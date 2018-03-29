@@ -20,7 +20,7 @@ var bows = require('bows');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var sundial = require('sundial');
-import { translate } from 'react-i18next';
+import { translate, Trans } from 'react-i18next';
 
 // tideline dependencies & plugins
 var tidelineBlip = require('tideline/plugins/blip');
@@ -281,19 +281,19 @@ var Weekly = translate()(React.createClass({
     };
 
     return (
-      <div className="patient-data-message patient-data-message-loading">
-        <p>{'The Weekly view shows a history of your finger stick BG data, but it looks like you haven\'t uploaded finger stick data yet.'}</p>
-        <p>{'To see your data in the Weekly view, '}
+      <Trans className="patient-data-message patient-data-message-loading">
+        <p>The Weekly view shows a history of your finger stick BG data, but it looks like you haven\'t uploaded finger stick data yet.</p>
+        <p>To see your data in the Weekly view,
           <a
             href={this.props.uploadUrl}
             target="_blank"
             onClick={handleClickUpload}>upload</a>
-          {' your pump or BG meter.'}</p>
-        <p>{'If you just uploaded, try '}
+          your pump or BG meter.</p>
+        <p>If you just uploaded, try
           <a href="" onClick={this.props.onClickNoDataRefresh}>refreshing</a>
-          {'.'}
+          .
         </p>
-      </div>
+      </Trans>
     );
   },
 
