@@ -19,6 +19,7 @@ var _ = require('lodash');
 var bows = require('bows');
 var React = require('react');
 var sundial = require('sundial');
+import { translate, Trans } from 'react-i18next';
 
 var utils = require('../../core/utils');
 
@@ -29,7 +30,7 @@ var BasicsChart = tidelineBlip.basics;
 var Header = require('./header');
 var Footer = require('./footer');
 
-var Basics = React.createClass({
+var Basics = translate()(React.createClass({
   chartType: 'basics',
   log: bows('Basics View'),
   propTypes: {
@@ -47,6 +48,7 @@ var Basics = React.createClass({
     onClickPrint: React.PropTypes.func.isRequired,
     onSwitchToSettings: React.PropTypes.func.isRequired,
     onSwitchToWeekly: React.PropTypes.func.isRequired,
+    onUpdateChartDateRange: React.PropTypes.func.isRequired,
     trackMetric: React.PropTypes.func.isRequired,
     updateBasicsData: React.PropTypes.func.isRequired,
     updateBasicsSettings: React.PropTypes.func.isRequired,
@@ -61,6 +63,14 @@ var Basics = React.createClass({
     };
   },
 
+  componentWillMount: function() {
+    var basicsData = this.props.patientData.basicsData;
+
+    if (basicsData.dateRange) {
+      this.props.onUpdateChartDateRange(basicsData.dateRange);
+    }
+  },
+
   render: function() {
     return (
       <div id="tidelineMain">
@@ -73,7 +83,7 @@ var Basics = React.createClass({
           title={this.state.title}
           onClickBasics={this.handleClickBasics}
           onClickOneDay={this.handleClickOneDay}
-          onClickModal={this.handleClickModal}
+          onClickTrends={this.handleClickTrends}
           onClickRefresh={this.props.onClickRefresh}
           onClickSettings={this.props.onSwitchToSettings}
           onClickTwoWeeks={this.handleClickTwoWeeks}
@@ -116,28 +126,29 @@ var Basics = React.createClass({
 
   renderMissingBasicsMessage: function() {
     var self = this;
+    const { t } = this.props;
     var handleClickUpload = function() {
       self.props.trackMetric('Clicked Partial Data Upload, No Pump Data for Basics');
     };
 
     return (
-      <div className="patient-data-message patient-data-message-loading">
-        <p>{'The Basics view shows a summary of your recent device activity, but it looks like you haven\'t uploaded device data yet.'}</p>
-        <p>{'To see the Basics, '}
+      <Trans className="patient-data-message patient-data-message-loading">
+        <p>The Basics view shows a summary of your recent device activity, but it looks like you haven\'t uploaded device data yet.</p>
+        <p>To see the Basics,
           <a
             href={this.props.uploadUrl}
             target="_blank"
-            onClick={handleClickUpload}>upload</a>
-          {' some device data.'}</p>
-        <p>{'If you just uploaded, try '}
+            onClick={handleClickUpload}>upload</a> some device data.</p>
+        <p>If you just uploaded, try
           <a href="" onClick={this.props.onClickNoDataRefresh}>refreshing</a>
           {'.'}
         </p>
-      </div>
+      </Trans>
     );
   },
 
   getTitle: function() {
+    const { t } = this.props;
     if (this.isMissingBasics()) {
       return '';
     }
@@ -149,7 +160,8 @@ var Basics = React.createClass({
       timezone = timePrefs.timezoneName || 'UTC';
     }
     var basicsData = this.props.patientData.basicsData;
-    var dtMask = 'MMM D, YYYY';
+    var dtMask = t('MMM D, YYYY');
+
     return sundial.formatInTimezone(basicsData.dateRange[0], timezone, dtMask) +
       ' - ' + sundial.formatInTimezone(basicsData.dateRange[1], timezone, dtMask);
   },
@@ -178,11 +190,11 @@ var Basics = React.createClass({
     return;
   },
 
-  handleClickModal: function(e) {
+  handleClickTrends: function(e) {
     if (e) {
       e.preventDefault();
     }
-    this.props.onSwitchToModal();
+    this.props.onSwitchToTrends();
   },
 
   handleClickOneDay: function(e) {
@@ -210,6 +222,6 @@ var Basics = React.createClass({
   handleSelectDay: function(date, title) {
     this.props.onSwitchToDaily(date, title);
   },
-});
+}));
 
 module.exports = Basics;

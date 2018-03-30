@@ -19,6 +19,7 @@ import _ from 'lodash';
 import bows from 'bows';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Trans, translate } from 'react-i18next';
 
 import utils from '../../core/utils';
 
@@ -32,7 +33,7 @@ const tideline = {
   log: bows('Settings')
 };
 
-const Settings = React.createClass({
+const Settings = translate()(React.createClass({
   chartType: 'settings',
   log: bows('Settings View'),
   propTypes: {
@@ -46,7 +47,7 @@ const Settings = React.createClass({
     onClickNoDataRefresh: React.PropTypes.func.isRequired,
     onSwitchToBasics: React.PropTypes.func.isRequired,
     onSwitchToDaily: React.PropTypes.func.isRequired,
-    onSwitchToModal: React.PropTypes.func.isRequired,
+    onSwitchToTrends: React.PropTypes.func.isRequired,
     onSwitchToSettings: React.PropTypes.func.isRequired,
     onSwitchToWeekly: React.PropTypes.func.isRequired,
     onClickPrint: React.PropTypes.func.isRequired,
@@ -75,7 +76,7 @@ const Settings = React.createClass({
           onClickMostRecent={this.handleClickMostRecent}
           onClickBasics={this.props.onSwitchToBasics}
           onClickOneDay={this.handleClickOneDay}
-          onClickModal={this.handleClickModal}
+          onClickTrends={this.handleClickTrends}
           onClickRefresh={this.props.onClickRefresh}
           onClickSettings={this.handleClickSettings}
           onClickTwoWeeks={this.handleClickTwoWeeks}
@@ -125,19 +126,19 @@ const Settings = React.createClass({
     };
 
     return (
-      <div className="patient-data-message patient-data-message-loading">
-        <p>{'The Device Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like you haven\'t uploaded pump data yet.'}</p>
-        <p>{'To see your Device Settings,  '}
+      <Trans className="patient-data-message patient-data-message-loading">
+        <p>The Device Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like you haven\'t uploaded pump data yet.</p>
+        <p>To see your Device Settings,
           <a
             href={this.props.uploadUrl}
             target="_blank"
             onClick={handleClickUpload}>upload</a>
-          {' your pump.'}</p>
-        <p>{'If you just uploaded, try '}
+           your pump.</p>
+        <p>If you just uploaded, try
           <a href="" onClick={this.props.onClickNoDataRefresh}>refreshing</a>
-          {'.'}
+          .
         </p>
-      </div>
+      </Trans>
     );
 
   },
@@ -157,11 +158,11 @@ const Settings = React.createClass({
   },
 
   // handlers
-  handleClickModal: function(e) {
+  handleClickTrends: function(e) {
     if (e) {
       e.preventDefault();
     }
-    this.props.onSwitchToModal();
+    this.props.onSwitchToTrends();
   },
 
   handleClickMostRecent: function(e) {
@@ -199,6 +200,6 @@ const Settings = React.createClass({
     }
     this.props.onSwitchToWeekly();
   }
-});
+}));
 
 module.exports = Settings;

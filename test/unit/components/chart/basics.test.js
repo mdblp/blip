@@ -19,6 +19,7 @@
 /* global describe */
 /* global it */
 /* global beforeEach */
+/* global afterEach */
 /* global sinon */
 
 var expect = chai.expect;
@@ -58,15 +59,21 @@ describe('Basics', () => {
     },
     pdf: {},
     onClickPrint: sinon.stub(),
+    onUpdateChartDateRange: sinon.stub(),
   };
 
   let wrapper;
   beforeEach(() => {
-    wrapper = shallow(<Basics {...baseProps} />);
+    wrapper = mount(<Basics {...baseProps} />);
   })
 
-  describe('render', function() {
-    it('should render the missing data text if no data has been uploaded', function () {
+  afterEach(() => {
+    baseProps.onClickPrint.reset();
+    baseProps.onUpdateChartDateRange.reset();
+  });
+
+  describe('render', () => {
+    it('should render the missing data text if no data has been uploaded', () => {
       const noDataMessage = wrapper.find('.patient-data-message');
       const chart = wrapper.find('BasicsChart');
       expect(noDataMessage.length).to.equal(1);
@@ -74,7 +81,8 @@ describe('Basics', () => {
       expect(noDataMessage.text()).to.include('upload some device data');
     });
 
-    it('should render the basics chart if any data is uploaded', function () {
+    it('should render the basics chart if any data is uploaded', () => {
+      wrapper = shallow(<Basics.WrappedComponent {...baseProps} />);
       wrapper.setProps({
         patientData: {
           basicsData: _.assign({}, baseProps.patientData.basicsData, {
@@ -97,7 +105,7 @@ describe('Basics', () => {
       expect(chart.length).to.equal(1);
     });
 
-    it('should have a disabled print button and spinner when a pdf is not ready to print', function () {
+    it('should have a disabled print button and spinner when a pdf is not ready to print', () => {
       let mountedWrapper = mount(<Basics {...baseProps} />);
 
       var printLink = mountedWrapper.find('.printview-print-icon');
@@ -108,7 +116,7 @@ describe('Basics', () => {
       expect(spinner.length).to.equal(1);
     });
 
-    it('should have an enabled print button and icon when a pdf is ready and call onClickPrint when clicked', function () {
+    it('should have an enabled print button and icon when a pdf is ready and call onClickPrint when clicked', () => {
       var props = _.assign({}, baseProps, {
         pdf: {
           url: 'blobURL',
@@ -129,4 +137,27 @@ describe('Basics', () => {
       expect(props.onClickPrint.callCount).to.equal(1);
     });
   });
+
+  describe('componentWillMount', () => {
+    it('should not call the `onUpdateChartDateRange` method when dateRange is not set', () => {
+      sinon.assert.notCalled(baseProps.onUpdateChartDateRange);
+    });
+
+    it('should call the `onUpdateChartDateRange` method when dateRange is set', () => {
+      var props = _.assign({}, baseProps, {
+        patientData: {
+          basicsData: {
+            data: {},
+            dateRange: [
+              '2018-01-15T05:00:00.000Z',
+              '2018-01-30T03:46:52.000Z',
+            ],
+          },
+        },
+      });
+
+      let mountedWrapper = mount(<Basics {...props} />);
+      sinon.assert.calledOnce(baseProps.onUpdateChartDateRange);
+    });
+  })
 });
