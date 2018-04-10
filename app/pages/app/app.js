@@ -158,7 +158,7 @@ export class AppComponent extends React.Component {
 
     // Determine whether or not to show the donate banner.
     // If showingDonateBanner is false, it means it was dismissed and we do not show it again.
-    if (showingDonateBanner !== false) {
+    if (!__HIDE_DONATE__ && showingDonateBanner !== false) {
       if (showDonateBanner) {
         this.props.showBanner('donate');
         displayDonateBanner = true;
@@ -258,7 +258,7 @@ export class AppComponent extends React.Component {
       userIsDonor,
     } = this.props;
 
-    if (showingDonateBanner) {
+    if (!__HIDE_DONATE__ && showingDonateBanner) {
       return (
         <div className="App-donatebanner">
           <DonateBanner
