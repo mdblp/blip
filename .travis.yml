@@ -23,6 +23,7 @@ addons:
       - $(git ls-files -o deploy/*/*-*.tar.gz | tr "\n" ":")
     target_paths:
       - /
+    debug: true
 
 services:
   - docker
