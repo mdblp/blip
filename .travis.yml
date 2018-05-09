@@ -30,8 +30,8 @@ deploy:
   # option to `master` means Travis will only attempt a deployment on
   # builds of your repo's master branch (e.g., after you merge a PR).
   on:
-#    tag: true
-    branch: dbl
+    tag: true
+#    branch: dbl
   provider: s3
   # You can refer to environment variables from Travis repo settings!
   access_key_id: $AWS_ACCESS_KEY_ID
