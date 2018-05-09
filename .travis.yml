@@ -16,14 +16,14 @@ before_install:
 install:
   - yarn install --frozen-lockfile
 
-addons:
-  artifacts:
-    s3_region: eu-central-1
-    paths:
-      - $(git ls-files -o deploy/*/*-*.tar.gz | tr "\n" ":")
-    target_paths:
-      - /
-    debug: true
+# addons:
+#   artifacts:
+#     s3_region: eu-central-1
+#     paths:
+#       - $(git ls-files -o deploy/*/*-*.tar.gz | tr "\n" ":")
+#     target_paths:
+#       - /
+#     debug: true
 
 deploy:
   # Control deployment by setting a value for `on`. Setting the `branch`
@@ -31,6 +31,7 @@ deploy:
   # builds of your repo's master branch (e.g., after you merge a PR).
   on:
     tags: true
+    node_js: 6.10.2
 #    branch: dbl
   provider: s3
   # You can refer to environment variables from Travis repo settings!
