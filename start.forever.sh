@@ -11,4 +11,4 @@ nvm use --delete-prefix "${START_NODE_VERSION}"
 . config/env.sh
 
 npm run build-config
-forever -o ../server.log -e ../error.log -l ../forever.$service.log --uid $service start server.js
+forever -a -o ../$service.log -e ../$service.error.log --uid $service start server.js
