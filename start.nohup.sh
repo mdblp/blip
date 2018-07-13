@@ -3,7 +3,7 @@
 . "${NVM_DIR}/nvm.sh"
 . version.sh
 
-service=blip
+service=${1:-'blip'}
 
 nvm ls "${START_NODE_VERSION}" > /dev/null || { echo "ERROR: Node version ${START_NODE_VERSION} not installed"; exit 1; }
 nvm use --delete-prefix "${START_NODE_VERSION}"
