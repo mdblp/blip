@@ -125,10 +125,8 @@
     "sinon": "2.3.4",
     "sinon-chai": "2.8.0",
     "tidepool-standard-action": "0.1.1",
-    "webpack-dev-server": "1.15.0"
-  },
-  "optionalDependencies": {
-    "rimraf": "2.5.4"
+    "webpack-dev-server": "1.15.0",
+    "rimraf": "2"
   },
   "engines": {
     "node": "6.x",
