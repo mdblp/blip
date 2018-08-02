@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@tidepool/viz@git+https://github.com/mdblp/viz.git#bug/rimraf":
+"@tidepool/viz@git+https://github.com/mdblp/viz.git#dblp":
   version "1.11.1"
-  resolved "git+https://github.com/mdblp/viz.git#498c7f7d2237b4b7739a6a354e3eb8e2ab525d2c"
+  resolved "git+https://github.com/mdblp/viz.git#f1f3086de2f7d2cfab95ea83db0d44656ec28d4d"
   dependencies:
     bluebird "3.5.0"
     crossfilter "1.3.12"
