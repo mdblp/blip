@@ -20,7 +20,7 @@
     "update-translations": "i18next 'app/**/*.js' 'node_modules/tideline/{plugins,js}/**/*.js' 'node_modules/@tidepool/viz/{storiesDatatypes,storybookDatatypes,stories,src}/**/*.js' -c i18next-parser.config.json -o ."
   },
   "dependencies": {
-    "@tidepool/viz": "git+https://github.com/mdblp/viz.git#dblp",
+    "@tidepool/viz": "git+https://github.com/mdblp/viz.git#bug/rimraf",
     "async": "1.5.2",
     "autoprefixer": "6.7.2",
     "babel-core": "6.13.2",
@@ -125,8 +125,7 @@
     "sinon": "2.3.4",
     "sinon-chai": "2.8.0",
     "tidepool-standard-action": "0.1.1",
-    "webpack-dev-server": "1.15.0",
-    "rimraf": "2"
+    "webpack-dev-server": "1.15.0"
   },
   "engines": {
     "node": "6.x",
