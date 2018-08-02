@@ -4,7 +4,7 @@
 
 "@tidepool/viz@git+https://github.com/mdblp/viz.git#bug/rimraf":
   version "1.11.1"
-  resolved "git+https://github.com/mdblp/viz.git#6c0fc4ad6961acc25bf0afd89aef216cc3bbbdf1"
+  resolved "git+https://github.com/mdblp/viz.git#b62b0cb146e2ee10b42aa07c08fa5bd64e9ab5b5"
   dependencies:
     bluebird "3.5.0"
     crossfilter "1.3.12"
