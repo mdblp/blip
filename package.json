@@ -128,7 +128,7 @@
     "webpack-dev-server": "1.15.0"
   },
   "engines": {
-    "node": "6.x",
+    "node": ">=6.x",
     "npm": "4.x"
   }
 }
