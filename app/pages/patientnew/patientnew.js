@@ -55,7 +55,7 @@ export let PatientNew = translate()(React.createClass({
     const { t } = this.props;
     const isOtherPerson = this.state.formValues.isOtherPerson;
 
-    const baseInputs = [
+	const baseInputs = [
       {
         name: 'isOtherPerson',
         type: 'radios',
@@ -91,10 +91,9 @@ export let PatientNew = translate()(React.createClass({
         multi: false,
         value: this.state.formValues.diagnosisType,
         placeholder: t('Choose One'),
-        items: DIABETES_TYPES(),
+        items: DIABETES_TYPES(),    // eslint-disable-line new-cap
       }
     ];
-
     if (__HIDE_DONATE__) {
       return baseInputs;
     } else {
@@ -111,7 +110,7 @@ export let PatientNew = translate()(React.createClass({
         type: 'explanation',
         text: (
           <Trans i18nKey="html.patientnew-donate-explainer">
-            You own your data. Read all the details about Tidepool's Big Data
+            You own your data. Read all the details about Tidepools Big Data
             Donation project <a target="_blank" href={URL_BIG_DATA_DONATION_INFO}>here</a>.
           </Trans>
         ),
