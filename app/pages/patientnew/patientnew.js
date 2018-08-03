@@ -91,18 +91,15 @@ export let PatientNew = translate()(React.createClass({
         multi: false,
         value: this.state.formValues.diagnosisType,
         placeholder: t('Choose One'),
-        items: DIABETES_TYPES,
+        items: DIABETES_TYPES(),
       }
     ];
 
     if (__HIDE_DONATE__) {
       return baseInputs;
     } else {
-      return baseInputs.concat({
-        placeholder: t('Choose One'),
-        items: DIABETES_TYPES(), // eslint-disable-line new-cap
-        },
-        {
+      return baseInputs.concat(
+          {
         name: 'dataDonate',
         label: isOtherPerson ? t('Donate their anonymized data') : t('Donate my anonymized data'),
         disabled: !_.isEmpty(this.state.formValues.dataDonateDestination),
