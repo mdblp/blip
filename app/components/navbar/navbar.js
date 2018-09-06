@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+ /* global __BRANDING__ */
+
 var React = require('react');
 var IndexLink = require('react-router').IndexLink;
 var Link = require('react-router').Link;

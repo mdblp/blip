@@ -15,6 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
+/* global __BRANDING__ */
+
 import React, { PropTypes } from 'react';
 
 import { URL_DIABELOOP_SUPPORT } from '../../core/constants';
