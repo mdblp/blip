@@ -18,6 +18,7 @@ import React from 'react';
 import { translate } from 'react-i18next'
 import _ from 'lodash';
 import cx from 'classnames';
+import config from '../../config';
 
 var ModalOverlay = require('../../components/modaloverlay');
 var InputGroup = require('../../components/inputgroup');
