@@ -17,6 +17,9 @@
 
 import React, { PropTypes } from 'react';
 
+import { URL_DIABELOOP_SUPPORT } from '../../core/constants';
+import { URL_DIABELOOP_LEGAL } from '../../core/constants';
+
 require('./images/jdrf.png');
 require('./images/jdrf_hover.png');
 
@@ -26,6 +29,7 @@ const FooterLinks = (props) => {
   }
   return (
     <div className='footer-section footer-section-top'>
+    {__BRANDING__ != "diabeloop" &&
       <div className='footer-link social-media large-format-only'>
         <a
           className='footer-twitter'
@@ -50,6 +54,8 @@ const FooterLinks = (props) => {
           </svg>
         </a>
       </div>
+    }
+    {__BRANDING__ != "diabeloop" &&
       <div className='footer-link large-format-only'>
         <a
           href="http://tidepool.org/products/tidepool-mobile/"
@@ -58,30 +64,42 @@ const FooterLinks = (props) => {
           target="_blank"
         >Get Mobile App</a>
       </div>
+    }
       <div className='footer-link large-format-only'>
         <a
-          href="http://support.tidepool.org/"
+          href={__BRANDING__ != 'diabeloop' ? "http://support.tidepool.org/" : URL_DIABELOOP_SUPPORT}
           id='support'
           onClick={metricFnMkr('Support')}
           target="_blank">Get Support</a>
       </div>
       <div className='footer-link large-format-only'>
         <a
-          href='http://tidepool.org/legal/'
+          href={__BRANDING__ != 'diabeloop' ? "http://tidepool.org/legal/" : URL_DIABELOOP_LEGAL}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>Privacy and Terms of Use</a>
       </div>
-      <div className='footer-link footer-jdrf'>
-        <a
-          href='http://jdrf.org/'
-          id='jdrf'
-          onClick={metricFnMkr('JDRF')}
-          target='_blank'>
-          Made possible by
-          <img />
-        </a>
-      </div>
+      {__BRANDING__ == "diabeloop" ? (
+        <div className='footer-link footer-jdrf'>
+          <a
+            href='https://tidepool.org'
+            id='jdrf'
+            target='_blank'>
+            Made possible by <b>Tidepool</b>
+          </a>
+        </div>
+      ):(
+        <div className='footer-link footer-jdrf'>
+          <a
+            href='http://jdrf.org/'
+            id='jdrf'
+            onClick={metricFnMkr('JDRF')}
+            target='_blank'>
+            Made possible by
+            <img />
+          </a>
+        </div>
+      )}
     </div>
   );
 };

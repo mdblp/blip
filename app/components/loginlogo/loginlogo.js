@@ -17,13 +17,18 @@
 var React = require('react');
 
 var logoSrc = require('./images/tidepool-logo-880x96.png');
+var logoSrcDiabeloop = require('./images/diabeloop/logo_diabeloop_bleu.png');
 
 var LoginLogo = React.createClass({
   render: function() {
 
     return (
       <div className="login-logo">
-        <img src={logoSrc} alt="Tidepool"/>
+        {__BRANDING__ == "diabeloop" ? (
+          <img src={logoSrcDiabeloop} alt="Diabeloop"/>
+        ):(
+          <img src={logoSrc} alt="Tidepool"/>
+        )}
       </div>
     );
 

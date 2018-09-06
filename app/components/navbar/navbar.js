@@ -26,6 +26,7 @@ var personUtils = require('../../core/personutils');
 var NavbarPatientCard = require('../../components/navbarpatientcard');
 
 var logoSrc = require('./images/tidepool-logo-408x46.png');
+var logoSrcDiabeloop = require('./images/diabeloop/logo_diabeloop_bleu.png');
 
 export default translate()(React.createClass({
   propTypes: {
@@ -75,7 +76,7 @@ export default translate()(React.createClass({
         to="/"
         className="Navbar-logo"
         onClick={handleClick}>
-        <img src={logoSrc}/>
+        <img src={__BRANDING__ == "diabeloop" ? logoSrcDiabeloop : logoSrc}/>
       </IndexLink>
     );
   },
