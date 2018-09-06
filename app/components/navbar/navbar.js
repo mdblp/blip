@@ -76,7 +76,7 @@ export default translate()(React.createClass({
         to="/"
         className="Navbar-logo"
         onClick={handleClick}>
-        <img src={__BRANDING__ == "diabeloop" ? logoSrcDiabeloop : logoSrc}/>
+        <img src={__BRANDING__ === 'diabeloop' ? logoSrcDiabeloop : logoSrc}/>
       </IndexLink>
     );
   },

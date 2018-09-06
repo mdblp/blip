@@ -29,7 +29,7 @@ const FooterLinks = (props) => {
   }
   return (
     <div className='footer-section footer-section-top'>
-    {__BRANDING__ != "diabeloop" &&
+    {__BRANDING__ !== 'diabeloop' &&
       <div className='footer-link social-media large-format-only'>
         <a
           className='footer-twitter'
@@ -55,7 +55,7 @@ const FooterLinks = (props) => {
         </a>
       </div>
     }
-    {__BRANDING__ != "diabeloop" &&
+    {__BRANDING__ !== 'diabeloop' &&
       <div className='footer-link large-format-only'>
         <a
           href="http://tidepool.org/products/tidepool-mobile/"
@@ -67,19 +67,19 @@ const FooterLinks = (props) => {
     }
       <div className='footer-link large-format-only'>
         <a
-          href={__BRANDING__ != 'diabeloop' ? "http://support.tidepool.org/" : URL_DIABELOOP_SUPPORT}
+          href={__BRANDING__ !== 'diabeloop' ? 'http://support.tidepool.org/' : URL_DIABELOOP_SUPPORT}
           id='support'
           onClick={metricFnMkr('Support')}
           target="_blank">Get Support</a>
       </div>
       <div className='footer-link large-format-only'>
         <a
-          href={__BRANDING__ != 'diabeloop' ? "http://tidepool.org/legal/" : URL_DIABELOOP_LEGAL}
+          href={__BRANDING__ !== 'diabeloop' ? 'http://tidepool.org/legal/' : URL_DIABELOOP_LEGAL}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>Privacy and Terms of Use</a>
       </div>
-      {__BRANDING__ == "diabeloop" ? (
+      {__BRANDING__ === 'diabeloop' ? (
         <div className='footer-link footer-jdrf'>
           <a
             href='https://tidepool.org'

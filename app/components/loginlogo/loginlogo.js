@@ -24,7 +24,7 @@ var LoginLogo = React.createClass({
 
     return (
       <div className="login-logo">
-        {__BRANDING__ == "diabeloop" ? (
+        {__BRANDING__ === 'diabeloop' ? (
           <img src={logoSrcDiabeloop} alt="Diabeloop"/>
         ):(
           <img src={logoSrc} alt="Tidepool"/>
