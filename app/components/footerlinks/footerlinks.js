@@ -17,11 +17,18 @@
 
 import React, { PropTypes } from 'react';
 
-import { URL_DIABELOOP_SUPPORT } from '../../core/constants';
-import { URL_DIABELOOP_LEGAL } from '../../core/constants';
+import { URLS } from '../../core/constants';
 
 require('./images/jdrf.png');
 require('./images/jdrf_hover.png');
+
+var url_support = 'http://support.tidepool.org/';
+var url_legal = 'http://tidepool.org/legal/';
+
+if(__BRANDING__ !== 'tidepool'){
+  url_support = URLS[__BRANDING__].support;
+  url_legal = URLS[__BRANDING__].legal;
+}
 
 const FooterLinks = (props) => {
   const metricFnMkr = (link) => {
@@ -67,14 +74,14 @@ const FooterLinks = (props) => {
     }
       <div className='footer-link large-format-only'>
         <a
-          href={__BRANDING__ !== 'diabeloop' ? 'http://support.tidepool.org/' : URL_DIABELOOP_SUPPORT}
+          href={url_support}
           id='support'
           onClick={metricFnMkr('Support')}
           target="_blank">Get Support</a>
       </div>
       <div className='footer-link large-format-only'>
         <a
-          href={__BRANDING__ !== 'diabeloop' ? 'http://tidepool.org/legal/' : URL_DIABELOOP_LEGAL}
+          href={url_legal}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>Privacy and Terms of Use</a>

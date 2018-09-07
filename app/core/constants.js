@@ -29,8 +29,12 @@ export const URL_UPLOADER_DOWNLOAD_PAGE = 'https://tidepool.org/products/tidepoo
 
 export const TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL = 'bigdata@tidepool.org';
 // BRANDING
-export const URL_DIABELOOP_SUPPORT = 'http://www.diabeloop.fr/faq.php';
-export const URL_DIABELOOP_LEGAL = 'http://www.diabeloop.fr/mentions-legales.php';
+export const URLS = {
+  'diabeloop': {
+    support: 'http://www.diabeloop.fr/faq.php',
+    legal: 'http://www.diabeloop.fr/mentions-legales.php'
+  }
+};
 
 export const DATA_DONATION_NONPROFITS = () => [
   { value: 'AADE', label: t('AADE Foundation') },
