@@ -17,7 +17,7 @@
 
 import React, { PropTypes } from 'react';
 
-import { URLS } from '../../core/constants';
+import { BRAND } from '../../core/constants';
 
 require('./images/jdrf.png');
 require('./images/jdrf_hover.png');
@@ -26,8 +26,8 @@ var urlSupport = 'http://support.tidepool.org/';
 var urlLegal = 'http://tidepool.org/legal/';
 
 if(__BRANDING__ !== 'tidepool'){
-  urlSupport = URLS[__BRANDING__].support;
-  urlLegal = URLS[__BRANDING__].legal;
+  urlSupport = BRAND[__BRANDING__].support;
+  urlLegal = BRAND[__BRANDING__].legal;
 }
 
 const FooterLinks = (props) => {
@@ -81,7 +81,7 @@ const FooterLinks = (props) => {
       </div>
       <div className='footer-link large-format-only'>
         <a
-          href={urLegal}
+          href={urlLegal}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>Privacy and Terms of Use</a>

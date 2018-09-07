@@ -29,8 +29,9 @@ export const URL_UPLOADER_DOWNLOAD_PAGE = 'https://tidepool.org/products/tidepoo
 
 export const TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL = 'bigdata@tidepool.org';
 // BRANDING
-export const URLS = {
+export const BRAND = {
   'diabeloop': {
+    alt: 'Diabeloop',
     support: 'http://www.diabeloop.fr/faq.php',
     legal: 'http://www.diabeloop.fr/mentions-legales.php'
   }

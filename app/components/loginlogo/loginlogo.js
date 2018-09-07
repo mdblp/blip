@@ -14,13 +14,15 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import { BRAND } from '../../core/constants';
 
 var React = require('react');
 
 var logoSrc = require('./images/tidepool-logo-880x96.png');
-
+var altText = 'Tidepool';
 if(__BRANDING__ !== 'tidepool'){
   logoSrc = require('./images/'+__BRANDING__+'/logo.png');
+  altText = BRAND[__BRANDING__].alt;
 }
 
 var LoginLogo = React.createClass({
@@ -28,7 +30,7 @@ var LoginLogo = React.createClass({
 
     return (
       <div className="login-logo">
-        <img src={logoSrc} alt={__BRANDING__}/>
+        <img src={logoSrc} alt={altText}/>
       </div>
     );
 
