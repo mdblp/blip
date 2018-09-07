@@ -22,12 +22,12 @@ import { URLS } from '../../core/constants';
 require('./images/jdrf.png');
 require('./images/jdrf_hover.png');
 
-var url_support = 'http://support.tidepool.org/';
-var url_legal = 'http://tidepool.org/legal/';
+var urlSupport = 'http://support.tidepool.org/';
+var urlLegal = 'http://tidepool.org/legal/';
 
 if(__BRANDING__ !== 'tidepool'){
-  url_support = URLS[__BRANDING__].support;
-  url_legal = URLS[__BRANDING__].legal;
+  urlSupport = URLS[__BRANDING__].support;
+  urlLegal = URLS[__BRANDING__].legal;
 }
 
 const FooterLinks = (props) => {
@@ -74,14 +74,14 @@ const FooterLinks = (props) => {
     }
       <div className='footer-link large-format-only'>
         <a
-          href={url_support}
+          href={urlSupport}
           id='support'
           onClick={metricFnMkr('Support')}
           target="_blank">Get Support</a>
       </div>
       <div className='footer-link large-format-only'>
         <a
-          href={url_legal}
+          href={urLegal}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>Privacy and Terms of Use</a>
