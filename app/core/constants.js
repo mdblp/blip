@@ -29,11 +29,24 @@ export const URL_UPLOADER_DOWNLOAD_PAGE = 'https://tidepool.org/products/tidepoo
 
 export const TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL = 'bigdata@tidepool.org';
 // BRANDING
-export const BRAND = {
+export const CONFIG = {
+  'tidepool': {
+    name: 'Tidepool',
+    support:'http://support.tidepool.org/',
+    legal:'http://tidepool.org/legal/',
+    terms: 'https://tidepool.org/terms-of-use',
+    terms_text: t('Tidepool Applications Terms of Use'),
+    privacy: 'https://tidepool.org/privacy-policy',
+    privacy_text: t('Privacy Policy')
+  },
   'diabeloop': {
-    alt: 'Diabeloop',
+    name: 'Diabeloop',
     support: 'http://www.diabeloop.fr/faq.php',
-    legal: 'http://www.diabeloop.fr/mentions-legales.php'
+    legal: 'http://www.diabeloop.fr/mentions-legales.php',
+    terms: 'add link',
+    terms_text: t('Diabeloop Applications Terms of Use'),
+    privacy: 'add link',
+    privacy_text: t('Privacy Policy')
   }
 };
 

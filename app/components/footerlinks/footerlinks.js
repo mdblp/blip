@@ -17,18 +17,13 @@
 
 import React, { PropTypes } from 'react';
 
-import { BRAND } from '../../core/constants';
+import { CONFIG } from '../../core/constants';
 
 require('./images/jdrf.png');
 require('./images/jdrf_hover.png');
 
-var urlSupport = 'http://support.tidepool.org/';
-var urlLegal = 'http://tidepool.org/legal/';
-
-if(__BRANDING__ !== 'tidepool'){
-  urlSupport = BRAND[__BRANDING__].support;
-  urlLegal = BRAND[__BRANDING__].legal;
-}
+var urlSupport = CONFIG[__BRANDING__].support;
+var urlLegal = CONFIG[__BRANDING__].legal;
 
 const FooterLinks = (props) => {
   const metricFnMkr = (link) => {
