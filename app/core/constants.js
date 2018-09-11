@@ -35,18 +35,18 @@ export const CONFIG = {
     support:'http://support.tidepool.org/',
     legal:'http://tidepool.org/legal/',
     terms: 'https://tidepool.org/terms-of-use',
-    terms_text: t('Tidepool Applications Terms of Use'),
+    termsText: t('Tidepool Applications Terms of Use'),
     privacy: 'https://tidepool.org/privacy-policy',
-    privacy_text: t('Privacy Policy')
+    privacyText: t('Privacy Policy')
   },
   'diabeloop': {
     name: 'Diabeloop',
     support: 'http://www.diabeloop.fr/faq.php',
     legal: 'http://www.diabeloop.fr/mentions-legales.php',
     terms: 'add link',
-    terms_text: t('Diabeloop Applications Terms of Use'),
+    termsText: t('Diabeloop Applications Terms of Use'),
     privacy: 'add link',
-    privacy_text: t('Privacy Policy')
+    privacyText: t('Privacy Policy')
   }
 };
 

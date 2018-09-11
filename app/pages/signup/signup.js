@@ -35,10 +35,10 @@ import SimpleForm from '../../components/simpleform';
 import check from './images/check.svg';
 
 var urlTermsOfUse = CONFIG[__BRANDING__].terms;
-var textTermsOfUse = CONFIG[__BRANDING__].terms_text;
+var textTermsOfUse = CONFIG[__BRANDING__].termsText;
 
 var urlPrivacyPolicy = CONFIG[__BRANDING__].privacy;
-var textPrivacyPolicy = CONFIG[__BRANDING__].privacy_text;
+var textPrivacyPolicy = CONFIG[__BRANDING__].privacyText;
 
 export let Signup = translate()(React.createClass({
   propTypes: {
