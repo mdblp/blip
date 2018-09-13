@@ -48,8 +48,7 @@ require('../../style.less');
 // Blip favicon
 require('../../../favicon.ico');
 
-document.getElementById('headTitle').innerHTML = CONFIG[__BRANDING__].name;
-document.getElementById('linkFavicon').href = CONFIG[__BRANDING__].favicon;
+document.title = CONFIG[__BRANDING__].name;
 
 export class AppComponent extends React.Component {
   static propTypes = {

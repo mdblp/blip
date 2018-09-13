@@ -29,7 +29,6 @@ export const TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL = 'bigdata@tidepool.org';
 // BRANDING
 export const CONFIG = {
   'tidepool': {
-    favicon: 'favicon.ico',
     name: 'Tidepool',
     support:'http://support.tidepool.org/',
     legal:'http://tidepool.org/legal/',
@@ -39,7 +38,6 @@ export const CONFIG = {
     privacyText: t('Privacy Policy')
   },
   'diabeloop': {
-    favicon: 'favicon_diabeloop.ico',
     name: 'Diabeloop',
     support: 'http://www.diabeloop.fr/faq.php',
     legal: 'http://www.diabeloop.fr/mentions-legales.php',
