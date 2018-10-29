@@ -14,7 +14,7 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 
 install:
-  - yarn install --frozen-lockfile
+  - yarn install --frozen-lockfile --mutex network
 
 deploy:
   # Control deployment by setting a value for `on`. Setting the `branch`
