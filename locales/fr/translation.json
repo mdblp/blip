@@ -3,7 +3,7 @@
   " I am 18 years old or older.": "J'ai plus de 18 ans",
   " I am between 13 and 17 years old. You'll need to have a parent or guardian agree to the terms below.": "J'ai entre 13 et 17 ans. Vous avez besoin d'avoir un parent ou un tuteur pour accepter les conditions ci-dessous.",
   " of ": "de",
-  " reports the data.": "Rapport de données",
+  " reports the data.": "Ramène les données",
   "{{automatedLabel}} Exited": "{{automatedLabel}} Sortie",
   "{{diff}} {{unit}} ago": "il y a {{diff}} {{unit}}",
   "{{diff}} {{unit}} ago_plural": "il y a plusieurs {{diff}} {{unit}} ",
