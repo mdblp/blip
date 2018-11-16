@@ -15,7 +15,7 @@
   "{{field}} is not a complete date.": "{{field}} n'est pas une date complète.",
   "{{field}} is required.": "{{field}} est requis.",
   "{{field}} must be at least {{min}} characters long.": "{{field}} doit être d'au moins {{min}} caractères.",
-  "{{field}} must be at most {{max}} characters long.": "{{field}} doit contenir au minimum {{max}} caractères.",
+  "{{field}} must be at most {{max}} characters long.": "{{field}} doit contenir au plus {{max}} caractères.",
   "{{field}} must not contain white spaces.": "{{field}} ne doit pas contenir d'espace.",
   "{{manualLabel}} to {{automatedLabel}} ratio": "{{manualLabel}} au {{automatedLabel}} ratio",
   "{{month}}-{{day}}-{{year}}": "{{month}}-{{day}}-{{year}}",
