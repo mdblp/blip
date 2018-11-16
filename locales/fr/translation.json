@@ -77,7 +77,7 @@
   "Basics": "Bases",
   "Because {{source}} represents extended boluses that cross midnight as two boluses, this bolus could be part of a dual-wave bolus, not an independent square-wave bolus as represented here.": "",
   "Because of how {{source}} reports bolus and wizard data, we can't be 100% certain that the bolus wizard information here (e.g., carbs, suggested dose) corresponds with the bolus.": "En raison du format des informations de bolus et de l'assistant bolus remontées par {{source}}, nous ne sommes pas certains à 100% que les informations de l'assistant bolus (e.g., glucides, dose proposée) correspondent à ce bolus.",
-  "Because of how {{source}} reports bolus data, normal and square-wave boluses may not be properly combined to appear as a dual-wave bolus.": "En raison des {{source}} informations des bolus remontées, il se peut que les bolus standard et les bolus carrés ne soient pas correctement affichés et apparaissent comme un bolus duo.",
+  "Because of how {{source}} reports bolus data, normal and square-wave boluses may not be properly combined to appear as a dual-wave bolus.": "En raison des informations des bolus remontées par {{source}}, il se peut que les bolus standard et les bolus carrés ne soient pas correctement affichés et apparaissent comme un bolus duo.",
   "Because of how {{source}} reports the data, we could not determine the duration of this basal rate segment.": "En raison des {{source}} données remontées, nous ne pouvons déterminer la durée de ce débit de base. ",
   "Because there was a time change during this basal, we split the basal into two segments.": "A cause d'un changement d'heure durant ce débit basal, nous avons séparé ce débit de base en 2 parties.",
   "below": "ci-dessous",
