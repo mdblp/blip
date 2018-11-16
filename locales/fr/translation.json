@@ -148,7 +148,7 @@
   "Data": "Donnée",
   "Date of birth": "Date de naissance",
   "Date of diagnosis": "Date du diagnostic",
-  "Date range: {{dateRange}}": "Plage de dates {{dateRange}}",
+  "Date range: {{dateRange}}": "Plage de dates: {{dateRange}}",
   "day": "jour",
   "Day": "Jour",
   "day_timeago": "il y a un jour",
