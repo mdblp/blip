@@ -6,7 +6,7 @@
   " reports the data.": "Ramène les données",
   "{{automatedLabel}} Exited": "{{automatedLabel}} Sortie",
   "{{diff}} {{unit}} ago": "il y a {{diff}} {{unit}}",
-  "{{diff}} {{unit}} ago_plural": "il y a plusieurs {{diff}} {{unit}} ",
+  "{{diff}} {{unit}} ago_plural": "il y a {{diff}} {{unit}} ",
   "{{displayCarbs}} g": "{{displayCarbs}} g",
   "{{displayDose}} U": "{{displayDose}} U",
   "{{dosePerKg}} U": "{{dosePerKg}} U",
