@@ -10,7 +10,7 @@
   "{{displayCarbs}} g": "{{displayCarbs}} g",
   "{{displayDose}} U": "{{displayDose}} U",
   "{{dosePerKg}} U": "{{dosePerKg}} U",
-  "{{field}} cannot be in the future!": "{{field}} ne peut être dans le futur !",
+  "{{field}} cannot be in the future!": "{{field}} ne peut pas être dans le futur !",
   "{{field}} is invalid.": "{{field}} est invalide",
   "{{field}} is not a complete date.": "{{field}} n'est pas une date complète.",
   "{{field}} is required.": "{{field}} est requis.",
