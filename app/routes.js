@@ -268,7 +268,7 @@ export const onSetUserToken = (api, next) => (nextState, replace, cb) => {
   if (!api.user.isAuthenticated()) {
     let localStore = window.localStorage;
     if (typeof nextState.params.tokenid === 'string') {
-      let tokenId = nextState.params.tokenid.replace(/-/g, ".");
+      let tokenId = nextState.params.tokenid.replace(/-/g, '.');
       localStore.setItem(TOKEN_LOCAL_KEY, tokenId);
     }
   }
