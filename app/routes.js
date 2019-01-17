@@ -268,7 +268,14 @@ export const onSetUserToken = (api, next) => (nextState, replace, cb) => {
   if (!api.user.isAuthenticated()) {
     let localStore = window.localStorage;
     if (typeof nextState.params.tokenid === 'string') {
-      let tokenId = nextState.params.tokenid.replace(/-/g, '.');
+      let tokenId = nextState.params.tokenid;
+      // Repad with "=" the token
+      tokenId = (tokenId + '===').slice(0, tokenId.length + (tokenId.length % 4));
+      // Conv from base64url to base64:
+      tokenId = tokenId.replace(/-/g, '+');
+      tokenId = tokenId.replace(/_/g, '/');
+      // Decode the token (base64):
+      tokenId = atob(nextState.params.tokenid);
       localStore.setItem(TOKEN_LOCAL_KEY, tokenId);
     }
   }
