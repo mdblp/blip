@@ -71,7 +71,7 @@ api.server.getTime = function(cb) {
 api.user = {};
 
 api.user.setToken = function(token) {
-  if (typeof token === "string") {
+  if (typeof token === 'string') {
     tidepool.syncToken(token);
   } else {
     tidepool.syncToken(null);
