@@ -65,7 +65,7 @@
   display: inline-block;
   line-height: @PatientInfo-blockHeight;
   color: #fff;
-  background-color: @green-dark-yourloops;
+  background-color: @gray-dark;
   padding-left: 8px;
   padding-right: 10px;
 
@@ -91,7 +91,7 @@
     position: absolute;
     pointer-events: none;
     border-color: rgba(152, 152, 151, 0);
-    border-right-color: @green-dark-yourloops;
+    border-right-color: @gray-dark;
     border-width: @PatientInfo-blockHeight/2;
     margin-top: -@PatientInfo-blockHeight/2;
   }
@@ -143,12 +143,12 @@ a.PatientInfo-block {
   line-height: @PatientInfo-inputHeight - 2*@PatientInfo-inputBorderSize;
   vertical-align: middle;
   padding: 0 8px;
-  border: @PatientInfo-inputBorderSize dashed @green-yourloops;
-  color: @green-yourloops;
+  border: @PatientInfo-inputBorderSize dashed @gray-darker;
+  color: @gray-darker;
   background-color: @gray-lighter;
 
   &:hover {
-    border-color: darken(@green-yourloops, 15%);
+    border-color: darken(@gray-darker, 15%);
   }
 
   &:focus {
