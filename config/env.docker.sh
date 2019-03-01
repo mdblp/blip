@@ -1,6 +1,4 @@
 ## external
-. ./config/shared.sh
-
 export API_HOST=http://localhost:8009
 export DEV_TOOLS=false
 export DISCOVERY_HOST=localhost:8000
