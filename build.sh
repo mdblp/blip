@@ -9,3 +9,7 @@ TIME="$(($(date +%s)-TIME))"
 echo "yarn install completed in ${TIME} seconds"
 
 yarn build-app
+
+# add configuration
+. ./config/env.docker.sh 
+npm run build-config
