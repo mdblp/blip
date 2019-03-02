@@ -118,7 +118,7 @@ describe('DexcomBanner', () => {
     });
 
     it('should render a dexcom message', () => {
-      const expectedText = 'Using Dexcom G5 Mobile on Android? See your data in Tidepool.'
+      const expectedText = 'Using Dexcom G5 Mobile on Android? See your data in'
       const messageText = wrapper.find('.message-text');
 
       expect(messageText).to.have.length(1);
