@@ -116,7 +116,7 @@ describe('Signup', function () {
 
       expect(wrapper.find('.signup-form').length).to.equal(1)
       expect(wrapper.find('.signup-title-condensed').length).to.equal(1)
-      expect(wrapper.find('.signup-title-condensed').text()).to.equal('Create Tidepool Account')
+      expect(wrapper.find('.signup-title-condensed').text()).to.contain.all.keys(['Create', 'Account'])
     });
 
     it('should render the clinician signup-form when clinician was selected', function () {
@@ -132,7 +132,7 @@ describe('Signup', function () {
 
       expect(wrapper.find('.signup-form').length).to.equal(1)
       expect(wrapper.find('.signup-title-condensed').length).to.equal(1)
-      expect(wrapper.find('.signup-title-condensed').text()).to.equal('Create Clinician Account')
+      expect(wrapper.find('.signup-title-condensed').text()).to.contain.all.keys(['Create', 'Account'])
     });
 
     it('should render the correct fields for the personal signup form', function() {
