@@ -259,7 +259,9 @@ describe('Signup', function () {
 
       expect(wrapper.find('.signup-form').length).to.equal(1)
       expect(wrapper.find('.signup-title-condensed').length).to.equal(1)
-      expect(wrapper.find('.signup-title-condensed').text()).to.equal('Create Tidepool Account')
+      // expect(wrapper.find('.signup-title-condensed').text()).to.have.string('Create')
+      // expect(wrapper.find('.signup-title-condensed').text()).to.have.string('Account')
+      expect(wrapper.find('.signup-title-condensed').text()).to.match(/Create(.*)Account/)
     });
 
     it('should set the state to show the clinician form according to the location pathname', function() {
