@@ -224,7 +224,7 @@
   "html.browser-warning-text": "<0>Copier - coller </0><1></1><2>dans chrome.</2>",
   "html.donate-form-explainer": " Vos données vous appartiennent.",
   "html.emailverification-instructions": "<0> Conserver vos données privées et sécurisées est important pour nous ! </0><1><0>S'il vous plait, cliquez sur le lien dans l'email que nous venons juste de vous envoyer à <1></1><2><0>{{sent}}</0></2><3></3> pour vérifier et activer votre compte.</0></1>",
-  "html.patient-delete-account": "Si vous êtes certains de vouloir supprimer votre compte, <1>envoyez un email</1> à support@diabeloop.fr et nous prendrons soin de le faire pour vous.",
+  "html.patient-delete-account": "Si vous êtes certains de vouloir supprimer votre compte, <1>envoyez un email</1> à support@diabeloop.fr et nous prendrons soin de le faire pour vous. Votre compte YourLoops est étroitement couplé à votre système Diabeloop. Il n'est pas recommandé de supprimer son compte YourLoops pour pouvoir profiter pleinement du système Diabeloop.",
   "html.patient-info-fullname": "<0>{{fullName}}</0> (<2>Editer</2>)",
   "html.patientdata-uploaded-message": "<0>Pour voir vos données, vous devrez utiliser un dispositif Diabeloop</0><1></1><2>Avez-vous déjà ce système ? </2><4><3>Besoin d'aide</3> Envoyez-nous un email à <5>support@diabeloop.fr</5> ou consultez notre <7>page d'aide </7>.</4>",
   "html.patientinfo-units-used": "<0>Les unités que j'utilise</0><1><0></0></1>",
