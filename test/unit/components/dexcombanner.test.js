@@ -118,7 +118,7 @@ describe('DexcomBanner', () => {
     });
 
     it('should render a dexcom message', () => {
-      const expectedText = new RegExp(/Using Dexcom G[1-9] Mobile on Android\? See your data in/, g);
+      const expectedText = new RegExp(/Using Dexcom G[1-9] Mobile on Android\? See your data in/, 'g');
       const messageText = wrapper.find('.message-text');
 
       expect(messageText).to.have.length(1);
