@@ -10,8 +10,10 @@ COPY ./node_modules/tideline ./node_modules
 RUN chown -R node:node .
 USER node
 
-RUN yarn install && \
-    yarn cache clean
+RUN yarn --production && \
+    yarn cache clean && \
+    . ./config/env.docker.sh && \
+    npm run build
 
 COPY . .
 
