@@ -2,11 +2,17 @@ FROM node:6.10.3-alpine
 
 WORKDIR /app
 
-RUN mkdir -p dist node_modules
-COPY ./dist ./dist
-COPY ./node_modules ./node_modules
-COPY *.js ./
-RUN chown -R node:node .
-VOLUME /app
+COPY package.json package.json
 
-CMD ["node", "server"]
+RUN mkdir -p dist node_modules
+COPY ./node_modules/@tidepool ./node_modules
+COPY ./node_modules/tideline ./node_modules
+RUN chown -R node:node .
+USER node
+
+RUN yarn install && \
+    yarn cache clean
+
+COPY . .
+
+CMD ["npm", "run", "server"]

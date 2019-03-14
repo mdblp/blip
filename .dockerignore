@@ -11,3 +11,6 @@ test/bin
 tmp
 web
 *.log
+node_modules
+!node_modules/@tidepool
+!node_modules/tideline
