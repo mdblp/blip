@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@tidepool/viz@0.1.1":
+"@tidepool/viz@mdblp/viz#dblp.0.1.1":
   version "0.1.1"
-  resolved "https://nexus.ci.diabeloop.eu/repository/your-loops-npm/@tidepool/viz/-/viz-0.1.1.tgz#73f192def48d53db887f25c0a15b8afa6d223b95"
+  resolved "https://codeload.github.com/mdblp/viz/tar.gz/59fc77776e0f1f2729fc826d53647ad764d53831"
   dependencies:
     bluebird "3.5.0"
     crossfilter "1.3.12"
