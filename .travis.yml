@@ -45,7 +45,6 @@ services:
 
 script:
   - npm run lint
-  - yarn install
   - npm test
   - ./artifact.sh
 
