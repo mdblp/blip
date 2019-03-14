@@ -11,10 +11,11 @@ RUN chown -R node:node .
 USER node
 
 RUN yarn --production && \
-    yarn cache clean && \
-    . ./config/env.docker.sh && \
-    npm run build
+    yarn cache clean
 
 COPY . .
+
+RUN source ./config/env.docker.sh && \
+    npm run build
 
 CMD ["npm", "run", "server"]
