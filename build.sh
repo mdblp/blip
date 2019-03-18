@@ -3,10 +3,10 @@
 rm -rf node_modules
 
 TIME="$(date +%s)"
-yarn --production
+npm install
 TIME="$(($(date +%s)-TIME))"
 
-echo "yarn install completed in ${TIME} seconds"
+echo "npm install completed in ${TIME} seconds"
 
 # add configuration
 . ./config/env.docker.sh 
