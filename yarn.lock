@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@tidepool/viz@mdblp/viz#dblp.0.1.1":
+"@tidepool/viz@mdblp/viz#feature/fix-install":
   version "0.1.1"
-  resolved "https://codeload.github.com/mdblp/viz/tar.gz/59fc77776e0f1f2729fc826d53647ad764d53831"
+  resolved "https://codeload.github.com/mdblp/viz/tar.gz/65c082633973f621e04bf98615d56cc0910ff383"
   dependencies:
     bluebird "3.5.0"
     crossfilter "1.3.12"
