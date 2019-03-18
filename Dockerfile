@@ -9,17 +9,18 @@ RUN apk --no-cache update && \
 
 COPY package.json package.json
 RUN npm install npm@6
+
+RUN chown -R node:node .
+
+USER node
 RUN mkdir -p dist node_modules
 COPY ./node_modules/@tidepool ./node_modules
 COPY ./node_modules/tideline ./node_modules
-RUN chown -R node:node . ./dist
-USER node
-
 RUN npm install --production
 
 COPY . .
 
-#RUN source ./config/env.docker.sh && \
-#    npm run build
+RUN source ./config/env.docker.sh && \
+    npm run build
 
 CMD ["npm", "run", "server"]
