@@ -2,20 +2,24 @@ FROM node:6.10.3-alpine
 
 WORKDIR /app
 
-COPY package.json package.json
+RUN apk --no-cache update && \
+    apk --no-cache upgrade && \
+    apk add --no-cache fontconfig && \
+    apk add --no-cache --virtual .build-dependencies curl git
 
+COPY package.json package.json
+RUN npm install npm@6
 RUN mkdir -p dist node_modules
 COPY ./node_modules/@tidepool ./node_modules
 COPY ./node_modules/tideline ./node_modules
-RUN chown -R node:node .
+RUN chown -R node:node . ./dist
 USER node
 
-RUN yarn --production && \
-    yarn cache clean
+RUN npm install --production
 
 COPY . .
 
-RUN source ./config/env.docker.sh && \
-    npm run build
+#RUN source ./config/env.docker.sh && \
+#    npm run build
 
 CMD ["npm", "run", "server"]
