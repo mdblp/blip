@@ -12,5 +12,6 @@ tmp
 web
 *.log
 node_modules
+dist
 !node_modules/@tidepool
 !node_modules/tideline
