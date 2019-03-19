@@ -10,12 +10,10 @@ RUN apk --no-cache update && \
 COPY package.json package.json
 RUN npm install npm@6
 
+
 RUN chown -R node:node .
 
 USER node
-RUN mkdir -p dist node_modules
-COPY ./node_modules/@tidepool ./node_modules
-COPY ./node_modules/tideline ./node_modules
 RUN npm install --production
 
 COPY . .
