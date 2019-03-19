@@ -1578,7 +1578,7 @@ LineWrapper = (function(_super) {
         fbk = {};
         while (word.length) {
           l = word.length;
-          while (w > this.spaceLeft) {
+          while (w > this.spaceLeft && this.spaceLeft > 0) {
             w = this.wordWidth(word.slice(0, --l));
           }
           fbk.required = l < word.length;
