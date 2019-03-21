@@ -17,7 +17,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { translate } from 'react-i18next';
+import { translate, Trans } from 'react-i18next';
 
 import * as actions from '../../redux/actions';
 
@@ -30,6 +30,8 @@ import { validateForm } from '../../core/validation';
 import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
+
+import CookieConsent from "react-cookie-consent";
 
 export let Login = translate()(React.createClass({
   propTypes: {
@@ -70,8 +72,12 @@ export let Login = translate()(React.createClass({
   },
 
   render: function() {
+    const { t } = this.props;
     var form = this.renderForm();
     var inviteIntro = this.renderInviteIntroduction();
+
+    var CookieText = t('YourLoops uses cookies to enhance the user experience. Your can check the <Privacy Notice and Terms of Use');
+    var AcceptText = t('Accept');
 
     return (
       <div className="login">
@@ -86,6 +92,17 @@ export let Login = translate()(React.createClass({
             <div className="login-simpleform">{form}</div>
           </div>
         </div>
+        <CookieConsent
+          location="bottom"
+          buttonText={AcceptText}
+          cookieName="CookieConsent"
+          disableStyles={true}
+          containerClasses="login-cookieConsent-container"
+          contentClasses="login-cookieConsent-content"
+          buttonClasses="simple-form-submit btn btn-primary js-form-submit"
+          expires={365}>
+          {CookieText}
+        </CookieConsent>      
       </div>
     );
   },
