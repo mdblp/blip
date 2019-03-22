@@ -31,7 +31,7 @@ import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 
-import CookieConsent from "react-cookie-consent";
+import CookieConsent from 'react-cookie-consent';
 
 export let Login = translate()(React.createClass({
   propTypes: {
