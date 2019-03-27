@@ -79,7 +79,7 @@ export let Login = translate()(React.createClass({
     var cookieText = (
       <Trans i18nKey="html.cookie-content">
         <div>
-          Please consult our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/data-privacy.pdf" className="link-cookieConsent" target="_blank">Data Privacy</a> and our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/terms.pdf" className="link-cookieConsent" target="_blank">Terms of Use</a>
+          Please consult our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/data-privacy.pdf" className="link-cookieConsent" target="_blank" rel="noreferrer noopener">Data Privacy</a> and our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/terms.pdf" className="link-cookieConsent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
         </div>
       </Trans>
     );
@@ -108,7 +108,7 @@ export let Login = translate()(React.createClass({
           buttonClasses="simple-form-submit btn btn-primary js-form-submit"
           expires={365}>
           {cookieText}
-        </CookieConsent>      
+        </CookieConsent>
       </div>
     );
   },
