@@ -223,6 +223,7 @@
   "html.basics-no-uploaded-data": "<0>La vue de base affiche un résumé des récentes activités de votre système, mais il semblerait que votre système n'a pas encore remonté de données. </0><1>Pour visualiser la vue de base, <1>Assurez-vous que votre système est actif</1>. </1><2>Si vous venez de l'activer, essayer de <1>rafraîchir la page</1>.</2>",
   "html.browser-warning-download-text": "Ou téléchargez Chrome <1>ici</1>.",
   "html.browser-warning-text": "<0>Copier - coller </0><1></1><2>dans chrome.</2>",
+  "html.cookie-content": "<0>Merci de consulter notre <1>avis de confidentialité</1> et nos <3>conditions d'utilisations</3></0>",
   "html.donate-form-explainer": " Vos données vous appartiennent.",
   "html.emailverification-instructions": "<0> Conserver vos données privées et sécurisées est important pour nous ! </0><1><0>S'il vous plait, cliquez sur le lien dans l'email que nous venons juste de vous envoyer à <1></1><2><0>{{sent}}</0></2><3></3> pour vérifier et activer votre compte.</0></1>",
   "html.patient-delete-account": "Si vous êtes certain de vouloir supprimer votre compte, <1>envoyez un email</1> à support@diabeloop.fr et nous prendrons soin de le faire pour vous. Votre compte YourLoops est étroitement couplé à votre système Diabeloop. Il n'est pas recommandé de supprimer son compte YourLoops pour pouvoir profiter pleinement du système Diabeloop.",
@@ -547,6 +548,5 @@
   "You may have changed pumps recently - perhaps because you had to have your pump replaced due to malfuction. As a result of how {{source}} reports the data, we can't be 100% certain of your basal rate here.": "",
   "You want to manage your diabetes data. You are caring for or supporting someone with diabetes.": "Vous souhaitez gérer les données de votre système Diabeloop. Vous soignez ou soutenez une personne avec un diabète",
   "You've been invited to Tidepool.": "Vous avez reçu une invitation à YourLoops.",
-  "Your password was changed successfully. You can now log in with your new password.": "Votre mot de passé a été modifié avec succès. Vous pouvez vous connecter avec ce nouveau mot de passe.",
-  "YourLoops uses cookies to enhance the user experience. Put there a link to the CGU and Data privacy": "blablablab en français" 
+  "Your password was changed successfully. You can now log in with your new password.": "Votre mot de passé a été modifié avec succès. Vous pouvez vous connecter avec ce nouveau mot de passe."
 }

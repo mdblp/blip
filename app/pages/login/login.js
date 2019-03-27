@@ -76,8 +76,14 @@ export let Login = translate()(React.createClass({
     var form = this.renderForm();
     var inviteIntro = this.renderInviteIntroduction();
 
-    var CookieText = t('YourLoops uses cookies to enhance the user experience. Your can check the <Privacy Notice and Terms of Use');
-    var AcceptText = t('Accept');
+    var cookieText = (
+      <Trans i18nKey="html.cookie-content">
+        <div>
+          Please consult our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/data-privacy.pdf" className="link-cookieConsent" target="_blank">Data Privacy</a> and our <a href="https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/terms.pdf" className="link-cookieConsent" target="_blank">Terms of Use</a>
+        </div>
+      </Trans>
+    );
+    var acceptText = t('Accept');
 
     return (
       <div className="login">
@@ -94,14 +100,14 @@ export let Login = translate()(React.createClass({
         </div>
         <CookieConsent
           location="bottom"
-          buttonText={AcceptText}
+          buttonText={acceptText}
           cookieName="CookieConsent"
           disableStyles={true}
           containerClasses="login-cookieConsent-container"
           contentClasses="login-cookieConsent-content"
           buttonClasses="simple-form-submit btn btn-primary js-form-submit"
           expires={365}>
-          {CookieText}
+          {cookieText}
         </CookieConsent>      
       </div>
     );
