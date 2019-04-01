@@ -32,6 +32,9 @@ import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 
 import CookieConsent from 'react-cookie-consent';
+import ScriptTag from 'react-script-tag';
+
+import Config from '../../config'
 
 export let Login = translate()(React.createClass({
   propTypes: {
@@ -86,7 +89,8 @@ export let Login = translate()(React.createClass({
     var acceptText = t('Accept');
 
     return (
-      <div className="login">
+      <div>
+        <ScriptTag type="text/javascript" id="ze-snippet" src={Config.HELP_LINK} />
         <LoginNav
           page="login"
           hideLinks={Boolean(this.props.seedEmail)}
