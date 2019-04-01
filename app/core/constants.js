@@ -38,12 +38,12 @@ export const CONFIG = {
     privacyText: t('Privacy Policy')
   },
   'diabeloop': {
-    name: 'Diabeloop',
+    name: 'YourLoops',
     support: 'http://www.diabeloop.fr/faq.php',
     legal: 'http://www.diabeloop.fr/mentions-legales.php',
-    terms: 'add link',
+    terms: 'https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/terms.pdf',
     termsText: t('Diabeloop Applications Terms of Use'),
-    privacy: 'add link',
+    privacy: 'https://s3-eu-west-1.amazonaws.com/com.diabeloop.public-assets/data-privacy.pdf',
     privacyText: t('Privacy Policy')
   }
 };
