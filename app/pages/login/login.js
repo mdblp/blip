@@ -32,7 +32,6 @@ import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 
 import CookieConsent from 'react-cookie-consent';
-import ScriptTag from 'react-script-tag';
 
 import Config from '../../config'
 
@@ -74,6 +73,18 @@ export let Login = translate()(React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    if (this.props.trackMetric) {
+      this.props.trackMetric('User Reached login page');
+    }
+
+    const script = document.createElement("script")
+    script.type = "text/javascript";
+    // limit the search YourLoops category until yoou are logged on
+    script.text = "window.zESettings = { webWidget: { helpCenter: { filter: { category: '360001386093' } } } };"; 
+    document.body.appendChild(script)
+  },
+
   render: function() {
     const { t } = this.props;
     var form = this.renderForm();
@@ -89,8 +100,7 @@ export let Login = translate()(React.createClass({
     var acceptText = t('Accept');
 
     return (
-      <div>
-        <ScriptTag type="text/javascript" id="ze-snippet" src={Config.HELP_LINK} />
+      <div>        
         <LoginNav
           page="login"
           hideLinks={Boolean(this.props.seedEmail)}
