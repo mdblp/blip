@@ -145,12 +145,12 @@ export class AppComponent extends React.Component {
     let scripts = [
       {
         src: Config.HELP_LINK,
-        id: "ze-snippet"
+        id: 'ze-snippet'
       }
     ]
     //Append the script element on each iteration
     scripts.map(item => {
-      const script = document.createElement("script")
+      const script = document.createElement('script')
       script.src = item.src
       script.id = item.id
       script.async = true

@@ -79,9 +79,9 @@ export let Login = translate()(React.createClass({
     }
 
     const script = document.createElement("script")
-    script.type = "text/javascript";
+    script.type = 'text/javascript';
     // limit the search YourLoops category until yoou are logged on
-    script.text = "window.zESettings = { webWidget: { helpCenter: { filter: { category: '360001386093' } } } };"; 
+    script.text = 'window.zESettings = { webWidget: { helpCenter: { filter: { category: \'360001386093\' } } } };'; 
     document.body.appendChild(script)
   },
 
