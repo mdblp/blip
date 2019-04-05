@@ -140,23 +140,23 @@ export class AppComponent extends React.Component {
   }
 
   componentDidMount() {
-    console.log(Config);
-    //An array of assets
-    let scripts = [
-      {
-        src: Config.HELP_LINK,
-        id: 'ze-snippet'
-      }
-    ]
-    //Append the script element on each iteration
-    scripts.map(item => {
-      const script = document.createElement('script')
-      script.src = item.src
-      script.id = item.id
-      script.async = true
-      document.body.appendChild(script)
-    })
-
+    if (Config.HELP_LINK != null) {
+      //An array of assets
+      let scripts = [
+        {
+          src: Config.HELP_LINK,
+          id: 'ze-snippet'
+        }
+      ]
+      //Append the script element on each iteration
+      scripts.map(item => {
+        const script = document.createElement('script')
+        script.src = item.src
+        script.id = item.id
+        script.async = true
+        document.body.appendChild(script)
+      })
+    }
   }
 
 
@@ -214,17 +214,17 @@ export class AppComponent extends React.Component {
         this.props.hideBanner('dexcom');
       }
     }
-    if (this.props.authenticated){
+    if (Config.HELP_LINK != null && this.props.authenticated) {
       let name = this.props.user.profile.fullName;
       console.log(this.props.user);
       let email = this.props.user.emails[0];
 
       const script = document.createElement('script')
       script.type = 'text/javascript';
-      script.text = 'zE(\'webWidget\', \'prefill\', { name: { value: \'' 
-        + name 
-        + '\', readOnly: true }, email: { value: \'' 
-        + email 
+      script.text = 'zE(\'webWidget\', \'prefill\', { name: { value: \''
+        + name
+        + '\', readOnly: true }, email: { value: \''
+        + email
         + '\', readOnly: true } });'
       document.body.appendChild(script)
     }
@@ -282,7 +282,7 @@ export class AppComponent extends React.Component {
               onLogout={this.props.onLogout}
               trackMetric={this.props.context.trackMetric}
               permsOfLoggedInUser={this.props.permsOfLoggedInUser}
-              ref="navbar"/>
+              ref="navbar" />
           </div>
         );
       }
