@@ -140,7 +140,7 @@ export class AppComponent extends React.Component {
   }
 
   componentDidMount() {
-    if (Config.HELP_LINK != null) {
+    if (Config.HELP_LINK !== null) {
       //An array of assets
       let scripts = [
         {
@@ -214,7 +214,7 @@ export class AppComponent extends React.Component {
         this.props.hideBanner('dexcom');
       }
     }
-    if (Config.HELP_LINK != null && this.props.authenticated) {
+    if (Config.HELP_LINK !== null && this.props.authenticated) {
       let name = this.props.user.profile.fullName;
       console.log(this.props.user);
       let email = this.props.user.emails[0];
