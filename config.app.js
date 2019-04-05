@@ -59,6 +59,7 @@ module.exports = {
   ALLOW_PATIENT_CHANGE_EMAIL: booleanFromText(__ALLOW_PATIENT_CHANGE_EMAIL__, true),
   ALLOW_PATIENT_CHANGE_PASSWORD: booleanFromText(__ALLOW_PATIENT_CHANGE_PASSWORD__, true),
   HELP_LINK: __HELP_LINK__ || null,
+  ASSETS_URL: __ASSETS_URL__ || null,
   HIDE_DONATE: booleanFromText(__HIDE_DONATE__ , false),
   HIDE_DEXCOM_BANNER: booleanFromText(__HIDE_DEXCOM_BANNER__ , false),
   HIDE_UPLOAD_LINK: booleanFromText(__HIDE_UPLOAD_LINK__, false),

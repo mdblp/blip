@@ -7,6 +7,7 @@
  - Add HELP_LINK variable to configure external web widget for online help in the application. 
     - widget gives access to helpCenter
     - once authenticated, the widget form is pre-filled with user name and email
+ - Add ASSETS_URL variable to reference terms of use and data privacy documents.
 
 
 # [1.12.5-dblp.0.2.2] - 2019-03-19 
