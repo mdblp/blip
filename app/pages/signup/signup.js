@@ -239,7 +239,9 @@ export let Signup = translate()(React.createClass({
 
     return (
       <div className="signup-formTypeSwitch">
+      {__BRANDING__ !== 'diabeloop' &&
         {content}
+      }
       </div>
     );
   },

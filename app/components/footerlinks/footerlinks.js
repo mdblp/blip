@@ -67,6 +67,7 @@ const FooterLinks = (props) => {
         >Get Mobile App</a>
       </div>
     }
+    {__BRANDING__ !== 'diabeloop' ? (
       <div className='footer-link large-format-only'>
         <a
           href={urlSupport}
@@ -74,6 +75,16 @@ const FooterLinks = (props) => {
           onClick={metricFnMkr('Support')}
           target="_blank">Get Support</a>
       </div>
+      ): (
+      <div className='footer-link large-format-only'>
+        <a
+          href='https://diabeloop.com'
+          id='diabeloop'
+          onClick={metricFnMkr('Diabeloop')}
+          target="_blank">Diabeloop</a>
+      </div>
+      )
+    }
       <div className='footer-link large-format-only'>
         <a
           href={urlLegal}
@@ -87,7 +98,7 @@ const FooterLinks = (props) => {
             href='https://tidepool.org'
             id='jdrf'
             target='_blank'>
-            Made possible by <b>Tidepool</b>
+            Using Tidepool
           </a>
         </div>
       ):(
