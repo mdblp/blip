@@ -236,12 +236,13 @@ export let Signup = translate()(React.createClass({
         );
         break;
     }
+    if (__BRANDING__ === 'diabeloop') {
+      content = '';
+    }
 
     return (
       <div className="signup-formTypeSwitch">
-      {__BRANDING__ !== 'diabeloop' &&
         {content}
-      }
       </div>
     );
   },
