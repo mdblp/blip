@@ -1,5 +1,10 @@
 # Blip 
 
+## [Unreleased]
+
+### Changed
+- PT-169: Review look & feel for PDF generated - review translations
+
 ## [0.3.0] - 2019-04-08
 Release candidate for pre-launch
 
