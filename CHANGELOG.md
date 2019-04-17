@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2019-04-17
+
 ### Changed
 - PT-169: Review look & feel for PDF generated - review translations
 
