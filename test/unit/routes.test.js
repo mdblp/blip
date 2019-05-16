@@ -38,7 +38,7 @@ describe('routes', () => {
 
       requiresChrome(utils, next)(nextState, replace, cb);
 
-      expect(utils.isChrome.callCount).to.equal(1);
+      expect(utils.isAcceptedBrowser.callCount).to.equal(1);
       expect(replace.callCount).to.equal(0);
       expect(cb.callCount).to.equal(0);
       expect(next.withArgs(nextState, replace, cb).callCount).to.equal(1);
@@ -56,7 +56,7 @@ describe('routes', () => {
 
       requiresChrome(utils, next)(nextState, replace, cb);
 
-      expect(utils.isChrome.callCount).to.equal(1);
+      expect(utils.isAcceptedBrowser.callCount).to.equal(1);
       expect(replace.withArgs('/browser-warning').callCount).to.equal(1);
       expect(cb.callCount).to.equal(1);
       expect(next.callCount).to.equal(0);
