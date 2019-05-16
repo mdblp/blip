@@ -156,7 +156,7 @@ export let Login = translate()(React.createClass({
       return (
         <div className='login-browserWarning'>
           <br></br>
-          <p>{t('For the full experience it is best to use Google Chrome. With any other browsers you may not have the best possible reading experience.')}</p>
+          <p>{t('BrowserWarning')}</p>
         </div>
       );
     }
