@@ -26,9 +26,9 @@ var expect = chai.expect;
 
 describe('routes', () => {
   describe('requiresChrome', () => {
-    it('should not redirect and call next when isChrome is true', () => {
+    it('should not redirect and call next when isAcceptedBrowser is true', () => {
       let utils = {
-        isChrome: sinon.stub().returns(true)
+        isAcceptedBrowser: sinon.stub().returns(true)
       };
 
       let next = sinon.stub();
@@ -44,9 +44,9 @@ describe('routes', () => {
       expect(next.withArgs(nextState, replace, cb).callCount).to.equal(1);
     });
 
-    it('should redirect and call cb when isChrome is false', () => {
+    it('should redirect and call cb when isAcceptedBrowser is false', () => {
       let utils = {
-        isChrome: sinon.stub().returns(false)
+        isAcceptedBrowser: sinon.stub().returns(false)
       };
 
       let next = sinon.stub();
