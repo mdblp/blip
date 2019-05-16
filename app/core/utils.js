@@ -71,12 +71,18 @@ utils.concat = () => {
   return Array.prototype.concat.apply([], args);
 };
 
-utils.isChrome = () => {
+utils.isAcceptedBrowser = () => {
   var userAgent = navigator.userAgent.toLowerCase();
   return (userAgent.indexOf('chrome') > -1 
     || userAgent.indexOf('firefox') > -1 
     || userAgent.indexOf('crios') > -1 
     || userAgent.indexOf('edge') > -1);
+};
+
+utils.isChrome = () => {
+  var userAgent = navigator.userAgent.toLowerCase();
+  return (userAgent.indexOf('chrome') > -1 
+    || userAgent.indexOf('crios') > -1);
 };
 
 utils.isMobile = () => {
