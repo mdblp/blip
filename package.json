@@ -61,6 +61,7 @@
     "lodash": "4.17.10",
     "mini-css-extract-plugin": "0.5.0",
     "moment": "2.22.2",
+    "moment-timezone": "0.5.21",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "postcss-loader": "3.0.0",
     "qs": "6.5.2",
