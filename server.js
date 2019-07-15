@@ -30,7 +30,7 @@ app.use(helmet());
 app.use(nonceMiddleware, helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'none'"],
-    baseUri: [],
+    baseUri: ["'none'"],
     scriptSrc: [
       "'self'",
       "'strict-dynamic'",
@@ -63,6 +63,7 @@ app.use(nonceMiddleware, helmet.contentSecurityPolicy({
       process.env.API_HOST,
       'https://api.github.com/repos/tidepool-org/chrome-uploader/releases',
       'https://static.zdassets.com',
+      'https://ekr.zdassets.com',
       'https://diabeloop.zendesk.com',
       'https://d3hb14vkzrxvla.cloudfront.net',
       'wss\://*.pusher.com',
