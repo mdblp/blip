@@ -31,7 +31,7 @@
     "@babel/polyfill": "7.0.0",
     "@babel/preset-env": "7.1.0",
     "@babel/preset-react": "7.0.0",
-    "@tidepool/viz": "mdblp/viz#tidepool/integrate-v1.3",
+    "@tidepool/viz": "mdblp/viz#feature/parameters-history",
     "async": "2.6.1",
     "autoprefixer": "9.1.5",
     "babel-core": "7.0.0-bridge.0",
