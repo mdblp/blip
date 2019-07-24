@@ -13,6 +13,8 @@ import { mount } from 'enzyme';
 import { PatientNew } from '../../../app/pages/patientnew';
 import { mapStateToProps } from '../../../app/pages/patientnew';
 
+import i18n from 'i18next';
+
 var assert = chai.assert;
 var expect = chai.expect;
 
@@ -71,7 +73,7 @@ describe('PatientNew', function () {
 
     let formValues = {
       birthday: {
-        day: '1',
+        day: '20',
         month: '0',
         year: '1990'
       },
@@ -92,6 +94,7 @@ describe('PatientNew', function () {
     });
 
     it('should call onSubmit with valid form values', function(){
+
       wrapper.instance().getWrappedInstance().handleSubmit(formValues);
       expect(props.onSubmit.callCount).to.equal(1);
 
@@ -99,7 +102,7 @@ describe('PatientNew', function () {
         profile: {
           fullName: 'John Doh',
           patient: {
-            birthday: '1990-01-01',
+            birthday: '1990-01-20',
             diagnosisDate: '1995-02-02',
             diagnosisType: 'type1',
           },
@@ -107,6 +110,42 @@ describe('PatientNew', function () {
       });
       expect(props.onUpdateDataDonationAccounts.callCount).to.equal(0);
       expect(props.trackMetric.callCount).to.equal(0);
+    });
+    /* Regression test case to cover bug PT-304:
+        When a patient want to create his/her profile on Blip
+        If the local is 'fr' then the date format was incorrectly parsed
+    */
+    describe("When local=fr", () => {
+      before((done)=> {
+        i18n.off('languageChanged');
+        i18n.changeLanguage('fr', (err, t) => {
+          if(err) console.log(err);
+          done();
+        });
+      });
+      after((done) => {
+        i18n.changeLanguage('en', (err, t) => {
+          if(err) console.log(err);
+          done();
+        });
+      });
+      it('should call onSubmit with valid form values when local=fr', function(){
+          wrapper.instance().getWrappedInstance().handleSubmit(formValues);
+          expect(props.onSubmit.callCount).to.equal(1);
+  
+          sinon.assert.calledWith(props.onSubmit, {
+            profile: {
+              fullName: 'John Doh',
+              patient: {
+                birthday: '1990-01-20',
+                diagnosisDate: '1995-02-02',
+                diagnosisType: 'type1',
+              },
+            },
+          });
+          expect(props.onUpdateDataDonationAccounts.callCount).to.equal(0);
+          expect(props.trackMetric.callCount).to.equal(0); 
+        });
     });
 
     it('should should not submit diagnosisType if left blank', function(){
@@ -119,7 +158,7 @@ describe('PatientNew', function () {
         profile: {
           fullName: 'John Doh',
           patient: {
-            birthday: '1990-01-01',
+            birthday: '1990-01-20',
             diagnosisDate: '1995-02-02',
           },
         },
