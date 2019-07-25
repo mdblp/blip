@@ -1,6 +1,9 @@
 /* global chai */
 /* global describe */
 /* global it */
+/* global before */
+/* global after */
+
 import * as validation from '../../../app/core/validation';
 import i18n from 'i18next';
 
@@ -269,7 +272,6 @@ describe('validation', () => {
 
     describe('Specific date format: FR', () => {
       before((done) => {
-        self.localStorage.lang = "fr";
         i18n.off('languageChanged');
         i18n.changeLanguage('fr', (err, t) => {
             if(err) console.log(err);

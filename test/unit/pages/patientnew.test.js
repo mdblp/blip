@@ -1,4 +1,6 @@
 /* global beforeEach */
+/* global before */
+/* global after */
 /* global chai */
 /* global describe */
 /* global sinon */
@@ -115,7 +117,7 @@ describe('PatientNew', function () {
         When a patient want to create his/her profile on Blip
         If the local is 'fr' then the date format was incorrectly parsed
     */
-    describe("When local=fr", () => {
+    describe('When local=fr', () => {
       before((done)=> {
         i18n.off('languageChanged');
         i18n.changeLanguage('fr', (err, t) => {
