@@ -1,12 +1,22 @@
 module.exports = function babelConfig(api) {
   const presets = [
-    '@babel/preset-env',
+    ["@babel/preset-env", {
+      modules: false,
+      debug: true,
+      useBuiltIns: false,
+      targets: {
+        chrome: "75",
+        edge: "44",
+        firefox: "68"
+      },
+    }],
     '@babel/preset-react',
     'babel-preset-react-app',
   ];
 
   const plugins = [
     '@babel/plugin-transform-modules-commonjs',
+    '@babel/plugin-proposal-class-properties'
   ];
 
   const env = api.env();
@@ -21,8 +31,7 @@ module.exports = function babelConfig(api) {
     plugins.unshift(
       ['babel-plugin-istanbul', {
         useInlineSourceMaps: false,
-      }],
-      'babel-plugin-rewire',
+      }]
     );
   }
 
