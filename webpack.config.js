@@ -112,7 +112,7 @@ const plugins = [
   // individually.
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': isDev ? JSON.stringify('development') : JSON.stringify('production'),
+      'NODE_ENV': isDev || isTest ? JSON.stringify('development') : JSON.stringify('production'),
     },
     __UPLOAD_API__: JSON.stringify(process.env.UPLOAD_API || null),
     __API_HOST__: JSON.stringify(process.env.API_HOST || null),
@@ -142,7 +142,7 @@ const plugins = [
     {
       from: 'static',
       transform: (content, path) => {
-        if (isDev) {
+        if (isDev || isTest) {
          return content;
         }
 
@@ -213,7 +213,7 @@ module.exports = {
   },
   devtool: process.env.WEBPACK_DEVTOOL || 'eval-source-map',
   entry,
-  mode: isDev ? 'development' : 'production',
+  mode: isDev || isTest ? 'development' : 'production',
   module: {
     rules: [
       ...babelLoaderConfiguration,
