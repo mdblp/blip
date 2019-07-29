@@ -1,10 +1,13 @@
 # Blip 
 
-## [0.5.0] - 2019-07-27
+## [0.5.0] - 2019-07-29
 
 ### Added
 - PT-376 Integrate latest change from [Tidepool 1.20.2](https://github.com/tidepool-org/blip/releases/tag/v1.20.2)
 - PT-513 Display history of parameters change in patient settings page.
+
+### Fixed
+- PT-304 Validation of the patient diagnostic date and date of birth uses the wrong format
 
 ## [0.4.0] - 2019-05-15
 

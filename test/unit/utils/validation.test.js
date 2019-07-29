@@ -1,8 +1,11 @@
 /* global chai */
 /* global describe */
 /* global it */
+/* global before */
+/* global after */
 
 import * as validation from '../../../app/core/validation';
+import i18n from 'i18next';
 
 var expect = chai.expect;
 
@@ -10,7 +13,7 @@ describe('validation', () => {
 
   describe('valid', () => {
     it('should be a function', () => {
-      expect(validation.valid).to.be.function;
+      expect(validation.valid).to.be.a('function');
     });
 
     it('should return valid object', () => {
@@ -22,7 +25,7 @@ describe('validation', () => {
 
   describe('invalid', () => {
     it('should be a function', () => {
-      expect(validation.invalid).to.be.function;
+      expect(validation.invalid).to.be.a('function');
     });
 
     it('should return invalid object', () => {
@@ -35,12 +38,12 @@ describe('validation', () => {
 
   describe('typeValidators', () => {
     it('should be a object', () => {
-      expect(validation.typeValidators).to.be.an.object;
+      expect(validation.typeValidators).to.be.an('object');
     });
 
     describe('name', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.name).to.be.function;
+        expect(validation.typeValidators.name).to.be.a('function');
       });
 
       it('should return invalid object when fieldValue is null', () => {
@@ -81,7 +84,7 @@ describe('validation', () => {
 
     describe('about', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.about).to.be.function;
+        expect(validation.typeValidators.about).to.be.a('function');
       });
 
       it('should return a valid object when fieldValue is empty', () => {
@@ -109,7 +112,7 @@ describe('validation', () => {
 
     describe('email', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.email).to.be.function;
+        expect(validation.typeValidators.email).to.be.a('function');
       });
 
       it('should return invalid object when fieldValue is null', () => {
@@ -178,7 +181,7 @@ describe('validation', () => {
 
     describe('password', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.password).to.be.function;
+        expect(validation.typeValidators.password).to.be.a('function');
       });
 
       it('should return invalid object when fieldValue is null', () => {
@@ -242,7 +245,7 @@ describe('validation', () => {
 
     describe('confirmPassword', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.confirmPassword).to.be.function;
+        expect(validation.typeValidators.confirmPassword).to.be.a('function');
       });
 
       it('should return invalid object when prerequisite password is empty', () => {
@@ -267,9 +270,35 @@ describe('validation', () => {
       });
     });
 
+    describe('Specific date format: FR', () => {
+      before((done) => {
+        i18n.off('languageChanged');
+        i18n.changeLanguage('fr', (err, t) => {
+            if(err) console.log(err);
+            done();
+          });
+      });
+      it('should return valid object when fieldValue and prerequisite birthday are valid and in order', () => {
+        var diagnosis = { day: '21', month: '2', year: '2004' };
+        var birthday = { day: '22', month: '3', year: '1984' };
+        var response = validation.typeValidators.diagnosisDate('diagnosis date', diagnosis, { birthday : birthday });
+        expect(response.message).to.be.null;
+        expect(response.valid).to.be.true;       
+      });
+      after((done) => {
+        i18n.changeLanguage('en', (err, t) => {
+          if(err) console.log(err);
+          done();
+        });
+
+      });
+
+
+    });
+
     describe('date', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.date).to.be.function;
+        expect(validation.typeValidators.date).to.be.a('function');
       });
 
       it('should return invalid object when fieldValue is null', () => {
@@ -350,6 +379,7 @@ describe('validation', () => {
       });
 
       it('should return valid object when fieldValue is valid date', () => {
+        
         var birthday = { day: '20', month: '2', year: '2002' };
         var response = validation.typeValidators.date('birthday', birthday);
 
@@ -360,7 +390,7 @@ describe('validation', () => {
 
     describe('diagnosisDate', () => {
       it('should be a function', () => {
-        expect(validation.typeValidators.diagnosisDate).to.be.function;
+        expect(validation.typeValidators.diagnosisDate).to.be.a('function');
       });
 
       it('should return invalid object when fieldValue is null', () => {
@@ -479,7 +509,7 @@ describe('validation', () => {
 
   describe('validateField', () => {
     it('should be a function', () => {
-      expect(validation.validateField).to.be.function;
+      expect(validation.validateField).to.be.a('function');
     });
 
     it('should return valid if not validation for this field', () => {
@@ -527,11 +557,11 @@ describe('validation', () => {
 
   describe('validateForm', () => {
     it('should be a function', () => {
-      expect(validation.validateForm).to.be.function;
+      expect(validation.validateForm).to.be.a('function');
     });
 
     it('should return empty validation object when no form object passed in', () => {
-      expect(validation.validateForm()).to.be.an.object;
+      expect(validation.validateForm()).to.be.an('object');
       expect(Object.keys(validation.validateForm()).length).to.equal(0);
     });
 
@@ -542,7 +572,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(0);
     });
 
@@ -553,7 +583,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(1);
       expect(result.fullName).to.equal('Full name is required.');
     });
@@ -568,7 +598,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(2);
       expect(result.fullName).to.equal('Full name is required.');
       expect(result.diagnosisDate).to.equal('Hmm, diagnosis date usually comes after birthday.');
