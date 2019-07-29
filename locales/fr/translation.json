@@ -1,5 +1,5 @@
 {
-  " I am 12 years old or younger.": "J'ai 12 ans ans ou moins",
+  " I am 12 years old or younger.": "J'ai 12 ans ou moins",
   " I am 18 years old or older.": "J'ai plus de 18 ans",
   " I am between 13 and 17 years old. You'll need to have a parent or guardian agree to the terms below.": "J'ai entre 13 et 17 ans. Vous avez besoin d'avoir un parent ou un tuteur pour accepter les conditions ci-dessous.",
   " reports the data.": ".",
@@ -350,7 +350,7 @@
   "Manual": "Manuel",
   "Manufacturer": "",
   "March": "Mars",
-  "May": "May",
+  "May": "Mai",
   "Median": "Valeur Médiane",
   "Medical Assistant": "Assistant médical",
   "Meter": "Mesure",
