@@ -7,7 +7,7 @@
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-import { PatientInfo } from '../../../../app/pages/patient/patientinfo';
+import PatientInfo from '../../../../app/pages/patient/patientinfo';
 
 import { mount } from 'enzyme';
 
@@ -57,6 +57,11 @@ describe('PatientInfo', function () {
         permsOfLoggedInUser: {},
         trackMetric: sinon.stub(),
       };
+      var patientInfoElem = React.createElement(PatientInfo, props);
+      var elem = TestUtils.renderIntoDocument(patientInfoElem);
+
+      expect(elem).to.be.ok;
+      expect(console.error.callCount).to.equal(0);
     });
   });
 
