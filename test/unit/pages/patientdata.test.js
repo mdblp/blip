@@ -2205,14 +2205,14 @@ describe('PatientData', function () {
         trackMetric: sinon.stub(),
       });
 
-      BaseObject = () => ({
-        props,
-        refs: {
+      BaseObject = function() {
+        this.props = props;
+        this.refs = {
           tideline: {
             getWrappedInstance: () => ({createMessageThread: sinon.stub()})
           },
-        },
-      });
+        }
+      };
     });
 
     it('should dispatch the message creation action', () => {
@@ -2238,14 +2238,14 @@ describe('PatientData', function () {
         trackMetric: sinon.stub(),
       });
 
-      BaseObject = () => ({
-        props,
-        refs: {
+      BaseObject = function() {
+        this.props = props;
+        this.refs = {
           tideline: {
             getWrappedInstance: () => ({editMessageThread: sinon.stub()}),
           },
-        },
-      });
+        }
+      };
     });
 
     it('should dispatch the message creation action', () => {
