@@ -35,7 +35,7 @@ describe('validation', () => {
 
   describe('typeValidators', () => {
     it('should be a object', () => {
-      expect(validation.typeValidators).to.be.an.object;
+      expect(validation.typeValidators).to.be.an('object');
     });
 
     describe('name', () => {
@@ -531,7 +531,7 @@ describe('validation', () => {
     });
 
     it('should return empty validation object when no form object passed in', () => {
-      expect(validation.validateForm()).to.be.an.object;
+      expect(validation.validateForm()).to.be.an('object');
       expect(Object.keys(validation.validateForm()).length).to.equal(0);
     });
 
@@ -542,7 +542,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(0);
     });
 
@@ -553,7 +553,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(1);
       expect(result.fullName).to.equal('Full name is required.');
     });
@@ -568,7 +568,7 @@ describe('validation', () => {
       ];
 
       var result = validation.validateForm(formEntries);
-      expect(result).to.be.an.object;
+      expect(result).to.be.an('object');
       expect(Object.keys(result).length).to.equal(2);
       expect(result.fullName).to.equal('Full name is required.');
       expect(result.diagnosisDate).to.equal('Hmm, diagnosis date usually comes after birthday.');
