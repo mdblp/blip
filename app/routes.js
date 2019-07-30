@@ -143,6 +143,30 @@ export const requireNoAuth = (api) => (nextState, replace, cb) => {
 
 /**
  * This function redirects any requests that land on pages that should only be
+ * visible when logged out (if the user is logged in) and allowed as per a boolean
+ *
+ * @param  {Object} nextState
+ * @param  {Function} replace
+ */
+export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace, cb) => {
+  let allowed = config.ALLOW_SIGNUP_PATIENT;
+
+  if (api.user.isAuthenticated())
+    // If user is authenticated, there is no way he can go to signup
+    replace('/patients');
+  else {
+    // if user is not authenticated, he needs to be allowed to create personal account per the configuration
+    if (!allowed)
+      replace('/signup');
+  }
+
+  if (!!cb) {
+    cb();
+  }
+};
+
+/**
+ * This function redirects any requests that land on pages that should only be
  * visible when the user hasn't yet verified their sign-up e-mail
  * if the user already has completed the e-mail verification
  *
@@ -287,7 +311,7 @@ export const getRoutes = (appContext, store) => {
       <Route path='login' component={Login} onEnter={requireNoAuth(api)} />
       <Route path='terms' components={Terms} />
       <Route path='signup' component={Signup} onEnter={requireNoAuth(api)} />
-      <Route path='signup/personal' component={Signup} onEnter={requireNoAuth(api)} />
+      <Route path='signup/personal' component={Signup} onEnter={requireNoAuthAndPatientSignupAllowed(api)} />
       <Route path='signup/clinician' component={Signup} onEnter={requireNoAuth(api)} />
       <Route path='clinician-details' component={ClinicianDetails} onEnter={requireAuth(api, store)} />
       <Route path='email-verification' component={EmailVerification} onEnter={requireNotVerified(api, store)} />
