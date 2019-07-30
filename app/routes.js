@@ -150,12 +150,24 @@ export const requireNoAuth = (api) => (nextState, replace, cb) => {
  * @param  {Function} replace
  */
 export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace, cb) => {
+<<<<<<< HEAD
   if (api.user.isAuthenticated()) {
     // If user is authenticated, there is no way he can go to signup
     replace('/patients');
    } else if (!config.ALLOW_SIGNUP_PATIENT) {
     // if user is not authenticated, he needs to be allowed to create personal account per the configuration
     replace('/signup');
+=======
+  let allowed = config.ALLOW_SIGNUP_PATIENT;
+
+  if (api.user.isAuthenticated())
+    // If user is authenticated, there is no way he can go to signup
+    replace('/patients');
+  else {
+    // if user is not authenticated, he needs to be allowed to create personal account per the configuration
+    if (!allowed)
+      replace('/signup');
+>>>>>>> PT-532 add new route blocker
   }
 
   if (!!cb) {
