@@ -2,6 +2,7 @@
 /* global sinon */
 /* global describe */
 /* global it */
+/* global before */
 
 import {
   requiresChrome,
@@ -1018,7 +1019,10 @@ describe('routes', () => {
 
   describe('requireNoAuthAndAllowedPatientSignup', () => {
     describe('Configuration allowing signup of patient', () => {
-      config.ALLOWED_PATIENT_SIGNUP = true;
+
+      before(() => {
+        config.ALLOW_SIGNUP_PATIENT = true;
+      });
 
       it('should update route to /patients if user is authenticated', () => {
         let api = {
@@ -1054,7 +1058,11 @@ describe('routes', () => {
     });
 
     describe('Configuration NOT allowing signup of patient (only clinician)', () => {
-      config.ALLOWED_PATIENT_SIGNUP = false;
+
+      before(() => {
+        config.ALLOW_SIGNUP_PATIENT = false;
+      });
+
       it('should update route to /patients if user is authenticated', () => {
         let api = {
           user: {
@@ -1070,7 +1078,6 @@ describe('routes', () => {
 
         expect(replace.withArgs('/patients').callCount).to.equal(1);
       });
-
 
       it('should update route to /signup if user is not authenticated', () => {
         let api = {
