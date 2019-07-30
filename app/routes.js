@@ -153,7 +153,7 @@ export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace
   if (api.user.isAuthenticated()) {
     // If user is authenticated, there is no way he can go to signup
     replace('/patients');
-   } else if (!config.ALLOW_SIGNUP_PATIENT) {
+  } else if (!config.ALLOW_SIGNUP_PATIENT) {
     // if user is not authenticated, he needs to be allowed to create personal account per the configuration
     replace('/signup');
   }
