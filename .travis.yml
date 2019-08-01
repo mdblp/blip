@@ -2,6 +2,8 @@ sudo: false
 
 language: node_js
 
+dist: trusty
+
 node_js:
   - 10.15.3
   - node
@@ -42,7 +44,6 @@ services:
   - docker
 
 script:
-  - npm run lint
   - npm test
   - ./artifact.sh
 

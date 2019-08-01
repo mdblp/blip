@@ -9,6 +9,6 @@ TIME="$(($(date +%s)-TIME))"
 echo "npm install completed in ${TIME} seconds"
 
 # add configuration
-. ./config/env.docker.sh 
+. ./config/env.docker.sh
 
 npm run build

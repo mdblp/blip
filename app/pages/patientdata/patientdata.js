@@ -555,17 +555,17 @@ export let PatientData = translate()(React.createClass({
       }, this));
     }
 
-    const weeklyDateRange = _.get(data, 'weekly.dateRange');
-    if (weeklyDateRange) {
-      data.weekly.endpoints = [
-        getLocalizedCeiling(weeklyDateRange[0], state.timePrefs).toISOString(),
-        addDuration(getLocalizedCeiling(weeklyDateRange[1], state.timePrefs).toISOString(), 864e5),
+    const bgLogDateRange = _.get(data, 'bgLog.dateRange');
+    if (bgLogDateRange) {
+      data.bgLog.endpoints = [
+        getLocalizedCeiling(bgLogDateRange[0], state.timePrefs).toISOString(),
+        addDuration(getLocalizedCeiling(bgLogDateRange[1], state.timePrefs).toISOString(), 864e5),
       ];
 
-      this.dataUtil.endpoints = data.weekly.endpoints;
-      this.dataUtil.chartPrefs = this.state.chartPrefs['weekly'];
+      this.dataUtil.endpoints = data.bgLog.endpoints;
+      this.dataUtil.chartPrefs = this.state.chartPrefs['bgLog'];
 
-      data.weekly.stats = {
+      data.bgLog.stats = {
         [commonStats.averageGlucose]: getStat(commonStats.averageGlucose),
       };
     }
@@ -924,8 +924,9 @@ export let PatientData = translate()(React.createClass({
       var prefs = _.cloneDeep(this.state.chartPrefs);
       prefs.bolusRatio = params.dynamicCarbs ? 0.5 : 0.35;
       prefs.dynamicCarbs = params.dynamicCarbs;
+      prefs.animateStats = params.animateStats ? JSON.parse(params.animateStats) : true;
       this.setState({
-        chartPrefs: prefs
+        chartPrefs: prefs,
       });
     }
   },

@@ -306,6 +306,7 @@ class BgLog extends Component {
         title={''}
         onClickBasics={this.props.onSwitchToBasics}
         onClickOneDay={this.handleClickOneDay}
+        onClickBasics={this.props.onSwitchToBasics}
         onClickTrends={this.handleClickTrends}
         onClickSettings={this.props.onSwitchToSettings}
         onClickBgLog={this.handleClickBgLog}

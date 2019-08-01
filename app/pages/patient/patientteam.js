@@ -133,10 +133,6 @@ var MemberInviteForm = translate()(React.createClass({
       e.preventDefault();
     }
 
-    var self = this;
-    var email = self.refs.email.value;
-    var allowUpload = config.HIDE_UPLOAD_LINK ? false : self.refs.allowUpload.getWrappedInstance().getValue();
-
     var validateEmail = function(email) {
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
@@ -147,7 +143,7 @@ var MemberInviteForm = translate()(React.createClass({
       note: {}
     };
     var self = this;
-    var email = self.refs.email.value;
+    var email = _.get(self, 'refs.email.value', '').trim();
     var allowUpload;
 
     if (!validateEmail(email)) {
@@ -169,7 +165,7 @@ var MemberInviteForm = translate()(React.createClass({
       }
     }
 
-    self.setState({allowUpload: allowUpload});
+    self.setState({ allowUpload });
     self.props.onSubmit(email, permissions);
     self.props.trackMetric('Clicked Invite');
   }

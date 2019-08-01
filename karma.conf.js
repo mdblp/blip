@@ -13,19 +13,32 @@ testWebpackConf.mode = 'development';
 
 module.exports = function karmaConfig(config) {
   config.set({
+    autoWatch: true,
     browserNoActivityTimeout: 60000,
-    browsers: ['ChromiumHeadless'],
+    browsers: ['CustomChromeHeadless'],
     captureTimeout: 60000,
     client: {
       mocha: mochaConf,
     },
     colors: true,
+    concurrency: Infinity,
     coverageReporter: {
       dir: 'coverage/',
       reporters: [
         { type: 'html' },
         { type: 'text' },
       ],
+    },
+    customLaunchers: {
+      CustomChromeHeadless: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--headless',
+          '--disable-gpu',
+          '--no-sandbox',
+          '--remote-debugging-port=9222',
+        ],
+      },
     },
     files: [
       'loadtests.js',
