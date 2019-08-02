@@ -9,8 +9,6 @@ testWebpackConf.output = {
   filename: '[name]',
 };
 
-testWebpackConf.mode = 'development';
-
 module.exports = function karmaConfig(config) {
   config.set({
     autoWatch: true,

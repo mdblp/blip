@@ -2,7 +2,7 @@ module.exports = function babelConfig(api) {
   const presets = [
     ["@babel/preset-env", {
       modules: false,
-      debug: true,
+      debug: false,
       useBuiltIns: false,
       targets: {
         chrome: "75",

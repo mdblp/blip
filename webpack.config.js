@@ -1,13 +1,14 @@
 const path = require('path');
+const _ = require('lodash');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const uglifyJS = require('uglify-es');
+const Terser = require("terser");
 const fs = require('fs');
 
+const isProduction = (process.env.NODE_ENV === 'production');
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
 
@@ -15,7 +16,7 @@ const isTest = (process.env.NODE_ENV === 'test');
 // that do not start and *end* with an alpha character
 // but that will sometimes happen with the base64 hashes
 // so we leave them off in the test env
-const localIdentName = process.env.NODE_ENV === 'test'
+const localIdentName = isTest
   ? '[name]--[local]'
   : '[name]--[local]--[hash:base64:5]';
 
@@ -27,7 +28,9 @@ const styleLoaderConfiguration = {
       loader: 'css-loader',
       query: {
         importLoaders: 2,
-        localIdentName,
+        modules: {
+          localIdentName,
+        },
         sourceMap: isDev,
       },
     },
@@ -45,6 +48,12 @@ const styleLoaderConfiguration = {
       },
     },
   ],
+};
+
+const sourceMapLoader = {
+  test: /\.js$/,
+  use: ['source-map-loader'],
+  enforce: 'pre'
 };
 
 const babelLoaderConfiguration = [
@@ -135,23 +144,6 @@ const plugins = [
     __TEST__: isTest,
     __DEV_TOOLS__: (process.env.DEV_TOOLS != null) ? process.env.DEV_TOOLS : (isDev ? true : false) //eslint-disable-line eqeqeq
   }),
-  new MiniCssExtractPlugin({
-    filename: isDev ? 'style.css' : 'style.[contenthash].css',
-  }),
-  new CopyWebpackPlugin([
-    {
-      from: 'static',
-      transform: (content, path) => {
-        if (isDev || isTest) {
-         return content;
-        }
-
-        const code = fs.readFileSync(path, 'utf8');
-        const result = uglifyJS.minify(code);
-        return result.code;
-      }
-    }
-  ]),
   new HtmlWebpackPlugin({
     template: 'index.ejs',
     favicon: 'favicon.ico',
@@ -160,6 +152,9 @@ const plugins = [
 
 if (isDev) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
+}
+if (isProduction) {
+  plugins.push(new MiniCssExtractPlugin({ filename: 'style.[contenthash].css' }));
 }
 
 const entry = isDev
@@ -174,7 +169,6 @@ const entry = isDev
 const output = {
   filename: 'bundle.js',
   path: path.join(__dirname, '/dist'),
-  publicPath: isDev ? 'http://localhost:3000/' : '/',
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
 
@@ -186,22 +180,34 @@ const resolve = {
   ],
 };
 
-const minimizer = isTest || isDev ? undefined : [
-  new UglifyJsPlugin({
-    uglifyOptions: {
-      ie8: false,
-      output: { comments: false },
-      compress: {
-        inline: false,
-        conditionals: false,
-      },
-    },
+const minimizer = [
+  new TerserPlugin({
+    test: /\.js(\?.*)?$/i,
     cache: true,
     parallel: true,
-    sourceMap: false, // set to true if you want JS source maps
+    sourceMap: true,
+    extractComments: true,
+    terserOptions: {
+      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+      ie8: false,
+      toplevel: true,
+      warnings: false,
+      passes: 2,
+      compress: {},
+      output: {
+        comments: false,
+        beautify: false
+      }
+    }
   }),
   new OptimizeCSSAssetsPlugin({}),
 ];
+
+let devtool = _.get(process, 'env.WEBPACK_DEVTOOL', 'source-map');
+if (isTest) {
+  // Usefull for the coverage/error reporting
+  devtool = 'inline-source-map';
+}
 
 module.exports = {
   devServer: {
@@ -211,11 +217,12 @@ module.exports = {
     // clientLogLevel: 'warning',
     clientLogLevel: 'info',
   },
-  devtool: process.env.WEBPACK_DEVTOOL || 'eval-source-map',
+  devtool,
   entry,
   mode: isDev || isTest ? 'development' : 'production',
   module: {
     rules: [
+      sourceMapLoader,
       ...babelLoaderConfiguration,
       imageLoaderConfiguration,
       styleLoaderConfiguration,
@@ -223,6 +230,7 @@ module.exports = {
     ],
   },
   optimization: {
+    noEmitOnErrors: true,
     splitChunks: {
       cacheGroups: {
         styles: {
@@ -233,6 +241,7 @@ module.exports = {
         }
       }
     },
+    minimize: isProduction,
     minimizer
   },
   output,
