@@ -2,7 +2,7 @@ sudo: false
 
 language: node_js
 
-dist: trusty
+dist: bionic
 
 node_js:
   - 10.15.3
