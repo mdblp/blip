@@ -27,7 +27,6 @@ import mutationTracker from 'redux-immutable-state-invariant';
 
 import { reducers as vizReducers } from '@tidepool/viz/';
 
-// eslint-disable-next-line import/no-unresolved
 import Worker from 'worker-loader?inline!./../../worker/index';
 
 import blipState from '../reducers/initialState';
