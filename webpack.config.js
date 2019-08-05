@@ -5,8 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const Terser = require("terser");
-const fs = require('fs');
 
 const isProduction = (process.env.NODE_ENV === 'production');
 const isDev = (process.env.NODE_ENV === 'development');
