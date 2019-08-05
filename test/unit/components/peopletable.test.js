@@ -177,7 +177,6 @@ describe('PeopleTable', () => {
     it('should show open a modal for removing a patient when their remove icon is clicked', function () {
       const wrappedInstance = wrapper.instance().getWrappedInstance();
       const renderRemoveDialog = sinon.spy(wrappedInstance, 'renderRemoveDialog');
-      const handleRemove = sinon.spy(wrappedInstance, 'handleRemove');
 
       // Modal should be hidden
       const overlay = () => wrapper.find('.ModalOverlay').hostNodes();
