@@ -6,7 +6,7 @@ RUN \
   && chown -R node:node . \
   && apk --no-cache  update \
   && apk --no-cache  upgrade \
-  && apk add --no-cache git \
+  && apk add --no-cache git openssh-client \
   && rm -rf /var/cache/apk/* /tmp/*
 
 ### Stage 1 - Base image for development image to install and configure Chromium for unit tests
@@ -17,7 +17,7 @@ RUN \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
   && apk --no-cache  update \
   && apk --no-cache  upgrade \
-  && apk add --no-cache fontconfig bash udev ttf-opensans chromium curl git openssh-client  \
+  && apk add --no-cache fontconfig bash udev ttf-opensans chromium curl \
   && apk add --no-cache --virtual .build-dependencies \
   && npm install -g npm \
   && mkdir -p /@tidepool/viz/node_modules /tideline/node_modules /tidepool-platform-client/node_modules \
