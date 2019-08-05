@@ -1,4 +1,4 @@
-FROM node:10.15.3-alpine
+FROM node:10.15.3-alpine as base
 
 WORKDIR /app
 RUN mkdir -p dist node_modules && chown -R node:node .
