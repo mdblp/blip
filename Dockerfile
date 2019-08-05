@@ -1,7 +1,13 @@
 FROM node:10.15.3-alpine as base
 
 WORKDIR /app
-RUN mkdir -p dist node_modules && chown -R node:node .
+RUN \
+  mkdir -p dist node_modules \
+  && chown -R node:node . \
+  && apk --no-cache  update \
+  && apk --no-cache  upgrade \
+  && apk add --no-cache git \
+  && rm -rf /var/cache/apk/* /tmp/*
 
 ### Stage 1 - Base image for development image to install and configure Chromium for unit tests
 FROM base as developBase
@@ -11,27 +17,29 @@ RUN \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
   && apk --no-cache  update \
   && apk --no-cache  upgrade \
-  && apk add --no-cache fontconfig bash udev ttf-opensans chromium \
+  && apk add --no-cache fontconfig bash udev ttf-opensans chromium curl git openssh-client  \
+  && apk add --no-cache --virtual .build-dependencies \
+  && npm install -g npm \
   && mkdir -p /@tidepool/viz/node_modules /tideline/node_modules /tidepool-platform-client/node_modules \
   && chown -R node:node /@tidepool /tideline /tidepool-platform-client \
   && rm -rf /var/cache/apk/* /tmp/*
 ENV \
   CHROME_BIN=/usr/bin/chromium-browser \
   LIGHTHOUSE_CHROMIUM_PATH=/usr/bin/chromium-browser \
-  NODE_ENV=development \
-  nexus_token=''
+  NODE_ENV=development
 
 ### Stage 2 - Create cached `node_modules`
 # Only rebuild layer if `package.json` has changed
 FROM base as dependencies
 USER node
 COPY package.json .
+ENV \
+  nexus_token=''
 RUN \
   # Build and separate all dependancies required for production
   npm install --production && cp -R node_modules production_node_modules \
   # Build all modules, including `devDependancies`
   && npm install
-
 
 ### Stage 3 - Development root with Chromium installed for unit tests
 FROM developBase as develop
@@ -67,7 +75,8 @@ ENV \
   PORT=$PORT \
   PUBLISH_HOST=$PUBLISH_HOST \
   SERVICE_NAME=$SERVICE_NAME \
-  NODE_ENV=production
+  NODE_ENV=production \
+  NODE_OPTIONS=--max-old-space-size=2048
 
 
 ### Stage 6 - Build production-ready release
@@ -77,7 +86,9 @@ USER node
 COPY --from=dependencies /app/node_modules ./node_modules
 # Copy source files, and possibily invalidate so we have to rebuild
 COPY . .
-RUN npm run build
+RUN \
+  source ./config/env.docker.sh && \
+  npm run build
 
 
 ### Stage 7 - Serve production-ready release
