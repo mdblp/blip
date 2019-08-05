@@ -18,8 +18,8 @@ RUN \
 ENV \
   CHROME_BIN=/usr/bin/chromium-browser \
   LIGHTHOUSE_CHROMIUM_PATH=/usr/bin/chromium-browser \
-  NODE_ENV=development
-
+  NODE_ENV=development \
+  nexus_token=''
 
 ### Stage 2 - Create cached `node_modules`
 # Only rebuild layer if `package.json` has changed
