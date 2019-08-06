@@ -88,7 +88,7 @@
     "shelljs": "0.8.2",
     "style-loader": "0.23.0",
     "sundial": "mdblp/sundial#dblp.1.7.0",
-    "tideline": "mdblp/tideline#dblp.1.13.0",
+    "tideline": "mdblp/tideline#dblp.1.0.0",
     "tidepool-platform-client": "0.41.0",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "2.0.1",
