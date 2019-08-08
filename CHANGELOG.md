@@ -1,9 +1,12 @@
 # Blip 
 
-## unreleased 
+## [Unreleased]
 
 ### Added
 - PT-545 Display infusion site changes for Diabeloop Devices
+
+### Fixed
+- PT-532 One can create a patient even if the application is not allowing it
 
 ## [0.5.0] - 2019-07-29
 
