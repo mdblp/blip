@@ -1,5 +1,10 @@
 # Blip 
 
+## unreleased 
+
+### Added
+- PT-545 Display infusion site changes for Diabeloop Devices
+
 ## [0.5.0] - 2019-07-29
 
 ### Added
