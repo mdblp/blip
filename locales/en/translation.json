@@ -23,7 +23,7 @@
   "* Animas pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "",
   "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "",
   "* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.": "",
-  "**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view. Note, these entries come from either bolus wizard events, or Apple Health records.": "**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view.",
+  "**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view. Note, these entries come from either bolus wizard events, or Apple Health records.": "**Avg. Daily Carbs**: All carb entries added together (including rescue carbs, then divided by the number of days in this view.",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "",
   "**Avg. Glucose ({{bgSourceLabel}}):** All {{bgSourceLabel}} glucose values added together, divided by the number of readings.": "",
   "**CV (Coefficient of Variation):** How far apart (wide) glucose values are; research suggests a target of 36% or lower.": "**CV (Coefficient of Variation):** Standard Deviation divided by the average CGM.",
