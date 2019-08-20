@@ -6,12 +6,11 @@
 /* global after */
 
 import React from 'react';
-import TestUtils from 'react-addons-test-utils';
-
-var expect = chai.expect;
-
+import TestUtils from 'react-dom/test-utils';
 import Patient from '../../../../app/pages/patient/patient';
 import { PatientTeam } from '../../../../app/pages/patient/patientteam';
+
+const expect = chai.expect;
 
 describe('Patient', function () {
   before(() => {

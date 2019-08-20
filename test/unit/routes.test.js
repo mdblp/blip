@@ -13,22 +13,17 @@ import {
   hashToUrl,
   onIndexRouteEnter,
   onOtherRouteEnter,
-  onLogoutEnter,
   ensureNoAuth
 } from '../../app/routes';
-import React from 'react';
-import TestUtils from 'react-addons-test-utils';
-import createHistory from 'history/lib/createMemoryHistory';
-import { Router } from 'react-router'
 import config from '../../app/config';
 
 var expect = chai.expect;
 
 describe('routes', () => {
   describe('requiresChrome', () => {
-    it('should not redirect and call next when isChrome is true', () => {
+    it('should not redirect and call next when isAcceptedBrowser is true', () => {
       let utils = {
-        isChrome: sinon.stub().returns(true)
+        isAcceptedBrowser: sinon.stub().returns(true)
       };
 
       let next = sinon.stub();
@@ -38,15 +33,15 @@ describe('routes', () => {
 
       requiresChrome(utils, next)(nextState, replace, cb);
 
-      expect(utils.isChrome.callCount).to.equal(1);
+      expect(utils.isAcceptedBrowser.callCount).to.equal(1);
       expect(replace.callCount).to.equal(0);
       expect(cb.callCount).to.equal(0);
       expect(next.withArgs(nextState, replace, cb).callCount).to.equal(1);
     });
 
-    it('should redirect and call cb when isChrome is false', () => {
+    it('should redirect and call cb when isAcceptedBrowser is false', () => {
       let utils = {
-        isChrome: sinon.stub().returns(false)
+        isAcceptedBrowser: sinon.stub().returns(false)
       };
 
       let next = sinon.stub();
@@ -56,7 +51,7 @@ describe('routes', () => {
 
       requiresChrome(utils, next)(nextState, replace, cb);
 
-      expect(utils.isChrome.callCount).to.equal(1);
+      expect(utils.isAcceptedBrowser.callCount).to.equal(1);
       expect(replace.withArgs('/browser-warning').callCount).to.equal(1);
       expect(cb.callCount).to.equal(1);
       expect(next.callCount).to.equal(0);

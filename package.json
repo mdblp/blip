@@ -1,6 +1,6 @@
 {
   "name": "blip",
-  "version": "1.25.0",
+  "version": "1.25.0-dblp.0.7.0",
   "private": true,
   "scripts": {
     "test": "TZ=UTC NODE_ENV=test ./node_modules/karma/bin/karma start",
@@ -10,10 +10,11 @@
     "browser-tests": "NODE_ENV=test ./node_modules/karma/bin/karma start --browsers Chrome",
     "test-watch": "TZ=UTC NODE_ENV=test ./node_modules/karma/bin/karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --cache --colors --progress --port 3000 --host 0.0.0.0",
+    "dblp": "NODE_ENV=development API_HOST='http://localhost:8009' ALLOW_SIGNUP_PATIENT=false ALLOW_PATIENT_CHANGE_EMAIL=false I18N_ENABLED=true ALLOW_PATIENT_CHANGE_PASSWORD=false ALLOW_CHANGE_LANG=false HIDE_DONATE=true HIDE_DEXCOM_BANNER=true HIDE_UPLOAD_LINK=true BRANDING='diabeloop' ALLOW_SIGNUP_PATIENT=false ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --cache --colors --progress --port 3000 --host 0.0.0.0",
     "build": "NODE_ENV=production npm run build-app && npm run build-config",
     "build-app": "NODE_ENV=production node buildapp",
     "build-config": "NODE_ENV=production node buildconfig",
-    "server": "node server",
+    "server": "npm run build-config && node server",
     "lint": "./node_modules/.bin/eslint app test",
     "install-selenium": "./node_modules/selenium-standalone/bin/selenium-standalone install --version=2.53.0",
     "build-docs": "./update-gh-pages.sh",
@@ -94,7 +95,6 @@
     "react-addons-create-fragment": "15.6.2",
     "react-addons-perf": "15.6.0-rc.1",
     "react-addons-pure-render-mixin": "15.6.2",
-    "react-addons-test-utils": "15.6.2",
     "react-addons-update": "15.6.2",
     "redux-devtools": "3.4.1",
     "redux-devtools-dock-monitor": "1.1.3",
@@ -137,8 +137,5 @@
   },
   "peerDependencies": {
     "babel-core": "6.x || ^7.0.0-bridge.0"
-  },
-  "resolutions": {
-    "sundial/moment-timezone": "0.5.21"
   }
 }

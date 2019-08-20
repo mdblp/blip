@@ -1,5 +1,6 @@
 ### Stage 0 - Base image
-FROM node:10.14.2-alpine as base
+FROM node:10.15.3-alpine as base
+
 WORKDIR /app
 RUN mkdir -p dist node_modules && chown -R node:node .
 
@@ -26,6 +27,7 @@ ENV \
 FROM base as dependencies
 USER node
 COPY package.json .
+ENV nexus_token=''
 RUN \
   # Build and separate all dependancies required for production
   npm install --production && cp -R node_modules production_node_modules \

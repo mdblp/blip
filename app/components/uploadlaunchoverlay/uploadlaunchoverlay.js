@@ -85,7 +85,7 @@ const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends Compon
               <Trans i18nKey="html.uploadlaunchoverlay-launching">
                 <div className='UploadLaunchOverlay-title'>Launching Uploader</div>
                 <div className='UploadLaunchOverlay-text'>If you don't yet have the Tidepool Uploader, please install the appropriate version below</div>
-              </Trans>
+            </Trans>
             </div>
           </div>
         </div>,

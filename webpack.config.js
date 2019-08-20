@@ -112,7 +112,7 @@ const plugins = [
   // individually.
   new webpack.DefinePlugin({
     'process.env': {
-      'NODE_ENV': isDev ? JSON.stringify('development') : JSON.stringify('production'),
+      'NODE_ENV': isDev || isTest ? JSON.stringify('development') : JSON.stringify('production'),
     },
     __UPLOAD_API__: JSON.stringify(process.env.UPLOAD_API || null),
     __API_HOST__: JSON.stringify(process.env.API_HOST || null),
@@ -122,6 +122,15 @@ const plugins = [
     __PASSWORD_MAX_LENGTH__: JSON.stringify(process.env.PASSWORD_MAX_LENGTH || null),
     __ABOUT_MAX_LENGTH__: JSON.stringify(process.env.ABOUT_MAX_LENGTH || null),
     __I18N_ENABLED__: JSON.stringify(process.env.I18N_ENABLED || false),
+    __ALLOW_SIGNUP_PATIENT__: JSON.stringify(process.env.ALLOW_SIGNUP_PATIENT || true),
+    __ALLOW_PATIENT_CHANGE_EMAIL__: JSON.stringify(process.env.ALLOW_PATIENT_CHANGE_EMAIL || true),
+    __ALLOW_PATIENT_CHANGE_PASSWORD__: JSON.stringify(process.env.ALLOW_PATIENT_CHANGE_PASSWORD || true),
+    __HELP_LINK__: JSON.stringify(process.env.HELP_LINK || null),
+    __ASSETS_URL__: JSON.stringify(process.env.ASSETS_URL || null),
+    __HIDE_DONATE__: JSON.stringify(process.env.HIDE_DONATE || false),
+    __HIDE_DEXCOM_BANNER__: JSON.stringify(process.env.HIDE_DEXCOM_BANNER || false),
+    __HIDE_UPLOAD_LINK__: JSON.stringify(process.env.HIDE_UPLOAD_LINK || false),
+    __BRANDING__: JSON.stringify(process.env.BRANDING || 'tidepool'),
     __DEV__: isDev,
     __TEST__: isTest,
     __DEV_TOOLS__: (process.env.DEV_TOOLS != null) ? process.env.DEV_TOOLS : (isDev ? true : false) //eslint-disable-line eqeqeq
@@ -133,7 +142,7 @@ const plugins = [
     {
       from: 'static',
       transform: (content, path) => {
-        if (isDev) {
+        if (isDev || isTest) {
          return content;
         }
 
@@ -179,6 +188,23 @@ const resolve = {
   ],
 };
 
+const minimizer = isTest || isDev ? undefined : [
+  new UglifyJsPlugin({
+    uglifyOptions: {
+      ie8: false,
+      output: { comments: false },
+      compress: {
+        inline: false,
+        conditionals: false,
+      },
+    },
+    cache: true,
+    parallel: true,
+    sourceMap: false, // set to true if you want JS source maps
+  }),
+  new OptimizeCSSAssetsPlugin({}),
+];
+
 module.exports = {
   devServer: {
     publicPath: output.publicPath,
@@ -189,7 +215,7 @@ module.exports = {
   },
   devtool: process.env.WEBPACK_DEVTOOL || 'eval-source-map',
   entry,
-  mode: isDev ? 'development' : 'production',
+  mode: isDev || isTest ? 'development' : 'production',
   module: {
     rules: [
       ...babelLoaderConfiguration,
@@ -209,22 +235,7 @@ module.exports = {
         }
       }
     },
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ie8: false,
-          output: { comments: false },
-          compress: {
-            inline: false,
-            conditionals: false,
-          },
-        },
-        cache: true,
-        parallel: true,
-        sourceMap: false, // set to true if you want JS source maps
-      }),
-      new OptimizeCSSAssetsPlugin({}),
-    ],
+    minimizer
   },
   output,
   plugins,
