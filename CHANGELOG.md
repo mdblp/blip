@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 ### Added
-- [PT-574] Integrate latest change from [Tidepool 1.25.0](https://github.com/tidepool-org/blip/releases/tag/v1.25.0)
+- PT-574 Integrate latest change from [Tidepool 1.25.0](https://github.com/tidepool-org/blip/releases/tag/v1.25.0)
+
+## [0.6.0] - 2019-08-09
+
+### Added
+- PT-545 Display infusion site changes for Diabeloop Devices
+
+### Fixed
+- PT-532 One can create a patient even if the application is not allowing it
 
 ## [0.5.0] - 2019-07-29
 

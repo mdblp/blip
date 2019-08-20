@@ -10,7 +10,7 @@
     "browser-tests": "NODE_ENV=test ./node_modules/karma/bin/karma start --browsers Chrome",
     "test-watch": "TZ=UTC NODE_ENV=test ./node_modules/karma/bin/karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --cache --colors --progress --port 3000 --host 0.0.0.0",
-    "dblp": "NODE_ENV=development API_HOST='http://localhost:8009' ALLOW_SIGNUP_PATIENT=false ALLOW_PATIENT_CHANGE_EMAIL=false I18N_ENABLED=true ALLOW_PATIENT_CHANGE_PASSWORD=false ALLOW_CHANGE_LANG=false HIDE_DONATE=true HIDE_DEXCOM_BANNER=true HIDE_UPLOAD_LINK=true BRANDING='diabeloop' ALLOW_SIGNUP_PATIENT=false ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --cache --colors --progress --port 3000 --host 0.0.0.0",
+    "dblp": "NODE_ENV=development API_HOST='http://localhost:8009' ALLOW_SIGNUP_PATIENT=false ALLOW_PATIENT_CHANGE_EMAIL=false I18N_ENABLED=true ALLOW_PATIENT_CHANGE_PASSWORD=false ALLOW_CHANGE_LANG=false HIDE_DONATE=true HIDE_DEXCOM_BANNER=true HIDE_UPLOAD_LINK=true BRANDING='diabeloop' ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --cache --colors --progress --port 3000 --host 0.0.0.0",
     "build": "NODE_ENV=production npm run build-app && npm run build-config",
     "build-app": "NODE_ENV=production node buildapp",
     "build-config": "NODE_ENV=production node buildconfig",
@@ -123,8 +123,8 @@
     "shelljs": "0.8.3",
     "sinon": "6.2.0",
     "style-loader": "0.23.0",
-    "sundial": "1.6.0",
-    "tideline": "1.14.0",
+    "sundial": "mdblp/sundial#dblp.1.7.0",
+    "tideline": "mdblp/tideline#dblp.1.1.0",
     "tidepool-platform-client": "0.41.0",
     "tidepool-standard-action": "0.1.1",
     "uglify-es": "3.3.9",
@@ -132,7 +132,7 @@
     "url-loader": "1.1.1",
     "webpack": "4.18.0",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.8",
+    "webpack-dev-server": "3.7.2",
     "worker-loader": "2.0.0"
   },
   "peerDependencies": {
