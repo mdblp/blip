@@ -2,7 +2,13 @@
 FROM node:10.15.3-alpine as base
 
 WORKDIR /app
-RUN mkdir -p dist node_modules && chown -R node:node .
+RUN \
+  mkdir -p dist node_modules \
+  && chown -R node:node . \
+  && apk --no-cache  update \
+  && apk --no-cache  upgrade \
+  && apk add --no-cache git openssh-client \
+  && rm -rf /var/cache/apk/* /tmp/*
 
 ### Stage 1 - Base image for development image to install and configure Chromium for unit tests
 FROM base as developBase
@@ -12,7 +18,9 @@ RUN \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
   && apk --no-cache  update \
   && apk --no-cache  upgrade \
-  && apk add --no-cache fontconfig bash udev ttf-opensans chromium \
+  && apk add --no-cache fontconfig bash udev ttf-opensans chromium curl \
+  && apk add --no-cache --virtual .build-dependencies \
+  && npm install -g npm \
   && mkdir -p /@tidepool/viz/node_modules /tideline/node_modules /tidepool-platform-client/node_modules \
   && chown -R node:node /@tidepool /tideline /tidepool-platform-client \
   && rm -rf /var/cache/apk/* /tmp/*
@@ -79,7 +87,9 @@ USER node
 COPY --from=dependencies /app/node_modules ./node_modules
 # Copy source files, and possibily invalidate so we have to rebuild
 COPY . .
-RUN npm run build
+RUN \
+  source ./config/env.docker.sh && \
+  npm run build
 
 
 ### Stage 7 - Serve production-ready release
