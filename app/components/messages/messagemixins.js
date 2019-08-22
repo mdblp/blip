@@ -21,7 +21,7 @@ var MessageMixins = {
     }
     else {
       var offset = sundial.getOffsetFromTime(ts) || sundial.getOffset();
-      displayTimestamp = sundial.formatFromOffset(ts, offset);
+      displayTimestamp = sundial.formatFromOffset(ts, offset, format);
     }
     return displayTimestamp;
   }
