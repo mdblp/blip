@@ -1,12 +1,15 @@
 module.exports = function babelConfig(api) {
   const presets = [
-    '@babel/preset-env',
+    ['@babel/preset-env', {
+      useBuiltIns: false
+    }],
     '@babel/preset-react',
     'babel-preset-react-app',
   ];
 
   const plugins = [
     '@babel/plugin-transform-modules-commonjs',
+    '@babel/plugin-proposal-class-properties'
   ];
 
   const env = api.env();

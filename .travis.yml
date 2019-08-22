@@ -2,7 +2,7 @@ sudo: false
 
 language: node_js
 
-dist: trusty
+dist: bionic
 
 node_js:
   - 10.15.3
@@ -14,7 +14,7 @@ before_install:
   - if [[ `npm -v` != 6* ]]; then npm install -g npm@6; fi
 
 install:
-  - npm install
+  - npm install --no-optional
 
 deploy:
   # Control deployment by setting a value for `on`. Setting the `branch`

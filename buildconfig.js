@@ -1,36 +1,46 @@
-/* global rm, mkdir, exec, ls, mv*/
-require('shelljs/global');
-var fs = require('fs');
-var crypto = require('crypto');
-var ms = require('ms');
 
-var start = new Date();
+const sh = require('shelljs');
+const fs = require('fs');
+const crypto = require('crypto');
+const ms = require('ms');
+
+const htmlFile = 'dist/index.html';
+const configTemplate = '<!-- config -->';
+
+const start = new Date();
 
 // NOTE: Webpack's hash also uses the absolute path on the filesystem
 // Since config is built in `start.sh` and apps can be on different
 // servers and directory, we implement our own hashing using the file's content
 
 function getHash(str) {
-	var hash = crypto.createHash('md5');
-	hash.update(str);
-	return hash.digest('hex').substr(0, 20);
+  const md5 = crypto.createHash('md5');
+  md5.update(str);
+  return md5.digest('hex').substr(0, 20);
 }
 
 console.log('Building config...');
-exec('webpack --config \'./config.webpack.js\' --colors --progress');
+const result = sh.exec('webpack --config config.webpack.js');
+if (result.code > 0) {
+  process.exit(result.code);
+}
 
-var hash = getHash(fs.readFileSync('dist/config.js'));
-var filename = 'config.' + hash + '.js';
-console.log('Renaming to ' + filename + '...');
-mv('-f', 'dist/config.js', 'dist/' + filename);
+const hash = getHash(fs.readFileSync('dist/config.js'));
+const filename = `config.${hash}.js`;
+console.log(`Renaming to ${filename}...`);
+sh.mv('-f', 'dist/config.js', 'dist/' + filename);
 
-console.log('Updating "dist/index.html"...');
-var indexHtml = fs.readFileSync('dist/index.html', 'utf8');
-indexHtml = indexHtml.replace('<!-- config -->',
-  '<script type="text/javascript" src="/' + filename + '"></script>'
-);
-indexHtml = indexHtml.replace(/config.*.js/gm, filename);
-indexHtml.to('dist/index.html');
+console.log(`Updating "${htmlFile}"...`);
+let indexHtml = fs.readFileSync(htmlFile, 'utf8');
+if (indexHtml.indexOf(configTemplate) > 0) {
+  indexHtml = indexHtml.replace(configTemplate,
+    `<script type="text/javascript" src="${filename}"></script>`
+  );
+  sh.ShellString(indexHtml).to(htmlFile);
+} else {
+  console.error(`Invalid template file ${htmlFile}`);
+  process.exit(1);
+}
 
-var end = new Date();
+const end = new Date();
 console.log('Config built in ' + ms(end - start));

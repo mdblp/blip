@@ -1,18 +1,23 @@
-/* global rm, mkdir, exec, ls, cp */
-require('shelljs/global');
-var fs = require('fs');
-var ms = require('ms');
+const sh = require('shelljs');
+const ms = require('ms');
 
-var start = new Date();
+const start = new Date();
 
 console.log('Cleaning output directory "dist/"...');
-rm('-rf', 'dist');
-mkdir('-p', 'dist');
+sh.rm('-rf', 'dist');
+sh.mkdir('-p', 'dist');
 
-var entry = './app/main.prod.js';
+const isProduction = (process.env.NODE_ENV === 'production');
+const entry = isProduction ? './app/main.prod.js': './app/main.js';
 
 console.log('Building app from "' + entry + '"...');
-exec('webpack --entry \'' + entry + '\' --output-filename \'bundle.[hash].js\' --devtool source-map --colors --progress --optimize-minimize');
+let webpackOptions = '--no-color';
+if (isProduction) {
+  webpackOptions = `--optimize-minimize --optimize-dedupe ${webpackOptions}`;
+}
+const result = sh.exec(`webpack ${webpackOptions}`);
 
-var end = new Date();
+const end = new Date();
 console.log('App built in ' + ms(end - start));
+
+process.exit(result.code);

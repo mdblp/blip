@@ -38,9 +38,9 @@ COPY package.json .
 ENV nexus_token=''
 RUN \
   # Build and separate all dependancies required for production
-  npm install --production && cp -R node_modules production_node_modules \
+  npm install --production --no-optional && cp -R node_modules production_node_modules \
   # Build all modules, including `devDependancies`
-  && npm install
+  && npm install --no-optional
 
 
 ### Stage 3 - Development root with Chromium installed for unit tests
