@@ -1,9 +1,11 @@
 # Blip 
 
-## [0.6.1] - 2019-08-14
+## [0.6.1] - 2019-08-26
 
 ### Fixed
 - PT-426 Update Translations
+- Using Tideline dblp.1.1.2
+- Using Viz dblp.0.4.2
 
 ## [0.6.0] - 2019-08-09
 
