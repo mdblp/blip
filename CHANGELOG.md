@@ -6,6 +6,7 @@
 - PT-426 Update Translations
 - Using Tideline dblp.1.1.2
 - Using Viz dblp.0.4.2
+- PT-370 The same "B" was displayed in French in basal section for closed loop and open loop. 
 
 ## [0.6.0] - 2019-08-09
 
