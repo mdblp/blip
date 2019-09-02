@@ -4,6 +4,14 @@
 ### Added
 - PT-574 Integrate latest change from [Tidepool 1.25.0](https://github.com/tidepool-org/blip/releases/tag/v1.25.0)
 
+## [0.6.1] - 2019-08-26
+
+### Fixed
+- PT-426 Update Translations
+- Using Tideline dblp.1.1.2
+- Using Viz dblp.0.4.2
+- PT-370 The same "B" was displayed in French in basal section for closed loop and open loop.
+
 ## [0.6.0] - 2019-08-09
 
 ### Added
