@@ -1,4 +1,6 @@
 # Blip
+Blip is the web front end for YourLoops system.
+It is based on Tidepool Blip 1.20.
 
 ## [0.6.2] - 2019-09-16
 - PT-640 Upgrade viz to dblp.0.4.3
