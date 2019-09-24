@@ -145,7 +145,6 @@ describe('BG Log', () => {
       });
 
       let mountedWrapper = mount(<BgLog {...props} />);
-      const instance = mountedWrapper.instance().getWrappedInstance();
 
       var printLink = mountedWrapper.find('.printview-print-icon');
       expect(printLink.length).to.equal(1);

@@ -115,11 +115,9 @@ class BgLogChart extends Component {
   };
 
   render = () => {
-    /* jshint ignore:start */
     return (
       <div id="tidelineContainer" className="patient-data-chart"></div>
     );
-    /* jshint ignore:end */
   };
 
   // handlers

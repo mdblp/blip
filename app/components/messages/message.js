@@ -14,7 +14,6 @@ You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
-/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
@@ -98,25 +97,25 @@ var Message = React.createClass({
   },
   renderTitle: function() {
     var edit = this.renderEditLink();
-    
+
     return (
       <div>
         {edit}
         <span className='message-author'>{this.state.author}</span>
       </div>
     );
-    
+
   },
   renderEditLink: function() {
     if (this.state.editing === false && this.props.onSaveEdit) {
       return (
-        
+
         <a
           className='message-edit'
           href=''
           onClick={this.handleAllowEdit}
           ref='editNote'>Edit</a>
-        
+
       );
     }
   },
@@ -132,13 +131,13 @@ var Message = React.createClass({
       imageSource = profileSmallSrc;
     }
 
-    
+
     return (
       <img className={'message-picture message-picture-' + imageSize}
         src={imageSource}
         alt='Profile picture'/>
     );
-    
+
   },
   renderNoteEdit: function() {
     if (this.state.editing) {
@@ -179,7 +178,7 @@ var Message = React.createClass({
           </div>
         </div>
       );
-      
+
     }
   },
   renderNoteContent: function() {
@@ -198,7 +197,7 @@ var Message = React.createClass({
             <div ref='messageText'>{this.state.note}</div>
           </div>
         </div>
-        
+
       );
     }
   },
@@ -211,11 +210,11 @@ var Message = React.createClass({
     }
 
     return (
-      
+
       <div className={noteClasses} >
         {note}
       </div>
-      
+
     );
   }
 });

@@ -201,7 +201,6 @@ module.exports = {
     publicPath: output.publicPath,
     historyApiFallback: true,
     hot: isDev,
-    // clientLogLevel: 'warning',
     clientLogLevel: 'info',
   },
   devtool,
