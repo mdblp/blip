@@ -68,14 +68,14 @@ const FooterLinks = (props) => {
           target="_blank">Get Mobile App</a>
       </div>
     }
-    <div className='footer-link large-format-only'>       
+    <div className='footer-link large-format-only'>
         <a
           href={urlSupport}
           id='support'
           onClick={metricFnMkr('Support')}
           target="_blank">{SupportText}</a>
     </div>
-    <div className='footer-link'>       
+    <div className='footer-link'>
         <a
           href={urlLegal}
           id='legal'

@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const isProduction = (process.env.NODE_ENV === 'production');
 const isDev = (process.env.NODE_ENV === 'development');
+const isTest = (process.env.NODE_ENV === 'test');
 
 // these values are required in the config.app.js file -- we can't use
 // process.env with webpack, we have to create these magic constants
@@ -20,12 +22,12 @@ const defineEnvPlugin = new webpack.DefinePlugin({
   __ALLOW_PATIENT_CHANGE_PASSWORD__: JSON.stringify(process.env.ALLOW_PATIENT_CHANGE_PASSWORD || true),
   __HELP_LINK__: JSON.stringify(process.env.HELP_LINK || null),
   __ASSETS_URL__: JSON.stringify(process.env.ASSETS_URL || null),
-  __HIDE_DONATE__: JSON.stringify(process.env.HIDE_DONATE || null),
+  __HIDE_DONATE__: JSON.stringify(process.env.HIDE_DONATE || false),
   __HIDE_DEXCOM_BANNER__: JSON.stringify(process.env.HIDE_DEXCOM_BANNER || false),
   __HIDE_UPLOAD_LINK__: JSON.stringify(process.env.HIDE_UPLOAD_LINK || false),
   __BRANDING__: JSON.stringify(process.env.BRANDING || 'tidepool'),
   __DEV__: isDev,
-  __TEST__: false,
+  __TEST__: isTest,
   __DEV_TOOLS__: (process.env.DEV_TOOLS != null) ? process.env.DEV_TOOLS : (isDev ? true : false) //eslint-disable-line eqeqeq
 });
 
@@ -36,7 +38,7 @@ module.exports = {
     filename: 'config.js',
     library: 'config',
   },
-  mode: isDev ? 'development' : 'production',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       { test: /\.js$/, exclude: /(node_modules)/, use: [] },

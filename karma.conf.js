@@ -1,21 +1,13 @@
-const webpack = require('webpack');
 const _ = require('lodash');
 const optional = require('optional');
-
 const webpackConf = require('./webpack.config.js');
 const mochaConf = optional('./config/mocha.opts.json') || {};
-
-const testWebpackConf = _.assign({}, webpackConf, {
-  devtool: 'inline-source-map',
-});
-
+const testWebpackConf = _.assign({}, webpackConf);
 delete testWebpackConf.devServer;
 
 testWebpackConf.output = {
   filename: '[name]',
 };
-
-testWebpackConf.mode = 'development';
 
 module.exports = function karmaConfig(config) {
   config.set({

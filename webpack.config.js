@@ -1,33 +1,24 @@
 const path = require('path');
+const _ = require('lodash');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const uglifyJS = require('uglify-es');
-const fs = require('fs');
 
+const isProduction = (process.env.NODE_ENV === 'production');
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
 
-// Enzyme as of v2.4.1 has trouble with classes
-// that do not start and *end* with an alpha character
-// but that will sometimes happen with the base64 hashes
-// so we leave them off in the test env
-const localIdentName = process.env.NODE_ENV === 'test'
-  ? '[name]--[local]'
-  : '[name]--[local]--[hash:base64:5]';
-
 const styleLoaderConfiguration = {
-  test: /\.less$/,
+  test: /\.less$/i,
   use: [
-    (isDev || isTest) ? 'style-loader' : MiniCssExtractPlugin.loader,
+    isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
     {
       loader: 'css-loader',
-      query: {
+      options: {
         importLoaders: 2,
-        localIdentName,
+        modules: false,
         sourceMap: isDev,
       },
     },
@@ -58,15 +49,6 @@ const babelLoaderConfiguration = [
       options: {
         cacheDirectory: true,
       },
-    },
-  },
-  {
-    test: /\.js?$/,
-    include: [
-      fs.realpathSync('./node_modules/@tidepool/viz'),
-    ],
-    use: {
-      loader: 'source-map-loader',
     },
   },
 ];
@@ -144,62 +126,75 @@ const plugins = [
     __TEST__: isTest,
     __DEV_TOOLS__: (process.env.DEV_TOOLS != null) ? process.env.DEV_TOOLS : (isDev ? true : false) //eslint-disable-line eqeqeq
   }),
-  new MiniCssExtractPlugin({
-    filename: isDev ? 'style.css' : 'style.[contenthash].css',
-  }),
-  new CopyWebpackPlugin([
-    {
-      from: 'static',
-      transform: (content, path) => {
-        if (isDev || isTest) {
-         return content;
-        }
-
-        const code = fs.readFileSync(path, 'utf8');
-        const result = uglifyJS.minify(code);
-        return result.code;
-      }
-    }
-  ]),
   new HtmlWebpackPlugin({
     template: 'index.ejs',
     favicon: 'favicon.ico',
+    minify: false, // Needed for config file
   }),
 ];
 
 if (isDev) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
 }
-
-const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
+if (isProduction) {
+  plugins.push(new MiniCssExtractPlugin({
+    filename: '[name].[contenthash].css',
+    chunkFilename: '[id].[hash].css',
+    ignoreOrder: false,
+  }));
+}
 
 const entry = isDev
   ? [
-    '@babel/polyfill',
-    'webpack-dev-server/client?' + devPublicPath,
+    'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
     './app/main.js',
   ] : [
-    '@babel/polyfill',
     './app/main.prod.js',
   ];
 
 const output = {
   filename: 'bundle.js',
   path: path.join(__dirname, '/dist'),
-  publicPath: isDev ? devPublicPath : '/',
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
 
 const resolve = {
+  symlinks: false,
   modules: [
     path.join(__dirname, 'node_modules'),
     'node_modules',
   ],
 };
 
-let devtool = process.env.WEBPACK_DEVTOOL || 'eval-source-map';
-if (process.env.WEBPACK_DEVTOOL === false) devtool = undefined;
+const minimizer = [
+  new TerserPlugin({
+    test: /\.js(\?.*)?$/i,
+    cache: true,
+    parallel: true,
+    sourceMap: !isProduction,
+    extractComments: isProduction,
+    terserOptions: {
+      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+      ie8: false,
+      toplevel: true,
+      warnings: false,
+      passes: 2,
+      compress: {},
+      output: {
+        comments: false,
+        beautify: false
+      }
+    }
+  }),
+  new OptimizeCSSAssetsPlugin({}),
+];
+
+let devtool = _.get(process, 'env.WEBPACK_DEVTOOL', isDev ? 'source-map' : undefined);
+if (isTest) {
+  // Usefull for the coverage/error reporting
+  devtool = 'inline-source-map';
+}
 
 module.exports = {
   devServer: {
@@ -210,52 +205,32 @@ module.exports = {
   },
   devtool,
   entry,
-  mode: isDev || isTest ? 'development' : 'production',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       ...babelLoaderConfiguration,
       imageLoaderConfiguration,
-      styleLoaderConfiguration,
       ...fontLoaderConfiguration,
+      styleLoaderConfiguration,
     ],
   },
   optimization: {
+    noEmitOnErrors: true,
     splitChunks: {
       cacheGroups: {
         styles: {
           name: 'styles',
-          test: /\.css$/,
+          test: /\.(css|less)$/,
           chunks: 'all',
           enforce: true
         }
       }
     },
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ie8: false,
-          output: { comments: false },
-          compress: {
-            inline: false,
-            conditionals: false,
-          },
-        },
-        cache: true,
-        parallel: true,
-        sourceMap: false, // set to true if you want JS source maps
-      }),
-      new OptimizeCSSAssetsPlugin({}),
-    ],
+    minimize: isProduction,
+    minimizer
   },
   output,
   plugins,
   resolve,
   resolveLoader: resolve,
-  cache: isDev,
-  watchOptions: {
-    ignored: [
-      /node_modules([\\]+|\/)+(?!(tideline|tidepool-platform-client|@tidepool\/viz))/,
-      /(tideline|tidepool-platform-client|@tidepool\/viz)([\\]+|\/)node_modules/
-    ]
-  },
 };

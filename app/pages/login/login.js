@@ -108,7 +108,7 @@ export let Login = translate()(React.createClass({
     var acceptText = t('Accept');
 
     return (
-      <div>        
+      <div>
         <LoginNav
           page="login"
           hideLinks={Boolean(this.props.seedEmail)}
