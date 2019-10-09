@@ -1,6 +1,22 @@
-#!/bin/sh -e
+#!/bin/bash -e
+
 wget -q -O artifact_node.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_node.sh'
 wget -q -O artifact_images.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_images.sh'
+
+declare -a languages
+languages=(en fr de)
+
+# token to access the private reporistory
+TOKEN=${GIT_TOKEN}
+OWNER=mdblp
+REPO=translations
+GIT_BRANCH=init
+for K in "${languages[@]}";
+    do curl --header "Authorization: token $TOKEN" \
+         --header 'Accept: application/vnd.github.v3.raw' \
+         --verbose \
+         --output "locales/$K/parameter.json" "https://api.github.com/repos/$OWNER/$REPO/contents/locales/$K/parameter.json?ref=$GIT_BRANCH"
+done
 
 . ./version.sh
 bash -eu artifact_images.sh
