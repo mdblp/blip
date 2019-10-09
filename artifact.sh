@@ -10,9 +10,12 @@ languages=(en fr de)
 TOKEN=${GIT_TOKEN}
 OWNER=mdblp
 REPO=translations
-GIT_BRANCH=init
+# GIT_BRANCH can be a branch or a tag
+# GIT_BRANCH=master
+GIT_BRANCH=dblp.0.0.1
 for K in "${languages[@]}";
-    do curl --header "Authorization: token $TOKEN" \
+    do  cp -f "locales/$K/parameter.json" "locales/$K/parameter.1.json"
+        curl --header "Authorization: token $TOKEN" \
          --header 'Accept: application/vnd.github.v3.raw' \
          --verbose \
          --output "locales/$K/parameter.json" "https://api.github.com/repos/$OWNER/$REPO/contents/locales/$K/parameter.json?ref=$GIT_BRANCH"
