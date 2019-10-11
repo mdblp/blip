@@ -81,11 +81,15 @@ export let Login = translate()(React.createClass({
     }
 
     if (Config.HELP_LINK !== null) {
-      const script = document.createElement('script')
-      script.type = 'text/javascript';
-      // limit the search YourLoops category until you are logged on
-      script.text = 'window.zESettings = { webWidget: { helpCenter: { filter: { category: \'360001386093\' } } } };';
-      document.body.appendChild(script)
+      window.zESettings = {
+        webWidget: {
+          helpCenter: {
+            filter: {
+              category: '360001386093'
+            }
+          }
+        }
+      };
     }
   },
 
@@ -108,7 +112,7 @@ export let Login = translate()(React.createClass({
     var acceptText = t('Accept');
 
     return (
-      <div>        
+      <div>
         <LoginNav
           page="login"
           hideLinks={Boolean(this.props.seedEmail)}
@@ -152,7 +156,7 @@ export let Login = translate()(React.createClass({
   renderBrowserWarning: function() {
     const { t } = this.props;
 
-    if (!utils.isChrome()) {
+    if (!utils.isAcceptedBrowser()) {
       return (
         <div className='login-browserWarning'>
           <br></br>

@@ -304,7 +304,6 @@ class BgLog extends Component {
         atMostRecent={this.state.atMostRecent}
         inTransition={this.state.inTransition}
         title={''}
-        onClickBasics={this.props.onSwitchToBasics}
         onClickOneDay={this.handleClickOneDay}
         onClickBasics={this.props.onSwitchToBasics}
         onClickTrends={this.handleClickTrends}

@@ -52,9 +52,6 @@ app.use(nonceMiddleware, helmet.contentSecurityPolicy({
     imgSrc: [
       "'self'",
       'data:',
-      'https://v2assets.zopim.io',
-      'https://static.zdassets.com',
-      'https://tidepoolsupport.zendesk.com',
     ],
     fontSrc: ["'self'", 'data:'],
     reportUri: '/event/csp-report/violation',

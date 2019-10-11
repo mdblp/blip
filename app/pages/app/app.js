@@ -214,18 +214,14 @@ export class AppComponent extends React.Component {
         this.props.hideBanner('dexcom');
       }
     }
-    if (Config.HELP_LINK !== null && this.props.authenticated) {
+    if (Config.HELP_LINK !== null && this.props.authenticated && typeof window.zE === "function") {
       let name = this.props.user.profile.fullName;
       let email = this.props.user.emails[0];
 
-      const script = document.createElement('script')
-      script.type = 'text/javascript';
-      script.text = 'if (typeof zE === "function") zE(\'webWidget\', \'prefill\', { name: { value: \''
-        + name
-        + '\', readOnly: true }, email: { value: \''
-        + email
-        + '\', readOnly: true } });'
-      document.body.appendChild(script)
+      window.zE('webWidget', 'prefill', {
+        name: { value: name, readOnly: true },
+        email: { value: email, readOnly: true },
+      });
     }
 
   }

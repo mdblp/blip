@@ -111,3 +111,8 @@ COPY --from=build \
   /app/server.js \
   ./
 CMD ["npm", "run", "server"]
+
+
+### Stage 7.5 - Serve docker-compose-ready release
+FROM build AS dockerStack
+CMD ["sh", "-c", "npm run build-config && npm run server"]
