@@ -156,7 +156,7 @@ export let Login = translate()(React.createClass({
   renderBrowserWarning: function() {
     const { t } = this.props;
 
-    if (!utils.isAcceptedBrowser()) {
+    if (!utils.isChrome()) {
       return (
         <div className='login-browserWarning'>
           <br></br>

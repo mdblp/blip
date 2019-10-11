@@ -73,6 +73,12 @@ utils.isAcceptedBrowser = () => {
     || userAgent.indexOf('edge') > -1);
 };
 
+utils.isChrome = () => {
+  var userAgent = navigator.userAgent.toLowerCase();
+  return (userAgent.indexOf('chrome') > -1
+    || userAgent.indexOf('crios') > -1);
+};
+
 utils.isMobile = () => {
   var userAgent = navigator.userAgent.toLowerCase();
   return (userAgent.indexOf('mobi') > -1);
