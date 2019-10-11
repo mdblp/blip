@@ -22,7 +22,7 @@
     "install-selenium": "./node_modules/selenium-standalone/bin/selenium-standalone install --version=2.53.0",
     "build-docs": "./update-gh-pages.sh",
     "serve-docs": "./node_modules/.bin/gitbook serve",
-    "update-translations": "i18next 'app/**/*.js' 'node_modules/tideline/{plugins,js}/**/*.js' 'node_modules/@tidepool/viz/{storiesDatatypes,storybookDatatypes,stories,src}/**/*.js' -c i18next-parser.config.json -o ."
+    "update-translations": "i18next 'app/**/*.js' 'node_modules/tideline/{plugins,js}/**/*.js' 'node_modules/@tidepool/viz/src/**/*.js' -c i18next-parser.config.json -o ."
   },
   "engines": {
     "node": ">=10.x",
