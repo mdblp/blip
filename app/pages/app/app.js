@@ -139,27 +139,6 @@ export class AppComponent extends React.Component {
     this.doFetching(this.props);
   }
 
-  componentDidMount() {
-    if (Config.HELP_LINK !== null) {
-      //An array of assets
-      let scripts = [
-        {
-          src: Config.HELP_LINK,
-          id: 'ze-snippet'
-        }
-      ]
-      //Append the script element on each iteration
-      scripts.map(item => {
-        const script = document.createElement('script')
-        script.src = item.src
-        script.id = item.id
-        script.async = true
-        document.body.appendChild(script)
-      })
-    }
-  }
-
-
   /**
    * Before any subsequent re-rendering
    * begin fetching any required data
