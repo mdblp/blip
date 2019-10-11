@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Added
+- PT-401 Display rescueCarbs with specific layout in Daily view
 - PT-574 Integrate latest change from [Tidepool 1.27.0](https://github.com/tidepool-org/blip/releases/tag/v1.27.0)
 
 ## [0.6.2] - 2019-09-16
