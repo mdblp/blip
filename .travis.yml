@@ -46,6 +46,9 @@ deploy:
 services:
   - docker
 
+addons:
+  chrome: stable
+
 script:
   - npm test
   - ./artifact.sh
