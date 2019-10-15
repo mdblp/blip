@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const uglifyJS = require('uglify-es');
 const fs = require('fs');
+const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
@@ -169,6 +170,9 @@ const plugins = [
 
 if (isDev) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
+  if (process.env.WEBPACK_DEV_SERVER === 'true' && typeof process.env.HELP_LINK === 'string') {
+    plugins.push(new DblpHtmlWebpackPlugin());
+  }
 }
 
 const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
@@ -207,6 +211,7 @@ module.exports = {
     historyApiFallback: true,
     hot: isDev,
     clientLogLevel: 'info',
+    disableHostCheck: true,
   },
   devtool,
   entry,
