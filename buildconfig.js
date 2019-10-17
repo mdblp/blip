@@ -4,7 +4,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var ms = require('ms');
 
-var reConfig = /(<!-- config -->)|(<script [^>]+config[^>]+><\/script>)/m;
+var reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
 var start = new Date();
 
 // NOTE: Webpack's hash also uses the absolute path on the filesystem
