@@ -6,7 +6,7 @@ var ms = require('ms');
 
 var reTitle = /<title>([^<]*)<\/title>/;
 var reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
-var reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" src="([^"]+)">\s*<\/script>)/m;
+var reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" type="text\/javascript" src="[^"]+">\s*<\/script>)/m;
 var zendeskDisable = '<!-- Zendesk disabled -->';
 var start = new Date();
 
@@ -55,7 +55,7 @@ if (typeof process.env.HELP_LINK === 'string') {
     indexHtml = indexHtml.replace(reZendesk, zendeskDisable);
 
   } else {
-    indexHtml = indexHtml.replace(reZendesk, `<script type="text/javascript" src="${process.env.HELP_LINK}"></script>`);
+    indexHtml = indexHtml.replace(reZendesk, `<script id="ze-snippet" type="text/javascript" src="${process.env.HELP_LINK}"></script>`);
   }
 }
 
