@@ -29,13 +29,13 @@ const nonceMiddleware = (req, res, next) => {
 
 app.use(helmet());
 
-app.use(nonceMiddleware, helmet.contentSecurityPolicy({
+const contentSecurityPolicy = {
   directives: {
     defaultSrc: ["'none'"],
     baseUri: ["'none'"],
     scriptSrc: [
-      "'self'",
       "'strict-dynamic'",
+      "'unsafe-eval'",
       (req, res) => {
         return `'nonce-${res.locals.nonce}'`;
       },
@@ -52,6 +52,7 @@ app.use(nonceMiddleware, helmet.contentSecurityPolicy({
     imgSrc: [
       "'self'",
       'data:',
+      'http://yt-linux-dblg:3000/',
     ],
     fontSrc: ["'self'", 'data:'],
     reportUri: '/event/csp-report/violation',
@@ -59,20 +60,28 @@ app.use(nonceMiddleware, helmet.contentSecurityPolicy({
     workerSrc: ["'self'", 'blob:'],
     childSrc: ["'self'", 'blob:', 'https://docs.google.com'],
     frameSrc: ['https://docs.google.com'],
-    connectSrc: [].concat([
-      process.env.API_HOST || 'localhost',
+    connectSrc: [
+      config.apiHost,
       'https://api.github.com/repos/tidepool-org/chrome-uploader/releases',
       'https://static.zdassets.com',
       'https://ekr.zdassets.com',
       'https://diabeloop.zendesk.com',
       'https://d3hb14vkzrxvla.cloudfront.net',
+      'http://yt-linux-dblg:3000/',
       'wss\://*.pusher.com',
       '*.sumologic.com',
       'sentry.io',
-    ]),
+    ],
   },
   reportOnly: false,
-}));
+};
+
+if (config.matomoUrl !== null) {
+  contentSecurityPolicy.directives.imgSrc.push(config.matomoUrl);
+  contentSecurityPolicy.directives.connectSrc.push(config.matomoUrl);
+}
+
+app.use(nonceMiddleware, helmet.contentSecurityPolicy(contentSecurityPolicy));
 
 app.use(bodyParser.json({
   type: ['json', 'application/csp-report'],
