@@ -8,6 +8,8 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - PT-597 Blip does not display medical data for patients having no medical data in the last 2 months
 - PT-774 Fix problems with translations in blip
+### Added
+- PT-728 Analytics/metrics for Blip/Front usage
 
 ## [0.8.0] - 2019-10-30
 - PT-719 Update translations in Blip for parameters
