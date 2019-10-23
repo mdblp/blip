@@ -52,7 +52,6 @@ const contentSecurityPolicy = {
     imgSrc: [
       "'self'",
       'data:',
-      'http://yt-linux-dblg:3000/',
     ],
     fontSrc: ["'self'", 'data:'],
     reportUri: '/event/csp-report/violation',
@@ -67,7 +66,6 @@ const contentSecurityPolicy = {
       'https://ekr.zdassets.com',
       'https://diabeloop.zendesk.com',
       'https://d3hb14vkzrxvla.cloudfront.net',
-      'http://yt-linux-dblg:3000/',
       'wss\://*.pusher.com',
       '*.sumologic.com',
       'sentry.io',
