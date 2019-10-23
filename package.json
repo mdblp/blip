@@ -1,6 +1,6 @@
 {
   "name": "blip",
-  "version": "0.7.1",
+  "version": "0.8.0-beta.1",
   "private": true,
   "scripts": {
     "mrproper": "rm -rf dist node_modules coverage",
