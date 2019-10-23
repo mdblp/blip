@@ -55,9 +55,6 @@ api.init = function(cb) {
     if (document.cookie.indexOf('CookieConsent') >= 0) {
       api.metrics.track('CookieConsent', 24);
     }
-    window.onpopstate = (event) => {
-      console.log(window.location, event);
-    };
     if (typeof config.BRANDING === 'string') {
       api.metrics.track('setDocumentTitle', constants[config.BRANDING].name, cb);
     } else if (cb) {
