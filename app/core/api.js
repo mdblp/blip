@@ -796,13 +796,13 @@ api.metrics.track = function(eventName, properties, cb) {
     } else {
       window._paq.push(['trackEvent', eventName, JSON.stringify(properties)]);
     }
-    if (cb) {
-      cb();
-    }
   } else {
     // using highwater
     api.log('GET /metrics/' + window.encodeURIComponent(eventName));
-    tidepool.trackMetric(eventName, properties, cb);
+    tidepool.trackMetric(eventName, properties);
+  }
+  if (cb) {
+    cb();
   }
 };
 
