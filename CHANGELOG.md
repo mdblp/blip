@@ -2,9 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## unreleased 
+- PT-755 Update naming for stopped loop mode
+
 ## [0.8.0] - 2019-10-30
 - PT-719 Update translations in Blip for parameters
-- PT-755 Update naming for stopped loop mode
 
 ## [0.7.1] - 2019-10-17
 ### Fixed
