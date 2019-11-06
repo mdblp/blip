@@ -3,6 +3,10 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Changed
+- PT-755 Update naming for stopped loop mode
+### Fixed
+- PT-597 Blip does not display medical data for patients having no medical data in the last 2 months
 - PT-774 Fix problems with translations in blip
 
 ## [0.8.0] - 2019-10-30
