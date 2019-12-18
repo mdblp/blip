@@ -4,7 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## unreleased
 ### Added
-- PT-865 Display physical activity in Bolus/Food section
+- PT-865 Display physical activity in Daily view in the CGM section
 
 ## 0.10.0 - 2019-12-09 
 ### Added
