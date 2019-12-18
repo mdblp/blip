@@ -120,7 +120,6 @@ describe('PeopleTable', () => {
 
   describe('showNames', function () {
     it('should show a row of data for each person', function () {
-      //wrapper.find('.peopletable-names-toggle').simulate('click');
       wrapper.setState({ showNames: true });
       // 5 people plus one row for the header
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
