@@ -16,12 +16,26 @@
 import Basics from './basics';
 import Daily from './daily';
 import BgLog from './bgLog';
+import Trends from './trends';
+import Settings from './settings';
+import Header from './header';
+import Footer from './footer';
 
-module.exports = {
-  basics: Basics,
-  daily: Daily,
-  bgLog: BgLog,
-  settings: require('./settings'),
-  header: require('./header'),
-  footer: require('./footer')
+export {
+  Basics,
+  Daily,
+  BgLog,
+  Trends,
+  Settings,
+  Header,
+  Footer
+};
+export default {
+  Basics,
+  Daily,
+  BgLog,
+  Trends,
+  Settings,
+  Header,
+  Footer
 };

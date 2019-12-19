@@ -14,6 +14,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
@@ -32,12 +33,7 @@ import { getfetchedPatientDataRange } from '../../redux/selectors';
 
 import personUtils from '../../core/personutils';
 import utils from '../../core/utils';
-import { header as Header } from '../../components/chart';
-import { basics as Basics } from '../../components/chart';
-import { daily as Daily } from '../../components/chart';
-import Trends from '../../components/chart/trends';
-import { bgLog as BgLog } from '../../components/chart';
-import { settings as Settings } from '../../components/chart';
+import { Header, Basics, Daily, Trends, BgLog, Settings } from '../../components/chart';
 import UploadLaunchOverlay from '../../components/uploadlaunchoverlay';
 
 import nurseShark from 'tideline/plugins/nurseshark/';
@@ -65,33 +61,33 @@ const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES,t=>t!=='food');
 
 export let PatientData = translate()(React.createClass({
   propTypes: {
-    addPatientNote: React.PropTypes.func.isRequired,
-    clearPatientData: React.PropTypes.func.isRequired,
-    currentPatientInViewId: React.PropTypes.string.isRequired,
-    fetchers: React.PropTypes.array.isRequired,
-    fetchingPatient: React.PropTypes.bool.isRequired,
-    fetchingPatientData: React.PropTypes.bool.isRequired,
-    fetchingUser: React.PropTypes.bool.isRequired,
-    generatePDFRequest: React.PropTypes.func.isRequired,
-    generatingPDF: React.PropTypes.bool.isRequired,
-    isUserPatient: React.PropTypes.bool.isRequired,
-    messageThread: React.PropTypes.array,
-    onCloseMessageThread: React.PropTypes.func.isRequired,
-    onCreateMessage: React.PropTypes.func.isRequired,
-    onEditMessage: React.PropTypes.func.isRequired,
-    onFetchMessageThread: React.PropTypes.func.isRequired,
-    onRefresh: React.PropTypes.func.isRequired,
-    onSaveComment: React.PropTypes.func.isRequired,
-    patient: React.PropTypes.object,
-    patientDataMap: React.PropTypes.object.isRequired,
-    patientNotesMap: React.PropTypes.object.isRequired,
-    queryParams: React.PropTypes.object.isRequired,
-    removeGeneratedPDFS: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    updatePatientNote: React.PropTypes.func.isRequired,
-    uploadUrl: React.PropTypes.string.isRequired,
-    user: React.PropTypes.object,
-    viz: React.PropTypes.object.isRequired,
+    addPatientNote: PropTypes.func.isRequired,
+    clearPatientData: PropTypes.func.isRequired,
+    currentPatientInViewId: PropTypes.string.isRequired,
+    fetchers: PropTypes.array.isRequired,
+    fetchingPatient: PropTypes.bool.isRequired,
+    fetchingPatientData: PropTypes.bool.isRequired,
+    fetchingUser: PropTypes.bool.isRequired,
+    generatePDFRequest: PropTypes.func.isRequired,
+    generatingPDF: PropTypes.bool.isRequired,
+    isUserPatient: PropTypes.bool.isRequired,
+    messageThread: PropTypes.array,
+    onCloseMessageThread: PropTypes.func.isRequired,
+    onCreateMessage: PropTypes.func.isRequired,
+    onEditMessage: PropTypes.func.isRequired,
+    onFetchMessageThread: PropTypes.func.isRequired,
+    onRefresh: PropTypes.func.isRequired,
+    onSaveComment: PropTypes.func.isRequired,
+    patient: PropTypes.object,
+    patientDataMap: PropTypes.object.isRequired,
+    patientNotesMap: PropTypes.object.isRequired,
+    queryParams: PropTypes.object.isRequired,
+    removeGeneratedPDFS: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    updatePatientNote: PropTypes.func.isRequired,
+    uploadUrl: PropTypes.string.isRequired,
+    user: PropTypes.object,
+    viz: PropTypes.object.isRequired,
   },
 
   getInitialState: function() {
@@ -1244,7 +1240,7 @@ export let PatientData = translate()(React.createClass({
           props.queryParams,
           patientSettings,
         );
-        
+
         const timePrefs = processedData.timePrefs || this.state.timePrefs;
         const bgPrefs = {
           bgClasses: processedData.bgClasses,

@@ -14,16 +14,15 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-
-const d3 = window.d3;
-
 import _ from 'lodash';
 import bows from 'bows';
 import moment from 'moment';
-import React, { PropTypes, PureComponent } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import sundial from 'sundial';
 import WindowSizeListener from 'react-window-size-listener';
 import { translate } from 'react-i18next';
+import * as viz from '@tidepool/viz';
 
 import Header from './header';
 import SubNav from './trendssubnav';
@@ -32,8 +31,6 @@ import BgSourceToggle from './bgSourceToggle';
 import Footer from './footer';
 import { BG_DATA_TYPES } from '../../core/constants';
 
-
-import * as viz from '@tidepool/viz';
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
 const FocusedRangeLabels = viz.components.FocusedRangeLabels;
 const FocusedSMBGPointLabel = viz.components.FocusedSMBGPointLabel;
@@ -43,16 +40,16 @@ const getTimezoneFromTimePrefs = viz.utils.datetime.getTimezoneFromTimePrefs;
 const getLocalizedCeiling = viz.utils.datetime.getLocalizedCeiling;
 const Loader = viz.components.Loader;
 
-const Trends = translate()(class Trends extends PureComponent {
+const Trends = translate()(class Trends extends React.PureComponent {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: React.PropTypes.oneOf(BG_DATA_TYPES),
+    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
     currentPatientInViewId: PropTypes.string.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     initialDatetimeLocation: PropTypes.string,
-    patient: React.PropTypes.object,
+    patient: PropTypes.object,
     patientData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
@@ -62,7 +59,7 @@ const Trends = translate()(class Trends extends PureComponent {
     onSwitchToTrends: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
     onSwitchToBgLog: PropTypes.func.isRequired,
-    onUpdateChartDateRange: React.PropTypes.func.isRequired,
+    onUpdateChartDateRange: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     updateDatetimeLocation: PropTypes.func.isRequired,
