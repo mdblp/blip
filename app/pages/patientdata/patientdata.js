@@ -105,7 +105,6 @@ export let PatientData = translate()(React.createClass({
             saturday: true,
             sunday: true,
           },
-          activeDomain: '2 weeks',
           extentSize: 14,
           // we track both showingCbg & showingSmbg as separate Booleans for now
           // in case we decide to layer BGM & CGM data, as has been discussed/prototyped
@@ -890,7 +889,7 @@ export let PatientData = translate()(React.createClass({
     }
   },
 
-  updateChartPrefs: function(updates) {
+  updateChartPrefs: function(updates, cb = _.noop) {
     const newPrefs = {
       ...this.state.chartPrefs,
       ...updates,
@@ -899,7 +898,7 @@ export let PatientData = translate()(React.createClass({
     this.dataUtil.chartPrefs = newPrefs[this.state.chartType];
     this.setState({
       chartPrefs: newPrefs,
-    });
+    }, cb);
   },
 
   updateDatetimeLocation: function(datetime) {

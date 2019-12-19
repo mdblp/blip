@@ -78,22 +78,19 @@ const Trends = translate()(class Trends extends React.PureComponent {
       endpoints: [],
       inTransition: false,
       title: '',
+      extentSize: 14,
       visibleDays: 0,
     };
 
     this.formatDate = this.formatDate.bind(this);
     this.getNewDomain = this.getNewDomain.bind(this);
-    this.getTitle = this.getTitle.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleClickBack = this.handleClickBack.bind(this);
     this.handleClickDaily = this.handleClickDaily.bind(this);
     this.handleClickForward = this.handleClickForward.bind(this);
-    this.handleClickFourWeeks = this.handleClickFourWeeks.bind(this);
     this.handleClickMostRecent = this.handleClickMostRecent.bind(this);
-    this.handleClickOneWeek = this.handleClickOneWeek.bind(this);
     this.handleClickSettings = this.handleClickSettings.bind(this);
     this.handleClickTrends = this.handleClickTrends.bind(this);
-    this.handleClickTwoWeeks = this.handleClickTwoWeeks.bind(this);
     this.handleClickBgLog = this.handleClickBgLog.bind(this);
     this.handleDatetimeLocationChange = this.handleDatetimeLocationChange.bind(this);
     this.handleSelectDate = this.handleSelectDate.bind(this);
@@ -139,9 +136,10 @@ const Trends = translate()(class Trends extends React.PureComponent {
     const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
 
     // endpoint is exclusive, so need to subtract a day
-    const end = moment(datetimeLocationEndpoints[1]).tz(timezone).subtract(1, 'day');
+    const end = this.formatDate(moment(datetimeLocationEndpoints[1]).tz(timezone).subtract(1, 'day'));
+    const start = this.formatDate(datetimeLocationEndpoints[0]);
 
-    return this.formatDate(datetimeLocationEndpoints[0]) + ' - ' + this.formatDate(end);
+    return `${start} - ${end}`;
   }
 
   handleWindowResize(windowSize) {
@@ -173,24 +171,6 @@ const Trends = translate()(class Trends extends React.PureComponent {
     this.chart.goForward();
   }
 
-  handleClickFourWeeks(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
-    // no change, return early
-    if (prefs.trends.activeDomain === '4 weeks' && prefs.trends.extentSize === 28) {
-      return;
-    }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '4 weeks';
-    prefs.trends.extentSize = 28;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 28);
-    this.chart.setExtent(newDomain, oldDomain);
-  }
-
   handleClickMostRecent(e) {
     if (e) {
       e.preventDefault();
@@ -201,22 +181,21 @@ const Trends = translate()(class Trends extends React.PureComponent {
     this.chart.goToMostRecent();
   }
 
-  handleClickOneWeek(e) {
+  handleClickPresetWeeks(e, extentSize) {
     if (e) {
       e.preventDefault();
     }
     const prefs = _.cloneDeep(this.props.chartPrefs);
     // no change, return early
-    if (prefs.trends.activeDomain === '1 week' && prefs.trends.extentSize === 7) {
-      return;
+    if (this.props.chartPrefs.trends.extentSize !== extentSize) {
+      const current = new Date(this.chart.getCurrentDay());
+      const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
+      const newDomain = this.getNewDomain(current, extentSize);
+      prefs.trends.extentSize = extentSize;
+      this.props.updateChartPrefs(prefs, () => {
+        this.chart.setExtent(newDomain, oldDomain);
+      });
     }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '1 week';
-    prefs.trends.extentSize = 7;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 7);
-    this.chart.setExtent(newDomain, oldDomain);
   }
 
   handleClickSettings(e) {
@@ -232,24 +211,6 @@ const Trends = translate()(class Trends extends React.PureComponent {
     }
     // when you're on Trends view, clicking Trends does nothing
     return;
-  }
-
-  handleClickTwoWeeks(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
-    // no change, return early
-    if (prefs.trends.activeDomain === '2 weeks' && prefs.trends.extentSize === 14) {
-      return;
-    }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '2 weeks';
-    prefs.trends.extentSize = 14;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 14);
-    this.chart.setExtent(newDomain, oldDomain);
   }
 
   handleClickBgLog(e) {
@@ -442,12 +403,11 @@ const Trends = translate()(class Trends extends React.PureComponent {
     return (
       <SubNav
        activeDays={this.props.chartPrefs.trends.activeDays}
-       activeDomain={this.props.chartPrefs.trends.activeDomain}
        extentSize={this.props.chartPrefs.trends.extentSize}
        domainClickHandlers={{
-        '1 week': this.handleClickOneWeek,
-        '2 weeks': this.handleClickTwoWeeks,
-        '4 weeks': this.handleClickFourWeeks
+        '1 week': (e) => this.handleClickPresetWeeks(e, 7),
+        '2 weeks': (e) => this.handleClickPresetWeeks(e, 14),
+        '4 weeks': (e) => this.handleClickPresetWeeks(e, 28),
        }}
        onClickDay={this.toggleDay}
        toggleWeekdays={this.toggleWeekdays}
