@@ -44,8 +44,7 @@ class ShowHidePassword extends React.Component {
     const boxType = passwordVisible ? 'input' : 'password'
     return(
       <div className={this.props.className}>
-        <input ref={this.props.ref}
-          type={boxType}
+        <input type={boxType}
           id={this.props.id}
           className='input'
           name={this.props.name}

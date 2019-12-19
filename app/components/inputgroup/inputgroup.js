@@ -137,9 +137,7 @@ const InputGroup = React.createClass({
         name={this.props.name}
         value={this.props.value}
         placeholder={this.props.placeholder}
-        onChange={this.handleChange}
-        disabled={this.props.disabled}
-        ref="control"/>
+        onChange={this.handleChange}/>
     );
   },
 
