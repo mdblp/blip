@@ -58,7 +58,14 @@ class DatePicker extends React.Component {
         day: props.value.get('date'),
         month: props.value.get('month'),
         year: props.value.get('year')
-      }
+      };
+    } else if (typeof value === 'string') {
+      const m = moment.utc(value);
+      value = {
+        day: m.get('date'),
+        month: m.get('month'),
+        year: m.get('year')
+      };
     } else if (props.popup && typeof value === 'undefined') {
       // For popup version if value is not set, display the current date
       const today = new Date();

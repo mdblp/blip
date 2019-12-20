@@ -29,6 +29,7 @@ import SubNav from './trendssubnav';
 import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import Footer from './footer';
+import DatePicker from '../datepicker';
 import { BG_DATA_TYPES } from '../../core/constants';
 
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
@@ -80,6 +81,7 @@ const Trends = translate()(class Trends extends React.PureComponent {
       inTransition: false,
       extentSize: 14,
       visibleDays: 0,
+      displayCalendar: null,
     };
 
     this.formatDate = this.formatDate.bind(this);
@@ -141,6 +143,7 @@ const Trends = translate()(class Trends extends React.PureComponent {
 
   getTitle() {
     const { t, timePrefs, endpoints } = this.props;
+    const { displayCalendar } = this.state;
 
     this.log('getTitle', endpoints);
     if (endpoints.length !== 2) {
@@ -155,14 +158,21 @@ const Trends = translate()(class Trends extends React.PureComponent {
     // endpoint is exclusive, so need to subtract a day
     const displayEndDate = this.formatDate(endDate.subtract(1, 'day'));
 
-    const handleChangeStartDate = (event) => {
-      const { value } = event.target;
-      this.log('handleChangeStartDate', value);
-
-      if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        const newStart = value + 'T00:00:00.000Z';
-        const newDomain = [newStart, endpoints[1]];
-
+    const handleClickStart = (e) => {
+      this.setState({displayCalendar: 'start'});
+    };
+    const handleClickEnd = (e) => {
+      this.setState({displayCalendar: 'end'});
+    };
+    const handleChange = (r) => {
+      console.log(r.value, r.valueAsDate, r.valueAsMoment);
+      const newDomain = _.clone(endpoints);
+      if (displayCalendar === 'start') {
+        newDomain[0] = r.valueAsDate.toISOString();
+      } else if (displayCalendar === 'end') {
+        newDomain[1] = r.valueAsDate.toISOString();
+      }
+      this.setState({displayCalendar: null}, () => {
         this.props.onUpdateChartDateRange(newDomain, () => {
           const prefs = _.cloneDeep(this.props.chartPrefs);
           const extentSize = this.getExtendSize(newDomain);
@@ -171,46 +181,26 @@ const Trends = translate()(class Trends extends React.PureComponent {
             this.chart.setExtent(newDomain);
           });
         });
-      }
+      });
     };
 
-    const handleChangeEndDate = (event) => {
-      const { value } = event.target;
-      this.log('handleChangeEndDate', value);
-
-      if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        const newEnd = value + 'T00:00:00.000Z';
-        const newDomain = [endpoints[0], newEnd];
-
-        this.props.onUpdateChartDateRange(newDomain, () => {
-          const prefs = _.cloneDeep(this.props.chartPrefs);
-          const extentSize = this.getExtendSize(newDomain);
-          prefs.trends.extentSize = extentSize;
-          this.props.updateChartPrefs(prefs, () => {
-            this.chart.setExtent(newDomain);
-          });
-        });
-      }
+    const divStyle = {
+      position: 'relative',
     };
 
-    let inputValue = startDate.format('YYYY-MM-DD');
-    const start = (
-      <div className="patient-data-subnav-dates-trends-value">
-        <span>{displayStartDate}</span>
-        <input type="date" value={inputValue} onChange={handleChangeStartDate} required={true} />
-      </div>
-    );
-    inputValue = endDate.format('YYYY-MM-DD');
-    const end = (
-      <div className="patient-data-subnav-dates-trends-value">
-        <span>{displayEndDate}</span>
-        <input type="date" value={inputValue} onChange={handleChangeEndDate} required={true} />
-      </div>
-    );
+    let calendar = null;
+    if (displayCalendar === 'start') {
+      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[0]} />;
+    } else if (displayCalendar === 'end') {
+      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[1]} />;
+    }
 
     return (
-      <div className="patient-data-subnav-dates-trends-flex">
-        {start}-{end}
+      <div style={divStyle}>
+        <span onClick={handleClickStart}>{displayStartDate}</span>
+        <span>&nbsp;-&nbsp;</span>
+        <span onClick={handleClickEnd}>{displayEndDate}</span>
+        {calendar}
       </div>
     );
   }
