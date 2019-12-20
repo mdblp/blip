@@ -204,6 +204,7 @@
   "Date of diagnosis": "",
   "Date of diagnosis: {{date}}": "",
   "Date range: ": "",
+  "date.format": "MDY",
   "day": "",
   "Day": "",
   "day_timeago": "day",

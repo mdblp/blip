@@ -18,7 +18,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
-
+import moment from 'moment';
 
 class DatePicker extends React.Component {
   static defaultValue = {
@@ -36,10 +36,11 @@ class DatePicker extends React.Component {
   }
 
   static defaultProps = {
+    name: 'datepicker',
+    value: DatePicker.defaultValue,
     disabled: false,
     popup: false,
     onChange: _.noop,
-    value: DatePicker.defaultValue,
   };
 
   constructor(props) {
@@ -48,17 +49,34 @@ class DatePicker extends React.Component {
     let value = props.value;
     if (_.isDate(value)) {
       value = {
-        day: value.getDate(),
-        month: value.getMonth(),
-        year: value.getFullYear()
+        day: props.value.getDate(),
+        month: props.value.getMonth(),
+        year: props.value.getFullYear()
+      };
+    } else if (moment.isMoment(value)) {
+      value = {
+        day: props.value.get('date'),
+        month: props.value.get('month'),
+        year: props.value.get('year')
+      }
+    } else if (props.popup && typeof value === 'undefined') {
+      // For popup version if value is not set, display the current date
+      const today = new Date();
+      value = {
+        day: today.getDate(),
+        months: today.getMonth(),
+        year: today.getFullYear(),
       };
     }
     this.state = {
-      value
+      value,
+      hidden: false
     };
 
-    this.months = this.getMonths();
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeFlat = this.handleChangeFlat.bind(this);
+    this.handleChangePopup = this.handleChangePopup.bind(this);
+    this.handlePrevMonth = this.handlePrevMonth.bind(this);
+    this.handleNextMonth = this.handleNextMonth.bind(this);
   }
 
   getMonths() {
@@ -90,8 +108,14 @@ class DatePicker extends React.Component {
 
   render() {
     const { popup } = this.props;
-    if (popup) {
-      return (<div>TODO</div>);
+    const { hidden } = this.state;
+
+    // console.log(moment().weekday(0).format('dd'));
+
+    if (hidden) {
+      return null;
+    } else if (popup) {
+      return this.renderPopup();
     } else {
       return this.renderFlat();
     }
@@ -100,38 +124,175 @@ class DatePicker extends React.Component {
   renderFlat() {
     const { t } = this.props;
     const { value } = this.state;
-    const monthOptions = _.map(this.months, (item) => {
+    const months = this.getMonths();
+    const monthOptions = _.map(months, (item) => {
       return <option key={item.value} value={item.value}>{item.label}</option>;
     });
+
+    const dateFormat = t('date.format', { defaultValue: 'MDY' });
+    let monthClassName = 'DatePicker-control DatePicker-control--month';
+    let dayClassName = 'DatePicker-control DatePicker-control--day';
+    let yearClassName = 'DatePicker-control DatePicker-control--year';
+
+    let position = dateFormat.indexOf('M');
+    if (position >= 0) {
+      monthClassName = `${monthClassName} DatePicker-control-order-${position}`;
+    }
+    position = dateFormat.indexOf('D');
+    if (position >= 0) {
+      dayClassName = `${dayClassName} DatePicker-control-order-${position}`;
+    }
+    position = dateFormat.indexOf('Y');
+    if (position >= 0) {
+      yearClassName = `${yearClassName} DatePicker-control-order-${position}`;
+    }
+
     return (
       <div className="DatePicker" name={this.props.name}>
         <select
-          className="DatePicker-control DatePicker-control--month"
+          className={monthClassName}
           name="month"
           value={value.month}
           disabled={this.props.disabled}
-          onChange={this.handleChange}>
+          onChange={this.handleChangeFlat}>
           {monthOptions}
         </select>
         <input
-          className="DatePicker-control DatePicker-control--day"
+          className={dayClassName}
           name="day"
           value={value.day}
           placeholder={t('Day')}
           disabled={this.props.disabled}
-          onChange={this.handleChange} />
+          onChange={this.handleChangeFlat} />
         <input
-          className="DatePicker-control DatePicker-control--year"
+          className={yearClassName}
           name="year"
           value={value.year}
           placeholder={t('Year')}
           disabled={this.props.disabled}
-          onChange={this.handleChange} />
+          onChange={this.handleChangeFlat} />
       </div>
     );
   }
 
-  handleChange(e) {
+  renderPopup() {
+    const { value } = this.state;
+    const m = moment.utc(value);
+
+    console.log('current date: ', m.toISOString());
+
+    // Build the weekdays (Su Mo Tu We Th Fr Sa)
+    const weekDays = [];
+    const weekDaysLabel = [];
+    for (let i=0; i<7; i++) {
+      const weekDay = moment().weekday(i);
+      const weekDayLabel = weekDay.format('dd');
+      weekDaysLabel.push(weekDayLabel);
+      weekDays.push(<span className="datepicker-popup-weekday" key={weekDayLabel}>{weekDayLabel}</span>);
+    }
+
+    // Build days
+    const monthDays = [];
+    const currentMonth = m.get('month');
+    const day = moment.utc(m).date(1).weekday(0);
+    console.log('first day', day.toISOString());
+    // Previous month
+    while (day.get('month') !== currentMonth) {
+      monthDays.push(this.getNextSpanDay(day, false, true));
+    }
+    // Current month
+    while (day.get('month') === currentMonth) {
+      const isSameDay = m.isSame(day, 'day');
+      monthDays.push(this.getNextSpanDay(day, isSameDay));
+    }
+    // Last week days in the next month
+    if (day.format('dd') !== weekDaysLabel[weekDaysLabel.length - 1]) {
+      while (day.format('dd') !== weekDaysLabel[weekDaysLabel.length - 1]) {
+        monthDays.push(this.getNextSpanDay(day, false, true));
+      }
+      monthDays.push(this.getNextSpanDay(day, false, true));
+    }
+
+    return (
+      <div className="datepicker-popup">
+        <div className="datepicker-popup-head">
+          <span className="datepicker-popup-prev-month icon-back" onClick={this.handlePrevMonth}></span>
+          <span className="datepicker-popup-year">{m.format('MMM YYYY')}</span>
+          <span className="datepicker-popup-next-month icon-next" onClick={this.handleNextMonth}></span>
+        </div>
+        <div className="datepicker-popup-monthdays">
+          {weekDays}
+          {monthDays}
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * private function.
+   *
+   * The day moment value will be incremented by 1 day after a call of this function.
+   * @param {moment} day the current day.
+   * @param {boolean} isSelected true to set the class 'datepicker-popup-day-selected'
+   * @param {boolean} wrongMonth true if outside the current displayed month
+   */
+  getNextSpanDay(day, isSelected = false, wrongMonth = false) {
+    const dayOfMonth = day.get('date');
+    const key = day.toISOString();
+    day.add(1, 'days');
+
+    let className = 'datepicker-popup-day';
+    if (isSelected) {
+      className = `${className} datepicker-popup-day-selected`;
+    }
+    if (wrongMonth) {
+      className = `${className} datepicker-popup-day-out`;
+    }
+    return (<span className={className} key={key} value={key} onClick={this.handleChangePopup}>{dayOfMonth}</span>);
+  }
+
+  handlePrevMonth(e) {
+    const m = moment(this.state.value);
+    m.subtract(1, 'months');
+    const value = {
+      day: m.get('date'),
+      month: m.get('month'),
+      year: m.get('year')
+    }
+    this.setState({value});
+  }
+
+  handleNextMonth(e) {
+    const m = moment(this.state.value);
+    m.add(1, 'months');
+    const value = {
+      day: m.get('date'),
+      month: m.get('month'),
+      year: m.get('year')
+    };
+    this.setState({value});
+  }
+
+  handleChangePopup(e) {
+    const isoDate = e.target.getAttribute('value');
+    const valueAsMoment = moment.utc(isoDate);
+    const value = {
+      day: valueAsMoment.get('date'),
+      month: valueAsMoment.get('month'),
+      year: valueAsMoment.get('year')
+    };
+    const valueAsDate = new Date(isoDate);
+    this.setState({ hidden: true}, () => {
+      this.props.onChange({
+        name: this.props.name,
+        value,
+        valueAsDate,
+        valueAsMoment,
+      });
+    });
+  }
+
+  handleChangeFlat(e) {
     const target = e.target;
     const { value: oldValue } = this.state;
     const value = _.clone(oldValue);
@@ -142,14 +303,13 @@ class DatePicker extends React.Component {
       valueAsDate = new Date(value.year, value.month, value.day);
     }
 
-    if (this.props.onChange) {
-      this.props.onChange({
-        name: this.props.name,
-        value,
-        valueAsDate
-      });
-    }
+    this.props.onChange({
+      name: this.props.name,
+      value,
+      valueAsDate
+    });
   }
+
 }
 
 export default translate()(DatePicker);

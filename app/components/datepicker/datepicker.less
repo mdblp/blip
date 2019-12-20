@@ -14,8 +14,19 @@
  */
 
 .DatePicker {
-  display: inline-block;
-  vertical-align: top;
+  display: flex;
+}
+
+.DatePicker-control-order-0 {
+  order: 1;
+}
+
+.DatePicker-control-order-1 {
+  order: 2;
+}
+
+.DatePicker-control-order-2 {
+  order: 3;
 }
 
 .DatePicker-control {
@@ -41,4 +52,46 @@
 
 .DatePicker-control--year {
   width: 80px;
+}
+
+/* Parent element must have: position: relative; */
+.datepicker-popup {
+  position: absolute;
+  top: 2em;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  background-color: white;
+  color: @black-color;
+}
+
+.datepicker-popup-head {
+  display: flex;
+  justify-content: space-between;
+  color: @gray-title;
+  font-weight: bold;
+}
+
+.datepicker-popup-monthdays {
+  display: grid;
+  grid-template-columns: repeat(7, 3em);
+}
+
+.datepicker-popup-weekday {
+  color: @black-color;
+  font-weight: bold;
+}
+.datepicker-popup-prev-month:hover, .datepicker-popup-next-month:hover, .datepicker-popup-day:hover {
+  background-color: @gray-darkest;
+  color: black;
+  font-weight: bold;
+}
+.datepicker-popup-day-out {
+  font-weight: lighter;
+  color: @gray-darker;
+}
+.datepicker-popup-day-selected {
+  font-weight: bold;
+  background-color: @brand-green;
 }
