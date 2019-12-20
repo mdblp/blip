@@ -15,20 +15,53 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 
-var DATE_FORMAT = 'YYYY-MM-DD';
 
-var DatePicker = translate()(React.createClass({
-  propTypes: {
-    name: React.PropTypes.string,
-    value: React.PropTypes.object,
-    disabled: React.PropTypes.bool,
-    onChange: React.PropTypes.func
-  },
+class DatePicker extends React.Component {
+  static defaultValue = {
+    day: undefined,
+    month: undefined,
+    year: undefined
+  };
 
-  months: function () {
+  static propTypes = {
+    name: PropTypes.string,
+    value: PropTypes.object,
+    disabled: PropTypes.bool,
+    popup: PropTypes.bool,
+    onChange: PropTypes.func,
+  }
+
+  static defaultProps = {
+    disabled: false,
+    popup: false,
+    onChange: _.noop,
+    value: DatePicker.defaultValue,
+  };
+
+  constructor(props) {
+    super(props);
+
+    let value = props.value;
+    if (_.isDate(value)) {
+      value = {
+        day: value.getDate(),
+        month: value.getMonth(),
+        year: value.getFullYear()
+      };
+    }
+    this.state = {
+      value
+    };
+
+    this.months = this.getMonths();
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  getMonths() {
     const { t } = this.props;
     return [
       {value: '', label: t('Month')},
@@ -45,80 +78,78 @@ var DatePicker = translate()(React.createClass({
       {value: '10', label: t('November')},
       {value: '11', label: t('December')}
     ];
-  },
+  }
 
-  getInitialState: function() {
-    return {
-      value: this.props.value || {}
-    };
-  },
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(prevProps.value, this.props.value)) {
+      this.setState({
+        value: this.props.value || DatePicker.defaultValue
+      });
+    }
+  }
 
-  componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      value: nextProps.value || {}
-    });
-  },
+  render() {
+    const { popup } = this.props;
+    if (popup) {
+      return (<div>TODO</div>);
+    } else {
+      return this.renderFlat();
+    }
+  }
 
-  render: function() {
-    return (
-      <div className="DatePicker" name={this.props.name}>
-        {this.renderMonth()}
-        {this.renderDay()}
-        {this.renderYear()}
-      </div>
-    );
-  },
-
-  renderMonth: function() {
-    var options = _.map(this.months(), function(item) {
+  renderFlat() {
+    const { t } = this.props;
+    const { value } = this.state;
+    const monthOptions = _.map(this.months, (item) => {
       return <option key={item.value} value={item.value}>{item.label}</option>;
     });
     return (
-      <select
-        className="DatePicker-control DatePicker-control--month"
-        name="month"
-        value={this.state.value.month}
-        disabled={this.props.disabled}
-        onChange={this.handleChange}>
-        {options}
-      </select>
+      <div className="DatePicker" name={this.props.name}>
+        <select
+          className="DatePicker-control DatePicker-control--month"
+          name="month"
+          value={value.month}
+          disabled={this.props.disabled}
+          onChange={this.handleChange}>
+          {monthOptions}
+        </select>
+        <input
+          className="DatePicker-control DatePicker-control--day"
+          name="day"
+          value={value.day}
+          placeholder={t('Day')}
+          disabled={this.props.disabled}
+          onChange={this.handleChange} />
+        <input
+          className="DatePicker-control DatePicker-control--year"
+          name="year"
+          value={value.year}
+          placeholder={t('Year')}
+          disabled={this.props.disabled}
+          onChange={this.handleChange} />
+      </div>
     );
-  },
+  }
 
-  renderDay: function() {
-    const { t } = this.props;
-    return <input
-      className="DatePicker-control DatePicker-control--day"
-      name="day"
-      value={this.state.value.day}
-      placeholder={t('Day')}
-      disabled={this.props.disabled}
-      onChange={this.handleChange} />;
-  },
-
-  renderYear: function() {
-    const { t } = this.props;
-    return <input
-      className="DatePicker-control DatePicker-control--year"
-      name="year"
-      value={this.state.value.year}
-      placeholder={t('Year')}
-      disabled={this.props.disabled}
-      onChange={this.handleChange} />;
-  },
-
-  handleChange: function(e) {
-    var target = e.target;
-    var value = this.state.value;
+  handleChange(e) {
+    const target = e.target;
+    const { value: oldValue } = this.state;
+    const value = _.clone(oldValue);
     value[target.name] = target.value;
+
+    let valueAsDate = null;
+    if (typeof value.year === 'number' && typeof value.month === 'number' && typeof value.day === 'number') {
+      valueAsDate = new Date(value.year, value.month, value.day);
+    }
 
     if (this.props.onChange) {
       this.props.onChange({
         name: this.props.name,
-        value: value
+        value,
+        valueAsDate
       });
     }
   }
-}));
+}
 
-module.exports = DatePicker;
+export default translate()(DatePicker);
