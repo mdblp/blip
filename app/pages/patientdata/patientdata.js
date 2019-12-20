@@ -419,6 +419,7 @@ export let PatientData = translate()(React.createClass({
             updateDatetimeLocation={this.updateDatetimeLocation}
             uploadUrl={this.props.uploadUrl}
             trendsState={this.props.viz.trends}
+            endpoints={this.state.endpoints}
             ref="tideline" />
           );
       case 'bgLog':
@@ -644,50 +645,53 @@ export let PatientData = translate()(React.createClass({
     return datetime;
   },
 
-  handleChartDateRangeUpdate: function(endpoints) {
-    this.updateChartEndpoints(endpoints);
+  handleChartDateRangeUpdate: function(endpoints, cb = _.noop) {
+    this.updateChartEndpoints(endpoints, () => {
+      if (!this.props.fetchingPatientData && !this.state.processingData) {
+        const patientID = this.props.currentPatientInViewId;
+        const patientData = _.get(this.props, ['patientDataMap', patientID], []);
+        const dateRangeStart = moment.utc(endpoints[0]).startOf('day');
+        const allDataFetched = _.get(this.props, 'fetchedPatientDataRange.fetchedUntil') === 'start';
 
-    if (!this.props.fetchingPatientData && !this.state.processingData) {
-      const patientID = this.props.currentPatientInViewId;
-      const patientData = _.get(this.props, ['patientDataMap', patientID], []);
-      const dateRangeStart = moment.utc(endpoints[0]).startOf('day');
-      const allDataFetched = _.get(this.props, 'fetchedPatientDataRange.fetchedUntil') === 'start';
+        const lastProcessedDateTarget = this.state.lastProcessedDateTarget;
+        const lastDiabetesDatumProcessedTime = _.get(patientData, `${this.state.lastDiabetesDatumProcessedIndex}.time`);
+        const allFetchedDatumsProcessed = this.state.lastDatumProcessedIndex === patientData.length - 1;
 
-      const lastProcessedDateTarget = this.state.lastProcessedDateTarget;
-      const lastDiabetesDatumProcessedTime = _.get(patientData, `${this.state.lastDiabetesDatumProcessedIndex}.time`);
-      const allFetchedDatumsProcessed = this.state.lastDatumProcessedIndex === patientData.length - 1;
+        const isScrollChart = _.includes(['daily', 'bgLog'], this.state.chartType);
+        const chartLimitReached = lastDiabetesDatumProcessedTime && dateRangeStart.isSameOrBefore(moment.utc(lastDiabetesDatumProcessedTime), 'day');
 
-      const isScrollChart = _.includes(['daily', 'bgLog'], this.state.chartType);
-      const chartLimitReached = lastDiabetesDatumProcessedTime && dateRangeStart.isSameOrBefore(moment.utc(lastDiabetesDatumProcessedTime), 'day');
+        const comparator = this.state.chartType === 'trends' ? 'isBefore' : 'isSameOrBefore';
+        const comparatorPrecision = this.state.chartType === 'trends' ? 'day' : 'millisecond';
 
-      const comparator = this.state.chartType === 'trends' ? 'isBefore' : 'isSameOrBefore';
-      const comparatorPrecision = this.state.chartType === 'trends' ? 'day' : 'millisecond';
-
-      // If we've reached the limit of our fetched data, we need to get some more
-      if (
-        allFetchedDatumsProcessed && (
-          (dateRangeStart[comparator](this.props.fetchedPatientDataRange.start, comparatorPrecision))
-          || (isScrollChart && chartLimitReached)
-        )
-      ) {
-        if (allDataFetched) {
-          return;
+        // If we've reached the limit of our fetched data, we need to get some more
+        if (
+          allFetchedDatumsProcessed && (
+            (dateRangeStart[comparator](this.props.fetchedPatientDataRange.start, comparatorPrecision))
+            || (isScrollChart && chartLimitReached)
+          )
+        ) {
+          if (!allDataFetched) {
+            this.fetchEarlierData({}, cb);
+          } else {
+            cb();
+          }
+        } else if (
+          !allFetchedDatumsProcessed && (
+            (lastProcessedDateTarget && dateRangeStart[comparator](lastProcessedDateTarget, comparatorPrecision))
+            || (isScrollChart && chartLimitReached)
+          )
+        ) {
+          // If we've reached the limit of our processed data (since we process in smaller chunks than
+          // what we fetch), we need to process some more.
+          this.log(`Limit of processed data reached, ${(patientData.length - 1) - this.state.lastDatumProcessedIndex} unprocessed remain. Processing more.`)
+          this.processData(this.props, cb);
+        } else {
+          cb();
         }
-        return this.fetchEarlierData();
+      } else {
+        cb();
       }
-
-      // If we've reached the limit of our processed data (since we process in smaller chunks than
-      // what we fetch), we need to process some more.
-      if (
-        !allFetchedDatumsProcessed && (
-          (lastProcessedDateTarget && dateRangeStart[comparator](lastProcessedDateTarget, comparatorPrecision))
-          || (isScrollChart && chartLimitReached)
-        )
-      ) {
-        this.log(`Limit of processed data reached, ${(patientData.length - 1) - this.state.lastDatumProcessedIndex} unprocessed remain. Processing more.`)
-        return this.processData(this.props);
-      }
-    }
+    });
   },
 
   handleMessageCreation: function(message) {
@@ -889,7 +893,7 @@ export let PatientData = translate()(React.createClass({
     }
   },
 
-  updateChartPrefs: function(updates, cb = _.noop) {
+  updateChartPrefs: function(updates, cb) {
     const newPrefs = {
       ...this.state.chartPrefs,
       ...updates,
@@ -901,16 +905,16 @@ export let PatientData = translate()(React.createClass({
     }, cb);
   },
 
-  updateDatetimeLocation: function(datetime) {
+  updateDatetimeLocation: function(datetime, cb) {
     this.setState({
       datetimeLocation: datetime,
-    });
+    }, cb);
   },
 
-  updateChartEndpoints: function(endpoints) {
+  updateChartEndpoints: function(endpoints, cb) {
     this.setState({
       endpoints,
-    });
+    }, cb);
   },
 
   componentWillMount: function() {
@@ -935,7 +939,6 @@ export let PatientData = translate()(React.createClass({
   componentWillReceiveProps: function(nextProps) {
     const userId = this.props.currentPatientInViewId;
     const nextPatientData = _.get(nextProps, ['patientDataMap', userId], null);
-    const currentPatientData = _.get(this.props, ['patientDataMap', userId], null);
     const patientSettings = _.get(nextProps, ['patient', 'settings'], null);
 
     const nextFetchedDataRange = _.get(nextProps, 'fetchedPatientDataRange', {});
@@ -1072,9 +1075,10 @@ export let PatientData = translate()(React.createClass({
     }
   },
 
-  fetchEarlierData: function(options = {}) {
+  fetchEarlierData: function(options = {}, cb) {
     // Return if we've already fetched all data, or are currently fetching
     if (_.get(this.props, 'fetchedPatientDataRange.fetchedUntil') === 'start') {
+      if (cb) { cb(); }
       return;
     };
 
@@ -1093,22 +1097,23 @@ export let PatientData = translate()(React.createClass({
       loading: true,
       requestedPatientDataRange,
       fetchEarlierDataCount: count,
+    }, () => {
+      const fetchOpts = _.defaults(options, {
+        startDate: requestedPatientDataRange.start,
+        endDate: requestedPatientDataRange.end,
+        carelink: this.props.carelink,
+        dexcom: this.props.dexcom,
+        medtronic: this.props.medtronic,
+        useCache: false,
+        initial: false,
+      });
+
+      this.props.onFetchEarlierData(fetchOpts, this.props.currentPatientInViewId);
+
+      const patientID = this.props.currentPatientInViewId;
+      this.props.trackMetric('Fetched earlier patient data', { patientID, count });
+      if (cb) { cb(); }
     });
-
-    const fetchOpts = _.defaults(options, {
-      startDate: requestedPatientDataRange.start,
-      endDate: requestedPatientDataRange.end,
-      carelink: this.props.carelink,
-      dexcom: this.props.dexcom,
-      medtronic: this.props.medtronic,
-      useCache: false,
-      initial: false,
-    });
-
-    this.props.onFetchEarlierData(fetchOpts, this.props.currentPatientInViewId);
-
-    const patientID = this.props.currentPatientInViewId;
-    this.props.trackMetric('Fetched earlier patient data', { patientID, count });
   },
 
   getLastDatumToProcessIndex: function (unprocessedData, targetDatetime) {
@@ -1141,7 +1146,7 @@ export let PatientData = translate()(React.createClass({
     return --targetIndex;
   },
 
-  processData: function(props = this.props) {
+  processData: function(props = this.props, cb = _.noop) {
     const patientID = props.currentPatientInViewId;
     const patientData = _.get(props, ['patientDataMap', patientID], []);
     const allDataFetched = _.get(props, 'fetchedPatientDataRange.fetchedUntil') === 'start';
@@ -1151,9 +1156,10 @@ export let PatientData = translate()(React.createClass({
       if (!this.state.processingData) {
         this.setState({
           loading: false,
-        });
+        }, cb);
+        return;
       }
-      return;
+      return cb();
     };
 
     if (patientData.length) {
@@ -1191,7 +1197,9 @@ export let PatientData = translate()(React.createClass({
       if (!isInitialProcessing && !allDataFetched && remainingDataIsLessThanAWeek) {
         return this.setState({
           processingData: false,
-        }, this.fetchEarlierData);
+        }, () => {
+          this.fetchEarlierData({}, cb);
+        });
       }
 
       // Find a cutoff point for processing unprocessed diabetes data
@@ -1269,6 +1277,7 @@ export let PatientData = translate()(React.createClass({
         }, () => {
           this.handleInitialProcessedData(props, processedData, patientSettings);
           props.trackMetric('Processed initial patient data', { patientID });
+          cb();
         });
       }
       else {
@@ -1298,19 +1307,21 @@ export let PatientData = translate()(React.createClass({
           processedPatientData,
           processingData: false,
         }, () => {
-          this.hideLoading();
+          this.hideLoading(cb);
           props.trackMetric('Processed earlier patient data', { patientID, count });
         });
       }
+    } else {
+      cb();
     }
   },
 
-  hideLoading: function(timeout = 250) {
+  hideLoading: function(timeout = 250, cb) {
     // Needs to be in a setTimeout to force unsetting the loading state in a new render cycle
     // so that child components can be aware of the change in processing states. It also serves
     // to ensure the loading indicator shows long enough for the user to make sense of it.
     setTimeout(() => {
-      this.setState({ loading: false });
+      this.setState({ loading: false }, cb);
     }, timeout);
   },
 

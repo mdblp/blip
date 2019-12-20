@@ -53,6 +53,7 @@ const Trends = translate()(class Trends extends React.PureComponent {
     patientData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
+    endpoints: PropTypes.array.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
     onSwitchToBasics: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
@@ -72,12 +73,11 @@ const Trends = translate()(class Trends extends React.PureComponent {
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs);
     this.chartType = 'trends';
     this.log = bows('Trends');
+    this.debouncedDateRangeUpdate = null;
 
     this.state = {
       atMostRecent: true,
-      endpoints: [],
       inTransition: false,
-      title: '',
       extentSize: 14,
       visibleDays: 0,
     };
@@ -111,8 +111,9 @@ const Trends = translate()(class Trends extends React.PureComponent {
   }
 
   componentWillUnmount = () => {
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
+    if (this.debouncedDateRangeUpdate) {
+      this.debouncedDateRangeUpdate.cancel();
+      this.debouncedDateRangeUpdate = null;
     }
   };
 
@@ -132,14 +133,86 @@ const Trends = translate()(class Trends extends React.PureComponent {
     return dateDomain;
   }
 
-  getTitle(datetimeLocationEndpoints) {
-    const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
+  getExtendSize(domain) {
+    const startDate = moment(domain[0]);
+    const endDate = moment(domain[1]);
+    return endDate.diff(startDate, 'days');
+  }
 
+  getTitle() {
+    const { t, timePrefs, endpoints } = this.props;
+
+    this.log('getTitle', endpoints);
+    if (endpoints.length !== 2) {
+      return t('Loading...');
+    }
+
+    const timezone = getTimezoneFromTimePrefs(timePrefs);
+    const startDate = moment(endpoints[0]).tz(timezone);
+    const endDate = moment(endpoints[1]).tz(timezone);
+
+    const displayStartDate = this.formatDate(startDate);
     // endpoint is exclusive, so need to subtract a day
-    const end = this.formatDate(moment(datetimeLocationEndpoints[1]).tz(timezone).subtract(1, 'day'));
-    const start = this.formatDate(datetimeLocationEndpoints[0]);
+    const displayEndDate = this.formatDate(endDate.subtract(1, 'day'));
 
-    return `${start} - ${end}`;
+    const handleChangeStartDate = (event) => {
+      const { value } = event.target;
+      this.log('handleChangeStartDate', value);
+
+      if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const newStart = value + 'T00:00:00.000Z';
+        const newDomain = [newStart, endpoints[1]];
+
+        this.props.onUpdateChartDateRange(newDomain, () => {
+          const prefs = _.cloneDeep(this.props.chartPrefs);
+          const extentSize = this.getExtendSize(newDomain);
+          prefs.trends.extentSize = extentSize;
+          this.props.updateChartPrefs(prefs, () => {
+            this.chart.setExtent(newDomain);
+          });
+        });
+      }
+    };
+
+    const handleChangeEndDate = (event) => {
+      const { value } = event.target;
+      this.log('handleChangeEndDate', value);
+
+      if (typeof value === 'string' && value.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        const newEnd = value + 'T00:00:00.000Z';
+        const newDomain = [endpoints[0], newEnd];
+
+        this.props.onUpdateChartDateRange(newDomain, () => {
+          const prefs = _.cloneDeep(this.props.chartPrefs);
+          const extentSize = this.getExtendSize(newDomain);
+          prefs.trends.extentSize = extentSize;
+          this.props.updateChartPrefs(prefs, () => {
+            this.chart.setExtent(newDomain);
+          });
+        });
+      }
+    };
+
+    let inputValue = startDate.format('YYYY-MM-DD');
+    const start = (
+      <div className="patient-data-subnav-dates-trends-value">
+        <span>{displayStartDate}</span>
+        <input type="date" value={inputValue} onChange={handleChangeStartDate} required={true} />
+      </div>
+    );
+    inputValue = endDate.format('YYYY-MM-DD');
+    const end = (
+      <div className="patient-data-subnav-dates-trends-value">
+        <span>{displayEndDate}</span>
+        <input type="date" value={inputValue} onChange={handleChangeEndDate} required={true} />
+      </div>
+    );
+
+    return (
+      <div className="patient-data-subnav-dates-trends-flex">
+        {start}-{end}
+      </div>
+    );
   }
 
   handleWindowResize(windowSize) {
@@ -185,9 +258,9 @@ const Trends = translate()(class Trends extends React.PureComponent {
     if (e) {
       e.preventDefault();
     }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
     // no change, return early
     if (this.props.chartPrefs.trends.extentSize !== extentSize) {
+      const prefs = _.cloneDeep(this.props.chartPrefs);
       const current = new Date(this.chart.getCurrentDay());
       const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
       const newDomain = this.getNewDomain(current, extentSize);
@@ -222,24 +295,23 @@ const Trends = translate()(class Trends extends React.PureComponent {
   }
 
   handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent) {
-    this.setState({
-      atMostRecent: atMostRecent,
-      title: this.getTitle(datetimeLocationEndpoints),
-      endpoints: datetimeLocationEndpoints,
-    });
-
-    this.props.updateDatetimeLocation(datetimeLocationEndpoints[1]);
+    const updateDateRange = () => {
+      this.debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
+      this.debouncedDateRangeUpdate(datetimeLocationEndpoints);
+    };
 
     // Update the chart date range in the patientData component.
     // We debounce this to avoid excessive updates while panning the view.
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
+    if (this.debouncedDateRangeUpdate) {
+      this.debouncedDateRangeUpdate.cancel();
+      this.debouncedDateRangeUpdate = null;
     }
 
-    const debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
-    debouncedDateRangeUpdate(datetimeLocationEndpoints);
-
-    this.setState({ debouncedDateRangeUpdate });
+    this.setState({
+      atMostRecent,
+    }, () => {
+      this.props.updateDatetimeLocation(datetimeLocationEndpoints[1], updateDateRange);
+    });
   }
 
   handleSelectDate(date) {
@@ -352,7 +424,7 @@ const Trends = translate()(class Trends extends React.PureComponent {
                 chartPrefs={this.props.chartPrefs}
                 chartType={this.chartType}
                 dataUtil={this.props.dataUtil}
-                endpoints={this.state.endpoints}
+                endpoints={this.props.endpoints}
               />
             </div>
           </div>
@@ -377,13 +449,14 @@ const Trends = translate()(class Trends extends React.PureComponent {
   }
 
   renderHeader() {
+    const title = this.getTitle();
     return (
       <Header
         chartType={this.chartType}
         patient={this.props.patient}
         inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
-        title={this.state.title}
+        title={title}
         iconBack={'icon-back'}
         iconNext={'icon-next'}
         iconMostRecent={'icon-most-recent'}

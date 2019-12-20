@@ -28,7 +28,7 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
   static propTypes = {
     patient: PropTypes.object,
     printReady: PropTypes.bool,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     chartType: PropTypes.string.isRequired,
     inTransition: PropTypes.bool.isRequired,
     atMostRecent: PropTypes.bool.isRequired,
