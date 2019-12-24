@@ -14,26 +14,24 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-
-const d3 = window.d3;
-
 import _ from 'lodash';
 import bows from 'bows';
 import moment from 'moment';
-import React, { PropTypes, PureComponent } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import sundial from 'sundial';
 import WindowSizeListener from 'react-window-size-listener';
 import { translate } from 'react-i18next';
+import * as viz from '@tidepool/viz';
 
 import Header from './header';
 import SubNav from './trendssubnav';
 import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import Footer from './footer';
+import DatePicker from '../datepicker';
 import { BG_DATA_TYPES } from '../../core/constants';
 
-
-import * as viz from '@tidepool/viz';
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
 const FocusedRangeLabels = viz.components.FocusedRangeLabels;
 const FocusedSMBGPointLabel = viz.components.FocusedSMBGPointLabel;
@@ -43,26 +41,27 @@ const getTimezoneFromTimePrefs = viz.utils.datetime.getTimezoneFromTimePrefs;
 const getLocalizedCeiling = viz.utils.datetime.getLocalizedCeiling;
 const Loader = viz.components.Loader;
 
-const Trends = translate()(class Trends extends PureComponent {
+const Trends = translate()(class Trends extends React.PureComponent {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: React.PropTypes.oneOf(BG_DATA_TYPES),
+    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
     currentPatientInViewId: PropTypes.string.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     initialDatetimeLocation: PropTypes.string,
-    patient: React.PropTypes.object,
+    patient: PropTypes.object,
     patientData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
+    endpoints: PropTypes.array.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
     onSwitchToBasics: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
     onSwitchToTrends: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
     onSwitchToBgLog: PropTypes.func.isRequired,
-    onUpdateChartDateRange: React.PropTypes.func.isRequired,
+    onUpdateChartDateRange: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     updateDatetimeLocation: PropTypes.func.isRequired,
@@ -75,28 +74,25 @@ const Trends = translate()(class Trends extends PureComponent {
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs);
     this.chartType = 'trends';
     this.log = bows('Trends');
+    this.debouncedDateRangeUpdate = null;
 
     this.state = {
       atMostRecent: true,
-      endpoints: [],
       inTransition: false,
-      title: '',
+      extentSize: 14,
       visibleDays: 0,
+      displayCalendar: null,
     };
 
     this.formatDate = this.formatDate.bind(this);
     this.getNewDomain = this.getNewDomain.bind(this);
-    this.getTitle = this.getTitle.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleClickBack = this.handleClickBack.bind(this);
     this.handleClickDaily = this.handleClickDaily.bind(this);
     this.handleClickForward = this.handleClickForward.bind(this);
-    this.handleClickFourWeeks = this.handleClickFourWeeks.bind(this);
     this.handleClickMostRecent = this.handleClickMostRecent.bind(this);
-    this.handleClickOneWeek = this.handleClickOneWeek.bind(this);
     this.handleClickSettings = this.handleClickSettings.bind(this);
     this.handleClickTrends = this.handleClickTrends.bind(this);
-    this.handleClickTwoWeeks = this.handleClickTwoWeeks.bind(this);
     this.handleClickBgLog = this.handleClickBgLog.bind(this);
     this.handleDatetimeLocationChange = this.handleDatetimeLocationChange.bind(this);
     this.handleSelectDate = this.handleSelectDate.bind(this);
@@ -117,8 +113,9 @@ const Trends = translate()(class Trends extends PureComponent {
   }
 
   componentWillUnmount = () => {
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
+    if (this.debouncedDateRangeUpdate) {
+      this.debouncedDateRangeUpdate.cancel();
+      this.debouncedDateRangeUpdate = null;
     }
   };
 
@@ -138,13 +135,74 @@ const Trends = translate()(class Trends extends PureComponent {
     return dateDomain;
   }
 
-  getTitle(datetimeLocationEndpoints) {
-    const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
+  getExtendSize(domain) {
+    const startDate = moment(domain[0]);
+    const endDate = moment(domain[1]);
+    return endDate.diff(startDate, 'days');
+  }
 
+  getTitle() {
+    const { t, timePrefs, endpoints } = this.props;
+    const { displayCalendar } = this.state;
+
+    this.log('getTitle', endpoints);
+    if (endpoints.length !== 2) {
+      return t('Loading...');
+    }
+
+    const timezone = getTimezoneFromTimePrefs(timePrefs);
+    const startDate = moment(endpoints[0]).tz(timezone);
+    const endDate = moment(endpoints[1]).tz(timezone);
+
+    const displayStartDate = this.formatDate(startDate);
     // endpoint is exclusive, so need to subtract a day
-    const end = moment(datetimeLocationEndpoints[1]).tz(timezone).subtract(1, 'day');
+    const displayEndDate = this.formatDate(endDate.subtract(1, 'day'));
 
-    return this.formatDate(datetimeLocationEndpoints[0]) + ' - ' + this.formatDate(end);
+    const handleClickStart = (e) => {
+      this.setState({displayCalendar: 'start'});
+    };
+    const handleClickEnd = (e) => {
+      this.setState({displayCalendar: 'end'});
+    };
+    const handleChange = (r) => {
+      console.log(r.value, r.valueAsDate, r.valueAsMoment);
+      const newDomain = _.clone(endpoints);
+      if (displayCalendar === 'start') {
+        newDomain[0] = r.valueAsDate.toISOString();
+      } else if (displayCalendar === 'end') {
+        newDomain[1] = r.valueAsDate.toISOString();
+      }
+      this.setState({displayCalendar: null}, () => {
+        this.props.onUpdateChartDateRange(newDomain, () => {
+          const prefs = _.cloneDeep(this.props.chartPrefs);
+          const extentSize = this.getExtendSize(newDomain);
+          prefs.trends.extentSize = extentSize;
+          this.props.updateChartPrefs(prefs, () => {
+            this.chart.setExtent(newDomain);
+          });
+        });
+      });
+    };
+
+    const divStyle = {
+      position: 'relative',
+    };
+
+    let calendar = null;
+    if (displayCalendar === 'start') {
+      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[0]} />;
+    } else if (displayCalendar === 'end') {
+      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[1]} />;
+    }
+
+    return (
+      <div style={divStyle}>
+        <span onClick={handleClickStart}>{displayStartDate}</span>
+        <span>&nbsp;-&nbsp;</span>
+        <span onClick={handleClickEnd}>{displayEndDate}</span>
+        {calendar}
+      </div>
+    );
   }
 
   handleWindowResize(windowSize) {
@@ -176,24 +234,6 @@ const Trends = translate()(class Trends extends PureComponent {
     this.chart.goForward();
   }
 
-  handleClickFourWeeks(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
-    // no change, return early
-    if (prefs.trends.activeDomain === '4 weeks' && prefs.trends.extentSize === 28) {
-      return;
-    }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '4 weeks';
-    prefs.trends.extentSize = 28;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 28);
-    this.chart.setExtent(newDomain, oldDomain);
-  }
-
   handleClickMostRecent(e) {
     if (e) {
       e.preventDefault();
@@ -204,22 +244,21 @@ const Trends = translate()(class Trends extends PureComponent {
     this.chart.goToMostRecent();
   }
 
-  handleClickOneWeek(e) {
+  handleClickPresetWeeks(e, extentSize) {
     if (e) {
       e.preventDefault();
     }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
     // no change, return early
-    if (prefs.trends.activeDomain === '1 week' && prefs.trends.extentSize === 7) {
-      return;
+    if (this.props.chartPrefs.trends.extentSize !== extentSize) {
+      const prefs = _.cloneDeep(this.props.chartPrefs);
+      const current = new Date(this.chart.getCurrentDay());
+      const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
+      const newDomain = this.getNewDomain(current, extentSize);
+      prefs.trends.extentSize = extentSize;
+      this.props.updateChartPrefs(prefs, () => {
+        this.chart.setExtent(newDomain, oldDomain);
+      });
     }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '1 week';
-    prefs.trends.extentSize = 7;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 7);
-    this.chart.setExtent(newDomain, oldDomain);
   }
 
   handleClickSettings(e) {
@@ -237,24 +276,6 @@ const Trends = translate()(class Trends extends PureComponent {
     return;
   }
 
-  handleClickTwoWeeks(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    const prefs = _.cloneDeep(this.props.chartPrefs);
-    // no change, return early
-    if (prefs.trends.activeDomain === '2 weeks' && prefs.trends.extentSize === 14) {
-      return;
-    }
-    const current = new Date(this.chart.getCurrentDay());
-    const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
-    prefs.trends.activeDomain = '2 weeks';
-    prefs.trends.extentSize = 14;
-    this.props.updateChartPrefs(prefs);
-    const newDomain = this.getNewDomain(current, 14);
-    this.chart.setExtent(newDomain, oldDomain);
-  }
-
   handleClickBgLog(e) {
     if (e) {
       e.preventDefault();
@@ -264,24 +285,23 @@ const Trends = translate()(class Trends extends PureComponent {
   }
 
   handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent) {
-    this.setState({
-      atMostRecent: atMostRecent,
-      title: this.getTitle(datetimeLocationEndpoints),
-      endpoints: datetimeLocationEndpoints,
-    });
-
-    this.props.updateDatetimeLocation(datetimeLocationEndpoints[1]);
+    const updateDateRange = () => {
+      this.debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
+      this.debouncedDateRangeUpdate(datetimeLocationEndpoints);
+    };
 
     // Update the chart date range in the patientData component.
     // We debounce this to avoid excessive updates while panning the view.
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
+    if (this.debouncedDateRangeUpdate) {
+      this.debouncedDateRangeUpdate.cancel();
+      this.debouncedDateRangeUpdate = null;
     }
 
-    const debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
-    debouncedDateRangeUpdate(datetimeLocationEndpoints);
-
-    this.setState({ debouncedDateRangeUpdate });
+    this.setState({
+      atMostRecent,
+    }, () => {
+      this.props.updateDatetimeLocation(datetimeLocationEndpoints[1], updateDateRange);
+    });
   }
 
   handleSelectDate(date) {
@@ -394,7 +414,7 @@ const Trends = translate()(class Trends extends PureComponent {
                 chartPrefs={this.props.chartPrefs}
                 chartType={this.chartType}
                 dataUtil={this.props.dataUtil}
-                endpoints={this.state.endpoints}
+                endpoints={this.props.endpoints}
               />
             </div>
           </div>
@@ -419,13 +439,14 @@ const Trends = translate()(class Trends extends PureComponent {
   }
 
   renderHeader() {
+    const title = this.getTitle();
     return (
       <Header
         chartType={this.chartType}
         patient={this.props.patient}
         inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
-        title={this.state.title}
+        title={title}
         iconBack={'icon-back'}
         iconNext={'icon-next'}
         iconMostRecent={'icon-most-recent'}
@@ -445,12 +466,11 @@ const Trends = translate()(class Trends extends PureComponent {
     return (
       <SubNav
        activeDays={this.props.chartPrefs.trends.activeDays}
-       activeDomain={this.props.chartPrefs.trends.activeDomain}
        extentSize={this.props.chartPrefs.trends.extentSize}
        domainClickHandlers={{
-        '1 week': this.handleClickOneWeek,
-        '2 weeks': this.handleClickTwoWeeks,
-        '4 weeks': this.handleClickFourWeeks
+        '1 week': (e) => this.handleClickPresetWeeks(e, 7),
+        '2 weeks': (e) => this.handleClickPresetWeeks(e, 14),
+        '4 weeks': (e) => this.handleClickPresetWeeks(e, 28),
        }}
        onClickDay={this.toggleDay}
        toggleWeekdays={this.toggleWeekdays}

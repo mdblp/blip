@@ -205,6 +205,7 @@
   "Date of diagnosis": "Date du diagnostic",
   "Date of diagnosis: {{date}}": "Date du diagnostic : {{date}}",
   "Date range: ": "Plage de dates : ",
+  "date.format": "DMY",
   "day": "jour",
   "Day": "Jour",
   "day_timeago": "",
