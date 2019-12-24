@@ -38,6 +38,7 @@ const BolusTooltip = vizComponents.BolusTooltip;
 const SMBGTooltip = vizComponents.SMBGTooltip;
 const CBGTooltip = vizComponents.CBGTooltip;
 const FoodTooltip = vizComponents.FoodTooltip;
+const PhysicalTooltip = vizComponents.PhysicalTooltip;
 
 import Header from './header';
 import Footer from './footer';
@@ -67,6 +68,8 @@ const DailyChart = translate()(class DailyChart extends Component {
     onCBGOut: React.PropTypes.func.isRequired,
     onCarbHover: React.PropTypes.func.isRequired,
     onCarbOut: React.PropTypes.func.isRequired,
+    onPhysicalHover: React.PropTypes.func.isRequired,
+    onPhysicalOut: React.PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -86,6 +89,8 @@ const DailyChart = translate()(class DailyChart extends Component {
       'onCBGOut',
       'onCarbHover',
       'onCarbOut',
+      'onPhysicalHover',
+      'onPhysicalOut',
     ];
 
     this.log = bows('Daily Chart');
@@ -312,6 +317,8 @@ class Daily extends Component {
                 onCBGOut={this.handleCBGOut}
                 onCarbHover={this.handleCarbHover}
                 onCarbOut={this.handleCarbOut}
+                onPhysicalHover={this.handlePhysicalHover}
+                onPhysicalOut={this.handlePhysicalOut}
                 ref="chart" />
             </div>
           </div>
@@ -376,6 +383,16 @@ class Daily extends Component {
           }}
           side={this.state.hoveredCarb.side}
           food={this.state.hoveredCarb.data}
+          bgPrefs={this.props.bgPrefs}
+          timePrefs={this.props.timePrefs}
+        />}
+        {this.state.hoveredPhysical && <PhysicalTooltip
+          position={{
+            top: this.state.hoveredPhysical.top,
+            left: this.state.hoveredPhysical.left
+          }}
+          side={this.state.hoveredPhysical.side}
+          physicalActivity={this.state.hoveredPhysical.data}
           bgPrefs={this.props.bgPrefs}
           timePrefs={this.props.timePrefs}
         />}
@@ -574,6 +591,29 @@ class Daily extends Component {
   handleCarbOut = () => {
     this.setState({
       hoveredCarb: false
+    });
+  };
+
+  handlePhysicalHover = physical => {
+    var rect = physical.rect;
+    // range here is -12 to 12
+    var hoursOffset = sundial.dateDifference(physical.data.normalTime, this.state.datetimeLocation, 'h');
+    physical.top = rect.top + (rect.height / 2)
+    if(hoursOffset > 5) {
+      physical.side = 'left';
+      physical.left = rect.left;
+    } else {
+      physical.side = 'right';
+      physical.left = rect.left + rect.width;
+    }
+    this.setState({
+      hoveredPhysical: physical
+    });
+  };
+
+  handlePhysicalOut = () => {
+    this.setState({
+      hoveredPhysical: false
     });
   };
 

@@ -4,13 +4,16 @@ It is based on Tidepool Blip 1.27.
 
 ## UNRELEASED
 ### Fixed
-- PT-869 Fix labelling issue in validation errors
+ - PT-869 Fix labelling issue in validation errors
+ - PT-869 Fix labelling issue in validation errors
   
 ### Added
-- PT-412 Add option to display password when changing password
+ - PT-412 Add option to display password when changing password
 
 ### Changed
  - PT-836 Display list of patients to clinician as a default behaviour
+### Added
+ - PT-865 Display physical activity in Bolus/Food section
 
 ## 0.10.0 - 2019-12-09 
 ### Added
