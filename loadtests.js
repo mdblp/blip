@@ -9,6 +9,7 @@ enzyme.configure({
   disableLifecycleMethods: true,
 });
 
-const context = require.context('./test', true, /\.js$/); // Load .js files in /test
+// Load .js files in /test excluding *.trending*.js
+const context = require.context('./test', true, /\/(?!.*trends).*\js$/); 
 // eslint-disable-next-line lodash/prefer-lodash-method
 context.keys().forEach(context);
