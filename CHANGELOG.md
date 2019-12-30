@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - PT-869 Fix labelling issue in validation errors
   
 ### Added
+- PN-9 Add Show/hide password in Login page
 - PT-412 Add option to display password when changing password
 
 ### Changed
