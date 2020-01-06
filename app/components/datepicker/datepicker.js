@@ -20,6 +20,22 @@ import { translate } from 'react-i18next';
 import _ from 'lodash';
 import moment from 'moment';
 
+function containsAll(str, letters) {
+  const ll = letters.length;
+  let ca = true;
+  for (let i=0; i<ll && ca; i++) {
+    ca = ca && str.indexOf(letters[i]) >= 0;
+  }
+  return ca;
+}
+
+function arraySwap(a, i, j) {
+  const v = a[i];
+  a[i] = a[j];
+  a[j] = v;
+  return a;
+}
+
 class DatePicker extends React.Component {
   static defaultValue = {
     day: undefined,
@@ -86,25 +102,6 @@ class DatePicker extends React.Component {
     this.handleNextMonth = this.handleNextMonth.bind(this);
   }
 
-  getMonths() {
-    const { t } = this.props;
-    return [
-      {value: '', label: t('Month')},
-      {value: '0', label: t('January')},
-      {value: '1', label: t('February')},
-      {value: '2', label: t('March')},
-      {value: '3', label: t('April')},
-      {value: '4', label: t('May')},
-      {value: '5', label: t('June')},
-      {value: '6', label: t('July')},
-      {value: '7', label: t('August')},
-      {value: '8', label: t('September')},
-      {value: '9', label: t('October')},
-      {value: '10', label: t('November')},
-      {value: '11', label: t('December')}
-    ];
-  }
-
   componentDidUpdate(prevProps) {
     if (!_.isEqual(prevProps.value, this.props.value)) {
       this.setState({
@@ -131,53 +128,70 @@ class DatePicker extends React.Component {
   renderFlat() {
     const { t } = this.props;
     const { value } = this.state;
+    const formElements = [ null, null, null ];
     const months = this.getMonths();
     const monthOptions = _.map(months, (item) => {
       return <option key={item.value} value={item.value}>{item.label}</option>;
     });
 
     const dateFormat = t('date.format', { defaultValue: 'MDY' });
-    let monthClassName = 'DatePicker-control DatePicker-control--month';
-    let dayClassName = 'DatePicker-control DatePicker-control--day';
-    let yearClassName = 'DatePicker-control DatePicker-control--year';
 
-    let position = dateFormat.indexOf('M');
-    if (position >= 0) {
-      monthClassName = `${monthClassName} DatePicker-control-order-${position}`;
-    }
-    position = dateFormat.indexOf('D');
-    if (position >= 0) {
-      dayClassName = `${dayClassName} DatePicker-control-order-${position}`;
-    }
-    position = dateFormat.indexOf('Y');
-    if (position >= 0) {
-      yearClassName = `${yearClassName} DatePicker-control-order-${position}`;
+    const selectMonth = (
+      <select
+        className="DatePicker-control DatePicker-control--month"
+        name="month"
+        value={value.month}
+        disabled={this.props.disabled}
+        onChange={this.handleChangeFlat}>
+        {monthOptions}
+      </select>
+    );
+
+    const inputDay = (
+      <input
+        className="DatePicker-control DatePicker-control--day"
+        name="day"
+        value={value.day}
+        placeholder={t('Day')}
+        disabled={this.props.disabled}
+        onChange={this.handleChangeFlat} />
+    );
+
+    const inputYear = (
+      <input
+        className="DatePicker-control DatePicker-control--year"
+        name="year"
+        value={value.year}
+        placeholder={t('Year')}
+        disabled={this.props.disabled}
+        onChange={this.handleChangeFlat} />
+    );
+
+    if (dateFormat.length === 3 && containsAll(dateFormat, 'YMD')) {
+      for (let i=0; i<3; i++) {
+        switch (dateFormat[i]) {
+        case 'Y':
+          formElements[i] = inputYear;
+          break;
+        case 'M':
+          formElements[i] = selectMonth;
+          break;
+        case 'D':
+          formElements[i] = inputDay;
+          break;
+        }
+      }
+    } else {
+      formElements[0] = selectMonth;
+      formElements[1] = inputDay;
+      formElements[2] = inputYear;
     }
 
     return (
       <div className="DatePicker" name={this.props.name}>
-        <select
-          className={monthClassName}
-          name="month"
-          value={value.month}
-          disabled={this.props.disabled}
-          onChange={this.handleChangeFlat}>
-          {monthOptions}
-        </select>
-        <input
-          className={dayClassName}
-          name="day"
-          value={value.day}
-          placeholder={t('Day')}
-          disabled={this.props.disabled}
-          onChange={this.handleChangeFlat} />
-        <input
-          className={yearClassName}
-          name="year"
-          value={value.year}
-          placeholder={t('Year')}
-          disabled={this.props.disabled}
-          onChange={this.handleChangeFlat} />
+        { formElements[0] }
+        { formElements[1] }
+        { formElements[2] }
       </div>
     );
   }
@@ -256,6 +270,25 @@ class DatePicker extends React.Component {
       className = `${className} datepicker-popup-day-out`;
     }
     return (<span className={className} key={key} value={key} onClick={this.handleChangePopup}>{dayOfMonth}</span>);
+  }
+
+  getMonths() {
+    const { t } = this.props;
+    return [
+      {value: '', label: t('Month')},
+      {value: '0', label: t('January')},
+      {value: '1', label: t('February')},
+      {value: '2', label: t('March')},
+      {value: '3', label: t('April')},
+      {value: '4', label: t('May')},
+      {value: '5', label: t('June')},
+      {value: '6', label: t('July')},
+      {value: '7', label: t('August')},
+      {value: '8', label: t('September')},
+      {value: '9', label: t('October')},
+      {value: '10', label: t('November')},
+      {value: '11', label: t('December')}
+    ];
   }
 
   handlePrevMonth(e) {
