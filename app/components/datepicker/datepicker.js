@@ -29,13 +29,6 @@ function containsAll(str, letters) {
   return ca;
 }
 
-function arraySwap(a, i, j) {
-  const v = a[i];
-  a[i] = a[j];
-  a[j] = v;
-  return a;
-}
-
 class DatePicker extends React.Component {
   static defaultValue = {
     day: undefined,
@@ -45,10 +38,11 @@ class DatePicker extends React.Component {
 
   static propTypes = {
     name: PropTypes.string,
-    value: PropTypes.object,
+    value: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
     disabled: PropTypes.bool,
     popup: PropTypes.bool,
     onChange: PropTypes.func,
+    onCancel: PropTypes.func,
   }
 
   static defaultProps = {
@@ -57,6 +51,7 @@ class DatePicker extends React.Component {
     disabled: false,
     popup: false,
     onChange: _.noop,
+    onCancel: _.noop,
   };
 
   constructor(props) {
@@ -100,6 +95,7 @@ class DatePicker extends React.Component {
     this.handleChangePopup = this.handleChangePopup.bind(this);
     this.handlePrevMonth = this.handlePrevMonth.bind(this);
     this.handleNextMonth = this.handleNextMonth.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -107,6 +103,22 @@ class DatePicker extends React.Component {
       this.setState({
         value: this.props.value || DatePicker.defaultValue
       });
+    }
+  }
+
+  componentDidMount() {
+    const { popup } = this.props;
+    if (popup) {
+      const body = document.getElementsByTagName('body');
+      body[0].addEventListener('click', this.handleClickOutside);
+    }
+  }
+
+  componentWillUnmount() {
+    const { popup } = this.props;
+    if (popup) {
+      const body = document.getElementsByTagName('body');
+      body[0].removeEventListener('click', this.handleClickOutside);
     }
   }
 
@@ -200,8 +212,6 @@ class DatePicker extends React.Component {
     const { value } = this.state;
     const m = moment.utc(value);
 
-    console.log('current date: ', m.toISOString());
-
     // Build the weekdays (Su Mo Tu We Th Fr Sa)
     const weekDays = [];
     const weekDaysLabel = [];
@@ -223,7 +233,7 @@ class DatePicker extends React.Component {
     }
     // Current month
     while (day.get('month') === currentMonth) {
-      const isSameDay = m.isSame(day, 'day');
+      const isSameDay = m.isSame(day, 'day'); // FIXME: true on wrong month
       monthDays.push(this.getNextSpanDay(day, isSameDay));
     }
     // Last week days in the next month
@@ -299,7 +309,9 @@ class DatePicker extends React.Component {
       month: m.get('month'),
       year: m.get('year')
     }
-    this.setState({value});
+
+    e.stopPropagation();
+    this.setState({ value });
   }
 
   handleNextMonth(e) {
@@ -310,6 +322,8 @@ class DatePicker extends React.Component {
       month: m.get('month'),
       year: m.get('year')
     };
+
+    e.stopPropagation();
     this.setState({value});
   }
 
@@ -322,7 +336,9 @@ class DatePicker extends React.Component {
       year: valueAsMoment.get('year')
     };
     const valueAsDate = new Date(isoDate);
-    this.setState({ hidden: true}, () => {
+
+    e.stopPropagation();
+    this.setState({ hidden: true }, () => {
       this.props.onChange({
         name: this.props.name,
         value,
@@ -348,6 +364,21 @@ class DatePicker extends React.Component {
       value,
       valueAsDate
     });
+  }
+
+  handleClickOutside(e) {
+    let elem = e.target;
+    let isInsidePopup = false;
+    while (elem !== null && !isInsidePopup) {
+      isInsidePopup = elem.className === 'datepicker-popup';
+      elem = elem.parentElement;
+    }
+    if (!isInsidePopup) {
+      // Click outside the datepicker popup, cancel the action, hide the popup.
+      this.setState({ hidden: true }, () => {
+        this.props.onCancel();
+      });
+    }
   }
 
 }

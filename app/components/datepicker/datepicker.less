@@ -52,6 +52,10 @@
   padding: 0.5em;
   background-color: white;
   color: @black-color;
+  box-shadow: 0.5em 0.5em 0.5em gray;
+  border-width: thin;
+  border-style: solid;
+  border-color: darkgray;
 }
 
 .datepicker-popup-head {
@@ -59,6 +63,7 @@
   justify-content: space-between;
   color: @gray-title;
   font-weight: bold;
+  cursor: default;
 }
 
 .datepicker-popup-monthdays {
@@ -69,11 +74,18 @@
 .datepicker-popup-weekday {
   color: @black-color;
   font-weight: bold;
+  cursor: default;
 }
-.datepicker-popup-prev-month:hover, .datepicker-popup-next-month:hover, .datepicker-popup-day:hover {
-  background-color: @gray-darkest;
-  color: black;
+.datepicker-popup-prev-month:hover, .datepicker-popup-next-month:hover {
+  color: @black-color;
+  text-decoration-line: underline;
+}
+.datepicker-popup-day:hover {
+  text-decoration: underline;
   font-weight: bold;
+}
+.datepicker-popup-day {
+  cursor: pointer;
 }
 .datepicker-popup-day-out {
   font-weight: lighter;
@@ -81,5 +93,6 @@
 }
 .datepicker-popup-day-selected {
   font-weight: bold;
-  background-color: @brand-green;
+  color: @white-color;
+  background-color: @gray-dark;
 }

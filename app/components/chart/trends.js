@@ -184,22 +184,31 @@ const Trends = translate()(class Trends extends React.PureComponent {
       });
     };
 
+    const handleCancel = () => {
+      this.setState({displayCalendar: null});
+    }
+
     const divStyle = {
       position: 'relative',
     };
 
     let calendar = null;
+    let startDateClass = 'clickable-span';
+    let endDateClass = 'clickable-span';
+
     if (displayCalendar === 'start') {
-      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[0]} />;
+      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endpoints[0]} />;
+      startDateClass = `${startDateClass} clickable-span-active`;
     } else if (displayCalendar === 'end') {
-      calendar = <DatePicker popup={true} onChange={handleChange} value={endpoints[1]} />;
+      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endpoints[1]} />;
+      endDateClass = `${endDateClass} clickable-span-active`;
     }
 
     return (
       <div style={divStyle}>
-        <span onClick={handleClickStart}>{displayStartDate}</span>
+        <span className={startDateClass} onClick={handleClickStart}>{displayStartDate}</span>
         <span>&nbsp;-&nbsp;</span>
-        <span onClick={handleClickEnd}>{displayEndDate}</span>
+        <span className={endDateClass} onClick={handleClickEnd}>{displayEndDate}</span>
         {calendar}
       </div>
     );
