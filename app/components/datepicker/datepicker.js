@@ -41,6 +41,8 @@ class DatePicker extends React.Component {
     value: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
     min: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
     max: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
+    beforeMinDateMessage: PropTypes.string,
+    afterMaxDateMessage: PropTypes.string,
     disabled: PropTypes.bool,
     popup: PropTypes.bool,
     onChange: PropTypes.func,
@@ -52,6 +54,8 @@ class DatePicker extends React.Component {
     value: DatePicker.defaultValue,
     min: null,
     max: null,
+    beforeMinDateMessage: null,
+    afterMaxDateMessage: null,
     disabled: false,
     popup: false,
     onChange: _.noop,
@@ -239,7 +243,7 @@ class DatePicker extends React.Component {
     const monthDays = [];
     const currentMonth = m.get('month');
     const day = moment.utc(m).date(1).weekday(0);
-    console.log('first day', day.toISOString());
+
     // Previous month
     while (day.get('month') !== currentMonth) {
       monthDays.push(this.getNextSpanDay(day, false, true));
@@ -284,17 +288,16 @@ class DatePicker extends React.Component {
     const { minDate, maxDate } = this.state;
     const dayOfMonth = day.get('date');
     const key = day.toISOString();
-    const isDisabled = (moment.isMoment(minDate) && day.isBefore(minDate)) || (moment.isMoment(maxDate) && day.isAfter(maxDate));
+    const isBefore = moment.isMoment(minDate) && day.isBefore(minDate);
+    const isAfter = moment.isMoment(maxDate) && day.isAfter(maxDate);
+    const isDisabled = isBefore || isAfter;
 
-    let className = 'datepicker-popup-day';
+    let className = isDisabled ? 'datepicker-popup-day-disabled' : 'datepicker-popup-day';
     if (isSelected) {
       className = `${className} datepicker-popup-day-selected`;
     }
     if (wrongMonth) {
       className = `${className} datepicker-popup-day-out`;
-    }
-    if (isDisabled) {
-      className = 'datepicker-popup-day-disabled';
     }
 
     // Increment day
@@ -302,7 +305,20 @@ class DatePicker extends React.Component {
 
     const clickEvent = isDisabled ? _.noop : this.handleChangePopup;
 
-    return (<span className={className} key={key} value={key} onClick={clickEvent}>{dayOfMonth}</span>);
+    let tooltip = null;
+    if (isBefore) {
+      const { t, beforeMinDateMessage } = this.props;
+      if (typeof beforeMinDateMessage === 'string') {
+        tooltip = t(beforeMinDateMessage);
+      }
+    } else if (isAfter) {
+      const { t, afterMaxDateMessage } = this.props;
+      if (typeof afterMaxDateMessage === 'string') {
+        tooltip = t(afterMaxDateMessage);
+      }
+    }
+
+    return (<span className={className} key={key} value={key} onClick={clickEvent} title={tooltip}>{dayOfMonth}</span>);
   }
 
   getMonths() {

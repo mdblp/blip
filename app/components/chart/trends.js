@@ -41,7 +41,7 @@ const getTimezoneFromTimePrefs = viz.utils.datetime.getTimezoneFromTimePrefs;
 const getLocalizedCeiling = viz.utils.datetime.getLocalizedCeiling;
 const Loader = viz.components.Loader;
 
-const Trends = translate()(class Trends extends React.PureComponent {
+class Trends extends React.PureComponent {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
@@ -165,7 +165,6 @@ const Trends = translate()(class Trends extends React.PureComponent {
       this.setState({displayCalendar: 'end'});
     };
     const handleChange = (r) => {
-      console.log(r.value, r.valueAsDate, r.valueAsMoment);
       const newDomain = _.clone(endpoints);
       if (displayCalendar === 'start') {
         newDomain[0] = r.valueAsDate.toISOString();
@@ -197,10 +196,32 @@ const Trends = translate()(class Trends extends React.PureComponent {
     let endDateClass = 'clickable-span';
 
     if (displayCalendar === 'start') {
-      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={startDate} max={endDate.subtract(1, 'days')} />;
+      const minDate = moment(endDate).subtract(90, 'days');
+      calendar = (
+        <DatePicker
+          popup={true}
+          onChange={handleChange}
+          onCancel={handleCancel}
+          value={startDate}
+          min={minDate}
+          max={endDate.subtract(1, 'days')}
+          beforeMinDateMessage="The period must be less than 90 days"
+          afterMaxDateMessage="The start date must be before the end date" />
+      );
       startDateClass = `${startDateClass} clickable-span-active`;
     } else if (displayCalendar === 'end') {
-      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endDate} min={startDate.add(1, 'days')} />;
+      const maxDate = moment(startDate).add(90, 'days');
+      calendar = (
+        <DatePicker
+          popup={true}
+          onChange={handleChange}
+          onCancel={handleCancel}
+          value={endDate}
+          min={startDate.add(1, 'days')}
+          max={maxDate}
+          beforeMinDateMessage="The end date must be after the start date"
+          afterMaxDateMessage="The period must be less than 90 days"/>
+      );
       endDateClass = `${endDateClass} clickable-span-active`;
     }
 
@@ -569,6 +590,6 @@ const Trends = translate()(class Trends extends React.PureComponent {
         focusedPoint={this.props.trendsState[currentPatientInViewId].focusedSmbg} />
     );
   }
-});
+}
 
-export default Trends;
+export default translate()(Trends);
