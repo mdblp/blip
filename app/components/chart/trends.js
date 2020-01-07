@@ -152,11 +152,11 @@ const Trends = translate()(class Trends extends React.PureComponent {
 
     const timezone = getTimezoneFromTimePrefs(timePrefs);
     const startDate = moment(endpoints[0]).tz(timezone);
-    const endDate = moment(endpoints[1]).tz(timezone);
+    const endDate = moment(endpoints[1]).tz(timezone).subtract(1, 'days');
 
     const displayStartDate = this.formatDate(startDate);
     // endpoint is exclusive, so need to subtract a day
-    const displayEndDate = this.formatDate(endDate.subtract(1, 'day'));
+    const displayEndDate = this.formatDate(endDate);
 
     const handleClickStart = (e) => {
       this.setState({displayCalendar: 'start'});
@@ -170,7 +170,7 @@ const Trends = translate()(class Trends extends React.PureComponent {
       if (displayCalendar === 'start') {
         newDomain[0] = r.valueAsDate.toISOString();
       } else if (displayCalendar === 'end') {
-        newDomain[1] = r.valueAsDate.toISOString();
+        newDomain[1] = r.valueAsMoment.add(1, 'days').toISOString();
       }
       this.setState({displayCalendar: null}, () => {
         this.props.onUpdateChartDateRange(newDomain, () => {
@@ -197,10 +197,10 @@ const Trends = translate()(class Trends extends React.PureComponent {
     let endDateClass = 'clickable-span';
 
     if (displayCalendar === 'start') {
-      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endpoints[0]} />;
+      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={startDate} max={endDate.subtract(1, 'days')} />;
       startDateClass = `${startDateClass} clickable-span-active`;
     } else if (displayCalendar === 'end') {
-      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endpoints[1]} />;
+      calendar = <DatePicker popup={true} onChange={handleChange} onCancel={handleCancel} value={endDate} min={startDate.add(1, 'days')} />;
       endDateClass = `${endDateClass} clickable-span-active`;
     }
 

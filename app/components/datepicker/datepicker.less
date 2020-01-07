@@ -76,17 +76,30 @@
   font-weight: bold;
   cursor: default;
 }
-.datepicker-popup-prev-month:hover, .datepicker-popup-next-month:hover {
+.datepicker-popup-change-month {
   color: @black-color;
-  text-decoration-line: underline;
-}
-.datepicker-popup-day:hover {
-  text-decoration: underline;
-  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    color: @gray-dark;
+    text-decoration-line: underline;
+    font-weight: bold;
+  }
 }
 .datepicker-popup-day {
   cursor: pointer;
+
+  &:hover {
+    color: @gray-dark;
+    text-decoration: underline;
+    font-weight: bold;
+  }
 }
+.datepicker-popup-day-disabled {
+  background-color: @red-error;
+  cursor: default;
+}
+
 .datepicker-popup-day-out {
   font-weight: lighter;
   color: @gray-darker;

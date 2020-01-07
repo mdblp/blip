@@ -39,6 +39,8 @@ class DatePicker extends React.Component {
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
+    min: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
+    max: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
     disabled: PropTypes.bool,
     popup: PropTypes.bool,
     onChange: PropTypes.func,
@@ -48,36 +50,45 @@ class DatePicker extends React.Component {
   static defaultProps = {
     name: 'datepicker',
     value: DatePicker.defaultValue,
+    min: null,
+    max: null,
     disabled: false,
     popup: false,
     onChange: _.noop,
     onCancel: _.noop,
   };
 
+  static propsValueToMoment(value) {
+    let mValue = null;
+
+    if (_.isDate(value)) {
+      mValue = moment(value);
+    } else if (moment.isMoment(value)) {
+      mValue = value;
+    } else if (typeof value === 'string') {
+      mValue = moment(value);
+    } else if (_.isObject(value) && _.isNumber(value.year) && _.isNumber(value.month) && _.isNumber(value.day)) {
+      mValue = moment({ year: value.year, month: value.month, day: value.day });
+    }
+
+    return mValue;
+  }
+
   constructor(props) {
     super(props);
 
-    let value = props.value;
-    if (_.isDate(value)) {
+    const defaultDate = DatePicker.propsValueToMoment(props.value);
+    const minDate = DatePicker.propsValueToMoment(props.min);
+    const maxDate = DatePicker.propsValueToMoment(props.max);
+
+    let value = DatePicker.defaultValue;
+    if (defaultDate !== null) {
       value = {
-        day: props.value.getDate(),
-        month: props.value.getMonth(),
-        year: props.value.getFullYear()
+        day: defaultDate.get('date'),
+        month: defaultDate.get('month'),
+        year: defaultDate.get('year')
       };
-    } else if (moment.isMoment(value)) {
-      value = {
-        day: props.value.get('date'),
-        month: props.value.get('month'),
-        year: props.value.get('year')
-      };
-    } else if (typeof value === 'string') {
-      const m = moment.utc(value);
-      value = {
-        day: m.get('date'),
-        month: m.get('month'),
-        year: m.get('year')
-      };
-    } else if (props.popup && typeof value === 'undefined') {
+    } else if (props.popup) {
       // For popup version if value is not set, display the current date
       const today = new Date();
       value = {
@@ -86,8 +97,12 @@ class DatePicker extends React.Component {
         year: today.getFullYear(),
       };
     }
+
     this.state = {
       value,
+      defaultDate,
+      minDate,
+      maxDate,
       hidden: false
     };
 
@@ -125,8 +140,6 @@ class DatePicker extends React.Component {
   render() {
     const { popup } = this.props;
     const { hidden } = this.state;
-
-    // console.log(moment().weekday(0).format('dd'));
 
     if (hidden) {
       return null;
@@ -209,7 +222,7 @@ class DatePicker extends React.Component {
   }
 
   renderPopup() {
-    const { value } = this.state;
+    const { value, defaultDate } = this.state;
     const m = moment.utc(value);
 
     // Build the weekdays (Su Mo Tu We Th Fr Sa)
@@ -233,7 +246,7 @@ class DatePicker extends React.Component {
     }
     // Current month
     while (day.get('month') === currentMonth) {
-      const isSameDay = m.isSame(day, 'day'); // FIXME: true on wrong month
+      const isSameDay = moment.isMoment(defaultDate) && defaultDate.isSame(day, 'day');
       monthDays.push(this.getNextSpanDay(day, isSameDay));
     }
     // Last week days in the next month
@@ -247,9 +260,9 @@ class DatePicker extends React.Component {
     return (
       <div className="datepicker-popup">
         <div className="datepicker-popup-head">
-          <span className="datepicker-popup-prev-month icon-back" onClick={this.handlePrevMonth}></span>
+          <span className="datepicker-popup-change-month icon-back" onClick={this.handlePrevMonth}></span>
           <span className="datepicker-popup-year">{m.format('MMM YYYY')}</span>
-          <span className="datepicker-popup-next-month icon-next" onClick={this.handleNextMonth}></span>
+          <span className="datepicker-popup-change-month icon-next" onClick={this.handleNextMonth}></span>
         </div>
         <div className="datepicker-popup-monthdays">
           {weekDays}
@@ -268,9 +281,10 @@ class DatePicker extends React.Component {
    * @param {boolean} wrongMonth true if outside the current displayed month
    */
   getNextSpanDay(day, isSelected = false, wrongMonth = false) {
+    const { minDate, maxDate } = this.state;
     const dayOfMonth = day.get('date');
     const key = day.toISOString();
-    day.add(1, 'days');
+    const isDisabled = (moment.isMoment(minDate) && day.isBefore(minDate)) || (moment.isMoment(maxDate) && day.isAfter(maxDate));
 
     let className = 'datepicker-popup-day';
     if (isSelected) {
@@ -279,7 +293,16 @@ class DatePicker extends React.Component {
     if (wrongMonth) {
       className = `${className} datepicker-popup-day-out`;
     }
-    return (<span className={className} key={key} value={key} onClick={this.handleChangePopup}>{dayOfMonth}</span>);
+    if (isDisabled) {
+      className = 'datepicker-popup-day-disabled';
+    }
+
+    // Increment day
+    day.add(1, 'days');
+
+    const clickEvent = isDisabled ? _.noop : this.handleChangePopup;
+
+    return (<span className={className} key={key} value={key} onClick={clickEvent}>{dayOfMonth}</span>);
   }
 
   getMonths() {
