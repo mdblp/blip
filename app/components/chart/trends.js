@@ -106,18 +106,20 @@ class Trends extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.log('componentDidMount');
     if (this.refs.chart) {
       // necessary to get a ref from the redux connect()ed TrendsContainer
       this.chart = this.refs.chart.getWrappedInstance();
     }
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
+    this.log('componentWillUnmount');
     if (this.debouncedDateRangeUpdate) {
       this.debouncedDateRangeUpdate.cancel();
       this.debouncedDateRangeUpdate = null;
     }
-  };
+  }
 
   formatDate(datetime) {
     const { t } = this.props;
@@ -172,11 +174,11 @@ class Trends extends React.PureComponent {
         newDomain[1] = r.valueAsMoment.add(1, 'days').toISOString();
       }
       this.setState({displayCalendar: null}, () => {
-        this.props.onUpdateChartDateRange(newDomain, () => {
-          const prefs = _.cloneDeep(this.props.chartPrefs);
-          const extentSize = this.getExtendSize(newDomain);
-          prefs.trends.extentSize = extentSize;
-          this.props.updateChartPrefs(prefs, () => {
+        const prefs = _.cloneDeep(this.props.chartPrefs);
+        const extentSize = this.getExtendSize(newDomain);
+        prefs.trends.extentSize = extentSize;
+        this.props.updateChartPrefs(prefs, () => {
+          this.props.onUpdateChartDateRange(newDomain, () => {
             this.chart.setExtent(newDomain);
           });
         });

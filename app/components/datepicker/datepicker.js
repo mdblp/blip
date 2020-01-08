@@ -66,13 +66,13 @@ class DatePicker extends React.Component {
     let mValue = null;
 
     if (_.isDate(value)) {
-      mValue = moment(value);
+      mValue = moment.utc(value);
     } else if (moment.isMoment(value)) {
       mValue = value;
     } else if (typeof value === 'string') {
-      mValue = moment(value);
+      mValue = moment.utc(value);
     } else if (_.isObject(value) && _.isNumber(value.year) && _.isNumber(value.month) && _.isNumber(value.day)) {
-      mValue = moment({ year: value.year, month: value.month, day: value.day });
+      mValue = moment.utc({ year: value.year, month: value.month, day: value.day });
     }
 
     return mValue;
@@ -341,7 +341,7 @@ class DatePicker extends React.Component {
   }
 
   handlePrevMonth(e) {
-    const m = moment(this.state.value);
+    const m = moment.utc(this.state.value);
     m.subtract(1, 'months');
     const value = {
       day: m.get('date'),
@@ -354,7 +354,7 @@ class DatePicker extends React.Component {
   }
 
   handleNextMonth(e) {
-    const m = moment(this.state.value);
+    const m = moment.utc(this.state.value);
     m.add(1, 'months');
     const value = {
       day: m.get('date'),

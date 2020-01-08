@@ -85,13 +85,14 @@ export let PatientData = translate()(React.createClass({
     removeGeneratedPDFS: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     updatePatientNote: PropTypes.func.isRequired,
-    uploadUrl: PropTypes.string.isRequired,
+    uploadUrl: PropTypes.string,
     user: PropTypes.object,
     viz: PropTypes.object.isRequired,
   },
 
   getInitialState: function() {
     var state = {
+      chartType: null,
       chartPrefs: {
         basics: {},
         daily: {},
@@ -105,6 +106,7 @@ export let PatientData = translate()(React.createClass({
             saturday: true,
             sunday: true,
           },
+          /** To keep the wanted extentSize (num days between endpoints) between charts switch. */
           extentSize: 14,
           // we track both showingCbg & showingSmbg as separate Booleans for now
           // in case we decide to layer BGM & CGM data, as has been discussed/prototyped
@@ -672,7 +674,7 @@ export let PatientData = translate()(React.createClass({
         ) {
           if (!allDataFetched) {
             this.fetchEarlierData({}, cb);
-          } else {
+          } else if (_.isFunction(cb)) {
             cb();
           }
         } else if (
@@ -685,10 +687,10 @@ export let PatientData = translate()(React.createClass({
           // what we fetch), we need to process some more.
           this.log(`Limit of processed data reached, ${(patientData.length - 1) - this.state.lastDatumProcessedIndex} unprocessed remain. Processing more.`)
           this.processData(this.props, cb);
-        } else {
+        } else if (_.isFunction(cb)) {
           cb();
         }
-      } else {
+      } else if (_.isFunction(cb)) {
         cb();
       }
     });
@@ -1066,12 +1068,14 @@ export let PatientData = translate()(React.createClass({
         chartType,
         datetimeLocation,
         initialDatetimeLocation: datetimeLocation,
+        endpoints: [datetimeLocation, datetimeLocation]
       };
 
       this.dataUtil.chartPrefs = this.state.chartPrefs[chartType];
 
-      this.setState(state);
-      this.props.trackMetric(`web - default to ${chartType === 'bgLog' ? 'weekly' : chartType}`);
+      this.setState(state, () => {
+        this.props.trackMetric(`web - default to ${chartType === 'bgLog' ? 'weekly' : chartType}`);
+      });
     }
   },
 
