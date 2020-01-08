@@ -74,7 +74,6 @@ class Trends extends React.PureComponent {
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs);
     this.chartType = 'trends';
     this.log = bows('Trends');
-    this.debouncedDateRangeUpdate = null;
 
     this.state = {
       atMostRecent: true,
@@ -113,12 +112,12 @@ class Trends extends React.PureComponent {
     }
   }
 
+  componentDidUpdate() {
+    this.log('componentDidUpdate');
+  }
+
   componentWillUnmount() {
     this.log('componentWillUnmount');
-    if (this.debouncedDateRangeUpdate) {
-      this.debouncedDateRangeUpdate.cancel();
-      this.debouncedDateRangeUpdate = null;
-    }
   }
 
   formatDate(datetime) {
@@ -147,7 +146,6 @@ class Trends extends React.PureComponent {
     const { t, timePrefs, endpoints } = this.props;
     const { displayCalendar } = this.state;
 
-    this.log('getTitle', endpoints);
     if (endpoints.length !== 2) {
       return t('Loading...');
     }
@@ -316,23 +314,16 @@ class Trends extends React.PureComponent {
     this.props.onSwitchToBgLog(datetime);
   }
 
-  handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent) {
-    const updateDateRange = () => {
-      this.debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
-      this.debouncedDateRangeUpdate(datetimeLocationEndpoints);
-    };
-
-    // Update the chart date range in the patientData component.
-    // We debounce this to avoid excessive updates while panning the view.
-    if (this.debouncedDateRangeUpdate) {
-      this.debouncedDateRangeUpdate.cancel();
-      this.debouncedDateRangeUpdate = null;
+  handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent, cb) {
+    if (typeof atMostRecent !== 'boolean') {
+      this.log('handleDatetimeLocationChange: Invalid parameter atMostRecent');
+      atMostRecent = false;
     }
 
-    this.setState({
-      atMostRecent,
-    }, () => {
-      this.props.updateDatetimeLocation(datetimeLocationEndpoints[1], updateDateRange);
+    this.props.onUpdateChartDateRange(datetimeLocationEndpoints, () => {
+      this.props.updateDatetimeLocation(datetimeLocationEndpoints[1], () => {
+        this.setState({ atMostRecent });
+      });
     });
   }
 

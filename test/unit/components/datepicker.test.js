@@ -5,9 +5,9 @@
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
+import DatePicker from '../../../app/components/datepicker';
 
-var DatePicker = require('../../../app/components/datepicker');
+const { expect } = chai;
 
 describe('DatePicker', function () {
 
@@ -17,7 +17,7 @@ describe('DatePicker', function () {
 
   describe('render', function() {
     it('should render without problems', function () {
-      var elem = TestUtils.renderIntoDocument(<DatePicker/>);
+      var elem = TestUtils.renderIntoDocument(<DatePicker />);
       expect(elem).to.be.ok;
     });
   });
