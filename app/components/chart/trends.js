@@ -29,7 +29,7 @@ import SubNav from './trendssubnav';
 import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import Footer from './footer';
-import DatePicker from '../datepicker';
+import { RangeDatePicker } from '../datepicker';
 import { BG_DATA_TYPES } from '../../core/constants';
 
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
@@ -80,7 +80,7 @@ class Trends extends React.PureComponent {
       inTransition: false,
       extentSize: 14,
       visibleDays: 0,
-      displayCalendar: null,
+      displayCalendar: false,
     };
 
     this.formatDate = this.formatDate.bind(this);
@@ -158,20 +158,13 @@ class Trends extends React.PureComponent {
     // endpoint is exclusive, so need to subtract a day
     const displayEndDate = this.formatDate(endDate);
 
-    const handleClickStart = (e) => {
-      this.setState({displayCalendar: 'start'});
+    const handleClickTitle = (e) => {
+      e.stopPropagation();
+      this.setState({ displayCalendar: true });
     };
-    const handleClickEnd = (e) => {
-      this.setState({displayCalendar: 'end'});
-    };
-    const handleChange = (r) => {
-      const newDomain = _.clone(endpoints);
-      if (displayCalendar === 'start') {
-        newDomain[0] = r.valueAsDate.toISOString();
-      } else if (displayCalendar === 'end') {
-        newDomain[1] = r.valueAsMoment.add(1, 'days').toISOString();
-      }
-      this.setState({displayCalendar: null}, () => {
+    const handleChange = (begin, end) => {
+      const newDomain = [begin.toISOString(), end.add(1, 'days').toISOString()];
+      this.setState({ displayCalendar: false }, () => {
         const prefs = _.cloneDeep(this.props.chartPrefs);
         const extentSize = this.getExtendSize(newDomain);
         prefs.trends.extentSize = extentSize;
@@ -184,52 +177,31 @@ class Trends extends React.PureComponent {
     };
 
     const handleCancel = () => {
-      this.setState({displayCalendar: null});
+      this.setState({ displayCalendar: false });
     }
 
-    const divStyle = {
-      position: 'relative',
-    };
-
     let calendar = null;
-    let startDateClass = 'clickable-span';
-    let endDateClass = 'clickable-span';
-
-    if (displayCalendar === 'start') {
-      const minDate = moment(endDate).subtract(90, 'days');
+    let divClass = 'chart-title-clickable';
+    if (displayCalendar) {
       calendar = (
-        <DatePicker
-          popup={true}
+        <RangeDatePicker
+          begin={startDate}
+          end={endDate}
+          max={moment.utc().add(1, 'days')}
+          minDuration={1}
+          maxDuration={89}
+          aboveMaxDurationMessage={t('The period must be less than {{days}} days', {days: 90})}
+          allowSelectDateOutsideDuration={true}
           onChange={handleChange}
           onCancel={handleCancel}
-          value={startDate}
-          min={minDate}
-          max={endDate.subtract(1, 'days')}
-          beforeMinDateMessage="The period must be less than 90 days"
-          afterMaxDateMessage="The start date must be before the end date" />
+          value={startDate} />
       );
-      startDateClass = `${startDateClass} clickable-span-active`;
-    } else if (displayCalendar === 'end') {
-      const maxDate = moment(startDate).add(90, 'days');
-      calendar = (
-        <DatePicker
-          popup={true}
-          onChange={handleChange}
-          onCancel={handleCancel}
-          value={endDate}
-          min={startDate.add(1, 'days')}
-          max={maxDate}
-          beforeMinDateMessage="The end date must be after the start date"
-          afterMaxDateMessage="The period must be less than 90 days"/>
-      );
-      endDateClass = `${endDateClass} clickable-span-active`;
+      divClass = `${divClass} active`;
     }
 
     return (
-      <div style={divStyle}>
-        <span className={startDateClass} onClick={handleClickStart}>{displayStartDate}</span>
-        <span>&nbsp;-&nbsp;</span>
-        <span className={endDateClass} onClick={handleClickEnd}>{displayEndDate}</span>
+      <div className={divClass} onClick={handleClickTitle}>
+        <span>{displayStartDate}&nbsp;-&nbsp;{displayEndDate}</span>
         {calendar}
       </div>
     );

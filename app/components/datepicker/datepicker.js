@@ -47,7 +47,7 @@ class DatePicker extends React.Component {
     popup: PropTypes.bool,
     onChange: PropTypes.func,
     onCancel: PropTypes.func,
-  }
+  };
 
   static defaultProps = {
     name: 'datepicker',

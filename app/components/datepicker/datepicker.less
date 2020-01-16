@@ -13,6 +13,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+ /* Flat calendar */
 .DatePicker {
   display: flex;
 }
@@ -42,6 +43,7 @@
   width: 80px;
 }
 
+/* Popup calendar */
 /* Parent element must have: position: relative; */
 .datepicker-popup {
   position: absolute;
@@ -56,6 +58,7 @@
   border-width: thin;
   border-style: solid;
   border-color: darkgray;
+  cursor: initial;
 }
 
 .datepicker-popup-head {
@@ -76,6 +79,7 @@
   font-weight: bold;
   cursor: default;
 }
+
 .datepicker-popup-change-month {
   color: @black-color;
   cursor: pointer;
@@ -86,6 +90,7 @@
     font-weight: bold;
   }
 }
+
 .datepicker-popup-day {
   cursor: pointer;
 
@@ -95,8 +100,9 @@
     font-weight: bold;
   }
 }
+
 .datepicker-popup-day-disabled {
-  background-color: @gray-darkest;
+  background-color: @purple-light;
   cursor: default;
 }
 
@@ -104,6 +110,7 @@
   font-weight: lighter;
   color: @gray-darker;
 }
+
 .datepicker-popup-day-selected {
   font-weight: bold;
   color: @white-color;
@@ -112,5 +119,47 @@
   &:hover {
     color: @white-color !important;
     font-weight: normal !important;
+  }
+}
+
+/* Range calendar */
+.datepicker-popup-range {
+  left: -15em;
+}
+
+.datepicker-popup-calendars {
+  display: flex;
+  flex-direction: row;
+}
+
+.datepicker-popup-calendar {
+  display: flex;
+  flex-direction: column;
+
+  &.datepicker-popup-begin {
+    margin-right: 0.5em;
+  }
+  &.datepicker-popup-end {
+    margin-right: 0.5em;
+  }
+}
+
+.datepicker-popup-elem-invisible {
+  visibility: hidden;
+  cursor: default;
+}
+
+.datepicker-popup-validate {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.3em;
+
+  .btn {
+    align-self: center;
+    min-width: 33%;
+
+    &:active {
+      background-color: @gray-dark !important;
+    }
   }
 }

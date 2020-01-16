@@ -14,4 +14,10 @@
  */
 
 import DatePicker from './datepicker';
+import RangeDatePicker from './range-datepicker';
+
 export default DatePicker;
+export {
+  DatePicker,
+  RangeDatePicker
+}

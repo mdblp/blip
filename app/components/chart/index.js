@@ -30,12 +30,3 @@ export {
   Header,
   Footer
 };
-export default {
-  Basics,
-  Daily,
-  BgLog,
-  Trends,
-  Settings,
-  Header,
-  Footer
-};

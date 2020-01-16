@@ -1156,7 +1156,7 @@ export let PatientData = translate()(React.createClass({
     const allDataFetched = _.get(props, 'fetchedPatientDataRange.fetchedUntil') === 'start';
 
     // Return if currently processing or we've already fetched and processed all data
-    if (this.state.processingData || allDataFetched && this.state.lastDatumProcessedIndex === patientData.length - 1) {
+    if (this.state.processingData || allDataFetched && this.state.lastDatumProcessedIndex === patientData.length - 1 || patientData.length === 0) {
       if (!this.state.processingData) {
         this.setState({
           loading: false,
@@ -1166,12 +1166,10 @@ export let PatientData = translate()(React.createClass({
       return cb();
     };
 
-    if (patientData.length) {
-      this.setState({
-        loading: true,
-        processingData: true,
-      });
-
+    this.setState({
+      loading: true,
+      processingData: true,
+    }, () => {
       const unprocessedPatientData = patientData.slice(this.state.lastDatumProcessedIndex + 1);
       const isInitialProcessing = this.state.lastDatumProcessedIndex < 0;
       const processDataMaxDays = isInitialProcessing ? 30 : 56;
@@ -1283,8 +1281,7 @@ export let PatientData = translate()(React.createClass({
           props.trackMetric('Processed initial patient data', { patientID });
           cb();
         });
-      }
-      else {
+      } else {
         // We don't need full processing for subsequent data. We just add and preprocess the new datums.
         const bgUnits = _.get(this.state, 'processedPatientData.bgUnits');
 
@@ -1311,13 +1308,11 @@ export let PatientData = translate()(React.createClass({
           processedPatientData,
           processingData: false,
         }, () => {
-          this.hideLoading(cb);
+          this.hideLoading(250, cb);
           props.trackMetric('Processed earlier patient data', { patientID, count });
         });
       }
-    } else {
-      cb();
-    }
+    });
   },
 
   hideLoading: function(timeout = 250, cb) {

@@ -30,7 +30,7 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
     printReady: PropTypes.bool,
     title: PropTypes.node.isRequired,
     chartType: PropTypes.string.isRequired,
-    inTransition: PropTypes.bool.isRequired,
+    inTransition: PropTypes.bool,
     atMostRecent: PropTypes.bool.isRequired,
     iconBack: PropTypes.string,
     iconNext: PropTypes.string,
@@ -47,6 +47,7 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
   };
 
   static defaultProps = {
+    inTransition: false,
     printReady: true,
   };
 
