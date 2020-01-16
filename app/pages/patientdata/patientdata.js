@@ -1156,7 +1156,7 @@ export let PatientData = translate()(React.createClass({
     const allDataFetched = _.get(props, 'fetchedPatientDataRange.fetchedUntil') === 'start';
 
     // Return if currently processing or we've already fetched and processed all data
-    if (this.state.processingData || allDataFetched && this.state.lastDatumProcessedIndex === patientData.length - 1 || patientData.length === 0) {
+    if (this.state.processingData || allDataFetched && this.state.lastDatumProcessedIndex === patientData.length - 1) {
       if (!this.state.processingData) {
         this.setState({
           loading: false,
@@ -1164,7 +1164,9 @@ export let PatientData = translate()(React.createClass({
         return;
       }
       return cb();
-    };
+    } else if (patientData.length === 0) {
+      return cb();
+    }
 
     this.setState({
       loading: true,

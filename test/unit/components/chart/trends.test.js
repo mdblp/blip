@@ -178,7 +178,7 @@ describe('Trends', () => {
 
       wrapper.setProps({datetimeLocation: endpoints[1], endpoints}, () => {
         const title = render(instance.getTitle());
-        expect(title.html()).to.be.equal('<span class="clickable-span">Jan 15, 2018</span><span>&#xA0;-&#xA0;</span><span class="clickable-span">Jan 28, 2018</span>');
+        expect(title.html()).to.be.equal('<span>Jan 15, 2018&#xA0;-&#xA0;Jan 28, 2018</span>');
         done();
       });
     });
@@ -204,7 +204,7 @@ describe('Trends', () => {
 
       wrapper.setProps({datetimeLocation: endpoints[1], endpoints}, () => {
         title = render(instance.getTitle());
-        expect(title.html()).to.be.equal('<span class="clickable-span">Mar 5, 2018</span><span>&#xA0;-&#xA0;</span><span class="clickable-span">Mar 11, 2018</span>');
+        expect(title.html()).to.be.equal('<span>Mar 5, 2018&#xA0;-&#xA0;Mar 11, 2018</span>');
         done();
       });
     });
@@ -230,7 +230,7 @@ describe('Trends', () => {
 
       wrapper.setProps({datetimeLocation: endpoints[1], endpoints}, () => {
         title = render(instance.getTitle());
-        expect(title.html()).to.be.equal('<span class="clickable-span">Mar 11, 2018</span><span>&#xA0;-&#xA0;</span><span class="clickable-span">Mar 17, 2018</span>');
+        expect(title.html()).to.be.equal('<span>Mar 11, 2018&#xA0;-&#xA0;Mar 17, 2018</span>');
         done();
       });
     });
