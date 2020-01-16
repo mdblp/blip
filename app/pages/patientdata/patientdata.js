@@ -1315,7 +1315,7 @@ export let PatientData = translate()(React.createClass({
     });
   },
 
-  hideLoading: function(timeout = 250, cb) {
+  hideLoading: function(timeout = 250, cb = _.noop) {
     // Needs to be in a setTimeout to force unsetting the loading state in a new render cycle
     // so that child components can be aware of the change in processing states. It also serves
     // to ensure the loading indicator shows long enough for the user to make sense of it.
