@@ -207,7 +207,7 @@ class RangeDatePicker extends React.Component {
       <div className={`datepicker-popup-calendar datepicker-popup-${which}`}>
         <div className="datepicker-popup-head">
           <span id={`datepicker-popup-${which}-prev-month`} className={prevMonthClassname} onClick={this.handlePrevNextMonth}></span>
-          <span className="datepicker-popup-year">{displayMonth.format('MMM YYYY')}</span>
+          <span className="datepicker-popup-year">{displayMonth.format('MMMM YYYY')}</span>
           <span id={`datepicker-popup-${which}-next-month`} className={nextMonthClassname} onClick={this.handlePrevNextMonth}></span>
         </div>
         <div className="datepicker-popup-monthdays">
