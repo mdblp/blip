@@ -105,7 +105,6 @@ class Trends extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.log('componentDidMount');
     if (this.refs.chart) {
       // necessary to get a ref from the redux connect()ed TrendsContainer
       this.chart = this.refs.chart.getWrappedInstance();
