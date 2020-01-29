@@ -196,9 +196,10 @@ class RangeDatePicker extends React.Component {
     }
     // Last week days in the next month
     if (day.format('dd') !== weekDaysLabel[weekDaysLabel.length - 1]) {
-      const isSameDay = date.isSame(day, 'day');
+      let isSameDay = date.isSame(day, 'day');
       while (day.format('dd') !== weekDaysLabel[weekDaysLabel.length - 1]) {
         monthDays.push(this.getNextSpanDay(day, which, isSameDay, true));
+        isSameDay = date.isSame(day, 'day');
       }
       monthDays.push(this.getNextSpanDay(day, which, isSameDay, true));
     }
@@ -229,23 +230,23 @@ class RangeDatePicker extends React.Component {
    */
   getNextSpanDay(day, which, isSelected = false, wrongMonth = false) {
     const { minDuration, maxDuration, allowSelectDateOutsideDuration } = this.props;
+    const { begin, end } = this.state;
     const dayOfMonth = day.get('date');
     const key = `${which}-${day.unix()}`;
-    const isBefore = this.minDate !== null && day.isBefore(this.minDate);
-    const isAfter = this.maxDate !== null && day.isAfter(this.maxDate);
+    const isBefore = this.minDate !== null && day.isSameOrBefore(this.minDate);
+    const isAfter = this.maxDate !== null && day.isSameOrAfter(this.maxDate);
     let isDisabled = isBefore || isAfter || wrongMonth;
     let isBelowMinRange = false;
     let isAboveMaxRange = false;
 
     // Range min/max duration
     if (minDuration > 0 || maxDuration > 0) {
-      let duration;
       if (which === 'begin') {
-        duration = moment.duration(day.diff(this.state.end)).asDays();
+        const duration = moment.duration(day.diff(end)).asDays();
         isBelowMinRange = minDuration > 0 && duration <= 0 && Math.abs(duration) < minDuration;
         isAboveMaxRange = maxDuration > 0 && duration < 0 && Math.abs(duration) > maxDuration;
       } else {
-        duration = moment.duration(day.diff(this.state.begin)).asDays();
+        const duration = moment.duration(day.diff(begin)).asDays();
         isBelowMinRange = minDuration > 0 && duration >= 0 && duration < minDuration;
         isAboveMaxRange = maxDuration > 0 && duration > 0 && duration > maxDuration;
       }
@@ -253,18 +254,18 @@ class RangeDatePicker extends React.Component {
       isDisabled = isDisabled || (!allowSelectDateOutsideDuration && (isBelowMinRange || isAboveMaxRange));
     }
 
-    // Increment day
-    day.add(1, 'days');
-
     let className = isDisabled ? 'datepicker-popup-day-disabled' : 'datepicker-popup-day';
     if (isSelected) {
-      className = `${className} datepicker-popup-day-selected`;
+      className = `${className} datepicker-popup-day-selected ${which === 'begin' ? 'first-day' : 'last-day'}`;
     }
     if (wrongMonth) {
       className = `${className} datepicker-popup-elem-invisible`;
     }
     if (isAboveMaxRange || isBelowMinRange) {
       className = `${className} datepicker-popup-day-out`;
+    }
+    if (day.isBetween(begin, end)) {
+      className = `${className} datepicker-popup-day-in`;
     }
 
     const clickEvent = isDisabled ? _.noop : this.handleSelectDay;
@@ -283,6 +284,9 @@ class RangeDatePicker extends React.Component {
       const { aboveMaxDurationMessage } = this.props;
       tooltip = aboveMaxDurationMessage;
     }
+
+    // Increment day
+    day.add(1, 'days');
 
     return (<span id={`datepicker-popup-day-${key}`} className={className} key={key} value={key} onClick={clickEvent} title={tooltip}>{dayOfMonth}</span>);
   }

@@ -104,8 +104,8 @@
   cursor: pointer;
   border-style: solid;
   border-color: transparent;
-  border-radius: 40%;
   border-width: 0.2rem;
+  border-radius: 0%;
   margin-top: 0.2rem;
   margin-bottom: 0.2rem;
   color: #281946;
@@ -127,6 +127,11 @@
   color: #ccc;
 }
 
+.datepicker-popup-day-in {
+  background-color: @purple-success;
+  color: @white-color;
+}
+
 .datepicker-popup-day-selected {
   font-weight: bold;
   color: @white-color;
@@ -136,6 +141,14 @@
   &:hover {
     color: @white-color !important;
     font-weight: normal !important;
+  }
+  &.first-day {
+    border-top-left-radius: 40%;
+    border-bottom-left-radius: 40%;
+  }
+  &.last-day {
+    border-top-right-radius: 40%;
+    border-bottom-right-radius: 40%;
   }
 }
 
@@ -173,7 +186,7 @@
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 
-  .btn {
+  &.btn {
     align-self: center;
     min-width: 33%;
     font-size: larger;
