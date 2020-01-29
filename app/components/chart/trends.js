@@ -179,7 +179,7 @@ class Trends extends React.PureComponent {
         <RangeDatePicker
           begin={startDate}
           end={endDate}
-          max={moment.utc().add(1, 'days')}
+          max={moment().add(1, 'days').utc().startOf('day')}
           minDuration={1}
           maxDuration={89}
           aboveMaxDurationMessage={t('The period must be less than {{days}} days', {days: 90})}

@@ -233,8 +233,8 @@ class RangeDatePicker extends React.Component {
     const { begin, end } = this.state;
     const dayOfMonth = day.get('date');
     const key = `${which}-${day.unix()}`;
-    const isBefore = this.minDate !== null && day.isSameOrBefore(this.minDate);
-    const isAfter = this.maxDate !== null && day.isSameOrAfter(this.maxDate);
+    const isBefore = this.minDate !== null && day.isSameOrBefore(this.minDate, 'day');
+    const isAfter = this.maxDate !== null && day.isSameOrAfter(this.maxDate, 'day');
     let isDisabled = isBefore || isAfter || wrongMonth;
     let isBelowMinRange = false;
     let isAboveMaxRange = false;
