@@ -27,3 +27,4 @@ export HELP_LINK='disable'
 export ASSETS_URL='https://url.com'
 # Matomo tracking URL (use disable to desactivate tracking)
 export MATOMO_TRACKER_URL='disable'
+export LOKALISE_PROJECTID='disable'

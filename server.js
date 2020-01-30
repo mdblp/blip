@@ -79,6 +79,12 @@ if (config.matomoUrl !== null) {
   contentSecurityPolicy.directives.connectSrc.push(config.matomoUrl);
 }
 
+if (config.lokalisePreview) {
+  contentSecurityPolicy.directives.imgSrc.push('https://lokalise.com');
+  contentSecurityPolicy.directives.styleSrc.push('https://lokalise.com');
+  contentSecurityPolicy.directives.connectSrc.push('https://lokalise.com');
+}
+
 app.use(nonceMiddleware, helmet.contentSecurityPolicy(contentSecurityPolicy));
 
 app.use(bodyParser.json({

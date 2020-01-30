@@ -737,6 +737,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleSwitchToBasics: function(e) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     this.props.trackMetric('Clicked Switch To Basics', {
       fromChart: this.state.chartType
     });
@@ -751,6 +752,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleSwitchToDaily: function(datetime, title) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     this.props.trackMetric('Clicked Basics '+title+' calendar', {
       fromChart: this.state.chartType
     });
@@ -773,6 +775,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleSwitchToTrends: function(datetime) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     this.props.trackMetric('Clicked Switch To Modal', {
       fromChart: this.state.chartType
     });
@@ -793,6 +796,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleSwitchToBgLog: function(datetime) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     this.props.trackMetric('Clicked Switch To Two Week', {
       fromChart: this.state.chartType
     });
@@ -815,6 +819,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleSwitchToSettings: function(e) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     this.props.trackMetric('Clicked Switch To Settings', {
       fromChart: this.state.chartType
     });
@@ -849,6 +854,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleRefresh: function(e) {
+    document.dispatchEvent(new Event('lokalise-update-elements'));
     if (e) {
       e.preventDefault();
     }

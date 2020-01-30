@@ -284,6 +284,7 @@ export const onOtherRouteEnter = (api) => (nextState, replace) => {
 }
 
 const trackPage = (api, next) => (nextState, replace, cb) => {
+  document.dispatchEvent(new Event('lokalise-update-elements'));
   api.metrics.track('setCustomUrl', nextState.location.pathname, () => {
     if (typeof next === 'function') {
       next(nextState, replace, cb);

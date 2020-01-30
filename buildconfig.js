@@ -10,6 +10,7 @@ var reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" type="text
 var zendeskDisable = '<!-- Zendesk disabled -->';
 var reTrackerUrl = /const u = '(.*)';/;
 var reTrackerSiteId = /const id = ([0-9]);/;
+var reLokaliseProjectId = /projectId: '(.*)',/;
 
 var start = new Date();
 
@@ -76,8 +77,21 @@ if (typeof process.env.MATOMO_TRACKER_URL === 'string' && process.env.MATOMO_TRA
     matomoJs = '/* MaToMo tracker is disabled */';
 }
 
+// Lokalise preview js
+var lokaliseJs = fs.readFileSync('lokalise.js', 'utf8');
+if (typeof process.env.LOKALISE_PROJECTID === 'string' && process.env.LOKALISE_PROJECTID !== 'disable') {
+  console.info(`Setting up lokalise preview: ${process.env.LOKALISE_PROJECTID}`);
+  lokaliseJs = lokaliseJs.replace(reLokaliseProjectId, (m, u) => {
+    return m.replace(u, process.env.LOKALISE_PROJECTID);
+  });
+} else {
+  console.info('Lokalise preview is disabled');
+  lokaliseJs = '/* Lokalise preview is disabled */';
+}
+
 // Saving
 matomoJs.to('dist/matomo.js')
+lokaliseJs.to('dist/lokalise.js')
 indexHtml.to('dist/index.html');
 
 var end = new Date();
