@@ -127,6 +127,7 @@ class RangeDatePicker extends React.Component {
     this.handleHoverDay = this.handleHoverDay.bind(this);
     this.handleSelectDay = this.handleSelectDay.bind(this);
     this.handleApply = this.handleApply.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
@@ -186,6 +187,7 @@ class RangeDatePicker extends React.Component {
           <p id="datepicker-popup-next-month" className="change-month icon-next" onClick={this.handlePrevNextMonth}  />
         </div>
         <div className="popup-footer">
+          <button id="datepicker-popup-btn-cancel" type="button" className="btn btn-secondary" onClick={this.handleCancel}>{this.t('Cancel')}</button>
           <button type="button" className="btn btn-primary" onClick={this.handleApply}>{this.t('Apply')}</button>
           <p>{numberOfDays}</p>
         </div>
@@ -384,6 +386,12 @@ class RangeDatePicker extends React.Component {
     this.setState({ hidden: true }, () => {
       // Use _.defer() (setTimeout() shortcut) to let the pop-up hide itself before continuing
       _.defer(this.props.onChange, begin, end);
+    });
+  }
+
+  handleCancel() {
+    this.setState({ hidden: true }, () => {
+      _.defer(this.props.onCancel);
     });
   }
 

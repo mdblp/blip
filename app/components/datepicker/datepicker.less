@@ -48,6 +48,7 @@
 .datepicker-popup {
   position: absolute;
   top: 2em;
+  left: -162px; // Approx value to center the popup
   z-index: 99;
   display: flex;
   flex-direction: column;
@@ -59,12 +60,22 @@
   border-color: #ccc;
   cursor: initial;
 
+  @media (max-width: @screen-md-lg-min) {
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: calc(100% - 1px);
+    align-items: center;
+    position: fixed;
+  }
+
   /* Range calendar */
   .range {
     left: -15em;
     display: flex;
     flex-direction: row;
     padding-top: 0.5em;
+
 
     .change-month {
       color: @black-color;
@@ -84,6 +95,10 @@
     .calendars {
       display: flex;
       flex-direction: row;
+
+      @media (max-width: @screen-md-lg-min) {
+        flex-direction: column;
+      }
 
       .calendar {
         display: flex;
@@ -173,12 +188,34 @@
     color: @gray-darker;
     font-size: 14px;
 
+    @media (max-width: @screen-md-lg-min) {
+      flex-direction: column-reverse;
+      width: 100%;
+      align-content: center;
+    }
+
+    #datepicker-popup-btn-cancel {
+      display: none;
+      @media (max-width: @screen-md-lg-min) {
+        display: initial;
+      }
+    }
+
     p {
       text-align: center;
       width: 40%;
+      @media (max-width: @screen-md-lg-min) {
+        width: 100%;
+      }
     }
+
     button {
       width: 40%;
+
+      @media (max-width: @screen-md-lg-min) {
+        margin-top: 0.3em;
+        align-self: center;
+      }
     }
   }
 }
