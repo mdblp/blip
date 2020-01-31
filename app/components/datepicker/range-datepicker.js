@@ -126,6 +126,7 @@ class RangeDatePicker extends React.Component {
     this.handlePrevNextMonth = this.handlePrevNextMonth.bind(this);
     this.handleHoverDay = this.handleHoverDay.bind(this);
     this.handleSelectDay = this.handleSelectDay.bind(this);
+    this.handleApply = this.handleApply.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
@@ -162,9 +163,7 @@ class RangeDatePicker extends React.Component {
 
     let first = selectedBegin;
     let last = selectedEnd;
-    if (nextSelection === SELECT_BEGIN) {
-      first = hoverDate;
-    } else if (nextSelection === SELECT_END) {
+    if (nextSelection === SELECT_END) {
       last = hoverDate;
     }
     if (first.isAfter(last, 'day')) {
@@ -174,7 +173,7 @@ class RangeDatePicker extends React.Component {
       last = tmp;
     }
 
-    const nDays = last.diff(first, 'days') + 1;
+    const nDays = last.diff(first, 'days');
     const numberOfDays = this.t('Number of days: {{nDays}}', { nDays });
 
     return (
@@ -186,7 +185,8 @@ class RangeDatePicker extends React.Component {
           </div>
           <p id="datepicker-popup-next-month" className="change-month icon-next" onClick={this.handlePrevNextMonth}  />
         </div>
-        <div className="infos">
+        <div className="popup-footer">
+          <button type="button" className="btn btn-primary" onClick={this.handleApply}>{this.t('Apply')}</button>
           <p>{numberOfDays}</p>
         </div>
       </div>
@@ -261,9 +261,7 @@ class RangeDatePicker extends React.Component {
       let first = selectedBegin;
       let last = selectedEnd;
 
-      if (nextSelection === SELECT_BEGIN) {
-        first = hoverDate;
-      } else if (nextSelection === SELECT_END) {
+      if (nextSelection === SELECT_END) {
         last = hoverDate;
         // Honored the max duration
         // Can only be done after the first date selection.
@@ -271,11 +269,6 @@ class RangeDatePicker extends React.Component {
           tooltip = aboveMaxDurationMessage;
           className = `${className} day-out`;
         }
-      } else {
-        // When the user have selected the two dates, be sure it is impossible
-        // to change them it the short time interval the ui is still display.
-        hoverEvent = null;
-        clickEvent = null;
       }
 
       if (first.isAfter(last, 'day')) {
@@ -340,23 +333,18 @@ class RangeDatePicker extends React.Component {
     const { minDuration, maxDuration } = this.props;
     const { nextSelection, hoverDate, selectedBegin } = this.state;
 
-    if (nextSelection === SELECT_BEGIN) {
+    if (nextSelection === SELECT_BEGIN || nextSelection > SELECT_END) {
+      this.log(`selectedBegin: ${hoverDate.toISOString()}`);
       this.setState({
         nextSelection: SELECT_END,
-        selectedBegin: hoverDate,
+        selectedBegin: moment.utc(hoverDate),
       });
 
     } else if (nextSelection === SELECT_END) {
-      let begin = selectedBegin;
-      let end = hoverDate;
+      let begin = moment.utc(selectedBegin);
+      let end = moment.utc(hoverDate);
 
-      if (end.isBefore(begin, 'day')) {
-        // Swap begin & end now we know the wanted range.
-        begin = hoverDate;
-        end = selectedBegin
-      }
-
-      let diffDays = end.diff(begin, 'days');
+      let diffDays = Math.abs(end.diff(begin, 'days'));
       this.log(`diffDays: ${diffDays}`);
 
       if (minDuration > 0 && diffDays < minDuration) {
@@ -364,21 +352,39 @@ class RangeDatePicker extends React.Component {
         diffDays = end.diff(begin, 'days');
         this.log(`diffDays adjusted: ${diffDays}`);
       } else if (maxDuration > 0 && diffDays > maxDuration) {
-        begin = moment.utc(end).subtract(maxDuration + 1, 'days');
+        if (begin.isBefore(end)) {
+          begin = moment.utc(end).subtract(maxDuration, 'days');
+        } else {
+          begin = moment.utc(end).add(maxDuration, 'days');
+        }
         diffDays = end.diff(begin, 'days');
         this.log(`diffDays adjusted: ${diffDays}`);
       }
 
-      this.setState({ nextSelection: SELECT_END + 1, selectedBegin: begin, selectedEnd: end }, () => {
-        // Use _.defer() (setTimeout() shortcut) to have theses changes displayed for a short time
-        _.defer(() => {
-          // Hide the popup
-          this.setState({ hidden: true }, () => {
-            _.defer(this.props.onChange, begin, end);
-          });
-        });
-      });
+      this.log(`selectedBegin: ${begin.toISOString()} selectedEnd: ${end.toISOString()}`);
+      this.setState({ nextSelection: SELECT_END + 1, selectedBegin: begin, selectedEnd: end });
     }
+  }
+
+  /**
+   * Accept the range
+   * @param {Event} e click event
+   */
+  handleApply(e) {
+    const { selectedBegin, selectedEnd } = this.state;
+
+    let begin = moment.utc(selectedBegin);
+    let end = moment.utc(selectedEnd);
+    if (begin.isAfter(end)) {
+      const tmp = begin;
+      begin = end;
+      end = tmp;
+    }
+
+    this.setState({ hidden: true }, () => {
+      // Use _.defer() (setTimeout() shortcut) to let the pop-up hide itself before continuing
+      _.defer(this.props.onChange, begin, end);
+    });
   }
 
   /**

@@ -180,7 +180,7 @@ class Trends extends React.PureComponent {
           end={endDate}
           max={moment().add(1, 'days').utc().startOf('day')}
           minDuration={1}
-          maxDuration={89}
+          maxDuration={90}
           aboveMaxDurationMessage={t('The period must be less than {{days}} days', {days: 90})}
           allowSelectDateOutsideDuration={true}
           onChange={handleChange}

@@ -120,6 +120,10 @@
             color: #281946;
             transition: color 50ms linear, background-color 50ms linear, border-color 50ms linear, opacity 30ms linear;
 
+            &:hover {
+              text-decoration-line: underline;
+            }
+
             &:active {
               font-weight: bold;
               opacity: 0.7;
@@ -161,12 +165,20 @@
     }
   }
 
-  .infos {
+  .popup-footer {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     font-weight: initial;
     color: @gray-darker;
     font-size: 14px;
+
+    p {
+      text-align: center;
+      width: 40%;
+    }
+    button {
+      width: 40%;
+    }
   }
 }
