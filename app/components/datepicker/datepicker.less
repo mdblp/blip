@@ -60,7 +60,7 @@
   border-color: #ccc;
   cursor: initial;
 
-  @media (max-width: @screen-md-lg-min) {
+  @media (max-width: @screen-md-max) {
     left: 0px;
     top: 0px;
     width: 100%;
@@ -96,7 +96,7 @@
       display: flex;
       flex-direction: row;
 
-      @media (max-width: @screen-md-lg-min) {
+      @media (max-width: @screen-md-min) {
         flex-direction: column;
       }
 
@@ -188,15 +188,18 @@
     color: @gray-darker;
     font-size: 14px;
 
-    @media (max-width: @screen-md-lg-min) {
+    @media (max-width: @screen-sm-max) {
       flex-direction: column-reverse;
-      width: 100%;
       align-content: center;
+    }
+
+    @media (max-width: @screen-md-max) {
+      width: 100%;
     }
 
     #datepicker-popup-btn-cancel {
       display: none;
-      @media (max-width: @screen-md-lg-min) {
+      @media (max-width: @screen-md-max) {
         display: initial;
       }
     }
@@ -204,7 +207,7 @@
     p {
       text-align: center;
       width: 40%;
-      @media (max-width: @screen-md-lg-min) {
+      @media (max-width: @screen-sm-max) {
         width: 100%;
       }
     }
@@ -212,7 +215,7 @@
     button {
       width: 40%;
 
-      @media (max-width: @screen-md-lg-min) {
+      @media (max-width: @screen-sm-max) {
         margin-top: 0.3em;
         align-self: center;
       }
