@@ -332,7 +332,6 @@ class RangeDatePicker extends React.Component {
     const unixDate = Number.parseInt(value, 10);
     const date = moment.unix(unixDate).utc();
 
-    this.log(type);
     this.setState({ hoverDate: date }, () => {
       if (type === 'click') {
         this.handleSelectDay();

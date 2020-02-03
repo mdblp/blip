@@ -83,8 +83,6 @@ class Trends extends React.PureComponent {
       displayCalendar: false,
     };
 
-    this.formatDate = this.formatDate.bind(this);
-    this.getNewDomain = this.getNewDomain.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleClickBack = this.handleClickBack.bind(this);
     this.handleClickDaily = this.handleClickDaily.bind(this);
@@ -160,9 +158,7 @@ class Trends extends React.PureComponent {
         const extentSize = this.getExtendSize(newDomain);
         prefs.trends.extentSize = extentSize;
         this.props.updateChartPrefs(prefs, () => {
-          this.props.onUpdateChartDateRange(newDomain, () => {
-            this.chart.setExtent(newDomain);
-          });
+          this.chart.setExtent(newDomain);
         });
       });
     };
@@ -244,7 +240,7 @@ class Trends extends React.PureComponent {
     // no change, return early
     if (this.props.chartPrefs.trends.extentSize !== extentSize) {
       const prefs = _.cloneDeep(this.props.chartPrefs);
-      const current = new Date(this.chart.getCurrentDay());
+      const current = moment.utc(this.chart.getCurrentDay());
       const oldDomain = this.getNewDomain(current, prefs.trends.extentSize);
       const newDomain = this.getNewDomain(current, extentSize);
       prefs.trends.extentSize = extentSize;
@@ -279,13 +275,17 @@ class Trends extends React.PureComponent {
 
   handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent, cb) {
     if (typeof atMostRecent !== 'boolean') {
-      this.log('handleDatetimeLocationChange: Invalid parameter atMostRecent');
+      this.log.error('handleDatetimeLocationChange: Invalid parameter atMostRecent');
       atMostRecent = false;
     }
 
     this.props.onUpdateChartDateRange(datetimeLocationEndpoints, () => {
       this.props.updateDatetimeLocation(datetimeLocationEndpoints[1], () => {
-        this.setState({ atMostRecent });
+        this.setState({ atMostRecent }, () => {
+          if (_.isFunction(cb)) {
+            cb();
+          }
+        });
       });
     });
   }
