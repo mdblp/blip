@@ -187,6 +187,8 @@
     font-weight: initial;
     color: @gray-darker;
     font-size: 14px;
+    margin-top: 1em;
+    margin-bottom: 1em;
 
     @media (max-width: @screen-sm-max) {
       flex-direction: column-reverse;
@@ -194,14 +196,11 @@
     }
 
     @media (max-width: @screen-md-max) {
-      width: 100%;
+      width: 80%;
     }
 
-    #datepicker-popup-btn-cancel {
-      display: none;
-      @media (max-width: @screen-md-max) {
-        display: initial;
-      }
+    #datepicker-popup-btn-cancel:hover {
+      text-decoration-line: underline;
     }
 
     p {
