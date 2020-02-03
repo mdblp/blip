@@ -125,7 +125,6 @@ class RangeDatePicker extends React.Component {
 
     this.handlePrevNextMonth = this.handlePrevNextMonth.bind(this);
     this.handleHoverDay = this.handleHoverDay.bind(this);
-    this.handleSelectDay = this.handleSelectDay.bind(this);
     this.handleApply = this.handleApply.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -258,7 +257,7 @@ class RangeDatePicker extends React.Component {
 
     if (sameMonth) {
       hoverEvent = this.handleHoverDay;
-      clickEvent = this.handleSelectDay;
+      clickEvent = this.handleHoverDay; // Use the same event for touch screen
 
       let first = selectedBegin;
       let last = selectedEnd;
@@ -323,14 +322,27 @@ class RangeDatePicker extends React.Component {
     }
   }
 
+  /**
+   * Mouse hover a date.
+   * @param {MouseEvent} e The mouse event
+   */
   handleHoverDay(e) {
-    const value = e.target.getAttribute('value');
+    const { type, target } = e;
+    const value = target.getAttribute('value');
     const unixDate = Number.parseInt(value, 10);
     const date = moment.unix(unixDate).utc();
 
-    this.setState({ hoverDate: date });
+    this.log(type);
+    this.setState({ hoverDate: date }, () => {
+      if (type === 'click') {
+        this.handleSelectDay();
+      }
+    });
   }
 
+  /**
+   * Click on a date.
+   */
   handleSelectDay() {
     const { minDuration, maxDuration } = this.props;
     const { nextSelection, hoverDate, selectedBegin } = this.state;
