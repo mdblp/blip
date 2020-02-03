@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - PT-338 Fix some translations.
 
+### Added
+- PT-875 Flexible period in Trending page
+
 ## 0.11.0 - 2020-01-06
 ### Fixed
 - PT-869 Fix labelling issue in validation errors
