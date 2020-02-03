@@ -112,14 +112,6 @@ class Trends extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() {
-    this.log('componentDidUpdate');
-  }
-
-  componentWillUnmount() {
-    this.log('componentWillUnmount');
-  }
-
   formatDate(datetime) {
     const { t } = this.props;
     const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
