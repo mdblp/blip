@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - PT-875 Flexible period in Trending page
+- PT-1049 Lokalise preview integration
 
 ## 0.11.0 - 2020-01-06
 ### Fixed
