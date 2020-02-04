@@ -188,7 +188,7 @@ class RangeDatePicker extends React.Component {
         <div className="popup-footer">
           <button id="datepicker-popup-btn-cancel" type="button" className="btn btn-secondary" onClick={this.handleCancel}>{this.t('Cancel')}</button>
           <button type="button" className="btn btn-primary" onClick={this.handleApply}>{this.t('Apply')}</button>
-          <p>{numberOfDays}</p>
+          <p id="datepicker-popup-nbdays">{numberOfDays}</p>
         </div>
       </div>
     );
