@@ -140,11 +140,11 @@ class Trends extends React.PureComponent {
     }
 
     const timezone = getTimezoneFromTimePrefs(timePrefs);
-    const startDate = moment(endpoints[0]).tz(timezone);
-    const endDate = moment(endpoints[1]).tz(timezone).subtract(1, 'days');
+    const startDate = moment.utc(endpoints[0]);
+    // endpoint is exclusive, so need to subtract a day:
+    const endDate = moment.utc(endpoints[1]).subtract(1, 'days');
 
     const displayStartDate = this.formatDate(startDate);
-    // endpoint is exclusive, so need to subtract a day
     const displayEndDate = this.formatDate(endDate);
 
     const handleClickTitle = (e) => {
@@ -172,6 +172,7 @@ class Trends extends React.PureComponent {
     if (displayCalendar) {
       calendar = (
         <RangeDatePicker
+          timezone={timezone}
           begin={startDate}
           end={endDate}
           max={moment().add(1, 'days').utc().startOf('day')}

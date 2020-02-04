@@ -29,6 +29,8 @@ const SELECT_END = 1;
  */
 class RangeDatePicker extends React.Component {
   static propTypes = {
+    /** Timezone */
+    timezone: PropTypes.string,
     /** Default date for the first calendar: begining of the range. Date as an ISO string, a Date object or a moment object. */
     begin: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]).isRequired,
     /** Default date for the second calendar: end of the range. Date as an ISO string, a Date object or a moment object. */
@@ -58,6 +60,7 @@ class RangeDatePicker extends React.Component {
   };
 
   static defaultProps = {
+    timezone: 'UTC',
     min: null,
     max: null,
     beforeMinDateMessage: null,
@@ -74,7 +77,8 @@ class RangeDatePicker extends React.Component {
 
   static reIdPrevNextMonth = /datepicker-popup-(prev|next)-month/;
 
-  static toMoment(value, isRequired = false) {
+  toMoment(value, isRequired = false) {
+    const { timezone } = this.props;
     if (value === null) {
       if (isRequired) {
         throw new Error('Value is required');
@@ -82,19 +86,20 @@ class RangeDatePicker extends React.Component {
       return null;
     }
     if (typeof value === 'string') {
-      return moment.utc(value).startOf('day');
+      return moment.utc(value).tz(timezone).startOf('day');
     }
-    return moment.utc(value).startOf('day');
+    return moment.utc(value).tz(timezone).startOf('day');
   }
 
   constructor(props) {
     super(props);
 
+    const { timezone } = props;
     this.t = i18next.t.bind(i18next);
     this.log = bows('RangeDatePicker');
 
-    let selectedBegin = RangeDatePicker.toMoment(props.begin, true);
-    let selectedEnd = RangeDatePicker.toMoment(props.end, true);
+    let selectedBegin = this.toMoment(props.begin, true);
+    let selectedEnd = this.toMoment(props.end, true);
 
     if (selectedBegin.isSameOrAfter(selectedEnd, 'day')) {
       this.log.error('begin date is after end date!');
@@ -103,8 +108,8 @@ class RangeDatePicker extends React.Component {
       selectedEnd = tmp;
     }
 
-    const hoverDate = moment.utc(selectedBegin);
-    const displayMonth = moment.utc(selectedBegin).date(1);
+    const hoverDate = moment.utc(selectedBegin).tz(timezone);
+    const displayMonth = moment.utc(selectedBegin).tz(timezone).date(1);
     if (selectedBegin.get('month') !== selectedEnd.get('month')) {
       // When 2 month (or more) are displayed, the start displayed
       // date should be on the left calendar side
@@ -120,8 +125,8 @@ class RangeDatePicker extends React.Component {
       nextSelection: SELECT_BEGIN,
     };
 
-    this.minDate = RangeDatePicker.toMoment(props.min);
-    this.maxDate = RangeDatePicker.toMoment(props.max);
+    this.minDate = this.toMoment(props.min);
+    this.maxDate = this.toMoment(props.max);
 
     this.handlePrevNextMonth = this.handlePrevNextMonth.bind(this);
     this.handleHoverDay = this.handleHoverDay.bind(this);
@@ -143,6 +148,7 @@ class RangeDatePicker extends React.Component {
   }
 
   render() {
+    const { timezone } = this.props;
     const {
       hidden,
       hoverDate,
@@ -157,7 +163,7 @@ class RangeDatePicker extends React.Component {
     }
 
     const months = [
-      this.renderMonth(moment.utc(displayMonth).subtract(1, 'month')),
+      this.renderMonth(moment.utc(displayMonth).tz(timezone).subtract(1, 'month')),
       this.renderMonth(displayMonth)
     ];
 
@@ -199,6 +205,7 @@ class RangeDatePicker extends React.Component {
    * @param {moment} month The month to render
    */
   renderMonth(month) {
+    const { timezone } = this.props;
     // Build the weekdays (Su Mo Tu We Th Fr Sa)
     const weekDays = [];
     for (let i=0; i<7; i++) {
@@ -209,7 +216,7 @@ class RangeDatePicker extends React.Component {
 
     // Build days
     const monthDays = []; // Array of JSX.Element
-    const day = moment.utc(month).weekday(0); // First day to display
+    const day = moment.utc(month).tz(timezone).weekday(0); // First day to display
 
     // Previous month
     while (day.get('month') !== month.get('month')) {
@@ -308,14 +315,15 @@ class RangeDatePicker extends React.Component {
    * @param {Event} e click event
    */
   handlePrevNextMonth(e) {
+    const { timezone } = this.props;
     const { displayMonth } = this.state;
     const { target } = e;
     const id = target.getAttribute('id');
 
     if (id === 'datepicker-popup-prev-month') {
-      this.setState({ displayMonth: moment.utc(displayMonth).subtract(1, 'month') });
+      this.setState({ displayMonth: moment(displayMonth).tz(timezone).subtract(1, 'month') });
     } else if (id === 'datepicker-popup-next-month') {
-      this.setState({ displayMonth: moment.utc(displayMonth).add(1, 'month') });
+      this.setState({ displayMonth: moment.utc(displayMonth).tz(timezone).add(1, 'month') });
     } else {
       // ignore: error somewhere ?
       this.log.error('handlePrevNextMonth(): Invalid event target');
@@ -327,10 +335,11 @@ class RangeDatePicker extends React.Component {
    * @param {MouseEvent} e The mouse event
    */
   handleHoverDay(e) {
+    const { timezone } = this.props;
     const { type, target } = e;
     const value = target.getAttribute('value');
     const unixDate = Number.parseInt(value, 10);
-    const date = moment.unix(unixDate).utc();
+    const date = moment.unix(unixDate).tz(timezone);
 
     this.setState({ hoverDate: date }, () => {
       if (type === 'click') {
@@ -343,32 +352,32 @@ class RangeDatePicker extends React.Component {
    * Click on a date.
    */
   handleSelectDay() {
-    const { minDuration, maxDuration } = this.props;
+    const { timezone, minDuration, maxDuration } = this.props;
     const { nextSelection, hoverDate, selectedBegin } = this.state;
 
     if (nextSelection === SELECT_BEGIN || nextSelection > SELECT_END) {
       this.log(`selectedBegin: ${hoverDate.toISOString()}`);
       this.setState({
         nextSelection: SELECT_END,
-        selectedBegin: moment.utc(hoverDate),
+        selectedBegin: moment.utc(hoverDate).tz(timezone),
       });
 
     } else if (nextSelection === SELECT_END) {
-      let begin = moment.utc(selectedBegin);
-      let end = moment.utc(hoverDate);
+      let begin = moment.utc(selectedBegin).tz(timezone);
+      let end = moment.utc(hoverDate).tz(timezone);
 
       let diffDays = Math.abs(end.diff(begin, 'days'));
       this.log(`diffDays: ${diffDays}`);
 
       if (minDuration > 0 && diffDays < minDuration) {
-        begin = moment.utc(end).subtract(minDuration, 'days');
+        begin = moment.utc(end).tz(timezone).subtract(minDuration, 'days');
         diffDays = end.diff(begin, 'days');
         this.log(`diffDays adjusted: ${diffDays}`);
       } else if (maxDuration > 0 && diffDays > maxDuration) {
         if (begin.isBefore(end)) {
-          begin = moment.utc(end).subtract(maxDuration, 'days');
+          begin = moment.utc(end).tz(timezone).subtract(maxDuration, 'days');
         } else {
-          begin = moment.utc(end).add(maxDuration, 'days');
+          begin = moment.utc(end).tz(timezone).add(maxDuration, 'days');
         }
         diffDays = end.diff(begin, 'days');
         this.log(`diffDays adjusted: ${diffDays}`);
@@ -384,10 +393,11 @@ class RangeDatePicker extends React.Component {
    * @param {Event} e click event
    */
   handleApply(e) {
+    const { timezone } = this.props;
     const { selectedBegin, selectedEnd } = this.state;
 
-    let begin = moment.utc(selectedBegin);
-    let end = moment.utc(selectedEnd);
+    let begin = moment.utc(selectedBegin).tz(timezone);
+    let end = moment.utc(selectedEnd).tz(timezone);
     if (begin.isAfter(end)) {
       const tmp = begin;
       begin = end;
