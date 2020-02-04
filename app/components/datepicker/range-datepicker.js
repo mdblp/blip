@@ -173,7 +173,7 @@ class RangeDatePicker extends React.Component {
       last = tmp;
     }
 
-    const nDays = last.diff(first, 'days');
+    const nDays = last.diff(first, 'days') + 1;
     const numberOfDays = this.t('Number of days: {{nDays}}', { nDays });
 
     return (
