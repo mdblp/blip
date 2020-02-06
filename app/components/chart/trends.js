@@ -140,9 +140,9 @@ class Trends extends React.PureComponent {
     }
 
     const timezone = getTimezoneFromTimePrefs(timePrefs);
-    const startDate = moment.utc(endpoints[0]);
+    const startDate = moment.utc(endpoints[0]).tz(timezone);
     // endpoint is exclusive, so need to subtract a day:
-    const endDate = moment.utc(endpoints[1]).subtract(1, 'days');
+    const endDate = moment.utc(endpoints[1]).tz(timezone).subtract(1, 'days');
 
     const displayStartDate = this.formatDate(startDate);
     const displayEndDate = this.formatDate(endDate);
