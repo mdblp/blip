@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - PT-338 Fix some translations.
 
+### Changed
+- PT-1052 Rework page for clinician sign up
+
 ### Added
 - PT-875 Flexible period in Trending page
 
