@@ -15,6 +15,7 @@
 * == BSD2 LICENSE ==
 */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import cx from 'classnames';
 import { Table, Column, Cell } from 'fixed-data-table-2';
@@ -26,6 +27,8 @@ import { translate, Trans } from 'react-i18next';
 import { SortHeaderCell, SortTypes } from './sortheadercell';
 import personUtils from '../../core/personutils';
 import ModalOverlay from '../modaloverlay';
+
+const resetSearchImageSrc = require('./images/searchReset.png');
 
 const TextCell = ({ rowIndex, data, col, icon, ...props }) => (
   <Cell {...props}>
@@ -74,6 +77,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     this.handleSortChange = this.handleSortChange.bind(this);
     this.handleToggleShowNames = this.handleToggleShowNames.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
+    this.handleEmptySearch = this.handleEmptySearch.bind(this);
 
     this.state = {
       currentRowIndex: -1,
@@ -86,9 +90,18 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       showModalOverlay: false,
       dialog: '',
       tableHeight: 590,
+      showSearchReset: false,
     };
 
     WindowSizeListener.DEBOUNCE_TIME = 50;
+  }
+
+  handleEmptySearch(e){
+    var node = ReactDOM.findDOMNode(this.refs.searchInput);
+    if (node) {
+      node.value = "";
+      this.handleFilterChange(e);
+    }
   }
 
   componentDidMount() {
@@ -131,6 +144,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       this.setState({
         searching: false,
         dataList: this.buildDataList(),
+        showSearchReset: false,
       });
       return;
     }
@@ -144,6 +158,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     this.setState({
       searching: true,
       dataList: filtered,
+      showSearchReset: true,
     });
   }
 
@@ -177,12 +192,23 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         <div className="peopletable-search-label">
           {t('Patient List')}
         </div>
+        <div className="peopletable-search-box form-control-border">
         <input
           type="search"
-          className="peopletable-search-box form-control-border"
+          ref="searchInput"
+          className="input"
           onChange={this.handleFilterChange}
           placeholder={t('Search by Name')}
         />
+        { 
+        this.state.showSearchReset ? 
+          <img
+            onClick={this.handleEmptySearch}
+            className="image"
+            src={resetSearchImageSrc}
+            title={t('Reset Search')}/> : null 
+        }
+        </div>
       </div>
     );
   }
@@ -396,7 +422,6 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     return (
       <div>
         {this.renderSearchBar()}
-        {this.renderShowNamesToggle()}
         {this.renderPeopleArea()}
         {this.renderModalOverlay()}
         <WindowSizeListener onResize={this.handleWindowResize} />
