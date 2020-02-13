@@ -145,7 +145,7 @@ var PatientCard = translate()(React.createClass({
       var getHighlight = () => this.state.showModalOverlay ? 'view' : '';
 
       return (
-        <a className={classes} href="" onMouseEnter={this.setHighlight('remove')} onMouseLeave={this.setHighlight(getHighlight())} onClick={this.handleRemove(patient)}>
+        <a className={classes} href="" onMouseEnter={this.setHighlight('remove')} onMouseLeave={this.setHighlight(getHighlight())} onClick={this.handleRemove(patient)} title={title}>
           <i className="Navbar-icon icon-delete"></i>
         </a>
       );

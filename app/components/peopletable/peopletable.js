@@ -48,10 +48,10 @@ TextCell.propTypes = {
   icon: React.PropTypes.object,
 };
 
-const RemoveLinkCell = ({ rowIndex, data, handleClick, ...props }) => (
+const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
   <Cell {...props}>
     <div onClick={(e) => e.stopPropagation()} className="peopletable-cell remove">
-      <i onClick={handleClick(data[rowIndex], rowIndex)} className="peopletable-icon-remove icon-delete"></i>
+      <i title={title} onClick={handleClick(data[rowIndex], rowIndex)} className="peopletable-icon-remove icon-delete"></i>
     </div>
   </Cell>
 );
@@ -60,6 +60,7 @@ RemoveLinkCell.propTypes = {
   data: React.PropTypes.array,
   rowIndex: React.PropTypes.number,
   handleClick: React.PropTypes.func,
+  title: React.PropTypes.string,
 };
 
 RemoveLinkCell.displayName = 'RemoveLinkCell';
@@ -99,7 +100,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   handleEmptySearch(e){
     var node = ReactDOM.findDOMNode(this.refs.searchInput);
     if (node) {
-      node.value = "";
+      node.value = '';
       this.handleFilterChange(e);
     }
   }
@@ -346,6 +347,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     const { t } = this.props;
     const { colSortDirs, dataList, tableWidth, tableHeight } = this.state;
 
+    const title = t('I want to quit this patient\'s care team');
+
     return (
       <Table
         rowHeight={65}
@@ -400,6 +403,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
           cell={<RemoveLinkCell
             data={dataList}
             handleClick={this.handleRemove.bind(this)}
+            title={title}
           />}
           width={30}
           flexGrow={0}
