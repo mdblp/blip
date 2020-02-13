@@ -129,10 +129,11 @@ describe('PeopleTable', () => {
       expect(links).to.have.length(2);
     });
 
-    it('should trigger a call to trackMetric', function () {
+    it('should trigger a call to trackMetric with correct parameters', function () {
       const link = wrapper.find('.peopletable-search-icon').first();
       link.simulate('click');
       expect(props.trackMetric.callCount).to.equal(1);
+      expect(props.trackMetric.calledWith('Sort by Name desc')).to.be.true;
     });
   });
 
