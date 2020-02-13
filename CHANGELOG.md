@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Fixed
 - PT-338 Fix some translations.
+- PT-1115 Fix wrong display due to inconsitent timezone in upload object
 
 ### Changed
 - PT-1052 Rework sign up (direct link to clinician signup from home page + clinician option selected as default in signup page)
