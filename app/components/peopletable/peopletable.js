@@ -15,6 +15,7 @@
 * == BSD2 LICENSE ==
 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import cx from 'classnames';
@@ -42,10 +43,10 @@ const TextCell = ({ rowIndex, data, col, icon, ...props }) => (
 );
 
 TextCell.propTypes = {
-  col: React.PropTypes.string,
-  data: React.PropTypes.array,
-  rowIndex: React.PropTypes.number,
-  icon: React.PropTypes.object,
+  col: PropTypes.string,
+  data: PropTypes.array,
+  rowIndex: PropTypes.number,
+  icon: PropTypes.object,
 };
 
 const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
@@ -57,10 +58,10 @@ const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
 );
 
 RemoveLinkCell.propTypes = {
-  data: React.PropTypes.array,
-  rowIndex: React.PropTypes.number,
-  handleClick: React.PropTypes.func,
-  title: React.PropTypes.string,
+  data: PropTypes.array,
+  rowIndex: PropTypes.number,
+  handleClick: PropTypes.func,
+  title: PropTypes.string.isRequired,
 };
 
 RemoveLinkCell.displayName = 'RemoveLinkCell';
@@ -76,11 +77,11 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     this.handleRemovePatient = this.handleRemovePatient.bind(this);
     this.handleRowClick = this.handleRowClick.bind(this);
     this.handleSortChange = this.handleSortChange.bind(this);
-    this.handleToggleShowNames = this.handleToggleShowNames.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
     this.handleEmptySearch = this.handleEmptySearch.bind(this);
 
     this.state = {
+      searchPattern: '',
       currentRowIndex: -1,
       searching: false,
       showNames: true,
@@ -98,11 +99,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   handleEmptySearch(e){
-    var node = ReactDOM.findDOMNode(this.refs.searchInput);
-    if (node) {
-      node.value = '';
-      this.handleFilterChange(e);
-    }
+    this.setState({searchPattern:''});
+    this.handleFilterChange(e);
   }
 
   componentDidMount() {
@@ -160,6 +158,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       searching: true,
       dataList: filtered,
       showSearchReset: true,
+      searchPattern: e.target.value,
     });
   }
 
@@ -200,44 +199,17 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
           className="input"
           onChange={this.handleFilterChange}
           placeholder={t('Search by Name')}
+          value={this.state.searchPattern}
         />
         { 
         this.state.showSearchReset ? 
           <img
             onClick={this.handleEmptySearch}
-            className="image"
+            className="peopletable-reset-image"
             src={resetSearchImageSrc}
             title={t('Reset Search')}/> : null 
         }
         </div>
-      </div>
-    );
-  }
-
-  handleToggleShowNames() {
-
-    let toggleLabel = 'Clicked Hide All';
-    if ( !this.state.showNames ){
-      toggleLabel = 'Clicked Show All';
-    }
-
-    this.props.trackMetric(toggleLabel);
-    this.setState({ showNames: !this.state.showNames });
-  }
-
-  renderShowNamesToggle() {
-    const { t } = this.props;
-    let toggleLabel = t('Hide All');
-
-    if (!this.state.showNames) {
-      toggleLabel = t('Show All');
-    }
-
-    return (
-      <div className="peopletable-names-toggle-wrapper">
-        <a className="peopletable-names-toggle" disabled={this.state.searching} onClick={this.handleToggleShowNames}>
-          {toggleLabel}
-        </a>
       </div>
     );
   }
@@ -251,14 +223,6 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   handleRowClick(e, rowIndex) {
     this.props.trackMetric('Selected PwD');
     browserHistory.push(this.state.dataList[rowIndex].link);
-  }
-
-  renderPeopleInstructions() {
-    return (
-      <Trans className="peopletable-instructions" i18nKey="html.peopletable-instructions">
-        Type a patient name in the search box or click <a className="peopletable-names-showall" onClick={this.handleToggleShowNames}>Show All</a> to display all patients.
-      </Trans>
-    );
   }
 
   renderRemoveDialog(patient) {
@@ -412,21 +376,11 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     )
   }
 
-  renderPeopleArea() {
-    const { showNames, searching } = this.state;
-
-    if (!showNames && !searching) {
-      return this.renderPeopleInstructions();
-    } else {
-      return this.renderPeopleTable();
-    }
-  }
-
   render() {
     return (
       <div>
         {this.renderSearchBar()}
-        {this.renderPeopleArea()}
+        {this.renderPeopleTable()}
         {this.renderModalOverlay()}
         <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
@@ -435,9 +389,9 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 });
 
 PeopleTable.propTypes = {
-  people: React.PropTypes.array,
-  trackMetric: React.PropTypes.func.isRequired,
-  onRemovePatient: React.PropTypes.func.isRequired,
+  people: PropTypes.array,
+  trackMetric: PropTypes.func.isRequired,
+  onRemovePatient: PropTypes.func.isRequired,
 };
 
 module.exports = PeopleTable;
