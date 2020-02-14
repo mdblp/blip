@@ -395,7 +395,7 @@ describe('utils', () => {
   });
 
   describe('getTimezoneForDataProcessing', () => {
-    // temporary change until we have consitent upload data
+    // temporary change until we have consistent upload data
     const data = [
       { type: 'cbg', time: '2018-01-02T00:00:00.000Z', timezone: 'US/Eastern' },
       { type: 'smbg', time: '2018-01-10T00:00:00.000Z', timezone: 'US/Central' },
