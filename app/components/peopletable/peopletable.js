@@ -16,7 +16,6 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import cx from 'classnames';
 import { Table, Column, Cell } from 'fixed-data-table-2';
@@ -99,8 +98,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   handleEmptySearch(e){
-    this.setState({searchPattern:''});
-    this.handleFilterChange(e);
+    this.handleFilterChange(null);
   }
 
   componentDidMount() {
@@ -139,11 +137,12 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   handleFilterChange(e) {
-    if (_.isEmpty(e.target.value)) {
+    if (e === null ||_.isEmpty(e.target.value)) {
       this.setState({
         searching: false,
         dataList: this.buildDataList(),
         showSearchReset: false,
+        searchPattern: '',
       });
       return;
     }
@@ -394,4 +393,4 @@ PeopleTable.propTypes = {
   onRemovePatient: PropTypes.func.isRequired,
 };
 
-module.exports = PeopleTable;
+export default PeopleTable;
