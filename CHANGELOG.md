@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - PT-338 Fix some translations.
 - PT-1115 Fix wrong display due to inconsitent timezone in upload object
+- PT-1108 PT-1105 PT-1114 Make Diabeloop devices automated devices.
 
 ### Changed
 - PT-1052 Rework sign up (direct link to clinician signup from home page + clinician option selected as default in signup page)
