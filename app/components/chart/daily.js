@@ -607,8 +607,6 @@ class Daily extends Component {
   };
 
   handleCarbHover = carb => {
-    console.log('handleCarbHover');
-    console.log(carb);
     var rect = carb.rect;
     // range here is -12 to 12
     var hoursOffset = sundial.dateDifference(carb.data.normalTime, this.state.datetimeLocation, 'h');
@@ -678,13 +676,11 @@ class Daily extends Component {
   };
 
   handleParameterHover = parameter => {
-    console.log('handleParameterHover');
-    console.log(parameter);
-    var rect = parameter.rect;
+    const { rect } = parameter;
     // range here is -12 to 12
-    var hoursOffset = sundial.dateDifference(parameter.data.normalTime, this.state.datetimeLocation, 'h');
+    const hoursOffset = sundial.dateDifference(parameter.data.normalTime, this.state.datetimeLocation, 'h');
     parameter.top = rect.top + (rect.height / 2)
-    if(hoursOffset > 5) {
+    if (hoursOffset > 5) {
       parameter.side = 'left';
       parameter.left = rect.left;
     } else {
