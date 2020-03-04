@@ -72,14 +72,14 @@ const FooterLinks = (props) => {
       </div>
     }
     <div className='footer-link large-format-only'>       
-        <a
-          href={urlSupport}
-          id='support'
-          onClick={metricFnMkr('Support')}
-          target="_blank">{t(SupportText)}</a>
+      <a
+        href={urlSupport}
+        id='support'
+        onClick={metricFnMkr('Support')}
+        target="_blank">{t(SupportText)}</a>
     </div>
     {__BRANDING__ === 'diabeloop' ? (
-       <div className='footer-link'>       
+      <div className='footer-link'>
         <a
           href={urlPrivacy}
           id='privacy'
@@ -91,35 +91,35 @@ const FooterLinks = (props) => {
           id='terms'
           onClick={metricFnMkr('TermsOfUSe')}
           target='_blank'>{t('Tidepool Applications Terms of Use')}</a>
-    </div> ) : (    <div className='footer-link'>       
+      </div> ) : (
+      <div className='footer-link'>
         <a
           href={urlLegal}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>{t('Privacy and Terms of Use')}</a>
-    </div>)
+      </div> )
     }
     {__BRANDING__ === 'diabeloop' ? (
-        <div className='footer-link large-format-only'>
-          <a
-            href='https://tidepool.org'
-            id='jdrf'
-            target='_blank'>
-            {t('Using Tidepool')}
-          </a>
-        </div>
-      ):(
-        <div className='footer-link footer-jdrf'>
-          <a
-            href='http://jdrf.org/'
-            id='jdrf'
-            onClick={metricFnMkr('JDRF')}
-            target='_blank'>
-            {t('Made possible by')}
-            <img />
-          </a>
-        </div>
-      )}
+      <div className='footer-link large-format-only'>
+        <a
+          href='https://tidepool.org'
+          id='jdrf'
+          target='_blank'>
+          {t('Using Tidepool')}
+        </a>
+      </div> ) : (
+      <div className='footer-link footer-jdrf'>
+        <a
+          href='http://jdrf.org/'
+          id='jdrf'
+          onClick={metricFnMkr('JDRF')}
+          target='_blank'>
+          {t('Made possible by')}
+          <img />
+        </a>
+      </div> )
+    }
     </div>
   );
 };
