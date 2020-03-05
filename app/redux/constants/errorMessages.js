@@ -1,4 +1,5 @@
 import i18next from '../../core/language';
+import config from '../../config';
 
 const t = i18next.t.bind(i18next);
 
@@ -6,6 +7,13 @@ const t = i18next.t.bind(i18next);
 export const ERR_ACCOUNT_ALREADY_EXISTS = t('That e-mail address already has an account.');
 // relating to login
 export const ERR_LOGIN_CREDS = t('Wrong username or password.');
+export const errLoginLocked = () => {
+  const params = {
+    delayBeforeNextLoginAttempt: config.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT,
+    maxFailedLogin: config.MAX_FAILED_LOGIN_ATTEMPTS,
+  };
+  return t('Wrong username or password. Your account may have been lock for {{delayBeforeNextLoginAttempt}} minutes after {{maxFailedLogin}} failed attempts.', params);
+}
 // this one doesn't get surfaced to user; instead we redirect to /email-verification
 export const ERR_EMAIL_NOT_VERIFIED = t('Looks like your e-mail address has not been verified.');
 
