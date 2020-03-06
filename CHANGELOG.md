@@ -7,7 +7,8 @@ It is based on Tidepool Blip 1.27.
 - PT-880 Display Parameter object change in Daily view
 
 ### Fixed
-- PT-1128 Refresh button is automatically switching to BGM 
+- PT-1128 Refresh button is automatically switching to BGM
+- PT-1103 Delete caps in legends (daily view)
 
 ### Changed
 - PT-1112 Upgrade Viz to 0.10.4: change the color of RescueCarb tool tip to be consistent with the other tool tips
