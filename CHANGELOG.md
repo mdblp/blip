@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - PT-1128 Refresh button is automatically switching to BGM 
+- PT-1157 Revert temporary fix PT-1115 with long term fix
 
 ### Changed
 - PT-1112 Upgrade Viz to 0.10.4: change the color of RescueCarb tool tip to be consistent with the other tool tips
@@ -17,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 ## 0.12.0 - 2020-02-17
 ### Fixed
 - PT-338 Fix some translations.
+- PT-1115 Fix wrong display due to inconsitent timezone in upload object
 - PT-1108 PT-1105 PT-1114 Make Diabeloop devices automated devices.
 
 ### Changed
