@@ -222,17 +222,21 @@ export function login(api, credentials, options, postLoginAction) {
     api.user.login(credentials, options, (err) => {
       if (err) {
         let error = null;
-        if (err.status === 403) {
-          dispatch(sync.loginFailure(null, err, { isLoggedIn: false, emailVerificationSent: false }));
-          dispatch(routeActions.push('/email-verification'));
-        } else if (err.status === 401) {
+
+        switch (err.status) {
+        case 401:
           if (++wrongCredCount >= config.MAX_FAILED_LOGIN_ATTEMPTS) {
             error = createActionError(ErrorMessages.errLoginLocked(), err);
           } else {
             error = createActionError(ErrorMessages.ERR_LOGIN_CREDS, err);
           }
           dispatch(sync.loginFailure(error, err));
-        } else {
+          break;
+        case 403:
+          dispatch(sync.loginFailure(null, err, { isLoggedIn: false, emailVerificationSent: false }));
+          dispatch(routeActions.push('/email-verification'));
+          break;
+        default:
           error = createActionError(ErrorMessages.ERR_LOGIN, err);
           dispatch(sync.loginFailure(error, err));
         }
