@@ -17,7 +17,6 @@ It is based on Tidepool Blip 1.27.
 ## 0.12.0 - 2020-02-17
 ### Fixed
 - PT-338 Fix some translations.
-- PT-1115 Fix wrong display due to inconsitent timezone in upload object
 - PT-1108 PT-1105 PT-1114 Make Diabeloop devices automated devices.
 
 ### Changed
