@@ -18,22 +18,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { translate, Trans } from 'react-i18next';
-
-import * as actions from '../../redux/actions';
-
 import { Link } from 'react-router';
 import _ from 'lodash';
+import moment from 'moment';
+import CookieConsent from 'react-cookie-consent';
 
+import * as actions from '../../redux/actions';
 import utils from '../../core/utils';
 import { validateForm } from '../../core/validation';
-
 import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
-
-import CookieConsent from 'react-cookie-consent';
-
-import Config from '../../config'
+import config from '../../config'
 import { CONFIG } from '../../core/constants';
 
 
@@ -53,7 +49,7 @@ export let Login = translate()(React.createClass({
   formInputs: function() {
     const { t } = this.props;
 
-    let pwdType = Config.CAN_SEE_PWD_LOGIN ? 'passwordShowHide' : 'password';
+    let pwdType = config.CAN_SEE_PWD_LOGIN ? 'passwordShowHide' : 'password';
 
     return [
       { name: 'username', placeholder: t('Email'), type: 'email', disabled: !!this.props.seedEmail },
@@ -82,7 +78,7 @@ export let Login = translate()(React.createClass({
       this.props.trackMetric('User Reached login page');
     }
 
-    if (Config.HELP_LINK !== null) {
+    if (config.HELP_LINK !== null) {
       window.zESettings = {
         webWidget: {
           helpCenter: {
@@ -101,14 +97,15 @@ export let Login = translate()(React.createClass({
     var inviteIntro = this.renderInviteIntroduction();
     var browserWarning = this.renderBrowserWarning();
 
-    var urlPrivacyPolicy = CONFIG[__BRANDING__].privacy;
-    var urlTermsOfUse = CONFIG[__BRANDING__].terms;
+    var urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
+    var urlTermsOfUse = CONFIG[config.BRANDING].terms;
 
+    const termsPrivacyDate = moment(config.TERMS_PRIVACY_DATE).format(t('MM/DD/YYYY'));
     var cookieText = (
-      <Trans i18nKey="html.cookie-content">
-        <div>
-          Please consult our <a href={urlPrivacyPolicy} className="link-cookieConsent" target="_blank" rel="noreferrer noopener">Data Privacy</a> and our <a href={urlTermsOfUse} className="link-cookieConsent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
-        </div>
+      <Trans i18nKey="html.cookie-content" ns="main">
+          Please consult our <a href={urlPrivacyPolicy} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Data Privacy</a> and our <a href={urlTermsOfUse} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
+          <br />
+          Last updated on {{ termsPrivacyDate }}
       </Trans>
     );
     var acceptText = t('Accept');
@@ -130,14 +127,15 @@ export let Login = translate()(React.createClass({
         <CookieConsent
           location="bottom"
           buttonText={acceptText}
-          cookieName="CookieConsent"
+          cookieName={`CookieConsent-${config.TERMS_PRIVACY_DATE}`}
           disableStyles={true}
-          containerClasses="login-cookieConsent-container"
-          contentClasses="login-cookieConsent-content"
-          buttonClasses="simple-form-submit btn btn-primary js-form-submit"
+          containerClasses="login-cookie-consent-container"
+          contentClasses="login-cookie-consent-content"
+          buttonClasses="simple-form-submit btn btn-primary"
+          buttonId="btn-accept-cookies"
           expires={365}
           onAccept={() => { this.props.trackMetric('CookieConsent', 365 * 24); }}>
-          {cookieText}
+            {cookieText}
         </CookieConsent>
       </div>
     );
