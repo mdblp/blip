@@ -11,7 +11,7 @@ export const errLoginLocked = () => {
   const params = {
     delayBeforeNextLoginAttempt: config.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT,
   };
-  return t('Wrong username or password. For your security your account has been locked for {{delayBeforeNextLoginAttempt}} minutes because you have reached the maximum number of logon attempts.', params);
+  return t('Your account has been locked for {{delayBeforeNextLoginAttempt}} minutes. You have reached the maximum number of login attempts.', params);
 }
 // this one doesn't get surfaced to user; instead we redirect to /email-verification
 export const ERR_EMAIL_NOT_VERIFIED = t('Looks like your e-mail address has not been verified.');
