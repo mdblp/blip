@@ -93,22 +93,27 @@ export let Login = translate()(React.createClass({
 
   render: function() {
     const { t } = this.props;
-    var form = this.renderForm();
-    var inviteIntro = this.renderInviteIntroduction();
-    var browserWarning = this.renderBrowserWarning();
+    const form = this.renderForm();
+    const inviteIntro = this.renderInviteIntroduction();
+    const browserWarning = this.renderBrowserWarning();
 
-    var urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
-    var urlTermsOfUse = CONFIG[config.BRANDING].terms;
+    const urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
+    const urlTermsOfUse = CONFIG[config.BRANDING].terms;
 
-    const termsPrivacyDate = moment(config.TERMS_PRIVACY_DATE).format(t('MM/DD/YYYY'));
-    var cookieText = (
+    const cookieText = (
       <Trans i18nKey="html.cookie-content" ns="main">
-          Please consult our <a href={urlPrivacyPolicy} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Data Privacy</a> and our <a href={urlTermsOfUse} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
-          <br />
-          Last updated on {{ termsPrivacyDate }}
+          Please consult our <a href={urlPrivacyPolicy} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Data Privacy</a>
+          and our <a href={urlTermsOfUse} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
       </Trans>
     );
-    var acceptText = t('Accept');
+
+    let cookieName = 'CookieConsent';
+    let lastUpdateText = null;
+    if (typeof config.TERMS_PRIVACY_DATE === 'string' && config.TERMS_PRIVACY_DATE.length > 0) {
+      const m = moment.utc(config.TERMS_PRIVACY_DATE);
+      cookieName = `CookieConsent-${m.format('YYYY-MM-DD')}`; // format not translated, there is no need here.
+      lastUpdateText = (<span>{t('Last updated on {{termsPrivacyDate}}.', { termsPrivacyDate: m.format(t('MM/DD/YYYY')) })}</span>);
+    }
 
     return (
       <div>
@@ -126,8 +131,8 @@ export let Login = translate()(React.createClass({
         </div>
         <CookieConsent
           location="bottom"
-          buttonText={acceptText}
-          cookieName={`CookieConsent-${config.TERMS_PRIVACY_DATE}`}
+          buttonText={t('Accept')}
+          cookieName={cookieName}
           disableStyles={true}
           containerClasses="login-cookie-consent-container"
           contentClasses="login-cookie-consent-content"
@@ -136,6 +141,7 @@ export let Login = translate()(React.createClass({
           expires={365}
           onAccept={() => { this.props.trackMetric('CookieConsent', 365 * 24); }}>
             {cookieText}
+            {lastUpdateText}
         </CookieConsent>
       </div>
     );
