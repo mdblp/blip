@@ -3,6 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Changed
+- PT-1093 Remove date of birth as filter
 
 ## 0.13.0 - 2020-03-20
 ### Added

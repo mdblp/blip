@@ -117,18 +117,11 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   buildDataList() {
     const { t } = this.props;
     const list = _.map(this.props.people, (person) => {
-      let bday = _.get(person, ['profile', 'patient', 'birthday'], '');
-
-      if (bday) {
-        bday = ` ${sundial.translateMask(bday, 'YYYY-MM-DD', t('M/D/YYYY'))}`;
-      }
 
       return {
         fullName: personUtils.patientFullName(person),
         fullNameOrderable: (personUtils.patientFullName(person) || '').toLowerCase(),
         link: person.link,
-        birthday: bday,
-        birthdayOrderable: new Date(bday),
         userid: person.userid,
       };
     });
@@ -169,9 +162,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
       if (columnKey === 'fullNameOrderable') {
         metricMessage += 'Name';
-      } else if (columnKey === 'birthdayOrderable') {
-        metricMessage += 'Birthday';
-      }
+      } 
       metricMessage += ` ${sortDir}`;
       this.props.trackMetric(metricMessage);
     }
@@ -337,28 +328,9 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             className="fullName"
             data={dataList}
             col="fullName"
-            icon={<i className="peopletable-icon-profile icon-profile"></i>}
           />}
           width={20}
           flexGrow={1}
-        />
-
-        <Column
-          columnKey="birthdayOrderable"
-          header={
-            <SortHeaderCell
-              onSortChange={this.handleSortChange}
-              sortDir={colSortDirs.birthdayOrderable}
-            >
-              {t('BIRTHDAY')}
-            </SortHeaderCell>
-          }
-          cell={<TextCell
-            data={dataList}
-            col="birthday"
-          />}
-          width={120}
-          flexGrow={0}
         />
 
         <Column
