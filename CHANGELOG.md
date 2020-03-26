@@ -3,6 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Engineering use
+- PT-1215 Integration with Crowdin live preview (localization management saas)
 
 ## 0.13.0 - 2020-03-20
 ### Added
