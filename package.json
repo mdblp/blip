@@ -53,7 +53,7 @@
     "babel-plugin-istanbul": "5.0.1",
     "babel-plugin-rewire": "1.2.0",
     "babel-preset-react-app": "4.0.0-next.2150693d",
-    "bows": "1.7.0",
+    "bows": "1.7.2",
     "browser-locale": "1.0.3",
     "chai": "4.1.2",
     "chromedriver": "2.41.0",

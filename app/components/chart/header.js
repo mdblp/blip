@@ -20,31 +20,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Loading from 'react-loading';
-import { translate } from 'react-i18next';
+import i18next from '../../core/language';
 import config from '../../config';
 
 import printPng from './img/print-icon-2x.png';
 
-const TidelineHeader = translate()(class TidelineHeader extends React.Component {
+class TidelineHeader extends React.Component {
   static propTypes = {
     patient: PropTypes.object,
     printReady: PropTypes.bool,
     title: PropTypes.node.isRequired,
     chartType: PropTypes.string.isRequired,
-    inTransition: PropTypes.bool,
+    inTransition: PropTypes.bool.isRequired,
     atMostRecent: PropTypes.bool.isRequired,
     iconBack: PropTypes.string,
     iconNext: PropTypes.string,
     iconMostRecent: PropTypes.string,
+    onClickBasics: PropTypes.func.isRequired,
+    onClickTrends: PropTypes.func.isRequired,
+    onClickOneDay: PropTypes.func.isRequired,
+    onClickBgLog: PropTypes.func.isRequired,
+    onClickSettings: PropTypes.func.isRequired,
+    onClickPrint: PropTypes.func.isRequired,
     onClickBack: PropTypes.func,
-    onClickBasics: PropTypes.func,
-    onClickTrends: PropTypes.func,
-    onClickMostRecent: PropTypes.func,
     onClickNext: PropTypes.func,
-    onClickOneDay: PropTypes.func,
-    onClickBgLog: PropTypes.func,
-    onClickSettings: PropTypes.func,
-    onClickPrint: PropTypes.func,
+    onClickMostRecent: PropTypes.func,
   };
 
   static defaultProps = {
@@ -52,8 +52,21 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
     printReady: true,
   };
 
-  renderStandard = () => {
-    const { t } = this.props;
+  constructor(props) {
+    super(props);
+    this.onClickBasics = this.onClickBasics.bind(this);
+    this.onClickTrends = this.onClickTrends.bind(this);
+    this.onClickOneDay = this.onClickOneDay.bind(this);
+    this.onClickBgLog = this.onClickBgLog.bind(this);
+    this.onClickSettings = this.onClickSettings.bind(this);
+    this.onClickPrint = this.onClickPrint.bind(this);
+    this.onClickBack = this.onClickBack.bind(this);
+    this.onClickNext = this.onClickNext.bind(this);
+    this.onClickMostRecent = this.onClickMostRecent.bind(this);
+  }
+
+  renderStandard() {
+    const t = i18next.t.bind(i18next);
 
     const printViews = ['basics', 'daily', 'bgLog', 'settings'];
     const showPrintLink = _.includes(printViews, this.props.chartType);
@@ -142,22 +155,22 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
     return (
       <div className="grid patient-data-subnav">
         <div className="app-no-print patient-data-subnav-left">
-            <a href="" className={basicsLinkClass} onClick={this.props.onClickBasics}>{t('Basics')}</a>
-            <a href="" className={dayLinkClass} onClick={this.props.onClickOneDay}>{t('Daily')}</a>
-            <a href="" className={bgLogLinkClass} onClick={this.props.onClickBgLog}>{t('BG Log')}</a>
-            <a href="" className={trendsLinkClass} onClick={this.props.onClickTrends}>{t('Trends')}</a>
+            <a href="" className={basicsLinkClass} onClick={this.onClickBasics}>{t('Basics')}</a>
+            <a href="" className={dayLinkClass} onClick={this.onClickOneDay}>{t('Daily')}</a>
+            <a href="" className={bgLogLinkClass} onClick={this.onClickBgLog}>{t('BG Log')}</a>
+            <a href="" className={trendsLinkClass} onClick={this.onClickTrends}>{t('Trends')}</a>
         </div>
         <div className="patient-data-subnav-center" id="tidelineLabel">
-          {this.renderNavButton(backClass, this.props.onClickBack, this.props.iconBack)}
+          {this.renderNavButton(backClass, this.onClickBack, this.props.iconBack)}
           <div className={dateLinkClass}>
             {this.props.title}
           </div>
-          {this.renderNavButton(nextClass, this.props.onClickNext, this.props.iconNext)}
-          {this.renderNavButton(mostRecentClass, this.props.onClickMostRecent, this.props.iconMostRecent)}
+          {this.renderNavButton(nextClass, this.onClickNext, this.props.iconNext)}
+          {this.renderNavButton(mostRecentClass, this.onClickMostRecent, this.props.iconMostRecent)}
         </div>
         <div className="app-no-print patient-data-subnav-right">
-          <a href="" className={settingsLinkClass} onClick={this.props.onClickSettings}>{t('Device settings')}</a>
-          <a href="" className={printLinkClass} onClick={this.props.onClickPrint}>
+          <a href="" className={settingsLinkClass} onClick={this.onClickSettings}>{t('Device settings')}</a>
+          <a href="" className={printLinkClass} onClick={this.onClickPrint}>
             {this.props.printReady && <img className="print-icon" src={printPng} alt="Print" />}
             {!this.props.printReady && <Loading className="print-loading-spinner" width={16} height={16} delay={0} type="spin" color="#fff" />}
             {t('Print')}
@@ -165,28 +178,9 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
         </div>
       </div>
     );
-  };
+  }
 
-  printTitle = () => {
-    const { t } = this.props;
-    switch (this.props.chartType) {
-      case 'basics':
-        return t('Basics');
-      case 'daily':
-        return t('Daily');
-      case 'bgLog':
-        return t('BG Log');
-      case 'trends':
-        return t('Trends');
-      case 'settings':
-        return t('Pump Settings');
-      case 'no-data':
-      default:
-        return '';
-    }
-  };
-
-  render = () => {
+  render() {
     return (
       <div className="container-box-outer patient-data-subnav-outer">
         <div className="container-box-inner patient-data-subnav-inner">
@@ -194,19 +188,19 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
         </div>
       </div>
     );
-  };
+  }
 
   /**
    * Helper function for rendering the various navigation buttons in the header.
    * It accounts for the transition state and disables the button if it is currently processing.
    *
-   * @param  {String} buttonClass
-   * @param  {Function} clickAction
-   * @param  {String} icon
+   * @param  {String} buttonClass CSS class name
+   * @param  {(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>)=>void} clickAction
+   * @param  {String} icon CSS class name for the icon
    *
-   * @return {ReactElement}
+   * @return {JSX.Element}
    */
-  renderNavButton = (buttonClass, clickAction, icon) => {
+  renderNavButton(buttonClass, clickAction, icon) {
     const nullAction = function(e) {
       if (e) {
         e.preventDefault();
@@ -217,7 +211,61 @@ const TidelineHeader = translate()(class TidelineHeader extends React.Component 
     } else {
       return (<a href="" className={buttonClass} onClick={clickAction}><i className={icon}/></a>);
     }
-  };
-});
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickBasics(event) {
+    event.preventDefault();
+    this.props.onClickBasics();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickTrends(event) {
+    event.preventDefault();
+    this.props.onClickTrends();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickOneDay(event) {
+    event.preventDefault();
+    this.props.onClickOneDay();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickBgLog(event) {
+    event.preventDefault();
+    this.props.onClickBgLog();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickSettings(event) {
+    event.preventDefault();
+    this.props.onClickSettings();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickPrint(event) {
+    event.preventDefault();
+    this.props.onClickPrint();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickBack(event) {
+    event.preventDefault();
+    this.props.onClickBack();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickNext(event) {
+    event.preventDefault();
+    this.props.onClickNext();
+  }
+
+  /** @param {React.MouseEvent<HTMLAnchorElement, MouseEvent>} event react event */
+  onClickMostRecent(event) {
+    event.preventDefault();
+    this.props.onClickMostRecent();
+  }
+}
 
 export default TidelineHeader;

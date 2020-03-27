@@ -1,7 +1,7 @@
-sudo: false
-
 language: node_js
 
+os:
+  - linux
 dist: trusty
 
 node_js:
@@ -36,7 +36,7 @@ deploy:
   # Path of the source directory containing your built site.
   local_dir: deploy
   # Path to a directory containing your built site.
-  upload-dir: deploy
+  upload_dir: deploy
   # Set the Cache-Control header.
   cache_control: "max-age=21600"
 
@@ -50,6 +50,6 @@ script:
   - npm test
   - ./artifact.sh
 
-matrix:
+jobs:
   allow_failures:
     - node_js: node

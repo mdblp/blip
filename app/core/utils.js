@@ -18,8 +18,10 @@
 import _  from 'lodash';
 import sundial from 'sundial';
 import TidelineData from 'tideline/js/tidelinedata';
+import DiabeloopData from 'tideline/js/diabeloop-data';
 import nurseShark from 'tideline/plugins/nurseshark';
 import { MGDL_UNITS, MMOLL_UNITS, MGDL_PER_MMOLL, DIABETES_DATA_TYPES } from './constants';
+import config from '../config';
 
 var utils = {};
 
@@ -302,7 +304,7 @@ utils.roundBgTarget = (value, units) => {
 utils.getTimezoneForDataProcessing = (data, queryParams) => {
   var timePrefsForTideline;
   // workaround a bug in upload timezone
-  var mostRecentUpload = _.sortBy(_.filter(data, {type: 'undefined'}), (d) => Date.parse(d.time)).reverse()[0];
+  var mostRecentUpload = _.sortBy(_.filter(data, {type: 'upload'}), (d) => Date.parse(d.time)).reverse()[0];
   var browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   try {
@@ -391,25 +393,34 @@ utils.processPatientData = (data, queryParams, settings) => {
   console.timeEnd('Nurseshark Total');
 
   console.time('TidelineData Total');
-  let tidelineData = new TidelineData(res.processedData, {
+  let tidelineData = null;
+  const tidelineDataOptions = {
     timePrefs: timePrefsForTideline,
     bgUnits: bgPrefs.bgUnits,
     bgClasses: bgPrefs.bgClasses,
-  });
+  };
+  if (config.BRANDING === 'diabeloop') {
+    tidelineData = new DiabeloopData(res.processedData, tidelineDataOptions);
+  } else {
+    tidelineData = new TidelineData(res.processedData, tidelineDataOptions);
+  }
 
   if (!_.isEmpty(timePrefsForTideline)) {
     tidelineData.timePrefs = timePrefsForTideline;
   }
 
+  // Set tidelineData as a global variable
+  // window.tidelineData = tidelineData;
   console.timeEnd('TidelineData Total');
 
-  window.tidelineData = tidelineData;
-  window.downloadProcessedData = () => {
-    console.save(res.processedData, 'nurseshark-output.json');
-  };
-  window.downloadErroredData = () => {
-    console.save(res.erroredData, 'errored.json');
-  };
+  if (__DEV__) {
+    window.downloadProcessedData = () => {
+      console.save(res.processedData, 'nurseshark-output.json');
+    };
+    window.downloadErroredData = () => {
+      console.save(res.erroredData, 'errored.json');
+    };
+  }
 
   return tidelineData;
 };

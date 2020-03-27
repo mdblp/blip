@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import bows from 'bows';
@@ -20,7 +20,7 @@ const {
 const { reshapeBgClassesToBgBounds } = vizUtils.bg;
 const { isAutomatedBasalDevice: isAutomatedBasalDeviceCheck } = vizUtils.device;
 
-class Stats extends Component {
+class Stats extends React.PureComponent {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
@@ -45,9 +45,10 @@ class Stats extends Component {
     this.state = {
       stats: this.getStatsByChartType(this.props),
     };
+    this.log.debug('constructor');
   }
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps(nextProps) {
     const update = this.updatesRequired(nextProps);
 
     if (update) {
@@ -62,13 +63,17 @@ class Stats extends Component {
         this.updateStatData(nextProps);
       }
     }
-  };
+  }
 
-  shouldComponentUpdate = nextProps => {
-    return this.updatesRequired(nextProps);
-  };
+  shouldComponentUpdate(nextProps) {
+    const result = this.updatesRequired(nextProps);
+    if (typeof result === 'object') {
+      return true;
+    }
+    return false;
+  }
 
-  updatesRequired = nextProps => {
+  updatesRequired(nextProps) {
     const {
       bgSource,
       chartPrefs,
@@ -89,7 +94,7 @@ class Stats extends Component {
         stats: bgSourceChanged,
       }
       : false;
-  };
+  }
 
   renderStats = (stats, animate) => (_.map(stats, stat => (
     <div id={`Stat--${stat.id}`} key={stat.id}>
@@ -97,7 +102,7 @@ class Stats extends Component {
     </div>
   )));
 
-  render = () => {
+  render() {
     const { chartPrefs: { animateStats } } = this.props;
 
     return (
@@ -105,7 +110,7 @@ class Stats extends Component {
         {this.renderStats(this.state.stats, animateStats)}
       </div>
     );
-  };
+  }
 
   getStatsByChartType = (props = this.props) => {
     const {
@@ -186,8 +191,6 @@ class Stats extends Component {
         break;
     }
 
-    this.log('stats', stats);
-
     return stats;
   };
 
@@ -223,9 +226,6 @@ class Stats extends Component {
       stats[i].annotations = getStatAnnotations(data, stat.id, opts);
       stats[i].title = getStatTitle(stat.id, opts);
     });
-
-
-    this.log('stats', stats);
 
     this.setState({ stats });
   };
