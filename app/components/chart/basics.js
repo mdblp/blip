@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import bows from 'bows';
-import moment from 'moment';
 import sundial from 'sundial';
 import { translate, Trans } from 'react-i18next';
 
 // tideline dependencies & plugins
 import tidelineBlip from 'tideline/plugins/blip';
+import DblgBasicsChart from 'tideline/plugins/blip/chart-basics';
 const BasicsChart = tidelineBlip.basics;
 
 import { components as vizComponents, utils as vizUtils } from '@tidepool/viz';
 const Loader = vizComponents.Loader;
-const getTimezoneFromTimePrefs = vizUtils.datetime.getTimezoneFromTimePrefs;
 const getLocalizedCeiling = vizUtils.datetime.getLocalizedCeiling;
 
 import Stats from './stats';
@@ -20,31 +20,31 @@ import Header from './header';
 import Footer from './footer';
 import { BG_DATA_TYPES } from '../../core/constants';
 
-class Basics extends Component {
+class Basics extends React.Component {
   static propTypes = {
-    bgPrefs: React.PropTypes.object.isRequired,
-    bgSource: React.PropTypes.oneOf(BG_DATA_TYPES),
-    chartPrefs: React.PropTypes.object.isRequired,
-    dataUtil: React.PropTypes.object,
-    endpoints: React.PropTypes.arrayOf(React.PropTypes.string),
-    timePrefs: React.PropTypes.object.isRequired,
-    patient: React.PropTypes.object,
-    patientData: React.PropTypes.object.isRequired,
-    pdf: React.PropTypes.object.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object.isRequired,
-    onClickRefresh: React.PropTypes.func.isRequired,
-    onClickNoDataRefresh: React.PropTypes.func.isRequired,
-    onSwitchToBasics: React.PropTypes.func.isRequired,
-    onSwitchToDaily: React.PropTypes.func.isRequired,
-    onClickPrint: React.PropTypes.func.isRequired,
-    onSwitchToSettings: React.PropTypes.func.isRequired,
-    onSwitchToBgLog: React.PropTypes.func.isRequired,
-    onUpdateChartDateRange: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    updateBasicsData: React.PropTypes.func.isRequired,
-    updateBasicsSettings: React.PropTypes.func.isRequired,
-    updateChartPrefs: React.PropTypes.func.isRequired,
-    uploadUrl: React.PropTypes.string.isRequired,
+    bgPrefs: PropTypes.object.isRequired,
+    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
+    chartPrefs: PropTypes.object.isRequired,
+    dataUtil: PropTypes.object,
+    endpoints: PropTypes.arrayOf(PropTypes.string),
+    timePrefs: PropTypes.object.isRequired,
+    patient: PropTypes.object,
+    patientData: PropTypes.object.isRequired,
+    pdf: PropTypes.object.isRequired,
+    permsOfLoggedInUser: PropTypes.object.isRequired,
+    onClickRefresh: PropTypes.func.isRequired,
+    onClickNoDataRefresh: PropTypes.func.isRequired,
+    onSwitchToBasics: PropTypes.func.isRequired,
+    onSwitchToDaily: PropTypes.func.isRequired,
+    onClickPrint: PropTypes.func.isRequired,
+    onSwitchToSettings: PropTypes.func.isRequired,
+    onSwitchToBgLog: PropTypes.func.isRequired,
+    onUpdateChartDateRange: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    updateBasicsData: PropTypes.func.isRequired,
+    updateBasicsSettings: PropTypes.func.isRequired,
+    updateChartPrefs: PropTypes.func.isRequired,
+    uploadUrl: PropTypes.string.isRequired,
   };
 
   static displayName = 'Basics';
@@ -54,16 +54,14 @@ class Basics extends Component {
     this.chartType = 'basics';
     this.log = bows('Basics View');
 
-    this.state = this.getInitialState();
+    this.state = {
+      atMostRecent: true,
+      inTransition: false,
+      title: this.getTitle(),
+    };
   }
 
-  getInitialState = () => ({
-    atMostRecent: true,
-    inTransition: false,
-    title: this.getTitle(),
-  });
-
-  componentWillMount = () => {
+  componentDidMount() {
     const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
 
     if (dateRange) {
@@ -74,9 +72,24 @@ class Basics extends Component {
 
       this.props.onUpdateChartDateRange(endpoints);
     }
-  };
+  }
 
-  render = () => {
+  render() {
+    const { loading, patientData } = this.props;
+    let chart = null;
+    if (!loading) {
+      if (this.isMissingBasics()) {
+        this.log.info('renderChart: Missing data');
+        chart = this.renderMissingBasicsMessage();
+      } else if (patientData.isDiabeloopData) {
+        this.log.info('renderChart: Diabeloop');
+        chart = this.renderDblgChart();
+      } else {
+        this.log.info('renderChart: Tidepool');
+        chart = this.renderChart();
+      }
+    }
+
     return (
       <div id="tidelineMain" className="basics">
         <Header
@@ -97,8 +110,8 @@ class Basics extends Component {
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
-              <Loader show={this.props.loading} overlay={true} />
-              {this.isMissingBasics() ? this.renderMissingBasicsMessage() : this.renderChart()}
+              <Loader show={loading} overlay={true} />
+              {chart}
             </div>
           </div>
           <div className="container-box-inner patient-data-sidebar">
@@ -129,10 +142,10 @@ class Basics extends Component {
          onClickRefresh={this.props.onClickRefresh}
         ref="footer" />
       </div>
-      );
-  };
+    );
+  }
 
-  renderChart = () => {
+  renderChart() {
     return (
       <div id="tidelineContainer" className="patient-data-chart-growing">
         <BasicsChart
@@ -149,9 +162,25 @@ class Basics extends Component {
           trackMetric={this.props.trackMetric} />
       </div>
     );
-  };
+  }
 
-  renderMissingBasicsMessage = () => {
+  renderDblgChart() {
+    const { patient, patientData, chartPrefs } = this.props;
+    return (
+      <DblgBasicsChart
+        patient={patient}
+        diabeloopData={patientData}
+        onSelectDay={this.handleSelectDay}
+        chartPrefs={chartPrefs}
+        updateBasicsData={this.props.updateBasicsData}
+        trackMetric={this.props.trackMetric}
+        containerId="tidelineContainer"
+        className="patient-data-chart-growing"
+      />
+    );
+  }
+
+  renderMissingBasicsMessage() {
     const self = this;
     const { t } = this.props;
     const handleClickUpload = function() {
@@ -169,9 +198,9 @@ class Basics extends Component {
         </p>
       </Trans>
     );
-  };
+  }
 
-  getTitle = () => {
+  getTitle() {
     const { t } = this.props;
     if (this.isMissingBasics()) {
       return '';
@@ -191,21 +220,11 @@ class Basics extends Component {
       ' - ' + sundial.formatInTimezone(basicsData.dateRange[1], timezone, dtMask);
   }
 
-  isMissingBasics = () => {
-    const basicsData = _.get(this.props, 'patientData.basicsData', {});
-    let data;
-
-    if (basicsData.data) {
-      data = basicsData.data;
-    }
-    else {
-      return true;
-    }
-
-    // require at least one relevant data point to show The Basics
-    const basicsDataLength = _.flatten(_.map(_.values(data), 'data')).length;
-    return basicsDataLength === 0;
-  };
+  isMissingBasics() {
+    // If no data dateRange, will be empty
+    const dateRange = _.get(this.props, 'patientData.basicsData.dateRange', []);
+    return dateRange.length === 0;
+  }
 
   // handlers
   toggleBgDataSource = (e, bgSource) => {

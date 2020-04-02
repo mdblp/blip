@@ -187,6 +187,12 @@ export let PatientData = translate()(React.createClass({
         inTransition={false}
         atMostRecent={false}
         title={t('Data')}
+        onClickBasics={_.noop}
+        onClickTrends={_.noop}
+        onClickOneDay={_.noop}
+        onClickBgLog={_.noop}
+        onClickSettings={_.noop}
+        onClickPrint={_.noop}
         ref="header" />
       );
   },

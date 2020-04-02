@@ -91,6 +91,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       showModalOverlay: false,
       dialog: '',
       tableHeight: 590,
+      tableWidth: 880,
       showSearchReset: false,
     };
 
@@ -105,7 +106,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     //setup default sorting but don't track via metrics
     this.handleSortChange('fullNameOrderable', SortTypes.ASC, false);
   }
-  
+
   //nextProps contains list of people being watched
   componentWillReceiveProps(nextProps) {
     //Watches for an update to the user list, if a clinician accepts an invitation then updates the visable user list
@@ -200,13 +201,13 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
           placeholder={t('Search by Name')}
           value={this.state.searchPattern}
         />
-        { 
-        this.state.showSearchReset ? 
+        {
+        this.state.showSearchReset ?
           <img
             onClick={this.handleEmptySearch}
             className="peopletable-reset-image"
             src={resetSearchImageSrc}
-            title={t('Reset Search')}/> : null 
+            title={t('Reset Search')}/> : null
         }
         </div>
       </div>
@@ -337,6 +338,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             className="fullName"
             data={dataList}
             col="fullName"
+            rowIndex={0}
             icon={<i className="peopletable-icon-profile icon-profile"></i>}
           />}
           width={20}
@@ -356,6 +358,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
           cell={<TextCell
             data={dataList}
             col="birthday"
+            rowIndex={1}
+            icon={null}
           />}
           width={120}
           flexGrow={0}
@@ -367,6 +371,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             data={dataList}
             handleClick={this.handleRemove.bind(this)}
             title={title}
+            rowIndex={2}
           />}
           width={30}
           flexGrow={0}
