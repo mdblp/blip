@@ -27,6 +27,7 @@ import { translate, Trans } from 'react-i18next';
 import { SortHeaderCell, SortTypes } from './sortheadercell';
 import personUtils from '../../core/personutils';
 import ModalOverlay from '../modaloverlay';
+import { Link } from 'react-router';
 
 const resetSearchImageSrc = require('./images/searchReset.png');
 
@@ -64,6 +65,25 @@ RemoveLinkCell.propTypes = {
 };
 
 RemoveLinkCell.displayName = 'RemoveLinkCell';
+
+const NewLinkCell = ({ rowIndex, data, title, ...props }) => (
+  <Cell {...props}>
+    <div onClick={(e) => e.stopPropagation()} className="peopletable-cell-content">
+      <Link to={data[rowIndex].link}  target="_blank">
+          opening in new tab
+      </Link>
+    </div>
+  </Cell>
+);
+
+NewLinkCell.propTypes = {
+  data: PropTypes.array,
+  rowIndex: PropTypes.number,
+  handleClick: PropTypes.func,
+  title: PropTypes.string.isRequired,
+};
+
+RemoveLinkCell.displayName = 'NewLinkCell';
 
 const PeopleTable = translate()(class PeopleTable extends React.Component {
   constructor(props) {
@@ -311,7 +331,9 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     const { colSortDirs, dataList, tableWidth, tableHeight } = this.state;
 
     const title = t('I want to quit this patient\'s care team');
+    const newTabTitle = t('I want to open this patient in a new tab');
 
+    console.log(dataList);
     return (
       <Table
         rowHeight={65}
@@ -337,30 +359,20 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             className="fullName"
             data={dataList}
             col="fullName"
-            icon={<i className="peopletable-icon-profile icon-profile"></i>}
           />}
-          width={20}
+          width={50}
           flexGrow={1}
         />
 
         <Column
-          columnKey="birthdayOrderable"
-          header={
-            <SortHeaderCell
-              onSortChange={this.handleSortChange}
-              sortDir={colSortDirs.birthdayOrderable}
-            >
-              {t('BIRTHDAY')}
-            </SortHeaderCell>
-          }
-          cell={<TextCell
+          columnKey="open"
+          cell={<NewLinkCell
             data={dataList}
-            col="birthday"
+            title={newTabTitle}
           />}
-          width={120}
-          flexGrow={0}
+          width={50}
+          flexGrow={1}
         />
-
         <Column
           columnKey="remove"
           cell={<RemoveLinkCell
