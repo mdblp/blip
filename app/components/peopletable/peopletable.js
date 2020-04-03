@@ -83,7 +83,7 @@ NewLinkCell.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-RemoveLinkCell.displayName = 'NewLinkCell';
+RemoveLinkCell.displayName = 'RemoveLinkCell';
 
 const PeopleTable = translate()(class PeopleTable extends React.Component {
   constructor(props) {
