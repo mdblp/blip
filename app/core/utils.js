@@ -380,6 +380,12 @@ utils.filterPatientData = (data, bgUnits) => {
   return nurseShark.processData(data, bgUnits);
 }
 
+/**
+ * @param {any[]} data
+ * @param {{timezone: string}} queryParams
+ * @param {any} settings
+ * @returns {TidelineData|DiabeloopData} The processed data
+ */
 utils.processPatientData = (data, queryParams, settings) => {
   if (!(data && data.length >= 0)) {
     return null;
@@ -387,10 +393,6 @@ utils.processPatientData = (data, queryParams, settings) => {
 
   const timePrefsForTideline = utils.getTimezoneForDataProcessing(data, queryParams);
   const bgPrefs = utils.getBGPrefsForDataProcessing(queryParams, settings);
-
-  console.time('Nurseshark Total');
-  const res = utils.filterPatientData(data, bgPrefs.bgUnits);
-  console.timeEnd('Nurseshark Total');
 
   console.time('TidelineData Total');
   let tidelineData = null;
@@ -400,13 +402,15 @@ utils.processPatientData = (data, queryParams, settings) => {
     bgClasses: bgPrefs.bgClasses,
   };
   if (config.BRANDING === 'diabeloop') {
-    tidelineData = new DiabeloopData(res.processedData, tidelineDataOptions);
+    tidelineData = new DiabeloopData(data, tidelineDataOptions);
   } else {
+    console.time('Nurseshark');
+    const res = utils.filterPatientData(data, bgPrefs.bgUnits);
+    console.timeEnd('Nurseshark Total');
     tidelineData = new TidelineData(res.processedData, tidelineDataOptions);
-  }
-
-  if (!_.isEmpty(timePrefsForTideline)) {
-    tidelineData.timePrefs = timePrefsForTideline;
+    if (!_.isEmpty(timePrefsForTideline)) {
+      tidelineData.timePrefs = timePrefsForTideline;
+    }
   }
 
   // Set tidelineData as a global variable

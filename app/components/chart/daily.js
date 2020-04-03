@@ -51,7 +51,7 @@ const DailyChart = translate()(class DailyChart extends Component {
     bgUnits: React.PropTypes.string.isRequired,
     bolusRatio: React.PropTypes.number,
     dynamicCarbs: React.PropTypes.bool,
-    initialDatetimeLocation: React.PropTypes.string,
+    datetimeLocation: React.PropTypes.string,
     patient: React.PropTypes.object,
     patientData: React.PropTypes.object.isRequired,
     timePrefs: React.PropTypes.object.isRequired,
@@ -115,7 +115,7 @@ const DailyChart = translate()(class DailyChart extends Component {
 
   componentDidMount = () => {
     this.mountChart();
-    this.initializeChart(this.props.initialDatetimeLocation);
+    this.initializeChart(this.props.datetimeLocation);
   };
 
   componentWillUnmount = () => {
@@ -222,7 +222,7 @@ class Daily extends Component {
     chartPrefs: React.PropTypes.object.isRequired,
     dataUtil: React.PropTypes.object,
     timePrefs: React.PropTypes.object.isRequired,
-    initialDatetimeLocation: React.PropTypes.string,
+    datetimeLocation: React.PropTypes.string,
     patientData: React.PropTypes.object.isRequired,
     pdf: React.PropTypes.object.isRequired,
     loading: React.PropTypes.bool.isRequired,
@@ -307,7 +307,7 @@ class Daily extends Component {
                 bgUnits={this.props.bgPrefs.bgUnits}
                 bolusRatio={this.props.chartPrefs.bolusRatio}
                 dynamicCarbs={this.props.chartPrefs.dynamicCarbs}
-                initialDatetimeLocation={this.props.initialDatetimeLocation}
+                datetimeLocation={this.props.datetimeLocation}
                 patientData={this.props.patientData}
                 timePrefs={this.props.timePrefs}
                 // message handlers
@@ -430,7 +430,7 @@ class Daily extends Component {
           bgPrefs={this.props.bgPrefs}
           timePrefs={this.props.timePrefs}
         />}
-       
+
         <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
       );

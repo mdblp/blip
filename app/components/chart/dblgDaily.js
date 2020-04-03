@@ -1,4 +1,3 @@
-
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2020, Diabeloop
@@ -16,11 +15,17 @@
  * https://opensource.org/licenses/BSD-2-Clause.
  * == BSD2 LICENSE ==
  */
+
+/** @typedef { import("tideline/js/diabeloop-data").DiabeloopData } DiabeloopData */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import bows from 'bows';
+import moment from 'moment-timezone';
+import i18next from '../../core/language';
 
+import ChartDaily from 'tideline/plugins/blip/chart-daily';
 import { components as vizComponents } from '@tidepool/viz';
 
 import { BG_DATA_TYPES } from '../../core/constants';
@@ -34,6 +39,12 @@ import BgSourceToggle from './bgSourceToggle';
 const DEBOUNCE_TIME = 100;
 const CHART_TYPE = 'daily';
 
+/** Translate a string @type{(t: string, ...args) => string} */
+const t = i18next.t.bind(i18next);
+
+/**
+ * @augments  {React.Component<{datetimeLocation: string, loading: boolean, trackMetric: (m: string)=>void, patientData: DiabeloopData, [x: string]: any}>}
+ */
 class Daily extends React.Component {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
@@ -41,7 +52,7 @@ class Daily extends React.Component {
     chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
-    initialDatetimeLocation: PropTypes.string.isRequired,
+    datetimeLocation: PropTypes.string.isRequired,
     // DiabeloopData from tideline
     patientData: PropTypes.object.isRequired,
     pdf: PropTypes.object.isRequired,
@@ -68,11 +79,13 @@ class Daily extends React.Component {
   constructor(props) {
     super(props);
 
+    const { datetimeLocation, patientData } = props;
+
     this.chartType = CHART_TYPE;
-    this.log = bows('Daily');
+    this.log = bows('DblgDaily');
     this.state = {
-      tidepoolDaily: true,
-      title: '',
+      tidepoolDaily: false,
+      title: moment.tz(datetimeLocation, patientData.timePrefs.timezoneName).format(t('ddd, MMM D, YYYY')),
       atMostRecent: false,
       inTransition: false,
     };
@@ -84,11 +97,13 @@ class Daily extends React.Component {
     // Thanks to WindowSizeListener (react-window-size-listener)
     this.debouncedResize = _.debounce(this.onWindowResize.bind(this), DEBOUNCE_TIME);
     window.addEventListener('resize', this.debouncedResize, false);
+    this.log.info('Mounting...');
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.debouncedResize, false);
     this.debouncedResize = null;
+    this.log.info('Unmount...');
   }
 
   render() {
@@ -128,8 +143,22 @@ class Daily extends React.Component {
   }
 
   renderDiabeloopDaily() {
+    const { loading, patientData, trackMetric, datetimeLocation } = this.props;
     const Loader = vizComponents.Loader;
-    const dailyChart = this.renderSVG();
+
+    let dailyChart = null;
+    if (!loading) {
+      dailyChart = (
+        <ChartDaily
+          containerId="tidelineContainer"
+          className="patient-data-chart"
+          diabeloopData={patientData}
+          datetimeLocation={datetimeLocation}
+          trackMetric={trackMetric}
+        />
+      );
+    }
+
     return (
       <div id="tidelineMain" className="daily">
         <Header
@@ -155,7 +184,7 @@ class Daily extends React.Component {
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
-              <Loader show={this.props.loading} overlay={true} />
+              <Loader show={loading} overlay={true} />
               {dailyChart}
             </div>
           </div>
@@ -187,25 +216,14 @@ class Daily extends React.Component {
     );
   }
 
-  // ** Render SVG **
-  renderSVG() {
-    return (
-      <div id="tidelineContainer" className="patient-data-chart">
-        <svg>
 
-        </svg>
-      </div>
-    );
-  }
-
-  renderScrollBar() {
-
-  }
+  renderScrollBar() {}
 
   // ** Events **
 
-  onWindowResize(e) {
-    this.log.debug('onWindowResize', e);
+  onWindowResize() {
+    this.log.debug('onWindowResize');
+
   }
 
   onClickBack() {

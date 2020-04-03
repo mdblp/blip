@@ -13,6 +13,9 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+/** @typedef { import("tideline/js/tidelinedata") } TidelineData */
+/** @typedef { import("tideline/js/diabeloop-data").DiabeloopData } DiabeloopData */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -137,6 +140,7 @@ export let PatientData = translate()(React.createClass({
       loading: true,
       processingData: false,
       processEarlierDataCount: 0,
+      /** @type {TidelineData|DiabeloopData} */
       processedPatientData: null,
       timePrefs: {
         timezoneAware: false,
@@ -794,23 +798,25 @@ export let PatientData = translate()(React.createClass({
     });
 
     if (config.BRANDING === 'diabeloop') {
+
+      /** @type{{endpoints: string[], processedPatientData: DiabeloopData }} */
       const { endpoints, processedPatientData } = this.state;
       let mDate = null;
 
       if (typeof datetime === 'string') {
         // Use the datetime we have in parameter
-        mDate = moment.utc(datetime);
+        mDate = moment.tz(datetime, processedPatientData.timePrefs.timezoneName);
       }
       if ((mDate === null || !mDate.isValid()) && (Array.isArray(endpoints) && endpoints.length === 2)) {
         // Use last endpoint
-        mDate = moment.utc(endpoints[1]);
+        mDate = moment.tz(endpoints[1], processedPatientData.timePrefs.timezoneName);
       }
       if (mDate === null || !mDate.isValid()) {
         // Default to now, since we need a date anyway
         mDate = moment();
       }
 
-      const diabetesData = _.get(processedPatientData, 'diabetesData', []);
+      const { diabetesData } = processedPatientData;
       if (diabetesData.length > 2) {
         const firstDatum = diabetesData[0];
         const lastDatum = diabetesData[diabetesData.length - 1];
@@ -821,19 +827,6 @@ export let PatientData = translate()(React.createClass({
           mDate = firstDD;
         } else if (mDate.isAfter(lastDD)) {
           mDate = lastDD;
-        } else {
-          // Get the closest timezone of the requested date
-          const rangeStart = moment(mDate).subtract(3, 'hour');
-          const rangeEnd = moment(mDate).add(3, 'hours');
-          // processedPatientData.dataByDate is a crossfilter2/dimension object
-          processedPatientData.dataByDate.filterAll();
-          processedPatientData.dataByDate.filter([rangeStart.toISOString(), rangeEnd.toISOString()]);
-          const values = processedPatientData.dataByDate.top(Number.POSITIVE_INFINITY);
-          if (values.length > 0) {
-            // Quick & broken way to get the most closed datum
-            const datum = values[Math.round((values.length - 1) / 2)];
-            mDate = moment.tz(mDate, datum.timezone);
-          }
         }
       }
 
