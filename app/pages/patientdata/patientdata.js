@@ -352,6 +352,7 @@ export let PatientData = translate()(React.createClass({
   },
 
   renderDaily: function() {
+    const { datetimeLocation } = this.state;
     if (config.BRANDING === 'diabeloop') {
       return (
         <DiabeloopDaily
@@ -359,7 +360,7 @@ export let PatientData = translate()(React.createClass({
           chartPrefs={this.state.chartPrefs}
           dataUtil={this.dataUtil}
           timePrefs={this.state.timePrefs}
-          initialDatetimeLocation={this.state.datetimeLocation}
+          datetimeLocation={datetimeLocation}
           patient={this.props.patient}
           patientData={this.state.processedPatientData}
           loading={this.state.loading}
@@ -386,7 +387,7 @@ export let PatientData = translate()(React.createClass({
         chartPrefs={this.state.chartPrefs}
         dataUtil={this.dataUtil}
         timePrefs={this.state.timePrefs}
-        initialDatetimeLocation={this.state.datetimeLocation}
+        datetimeLocation={datetimeLocation}
         patient={this.props.patient}
         patientData={this.state.processedPatientData}
         loading={this.state.loading}
