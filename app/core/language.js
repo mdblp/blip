@@ -17,6 +17,9 @@ let language = getLocale();
 if (self.localStorage && self.localStorage.lang) {
   language = self.localStorage.lang;
 }
+if (crowdinActive) {
+  language = 'it';
+}
 
 const i18nOptions = {
   fallbackLng: 'en',
@@ -81,8 +84,12 @@ i18n.on('languageChanged', (lng) => {
   if (typeof lng === 'string' && language !== lng) {
     language = lng;
 
-    // Update moment locale
-    moment.locale(lng);
+    // Update moment locale, but if crowdin is enabled then force 'en'
+    if (crowdinActive && lng === 'it') {
+      moment.locale('en');
+    } else {
+      moment.locale(lng);
+    }
 
     // Save locale for future load
     if (self.localStorage) {
