@@ -78,7 +78,7 @@ if (typeof process.env.MATOMO_TRACKER_URL === 'string' && process.env.MATOMO_TRA
 }
 
 // Replace Crowdin Javascript
-if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enable') {
+if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled') {
   const script = "\
   <script type=\"text/javascript\">\n\
     var _jipt = [];\n\

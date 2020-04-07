@@ -64,7 +64,7 @@ if (typeof process.env.MATOMO_TRACKER_URL === 'string' && process.env.MATOMO_TRA
   config.matomoUrl = null;
 }
 
-if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN !== 'disable') {
+if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled') {
   config.crowdinPreview = true;
 } else {
   config.crowdinPreview = false;
