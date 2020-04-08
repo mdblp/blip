@@ -17,9 +17,6 @@ let language = getLocale();
 if (self.localStorage && self.localStorage.lang) {
   language = self.localStorage.lang;
 }
-if (crowdinActive) {
-  language = 'it';
-}
 
 const i18nOptions = {
   fallbackLng: 'en',
