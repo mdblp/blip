@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+# Unreleased
+### Changed
+- PT-1205 Add timezone info on tooltips when necessary
+
 # 0.15.0 - 2020-04-14
 ### Changed
 - PT-1093 Search Page: remove date of birth as filter
@@ -10,7 +14,6 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - PT-1157 Revert temporary fix PT-1115
-- PT-1205 Add timezone info on tooltips when necessary
 
 ### Engineering
 - PT-1215 Integration with Crowdin live preview (localization management saas)
