@@ -315,7 +315,7 @@
   "html.patientsettings-target-range": "",
   "html.peopletable-instructions": "",
   "html.peopletable-remove-patient-confirm": "",
-  "html.setting-no-uploaded-data": "",
+  "html.setting-no-uploaded-data": "<0>The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn't sent data yet.</0><1>Try <1>refreshing</1>.</1>",
   "html.signup-clinician": "",
   "html.signup-invited": "",
   "html.signup-personal": "",
