@@ -139,7 +139,7 @@
     "style-loader": "0.23.0",
     "sundial": "mdblp/sundial#dblp.0.1.0",
     "tideline": "mdblp/tideline#dblp.1.9.2",
-    "tidepool-platform-client": "0.41.0",
+    "tidepool-platform-client": "mdblp/platform-client#feature/add-tir",
     "tidepool-standard-action": "0.1.1",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "2.2.0",
