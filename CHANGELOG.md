@@ -4,7 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Fixed
-- PT1218 Zendesk Contact form is not offloaded
+- PT-1218 Zendesk Contact form is not offloaded
 
 ## 0.15.0 - 2020-04-14
 ### Changed
