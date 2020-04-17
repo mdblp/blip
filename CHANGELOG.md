@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 0.15.1
+## 0.15.1 - 2020-04-17
 ### Fixed
 - PT-1218 Zendesk Contact form is not offloaded
 - PT-419 Manage Language in Zendesk widget
