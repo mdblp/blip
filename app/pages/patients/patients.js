@@ -41,8 +41,10 @@ export let Patients = translate()(React.createClass({
     fetchingUser: React.PropTypes.bool.isRequired,
     fetchingPendingReceivedInvites: React.PropTypes.object.isRequired,
     fetchingAssociatedAccounts: React.PropTypes.object.isRequired,
+    fetchingMetrics: React.PropTypes.object.isRequired,
     invites: React.PropTypes.array.isRequired,
     loading: React.PropTypes.bool.isRequired,
+    ready: React.PropTypes.bool.isRequired,
     location: React.PropTypes.object.isRequired,
     loggedInUserId: React.PropTypes.string,
     onAcceptInvitation: React.PropTypes.func.isRequired,
@@ -60,7 +62,7 @@ export let Patients = translate()(React.createClass({
   render: function() {
     var welcomeTitle = this.renderWelcomeTitle();
 
-    if (this.props.loading) {
+    if (!this.props.ready) {
       if (this.props.location.query.justLoggedIn) {
         return (
           <div>
@@ -373,6 +375,9 @@ export function getFetchers(dispatchProps, stateProps, api) {
     fetchers.push(dispatchProps.fetchAssociatedAccounts.bind(null, api));
   }
 
+  if(stateProps.fetchingAssociatedAccounts.completed && !stateProps.fetchingMetrics.inProgress && !stateProps.fetchingMetrics.completed){
+    dispatchProps.fetchMetrics(api, stateProps);
+  }
   return fetchers;
 };
 
@@ -380,6 +385,7 @@ export function getFetchers(dispatchProps, stateProps, api) {
 export function mapStateToProps(state) {
   var user = null;
   let patientMap = {};
+  let ready = false;
 
   if (state.blip.allUsersMap) {
     if (state.blip.loggedInUserId) {
@@ -414,12 +420,16 @@ export function mapStateToProps(state) {
         });
       });
     }
+    if (state.blip.working.fetchingMetrics.completed) {
+      ready = true;
+    }
   }
 
   let {
     fetchingUser: { inProgress: fetchingUser },
     fetchingAssociatedAccounts,
     fetchingPendingReceivedInvites,
+    fetchingMetrics,
   } = state.blip.working;
 
   return {
@@ -428,7 +438,9 @@ export function mapStateToProps(state) {
     fetchingUser: fetchingUser,
     fetchingPendingReceivedInvites,
     fetchingAssociatedAccounts,
-    loading: fetchingUser || fetchingAssociatedAccounts.inProgress || fetchingPendingReceivedInvites.inProgress,
+    fetchingMetrics,
+    loading: fetchingUser || fetchingAssociatedAccounts.inProgress || fetchingPendingReceivedInvites.inProgress ||  fetchingMetrics.inProgress,
+    ready,
     loggedInUserId: state.blip.loggedInUserId,
     patients: _.keys(patientMap).map((key) => patientMap[key]),
     showingWelcomeMessage: state.blip.showingWelcomeMessage,
@@ -442,6 +454,7 @@ let mapDispatchToProps = dispatch => bindActionCreators({
   removePatient: actions.async.removeMembershipInOtherCareTeam,
   fetchPendingReceivedInvites: actions.async.fetchPendingReceivedInvites,
   fetchAssociatedAccounts: actions.async.fetchAssociatedAccounts,
+  fetchMetrics: actions.async.fetchMetrics,
   clearPatientData: actions.sync.clearPatientData,
   clearPatientInView: actions.sync.clearPatientInView,
   showWelcomeMessage: actions.sync.showWelcomeMessage,
