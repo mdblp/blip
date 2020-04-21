@@ -30,6 +30,7 @@ import ModalOverlay from '../modaloverlay';
 import { Link } from 'react-router';
 
 const resetSearchImageSrc = require('./images/searchReset.png');
+const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 const TextCell = ({ rowIndex, data, col, icon, title, t, track, ...props }) => (
   <Cell {...props}>
@@ -69,6 +70,62 @@ TextCell.propTypes = {
   t: PropTypes.func,
   track: PropTypes.func,
 };
+
+const MetricCell = ({ rowIndex, data, col, title, t, track, format, ...props }) => (
+  <Cell {...props}>
+    <div className="peopletable-cell">
+      <div className="peopletable-cell-metric">
+        {format(data[rowIndex][col], t, props)}
+      </div>
+    </div>
+  </Cell>
+);
+
+MetricCell.propTypes = {
+  col: PropTypes.string,
+  data: PropTypes.array,
+  rowIndex: PropTypes.number,
+  title: PropTypes.string,
+  t: PropTypes.func,
+  track: PropTypes.func,
+  format: PropTypes.func,
+};
+
+const TirCell = ({ rowIndex, data, col, title, t, track, format, ...props }) => (
+  <Cell {...props}>
+    { (data[rowIndex][col]) ? 
+      <div className="peopletable-cell">
+        <div className="peopletable-cell-rate">
+          Very High: {format(data[rowIndex][col].veryHigh)}
+        </div>
+        <div className="peopletable-cell-rate">
+          High: {format(data[rowIndex][col].high)}
+        </div>
+        <div className="peopletable-cell-rate">
+          Target: {format(data[rowIndex][col].target)}
+        </div>
+        <div className="peopletable-cell-rate">
+          Low: {format(data[rowIndex][col].low)}
+        </div>
+        <div className="peopletable-cell-rate">
+          VeryLow: {format(data[rowIndex][col].veryLow)}
+        </div>
+    </div> 
+    : <div></div>
+    }
+  </Cell>
+);
+
+TirCell.propTypes = {
+  col: PropTypes.string,
+  data: PropTypes.array,
+  rowIndex: PropTypes.number,
+  title: PropTypes.string,
+  t: PropTypes.func,
+  track: PropTypes.func,
+  format: PropTypes.func,
+};
+
 
 const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
   <Cell {...props}>
@@ -113,7 +170,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       showModalOverlay: false,
       dialog: '',
       tableHeight: 590,
-      showSearchReset: false,
+      showSearchReset: false,      
     };
 
     WindowSizeListener.DEBOUNCE_TIME = 50;
@@ -140,6 +197,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     const { t } = this.props;
     const list = _.map(this.props.people, (person) => {
       let bday = _.get(person, ['profile', 'patient', 'birthday'], '');
+      let pmetric = _.get(person, ['metric'], '');
 
       if (bday) {
         bday = ` ${sundial.translateMask(bday, 'YYYY-MM-DD', t('M/D/YYYY'))}`;
@@ -152,10 +210,27 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         birthday: bday,
         birthdayOrderable: new Date(bday),
         userid: person.userid,
+        tirLastTime: pmetric.lastCbgTime,
+        rate: pmetric.rate,
       };
     });
 
     return _.orderBy(list, ['fullNameOrderable'], [SortTypes.DESC]);
+  }
+
+  formatRate(rate){
+    const v = Math.round((rate + Number.EPSILON) * 100) / 100
+    return `${v}%`
+  }
+
+  formatDate(datetime, t) {
+    if (datetime) {
+      return sundial.formatInTimezone(
+        datetime, 
+        browserTimezone, 
+        t('MMM D, YYYY h:mm a'));
+    };
+    return t('No data in the last 24 hours');
   }
 
   handleFilterChange(e) {
@@ -333,12 +408,12 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     const { colSortDirs, dataList, tableWidth, tableHeight } = this.state;
 
     const title = t('I want to quit this patient\'s care team');
-    const newTabTitle = 'open {{patient}} in a new tab';
+    const newTabTitle = t('open {{patient}} in a new tab');
 
     console.log(dataList);
     return (
       <Table
-        rowHeight={65}
+        rowHeight={100}
         headerHeight={50}
         width={tableWidth}
         height={tableHeight}
@@ -364,6 +439,34 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             title={newTabTitle}
             t={t}
             track={this.props.trackMetric}
+          />}
+          width={50}
+          flexGrow={1}
+        />
+        <Column
+          columnKey="tirLastTime"
+          cell={<MetricCell
+            className="tirLastTime"
+            data={dataList}
+            col="tirLastTime"
+            title="tirTime"
+            t={t}
+            track={this.props.trackMetric}
+            format={this.formatDate}
+          />}
+          width={50}
+          flexGrow={1}
+        />
+        <Column
+          columnKey="rate"
+          cell={<TirCell
+            className="rate"
+            data={dataList}
+            col="rate"
+            title="tir"
+            t={t}
+            track={this.props.trackMetric}
+            format={this.formatRate}
           />}
           width={50}
           flexGrow={1}
