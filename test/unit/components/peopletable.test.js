@@ -38,6 +38,16 @@ describe('PeopleTable', () => {
         },
         permissions: { root: {} },
         userid: 10,
+        metric: {
+          lastCbgTime: '2020-03-06T23:50:21.000Z',
+          rate: {
+            high: 10.3,
+            low: 0,
+            target: 6.9,
+            veryHigh: 82.8,
+            veryLow: 0,
+          },
+        },
       },
       {
         profile: {
@@ -54,6 +64,16 @@ describe('PeopleTable', () => {
           link: 'http://localhost:3000/patients/0cc2ccd188/data',
         },
         userid: 30,
+        metric: {
+          lastCbgTime: '2020-03-06T23:50:21+01:00',
+          rate: {
+            high: 10.3,
+            low: 0,
+            target: 6.9,
+            veryHigh: 82.8,
+            veryLow: 0,
+          },
+        }
       },
       {
         profile: {
@@ -74,6 +94,7 @@ describe('PeopleTable', () => {
     ],
     trackMetric: sinon.stub(),
     onRemovePatient: sinon.stub(),
+    timezone: 'Europe/Paris',
   };
 
   let wrapper;
@@ -124,7 +145,7 @@ describe('PeopleTable', () => {
   });
 
   describe('sorting', function () {
-    it('should find 2 sort links', function () {
+    it('should find 1 sort link', function () {
       const links = wrapper.find('.peopletable-search-icon');
       expect(links).to.have.length(1);
     });
@@ -165,6 +186,15 @@ describe('PeopleTable', () => {
       wrapper.find('input').simulate('change', {target: {value: 'a'}});
       expect(wrapper.find('.peopletable-instructions')).to.have.length(0);
     });
+
+    it('should have tir displayed when available', function () {
+      expect(wrapper.find('.peopletable-cell-rate')).to.have.length(10);
+    });
+
+    it('should have message displayed when tir not available', function () {
+      expect(wrapper.find('.peopletable-cell-metric')).to.have.length(5);
+    });
+
   });
 
   describe('patient removal link', function () {

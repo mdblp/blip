@@ -30,7 +30,6 @@ import ModalOverlay from '../modaloverlay';
 import { Link } from 'react-router';
 
 const resetSearchImageSrc = require('./images/searchReset.png');
-const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 const TextCell = ({ rowIndex, data, col, icon, title, t, track, ...props }) => (
   <Cell {...props}>
@@ -71,11 +70,11 @@ TextCell.propTypes = {
   track: PropTypes.func,
 };
 
-const MetricCell = ({ rowIndex, data, col, title, t, track, format, ...props }) => (
+const MetricCell = ({ rowIndex, data, col, title, t, track, format, timezone, ...props }) => (
   <Cell {...props}>
     <div className="peopletable-cell">
       <div className="peopletable-cell-metric">
-        {format(data[rowIndex][col], t, props)}
+        {format(data[rowIndex][col], t, timezone)}
       </div>
     </div>
   </Cell>
@@ -202,6 +201,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       if (bday) {
         bday = ` ${sundial.translateMask(bday, 'YYYY-MM-DD', t('M/D/YYYY'))}`;
       }
+      console.log(pmetric.lastCbgTime);
+      console.log(pmetric.tir);
 
       return {
         fullName: personUtils.patientFullName(person),
@@ -223,11 +224,11 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     return `${v}%`
   }
 
-  formatDate(datetime, t) {
+  formatDate(datetime, t, timezone) {
     if (datetime) {
       return sundial.formatInTimezone(
         datetime, 
-        browserTimezone, 
+        timezone, 
         t('MMM D, YYYY h:mm a'));
     };
     return t('No data in the last 24 hours');
@@ -453,6 +454,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             t={t}
             track={this.props.trackMetric}
             format={this.formatDate}
+            timezone={this.props.timezone}
           />}
           width={50}
           flexGrow={1}
@@ -502,6 +504,7 @@ PeopleTable.propTypes = {
   people: PropTypes.array,
   trackMetric: PropTypes.func.isRequired,
   onRemovePatient: PropTypes.func.isRequired,
+  timezone: PropTypes.string.isRequired,
 };
 
 export default PeopleTable;
