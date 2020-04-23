@@ -3,9 +3,7 @@ const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const uglifyJS = require('uglify-es');
 const fs = require('fs');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
 
@@ -154,20 +152,6 @@ const plugins = [
   new MiniCssExtractPlugin({
     filename: isDev ? 'style.css' : 'style.[contenthash].css',
   }),
-  new CopyWebpackPlugin([
-    {
-      from: 'static',
-      transform: (content, path) => {
-        if (isDev || isTest) {
-         return content;
-        }
-
-        const code = fs.readFileSync(path, 'utf8');
-        const result = uglifyJS.minify(code);
-        return result.code;
-      }
-    }
-  ]),
   new HtmlWebpackPlugin({
     template: 'index.ejs',
     favicon: 'favicon.ico',

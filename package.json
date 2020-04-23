@@ -59,7 +59,6 @@
     "chromedriver": "2.41.0",
     "classnames": "2.2.6",
     "concurrently": "4.1.1",
-    "copy-webpack-plugin": "4.5.2",
     "css-loader": "1.0.0",
     "custom-protocol-detection": "1.0.1",
     "enzyme": "3.6.0",
