@@ -14,6 +14,7 @@ import mutationTracker from 'object-invariant-test-helper';
 import _ from 'lodash';
 import moment from 'moment';
 import { mount, shallow } from 'enzyme';
+import sinon from 'sinon';
 import { components as vizComponents } from '@tidepool/viz';
 import i18next from '../../../app/core/language';
 import DataUtilStub from '../../helpers/DataUtil';
@@ -38,8 +39,6 @@ describe('PatientData', function () {
     fetchingPatient: false,
     fetchingPatientData: false,
     fetchingUser: false,
-    generatePDFRequest: sinon.stub(),
-    generatingPDF: false,
     isUserPatient: false,
     onCloseMessageThread: sinon.stub(),
     onCreateMessage: sinon.stub(),
@@ -49,9 +48,7 @@ describe('PatientData', function () {
     onSaveComment: sinon.stub(),
     patientDataMap: {},
     patientNotesMap: {},
-    pdf: {},
     queryParams: {},
-    removeGeneratedPDFS: sinon.stub(),
     trackMetric: sinon.stub(),
     updateBasicsSettings: sinon.stub(),
     updatePatientNote: sinon.stub(),
@@ -72,7 +69,7 @@ describe('PatientData', function () {
     timeInAuto: 'timeInAuto',
     timeInRange: 'timeInRange',
     totalInsulin: 'totalInsulin',
-  }
+  };
 
   const statFetchMethods = _.transform(commonStats, (result, value, key) => {
     result[value] = sinon.stub();
@@ -107,6 +104,7 @@ describe('PatientData', function () {
         getStatDefinition: sinon.stub().callsFake((data, type) => `stubbed ${type} definition`),
       }
     });
+    PD.__Rewire__('createPrintPDFPackage', sinon.stub().returns(new Promise((resolve, reject) => reject(new Error('stub')))));
   });
 
   after(() => {
@@ -114,6 +112,7 @@ describe('PatientData', function () {
     PD.__ResetDependency__('Trends');
     PD.__ResetDependency__('BgLog');
     PD.__ResetDependency__('vizUtils');
+    PD.__ResetDependency__('createPrintPDFPackage');
   });
 
   it('should be exposed as a module and be of type function', function() {
@@ -871,7 +870,6 @@ describe('PatientData', function () {
     const props = {
       onRefresh: sinon.stub(),
       clearPatientData: sinon.stub(),
-      removeGeneratedPDFS: sinon.stub(),
     };
 
     it('should clear patient data upon refresh', function() {
@@ -883,10 +881,17 @@ describe('PatientData', function () {
     });
 
     it('should clear generated pdfs upon refresh', function() {
+      const setStateSpy = sinon.spy(PatientData.WrappedComponent.prototype, 'setState');
       const elem = TestUtils.findRenderedComponentWithType(TestUtils.renderIntoDocument(<PatientData {...props} />), PatientData.WrappedComponent);
-      const callCount = props.removeGeneratedPDFS.callCount;
+
+      setStateSpy.resetHistory();
       elem.handleRefresh();
-      expect(props.removeGeneratedPDFS.callCount).to.equal(callCount + 1);
+
+      sinon.assert.calledWithMatch(setStateSpy, {
+        canPrint: false,
+        pdf: null,
+      });
+      PatientData.WrappedComponent.prototype.setState.restore();
     });
 
     it('should reset patient data processing state', function() {
@@ -911,7 +916,9 @@ describe('PatientData', function () {
         loading: true,
         processEarlierDataCount: 0,
         processedPatientData: null,
-        title: 'defaultTitle'
+        title: 'defaultTitle',
+        canPrint: false,
+        pdf: null,
       });
 
       PatientData.WrappedComponent.prototype.setState.restore();
@@ -980,7 +987,6 @@ describe('PatientData', function () {
   describe('updateBasicsSettings', () => {
     beforeEach(() => {
       defaultProps.updateBasicsSettings.reset();
-      defaultProps.removeGeneratedPDFS.reset();
     })
 
     it('should call `updateBasicsSettings` from props, but only if `canUpdateSettings` arg is true', () => {
@@ -1039,7 +1045,7 @@ describe('PatientData', function () {
       PatientData.WrappedComponent.prototype.setState.restore();
     });
 
-    it('should callback with `props.removeGeneratedPDFS` if `siteChangeSource` is changed from user settings', () => {
+    it('should reset generated PDF if `siteChangeSource` is changed from user settings', () => {
       const setStateSpy = sinon.spy(PatientData.WrappedComponent.prototype, 'setState');
 
       const settingsProps = _.assign({}, defaultProps, {
@@ -1048,6 +1054,9 @@ describe('PatientData', function () {
             siteChangeSource: 'cannula',
           },
         }),
+        pdf: {
+          url: 'pdfData',
+        },
       });
 
       const wrapper = shallow(<PatientData.WrappedComponent {...settingsProps} />);
@@ -1065,8 +1074,9 @@ describe('PatientData', function () {
 
       sinon.assert.calledOnce(setStateSpy);
       sinon.assert.calledWith(setStateSpy, {
-        updatedSiteChangeSource: settings.siteChangeSource
-      }, defaultProps.removeGeneratedPDFS);
+        updatedSiteChangeSource: settings.siteChangeSource,
+        pdf: null,
+      });
 
       PatientData.WrappedComponent.prototype.setState.restore();
     });
@@ -1079,20 +1089,20 @@ describe('PatientData', function () {
               siteChangeSource: 'cannula',
             },
           }),
+          pdf: {
+            url: 'pdfData',
+          },
         });
 
         const wrapper = shallow(<PatientData.WrappedComponent {...settingsProps} />);
         const instance = wrapper.instance();
-
-        sinon.assert.callCount(defaultProps.removeGeneratedPDFS, 0);
 
         const settings = { siteChangeSource: 'prime' };
 
         let canUpdateSettings = false;
         instance.updateBasicsSettings(defaultProps.currentPatientInViewId, settings, canUpdateSettings);
         expect(wrapper.state('updatedSiteChangeSource')).to.equal('prime');
-
-        sinon.assert.callCount(defaultProps.removeGeneratedPDFS, 1);
+        expect(wrapper.state('pdf')).to.equal(null);
       });
 
       it('should not remove the generated PDF when the patient\'s site change source did not change', function() {
@@ -1102,19 +1112,20 @@ describe('PatientData', function () {
               siteChangeSource: 'prime',
             },
           }),
+          pdf: {
+            url: 'pdfData',
+          },
         });
 
         const wrapper = shallow(<PatientData.WrappedComponent {...settingsProps} />);
         const instance = wrapper.instance();
 
-        sinon.assert.callCount(defaultProps.removeGeneratedPDFS, 0);
-
         const settings = { siteChangeSource: 'prime' };
 
         let canUpdateSettings = false;
         instance.updateBasicsSettings(defaultProps.currentPatientInViewId, settings, canUpdateSettings);
-
-        sinon.assert.callCount(defaultProps.removeGeneratedPDFS, 0);
+        expect(wrapper.state('updatedSiteChangeSource'), 'state.updatedSiteChangeSource').to.be.undefined;
+        expect(wrapper.state('pdf'), 'state.pdf').to.be.null;
       });
     });
   });
@@ -1154,20 +1165,6 @@ describe('PatientData', function () {
       });
 
       PatientData.WrappedComponent.prototype.setState.restore();
-    });
-  });
-
-  describe('componentWillUnmount', function() {
-    const props = {
-      clearPatientData: sinon.stub(),
-      removeGeneratedPDFS: sinon.stub(),
-    };
-
-    it('should clear generated pdfs upon refresh', function() {
-    const elem = TestUtils.findRenderedComponentWithType(TestUtils.renderIntoDocument(<PatientData {...props} />), PatientData.WrappedComponent);
-      const callCount = props.removeGeneratedPDFS.callCount;
-      elem.componentWillUnmount();
-      expect(props.removeGeneratedPDFS.callCount).to.equal(callCount + 1);
     });
   });
 
@@ -1356,7 +1353,7 @@ describe('PatientData', function () {
   });
 
   describe('componentWillUpdate', function() {
-    it('should generate a pdf when view is basics and patient data is processed', function () {
+    it('should be able to generate a pdf when the patient data is processed', function () {
       var props = {
         currentPatientInViewId: 40,
         isUserPatient: true,
@@ -1366,7 +1363,8 @@ describe('PatientData', function () {
             fullName: 'Fooey McBar'
           }
         },
-        generatingPDF: false,
+        fetchingUser: false,
+        trackMetric: _.noop,
       };
 
       const processedPatientData = {
@@ -1375,135 +1373,19 @@ describe('PatientData', function () {
 
       const wrapper = mount(<PatientData {...props} />);
       const elem = wrapper.instance().getWrappedInstance();
-      sinon.stub(elem, 'generatePDF');
+      sinon.stub(elem, 'generatePDF').returns(
+        new Promise((resolve, reject) => {
+          reject(new Error('dummy'));
+        })
+      );
 
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'basics', processingData: false, processedPatientData });
+      elem.setState({ chartType: 'daily', processingData: false, processedPatientData, loading: false });
 
-      elem.generatePDF.reset()
-      expect(elem.generatePDF.callCount).to.equal(0);
-
-      wrapper.instance().forceUpdate();
-      expect(elem.generatePDF.callCount).to.equal(1);
-    });
-
-    it('should generate a pdf when view is daily and patient data is processed', function () {
-      var props = {
-        currentPatientInViewId: 40,
-        isUserPatient: true,
-        patient: {
-          userid: 40,
-          profile: {
-            fullName: 'Fooey McBar'
-          }
-        },
-        generatingPDF: false,
-      };
-
-      const processedPatientData = {
-        diabetesData: ['stub'],
-      };
-
-      const wrapper = mount(<PatientData {...props} />);
-      const elem = wrapper.instance().getWrappedInstance();
-      sinon.stub(elem, 'generatePDF');
-
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'daily', processingData: false, processedPatientData });
-
-      elem.generatePDF.reset()
-      expect(elem.generatePDF.callCount).to.equal(0);
+      expect(elem.generatePDF.callCount, 'generatePDF not called').to.equal(0);
 
       wrapper.instance().forceUpdate();
-      expect(elem.generatePDF.callCount).to.equal(1);
-    });
-
-    it('should generate a pdf when view is bgLog and patient data is processed', function () {
-      var props = {
-        currentPatientInViewId: 40,
-        isUserPatient: true,
-        patient: {
-          userid: 40,
-          profile: {
-            fullName: 'Fooey McBar'
-          }
-        },
-        generatingPDF: false,
-      };
-
-      const processedPatientData = {
-        diabetesData: ['stub'],
-      };
-
-      const wrapper = mount(<PatientData {...props} />);
-      const elem = wrapper.instance().getWrappedInstance();
-      sinon.stub(elem, 'generatePDF');
-
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'bgLog', processingData: false, processedPatientData });
-
-      elem.generatePDF.reset()
-      expect(elem.generatePDF.callCount).to.equal(0);
-
-      wrapper.instance().forceUpdate();
-      expect(elem.generatePDF.callCount).to.equal(1);
-    });
-
-    it('should generate a pdf when view is settings and patient data is processed', function () {
-      var props = {
-        currentPatientInViewId: 40,
-        isUserPatient: true,
-        patient: {
-          userid: 40,
-          profile: {
-            fullName: 'Fooey McBar'
-          }
-        },
-        generatingPDF: false,
-      };
-
-      const processedPatientData = {
-        diabetesData: ['stub'],
-      };
-
-      const wrapper = mount(<PatientData {...props} />);
-      const elem = wrapper.instance().getWrappedInstance();
-      sinon.stub(elem, 'generatePDF');
-
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'settings', processingData: false, processedPatientData });
-
-      elem.generatePDF.reset()
-      expect(elem.generatePDF.callCount).to.equal(0);
-
-      wrapper.instance().forceUpdate();
-      expect(elem.generatePDF.callCount).to.equal(1);
-    });
-
-    it('should generate a pdf when view is trends and patient data is processed', function () {
-      var props = {
-        currentPatientInViewId: 40,
-        isUserPatient: true,
-        patient: {
-          userid: 40,
-          profile: {
-            fullName: 'Fooey McBar'
-          }
-        },
-        generatingPDF: false,
-      };
-
-      const processedPatientData = {
-        diabetesData: ['stub'],
-      };
-
-      const wrapper = mount(<PatientData {...props} />);
-      const elem = wrapper.instance().getWrappedInstance();
-      sinon.stub(elem, 'generatePDF');
-
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'trends', processingData: false, processedPatientData });
-
-      elem.generatePDF.reset()
-      expect(elem.generatePDF.callCount).to.equal(0);
-
-      wrapper.instance().forceUpdate();
-      expect(elem.generatePDF.callCount).to.equal(1);
+      elem.handleClickPrint();
+      expect(elem.generatePDF.callCount, 'generatePDF called').to.equal(1);
     });
 
     it('should not generate a pdf when one is currently generating', function () {
@@ -1516,15 +1398,16 @@ describe('PatientData', function () {
             fullName: 'Fooey McBar'
           }
         },
-        generatingPDF: true,
+        trackMetric: _.noop,
       };
 
       const wrapper = mount(<PatientData {...props} />);
       const elem = wrapper.instance().getWrappedInstance();
       sinon.stub(elem, 'generatePDF');
 
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'daily', processingData: false, processedPatientData: true });
+      elem.setState({ chartType: 'daily', processingData: false, processedPatientData: true });
       wrapper.update();
+      elem.handleClickPrint();
 
       expect(elem.generatePDF.callCount).to.equal(0);
     });
@@ -1539,16 +1422,16 @@ describe('PatientData', function () {
             fullName: 'Fooey McBar'
           }
         },
-        generatingPDF: false,
+        trackMetric: _.noop,
       };
 
       const wrapper = mount(<PatientData {...props} />);
       const elem = wrapper.instance().getWrappedInstance();
       sinon.stub(elem, 'generatePDF');
 
-      var callCount = elem.generatePDF.callCount;
+      expect(elem.generatePDF.callCount).to.equal(0);
 
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'daily', processingData: false, processedPatientData: false });
+      elem.setState({ chartType: 'daily', processingData: false, processedPatientData: false });
       wrapper.update();
 
       expect(elem.generatePDF.callCount).to.equal(0);
@@ -1564,16 +1447,16 @@ describe('PatientData', function () {
             fullName: 'Fooey McBar'
           }
         },
-        generatingPDF: false,
+        trackMetric: _.noop,
       };
 
       const wrapper = mount(<PatientData {...props} />);
       const elem = wrapper.instance().getWrappedInstance();
       sinon.stub(elem, 'generatePDF');
 
-      var callCount = elem.generatePDF.callCount;
+      expect(elem.generatePDF.callCount).to.equal(0);
 
-      wrapper.instance().getWrappedInstance().setState({ chartType: 'daily', processingData: true, processedPatientData: true });
+      elem.setState({ chartType: 'daily', processingData: true, processedPatientData: true });
       wrapper.update();
 
       expect(elem.generatePDF.callCount).to.equal(0);
@@ -1589,19 +1472,14 @@ describe('PatientData', function () {
             fullName: 'Fooey McBar'
           }
         },
-        generatingPDF: false,
-        pdf: {
-          combined: {
-            url: 'someUrl'
-          }
-        }
+        trackMetric: _.noop,
       };
 
       const wrapper = mount(<PatientData {...props} />);
       const elem = wrapper.instance().getWrappedInstance();
       sinon.stub(elem, 'generatePDF');
 
-      var callCount = elem.generatePDF.callCount;
+      expect(elem.generatePDF.callCount).to.equal(0);
 
       wrapper.instance().getWrappedInstance().setState({ chartType: 'daily', processingData: false, processedPatientData: true });
       wrapper.update();
@@ -1675,11 +1553,10 @@ describe('PatientData', function () {
     it('should filter the daily and bgLog view data before dispatching the generate pdf action', () => {
       const dailyFilterStub = PD.__get__('vizUtils').data.selectDailyViewData;
       const bgLogFilterStub = PD.__get__('vizUtils').data.selectBgLogViewData;
+      const createPrintPDFPackageStub =  PD.__get__('createPrintPDFPackage');
       const pickSpy = sinon.spy(_, 'pick');
 
-      const props = _.assign({}, defaultProps, {
-        generatePDFRequest: sinon.stub(),
-      });
+      const props = _.assign({}, defaultProps);
 
       const state = {
         processedPatientData: {
@@ -1702,24 +1579,22 @@ describe('PatientData', function () {
 
       sinon.assert.callCount(dailyFilterStub, 0);
       sinon.assert.callCount(bgLogFilterStub, 0);
-      sinon.assert.callCount(props.generatePDFRequest, 0);
+      sinon.assert.callCount(createPrintPDFPackageStub, 0);
 
       instance.generatePDFStats = sinon.stub().returns({});
       instance.generatePDF(props, state);
 
       sinon.assert.callCount(dailyFilterStub, 1);
       sinon.assert.callCount(bgLogFilterStub, 1);
-      sinon.assert.callCount(props.generatePDFRequest, 1);
+      sinon.assert.callCount(createPrintPDFPackageStub, 1);
 
       sinon.assert.callCount(pickSpy, 2);
       assert(dailyFilterStub.calledBefore(bgLogFilterStub));
       expect(pickSpy.firstCall.lastArg).to.have.members(['basal', 'bolus', 'cbg', 'food', 'message', 'smbg', 'upload', 'physicalActivity']);
       expect(pickSpy.secondCall.lastArg).to.have.members(['smbg']);
 
-      assert(dailyFilterStub.calledBefore(props.generatePDFRequest));
-      sinon.assert.calledWithMatch(props.generatePDFRequest,
-        'combined',
-        {
+      assert(dailyFilterStub.calledBefore(createPrintPDFPackageStub));
+      sinon.assert.calledWithMatch(createPrintPDFPackageStub, {
           daily: 'stubbed filtered daily data',
           bgLog: 'stubbed filtered bgLog data',
         },
@@ -1729,10 +1604,7 @@ describe('PatientData', function () {
     });
 
     it('should add stats to the pdf data object by passing it to `generatePDFStats`', () => {
-      const props = _.assign({}, defaultProps, {
-        generatePDFRequest: sinon.stub(),
-      });
-
+      const createPrintPDFPackageStub =  PD.__get__('createPrintPDFPackage');
       const state = {
         processedPatientData: {
           diabetesData: [{
@@ -1749,10 +1621,10 @@ describe('PatientData', function () {
         },
       };
 
-      const wrapper = shallow(<PatientData.WrappedComponent {...props} />);
+      const wrapper = shallow(<PatientData.WrappedComponent {...defaultProps} />);
       const instance = wrapper.instance();
 
-      sinon.assert.callCount(props.generatePDFRequest, 0);
+      sinon.assert.callCount(createPrintPDFPackageStub, 0);
 
 
       instance.generatePDFStats = sinon.stub().callsFake((data) => {
@@ -1760,14 +1632,12 @@ describe('PatientData', function () {
         return data;
       });
 
-      instance.generatePDF(props, state);
+      instance.generatePDF(defaultProps, state);
 
-      sinon.assert.callCount(props.generatePDFRequest, 1);
+      sinon.assert.callCount(createPrintPDFPackageStub, 1);
       sinon.assert.callCount(instance.generatePDFStats, 1);
 
-      sinon.assert.calledWithMatch(props.generatePDFRequest,
-        'combined',
-        {
+      sinon.assert.calledWithMatch(createPrintPDFPackageStub, {
           daily: 'stubbed filtered daily data',
           bgLog: 'stubbed filtered bgLog data',
           basics: { stats: 'stubbed basics stats' },
@@ -3766,7 +3636,6 @@ describe('PatientData', function () {
           fetchingPendingSentInvites: {inProgress: false, notification: null, completed: null},
           fetchingAssociatedAccounts: {inProgress: false, notification: null, completed: null},
           fetchingUser: { inProgress: false, notification: null },
-          generatingPDF: { inProgress: false, notification: null },
         },
       };
 
@@ -3854,7 +3723,6 @@ describe('PatientData', function () {
           fetchingPatient: {inProgress: false, notification: null},
           fetchingPatientData: {inProgress: false, notification: null},
           fetchingUser: {inProgress: false, notification: null},
-          generatingPDF: {inProgress: false, notification: null},
         },
       };
 

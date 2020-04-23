@@ -207,6 +207,9 @@ const resolve = {
     path.join(__dirname, 'node_modules'),
     'node_modules',
   ],
+  alias: {
+    pdfkit: 'pdfkit/js/pdfkit.standalone.js',
+  }
 };
 
 let devtool = process.env.WEBPACK_DEVTOOL || 'eval-source-map';
