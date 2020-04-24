@@ -828,10 +828,6 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleClickPrint: function() {
-    this.props.trackMetric('Clicked Print', {
-      fromChart: this.state.chartType
-    });
-
     function openPDFWindow(pdf) {
       const printWindow = window.open(pdf.url);
       if (printWindow !== null) {
@@ -842,26 +838,40 @@ export let PatientData = translate()(React.createClass({
       }
     }
 
-    if (this.state.pdf !== null) {
-      openPDFWindow(this.state.pdf);
-    } else {
-      const { fetchingUser } = this.props;
-      const { processingData, processedPatientData } = this.state;
-      let hasDiabetesData = false;
-      if (processedPatientData !== null) {
-        hasDiabetesData = _.get(processedPatientData, 'diabetesData.length', 0) > 0;
-      }
+    this.props.trackMetric('Clicked Print', {
+      fromChart: this.state.chartType
+    });
 
-      if (!fetchingUser && !processingData && hasDiabetesData) {
-        this.generatePDF(this.props, this.state).then((pdf) => {
-          openPDFWindow(pdf);
-          this.setState({ pdf });
-        }).catch((err) => {
-          this.log(err);
-          window.onerror('print', 'patient-data', 0, 0, err);
-        });
+    // Return a promise for the tests
+    return new Promise((resolve, reject) => {
+      if (this.state.pdf !== null) {
+        openPDFWindow(this.state.pdf);
+        resolve();
+      } else {
+        const { fetchingUser } = this.props;
+        const { processingData, processedPatientData } = this.state;
+        let hasDiabetesData = false;
+        if (processedPatientData !== null) {
+          hasDiabetesData = _.get(processedPatientData, 'diabetesData.length', 0) > 0;
+        }
+
+        if (!fetchingUser && !processingData && hasDiabetesData) {
+          this.generatePDF(this.props, this.state).then((pdf) => {
+            openPDFWindow(pdf);
+            this.setState({ pdf });
+            resolve();
+          }).catch((err) => {
+            this.log('generatePDF:', err);
+            if (_.isFunction(window.onerror)) {
+              window.onerror('print', 'patient-data', 0, 0, err);
+            }
+            reject(err);
+          });
+        } else {
+          resolve();
+        }
       }
-    }
+    });
   },
 
   handleClickRefresh: function(e) {
@@ -979,13 +989,13 @@ export let PatientData = translate()(React.createClass({
     if (patientSettings && nextPatientData) {
       if (newDiabetesDataReturned || this.state.lastDatumProcessedIndex < 0) {
         this.log(`${nextFetchedDataRange.count - currentFetchedDataRange.count} new datums received and off to processing.`)
-        this.processData(nextProps);
+        this.processData(nextProps, _.noop);
       }
       else if (!newDiabetesDataReturned && newDataRangeFetched) {
         if (!allDataFetched) {
           // Our latest data fetch yeilded no new data. We now request the remainder of the available
           // data to make sure that we don't miss any.
-          this.fetchEarlierData({ startDate: null });
+          this.fetchEarlierData({ startDate: null }, _.noop);
         }
         else {
           this.setState({ loading: false });
@@ -1334,8 +1344,9 @@ export let PatientData = translate()(React.createClass({
           processedPatientData,
           processingData: false,
         }, () => {
-          this.hideLoading(250, cb);
+          this.hideLoading(250);
           props.trackMetric('Processed earlier patient data', { patientID, count });
+          cb();
         });
       }
     });
