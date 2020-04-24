@@ -34,28 +34,28 @@ const resetSearchImageSrc = require('./images/searchReset.png');
 const TextCell = ({ rowIndex, data, col, icon, title, t, track, ...props }) => (
   <Cell {...props}>
     <div className="peopletable-cell">
-      {icon}
       <div className="peopletable-cell-content">
-        {data[rowIndex][col]}
-      </div>
-      <div 
-        onClick={
-          (e) => {
-            track('Selected PWD in new tab');
-            e.stopPropagation()}
-        } 
-        className="peopletable-cell-content-svg">
-        <Link 
-          title={t(title, {patient: data[rowIndex][col]})} 
-          to={data[rowIndex].link}  
-          target="_blank">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V8h-1v5a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1h5V1z"/>
-              <path fillRule="evenodd" d="M13.5 1a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V1.5a.5.5 0 01.5-.5z" fillRule="evenodd"/>
-              <path fillRule="evenodd" d="M13 3.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" fillRule="evenodd"/>
-          </svg>
-        </Link>
-      </div>
+          {data[rowIndex][col]}
+        </div>
+        <div 
+          onClick={
+            (e) => {
+              track('Selected PWD in new tab');
+              e.stopPropagation()}
+          } 
+          className="peopletable-cell-content-svg">
+          <Link 
+            title={t(title, {patient: data[rowIndex][col]})} 
+            to={data[rowIndex].link}  
+            target="_blank">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V8h-1v5a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1h5V1z"/>
+                <path fillRule="evenodd" d="M13.5 1a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V1.5a.5.5 0 01.5-.5z" fillRule="evenodd"/>
+                <path fillRule="evenodd" d="M13 3.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" fillRule="evenodd"/>
+            </svg>
+          </Link>
+        </div>
+        <div width="100%">&nbsp;</div>
     </div>
   </Cell>
 );
@@ -74,7 +74,7 @@ const MetricCell = ({ rowIndex, data, col, title, t, track, format, timezone, ..
   <Cell {...props}>
     <div className="peopletable-cell">
       <div className="peopletable-cell-metric">
-        {format(data[rowIndex][col], t, timezone)}
+        {(timezone)?format(data[rowIndex][col], t, timezone):format(data[rowIndex][col], t)}
       </div>
     </div>
   </Cell>
@@ -89,42 +89,6 @@ MetricCell.propTypes = {
   track: PropTypes.func,
   format: PropTypes.func,
 };
-
-const TirCell = ({ rowIndex, data, col, title, t, track, format, ...props }) => (
-  <Cell {...props}>
-    { (data[rowIndex][col]) ? 
-      <div className="peopletable-cell">
-        <div className="peopletable-cell-rate">
-          Very High: {format(data[rowIndex][col].veryHigh)}
-        </div>
-        <div className="peopletable-cell-rate">
-          High: {format(data[rowIndex][col].high)}
-        </div>
-        <div className="peopletable-cell-rate">
-          Target: {format(data[rowIndex][col].target)}
-        </div>
-        <div className="peopletable-cell-rate">
-          Low: {format(data[rowIndex][col].low)}
-        </div>
-        <div className="peopletable-cell-rate">
-          VeryLow: {format(data[rowIndex][col].veryLow)}
-        </div>
-    </div> 
-    : <div></div>
-    }
-  </Cell>
-);
-
-TirCell.propTypes = {
-  col: PropTypes.string,
-  data: PropTypes.array,
-  rowIndex: PropTypes.number,
-  title: PropTypes.string,
-  t: PropTypes.func,
-  track: PropTypes.func,
-  format: PropTypes.func,
-};
-
 
 const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
   <Cell {...props}>
@@ -195,24 +159,29 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   buildDataList() {
     const { t } = this.props;
     const list = _.map(this.props.people, (person) => {
-      let bday = _.get(person, ['profile', 'patient', 'birthday'], '');
       let pmetric = _.get(person, ['metric'], '');
-
-      if (bday) {
-        bday = ` ${sundial.translateMask(bday, 'YYYY-MM-DD', t('M/D/YYYY'))}`;
+      let rate = pmetric.rate;
+      let tirVeryLow, tirLow, tirTarget, tirHigh, tirVeryHigh = undefined;
+      if (rate) {
+        tirVeryLow = pmetric.rate.veryLow;
+        tirLow = pmetric.rate.low;
+        tirTarget = pmetric.rate.target;
+        tirHigh = pmetric.rate.high;
+        tirVeryHigh = pmetric.rate.veryHigh;
       }
-      console.log(pmetric.lastCbgTime);
-      console.log(pmetric.tir);
 
       return {
         fullName: personUtils.patientFullName(person),
         fullNameOrderable: (personUtils.patientFullName(person) || '').toLowerCase(),
         link: person.link,
-        birthday: bday,
-        birthdayOrderable: new Date(bday),
         userid: person.userid,
-        tirLastTime: pmetric.lastCbgTime,
+        tirLastTime: pmetric.lastCbgTime || '0',
         rate: pmetric.rate,
+        tirVeryLow,
+        tirLow,
+        tirTarget,
+        tirHigh,
+        tirVeryHigh
       };
     });
 
@@ -220,12 +189,16 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   formatRate(rate){
+    if (rate === undefined) {
+      return '';
+    }
+
     const v = Math.round((rate + Number.EPSILON) * 100) / 100
     return `${v}%`
   }
 
   formatDate(datetime, t, timezone) {
-    if (datetime) {
+    if (datetime && datetime !== '0') {
       return sundial.formatInTimezone(
         datetime, 
         timezone, 
@@ -259,16 +232,27 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     });
   }
 
-  handleSortChange(columnKey, sortDir, track) {
-    const sorted = _.orderBy(this.state.dataList, [columnKey], [sortDir]);
-
+  handleSortChange(columnKey, sortDir, track, excludedValue = undefined) {
+    const split = _.partition(this.state.dataList, {[columnKey]: excludedValue});
+    const sortNotExcluded = _.orderBy(split[1], [columnKey], [sortDir]);
+    const sorted = _.concat(sortNotExcluded, split[0]);
     if (track) {
       let metricMessage = 'Sort by ';
 
-      if (columnKey === 'fullNameOrderable') {
-        metricMessage += 'Name';
-      } else if (columnKey === 'birthdayOrderable') {
-        metricMessage += 'Birthday';
+      switch (columnKey) {
+        case 'fullNameOrderable':
+          metricMessage += 'Name';
+          break;
+        case 'tirLastTime': 
+        case 'tirVeryLow':
+        case 'tirLow':
+        case 'tirTarget':
+        case 'tirHigh':
+        case 'tirVeryHigh':
+                metricMessage += columnKey
+          break;
+        default:
+          break;
       }
       metricMessage += ` ${sortDir}`;
       this.props.trackMetric(metricMessage);
@@ -404,6 +388,32 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     });
   }
 
+  getTirCol(list, key, label, sortDirs, t, format, width = 40, flexGrow = 0) {
+    return <Column
+      columnKey={key}
+      header={
+        <SortHeaderCell
+          onSortChange={this.handleSortChange}
+          sortDir={sortDirs[key]}
+        >
+          {t(label)}
+        </SortHeaderCell>
+      }
+      cell={<MetricCell
+        className={key}
+        data={list}
+        col={key}
+        title={key}
+        t={t}
+        track={this.props.trackMetric}
+        format={format}
+        timezone={this.props.timezone}
+      />}
+      width={width}
+      flexGrow={flexGrow}
+    />
+  }
+
   renderPeopleTable() {
     const { t } = this.props;
     const { colSortDirs, dataList, tableWidth, tableHeight } = this.state;
@@ -411,11 +421,10 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     const title = t('I want to quit this patient\'s care team');
     const newTabTitle = t('open {{patient}} in a new tab');
 
-    console.log(dataList);
     return (
       <Table
-        rowHeight={100}
-        headerHeight={50}
+        rowHeight={50}
+        headerHeight={70}
         width={tableWidth}
         height={tableHeight}
         rowsCount={dataList.length}
@@ -432,7 +441,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             >
               {t('NAME')}
             </SortHeaderCell>
-          }
+        }
           cell={<TextCell
             className="fullName"
             data={dataList}
@@ -444,35 +453,12 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
           width={50}
           flexGrow={1}
         />
-        <Column
-          columnKey="tirLastTime"
-          cell={<MetricCell
-            className="tirLastTime"
-            data={dataList}
-            col="tirLastTime"
-            title="tirTime"
-            t={t}
-            track={this.props.trackMetric}
-            format={this.formatDate}
-            timezone={this.props.timezone}
-          />}
-          width={50}
-          flexGrow={1}
-        />
-        <Column
-          columnKey="rate"
-          cell={<TirCell
-            className="rate"
-            data={dataList}
-            col="rate"
-            title="tir"
-            t={t}
-            track={this.props.trackMetric}
-            format={this.formatRate}
-          />}
-          width={50}
-          flexGrow={1}
-        />
+        {this.getTirCol(dataList, 'tirLastTime', 'Last available CGM Data', colSortDirs, t, this.formatDate, 50, 1)}
+        {this.getTirCol(dataList, 'tirVeryLow', 'tirVeryLow', colSortDirs, t, this.formatRate)}
+        {this.getTirCol(dataList, 'tirLow', 'tirLow', colSortDirs, t, this.formatRate)}
+        {this.getTirCol(dataList, 'tirTarget', 'tirTarget', colSortDirs, t, this.formatRate)}
+        {this.getTirCol(dataList, 'tirHigh', 'tirHigh', colSortDirs, t, this.formatRate)}
+        {this.getTirCol(dataList, 'tirVeryHigh', 'tirVeryHigh', colSortDirs, t, this.formatRate)}
 
         <Column
           columnKey="remove"
