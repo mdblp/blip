@@ -6,7 +6,17 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - PT-1205 Add timezone info on tooltips when necessary
 
-# 0.15.0 - 2020-04-14
+## 0.15.1 - 2020-04-17
+### Fixed
+- PT-1218 Zendesk Contact form is not offloaded
+- PT-419 Manage Language in Zendesk widget
+### Changed
+- Upgrade to Tideline 1.9.2
+  - PT-1231 Basics: Total basal events count does not give the correct total
+- Upgrade to Viz 0.11.3
+  - PT-1230 CGM / BGM labels don't change with language
+
+## 0.15.0 - 2020-04-14
 ### Changed
 - PT-1093 Search Page: remove date of birth as filter
 - PT-1094 Search Page: remove the persona icon next to the patient name
