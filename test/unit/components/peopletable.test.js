@@ -147,7 +147,7 @@ describe('PeopleTable', () => {
   describe('sorting', function () {
     it('should find 1 sort link', function () {
       const links = wrapper.find('.peopletable-search-icon');
-      expect(links).to.have.length(1);
+      expect(links).to.have.length(7);
     });
 
     it('should trigger a call to trackMetric with correct parameters', function () {
@@ -188,11 +188,21 @@ describe('PeopleTable', () => {
     });
 
     it('should have tir displayed when available', function () {
-      expect(wrapper.find('.peopletable-cell-rate')).to.have.length(10);
+      const expectedCells = props.people.length * 6;
+      expect(wrapper.find('.peopletable-cell-metric')).to.have.length(expectedCells);
+    });
+
+    it('should have message displayed for 1st patient in the list', function () {
+      expect(wrapper.find('.peopletable-cell-metric').at(0).text()).to.equal('No data in the last 24 hours');
     });
 
     it('should have message displayed when tir not available', function () {
-      expect(wrapper.find('.peopletable-cell-metric')).to.have.length(5);
+      const cells = wrapper.find('.peopletable-cell-metric');
+      let nbrOfDataNotAvailable = 0;
+      cells.forEach(cell => {
+        nbrOfDataNotAvailable = (cell.text() === 'No data in the last 24 hours') ? nbrOfDataNotAvailable + 1 : nbrOfDataNotAvailable;
+      });
+      expect(nbrOfDataNotAvailable).to.equal(3);
     });
 
   });
