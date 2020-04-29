@@ -398,6 +398,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
   getTirCol(list, item, label, sortDirs, t, format, width = 50, flexGrow = 0) {
     return <Column
+      key={item}
       columnKey={item}
       header={
         <SortHeaderCell

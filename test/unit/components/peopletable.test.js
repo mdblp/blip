@@ -108,6 +108,8 @@ describe('PeopleTable', () => {
         {...props}
       />
     );
+    wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: true });
+    wrapper.update();
   });
 
   it('should be a function', function () {
@@ -145,7 +147,7 @@ describe('PeopleTable', () => {
   });
 
   describe('sorting', function () {
-    it('should find 1 sort link', function () {
+    it('should find 7 sort link', function () {
       const links = wrapper.find('.peopletable-search-icon');
       expect(links).to.have.length(7);
     });
@@ -155,6 +157,13 @@ describe('PeopleTable', () => {
       link.simulate('click');
       expect(props.trackMetric.callCount).to.equal(1);
       expect(props.trackMetric.calledWith('Sort by Name desc')).to.be.true;
+    });
+
+    it('should find 3 sort link on small display', function () {
+      wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: false });
+      wrapper.update();
+      const links = wrapper.find('.peopletable-search-icon');
+      expect(links).to.have.length(3);
     });
   });
 
@@ -189,6 +198,13 @@ describe('PeopleTable', () => {
 
     it('should have tir displayed when available', function () {
       const expectedCells = props.people.length * 6;
+      expect(wrapper.find('.peopletable-cell-metric')).to.have.length(expectedCells);
+    });
+
+    it('should have tir displayed when available on small display', function () {
+      wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: false });
+      wrapper.update();
+      const expectedCells = props.people.length * 2;
       expect(wrapper.find('.peopletable-cell-metric')).to.have.length(expectedCells);
     });
 

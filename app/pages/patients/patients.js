@@ -56,7 +56,7 @@ export let Patients = translate()(React.createClass({
     showWelcomeMessage: React.PropTypes.func.isRequired,
     showingWelcomeMessage: React.PropTypes.bool,
     trackMetric: React.PropTypes.func.isRequired,
-    uploadUrl: React.PropTypes.string.isRequired,
+    uploadUrl: React.PropTypes.string,
     user: React.PropTypes.object,
   },
 
