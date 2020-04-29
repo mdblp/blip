@@ -31,12 +31,13 @@ import { Link } from 'react-router';
 
 const resetSearchImageSrc = require('./images/searchReset.png');
 
-const TextCell = ({ rowIndex, data, col, icon, title, t, track, ...props }) => (
+const TextCell = ({ rowIndex, data, col, icon, title, t, track, fullDisplayMode, ...props }) => (
   <Cell {...props}>
     <div className="peopletable-cell">
       <div className="peopletable-cell-content">
-          {data[rowIndex][col]}
-        </div>
+        {data[rowIndex][col]}
+      </div>
+      { fullDisplayMode ? (
         <div 
           onClick={
             (e) => {
@@ -55,7 +56,10 @@ const TextCell = ({ rowIndex, data, col, icon, title, t, track, ...props }) => (
             </svg>
           </Link>
         </div>
-        <div width="100%">&nbsp;</div>
+        )
+        :
+        <div width="100%">&nbsp;</div> 
+        }
     </div>
   </Cell>
 );
@@ -68,6 +72,7 @@ TextCell.propTypes = {
   title: PropTypes.string,
   t: PropTypes.func,
   track: PropTypes.func,
+  fullDisplayMode: PropTypes.bool,
 };
 
 const MetricCell = ({ rowIndex, data, col, title, t, track, format, timezone, ...props }) => (
@@ -133,7 +138,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       showModalOverlay: false,
       dialog: '',
       tableHeight: 590,
-      showSearchReset: false,      
+      tableWidth: 880,
+      showSearchReset: false,
     };
 
     WindowSizeListener.DEBOUNCE_TIME = 50;
@@ -157,7 +163,6 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   buildDataList() {
-    const { t } = this.props;
     const list = _.map(this.props.people, (person) => {
       let pmetric = _.get(person, ['metric'], '');
       let rate = pmetric.rate;
@@ -371,11 +376,13 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
   handleWindowResize(windowSize) {
     let tableWidth = 880;
+    let fullDisplayMode = true;
 
     switch (true) {
 
       case (windowSize.windowWidth < 480):
         tableWidth = windowSize.windowWidth - 35;
+        fullDisplayMode = false;
         break;
 
       case (windowSize.windowWidth < 934):
@@ -385,25 +392,27 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
     this.setState({
       tableWidth,
+      fullDisplayMode
     });
   }
 
-  getTirCol(list, key, label, sortDirs, t, format, width = 40, flexGrow = 0) {
+  getTirCol(list, item, label, sortDirs, t, format, width = 50, flexGrow = 0) {
     return <Column
-      columnKey={key}
+      columnKey={item}
       header={
         <SortHeaderCell
           onSortChange={this.handleSortChange}
-          sortDir={sortDirs[key]}
+          sortDir={sortDirs[item]}
+          title={t('Sort By {{name}}', {name: t(item)})}
         >
           {t(label)}
         </SortHeaderCell>
       }
       cell={<MetricCell
-        className={key}
+        className={item}
         data={list}
-        col={key}
-        title={key}
+        col={item}
+        title={item}
         t={t}
         track={this.props.trackMetric}
         format={format}
@@ -414,13 +423,21 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     />
   }
 
+  getTirsCol(list, cols, sortDirs, t, format, width = 40, flexGrow = 0){
+    let res = [];
+    cols.forEach(item => {
+      res.push(this.getTirCol(list, item, item, sortDirs, t, format, width, flexGrow));      
+    });
+    return res;
+  }
+
   renderPeopleTable() {
     const { t } = this.props;
-    const { colSortDirs, dataList, tableWidth, tableHeight } = this.state;
+    const { colSortDirs, dataList, tableWidth, tableHeight, fullDisplayMode } = this.state;
 
     const title = t('I want to quit this patient\'s care team');
-    const newTabTitle = t('open {{patient}} in a new tab');
-
+    const newTabTitle = 'open {{patient}} in a new tab';
+    const labelName = t('NAME');
     return (
       <Table
         rowHeight={50}
@@ -438,8 +455,9 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             <SortHeaderCell
               onSortChange={this.handleSortChange}
               sortDir={colSortDirs.fullNameOrderable}
+              title={t('Sort By {{name}}', {name: labelName})}
             >
-              {t('NAME')}
+              {labelName}
             </SortHeaderCell>
         }
           cell={<TextCell
@@ -449,16 +467,22 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             title={newTabTitle}
             t={t}
             track={this.props.trackMetric}
+            fullDisplayMode= {fullDisplayMode}
           />}
           width={50}
           flexGrow={1}
         />
-        {this.getTirCol(dataList, 'tirLastTime', 'Last available CGM Data', colSortDirs, t, this.formatDate, 50, 1)}
-        {this.getTirCol(dataList, 'tirVeryLow', 'tirVeryLow', colSortDirs, t, this.formatRate)}
-        {this.getTirCol(dataList, 'tirLow', 'tirLow', colSortDirs, t, this.formatRate)}
-        {this.getTirCol(dataList, 'tirTarget', 'tirTarget', colSortDirs, t, this.formatRate)}
-        {this.getTirCol(dataList, 'tirHigh', 'tirHigh', colSortDirs, t, this.formatRate)}
-        {this.getTirCol(dataList, 'tirVeryHigh', 'tirVeryHigh', colSortDirs, t, this.formatRate)}
+        {this.getTirCol(dataList, 'tirLastTime', 'tirLastTime', colSortDirs, t, this.formatDate, 40, 1)}
+        {(fullDisplayMode) ?
+          this.getTirsCol(
+            dataList, 
+            ['tirVeryLow', 'tirLow', 'tirTarget', 'tirHigh', 'tirVeryHigh'],
+            colSortDirs, 
+            t, 
+            this.formatRate)
+          : 
+          this.getTirCol(dataList, 'tirTarget', 'tirTarget', colSortDirs, t, this.formatRate)
+          }
 
         <Column
           columnKey="remove"
