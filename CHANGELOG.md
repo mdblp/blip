@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - PT-1256 Improve PDF generation
+### Engineering use
+- PT-1249 Reduce blip & viz build time.
 
 ## 0.15.1 - 2020-04-17
 ### Fixed
