@@ -198,9 +198,11 @@ const entry = isDev
 const output = {
   filename: isDev || isTest ? 'bundle.js' : 'bundle.[hash].js',
   path: path.join(__dirname, '/dist'),
-  publicPath: isDev ? devPublicPath : '/',
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
+if (isDev) {
+  output.publicPath = devPublicPath;
+}
 
 const resolve = {
   modules: [
@@ -214,7 +216,7 @@ if (process.env.WEBPACK_DEVTOOL === false) devtool = undefined;
 
 module.exports = {
   devServer: {
-    publicPath: output.publicPath,
+    publicPath: devPublicPath,
     historyApiFallback: true,
     hot: isDev,
     clientLogLevel: 'info',
