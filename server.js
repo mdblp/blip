@@ -53,8 +53,11 @@ function redirectMiddleware(req, res, next) {
   const n = urlPath.length;
   const paths = [];
   for (let i = 0; i < n; i++) {
-    if (urlPath[i].length > 0) {
-      paths.push(urlPath[i]);
+    const p = urlPath[i];
+    // Keep only not empty elements, but avoid problematics
+    // paths for security reason.
+    if (p.length > 0 && p != '.' && p != '..') {
+      paths.push(p);
     }
   }
 
