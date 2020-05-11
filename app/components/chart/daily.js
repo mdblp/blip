@@ -224,8 +224,8 @@ class Daily extends Component {
     timePrefs: React.PropTypes.object.isRequired,
     initialDatetimeLocation: React.PropTypes.string,
     patientData: React.PropTypes.object.isRequired,
-    pdf: React.PropTypes.object.isRequired,
     loading: React.PropTypes.bool.isRequired,
+    canPrint: React.PropTypes.bool.isRequired,
     // refresh handler
     onClickRefresh: React.PropTypes.func.isRequired,
     // message handlers
@@ -282,13 +282,13 @@ class Daily extends Component {
         <Header
           chartType={this.chartType}
           patient={this.props.patient}
-          printReady={!!this.props.pdf.url}
           inTransition={this.state.inTransition}
           atMostRecent={this.state.atMostRecent}
           title={this.state.title}
           iconBack={'icon-back'}
           iconNext={'icon-next'}
           iconMostRecent={'icon-most-recent'}
+          canPrint={this.props.canPrint}
           onClickBack={this.handlePanBack}
           onClickBasics={this.props.onSwitchToBasics}
           onClickTrends={this.handleClickTrends}
@@ -297,7 +297,7 @@ class Daily extends Component {
           onClickOneDay={this.handleClickOneDay}
           onClickSettings={this.props.onSwitchToSettings}
           onClickBgLog={this.handleClickBgLog}
-          onClickPrint={this.handleClickPrint}
+          onClickPrint={this.props.onClickPrint}
         ref="header" />
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
@@ -487,14 +487,6 @@ class Daily extends Component {
       e.preventDefault();
     }
     return;
-  };
-
-  handleClickPrint = e => {
-    if (e) {
-      e.preventDefault();
-    }
-
-    this.props.onClickPrint(this.props.pdf);
   };
 
   handleClickBgLog = e => {
