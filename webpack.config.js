@@ -1,16 +1,15 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const uglifyJS = require('uglify-es');
 const fs = require('fs');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
+const isProduction = (process.env.NODE_ENV === 'production');
 
 // Enzyme as of v2.4.1 has trouble with classes
 // that do not start and *end* with an alpha character
@@ -20,31 +19,52 @@ const localIdentName = process.env.NODE_ENV === 'test'
   ? '[name]--[local]'
   : '[name]--[local]--[hash:base64:5]';
 
-const styleLoaderConfiguration = {
-  test: /\.less$/,
+const lessLoaderConfiguration = {
+    test: /\.less$/,
+    use: [
+      (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
+      {
+        loader: 'css-loader',
+        query: {
+          importLoaders: 2,
+          localIdentName,
+          sourceMap: true,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: true,
+        },
+      },
+      {
+        loader: 'less-loader',
+        options: {
+          sourceMap: true,
+          javascriptEnabled: true,
+        },
+      },
+    ],
+  };
+const cssLoaderConfiguration = {
+  test: /\.css$/,
   use: [
-    (isDev || isTest) ? 'style-loader' : MiniCssExtractPlugin.loader,
+    (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
     {
       loader: 'css-loader',
       query: {
         importLoaders: 2,
         localIdentName,
-        sourceMap: isDev,
+        modules: true,
+        sourceMap: true,
       },
     },
     {
       loader: 'postcss-loader',
       options: {
-        sourceMap: isDev,
+        sourceMap: true,
       },
-    },
-    {
-      loader: 'less-loader',
-      options: {
-        sourceMap: isDev,
-        javascriptEnabled: true,
-      },
-    },
+    }
   ],
 };
 
@@ -52,7 +72,7 @@ const babelLoaderConfiguration = [
   {
     test: /\.js$/,
     exclude: function(modulePath) {
-      return /node_modules/.test(modulePath) && !/node_modules\/(tideline|tidepool-platform-client)/.test(modulePath);
+      return /node_modules/.test(modulePath) && !/node_modules\/(tideline|tidepool-platform-client|.*viz)/.test(modulePath);
     },
     use: {
       loader: 'babel-loader',
@@ -155,20 +175,6 @@ const plugins = [
   new MiniCssExtractPlugin({
     filename: isDev ? 'style.css' : 'style.[contenthash].css',
   }),
-  new CopyWebpackPlugin([
-    {
-      from: 'static',
-      transform: (content, path) => {
-        if (isDev || isTest) {
-         return content;
-        }
-
-        const code = fs.readFileSync(path, 'utf8');
-        const result = uglifyJS.minify(code);
-        return result.code;
-      }
-    }
-  ]),
   new HtmlWebpackPlugin({
     template: 'index.ejs',
     favicon: 'favicon.ico',
@@ -182,6 +188,29 @@ if (isDev) {
     plugins.push(new DblpHtmlWebpackPlugin());
   }
 }
+
+const minimizer = [
+  new TerserPlugin({
+    test: /\.js(\?.*)?$/i,
+    cache: true,
+    parallel: true,
+    sourceMap: true,
+    extractComments: isProduction,
+    terserOptions: {
+      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+      ie8: false,
+      toplevel: true,
+      warnings: false,
+      ecma: 2017,
+      compress: {},
+      output: {
+        comments: false,
+        beautify: false
+      }
+    }
+  }),
+  new OptimizeCSSAssetsPlugin({}),
+];
 
 const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
 
@@ -208,10 +237,13 @@ const resolve = {
     path.join(__dirname, 'node_modules'),
     'node_modules',
   ],
+  alias: {
+    pdfkit: 'pdfkit/js/pdfkit.standalone.js',
+  }
 };
 
 let devtool = process.env.WEBPACK_DEVTOOL || 'eval-source-map';
-if (process.env.WEBPACK_DEVTOOL === false) devtool = undefined;
+if (process.env.WEBPACK_DEVTOOL === 'false') devtool = undefined;
 
 module.exports = {
   devServer: {
@@ -228,37 +260,25 @@ module.exports = {
     rules: [
       ...babelLoaderConfiguration,
       imageLoaderConfiguration,
-      styleLoaderConfiguration,
+      lessLoaderConfiguration,
+      cssLoaderConfiguration,
       ...fontLoaderConfiguration,
     ],
   },
   optimization: {
+    noEmitOnErrors: true,
     splitChunks: {
       cacheGroups: {
         styles: {
           name: 'styles',
-          test: /\.css$/,
+          test: /\.(css|less)$/,
           chunks: 'all',
           enforce: true
         }
       }
     },
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          ie8: false,
-          output: { comments: false },
-          compress: {
-            inline: false,
-            conditionals: false,
-          },
-        },
-        cache: true,
-        parallel: true,
-        sourceMap: false, // set to true if you want JS source maps
-      }),
-      new OptimizeCSSAssetsPlugin({}),
-    ],
+    minimize: isProduction,
+    minimizer
   },
   output,
   plugins,
