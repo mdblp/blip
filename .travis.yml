@@ -42,19 +42,15 @@ deploy:
     cache_control: "max-age=21600"
   # Deploy SOUP list
   - provider: s3
-    # You can refer to environment variables from Travis repo settings!
+      on:
+        branch: feature/PT-1309_viz_tideline_deps
     access_key_id: $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     region: $AWS_DEFAULT_REGION
-    # Name of the S3 bucket to which your site should be uploaded.
     bucket: com.diabeloop.yourloops.doc
-    # Prevent Travis from deleting your built site so it can be uploaded.
     skip_cleanup: true
-    # Path of the source directory containing your built site.
     local_dir: doc
-    # Path to a directory containing your built site.
     upload-dir: soup/blip
-    # Set the Cache-Control header.
     cache_control: "max-age=21600"
 
 services:
