@@ -1,6 +1,8 @@
 ### Stage 0 - Base image
 FROM node:10.15.3-alpine as base
+
 WORKDIR /app
+
 RUN \
   mkdir -p dist node_modules \
   && chown -R node:node . \
@@ -29,8 +31,12 @@ ENV \
 ### Stage 2 - Create cached `node_modules`
 # Only rebuild layer if `package.json` has changed
 FROM base as dependencies
-COPY package.json .
-ENV nexus_token=''
+
+ARG npm_token
+ENV nexus_token=$npm_token
+
+COPY package.json .npmrc ./
+
 # Run as node user, so that npm run the prepare scripts in dependencies
 USER node
 RUN \

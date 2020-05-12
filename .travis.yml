@@ -19,6 +19,7 @@ before_install:
 
 install:
   - npm install
+  - npm install --save-dev ci-toolbox@2.1.1
 
 deploy:
   - provider: s3
