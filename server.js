@@ -191,7 +191,7 @@ if (config.httpPort) {
   });
 }
 
-if (config.httpsPort) {
+if (config.httpsPort && config.httpsConfig) {
   https.createServer(config.httpsConfig, app).listen(config.httpsPort, () => {
     const now = new Date().toISOString();
     console.log(`${now} Connect server started on HTTP port`, config.httpPort);
@@ -199,7 +199,7 @@ if (config.httpsPort) {
   });
 }
 
-if (config.discovery && config.publishHost) {
+if (config.skipHakken === false) {
   const hakken = require('hakken')(config.discovery).client();
   hakken.start();
 
