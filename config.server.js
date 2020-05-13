@@ -87,7 +87,7 @@ if (process.env.SKIP_HAKKEN === 'false') {
   console.info('Hakken discovery host will be disabled');
 }
 
-switch (_.get(process.env, 'METRICS_SERVICE', 'highwater')) {
+switch (_.get(process.env, 'METRICS_SERVICE', 'disabled')) {
 case 'matomo':
   if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
     config.matomoUrl = process.env.MATOMO_TRACKER_URL;
