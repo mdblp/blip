@@ -678,7 +678,7 @@
   "Within this basal segment, we are omitting a suspend event that didn't end. This may have resulted from changing the date & time settings on the device or switching to a new device. As a result, this basal segment may be inaccurate.": "crwdns36914:0crwdne36914:0",
   "Would you like to set up data storage for someone’s diabetes data?": "crwdns36916:0crwdne36916:0",
   "Wrong username or password.": "crwdns36918:0crwdne36918:0",
-  "Your account has been locked for {{delayBeforeNextLoginAttempt}} minutes. You have reached the maximum number of login attempts.": "crwdns36920:0{{delayBeforeNextLoginAttempt}}crwdne36920:0",
+  "Your account has been locked for {{delayBeforeNextLoginAttempt}} minutes. You have reached the maximum number of login attempts.": "crwdns37572:0{{delayBeforeNextLoginAttempt}}crwdne37572:0",
   "year": "crwdns36922:0crwdne36922:0",
   "Year": "crwdns36924:0crwdne36924:0",
   "year_timeago": "crwdns36926:0crwdne36926:0",
