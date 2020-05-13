@@ -65,7 +65,6 @@ describe('Daily', () => {
     onSwitchToSettings: () => {},
     onSwitchToBgLog: () => {},
     onSwitchToTrends: () => {},
-    trackMetric: () => {},
     onUpdateChartDateRange: sinon.stub(),
     patient: {
       profile: {
@@ -77,9 +76,16 @@ describe('Daily', () => {
       }
     },
     patientData: {
+      opts: {
+        timePrefs: {
+          timezoneAware: false,
+          timezoneName: 'UTC',
+          timezoneOffset: 0,
+        },
+      },
       grouped: { foo: 'bar' }
     },
-    pdf: {},
+    canPrint: false,
     timePrefs: {
       timezoneAware: false,
       timezoneName: 'US/Pacific'
@@ -136,33 +142,26 @@ describe('Daily', () => {
       sinon.assert.callCount(props.onClickRefresh, 1);
     });
 
-    it('should have a disabled print button and spinner when a pdf is not ready to print', () => {
+    it('should not have a print button when a pdf is not ready to print', () => {
       var props = _.assign({}, baseProps, {
-        printReady: false,
-        pdf: {},
+        canPrint: false,
+      });
+
+      wrapper.setProps(props);
+
+      var printLink = wrapper.find('.printview-print-icon').hostNodes();
+      expect(printLink.length).to.equal(0);
+    });
+
+    it('should have an enabled print button and icon when a pdf is ready and call onClickPrint when clicked', () => {
+      var props = _.assign({}, baseProps, {
+        canPrint: true,
       });
 
       wrapper.setProps(props);
 
       var printLink = wrapper.find('.printview-print-icon').hostNodes();
       expect(printLink.length).to.equal(1);
-      expect(printLink.hasClass('patient-data-subnav-disabled')).to.be.true;
-
-      var spinner = wrapper.find('.print-loading-spinner').hostNodes();
-      expect(spinner.length).to.equal(1);
-    });
-
-    it('should have an enabled print button and icon when a pdf is ready and call onClickPrint when clicked', () => {
-      var props = _.assign({}, baseProps, {
-        printReady: true,
-        pdf: {
-          url: 'blobURL',
-        },
-      });
-
-      wrapper.setProps(props);
-
-      var printLink = wrapper.find('.printview-print-icon').hostNodes();
 
       sinon.assert.callCount(props.onClickPrint, 0);
       printLink.simulate('click');

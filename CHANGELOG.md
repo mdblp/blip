@@ -2,6 +2,13 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+### Changed
+- PT-1205 Add timezone info on tooltips when necessary
+- PT-1256 Improve PDF generation
+### Engineering use
+- PT-1249 Reduce blip & viz build time.
+
 ## 0.15.1 - 2020-04-17
 ### Fixed
 - PT-1218 Zendesk Contact form is not offloaded
@@ -11,7 +18,6 @@ It is based on Tidepool Blip 1.27.
   - PT-1231 Basics: Total basal events count does not give the correct total
 - Upgrade to Viz 0.11.3
   - PT-1230 CGM / BGM labels don't change with language
-
 
 ## 0.15.0 - 2020-04-14
 ### Changed
