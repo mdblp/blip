@@ -64,7 +64,7 @@ if (typeof process.env.HELP_LINK === 'string') {
 }
 
 var matomoJs = '/* MaToMo tracker is disabled */';
-switch (_.get(process, 'env.METRICS_SERVICE', 'highwater')) {
+switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
 case 'matomo':
   console.info('Using matomo tracker code');
   if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {

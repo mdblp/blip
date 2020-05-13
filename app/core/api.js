@@ -775,7 +775,7 @@ api.getUploadUrl = function() {
 api.metrics = {};
 
 api.metrics.track = function(eventName, properties, cb) {
-  const metricsService = _.get(config, 'METRICS_SERVICE', 'highwater');
+  const metricsService = _.get(config, 'METRICS_SERVICE', 'disabled');
 
   switch (metricsService) {
   case 'matomo':
@@ -822,7 +822,7 @@ api.metrics.track = function(eventName, properties, cb) {
 api.errors = {};
 
 api.errors.log = function(error, message, properties, cb) {
-  const metricsService = _.get(config, 'METRICS_SERVICE', 'highwater');
+  const metricsService = _.get(config, 'METRICS_SERVICE', 'disabled');
 
   if (metricsService === 'highwater') {
     api.log('POST /errors');
