@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 0.16.0 - 2020-05-14
 ### Added
  - PT-1251 Display TIR result of last 24 hours in patients search page.
 ### Changed
