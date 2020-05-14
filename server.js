@@ -43,6 +43,7 @@ function redirectMiddleware(req, res, next) {
     // Send the modified index.html
     res.setHeader('Cache-Control', 'public, max-age=0');
     res.send(res.locals.htmlWithNonces);
+    return;
   }
 
   if (fileList.includes(file)) {
