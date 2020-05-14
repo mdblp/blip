@@ -15,28 +15,16 @@ const config = require('./config.server.js');
 const buildDir = 'dist';
 const staticDir = path.join(__dirname, buildDir);
 let indexHTML = '<html></html>';
+const fileList = [];
 
 /**
- * Check if one file can be found, recursively using paths array
- * @param {string[]} paths array of paths
- * @returns {Promise<string|null>} true if found
+ * Get the list of files we can serve
  */
-function foundFileFromPath(paths) {
-  return new Promise((resolve) => {
-    if (paths.length < 1) {
-      return resolve(null);
-    }
-    const url = paths.join('/');
-    const localFile = `${staticDir}/${url}`;
-    fs.access(localFile, fs.constants.R_OK, (err) => {
-      if (err) {
-        paths.shift();
-        resolve(foundFileFromPath(paths));
-      } else {
-        resolve(url);
-      }
-    });
-  });
+function fetchFilesList() {
+  const now = new Date().toISOString();
+  console.log(`${now} Caching file list`);
+  const files = fs.readdirSync(staticDir);
+  Array.prototype.push.apply(fileList, files);
 }
 
 /**
@@ -49,30 +37,26 @@ function foundFileFromPath(paths) {
  */
 function redirectMiddleware(req, res, next) {
   const reqURL = req.url;
-  const urlPath = reqURL.split('/');
-  const n = urlPath.length;
-  const paths = [];
-  for (let i = 0; i < n; i++) {
-    const p = urlPath[i];
-    // Keep only not empty elements, but avoid problematics
-    // paths for security reason.
-    if (p.length > 0 && p != '.' && p != '..') {
-      paths.push(p);
-    }
-  }
+  const file = path.basename(req.url);
 
-  foundFileFromPath(paths).then((url) => {
-    if (url) {
-      if (reqURL === `/${url}`) {
-        // Serve the file with 'serve-static'
-        return next();
-      }
-      return res.redirect(`/${url}`);
-    }
-    // Not found, send the modified index.html
+  if (file === "index.html") {
+    // Send the modified index.html
     res.setHeader('Cache-Control', 'public, max-age=0');
     res.send(res.locals.htmlWithNonces);
-  });
+  }
+
+  if (fileList.includes(file)) {
+    if (reqURL === `/${file}`) {
+      // Serve the file with 'serve-static'
+      return next();
+    }
+    // Do a redirect to the file -> can be in cache in the browser.
+    return res.redirect(`/${file}`);
+  }
+
+  // Not found, send the modified index.html by default (no 404)
+  res.setHeader('Cache-Control', 'public, max-age=0');
+  res.send(res.locals.htmlWithNonces);
 }
 
 function nonceMiddleware(req, res, next) {
@@ -154,6 +138,7 @@ if (config.crowdinPreview) {
 
 printVersion();
 cacheIndexHTML();
+fetchFilesList();
 const app = express();
 app.use(morgan(':date[iso] :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]'));
 app.use(compression());
