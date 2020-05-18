@@ -563,7 +563,7 @@
   "Sorry! It appears that your account hasn't been fully set up.": "Désolé ! Il semble que votre compte n’a pas été complètement configuré.",
   "Sorry! Something went wrong. It's our fault, not yours. We're going to go investigate. Please try again in a few moments.": "Désolé ! Quelque chose s'est mal passé. Il s'agit d'une erreur de notre part. Nous allons enquêter. Merci de réessayer dans quelques instants.",
   "Sorry! Something went wrong. It's our fault, not yours. We're going to investigate.": "Désolé ! Quelque chose s'est mal passé. Il s'agit d'une erreur de notre part. Nous allons enquêter.",
-  "Sort By {{name}}": "Sort By {{name}}",
+  "Sort By {{name}}": "Trier par {{name}}",
   "Spring forward! You may see your data overlap. Make sure you update the time on all your devices.": "Heure d'été ! Vos données peuvent se superposer. Soyez sûr·e de mettre tous vos appareils à l'heure ",
   "Start time": "Heure de début",
   "Std. Deviation ({{bgSourceLabel}})": "Ecart type ({{bgSourceLabel}})",
