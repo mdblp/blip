@@ -12,8 +12,6 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - PT-1205 Add timezone info on tooltips when necessary
 - PT-1254 Disable Highwater from Blip
-
-### Changed
 - PT-1256 Improve PDF generation
 ### Engineering use
 - PT-1249 Reduce blip & viz build time.
