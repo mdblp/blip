@@ -140,7 +140,7 @@
     "source-map-loader": "0.2.4",
     "style-loader": "0.23.0",
     "sundial": "mdblp/sundial#dblp.0.1.0",
-    "tidepool-platform-client": "0.41.0",
+    "tidepool-platform-client": "mdblp/platform-client#dblp.0.2.0",
     "tidepool-standard-action": "0.1.1",
     "terser-webpack-plugin": "3.0.1",
     "url-loader": "1.1.1",
