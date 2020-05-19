@@ -28,12 +28,20 @@ import './images/jdrf_hover.png';
 const branding = config.BRANDING;
 const t = i18next.t.bind(i18next);
 
+function renderVersion() {
+  return (
+    <div className='footer-section'>
+      <div className="footer-version">{`v${config.VERSION}`}</div>
+    </div>
+  );
+}
+
 function tidepoolFooter(metricFnMkr) {
   const urlSupport = CONFIG[branding].support;
   const urlLegal = CONFIG[branding].legal;
 
   return (
-    <div className='footer-section footer-section-top'>
+    <div className='footer-section-tidepool footer-section-top'>
       <div className='footer-link social-media large-format-only'>
         <a
           className='footer-twitter'
@@ -98,36 +106,43 @@ function diabeloopFooter(metricFnMkr) {
   const urlSupport = CONFIG[branding].support;
   const urlLegal = CONFIG[branding].legal;
   const urlPrivacy = CONFIG[branding].privacy;
+  const regulatoryWebAddress = config.REGULATORY_WEB_ADDRESS;
 
   return (
-    <div className='footer-section footer-section-top'>
-      <div className='footer-link large-format-only'>
+    <div className='footer-section-diabeloop'>
+      <div className='footer-column'>
+        <a
+          href={urlPrivacy}
+          className='footer-link'
+          id='privacy-link'
+          onClick={metricFnMkr('Privacy')}
+          target='_blank'>{t('Privacy Policy')}
+        </a>
+        <a
+          href={urlLegal}
+          id='terms-link'
+          className='footer-link'
+          onClick={metricFnMkr('TermsOfUSe')}
+          target='_blank'>{t('Tidepool Applications Terms of Use')}
+        </a>
+      </div>
+      <div className='footer-column justify-space-around'>
+        {`${t('Yourloops')} v${config.VERSION}`}
+      </div>
+      <div className='footer-column justify-space-around'>
         <a
           href={urlSupport}
-          id='support'
+          id='support-link'
+          className='footer-link'
           onClick={metricFnMkr('Support')}
           target="_blank">{t('Diabeloop')}
         </a>
-      </div>
-      <div className='footer-link'>
         <a
-          href={urlPrivacy}
-          id='privacy'
-          onClick={metricFnMkr('Privacy')}
-          target='_blank'>{t('Privacy Policy')}</a>
-        &nbsp;&&nbsp;
-        <a
-          href={urlLegal}
-          id='terms'
-          onClick={metricFnMkr('TermsOfUSe')}
-          target='_blank'>{t('Tidepool Applications Terms of Use')}</a>
-      </div>
-      <div className='footer-link large-format-only'>
-        <a
-          href='https://tidepool.org'
-          id='jdrf'
-          target='_blank'>
-          {t('Using Tidepool')}
+          href={regulatoryWebAddress}
+          id='regulatory-link'
+          className='footer-link'
+          onClick={metricFnMkr('RegulatoryInformations')}
+          target='_blank'>{t('Regulatory Informations')}
         </a>
       </div>
     </div>
@@ -135,19 +150,39 @@ function diabeloopFooter(metricFnMkr) {
 }
 
 const FooterLinks = (props) => {
+  const { shouldDisplayFooterLinks } = props;
   const metricFnMkr = (link) => {
     return () => { props.trackMetric(`Clicked Footer ${link}`); };
   }
 
-  if (branding === 'diabeloop') {
-    return diabeloopFooter(metricFnMkr);
+  let footerContent = null;
+  let versionContent = null;
+  if (shouldDisplayFooterLinks) {
+    if (branding === 'diabeloop') {
+      footerContent = diabeloopFooter(metricFnMkr);
+    } else {
+      footerContent = tidepoolFooter(metricFnMkr);
+      versionContent = renderVersion();
+    }
+  } else {
+    versionContent = (
+      <div className='footer-section'>
+        {renderVersion()}
+      </div>
+    );
   }
 
-  return tidepoolFooter(metricFnMkr);
+  return (
+    <div className='container-nav-inner footer'>
+      {footerContent}
+      {versionContent}
+    </div>
+  );
 };
 
 FooterLinks.propTypes = {
   trackMetric: PropTypes.func.isRequired,
+  shouldDisplayFooterLinks: PropTypes.bool.isRequired,
 };
 
 export default FooterLinks;
