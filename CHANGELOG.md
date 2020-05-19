@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - PT-1309 Ensure Blip SOUP list includes viz and tideline SOUPs
+- PT-1335 Display legal stuff in YourLoops (such as CE mark)
 
 ## 0.16.0 - 2020-05-14
 ### Added
