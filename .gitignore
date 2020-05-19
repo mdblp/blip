@@ -26,7 +26,9 @@ config/*
 !config/env.docker.sh
 test/bin
 web/
+artifact_images.sh
 artifact_node.sh
+scanDockerImage.sh
 coverage/
 packageMounts/*
 !packageMounts/stub
@@ -35,7 +37,6 @@ packageMounts/*
 _book/
 
 yarn.lock
-package-lock.json
 
 # Ignore old translation files
 locales/*/*_old.json
