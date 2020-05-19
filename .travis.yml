@@ -2,6 +2,7 @@ sudo: false
 
 language: node_js
 
+os: linux
 dist: trusty
 
 node_js:
@@ -9,6 +10,9 @@ node_js:
   - node
 
 cache: npm
+env:
+  jobs:
+    - SECURITY_SCAN=true
 
 before_install:
   - npm install -g npm@latest
