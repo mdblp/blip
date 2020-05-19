@@ -25,7 +25,7 @@ import { CONFIG } from '../../core/constants';
 import './images/jdrf.png';
 import './images/jdrf_hover.png';
 
-const branding = config.BRANDING;
+const branding = config.BRANDING || 'tidepool';
 const t = i18next.t.bind(i18next);
 
 function renderVersion() {
