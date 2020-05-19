@@ -15,28 +15,25 @@
  * == BSD2 LICENSE ==
  */
 
-import React, { PropTypes } from 'react';
-
-import { CONFIG } from '../../core/constants';
+import React from 'react';
+import PropTypes from 'prop-types';
 import i18next from 'i18next';
 
-require('./images/jdrf.png');
-require('./images/jdrf_hover.png');
+import config from '../../config';
+import { CONFIG } from '../../core/constants';
 
-var urlSupport = CONFIG[__BRANDING__].support;
-var urlLegal = CONFIG[__BRANDING__].legal;
-var urlPrivacy = CONFIG[__BRANDING__].privacy;
+import './images/jdrf.png';
+import './images/jdrf_hover.png';
 
+const branding = config.BRANDING;
 const t = i18next.t.bind(i18next);
-var SupportText = (__BRANDING__ !== 'diabeloop') ? 'Get Support' : 'Diabeloop';
 
-const FooterLinks = (props) => {
-  const metricFnMkr = (link) => {
-    return () => { props.trackMetric(`Clicked Footer ${link}`); };
-  }
+function tidepoolFooter(metricFnMkr) {
+  const urlSupport = CONFIG[branding].support;
+  const urlLegal = CONFIG[branding].legal;
+
   return (
     <div className='footer-section footer-section-top'>
-    {__BRANDING__ !== 'diabeloop' &&
       <div className='footer-link social-media large-format-only'>
         <a
           className='footer-twitter'
@@ -61,8 +58,6 @@ const FooterLinks = (props) => {
           </svg>
         </a>
       </div>
-    }
-    {__BRANDING__ !== 'diabeloop' &&
       <div className='footer-link secondary large-format-only'>
         <a
           href="http://tidepool.org/products/tidepool-mobile/"
@@ -70,45 +65,21 @@ const FooterLinks = (props) => {
           onClick={metricFnMkr('Mobile App')}
           target="_blank">{t('Get Mobile App')}</a>
       </div>
-    }
-    <div className='footer-link large-format-only'>       
-      <a
-        href={urlSupport}
-        id='support'
-        onClick={metricFnMkr('Support')}
-        target="_blank">{t(SupportText)}</a>
-    </div>
-    {__BRANDING__ === 'diabeloop' ? (
-      <div className='footer-link'>
+      <div className='footer-link large-format-only'>
         <a
-          href={urlPrivacy}
-          id='privacy'
-          onClick={metricFnMkr('Privacy')}
-          target='_blank'>{t('Privacy Policy')}</a> 
-        &nbsp;&&nbsp;
-        <a
-          href={urlLegal}
-          id='terms'
-          onClick={metricFnMkr('TermsOfUSe')}
-          target='_blank'>{t('Tidepool Applications Terms of Use')}</a>
-      </div> ) : (
+          href={urlSupport}
+          id='support'
+          onClick={metricFnMkr('Support')}
+          target="_blank">{t('Get Support')}
+        </a>
+      </div>
       <div className='footer-link'>
         <a
           href={urlLegal}
           id='legal'
           onClick={metricFnMkr('PP and TOU')}
           target='_blank'>{t('Privacy and Terms of Use')}</a>
-      </div> )
-    }
-    {__BRANDING__ === 'diabeloop' ? (
-      <div className='footer-link large-format-only'>
-        <a
-          href='https://tidepool.org'
-          id='jdrf'
-          target='_blank'>
-          {t('Using Tidepool')}
-        </a>
-      </div> ) : (
+      </div>
       <div className='footer-link footer-jdrf'>
         <a
           href='http://jdrf.org/'
@@ -118,14 +89,65 @@ const FooterLinks = (props) => {
           {t('Made possible by')}
           <img />
         </a>
-      </div> )
-    }
+      </div>
     </div>
   );
+}
+
+function diabeloopFooter(metricFnMkr) {
+  const urlSupport = CONFIG[branding].support;
+  const urlLegal = CONFIG[branding].legal;
+  const urlPrivacy = CONFIG[branding].privacy;
+
+  return (
+    <div className='footer-section footer-section-top'>
+      <div className='footer-link large-format-only'>
+        <a
+          href={urlSupport}
+          id='support'
+          onClick={metricFnMkr('Support')}
+          target="_blank">{t('Diabeloop')}
+        </a>
+      </div>
+      <div className='footer-link'>
+        <a
+          href={urlPrivacy}
+          id='privacy'
+          onClick={metricFnMkr('Privacy')}
+          target='_blank'>{t('Privacy Policy')}</a>
+        &nbsp;&&nbsp;
+        <a
+          href={urlLegal}
+          id='terms'
+          onClick={metricFnMkr('TermsOfUSe')}
+          target='_blank'>{t('Tidepool Applications Terms of Use')}</a>
+      </div>
+      <div className='footer-link large-format-only'>
+        <a
+          href='https://tidepool.org'
+          id='jdrf'
+          target='_blank'>
+          {t('Using Tidepool')}
+        </a>
+      </div>
+    </div>
+  );
+}
+
+const FooterLinks = (props) => {
+  const metricFnMkr = (link) => {
+    return () => { props.trackMetric(`Clicked Footer ${link}`); };
+  }
+
+  if (branding === 'diabeloop') {
+    return diabeloopFooter(metricFnMkr);
+  }
+
+  return tidepoolFooter(metricFnMkr);
 };
 
 FooterLinks.propTypes = {
-  trackMetric: React.PropTypes.func.isRequired,
+  trackMetric: PropTypes.func.isRequired,
 };
 
 export default FooterLinks;
