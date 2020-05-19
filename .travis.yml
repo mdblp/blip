@@ -11,10 +11,11 @@ node_js:
 cache: npm
 
 before_install:
-  - if [[ `npm -v` != 6* ]]; then npm install -g npm@6; fi
+  - npm install -g npm@latest
 
 install:
   - npm install
+  - sed -Ei 's/^\/\/.*//g' ./node_modules/@tidepool/viz/src/components/settings/common/norgie.css
 
 deploy:
   # Control deployment by setting a value for `on`. Setting the `branch`
