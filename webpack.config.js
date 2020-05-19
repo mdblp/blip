@@ -1,15 +1,17 @@
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const fs = require('fs');
+// const postcssCustomProperties = require('postcss-custom-properties');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
 const isProduction = (process.env.NODE_ENV === 'production');
+const useWebpackDevServer = isDev && (process.env.USE_WEBPACK_DEV_SERVER !== 'false');
 
 // Enzyme as of v2.4.1 has trouble with classes
 // that do not start and *end* with an alpha character
@@ -25,10 +27,15 @@ const lessLoaderConfiguration = {
       (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
       {
         loader: 'css-loader',
-        query: {
+        options: {
           importLoaders: 2,
-          localIdentName,
           sourceMap: true,
+          onlyLocals: isProduction,
+          modules: {
+            auto: true,
+            exportGlobals: true,
+            localIdentName,
+          }
         },
       },
       {
@@ -41,7 +48,11 @@ const lessLoaderConfiguration = {
         loader: 'less-loader',
         options: {
           sourceMap: true,
-          javascriptEnabled: true,
+          lessOptions: {
+            strictUnits: true,
+            strictMath: true,
+            javascriptEnabled: true, // Deprecated
+          },
         },
       },
     ],
@@ -52,17 +63,19 @@ const cssLoaderConfiguration = {
     (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
     {
       loader: 'css-loader',
-      query: {
-        importLoaders: 2,
-        localIdentName,
-        modules: true,
+      options: {
+        importLoaders: 1,
         sourceMap: true,
+        modules: {
+          localIdentName,
+        }
       },
     },
     {
       loader: 'postcss-loader',
       options: {
         sourceMap: true,
+        ident: 'postcss',
       },
     }
   ],
@@ -99,6 +112,7 @@ const imageLoaderConfiguration = {
     loader: 'url-loader',
     options: {
       name: '[name].[ext]',
+      esModule: false,
     },
   },
 };
@@ -212,26 +226,33 @@ const minimizer = [
   new OptimizeCSSAssetsPlugin({}),
 ];
 
-const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
-
-const entry = isDev
-  ? [
-    '@babel/polyfill',
-    'webpack-dev-server/client?' + devPublicPath,
-    'webpack/hot/only-dev-server',
-    './app/main.js',
-  ] : [
-    '@babel/polyfill',
-    './app/main.prod.js',
-  ];
-
 const output = {
   filename: isDev || isTest ? 'bundle.js' : 'bundle.[hash].js',
   path: path.join(__dirname, '/dist'),
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
-if (isDev) {
+let entry = [];
+let devServer;
+if (useWebpackDevServer) {
+  const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
+  entry = [
+    '@babel/polyfill',
+    'webpack-dev-server/client?' + devPublicPath,
+    'webpack/hot/only-dev-server',
+    './app/main.js',
+  ];
   output.publicPath = devPublicPath;
+  devServer = {
+    publicPath: devPublicPath,
+    historyApiFallback: true,
+    hot: isDev,
+    clientLogLevel: 'info',
+    disableHostCheck: true,
+  };
+} else if (isDev) {
+  entry = [ './app/main.js' ];
+} else {
+  entry = [ '@babel/polyfill', './app/main.prod.js' ];
 }
 
 const resolve = {
@@ -244,17 +265,17 @@ const resolve = {
   }
 };
 
-let devtool = process.env.WEBPACK_DEVTOOL || 'eval-source-map';
-if (process.env.WEBPACK_DEVTOOL === 'false') devtool = undefined;
+let devtool = 'source-map';
+if (process.env.WEBPACK_DEVTOOL === 'false') {
+  devtool = undefined;
+} else if (isTest) {
+  devtool = 'inline-source-map';
+} else if (isProduction) {
+  devtool = 'eval-source-map';
+}
 
 module.exports = {
-  devServer: {
-    publicPath: devPublicPath,
-    historyApiFallback: true,
-    hot: isDev,
-    clientLogLevel: 'info',
-    disableHostCheck: true,
-  },
+  devServer,
   devtool,
   entry,
   mode: isDev || isTest ? 'development' : 'production',
