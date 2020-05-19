@@ -30,7 +30,7 @@ const lessLoaderConfiguration = {
         options: {
           importLoaders: 2,
           sourceMap: true,
-          onlyLocals: isProduction,
+          onlyLocals: false,
           modules: {
             auto: true,
             exportGlobals: true,
