@@ -29,16 +29,19 @@ ENV \
 ### Stage 2 - Create cached `node_modules`
 # Only rebuild layer if `package.json` has changed
 FROM base as dependencies
-COPY package.json .
 ENV nexus_token=''
 # Run as node user, so that npm run the prepare scripts in dependencies
 USER node
+COPY package.json .
+COPY package-lock.json .
 RUN \
   # Build and separate all dependancies required for production
   npm install --only=production \
   && cp -ra node_modules production_node_modules \
   # Build all modules, including `devDependancies`
-  && npm install
+  && npm install \
+  # Dirty temp fix
+  && sed -Ei 's/^\/\/.*//g' ./node_modules/@tidepool/viz/src/components/settings/common/norgie.css
 COPY packageMounts/stub packageMounts/tideline/package*.json* /app/packageMounts/tideline/
 COPY packageMounts/stub packageMounts/tidepool-platform-client/package*.json*  /app/packageMounts/tidepool-platform-client/
 COPY packageMounts/stub packageMounts/@tidepool/viz/package*.json* /app/packageMounts/@tidepool/viz/
