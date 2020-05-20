@@ -99,13 +99,24 @@
     font-size: @font-size-small;
     color: @gray-dark;
 
-    @media(max-width: @screen-md-max) {
-      grid-template-columns: auto auto;
+    @media(max-width: @screen-md-min) {
+      grid-template-columns: auto;
+
+      .footer-column {
+        &.footer-column-2 {
+          grid-row: 1;
+        }
+        &.footer-column-3 {
+          flex-direction: column-reverse;
+        }
+      }
     }
 
     .footer-column {
       display: flex;
       flex-direction: column;
+      margin-right: 0.5em;
+      margin-left: 0.5em;
 
       &.justify-space-around {
         justify-content: space-around;

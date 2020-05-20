@@ -110,7 +110,7 @@ function diabeloopFooter(metricFnMkr) {
 
   return (
     <div className='footer-section-diabeloop'>
-      <div className='footer-column'>
+      <div className='footer-column footer-column-1'>
         <a
           href={urlPrivacy}
           className='footer-link'
@@ -126,10 +126,10 @@ function diabeloopFooter(metricFnMkr) {
           target='_blank'>{t('Tidepool Applications Terms of Use')}
         </a>
       </div>
-      <div className='footer-column justify-space-around'>
+      <div className='footer-column footer-column-2 justify-space-around'>
         {`${t('Yourloops')} v${config.VERSION}`}
       </div>
-      <div className='footer-column justify-space-around'>
+      <div className='footer-column footer-column-3 justify-space-around'>
         <a
           href={urlSupport}
           id='support-link'
@@ -149,10 +149,10 @@ function diabeloopFooter(metricFnMkr) {
   );
 }
 
-const FooterLinks = (props) => {
-  const { shouldDisplayFooterLinks } = props;
+function FooterLinks(props) {
+  const { shouldDisplayFooterLinks, trackMetric } = props;
   const metricFnMkr = (link) => {
-    return () => { props.trackMetric(`Clicked Footer ${link}`); };
+    trackMetric(`Clicked Footer ${link}`);
   }
 
   let footerContent = null;
