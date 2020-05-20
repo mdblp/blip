@@ -1,17 +1,14 @@
-/* global rm, mkdir, exec, ls, cp */
-require('shelljs/global');
-var ms = require('ms');
+const shell = require('shelljs');
+const ms = require('ms');
 
-var start = new Date();
+const start = Date.now();
 
 console.log('Cleaning output directory "dist/"...');
-rm('-rf', 'dist');
-mkdir('-p', 'dist');
+shell.rm('-rf', 'dist');
+shell.mkdir('-p', 'dist');
 
-var entry = './app/main.prod.js';
+console.log('Building app from "./app/main.prod.js"...');
+shell.exec('webpack --devtool source-map --optimize-minimize');
 
-console.log('Building app from "' + entry + '"...');
-exec('webpack --devtool source-map --progress --optimize-minimize');
-
-var end = new Date();
+const end = Date.now();
 console.log('App built in ' + ms(end - start));

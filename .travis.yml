@@ -10,13 +10,11 @@ node_js:
   - node
 
 cache: npm
-env:
-  jobs:
-    - SECURITY_SCAN=true
 
 env:
   jobs:
     - BUILD_SOUP=true
+    - SECURITY_SCAN=true
 
 before_install:
   - npm install -g npm@latest
