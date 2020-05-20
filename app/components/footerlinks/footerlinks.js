@@ -173,7 +173,7 @@ function FooterLinks(props) {
   }
 
   return (
-    <div className='container-nav-inner footer'>
+    <div className='footer'>
       {footerContent}
       {versionContent}
     </div>
