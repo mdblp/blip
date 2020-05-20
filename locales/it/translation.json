@@ -477,6 +477,7 @@
   "Readings In Range": "crwdns36514:0crwdne36514:0",
   "Ready!": "crwdns36516:0crwdne36516:0",
   "Refresh": "crwdns36518:0crwdne36518:0",
+  "Regulatory Information": "crwdns37590:0crwdne37590:0",
   "Remember me": "crwdns36520:0crwdne36520:0",
   "Remove": "crwdns36522:0crwdne36522:0",
   "Remove People": "crwdns36524:0crwdne36524:0",
@@ -704,5 +705,6 @@
   "You want to manage your diabetes data. You are caring for or supporting someone with diabetes.": "crwdns36950:0crwdne36950:0",
   "You've been invited to Tidepool.": "crwdns36952:0crwdne36952:0",
   "Your password was changed successfully. You can now log in with your new password.": "crwdns36954:0crwdne36954:0",
+  "Yourloops": "crwdns37592:0crwdne37592:0",
   "YYYY-MM-DD": "crwdns36956:0crwdne36956:0"
 }
