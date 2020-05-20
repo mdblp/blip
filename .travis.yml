@@ -1,9 +1,7 @@
-sudo: false
-
 language: node_js
 
 os: linux
-dist: trusty
+dist: bionic
 
 node_js:
   - 10.15.3
@@ -42,7 +40,7 @@ deploy:
     # Path of the source directory containing your built site.
     local_dir: deploy
     # Path to a directory containing your built site.
-    upload-dir: deploy
+    upload_dir: deploy
     # Set the Cache-Control header.
     cache_control: "max-age=21600"
   # Deploy SOUP list
@@ -56,7 +54,7 @@ deploy:
     bucket: com.diabeloop.yourloops.doc
     skip_cleanup: true
     local_dir: doc
-    upload-dir: soup/blip
+    upload_dir: soup/blip
     cache_control: "max-age=21600"
 
 services:
