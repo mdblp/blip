@@ -29,11 +29,11 @@ ENV \
 ### Stage 2 - Create cached `node_modules`
 # Only rebuild layer if `package.json` has changed
 FROM base as dependencies
-ENV nexus_token=''
+ARG npm_token
+ENV nexus_token=$npm_token
 # Run as node user, so that npm run the prepare scripts in dependencies
 USER node
-COPY package.json .
-COPY package-lock.json .
+COPY package.json .npmrc package-lock.json ./
 RUN \
   # Build and separate all dependancies required for production
   npm install --only=production \
