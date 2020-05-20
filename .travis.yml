@@ -23,7 +23,6 @@ before_install:
 
 install:
   - npm install
-  - sed -Ei 's/^\/\/.*//g' ./node_modules/@tidepool/viz/src/components/settings/common/norgie.css
   - npm install --save-dev ci-toolbox@2.1.1
 
 deploy:

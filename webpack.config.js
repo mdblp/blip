@@ -236,7 +236,6 @@ let devServer;
 if (useWebpackDevServer) {
   const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
   entry = [
-    '@babel/polyfill',
     'webpack-dev-server/client?' + devPublicPath,
     'webpack/hot/only-dev-server',
     './app/main.js',
@@ -252,7 +251,7 @@ if (useWebpackDevServer) {
 } else if (isDev) {
   entry = [ './app/main.js' ];
 } else {
-  entry = [ '@babel/polyfill', './app/main.prod.js' ];
+  entry = [ './app/main.prod.js' ];
 }
 
 const resolve = {
