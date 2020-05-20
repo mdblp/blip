@@ -134,15 +134,15 @@ function diabeloopFooter(metricFnMkr) {
           href={urlSupport}
           id='support-link'
           className='footer-link'
-          onClick={metricFnMkr('Support')}
+          onClick={metricFnMkr('CompanyInformation')}
           target="_blank">{t('Diabeloop')}
         </a>
         <a
           href={regulatoryWebAddress}
           id='regulatory-link'
           className='footer-link'
-          onClick={metricFnMkr('RegulatoryInformations')}
-          target='_blank'>{t('Regulatory Informations')}
+          onClick={metricFnMkr('RegulatoryInformation')}
+          target='_blank'>{t('Regulatory Information')}
         </a>
       </div>
     </div>
