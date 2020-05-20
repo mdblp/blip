@@ -152,7 +152,7 @@ function diabeloopFooter(metricFnMkr) {
 function FooterLinks(props) {
   const { shouldDisplayFooterLinks, trackMetric } = props;
   const metricFnMkr = (link) => {
-    trackMetric(`Clicked Footer ${link}`);
+    return () => trackMetric(`Clicked Footer ${link}`);
   }
 
   let footerContent = null;
