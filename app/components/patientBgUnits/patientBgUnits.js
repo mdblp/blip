@@ -15,23 +15,23 @@
  * == BSD2 LICENSE ==
  */
 
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import InputGroup from '../../components/inputgroup';
 import SimpleForm from '../../components/simpleform';
 
 import { MGDL_UNITS, MMOLL_UNITS } from '../../core/constants';
 import { DEFAULT_BG_SETTINGS } from '../../pages/patient/patientsettings';
-import { togglePatientBgUnits } from '../../core/personutils';
+import personUtils from '../../core/personutils';
 
-export default class PatientBgUnits extends Component {
+export default class PatientBgUnits extends React.Component {
   static propTypes = {
-    editingAllowed: React.PropTypes.bool.isRequired,
-    onUpdatePatientSettings: React.PropTypes.func.isRequired,
-    patient: React.PropTypes.object.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired,
+    editingAllowed: PropTypes.bool.isRequired,
+    onUpdatePatientSettings: PropTypes.func.isRequired,
+    patient: PropTypes.object.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -114,7 +114,7 @@ export default class PatientBgUnits extends Component {
       return;
     }
 
-    const newSettings = togglePatientBgUnits(patientSettings);
+    const newSettings = personUtils.togglePatientBgUnits(patientSettings);
 
     if (newSettings) {
       this.props.onUpdatePatientSettings(this.props.patient.userid, newSettings);

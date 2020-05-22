@@ -20,17 +20,15 @@ import sundial from 'sundial';
 import async from 'async';
 import moment from 'moment';
 import { checkCacheValid } from 'redux-cache';
+import { routeActions } from 'react-router-redux';
+import update from 'react-addons-update';
 
 import * as ErrorMessages from '../constants/errorMessages';
 import * as UserMessages from '../constants/usrMessages';
 import * as sync from './sync.js';
-import update from 'react-addons-update';
 import personUtils from '../../core/personutils';
 import config from '../../config';
-
-import { routeActions } from 'react-router-redux';
-
-const utils = require('../../core/utils');
+import utils from '../../core/utils';
 
 function createActionError(usrErrMessage, apiError) {
   const err = new Error(usrErrMessage);
@@ -46,7 +44,7 @@ function createActionError(usrErrMessage, apiError) {
  * Sets the options used by redux-cache for a given id. This allows us to selectively cache parts of
  * a nested data store, such as our patientDataMap, which stores nested data by patient ID
  *
- * @param {String} id - The ID to use for the cache key
+ * @param {string|number} id - The ID to use for the cache key
  * @returns {Object} The options object
  */
 function cacheByIdOptions(id) {
@@ -211,7 +209,7 @@ let wrongCredCount = 0;
  * Login Async Action Creator
  *
  * @param  {Object} api an instance of the API wrapper
- * @param  {Object} accountDetails contains email and password
+ * @param  {Object} credentials contains email and password
  * @param  {?Object} options optionalArgument that contains options like remember
  * @param  {?Function} postLoginAction optionalArgument action to call after login success
  */
@@ -613,7 +611,6 @@ export function updateSettings(api, patientId, settings) {
  * Update User Data Action Creator
  *
  * @param  {Object} api an instance of the API wrapper
- * @param {userId} userId
  * @param  {Object} formValues
  */
 export function updateUser(api, formValues) {
@@ -653,7 +650,6 @@ export function updateUser(api, formValues) {
  * Update Clinician Profile Action Creator
  *
  * @param  {Object} api an instance of the API wrapper
- * @param {userId} userId
  * @param  {Object} formValues
  */
 export function updateClinicianProfile(api, formValues) {

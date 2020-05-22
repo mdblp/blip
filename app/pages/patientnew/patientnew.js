@@ -15,18 +15,18 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
-
 import _ from 'lodash';
+
+import config from '../../config';
 import { validateForm } from '../../core/validation';
-
 import * as actions from '../../redux/actions';
-
 import SimpleForm from '../../components/simpleform';
 import personUtils from '../../core/personutils';
-import { getDonationAccountCodeFromEmail } from '../../core/utils';
+import coreUtils from '../../core/utils';
 
 import {
   DATA_DONATION_NONPROFITS,
@@ -37,12 +37,12 @@ import {
 
 export let PatientNew = translate()(React.createClass({
   propTypes: {
-    fetchingUser: React.PropTypes.bool.isRequired,
-    onUpdateDataDonationAccounts: React.PropTypes.func.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    user: React.PropTypes.object,
-    working: React.PropTypes.bool.isRequired
+    fetchingUser: PropTypes.bool.isRequired,
+    onUpdateDataDonationAccounts: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    user: PropTypes.object,
+    working: PropTypes.bool.isRequired
   },
 
   getFormInputs: function() {
@@ -88,7 +88,7 @@ export let PatientNew = translate()(React.createClass({
         items: DIABETES_TYPES(),    // eslint-disable-line new-cap
       }
     ];
-    if (__HIDE_DONATE__) {
+    if (config.HIDE_DONATE) {
       return baseInputs;
     } else {
       return baseInputs.concat(
@@ -281,7 +281,7 @@ export let PatientNew = translate()(React.createClass({
 
       if (this.props.trackMetric) {
         _.forEach(addAccounts, email => {
-          const source = getDonationAccountCodeFromEmail(email) || 'none';
+          const source = coreUtils.getDonationAccountCodeFromEmail(email) || 'none';
           const location = 'sign-up';
           this.props.trackMetric('web - big data sign up', { source, location });
         });

@@ -14,6 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 import React  from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
@@ -22,20 +23,19 @@ import _ from 'lodash';
 import i18next from '../../core/language';
 import config from '../../config';
 import LoginNav from '../../components/loginnav';
-import utils  from '../../core/utils';
 import { CONFIG } from '../../core/constants';
 
 import * as actions from '../../redux/actions';
 
 const t = i18next.t.bind(i18next);
 
-var brand = CONFIG[__BRANDING__].name;
+var brand = CONFIG[config.BRANDING].name;
 
-var urlTermsOfUse = CONFIG[__BRANDING__].terms;
-var textTermsOfUse = CONFIG[__BRANDING__].termsText;
+var urlTermsOfUse = CONFIG[config.BRANDING].terms;
+var textTermsOfUse = CONFIG[config.BRANDING].termsText;
 
-var urlPrivacyPolicy = CONFIG[__BRANDING__].privacy;
-var textPrivacyPolicy = CONFIG[__BRANDING__].privacyText;
+var urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
+var textPrivacyPolicy = CONFIG[config.BRANDING].privacyText;
 
 const ACCEPT_OF_AGE = <Trans parent="span" i18nKey="html.terms-accept-of-age">
   I am 18 or older and I accept the terms of the <a href={urlTermsOfUse} target='_blank'>{textTermsOfUse}</a> and <a href={urlPrivacyPolicy} target='_blank'>{textPrivacyPolicy}</a>
@@ -52,13 +52,13 @@ const TERMS_OF_USE_UPDATED = <Trans parent="span" i18nKey="html.terms-of-use-upd
 
 export const Terms = translate()(class Terms extends React.Component {
   static propTypes = {
-    ages: React.PropTypes.object.isRequired,
-    authenticated: React.PropTypes.bool.isRequired,
-    messages: React.PropTypes.object.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    termsAccepted: React.PropTypes.bool.isRequired,
-    acceptedLatestTerms: React.PropTypes.bool.isRequired,
-    trackMetric: React.PropTypes.func.isRequired
+    ages: PropTypes.object.isRequired,
+    authenticated: PropTypes.bool.isRequired,
+    messages: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    termsAccepted: PropTypes.bool.isRequired,
+    acceptedLatestTerms: PropTypes.bool.isRequired,
+    trackMetric: PropTypes.func.isRequired
   };
 
   static get defaultProps () {

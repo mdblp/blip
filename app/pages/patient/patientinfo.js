@@ -15,15 +15,16 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import _ from 'lodash';
 import sundial from 'sundial';
 import { translate, Trans } from 'react-i18next';
-import i18next from '../../core/language';
-
 import { Element } from 'react-scroll';
 
-var personUtils = require('../../core/personutils');
+import config from '../../config';
+import i18next from '../../core/language';
+import personUtils from '../../core/personutils';
 import PatientSettings from './patientsettings';
 import PatientBgUnits from '../../components/patientBgUnits';
 import DonateForm from '../../components/donateform';
@@ -41,25 +42,25 @@ var PatientInfo = translate()(React.createClass({
   // many things *not* required here because they aren't needed for
   // /patients/:id/profile although they are for /patients/:id/share (or vice-versa)
   propTypes: {
-    dataDonationAccounts: React.PropTypes.array,
-    dataDonationAccountsFetched: React.PropTypes.bool,
-    fetchingPatient: React.PropTypes.bool.isRequired,
-    fetchingUser: React.PropTypes.bool.isRequired,
-    onUpdateDataDonationAccounts: React.PropTypes.func,
-    onUpdatePatient: React.PropTypes.func.isRequired,
-    onUpdatePatientSettings: React.PropTypes.func,
-    permsOfLoggedInUser: React.PropTypes.object,
-    patient: React.PropTypes.object,
-    trackMetric: React.PropTypes.func.isRequired,
-    updatingDataDonationAccounts: React.PropTypes.bool,
-    updatingPatientBgUnits: React.PropTypes.bool,
-    user: React.PropTypes.object,
-    dataSources: React.PropTypes.array,
-    fetchDataSources: React.PropTypes.func,
-    connectDataSource: React.PropTypes.func,
-    disconnectDataSource: React.PropTypes.func,
-    authorizedDataSource: React.PropTypes.object,
-    api: React.PropTypes.object.isRequired,
+    dataDonationAccounts: PropTypes.array,
+    dataDonationAccountsFetched: PropTypes.bool,
+    fetchingPatient: PropTypes.bool.isRequired,
+    fetchingUser: PropTypes.bool.isRequired,
+    onUpdateDataDonationAccounts: PropTypes.func,
+    onUpdatePatient: PropTypes.func.isRequired,
+    onUpdatePatientSettings: PropTypes.func,
+    permsOfLoggedInUser: PropTypes.object,
+    patient: PropTypes.object,
+    trackMetric: PropTypes.func.isRequired,
+    updatingDataDonationAccounts: PropTypes.bool,
+    updatingPatientBgUnits: PropTypes.bool,
+    user: PropTypes.object,
+    dataSources: PropTypes.array,
+    fetchDataSources: PropTypes.func,
+    connectDataSource: PropTypes.func,
+    disconnectDataSource: PropTypes.func,
+    authorizedDataSource: PropTypes.object,
+    api: PropTypes.object.isRequired,
   },
 
   getInitialState: function() {
@@ -414,7 +415,7 @@ var PatientInfo = translate()(React.createClass({
 
   renderDonateForm: function() {
     const { t } = this.props;
-    if (this.isSamePersonUserAndPatient() && !__HIDE_DONATE__) {
+    if (this.isSamePersonUserAndPatient() && !config.HIDE_DONATE) {
       return (
         <div className="PatientPage-donateForm">
           <div className="PatientPage-sectionTitle">{t('Donate my data?')}</div>
@@ -436,7 +437,7 @@ var PatientInfo = translate()(React.createClass({
 
   renderDataSources: function() {
     const { t } = this.props;
-    if (this.isSamePersonUserAndPatient() && !__HIDE_DEXCOM_BANNER__) {
+    if (this.isSamePersonUserAndPatient() && !config.HIDE_DEXCOM_BANNER) {
       return (
         <Element name="dexcomConnect" className="PatientPage-dataSources">
           <div className="PatientPage-sectionTitle">{t('My Data Sources')}</div>

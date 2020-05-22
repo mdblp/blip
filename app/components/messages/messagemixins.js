@@ -1,11 +1,11 @@
 import i18next from 'i18next';
+import coreUtils from '../../core/utils';
+import sundial from 'sundial';
 
 const t = i18next.t.bind(i18next);
+const { getIn } = coreUtils;
 
-var sundial = require('sundial');
-var getIn = require('../../core/utils').getIn;
-
-var MessageMixins = {
+const MessageMixins = {
   isTimezoneAware: function() {
     if (getIn(this.props, ['timePrefs', 'timezoneAware'], false) &&
       getIn(this.props, ['timePrefs', 'timezoneAware'], false)) {
@@ -27,4 +27,4 @@ var MessageMixins = {
   }
 };
 
-module.exports = MessageMixins;
+export default MessageMixins;

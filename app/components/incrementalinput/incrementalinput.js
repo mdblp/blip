@@ -14,9 +14,9 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { MMOLL_UNITS } from '../../core/constants';
 import { utils } from '@tidepool/viz';
 
 const IncrementalInput = (props) => {
@@ -71,13 +71,14 @@ const IncrementalInput = (props) => {
 }
 
 IncrementalInput.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  value: React.PropTypes.number.isRequired,
-  unit: React.PropTypes.string.isRequired,
-  minValue: React.PropTypes.number.isRequired,
-  maxValue: React.PropTypes.number.isRequired,
-  step: React.PropTypes.number.isRequired,
-  onChange: React.PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
+  minValue: PropTypes.number.isRequired,
+  maxValue: PropTypes.number.isRequired,
+  step: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default IncrementalInput;

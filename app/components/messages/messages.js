@@ -20,8 +20,8 @@ import _ from 'lodash';
 import sundial from 'sundial';
 import { translate } from 'react-i18next';
 
-var Message = require('./message');
-var MessageForm = require('./messageform');
+import Message from './message';
+import MessageForm from './messageform';
 
 var Messages = translate()(React.createClass({
   propTypes: {
@@ -252,4 +252,4 @@ var Messages = translate()(React.createClass({
   }
 }));
 
-module.exports = Messages;
+export default Messages;

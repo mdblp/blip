@@ -15,20 +15,21 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import _ from 'lodash';
 import cx from 'classnames';
 import { translate } from 'react-i18next';
 
-var personUtils = require('../../core/personutils');
-var PatientCard = require('../../components/patientcard');
+import personUtils from '../../core/personutils';
+import PatientCard from '../../components/patientcard';
 
 var PeopleList = translate()(React.createClass({
   propTypes: {
-    people: React.PropTypes.array,
-    uploadUrl: React.PropTypes.string,
-    onClickPerson: React.PropTypes.func,
-    onRemovePatient: React.PropTypes.func,
-    trackMetric: React.PropTypes.func.isRequired,
+    people: PropTypes.array,
+    uploadUrl: PropTypes.string,
+    onClickPerson: PropTypes.func,
+    onRemovePatient: PropTypes.func,
+    trackMetric: PropTypes.func.isRequired,
   },
 
   getInitialState: function() {
@@ -152,4 +153,4 @@ var PeopleList = translate()(React.createClass({
   }
 }));
 
-module.exports = PeopleList;
+export default PeopleList;

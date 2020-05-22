@@ -14,7 +14,8 @@
  */
 
 import _ from 'lodash';
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { translate, Trans } from 'react-i18next';
 import cx from 'classnames';
 import GitHub from 'github-api';
@@ -25,7 +26,7 @@ import logoSrc from '../uploaderbutton/images/T-logo-dark-512x512.png';
 
 const github = new GitHub();
 
-const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends Component {
+const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +37,7 @@ const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends Compon
   }
 
   static propTypes = {
-    modalDismissHandler: React.PropTypes.func.isRequired,
+    modalDismissHandler: PropTypes.func.isRequired,
   };
 
   componentWillMount = () => {
@@ -113,4 +114,4 @@ const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends Compon
 
 });
 
-module.exports = UploadLaunchOverlay;
+export default UploadLaunchOverlay;

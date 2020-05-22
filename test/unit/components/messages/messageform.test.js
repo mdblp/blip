@@ -5,9 +5,9 @@
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
 
-var MessageForm = require('../../../../app/components/messages/messageform');
+import MessageForm from '../../../../app/components/messages/messageform';
+const { expect } = chai;
 
 describe('MessageForm', function () {
   var timePrefs = {

@@ -1,7 +1,8 @@
-import { capitalize } from '../utils';
+import utils from '../utils';
 import i18next from '../language';
 
 const t = i18next.t.bind(i18next);
+const { capitalize } = utils;
 
 // Generic validation
 export const isRequired = (field = t('this field')) => capitalize(t('{{field}} is required.', {field: t(field)}));

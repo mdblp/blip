@@ -502,4 +502,4 @@ utils.getLatestPumpSettings = (data) => {
   }
 }
 
-module.exports = utils;
+export default utils;

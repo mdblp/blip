@@ -13,4 +13,5 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-module.exports = require('./donateform');
+import DonateForm from './donateform';
+export default DonateForm;

@@ -22,16 +22,11 @@
 /* global expect */
 
 import _ from 'lodash';
-
 import mutationTracker from 'object-invariant-test-helper';
-
 import { dataDonationAccounts as reducer } from '../../../../app/redux/reducers/misc';
-
 import * as actions from '../../../../app/redux/actions/index';
 
-import { dataDonationAccounts as initialState } from '../../../../app/redux/reducers/initialState';
-
-var expect = chai.expect;
+const { expect } = chai;
 
 describe('dataDonationAccounts', () => {
   describe('fetchAssociatedAccountsSuccess', () => {
@@ -88,7 +83,7 @@ describe('dataDonationAccounts', () => {
 
       let state = reducer(initialStateForTest, action);
 
-      expect(state.length).to.equal(2);
+      expect(state.length).to.equal(3);
       expect(state[0].status).to.equal('pending');
       expect(mutationTracker.hasMutated(tracked)).to.be.false;
     });

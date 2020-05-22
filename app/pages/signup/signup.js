@@ -14,6 +14,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans} from 'react-i18next';
 import { bindActionCreators } from 'redux';
@@ -36,17 +37,17 @@ import check from './images/check.svg';
 
 export let Signup = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    api: React.PropTypes.object.isRequired,
-    configuredInviteKey: React.PropTypes.string.isRequired,
-    inviteEmail: React.PropTypes.string,
-    inviteKey: React.PropTypes.string,
-    roles: React.PropTypes.array,
-    notification: React.PropTypes.object,
-    onSubmit: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired,
-    location: React.PropTypes.object.isRequired,
+    acknowledgeNotification: PropTypes.func.isRequired,
+    api: PropTypes.object.isRequired,
+    configuredInviteKey: PropTypes.string.isRequired,
+    inviteEmail: PropTypes.string,
+    inviteKey: PropTypes.string,
+    roles: PropTypes.array,
+    notification: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired,
   },
 
   formInputs: function() {
@@ -230,8 +231,8 @@ export let Signup = translate()(React.createClass({
         );
         break;
     }
-    if (__BRANDING__ === 'diabeloop') {
-      content = '';
+    if (config.BRANDING === 'diabeloop') {
+      content = null;
     }
 
     return (
@@ -306,7 +307,7 @@ export let Signup = translate()(React.createClass({
     let signUpSubtitle = null;
     let signUpSelectionPersonal = null;
 
-    if ( _.get(window, 'config.ALLOW_SIGNUP_PATIENT', true)) {
+    if (config.ALLOW_SIGNUP_PATIENT) {
       signUpSubtitle = (<div className="signup-subtitle">{t('Which kind of account do you need?')}</div>);
 
       signUpSelectionPersonal = (
@@ -350,12 +351,12 @@ export let Signup = translate()(React.createClass({
   },
 
   renderAcceptTermsLabel: function() {
-    const config = CONFIG[__BRANDING__];
-    const urlTermsOfUse = config.terms;
-    const textTermsOfUse = config.termsText;
+    const brandConfig = CONFIG[config.BRANDING];
+    const urlTermsOfUse = brandConfig.terms;
+    const textTermsOfUse = brandConfig.termsText;
 
-    const urlPrivacyPolicy = config.privacy;
-    const textPrivacyPolicy = config.privacyText;
+    const urlPrivacyPolicy = brandConfig.privacy;
+    const textPrivacyPolicy = brandConfig.privacyText;
 
     return (
       <Trans parent="span" i18nKey="html.signup-terms-of-use">

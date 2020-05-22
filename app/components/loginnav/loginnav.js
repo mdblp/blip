@@ -14,65 +14,69 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-var React = require('react');
+import React from 'react';
+import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
-var Link = require('react-router').Link;
+import { Link } from 'react-router';
 
-var LoginNav = translate()(React.createClass({
-  propTypes: {
-    page: React.PropTypes.string,
-    hideLinks: React.PropTypes.bool,
-    trackMetric: React.PropTypes.func.isRequired
-  },
-
-  render: function() {
-    var link = this.renderLink();
-
-    return (
-      <div className="container-nav-outer login-nav">
-        <div className="container-nav-inner nav-wrapper">
-          <ul className="nav nav-right">
-            <li>
-              {link}
-            </li>
-          </ul>
-        </div>
-      </div>
-    );
-  },
-
-  renderLink: function() {
-    if (this.props.hideLinks) {
-      return null;
-    }
-
-
-    var self = this;
-    const {page, t} = this.props;
-    var href = '/signup/clinician';
-    var className = 'js-signup-link';
-    var icon = 'icon-add';
-    var text = t('Sign up');
-    var handleClick = function() {
-      self.props.trackMetric('Clicked Sign Up Link');
-    };
-
-    if (page === 'signup') {
-      href = '/login';
-      className = 'js-login-link';
-      icon = 'icon-login';
-      text = t('Log in');
-      handleClick = function() {
-        self.props.trackMetric('Clicked Log In Link');
-      };
-    }
-
-    return (
-      <Link
-        to={href}
-        className={className}><i className={icon}></i>{' ' + text}</Link>
-    );
+function renderLink(props) {
+  const { trackMetric, hideLinks } = props;
+  if (hideLinks) {
+    return null;
   }
-}));
 
-module.exports = LoginNav;
+  const { page, t } = props;
+  let href;
+  let className;
+  let icon;
+  let text;
+  let handleClick;
+
+  if (page === 'signup') {
+    href = '/login';
+    className = 'js-login-link';
+    icon = 'icon-login';
+    text = t('Log in');
+    handleClick = () => {
+      trackMetric('Clicked Log In Link');
+    };
+  } else {
+    href = '/signup/clinician';
+    className = 'js-signup-link';
+    icon = 'icon-add';
+    text = t('Sign up');
+    handleClick = () => {
+      trackMetric('Clicked Sign Up Link');
+    };
+  }
+
+  return (
+    <Link id="login-nav-link" to={href} className={className} onClick={handleClick}>
+      <i className={icon}></i>{' ' + text}
+    </Link>
+  );
+}
+
+function LoginNav(props) {
+  const link = renderLink(props);
+
+  return (
+    <div className="container-nav-outer login-nav">
+      <div className="container-nav-inner nav-wrapper">
+        <ul className="nav nav-right">
+          <li>
+            {link}
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+LoginNav.propTypes = {
+  page: PropTypes.string,
+  hideLinks: PropTypes.bool,
+  trackMetric: PropTypes.func.isRequired
+};
+
+export default translate()(LoginNav);

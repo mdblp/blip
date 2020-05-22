@@ -93,4 +93,4 @@ var TidepoolNotification = translate()(React.createClass({
   }
 }));
 
-module.exports = TidepoolNotification;
+export default TidepoolNotification;

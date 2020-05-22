@@ -49,4 +49,4 @@ var LogoutOverlay = translate()(React.createClass({
   }
 }));
 
-module.exports = LogoutOverlay;
+export default LogoutOverlay;

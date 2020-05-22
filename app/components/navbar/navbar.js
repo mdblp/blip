@@ -15,43 +15,39 @@
  */
 
 
-var React = require('react');
-var IndexLink = require('react-router').IndexLink;
-var Link = require('react-router').Link;
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link, IndexLink } from 'react-router';
 import { translate } from 'react-i18next';
+import _ from 'lodash';
+import cx from 'classnames';
 
-var _ = require('lodash');
-var cx = require('classnames');
+import personUtils from '../../core/personutils';
+import NavbarPatientCard from '../../components/navbarpatientcard';
 
-var personUtils = require('../../core/personutils');
-var NavbarPatientCard = require('../../components/navbarpatientcard');
+import logoSrc from './images/tidepool/logo.png';
 
-var logoSrc = require('./images/tidepool-logo-408x46.png');
+// export default translate()(React.createClass({
+class NavBar extends React.Component {
 
-if(__BRANDING__ !== 'tidepool'){
-  logoSrc = require('./images/'+__BRANDING__+'/logo.png');
-}
-
-export default translate()(React.createClass({
-  propTypes: {
-    currentPage: React.PropTypes.string,
-    user: React.PropTypes.object,
-    fetchingUser: React.PropTypes.bool,
-    patient: React.PropTypes.object,
-    fetchingPatient: React.PropTypes.bool,
-    getUploadUrl: React.PropTypes.func,
-    onLogout: React.PropTypes.func,
-    trackMetric: React.PropTypes.func.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object,
-  },
-
-  getInitialState: function() {
-    return {
-      showDropdown: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDropdown: props.showDropdown,
     };
-  },
 
-  render: function() {
+    this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  componentDidUpdate() {
+    const { showDropdown } = this.props;
+    if (this.state.showDropdown !== showDropdown) {
+      this.setState({ showDropdown });
+    }
+  }
+
+  render() {
     return (
       <div className="Navbar">
         {this.renderLogoSection()}
@@ -59,20 +55,19 @@ export default translate()(React.createClass({
         {this.renderMenuSection()}
       </div>
     );
-  },
+  }
 
-  renderLogoSection: function() {
+  renderLogoSection() {
     return (
       <div className="Navbar-logoSection">
         {this.renderLogo()}
       </div>
     );
-  },
+  }
 
-  renderLogo: function() {
-    var self = this;
-    var handleClick = function() {
-      self.props.trackMetric('Clicked Navbar Logo');
+  renderLogo() {
+    const handleClick = () => {
+      this.props.trackMetric('Clicked Navbar Logo');
     };
 
     return (
@@ -83,17 +78,17 @@ export default translate()(React.createClass({
         <img src={logoSrc}/>
       </IndexLink>
     );
-  },
+  }
 
-  getPatientLink: function(patient) {
+  getPatientLink(patient) {
     if (!patient || !patient.userid) {
       return '';
     }
 
     return '/patients/' + patient.userid + '/data';
-  },
+  }
 
-  renderPatientSection: function() {
+  renderPatientSection() {
     var patient = this.props.patient;
 
     if (_.isEmpty(patient)) {
@@ -113,28 +108,28 @@ export default translate()(React.createClass({
           trackMetric={this.props.trackMetric} />
       </div>
     );
-  },
+  }
 
-  toggleDropdown: function(e) {
+  toggleDropdown(e) {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
     this.setState({showDropdown: !this.state.showDropdown});
-  },
+  }
 
-  stopPropagation: function(e) {
+  stopPropagation(e) {
     e.stopPropagation();
-  },
+  }
 
-  hideDropdown: function()  {
+  hideDropdown() {
     if (this.state.showDropdown) {
-      this.setState({showDropdown: false});
+      this.setState({ showDropdown: false });
     }
-  },
+  }
 
-  renderMenuSection: function() {
+  renderMenuSection() {
     var currentPage = (this.props.currentPage && this.props.currentPage[0] === '/') ? this.props.currentPage.slice(1) : this.props.currentPage;
     const {user, t} = this.props;
 
@@ -143,14 +138,14 @@ export default translate()(React.createClass({
     }
 
     var displayName = this.getUserDisplayName();
-    var self = this;
-    var handleClickUser = function() {
-      self.props.trackMetric('Clicked Navbar Logged In User');
-      self.setState({showDropdown: false});
+
+    var handleClickUser = () => {
+      this.props.trackMetric('Clicked Navbar Logged In User');
+      this.setState({showDropdown: false});
     };
 
-    var handleCareteam = function() {
-      self.props.trackMetric('Clicked Navbar CareTeam');
+    var handleCareteam = () => {
+      this.props.trackMetric('Clicked Navbar CareTeam');
     };
     var patientsClasses = cx({
       'Navbar-button': true,
@@ -164,19 +159,13 @@ export default translate()(React.createClass({
 
     var dropdownClasses = cx({
       'Navbar-menuDropdown': true,
-      'Navbar-menuDropdown-hide': !self.state.showDropdown,
+      'Navbar-menuDropdown-hide': !this.state.showDropdown,
     });
 
     var dropdownIconClasses = cx({
       'Navbar-dropdownIcon': true,
-      'Navbar-dropdownIcon-show': self.state.showDropdown,
+      'Navbar-dropdownIcon-show': this.state.showDropdown,
       'Navbar-dropdownIcon-current': currentPage && currentPage === 'profile',
-    });
-
-    var dropdownIconIClasses = cx({
-      'Navbar-icon': true,
-      'icon-account--down': !self.state.showDropdown,
-      'icon-account--up': self.state.showDropdown,
     });
 
     return (
@@ -211,17 +200,17 @@ export default translate()(React.createClass({
         </li>
       </ul>
     );
-  },
+  }
 
-  getUserDisplayName: function() {
+  getUserDisplayName() {
     return personUtils.fullName(this.props.user);
-  },
+  }
 
-  isSamePersonUserAndPatient: function() {
+  isSamePersonUserAndPatient() {
     return personUtils.isSame(this.props.user, this.props.patient);
-  },
+  }
 
-  handleLogout: function(e) {
+  handleLogout(e) {
     this.setState({showDropdown: false});
 
     if (e) {
@@ -233,4 +222,19 @@ export default translate()(React.createClass({
       logout();
     }
   }
-}));
+}
+
+NavBar.propTypes = {
+  showDropdown: PropTypes.bool.isRequired,
+  currentPage: PropTypes.string,
+  user: PropTypes.object,
+  fetchingUser: PropTypes.bool,
+  patient: PropTypes.object,
+  fetchingPatient: PropTypes.bool,
+  getUploadUrl: PropTypes.func,
+  onLogout: PropTypes.func,
+  trackMetric: PropTypes.func.isRequired,
+  permsOfLoggedInUser: PropTypes.object,
+};
+
+export default translate()(NavBar);

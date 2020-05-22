@@ -15,10 +15,36 @@
  * == BSD2 LICENSE ==
  */
 
-/* global __DEV__ */
+import React from 'react';
+import { Provider } from 'react-redux';
+import { Router, browserHistory } from 'react-router';
+import { hot, setConfig } from 'react-hot-loader';
+import Perf from 'react-addons-perf';
 
-if (__DEV__) {
-  module.exports = require('./Root.dev');
-} else {
-  module.exports = require('./Root.prod');
+import config from '../../config';
+
+function Root(props) {
+  const { store, routing } = props;
+  return (
+    <Provider store={store}>
+      <div>
+        <Router history={browserHistory}>
+          {routing}
+        </Router>
+      </div>
+    </Provider>
+  );
 }
+
+function exportRoot() {
+  if (config.DEV) {
+    window.Perf = Perf;
+    setConfig({ logLevel: 'warning' });
+    return hot(module)(Root);
+  } else {
+    return Root;
+  }
+
+}
+
+export default exportRoot();

@@ -15,28 +15,39 @@
 
 // Wrapper around the Tidepool client library
 
-var _ = require('lodash');
-var async = require('async');
-var bows = require('bows');
+import _ from 'lodash';
+import async from 'async';
+import bows from 'bows';
+import createTidepoolClient from 'tidepool-platform-client';
 
-var createTidepoolClient = require('tidepool-platform-client');
-var tidepool;
+import config from '../config';
+import { CONFIG as CONSTANTS } from './constants';
 
-var config = require('../config');
-var constants = require('./constants').CONFIG;
+import personUtils from './personutils';
+import migrations from './lib/apimigrations';
 
-var personUtils = require('./personutils');
-var migrations = require('./lib/apimigrations');
-
-var api = {
-  log: bows('Api')
+const api = {
+  log: bows('Api'),
+  apiHost: config.API_HOST || `${window.location.protocol}//${window.location.host}`,
+  server: {},
+  user: {},
+  patient: {},
+  metadata: {
+    preferences: {},
+  },
+  team: {},
+  patientData: {},
+  invitation: {},
+  access: {},
+  metrics: {},
 };
 
+let tidepool;
 api.init = function(cb) {
-  var tidepoolLog = bows('Tidepool');
+  const tidepoolLog = bows('Tidepool');
   tidepool = createTidepoolClient({
-    host: config.API_HOST,
-    dataHost: config.API_HOST + '/dataservices',
+    host: api.apiHost,
+    dataHost: `${api.apiHost}/dataservices`,
     uploadApi: config.UPLOAD_API,
     log: {
       warn: tidepoolLog,
@@ -56,7 +67,7 @@ api.init = function(cb) {
       api.metrics.track('CookieConsent', 24);
     }
     if (typeof config.BRANDING === 'string') {
-      api.metrics.track('setDocumentTitle', constants[config.BRANDING].name, cb);
+      api.metrics.track('setDocumentTitle', CONSTANTS[config.BRANDING].name, cb);
     } else if (cb) {
       cb();
     }
@@ -64,8 +75,6 @@ api.init = function(cb) {
 };
 
 // ----- Server -----
-api.server = {};
-
 api.server.getTime = function(cb) {
   tidepool.getTime(function(err, data) {
     if (err) {
@@ -76,8 +85,6 @@ api.server.getTime = function(cb) {
 };
 
 // ----- User -----
-api.user = {};
-
 api.user.setToken = function(token) {
   if (typeof token === 'string') {
     tidepool.syncToken(token);
@@ -445,8 +452,6 @@ api.user.getPatientsMetrics = function(accounts, cb) {
 }
 // ----- Patient -----
 
-api.patient = {};
-
 // Get a user's public info
 function getPerson(userId, cb) {
   var person = {userid: userId};
@@ -557,10 +562,6 @@ api.patient.put = function(patient, cb) {
 
 // ----- Metadata -----
 
-api.metadata = {};
-
-api.metadata.preferences = {};
-
 api.metadata.preferences.get = function(patientId, cb) {
   api.log('GET /metadata/' + patientId + '/preferences');
 
@@ -620,7 +621,6 @@ api.metadata.settings.put = function(patientId, settings, cb) {
 };
 
 // ----- Team data -----
-api.team = {};
 
 //Get all messages for the given thread
 api.team.getMessageThread = function(messageId,cb){
@@ -696,8 +696,6 @@ api.team.editMessage = function(message,cb){
 
 // ----- Patient data -----
 
-api.patientData = {};
-
 api.patientData.get = function(patientId, options, cb) {
   api.log('GET /data/' + patientId);
 
@@ -715,8 +713,6 @@ api.patientData.get = function(patientId, options, cb) {
 };
 
 // ----- Invitation -----
-
-api.invitation = {};
 
 api.invitation.send = function(emailAddress, permissions, callback) {
   var loggedInUser = tidepool.getUserId();
@@ -755,8 +751,6 @@ api.invitation.cancel = function(emailAddress, callback) {
 
 // ----- Access -----
 
-api.access = {};
-
 api.access.setMemberPermissions = function(memberId, permissions, callback) {
   var groupId = tidepool.getUserId();
   api.log('PUT /access/' + groupId + '/' + memberId);
@@ -782,8 +776,6 @@ api.getUploadUrl = function() {
 };
 
 // ----- Metrics -----
-
-api.metrics = {};
 
 api.metrics.track = function(eventName, properties, cb) {
   const metricsService = _.get(config, 'METRICS_SERVICE', 'disabled');
@@ -843,4 +835,4 @@ api.errors.log = function(error, message, properties, cb) {
   }
 };
 
-module.exports = api;
+export default api;

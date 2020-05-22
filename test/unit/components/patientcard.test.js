@@ -3,18 +3,18 @@
 /* global sinon */
 /* global it */
 /* global beforeEach */
+/* global after */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
+import * as sinon from 'sinon';
 import {shallow} from 'enzyme';
 import i18next from '../../../app/core/language';
+import PatientCard from '../../../app/components/patientcard';
 
-var expect = chai.expect;
-
+const { expect } = chai;
 const t = i18next.t.bind(i18next);
-
-var PatientCard = require('../../../app/components/patientcard');
 
 let patientUpload = {
   permissions: {
@@ -30,6 +30,10 @@ let patientNoUpload = {
 }
 
 describe('PatientCard', function () {
+  after(() => {
+    sinon.restore();
+  });
+
   describe('render', function() {
     it('should not console.error when required props set', function() {
       console.error = sinon.stub();

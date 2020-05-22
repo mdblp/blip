@@ -6,12 +6,12 @@
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
 import { shallow } from 'enzyme';
+import * as sinon from 'sinon';
 import i18next from '../../../app/core/language';
-var expect = chai.expect;
+import NavbarPatientCard from '../../../app/components/navbarpatientcard';
 
+const { expect } = chai;
 const t = i18next.t.bind(i18next);
-
-var NavbarPatientCard = require('../../../app/components/navbarpatientcard');
 
 const rootUser = {
   patient: {
@@ -55,7 +55,7 @@ describe('NavbarPatientCard', function () {
         href: 'foo',
         trackMetric: function() {}
       };
-      var navbarElem = React.createElement(NavbarPatientCard, props);
+      var navbarElem = <NavbarPatientCard {...props} />;
       var elem = TestUtils.renderIntoDocument(navbarElem);
 
       expect(elem).to.be.ok;

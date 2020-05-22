@@ -2,12 +2,13 @@
 /* global describe */
 /* global sinon */
 /* global it */
+/* global after */
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
-
-var Messages = require('../../../../app/components/messages/messages');
+import * as sinon from 'sinon';
+import Messages from '../../../../app/components/messages/messages';
+const { expect } = chai;
 
 describe('Messages', function () {
   it('should be exposed as a module and be of type function', function() {
@@ -15,6 +16,10 @@ describe('Messages', function () {
   });
 
   describe('render', function() {
+    after(() => {
+      sinon.restore();
+    });
+
     it('should render without problems when required props are present', function () {
       console.error = sinon.stub();
       var props = {

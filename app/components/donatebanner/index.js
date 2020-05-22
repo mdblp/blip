@@ -13,4 +13,5 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-module.exports = require('./donatebanner');
+import DonateBanner from './donatebanner';
+export default DonateBanner;

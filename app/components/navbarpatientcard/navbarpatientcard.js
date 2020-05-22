@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import { Link } from 'react-router';
 import _ from 'lodash';
@@ -22,19 +23,19 @@ import cx from 'classnames';
 
 import config from '../../config';
 
-var launchCustomProtocol = require('custom-protocol-detection');
-var UploadLaunchOverlay = require('../uploadlaunchoverlay');
+import UploadLaunchOverlay from '../uploadlaunchoverlay';
+import personUtils from '../../core/personutils';
 
-var personUtils = require('../../core/personutils');
+var launchCustomProtocol = require('custom-protocol-detection');
 
 var NavbarPatientCard = translate()(React.createClass({
   propTypes: {
-    href: React.PropTypes.string.isRequired,
-    currentPage: React.PropTypes.string,
-    uploadUrl: React.PropTypes.string,
-    patient: React.PropTypes.object,
-    trackMetric: React.PropTypes.func.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object,
+    href: PropTypes.string.isRequired,
+    currentPage: PropTypes.string,
+    uploadUrl: PropTypes.string,
+    patient: PropTypes.object,
+    trackMetric: PropTypes.func.isRequired,
+    permsOfLoggedInUser: PropTypes.object,
   },
 
   getInitialState: function() {
@@ -45,7 +46,6 @@ var NavbarPatientCard = translate()(React.createClass({
 
   render: function() {
     var patient = this.props.patient || {};
-    var self = this;
 
     var classes = cx({
       'patientcard': true,
@@ -181,4 +181,4 @@ var NavbarPatientCard = translate()(React.createClass({
   },
 }));
 
-module.exports = NavbarPatientCard;
+export default NavbarPatientCard;

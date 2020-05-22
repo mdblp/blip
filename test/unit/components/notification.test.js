@@ -5,9 +5,10 @@
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
+import * as sinon from 'sinon';
+import NotificationElem from '../../../app/components/notification';
 
-var NotificationElem = require('../../../app/components/notification');
+const { expect } = chai;
 
 describe('NotificationElem', function () {
   describe('render', function() {

@@ -20,7 +20,7 @@ import _ from 'lodash';
 import sundial from 'sundial';
 import { translate } from 'react-i18next';
 
-var MessageMixins = require('./messagemixins');
+import MessageMixins from './messagemixins';
 
 // Form for creating new Notes or adding Comments
 var MessageForm = translate()(React.createClass({
@@ -329,4 +329,4 @@ var MessageForm = translate()(React.createClass({
 
 }));
 
-module.exports = MessageForm;
+export default MessageForm;

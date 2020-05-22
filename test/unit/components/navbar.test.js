@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
-
+import * as sinon from 'sinon';
 import '../../../app/core/language';
 import Navbar from '../../../app/components/navbar';
 
@@ -10,7 +10,7 @@ const expect = chai.expect;
 
 describe('Navbar', ()  => {
   let wrapper;
-  const props = { trackMetric: sinon.spy() };
+  const props = { trackMetric: sinon.spy(), showDropdown: false };
   before(() => {
     console.error = sinon.spy();
     // we have to rewire IndexLink because React Router throws an error
@@ -30,6 +30,8 @@ describe('Navbar', ()  => {
 
   after(() => {
     Navbar.__ResetDependency__('IndexLink');
+    sinon.restore();
+    wrapper = null;
   });
 
   it('should be exposed as a module and be of type function', function() {

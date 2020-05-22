@@ -15,6 +15,7 @@
 
 import _ from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import i18next from '../../core/language';
@@ -37,58 +38,58 @@ import FooterLinks from '../../components/footerlinks';
 
 import { DATA_DONATION_NONPROFITS, CONFIG } from '../../core/constants';
 
-import Config from '../../config';
+import config from '../../config';
 
 // Styles
-require('tideline/css/tideline.less');
-require('../../style.less');
+import 'tideline/css/tideline.less';
+import '../../style.less';
 
-document.title = CONFIG[__BRANDING__].name;
+document.title = CONFIG[config.BRANDING].name;
 export class AppComponent extends React.Component {
   static propTypes = {
-    authenticated: React.PropTypes.bool.isRequired,
-    children: React.PropTypes.object.isRequired,
-    fetchers: React.PropTypes.array.isRequired,
-    fetchingPatient: React.PropTypes.bool.isRequired,
-    fetchingPendingSentInvites: React.PropTypes.bool.isRequired,
-    fetchingUser: React.PropTypes.shape({
-      inProgress: React.PropTypes.bool.isRequired,
-      completed: React.PropTypes.bool,
+    authenticated: PropTypes.bool.isRequired,
+    children: PropTypes.object.isRequired,
+    fetchers: PropTypes.array.isRequired,
+    fetchingPatient: PropTypes.bool.isRequired,
+    fetchingPendingSentInvites: PropTypes.bool.isRequired,
+    fetchingUser: PropTypes.shape({
+      inProgress: PropTypes.bool.isRequired,
+      completed: PropTypes.bool,
     }).isRequired,
-    fetchingDataSources: React.PropTypes.shape({
-      inProgress: React.PropTypes.bool.isRequired,
-      completed: React.PropTypes.bool,
+    fetchingDataSources: PropTypes.shape({
+      inProgress: PropTypes.bool.isRequired,
+      completed: PropTypes.bool,
     }).isRequired,
-    location: React.PropTypes.string.isRequired,
-    loggingOut: React.PropTypes.bool.isRequired,
-    updatingDataDonationAccounts: React.PropTypes.bool.isRequired,
-    notification: React.PropTypes.object,
-    onAcceptTerms: React.PropTypes.func.isRequired,
-    onCloseNotification: React.PropTypes.func.isRequired,
-    onDismissDonateBanner: React.PropTypes.func.isRequired,
-    onDismissDexcomConnectBanner: React.PropTypes.func.isRequired,
-    onUpdateDataDonationAccounts: React.PropTypes.func.isRequired,
-    onLogout: React.PropTypes.func.isRequired,
-    patient: React.PropTypes.object,
-    context: React.PropTypes.shape({
-      DEBUG: React.PropTypes.bool.isRequired,
-      api: React.PropTypes.object.isRequired,
-      config: React.PropTypes.object.isRequired,
-      log: React.PropTypes.func.isRequired,
-      personUtils: React.PropTypes.object.isRequired,
-      trackMetric: React.PropTypes.func.isRequired,
+    location: PropTypes.string.isRequired,
+    loggingOut: PropTypes.bool.isRequired,
+    updatingDataDonationAccounts: PropTypes.bool.isRequired,
+    notification: PropTypes.object,
+    onAcceptTerms: PropTypes.func.isRequired,
+    onCloseNotification: PropTypes.func.isRequired,
+    onDismissDonateBanner: PropTypes.func.isRequired,
+    onDismissDexcomConnectBanner: PropTypes.func.isRequired,
+    onUpdateDataDonationAccounts: PropTypes.func.isRequired,
+    onLogout: PropTypes.func.isRequired,
+    patient: PropTypes.object,
+    context: PropTypes.shape({
+      DEBUG: PropTypes.bool.isRequired,
+      api: PropTypes.object.isRequired,
+      config: PropTypes.object.isRequired,
+      log: PropTypes.func.isRequired,
+      personUtils: PropTypes.object.isRequired,
+      trackMetric: PropTypes.func.isRequired,
     }).isRequired,
-    showingDonateBanner: React.PropTypes.bool,
-    showingDexcomConnectBanner: React.PropTypes.bool,
-    showBanner: React.PropTypes.func.isRequired,
-    hideBanner: React.PropTypes.func.isRequired,
-    termsAccepted: React.PropTypes.string,
-    user: React.PropTypes.object,
-    userHasData: React.PropTypes.bool.isRequired,
-    userIsCurrentPatient: React.PropTypes.bool.isRequired,
-    userIsDonor: React.PropTypes.bool.isRequired,
-    userIsSupportingNonprofit: React.PropTypes.bool.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object,
+    showingDonateBanner: PropTypes.bool,
+    showingDexcomConnectBanner: PropTypes.bool,
+    showBanner: PropTypes.func.isRequired,
+    hideBanner: PropTypes.func.isRequired,
+    termsAccepted: PropTypes.string,
+    user: PropTypes.object,
+    userHasData: PropTypes.bool.isRequired,
+    userIsCurrentPatient: PropTypes.bool.isRequired,
+    userIsDonor: PropTypes.bool.isRequired,
+    userIsSupportingNonprofit: PropTypes.bool.isRequired,
+    permsOfLoggedInUser: PropTypes.object,
   };
 
   constructor(props) {
@@ -97,15 +98,12 @@ export class AppComponent extends React.Component {
     this.state = {
       dexcomShowBannerMetricTracked: false,
       donateShowBannerMetricTracked: false,
+      showNavBarDropDown: true,
     }
   }
 
   hideNavbarDropdown() {
-    var navbar = this.refs.navbar;
-
-    if (navbar) {
-      navbar.getWrappedInstance().hideDropdown();
-    }
+    this.setState({ showNavBarDropDown: false });
   }
 
   /**
@@ -163,7 +161,7 @@ export class AppComponent extends React.Component {
 
     // Determine whether or not to show the donate banner.
     // If showingDonateBanner is false, it means it was dismissed and we do not show it again.
-    if (!__HIDE_DONATE__ && showingDonateBanner !== false) {
+    if (!config.HIDE_DONATE && showingDonateBanner !== false) {
       if (showDonateBanner) {
         this.props.showBanner('donate');
         displayDonateBanner = true;
@@ -179,7 +177,7 @@ export class AppComponent extends React.Component {
 
     // Determine whether or not to show the dexcom banner.
     // If showingDexcomConnectBanner is false, it means it was dismissed and we do not show it again.
-    if (!__HIDE_DEXCOM_BANNER__ && showingDexcomConnectBanner !== false && !displayDonateBanner) {
+    if (!config.HIDE_DEXCOM_BANNER && showingDexcomConnectBanner !== false && !displayDonateBanner) {
       const showDexcomBanner = isBannerRoute && userIsCurrentPatient && userHasData && !userHasConnectedDataSources;
       if (showDexcomBanner) {
         this.props.showBanner('dexcom');
@@ -192,7 +190,7 @@ export class AppComponent extends React.Component {
         this.props.hideBanner('dexcom');
       }
     }
-    if (Config.HELP_LINK !== null && typeof window.zE === 'function') {
+    if (config.HELP_LINK !== null && typeof window.zE === 'function') {
       if (this.props.authenticated) {
         let name = this.props.user.profile.fullName;
         let email = this.props.user.emails[0];
@@ -226,6 +224,7 @@ export class AppComponent extends React.Component {
   }
 
   renderNavbar() {
+    const { showNavBarDropDown } = this.state;
     this.props.context.log('Rendering navbar');
     // at some point we should refactor so that LoginNav and NavBar
     // have a common parent that can decide what to render
@@ -263,7 +262,8 @@ export class AppComponent extends React.Component {
             onLogout={this.props.onLogout}
             trackMetric={this.props.context.trackMetric}
             permsOfLoggedInUser={this.props.permsOfLoggedInUser}
-            ref="navbar"/>
+            showDropdown={showNavBarDropDown}
+            />
           </div>
         );
       }
@@ -282,7 +282,7 @@ export class AppComponent extends React.Component {
       userIsDonor,
     } = this.props;
 
-    if (!__HIDE_DONATE__ && showingDonateBanner) {
+    if (!config.HIDE_DONATE && showingDonateBanner) {
       return (
         <div className="App-donatebanner">
           <DonateBanner
@@ -309,7 +309,7 @@ export class AppComponent extends React.Component {
       patient,
     } = this.props;
 
-    if (!__HIDE_DEXCOM_BANNER__ && showingDexcomConnectBanner) {
+    if (!config.HIDE_DEXCOM_BANNER && showingDexcomConnectBanner) {
       return (
         <div className="App-dexcombanner">
           <DexcomBanner

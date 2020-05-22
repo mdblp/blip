@@ -2,16 +2,21 @@
 /* global describe */
 /* global sinon */
 /* global it */
+/* global after */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
+import * as sinon from 'sinon';
+import PeopleList from '../../../app/components/peoplelist';
 
-var PeopleList = require('../../../app/components/peoplelist');
-var PatientCard = require('../../../app/components/patientcard');
+const { expect } = chai;
 
 describe('PeopleList', function () {
+  after(() => {
+    sinon.restore();
+  });
+
   describe('render', function() {
     it('should not console.error when trackMetric set', function() {
       console.error = sinon.stub();

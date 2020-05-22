@@ -17,8 +17,7 @@
 
 import _ from 'lodash';
 
-import { isClinic } from '../../core/personutils';
-import * as ActionTypes from '../constants/actionTypes';
+import personUtils from '../../core/personutils';
 
 const trackMetricMap = {
   LOGIN_SUCCESS: 'Logged In',
@@ -36,7 +35,7 @@ const interpretMetricMap = {
   SIGNUP_SUCCESS: function(action) {
     const user = _.get(action, 'payload.user');
     const roles = _.get(user, 'roles');
-    const type = isClinic(user) ? 'Clinician' : 'Personal';
+    const type = personUtils.isClinic(user) ? 'Clinician' : 'Personal';
     return [
       { eventName: 'Signed Up', properties: roles ? { roles: roles } : null },
       { eventName: `Web - ${type} Account Created` },

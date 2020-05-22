@@ -2,12 +2,15 @@
 /* global describe */
 /* global sinon */
 /* global it */
+/* global after */
 
 import React from 'react';
-import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
+import ReactDOM from 'react-dom';
+// import { act } from 'react-dom/test-utils';
+import * as sinon from 'sinon';
+import LoginNav from '../../../app/components/loginnav';
 
-var LoginNav = require('../../../app/components/loginnav');
+const { expect } = chai;
 
 describe('LoginNav', function () {
   it('should be exposed as a module and be of type function', function() {
@@ -15,15 +18,37 @@ describe('LoginNav', function () {
   });
 
   describe('render', function() {
-    it('should render without problems when required props are present', function () {
-      console.error = sinon.stub();
-      var props = {
-        trackMetric: sinon.stub()
-      };
-      var elem = React.createElement(LoginNav, props);
-      var render = TestUtils.renderIntoDocument(elem);
-      expect(render).to.be.ok;
-      expect(console.error.callCount).to.equal(0);
+    /** @type {HTMLElement} */
+    let container = null;
+    /** @type {HTMLElement} */
+    let link = null;
+    const trackMetric = sinon.stub();
+
+    after(() => {
+      if (container) {
+        container.parentElement.removeChild(container);
+        container = null;
+      }
+      link = null;
+    });
+
+    it('should render without problems when required props are present', () => {
+      container = document.createElement('div');
+      const body = document.getElementsByTagName('body')[0];
+      body.appendChild(container);
+
+      // React v16:
+      // act(() => { ReactDOM.render(<LoginNav trackMetric={trackMetric} />, container); });
+      ReactDOM.render(<LoginNav trackMetric={trackMetric} />, container);
+
+      expect(container.getElementsByClassName('login-nav').length).to.be.equal(1);
+      link = document.getElementById('login-nav-link');
+      expect(link).to.be.not.null;
+    });
+
+    it('Should call trackMetrics when the link is clicked', () => {
+      // act(() => { link.dispatchEvent(new MouseEvent('click', {bubbles: true})); });
+      // expect(trackMetric.called).to.be.true;
     });
   });
 });

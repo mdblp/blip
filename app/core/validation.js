@@ -18,11 +18,12 @@ import _ from 'lodash';
 import sundial from 'sundial';
 
 import i18next from './language';
-import { capitalize, validateEmail } from './utils';
+import utils from './utils';
 import * as errors from './validation/errors';
 
 import config from '../config';
 
+const { validateEmail } = utils;
 const t = i18next.t.bind(i18next);
 
 // ensure config vars are defined
@@ -63,7 +64,7 @@ export const invalid = (message) => ({
  * @param  {Object} currentDateObj for testing purposes
  * @return {Object}
  */
-const dateValidator = (fieldLabel, fieldValue, currentDateObj) => {
+const dateValidator = (fieldLabel, fieldValue, currentDateObj = null) => {
   let now = new Date();
   // dateMask will be used for date validation
   // it is static and does not depend on any locale here

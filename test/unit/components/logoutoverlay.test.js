@@ -5,9 +5,9 @@
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
-var expect = chai.expect;
+import LogoutOverlay from '../../../app/components/logoutoverlay';
 
-var LogoutOverlay = require('../../../app/components/logoutoverlay');
+const { expect } = chai;
 
 describe('LogoutOverlay', function () {
   it('should be exposed as a module and be of type function', function() {

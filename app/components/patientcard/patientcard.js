@@ -15,6 +15,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
 import { Link } from 'react-router';
 import _ from 'lodash';
@@ -23,21 +24,21 @@ import launchCustomProtocol from 'custom-protocol-detection';
 
 import config from '../../config';
 
-var personUtils = require('../../core/personutils');
-var ModalOverlay = require('../modaloverlay');
-var UploadLaunchOverlay = require('../uploadlaunchoverlay');
+import personUtils from '../../core/personutils';
+import ModalOverlay from '../modaloverlay';
+import UploadLaunchOverlay from '../uploadlaunchoverlay';
 
 var PatientCard = translate()(React.createClass({
   propTypes: {
-    href: React.PropTypes.string.isRequired,
-    currentPage: React.PropTypes.string,
-    isEditing: React.PropTypes.bool,
-    isNavbar: React.PropTypes.bool,
-    onClick: React.PropTypes.func,
-    onRemovePatient: React.PropTypes.func,
-    uploadUrl: React.PropTypes.string,
-    patient: React.PropTypes.object.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    href: PropTypes.string.isRequired,
+    currentPage: PropTypes.string,
+    isEditing: PropTypes.bool,
+    isNavbar: PropTypes.bool,
+    onClick: PropTypes.func,
+    onRemovePatient: PropTypes.func,
+    uploadUrl: PropTypes.string,
+    patient: PropTypes.object.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
 
   getInitialState: function() {
@@ -295,4 +296,4 @@ var PatientCard = translate()(React.createClass({
   },
 }));
 
-module.exports = PatientCard;
+export default PatientCard;

@@ -22,10 +22,6 @@ import i18next from './language';
 
 const t = i18next.t.bind(i18next);
 
-// date masks we use
-const FORM_DATE_FORMAT = t('MM/DD/YYYY');
-const SERVER_DATE_FORMAT = 'YYYY-MM-DD';
-
 import { MGDL_UNITS, MMOLL_UNITS } from './constants';
 
 let personUtils = {};
@@ -143,9 +139,9 @@ personUtils.togglePatientBgUnits = (settings) => {
    * @param  {Object} formValues
    * @param  {Boolean} isNameRequired
    * @param  {String} dateFormat of input
-   * @param  {Date|null} currentDate mainly for testing purposes
+   * @param  {Date|null} currentDateObj mainly for testing purposes
    *
-   * @return {String|undefined} returns a string if there is an error
+   * @return {object} returns a string if there is an error
    */
 personUtils.validateFormValues = (formValues, isNameRequired, dateFormat, currentDateObj) => {
   let validationErrors = {};
@@ -195,4 +191,4 @@ personUtils.validateFormValues = (formValues, isNameRequired, dateFormat, curren
   return validationErrors;
 };
 
-module.exports = personUtils;
+export default personUtils;

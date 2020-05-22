@@ -1,6 +1,6 @@
 
 /**
- * Copyright (c) 2014, Tidepool Project
+ * Copyright (c) 2020, Diabeloop
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -14,26 +14,18 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import { CONFIG } from '../../core/constants';
+import React from 'react';
+import { CONFIG as CONSTANTS } from '../../core/constants';
+import config from '../../config';
+import logoSrc from './images/tidepool/logo.png';
 
-var React = require('react');
-
-var logoSrc = require('./images/tidepool-logo-880x96.png');
-if(__BRANDING__ !== 'tidepool'){
-  logoSrc = require('./images/'+__BRANDING__+'/logo.png');
+function LoginLogo() {
+  const altText = CONSTANTS[config.BRANDING].name;
+  return (
+    <div className="login-logo">
+      <img src={logoSrc} alt={altText}/>
+    </div>
+  );
 }
-var altText = CONFIG[__BRANDING__].name;
 
-var LoginLogo = React.createClass({
-  render: function() {
-
-    return (
-      <div className="login-logo">
-        <img src={logoSrc} alt={altText}/>
-      </div>
-    );
-
-  }
-});
-
-module.exports = LoginLogo;
+export default LoginLogo;

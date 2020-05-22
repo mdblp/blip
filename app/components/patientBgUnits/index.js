@@ -13,4 +13,5 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-module.exports = require('./patientBgUnits');
+import PatientBgUnits from './patientBgUnits';
+export default PatientBgUnits;
