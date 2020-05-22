@@ -172,6 +172,13 @@ To run the unit tests in watch mode, use:
 $ npm run test-watch
 ```
 
+To run the unit test in docker, use:
+```bash
+$ npm run test-docker
+```
+Note: you can copy your local packages (viz, tideline...) in the packageMounts directory, if you want to use
+a local version of theses packages. See `packageMounts/npm-link.sh`
+
 ## Build and deployment
 
 The app is built as a static site in the `dist/` directory.

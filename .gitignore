@@ -31,7 +31,7 @@ artifact_node.sh
 scanDockerImage.sh
 coverage/
 packageMounts/*
-!packageMounts/stub
+!packageMounts/npm-link.sh
 
 # GitBook
 _book/

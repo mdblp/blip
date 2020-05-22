@@ -14,7 +14,7 @@ coverage
 tmp
 web
 *.log
-
+packageMounts/**/node_modules
 yarn.lock
 
 # Ignore old translation files
