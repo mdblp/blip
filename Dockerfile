@@ -23,5 +23,5 @@ RUN npm install
 
 
 ### Stage 2 - Serve docker-compose-ready release
-FROM build AS dockerStack
+FROM dependencies AS dockerStack
 CMD ["sh", "-c", "npm run build-config && npm run server"]
