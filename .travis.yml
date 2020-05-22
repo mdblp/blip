@@ -70,7 +70,7 @@ script:
   - bash server/update-version.sh
   - bash artifact.sh
   - bash build.sh
-  - bash -euc '. ./version.sh ; artifact_node.sh'
+  - bash build-node.sh
 
 matrix:
   allow_failures:
