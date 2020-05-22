@@ -26,7 +26,3 @@ if [[ -n "${GIT_TOKEN}" ]]; then
 else
   echo "No GIT_TOKEN provided, parameters translation will not be available"
 fi
-
-. ./version.sh
-bash -eu artifact_images.sh
-bash -eu artifact_node.sh
