@@ -305,7 +305,7 @@
   "html.browser-warning-text": "<0>Copier - coller </0><1></1><2>dans chrome.</2>",
   "html.cookie-content": "Merci de consulter notre <1>avis de confidentialité</1> et nos <3>conditions d'utilisations</3>",
   "html.donate-form-explainer": " Vos données vous appartiennent.",
-  "html.emailverification-instructions": "<0>Keeping your data private and secure is important to us!</0><1><0>Please click the link in the email we just sent you at<1></1><2><0>{{sent}}</0></2><3></3>to verify and activate your account.</0></1>",
+  "html.emailverification-instructions": "<0></0><1><0>Veuillez cliquer sur le lien contenu dans l'email envoyé à <1></1><2><0>{{sent}}</0></2><3></3> pour vérifier et activer votre compte.</0></1>",
   "html.patient-delete-account": "Si vous êtes certain de vouloir supprimer votre compte, <1>envoyez un email</1> et nous prendrons soin de le faire pour vous. Votre compte YourLoops est étroitement couplé à votre système Diabeloop. Il n'est pas recommandé de supprimer son compte YourLoops pour pouvoir profiter pleinement du système Diabeloop.",
   "html.patient-info-fullname": "<0>{{fullName}}</0> (<2>Editer</2>)",
   "html.patientdata-uploaded-message": "<0>Pour voir vos données, vous devez utiliser un produit Diabeloop</0><1></1><2>Utilisez-vous déjà ce système ? </2><4><3>Besoin d'aide ?</3> Envoyez-nous un <5>email</5> ou consultez notre <7>page d'aide</7>.</4>",
