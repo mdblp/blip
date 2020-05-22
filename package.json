@@ -1,6 +1,6 @@
 {
   "name": "blip",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "private": true,
   "scripts": {
     "mrproper": "rm -rf dist node_modules coverage",
@@ -35,7 +35,7 @@
     "helmet": "3.22.0",
     "morgan": "1.10.0",
     "@tidepool/viz": "github:mdblp/viz#issue/pt1345-vulnerabilities",
-    "tideline": "mdblp/tideline#dblp.1.10.0",
+    "tideline": "mdblp/tideline#dblp.1.10.2",
     "async": "2.6.1",
     "sundial": "mdblp/sundial#dblp.0.1.0",
     "tidepool-platform-client": "mdblp/platform-client#dblp.0.2.0",
