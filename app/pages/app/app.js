@@ -98,12 +98,7 @@ export class AppComponent extends React.Component {
     this.state = {
       dexcomShowBannerMetricTracked: false,
       donateShowBannerMetricTracked: false,
-      showNavBarDropDown: true,
     }
-  }
-
-  hideNavbarDropdown() {
-    this.setState({ showNavBarDropDown: false });
   }
 
   /**
@@ -224,7 +219,6 @@ export class AppComponent extends React.Component {
   }
 
   renderNavbar() {
-    const { showNavBarDropDown } = this.state;
     this.props.context.log('Rendering navbar');
     // at some point we should refactor so that LoginNav and NavBar
     // have a common parent that can decide what to render
@@ -262,7 +256,6 @@ export class AppComponent extends React.Component {
             onLogout={this.props.onLogout}
             trackMetric={this.props.context.trackMetric}
             permsOfLoggedInUser={this.props.permsOfLoggedInUser}
-            showDropdown={showNavBarDropDown}
             />
           </div>
         );
@@ -384,7 +377,7 @@ export class AppComponent extends React.Component {
     var footer = this.renderFooter();
 
     return (
-      <div className="app" onClick={this.hideNavbarDropdown.bind(this)}>
+      <div className="app">
         {overlay}
         {navbar}
         {notification}

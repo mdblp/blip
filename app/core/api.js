@@ -28,7 +28,7 @@ import migrations from './lib/apimigrations';
 
 const api = {
   log: bows('Api'),
-  apiHost: config.API_HOST || `${window.location.protocol}//${window.location.host}`,
+  apiHost: config.API_HOST,
   server: {},
   user: {},
   patient: {},

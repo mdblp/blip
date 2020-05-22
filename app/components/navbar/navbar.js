@@ -21,30 +21,32 @@ import { Link, IndexLink } from 'react-router';
 import { translate } from 'react-i18next';
 import _ from 'lodash';
 import cx from 'classnames';
+import bows from 'bows';
 
 import personUtils from '../../core/personutils';
 import NavbarPatientCard from '../../components/navbarpatientcard';
 
 import logoSrc from './images/tidepool/logo.png';
 
-// export default translate()(React.createClass({
 class NavBar extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      showDropdown: props.showDropdown,
+      showDropdown: false,
     };
+
+    this.log = bows('NavBar');
 
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleClickUser = this.handleClickUser.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
-  componentDidUpdate() {
-    const { showDropdown } = this.props;
-    if (this.state.showDropdown !== showDropdown) {
-      this.setState({ showDropdown });
-    }
+  componentWillUnmount() {
+    this.log('Unregister the event to close the menu when click outside of it.');
+    const body = document.getElementsByTagName('body');
+    body[0].removeEventListener('click', this.handleClickOutside);
   }
 
   render() {
@@ -71,11 +73,8 @@ class NavBar extends React.Component {
     };
 
     return (
-      <IndexLink
-        to="/"
-        className="Navbar-logo"
-        onClick={handleClick}>
-        <img src={logoSrc}/>
+      <IndexLink to="/" className="Navbar-logo" onClick={handleClick}>
+        <img src={logoSrc} />
       </IndexLink>
     );
   }
@@ -89,7 +88,7 @@ class NavBar extends React.Component {
   }
 
   renderPatientSection() {
-    var patient = this.props.patient;
+    const { patient } = this.props;
 
     if (_.isEmpty(patient)) {
       return <div className="Navbar-patientSection"></div>;
@@ -111,65 +110,78 @@ class NavBar extends React.Component {
   }
 
   toggleDropdown(e) {
+    let { showDropdown } = this.state;
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    this.setState({showDropdown: !this.state.showDropdown});
+    showDropdown = !showDropdown;
+    if (showDropdown) {
+      this.setState({ showDropdown }, () => {
+        this.log('Register the event to close the menu when click outside of it.');
+        const body = document.getElementsByTagName('body');
+        body[0].addEventListener('click', this.handleClickOutside);
+      });
+    } else {
+      this.hideDropdown();
+    }
   }
 
   stopPropagation(e) {
     e.stopPropagation();
   }
 
-  hideDropdown() {
+  hideDropdown(callback) {
     if (this.state.showDropdown) {
-      this.setState({ showDropdown: false });
+      this.setState({ showDropdown: false }, () => {
+        this.log('Unregister the event to close the menu when click outside of it.');
+        const body = document.getElementsByTagName('body');
+        body[0].removeEventListener('click', this.handleClickOutside);
+        if (callback) {
+          callback();
+        }
+      });
     }
   }
 
   renderMenuSection() {
-    var currentPage = (this.props.currentPage && this.props.currentPage[0] === '/') ? this.props.currentPage.slice(1) : this.props.currentPage;
-    const {user, t} = this.props;
+    const currentPage = (this.props.currentPage && this.props.currentPage[0] === '/') ? this.props.currentPage.slice(1) : this.props.currentPage;
+    const { user, t } = this.props;
+    const { showDropdown } = this.state;
 
     if (_.isEmpty(user)) {
-      return <div className="Navbar-menuSection"></div>;
+      return null;
     }
 
-    var displayName = this.getUserDisplayName();
+    const displayName = this.getUserDisplayName();
 
-    var handleClickUser = () => {
-      this.props.trackMetric('Clicked Navbar Logged In User');
-      this.setState({showDropdown: false});
-    };
-
-    var handleCareteam = () => {
+    const handleCareteam = () => {
       this.props.trackMetric('Clicked Navbar CareTeam');
     };
-    var patientsClasses = cx({
+    const patientsClasses = cx({
       'Navbar-button': true,
       'Navbar-selected': currentPage && currentPage === 'patients',
     });
 
-    var accountSettingsClasses = cx({
+    const accountSettingsClasses = cx({
       'Navbar-button': true,
       'Navbar-dropdownIcon-show': currentPage && currentPage === 'profile',
     });
 
-    var dropdownClasses = cx({
+    const dropdownClasses = cx({
       'Navbar-menuDropdown': true,
-      'Navbar-menuDropdown-hide': !this.state.showDropdown,
+      'Navbar-menuDropdown-hide': !showDropdown,
     });
 
-    var dropdownIconClasses = cx({
+    const dropdownIconClasses = cx({
       'Navbar-dropdownIcon': true,
-      'Navbar-dropdownIcon-show': this.state.showDropdown,
+      'Navbar-dropdownIcon-show': showDropdown,
       'Navbar-dropdownIcon-current': currentPage && currentPage === 'profile',
     });
 
     return (
-      <ul className="Navbar-menuSection" ref="user">
+      <ul className="Navbar-menuSection">
         <li className="Navbar-menuItem">
           <Link to="/patients" title="Care Team" onClick={handleCareteam} className={patientsClasses} ref="careteam"><i className="Navbar-icon icon-careteam"></i></Link>
         </li>
@@ -186,7 +198,7 @@ class NavBar extends React.Component {
           <div onClick={this.stopPropagation} className={dropdownClasses}>
             <ul>
               <li>
-                <Link to="/profile" title={t('Account')} onClick={handleClickUser} className={accountSettingsClasses}>
+                <Link to="/profile" title={t('Account')} onClick={this.handleClickUser} className={accountSettingsClasses}>
                   <i className='Navbar-icon icon-settings'></i><span className="Navbar-menuText">{t('Account Settings')}</span>
                 </Link>
               </li>
@@ -210,22 +222,47 @@ class NavBar extends React.Component {
     return personUtils.isSame(this.props.user, this.props.patient);
   }
 
-  handleLogout(e) {
-    this.setState({showDropdown: false});
+  handleClickUser(e) {
+    this.hideDropdown(() => {
+      this.props.trackMetric('Clicked Navbar Logged In User');
+    });
+  }
 
+  handleLogout(e) {
     if (e) {
       e.preventDefault();
     }
 
-    var logout = this.props.onLogout;
-    if (logout) {
-      logout();
+    this.hideDropdown(() => {
+      const { onLogout } = this.props;
+      if (onLogout) {
+        onLogout();
+      }
+    });
+  }
+
+  /**
+   * Click outside the popup
+   * @param {MouseEvent} e click event
+   */
+  handleClickOutside(e) {
+    /** @type{HTMLElement} */
+    let elem = e.target;
+    let isInsidePopup = false;
+    while (elem !== null && !isInsidePopup) {
+      isInsidePopup = elem.classList.contains('Navbar-menuSection');
+      elem = elem.parentElement;
+    }
+
+    if (!isInsidePopup) {
+      e.stopPropagation(); // Prevent others elements to have this click event.
+      // Click outside the datepicker popup, cancel the action, hide the popup.
+      this.hideDropdown();
     }
   }
 }
 
 NavBar.propTypes = {
-  showDropdown: PropTypes.bool.isRequired,
   currentPage: PropTypes.string,
   user: PropTypes.object,
   fetchingUser: PropTypes.bool,
