@@ -5,8 +5,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const postcssCustomProperties = require('postcss-custom-properties');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
+const buildConfig = require('./server/config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
@@ -155,37 +155,9 @@ const plugins = [
   // process.env with webpack, we have to create these magic constants
   // individually.
   new webpack.DefinePlugin({
-    'process.env': {
-      'NODE_ENV': isDev || isTest ? JSON.stringify('development') : JSON.stringify('production'),
-    },
-    __UPLOAD_API__: JSON.stringify(process.env.UPLOAD_API || null),
-    __API_HOST__: JSON.stringify(process.env.API_HOST || null),
-    __INVITE_KEY__: JSON.stringify(process.env.INVITE_KEY || null),
-    __LATEST_TERMS__: JSON.stringify(process.env.LATEST_TERMS || null),
-    __PASSWORD_MIN_LENGTH__: JSON.stringify(process.env.PASSWORD_MIN_LENGTH || null),
-    __PASSWORD_MAX_LENGTH__: JSON.stringify(process.env.PASSWORD_MAX_LENGTH || null),
-    __ABOUT_MAX_LENGTH__: JSON.stringify(process.env.ABOUT_MAX_LENGTH || null),
-    __I18N_ENABLED__: JSON.stringify(process.env.I18N_ENABLED || false),
-    __ALLOW_SIGNUP_PATIENT__: JSON.stringify(process.env.ALLOW_SIGNUP_PATIENT || true),
-    __ALLOW_PATIENT_CHANGE_EMAIL__: JSON.stringify(process.env.ALLOW_PATIENT_CHANGE_EMAIL || true),
-    __ALLOW_PATIENT_CHANGE_PASSWORD__: JSON.stringify(process.env.ALLOW_PATIENT_CHANGE_PASSWORD || true),
-    __CAN_SEE_PWD_LOGIN__: JSON.stringify(process.env.CAN_SEE_PWD_LOGIN || true),
-    __SUPPORT_EMAIL_ADDRESS__: JSON.stringify(process.env.SUPPORT_EMAIL_ADDRESS || 'support@tidepool.org'),
-    __SUPPORT_WEB_ADDRESS__: JSON.stringify(process.env.SUPPORT_WEB_ADDRESS || 'http://support.tidepool.org'),
-    __REGULATORY_WEB_ADDRESS__: JSON.stringify(process.env.REGULATORY_WEB_ADDRESS || ''),
-    __HELP_LINK__: JSON.stringify(process.env.HELP_LINK || null),
-    __ASSETS_URL__: JSON.stringify(process.env.ASSETS_URL || null),
-    __HIDE_DONATE__: JSON.stringify(process.env.HIDE_DONATE || false),
-    __HIDE_DEXCOM_BANNER__: JSON.stringify(process.env.HIDE_DEXCOM_BANNER || false),
-    __HIDE_UPLOAD_LINK__: JSON.stringify(process.env.HIDE_UPLOAD_LINK || false),
-    __BRANDING__: JSON.stringify(process.env.BRANDING || 'tidepool'),
-    __METRICS_SERVICE__: JSON.stringify(process.env.METRICS_SERVICE || 'disabled'),
-    __MAX_FAILED_LOGIN_ATTEMPTS__: JSON.stringify(process.env.MAX_FAILED_LOGIN_ATTEMPTS || 5),
-    __DELAY_BEFORE_NEXT_LOGIN_ATTEMPT__: JSON.stringify(process.env.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT || 10),
-    __TERMS_PRIVACY_DATE__: JSON.stringify(process.env.TERMS_PRIVACY_DATE || ''),
+    BUILD_CONFIG: `'${JSON.stringify(buildConfig)}'`,
     __DEV__: isDev,
     __TEST__: isTest,
-    __DEV_TOOLS__: (process.env.DEV_TOOLS != null) ? process.env.DEV_TOOLS : (isDev ? true : false) //eslint-disable-line eqeqeq
   }),
   new MiniCssExtractPlugin({
     filename: isDev ? 'style.css' : 'style.[contenthash].css',
@@ -235,7 +207,7 @@ const output = {
 let entry = [];
 let devServer;
 if (useWebpackDevServer) {
-  const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3000/';
+  const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3001/';
   entry = [
     'webpack-dev-server/client?' + devPublicPath,
     'webpack/hot/only-dev-server',
@@ -262,6 +234,7 @@ const resolve = {
   ],
   alias: {
     pdfkit: 'pdfkit/js/pdfkit.standalone.js',
+    './images/tidepool/logo.png': `./images/${buildConfig.BRANDING}/logo.png`,
   }
 };
 

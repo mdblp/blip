@@ -1,40 +1,40 @@
-/* global rm, mkdir, exec, ls, mv*/
-require('shelljs/global');
-var fs = require('fs');
-var crypto = require('crypto');
-var ms = require('ms');
+const shell = require('shelljs');
+const { ShellString } = require('shelljs');
+const fs = require('fs');
+const crypto = require('crypto');
+const ms = require('ms');
 const _ = require('lodash');
 
-var reTitle = /<title>([^<]*)<\/title>/;
-var reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
-var reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" type="text\/javascript" src="[^"]+">\s*<\/script>)/m;
-var zendeskDisable = '<!-- Zendesk disabled -->';
-var reTrackerUrl = /const u = '(.*)';/;
-var reTrackerSiteId = /const id = ([0-9]);/;
-var reCrowdin = /<!-- Crowdin Start -->([\s\S]*)<!-- Crowdin End -->/m;
+const reTitle = /<title>([^<]*)<\/title>/;
+const reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
+const reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" type="text\/javascript" src="[^"]+">\s*<\/script>)/m;
+const zendeskDisable = '<!-- Zendesk disabled -->';
+const reTrackerUrl = /const u = '(.*)';/;
+const reTrackerSiteId = /const id = ([0-9]);/;
+const reCrowdin = /<!-- Crowdin Start -->([\s\S]*)<!-- Crowdin End -->/m;
 
-var start = Date.now();
-
-// NOTE: Webpack's hash also uses the absolute path on the filesystem
-// Since config is built in `start.sh` and apps can be on different
-// servers and directory, we implement our own hashing using the file's content
+const start = Date.now();
 
 function getHash(str) {
-	var hash = crypto.createHash('md5');
+	const hash = crypto.createHash('md5');
 	hash.update(str);
 	return hash.digest('hex').substr(0, 20);
 }
 
 console.log('Building config...');
-exec('webpack --devtool source-map --config config.webpack.js');
+if (fs.existsSync('config.app.js')) {
+  shell.exec('node config.app.js').to('dist/config.js');
+} else if (fs.existsSync('server/config.app.js')) {
+  shell.exec('node server/config.app.js').to('dist/config.js');
+}
 
-var hash = getHash(fs.readFileSync('dist/config.js'));
-var filename = 'config.' + hash + '.js';
-console.log('Renaming to ' + filename + '...');
-mv('-f', 'dist/config.js', 'dist/' + filename);
+const configHash = getHash(fs.readFileSync('dist/config.js'));
+const filename = `config.${configHash}.js`;
+console.log(`Renaming "config.js" to "${filename}"...`);
+shell.mv('dist/config.js', `dist/${filename}`);
 
 console.log('Updating "dist/index.html"...');
-var indexHtml = fs.readFileSync('dist/index.html', 'utf8');
+let indexHtml = fs.readFileSync('dist/index.html', 'utf8');
 
 // Replace the title
 if (typeof process.env.BRANDING === 'string') {
@@ -43,8 +43,8 @@ if (typeof process.env.BRANDING === 'string') {
 
 // Replace from config.js part
 if (reConfig.test(indexHtml)) {
-  var configStrOrig = reConfig.exec(indexHtml)[0];
-  var configStrRepl = `<script type="text/javascript" src="${filename}"></script>`;
+  const configStrOrig = reConfig.exec(indexHtml)[0];
+  const configStrRepl = `<script type="text/javascript" src="${filename}"></script>`;
   console.log(`Replace ${configStrOrig} by ${configStrRepl}`);
   indexHtml = indexHtml.replace(reConfig, configStrRepl);
 } else {
@@ -63,7 +63,7 @@ if (typeof process.env.HELP_LINK === 'string') {
   }
 }
 
-var matomoJs = '/* MaToMo tracker is disabled */';
+let matomoJs = '/* MaToMo tracker is disabled */';
 switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
 case 'matomo':
   console.info('Using matomo tracker code');
@@ -97,7 +97,7 @@ default:
 if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled') {
   const script = "\
   <script type=\"text/javascript\">\n\
-    var _jipt = [];\n\
+    const _jipt = [];\n\
     _jipt.push(['project', 'yourloops']);\n\
   </script>\n\
   <script type=\"text/javascript\" src=\"//cdn.crowdin.com/jipt/jipt.js\"></script>\n";
@@ -112,8 +112,10 @@ if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled'
 }
 
 // Saving
-matomoJs.to('dist/matomo.js')
-indexHtml.to('dist/index.html');
+let shellStr = new ShellString(matomoJs);
+shellStr.to('dist/matomo.js');
+shellStr = new ShellString(indexHtml);
+shellStr.to('dist/index.html');
 
-var end = Date.now();
-console.log('Config built in ' + ms(end - start));
+const end = Date.now();
+console.log(`Config built in ${ms(end - start)}`);

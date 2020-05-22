@@ -11,4 +11,4 @@ echo "npm install completed in ${TIME} seconds"
 # add configuration
 . ./config/env.docker.sh
 
-npm run build
+npm run build-app

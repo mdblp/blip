@@ -32,7 +32,7 @@ FROM dependencies as devDependencies
 COPY --chown=node . .
 RUN sh -e /app/packageMounts/npm-link.sh
 
-### Stage 4 - Linting and unit testing
+### Linting and unit testing
 FROM devDependencies as test
 ENV NODE_ENV=test
 CMD ["npm", "test"]

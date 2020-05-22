@@ -28,7 +28,6 @@ test/bin
 web/
 artifact_images.sh
 artifact_node.sh
-scanDockerImage.sh
 coverage/
 packageMounts/*
 !packageMounts/npm-link.sh

@@ -13,10 +13,11 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+/* global BUILD_CONFIG */
+
 import _ from 'lodash';
 
-// default config
-let config  = {
+const defaultConfig  = {
   VERSION: '0.0.0',
   UPLOAD_API: 'https://tidepool.org/uploader',
   API_HOST: `${window.location.protocol}//${window.location.host}`,
@@ -48,9 +49,10 @@ let config  = {
 };
 
 if (!_.isObjectLike(window.config)) {
-  window.config = {};
+  console.warn('Config not found, using default');
+  window.config = JSON.parse(BUILD_CONFIG);
 }
 
-config = _.defaults(window.config, config);
+_.assign(defaultConfig, window.config);
 
-export default config;
+export default defaultConfig;

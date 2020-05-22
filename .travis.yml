@@ -7,12 +7,14 @@ node_js:
   - 10.15.3
   - node
 
-cache: npm
-
 env:
-  jobs:
-    - BUILD_SOUP=true
+  global:
     - SECURITY_SCAN=true
+
+jobs:
+  - include:
+    - if: branch = dblp
+    env: BUILD_SOUP=true
 
 before_install:
   - npm install -g npm@latest
@@ -65,7 +67,8 @@ addons:
 
 script:
   - npm test
-  - ./artifact.sh
+  - bash server/update-version.sh
+  - bash artifact.sh
 
 matrix:
   allow_failures:
