@@ -10,7 +10,7 @@ const expect = chai.expect;
 
 describe('Navbar', ()  => {
   let wrapper;
-  const props = { trackMetric: sinon.spy(), showDropdown: false };
+  const props = { trackMetric: sinon.spy() };
   before(() => {
     console.error = sinon.spy();
     // we have to rewire IndexLink because React Router throws an error
