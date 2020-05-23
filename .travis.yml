@@ -12,12 +12,12 @@ env:
     - SECURITY_SCAN=true
 
 jobs:
-  allow_failures:
-    - node_js: node
   include:
     - if: branch = dblp
-    - node_js: 10.15.3
     env: BUILD_SOUP=true SECURITY_SCAN=true
+  allow_failures:
+    - node_js: node
+    env: SECURITY_SCAN=true
 
 before_install:
   - npm install -g npm@latest
