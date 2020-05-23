@@ -16,6 +16,7 @@ jobs:
     - node_js: node
   include:
     - if: branch = dblp
+    - node_js: 10.15.3
     env: BUILD_SOUP=true SECURITY_SCAN=true
 
 before_install:
