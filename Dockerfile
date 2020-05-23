@@ -2,7 +2,7 @@
 FROM node:10.15.3-alpine as base
 WORKDIR /app
 RUN \
-  mkdir -p dist node_modules \
+  mkdir -p dist \
   && chown -R node:node . \
   && apk --no-cache  update \
   && apk --no-cache  upgrade \
@@ -21,7 +21,7 @@ COPY .npmrc matomo.js server/* ./
 COPY dist/* dist/
 RUN \
   npm install \
-  && chown -v node:node dist/matomo.js dist/index.html
+  && chown -v node:node dist/index.html
 
 
 ### Stage 2 - Serve docker-compose-ready release
