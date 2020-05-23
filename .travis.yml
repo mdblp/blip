@@ -15,6 +15,8 @@ jobs:
   - include:
     - if: branch = dblp
     env: BUILD_SOUP=true
+  allow_failures:
+    - node_js: node
 
 before_install:
   - npm install -g npm@latest
@@ -71,7 +73,3 @@ script:
   - bash artifact.sh
   - bash build.sh
   - bash build-node.sh
-
-matrix:
-  allow_failures:
-    - node_js: node
