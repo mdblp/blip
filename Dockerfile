@@ -17,11 +17,14 @@ FROM base as dependencies
 ARG npm_token
 ENV nexus_token=$npm_token
 # Run as node user, so that npm run the prepare scripts in dependencies
-USER node
-COPY .npmrc matomo.js dist server/* ./
-RUN npm install
+COPY .npmrc matomo.js server/* ./
+COPY dist/* dist/
+RUN \
+  npm install \
+  && chown -v node:node dist/matomo.js dist/index.html
 
 
 ### Stage 2 - Serve docker-compose-ready release
 FROM dependencies AS dockerStack
+USER node
 CMD ["sh", "-c", "npm run build-config && npm run server"]
