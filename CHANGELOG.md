@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 0.17.1 - 2020-05-20
 ### Fixed 
 - Fix regression introduced in PT-1309
+- Disable German language 
 
 ## 0.17.0 - 2020-05-20
 ### Changed
