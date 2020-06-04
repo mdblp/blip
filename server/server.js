@@ -8,9 +8,9 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const crypto = require('crypto');
 const morgan = require('morgan');
-const package = require('./package.json');
 
-const config = require('./config.server.js');
+const jsonPackage = require('./package.json');
+const config = require('./server-config');
 
 const buildDir = 'dist';
 const staticDir = path.join(__dirname, buildDir);
@@ -69,7 +69,7 @@ function nonceMiddleware(req, res, next) {
 
 function printVersion() {
   const now = new Date().toISOString();
-  console.log(`${now} ${package.name} v${package.version}`);
+  console.log(`${now} ${jsonPackage.name} v${jsonPackage.version}`);
 }
 
 function cacheIndexHTML() {
