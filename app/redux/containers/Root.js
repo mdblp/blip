@@ -15,9 +15,9 @@
  * == BSD2 LICENSE ==
  */
 
-/* global __DEV__ */
+import config from '../../config';
 
-if (__DEV__) {
+if (config.DEV) {
   module.exports = require('./Root.dev');
 } else {
   module.exports = require('./Root.prod');
