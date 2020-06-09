@@ -404,7 +404,7 @@
   "MMM D": "D MMM",
   "MMM D, h:mm a": "H:mm, D MMM",
   "MMM D, YYYY": "D MMM YYYY",
-  "MMM D, YYYY h:mm a": "D MMM YYYY, H:mm",
+  "MMM D, YYYY h:mm a": "D MMM YYYY H:mm",
   "MMMM D": "D MMMM",
   "MMMM D [at] h:mm a": "D MMMM [à] H:mm",
   "mmol/L": "mmol/L",
