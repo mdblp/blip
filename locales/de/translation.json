@@ -36,7 +36,7 @@
   "**How we calculate this:**\n\n**(%)** is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.": "**Wie wir das berechnen:**\n\n**(%)** ist die jeweilige Summe der Basal- oder Bolusabgabe dividiert durch das für diesen Zeitraum insgesamt abgegebene Insulin.",
   "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.": "**Messungen im Bereich:** Tagesdurchschnitt der Anzahl der {{smbgLabel}}} Messwerte.",
   "**SD (Standard Deviation):** How far values are from the average.": "**SD (Standardabweichung):** Wie weit sind die Werte vom Durchschnitt entfernt.",
-  "**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.": "**Sensorverwendung:** Zeit, die {{cbgLabel}}  Daten gesammelt hat, geteilt durch die Gesamtzeit, die in dieser Ansicht dargestellt wird.",
+  "**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.": "**Sensorverwendung:** Zeit, {{cbgLabel}} gesammelter Daten, geteilt durch die Gesamtzeit, die in dieser Ansicht dargestellt wird.",
   "**Time In {{automatedLabel}}:** Daily average of the time spent in automated basal delivery.": "**Zeit Loop Modus:** Tagesdurchschnitt der Zeit, die mit automatisierter Basalversorgung verbracht wurde.",
   "**Time In {{automatedLabel}}:** Time spent in automated basal delivery.": "**Zeit im Loop Modus:**Zeitdauer mit automatisierter Basalversorgung",
   "**Time In Range:** Daily average of the time spent in range, based on {{cbgLabel}} readings.": "**Zeit im Zielbereich:** Tagesdurchschnitt der im Zielbereich verbrachten Zeit, basierend auf {{cbgLabel}} Messwerten.",
