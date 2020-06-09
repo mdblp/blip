@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "lodash": "^4.17.15",
-    "ms": "^2.1.2",
     "shelljs": "^0.8.4"
   }
 }
