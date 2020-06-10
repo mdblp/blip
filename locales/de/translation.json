@@ -15,7 +15,7 @@
   "{{field}} must not contain white spaces.": "{{field}} darf keine Leerzeichen enthalten.",
   "{{month}}-{{day}}-{{year}}": "{{month}}-{{day}}-{{year}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} Tage im Überblick",
-  "{{patientName}} does not have any data yet.": "{{patientName}} hat noch keine Daten.",
+  "{{patientName}} does not have any data yet.": "{{patientName}} sind noch keine Daten vorhanden.",
   "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.",
   "{{title}} (cont.)": "{{title}} (kont.)",
   "{{yearsAgo}} years ago": "{{yearsAgo}} Jahre her",
