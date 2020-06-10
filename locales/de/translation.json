@@ -324,7 +324,7 @@
   "html.terms-accept-of-age": "Ich bin 18 Jahre oder älter und akzeptiere die Bedingungen der <1><0>{textTermsOfUse}</0></1> und <3><0>{textPrivacyPolicy}</0></3>",
   "html.terms-accept-on-behalf": "Ich stimme zu, dass mein Kind im Alter von 13 bis 17 Jahren <1>{brand}</1> Anwendungen nutzen kann und stimme zu, dass es auch an die Bedingungen der <3><0>{textTermsOfUse}</0></3> und <5><0>{textPrivacyPolicy}</0></5>gebunden ist",
   "html.terms-of-use-updated": "Die Nutzungsbedingungen und die Datenschutzerklärung haben sich seit Ihrer letzten Nutzung von <1>{brand}</1> geändert.<3></3>Sie müssen die Änderungen akzeptieren, um fortzufahren.",
-  "html.uploadlaunchoverlay-error": "Fehler beim Abrufen von Release-Informationen, bitte besuchen Sie unsere<1> Download-Seite</1>.",
+  "html.uploadlaunchoverlay-error": "Fehler beim Abrufen der Freigabe von Informationen, bitte besuchen Sie unsere<1> Download-Seite</1>.",
   "html.uploadlaunchoverlay-launching": "<0>Uploader starten</0><1>Wenn Sie ein Diabeloop-System haben, müssen Sie keine zusätzliche Software installieren</1>",
   "I:C Ratio": "Insulin-Kohlenhydrat-Verhältnis",
   "I'm sure, remove me.": "Ich bin sicher, entfernen Sie mich.",
