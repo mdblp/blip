@@ -319,7 +319,7 @@
   "html.setting-no-uploaded-data": "<0>Die Ansicht Systemeinstellungen zeigt Ihre Basalraten, Kohlenhydratverhältnisse, Empfindlichkeitsfaktoren und mehr, aber es sieht so aus, als ob Ihr System noch keine Daten gesendet hat.</0><1>Versuchen Sie <1>erneut laden</1>.</1>",
   "html.signup-clinician": "Wenn Sie medizinisches Fachpersonal sind und ein Konto erstellen möchten, klicken Sie bitte <1>hier</1>.",
   "html.signup-invited": "<0>Sie wurden zu YourLoops eingeladen.</0><1>Anmelden, um die Einladung zu sehen.</1>",
-  "html.signup-personal": " Wenn Sie medizinisches Fachpersonal sind, mit Diabetes leben und Ihre persönlichen Diabetes-Daten verfolgen und verwalten möchten, erstellen Sie bitte ein separates <1>persönliches Konto</1>.",
+  "html.signup-personal": " Wenn Sie medizinisches Fachpersonal sind, einen Diabetes haben und Ihre persönlichen Diabetes-Daten verfolgen und verwalten möchten, erstellen Sie bitte ein separates <1>persönliches Konto</1>.",
   "html.signup-terms-of-use": "Ich akzeptiere die <1><0>{textTermsOfUse}</0></1> und die <3><0>{textPrivacyPolicy}</0></3>",
   "html.terms-accept-of-age": "Ich bin 18 Jahre oder älter und akzeptiere die Bedingungen der <1><0>{textTermsOfUse}</0></1> und <3><0>{textPrivacyPolicy}</0></3>",
   "html.terms-accept-on-behalf": "Ich stimme zu, dass mein Kind im Alter von 13 bis 17 Jahren <1>{brand}</1> Anwendungen nutzen kann und stimme zu, dass es auch an die Bedingungen der <3><0>{textTermsOfUse}</0></3> und <5><0>{textPrivacyPolicy}</0></5>.",
