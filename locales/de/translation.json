@@ -2,7 +2,7 @@
   " I am 12 years old or younger.": "Ich bin 12 Jahre alt oder jünger.",
   " I am 18 years old or older.": "Ich bin 18 Jahre alt oder älter.",
   " I am between 13 and 17 years old. You'll need to have a parent or guardian agree to the terms below.": "Ich bin zwischen 13 und 17 Jahre alt. Du musst einen Elternteil oder Erziehungsberechtigten haben, der den folgenden Bedingungen zustimmt.",
-  " reports the data.": " reports the data.",
+  " reports the data.": " zeigt die Daten an.",
   "{{automatedLabel}} Exited": "{{automatedLabel}} Loop-Modus gestoppt.",
   "{{diff}} {{unit}} ago": "{{diff}} {{unit}} her",
   "{{diff}} {{unit}} ago_plural": "{{diff}} {{unit}} her",
