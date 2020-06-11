@@ -31,7 +31,7 @@ import config from '../../config';
 import personUtils from '../../core/personutils';
 import SimpleForm from '../../components/simpleform';
 
-const MESSAGE_TIMEOUT = 2000;
+const MESSAGE_TIMEOUT = 5000;
 const t = i18next.t.bind(i18next);
 
 class UserProfile extends React.Component {
@@ -45,6 +45,8 @@ class UserProfile extends React.Component {
     };
 
     this.messageTimeoutId = null;
+    // Used to avoid a recusive stack full error:
+    this.submitInProgress = false;
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -56,19 +58,31 @@ class UserProfile extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const prevUserId = _.get(prevProps, 'user.userid', null);
-    const currentUserId = _.get(this, 'props.user.userid', null);
-    if (prevUserId !== currentUserId) {
+    const { updatingUser, user } = this.props;
+    if (!_.isEqual(this.props, prevProps)) {
       // Keep form values in sync with upstream changes
-      this.setState({ formValues: this.formValuesFromUser(this.props.user) });
+      this.setState({ formValues: this.formValuesFromUser(user) });
+    }
+
+    if (this.submitInProgress && !_.isEmpty(updatingUser) && !updatingUser.inProgress) {
+      this.submitInProgress = false;
+      this.clearTimeoutMessage();
+
+      const notification = { type: 'success', message: t('All changes saved.') };
+      if (!_.isEmpty(updatingUser.notification)) {
+        _.assign(notification, updatingUser.notification);
+      }
+
+      this.setState({ notification }, () => {
+        this.messageTimeoutId = setTimeout(() => {
+          this.setState({ notification: null });
+        }, MESSAGE_TIMEOUT);
+      });
     }
   }
 
   componentWillUnmount() {
-    if (this.messageTimeoutId !== null) {
-      clearTimeout(this.messageTimeoutId);
-      this.messageTimeoutId = null;
-    }
+    this.clearTimeoutMessage();
   }
 
   formInputs() {
@@ -193,7 +207,13 @@ class UserProfile extends React.Component {
         notification={this.state.notification}
         disabled={disabled} />
     );
+  }
 
+  clearTimeoutMessage() {
+    if (this.messageTimeoutId !== null) {
+      clearTimeout(this.messageTimeoutId);
+      this.messageTimeoutId = null;
+    }
   }
 
   handleSubmit(formValues) {
@@ -214,10 +234,6 @@ class UserProfile extends React.Component {
       validationErrors: {},
       notification: null
     });
-    if (this.messageTimeoutId !== null) {
-      clearTimeout(this.messageTimeoutId);
-      this.messageTimeoutId = null;
-    }
   }
 
   validateFormValues(formValues) {
@@ -232,7 +248,13 @@ class UserProfile extends React.Component {
     if (this.isUserAllowedToChangePassword() && (formValues.password || formValues.passwordConfirm)) {
       form = _.merge(form, [
         { type: 'password', name: 'password', label: 'password', value: formValues.password },
-        { type: 'confirmPassword', name: 'passwordConfirm', label: 'confirm password', value: formValues.passwordConfirm, prerequisites: { password: formValues.password } }
+        {
+          type: 'confirmPassword',
+          name: 'passwordConfirm',
+          label: 'confirm password',
+          value: formValues.passwordConfirm,
+          prerequisites: { password: formValues.password }
+        }
       ]);
     }
 
@@ -269,16 +291,9 @@ class UserProfile extends React.Component {
 
   submitFormValues(formValues) {
     const { onSubmit } = this.props;
-
-    // Save optimistically
+    // Save
+    this.submitInProgress = true;
     onSubmit(formValues);
-    this.setState({
-      notification: { type: 'success', message: t('All changes saved.') }
-    });
-
-    this.messageTimeoutId = setTimeout(() => {
-      this.setState({ notification: null });
-    }, MESSAGE_TIMEOUT);
   }
 
   isResettingUserData() {
@@ -311,7 +326,7 @@ UserProfile.propTypes = {
  */
 function mapStateToProps(state) {
   let user = null;
-  const { allUsersMap, loggedInUserId } = state.blip;
+  const { allUsersMap, loggedInUserId, working } = state.blip;
 
   if (allUsersMap && loggedInUserId) {
     user = allUsersMap[loggedInUserId];
@@ -319,7 +334,8 @@ function mapStateToProps(state) {
 
   return {
     user,
-    fetchingUser: state.blip.working.fetchingUser.inProgress
+    fetchingUser: working.fetchingUser.inProgress,
+    updatingUser: working.updatingUser,
   };
 }
 
