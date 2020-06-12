@@ -207,7 +207,7 @@
   "Date of diagnosis": "Datum der Diagnose",
   "Date of diagnosis: {{date}}": "Datum der Diagnose: {{date}}",
   "Date range: ": "Datumsbereich: ",
-  "date.format": "DMY",
+  "date.format": "MDY",
   "day": "Tag",
   "Day": "Tag",
   "day_timeago": "Tag",
