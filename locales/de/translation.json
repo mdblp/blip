@@ -118,7 +118,7 @@
   "Because of how {{source}} reports bolus and wizard data, we can't be 100% certain that the bolus wizard information here (e.g., carbs, suggested dose) corresponds with the bolus.": "Because of how {{source}} reports bolus and wizard data, we can't be 100% certain that the bolus wizard information here (e.g., carbs, suggested dose) corresponds with the bolus.",
   "Because of how {{source}} reports bolus data, normal and square-wave boluses may not be properly combined to appear as a dual-wave bolus.": "Because of how {{source}} reports bolus data, normal and square-wave boluses may not be properly combined to appear as a dual-wave bolus.",
   "Because of how {{source}} reports the data, we could not determine the duration of this basal rate segment.": "Because of how {{source}} reports the data, we could not determine the duration of this basal rate segment.",
-  "Because there was a time change during this basal, we split the basal into two segments.": "Da es während dieses Basalsegments zu einer Zeitänderung kam, haben wir das Basalsegment in zwei Segmente aufgeteilt.",
+  "Because there was a time change during this basal, we split the basal into two segments.": "Because there was a time change during this basal, we split the basal into two segments.",
   "below": "unterhalb",
   "Below {{threshold}}": "Unterhalb {{threshold}}",
   "below {{value}} {{- units}}": "unterhalb {{value}} {{- units}}",
