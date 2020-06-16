@@ -539,7 +539,7 @@
   "Something went wrong while fetching a message thread.": "Something went wrong while fetching a message thread.",
   "Something went wrong while fetching associated accounts.": "Beim Aufrufen der zugehörigen Konten ist etwas schief gelaufen.",
   "Something went wrong while fetching data for the current patient.": "Something went wrong while fetching data for the current patient.",
-  "Something went wrong while fetching latest pump settings for the current patient.": "Beim aktuellen Patienten ist beim Aufrufen seiner Pumpendaten etwas schief gelaufen.",
+  "Something went wrong while fetching latest pump settings for the current patient.": "Something went wrong while fetching latest pump settings for the current patient.",
   "Something went wrong while fetching latest pump settings upload record for the current patient.": "Beim aktuellen Patienten, ist beim Daten upload, bezogen auf den Datensatz der letzten Pumpeneinstellung, etwas schief gelaufen.",
   "Something went wrong while fetching patient preferences.": "Beim Abrufen der Patientenpräferenzen ist etwas schief gelaufen.",
   "Something went wrong while fetching patient settings.": "Beim Abrufen der Patienteneinstellungen ist etwas schief gelaufen.",
