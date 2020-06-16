@@ -665,7 +665,7 @@
   "We can't be 100% certain of the data displayed here.": "Wir können uns nicht 100% sicher sein, ob die hier angezeigten Daten korrekt sind.",
   "We couldn't change your password. You may have mistyped your email, or the reset link may have expired.": "We couldn't change your password. You may have mistyped your email, or the reset link may have expired.",
   "We have fabricated this basal segment from a {{source}} new day event; it was not provided directly as basal data": "Wir haben dieses Basalsegment aus einem {{source}} neuen Tagesereignis erstellt; es wurde nicht direkt als Basaldaten bereitgestellt.",
-  "We just sent you an e-mail.": "Wir haben dir gerade eine E-Mail geschickt.",
+  "We just sent you an e-mail.": "We just sent you an e-mail.",
   "We know this bolus was canceled, but {{source}} pumps do not capture exactly when.": "Wir wissen, dass dieser Bolus abgebrochen wurde, aber {{source}} Pumpen erfassen nicht genau wann.",
   "We use these details to identify you to your patients and to better support you.": "Wir verwenden diese Daten, um Sie gegenüber Ihren Patienten zu identifizieren und Sie besser zu unterstützen.",
   "We were unable to log this error to our server so could you please send us a note at <a style=\"text-decoration: underline;\" href=\"mailto:{{supportEmailAddr}}\">{{supportEmailAddr}}</a> and we'll try to see what broke?": "Wir konnten diesen Fehler nicht auf unserem Server protokollieren, also könntest du uns bitte eine Nachricht schicken an <a style=\"text-decoration: underline;\" href=\"mailto:{{supportEmailAddr}}\">{{supportEmailAddr}}</a> und wir werden versuchen zu sehen, was kaputt ging?",
