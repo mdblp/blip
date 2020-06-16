@@ -528,7 +528,7 @@
   "Something went wrong trying to remove a member from a care team.": "Etwas ging schief beim Versuch, ein Mitglied aus einem Pflegeteam zu entfernen.",
   "Something went wrong trying to request a password reset e-mail.": "Etwas ist schief gelaufen, als versucht wurde, eine E-Mail zum Zurücksetzen des Passworts anzufordern.",
   "Something went wrong trying to resend verification e-mail.": "Etwas ist schief gelaufen, als versucht wurde, eine Bestätigungs-E-Mail erneut zu versenden.",
-  "Something went wrong trying to sign you up.": "Irgendwas ist schief gelaufen beim Versuch, dich anzumelden.",
+  "Something went wrong trying to sign you up.": "Something went wrong trying to sign you up.",
   "Something went wrong while accepting a received care team invitation.": "Bei der Annahme einer erhaltenen Einladung des Pflegeteams ist etwas schief gelaufen.",
   "Something went wrong while accepting the terms and conditions.": "Bei der Annahme der Allgemeinen Geschäftsbedingungen ist etwas schief gelaufen.",
   "Something went wrong while cancelling an outgoing care team invitation.": "Etwas ist schief gelaufen, als eine Einladung eines ausgehenden Pflegeteams storniert wurde.",
