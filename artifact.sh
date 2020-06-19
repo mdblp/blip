@@ -1,5 +1,5 @@
-#!/bin/bash -e
-
+#!/bin/bash
+set -eu
 BASEDIR="$(dirname $0)"
 . ./version.sh
 
