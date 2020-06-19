@@ -63,5 +63,6 @@ addons:
 
 script:
   - npm test
+  - npm run security-checks
   - bash server/update-version.sh
   - bash artifact.sh

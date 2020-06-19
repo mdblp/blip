@@ -108,7 +108,7 @@ function buildDockerImage {
     echo "Building docker image ${DOCKER_REPO} using ${DOCKER_FILE} from ${DOCKER_TARGET_DIR}"
     docker build --tag "${DOCKER_REPO}" --build-arg npm_token="${nexus_token}" -f "${DOCKER_FILE}" "${DOCKER_TARGET_DIR}"
 
-    if [ ${SECURITY_SCAN:-false} = true ]; then
+    if [ "${SECURITY_SCAN:-false}" = "true" ]; then
         echo "Security scan"
         # Microscanner security scan on the built image
         wget -q -O scanDockerImage.sh 'https://raw.githubusercontent.com/mdblp/tools/feature/add_microscanner/artifact/scanDockerImage.sh'

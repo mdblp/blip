@@ -5,7 +5,8 @@
   "scripts": {
     "server": "node server",
     "build": "npm run build-config",
-    "build-config": "NODE_ENV=production node build-config.js"
+    "build-config": "NODE_ENV=production node build-config.js",
+    "security-checks": "npm audit --production --registry=https://registry.npmjs.org/"
   },
   "engines": {
     "node": ">=10.x",

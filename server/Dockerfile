@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . .
 RUN \
   npm install \
+  && npm run "security-checks" \
   && chown -v node /app/dist/index.html \
   && chown -v node /app/dist
 
