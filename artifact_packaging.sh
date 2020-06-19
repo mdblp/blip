@@ -7,6 +7,7 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "TRAVIS_PULL_REQUEST: ${TRAVIS_PULL_REQUEST}"
 echo "TRAVIS_TAG: ${TRAVIS_TAG}"
 echo "TRAVIS_REPO_SLUG: ${TRAVIS_REPO_SLUG}"
+echo "NO_DEFAULT_PACKAGING: ${NO_DEFAULT_PACKAGING}"
 
 APP="${TRAVIS_REPO_SLUG#*/}"
 DOCKER_REPO="docker.ci.diabeloop.eu/${APP}"
@@ -134,6 +135,7 @@ function publishDockerImage {
 }
 
 if [ -n "${NO_DEFAULT_PACKAGING}" -o "${NO_DEFAULT_PACKAGING}" = "false" ]; then
+    echo "Default packaging"
     if [ "${TRAVIS_NODE_VERSION}" != "${ARTIFACT_NODE_VERSION}" ]; then
         echo "Unexpected node version: expected ${ARTIFACT_NODE_VERSION}, having ${TRAVIS_NODE_VERSION}"
         exit 0
@@ -143,4 +145,6 @@ if [ -n "${NO_DEFAULT_PACKAGING}" -o "${NO_DEFAULT_PACKAGING}" = "false" ]; then
     # publishDockerImage
     buildDocumentation
     buildSOUP
+else
+    echo "Not using default packaging"
 fi
