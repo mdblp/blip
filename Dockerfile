@@ -80,9 +80,7 @@ CMD ["npm", "test"]
 FROM base as buildBase
 # ARGs
 ARG API_HOST
-ARG DISCOVERY_HOST=hakken:8000
 ARG PORT=3000
-ARG PUBLISH_HOST=hakken
 ARG SERVICE_NAME=blip
 # Set ENV from ARGs
 ENV \

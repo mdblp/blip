@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "mrproper": "rm -rf dist node_modules coverage server/dist server/node_modules packageMounts{@tidepool/viz,tideline,sundial,tidepool-platform-client,hakken}",
+    "mrproper": "rm -rf dist node_modules coverage server/dist server/node_modules packageMounts{@tidepool/viz,tideline,sundial,tidepool-platform-client}",
     "pretest-docker": "docker build --tag blip:test -f test/Dockerfile --build-arg npm_token=${nexus_token} .",
     "test-docker": "docker run blip:test",
     "test": "TZ=UTC NODE_ENV=test karma --log-level debug --reporters=mocha start",
