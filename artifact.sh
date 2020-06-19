@@ -1,8 +1,6 @@
 #!/bin/bash -e
 
 BASEDIR="$(dirname $0)"
-NO_DEFAULT_PACKAGING="true"
-
 . ./version.sh
 
 wget -q -O artifact_node.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_node.sh'
@@ -34,6 +32,7 @@ fi
 
 bash -eu artifact_images.sh
 
+NO_DEFAULT_PACKAGING="true"
 . ./artifact_packaging.sh
 
 bash build.sh

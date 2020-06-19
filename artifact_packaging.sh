@@ -13,7 +13,7 @@ DOCKER_REPO="docker.ci.diabeloop.eu/${APP}"
 
 # If project has set BUILD_OPENAPI_DOC environment variable to true, then we build the openapi doc
 function buildDocumentation {
-    if [ ${BUILD_OPENAPI_DOC:-false} = true ]; then
+    if [ "${BUILD_OPENAPI_DOC:-false}" = "true" ]; then
         echo "Build documentation"
         npm run build-doc
     fi
@@ -21,7 +21,7 @@ function buildDocumentation {
 
 # If project has set BUILD_SOUP environment variable to true, then we build the SOUPs list
 function buildSOUP {
-    if [ ${BUILD_SOUP:-false} = true ]; then
+    if [ "${BUILD_SOUP:-false}" = "true" ]; then
         echo "Build SOUPs list"
         npm install --save-dev ci-toolbox@latest
         npm run build-soup
@@ -111,8 +111,7 @@ function buildDockerImage {
         echo "Security scan"
         # Microscanner security scan on the built image
         wget -q -O scanDockerImage.sh 'https://raw.githubusercontent.com/mdblp/tools/feature/add_microscanner/artifact/scanDockerImage.sh'
-        chmod +x scanDockerImage.sh
-        MICROSCANNER_TOKEN=${microscanner_token} ./scanDockerImage.sh ${DOCKER_REPO}
+        MICROSCANNER_TOKEN=${microscanner_token} bash ./scanDockerImage.sh ${DOCKER_REPO}
     fi
 }
 

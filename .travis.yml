@@ -1,21 +1,20 @@
-sudo: false
-
 language: node_js
 
-dist: trusty
+os: linux
+dist: bionic
 
 node_js:
   - 10.15.3
-  - node
+  - lts/*
+
+env:
+  global:
+    - SECURITY_SCAN=true
 
 cache: npm
 
-env:
-  jobs:
-    - BUILD_SOUP=true
-
 before_install:
-  - if [[ `npm -v` != 6* ]]; then npm install -g npm@6; fi
+  - npm install -g npm@latest
 
 install:
   - npm install
@@ -64,8 +63,5 @@ addons:
 
 script:
   - npm test
+  - bash server/update-version.sh
   - bash artifact.sh
-
-matrix:
-  allow_failures:
-    - node_js: node
