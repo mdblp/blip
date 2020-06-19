@@ -134,7 +134,7 @@ function publishDockerImage {
     fi
 }
 
-if [ -n "${NO_DEFAULT_PACKAGING}" -o "${NO_DEFAULT_PACKAGING}" = "false" ]; then
+if [ -z "${NO_DEFAULT_PACKAGING}" -o "${NO_DEFAULT_PACKAGING}" = "false" ]; then
     echo "Default packaging"
     if [ "${TRAVIS_NODE_VERSION}" != "${ARTIFACT_NODE_VERSION}" ]; then
         echo "Unexpected node version: expected ${ARTIFACT_NODE_VERSION}, having ${TRAVIS_NODE_VERSION}"
