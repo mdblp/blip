@@ -84,5 +84,4 @@ const config = {
   TEST: isTest,
 };
 
-console.log(`window.config=${JSON.stringify(config)};`);
 module.exports = config;

@@ -3,6 +3,7 @@ const { ShellString } = require('shelljs');
 const fs = require('fs');
 const crypto = require('crypto');
 const _ = require('lodash');
+const blipConfig = require('./config.app');
 
 const reTitle = /<title>([^<]*)<\/title>/;
 const reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
@@ -13,32 +14,59 @@ const reTrackerSiteId = /const id = ([0-9]);/;
 const reMatomoJs = /<!-- Start of Tracker Code -->(.*)<!-- End of Tracker Code -->/m;
 const reCrowdin = /<!-- Crowdin Start -->(.*)<!-- Crowdin End -->/m;
 
-const start = Date.now();
-
 function getHash(str) {
 	const hash = crypto.createHash('md5');
 	hash.update(str);
 	return hash.digest('hex').substr(0, 20);
 }
 
-if (!fs.existsSync('config.app.js')) {
-  console.error('Missing file config.app.js');
+const start = Date.now();
+let distDir = null;
+let srvDir = null;
+
+// Determined dist dir location
+for (const dd of ['dist', '../dist']) {
+  distDir = dd;
+  if (fs.existsSync(distDir)) {
+    break;
+  }
+  distDir = null;
+}
+if (distDir === null) {
+  console.error('dist not found in . or ..');
   process.exit(1);
+} else {
+  console.info(`Using dist directory: ${distDir}`);
 }
 
-let indexHtml = fs.readFileSync('dist/index.html', 'utf8');
-
-console.log('Building config...');
-let configJs = shell.exec('node config.app.js');
-
-let fileHash = getHash(configJs.toString());
-const configFilename = `config.${fileHash}.js`;
-configJs.to(`dist/${configFilename}`);
+// Determined server dir location:
+for (const sd of ['.', 'server']) {
+  srvDir = sd;
+  if (fs.existsSync(`${srvDir}/config.app.js`)) {
+    break;
+  }
+  srvDir = null;
+}
+if (srvDir === null) {
+  console.error('config.app.js not found, can\'t determined the server dir location.');
+  process.exit(1);
+} else {
+  console.info(`Using server directory: ${srvDir}`);
+}
 
 // Replace the title
+let indexHtml = fs.readFileSync(`${distDir}/index.html`, 'utf8');
 if (typeof process.env.BRANDING === 'string') {
   indexHtml = indexHtml.replace(reTitle, `<title>${process.env.BRANDING}</title>`);
 }
+
+console.info('Blip configuration:', blipConfig);
+const configJs = `window.config=${JSON.stringify(blipConfig)};`;
+let shellStr = new ShellString(configJs);
+let fileHash = getHash(configJs.toString());
+const configFilename = `config.${fileHash}.js`;
+shellStr.to(`${distDir}/${configFilename}`);
+console.info(`Config saved to ${distDir}/${configFilename}`);
 
 // Replace from config.js part
 if (reConfig.test(indexHtml)) {
@@ -68,7 +96,7 @@ case 'matomo':
   console.info('Using matomo tracker code');
   if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
     // Replace tracker Javascript
-    matomoJs = fs.readFileSync('templates/matomo.js', 'utf8');
+    matomoJs = fs.readFileSync(`${srvDir}/templates/matomo.js`, 'utf8');
     console.info(`Setting up matomo tracker code: ${process.env.MATOMO_TRACKER_URL}`);
     const updatedSrc = matomoJs.replace(reTrackerUrl, (m, u) => {
       return m.replace(u, process.env.MATOMO_TRACKER_URL);
@@ -81,8 +109,8 @@ case 'matomo':
     fileHash = getHash(matomoJs);
     indexHtml = indexHtml.replace(reMatomoJs, `<script type="text/javascript" src="matomo.${fileHash}.js"></script>`);
 
-    let shellStr = new ShellString(matomoJs);
-    shellStr.to(`dist/matomo.${fileHash}.js`);
+    shellStr = new ShellString(matomoJs);
+    shellStr.to(`${distDir}/matomo.${fileHash}.js`);
   } else {
     console.error('Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable');
   }
@@ -101,7 +129,7 @@ default:
 }
 
 // Replace Crowdin Javascript
-if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled') {
+if (process.env.CROWDIN === 'enabled') {
   const script = "\
   <script type=\"text/javascript\">\n\
     const _jipt = [];\n\
@@ -119,9 +147,9 @@ if (typeof process.env.CROWDIN === 'string' && process.env.CROWDIN === 'enabled'
 }
 
 // Saving
-console.log('Updating "dist/index.html"...');
-let shellStr = new ShellString(indexHtml);
-shellStr.to('dist/index.html');
+console.log(`Updating "${distDir}/index.html"...`);
+shellStr = new ShellString(indexHtml);
+shellStr.to(`${distDir}/index.html`);
 
 const end = Date.now();
 console.log(`Config built in ${(end - start)}ms`);

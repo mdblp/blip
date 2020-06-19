@@ -6,7 +6,6 @@ export DISCOVERY_HOST='localhost:8000'
 export NODE_ENV='production'
 export PORT='3000'
 export PUBLISH_HOST='hakken'
-export WEBPACK_DEVTOOL='cheap-module-eval-source-map'
 export SERVICE_NAME='blip'
 
 #Diabeloop specific

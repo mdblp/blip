@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "server": "node server",
+    "build": "npm run build-config",
     "build-config": "NODE_ENV=production node build-config.js"
   },
   "engines": {

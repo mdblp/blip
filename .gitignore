@@ -31,10 +31,6 @@ artifact_images.sh
 coverage/
 packageMounts/*
 !packageMounts/stub
-
-# GitBook
-_book/
-
 yarn.lock
 
 # Ignore old translation files
@@ -44,3 +40,9 @@ locales/*/parameter.*.json*
 # Aqua microscanner
 scanDockerImage.sh
 microscanner
+
+# Build system
+server/matomo.js
+
+# Branding
+**/diabeloop/*.png

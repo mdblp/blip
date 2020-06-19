@@ -1,10 +1,15 @@
 #!/bin/bash -e
 
+BASEDIR="$(dirname $0)"
+NO_DEFAULT_PACKAGING="true"
+
+. ./version.sh
+
 wget -q -O artifact_node.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_node.sh'
 wget -q -O artifact_images.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_images.sh'
 
 declare -a languages
-languages=(en fr de)
+languages=(en fr)
 
 # GIT_TOKEN: Token to access the private repository: see README.md
 OWNER=${GIT_OWNER:-mdblp}
@@ -27,6 +32,12 @@ else
   echo "No GIT_TOKEN provided, parameters translation will not be available"
 fi
 
-. ./version.sh
 bash -eu artifact_images.sh
-bash -eu artifact_node.sh
+
+. ./artifact_packaging.sh
+
+bash build.sh
+mv -v dist server/dist
+buildArchive -d "server"
+buildDockerImage -f "server/Dockerfile" -d "server"
+buildSOUP

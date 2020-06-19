@@ -19,7 +19,6 @@ before_install:
 
 install:
   - npm install
-  - npm install --save-dev ci-toolbox@2.1.1
 
 deploy:
   # Control deployment by setting a value for `on`. Setting the `branch`
@@ -65,7 +64,7 @@ addons:
 
 script:
   - npm test
-  - ./artifact.sh
+  - bash artifact.sh
 
 matrix:
   allow_failures:

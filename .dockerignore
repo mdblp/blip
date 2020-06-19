@@ -1,6 +1,8 @@
 .git
 .gitignore
 node_modules
+server/node_modules
+packageMounts/**/node_modules
 npm-debug.log
 _book
 artifact_node.sh
@@ -8,15 +10,12 @@ config/*
 !config/local.sh
 !config/env.docker.sh
 deploy
-dist
 test/bin
 coverage
 tmp
 web
 *.log
-
 yarn.lock
-package-lock.json
 
 # Ignore old translation files
 locales/*/*_old.json
