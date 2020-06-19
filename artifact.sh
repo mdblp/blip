@@ -38,5 +38,5 @@ NO_DEFAULT_PACKAGING="true"
 bash build.sh
 mv -v dist server/dist
 buildArchive -d "server"
-buildDockerImage -f "server/Dockerfile" -d "server"
+buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
 buildSOUP

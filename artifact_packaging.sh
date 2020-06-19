@@ -79,14 +79,15 @@ function buildArchive {
 }
 
 # Build Docker image whatever
-# Usage: buildDockerImage [-f <Dockerfile>] [-r <docker_repo>] [-d <target_dir>]
+# Usage: buildDockerImage [-f <Dockerfile>] [-r <docker_repo>] [-t <docker_tag>] [-s <docker_scan_tag>] [-d <target_dir>]
 function buildDockerImage {
     DOCKER_FILE='Dockerfile'
     DOCKER_TARGET_DIR='.'
+    DOCKER_TAG=''
 
     # Reset the getopts counter
     OPTIND=1
-    while getopts ":f:r:d:" option
+    while getopts ":f:r:d:t:s:" option
     do
         case $option in
             f)
@@ -98,6 +99,12 @@ function buildDockerImage {
             d)
                 DOCKER_TARGET_DIR="${OPTARG}"
                 ;;
+            t)
+                DOCKER_TAG=":${OPTARG}"
+                ;;
+            s)
+                DOCKER_SCAN_TAG=":${OPTARG}"
+                ;;
             \?)
                 echo "buildDockerImage(): Invalid option '${option}' at index ${OPTIND}, arg invalid: ${OPTARG}"
                 exit 2
@@ -105,14 +112,14 @@ function buildDockerImage {
         esac
     done
 
-    echo "Building docker image ${DOCKER_REPO} using ${DOCKER_FILE} from ${DOCKER_TARGET_DIR}"
-    docker build --tag "${DOCKER_REPO}" --build-arg npm_token="${nexus_token}" -f "${DOCKER_FILE}" "${DOCKER_TARGET_DIR}"
+    echo "Building docker image ${DOCKER_REPO}${DOCKER_TAG} using ${DOCKER_FILE} from ${DOCKER_TARGET_DIR}"
+    docker build --tag "${DOCKER_REPO}${DOCKER_TAG}" --build-arg npm_token="${nexus_token}" -f "${DOCKER_FILE}" "${DOCKER_TARGET_DIR}"
 
     if [ "${SECURITY_SCAN:-false}" = "true" ]; then
-        echo "Security scan"
+        echo "Security scan of ${DOCKER_REPO}${DOCKER_SCAN_TAG}"
         # Microscanner security scan on the built image
         wget -q -O scanDockerImage.sh 'https://raw.githubusercontent.com/mdblp/tools/feature/add_microscanner/artifact/scanDockerImage.sh'
-        MICROSCANNER_TOKEN=${microscanner_token} bash ./scanDockerImage.sh ${DOCKER_REPO}
+        MICROSCANNER_TOKEN="${microscanner_token}" bash ./scanDockerImage.sh "${DOCKER_REPO}${DOCKER_SCAN_TAG}"
     fi
 }
 
