@@ -29,8 +29,6 @@ web/
 artifact_node.sh
 artifact_images.sh
 coverage/
-packageMounts/*
-!packageMounts/stub
 yarn.lock
 
 # Ignore old translation files

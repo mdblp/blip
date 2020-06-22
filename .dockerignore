@@ -2,20 +2,21 @@
 .gitignore
 node_modules
 server/node_modules
-packageMounts/**/node_modules
 npm-debug.log
-_book
 artifact_node.sh
+artifact_images.sh
 config/*
 !config/local.sh
 !config/env.docker.sh
 deploy
 test/bin
 coverage
+docs
 tmp
 web
 *.log
 yarn.lock
-
+Dockerfile
+*.md
 # Ignore old translation files
 locales/*/*_old.json

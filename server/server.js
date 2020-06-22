@@ -12,18 +12,32 @@ const morgan = require('morgan');
 const jsonPackage = require('./package.json');
 const config = require('./server-config');
 
-const buildDir = 'dist';
-const staticDir = path.join(__dirname, buildDir);
-let indexHTML = '<html></html>';
+function getStaticDir(defaultDir) {
+  let dir = null;
+  if (process.argv.length === 3) {
+    dir = process.argv[2];
+  } else {
+    dir = path.join(__dirname, defaultDir);
+  }
+  console.info(`Serving from: '${dir}'`);
+  return dir;
+}
+
+/** @type {string[]} */
 const fileList = [];
+let indexHTML = '<html></html>';
+/** @type {http.Server} */
+let httpServer = null;
+/** @type {https.Server} */
+let httpsServer = null;
 
 /**
  * Get the list of files we can serve
  */
-function fetchFilesList() {
+function fetchFilesList(dir) {
   const now = new Date().toISOString();
   console.log(`${now} Caching file list`);
-  const files = fs.readdirSync(staticDir);
+  const files = fs.readdirSync(dir);
   Array.prototype.push.apply(fileList, files);
 }
 
@@ -31,17 +45,17 @@ function fetchFilesList() {
  * Verify we have the requested file in stock
  * If we have, but with the wrong path, do a redirect
  * If not return the modified index.html
- * @param {Express.Request} req
- * @param {Express.Response} res
+ * @param {express.Request} req
+ * @param {express.Response} res
  * @param {(err?: any) => void} next
  */
 function redirectMiddleware(req, res, next) {
   const reqURL = req.url;
-  const file = path.basename(req.url);
+  const file = path.basename(reqURL);
 
   if (file === "index.html") {
     // Send the modified index.html
-    res.setHeader('Cache-Control', 'public, max-age=0');
+    res.header('Cache-Control', 'public, max-age=0');
     res.send(res.locals.htmlWithNonces);
     return;
   }
@@ -56,7 +70,7 @@ function redirectMiddleware(req, res, next) {
   }
 
   // Not found, send the modified index.html by default (no 404)
-  res.setHeader('Cache-Control', 'public, max-age=0');
+  res.header('Cache-Control', 'public, max-age=0');
   res.send(res.locals.htmlWithNonces);
 }
 
@@ -72,11 +86,33 @@ function printVersion() {
   console.log(`${now} ${jsonPackage.name} v${jsonPackage.version}`);
 }
 
-function cacheIndexHTML() {
+function cacheIndexHTML(dir) {
   // Cache static html file to avoid reading it from the filesystem on each request
   const now = new Date().toISOString();
   console.log(`${now} Caching static HTML`);
-  indexHTML = fs.readFileSync(`${staticDir}/index.html`, 'utf8');
+  indexHTML = fs.readFileSync(`${dir}/index.html`, 'utf8');
+}
+
+/**
+ *
+ * @param {express.Express} app
+ */
+async function stopServer(app) {
+  console.log('Stopping server...');
+  if (httpServer !== null) {
+    httpServer.close();
+    httpServer.removeAllListeners();
+    httpServer = null;
+  }
+  if (httpsServer !== null) {
+    httpsServer.close();
+    httpsServer.removeAllListeners();
+    httpsServer = null;
+  }
+
+  if (app !== null) {
+    app.removeAllListeners();
+  }
 }
 
 const contentSecurityPolicy = {
@@ -137,9 +173,11 @@ if (config.crowdinPreview) {
   contentSecurityPolicy.directives.frameSrc.push('https://cdn.crowdin.com', 'https://crowdin.com');
 }
 
+const staticDir = getStaticDir('dist');
+
 printVersion();
-cacheIndexHTML();
-fetchFilesList();
+cacheIndexHTML(staticDir);
+fetchFilesList(staticDir);
 const app = express();
 app.use(morgan(':date[iso] :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]'));
 app.use(compression());
@@ -163,14 +201,13 @@ app.use(express.static(staticDir, {
   index: false,
 }));
 
-
 // If no ports specified, just start on default HTTP port
 if (!(config.httpPort || config.httpsPort)) {
   config.httpPort = 3000;
 }
 
 if (config.httpPort) {
-  app.server = http.createServer(app).listen(config.httpPort, () => {
+  httpServer = http.createServer(app).listen(config.httpPort, () => {
     const now = new Date().toISOString();
     console.log(`${now} Connect server started on HTTP port`, config.httpPort);
     console.log(`${now} Serving static directory "${staticDir}/"`);
@@ -178,11 +215,21 @@ if (config.httpPort) {
 }
 
 if (config.httpsPort && config.httpsConfig) {
-  https.createServer(config.httpsConfig, app).listen(config.httpsPort, () => {
+  httpsServer = https.createServer(config.httpsConfig, app).listen(config.httpsPort, () => {
     const now = new Date().toISOString();
     console.log(`${now} Connect server started on HTTP port`, config.httpPort);
     console.log(`${now} Serving static directory "${staticDir}/"`);
   });
 }
+
+  // Handle simple process kill
+  process.once("SIGTERM", async () => {
+    await stopServer(app);
+  });
+
+  // Handle Ctrl+C when launch in a console
+  process.once("SIGINT", async () => {
+    await stopServer(app);
+  });
 
 module.exports = app;
