@@ -667,7 +667,7 @@
   "We have fabricated this basal segment from a {{source}} new day event; it was not provided directly as basal data": "We have fabricated this basal segment from a {{source}} new day event; it was not provided directly as basal data",
   "We just sent you an e-mail.": "We just sent you an e-mail.",
   "We know this bolus was canceled, but {{source}} pumps do not capture exactly when.": "We know this bolus was canceled, but {{source}} pumps do not capture exactly when.",
-  "We use these details to identify you to your patients and to better support you.": "We use these details to identify you to your patients and to better support you.",
+  "We use these details to identify you to your patients and to better support you.": "We use these details to identify you to your patients and your team.",
   "We were unable to log this error to our server so could you please send us a note at <a style=\"text-decoration: underline;\" href=\"mailto:{{supportEmailAddr}}\">{{supportEmailAddr}}</a> and we'll try to see what broke?": "We were unable to log this error to our server so we would appreciate if you send us a note at <a style=\"text-decoration: underline;\" href=\"mailto:{{supportEmailAddr}}\">{{supportEmailAddr}}</a> and we'll try to see what broke?",
   "week": "week",
   "week_timeago": "week",
