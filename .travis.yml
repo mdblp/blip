@@ -12,6 +12,11 @@ env:
     - SECURITY_SCAN=true
 
 cache: npm
+services:
+  - docker
+addons:
+  chrome: stable
+  firefox: latest-esr
 
 before_install:
   - npm install -g npm@latest
@@ -54,12 +59,6 @@ deploy:
     local_dir: doc
     upload_dir: soup/blip
     cache_control: "max-age=21600"
-
-services:
-  - docker
-
-addons:
-  chrome: stable
 
 script:
   - npm test

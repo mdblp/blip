@@ -8,10 +8,16 @@ const testWebpackConf = _.assign({}, webpackConf, {
   devtool: 'inline-source-map',
 });
 
+const isWSL = typeof process.env.WSL_DISTRO_NAME === 'string';
+const browsers = ['CustomChromeHeadless'];
+if (!isWSL) {
+  browsers.push('FirefoxHeadless');
+}
+
 const karmaConfig = {
   autoWatch: true,
   browserNoActivityTimeout: 60000,
-  browsers: ['CustomChromeHeadless'],
+  browsers,
   captureTimeout: 60000,
   client: {
     mocha: mochaConf,
