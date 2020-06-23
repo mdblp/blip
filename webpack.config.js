@@ -22,41 +22,41 @@ const localIdentName = process.env.NODE_ENV === 'test'
   : '[name]--[local]--[hash:base64:5]';
 
 const lessLoaderConfiguration = {
-    test: /\.less$/,
-    use: [
-      (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
-      {
-        loader: 'css-loader',
-        options: {
-          importLoaders: 2,
-          sourceMap: true,
-          onlyLocals: false,
-          modules: {
-            auto: true,
-            exportGlobals: true,
-            localIdentName,
-          }
+  test: /\.less$/,
+  use: [
+    (isProduction) ? MiniCssExtractPlugin.loader : 'style-loader',
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 2,
+        sourceMap: true,
+        onlyLocals: false,
+        modules: {
+          auto: true,
+          exportGlobals: true,
+          localIdentName,
+        }
+      },
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        sourceMap: true,
+      },
+    },
+    {
+      loader: 'less-loader',
+      options: {
+        sourceMap: true,
+        lessOptions: {
+          strictUnits: true,
+          strictMath: true,
+          javascriptEnabled: true, // Deprecated
         },
       },
-      {
-        loader: 'postcss-loader',
-        options: {
-          sourceMap: true,
-        },
-      },
-      {
-        loader: 'less-loader',
-        options: {
-          sourceMap: true,
-          lessOptions: {
-            strictUnits: true,
-            strictMath: true,
-            javascriptEnabled: true, // Deprecated
-          },
-        },
-      },
-    ],
-  };
+    },
+  ],
+};
 const cssLoaderConfiguration = {
   test: /\.css$/,
   use: [
