@@ -21,7 +21,7 @@
     "build-dev": "NODE_ENV=development webpack --progress --optimize-minimize",
     "postbuild-dev": "NODE_ENV=development node server/build-config.js",
     "server": "node server/server.js dist",
-    "lint": "eslint app test",
+    "lint": "eslint app test server",
     "security-checks": "npm audit --production --registry=https://registry.npmjs.org/",
     "update-translations": "i18next 'app/**/*.js' 'node_modules/tideline/{plugins,js}/**/*.js' 'node_modules/@tidepool/viz/src/**/*.js' -c i18next-parser.config.json -o .",
     "build-soup": "release-helper gen-dep-report --deep-dep @tidepool/viz,tideline,tidepool-platform-client doc/${npm_package_name}-${npm_package_version}-soup.md"
