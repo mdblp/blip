@@ -61,7 +61,7 @@ deploy:
     cache_control: "max-age=21600"
 
 script:
-  - npm test
+  - npm run test
   - npm run security-checks
   - bash server/update-version.sh
   - bash artifact.sh
