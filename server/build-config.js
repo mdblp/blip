@@ -10,7 +10,7 @@ const reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)?(^\s+<!-- End of support Zendesk Widget script -->)/m;
 const reTrackerUrl = /const u = '(.*)';/;
 const reTrackerSiteId = /const id = ([0-9]);/;
-const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)?(^\s+<!-- End of Tracker Code -->)/m;
+const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)*(^\s+<!-- End of Tracker Code -->)/m;
 const reCrowdin = /(^\s+<!-- Crowdin Start -->\n)(.*\n)*(^\s+<!-- Crowdin End -->)/m;
 
 function getHash(str) {
@@ -113,7 +113,9 @@ case 'matomo':
     });
 
     fileHash = getHash(matomoJs);
-    indexHtml = indexHtml.replace(reMatomoJs, `$1  <script type="text/javascript" src="matomo.${fileHash}.js"></script>\n$3`);
+    let matomoScripts = `  <script type="text/javascript" src="matomo.${fileHash}.js"></script>\n`;
+    matomoScripts = `${matomoScripts}  <script type="text/javascript" src="${process.env.MATOMO_TRACKER_URL}matomo.js"></script>\n`;
+    indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoScripts}$3`);
 
     shellStr = new ShellString(matomoJs);
     shellStr.to(`${distDir}/matomo.${fileHash}.js`);

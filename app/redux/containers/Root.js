@@ -15,10 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-import config from '../../config';
+import root from './Root.prod';
 
-if (config.DEV) {
-  module.exports = require('./Root.dev');
-} else {
-  module.exports = require('./Root.prod');
-}
+export default root;

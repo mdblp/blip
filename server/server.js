@@ -24,6 +24,7 @@ function getStaticDir(defaultDir) {
   return dir;
 }
 
+const reUrl = /(^https?:\/\/[^/]+).*/;
 /** @type {string[]} */
 const fileList = [];
 let indexHTML = '<html></html>';
@@ -57,6 +58,7 @@ function redirectMiddleware(req, res, next) {
   if (file === "index.html") {
     // Send the modified index.html
     res.header('Cache-Control', 'public, max-age=0');
+    res.header('Content-Type', 'text/html; charset=utf-8');
     res.send(res.locals.htmlWithNonces);
     return;
   }
@@ -72,6 +74,7 @@ function redirectMiddleware(req, res, next) {
 
   // Not found, send the modified index.html by default (no 404)
   res.header('Cache-Control', 'public, max-age=0');
+  res.header('Content-Type', 'text/html; charset=utf-8');
   res.send(res.locals.htmlWithNonces);
 }
 
@@ -118,11 +121,11 @@ async function stopServer(app) {
 
 const contentSecurityPolicy = {
   directives: {
-    defaultSrc: ["'none'"],
+    defaultSrc: ["'self'", "'report-sample'"],
     baseUri: ["'none'"],
     scriptSrc: [
-      "'strict-dynamic'",
-      "'unsafe-eval'",
+      "'self'",
+      "'unsafe-eval'", // At least used by pdfkit
       (req, res) => {
         return `'nonce-${res.locals.nonce}'`;
       },
@@ -160,16 +163,21 @@ if (blipConfig.BRANDING === 'tidepool') {
   contentSecurityPolicy.directives.connectSrc.push('sentry.io');
 }
 
-if (blipConfig.HELP_LINK) {
+if (typeof blipConfig.HELP_LINK === 'string' && blipConfig.HELP_LINK.startsWith('https://')) {
   // Assume Zendesk
-  contentSecurityPolicy.directives.connectSrc.push('https://static.zdassets.com');
+  const helpUrl = blipConfig.HELP_LINK.replace(reUrl, '$1');
+  contentSecurityPolicy.directives.scriptSrc.push(helpUrl);
+  contentSecurityPolicy.directives.connectSrc.push(helpUrl);
+  contentSecurityPolicy.directives.imgSrc.push(helpUrl);
   contentSecurityPolicy.directives.connectSrc.push('https://ekr.zdassets.com');
   contentSecurityPolicy.directives.connectSrc.push('https://diabeloop.zendesk.com');
 }
 
 if (serverConfig.matomoUrl !== null) {
-  contentSecurityPolicy.directives.imgSrc.push(serverConfig.matomoUrl);
-  contentSecurityPolicy.directives.connectSrc.push(serverConfig.matomoUrl);
+  const matomoUrl = serverConfig.matomoUrl.replace(reUrl, '$1');
+  contentSecurityPolicy.directives.scriptSrc.push(matomoUrl);
+  contentSecurityPolicy.directives.imgSrc.push(matomoUrl);
+  contentSecurityPolicy.directives.connectSrc.push(matomoUrl);
 }
 
 if (serverConfig.crowdinPreview) {

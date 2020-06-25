@@ -127,7 +127,6 @@
     "postcss-loader": "3.0.0",
     "postcss-calc": "7.0.2",
     "react-test-renderer": "15.6.2",
-    "script-loader": "0.7.2",
     "shelljs": "0.8.4",
     "sinon": "9.0.2",
     "source-map-loader": "1.0.0",

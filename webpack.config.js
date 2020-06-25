@@ -204,9 +204,22 @@ const output = {
   path: path.join(__dirname, 'dist'),
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
+
+const resolve = {
+  modules: [
+    path.join(__dirname, 'node_modules'),
+    'node_modules',
+  ],
+  alias: {
+    pdfkit: 'pdfkit/js/pdfkit.standalone.js',
+    './images/tidepool/logo.png': `./images/${buildConfig.BRANDING}/logo.png`,
+  }
+};
+
 let entry = [];
 let devServer;
 if (useWebpackDevServer) {
+  console.info('Webpack dev-server is enable');
   const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3001/';
   output.publicPath = devPublicPath;
   entry = [
@@ -221,22 +234,10 @@ if (useWebpackDevServer) {
     clientLogLevel: 'info',
     disableHostCheck: true,
   };
-} else if (isDev) {
-  entry = [ './app/main.dev.js' ];
+  resolve.alias['./Root.prod'] = './Root.dev';
 } else {
   entry = [ './app/main.prod.js' ];
 }
-
-const resolve = {
-  modules: [
-    path.join(__dirname, 'node_modules'),
-    'node_modules',
-  ],
-  alias: {
-    pdfkit: 'pdfkit/js/pdfkit.standalone.js',
-    './images/tidepool/logo.png': `./images/${buildConfig.BRANDING}/logo.png`,
-  }
-};
 
 let devtool = 'source-map';
 if (process.env.WEBPACK_DEVTOOL === 'false') {
@@ -245,6 +246,8 @@ if (process.env.WEBPACK_DEVTOOL === 'false') {
   devtool = 'inline-source-map';
 } else if (isProduction) {
   devtool = 'eval-source-map';
+} else if (typeof process.env.WEBPACK_DEVTOOL === 'string') {
+  devtool = process.env.WEBPACK_DEVTOOL;
 }
 
 module.exports = {
