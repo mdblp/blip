@@ -245,7 +245,7 @@ if (process.env.WEBPACK_DEVTOOL === 'false') {
 } else if (isTest) {
   devtool = 'inline-source-map';
 } else if (isProduction) {
-  devtool = 'eval-source-map';
+  devtool = 'source-map';
 } else if (typeof process.env.WEBPACK_DEVTOOL === 'string') {
   devtool = process.env.WEBPACK_DEVTOOL;
 }
