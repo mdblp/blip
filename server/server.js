@@ -10,7 +10,8 @@ const crypto = require('crypto');
 const morgan = require('morgan');
 
 const jsonPackage = require('./package.json');
-const config = require('./server-config');
+const blipConfig = require('./config.app');
+const serverConfig = require('./config.server');
 
 function getStaticDir(defaultDir) {
   let dir = null;
@@ -125,15 +126,11 @@ const contentSecurityPolicy = {
       (req, res) => {
         return `'nonce-${res.locals.nonce}'`;
       },
-      'https://d12wqas9hcki3z.cloudfront.net',
-      'https://d33v4339jhl8k0.cloudfront.net',
     ],
     styleSrc: [
       "'self'",
       'blob:',
       "'unsafe-inline'",
-      'https://fonts.googleapis.com',
-      'https://djtflbt20bdde.cloudfront.net',
     ],
     imgSrc: [
       "'self'",
@@ -146,26 +143,36 @@ const contentSecurityPolicy = {
     childSrc: ["'self'", 'blob:', 'https://docs.google.com'],
     frameSrc: ['https://docs.google.com'],
     connectSrc: [
-      config.apiHost,
-      'https://api.github.com/repos/tidepool-org/chrome-uploader/releases',
-      'https://static.zdassets.com',
-      'https://ekr.zdassets.com',
-      'https://diabeloop.zendesk.com',
-      'https://d3hb14vkzrxvla.cloudfront.net',
-      'wss\://*.pusher.com',
-      '*.sumologic.com',
-      'sentry.io',
+      serverConfig.apiHost,
     ],
   },
   reportOnly: false,
 };
 
-if (config.matomoUrl !== null) {
-  contentSecurityPolicy.directives.imgSrc.push(config.matomoUrl);
-  contentSecurityPolicy.directives.connectSrc.push(config.matomoUrl);
+if (blipConfig.BRANDING === 'tidepool') {
+  contentSecurityPolicy.directives.scriptSrc.push('https://d12wqas9hcki3z.cloudfront.net');
+  contentSecurityPolicy.directives.scriptSrc.push('https://d33v4339jhl8k0.cloudfront.net');
+  contentSecurityPolicy.directives.styleSrc.push('https://djtflbt20bdde.cloudfront.net');
+  contentSecurityPolicy.directives.styleSrc.push('https://fonts.googleapis.com');
+  contentSecurityPolicy.directives.connectSrc.push('https://api.github.com/repos/tidepool-org/chrome-uploader/releases');
+  contentSecurityPolicy.directives.connectSrc.push('wss\://*.pusher.com');
+  contentSecurityPolicy.directives.connectSrc.push('*.sumologic.com');
+  contentSecurityPolicy.directives.connectSrc.push('sentry.io');
 }
 
-if (config.crowdinPreview) {
+if (blipConfig.HELP_LINK) {
+  // Assume Zendesk
+  contentSecurityPolicy.directives.connectSrc.push('https://static.zdassets.com');
+  contentSecurityPolicy.directives.connectSrc.push('https://ekr.zdassets.com');
+  contentSecurityPolicy.directives.connectSrc.push('https://diabeloop.zendesk.com');
+}
+
+if (serverConfig.matomoUrl !== null) {
+  contentSecurityPolicy.directives.imgSrc.push(serverConfig.matomoUrl);
+  contentSecurityPolicy.directives.connectSrc.push(serverConfig.matomoUrl);
+}
+
+if (serverConfig.crowdinPreview) {
   contentSecurityPolicy.directives.imgSrc.push('https://crowdin-static.downloads.crowdin.com', 'https://cdn.crowdin.com');
   contentSecurityPolicy.directives.styleSrc.push('https://cdn.crowdin.com');
   contentSecurityPolicy.directives.connectSrc.push('https://cdn.crowdin.com');
@@ -202,22 +209,22 @@ app.use(express.static(staticDir, {
 }));
 
 // If no ports specified, just start on default HTTP port
-if (!(config.httpPort || config.httpsPort)) {
-  config.httpPort = 3000;
+if (!(serverConfig.httpPort || serverConfig.httpsPort)) {
+  serverConfig.httpPort = 3000;
 }
 
-if (config.httpPort) {
-  httpServer = http.createServer(app).listen(config.httpPort, () => {
+if (serverConfig.httpPort) {
+  httpServer = http.createServer(app).listen(serverConfig.httpPort, () => {
     const now = new Date().toISOString();
-    console.log(`${now} Connect server started on HTTP port`, config.httpPort);
+    console.log(`${now} Connect server started on HTTP port`, serverConfig.httpPort);
     console.log(`${now} Serving static directory "${staticDir}/"`);
   });
 }
 
-if (config.httpsPort && config.httpsConfig) {
-  httpsServer = https.createServer(config.httpsConfig, app).listen(config.httpsPort, () => {
+if (serverConfig.httpsPort && serverConfig.httpsConfig) {
+  httpsServer = https.createServer(serverConfig.httpsConfig, app).listen(serverConfig.httpsPort, () => {
     const now = new Date().toISOString();
-    console.log(`${now} Connect server started on HTTP port`, config.httpPort);
+    console.log(`${now} Connect server started on HTTP port`, serverConfig.httpPort);
     console.log(`${now} Serving static directory "${staticDir}/"`);
   });
 }

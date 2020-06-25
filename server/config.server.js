@@ -31,7 +31,6 @@ const config = {
   discovery: {
     host: null,
   },
-  serviceName: null,
   publishHost: null,
   metricsService: 'disabled',
   matomoUrl: null,
