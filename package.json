@@ -12,7 +12,7 @@
     "test-watch": "TZ=UTC NODE_ENV=test karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' webpack-dev-server --color --progress --port 3001 --host 0.0.0.0",
     "dblp": "NODE_ENV=development USE_WEBPACK_DEV_SERVER=true API_HOST='http://localhost:8009' SUPPORT_EMAIL_ADDRESS='yourloops@diabeloop.com' SUPPORT_WEB_ADDRESS='https://support.diabeloop.com/hc/categories/360001386093-YourLoops' ALLOW_SIGNUP_PATIENT=false ALLOW_PATIENT_CHANGE_EMAIL=false I18N_ENABLED=true ALLOW_PATIENT_CHANGE_PASSWORD=false HIDE_DONATE=true HIDE_DEXCOM_BANNER=true HIDE_UPLOAD_LINK=true BRANDING='diabeloop' METRICS_SERVICE='disabled' HELP_LINK='disabled' ASSETS_URL='https://url.com/' webpack-dev-server --cache --colors --progress --port 3001 --host 0.0.0.0",
-    "prebuild": "rm -rf dist",
+    "prebuild": "rm -rf dist server/dist",
     "build": "npm run build-app && npm run build-config",
     "prebuild-app": "echo 'Building app'",
     "build-app": "NODE_ENV=production webpack --optimize-minimize",

@@ -7,12 +7,11 @@ const blipConfig = require('./config.app');
 
 const reTitle = /<title>([^<]*)<\/title>/;
 const reConfig = /(<!-- config -->)|(<script [^>]*src="config(\.[\w]*)*\.js"[^>]*><\/script>)/m;
-const reZendesk = /(<!-- Zendesk disabled -->)|(<script id="ze-snippet" type="text\/javascript" src="[^"]+">\s*<\/script>)/m;
-const zendeskDisable = '<!-- Zendesk disabled -->';
+const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)?(^\s+<!-- End of support Zendesk Widget script -->)/m;
 const reTrackerUrl = /const u = '(.*)';/;
 const reTrackerSiteId = /const id = ([0-9]);/;
-const reMatomoJs = /<!-- Start of Tracker Code -->(.*)<!-- End of Tracker Code -->/m;
-const reCrowdin = /<!-- Crowdin Start -->(.*)<!-- Crowdin End -->/m;
+const reMatomoJs = /(^\s+<!-- Start of Tracker Code -->\n)(.*\n)?(^\s+<!-- End of Tracker Code -->)/m;
+const reCrowdin = /(^\s+<!-- Crowdin Start -->\n)(.*\n)*(^\s+<!-- Crowdin End -->)/m;
 
 function getHash(str) {
 	const hash = crypto.createHash('md5');
@@ -66,13 +65,13 @@ let shellStr = new ShellString(configJs);
 let fileHash = getHash(configJs.toString());
 const configFilename = `config.${fileHash}.js`;
 shellStr.to(`${distDir}/${configFilename}`);
-console.info(`Config saved to ${distDir}/${configFilename}`);
+console.info(`- Config saved to ${distDir}/${configFilename}`);
 
 // Replace from config.js part
 if (reConfig.test(indexHtml)) {
   const configStrOrig = reConfig.exec(indexHtml)[0];
   const configStrRepl = `<script type="text/javascript" src="${configFilename}"></script>`;
-  console.log(`Replace ${configStrOrig} by ${configStrRepl}`);
+  console.info(`- Update config file to ${configFilename}`);
   indexHtml = indexHtml.replace(reConfig, configStrRepl);
 } else {
   console.error('Missing config template part');
@@ -80,24 +79,31 @@ if (reConfig.test(indexHtml)) {
 }
 
 // Replace ZenDesk Javascript
-if (typeof process.env.HELP_LINK === 'string') {
-  console.log('Using HELP_LINK:', process.env.HELP_LINK);
-
-  if (process.env.HELP_LINK === 'disabled') {
-    indexHtml = indexHtml.replace(reZendesk, zendeskDisable);
-  } else {
-    indexHtml = indexHtml.replace(reZendesk, `<script id="ze-snippet" type="text/javascript" src="${process.env.HELP_LINK}"></script>`);
-  }
+let helpLink = '<!-- Zendesk disabled -->';
+if (!reZendesk.test(indexHtml)) {
+  console.error(`Can't find help pattern in index.html: ${reZendesk.source}`);
+  process.exit(1);
 }
+if (typeof process.env.HELP_LINK === 'string' && process.env.HELP_LINK.startsWith('https://')) {
+  console.info('- Using HELP_LINK:', process.env.HELP_LINK);
+  helpLink = `<script id="ze-snippet" type="text/javascript" src="${process.env.HELP_LINK}"></script>`;
+} else {
+  console.info('- Help link is disabled');
+}
+indexHtml = indexHtml.replace(reZendesk, `$1  ${helpLink}\n$3`);
 
 let matomoJs = null;
+if (!reMatomoJs.test(indexHtml)) {
+  console.error(`Can't find tracker pattern in index.html: ${reMatomoJs.source}`);
+  process.exit(1);
+}
 switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
 case 'matomo':
-  console.info('Using matomo tracker code');
+  console.info('- Using matomo tracker code');
   if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
     // Replace tracker Javascript
     matomoJs = fs.readFileSync(`${srvDir}/templates/matomo.js`, 'utf8');
-    console.info(`Setting up matomo tracker code: ${process.env.MATOMO_TRACKER_URL}`);
+    console.info(`  => Setting up matomo tracker code: ${process.env.MATOMO_TRACKER_URL}`);
     const updatedSrc = matomoJs.replace(reTrackerUrl, (m, u) => {
       return m.replace(u, process.env.MATOMO_TRACKER_URL);
     });
@@ -107,7 +113,7 @@ case 'matomo':
     });
 
     fileHash = getHash(matomoJs);
-    indexHtml = indexHtml.replace(reMatomoJs, `<script type="text/javascript" src="matomo.${fileHash}.js"></script>`);
+    indexHtml = indexHtml.replace(reMatomoJs, `$1  <script type="text/javascript" src="matomo.${fileHash}.js"></script>\n$3`);
 
     shellStr = new ShellString(matomoJs);
     shellStr.to(`${distDir}/matomo.${fileHash}.js`);
@@ -116,40 +122,42 @@ case 'matomo':
   }
   break;
 case 'highwater':
-  indexHtml = indexHtml.replace(reMatomoJs, `<!-- Using highwater -->`);
-  console.info('Using highwater tracker code');
+  indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Using highwater -->\n$3');
+  console.info('- Using highwater tracker code');
   break;
 case 'disabled':
-  console.info('Tracker code is disabled');
-  indexHtml = indexHtml.replace(reMatomoJs, `<!-- Tracker disabled -->`);
+  console.info('- Tracker code is disabled');
+  indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Tracker disabled -->\n$3');
   break;
 default:
-  console.error(`Unknown tracker ${process.env.METRICS_SERVICE}`);
+  console.error(`! Unknown tracker ${process.env.METRICS_SERVICE}`);
+  indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Tracker disabled -->\n$3');
   break;
 }
 
 // Replace Crowdin Javascript
 if (process.env.CROWDIN === 'enabled') {
-  const script = "\
+  const crowdinScript = "\
   <script type=\"text/javascript\">\n\
     const _jipt = [];\n\
     _jipt.push(['project', 'yourloops']);\n\
   </script>\n\
-  <script type=\"text/javascript\" src=\"//cdn.crowdin.com/jipt/jipt.js\"></script>\n";
-  console.log('Enable crowdin...');
-  indexHtml = indexHtml.replace(reCrowdin,(m, u) => {
-    return m.replace(u, script);
-  });
+  <script type=\"text/javascript\" src=\"//cdn.crowdin.com/jipt/jipt.js\"></script>";
+  console.info('- Enable crowdin...');
+  if (!reCrowdin.test(indexHtml)) {
+    console.error(`Can't find crowdin pattern in index.html: ${reCrowdin.source}`);
+    process.exit(1);
+  }
+  indexHtml = indexHtml.replace(reCrowdin,  `$1${crowdinScript}\n$3`);
 } else {
-  indexHtml = indexHtml.replace(reCrowdin, (m, u) => {
-    return m.replace(u, '<!-- disabled -->');
-  });
+  console.info('- Crowdin is disabled');
+  indexHtml = indexHtml.replace(reCrowdin, '$1  <!-- disabled -->\n$3');
 }
 
 // Saving
-console.log(`Updating "${distDir}/index.html"...`);
+console.info(`- Updating "${distDir}/index.html"...`);
 shellStr = new ShellString(indexHtml);
 shellStr.to(`${distDir}/index.html`);
 
 const end = Date.now();
-console.log(`Config built in ${(end - start)}ms`);
+console.info(`Config built in ${(end - start)}ms`);
