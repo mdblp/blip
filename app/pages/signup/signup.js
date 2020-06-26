@@ -230,7 +230,7 @@ export let Signup = translate()(React.createClass({
         );
         break;
     }
-    if (__BRANDING__ === 'diabeloop') {
+    if (config.BRANDING === 'diabeloop') {
       content = '';
     }
 
@@ -350,12 +350,12 @@ export let Signup = translate()(React.createClass({
   },
 
   renderAcceptTermsLabel: function() {
-    const config = CONFIG[__BRANDING__];
-    const urlTermsOfUse = config.terms;
-    const textTermsOfUse = config.termsText;
+    const brandConfig = CONFIG[config.BRANDING];
+    const urlTermsOfUse = brandConfig.terms;
+    const textTermsOfUse = brandConfig.termsText;
 
-    const urlPrivacyPolicy = config.privacy;
-    const textPrivacyPolicy = config.privacyText;
+    const urlPrivacyPolicy = brandConfig.privacy;
+    const textPrivacyPolicy = brandConfig.privacyText;
 
     return (
       <Trans parent="span" i18nKey="html.signup-terms-of-use">
