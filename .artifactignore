@@ -1,3 +1,4 @@
 .artifactignore
 .git
 .gitignore
+.npmrc
