@@ -52,13 +52,18 @@ if (srvDir === null) {
   console.info(`Using server directory: ${srvDir}`);
 }
 
-// Replace the title
+// Display configuration used
+console.info('Using configuration:', blipConfig);
+
+// *** Title ***
 let indexHtml = fs.readFileSync(`${distDir}/index.html`, 'utf8');
 if (typeof process.env.BRANDING === 'string') {
-  indexHtml = indexHtml.replace(reTitle, `<title>${process.env.BRANDING}</title>`);
+  const title = process.env.BRANDING.replace(/^\w/, (c) => { return c.toUpperCase(); });
+  console.info(`- Setup title to ${title}`);
+  indexHtml = indexHtml.replace(reTitle, `<title>${title}</title>`);
 }
 
-console.info('Blip configuration:', blipConfig);
+// *** Configuration ***
 const configJs = `window.config=${JSON.stringify(blipConfig)};`;
 let shellStr = new ShellString(configJs);
 let fileHash = getHash(configJs.toString());
@@ -66,21 +71,29 @@ const configFilename = `config.${fileHash}.js`;
 shellStr.to(`${distDir}/${configFilename}`);
 console.info(`- Config saved to ${distDir}/${configFilename}`);
 
-// Replace from config.js part
 if (reConfig.test(indexHtml)) {
-  const configStrOrig = reConfig.exec(indexHtml)[0];
-  const configStrRepl = `<script type="text/javascript" src="${configFilename}"></script>`;
+  let configURL = configFilename;
+  // Public path declared (for CloudFront)
   console.info(`- Update config file to ${configFilename}`);
+  if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.startsWith('https')) {
+    console.info(`  => Using public path: ${process.env.PUBLIC_PATH}`);
+    if (process.env.PUBLIC_PATH.endsWith('/')) {
+      configURL = `${process.env.PUBLIC_PATH}${configURL}`;
+    } else {
+      configURL = `${process.env.PUBLIC_PATH}/${configURL}`;
+    }
+  }
+  const configStrRepl = `<script type="text/javascript" src="${configURL}"></script>`;
   indexHtml = indexHtml.replace(reConfig, configStrRepl);
 } else {
-  console.error('Missing config template part');
+  console.error('/!\\ Missing config template part /!\\');
   process.exit(1);
 }
 
-// Replace ZenDesk Javascript
+// *** ZenDesk ***
 let helpLink = '<!-- Zendesk disabled -->';
 if (!reZendesk.test(indexHtml)) {
-  console.error(`Can't find help pattern in index.html: ${reZendesk.source}`);
+  console.error(`/!\\ Can't find help pattern in index.html: ${reZendesk.source} /!\\`);
   process.exit(1);
 }
 if (typeof process.env.HELP_LINK === 'string' && process.env.HELP_LINK.startsWith('https://')) {
@@ -91,15 +104,16 @@ if (typeof process.env.HELP_LINK === 'string' && process.env.HELP_LINK.startsWit
 }
 indexHtml = indexHtml.replace(reZendesk, `$1  ${helpLink}\n$3`);
 
+// *** Matomo ***
 let matomoJs = null;
 if (!reMatomoJs.test(indexHtml)) {
-  console.error(`Can't find tracker pattern in index.html: ${reMatomoJs.source}`);
+  console.error(`/!\\ Can't find tracker pattern in index.html: ${reMatomoJs.source} /!\\`);
   process.exit(1);
 }
 switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
 case 'matomo':
   console.info('- Using matomo tracker code');
-  if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
+  if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('https')) {
     // Replace tracker Javascript
     matomoJs = fs.readFileSync(`${srvDir}/templates/matomo.js`, 'utf8');
     console.info(`  => Setting up matomo tracker code: ${process.env.MATOMO_TRACKER_URL}`);
@@ -112,14 +126,37 @@ case 'matomo':
     });
 
     fileHash = getHash(matomoJs);
-    let matomoScripts = `  <script type="text/javascript" src="matomo.${fileHash}.js"></script>\n`;
-    matomoScripts = `${matomoScripts}  <script type="text/javascript" src="${process.env.MATOMO_TRACKER_URL}matomo.js"></script>\n`;
-    indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoScripts}$3`);
+    const fileName = `matomo.${fileHash}.js`;
+
+    let matomoConfigScript = null;
+    let matomoScript = null;
+
+    // Public path declared (for CloudFront)
+    if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.startsWith('https')) {
+      console.info(`  => Using public path: ${process.env.PUBLIC_PATH}`);
+      if (process.env.PUBLIC_PATH.endsWith('/')) {
+        matomoConfigScript = `<script type="text/javascript" src="${process.env.PUBLIC_PATH}${fileName}"></script>`;
+      } else {
+        matomoConfigScript = `<script type="text/javascript" src="${process.env.PUBLIC_PATH}/${fileName}"></script>`;
+      }
+    } else {
+      matomoConfigScript = `<script type="text/javascript" src="${fileName}"></script>`;
+    }
+
+    // Matomo main script
+    if (process.env.MATOMO_TRACKER_URL.endsWith('/')) {
+      matomoScript = `<script type="text/javascript" src="${process.env.MATOMO_TRACKER_URL}matomo.js"></script>`;
+    } else {
+      matomoScript = `<script type="text/javascript" src="${process.env.MATOMO_TRACKER_URL}/matomo.js"></script>`;
+    }
+
+    const matomoConfigScripts = `  ${matomoConfigScript}\n  ${matomoScript}\n`;
+    indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`);
 
     shellStr = new ShellString(matomoJs);
-    shellStr.to(`${distDir}/matomo.${fileHash}.js`);
+    shellStr.to(`${distDir}/${fileName}`);
   } else {
-    console.error('Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable');
+    console.error('  /!\\ Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable /!\\');
   }
   break;
 case 'highwater':
@@ -131,12 +168,12 @@ case 'disabled':
   indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Tracker disabled -->\n$3');
   break;
 default:
-  console.error(`! Unknown tracker ${process.env.METRICS_SERVICE}`);
+  console.error(`/!\ Unknown tracker ${process.env.METRICS_SERVICE} /!\\`);
   indexHtml = indexHtml.replace(reMatomoJs, '$1  <!-- Tracker disabled -->\n$3');
   break;
 }
 
-// Replace Crowdin Javascript
+// *** Crowdin ***
 if (process.env.CROWDIN === 'enabled') {
   const crowdinScript = "\
   <script type=\"text/javascript\">\n\
@@ -146,7 +183,7 @@ if (process.env.CROWDIN === 'enabled') {
   <script type=\"text/javascript\" src=\"//cdn.crowdin.com/jipt/jipt.js\"></script>";
   console.info('- Enable crowdin...');
   if (!reCrowdin.test(indexHtml)) {
-    console.error(`Can't find crowdin pattern in index.html: ${reCrowdin.source}`);
+    console.error(`/!\\ Can't find crowdin pattern in index.html: ${reCrowdin.source} /!\\`);
     process.exit(1);
   }
   indexHtml = indexHtml.replace(reCrowdin,  `$1${crowdinScript}\n$3`);
@@ -155,7 +192,7 @@ if (process.env.CROWDIN === 'enabled') {
   indexHtml = indexHtml.replace(reCrowdin, '$1  <!-- disabled -->\n$3');
 }
 
-// Saving
+// *** Saving ***
 console.info(`- Updating "${distDir}/index.html"...`);
 shellStr = new ShellString(indexHtml);
 shellStr.to(`${distDir}/index.html`);

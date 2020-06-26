@@ -199,11 +199,16 @@ const minimizer = [
   new OptimizeCSSAssetsPlugin({}),
 ];
 
+/** @type {webpack.Output} */
 const output = {
   filename: isDev || isTest ? 'bundle.js' : 'bundle.[hash].js',
   path: path.join(__dirname, 'dist'),
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
+
+if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.startsWith('https')) {
+  output.publicPath = process.env.PUBLIC_PATH;
+}
 
 const resolve = {
   modules: [
