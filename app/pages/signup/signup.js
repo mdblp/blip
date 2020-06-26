@@ -230,7 +230,7 @@ export let Signup = translate()(React.createClass({
         );
         break;
     }
-    if (__BRANDING__ === 'diabeloop') {
+    if (config.BRANDING === 'diabeloop') {
       content = '';
     }
 
@@ -306,7 +306,7 @@ export let Signup = translate()(React.createClass({
     let signUpSubtitle = null;
     let signUpSelectionPersonal = null;
 
-    if ( _.get(window, 'config.ALLOW_SIGNUP_PATIENT', true)) {
+    if (config.ALLOW_SIGNUP_PATIENT) {
       signUpSubtitle = (<div className="signup-subtitle">{t('Which kind of account do you need?')}</div>);
 
       signUpSelectionPersonal = (
@@ -350,12 +350,12 @@ export let Signup = translate()(React.createClass({
   },
 
   renderAcceptTermsLabel: function() {
-    const config = CONFIG[__BRANDING__];
-    const urlTermsOfUse = config.terms;
-    const textTermsOfUse = config.termsText;
+    const brandConfig = CONFIG[config.BRANDING];
+    const urlTermsOfUse = brandConfig.terms;
+    const textTermsOfUse = brandConfig.termsText;
 
-    const urlPrivacyPolicy = config.privacy;
-    const textPrivacyPolicy = config.privacyText;
+    const urlPrivacyPolicy = brandConfig.privacy;
+    const textPrivacyPolicy = brandConfig.privacyText;
 
     return (
       <Trans parent="span" i18nKey="html.signup-terms-of-use">
