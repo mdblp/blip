@@ -1,8 +1,7 @@
 ## external
 export API_HOST='http://localhost:8009'
-export NODE_ENV='production'
+export WEBPACK_DEVTOOL='source-map'
 export PORT='3000'
-export WEBPACK_DEVTOOL='cheap-module-eval-source-map'
 
 #Diabeloop specific
 export ALLOW_CHANGE_EMAIL='false'

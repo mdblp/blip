@@ -4,4 +4,5 @@
 . ./config/env.docker.sh
 
 export NODE_OPTIONS='--max-old-space-size=4096'
-npm run build
+export USE_WEBPACK_DEV_SERVER="false"
+npm run build-dev
