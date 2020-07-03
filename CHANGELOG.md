@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Fixed
 - PT-1168 Fix display bug when updating user profile
+### Changed
+- PT-1376 Center the text in the cookie banner
 
 ## 1.0.1 - 2020-06-12
 ### Fixed
