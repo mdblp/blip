@@ -1,4 +1,6 @@
-# Build:
+# Build for developers through Docker:
+# Use the latests packages to detect potential problems in advance.
+#
 # docker build --build-arg npm_token="${nexus_token}" -t blip:dev .
 # Run:
 # docker run -p 3001:3001 blip:dev
