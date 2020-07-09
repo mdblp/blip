@@ -40,8 +40,8 @@
     "hakken": "mdblp/hakken#dblp.0.2.0",
     "helmet": "3.22.0",
     "morgan": "1.10.0",
-    "@tidepool/viz": "mdblp/viz#dblp.0.12.2",
-    "tideline": "mdblp/tideline#dblp.1.10.2"
+    "@tidepool/viz": "mdblp/viz#feature/display-bolus",
+    "tideline": "mdblp/tideline#feature/show-new-bolus-types"
   },
   "devDependencies": {
     "@babel/cli": "7.1.0",
