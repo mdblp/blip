@@ -4,6 +4,7 @@
 /* global it */
 /* global before */
 
+import _ from 'lodash';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -69,6 +70,12 @@ describe('routes', () => {
   });
 
   describe('requireAuth', () => {
+    const nextStatePatientRoute = {
+      location: {
+        pathname: '/patient',
+      }
+    };
+
     it('should update route to /login if user is not authenticated', (done) => {
       let api = {
         user: {
@@ -119,7 +126,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuth(api, store)(null, replace, () => {
+      requireAuth(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.callCount).to.equal(0);
         done();
       });
@@ -153,7 +160,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuth(api, store)(null, replace, () => {
+      requireAuth(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.callCount).to.equal(0);
         expect(api.user.get.callCount).to.equal(0);
         done();
@@ -230,6 +237,12 @@ describe('routes', () => {
   });
 
   describe('requireAuthAndNoPatient', () => {
+    const nextStatePatientRoute = {
+      location: {
+        pathname: '/patient',
+      }
+    };
+
     it('should update the route to /login if the user is not authenticated', (done) => {
       let api = {
         user: {
@@ -245,7 +258,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.withArgs('/login').callCount).to.equal(1);
         done();
       });
@@ -278,7 +291,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.withArgs('/patients').callCount).to.equal(1);
         done();
       });
@@ -311,7 +324,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.withArgs('/patients').callCount).to.equal(1);
         expect(api.user.get.callCount).to.equal(0);
         done();
@@ -339,7 +352,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.withArgs('/terms').callCount).to.equal(1);
         done();
       });
@@ -369,7 +382,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.withArgs('/terms').callCount).to.equal(1);
         expect(api.user.get.callCount).to.equal(0);
         done();
@@ -403,7 +416,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.callCount).to.equal(0);
         done();
       });
@@ -436,7 +449,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireAuthAndNoPatient(api, store)(null, replace, () => {
+      requireAuthAndNoPatient(api, store)(nextStatePatientRoute, replace, () => {
         expect(replace.callCount).to.equal(0);
         expect(api.user.get.callCount).to.equal(0);
         done();
@@ -955,7 +968,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      onOtherRouteEnter(api)(null, replace);
+      onOtherRouteEnter(api)(null, replace, _.noop);
 
       expect(replace.withArgs('/patients').callCount).to.equal(1);
     });
@@ -972,7 +985,7 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      onOtherRouteEnter(api)(null, replace);
+      onOtherRouteEnter(api)(null, replace, _.noop);
 
       expect(replace.withArgs('/login').callCount).to.equal(1);
     })

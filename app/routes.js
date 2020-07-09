@@ -71,8 +71,12 @@ export const requireAuth = (api, store) => (nextState, replace, cb) => {
       dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user)));
     }
     function checkIfAcceptedTerms(user) {
-      if (!personUtils.hasAcceptedTerms(user)) {
+      const isTermsPage = nextState.location.pathname === '/terms';
+      if (!personUtils.hasAcceptedTerms(user) && !isTermsPage) {
         replace('/terms');
+      } else if (isTermsPage) {
+        // Terms already accepted, redirect to the patient page
+        replace('/patients');
       }
       cb();
     }
@@ -102,7 +106,7 @@ export const requireAuthAndNoPatient = (api, store) => (nextState, replace, cb) 
       dispatch(actions.async.fetchUser(api, (err, user) => checkUserStatus(user)));
     }
     function checkUserStatus(user) {
-      if (!personUtils.hasAcceptedTerms(user)) {
+      if (!personUtils.hasAcceptedTerms(user) && nextState.location.pathname !== '/terms') {
         replace('/terms');
         return cb();
       }
@@ -177,7 +181,7 @@ export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
   const { dispatch } = store;
   const user = _.get(state.allUsersMap, state.loggedInUserId, {});
   if (!_.isEmpty(user)) {
-    checkIfVerified(user);
+    checkIfVerified(user, nextState);
   } else {
     dispatch(actions.async.fetchUser(api, (err, user) => {
       if (err) {
@@ -189,13 +193,13 @@ export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
         throw new Error('Error getting user at /email-verification');
       }
 
-      checkIfVerified(user);
+      checkIfVerified(user, nextState);
     }));
   }
 
-  function checkIfVerified(userToCheck) {
+  function checkIfVerified(userToCheck, nextState) {
     if (userToCheck.emailVerified === true) {
-      if (!personUtils.hasAcceptedTerms(userToCheck)) {
+      if (!personUtils.hasAcceptedTerms(userToCheck) && nextState.location.pathname !== '/terms') {
         replace('/terms');
         return cb();
       }
@@ -287,6 +291,8 @@ const trackPage = (api, next) => (nextState, replace, cb) => {
   api.metrics.track('setCustomUrl', nextState.location.pathname, () => {
     if (typeof next === 'function') {
       next(nextState, replace, cb);
+    } else if (_.isFunction(cb)) {
+      cb();
     }
   });
 }
@@ -317,7 +323,7 @@ export const getRoutes = (appContext, store) => {
     <Route path='/' component={AppComponent} {...props}>
       <IndexRoute component={Login} onEnter={trackPage(api, onIndexRouteEnter(api, store))} />
       <Route path='login' component={Login} onEnter={trackPage(api, requireNoAuth(api))} />
-      <Route path='terms' components={Terms} onEnter={trackPage(api, null)} />
+      <Route path='terms' components={Terms} onEnter={trackPage(api, requireAuth(api, store))} />
       <Route path='signup' component={Signup} onEnter={trackPage(api, requireNoAuth(api))} />
       <Route path='signup/personal' component={Signup} onEnter={trackPage(api, requireNoAuthAndPatientSignupAllowed(api))} />
       <Route path='signup/clinician' component={Signup} onEnter={trackPage(api, requireNoAuth(api))} />
