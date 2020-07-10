@@ -245,6 +245,12 @@ const resolve = {
   }
 };
 
+if (isTest) {
+  // Don't make tests to failed when we update a translation in Crowdin
+  resolve.alias['../../locales/en/translation.json'] = '../../test/locales/en/translation.json';
+  resolve.alias['../../locales/fr/translation.json'] = '../../test/locales/fr/translation.json';
+}
+
 let devtool = process.env.WEBPACK_DEVTOOL || 'eval-source-map';
 if (process.env.WEBPACK_DEVTOOL === 'false') devtool = undefined;
 
