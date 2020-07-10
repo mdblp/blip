@@ -584,6 +584,7 @@
   "The birthday specified does not match what is in our system. Please contact the clinic that created your account and ask them to update your birthday.": "La date d'anniversaire ne correspond pas à ce qui est enregistré dans notre système. Veuillez contacter l'équipe médicale qui a crée votre compte pour mettre à jour cette date de naissance.",
   "The date and/or time settings of your device were changed recently, and this datum may overlap in the timeline display with other data from the same device.": "Les paramètres de date et/ou d'heure de votre système ont récemment changé, il se peut que ces données se superposent avec d'autres données sur ce laps de temps. Cela ne concerne que les données remontant d'un seul et même système.",
   "The diaTribe Foundation": "The diaTribe Foundation",
+  "The period must be less than {{days}} days": "The period must be less than {{days}} days",
   "There is no {{displayType}} data for this time period :(": "Il n'y a pas de données {{displayType}} pour cette période : (",
   "There is not enough data to show this statistic.": "Il n'y a pas suffisamment de données pour vous montrer cette statistique.",
   "These people can view {{patientName}}'s data": "Ces personnes peuvent visualiser les données de {{patientName}}",
