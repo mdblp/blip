@@ -116,20 +116,7 @@ export let Login = translate()(React.createClass({
 
     return (
       <div>
-        <LoginNav
-          page="login"
-          hideLinks={Boolean(this.props.seedEmail)}
-          trackMetric={this.props.trackMetric} />
-        <LoginLogo />
-        {inviteIntro}
-        {browserWarning}
-        <div className="container-small-outer login-form">
-          <div className="container-small-inner login-form-box">
-            <div className="login-simpleform">{form}</div>
-          </div>
-        </div>
         <CookieConsent
-          location="bottom"
           buttonText={t('Accept')}
           cookieName={cookieName}
           disableStyles={true}
@@ -142,6 +129,18 @@ export let Login = translate()(React.createClass({
             {cookieText}
             {lastUpdateText}
         </CookieConsent>
+        <LoginNav
+          page="login"
+          hideLinks={Boolean(this.props.seedEmail)}
+          trackMetric={this.props.trackMetric} />
+        <LoginLogo />
+        {inviteIntro}
+        {browserWarning}
+        <div className="container-small-outer login-form">
+          <div className="container-small-inner login-form-box">
+            <div className="login-simpleform">{form}</div>
+          </div>
+        </div>
       </div>
     );
   },
