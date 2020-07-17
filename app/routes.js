@@ -30,19 +30,38 @@ import config from './config';
  * This function checks if the user is using chrome - if they are not it will redirect
  * the user to a browser warning page
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} utils
+ * @param  {Function} next
  */
-export const requiresChrome = (utils, next) => (nextState, replace, cb)  => {
+export const requiresChrome = (utils, next) => (nextState, replace, cb) => {
   if (!utils.isAcceptedBrowser()) {
     replace('/browser-warning');
-    return (!!cb) ? cb() : true;
-  } else {
-    if (next) {
-      next(nextState, replace, cb);
+    if (_.isFunction(cb)) {
+      cb();
     }
-
+  } else if (_.isFunction(next)) {
+    next(nextState, replace, cb);
   }
+}
+
+function checkIfAcceptedTerms(user, nextState, replace, cb) {
+  const isPatientPage = nextState.location.pathname.startsWith('/patients');
+  const isTermsPage = nextState.location.pathname === '/terms';
+  const termsAccepted = personUtils.hasAcceptedTerms(user);
+
+  console.log('checkIfAcceptedTerms', {
+    pathname: nextState.location.pathname,
+    isPatientPage,
+    isTermsPage,
+    termsAccepted
+  });
+
+  if (termsAccepted && !isPatientPage) {
+    replace('/patients');
+  } else if (!termsAccepted && !isTermsPage) {
+    replace('/terms');
+  }
+  cb();
 }
 
 /**
@@ -51,10 +70,9 @@ export const requiresChrome = (utils, next) => (nextState, replace, cb)  => {
  * It also redirects to the Terms of Use & Privacy Policy form if the user is logged in
  * but has not yet agreed to these
  *
- * @param  {Object} nextState
- * @param  {Function} replace
- *
- * @return {boolean|null} returns true if hash mapping happened
+ * @param  {Object} api
+ * @param  {Object} store *
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const requireAuth = (api, store) => (nextState, replace, cb) => {
   const { blip: state } = store.getState();
@@ -66,19 +84,9 @@ export const requireAuth = (api, store) => (nextState, replace, cb) => {
   } else {
     const user = _.get(state.allUsersMap, state.loggedInUserId, {});
     if (!_.isEmpty(user)) {
-      checkIfAcceptedTerms(user);
+      checkIfAcceptedTerms(user, nextState, replace, cb);
     } else {
-      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user)));
-    }
-    function checkIfAcceptedTerms(user) {
-      const isTermsPage = nextState.location.pathname === '/terms';
-      if (!personUtils.hasAcceptedTerms(user) && !isTermsPage) {
-        replace('/terms');
-      } else if (isTermsPage) {
-        // Terms already accepted, redirect to the patient page
-        replace('/patients');
-      }
-      cb();
+      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user, nextState, replace, cb)));
     }
   }
 };
@@ -87,8 +95,9 @@ export const requireAuth = (api, store) => (nextState, replace, cb) => {
  * This function redirects any requests that land on pages that should only be
  * visible when no data storage is set up if the user has data storage set up
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @param  {Object} store
+ * @return {(nextState, replace, cb) => void} Function for the router
  *
  */
 export const requireAuthAndNoPatient = (api, store) => (nextState, replace, cb) => {
@@ -101,20 +110,9 @@ export const requireAuthAndNoPatient = (api, store) => (nextState, replace, cb) 
   } else {
     const user = _.get(state.allUsersMap, state.loggedInUserId, {});
     if (!_.isEmpty(user)) {
-      checkUserStatus(user);
+      checkIfAcceptedTerms(user, nextState, replace, cb);
     } else {
-      dispatch(actions.async.fetchUser(api, (err, user) => checkUserStatus(user)));
-    }
-    function checkUserStatus(user) {
-      if (!personUtils.hasAcceptedTerms(user) && nextState.location.pathname !== '/terms') {
-        replace('/terms');
-        return cb();
-      }
-      if (personUtils.isPatient(user)) {
-        replace('/patients');
-        return cb();
-      }
-      cb();
+      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user, nextState, replace, cb)));
     }
   }
 };
@@ -122,9 +120,8 @@ export const requireAuthAndNoPatient = (api, store) => (nextState, replace, cb) 
 /**
  * This function ensures any logged in state is destroyed on entering a route
  *
- * @param  {Object} nextState
- * @param  {Function} replace
- * @param  {Function} cb
+ * @param  {Object} api
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const ensureNoAuth = (api) => (nextState, replace, cb) => {
   api.user.logout(cb);
@@ -134,15 +131,15 @@ export const ensureNoAuth = (api) => (nextState, replace, cb) => {
  * This function redirects any requests that land on pages that should only be
  * visible when logged out if the user is logged in
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const requireNoAuth = (api) => (nextState, replace, cb) => {
   if (api.user.isAuthenticated()) {
     replace('/patients');
   }
 
-  if (!!cb) {
+  if (_.isFunction(cb)) {
     cb();
   }
 };
@@ -151,8 +148,8 @@ export const requireNoAuth = (api) => (nextState, replace, cb) => {
  * This function redirects any requests that land on pages that should only be
  * visible when logged out (if the user is logged in) and allowed as per a boolean
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace, cb) => {
   if (api.user.isAuthenticated()) {
@@ -163,7 +160,7 @@ export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace
     replace('/signup');
   }
 
-  if (!!cb) {
+  if (_.isFunction(cb)) {
     cb();
   }
 };
@@ -173,15 +170,28 @@ export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace
  * visible when the user hasn't yet verified their sign-up e-mail
  * if the user already has completed the e-mail verification
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @param  {Object} store
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
+  function checkIfVerified(userToCheck) {
+    if (userToCheck.emailVerified === true) {
+      return checkIfAcceptedTerms(userToCheck, nextState, replace, cb)
+    }
+    // we log the user out so that requireNoAuth will work properly
+    // when they try to log in
+    api.user.logout(() => {
+      api.log('"Logged out" user after initial set-up so that /login is accessible');
+    });
+    cb();
+  }
+
   const { blip: state } = store.getState();
   const { dispatch } = store;
   const user = _.get(state.allUsersMap, state.loggedInUserId, {});
   if (!_.isEmpty(user)) {
-    checkIfVerified(user, nextState);
+    checkIfVerified(user);
   } else {
     dispatch(actions.async.fetchUser(api, (err, user) => {
       if (err) {
@@ -193,25 +203,8 @@ export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
         throw new Error('Error getting user at /email-verification');
       }
 
-      checkIfVerified(user, nextState);
+      checkIfVerified(user);
     }));
-  }
-
-  function checkIfVerified(userToCheck, nextState) {
-    if (userToCheck.emailVerified === true) {
-      if (!personUtils.hasAcceptedTerms(userToCheck) && nextState.location.pathname !== '/terms') {
-        replace('/terms');
-        return cb();
-      }
-      replace('/patients');
-      return cb();
-    }
-    // we log the user out so that requireNoAuth will work properly
-    // when they try to log in
-    api.user.logout(() => {
-      api.log('"Logged out" user after initial set-up so that /login is accessible');
-    });
-    cb();
   }
 }
 
@@ -220,15 +213,15 @@ export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
  * account settings/profile page where the user can change password iff the user
  * is already logged in (with token stored) to blip in their browser
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
 export const onUploaderPasswordReset = (api) => (nextState, replace, cb) => {
   if (api.user.isAuthenticated()) {
     replace('/profile');
   }
 
-  if (!!cb) {
+  if (_.isFunction(cb)) {
     cb();
   }
 }
@@ -257,15 +250,15 @@ export const hashToUrl = (nextState, replace) => {
  *
  * This function calls hashToUrl and requireNoAuth
  *
- * @param  {Object} nextState
- * @param  {Function} replace
+ * @param  {Object} api
+ * @return {(nextState, replace, cb) => void} Function for the router
  */
-export const onIndexRouteEnter = (api, store) => (nextState, replace, cb) => {
+export const onIndexRouteEnter = (api) => (nextState, replace, cb) => {
   if (!hashToUrl(nextState, replace)) {
     requireNoAuth(api)(nextState, replace, cb);
   }
 
-  if (!!cb) {
+  if (_.isFunction(cb)) {
     cb();
   }
 }
@@ -289,7 +282,7 @@ export const onOtherRouteEnter = (api) => (nextState, replace, cb) => {
 
 const trackPage = (api, next) => (nextState, replace, cb) => {
   api.metrics.track('setCustomUrl', nextState.location.pathname, () => {
-    if (typeof next === 'function') {
+    if (_.isFunction(next)) {
       next(nextState, replace, cb);
     } else if (_.isFunction(cb)) {
       cb();
@@ -321,7 +314,7 @@ export const getRoutes = (appContext, store) => {
 
   return (
     <Route path='/' component={AppComponent} {...props}>
-      <IndexRoute component={Login} onEnter={trackPage(api, onIndexRouteEnter(api, store))} />
+      <IndexRoute component={Login} onEnter={trackPage(api, onIndexRouteEnter(api))} />
       <Route path='login' component={Login} onEnter={trackPage(api, requireNoAuth(api))} />
       <Route path='terms' components={Terms} onEnter={trackPage(api, requireAuth(api, store))} />
       <Route path='signup' component={Signup} onEnter={trackPage(api, requireNoAuth(api))} />
@@ -344,3 +337,5 @@ export const getRoutes = (appContext, store) => {
     </Route>
   );
 }
+
+export default getRoutes;
