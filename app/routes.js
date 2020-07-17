@@ -44,26 +44,6 @@ export const requiresChrome = (utils, next) => (nextState, replace, cb) => {
   }
 }
 
-function checkIfAcceptedTerms(user, nextState, replace, cb) {
-  const isPatientPage = nextState.location.pathname.startsWith('/patients');
-  const isTermsPage = nextState.location.pathname === '/terms';
-  const termsAccepted = personUtils.hasAcceptedTerms(user);
-
-  console.log('checkIfAcceptedTerms', {
-    pathname: nextState.location.pathname,
-    isPatientPage,
-    isTermsPage,
-    termsAccepted
-  });
-
-  if (termsAccepted && !isPatientPage) {
-    replace('/patients');
-  } else if (!termsAccepted && !isTermsPage) {
-    replace('/terms');
-  }
-  cb();
-}
-
 /**
  * This function redirects any requests that land on pages that should only be
  * visible when logged in if the user is logged out
@@ -78,15 +58,28 @@ export const requireAuth = (api, store) => (nextState, replace, cb) => {
   const { blip: state } = store.getState();
   const { dispatch } = store;
 
+  function checkIfAcceptedTerms(user) {
+    const isPatientPage = nextState.location.pathname === '/patients';
+    const isTermsPage = nextState.location.pathname === '/terms';
+    const termsAccepted = personUtils.hasAcceptedTerms(user);
+
+    if (isTermsPage && termsAccepted && !isPatientPage) {
+      replace('/patients');
+    } else if (!termsAccepted && !isTermsPage) {
+      replace('/terms');
+    }
+    cb();
+  }
+
   if (!api.user.isAuthenticated()) {
     replace('/login');
     return cb();
   } else {
     const user = _.get(state.allUsersMap, state.loggedInUserId, {});
     if (!_.isEmpty(user)) {
-      checkIfAcceptedTerms(user, nextState, replace, cb);
+      checkIfAcceptedTerms(user);
     } else {
-      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user, nextState, replace, cb)));
+      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user)));
     }
   }
 };
@@ -104,15 +97,24 @@ export const requireAuthAndNoPatient = (api, store) => (nextState, replace, cb) 
   const { blip: state } = store.getState();
   const { dispatch } = store;
 
+  function checkUserStatus(user) {
+    if (!personUtils.hasAcceptedTerms(user)) {
+      replace('/terms');
+    } else if (personUtils.isPatient(user)) {
+      replace('/patients');
+    }
+    cb();
+  }
+
   if (!api.user.isAuthenticated()) {
     replace('/login');
     return cb();
   } else {
     const user = _.get(state.allUsersMap, state.loggedInUserId, {});
     if (!_.isEmpty(user)) {
-      checkIfAcceptedTerms(user, nextState, replace, cb);
+      checkUserStatus(user);
     } else {
-      dispatch(actions.async.fetchUser(api, (err, user) => checkIfAcceptedTerms(user, nextState, replace, cb)));
+      dispatch(actions.async.fetchUser(api, (err, user) => checkUserStatus(user)));
     }
   }
 };
@@ -177,7 +179,13 @@ export const requireNoAuthAndPatientSignupAllowed = (api) => (nextState, replace
 export const requireNotVerified = (api, store) => (nextState, replace, cb) => {
   function checkIfVerified(userToCheck) {
     if (userToCheck.emailVerified === true) {
-      return checkIfAcceptedTerms(userToCheck, nextState, replace, cb)
+      const termsAccepted = personUtils.hasAcceptedTerms(userToCheck);
+      if (termsAccepted) {
+        replace('/patients');
+      } else {
+        replace('/terms');
+      }
+      return cb();
     }
     // we log the user out so that requireNoAuth will work properly
     // when they try to log in

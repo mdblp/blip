@@ -72,7 +72,7 @@ describe('routes', () => {
   describe('requireAuth', () => {
     const nextStatePatientRoute = {
       location: {
-        pathname: '/patient',
+        pathname: '/patients',
       }
     };
 
@@ -239,7 +239,7 @@ describe('routes', () => {
   describe('requireAuthAndNoPatient', () => {
     const nextStatePatientRoute = {
       location: {
-        pathname: '/patient',
+        pathname: '/login',
       }
     };
 
@@ -590,7 +590,13 @@ describe('routes', () => {
 
       expect(replace.callCount).to.equal(0);
 
-      requireNotVerified(api, store)(null, replace, () => {
+      const nextStateLocation = {
+        location: {
+          pathname: '/email-verification',
+        }
+      };
+
+      requireNotVerified(api, store)(nextStateLocation, replace, () => {
         expect(replace.withArgs('/patients').callCount).to.equal(1);
         expect(api.user.get.callCount).to.equal(0);
         done();
