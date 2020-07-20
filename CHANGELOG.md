@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Fixed
 - YLP-78 Don't let tests failed when we update a translation in Crowdin
+- YLP-89 Infusion site icon missing in basics calendar
 
 ## 1.0.3 - 2020-07-15
 ### Fixed
