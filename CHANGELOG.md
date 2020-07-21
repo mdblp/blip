@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 1.1.0 - 2020-07-21
 ### Changed
 - PT-1297 Display Bolus objects additional fields
 ### Fixed
