@@ -22,10 +22,6 @@ import i18next from './language';
 
 const t = i18next.t.bind(i18next);
 
-// date masks we use
-const FORM_DATE_FORMAT = t('MM/DD/YYYY');
-const SERVER_DATE_FORMAT = 'YYYY-MM-DD';
-
 import { MGDL_UNITS, MMOLL_UNITS } from './constants';
 
 let personUtils = {};
@@ -43,7 +39,7 @@ personUtils.firstName = (person) => {
 personUtils.lastName = (person) => {
   const lastName = utils.getIn(person, ['profile', 'lastName']);
   if(!lastName) {
-    return "";
+    return '';
   }
   return lastName;
 };

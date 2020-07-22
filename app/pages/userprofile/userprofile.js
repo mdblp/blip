@@ -86,7 +86,8 @@ class UserProfile extends React.Component {
   }
 
   formInputs() {
-    // @ts-ignore
+    // eslint-disable-next-line no-undef
+    // eslint-disable-next-line lodash/prefer-lodash-typecheck
     const CROWDIN_ACTIVE = typeof _jipt === 'object';
     const inputs = [
       { name: 'firstName', label: t('First name'), type: 'text' },
@@ -138,7 +139,7 @@ class UserProfile extends React.Component {
   }
 
   formValuesFromUser(user) {
-    if (user === null || typeof user !== 'object') {
+    if (user === null || !_.isObject(user)) {
       return null;
     }
     return {
@@ -165,7 +166,7 @@ class UserProfile extends React.Component {
     };
 
     let organization = '';
-    if (user && user.profile && user.profile.organization && user.profile.organization.name) {
+    if (user && _.get(user, 'profile.organization.name',false)) {
       organization = user.profile.organization.name + ' / ';
     }
 
@@ -321,6 +322,10 @@ UserProfile.propTypes = {
     userid: PropTypes.string.isRequired,
     profile: PropTypes.object.isRequired,
   }),
+  updatingUser: PropTypes.shape({
+    inProgress: PropTypes.bool,
+    notification: PropTypes.object
+  })
 };
 
 /**
