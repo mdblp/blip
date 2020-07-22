@@ -33,6 +33,20 @@ let personUtils = {};
 personUtils.fullName = (person) => {
   return utils.getIn(person, ['profile', 'fullName']);
 };
+personUtils.firstName = (person) => {
+  const firstName = utils.getIn(person, ['profile', 'firstName']);
+  if(!firstName) {
+    return personUtils.fullName(person);
+  }
+  return firstName;
+};
+personUtils.lastName = (person) => {
+  const lastName = utils.getIn(person, ['profile', 'lastName']);
+  if(!lastName) {
+    return "";
+  }
+  return lastName;
+};
 
 personUtils.patientInfo = (person) => {
   return utils.getIn(person, ['profile', 'patient']);
@@ -153,9 +167,13 @@ personUtils.validateFormValues = (formValues, isNameRequired, dateFormat, curren
   const INVALID_DATE_TEXT = t('Hmm, this date doesn’t look right');
   const OUT_OF_ORDER_TEXT = t('Hmm, diagnosis date usually comes after birthday');
 
-  // Legacy: revisit when proper "child accounts" are implemented
-  if (isNameRequired && !formValues.fullName) {
-    validationErrors.fullName = t('Full name is required');
+  if (isNameRequired) {
+    if (!formValues.firstName) {
+      validationErrors.firstName = t('First name is required');
+    }
+    if (!formValues.lastName) {
+      validationErrors.lastName = t('Last name is required');
+    }
   }
 
   const birthday = formValues.birthday;

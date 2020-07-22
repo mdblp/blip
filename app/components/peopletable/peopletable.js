@@ -127,13 +127,16 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     this.handleEmptySearch = this.handleEmptySearch.bind(this);
 
     this.state = {
-      searchPattern: '',
+      searchPattern: {
+        firstName:'',
+        lastName:''
+      },
       currentRowIndex: -1,
       searching: false,
       showNames: true,
       dataList: this.buildDataList(),
       colSortDirs: {
-        fullNameOrderable: SortTypes.ASC,
+        lastNameOrderable: SortTypes.ASC,
       },
       showModalOverlay: false,
       dialog: '',
@@ -151,7 +154,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
   componentDidMount() {
     //setup default sorting but don't track via metrics
-    this.handleSortChange('fullNameOrderable', SortTypes.ASC, false);
+    this.handleSortChange('lastNameOrderable', SortTypes.ASC, false);
   }
 
   //nextProps contains list of people being watched
@@ -163,6 +166,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   buildDataList() {
+    const getOrderable = (val) => (val|| '').toLowerCase();
     const list = _.map(this.props.people, (person) => {
       let pmetric = _.get(person, ['metric'], '');
       let rate = pmetric.rate;
@@ -174,10 +178,13 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         tirHigh = pmetric.rate.high;
         tirVeryHigh = pmetric.rate.veryHigh;
       }
-
+      const firstName = personUtils.firstName(person);
+      const lastName = personUtils.lastName(person);
       return {
-        fullName: personUtils.patientFullName(person),
-        fullNameOrderable: (personUtils.patientFullName(person) || '').toLowerCase(),
+        firstName: firstName,
+        firstNameOrderable: getOrderable(firstName),
+        lastName: lastName,
+        lastNameOrderable: getOrderable(lastName),
         link: person.link,
         userid: person.userid,
         tirLastTime: pmetric.lastCbgTime || '0',
@@ -190,7 +197,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       };
     });
 
-    return _.orderBy(list, ['fullNameOrderable'], [SortTypes.DESC]);
+    return _.orderBy(list, ['lastNameOrderable'], [SortTypes.DESC]);
   }
 
   formatRate(rate){
@@ -213,27 +220,42 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   handleFilterChange(e) {
-    if (e === null ||_.isEmpty(e.target.value)) {
+    if(e === null ||_.isEmpty(e.target) || _.isEmpty(e.target.name)) {
       this.setState({
         searching: false,
         dataList: this.buildDataList(),
         showSearchReset: false,
-        searchPattern: '',
+        searchPattern: {
+          firstName:'',
+          lastName: ''
+        },
       });
       return;
     }
+    let currentSearch = {
+      firstName: this.state.searchPattern.firstName,
+      lastName: this.state.searchPattern.lastName
+    };
+    currentSearch[e.target.name] = e.target.value;
+    
 
-    const filterBy = e.target.value.toLowerCase();
-
+    const filterBy = (person,key) => {
+      let filtered = true;
+      const filter = currentSearch[key].toLowerCase();
+      if (filter!=='') {
+        filtered = _.get(person, key, '').toLowerCase().indexOf(filter) !== -1;
+      }
+      return filtered;
+    }
     const filtered = _.filter(this.buildDataList(), (person) => {
-      return _.get(person, 'fullName', '').toLowerCase().indexOf(filterBy) !== -1;
+      return filterBy(person,'firstName') && filterBy(person,'lastName');
     });
 
     this.setState({
       searching: true,
       dataList: filtered,
       showSearchReset: true,
-      searchPattern: e.target.value,
+      searchPattern: currentSearch
     });
   }
 
@@ -245,8 +267,11 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       let metricMessage = 'Sort by ';
 
       switch (columnKey) {
-        case 'fullNameOrderable':
-          metricMessage += 'Name';
+        case 'firstNameOrderable':
+          metricMessage += 'firstName';
+          break;
+        case 'lastNameOrderable':
+          metricMessage += 'lastName';
           break;
         case 'tirLastTime': 
         case 'tirVeryLow':
@@ -281,11 +306,19 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         <div className="peopletable-search-box form-control-border">
         <input
           type="search"
-          ref="searchInput"
+          name="firstName"
           className="input"
           onChange={this.handleFilterChange}
-          placeholder={t('Search by Name')}
-          value={this.state.searchPattern}
+          placeholder={t('Search by First Name')}
+          value={this.state.searchPattern.firstName}
+        />
+         <input
+          type="search"
+          name="lastName"
+          className="input"
+          onChange={this.handleFilterChange}
+          placeholder={t('Search by Last Name')}
+          value={this.state.searchPattern.lastName}
         />
         {
         this.state.showSearchReset ?
@@ -438,7 +471,8 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
     const title = t('I want to quit this patient\'s care team');
     const newTabTitle = 'open {{patient}} in a new tab';
-    const labelName = t('NAME');
+    const labelLastName = t('LAST NAME');
+    const labelFirstName = t('FIRST NAME');
     return (
       <Table
         rowHeight={50}
@@ -451,20 +485,42 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         {...this.props}
       >
         <Column
-          columnKey="fullNameOrderable"
+          columnKey="firstNameOrderable"
           header={
             <SortHeaderCell
               onSortChange={this.handleSortChange}
-              sortDir={colSortDirs.fullNameOrderable}
-              title={t('Sort By {{name}}', {name: labelName})}
+              sortDir={colSortDirs.firstNameOrderable}
+              title={t('Sort By {{name}}', {name: labelFirstName})}
             >
-              {labelName}
+              {labelFirstName}
             </SortHeaderCell>
         }
           cell={<TextCell
-            className="fullName"
+            className="firstName"
             data={dataList}
-            col="fullName"
+            col="firstName"
+            title={newTabTitle}
+            t={t}
+            track={this.props.trackMetric}
+          />}
+          width={50}
+          flexGrow={1}
+        />
+        <Column
+          columnKey="lastNameOrderable"
+          header={
+            <SortHeaderCell
+              onSortChange={this.handleSortChange}
+              sortDir={colSortDirs.lastNameOrderable}
+              title={t('Sort By {{name}}', {name: labelLastName})}
+            >
+              {labelLastName}
+            </SortHeaderCell>
+        }
+          cell={<TextCell
+            className="lastName"
+            data={dataList}
+            col="lastName"
             title={newTabTitle}
             t={t}
             track={this.props.trackMetric}

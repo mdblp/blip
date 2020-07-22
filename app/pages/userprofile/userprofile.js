@@ -89,7 +89,8 @@ class UserProfile extends React.Component {
     // @ts-ignore
     const CROWDIN_ACTIVE = typeof _jipt === 'object';
     const inputs = [
-      { name: 'fullName', label: t('Full name'), type: 'text' }
+      { name: 'firstName', label: t('First name'), type: 'text' },
+      { name: 'lastName', label: t('Last name'), type: 'text' }
     ];
 
     if (this.isUserAllowedToChangeEmail()) {
@@ -140,9 +141,9 @@ class UserProfile extends React.Component {
     if (user === null || typeof user !== 'object') {
       return null;
     }
-
     return {
-      fullName: user.profile && user.profile.fullName,
+      firstName: user.profile && user.profile.firstName,
+      lastName: user.profile && user.profile.lastName,
       username: user.username,
       lang: _.get(user, 'preferences.displayLanguageCode', undefined)
     };
@@ -218,12 +219,10 @@ class UserProfile extends React.Component {
 
   handleSubmit(formValues) {
     this.resetFormStateBeforeSubmit(formValues);
-
     const validationErrors = this.validateFormValues(formValues);
     if (!_.isEmpty(validationErrors)) {
       return;
     }
-
     const values = this.prepareFormValuesForSubmit(formValues);
     this.submitFormValues(values);
   }
@@ -238,7 +237,8 @@ class UserProfile extends React.Component {
 
   validateFormValues(formValues) {
     let form = [
-      { type: 'name', name: 'fullName', label: 'full name', value: formValues.fullName }
+      { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
+      { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName }
     ];
 
     if (this.isUserAllowedToChangeEmail()) {
@@ -269,7 +269,9 @@ class UserProfile extends React.Component {
   prepareFormValuesForSubmit(formValues) {
     const result = {
       profile: {
-        fullName: formValues.fullName
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        fullName: `${formValues.firstName} ${formValues.lastName}`
       },
     };
 

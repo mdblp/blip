@@ -45,10 +45,16 @@ export let ClinicianDetails = translate()(React.createClass({
     const { t } = this.props;
     return [
     {
-      name: 'fullName',
-      label: t('Full Name'),
+      name: 'firstName',
+      label: t('First Name'),
       type: 'text',
-      placeholder: t('Full name')
+      placeholder: t('First name')
+    },
+    {
+      name: 'lastName',
+      label: t('Last Name'),
+      type: 'text',
+      placeholder: t('Last name')
     },
     {
       name: 'clinicalRole',
@@ -85,7 +91,8 @@ export let ClinicianDetails = translate()(React.createClass({
     return {
       working: false,
       formValues: {
-        fullName: this.getUserFullName(),
+        firstName:this.getUserFirstName(),
+        lastName:this.getUserLastName(),
         clinicalRole: ''
       },
       validationErrors: {},
@@ -101,19 +108,27 @@ export let ClinicianDetails = translate()(React.createClass({
   componentWillReceiveProps: function(nextProps) {
     this.setState({
       formValues: _.assign(this.state.formValues, {
-        fullName: this.getUserFullName(nextProps)
+        firstName: this.getUserFirstName(nextProps),
+        lastName: this.getUserLastName(nextProps)
       })
     });
   },
 
-  getUserFullName: function(props) {
+
+  getUserFirstName: function(props) {
     props = props || this.props;
-    return personUtils.fullName(props.user) || '';
+    return personUtils.firstName(props.user) || '';
+  },
+
+  getUserLastName: function(props) {
+    props = props || this.props;
+    return personUtils.lastName(props.user) || '';
   },
 
   canSubmit: function() {
     if (
-      _.get(this,'state.formValues.fullName.length') &&
+      _.get(this,'state.formValues.firstName.length') &&
+      _.get(this,'state.formValues.lastName.length') &&
       _.get(this,'state.formValues.clinicalRole.length') &&
       _.get(this,'state.formValues.clinicName.length')
     )
@@ -182,8 +197,7 @@ export let ClinicianDetails = translate()(React.createClass({
     if (!key) {
       return;
     }
-
-    var formValues = _.clone(this.state.formValues);
+    const formValues = _.clone(this.state.formValues);
 
     formValues[key] = value;
 
@@ -198,11 +212,15 @@ export let ClinicianDetails = translate()(React.createClass({
     if (!_.isEmpty(validationErrors)) {
       return;
     }
-
-    var user = {
-      fullName: formValues.fullName,
+    const fullName = `${formValues.firstName} ${formValues.lastName}`
+    const user = {
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      fullName: fullName,
       profile: {
-        fullName: formValues.fullName,
+        fullName: fullName,
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
         clinic: {
           role: formValues.clinicalRole,
           name: formValues.clinicName,
@@ -215,7 +233,8 @@ export let ClinicianDetails = translate()(React.createClass({
 
   validateFormValues: function(formValues) {
     var form = [
-      { type: 'name', name: 'fullName', label: 'full name', value: formValues.fullName },
+      { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
+      { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName },
       { type: 'clinicName', name: 'clinicName', label: 'clinic name', value: formValues.clinicName },
       { type: 'clinicPhone', name: 'clinicPhone', label: 'clinic phone', value: formValues.clinicPhone },
       { type: 'clinicalRole', name: 'clinicalRole', label: 'clinical role', value: formValues.clinicalRole }

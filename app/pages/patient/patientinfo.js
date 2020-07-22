@@ -24,7 +24,7 @@ import i18next from '../../core/language';
 import { Element } from 'react-scroll';
 
 import config from '../../config';
-var personUtils = require('../../core/personutils');
+import personUtils  from '../../core/personutils';
 import PatientSettings from './patientsettings';
 import PatientBgUnits from '../../components/patientBgUnits';
 import DonateForm from '../../components/donateform';
@@ -256,23 +256,31 @@ var PatientInfo = translate()(React.createClass({
 
   renderFullNameInput: function(formValues) {
     var fullNameNode, errorElem, classes;
-    var error = this.state.validationErrors.fullName;
+    const errors = {
+      firstName: this.state.validationErrors.firstName,
+      lastName: this.state.validationErrors.lastName
+    };
     // Legacy: revisit when proper "child accounts" are implemented
     if (personUtils.patientIsOtherPerson(this.props.patient)) {
       classes = 'PatientInfo-input';
-      if (error) {
+      if (errors.firstName || errors.lastName) {
         classes += ' PatientInfo-input-error';
-        errorElem = <div className="PatientInfo-error-message">{error}</div>;
+        errorElem = <div className="PatientInfo-error-message">
+            {errors.firstName?errors.firstName:""}
+            <br/>
+            {errors.lastName?errors.lastName:""}
+          </div>;
       }
       fullNameNode = (
-        <div className={classes}>
-          <input className="PatientInfo-input" id="fullName" ref="fullName" placeholder="Full name" defaultValue={formValues.fullName} />
+        <div className="PatientInfo-blockRow">
+          <input className={classes} id="firstName" ref="firstName" placeholder="First name" defaultValue={formValues.firstName} />
+          <input className={classes} id="lastName" ref="lastName" placeholder="Last name" defaultValue={formValues.lastName} />
           {errorElem}
         </div>
       );
     }
     else {
-      formValues = _.omit(formValues, 'fullName');
+      formValues = _.omit(formValues, ['firstName','lastName']);
       const fullName = this.getDisplayName(this.props.patient);
       fullNameNode = (
         <Trans className="PatientInfo-block PatientInfo-block--withArrow" i18nKey="html.patient-info-fullname">
@@ -579,12 +587,15 @@ var PatientInfo = translate()(React.createClass({
 
     var formValues = {};
     var patientInfo = personUtils.patientInfo(patient);
-    var name = personUtils.patientFullName(patient);
-
-    if (name) {
-      formValues.fullName = name;
+    const firstName = personUtils.firstName(patient);
+    if(firstName) {
+      formValues.firstName = firstName;
     }
-
+    const lastName = personUtils.lastName(patient);
+    if(lastName) {
+      formValues.lastName = lastName;
+    }
+    
     if (patientInfo) {
       if (patientInfo.birthday) {
         formValues.birthday =  sundial.translateMask(patientInfo.birthday, SERVER_DATE_FORMAT, FORM_DATE_FORMAT);
@@ -601,8 +612,15 @@ var PatientInfo = translate()(React.createClass({
       if (patientInfo.about) {
         formValues.about = patientInfo.about;
       }
-    }
 
+      if(patientInfo.firstName) {
+        formValues.firstName = patientInfo.firstName;
+      }
+
+      if(patientInfo.lastName) {
+        formValues.lastName = patientInfo.lastName;
+      }
+    }
     return formValues;
   },
 
@@ -621,14 +639,14 @@ var PatientInfo = translate()(React.createClass({
       });
       return;
     }
-
     this.submitFormValues(formValues);
   },
 
   getFormValues: function() {
     var self = this;
     return _.reduce([
-      'fullName',
+      'firstName',
+      'lastName',
       'birthday',
       'diagnosisDate',
       'diagnosisType',
@@ -650,6 +668,8 @@ var PatientInfo = translate()(React.createClass({
   },
 
   prepareFormValuesForSubmit: function(formValues) {
+    formValues.fullName = `${formValues.firstName} ${formValues.lastName}`
+
     // Legacy: revisit when proper "child accounts" are implemented
     if (personUtils.patientIsOtherPerson(this.props.patient)) {
       formValues.isOtherPerson = true;
