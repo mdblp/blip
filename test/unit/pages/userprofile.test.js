@@ -28,7 +28,9 @@ describe('UserProfile', function () {
       username: 'foo@bar.com',
       userid: 'abcd',
       profile: {
-        fullName: 'Gordon Dent'
+        fullName: 'Gordon Dent',
+        firstName: 'Gordon',
+        lastName: 'Dent'
       },
     },
   };
@@ -67,7 +69,8 @@ describe('UserProfile', function () {
       const state = elem.state();
 
       expect(state.formValues.username).to.equal('foo@bar.com');
-      expect(state.formValues.fullName).to.equal('Gordon Dent');
+      expect(state.formValues.firstName).to.equal('Gordon');
+      expect(state.formValues.lastName).to.equal('Dent');
       expect(Object.keys(state.validationErrors).length).to.equal(0);
       expect(state.notification).to.equal(null);
     });

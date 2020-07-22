@@ -32,7 +32,9 @@ describe('PeopleTable', () => {
   const props = {
     people: [{
         profile: {
-          fullName: 'Zoe Doe',
+          fullName: 'Zoe Smith',
+          firstName: 'Zoe',
+          lastName: 'Smith',
           patient: { birthday: '1969-08-19T01:51:55.000Z' },
           link: 'http://localhost:3000/patients/0cc2aad188/data',
         },
@@ -60,6 +62,8 @@ describe('PeopleTable', () => {
       {
         profile: {
           fullName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
           patient: { birthday: '2000-08-19T01:51:55.000Z' },
           link: 'http://localhost:3000/patients/0cc2ccd188/data',
         },
@@ -78,6 +82,8 @@ describe('PeopleTable', () => {
       {
         profile: {
           fullName: 'amanda jones',
+          firstName: 'amanda',
+          lastName: 'jones',
           patient: { birthday: '1989-08-19T01:51:55.000Z' },
           link: 'http://localhost:3000/patients/0cc2ddd188/data',
         },
@@ -86,6 +92,8 @@ describe('PeopleTable', () => {
       {
         profile: {
           fullName: 'Anna Zork',
+          firstName: 'Anna',
+          lastName: 'Zork',
           patient: { birthday: '2010-08-19T01:51:55.000Z' },
           link: 'http://localhost:3000/patients/0cc2eed188/data',
         },
@@ -123,6 +131,7 @@ describe('PeopleTable', () => {
 
     it('should have provided search box', function () {
       expect(wrapper.find('.peopletable-search-box')).to.have.length(1);
+      expect(wrapper.find('.peopletable-search-box input')).to.have.length(2);
     });
 
     // by default, patients list is displayed
@@ -144,26 +153,53 @@ describe('PeopleTable', () => {
       // 5 people plus one row for the header
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
     });
+    it('should display first name and last name for each person (if available)', function () {
+      wrapper.setState({ showNames: true });
+      const names = props.people.map(p=>{
+        return {
+          firstName:p.profile.firstName?p.profile.firstName:p.profile.fullName,
+          lastName:p.profile.lastName?p.profile.lastName:""
+        }
+      }).sort((p1,p2)=>{
+        const lastNameP1 = p1.lastName.toLocaleLowerCase();
+        const lastNameP2 = p2.lastName.toLocaleLowerCase();
+        if( lastNameP1 < lastNameP2){
+          return -1;
+        }
+        if( lastNameP1 > lastNameP2){
+          return 1;
+        }
+        return 0;
+      })
+      const firstNameCells = wrapper.find('.public_fixedDataTable_bodyRow .firstName .peopletable-cell-content').map(r=>r.text());
+      const lastNameCells = wrapper.find('.public_fixedDataTable_bodyRow .lastName .peopletable-cell-content').map(r=>r.text());;
+      expect(names.length).to.equal(firstNameCells.length);
+      expect(names.length).to.equal(lastNameCells.length);
+      names.forEach((name,i)=>{
+        expect(name.firstName).to.equal(firstNameCells[i]);
+        expect(name.lastName).to.equal(lastNameCells[i]);
+      })
+    });
   });
 
   describe('sorting', function () {
-    it('should find 7 sort link', function () {
+    it('should find 8 sort link', function () {
       const links = wrapper.find('.peopletable-search-icon');
-      expect(links).to.have.length(7);
+      expect(links).to.have.length(8);
     });
 
     it('should trigger a call to trackMetric with correct parameters', function () {
       const link = wrapper.find('.peopletable-search-icon').first();
       link.simulate('click');
       expect(props.trackMetric.callCount).to.equal(1);
-      expect(props.trackMetric.calledWith('Sort by Name desc')).to.be.true;
+      expect(props.trackMetric.calledWith('Sort by firstName desc')).to.be.true;
     });
 
-    it('should find 3 sort link on small display', function () {
+    it('should find 4 sort link on small display', function () {
       wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: false });
       wrapper.update();
       const links = wrapper.find('.peopletable-search-icon');
-      expect(links).to.have.length(3);
+      expect(links).to.have.length(4);
     });
   });
 
@@ -175,24 +211,46 @@ describe('PeopleTable', () => {
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
     });
 
-    it('should show a row of data for each person that matches the search value', function () {
+    it('should show a row of data for each person that matches the firstName search value', function () {
       // showing `amanda` or `Anna`
-      wrapper.find('input').simulate('change', {target: {value: 'a'}});
+      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(3);
       expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
       // now just showing `amanda`
-      wrapper.find('input').simulate('change', {target: {value: 'am'}});
+      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
+      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
+      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+    });
+
+    it('should show a row of data for each person that matches the lastName search value', function () {
+      // showing `Doe`, `Zork` & `jones` matches
+      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
+      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
+      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      // now just showing `jones`
+      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'Jones'}});
+      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
+      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+    });
+
+    it('should show a row of data for each person that matches the lastName and the firstName search value', function () {
+      // showing `Doe`, `Zork` & `jones` matches
+      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
+      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
+      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      // now just showing `amanda jones`
+      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
       expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
     });
 
     it('should NOT trigger a call to trackMetric', function () {
-      wrapper.find('input').simulate('change', {target: {value: 'am'}});
+      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
       expect(props.trackMetric.callCount).to.equal(0);
     });
 
     it('should not have instructions displayed', function () {
-      wrapper.find('input').simulate('change', {target: {value: 'a'}});
+      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
       expect(wrapper.find('.peopletable-instructions')).to.have.length(0);
     });
 
@@ -251,14 +309,15 @@ describe('PeopleTable', () => {
       expect(currentRow).to.equal(4);
       const activeRow = wrapper.find('.peopletable-active-row').hostNodes();
       expect(activeRow).to.have.length(1);
-      expect(activeRow.html()).to.contain('Zoe Doe');
-
+      expect(activeRow.html()).to.contain('Anna');
+      expect(activeRow.html()).to.contain('Zork');
       // Ensure the renderRemoveDialog method is called with the correct patient
-      // Since we've clicked the last one, and the default sort is fullName alphabetically,
-      // it should be 'Zoe Doe'
+      // Since we've clicked the last one, and the default sort is lastName alphabetically,
+      // it should be 'Anna Zork'
       sinon.assert.callCount(renderRemoveDialog, 1);
       sinon.assert.calledWith(renderRemoveDialog, state('dataList')[currentRow]);
-      expect(state('dataList')[currentRow].fullName).to.equal('Zoe Doe');
+      expect(state('dataList')[currentRow].firstName).to.equal('Anna');
+      expect(state('dataList')[currentRow].lastName).to.equal('Zork');
 
       // Ensure the modal is showing
       expect(overlay().is('.ModalOverlay--show')).to.be.true;
@@ -303,7 +362,7 @@ describe('PeopleTable', () => {
       // Ensure that onRemovePatient is called with the proper userid
       removeButton.simulate('click')
       sinon.assert.callCount(props.onRemovePatient, 1);
-      sinon.assert.calledWith(props.onRemovePatient, 10);
+      sinon.assert.calledWith(props.onRemovePatient, 50);
     })
   });
 

@@ -483,7 +483,9 @@ describe('PatientInfo', function () {
         patient: {
           userid: 1,
           profile: {
-            fullName: 'Joe Bloggs'
+            fullName: 'Joe Bloggs',
+            firstName: 'Joe',
+            lastName: 'Bloggs'
           }
         }
       };
@@ -493,8 +495,9 @@ describe('PatientInfo', function () {
 
       var formValues = elem.formValuesFromPatient(elem.props.patient);
 
-      expect(Object.keys(formValues).length).to.equal(1);
-      expect(formValues.fullName).to.equal('Joe Bloggs');
+      expect(Object.keys(formValues).length).to.equal(2);
+      expect(formValues.firstName).to.equal('Joe');
+      expect(formValues.lastName).to.equal('Bloggs');
     });
 
     it('should return object containing birthday', function() {
@@ -581,12 +584,14 @@ describe('PatientInfo', function () {
       expect(formValues.about).to.equal('I have a wonderful coffee mug.');
     });
 
-    it('should return object containing fullName, birthday, diagnosisDate, diagnosisType and about', function() {
+    it('should return object containing firstName, lastName, birthday, diagnosisDate, diagnosisType and about', function() {
       var props = {
         patient: {
           userid: 1,
           profile: {
             fullName: 'Joe Bloggs',
+            firstName: 'Joe',
+            lastName: 'Bloggs',
             patient: {
               birthday: '1995-05-01',
               diagnosisDate: '2006-06-05',
@@ -602,8 +607,9 @@ describe('PatientInfo', function () {
 
       var formValues = elem.formValuesFromPatient(elem.props.patient);
 
-      expect(Object.keys(formValues).length).to.equal(5);
-      expect(formValues.fullName).to.equal('Joe Bloggs');
+      expect(Object.keys(formValues).length).to.equal(6);
+      expect(formValues.firstName).to.equal('Joe');
+      expect(formValues.lastName).to.equal('Bloggs');
       expect(formValues.birthday).to.equal('05/01/1995');
       expect(formValues.diagnosisDate).to.equal('06/05/2006');
       expect(formValues.diagnosisType).to.equal('type1');
