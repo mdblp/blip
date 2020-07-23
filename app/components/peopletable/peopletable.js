@@ -20,18 +20,18 @@ import _ from 'lodash';
 import cx from 'classnames';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import sundial from 'sundial';
-import { browserHistory } from 'react-router';
+import { browserHistory, Link } from 'react-router';
 import WindowSizeListener from 'react-window-size-listener';
-import { translate, Trans } from 'react-i18next';
+import i18next from '../../core/language';
 
 import { SortHeaderCell, SortTypes } from './sortheadercell';
 import personUtils from '../../core/personutils';
 import ModalOverlay from '../modaloverlay';
-import { Link } from 'react-router';
 
 const resetSearchImageSrc = require('./images/searchReset.png');
+const t = i18next.t.bind(i18next);
 
-const TextCell = ({ rowIndex, data, col, icon, title, t, track, fullDisplayMode, ...props }) => (
+const TextCell = ({ rowIndex, data, col, title, track, fullDisplayMode, ...props }) => (
   <Cell {...props}>
     <div className="peopletable-cell">
       <div className="peopletable-cell-content">
@@ -39,6 +39,7 @@ const TextCell = ({ rowIndex, data, col, icon, title, t, track, fullDisplayMode,
       </div>
       { fullDisplayMode ? (
         <div 
+          role = "presentation"
           onClick={
             (e) => {
               track('Selected PWD in new tab');
@@ -51,8 +52,8 @@ const TextCell = ({ rowIndex, data, col, icon, title, t, track, fullDisplayMode,
             target="_blank">
               <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V8h-1v5a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1h5V1z"/>
-                <path fillRule="evenodd" d="M13.5 1a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V1.5a.5.5 0 01.5-.5z" fillRule="evenodd"/>
-                <path fillRule="evenodd" d="M13 3.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z" fillRule="evenodd"/>
+                <path fillRule="evenodd" d="M13.5 1a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13V1.5a.5.5 0 01.5-.5z"/>
+                <path fillRule="evenodd" d="M13 3.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z"/>
             </svg>
           </Link>
         </div>
@@ -68,18 +69,16 @@ TextCell.propTypes = {
   col: PropTypes.string,
   data: PropTypes.array,
   rowIndex: PropTypes.number,
-  icon: PropTypes.object,
   title: PropTypes.string,
-  t: PropTypes.func,
   track: PropTypes.func,
   fullDisplayMode: PropTypes.bool,
 };
 
-const MetricCell = ({ rowIndex, data, col, title, t, track, format, timezone, ...props }) => (
+const MetricCell = ({ rowIndex, data, col, format, timezone, ...props }) => (
   <Cell {...props}>
     <div className="peopletable-cell">
       <div className="peopletable-cell-metric">
-        {(timezone)?format(data[rowIndex][col], t, timezone):format(data[rowIndex][col], t)}
+        {(timezone)?format(data[rowIndex][col], timezone):format(data[rowIndex][col])}
       </div>
     </div>
   </Cell>
@@ -89,16 +88,14 @@ MetricCell.propTypes = {
   col: PropTypes.string,
   data: PropTypes.array,
   rowIndex: PropTypes.number,
-  title: PropTypes.string,
-  t: PropTypes.func,
-  track: PropTypes.func,
   format: PropTypes.func,
+  timezone: PropTypes.string
 };
 
 const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
   <Cell {...props}>
-    <div onClick={(e) => e.stopPropagation()} className="peopletable-cell remove">
-      <i title={title} onClick={handleClick(data[rowIndex], rowIndex)} className="peopletable-icon-remove icon-delete"></i>
+    <div role="presentation" onClick={(e) => e.stopPropagation()} className="peopletable-cell remove">
+      <i role="button" tabIndex={rowIndex} title={title} onClick={handleClick(data[rowIndex], rowIndex)} className="peopletable-icon-remove icon-delete"></i>
     </div>
   </Cell>
 );
@@ -112,7 +109,7 @@ RemoveLinkCell.propTypes = {
 
 RemoveLinkCell.displayName = 'RemoveLinkCell';
 
-const PeopleTable = translate()(class PeopleTable extends React.Component {
+class PeopleTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -148,7 +145,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     WindowSizeListener.DEBOUNCE_TIME = 50;
   }
 
-  handleEmptySearch(e){
+  handleEmptySearch(){
     this.handleFilterChange(null);
   }
 
@@ -168,7 +165,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   buildDataList() {
     const getOrderable = (val) => (val|| '').toLowerCase();
     const list = _.map(this.props.people, (person) => {
-      let pmetric = _.get(person, ['metric'], '');
+      let pmetric = _.get(person, 'metric', '');
       let rate = pmetric.rate;
       let tirVeryLow, tirLow, tirTarget, tirHigh, tirVeryHigh = undefined;
       if (rate) {
@@ -209,13 +206,13 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     return `${v}%`
   }
 
-  formatDate(datetime, t, timezone) {
+  formatDate(datetime, timezone) {
     if (datetime && datetime !== '0') {
       return sundial.formatInTimezone(
         datetime, 
         timezone, 
         t('MMM D, YYYY h:mm a'));
-    };
+    }
     return t('No data in the last 24 hours');
   }
 
@@ -297,7 +294,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   renderSearchBar() {
-    const { t } = this.props;
+    
     return (
       <div className="peopletable-search">
         <div className="peopletable-search-label">
@@ -323,6 +320,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         {
         this.state.showSearchReset ?
           <img
+            alt={t('Reset Search')}
             onClick={this.handleEmptySearch}
             className="peopletable-reset-image"
             src={resetSearchImageSrc}
@@ -345,17 +343,17 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
   }
 
   renderRemoveDialog(patient) {
-    const { t } = this.props;
+    
     return (
       <div className="patient-remove-dialog">
-        <Trans className="ModalOverlay-content" i18nKey="html.peopletable-remove-patient-confirm">
+        <div className="ModalOverlay-content">
           <p>
-            Are you sure you want to remove this patient from your list?
+            {t('Are you sure you want to remove this patient from your list?')}
           </p>
           <p>
-            You will no longer be able to see or comment on their data.
+            {t('You will no longer be able to see or comment on their data.')}
           </p>
-        </Trans>
+        </div>
         <div className="ModalOverlay-controls">
           <button className="btn-secondary" type="button" onClick={this.handleOverlayClick}>
             {t('Cancel')}
@@ -379,7 +377,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
 
   handleRemovePatient(patient) {
     return () => {
-      this.props.onRemovePatient(patient.userid, function (err) {
+      this.props.onRemovePatient(patient.userid, function () {
         this.setState({
           currentRowIndex: -1,
           showModalOverlay: false,
@@ -429,7 +427,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     });
   }
 
-  getTirCol(list, item, label, sortDirs, t, format, width = 50, flexGrow = 0) {
+  getTirCol(list, item, label, sortDirs, format, width = 50, flexGrow = 0) {
     return <Column
       key={item}
       columnKey={item}
@@ -446,9 +444,6 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
         className={item}
         data={list}
         col={item}
-        title={item}
-        t={t}
-        track={this.props.trackMetric}
         format={format}
         timezone={this.props.timezone}
       />}
@@ -457,20 +452,19 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
     />
   }
 
-  getTirsCol(list, cols, sortDirs, t, format, width = 40, flexGrow = 0){
+  getTirsCol(list, cols, sortDirs, format, width = 40, flexGrow = 0){
     let res = [];
     cols.forEach(item => {
-      res.push(this.getTirCol(list, item, item, sortDirs, t, format, width, flexGrow));      
+      res.push(this.getTirCol(list, item, item, sortDirs, format, width, flexGrow));      
     });
     return res;
   }
 
   renderPeopleTable() {
-    const { t } = this.props;
     const { colSortDirs, dataList, tableWidth, tableHeight, fullDisplayMode } = this.state;
 
     const title = t('I want to quit this patient\'s care team');
-    const newTabTitle = 'open {{patient}} in a new tab';
+    const newTabTitle = t('open {{patient}} in a new tab');
     const labelLastName = t('LAST NAME');
     const labelFirstName = t('FIRST NAME');
     return (
@@ -500,7 +494,6 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             data={dataList}
             col="firstName"
             title={newTabTitle}
-            t={t}
             track={this.props.trackMetric}
           />}
           width={50}
@@ -522,23 +515,21 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
             data={dataList}
             col="lastName"
             title={newTabTitle}
-            t={t}
             track={this.props.trackMetric}
             fullDisplayMode= {fullDisplayMode}
           />}
           width={50}
           flexGrow={1}
         />
-        {this.getTirCol(dataList, 'tirLastTime', 'tirLastTime', colSortDirs, t, this.formatDate, 40, 1)}
+        {this.getTirCol(dataList, 'tirLastTime', 'tirLastTime', colSortDirs, this.formatDate, 40, 1)}
         {(fullDisplayMode) ?
           this.getTirsCol(
             dataList, 
             ['tirVeryLow', 'tirLow', 'tirTarget', 'tirHigh', 'tirVeryHigh'],
             colSortDirs, 
-            t, 
             this.formatRate)
           : 
-          this.getTirCol(dataList, 'tirTarget', 'tirTarget', colSortDirs, t, this.formatRate)
+          this.getTirCol(dataList, 'tirTarget', 'tirTarget', colSortDirs, this.formatRate)
           }
 
         <Column
@@ -565,7 +556,7 @@ const PeopleTable = translate()(class PeopleTable extends React.Component {
       </div>
     );
   }
-});
+}
 
 PeopleTable.propTypes = {
   people: PropTypes.array,
