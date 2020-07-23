@@ -44,7 +44,8 @@ class PatientNew extends React.Component {
       working: false,
       formValues: {
         isOtherPerson: false,
-        fullName: this.getUserFullName(),
+        firstName:this.getUserFirstName(),
+        lastName:this.getUserLastName(),
         dataDonateDestination: ''
       },
       validationErrors: {},
@@ -66,9 +67,16 @@ class PatientNew extends React.Component {
         ],
       },
       {
-        name: 'fullName',
+        name: 'firstName',
+        label: t('First Name'),
         type: 'text',
-        placeholder: t('Full name'),
+        placeholder: t('First name')
+      },
+      {
+        name: 'lastName',
+        label: t('Last Name'),
+        type: 'text',
+        placeholder: t('Last name')
       },
       {
         name: 'about',
@@ -145,14 +153,20 @@ class PatientNew extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       formValues: _.assign(this.state.formValues, {
-        fullName: this.getUserFullName(nextProps)
+        firstName: this.getUserFirstName(nextProps),
+        lastName: this.getUserLastName(nextProps)
       })
     });
   }
 
-  getUserFullName(props) {
+  getUserFirstName(props) {
     props = props || this.props;
-    return personUtils.fullName(props.user) || '';
+    return personUtils.firstName(props.user) || '';
+  }
+
+  getUserLastName(props) {
+    props = props || this.props;
+    return personUtils.lastName(props.user) || '';
   }
 
   render() {
@@ -224,11 +238,13 @@ class PatientNew extends React.Component {
     var formValues = _.clone(this.state.formValues);
 
     if (key === 'isOtherPerson') {
-      var isOtherPerson = (attributes.value === 'true') ? true : false;
-      var fullName = isOtherPerson ? '' : this.getUserFullName();
+      const isOtherPerson = (attributes.value === 'true') ? true : false;
+      const firstName = isOtherPerson ? '' : this.getUserFirstName();
+      const lastName = isOtherPerson ? '' : this.getUserLastName();
       formValues = _.assign(formValues, {
         isOtherPerson: isOtherPerson,
-        fullName: fullName,
+        firstName: firstName,
+        lastName: lastName
       });
     }
     else if (key === 'dataDonateDestination') {
@@ -284,7 +300,8 @@ class PatientNew extends React.Component {
 
   validateFormValues(formValues) {
     const form = [
-      { type: 'name', name: 'fullName', label: t('full name'), value: formValues.fullName },
+      { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
+      { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName },
       { type: 'date', name: 'birthday', label: t('birthday'), value: formValues.birthday },
       { type: 'diagnosisDate', name: 'diagnosisDate', label: t('diagnosis date'), value: formValues.diagnosisDate, prerequisites: { birthday: formValues.birthday } },
       { type: 'about', name: 'about', label: t('about'), value: formValues.about},
@@ -342,13 +359,18 @@ class PatientNew extends React.Component {
     }
 
     if (formValues.isOtherPerson) {
-      profile.fullName = this.getUserFullName();
+      profile.firstName = this.getUserFirstName();
+      profile.lastName = this.getUserLastName();
       patient.isOtherPerson = true;
-      patient.fullName = formValues.fullName;
+      patient.firstName = formValues.firstName;
+      patient.lastName = formValues.lastName;
+      patient.fullName = `${formValues.firstName} ${formValues.lastName}`;
     }
     else {
-      profile.fullName = formValues.fullName;
+      profile.firstName = formValues.firstName;
+      profile.lastName = formValues.lastName;
     }
+    profile.fullName = `${profile.firstName} ${profile.lastName}`;
 
     profile.patient = patient;
 
@@ -371,7 +393,7 @@ PatientNew.propTypes = {
  * Expose "Smart" Component that is connect-ed to Redux
  */
 
-export function mapStateToProps(state) {
+function mapStateToProps(state) {
   let user = null;
   if (state.blip.allUsersMap){
     if (state.blip.loggedInUserId) {
@@ -400,4 +422,5 @@ let mergeProps = (stateProps, dispatchProps, ownProps) => {
   });
 };
 
+export { PatientNew, mapStateToProps };
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(PatientNew);
