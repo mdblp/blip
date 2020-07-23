@@ -15,11 +15,7 @@
  * == BSD2 LICENSE ==
  */
 /* global chai */
-/* global describe */
 /* global sinon */
-/* global it */
-/* global beforeEach */
-/* global afterEach */
 
 import React from 'react';
 import { mount } from 'enzyme';
@@ -116,7 +112,7 @@ describe('PeopleTable', () => {
         {...props}
       />
     );
-    wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: true });
+    wrapper.instance().setState({ fullDisplayMode: true });
     wrapper.update();
   });
 
@@ -142,8 +138,8 @@ describe('PeopleTable', () => {
     });
 
     it('should default searching and showNames to be respectively false and true', function () {
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(false);
-      expect(wrapper.instance().getWrappedInstance().state.showNames).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(false);
+      expect(wrapper.instance().state.showNames).to.equal(true);
     });
   });
 
@@ -158,7 +154,7 @@ describe('PeopleTable', () => {
       const names = props.people.map(p=>{
         return {
           firstName:p.profile.firstName?p.profile.firstName:p.profile.fullName,
-          lastName:p.profile.lastName?p.profile.lastName:""
+          lastName:p.profile.lastName?p.profile.lastName:''
         }
       }).sort((p1,p2)=>{
         const lastNameP1 = p1.lastName.toLocaleLowerCase();
@@ -172,7 +168,7 @@ describe('PeopleTable', () => {
         return 0;
       })
       const firstNameCells = wrapper.find('.public_fixedDataTable_bodyRow .firstName .peopletable-cell-content').map(r=>r.text());
-      const lastNameCells = wrapper.find('.public_fixedDataTable_bodyRow .lastName .peopletable-cell-content').map(r=>r.text());;
+      const lastNameCells = wrapper.find('.public_fixedDataTable_bodyRow .lastName .peopletable-cell-content').map(r=>r.text());
       expect(names.length).to.equal(firstNameCells.length);
       expect(names.length).to.equal(lastNameCells.length);
       names.forEach((name,i)=>{
@@ -196,7 +192,7 @@ describe('PeopleTable', () => {
     });
 
     it('should find 4 sort link on small display', function () {
-      wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: false });
+      wrapper.instance().setState({ fullDisplayMode: false });
       wrapper.update();
       const links = wrapper.find('.peopletable-search-icon');
       expect(links).to.have.length(4);
@@ -205,7 +201,7 @@ describe('PeopleTable', () => {
 
   describe('searching', function () {
     it('should show a row of data for each person', function () {
-      wrapper.instance().getWrappedInstance().setState({ searching: true });
+      wrapper.instance().setState({ searching: true });
       wrapper.update();
       // 5 people plus one row for the header
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
@@ -215,33 +211,33 @@ describe('PeopleTable', () => {
       // showing `amanda` or `Anna`
       wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(3);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
       // now just showing `amanda`
       wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
     });
 
     it('should show a row of data for each person that matches the lastName search value', function () {
       // showing `Doe`, `Zork` & `jones` matches
       wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
       // now just showing `jones`
       wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'Jones'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
     });
 
     it('should show a row of data for each person that matches the lastName and the firstName search value', function () {
       // showing `Doe`, `Zork` & `jones` matches
       wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
       // now just showing `amanda jones`
       wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
-      expect(wrapper.instance().getWrappedInstance().state.searching).to.equal(true);
+      expect(wrapper.instance().state.searching).to.equal(true);
     });
 
     it('should NOT trigger a call to trackMetric', function () {
@@ -260,7 +256,7 @@ describe('PeopleTable', () => {
     });
 
     it('should have tir displayed when available on small display', function () {
-      wrapper.instance().getWrappedInstance().setState({ fullDisplayMode: false });
+      wrapper.instance().setState({ fullDisplayMode: false });
       wrapper.update();
       const expectedCells = props.people.length * 2;
       expect(wrapper.find('.peopletable-cell-metric')).to.have.length(expectedCells);
@@ -288,7 +284,7 @@ describe('PeopleTable', () => {
     });
 
     it('should show open a modal for removing a patient when their remove icon is clicked', function () {
-      const wrappedInstance = wrapper.instance().getWrappedInstance();
+      const wrappedInstance = wrapper.instance();
       const renderRemoveDialog = sinon.spy(wrappedInstance, 'renderRemoveDialog');
 
       // Modal should be hidden
@@ -372,9 +368,9 @@ describe('PeopleTable', () => {
     let proxy;
 
     beforeEach(function () {
-      patient = wrapper.instance().getWrappedInstance().state.dataList[0];
+      patient = wrapper.instance().state.dataList[0];
       rowIndex = 4;
-      proxy = wrapper.instance().getWrappedInstance().handleRemove(patient, rowIndex);
+      proxy = wrapper.instance().handleRemove(patient, rowIndex);
     });
 
     it('should return a proxy function', function () {
@@ -382,7 +378,7 @@ describe('PeopleTable', () => {
     });
 
     it('should set the modal and currentRowIndex state appropriately when called', function () {
-      const state = key => wrapper.instance().getWrappedInstance().state[key];
+      const state = key => wrapper.instance().state[key];
       expect(state('currentRowIndex')).to.equal(-1);
       expect(state('showModalOverlay')).to.be.false;
       expect(state('dialog')).to.equal('');
@@ -401,7 +397,7 @@ describe('PeopleTable', () => {
 
     beforeEach(function () {
       patient = { userid: 40 };
-      proxy = wrapper.instance().getWrappedInstance().handleRemovePatient(patient);
+      proxy = wrapper.instance().handleRemovePatient(patient);
     });
 
     it('should return a proxy function', function () {
