@@ -1,9 +1,3 @@
-/* global describe */
-/* global before */
-/* global after */
-/* global afterEach */
-/* global it */
-
 import React from 'react';
 import _ from 'lodash';
 import TestUtils from 'react-dom/test-utils';

@@ -1,10 +1,6 @@
 /* global chai */
-/* global describe */
 /* global sinon */
-/* global it */
-/* global beforeEach */
-/* global afterEach */
-
+import _ from 'lodash'
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
 import PatientInfo from '../../../../app/pages/patient/patientinfo';
@@ -68,7 +64,7 @@ describe('PatientInfo', function () {
   describe('initial state', function() {
     it('should return an object with editing set to false and containing no validationErrors', function() {
       var props = {
-        trackMetric: function() {}
+        trackMetric: _.noop
       };
 
       var patientInfoElem = React.createElement(PatientInfo, props);
@@ -138,7 +134,7 @@ describe('PatientInfo', function () {
             fullName: 'Joe Bloggs'
           }
         },
-        trackMetric: function() {}
+        trackMetric: _.noop
       };
 
       var patientInfoElem = React.createElement(PatientInfo, props);
@@ -230,12 +226,11 @@ describe('PatientInfo', function () {
             }
           }
         },
-        trackMetric: function() {}
+        trackMetric: _.noop
       };
 
       var patientInfoElem = React.createElement(PatientInfo, props);
       var elem = TestUtils.renderIntoDocument(patientInfoElem);
-      var today = Date.UTC(2015, 4, 28); //for testing purposes - set today as fixed
       expect(elem).to.be.ok;
       expect(elem.getAgeText(elem.props.patient, Date.UTC(2015, 4, 28))).to.equal('31 years old');
       elem.props.patient.profile.patient.birthday = '1984-04-30';
@@ -323,7 +318,6 @@ describe('PatientInfo', function () {
 
       var patientInfoElem = React.createElement(PatientInfo, props);
       var elem = TestUtils.renderIntoDocument(patientInfoElem);
-      var today = Date.UTC(2015, 4, 28); //for testing purposes - set today as fixed
       expect(elem).to.be.ok;
       expect(elem.getDiagnosisText(elem.props.patient, Date.UTC(2015, 4, 28))).to.equal('Diagnosed 31 years ago');
       elem.props.patient.profile.patient.diagnosisDate = '1984-04-30';

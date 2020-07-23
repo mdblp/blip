@@ -1,10 +1,5 @@
-/* global beforeEach */
-/* global before */
-/* global after */
 /* global chai */
-/* global describe */
 /* global sinon */
-/* global it */
 
 import _ from 'lodash';
 import React from 'react';
@@ -14,7 +9,7 @@ import { mount } from 'enzyme';
 
 import { PatientNew, mapStateToProps } from '../../../app/pages/patientnew/patientnew';
 
-import i18n from 'i18next';
+import * as i18n from 'i18next';
 
 var assert = chai.assert;
 var expect = chai.expect;
@@ -104,7 +99,7 @@ describe('PatientNew', function () {
         profile: {
           firstName: 'John',
           lastName: 'Doh',
-          fullName: "John Doh",
+          fullName: 'John Doh',
           patient: {
             birthday: '1990-01-20',
             diagnosisDate: '1995-02-02',
@@ -122,13 +117,13 @@ describe('PatientNew', function () {
     describe('When local=fr', () => {
       before((done)=> {
         i18n.off('languageChanged');
-        i18n.changeLanguage('fr', (err, t) => {
+        i18n.changeLanguage('fr', (err) => {
           if(err) console.log(err);
           done();
         });
       });
       after((done) => {
-        i18n.changeLanguage('en', (err, t) => {
+        i18n.changeLanguage('en', (err) => {
           if(err) console.log(err);
           done();
         });
@@ -141,7 +136,7 @@ describe('PatientNew', function () {
             profile: {
               firstName: 'John',
               lastName: 'Doh',
-              fullName: "John Doh",
+              fullName: 'John Doh',
               patient: {
                 birthday: '1990-01-20',
                 diagnosisDate: '1995-02-02',
@@ -164,7 +159,7 @@ describe('PatientNew', function () {
         profile: {
           firstName: 'John',
           lastName: 'Doh',
-          fullName: "John Doh",
+          fullName: 'John Doh',
           patient: {
             birthday: '1990-01-20',
             diagnosisDate: '1995-02-02',
