@@ -35,12 +35,12 @@ class ClinicianDetails extends React.Component {
     this.state = {
       working: false,
       formValues: {
-        firstName:this.getUserFirstName(),
-        lastName:this.getUserLastName(),
-        clinicalRole: ''
+        firstName: this.getUserFirstName(),
+        lastName: this.getUserLastName(),
+        clinicalRole: '',
+        clinicName: '',
       },
       validationErrors: {},
-    };
 
   }
 
@@ -200,12 +200,13 @@ class ClinicianDetails extends React.Component {
     if (!_.isEmpty(validationErrors)) {
       return;
     }
+    const fullName = `${formValues.firstName} ${formValues.lastName}`;
     const user = {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
-      fullName: fullName,
+      fullName,
       profile: {
-        fullName: fullName,
+        fullName,
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         clinic: {
@@ -226,7 +227,7 @@ class ClinicianDetails extends React.Component {
       { type: 'clinicPhone', name: 'clinicPhone', label: 'clinic phone', value: formValues.clinicPhone },
       { type: 'clinicalRole', name: 'clinicalRole', label: 'clinical role', value: formValues.clinicalRole }
     ];
-    const validationErrors = validateForm(form);
+    const validationErrors = validateForm(form, false);
 
     if (!_.isEmpty(validationErrors)) {
       this.setState({
@@ -240,7 +241,7 @@ class ClinicianDetails extends React.Component {
   resetFormStateBeforeSubmit(formValues) {
     this.setState({
       working: true,
-      formValues: formValues,
+      formValues,
       validationErrors: {}
     });
   }

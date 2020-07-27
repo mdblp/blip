@@ -60,10 +60,9 @@ class PatientInfo extends React.Component {
     }
 
     const patient = this.props.patient;
-    let self = this;
-    const handleClick = function(e) {
+    const handleClick = (e) => {
       e.preventDefault();
-      self.toggleEdit();
+      this.toggleEdit();
     };
     let nameNode;
     let ageNode;
@@ -171,11 +170,10 @@ class PatientInfo extends React.Component {
       return null;
     }
 
-    let self = this;
-    const handleClick = function(e) {
+    const handleClick = (e) => {
       e.preventDefault();
-      self.props.trackMetric('Clicked Edit Profile');
-      self.toggleEdit();
+      this.props.trackMetric('Clicked Edit Profile');
+      this.toggleEdit();
     };
 
     // Important to add a `key`, different from the "Cancel" button in edit mode
@@ -196,10 +194,9 @@ class PatientInfo extends React.Component {
     const patient = this.props.patient;
     const formValues = this.formValuesFromPatient(patient);
 
-    let self = this;
-    const handleCancel = function(e) {
+    const handleCancel = (e) => {
       e.preventDefault();
-      self.toggleEdit();
+      this.toggleEdit();
     };
 
     return (
@@ -249,7 +246,7 @@ class PatientInfo extends React.Component {
       }
       fullNameNode = (
         <div className="PatientInfo-blockRow">
-          <input className={classes} id="firstName" ref="firstName" placeholder="First name" defaultValue={formValues.firstName} />
+          <input className={classes} id="firstName" placeholder="First name" defaultValue={formValues.firstName} />
           <input className={classes} id="lastName" ref="lastName" placeholder="Last name" defaultValue={formValues.lastName} />
           {errorElem}
         </div>
@@ -329,7 +326,8 @@ class PatientInfo extends React.Component {
   }
 
   renderAboutInput(formValues) {
-    let classes = 'PatientInfo-input', errorElem;
+    let classes = 'PatientInfo-input';
+    let errorElem = null;
     const error = this.state.validationErrors.about;
     if (error) {
       classes += ' PatientInfo-input-error';
@@ -462,12 +460,12 @@ class PatientInfo extends React.Component {
     return personUtils.patientFullName(patient);
   }
 
-  getAgeText(patient, currentDate) {
+  getAgeText(patient) {
     const patientInfo = personUtils.patientInfo(patient) || {};
     const birthday = patientInfo.birthday;
 
     if (!birthday) {
-      return;
+      return null;
     }
 
     const now = new Date();
@@ -551,11 +549,11 @@ class PatientInfo extends React.Component {
     const formValues = {};
     const patientInfo = personUtils.patientInfo(patient);
     const firstName = personUtils.firstName(patient);
-    if(firstName) {
+    if (firstName) {
       formValues.firstName = firstName;
     }
     const lastName = personUtils.lastName(patient);
-    if(lastName) {
+    if (lastName) {
       formValues.lastName = lastName;
     }
     
@@ -606,7 +604,6 @@ class PatientInfo extends React.Component {
   }
 
   getFormValues() {
-    let self = this;
     return _.reduce([
       'firstName',
       'lastName',
@@ -614,7 +611,7 @@ class PatientInfo extends React.Component {
       'diagnosisDate',
       'diagnosisType',
       'about'
-    ], function(acc, key) {
+    ], (acc, key) => {
       if (self.refs[key]) {
         acc[key] = self.refs[key].value;
       }

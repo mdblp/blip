@@ -28,7 +28,7 @@ import { SortHeaderCell, SortTypes } from './sortheadercell';
 import personUtils from '../../core/personutils';
 import ModalOverlay from '../modaloverlay';
 
-const resetSearchImageSrc = require('./images/searchReset.png');
+import resetSearchImageSrc from './images/searchReset.png';
 const t = i18next.t.bind(i18next);
 
 const TextCell = ({ rowIndex, data, col, title, track, fullDisplayMode, ...props }) => (

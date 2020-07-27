@@ -30,18 +30,10 @@ personUtils.fullName = (person) => {
   return utils.getIn(person, ['profile', 'fullName']);
 };
 personUtils.firstName = (person) => {
-  const firstName = utils.getIn(person, ['profile', 'firstName']);
-  if(!firstName) {
-    return personUtils.fullName(person);
-  }
-  return firstName;
+  return _.get(person, 'profile.firstName', personUtils.fullName(person));
 };
 personUtils.lastName = (person) => {
-  const lastName = utils.getIn(person, ['profile', 'lastName']);
-  if(!lastName) {
-    return '';
-  }
-  return lastName;
+  return _.get(person, 'profile.lastName', '');
 };
 
 personUtils.patientInfo = (person) => {
