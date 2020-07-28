@@ -27,7 +27,7 @@ import { MGDL_UNITS, MMOLL_UNITS } from './constants';
 let personUtils = {};
 
 personUtils.fullName = (person) => {
-  return utils.getIn(person, ['profile', 'fullName']);
+  return _.get(person, 'profile.fullName','');
 };
 personUtils.firstName = (person) => {
   return _.get(person, 'profile.firstName', personUtils.fullName(person));
@@ -37,7 +37,7 @@ personUtils.lastName = (person) => {
 };
 
 personUtils.patientInfo = (person) => {
-  return utils.getIn(person, ['profile', 'patient']);
+  return _.get(person, 'profile.patient');
 };
 
 personUtils.hasAcceptedTerms = (person) => {
@@ -69,7 +69,7 @@ personUtils.isDataDonationAccount = (account) => {
 };
 
 personUtils.patientFullName = (person) => {
-  const profile = utils.getIn(person, ['profile'], {});
+  const profile = _.get(person, 'profile', {});
   const patientInfo = profile.patient || {};
 
   if (patientInfo.isOtherPerson) {
@@ -80,11 +80,11 @@ personUtils.patientFullName = (person) => {
 };
 
 personUtils.patientIsOtherPerson = (person) => {
-  return Boolean(utils.getIn(person, ['profile', 'patient', 'isOtherPerson']));
+  return Boolean(_.get(person, 'profile.patient.isOtherPerson'));
 };
 
 personUtils.isOnlyCareGiver = (person) => {
-  return Boolean(utils.getIn(person, ['profile', 'isOnlyCareGiver']));
+  return Boolean(_.get(person, 'profile.isOnlyCareGiver'));
 };
 
 personUtils.isSame = (first, second) => {
