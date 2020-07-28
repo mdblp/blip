@@ -461,7 +461,7 @@ class PatientInfo extends React.Component {
     return personUtils.patientFullName(patient);
   }
 
-  getAgeText(patient) {
+  getAgeText(patient,to=moment.utc()) {
     const patientInfo = personUtils.patientInfo(patient) || {};
     const birthday = patientInfo.birthday;
 
@@ -469,7 +469,7 @@ class PatientInfo extends React.Component {
       return null;
     }
 
-    const yrsAgo = moment.utc().diff(moment.utc(birthday), 'years');
+    const yrsAgo = to.diff(moment.utc(birthday), 'years');
 
     if (yrsAgo === 1) {
       return t('1 year old');
@@ -482,7 +482,7 @@ class PatientInfo extends React.Component {
     }
   }
 
-  getDiagnosisText(patient) {
+  getDiagnosisText(patient,to=moment.utc()) {
     const patientInfo = personUtils.patientInfo(patient) || {};
     const { diagnosisDate, diagnosisType } = patientInfo;
     let diagnosisDateText = '';
@@ -494,7 +494,7 @@ class PatientInfo extends React.Component {
     }
 
     if (diagnosisDate) {
-      yearsAgo = moment.utc().diff(moment.utc(diagnosisDate), 'years');
+      yearsAgo = to.diff(moment.utc(diagnosisDate), 'years');
       
       if (yearsAgo === 0) {
         diagnosisDateText = t('this year');
