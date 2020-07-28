@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import _ from 'lodash';
 import sundial from 'sundial';
+import moment from 'moment-timezone'
 import i18next from '../../core/language';
 
 import { Element } from 'react-scroll';
@@ -239,15 +240,15 @@ class PatientInfo extends React.Component {
       if (errors.firstName || errors.lastName) {
         classes += ' PatientInfo-input-error';
         errorElem = <div className="PatientInfo-error-message">
-            {errors.firstName?errors.firstName:''}
+            {errors.firstName}
             <br/>
-            {errors.lastName?errors.lastName:''}
+            {errors.lastName}
           </div>;
       }
       fullNameNode = (
         <div className="PatientInfo-blockRow">
-          <input className={classes} id="firstName" placeholder="First name" defaultValue={formValues.firstName} />
-          <input className={classes} id="lastName" ref="lastName" placeholder="Last name" defaultValue={formValues.lastName} />
+          <input className={classes} id="firstName" placeholder={t('First name')} defaultValue={formValues.firstName} />
+          <input className={classes} id="lastName" ref="lastName" placeholder={t('Last name')} defaultValue={formValues.lastName} />
           {errorElem}
         </div>
       );
@@ -468,9 +469,7 @@ class PatientInfo extends React.Component {
       return null;
     }
 
-    const now = new Date();
-    currentDate = currentDate || Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    const yrsAgo = sundial.dateDifference(currentDate, birthday, 'years');
+    const yrsAgo = moment.utc().diff(moment.utc(birthday), 'years');
 
     if (yrsAgo === 1) {
       return t('1 year old');
@@ -483,7 +482,7 @@ class PatientInfo extends React.Component {
     }
   }
 
-  getDiagnosisText(patient, currentDate) {
+  getDiagnosisText(patient) {
     const patientInfo = personUtils.patientInfo(patient) || {};
     const { diagnosisDate, diagnosisType } = patientInfo;
     let diagnosisDateText = '';
@@ -494,12 +493,9 @@ class PatientInfo extends React.Component {
       return;
     }
 
-    const now = new Date();
-    currentDate = currentDate || Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-
     if (diagnosisDate) {
-      yearsAgo = sundial.dateDifference(currentDate, diagnosisDate, 'years');
-
+      yearsAgo = moment.utc().diff(moment.utc(diagnosisDate), 'years');
+      
       if (yearsAgo === 0) {
         diagnosisDateText = t('this year');
       } else if (yearsAgo === 1) {
@@ -612,8 +608,8 @@ class PatientInfo extends React.Component {
       'diagnosisType',
       'about'
     ], (acc, key) => {
-      if (self.refs[key]) {
-        acc[key] = self.refs[key].value;
+      if (this.refs[key]) {
+        acc[key] = this.refs[key].value;
       }
       return acc;
     }, {});
@@ -688,4 +684,4 @@ PatientInfo.propTypes = {
   queryParams: PropTypes.object,
 };
 
-module.exports = PatientInfo;
+export default PatientInfo;

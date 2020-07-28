@@ -150,15 +150,6 @@ class PatientNew extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      formValues: _.assign(this.state.formValues, {
-        firstName: this.getUserFirstName(nextProps),
-        lastName: this.getUserLastName(nextProps)
-      })
-    });
-  }
-
   getUserFirstName(props) {
     props = props || this.props;
     return personUtils.firstName(props.user) || '';
@@ -300,8 +291,8 @@ class PatientNew extends React.Component {
 
   validateFormValues(formValues) {
     const form = [
-      { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
-      { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName },
+      { type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName },
+      { type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName },
       { type: 'date', name: 'birthday', label: t('birthday'), value: formValues.birthday },
       { type: 'diagnosisDate', name: 'diagnosisDate', label: t('diagnosis date'), value: formValues.diagnosisDate, prerequisites: { birthday: formValues.birthday } },
       { type: 'about', name: 'about', label: t('about'), value: formValues.about},

@@ -41,7 +41,9 @@ class ClinicianDetails extends React.Component {
         clinicName: '',
       },
       validationErrors: {},
-
+    }
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   formInputs() {
@@ -94,16 +96,6 @@ class ClinicianDetails extends React.Component {
       this.props.trackMetric('Web - Clinician Details Setup');
     }
   }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      formValues: _.assign(this.state.formValues, {
-        firstName: this.getUserFirstName(nextProps),
-        lastName: this.getUserLastName(nextProps)
-      })
-    });
-  }
-
 
   getUserFirstName(props) {
     props = props || this.props;
@@ -230,9 +222,7 @@ class ClinicianDetails extends React.Component {
     const validationErrors = validateForm(form, false);
 
     if (!_.isEmpty(validationErrors)) {
-      this.setState({
-        validationErrors: validationErrors
-      });
+      this.setState({ validationErrors });
     }
 
     return validationErrors;
@@ -274,11 +264,11 @@ export function mapStateToProps(state) {
   };
 }
 
-let mapDispatchToProps = dispatch => bindActionCreators({
+const mapDispatchToProps = dispatch => bindActionCreators({
   updateClinicianProfile: actions.async.updateClinicianProfile
 }, dispatch);
 
-let mergeProps = (stateProps, dispatchProps, ownProps) => {
+const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const api = ownProps.routes[0].api;
   return Object.assign({}, stateProps, {
     onSubmit: dispatchProps.updateClinicianProfile.bind(null, api),
