@@ -152,12 +152,12 @@ class PatientNew extends React.Component {
 
   getUserFirstName(props) {
     props = props || this.props;
-    return personUtils.firstName(props.user) || '';
+    return personUtils.firstName(props.user);
   }
 
   getUserLastName(props) {
     props = props || this.props;
-    return personUtils.lastName(props.user) || '';
+    return personUtils.lastName(props.user);
   }
 
   render() {

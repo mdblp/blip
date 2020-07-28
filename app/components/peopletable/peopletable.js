@@ -239,9 +239,6 @@ class PeopleTable extends React.Component {
   }
 
   handleSortChange(columnKey, sortDir, track, excludedValue = undefined) {
-    const split = _.partition(this.state.dataList, {[columnKey]: excludedValue});
-    const sortNotExcluded = _.orderBy(split[1], [columnKey], [sortDir]);
-    const sorted = _.concat(sortNotExcluded, split[0]);
     if (track) {
       let metricMessage = 'Sort by ';
 
@@ -258,7 +255,7 @@ class PeopleTable extends React.Component {
         case 'tirTarget':
         case 'tirHigh':
         case 'tirVeryHigh':
-                metricMessage += columnKey
+          metricMessage += columnKey
           break;
         default:
           break;
@@ -266,6 +263,20 @@ class PeopleTable extends React.Component {
       metricMessage += ` ${sortDir}`;
       this.props.trackMetric(metricMessage);
     }
+    const dataSort = {
+      column : [columnKey],
+      direction: [sortDir],
+    }
+    const defaultSort = ["lastNameOrderable","firstNameOrderable"]
+    defaultSort.forEach(col=>{
+      if (dataSort.column.indexOf(col) < 0) {
+        dataSort.column.push(col);
+        dataSort.direction.push(SortTypes.ASC)
+      }
+    });
+    const split = _.partition(this.state.dataList, {[columnKey]: excludedValue});
+    const sortNotExcluded = _.orderBy(split[1], dataSort.column, dataSort.direction);
+    const sorted = _.concat(sortNotExcluded, split[0]);
 
     this.setState({
       dataList: sorted,
