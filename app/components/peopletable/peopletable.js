@@ -66,12 +66,12 @@ const TextCell = ({ rowIndex, data, col, title, track, fullDisplayMode, ...props
 );
 
 TextCell.propTypes = {
-  col: PropTypes.string,
-  data: PropTypes.array,
-  rowIndex: PropTypes.number,
-  title: PropTypes.string,
-  track: PropTypes.func,
-  fullDisplayMode: PropTypes.bool,
+  col: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  track: PropTypes.func.isRequired,
+  fullDisplayMode: PropTypes.bool.isRequired,
 };
 
 const MetricCell = ({ rowIndex, data, col, format, timezone, ...props }) => (
@@ -85,11 +85,11 @@ const MetricCell = ({ rowIndex, data, col, format, timezone, ...props }) => (
 );
 
 MetricCell.propTypes = {
-  col: PropTypes.string,
-  data: PropTypes.array,
-  rowIndex: PropTypes.number,
-  format: PropTypes.func,
-  timezone: PropTypes.string
+  col: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  format: PropTypes.func.isRequired,
+  timezone: PropTypes.string.isRequired
 };
 
 const RemoveLinkCell = ({ rowIndex, data, handleClick, title, ...props }) => (
@@ -124,10 +124,7 @@ class PeopleTable extends React.Component {
     this.handleEmptySearch = this.handleEmptySearch.bind(this);
 
     this.state = {
-      searchPattern: {
-        firstName:'',
-        lastName:''
-      },
+      searchPattern: '',
       currentRowIndex: -1,
       searching: false,
       showNames: true,
@@ -178,6 +175,7 @@ class PeopleTable extends React.Component {
       const firstName = personUtils.firstName(person);
       const lastName = personUtils.lastName(person);
       return {
+        fullName: personUtils.patientFullName(person),
         firstName: firstName,
         firstNameOrderable: getOrderable(firstName),
         lastName: lastName,
@@ -217,42 +215,26 @@ class PeopleTable extends React.Component {
   }
 
   handleFilterChange(e) {
-    if(e === null ||_.isEmpty(e.target) || _.isEmpty(e.target.name)) {
+    if(e === null ||_.isEmpty(e.target)) {
       this.setState({
         searching: false,
         dataList: this.buildDataList(),
         showSearchReset: false,
-        searchPattern: {
-          firstName:'',
-          lastName: ''
-        },
+        searchPattern: '',
       });
       return;
     }
-    let currentSearch = {
-      firstName: this.state.searchPattern.firstName,
-      lastName: this.state.searchPattern.lastName
-    };
-    currentSearch[e.target.name] = e.target.value;
-    
 
-    const filterBy = (person,key) => {
-      let filtered = true;
-      const filter = currentSearch[key].toLowerCase();
-      if (filter!=='') {
-        filtered = _.get(person, key, '').toLowerCase().indexOf(filter) !== -1;
-      }
-      return filtered;
-    }
+    const filterBy = e.target.value.toLowerCase();
     const filtered = _.filter(this.buildDataList(), (person) => {
-      return filterBy(person,'firstName') && filterBy(person,'lastName');
+      return _.get(person, 'fullName', '').toLowerCase().indexOf(filterBy) !== -1;
     });
 
     this.setState({
       searching: true,
       dataList: filtered,
       showSearchReset: true,
-      searchPattern: currentSearch
+      searchPattern: e.target.value,
     });
   }
 
@@ -303,19 +285,11 @@ class PeopleTable extends React.Component {
         <div className="peopletable-search-box form-control-border">
         <input
           type="search"
-          name="firstName"
+          name="fullName"
           className="input"
           onChange={this.handleFilterChange}
-          placeholder={t('Search by First Name')}
-          value={this.state.searchPattern.firstName}
-        />
-         <input
-          type="search"
-          name="lastName"
-          className="input"
-          onChange={this.handleFilterChange}
-          placeholder={t('Search by Last Name')}
-          value={this.state.searchPattern.lastName}
+          placeholder={t('Search by Name')}
+          value={this.state.searchPattern}
         />
         {
         this.state.showSearchReset ?
