@@ -715,12 +715,16 @@
   "First Name": "First Name",
   "First name": "First name",
   "First name is required": "First name is required",
+  "first name": "first name",
   "LAST NAME": "LAST NAME",
   "Last Name": "Last Name",
   "Last name": "Last name",
   "Last name is required": "Last name is required",
+  "last name": "last name",
   "edit in": "edit in",
   "account": "account",
   "The units I use are": "The units I use are",
-  "You own your data. Read all the details about Tidepool's Big Data Donation project": "You own your data."
+  "You own your data. Read all the details about Tidepool's Big Data Donation project": "You own your data.",
+  "here": "here",
+  "email": "email"
 }
