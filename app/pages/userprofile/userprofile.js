@@ -238,21 +238,21 @@ class UserProfile extends React.Component {
 
   validateFormValues(formValues) {
     let form = [
-      { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
-      { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName }
+      { type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName },
+      { type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName }
     ];
 
     if (this.isUserAllowedToChangeEmail()) {
-      form.push({ type: 'email', name: 'username', label: 'email', value: formValues.username });
+      form.push({ type: 'email', name: 'username', label: t('email'), value: formValues.username });
     }
 
     if (this.isUserAllowedToChangePassword() && (formValues.password || formValues.passwordConfirm)) {
       form = _.merge(form, [
-        { type: 'password', name: 'password', label: 'password', value: formValues.password },
+        { type: 'password', name: 'password', label: t('password'), value: formValues.password },
         {
           type: 'confirmPassword',
           name: 'passwordConfirm',
-          label: 'confirm password',
+          label: t('confirm password'),
           value: formValues.passwordConfirm,
           prerequisites: { password: formValues.password }
         }
