@@ -143,8 +143,8 @@ class UserProfile extends React.Component {
       return null;
     }
     return {
-      firstName: user.profile && user.profile.firstName,
-      lastName: user.profile && user.profile.lastName,
+      firstName: personUtils.firstName(user),
+      lastName: personUtils.lastName(user),
       username: user.username,
       lang: _.get(user, 'preferences.displayLanguageCode', undefined)
     };
