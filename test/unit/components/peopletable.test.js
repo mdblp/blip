@@ -127,7 +127,7 @@ describe('PeopleTable', () => {
 
     it('should have provided search box', function () {
       expect(wrapper.find('.peopletable-search-box')).to.have.length(1);
-      expect(wrapper.find('.peopletable-search-box input')).to.have.length(2);
+      expect(wrapper.find('.peopletable-search-box input')).to.have.length(1);
     });
 
     // by default, patients list is displayed
@@ -207,46 +207,24 @@ describe('PeopleTable', () => {
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
     });
 
-    it('should show a row of data for each person that matches the firstName search value', function () {
-      // showing `amanda` or `Anna`
-      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
-      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(3);
+    it('should show a row of data for each person that matches the fullName search value', function () {
+      // showing all rows because they all contain "o" in their first or lastname
+      wrapper.find('input[name="fullName"]').simulate('change', {target: {name:'firstName', value: 'o'}});
+      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(6);
       expect(wrapper.instance().state.searching).to.equal(true);
-      // now just showing `amanda`
-      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
-      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
-      expect(wrapper.instance().state.searching).to.equal(true);
-    });
-
-    it('should show a row of data for each person that matches the lastName search value', function () {
-      // showing `Doe`, `Zork` & `jones` matches
-      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
+      // now just showing `zoe` `Doe` `Tucker Doe`
+      wrapper.find('input[name="fullName"]').simulate('change', {target: {name:'firstName', value: 'oe'}});
       expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
-      expect(wrapper.instance().state.searching).to.equal(true);
-      // now just showing `jones`
-      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'Jones'}});
-      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
-      expect(wrapper.instance().state.searching).to.equal(true);
-    });
-
-    it('should show a row of data for each person that matches the lastName and the firstName search value', function () {
-      // showing `Doe`, `Zork` & `jones` matches
-      wrapper.find('input[name="lastName"]').simulate('change', {target: {name:'lastName', value: 'o'}});
-      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(4);
-      expect(wrapper.instance().state.searching).to.equal(true);
-      // now just showing `amanda jones`
-      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
-      expect(wrapper.find('.public_fixedDataTableRow_main')).to.have.length(2);
       expect(wrapper.instance().state.searching).to.equal(true);
     });
 
     it('should NOT trigger a call to trackMetric', function () {
-      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
+      wrapper.find('input[name="fullName"]').simulate('change', {target: {name:'firstName', value: 'am'}});
       expect(props.trackMetric.callCount).to.equal(0);
     });
 
     it('should not have instructions displayed', function () {
-      wrapper.find('input[name="firstName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
+      wrapper.find('input[name="fullName"]').simulate('change', {target: {name:'firstName', value: 'a'}});
       expect(wrapper.find('.peopletable-instructions')).to.have.length(0);
     });
 
