@@ -36,7 +36,7 @@ import { DIABETES_TYPES } from '../../core/constants';
 const t = i18next.t.bind(i18next);
 
 //date masks we use
-const FORM_DATE_FORMAT = t('MM/DD/YYYY');
+const FORM_DATE_FORMAT = 'MM/DD/YYYY';
 const SERVER_DATE_FORMAT = 'YYYY-MM-DD';
 
 class PatientInfo extends React.Component {
@@ -247,7 +247,7 @@ class PatientInfo extends React.Component {
       }
       fullNameNode = (
         <div className="PatientInfo-blockRow">
-          <input className={classes} id="firstName" placeholder={t('First name')} defaultValue={formValues.firstName} />
+          <input className={classes} id="firstName" ref="firstName" placeholder={t('First name')} defaultValue={formValues.firstName} />
           <input className={classes} id="lastName" ref="lastName" placeholder={t('Last name')} defaultValue={formValues.lastName} />
           {errorElem}
         </div>
@@ -278,7 +278,7 @@ class PatientInfo extends React.Component {
     return (<div className="PatientInfo-blockRow">
       <div className="">
         <label className="PatientInfo-label" htmlFor="birthday">{t('Date of birth')}</label>
-        <input className={classes} id="birthday" ref="birthday" placeholder={FORM_DATE_FORMAT} defaultValue={formValues.birthday} />
+        <input className={classes} id="birthday" ref="birthday" placeholder={t(FORM_DATE_FORMAT)} defaultValue={formValues.birthday} />
         {errorElem}
       </div>
     </div>);
@@ -294,7 +294,7 @@ class PatientInfo extends React.Component {
     return (<div className="PatientInfo-blockRow">
       <div className="">
         <label className="PatientInfo-label" htmlFor="diagnosisDate">{t('Date of diagnosis')}</label>
-        <input className={classes} id="diagnosisDate" ref="diagnosisDate" placeholder={FORM_DATE_FORMAT} defaultValue={formValues.diagnosisDate} />
+        <input className={classes} id="diagnosisDate" ref="diagnosisDate" placeholder={t(FORM_DATE_FORMAT)} defaultValue={formValues.diagnosisDate} />
         {errorElem}
       </div>
     </div>);
@@ -544,22 +544,22 @@ class PatientInfo extends React.Component {
 
     const formValues = {};
     const patientInfo = personUtils.patientInfo(patient);
-    const firstName = personUtils.firstName(patient);
+    const firstName = personUtils.patientFirstName(patient);
     if (firstName) {
       formValues.firstName = firstName;
     }
-    const lastName = personUtils.lastName(patient);
+    const lastName = personUtils.patientLastName(patient);
     if (lastName) {
       formValues.lastName = lastName;
     }
     
     if (patientInfo) {
       if (patientInfo.birthday) {
-        formValues.birthday = sundial.translateMask(patientInfo.birthday, SERVER_DATE_FORMAT, FORM_DATE_FORMAT);
+        formValues.birthday = sundial.translateMask(patientInfo.birthday, SERVER_DATE_FORMAT, t(FORM_DATE_FORMAT));
       }
 
       if (patientInfo.diagnosisDate) {
-        formValues.diagnosisDate = sundial.translateMask(patientInfo.diagnosisDate, SERVER_DATE_FORMAT, FORM_DATE_FORMAT);
+        formValues.diagnosisDate = sundial.translateMask(patientInfo.diagnosisDate, SERVER_DATE_FORMAT, t(FORM_DATE_FORMAT));
       }
 
       if (patientInfo.diagnosisType) {
@@ -569,15 +569,8 @@ class PatientInfo extends React.Component {
       if (patientInfo.about) {
         formValues.about = patientInfo.about;
       }
-
-      if(patientInfo.firstName) {
-        formValues.firstName = patientInfo.firstName;
-      }
-
-      if(patientInfo.lastName) {
-        formValues.lastName = patientInfo.lastName;
-      }
     }
+    
     return formValues;
   }
 
@@ -588,7 +581,7 @@ class PatientInfo extends React.Component {
     this.setState({validationErrors: {}});
 
     const isNameRequired = personUtils.patientIsOtherPerson(this.props.patient);
-    const validationErrors = personUtils.validateFormValues(formValues, isNameRequired, FORM_DATE_FORMAT);
+    const validationErrors = personUtils.validateFormValues(formValues, isNameRequired, t(FORM_DATE_FORMAT));
 
     if (!_.isEmpty(validationErrors)) {
       this.setState({
@@ -632,11 +625,11 @@ class PatientInfo extends React.Component {
     }
 
     if (formValues.birthday) {
-      formValues.birthday = sundial.translateMask(formValues.birthday, FORM_DATE_FORMAT, SERVER_DATE_FORMAT);
+      formValues.birthday = sundial.translateMask(formValues.birthday, t(FORM_DATE_FORMAT), SERVER_DATE_FORMAT);
     }
 
     if (formValues.diagnosisDate) {
-      formValues.diagnosisDate = sundial.translateMask(formValues.diagnosisDate, FORM_DATE_FORMAT, SERVER_DATE_FORMAT);
+      formValues.diagnosisDate = sundial.translateMask(formValues.diagnosisDate, t(FORM_DATE_FORMAT), SERVER_DATE_FORMAT);
     }
 
     if (!formValues.diagnosisType) {

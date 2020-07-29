@@ -6,10 +6,11 @@ import React from 'react';
 import TestUtils from 'react-dom/test-utils';
 import mutationTracker from 'object-invariant-test-helper';
 import { mount } from 'enzyme';
+import * as i18n from 'i18next';
 
 import { PatientNew, mapStateToProps } from '../../../app/pages/patientnew/patientnew';
 
-import * as i18n from 'i18next';
+
 
 var assert = chai.assert;
 var expect = chai.expect;

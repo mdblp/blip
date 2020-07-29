@@ -97,14 +97,12 @@ class ClinicianDetails extends React.Component {
     }
   }
 
-  getUserFirstName(props) {
-    props = props || this.props;
-    return personUtils.firstName(props.user) || '';
+  getUserFirstName() {
+    return personUtils.firstName(this.props.user);
   }
 
-  getUserLastName(props) {
-    props = props || this.props;
-    return personUtils.lastName(props.user) || '';
+  getUserLastName() {
+    return personUtils.lastName(this.props.user);
   }
 
   canSubmit() {

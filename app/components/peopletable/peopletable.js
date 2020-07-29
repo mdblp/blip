@@ -172,13 +172,13 @@ class PeopleTable extends React.Component {
         tirHigh = pmetric.rate.high;
         tirVeryHigh = pmetric.rate.veryHigh;
       }
-      const firstName = personUtils.firstName(person);
-      const lastName = personUtils.lastName(person);
+      const firstName = personUtils.patientFirstName(person);
+      const lastName = personUtils.patientLastName(person);
       return {
         fullName: personUtils.patientFullName(person),
-        firstName: firstName,
+        firstName,
         firstNameOrderable: getOrderable(firstName),
-        lastName: lastName,
+        lastName,
         lastNameOrderable: getOrderable(lastName),
         link: person.link,
         userid: person.userid,

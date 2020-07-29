@@ -69,14 +69,24 @@ personUtils.isDataDonationAccount = (account) => {
 };
 
 personUtils.patientFullName = (person) => {
-  const profile = _.get(person, 'profile', {});
-  const patientInfo = profile.patient || {};
-
-  if (patientInfo.isOtherPerson) {
-    return patientInfo.fullName;
+  if (personUtils.patientIsOtherPerson(person)) {
+    return _.get(person, 'profile.patient.fullName', personUtils.fullName(person));
   }
+  return personUtils.fullName(person);
+};
 
-  return profile.fullName;
+personUtils.patientFirstName = (person) => {
+  if (personUtils.patientIsOtherPerson(person)) {
+    return _.get(person, 'profile.patient.firstName', personUtils.firstName(person));
+  }
+  return personUtils.firstName(person);
+};
+
+personUtils.patientLastName = (person) => {
+  if (personUtils.patientIsOtherPerson(person)) {
+    return _.get(person, 'profile.patient.lastName', personUtils.lastName(person));
+  }
+  return personUtils.lastName(person);
 };
 
 personUtils.patientIsOtherPerson = (person) => {
