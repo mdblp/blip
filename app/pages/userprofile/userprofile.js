@@ -22,6 +22,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import i18next from '../../core/language';
+import languages from '../../../locales/languages.json'
 import * as actions from '../../redux/actions';
 
 import { validateForm } from '../../core/validation';
@@ -86,9 +87,6 @@ class UserProfile extends React.Component {
   }
 
   formInputs() {
-    // eslint-disable-next-line no-undef
-    // eslint-disable-next-line lodash/prefer-lodash-typecheck
-    const CROWDIN_ACTIVE = typeof _jipt === 'object';
     const inputs = [
       { name: 'firstName', label: t('First name'), type: 'text' },
       { name: 'lastName', label: t('Last name'), type: 'text' }
@@ -118,14 +116,10 @@ class UserProfile extends React.Component {
     }
 
     if (config.I18N_ENABLED) {
-      const locales = [
-        { value: 'en', label: 'English' },
-        { value: 'fr', label: 'Français' }
-      ];
-      if (CROWDIN_ACTIVE) {
-        // Special "pseudo" language for crowdin live preview
-        locales.push({ value: 'it', label: 'Crowdin' });
-      }
+      const locales = [];
+      _.forOwn(languages.resources, (value, key) => {
+        locales.push({ value: key, label: value.name });
+      });
       inputs.push({
         name: 'lang',
         label: t('Language'),
@@ -146,7 +140,7 @@ class UserProfile extends React.Component {
       firstName: personUtils.firstName(user),
       lastName: personUtils.lastName(user),
       username: user.username,
-      lang: _.get(user, 'preferences.displayLanguageCode', undefined)
+      lang: _.get(user, 'preferences.displayLanguageCode')
     };
   }
 

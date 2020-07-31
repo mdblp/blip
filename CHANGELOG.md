@@ -3,10 +3,15 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Engineering Use
+- YLP-107 Create lambda edge generatation script for CloudFront
+
+## 1.2.0 - 2020-07-31
 ### Changed
 - YLP-72 Have two distincts fields for first name and last name in profile page
 ### Engineering Use
-- YLP-107 Create lambda edge generatation script for CloudFront
+- YLP-48 Change crowdin pseudo language from 'it' to 'lol'
+- Externalize languages definition (out of code)
 
 ## 1.1.0 - 2020-07-21
 ### Changed
