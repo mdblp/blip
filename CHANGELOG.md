@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - YLP-72 Have two distincts fields for first name and last name in profile page
+### Engineering Use
+- YLP-107 Create lambda edge generatation script for CloudFront
 
 ## 1.1.0 - 2020-07-21
 ### Changed
