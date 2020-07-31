@@ -1,13 +1,9 @@
-
+// @ts-nocheck
 import i18n from 'i18next';
 import { reactI18nextModule } from 'react-i18next';
 import getLocale from 'browser-locale';
 import moment from 'moment';
-import mainEN from '../../locales/en/translation.json';
-import parameterEN from '../../locales/en/parameter.json';
-import mainFR from '../../locales/fr/translation.json';
-import parameterFR from '../../locales/fr/parameter.json';
-import mainIT from '../../locales/it/translation.json';
+import locales from '../../locales/languages.json';
 
 const crowdinActive = typeof _jipt === 'object';
 
@@ -21,7 +17,7 @@ if (self.localStorage && self.localStorage.lang) {
 }
 
 const i18nOptions = {
-  fallbackLng: 'en',
+  fallbackLng: locales.fallback,
   lng: language,
 
   // To allow . in keys
@@ -44,32 +40,17 @@ const i18nOptions = {
     defaultTransParent: 'div', // a valid react element - required before react 16
     transSupportBasicHtmlNodes: true, // allow <br/> and simple html elements in translations
   },
-  ns: ['main', 'params'],
-  defaultNS: 'main',
+  ns: locales.namespaces,
+  defaultNS: locales.defaultNS,
 
-  resources: {
-    en: {
-      // Default namespace
-      main: mainEN,
-      params: parameterEN
-    },
-    fr: {
-      main: mainFR,
-      params: parameterFR
-    }
-  }
-}
-
+  resources: locales.resources,
+};
 
 i18n.use(reactI18nextModule);
 
 if (crowdinActive) {
-  i18nOptions.fallbackLng = 'it';
-  i18nOptions.resources.it = {
-    main: mainIT,
-    params: parameterEN
-  }
-
+  i18nOptions.fallbackLng = locales.crowdin.fallback;
+  i18nOptions.resources[locales.crowdin.fallback] = locales.crowdin.resources;
 }
 
 // Update moment with the right language, for date display
@@ -79,12 +60,8 @@ i18n.on('languageChanged', (lng) => {
   if (typeof lng === 'string' && language !== lng) {
     language = lng;
 
-    // Update moment locale, but if crowdin is enabled then force 'en'
-    if (crowdinActive && lng === 'it') {
-      moment.locale('en');
-    } else {
-      moment.locale(lng);
-    }
+    // FIXME: Get currently use Crowdin language, when Crowdin is active.
+    moment.locale(lng);
 
     // Zendesk locale
     if (typeof window.zE === 'function') {
