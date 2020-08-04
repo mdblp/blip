@@ -38,7 +38,7 @@
     "express": "4.17.1",
     "helmet": "3.22.0",
     "morgan": "1.10.0",
-    "@tidepool/viz": "github:mdblp/viz#dblp.0.14.0",
+    "@tidepool/viz": "github:mdblp/viz#fix/coefficient-of-variation",
     "tideline": "github:mdblp/tideline#dblp.1.11.1",
     "async": "3.2.0",
     "sundial": "github:mdblp/sundial#dblp.0.2.0",
