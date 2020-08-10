@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Changed 
+- PT-1444 Deduplicate Physical Activity events containing the new EventId field
+- PT-1304 Display the new physical activity fields
 ### Engineering Use
 - YLP-107 Create lambda edge generatation script for CloudFront
 
