@@ -15,7 +15,7 @@ import Patients from './pages/patients';
 import RequestPasswordReset from './pages/passwordreset/request';
 import Share from './pages/share/share';
 import Signup from './pages/signup';
-import Terms from './pages/terms';
+import TermsPage from './pages/terms';
 import UserProfile from './pages/userprofile';
 import VerificationWithPassword from './pages/verificationwithpassword';
 
@@ -324,7 +324,7 @@ export const getRoutes = (appContext, store) => {
     <Route path='/' component={AppComponent} {...props}>
       <IndexRoute component={Login} onEnter={trackPage(api, onIndexRouteEnter(api))} />
       <Route path='login' component={Login} onEnter={trackPage(api, requireNoAuth(api))} />
-      <Route path='terms' components={Terms} onEnter={trackPage(api, requireAuth(api, store))} />
+      <Route path='terms' components={TermsPage} onEnter={trackPage(api, requireAuth(api, store))} />
       <Route path='signup' component={Signup} onEnter={trackPage(api, requireNoAuth(api))} />
       <Route path='signup/personal' component={Signup} onEnter={trackPage(api, requireNoAuthAndPatientSignupAllowed(api))} />
       <Route path='signup/clinician' component={Signup} onEnter={trackPage(api, requireNoAuth(api))} />

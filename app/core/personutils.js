@@ -24,7 +24,9 @@ const t = i18next.t.bind(i18next);
 
 import { MGDL_UNITS, MMOLL_UNITS } from './constants';
 
-let personUtils = {};
+let personUtils = {
+  haveClinicProfile: (user) => _.get(user, 'profile.clinic', false) !== false
+};
 
 personUtils.fullName = (person) => {
   return _.get(person, 'profile.fullName','');
