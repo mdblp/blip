@@ -6,6 +6,8 @@ It is based on Tidepool Blip 1.27.
 ### Changed 
 - PT-1444 Deduplicate Physical Activity events containing the new EventId field
 - PT-1304 Display the new physical activity fields
+### Fixed
+- YLP-15 Calculate coefficient of Variation with correct formula: 2 weeks CV displays the result of average daily CV of the 14 days
 ### Engineering Use
 - YLP-107 Create lambda edge generatation script for CloudFront
 
