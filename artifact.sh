@@ -7,7 +7,7 @@ echo "Running artifacts for ${APP_NAME} v${APP_VERSION}"
 
 . ./server/version.sh
 
-wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_packaging.sh'
+wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/feature/YLP-126/artifact/artifact_packaging.sh'
 wget -q -O artifact_images.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_images.sh'
 
 NO_DEFAULT_PACKAGING="true"
