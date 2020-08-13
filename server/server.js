@@ -34,13 +34,30 @@ let httpServer = null;
 let httpsServer = null;
 
 /**
+ *
+ * @param {string} dir dist directory, or a sub-directory
+ * @param {string} subdir sub-directory path
+ */
+function fetchDirList(dir, subdir = null) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filename = subdir ? path.join(subdir, file) : file;
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      fetchDirList(path.join(dir, file), filename);
+    } else {
+      fileList.push(filename);
+    }
+  }
+}
+
+/**
  * Get the list of files we can serve
+ * @param {string} dir dist directory
  */
 function fetchFilesList(dir) {
   const now = new Date().toISOString();
   console.log(`${now} Caching file list`);
-  const files = fs.readdirSync(dir);
-  Array.prototype.push.apply(fileList, files);
+  fetchDirList(dir);
 }
 
 /**
@@ -55,7 +72,7 @@ function redirectMiddleware(req, res, next) {
   const reqURL = req.url;
   const file = path.basename(reqURL);
 
-  if (file === "index.html") {
+  if (file === 'index.html') {
     // Send the modified index.html
     res.header('Cache-Control', 'public, max-age=0');
     res.header('Content-Type', 'text/html; charset=utf-8');
@@ -63,15 +80,24 @@ function redirectMiddleware(req, res, next) {
     return;
   }
 
-  if (fileList.includes(file)) {
-    if (reqURL === `/${file}`) {
-      // Serve the file with 'serve-static'
-      return next();
+  const pathParts = path.normalize(reqURL).split('/');
+  if (pathParts.length > 0) {
+    let filePath = pathParts.pop();
+
+    while (pathParts.length > 0) {
+      if (fileList.includes(filePath)) {
+        if (reqURL === `/${filePath}`) {
+          // Serve the file with 'serve-static'
+          return next();
+        }
+        // Do a redirect to the file -> can be in cache in the browser.
+        return res.redirect(`/${filePath}`);
+      }
+      filePath = `${pathParts.pop()}/${filePath}`;
     }
-    // Do a redirect to the file -> can be in cache in the browser.
-    return res.redirect(`/${file}`);
   }
 
+  console.log('default index.html');
   // Not found, send the modified index.html by default (no 404)
   res.header('Cache-Control', 'public, max-age=0');
   res.header('Content-Type', 'text/html; charset=utf-8');
@@ -147,6 +173,7 @@ const contentSecurityPolicy = {
     childSrc: ["'self'", 'blob:'],
     frameSrc: ["'none'"],
     connectSrc: [
+      "'self'",
       serverConfig.apiHost,
     ],
   },

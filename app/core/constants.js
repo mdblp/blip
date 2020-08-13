@@ -20,10 +20,7 @@ import config from '../config'
 
 const t = i18next.t.bind(i18next);
 
-export const URL_UPLOADER_CHROME_STORE = 'http://chrome.google.com/webstore/detail/tidepool-uploader/cabklgajffclbljkhmjphejemhpbghfb';
 export const URL_TIDEPOOL_MOBILE_APP_STORE = 'https://itunes.apple.com/us/app/tidepool-mobile/id1026395200?mt=8';
-export const URL_TERMS_OF_USE = 'https://tidepool.org/terms-of-use';
-export const URL_PRIVACY_POLICY = 'https://tidepool.org/privacy-policy';
 export const URL_BIG_DATA_DONATION_INFO = 'https://tidepool.org/announcing-the-tidepool-big-data-donation-project';
 export const URL_DEXCOM_CONNECT_INFO = 'http://support.tidepool.org/article/73-connecting-dexcom-account-to-tidepool';
 export const URL_UPLOADER_DOWNLOAD_PAGE = 'https://tidepool.org/products/tidepool-uploader/'
@@ -35,19 +32,22 @@ export const CONFIG = {
     name: 'Tidepool',
     support:'http://support.tidepool.org/',
     legal:'http://tidepool.org/legal/',
-    terms: URL_TERMS_OF_USE,
+    terms: 'https://tidepool.org/terms-of-use',
     get termsText() { return t('Tidepool Applications Terms of Use'); },
-    privacy: URL_PRIVACY_POLICY,
+    privacy: 'https://tidepool.org/privacy-policy',
     get privacyText() { return t('Privacy Policy'); }
   },
   'diabeloop': {
     name: 'YourLoops',
     support: 'https://www.diabeloop.com',
-    legal: config.ASSETS_URL + 'terms.pdf',
-    terms: config.ASSETS_URL + 'terms.pdf',
-    get termsText() {  return t('Diabeloop Applications Terms of Use'); },
-    privacy: config.ASSETS_URL + 'data-privacy.pdf',
-    get privacyText() { return t('Privacy Policy'); }
+    get supportText() { return t('Diabeloop'); },
+    terms: `${config.ASSETS_URL}terms.pdf`,
+    get termsText() { return t('Diabeloop Applications Terms of Use'); },
+    dataPrivacy: `${config.ASSETS_URL}data-privacy.pdf`,
+    get privacy() { return this.dataPrivacy; },
+    get privacyText() { return t('Privacy Policy'); },
+    intendedUse: config.REGULATORY_WEB_ADDRESS,
+    get intendedUseText() { return t('Regulatory Information'); },
   }
 };
 

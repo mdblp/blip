@@ -302,18 +302,7 @@ const trackPage = (api, next) => (nextState, replace, cb) => {
  * @return {Route} the react-router routes
  */
 export const getRoutes = (appContext, store) => {
-  const TOKEN_LOCAL_KEY = 'authToken';
-  const localStore = window.localStorage;
-  let props = appContext.props;
-  let api = props.api;
-
-  // If Blip is opened with portal-front, we may end-up having
-  // the localStorage key 'authToken' but not being authenticated yet.
-  // Set the user token to simulate the login process
-  let authToken = localStore.getItem(TOKEN_LOCAL_KEY);
-  if (!api.user.isAuthenticated() && authToken !== null) {
-    api.user.setToken(authToken);
-  }
+  const { api, props } = appContext;
 
   return (
     <Route path='/' component={AppComponent} {...props}>

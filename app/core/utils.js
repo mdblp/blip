@@ -15,7 +15,7 @@
 
 // Various helper functions
 
-import _  from 'lodash';
+import _ from 'lodash';
 import sundial from 'sundial';
 import TidelineData from 'tideline/js/tidelinedata';
 import nurseShark from 'tideline/plugins/nurseshark';
@@ -120,7 +120,7 @@ utils.objectDifference = (destination, source) => {
  * Utility function to get whether page has changed or not
  *
  * @param  {Object} oldProps
- * @param  {[type]} newProps
+ * @param  {Object} newProps
  *
  * @return {Boolean}
  */
@@ -131,9 +131,9 @@ utils.isOnSamePage = (oldProps, newProps) => {
 /**
  * Utility function to strip trailing slashes from a string
  *
- * @param  {str} string
+ * @param  {string} str
  *
- * @return {String}
+ * @return {string}
  */
 utils.stripTrailingSlash = (str) => {
   return str.replace(/\/$/, '');

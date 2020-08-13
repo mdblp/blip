@@ -35,7 +35,7 @@ import TidepoolNotification from '../../components/notification';
 
 import FooterLinks from '../../components/footerlinks';
 
-import { DATA_DONATION_NONPROFITS, CONFIG } from '../../core/constants';
+import { DATA_DONATION_NONPROFITS } from '../../core/constants';
 
 import config from '../../config';
 
@@ -43,7 +43,6 @@ import config from '../../config';
 require('tideline/css/tideline.less');
 require('../../style.less');
 
-document.title = CONFIG[config.BRANDING].name;
 export class AppComponent extends React.Component {
   static propTypes = {
     authenticated: React.PropTypes.bool.isRequired,
@@ -75,7 +74,6 @@ export class AppComponent extends React.Component {
       api: React.PropTypes.object.isRequired,
       config: React.PropTypes.object.isRequired,
       log: React.PropTypes.func.isRequired,
-      personUtils: React.PropTypes.object.isRequired,
       trackMetric: React.PropTypes.func.isRequired,
     }).isRequired,
     showingDonateBanner: React.PropTypes.bool,

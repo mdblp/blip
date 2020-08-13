@@ -103,27 +103,28 @@ function tidepoolFooter(metricFnMkr) {
 }
 
 function diabeloopFooter(metricFnMkr) {
-  const urlSupport = CONFIG[branding].support;
-  const urlLegal = CONFIG[branding].legal;
-  const urlPrivacy = CONFIG[branding].privacy;
-  const regulatoryWebAddress = config.REGULATORY_WEB_ADDRESS;
+  const brandConfig = CONFIG.diabeloop;
 
   return (
     <div className='footer-section-diabeloop'>
       <div className='footer-column footer-column-1'>
         <a
-          href={urlPrivacy}
+          href={brandConfig.dataPrivacy}
           className='footer-link'
           id='privacy-link'
           onClick={metricFnMkr('Privacy')}
-          target='_blank'>{t('Privacy Policy')}
+          target='_blank'
+          rel="noreferrer">
+            {brandConfig.privacyText}
         </a>
         <a
-          href={urlLegal}
+          href={brandConfig.terms}
           id='terms-link'
           className='footer-link'
           onClick={metricFnMkr('TermsOfUSe')}
-          target='_blank'>{t('Tidepool Applications Terms of Use')}
+          target='_blank'
+          rel="noreferrer">
+            {brandConfig.termsText}
         </a>
       </div>
       <div className='footer-column footer-column-2 justify-space-around'>
@@ -131,18 +132,22 @@ function diabeloopFooter(metricFnMkr) {
       </div>
       <div className='footer-column footer-column-3 justify-space-around'>
         <a
-          href={urlSupport}
+          href={brandConfig.support}
           id='support-link'
           className='footer-link'
           onClick={metricFnMkr('CompanyInformation')}
-          target="_blank">{t('Diabeloop')}
+          target="_blank"
+          rel="noreferrer">
+            {brandConfig.supportText}
         </a>
         <a
-          href={regulatoryWebAddress}
+          href={brandConfig.intendedUse}
           id='regulatory-link'
           className='footer-link'
           onClick={metricFnMkr('RegulatoryInformation')}
-          target='_blank'>{t('Regulatory Information')}
+          target='_blank'
+          rel="noreferrer">
+            {brandConfig.intendedUseText}
         </a>
       </div>
     </div>
@@ -178,7 +183,7 @@ function FooterLinks(props) {
       {versionContent}
     </div>
   );
-};
+}
 
 FooterLinks.propTypes = {
   trackMetric: PropTypes.func.isRequired,
