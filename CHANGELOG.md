@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - PT-1444 Deduplicate Physical Activity events containing the new EventId field
 - PT-1304 Display the new physical activity fields
 - YLP-111 Display localized CGU and data privacy
+- YLP-115 Add intermediate screen after login to renew consent
 
 ## 1.2.0 - 2020-07-31
 ### Changed
