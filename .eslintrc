@@ -14,7 +14,8 @@
   },
   "ignorePatterns": [
     "**/dist/*",
-    "**/node_modules/*"
+    "**/node_modules/*",
+    "server/templates/cloudfront-lambda-blip-request-viewer.js"
   ],
   "rules": {
     "quotes": [
@@ -140,8 +141,5 @@
       "pragma": "React",
       "version": "15.6.2"
     }
-  },
-  "ignorePatterns": [
-    "server/templates/cloudfront-lambda-blip-request-viewer.js"
-  ]
+  }
 }
