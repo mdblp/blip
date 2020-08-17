@@ -17,9 +17,9 @@
 import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Trans } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import bows from 'bows';
 
 import i18next from '../../core/language';
 import config from '../../config';
@@ -37,7 +37,6 @@ export class Terms extends React.Component {
     this.state = {
       agreed: false,
     };
-    this.log = bows('Terms');
   }
 
   renderTermsTitle() {
@@ -47,7 +46,6 @@ export class Terms extends React.Component {
 
     let termsTitle = null;
     if (termsWasAccepted) {
-      this.log('Previous terms was accepted.');
       termsTitle = (
         <p id="terms-title-updated" className="terms-title">
           <span>{t('The Terms of Use and Privacy Policy have changed since you last used {{brand}}.', { brand })}</span>
@@ -56,7 +54,6 @@ export class Terms extends React.Component {
         </p>
       );
     } else {
-      this.log('Terms was never accepted before for this account.');
       termsTitle = (
         <p id="terms-title-first-time" className="terms-title">
           <span>{t('You need to accept the Terms of Use and Privacy Policy of {{brand}} to continue.', { brand })}</span>
@@ -92,15 +89,15 @@ export class Terms extends React.Component {
             checked={agreed}
             onChange={() => this.setState({ agreed: !this.state.agreed })} />
           &nbsp;
-          <span>
-            {t('I am 18 or older and I accept the terms of the')}
+          <Trans parent="span" i18nKey="html.terms-of-use.updated" i18n={i18next}>
+            I am 18 or older and I accept the terms of the
             &nbsp;
             <a href={urlTermsOfUse} target='_blank' rel='noreferrer'>{textTermsOfUse}</a>
             &nbsp;
-            {t('and the')}
+            and the
             &nbsp;
             <a href={urlPrivacyPolicy} target='_blank' rel='noreferrer'>{textPrivacyPolicy}</a>
-          </span>
+          </Trans>
         </label>
       </p>
     );
@@ -125,7 +122,7 @@ export class Terms extends React.Component {
           </button>
           <button
               className="btn btn-secondary"
-              onClick={this.handleRefuseTerms.bind(this)}>
+              onClick={this.handleRejectTerms.bind(this)}>
             {t('Reject')}
           </button>
         </div>
@@ -140,10 +137,10 @@ export class Terms extends React.Component {
     this.props.onSubmit();
   }
 
-  handleRefuseTerms(e) {
+  handleRejectTerms(e) {
     const { termsWasAccepted } = this.props;
     e.preventDefault();
-    this.props.trackMetric(termsWasAccepted ? 'Refused the new Terms Of Use' : 'Refused the Terms Of Use');
+    this.props.trackMetric(termsWasAccepted ? 'Rejected the new Terms Of Use' : 'Rejected the Terms Of Use');
     this.props.onRefuse();
   }
 }
