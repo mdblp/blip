@@ -59,7 +59,7 @@ export class Terms extends React.Component {
       this.log('Terms was never accepted before for this account.');
       termsTitle = (
         <p id="terms-title-first-time" className="terms-title">
-          <span>{t('Your need to accept the Terms of Use and Privacy Policy of {{brand}} to continue.', { brand })}</span>
+          <span>{t('You need to accept the Terms of Use and Privacy Policy of {{brand}} to continue.', { brand })}</span>
         </p>
       );
     }
@@ -126,7 +126,7 @@ export class Terms extends React.Component {
           <button
               className="btn btn-secondary"
               onClick={this.handleRefuseTerms.bind(this)}>
-            {t('Refuse')}
+            {t('Reject')}
           </button>
         </div>
       </div>
