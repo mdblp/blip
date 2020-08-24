@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 1.3.2 2020-08-19
+### Fixed
+-  PT-1480 Tideline 1.12.1
+
 ## 1.3.1 2020-08-19
 ### Engineering
 - PT-1470 Update blip docker image to run as Coreye user
