@@ -579,7 +579,7 @@
   "The date and/or time settings of your device were changed recently, and this datum may overlap in the timeline display with other data from the same device.": "The date and/or time settings of your system were changed recently, and this datum may overlap in the timeline display with other data from the same system.",
   "The diaTribe Foundation": "The diaTribe Foundation",
   "The period must be less than {{days}} days": "The period must be less than {{days}} days",
-  "The Terms of Use and Privacy Policy have changed since you last used {{brand}}.": "The Terms of Use and Privacy Policy have changed since you last used {{brand}}.",
+  "The Terms of Use and Privacy Policy have changed since you last used {{brand}}.": "The Terms of Use and/or Privacy Policy have changed since you last used {{brand}}.",
   "The units I use are": "The units I use are",
   "There is no {{displayType}} data for this time period :(": "There is no {{displayType}} data for this time period :(",
   "There is not enough data to show this statistic.": "There is not enough data to show this statistic.",
