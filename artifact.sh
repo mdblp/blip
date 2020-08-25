@@ -42,10 +42,6 @@ fi
 if [ ! -d "node_modules" ]; then
   npm install
 fi
-if [ ! -d "server/node_modules" ]; then
-  cp -v .npmrc server/
-  bash -c 'cd server && npm install && npm run "security-checks"'
-fi
 
 bash build.sh
 
@@ -55,8 +51,15 @@ npm run test-cloudfront
 # Publish only on the main node version build
 # TODO: Get node version using: "$(node --version | cut -c 2-)" to make this script usable on another build system ?
 if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
-  mv -v dist server/dist
-  buildArchive -d "./server/" -n
+  # Prepare cloudfront distrib
+  rm -rf dist
+  mkdir dist
+  rsync static-dist/* dist/static-dist
+  rsync templates/* dist/templates
+  rsync --exclude="cloudfront*viewer.js" cloudfront-dist/* dist/cloudfront-dist
+  rsync config.app.js package.json dist/
+
+  buildArchive -d "./dist" -n
   buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
   publishDockerImage
   npm install --save-dev "ci-toolbox@latest"

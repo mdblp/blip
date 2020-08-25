@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Engineering Use
 - YLP-107 Create lambda edge generatation script for CloudFront
+- Refactor to move to Cloudfront
 
 ## 1.3.1 2020-08-19
 ### Engineering

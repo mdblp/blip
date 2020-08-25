@@ -167,21 +167,20 @@ To do it manually, fist be sure to set the environment variables needed (see the
 
 ## Integration with CloudFront
 
-To manually publish blip to CloudFront, follow theses steps (quick summary):
-- Setup the environment variables for your build (see `config/*.sh`)
+To publish blip to CloudFront, follow theses steps (quick summary):
+- Load the environment variables for your build (see `config/*.sh`)
 - build the package: `npm run build`
-- `mv dist server/dist`
-- `cd server`
-- `npm run build`
-- `TARGET_ENVIRONNEMENT=<env> npm run gen-lambda` replacing `<env>` with yours (ex: `preview`, `production`)
-- Publish on S3 the dist files except: `config*.js`, `index.html` and `cloudfront*.js`
-- Publish the new lambda edge version with the content of `server/dist/cloudfront-<env>-blip-request-viewer.js`
+- generate the lambda script: `TARGET_ENVIRONMENT=<env> npm run gen-lambda` replacing `<env>` with yours (ex: `preview`, `production`)
+- Publish on S3 the files located in static-dist
+- Publish the new lambda edge version with the content of `cloudfront-dist/cloudfront-<env-blip-request-viewer.js`
 - Update the lambda edge version in the CloudFront distribution, using the new ARN link.
 
+TODO: create a target `deploy-cf` to automatically deploy a new cloudfront distrib for a given environment.  
+`TARGET_ENVIRONMENT=<env> npm run deploy-cf`
+
 ### Local testing
-To test blip locally as if it was running on CloudFront with a lambda@edge middleware you will need to execute the following steps (from the server folder):
-1) Run the lambda function via docker `docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v $PWD/dist:/var/task:ro,delegated lambci/lambda:nodejs10.x lambda.handler` where `lambda` is the name of the generated lambda file (cloudfront*blip-request-viewer.js)  
-2) execute the node server `npm run server`
+To test blip locally as if it was running on CloudFront with a lambda@edge middleware you can execute the following command (from root):
+`npm run local-stack`
 
 ## Documentation for developers
 
