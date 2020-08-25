@@ -21,6 +21,7 @@ node_modules
 tmp
 deploy/
 dist/
+static-dist/
 config/*
 !config/local.sh
 !config/env.docker.sh
