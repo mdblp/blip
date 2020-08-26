@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## 1.3.2 2020-08-19
 ### Fixed
 -  PT-1480 Tideline 1.12.1
+### Engineering Use
+- YLP-107 Create lambda edge generatation script for CloudFront
 
 ## 1.3.1 2020-08-19
 ### Engineering
@@ -21,7 +23,7 @@ It is based on Tidepool Blip 1.27.
 ## 1.2.0 - 2020-07-31
 ### Changed
 - YLP-72 Have two distincts fields for first name and last name in profile page
-### Engineering
+### Engineering Use
 - YLP-48 Change crowdin pseudo language from 'it' to 'lol'
 - Externalize languages definition (out of code)
 
