@@ -108,7 +108,6 @@ var SimpleForm = React.createClass({
     var error = this.props.validationErrors[name];
     var placeholder = input.placeholder;
     var disabled = this.props.disabled || input.disabled;
-    var info = input.info || undefined;
 
     return (
       <InputGroup
@@ -124,7 +123,7 @@ var SimpleForm = React.createClass({
         placeholder={placeholder}
         disabled={disabled}
         onChange={this.handleChange}
-        info={info}
+        info={input.info}
       />
     );
   },

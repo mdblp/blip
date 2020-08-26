@@ -44,10 +44,6 @@ const InputGroup = React.createClass({
     info: React.PropTypes.string,
   },
 
-  defaultProps: {
-    info: undefined,
-  },
-
   DEFAULT_TEXTAREA_ROWS: 3,
 
   render: function() {
