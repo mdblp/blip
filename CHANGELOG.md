@@ -3,18 +3,27 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Changed
+- YLP-111 Display localized CGU and data privacy
+### Engineering Use
+- YLP-107 Create lambda edge generatation script for CloudFront
+
+## 1.3.1 2020-08-19
+### Engineering
+- PT-1470 Update blip docker image to run as Coreye user
+
+## 1.3.0 2020-08-17
 ### Fixed
 - YLP-15 Calculate coefficient of Variation with correct formula: 2 weeks CV displays the result of average daily CV of the 14 days
 ### Changed 
 - PT-1444 Deduplicate Physical Activity events containing the new EventId field
 - PT-1304 Display the new physical activity fields
-- YLP-111 Display localized CGU and data privacy
 - YLP-115 Add intermediate screen after login to renew consent
 
 ## 1.2.0 - 2020-07-31
 ### Changed
 - YLP-72 Have two distincts fields for first name and last name in profile page
-### Engineering
+### Engineering Use
 - YLP-48 Change crowdin pseudo language from 'it' to 'lol'
 - Externalize languages definition (out of code)
 

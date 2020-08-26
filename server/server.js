@@ -1,3 +1,4 @@
+/* eslint-disable lodash/prefer-lodash-typecheck */
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
@@ -187,7 +188,7 @@ if (blipConfig.BRANDING === 'tidepool') {
   contentSecurityPolicy.directives.styleSrc.push('https://djtflbt20bdde.cloudfront.net');
   contentSecurityPolicy.directives.styleSrc.push('https://fonts.googleapis.com');
   contentSecurityPolicy.directives.connectSrc.push('https://api.github.com/repos/tidepool-org/chrome-uploader/releases');
-  contentSecurityPolicy.directives.connectSrc.push('wss\://*.pusher.com');
+  contentSecurityPolicy.directives.connectSrc.push('wss://*.pusher.com');
   contentSecurityPolicy.directives.connectSrc.push('*.sumologic.com');
   contentSecurityPolicy.directives.connectSrc.push('sentry.io');
   contentSecurityPolicy.directives.childSrc.push('https://docs.google.com');
@@ -236,7 +237,7 @@ if (serverConfig.crowdinPreview) {
   if (contentSecurityPolicy.directives.frameSrc[0] === "'none'") {
     contentSecurityPolicy.directives.frameSrc.splice(0, 1);
   }
-  contentSecurityPolicy.directives.frameSrc.push(crowdinCDN, crowdinURL, "https://accounts.crowdin.com");
+  contentSecurityPolicy.directives.frameSrc.push(crowdinCDN, crowdinURL, 'https://accounts.crowdin.com');
 }
 
 const staticDir = getStaticDir('dist');
@@ -289,12 +290,12 @@ if (serverConfig.httpsPort && serverConfig.httpsConfig) {
 }
 
   // Handle simple process kill
-  process.once("SIGTERM", async () => {
+  process.once('SIGTERM', async () => {
     await stopServer(app);
   });
 
   // Handle Ctrl+C when launch in a console
-  process.once("SIGINT", async () => {
+  process.once('SIGINT', async () => {
     await stopServer(app);
   });
 
