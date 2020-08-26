@@ -178,6 +178,11 @@ To manually publish blip to CloudFront, follow theses steps (quick summary):
 - Publish the new lambda edge version with the content of `server/dist/cloudfront-<env>-blip-request-viewer.js`
 - Update the lambda edge version in the CloudFront distribution, using the new ARN link.
 
+### Local testing
+To test blip locally as if it was running on CloudFront with a lambda@edge middleware you will need to execute the following steps (from the server folder):
+1) Run the lambda function via docker `docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v $PWD/dist:/var/task:ro,delegated lambci/lambda:nodejs10.x lambda.handler` where `lambda` is the name of the generated lambda file (cloudfront*blip-request-viewer.js)  
+2) execute the node server `npm run server`
+
 ## Documentation for developers
 
 + [Blip developer guide](docs/StartHere.md)
