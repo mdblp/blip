@@ -5,11 +5,13 @@ It is based on Tidepool Blip 1.27.
 ## 1.4.0 2020-08-26
 ### Changed 
 - YLP-92 Block patient name edition in profile
+### Fixed
+- PT-1480 Tideline 1.12.1
 ### Engineering Use
 - YLP-107 Create lambda edge generatation script for CloudFront
 
 ## 1.3.1 2020-08-19
-### Engineering
+### Engineering Use
 - PT-1470 Update blip docker image to run as Coreye user
 
 ## 1.3.0 2020-08-17
