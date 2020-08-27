@@ -27,10 +27,7 @@ const config = {
   httpPort: 3000,
   httpsPort: 3443,
   apiHost: 'http://localhost:8009',
-  httpsConfig: null,
-  metricsService: 'disabled',
-  matomoUrl: null,
-  crowdinPreview: false,
+  httpsConfig: null
 };
 
 if (!_.isEmpty(process.env.PORT)) {
@@ -61,30 +58,5 @@ if (config.httpsConfig === null) {
   console.info(`HTTPS will be available on port ${config.httpsPort}`);
 }
 
-if (!_.isEmpty(process.env.API_HOST)) {
-  config.apiHost = process.env.API_HOST
-}
-
-switch (_.get(process.env, 'METRICS_SERVICE', 'disabled')) {
-case 'matomo':
-  if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
-    config.matomoUrl = process.env.MATOMO_TRACKER_URL;
-    config.metricsService = 'matomo';
-  } else {
-    console.error('Please set the MATOMO_TRACKER_URL to enable it');
-  }
-  break;
-case 'highwater':
-  config.metricsService = 'highwater';
-  break;
-case 'disabled':
-  break;
-default:
-  console.error(`Unknown METRICS_SERVICE '${process.env.METRICS_SERVICE}`);
-}
-
-if (process.env.CROWDIN === 'enabled') {
-  config.crowdinPreview = true;
-}
 
 module.exports = config;
