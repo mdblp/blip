@@ -47,7 +47,7 @@ if [ ! -d "server/node_modules" ]; then
   bash -c 'cd server && npm install && npm run "security-checks"'
 fi
 
-# bash build.sh
+bash build.sh
 
 # CloudFront Lambda edge tests:
 npm run test-cloudfront
