@@ -309,7 +309,7 @@
   "html.signup-invited": "<0>Sie wurden zu YourLoops eingeladen.</0><1>Anmelden, um die Einladung zu sehen.</1>",
   "html.signup-personal": "Wenn Sie dem medizinisches Fachpersonal zugehören und einen Diabetes haben, können Sie Ihre persönlichen Diabetes-Daten verfolgen und verwalten, in dem Sie sich  ein separates <1>persönliches Konto</1> erstellen.",
   "html.signup-terms-of-use": "Ich akzeptiere die <1><0>{textTermsOfUse}</0></1> und die <3><0>{textPrivacyPolicy}</0></3>",
-  "html.terms-of-use.updated": "I am 18 or older and I accept the terms of the <1><0>{textTermsOfUse}</0></1> and the <3><0>{textPrivacyPolicy}</0></3>",
+  "html.terms-of-use.updated": "Ich bin 18 Jahre oder älter und akzeptiere die Bedingungen der  <1><0>{textTermsOfUse}</0></1> und die <3><0>{textPrivacyPolicy}</0></3>\n",
   "html.uploadlaunchoverlay-error": "Fehler beim Abrufen der Freigabe von Informationen, bitte besuchen Sie unsere<1> Download-Seite</1>.",
   "html.uploadlaunchoverlay-launching": "<0>Uploader starten</0><1>Wenn Sie ein Diabeloop-System haben, müssen Sie keine zusätzliche Software installieren</1>",
   "I want to quit this patient's care team": "Ich möchte den Zugriff auf die Daten dieses Patienten beenden",
