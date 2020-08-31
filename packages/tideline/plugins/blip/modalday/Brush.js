@@ -1,10 +1,9 @@
-window.d3 = window.d3 || require('d3/d3.min.js');
-window.d3.chart = window.d3.chart || require('d3.chart/d3.chart.min.js');
-
 var _ = require('lodash');
-var d3 = window.d3;
+var d3 = require('d3');
+if (!d3.chart) {
+  d3.chart = require('d3.chart');
+}
 var EventEmitter = require('events').EventEmitter;
-
 var moment = require('moment-timezone');
 
 var MS_IN_24 = 86400000;

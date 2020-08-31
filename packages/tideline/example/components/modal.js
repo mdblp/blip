@@ -16,13 +16,10 @@
  */
 var _ = require('lodash');
 var bows = require('bows');
-var crossfilter = require('crossfilter2');
-var d3 = window.d3;
+var d3 = require('d3');
 var moment = require('moment-timezone');
 var React = require('react');
 var ReactDOM = require('react-dom');
-
-var dt = require('../../js/data/util/datetime');
 
 var Header = require('./header');
 var SubNav = require('./modalsubnav');

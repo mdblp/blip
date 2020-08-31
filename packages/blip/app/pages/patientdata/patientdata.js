@@ -36,7 +36,7 @@ import utils from '../../core/utils';
 import { Header, Basics, Daily, Trends, BgLog, Settings } from '../../components/chart';
 import UploadLaunchOverlay from '../../components/uploadlaunchoverlay';
 
-import nurseShark from 'tideline/plugins/nurseshark/';
+import nurseShark from 'tideline/plugins/nurseshark';
 
 import Messages from '../../components/messages';
 import UploaderButton from '../../components/uploaderbutton';

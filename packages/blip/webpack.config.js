@@ -1,14 +1,14 @@
 /* eslint-disable lodash/prefer-lodash-typecheck */
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SriWebpackPlugin = require('webpack-subresource-integrity');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
-const buildConfig = require('./server/config.app');
+const buildConfig = require('../../server/config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
@@ -44,6 +44,9 @@ const lessLoaderConfiguration = {
       loader: 'postcss-loader',
       options: {
         sourceMap: true,
+        config: {
+          path: __dirname,
+        }
       },
     },
     {
@@ -78,6 +81,9 @@ const cssLoaderConfiguration = {
       options: {
         sourceMap: true,
         ident: 'postcss',
+        config: {
+          path: __dirname,
+        }
       },
     }
   ],
@@ -86,9 +92,6 @@ const cssLoaderConfiguration = {
 const babelLoaderConfiguration = [
   {
     test: /\.js$/,
-    exclude: function(modulePath) {
-      return /node_modules/.test(modulePath) && !/node_modules\/(tideline|tidepool-platform-client|.*viz)/.test(modulePath);
-    },
     use: {
       loader: 'babel-loader',
       options: {
@@ -98,9 +101,13 @@ const babelLoaderConfiguration = [
   },
   {
     test: /\.js?$/,
-    include: [
-      fs.realpathSync('./node_modules/@tidepool/viz'),
-    ],
+    // include: [
+    //   fs.realpathSync('../sundial'),
+    //   fs.realpathSync('../platform-client'),
+    //   fs.realpathSync('../viz'),
+    //   fs.realpathSync('../tideline/js'),
+    //   fs.realpathSync('../tideline/plugins'),
+    // ],
     use: {
       loader: 'source-map-loader',
     },
@@ -169,6 +176,14 @@ const plugins = [
     __DEV__: isDev,
     __TEST__: isTest,
   }),
+  new CopyWebpackPlugin({
+    patterns: [{
+      from: path.resolve(__dirname, 'node_modules/d3/d3.min.js'),
+      to: '[name].[contenthash].[ext]',
+      transformPath: DblpHtmlWebpackPlugin.transformJSPath
+    }],
+    options: { concurrency: 1 }, // Set to 1 to keep the JS loading order
+  }),
   new MiniCssExtractPlugin({
     filename: isDev ? 'style.css' : 'style.[contenthash].css',
   }),
@@ -177,21 +192,19 @@ const plugins = [
     enabled: isProduction,
   }),
   new HtmlWebpackPlugin({
-    template: 'server/templates/index.html',
-    favicon: 'favicon.ico',
+    template: '../../server/templates/index.html',
+    favicon: `../../branding/${buildConfig.BRANDING}/favicon.ico`,
     minify: false,
     scriptLoading: 'defer',
     inject: 'body',
     showErrors: !isProduction,
     title: buildConfig.BRANDING,
   }),
+  new DblpHtmlWebpackPlugin(),
 ];
 
 if (isDev) {
   plugins.push(new webpack.HotModuleReplacementPlugin());
-  if (process.env.WEBPACK_DEV_SERVER === 'true' && typeof process.env.HELP_LINK === 'string') {
-    plugins.push(new DblpHtmlWebpackPlugin());
-  }
 }
 
 const minimizer = [
@@ -231,11 +244,17 @@ if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.start
 const resolve = {
   modules: [
     path.join(__dirname, 'node_modules'),
-    'node_modules',
   ],
   alias: {
     pdfkit: 'pdfkit/js/pdfkit.standalone.js',
-    './images/tidepool/logo.png': `./images/${buildConfig.BRANDING}/logo.png`,
+    './images/tidepool/logo.png': path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
+    '@tidepool/viz': path.resolve(__dirname, '../viz/src/index.js'),
+    sundial: path.resolve(__dirname, '../sundial/sundial.js'),
+    'tidepool-platform-client': path.resolve(__dirname, '../platform-client/tidepool.js'),
+    'tideline/plugins/nurseshark': path.resolve(__dirname, '../tideline/plugins/nurseshark/index.js'),
+    'tideline/plugins/blip': path.resolve(__dirname, '../tideline/plugins/blip/index.js'),
+    'tideline/js/tidelinedata': path.resolve(__dirname, '../tideline/js/tidelinedata.js'),
+    'tideline/css/tideline.less': path.resolve(__dirname, '../tideline/css/tideline.less')
   }
 };
 
@@ -309,10 +328,7 @@ module.exports = {
   resolve,
   resolveLoader: resolve,
   cache: isDev,
-  watchOptions: {
-    ignored: [
-      /node_modules([\\]+|\/)+(?!(tideline|tidepool-platform-client|@tidepool\/viz))/,
-      /(tideline|tidepool-platform-client|@tidepool\/viz)([\\]+|\/)node_modules/
-    ]
-  },
+  externals: {
+    'd3': 'd3',
+  }
 };

@@ -46,7 +46,7 @@ if (distDir === null) {
 }
 
 // Determined server dir location:
-for (const sd of ['.', 'server']) {
+for (const sd of ['.', 'server', __dirname]) {
   srvDir = sd;
   if (fs.existsSync(`${srvDir}/config.app.js`)) {
     break;
