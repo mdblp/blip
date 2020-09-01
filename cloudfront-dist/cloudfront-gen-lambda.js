@@ -30,6 +30,7 @@ const reCrowdinBranding = /BRANDING/;
 
 const reUrl = /(^https?:\/\/[^/]+).*/;
 const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g;
+const scriptConfigJs = '<script defer type="text/javascript" src="config.js" integrity="{{CONFIG_HASH}}" crossorigin="anonymous"></script>';
 const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js';
 
 const featurePolicy = [
@@ -165,12 +166,16 @@ function genOutputFile() {
 
   let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`;
   console.log('Using config:', configJs);
+  const hash = crypto.createHash('sha512');
+  hash.update(configJs);
+  const configHash = `sha512-${hash.digest('base64')}`;
 
   const templateParameters = {
     ...blipConfig,
     DISTRIB_FILES: distribFiles,
     INDEX_HTML: '',
     CONFIG_JS: configJs,
+    CONFIG_HASH: configHash,
     TARGET_ENVIRONMENT: process.env.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
@@ -377,6 +382,7 @@ const templateFilename = path.resolve(`${__dirname}/template.lambda-request-view
 
 fs.readdir(distDir, withFilesList);
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate);
+indexHtml = indexHtml.replace(/(<!-- config -->)/, scriptConfigJs);
 indexHtml = indexHtml.replace(/<(script)/g, '<$1 nonce="${nonce}"');
 genOutputFile();
 
