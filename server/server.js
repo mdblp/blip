@@ -10,15 +10,15 @@ const compression = require('compression');
 const morgan = require('morgan');
 const request = require('request');
 
-const jsonPackage = require('./package.json');
+const jsonPackage = require('../package.json');
 const serverConfig = require('./config.server');
 
 function getStaticDir(defaultDir) {
   let dir = null;
   if (process.argv.length === 3) {
-    dir = process.argv[2];
+    dir = path.resolve(process.argv[2]);
   } else {
-    dir = path.join(__dirname, defaultDir);
+    dir = path.resolve(defaultDir);
   }
   console.info(`Serving from: '${dir}'`);
   return dir;
@@ -123,7 +123,7 @@ async function stopServer(app) {
   }
 }
 
-const staticDir = getStaticDir('dist');
+const staticDir = getStaticDir('../static-dist');
 
 printVersion();
 fetchFilesList(staticDir);
