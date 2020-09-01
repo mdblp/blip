@@ -8,7 +8,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SriWebpackPlugin = require('webpack-subresource-integrity');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
-const buildConfig = require('./server/config.app');
+const buildConfig = require('./config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
@@ -177,7 +177,7 @@ const plugins = [
     enabled: isProduction,
   }),
   new HtmlWebpackPlugin({
-    template: 'server/templates/index.html',
+    template: 'templates/index.html',
     favicon: 'favicon.ico',
     minify: false,
     scriptLoading: 'defer',
@@ -220,7 +220,7 @@ const minimizer = [
 /** @type {webpack.Output} */
 const output = {
   filename: isDev || isTest ? 'bundle.js' : 'bundle.[hash].js',
-  path: path.join(__dirname, 'dist'),
+  path: path.join(__dirname, 'static-dist'),
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
 

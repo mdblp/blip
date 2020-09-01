@@ -16,9 +16,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const handlebars = require('handlebars');
-const blipConfig = require('./config.app');
+const blipConfig = require('../config.app');
 
-const { ShellString } = require('shelljs');
 const _ = require('lodash');
 
 const reTitle = /<title>([^<]*)<\/title>/;
@@ -31,7 +30,7 @@ const reCrowdinBranding = /BRANDING/;
 
 const reUrl = /(^https?:\/\/[^/]+).*/;
 const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g;
-const outputFilenameTemplate = '{{ DIST }}/cloudfront-{{ TARGET_ENVIRONNEMENT }}-blip-request-viewer.js';
+const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js';
 
 const featurePolicy = [
   "accelerometer 'none'",
@@ -71,7 +70,7 @@ let indexHtml = null;
 let distribFiles = null;
 
 let distDir = null;
-let srvDir = null;
+let templateDir = null;
 
 function getHash(str) {
 	const hash = crypto.createHash('md5');
@@ -172,7 +171,7 @@ function genOutputFile() {
     DISTRIB_FILES: distribFiles,
     INDEX_HTML: '',
     CONFIG_JS: configJs,
-    TARGET_ENVIRONNEMENT: process.env.TARGET_ENVIRONNEMENT.toLowerCase(),
+    TARGET_ENVIRONMENT: process.env.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
     CSP: '',
@@ -191,7 +190,7 @@ function genOutputFile() {
   const lambdaFile = template(templateParameters);
 
   template = handlebars.compile(outputFilenameTemplate, { noEscape: true });
-  const outputFilename = template(templateParameters);
+  const outputFilename = `${__dirname}/${template(templateParameters)}`;
   console.log(`Saving to ${outputFilename}`);
   fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
 }
@@ -224,21 +223,6 @@ function withFilesList(err, files) {
  * @param {NodeJS.ErrnoException | null} err
  * @param {string} data
  */
-function withIndexHtml(err, data) {
-  if (err) {
-    console.error(err);
-    process.exitCode = 1;
-    return;
-  }
-
-  indexHtml = indexHtml.replace(/<(script)/g, '<$1 nonce="${nonce}"');
-  genOutputFile();
-}
-
-/**
- * @param {NodeJS.ErrnoException | null} err
- * @param {string} data
- */
 function withTemplate(err, data) {
   if (err) {
     console.error(err);
@@ -252,8 +236,8 @@ function withTemplate(err, data) {
 
 
 /*** Main ***/
-if (typeof process.env.TARGET_ENVIRONNEMENT !== 'string' || process.env.TARGET_ENVIRONNEMENT.length < 1) {
-  console.error('Missing environnement variable TARGET_ENVIRONNEMENT');
+if (typeof process.env.TARGET_ENVIRONMENT !== 'string' || process.env.TARGET_ENVIRONMENT.length < 1) {
+  console.error('Missing environnement variable TARGET_ENVIRONMENT');
   process.exit(1);
 } else if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST)) {
   console.error('Missing or invalid environnement variable API_HOST');
@@ -261,39 +245,18 @@ if (typeof process.env.TARGET_ENVIRONNEMENT !== 'string' || process.env.TARGET_E
 }
 
 // Determined dist dir location
-for (const dd of ['dist', '../dist']) {
-  distDir = dd;
-  if (fs.existsSync(distDir)) {
-    break;
-  }
-  distDir = null;
-}
-if (distDir === null) {
-  console.error('dist not found in . or ..');
-  process.exit(1);
-} else {
-  console.info(`Using dist directory: ${distDir}`);
-}
+distDir = path.resolve(`${__dirname}/../static-dist`);
+console.info(`Using dist directory: ${distDir}`);
 
-// Determined server dir location:
-for (const sd of ['.', 'server']) {
-  srvDir = sd;
-  if (fs.existsSync(`${srvDir}/config.app.js`)) {
-    break;
-  }
-  srvDir = null;
-}
-if (srvDir === null) {
-  console.error('config.app.js not found, can\'t determined the server dir location.');
-  process.exit(1);
-} else {
-  console.info(`Using server directory: ${srvDir}`);
-}
+// Determined template dir location:
+templateDir = path.resolve(`${__dirname}/../templates`);
+console.info(`Using template directory: ${templateDir}`);
 
 // Display configuration used
 console.info('Using configuration:', blipConfig);
 
-indexHtml = fs.readFileSync(`${distDir}/index.html`, 'utf8');
+const indexHtmlPath = path.resolve(`${__dirname}/pre-compiled-index.html`);
+indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 if (typeof process.env.BRANDING === 'string') {
   const title = process.env.BRANDING.replace(/^\w/, (c) => { return c.toUpperCase(); });
   console.info(`- Setup title to ${title}`);
@@ -330,7 +293,7 @@ case 'matomo':
       matomoTrackerUrl = `${matomoTrackerUrl}/`;
     }
 
-    let matomoJs = fs.readFileSync(`${srvDir}/templates/matomo.js`, 'utf8');
+    let matomoJs = fs.readFileSync(`${templateDir}/matomo.js`, 'utf8');
     console.info(`  => Setting up matomo tracker code: ${matomoTrackerUrl}`);
     const updatedSrc = matomoJs.replace(reTrackerUrl, (m, u) => {
       return m.replace(u, matomoTrackerUrl);
@@ -365,8 +328,7 @@ case 'matomo':
     const matomoConfigScripts = `  ${matomoConfigScript}\n  ${matomoScript}\n`;
     indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`);
 
-    const shellStr = new ShellString(matomoJs);
-    shellStr.to(`${distDir}/${fileName}`);
+    fs.writeFileSync(`${distDir}/${fileName}`, matomoJs);
   } else {
     console.error('  /!\\ Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable /!\\');
   }
@@ -384,7 +346,7 @@ default:
 // *** Crowdin ***
 if (process.env.CROWDIN === 'enabled') {
   console.info('- Enable crowdin...');
-  let crowdinJs = fs.readFileSync(`${srvDir}/templates/crowdin.js`, 'utf8');
+  let crowdinJs = fs.readFileSync(`${templateDir}/crowdin.js`, 'utf8');
   let crowdinProject = blipConfig.BRANDING;
   switch (blipConfig.BRANDING) {
   case 'diabeloop':
@@ -396,8 +358,7 @@ if (process.env.CROWDIN === 'enabled') {
   const fileHash = getHash(crowdinJs);
   const integrity = getIntegrity(crowdinJs);
   const fileName = `crowdin.${fileHash}.js`;
-  const shellStr = new ShellString(crowdinJs);
-  shellStr.to(`${distDir}/${fileName}`);
+  fs.writeFileSync(`${distDir}/${fileName}`, crowdinJs);
 
   const crowdinScripts = `\
   <script type="text/javascript" defer src="${fileName}" integrity="sha512-${integrity}" crossorigin="anonymous"></script>\n\
@@ -412,10 +373,10 @@ if (process.env.CROWDIN === 'enabled') {
   indexHtml = indexHtml.replace(reCrowdin, '$1  <!-- disabled -->\n$3');
 }
 
-const templateFilename = 'templates/cloudfront-lambda-blip-request-viewer.js';
-
+const templateFilename = path.resolve(`${__dirname}/template.lambda-request-viewer.js`);
 
 fs.readdir(distDir, withFilesList);
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate);
-fs.readFile(`${distDir}/index.html`, { encoding: 'utf-8' }, withIndexHtml);
+indexHtml = indexHtml.replace(/<(script)/g, '<$1 nonce="${nonce}"');
+genOutputFile();
 
