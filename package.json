@@ -15,7 +15,7 @@
     "test-cloudfront": "TARGET_ENVIRONMENT=test API_HOST='https://api.example.com' node cloudfront-dist/cloudfront-gen-lambda.js && mocha test/lambda/cloudfront-gen-lambda.test.js",
     "start-dev": "NODE_ENV=development USE_WEBPACK_DEV_SERVER=true ALLOW_SIGNUP_PATIENT=false ALLOW_PATIENT_CHANGE_EMAIL=false I18N_ENABLED=true ALLOW_PATIENT_CHANGE_PASSWORD=false HIDE_DONATE=true HIDE_DEXCOM_BANNER=true HIDE_UPLOAD_LINK=true CAN_SEE_PWD_LOGIN=true BRANDING='diabeloop' METRICS_SERVICE='disabled' HELP_LINK='disabled' webpack-dev-server --cache --colors --progress --port 3001 --host 0.0.0.0",
     "prebuild": "rm -rf dist server/dist deploy",
-    "build": "TARGET_ENVIRONMENT=test npm run build-app && npm run gen-lambda",
+    "build": "npm run build-app && TARGET_ENVIRONMENT=test npm run gen-lambda",
     "pregen-lambda": "NODE_ENV=production npm install",
     "gen-lambda": "BLIP_VERSION=$(echo \"const c = require('./package.json'); console.log(c.version);\" | node -) node cloudfront-dist/cloudfront-gen-lambda.js",
     "deploy-cf": "echo 'not implemented yet'",
