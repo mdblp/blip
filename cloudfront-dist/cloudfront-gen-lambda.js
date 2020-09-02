@@ -195,8 +195,9 @@ function genOutputFile() {
   const lambdaFile = template(templateParameters);
 
   template = handlebars.compile(outputFilenameTemplate, { noEscape: true });
-  const outputFilename = `${__dirname}/${template(templateParameters)}`;
+  const outputFilename = `${__dirname}/lambda/${template(templateParameters)}`;
   console.log(`Saving to ${outputFilename}`);
+  fs.mkdir(`${__dirname}/lambda`, { recursive: true }, (err) => { if (err) throw err; });
   fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
 }
 
