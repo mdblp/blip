@@ -57,6 +57,7 @@ if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
   rsync static-dist/* dist/static-dist
   rsync templates/* dist/templates
   rsync --exclude="cloudfront*viewer.js" cloudfront-dist/* dist/cloudfront-dist
+  rsync -r --exclude-from=.artifactignore cloudfront-dist/deployment/ dist/cloudfront-dist/deployment
   rsync config.app.js package.json dist/
 
   buildArchive -d "./dist" -n
