@@ -12,7 +12,7 @@ const plugins = [
 ];
 
 const output = {
-  filename: '[name].js',
+  filename: 'tideline.[hash].js',
   path: path.join(__dirname, '/dist/'),
 };
 

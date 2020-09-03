@@ -24,6 +24,7 @@ dist/
 config/*
 !config/local.sh
 !config/env.docker.sh
+!config/env.travis.sh
 test/bin
 web/
 artifact_node.sh
@@ -44,9 +45,6 @@ microscanner
 # Build system
 server/matomo.js
 server/.npmrc
-
-# Branding
-**/diabeloop/*.png
 
 # Lambda testing
 test/lambda/dist

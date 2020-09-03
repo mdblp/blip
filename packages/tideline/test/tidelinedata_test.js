@@ -527,6 +527,8 @@ describe('TidelineData', function() {
   });
 
   describe('editDatum', function() {
+    this.timeout(10000);
+
     var smbg = new types.SMBG({deviceTime: '2015-09-01T15:00:00'});
     var message = new types.Message({time: '2015-09-01T22:30:00.000Z'});
     var origMessage = _.clone(message);
@@ -571,6 +573,7 @@ describe('TidelineData', function() {
     });
 
     it('should expand the fill data if necessary', function() {
+      this.timeout(10000);
       var toEdit = new TidelineData([smbg, _.clone(message), new types.CBG()], {
         timePrefs: {
           timezoneAware: true,

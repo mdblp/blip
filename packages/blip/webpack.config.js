@@ -1,5 +1,4 @@
 /* eslint-disable lodash/prefer-lodash-typecheck */
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -8,7 +7,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SriWebpackPlugin = require('webpack-subresource-integrity');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
-const buildConfig = require('./server/config.app');
+const buildConfig = require('../../server/config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
@@ -44,6 +43,9 @@ const lessLoaderConfiguration = {
       loader: 'postcss-loader',
       options: {
         sourceMap: true,
+        config: {
+          path: __dirname,
+        }
       },
     },
     {
@@ -78,6 +80,9 @@ const cssLoaderConfiguration = {
       options: {
         sourceMap: true,
         ident: 'postcss',
+        config: {
+          path: __dirname,
+        }
       },
     }
   ],
@@ -98,9 +103,6 @@ const babelLoaderConfiguration = [
   },
   {
     test: /\.js?$/,
-    include: [
-      fs.realpathSync('./node_modules/@tidepool/viz'),
-    ],
     use: {
       loader: 'source-map-loader',
     },
@@ -177,8 +179,8 @@ const plugins = [
     enabled: isProduction,
   }),
   new HtmlWebpackPlugin({
-    template: 'server/templates/index.html',
-    favicon: 'favicon.ico',
+    template: '../../server/templates/index.html',
+    favicon:  `../../branding/${buildConfig.BRANDING}/favicon.ico`,
     minify: false,
     scriptLoading: 'defer',
     inject: 'body',
@@ -229,19 +231,22 @@ if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.start
 }
 
 const resolve = {
+  symlinks: false,
   modules: [
     path.join(__dirname, 'node_modules'),
     'node_modules',
   ],
   alias: {
     pdfkit: 'pdfkit/js/pdfkit.standalone.js',
-    './images/tidepool/logo.png': `./images/${buildConfig.BRANDING}/logo.png`,
+    './images/tidepool/logo.png': path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
   }
 };
 
 let entry = [];
 let devServer;
-if (useWebpackDevServer) {
+if (isTest) {
+  entry = undefined; // Speed up the compile of the tests
+} else if (useWebpackDevServer) {
   console.info('Webpack dev-server is enable');
   const devPublicPath = process.env.WEBPACK_PUBLIC_PATH || 'http://localhost:3001/';
   output.publicPath = devPublicPath;
@@ -309,10 +314,4 @@ module.exports = {
   resolve,
   resolveLoader: resolve,
   cache: isDev,
-  watchOptions: {
-    ignored: [
-      /node_modules([\\]+|\/)+(?!(tideline|tidepool-platform-client|@tidepool\/viz))/,
-      /(tideline|tidepool-platform-client|@tidepool\/viz)([\\]+|\/)node_modules/
-    ]
-  },
 };

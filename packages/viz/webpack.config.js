@@ -112,7 +112,7 @@ const entry = {
 };
 
 const output = {
-  filename: '[name].js',
+  filename: 'viz.[hash].js',
   path: path.join(__dirname, '/dist/'),
 };
 

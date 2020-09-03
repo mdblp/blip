@@ -15,7 +15,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
-import { components as vizComponents } from '@tidepool/viz';
+import { components as vizComponents } from 'tidepool-viz';
 import i18next from '../../../app/core/language';
 import utils from '../../../app/core/utils';
 import DataUtilStub from '../../helpers/DataUtil';

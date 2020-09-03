@@ -18,12 +18,11 @@
 import _ from 'lodash';
 import bows from 'bows';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Trans, translate } from 'react-i18next';
 
 import utils from '../../core/utils';
 
-import * as viz from '@tidepool/viz';
+import * as viz from 'tidepool-viz';
 const PumpSettingsContainer = viz.containers.PumpSettingsContainer;
 
 import Header from './header';
