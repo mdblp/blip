@@ -7,18 +7,20 @@ import * as rsc from '@aws-cdk/custom-resources';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as route53 from '@aws-cdk/aws-route53';
+import { WebStackProps } from './props/WebStackProps';
 
 export class StaticWebSiteStack extends core.Stack {
-  constructor(scope: core.Construct, id: string, props?: core.StackProps, prefix?: string, version?: string) {
+  constructor(scope: core.Construct, id: string, props?: WebStackProps) {
     super(scope, id, props);
 
     // Create the bucket
-    const bucket = new s3.Bucket(this, `com.diabeloop.dev.yourloops.cloudfront.${prefix}`, {
-      bucketName: `com.diabeloop.dev.yourloops.cloudfront.${prefix}`,
+    const bucket = new s3.Bucket(this, `${props?.rootBucketName}.${props?.prefix}`, {
+      bucketName: `${props?.rootBucketName}.${props?.prefix}`,
       removalPolicy: core.RemovalPolicy.RETAIN,
       publicReadAccess: true,
     });
 
+    // Retrieve the Lambda arn
     const lambdaParameter = new rsc.AwsCustomResource(this, 'GetParameter', {
       policy: rsc.AwsCustomResourcePolicy.fromStatements([
         new iam.PolicyStatement({
@@ -28,7 +30,7 @@ export class StaticWebSiteStack extends core.Stack {
             this.formatArn({
               service: 'ssm',
               region: 'us-east-1',
-              resource: `parameter/blip/${prefix}/lambda-edge-arn`
+              resource: `parameter/blip/${props?.prefix}/lambda-edge-arn`
             })
           ]
         })
@@ -38,7 +40,7 @@ export class StaticWebSiteStack extends core.Stack {
         service: 'SSM',
         action: 'getParameter',
         parameters: {
-          Name: `/blip/${prefix}/lambda-edge-arn`
+          Name: `/blip/${props?.prefix}/lambda-edge-arn`
         },
         region: 'us-east-1',
         physicalResourceId: rsc.PhysicalResourceId.of(Date.now().toString()) // Update physical id to always fetch the latest version
@@ -47,24 +49,26 @@ export class StaticWebSiteStack extends core.Stack {
 
     // AWS variable are required here for getting dns zone 
     const zone =  route53.HostedZone.fromLookup(this, 'domainName', {
-      domainName: 'preview.your-loops.dev'
+      domainName: `${props?.zone}`
     });
 
+    // Create the Certificate
     const cert = new DnsValidatedCertificate(this, 'Certificate', {
       hostedZone: zone,
-      domainName: `static.preview.your-loops.dev`,
+      domainName: `${props?.domainName}`,
       region: 'us-east-1',
     });
 
+    // Create the distribution
     const distribution = new cloudfront.CloudFrontWebDistribution(
       this,
       `${id}-cloudfront`,
       {
-        comment: `cloudfront deployment for ${prefix} blip ${version}`,
+        comment: `cloudfront deployment for ${props?.prefix} blip ${props?.version}`,
         originConfigs: [
           {
             s3OriginSource: {
-              originPath: `/blip/${version}`,
+              originPath: `/blip/${props?.version}`,
               s3BucketSource: bucket,
             },
             behaviors: [
@@ -73,7 +77,7 @@ export class StaticWebSiteStack extends core.Stack {
                 lambdaFunctionAssociations: [
                   {
                     eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                    lambdaFunction: lambda.Version.fromVersionArn(this, `${prefix}-blip-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
+                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props?.prefix}-blip-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
                   },
                 ],
               },
@@ -120,7 +124,7 @@ export class StaticWebSiteStack extends core.Stack {
           },
           {
             s3OriginSource: {
-              originPath: `/blip/portal/${version}`,
+              originPath: `/blip/portal/${props?.version}`,
               s3BucketSource: bucket,
             },
             behaviors: [
@@ -134,7 +138,7 @@ export class StaticWebSiteStack extends core.Stack {
         ],
         viewerCertificate: 
         {
-          aliases: ['static.preview.your-loops.dev'],
+          aliases: [`${props?.domainName}`],
           props: {
             acmCertificateArn: cert.certificateArn,
             sslSupportMethod: cloudfront.SSLMethod.SNI,
@@ -149,20 +153,18 @@ export class StaticWebSiteStack extends core.Stack {
     // associate the distribution to a dns record
     new route53.CnameRecord(this, 'WebSiteAliasRecord', {
       zone: zone,
-      recordName: `static.preview.your-loops.dev`,
+      recordName: `${props?.domainName}`,
       domainName: distribution.domainName
     });
-    //
+
+    //  Publish the site content to the S3 bucket (with --delete and invalidation)
     new s3deploy.BucketDeployment(this, 'DeployWithInvalidation', {
       sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist`)],
       destinationBucket: bucket,
-      destinationKeyPrefix: `blip/${version}`,
+      destinationKeyPrefix: `blip/${props?.version}`,
       distribution, //
       distributionPaths: [`/index.html`], // invalidate previous version
     });
-
-    
-
 
   }
 }
