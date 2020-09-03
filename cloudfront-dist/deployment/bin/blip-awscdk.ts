@@ -34,5 +34,5 @@ new StaticWebSiteStack(app, BLIP_STACK_NAME,  {
     zone: DNS_ZONE, 
     prefix: STACK_PREFIX_NAME, 
     version: STACK_VERSION,
-    bucketName: BUCKET
+    rootBucketName: BUCKET
   }).addDependency(ls);

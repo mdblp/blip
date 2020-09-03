@@ -53,7 +53,7 @@ export class StaticWebSiteStack extends core.Stack {
     });
 
     // Create the Certificate
-    const cert = new DnsValidatedCertificate(this, 'Certificate', {
+    const cert = new DnsValidatedCertificate(this, `${id}-certificate`, {
       hostedZone: zone,
       domainName: `${props?.domainName}`,
       region: 'us-east-1',
@@ -151,14 +151,14 @@ export class StaticWebSiteStack extends core.Stack {
     );
 
     // associate the distribution to a dns record
-    new route53.CnameRecord(this, 'WebSiteAliasRecord', {
+    new route53.CnameRecord(this, `${id}-websitealiasrecord`, {
       zone: zone,
       recordName: `${props?.domainName}`,
       domainName: distribution.domainName
     });
 
     //  Publish the site content to the S3 bucket (with --delete and invalidation)
-    new s3deploy.BucketDeployment(this, 'DeployWithInvalidation', {
+    new s3deploy.BucketDeployment(this, `${id}-deploymentwithinvalidation`, {
       sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist`)],
       destinationBucket: bucket,
       destinationKeyPrefix: `blip/${props?.version}`,
