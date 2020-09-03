@@ -14,10 +14,9 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React from 'react'
+import React from 'react';
 import cx from 'classnames';
-import { MMOLL_UNITS } from '../../core/constants';
-import { utils } from '@tidepool/viz';
+import { utils } from 'tidepool-viz';
 
 const IncrementalInput = (props) => {
   function calculate(e) {

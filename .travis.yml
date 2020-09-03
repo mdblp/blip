@@ -3,17 +3,16 @@ language: node_js
 os: linux
 dist: bionic
 
-node_js:
-  - 10.15.3
-  - lts/*
-
-matrix:
-  allow_failures:
-    - node_js: lts/*
-
 env:
   global:
     - SECURITY_SCAN=true
+
+jobs:
+  include:
+    - node_js: 10.15.3
+    - node_js: lts/*
+  allow_failures:
+    - node_js: lts/*
 
 cache: npm
 services:
@@ -24,6 +23,8 @@ addons:
 
 before_install:
   - npm install -g npm@latest
+  - npm cache verify
+  - rm -fv ~/.npm/_logs/*
 
 install:
   - npm install
@@ -43,7 +44,7 @@ deploy:
     # Name of the S3 bucket to which your site should be uploaded.
     bucket: $AWS_BUCKET
     # Prevent Travis from deleting your built site so it can be uploaded.
-    skip_cleanup: true
+    cleanup: false
     # Path of the source directory containing your built site.
     local_dir: deploy
     # Path to a directory containing your built site.
@@ -59,14 +60,17 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     region: $AWS_DEFAULT_REGION
     bucket: com.diabeloop.yourloops.doc
-    skip_cleanup: true
+    cleanup: false
     local_dir: doc
     upload_dir: soup/blip
     cache_control: "max-age=21600"
 
 script:
+  - npm run info
   - npm run lint
   - npm run test
   - npm run security-checks
   - bash server/update-version.sh
-  - bash artifact.sh
+  - npm run clean
+  - bash build.sh
+  - bash show-npm-logs.sh

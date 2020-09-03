@@ -28,7 +28,6 @@ function getIntegrity(str, algorithm = 'sha512') {
 
 const start = Date.now();
 let distDir = null;
-let srvDir = null;
 
 // Determined dist dir location
 for (const dd of ['dist', '../dist']) {
@@ -43,21 +42,6 @@ if (distDir === null) {
   process.exit(1);
 } else {
   console.info(`Using dist directory: ${distDir}`);
-}
-
-// Determined server dir location:
-for (const sd of ['.', 'server']) {
-  srvDir = sd;
-  if (fs.existsSync(`${srvDir}/config.app.js`)) {
-    break;
-  }
-  srvDir = null;
-}
-if (srvDir === null) {
-  console.error('config.app.js not found, can\'t determined the server dir location.');
-  process.exit(1);
-} else {
-  console.info(`Using server directory: ${srvDir}`);
 }
 
 // Display configuration used
@@ -129,7 +113,7 @@ case 'matomo':
       matomoTrackerUrl = `${matomoTrackerUrl}/`;
     }
 
-    let matomoJs = fs.readFileSync(`${srvDir}/templates/matomo.js`, 'utf8');
+    let matomoJs = fs.readFileSync(`${__dirname}/templates/matomo.js`, 'utf8');
     console.info(`  => Setting up matomo tracker code: ${matomoTrackerUrl}`);
     const updatedSrc = matomoJs.replace(reTrackerUrl, (m, u) => {
       return m.replace(u, matomoTrackerUrl);
@@ -187,7 +171,7 @@ default:
 // *** Crowdin ***
 if (process.env.CROWDIN === 'enabled') {
   console.info('- Enable crowdin...');
-  let crowdinJs = fs.readFileSync(`${srvDir}/templates/crowdin.js`, 'utf8');
+  let crowdinJs = fs.readFileSync(`${__dirname}/templates/crowdin.js`, 'utf8');
   let crowdinProject = blipConfig.BRANDING;
   switch (blipConfig.BRANDING) {
   case 'diabeloop':

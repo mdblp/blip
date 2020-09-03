@@ -22,7 +22,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import i18next from '../../core/language';
-import languages from '../../../locales/languages.json'
+import languages from '../../../../../locales/languages.json';
 import * as actions from '../../redux/actions';
 
 import { validateForm } from '../../core/validation';
@@ -89,16 +89,16 @@ class UserProfile extends React.Component {
   formInputs() {
     const inputs = [];
     const disabled = personUtils.isPatient(this.props.user);
-    const firstName = { 
-      name: 'firstName', 
-      label: t('First name'), 
-      type: 'text', 
+    const firstName = {
+      name: 'firstName',
+      label: t('First name'),
+      type: 'text',
       disabled: disabled
     };
-    const lastName = { 
-      name: 'lastName', 
-      label: t('Last name'), 
-      type: 'text', 
+    const lastName = {
+      name: 'lastName',
+      label: t('Last name'),
+      type: 'text',
       disabled: disabled
     };
     if (disabled) {

@@ -427,7 +427,7 @@ describe('sundial', function() {
       it('returns a string',function(){
 
         var utcString = datetimeWrapper.formatForStorage(basicTimestamp,offsetMins);
-        expect(utcString).is.a.String;
+        expect(utcString).is.a('string');
       });
 
       it('returns a valid date',function(){
@@ -808,7 +808,7 @@ describe('sundial', function() {
       it('returns a string',function(){
 
         var utcString = datetimeWrapper.utcDateString();
-        expect(utcString).is.a.String;
+        expect(utcString).is.a('string');
       });
 
       it('returns a valid date',function(){

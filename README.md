@@ -1,6 +1,7 @@
 # Blip
 
 [![Build Status](https://travis-ci.org/mdblp/blip.svg?branch=dblp)](https://travis-ci.org/mdblp/blip)
+[![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
 
 Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform. It allows patients and their "care team" (family, doctors) to visualize their diabetes device data (from insulin pumps, BGMs, and/or CGMs) and message each other.
 
@@ -49,7 +50,7 @@ $ npm install
 Simplest method, will do everything needed in one command.
 
 ```bash
-$ bash artifact.sh
+$ bash build.sh
 ```
 
 Options (using env var):
@@ -69,14 +70,16 @@ Example for a dev build:
 $ source config/env.docker.sh
 ```
 
+## Blib
+
 ### Simple dev build
 
-The app is built as a static site in the `dist/` directory.
+The app is built as a static site in the `packages/blip/dist/` directory.
 
 - Will load the env var for a dev environment (docker)
 - Do a development build of the application
 ```bash
-$ bash build-dev.sh
+$ npm run build-dev
 ```
 
 ### Watch dev build

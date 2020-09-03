@@ -2,6 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased (1.5.0)
+- Integrate viz/tideline/sundial/platform-client into the git repo
+  - Move blip sources to packages/blip
+  - Update build system
+
 ## 1.4.1 2020-08-31
 ### Fixed
 - Updating german translations

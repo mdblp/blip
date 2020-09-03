@@ -1,8 +1,18 @@
 #!/bin/sh
 set -eu
 
-# add configuration
-. ./config/env.docker.sh
+echo "Current directory: $(pwd)"
 
+# add configuration
+source ../../config/env.docker.sh
+
+export NODE_ENV=production
 export NODE_OPTIONS='--max-old-space-size=4096'
-npm run build
+
+echo "Building blib..."
+webpack
+# Use verbose mode, if no usable output in travis to know the reason of the crash:
+# webpack --verbose
+
+echo "Building config..."
+exec node ../../server/build-config.js
