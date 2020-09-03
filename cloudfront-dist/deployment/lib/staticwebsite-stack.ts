@@ -45,6 +45,7 @@ export class StaticWebSiteStack extends core.Stack {
       }
     })
 
+    // AWS variable are required here for getting dns zone 
     const zone =  route53.HostedZone.fromLookup(this, 'domainName', {
       domainName: 'preview.your-loops.dev'
     });
@@ -151,9 +152,9 @@ export class StaticWebSiteStack extends core.Stack {
       recordName: `static.preview.your-loops.dev`,
       domainName: distribution.domainName
     });
-
+    //
     new s3deploy.BucketDeployment(this, 'DeployWithInvalidation', {
-      sources: [s3deploy.Source.asset('../dist')],
+      sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist`)],
       destinationBucket: bucket,
       destinationKeyPrefix: `blip/${version}`,
       distribution, //
