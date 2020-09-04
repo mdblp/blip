@@ -17,10 +17,13 @@
 
 import _ from 'lodash';
 
-const defaultConfig  = {
+const DUMMY_DOMAIN = 'example.com';
+const DUMMY_URL = `https://${DUMMY_DOMAIN}/`;
+
+const defaultConfig = {
   VERSION: '0.0.0',
   UPLOAD_API: 'https://tidepool.org/uploader',
-  API_HOST: `${window.location.protocol}//${window.location.host}`,
+  API_HOST: `${window.location.protocol}//${window.location.hostname}:8009`,
   LATEST_TERMS: '1970-01-01',
   PASSWORD_MIN_LENGTH: 8,
   PASSWORD_MAX_LENGTH: 72,
@@ -30,11 +33,11 @@ const defaultConfig  = {
   ALLOW_PATIENT_CHANGE_EMAIL: true,
   ALLOW_PATIENT_CHANGE_PASSWORD: true,
   CAN_SEE_PWD_LOGIN: false,
-  SUPPORT_EMAIL_ADDRESS: 'support@example.com',
-  SUPPORT_WEB_ADDRESS: 'https://example.com',
-  REGULATORY_WEB_ADDRESS: 'https://example.com/',
+  SUPPORT_EMAIL_ADDRESS: `support@${DUMMY_DOMAIN}`,
+  SUPPORT_WEB_ADDRESS: DUMMY_URL,
+  REGULATORY_WEB_ADDRESS: DUMMY_URL,
+  ASSETS_URL: DUMMY_URL,
   HELP_LINK: null,
-  ASSETS_URL: 'https://example.com/',
   HIDE_DONATE: false,
   HIDE_DEXCOM_BANNER: false,
   HIDE_UPLOAD_LINK: false,
@@ -47,15 +50,45 @@ const defaultConfig  = {
   TEST: false,
 };
 
-const buildConfig = JSON.parse(BUILD_CONFIG);
+/** @type {defaultConfig} */
+// @ts-ignore
+const appConfig = {};
 
-_.assign(defaultConfig, buildConfig);
-
-if (!_.isObjectLike(window.config)) {
-  console.warn('Config not found, using default');
-  window.config = defaultConfig;
-} else {
-  _.assign(defaultConfig,  window.config);
+/**
+ *
+ * @param {defaultConfig} newConfig
+ * @returns {defaultConfig}
+ */
+function updateConfig(newConfig) {
+  _.assign(appConfig, newConfig);
+  _.set(window, 'config', appConfig);
+  return appConfig;
 }
 
-export default defaultConfig;
+function initConfig() {
+  _.assign(appConfig, defaultConfig);
+  if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {
+    const runConfig = _.get(window, 'config', null);
+    _.assign(appConfig, runConfig);
+  } else {
+    console.warn('Config not found, using build configuration');
+
+    /** @type {defaultConfig} */
+    // @ts-ignore
+    const buildConfig = JSON.parse(BUILD_CONFIG);
+    _.assign(appConfig, buildConfig);
+  }
+
+  _.defaults(appConfig, defaultConfig);
+
+  if (!_.isString(appConfig.API_HOST)) {
+    appConfig.API_HOST = defaultConfig.API_HOST;
+  }
+
+  _.set(window, 'config', appConfig);
+}
+
+initConfig();
+
+export { DUMMY_URL, updateConfig };
+export default appConfig;

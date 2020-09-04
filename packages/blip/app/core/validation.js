@@ -18,11 +18,12 @@ import _ from 'lodash';
 import sundial from 'sundial';
 
 import i18next from './language';
-import { capitalize, validateEmail } from './utils';
+import utils from './utils';
 import * as errors from './validation/errors';
 
 import config from '../config';
 
+const { validateEmail } = utils;
 const t = i18next.t.bind(i18next);
 
 // ensure config vars are defined

@@ -6,7 +6,8 @@ module.exports = function babelConfig(api) {
   ];
 
   const plugins = [
-    '@babel/plugin-transform-modules-commonjs',
+    // Disable the 'use strict', because it makes d3 crash.
+    ['@babel/plugin-transform-modules-commonjs', { strictMode: false, }],
   ];
 
   const env = api.env();

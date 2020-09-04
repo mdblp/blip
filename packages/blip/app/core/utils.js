@@ -15,7 +15,7 @@
 
 // Various helper functions
 
-import _  from 'lodash';
+import _ from 'lodash';
 import sundial from 'sundial';
 import TidelineData from 'tideline/js/tidelinedata';
 import nurseShark from 'tideline/plugins/nurseshark';
@@ -502,5 +502,16 @@ utils.getLatestPumpSettings = (data) => {
     uploadRecord,
   }
 }
+
+/**
+ * setTimeout() as promised
+ * @param {number} timeout in milliseconds
+ * @returns Promise<void>
+ */
+utils.waitTimeout = (timeout) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
+};
 
 module.exports = utils;

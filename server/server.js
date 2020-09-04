@@ -21,9 +21,13 @@ function getStaticDir(defaultDir) {
   } else {
     dir = path.join(__dirname, defaultDir);
   }
-  console.info(`Serving from: '${dir}'`);
+
+  const now = new Date().toISOString();
+  console.info(`${now} Serving from: '${dir}'`);
   return dir;
 }
+
+const isDev = process.env.NODE_ENV === 'development';
 
 const reUrl = /(^https?:\/\/[^/]+).*/;
 /** @type {string[]} */
@@ -103,7 +107,8 @@ function cacheIndexHTML(dir) {
  * @param {express.Express} app
  */
 async function stopServer(app) {
-  console.log('Stopping server...');
+  const now = new Date().toISOString();
+  console.log(`${now} Stopping server...`);
   if (httpServer !== null) {
     httpServer.close();
     httpServer.removeAllListeners();
@@ -154,63 +159,65 @@ const contentSecurityPolicy = {
   reportOnly: false,
 };
 
-if (blipConfig.BRANDING === 'tidepool') {
-  console.log('Tidepool enable, setting up CSP');
-  contentSecurityPolicy.directives.scriptSrc.push('https://d12wqas9hcki3z.cloudfront.net');
-  contentSecurityPolicy.directives.scriptSrc.push('https://d33v4339jhl8k0.cloudfront.net');
-  contentSecurityPolicy.directives.styleSrc.push('https://djtflbt20bdde.cloudfront.net');
-  contentSecurityPolicy.directives.styleSrc.push('https://fonts.googleapis.com');
-  contentSecurityPolicy.directives.connectSrc.push('https://api.github.com/repos/tidepool-org/chrome-uploader/releases');
-  contentSecurityPolicy.directives.connectSrc.push('wss://*.pusher.com');
-  contentSecurityPolicy.directives.connectSrc.push('*.sumologic.com');
-  contentSecurityPolicy.directives.connectSrc.push('sentry.io');
-  contentSecurityPolicy.directives.childSrc.push('https://docs.google.com');
-  if (contentSecurityPolicy.directives.frameSrc[0] === "'none'") {
-    contentSecurityPolicy.directives.frameSrc.splice(0, 1);
-  }
-  contentSecurityPolicy.directives.frameSrc.push('https://docs.google.com');
-}
-
-if (typeof blipConfig.HELP_LINK === 'string' && blipConfig.HELP_LINK.startsWith('https://')) {
-  // Assume Zendesk
-  console.log('Zendesk enable, setting up CSP');
-  const helpUrl = blipConfig.HELP_LINK.replace(reUrl, '$1');
-  contentSecurityPolicy.directives.scriptSrc.push(helpUrl);
-  contentSecurityPolicy.directives.connectSrc.push(helpUrl);
-  contentSecurityPolicy.directives.imgSrc.push(helpUrl);
-  contentSecurityPolicy.directives.connectSrc.push('https://ekr.zdassets.com');
-  contentSecurityPolicy.directives.connectSrc.push('https://diabeloop.zendesk.com');
-}
-
-if (serverConfig.matomoUrl !== null) {
-  console.log('Matomo enable, setting up CSP');
-  const matomoUrl = serverConfig.matomoUrl.replace(reUrl, '$1');
-  contentSecurityPolicy.directives.scriptSrc.push(matomoUrl);
-  contentSecurityPolicy.directives.imgSrc.push(matomoUrl);
-  contentSecurityPolicy.directives.connectSrc.push(matomoUrl);
-}
-
-if (serverConfig.crowdinPreview) {
-  console.log('Crowdin enable, setting up CSP');
-  const crowdinURL = 'https://crowdin.com';
-  const crowdinCDN = 'https://cdn.crowdin.com/';
-  contentSecurityPolicy.directives.scriptSrc.push(crowdinCDN, crowdinURL, "'unsafe-inline'");
-  // Disable nonce because crowdin use JQuery, and it's breaking it
-  for (let i=0; i<contentSecurityPolicy.directives.scriptSrc.length; i++) {
-    if (typeof contentSecurityPolicy.directives.scriptSrc[i] === 'function') {
-      contentSecurityPolicy.directives.scriptSrc.splice(i, 1);
-      break;
+function initCSP() {
+  if (blipConfig.BRANDING === 'tidepool') {
+    console.log('Tidepool enable, setting up CSP');
+    contentSecurityPolicy.directives.scriptSrc.push('https://d12wqas9hcki3z.cloudfront.net');
+    contentSecurityPolicy.directives.scriptSrc.push('https://d33v4339jhl8k0.cloudfront.net');
+    contentSecurityPolicy.directives.styleSrc.push('https://djtflbt20bdde.cloudfront.net');
+    contentSecurityPolicy.directives.styleSrc.push('https://fonts.googleapis.com');
+    contentSecurityPolicy.directives.connectSrc.push('https://api.github.com/repos/tidepool-org/chrome-uploader/releases');
+    contentSecurityPolicy.directives.connectSrc.push('wss://*.pusher.com');
+    contentSecurityPolicy.directives.connectSrc.push('*.sumologic.com');
+    contentSecurityPolicy.directives.connectSrc.push('sentry.io');
+    contentSecurityPolicy.directives.childSrc.push('https://docs.google.com');
+    if (contentSecurityPolicy.directives.frameSrc[0] === "'none'") {
+      contentSecurityPolicy.directives.frameSrc.splice(0, 1);
     }
+    contentSecurityPolicy.directives.frameSrc.push('https://docs.google.com');
   }
-  contentSecurityPolicy.directives.imgSrc.push(crowdinCDN, 'https://crowdin-static.downloads.crowdin.com', 'https://www.gravatar.com', 'https://*.wp.com');
-  contentSecurityPolicy.directives.styleSrc.push(crowdinCDN, 'https://fonts.googleapis.com');
-  contentSecurityPolicy.directives.connectSrc.push(crowdinCDN);
-  contentSecurityPolicy.directives.fontSrc.push(crowdinCDN, 'https://fonts.gstatic.com');
-  contentSecurityPolicy.directives.objectSrc.push("'self'");
-  if (contentSecurityPolicy.directives.frameSrc[0] === "'none'") {
-    contentSecurityPolicy.directives.frameSrc.splice(0, 1);
+
+  if (typeof blipConfig.HELP_LINK === 'string' && blipConfig.HELP_LINK.startsWith('https://')) {
+    // Assume Zendesk
+    console.log('Zendesk enable, setting up CSP');
+    const helpUrl = blipConfig.HELP_LINK.replace(reUrl, '$1');
+    contentSecurityPolicy.directives.scriptSrc.push(helpUrl);
+    contentSecurityPolicy.directives.connectSrc.push(helpUrl);
+    contentSecurityPolicy.directives.imgSrc.push(helpUrl);
+    contentSecurityPolicy.directives.connectSrc.push('https://ekr.zdassets.com');
+    contentSecurityPolicy.directives.connectSrc.push('https://diabeloop.zendesk.com');
   }
-  contentSecurityPolicy.directives.frameSrc.push(crowdinCDN, crowdinURL, 'https://accounts.crowdin.com');
+
+  if (serverConfig.matomoUrl !== null) {
+    console.log('Matomo enable, setting up CSP');
+    const matomoUrl = serverConfig.matomoUrl.replace(reUrl, '$1');
+    contentSecurityPolicy.directives.scriptSrc.push(matomoUrl);
+    contentSecurityPolicy.directives.imgSrc.push(matomoUrl);
+    contentSecurityPolicy.directives.connectSrc.push(matomoUrl);
+  }
+
+  if (serverConfig.crowdinPreview) {
+    console.log('Crowdin enable, setting up CSP');
+    const crowdinURL = 'https://crowdin.com';
+    const crowdinCDN = 'https://cdn.crowdin.com/';
+    contentSecurityPolicy.directives.scriptSrc.push(crowdinCDN, crowdinURL, "'unsafe-inline'");
+    // Disable nonce because crowdin use JQuery, and it's breaking it
+    for (let i=0; i<contentSecurityPolicy.directives.scriptSrc.length; i++) {
+      if (typeof contentSecurityPolicy.directives.scriptSrc[i] === 'function') {
+        contentSecurityPolicy.directives.scriptSrc.splice(i, 1);
+        break;
+      }
+    }
+    contentSecurityPolicy.directives.imgSrc.push(crowdinCDN, 'https://crowdin-static.downloads.crowdin.com', 'https://www.gravatar.com', 'https://*.wp.com');
+    contentSecurityPolicy.directives.styleSrc.push(crowdinCDN, 'https://fonts.googleapis.com');
+    contentSecurityPolicy.directives.connectSrc.push(crowdinCDN);
+    contentSecurityPolicy.directives.fontSrc.push(crowdinCDN, 'https://fonts.gstatic.com');
+    contentSecurityPolicy.directives.objectSrc.push("'self'");
+    if (contentSecurityPolicy.directives.frameSrc[0] === "'none'") {
+      contentSecurityPolicy.directives.frameSrc.splice(0, 1);
+    }
+    contentSecurityPolicy.directives.frameSrc.push(crowdinCDN, crowdinURL, 'https://accounts.crowdin.com');
+  }
 }
 
 const staticDir = getStaticDir('dist');
@@ -222,7 +229,19 @@ const app = express();
 app.use(morgan(':date[iso] :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]'));
 app.use(compression());
 app.use(helmet());
-app.use(nonceMiddleware, helmet.contentSecurityPolicy(contentSecurityPolicy));
+
+if (isDev) {
+  const now = new Date().toISOString();
+  console.log(`${now} Development mode: CSP disable`);
+  app.use((req, res, next) => {
+    res.locals.htmlWithNonces = indexHTML;
+    next();
+  });
+} else {
+  initCSP();
+  app.use(nonceMiddleware, helmet.contentSecurityPolicy(contentSecurityPolicy));
+}
+
 app.use(bodyParser.json({
   type: ['json', 'application/csp-report'],
 }));
