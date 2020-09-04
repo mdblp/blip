@@ -1,0 +1,268 @@
+/* eslint-disable lodash/prefer-lodash-typecheck */
+const path = require('path');
+const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const SriWebpackPlugin = require('webpack-subresource-integrity');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const buildConfig = require('../../server/config.app');
+
+const isDev = (process.env.NODE_ENV === 'development');
+const isTest = (process.env.NODE_ENV === 'test');
+const isProduction = (process.env.NODE_ENV === 'production');
+
+// Enzyme as of v2.4.1 has trouble with classes
+// that do not start and *end* with an alpha character
+// but that will sometimes happen with the base64 hashes
+// so we leave them off in the test env
+const localIdentName = process.env.NODE_ENV === 'test'
+  ? '[name]--[local]'
+  : '[name]--[local]--[hash:base64:5]';
+
+const lessLoaderConfiguration = {
+  test: /\.less$/,
+  use: [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 2,
+        sourceMap: true,
+        onlyLocals: false,
+        modules: {
+          auto: true,
+          exportGlobals: true,
+          localIdentName,
+        }
+      },
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        sourceMap: true,
+        config: {
+          path: __dirname,
+        }
+      },
+    },
+    {
+      loader: 'less-loader',
+      options: {
+        sourceMap: true,
+        lessOptions: {
+          strictUnits: true,
+          strictMath: true,
+          javascriptEnabled: true, // Deprecated
+        },
+      },
+    },
+  ],
+};
+const cssLoaderConfiguration = {
+  test: /\.css$/,
+  use: [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 1,
+        sourceMap: true,
+        modules: {
+          localIdentName,
+        }
+      },
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        sourceMap: true,
+        ident: 'postcss',
+        config: {
+          path: __dirname,
+        }
+      },
+    }
+  ],
+};
+
+const babelLoaderConfiguration = [
+  {
+    test: /\.js$/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        cacheDirectory: true,
+      },
+    },
+  },
+  {
+    test: /\.js$/,
+    use: {
+      loader: 'source-map-loader',
+    },
+  },
+];
+
+// This is needed for webpack to import static images in JavaScript files
+const imageLoaderConfiguration = {
+  test: /\.(gif|jpe?g|png|svg)$/,
+  use: {
+    loader: 'url-loader',
+    options: {
+      name: '[name].[ext]',
+      esModule: false,
+    },
+  },
+};
+
+const fontLoaderConfiguration = [
+  {
+    test: /\.eot$/,
+    use: {
+      loader: 'url-loader',
+      query: {
+        limit: 10000,
+        mimetype: 'application/vnd.ms-fontobject',
+      },
+    },
+  },
+  {
+    test: /\.woff$/,
+    use: {
+      loader: 'url-loader',
+      query: {
+        limit: 10000,
+        mimetype: 'application/font-woff',
+      },
+    },
+  },
+  {
+    test: /\.ttf$/,
+    use: {
+      loader: 'url-loader',
+      query: {
+        limit: 10000,
+        mimetype: 'application/octet-stream',
+      },
+    },
+  },
+];
+
+const localesLoader = {
+  test: /locales\/languages\.json$/,
+  use: {
+    loader: './locales-loader.js'
+  }
+};
+
+const plugins = [
+  // these values are required in the config.app.js file -- we can't use
+  // process.env with webpack, we have to create these magic constants
+  // individually.
+  // When running the test, we always use the default config.
+  new webpack.DefinePlugin({
+    BUILD_CONFIG: `'${JSON.stringify(isTest ? {DEV: isDev, TEST: isTest} : buildConfig)}'`,
+    __DEV__: isDev,
+    __TEST__: isTest,
+  }),
+  new MiniCssExtractPlugin({
+    filename: isDev ? 'blip.css' : 'blip.[contenthash].css',
+  }),
+  new SriWebpackPlugin({
+    hashFuncNames: ['sha512'],
+    enabled: isProduction,
+  }),
+  new HtmlWebpackPlugin({
+    minify: false,
+    scriptLoading: 'defer',
+    inject: 'body',
+    showErrors: true,
+    title: buildConfig.BRANDING,
+    filename: 'blip.html'
+  }),
+];
+
+const minimizer = [
+  new TerserPlugin({
+    test: /\.js(\?.*)?$/i,
+    cache: true,
+    parallel: true,
+    sourceMap: true,
+    extractComments: isProduction,
+    terserOptions: {
+      // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+      ie8: false,
+      toplevel: true,
+      warnings: false,
+      ecma: 2017,
+      compress: {},
+      output: {
+        comments: false,
+        beautify: false
+      }
+    }
+  }),
+  new OptimizeCSSAssetsPlugin({}),
+];
+
+/** @type {webpack.Output} */
+const output = {
+  filename: isDev || isTest ? 'blip.js' : 'blip.[hash].js',
+  path: path.join(__dirname, 'dist'),
+};
+
+if (typeof process.env.PUBLIC_PATH === 'string' && process.env.PUBLIC_PATH.startsWith('https')) {
+  output.publicPath = process.env.PUBLIC_PATH;
+}
+
+const resolve = {
+  modules: [
+    path.join(__dirname, 'node_modules'),
+    path.join(__dirname, '../../node_modules'),
+    'node_modules',
+  ],
+  alias: {
+    pdfkit: 'pdfkit/js/pdfkit.standalone.js',
+    './images/tidepool/logo.png': path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
+  }
+};
+
+let entry = [ './iframe/index.js' ];
+let devtool = 'source-map';
+
+module.exports = {
+  devtool,
+  entry,
+  mode: isDev || isTest ? 'development' : 'production',
+  module: {
+    rules: [
+      ...babelLoaderConfiguration,
+      imageLoaderConfiguration,
+      lessLoaderConfiguration,
+      cssLoaderConfiguration,
+      ...fontLoaderConfiguration,
+      localesLoader,
+    ],
+  },
+  optimization: {
+    noEmitOnErrors: true,
+    splitChunks: {
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.(css|less)$/,
+          chunks: 'all',
+          enforce: true
+        }
+      }
+    },
+    minimize: isProduction,
+    minimizer
+  },
+  output,
+  plugins,
+  resolve,
+  resolveLoader: resolve,
+  cache: isDev,
+};

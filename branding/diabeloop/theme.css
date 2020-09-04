@@ -1,0 +1,28 @@
+/* Diabeloop / Yourloops theme */
+
+:root {
+  --mdc-theme-primary: #109182;
+  --mdc-theme-secondary: #575756;
+  --mdc-theme-error: #de514b;
+  --mdc-theme-text-button-on-surface: #006c71;
+  --mdc-theme-text-button-hover-on-surface: #6fc3bb;
+}
+
+body {
+	height: 100vh;
+	margin: 0px;
+}
+
+img.toolbar-logo {
+  content: url(./logo.png);
+  height: 45px;
+}
+
+div#login-card-logo {
+  content: url(./logo.png);
+  height: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
