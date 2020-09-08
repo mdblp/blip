@@ -36,10 +36,8 @@ const tideline = {
   log: bows('Settings')
 };
 
-const Settings = translate()(React.createClass({
-  chartType: 'settings',
-  log: bows('Settings View'),
-  propTypes: {
+const Settings = translate()(class extends React.Component {
+  static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
     chartPrefs: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
@@ -56,17 +54,17 @@ const Settings = translate()(React.createClass({
     onClickPrint: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     uploadUrl: PropTypes.string.isRequired
-  },
+  };
 
-  getInitialState: function() {
-    return {
-      atMostRecent: true,
-      inTransition: false,
-      title: ''
-    };
-  },
+  state = {
+    atMostRecent: true,
+    inTransition: false,
+    title: ''
+  };
+  log = bows('Settings View');
+  chartType = 'settings';
 
-  render: function() {
+  render() {
     return (
       <div id="tidelineMain">
         <Header
@@ -99,9 +97,9 @@ const Settings = translate()(React.createClass({
         ref="footer" />
       </div>
       );
-  },
+  }
 
-  renderChart: function() {
+  renderChart = () => {
     const mostRecentSettings = _.last(this.props.patientData.grouped.pumpSettings);
 
     const self = this;
@@ -121,9 +119,9 @@ const Settings = translate()(React.createClass({
         view='display'
       />
     );
-  },
+  };
 
-  renderMissingSettingsMessage: function() {
+  renderMissingSettingsMessage = () => {
     const self = this;
     const handleClickUpload = function() {
       self.props.trackMetric('Clicked Partial Data Upload, No Settings');
@@ -140,9 +138,9 @@ const Settings = translate()(React.createClass({
       </Trans>
     );
 
-  },
+  };
 
-  isMissingSettings: function() {
+  isMissingSettings = () => {
     const data = this.props.patientData;
     const pumpSettings = utils.getIn(data, ['grouped', 'pumpSettings'], false);
     if (pumpSettings === false) {
@@ -155,43 +153,43 @@ const Settings = translate()(React.createClass({
     }
 
     return false;
-  },
+  };
 
   // handlers
-  handleClickTrends: function(e) {
+  handleClickTrends = (e) => {
     if (e) {
       e.preventDefault();
     }
     this.props.onSwitchToTrends();
-  },
+  };
 
-  handleClickMostRecent: function(e) {
+  handleClickMostRecent = (e) => {
     if (e) {
       e.preventDefault();
     }
     return;
-  },
+  };
 
-  handleClickOneDay: function(e) {
+  handleClickOneDay = (e) => {
     if (e) {
       e.preventDefault();
     }
     this.props.onSwitchToDaily();
-  },
+  };
 
-  handleClickSettings: function(e) {
+  handleClickSettings = (e) => {
     if (e) {
       e.preventDefault();
     }
     return;
-  },
+  };
 
-  handleClickBgLog: function(e) {
+  handleClickBgLog = (e) => {
     if (e) {
       e.preventDefault();
     }
     this.props.onSwitchToBgLog();
-  }
-}));
+  };
+});
 
 module.exports = Settings;

@@ -18,13 +18,14 @@ var PropTypes = require('prop-types');
 var React = require('react');
 var cx = require('classnames');
 
-var ModalOverlay = React.createClass({
-  propTypes: {
+class ModalOverlay extends React.Component {
+  static propTypes = {
     show: PropTypes.bool.isRequired,
     dialog: PropTypes.node.isRequired,
     overlayClickHandler: PropTypes.func.isRequired
-  },
-  render: function() {
+  };
+
+  render() {
     var self = this;
     var classes = cx({
       'ModalOverlay': true,
@@ -42,6 +43,6 @@ var ModalOverlay = React.createClass({
     );
     
   }
-});
+}
 
 module.exports = ModalOverlay;

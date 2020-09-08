@@ -31,8 +31,8 @@ var NavbarPatientCard = require('../../components/navbarpatientcard');
 var logoSrc = require('./images/tidepool/logo.png');
 
 
-export default translate()(React.createClass({
-  propTypes: {
+export default translate()(class extends React.Component {
+  static propTypes = {
     currentPage: PropTypes.string,
     user: PropTypes.object,
     fetchingUser: PropTypes.bool,
@@ -42,15 +42,13 @@ export default translate()(React.createClass({
     onLogout: PropTypes.func,
     trackMetric: PropTypes.func.isRequired,
     permsOfLoggedInUser: PropTypes.object,
-  },
+  };
 
-  getInitialState: function() {
-    return {
-      showDropdown: false,
-    };
-  },
+  state = {
+    showDropdown: false,
+  };
 
-  render: function() {
+  render() {
     return (
       <div className="Navbar">
         {this.renderLogoSection()}
@@ -58,17 +56,17 @@ export default translate()(React.createClass({
         {this.renderMenuSection()}
       </div>
     );
-  },
+  }
 
-  renderLogoSection: function() {
+  renderLogoSection = () => {
     return (
       <div className="Navbar-logoSection">
         {this.renderLogo()}
       </div>
     );
-  },
+  };
 
-  renderLogo: function() {
+  renderLogo = () => {
     var self = this;
     var handleClick = function() {
       self.props.trackMetric('Clicked Navbar Logo');
@@ -82,17 +80,17 @@ export default translate()(React.createClass({
         <img src={logoSrc}/>
       </IndexLink>
     );
-  },
+  };
 
-  getPatientLink: function(patient) {
+  getPatientLink = (patient) => {
     if (!patient || !patient.userid) {
       return '';
     }
 
     return '/patients/' + patient.userid + '/data';
-  },
+  };
 
-  renderPatientSection: function() {
+  renderPatientSection = () => {
     var patient = this.props.patient;
 
     if (_.isEmpty(patient)) {
@@ -112,28 +110,28 @@ export default translate()(React.createClass({
           trackMetric={this.props.trackMetric} />
       </div>
     );
-  },
+  };
 
-  toggleDropdown: function(e) {
+  toggleDropdown = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
     this.setState({showDropdown: !this.state.showDropdown});
-  },
+  };
 
-  stopPropagation: function(e) {
+  stopPropagation = (e) => {
     e.stopPropagation();
-  },
+  };
 
-  hideDropdown: function()  {
+  hideDropdown = () => {
     if (this.state.showDropdown) {
       this.setState({showDropdown: false});
     }
-  },
+  };
 
-  renderMenuSection: function() {
+  renderMenuSection = () => {
     var currentPage = (this.props.currentPage && this.props.currentPage[0] === '/') ? this.props.currentPage.slice(1) : this.props.currentPage;
     const {user, t} = this.props;
 
@@ -210,17 +208,17 @@ export default translate()(React.createClass({
         </li>
       </ul>
     );
-  },
+  };
 
-  getUserDisplayName: function() {
+  getUserDisplayName = () => {
     return personUtils.fullName(this.props.user);
-  },
+  };
 
-  isSamePersonUserAndPatient: function() {
+  isSamePersonUserAndPatient = () => {
     return personUtils.isSame(this.props.user, this.props.patient);
-  },
+  };
 
-  handleLogout: function(e) {
+  handleLogout = (e) => {
     this.setState({showDropdown: false});
 
     if (e) {
@@ -231,5 +229,5 @@ export default translate()(React.createClass({
     if (logout) {
       logout();
     }
-  }
-}));
+  };
+});

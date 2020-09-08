@@ -25,8 +25,8 @@ import { translate } from 'react-i18next';
 var Message = require('./message');
 var MessageForm = require('./messageform');
 
-var Messages = translate()(React.createClass({
-  propTypes: {
+var Messages = translate()(class extends React.Component {
+  static propTypes = {
     messages: PropTypes.array,
     createDatetime: PropTypes.string,
     user: PropTypes.object,
@@ -36,26 +36,28 @@ var Messages = translate()(React.createClass({
     onEdit: PropTypes.func,
     onNewMessage: PropTypes.func,
     timePrefs: PropTypes.object.isRequired
-  },
-  componentWillReceiveProps: function(nextProps) {
+  };
+
+  state = {
+    messages : this.props.messages
+  };
+
+  componentWillReceiveProps(nextProps) {
     this.setState({messages: nextProps.messages});
-  },
-  getInitialState: function() {
-    return {
-      messages : this.props.messages
-    };
-  },
+  }
+
   /*
    * Should the user be able to edit this message?
    */
-  getSaveEdit: function(messageUserId) {
+  getSaveEdit = (messageUserId) => {
     var saveEdit;
     if (messageUserId === this.props.user.userid) {
       saveEdit = this.handleEditNote;
     }
     return saveEdit;
-  },
-  renderNote: function(message){
+  };
+
+  renderNote = (message) => {
     return (
       <Message
         key={message.id}
@@ -65,8 +67,9 @@ var Messages = translate()(React.createClass({
         timePrefs={this.props.timePrefs} />
       );
 
-  },
-  renderComment: function(message){
+  };
+
+  renderComment = (message) => {
     return (
       <Message
         key={message.id}
@@ -76,8 +79,9 @@ var Messages = translate()(React.createClass({
         timePrefs={this.props.timePrefs} />
       );
 
-  },
-  renderThread: function() {
+  };
+
+  renderThread = () => {
     if (this.isMessageThread()) {
       var thread = _.map(this.state.messages, function(message) {
         if (!message.parentmessage) {
@@ -95,11 +99,13 @@ var Messages = translate()(React.createClass({
     }
 
     return;
-  },
-  isMessageThread: function() {
+  };
+
+  isMessageThread = () => {
     return !_.isEmpty(this.state.messages);
-  },
-  renderCommentOnThreadForm: function() {
+  };
+
+  renderCommentOnThreadForm = () => {
     const { t } = this.props;
     var submitButtonText = t('Comment_submit');
 
@@ -113,8 +119,9 @@ var Messages = translate()(React.createClass({
           timePrefs={this.props.timePrefs} />
       </div>
     );
-  },
-  renderNewThreadForm: function() {
+  };
+
+  renderNewThreadForm = () => {
     const { t } = this.props;
     var submitButtonText = t('Post_submit');
 
@@ -130,12 +137,14 @@ var Messages = translate()(React.createClass({
           timePrefs={this.props.timePrefs} />
       </div>
     );
-  },
-  renderClose:function(){
+  };
+
+  renderClose = () => {
     return (<a className='messages-close' onClick={this.handleClose}>Close</a>);
 
-  },
-  render: function() {
+  };
+
+  render() {
     var thread = this.renderThread();
     var form = this.renderNewThreadForm() ;
     var close;
@@ -160,8 +169,9 @@ var Messages = translate()(React.createClass({
       </div>
      </div>
     );
-  },
-  getParent: function() {
+  }
+
+  getParent = () => {
     if (this.isMessageThread()) {
       return _.find(
         this.state.messages,
@@ -169,8 +179,9 @@ var Messages = translate()(React.createClass({
       );
     }
     return;
-  },
-  handleAddComment: function(formValues, cb) {
+  };
+
+  handleAddComment = (formValues, cb) => {
     var self = this;
     if (_.isEmpty(formValues) === false) {
       var addComment = this.props.onSave;
@@ -198,8 +209,9 @@ var Messages = translate()(React.createClass({
       });
 
     }
-  },
-  handleCreateNote: function(formValues,cb) {
+  };
+
+  handleCreateNote = (formValues, cb) => {
     var self = this;
     if (_.isEmpty(formValues) === false) {
       var createNote = this.props.onSave;
@@ -237,13 +249,15 @@ var Messages = translate()(React.createClass({
         }
       });
     }
-  },
-  handleEditNote: function(updated) {
+  };
+
+  handleEditNote = (updated) => {
     if(_.isEmpty(updated) === false){
       this.props.onEdit(updated, function(error, details){});
     }
-  },
-  handleClose: function(e) {
+  };
+
+  handleClose = (e) => {
     if(e){
       e.preventDefault();
     }
@@ -251,7 +265,7 @@ var Messages = translate()(React.createClass({
     if (close) {
       close();
     }
-  }
-}));
+  };
+});
 
 module.exports = Messages;
