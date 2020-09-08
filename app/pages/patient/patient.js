@@ -31,10 +31,10 @@ import PatientInfo from './patientinfo';
 import { PatientTeam } from './patientteam';
 import config from '../../config';
 
-const Patient = translate()(React.createClass({
+const Patient = translate()(class extends React.Component {
   // many things *not* required here because they aren't needed for
   // /patients/:id/profile although they are for /patients/:id/share (or vice-versa)
-  propTypes: {
+  static propTypes = {
     acknowledgeNotification: PropTypes.func.isRequired,
     cancellingInvite: PropTypes.bool,
     dataDonationAccounts: PropTypes.array,
@@ -66,16 +66,9 @@ const Patient = translate()(React.createClass({
     authorizedDataSource: PropTypes.object,
     queryParams: PropTypes.object,
     api: PropTypes.object,
-  },
+  };
 
-  getInitialState: function() {
-    return {
-      showModalOverlay: false,
-      dialog: ''
-    };
-  },
-
-  render: function() {
+  render() {
     return (
       <div className="PatientPage js-patient-page">
         <div className="PatientPage-layer">
@@ -85,16 +78,16 @@ const Patient = translate()(React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
-  renderSubnav: function() {
+  renderSubnav = () => {
     return (
       <div className="PatientPage-subnav grid">
       </div>
     );
-  },
+  };
 
-  renderContent: function() {
+  renderContent = () => {
     var share;
     var modal;
     var profile = this.renderInfo();
@@ -112,13 +105,13 @@ const Patient = translate()(React.createClass({
         {modal}
       </div>
     );
-  },
+  };
 
-  renderFooter: function() {
+  renderFooter = () => {
     return <div className="PatientPage-footer"></div>;
-  },
+  };
 
-  renderInfo: function() {
+  renderInfo = () => {
     return (
       <div className="PatientPage-infoSection">
         <PatientInfo
@@ -144,20 +137,20 @@ const Patient = translate()(React.createClass({
           trackMetric={this.props.trackMetric} />
       </div>
     );
-  },
+  };
 
-  isSamePersonUserAndPatient: function() {
+  isSamePersonUserAndPatient = () => {
     return personUtils.isSame(this.props.user, this.props.patient);
-  },
+  };
 
-  renderDeleteDialog: function() {
+  renderDeleteDialog = () => {
     const mailto = `mailto:${config.SUPPORT_EMAIL_ADDRESS}?Subject=Delete%20my%20account`;
     return (
       <Trans i18nKey="html.patient-delete-account">If you are sure you want to delete your account, please <a href={mailto} target="_blank">send an email</a> and we take care of it for you.</Trans>
     );
-  },
+  };
 
-  renderDelete: function() {
+  renderDelete = () => {
     const { t } = this.props;
     var self = this;
 
@@ -177,22 +170,25 @@ const Patient = translate()(React.createClass({
         <div onClick={handleClick}>{t('Delete my account')}</div>
       </div>
     );
-  },
+  };
 
-  overlayClickHandler: function() {
-    this.setState(this.getInitialState());
-  },
+  overlayClickHandler = () => {
+    this.setState({
+      showModalOverlay: false,
+      dialog: ''
+    }); // TODO verify getinitialstate
+  };
 
-  renderModalOverlay: function() {
+  renderModalOverlay = () => {
     return (
       <ModalOverlay
         show={this.state.showModalOverlay}
         dialog={this.state.dialog}
         overlayClickHandler={this.overlayClickHandler}/>
     );
-  },
+  };
 
-  renderAccess: function() {
+  renderAccess = () => {
     if (!this.isSamePersonUserAndPatient()) {
       return null;
     }
@@ -202,9 +198,9 @@ const Patient = translate()(React.createClass({
         {this.renderPatientTeam()}
       </div>
     );
-  },
+  };
 
-  renderPatientTeam: function() {
+  renderPatientTeam = () => {
     return (
       <PatientTeam
         acknowledgeNotification={this.props.acknowledgeNotification}
@@ -222,9 +218,9 @@ const Patient = translate()(React.createClass({
         user={this.props.user}
       />
     );
-  },
+  };
 
-  componentDidMount: function() {
+  componentDidMount() {
     if (this.props.trackMetric) {
       if (this.props.shareOnly) {
         this.props.trackMetric('Viewed Share');
@@ -232,9 +228,9 @@ const Patient = translate()(React.createClass({
         this.props.trackMetric('Viewed Profile')
       }
     }
-  },
+  }
 
-  doFetching: function(nextProps) {
+  doFetching = (nextProps) => {
     if (!nextProps.fetchers) {
       return
     }
@@ -242,15 +238,15 @@ const Patient = translate()(React.createClass({
     nextProps.fetchers.forEach(fetcher => {
       fetcher();
     });
-  },
+  };
 
   /**
    * Before rendering for first time
    * begin fetching any required data
    */
-  componentWillMount: function() {
+  componentWillMount() {
     this.doFetching(this.props);
   }
-}));
+});
 
 export default Patient;
