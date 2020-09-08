@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { translate } from 'react-i18next';
 import { Link } from 'react-router';
@@ -29,12 +31,12 @@ var personUtils = require('../../core/personutils');
 
 var NavbarPatientCard = translate()(React.createClass({
   propTypes: {
-    href: React.PropTypes.string.isRequired,
-    currentPage: React.PropTypes.string,
-    uploadUrl: React.PropTypes.string,
-    patient: React.PropTypes.object,
-    trackMetric: React.PropTypes.func.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object,
+    href: PropTypes.string.isRequired,
+    currentPage: PropTypes.string,
+    uploadUrl: PropTypes.string,
+    patient: PropTypes.object,
+    trackMetric: PropTypes.func.isRequired,
+    permsOfLoggedInUser: PropTypes.object,
   },
 
   getInitialState: function() {

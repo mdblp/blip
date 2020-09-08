@@ -1,4 +1,5 @@
 
+var PropTypes = require('prop-types');
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -22,16 +23,16 @@ var InputGroup = require('../inputgroup');
 // Simple form with validation errors, submit button, and notification message
 var SimpleForm = React.createClass({
   propTypes: {
-    inputs: React.PropTypes.array,
-    formValues: React.PropTypes.object,
-    validationErrors: React.PropTypes.object,
-    submitButtonText: React.PropTypes.string,
-    submitDisabled: React.PropTypes.bool,
-    onSubmit: React.PropTypes.func,
-    onChange: React.PropTypes.func,
-    notification: React.PropTypes.object,
-    disabled: React.PropTypes.bool,
-    renderSubmit: React.PropTypes.bool,
+    inputs: PropTypes.array,
+    formValues: PropTypes.object,
+    validationErrors: PropTypes.object,
+    submitButtonText: PropTypes.string,
+    submitDisabled: PropTypes.bool,
+    onSubmit: PropTypes.func,
+    onChange: PropTypes.func,
+    notification: PropTypes.object,
+    disabled: PropTypes.bool,
+    renderSubmit: PropTypes.bool,
   },
 
   getDefaultProps: function() {

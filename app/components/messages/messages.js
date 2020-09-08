@@ -15,6 +15,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import _ from 'lodash';
 import sundial from 'sundial';
@@ -25,15 +27,15 @@ var MessageForm = require('./messageform');
 
 var Messages = translate()(React.createClass({
   propTypes: {
-    messages: React.PropTypes.array,
-    createDatetime: React.PropTypes.string,
-    user: React.PropTypes.object,
-    patient: React.PropTypes.object,
-    onClose: React.PropTypes.func,
-    onSave: React.PropTypes.func,
-    onEdit: React.PropTypes.func,
-    onNewMessage: React.PropTypes.func,
-    timePrefs: React.PropTypes.object.isRequired
+    messages: PropTypes.array,
+    createDatetime: PropTypes.string,
+    user: PropTypes.object,
+    patient: PropTypes.object,
+    onClose: PropTypes.func,
+    onSave: PropTypes.func,
+    onEdit: PropTypes.func,
+    onNewMessage: PropTypes.func,
+    timePrefs: PropTypes.object.isRequired
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({messages: nextProps.messages});

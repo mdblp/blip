@@ -15,6 +15,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import _ from 'lodash';
 import sundial from 'sundial';
@@ -26,11 +28,11 @@ var MessageMixins = require('./messagemixins');
 var MessageForm = translate()(React.createClass({
   mixins: [MessageMixins],
   propTypes: {
-    formFields: React.PropTypes.object,
-    messagePrompt: React.PropTypes.string,
-    onCancel: React.PropTypes.func,
-    onSubmit: React.PropTypes.func,
-    timePrefs: React.PropTypes.object.isRequired
+    formFields: PropTypes.object,
+    messagePrompt: PropTypes.string,
+    onCancel: PropTypes.func,
+    onSubmit: PropTypes.func,
+    timePrefs: PropTypes.object.isRequired
   },
   /*
    * Declared so that we can reset them easily

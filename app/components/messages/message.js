@@ -1,3 +1,4 @@
+var PropTypes = require('prop-types');
 /*
 == BSD2 LICENSE ==
 Copyright (c) 2014, Tidepool Project
@@ -31,10 +32,10 @@ if (!window.process) {
 var Message = React.createClass({
   mixins: [MessageMixins],
   propTypes: {
-    theNote : React.PropTypes.object.isRequired,
-    imageSize: React.PropTypes.string,
-    onSaveEdit: React.PropTypes.func,
-    timePrefs: React.PropTypes.object.isRequired
+    theNote : PropTypes.object.isRequired,
+    imageSize: PropTypes.string,
+    onSaveEdit: PropTypes.func,
+    timePrefs: PropTypes.object.isRequired
   },
   getInitialState: function() {
     return {

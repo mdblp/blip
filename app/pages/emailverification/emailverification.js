@@ -13,6 +13,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
@@ -29,16 +31,16 @@ import utils from '../../core/utils';
 
 export var EmailVerification = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    notification: React.PropTypes.object,
-    onSubmitResend: React.PropTypes.func.isRequired,
-    resent: React.PropTypes.bool.isRequired,
-    sent: React.PropTypes.oneOfType([
-      React.PropTypes.bool,
-      React.PropTypes.string,
+    acknowledgeNotification: PropTypes.func.isRequired,
+    notification: PropTypes.object,
+    onSubmitResend: PropTypes.func.isRequired,
+    resent: PropTypes.bool.isRequired,
+    sent: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.string,
     ]),
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
   },
   componentWillUnmount: function() {
     this.props.acknowledgeNotification('resendingEmailVerification');

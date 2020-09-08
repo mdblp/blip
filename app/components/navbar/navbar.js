@@ -1,4 +1,8 @@
 
+var React = require('react');
+var IndexLink = require('react-router').IndexLink;
+var Link = require('react-router').Link;
+
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -15,9 +19,8 @@
  */
 
 
-var React = require('react');
-var IndexLink = require('react-router').IndexLink;
-var Link = require('react-router').Link;
+import PropTypes from 'prop-types';
+
 import { translate } from 'react-i18next';
 
 var _ = require('lodash');
@@ -30,15 +33,15 @@ var logoSrc = require('./images/tidepool/logo.png');
 
 export default translate()(React.createClass({
   propTypes: {
-    currentPage: React.PropTypes.string,
-    user: React.PropTypes.object,
-    fetchingUser: React.PropTypes.bool,
-    patient: React.PropTypes.object,
-    fetchingPatient: React.PropTypes.bool,
-    getUploadUrl: React.PropTypes.func,
-    onLogout: React.PropTypes.func,
-    trackMetric: React.PropTypes.func.isRequired,
-    permsOfLoggedInUser: React.PropTypes.object,
+    currentPage: PropTypes.string,
+    user: PropTypes.object,
+    fetchingUser: PropTypes.bool,
+    patient: PropTypes.object,
+    fetchingPatient: PropTypes.bool,
+    getUploadUrl: PropTypes.func,
+    onLogout: PropTypes.func,
+    trackMetric: PropTypes.func.isRequired,
+    permsOfLoggedInUser: PropTypes.object,
   },
 
   getInitialState: function() {

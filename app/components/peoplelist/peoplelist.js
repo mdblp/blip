@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
@@ -24,11 +26,11 @@ var PatientCard = require('../../components/patientcard');
 
 var PeopleList = translate()(React.createClass({
   propTypes: {
-    people: React.PropTypes.array,
-    uploadUrl: React.PropTypes.string,
-    onClickPerson: React.PropTypes.func,
-    onRemovePatient: React.PropTypes.func,
-    trackMetric: React.PropTypes.func.isRequired,
+    people: PropTypes.array,
+    uploadUrl: PropTypes.string,
+    onClickPerson: PropTypes.func,
+    onRemovePatient: PropTypes.func,
+    trackMetric: PropTypes.func.isRequired,
   },
 
   getInitialState: function() {

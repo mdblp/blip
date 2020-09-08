@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React, { Component } from 'react';
 import GitHub from 'github-api';
 import _ from 'lodash';
@@ -38,8 +40,8 @@ export default translate()(class UploaderButton extends Component {
   }
 
   static propTypes = {
-    onClick: React.PropTypes.func.isRequired,
-    buttonText: React.PropTypes.string.isRequired
+    onClick: PropTypes.func.isRequired,
+    buttonText: PropTypes.string.isRequired
   };
 
   componentWillMount = () => {

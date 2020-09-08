@@ -15,6 +15,9 @@
  */
 
 
+import PropTypes from 'prop-types';
+
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -34,12 +37,12 @@ import SimpleForm from '../../components/simpleform';
 
 export let RequestPasswordReset = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    api: React.PropTypes.object.isRequired,
-    notification: React.PropTypes.object,
-    onSubmit: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
+    acknowledgeNotification: PropTypes.func.isRequired,
+    api: PropTypes.object.isRequired,
+    notification: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
   },
 
   formInputs: function() {

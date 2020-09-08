@@ -13,6 +13,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { translate } from 'react-i18next'
 import _ from 'lodash';
@@ -26,9 +28,9 @@ var utils = require('../../core/utils');
 
 var PermissionInputGroup = translate()(React.createClass({
   propTypes: {
-    value: React.PropTypes.bool,
-    working: React.PropTypes.bool,
-    onChange: React.PropTypes.func
+    value: PropTypes.bool,
+    working: PropTypes.bool,
+    onChange: PropTypes.func
   },
   getDefaultProps: function() {
     return {
@@ -67,11 +69,11 @@ var PermissionInputGroup = translate()(React.createClass({
 
 var MemberInviteForm = translate()(React.createClass({
   propTypes: {
-    onSubmit: React.PropTypes.func,
-    onCancel: React.PropTypes.func,
-    working: React.PropTypes.bool.isRequired,
-    error: React.PropTypes.string,
-    trackMetric: React.PropTypes.func.isRequired
+    onSubmit: PropTypes.func,
+    onCancel: PropTypes.func,
+    working: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    trackMetric: PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {
@@ -172,11 +174,11 @@ var MemberInviteForm = translate()(React.createClass({
 
 var ConfirmDialog = translate()(React.createClass({
   propTypes: {
-    buttonText: React.PropTypes.string,
-    dismissText: React.PropTypes.string,
-    message: React.PropTypes.node,
-    onCancel: React.PropTypes.func,
-    onSubmit: React.PropTypes.func
+    buttonText: PropTypes.string,
+    dismissText: PropTypes.string,
+    message: PropTypes.node,
+    onCancel: PropTypes.func,
+    onSubmit: PropTypes.func
   },
 
   render: function() {
@@ -209,19 +211,19 @@ var ConfirmDialog = translate()(React.createClass({
 
 var PatientTeam = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    cancellingInvite: React.PropTypes.bool.isRequired,
-    changingMemberPermissions: React.PropTypes.bool.isRequired,
-    invitingMemberInfo: React.PropTypes.object.isRequired,
-    onCancelInvite: React.PropTypes.func.isRequired,
-    onChangeMemberPermissions: React.PropTypes.func.isRequired,
-    onInviteMember: React.PropTypes.func.isRequired,
-    onRemoveMember: React.PropTypes.func.isRequired,
-    patient: React.PropTypes.object.isRequired,
-    pendingSentInvites: React.PropTypes.array.isRequired,
-    removingMember: React.PropTypes.bool.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    user: React.PropTypes.object.isRequired
+    acknowledgeNotification: PropTypes.func.isRequired,
+    cancellingInvite: PropTypes.bool.isRequired,
+    changingMemberPermissions: PropTypes.bool.isRequired,
+    invitingMemberInfo: PropTypes.object.isRequired,
+    onCancelInvite: PropTypes.func.isRequired,
+    onChangeMemberPermissions: PropTypes.func.isRequired,
+    onInviteMember: PropTypes.func.isRequired,
+    onRemoveMember: PropTypes.func.isRequired,
+    patient: PropTypes.object.isRequired,
+    pendingSentInvites: PropTypes.array.isRequired,
+    removingMember: PropTypes.bool.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
   },
 
   getInitialState: function() {
