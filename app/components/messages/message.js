@@ -29,20 +29,20 @@ if (!window.process) {
   var profileSmallSrc = require('./images/profile-64x64.png');
 }
 
-var Message = React.createClass({
-  mixins: [MessageMixins],
-  propTypes: {
+class Message extends React.Component {
+  static propTypes = {
     theNote : PropTypes.object.isRequired,
     imageSize: PropTypes.string,
     onSaveEdit: PropTypes.func,
     timePrefs: PropTypes.object.isRequired
-  },
-  getInitialState: function() {
-    return {
-      editing: false
-    };
-  },
-  componentDidMount: function () {
+  };
+  mixins: [MessageMixins];
+  
+  state = {
+    editing: false
+  };
+
+  componentDidMount() {
     if (this.props.theNote) {
       this.setState({
       author: this.getUserDisplayName(this.props.theNote.user),
@@ -50,18 +50,21 @@ var Message = React.createClass({
       when: this.getDisplayTimestamp(this.props.theNote.timestamp)
       });
     }
-  },
-  getUserDisplayName: function(user) {
+  }
+
+  getUserDisplayName = (user) => {
     var result = 'Anonymous user';
     if (user && user.fullName) {
       result = user.fullName;
     }
     return result;
-  },
-  isComment: function() {
+  };
+
+  isComment = () => {
     return _.isEmpty(this.props.theNote.parentmessage) === false;
-  },
-  handleEditSave: function(edits) {
+  };
+
+  handleEditSave = (edits) => {
     var saveEdit = this.props.onSaveEdit;
 
     if (saveEdit) {
@@ -84,20 +87,23 @@ var Message = React.createClass({
       }
       this.setState(newState);
     }
-  },
-  handleAllowEdit: function(e) {
+  };
+
+  handleAllowEdit = (e) => {
     if (e) {
       e.preventDefault();
     }
     this.setState({editing:true});
-  },
-  handleCancelEdit: function(e) {
+  };
+
+  handleCancelEdit = (e) => {
     if (e) {
       e.preventDefault();
     }
     this.setState({editing:false});
-  },
-  renderTitle: function() {
+  };
+
+  renderTitle = () => {
     var edit = this.renderEditLink();
     
     return (
@@ -107,8 +113,9 @@ var Message = React.createClass({
       </div>
     );
     
-  },
-  renderEditLink: function() {
+  };
+
+  renderEditLink = () => {
     if (this.state.editing === false && this.props.onSaveEdit) {
       return (
         
@@ -120,8 +127,9 @@ var Message = React.createClass({
         
       );
     }
-  },
-  renderImage: function() {
+  };
+
+  renderImage = () => {
     var imageSize = this.props.imageSize;
     var imageSource;
 
@@ -140,8 +148,9 @@ var Message = React.createClass({
         alt='Profile picture'/>
     );
     
-  },
-  renderNoteEdit: function() {
+  };
+
+  renderNoteEdit = () => {
     if (this.state.editing) {
       var editForm;
       if ( this.isComment() ){
@@ -182,8 +191,9 @@ var Message = React.createClass({
       );
       
     }
-  },
-  renderNoteContent: function() {
+  };
+
+  renderNoteContent = () => {
     if (this.state.editing === false) {
       var image = this.renderImage();
       var title = this.renderTitle();
@@ -202,9 +212,9 @@ var Message = React.createClass({
         
       );
     }
-  },
+  };
 
-  render: function() {
+  render() {
     var noteClasses = 'message';
     var note = this.renderNoteContent() ? this.renderNoteContent() : this.renderNoteEdit();
     if (this.state.editing) {
@@ -219,6 +229,6 @@ var Message = React.createClass({
       
     );
   }
-});
+}
 
 module.exports = Message;
