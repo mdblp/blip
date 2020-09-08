@@ -15,8 +15,10 @@ It is based on Tidepool Blip 1.27.
 ## 1.4.2 - 2020-09-09  
 ### Fixed
 - YLP-157 Add german locale to the list of available languages.
+### Engineering
+- Prevent from security scan to run
 
-## 1.4.1 - 2020-08-31  
+## 1.4.1 2020-08-31
 ### Fixed
 - Updating german translations
 
