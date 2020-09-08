@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import _ from 'lodash';
 import cx from 'classnames';
@@ -25,23 +27,23 @@ import ShowHidePassword from '../showHidePassword';
 // Input with label and validation error message
 const InputGroup = React.createClass({
   propTypes: {
-    name: React.PropTypes.string,
-    label: React.PropTypes.node,
-    items: React.PropTypes.array,
-    text: React.PropTypes.node,
-    value: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.bool,
-      React.PropTypes.object // dates for datepicker input type are objects
+    name: PropTypes.string,
+    label: PropTypes.node,
+    items: PropTypes.array,
+    text: PropTypes.node,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.bool,
+      PropTypes.object // dates for datepicker input type are objects
     ]),
-    error: React.PropTypes.string,
-    type: React.PropTypes.string.isRequired,
-    placeholder: React.PropTypes.string,
-    rows: React.PropTypes.number,
-    disabled: React.PropTypes.bool,
-    multi: React.PropTypes.bool,
-    onChange: React.PropTypes.func,
-    info: React.PropTypes.string,
+    error: PropTypes.string,
+    type: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    rows: PropTypes.number,
+    disabled: PropTypes.bool,
+    multi: PropTypes.bool,
+    onChange: PropTypes.func,
+    info: PropTypes.string,
   },
 
   DEFAULT_TEXTAREA_ROWS: 3,

@@ -13,6 +13,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -37,14 +39,14 @@ var formText = 'Welcome!';
 
 export let VerificationWithPassword = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    api: React.PropTypes.object.isRequired,
-    notification: React.PropTypes.object,
-    signupEmail: React.PropTypes.string.isRequired,
-    signupKey: React.PropTypes.string.isRequired,
-    onSubmit: React.PropTypes.func.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
+    acknowledgeNotification: PropTypes.func.isRequired,
+    api: PropTypes.object.isRequired,
+    notification: PropTypes.object,
+    signupEmail: PropTypes.string.isRequired,
+    signupKey: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
   },
 
   formInputs: function() {

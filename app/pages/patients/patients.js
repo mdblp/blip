@@ -13,12 +13,14 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { browserHistory, Link } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { translate, Trans } from 'react-i18next';
-import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 import * as actions from '../../redux/actions';
 import utils from '../../core/utils';
@@ -36,28 +38,28 @@ const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export let Patients = translate()(React.createClass({
   propTypes: {
-    clearPatientData: React.PropTypes.func.isRequired,
-    clearPatientInView: React.PropTypes.func.isRequired,
-    currentPatientInViewId: React.PropTypes.string,
-    fetchers: React.PropTypes.array.isRequired,
-    fetchingUser: React.PropTypes.bool.isRequired,
-    fetchingPendingReceivedInvites: React.PropTypes.object.isRequired,
-    fetchingAssociatedAccounts: React.PropTypes.object.isRequired,
-    fetchingMetrics: React.PropTypes.object.isRequired,
-    invites: React.PropTypes.array.isRequired,
-    loading: React.PropTypes.bool.isRequired,
-    location: React.PropTypes.object.isRequired,
-    loggedInUserId: React.PropTypes.string,
-    onAcceptInvitation: React.PropTypes.func.isRequired,
-    onDismissInvitation: React.PropTypes.func.isRequired,
-    onHideWelcomeSetup: React.PropTypes.func.isRequired,
-    onRemovePatient: React.PropTypes.func.isRequired,
-    patients: React.PropTypes.array.isRequired,
-    showWelcomeMessage: React.PropTypes.func.isRequired,
-    showingWelcomeMessage: React.PropTypes.bool,
-    trackMetric: React.PropTypes.func.isRequired,
-    uploadUrl: React.PropTypes.string,
-    user: React.PropTypes.object,
+    clearPatientData: PropTypes.func.isRequired,
+    clearPatientInView: PropTypes.func.isRequired,
+    currentPatientInViewId: PropTypes.string,
+    fetchers: PropTypes.array.isRequired,
+    fetchingUser: PropTypes.bool.isRequired,
+    fetchingPendingReceivedInvites: PropTypes.object.isRequired,
+    fetchingAssociatedAccounts: PropTypes.object.isRequired,
+    fetchingMetrics: PropTypes.object.isRequired,
+    invites: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired,
+    loggedInUserId: PropTypes.string,
+    onAcceptInvitation: PropTypes.func.isRequired,
+    onDismissInvitation: PropTypes.func.isRequired,
+    onHideWelcomeSetup: PropTypes.func.isRequired,
+    onRemovePatient: PropTypes.func.isRequired,
+    patients: PropTypes.array.isRequired,
+    showWelcomeMessage: PropTypes.func.isRequired,
+    showingWelcomeMessage: PropTypes.bool,
+    trackMetric: PropTypes.func.isRequired,
+    uploadUrl: PropTypes.string,
+    user: PropTypes.object,
   },
 
   render: function() {
@@ -381,7 +383,7 @@ export function getFetchers(dispatchProps, stateProps, api) {
     dispatchProps.fetchMetrics(api, stateProps);
   }
   return fetchers;
-};
+}
 
 
 export function mapStateToProps(state) {
@@ -443,7 +445,7 @@ export function mapStateToProps(state) {
     showingWelcomeMessage: state.blip.showingWelcomeMessage,
     user: user,
   }
-};
+}
 
 let mapDispatchToProps = dispatch => bindActionCreators({
   acceptReceivedInvite: actions.async.acceptReceivedInvite,

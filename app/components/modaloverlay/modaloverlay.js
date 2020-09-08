@@ -1,4 +1,5 @@
 
+var PropTypes = require('prop-types');
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -19,9 +20,9 @@ var cx = require('classnames');
 
 var ModalOverlay = React.createClass({
   propTypes: {
-    show: React.PropTypes.bool.isRequired,
-    dialog: React.PropTypes.node.isRequired,
-    overlayClickHandler: React.PropTypes.func.isRequired
+    show: PropTypes.bool.isRequired,
+    dialog: PropTypes.node.isRequired,
+    overlayClickHandler: PropTypes.func.isRequired
   },
   render: function() {
     var self = this;

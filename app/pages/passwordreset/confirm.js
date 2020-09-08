@@ -13,6 +13,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { translate } from 'react-i18next';
@@ -31,14 +33,14 @@ import SimpleForm from '../../components/simpleform';
 
 export var ConfirmPasswordReset = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    api: React.PropTypes.object.isRequired,
-    notification: React.PropTypes.object,
-    onSubmit: React.PropTypes.func.isRequired,
-    resetKey: React.PropTypes.string.isRequired,
-    success: React.PropTypes.bool.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
+    acknowledgeNotification: PropTypes.func.isRequired,
+    api: PropTypes.object.isRequired,
+    notification: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    resetKey: PropTypes.string.isRequired,
+    success: PropTypes.bool.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
   },
 
   formInputs: function() {

@@ -1,4 +1,6 @@
 
+var React = require('react');
+
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -14,15 +16,16 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-var React = require('react');
+import PropTypes from 'prop-types';
+
 import { translate } from 'react-i18next';
 var Link = require('react-router').Link;
 
 var LoginNav = translate()(React.createClass({
   propTypes: {
-    page: React.PropTypes.string,
-    hideLinks: React.PropTypes.bool,
-    trackMetric: React.PropTypes.func.isRequired
+    page: PropTypes.string,
+    hideLinks: PropTypes.bool,
+    trackMetric: PropTypes.func.isRequired
   },
 
   render: function() {

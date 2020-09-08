@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -32,15 +34,15 @@ import config from '../../config'
 
 export let Login = translate()(React.createClass({
   propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    confirmSignup: React.PropTypes.func.isRequired,
-    fetchers: React.PropTypes.array.isRequired,
-    isInvite: React.PropTypes.bool.isRequired,
-    notification: React.PropTypes.object,
-    onSubmit: React.PropTypes.func.isRequired,
-    seedEmail: React.PropTypes.string,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
+    acknowledgeNotification: PropTypes.func.isRequired,
+    confirmSignup: PropTypes.func.isRequired,
+    fetchers: PropTypes.array.isRequired,
+    isInvite: PropTypes.bool.isRequired,
+    notification: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    seedEmail: PropTypes.string,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
   },
 
   formInputs: function() {

@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { translate } from 'react-i18next';
 import { Link } from 'react-router';
@@ -29,15 +31,15 @@ var UploadLaunchOverlay = require('../uploadlaunchoverlay');
 
 var PatientCard = translate()(React.createClass({
   propTypes: {
-    href: React.PropTypes.string.isRequired,
-    currentPage: React.PropTypes.string,
-    isEditing: React.PropTypes.bool,
-    isNavbar: React.PropTypes.bool,
-    onClick: React.PropTypes.func,
-    onRemovePatient: React.PropTypes.func,
-    uploadUrl: React.PropTypes.string,
-    patient: React.PropTypes.object.isRequired,
-    trackMetric: React.PropTypes.func.isRequired,
+    href: PropTypes.string.isRequired,
+    currentPage: PropTypes.string,
+    isEditing: PropTypes.bool,
+    isNavbar: PropTypes.bool,
+    onClick: PropTypes.func,
+    onRemovePatient: PropTypes.func,
+    uploadUrl: PropTypes.string,
+    patient: PropTypes.object.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   },
 
   getInitialState: function() {

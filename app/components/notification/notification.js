@@ -1,4 +1,6 @@
 
+import _ from 'lodash';
+
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -13,17 +15,18 @@
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
-import _ from 'lodash';
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { Link } from 'react-router';
 import { translate } from 'react-i18next';
 
 var TidepoolNotification = translate()(React.createClass({
   propTypes: {
-    type: React.PropTypes.string,
-    contents: React.PropTypes.object.isRequired,
-    link: React.PropTypes.object,
-    onClose: React.PropTypes.func.isRequired
+    type: PropTypes.string,
+    contents: PropTypes.object.isRequired,
+    link: PropTypes.object,
+    onClose: PropTypes.func.isRequired
   },
 
   render: function() {
