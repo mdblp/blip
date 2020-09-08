@@ -29,8 +29,8 @@ import SimpleForm from '../../components/simpleform';
 
 import utils from '../../core/utils';
 
-export var EmailVerification = translate()(React.createClass({
-  propTypes: {
+export var EmailVerification = translate()(class extends React.Component {
+  static propTypes = {
     acknowledgeNotification: PropTypes.func.isRequired,
     notification: PropTypes.object,
     onSubmitResend: PropTypes.func.isRequired,
@@ -41,23 +41,25 @@ export var EmailVerification = translate()(React.createClass({
     ]),
     trackMetric: PropTypes.func.isRequired,
     working: PropTypes.bool.isRequired
-  },
-  componentWillUnmount: function() {
+  };
+
+  state = {
+    formValues: {},
+    validationErrors: {}
+  };
+
+  componentWillUnmount() {
     this.props.acknowledgeNotification('resendingEmailVerification');
-  },
-  formInputs: function() {
+  }
+
+  formInputs = () => {
     const { t } = this.props;
     return [
       {name: 'email', label: t('Email'), type: 'email'}
     ];
-  },
-  getInitialState: function() {
-    return {
-      formValues: {},
-      validationErrors: {}
-    };
-  },
-  render: function() {
+  };
+
+  render() {
     const { t, sent } = this.props;
     var content;
     var loginPage;
@@ -111,8 +113,9 @@ export var EmailVerification = translate()(React.createClass({
         {content}
       </div>
     );
-  },
-  renderForm: function() {
+  }
+
+  renderForm = () => {
     const { t } = this.props;
     var submitButtonText = this.props.working ? t('Sending email...') : t('Resend');
 
@@ -126,8 +129,9 @@ export var EmailVerification = translate()(React.createClass({
         onSubmit={this.handleSubmit}
         notification={this.props.notification}/>
     );
-  },
-  handleSubmit: function(formValues) {
+  };
+
+  handleSubmit = (formValues) => {
     var self = this;
 
     if (this.props.working) {
@@ -141,15 +145,17 @@ export var EmailVerification = translate()(React.createClass({
       return;
     }
     this.props.onSubmitResend(formValues.email);
-  },
-  resetFormStateBeforeSubmit: function(formValues) {
+  };
+
+  resetFormStateBeforeSubmit = (formValues) => {
     this.props.acknowledgeNotification('resendingEmailVerification');
     this.setState({
       formValues: formValues,
       validationErrors: {}
     });
-  },
-  validateFormValues: function(formValues) {
+  };
+
+  validateFormValues = (formValues) => {
     const { t } = this.props;
     var validationErrors = {};
     var IS_REQUIRED = t('This field is required.');
@@ -170,8 +176,8 @@ export var EmailVerification = translate()(React.createClass({
     }
 
     return validationErrors;
-  }
-}));
+  };
+});
 
 /**
  * Expose "Smart" Component that is connect-ed to Redux

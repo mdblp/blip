@@ -14,6 +14,7 @@
  */
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
@@ -59,7 +60,9 @@ const { commonStats, getStatDefinition, statFetchMethods } = vizUtils.stat;
 
 const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES,t=>t!=='food');
 
-export let PatientData = translate()(React.createClass({
+export let PatientData = translate()(createReactClass({
+  displayName: 'PatientData',
+
   propTypes: {
     addPatientNote: PropTypes.func.isRequired,
     clearPatientData: PropTypes.func.isRequired,
@@ -1481,7 +1484,7 @@ export let PatientData = translate()(React.createClass({
     nextProps.fetchers.forEach(function(fetcher) {
       fetcher();
     });
-  }
+  },
 }));
 
 /**
@@ -1504,7 +1507,7 @@ export function getFetchers(dispatchProps, ownProps, stateProps, api, options) {
   }
 
   return fetchers;
-};
+}
 
 export function mapStateToProps(state, props) {
   let user = null;
