@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.11.0",
-    "@tidepool/viz": "file:../viz",
+    "@tidepool/viz": "github:mdblp/viz#react-16-migration",
     "@types/react": "^16.9.49",
     "async": "3.2.0",
     "babel-core": "^7.0.0-bridge.0",
@@ -80,7 +80,7 @@
     "regenerator-runtime": "0.13.5",
     "reselect": "3.0.1",
     "sundial": "github:mdblp/sundial#dblp.0.2.0",
-    "tideline": "file:../tideline",
+    "tideline": "github:mdblp/tideline#react-16-migration",
     "tidepool-platform-client": "github:mdblp/platform-client#dblp.0.3.0"
   },
   "devDependencies": {
