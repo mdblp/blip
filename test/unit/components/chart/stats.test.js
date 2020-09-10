@@ -553,7 +553,7 @@ describe('Stats', () => {
       const setStateSpy = sinon.spy(instance, 'setState');
       sinon.assert.callCount(setStateSpy, 0);
 
-      instance.componentWillReceiveProps(_.assign({}, baseProps, {
+      instance.UNSAFE_componentWillReceiveProps(_.assign({}, baseProps, {
         bgSource: 'smbg',
       }));
 
@@ -572,7 +572,7 @@ describe('Stats', () => {
         endpoints: ['foo', 'bar'],
       });
 
-      instance.componentWillReceiveProps(nextProps);
+      instance.UNSAFE_componentWillReceiveProps(nextProps);
 
       sinon.assert.callCount(dataUtilEndpointsSpy.set, 1);
       sinon.assert.calledWith(dataUtilEndpointsSpy.set, ['foo', 'bar']);
@@ -591,7 +591,7 @@ describe('Stats', () => {
         chartPrefs: { trends: { activeDays: { monday: false } } },
       });
 
-      instance.componentWillReceiveProps(nextProps);
+      instance.UNSAFE_componentWillReceiveProps(nextProps);
 
       sinon.assert.callCount(updateStatDataSpy, 1);
       sinon.assert.calledWith(updateStatDataSpy, nextProps);

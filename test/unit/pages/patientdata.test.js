@@ -19,6 +19,7 @@ import { components as vizComponents } from '@tidepool/viz';
 import i18next from '../../../app/core/language';
 import utils from '../../../app/core/utils';
 import DataUtilStub from '../../helpers/DataUtil';
+import createReactClass from 'create-react-class';
 
 const { Loader } = vizComponents;
 
@@ -78,17 +79,17 @@ describe('PatientData', function () {
 
 
   before(() => {
-    PD.__Rewire__('Basics', React.createClass({
+    PD.__Rewire__('Basics', createReactClass({
       render: function() {
         return (<div className='fake-basics-view'></div>);
       }
     }));
-    PD.__Rewire__('Trends', React.createClass({
+    PD.__Rewire__('Trends',createReactClass({
       render: function() {
         return (<div className='fake-trends-view'></div>);
       }
     }));
-    PD.__Rewire__('BgLog', React.createClass({
+    PD.__Rewire__('BgLog', createReactClass({
       render: function() {
         return (<div className='fake-bgLog-view'></div>);
       }
@@ -483,7 +484,7 @@ describe('PatientData', function () {
             elem.setInitialChartType(processedData);
           };
 
-          elem.componentWillReceiveProps({
+          elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},
             }),
@@ -767,7 +768,7 @@ describe('PatientData', function () {
               chartType: elem.deriveChartTypeFromLatestData(data[0], []),
             });
           }
-          elem.componentWillReceiveProps({
+          elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},
             }),
@@ -818,7 +819,7 @@ describe('PatientData', function () {
               chartType: elem.deriveChartTypeFromLatestData(data[0]),
             });
           }
-          elem.componentWillReceiveProps({
+          elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},
             }),
