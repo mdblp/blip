@@ -71,7 +71,7 @@ export let VerificationWithPassword = translate()(class extends React.Component 
     ];
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({ loading: false });
   }
 
@@ -81,7 +81,7 @@ export let VerificationWithPassword = translate()(class extends React.Component 
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (_.get(this.props, 'notification.message', null) === null &&
         _.get(nextProps, 'notification.message') === errorMessages.ERR_BIRTHDAY_MISMATCH) {
       this.props.trackMetric('VCA Home Verification - Birthday Mismatch')

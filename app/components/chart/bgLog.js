@@ -208,7 +208,7 @@ class BgLog extends Component {
     }
   };
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     if (this.props.loading && !nextProps.loading) {
       this.refs.chart.rerenderChart();
     }

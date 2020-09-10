@@ -42,7 +42,7 @@ var Messages = translate()(class extends React.Component {
     messages : this.props.messages
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({messages: nextProps.messages});
   }
 

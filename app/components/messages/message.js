@@ -18,6 +18,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 /* jshint unused: false */
 
 var React = require('react');
+var createReactClass = require('create-react-class');
 var _ = require('lodash');
 var sundial = require('sundial');
 
@@ -29,20 +30,24 @@ if (!window.process) {
   var profileSmallSrc = require('./images/profile-64x64.png');
 }
 
-class Message extends React.Component {
-  static propTypes = {
+var Message = createReactClass({
+  displayName: 'Message',
+  mixins: [MessageMixins],
+
+  propTypes: {
     theNote : PropTypes.object.isRequired,
     imageSize: PropTypes.string,
     onSaveEdit: PropTypes.func,
     timePrefs: PropTypes.object.isRequired
-  };
-  mixins: [MessageMixins];
-  
-  state = {
-    editing: false
-  };
+  },
 
-  componentDidMount() {
+  getInitialState: function() {
+    return {
+      editing: false
+    };
+  },
+
+  componentDidMount: function () {
     if (this.props.theNote) {
       this.setState({
       author: this.getUserDisplayName(this.props.theNote.user),
@@ -50,21 +55,21 @@ class Message extends React.Component {
       when: this.getDisplayTimestamp(this.props.theNote.timestamp)
       });
     }
-  }
+  },
 
-  getUserDisplayName = (user) => {
+  getUserDisplayName: function(user) {
     var result = 'Anonymous user';
     if (user && user.fullName) {
       result = user.fullName;
     }
     return result;
-  };
+  },
 
-  isComment = () => {
+  isComment: function() {
     return _.isEmpty(this.props.theNote.parentmessage) === false;
-  };
+  },
 
-  handleEditSave = (edits) => {
+  handleEditSave: function(edits) {
     var saveEdit = this.props.onSaveEdit;
 
     if (saveEdit) {
@@ -87,23 +92,23 @@ class Message extends React.Component {
       }
       this.setState(newState);
     }
-  };
+  },
 
-  handleAllowEdit = (e) => {
+  handleAllowEdit: function(e) {
     if (e) {
       e.preventDefault();
     }
     this.setState({editing:true});
-  };
+  },
 
-  handleCancelEdit = (e) => {
+  handleCancelEdit: function(e) {
     if (e) {
       e.preventDefault();
     }
     this.setState({editing:false});
-  };
+  },
 
-  renderTitle = () => {
+  renderTitle: function() {
     var edit = this.renderEditLink();
     
     return (
@@ -113,9 +118,9 @@ class Message extends React.Component {
       </div>
     );
     
-  };
+  },
 
-  renderEditLink = () => {
+  renderEditLink: function() {
     if (this.state.editing === false && this.props.onSaveEdit) {
       return (
         
@@ -127,9 +132,9 @@ class Message extends React.Component {
         
       );
     }
-  };
+  },
 
-  renderImage = () => {
+  renderImage: function() {
     var imageSize = this.props.imageSize;
     var imageSource;
 
@@ -148,9 +153,9 @@ class Message extends React.Component {
         alt='Profile picture'/>
     );
     
-  };
+  },
 
-  renderNoteEdit = () => {
+  renderNoteEdit: function() {
     if (this.state.editing) {
       var editForm;
       if ( this.isComment() ){
@@ -191,9 +196,9 @@ class Message extends React.Component {
       );
       
     }
-  };
+  },
 
-  renderNoteContent = () => {
+  renderNoteContent: function() {
     if (this.state.editing === false) {
       var image = this.renderImage();
       var title = this.renderTitle();
@@ -212,9 +217,9 @@ class Message extends React.Component {
         
       );
     }
-  };
+  },
 
-  render() {
+  render: function() {
     var noteClasses = 'message';
     var note = this.renderNoteContent() ? this.renderNoteContent() : this.renderNoteEdit();
     if (this.state.editing) {
@@ -228,7 +233,7 @@ class Message extends React.Component {
       </div>
       
     );
-  }
-}
+  },
+});
 
 module.exports = Message;

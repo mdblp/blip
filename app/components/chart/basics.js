@@ -62,7 +62,7 @@ class Basics extends Component {
     title: this.getTitle(),
   });
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
 
     if (dateRange) {

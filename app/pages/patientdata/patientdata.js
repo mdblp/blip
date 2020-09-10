@@ -959,7 +959,7 @@ export let PatientData = translate()(createReactClass({
     }, cb);
   },
 
-  componentWillMount: function() {
+  UNSAFE_componentWillMount: function() {
     this.doFetching(this.props);
     var params = this.props.queryParams;
 
@@ -974,7 +974,7 @@ export let PatientData = translate()(createReactClass({
     }
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  UNSAFE_componentWillReceiveProps: function(nextProps) {
     const userId = this.props.currentPatientInViewId;
     const nextPatientData = _.get(nextProps, ['patientDataMap', userId], null);
     const patientSettings = _.get(nextProps, ['patient', 'settings'], null);

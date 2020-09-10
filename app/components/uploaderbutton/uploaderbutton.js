@@ -44,7 +44,7 @@ export default translate()(class UploaderButton extends Component {
     buttonText: PropTypes.string.isRequired
   };
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     const uploaderRepo = github.getRepo('tidepool-org/chrome-uploader');
     uploaderRepo.listReleases((err, releases, request) => {
       if(err){

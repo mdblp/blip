@@ -17,6 +17,7 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
 import { bindActionCreators } from 'redux';
@@ -31,10 +32,12 @@ import PatientInfo from './patientinfo';
 import { PatientTeam } from './patientteam';
 import config from '../../config';
 
-const Patient = translate()(class extends React.Component {
+const Patient = translate()(createReactClass({
+  displayName: 'Patient',
+
   // many things *not* required here because they aren't needed for
   // /patients/:id/profile although they are for /patients/:id/share (or vice-versa)
-  static propTypes = {
+  propTypes: {
     acknowledgeNotification: PropTypes.func.isRequired,
     cancellingInvite: PropTypes.bool,
     dataDonationAccounts: PropTypes.array,
@@ -66,9 +69,16 @@ const Patient = translate()(class extends React.Component {
     authorizedDataSource: PropTypes.object,
     queryParams: PropTypes.object,
     api: PropTypes.object,
-  };
+  },
 
-  render() {
+  getInitialState: function() {
+    return {
+      showModalOverlay: false,
+      dialog: ''
+    };
+  },
+
+  render: function() {
     return (
       <div className="PatientPage js-patient-page">
         <div className="PatientPage-layer">
@@ -78,16 +88,16 @@ const Patient = translate()(class extends React.Component {
         </div>
       </div>
     );
-  }
+  },
 
-  renderSubnav = () => {
+  renderSubnav: function() {
     return (
       <div className="PatientPage-subnav grid">
       </div>
     );
-  };
+  },
 
-  renderContent = () => {
+  renderContent: function() {
     var share;
     var modal;
     var profile = this.renderInfo();
@@ -105,13 +115,13 @@ const Patient = translate()(class extends React.Component {
         {modal}
       </div>
     );
-  };
+  },
 
-  renderFooter = () => {
+  renderFooter: function() {
     return <div className="PatientPage-footer"></div>;
-  };
+  },
 
-  renderInfo = () => {
+  renderInfo: function() {
     return (
       <div className="PatientPage-infoSection">
         <PatientInfo
@@ -137,20 +147,20 @@ const Patient = translate()(class extends React.Component {
           trackMetric={this.props.trackMetric} />
       </div>
     );
-  };
+  },
 
-  isSamePersonUserAndPatient = () => {
+  isSamePersonUserAndPatient: function() {
     return personUtils.isSame(this.props.user, this.props.patient);
-  };
+  },
 
-  renderDeleteDialog = () => {
+  renderDeleteDialog: function() {
     const mailto = `mailto:${config.SUPPORT_EMAIL_ADDRESS}?Subject=Delete%20my%20account`;
     return (
       <Trans i18nKey="html.patient-delete-account">If you are sure you want to delete your account, please <a href={mailto} target="_blank">send an email</a> and we take care of it for you.</Trans>
     );
-  };
+  },
 
-  renderDelete = () => {
+  renderDelete: function() {
     const { t } = this.props;
     var self = this;
 
@@ -170,25 +180,22 @@ const Patient = translate()(class extends React.Component {
         <div onClick={handleClick}>{t('Delete my account')}</div>
       </div>
     );
-  };
+  },
 
-  overlayClickHandler = () => {
-    this.setState({
-      showModalOverlay: false,
-      dialog: ''
-    }); // TODO verify getinitialstate
-  };
+  overlayClickHandler: function() {
+    this.setState(this.getInitialState());
+  },
 
-  renderModalOverlay = () => {
+  renderModalOverlay: function() {
     return (
       <ModalOverlay
         show={this.state.showModalOverlay}
         dialog={this.state.dialog}
         overlayClickHandler={this.overlayClickHandler}/>
     );
-  };
+  },
 
-  renderAccess = () => {
+  renderAccess: function() {
     if (!this.isSamePersonUserAndPatient()) {
       return null;
     }
@@ -198,9 +205,9 @@ const Patient = translate()(class extends React.Component {
         {this.renderPatientTeam()}
       </div>
     );
-  };
+  },
 
-  renderPatientTeam = () => {
+  renderPatientTeam: function() {
     return (
       <PatientTeam
         acknowledgeNotification={this.props.acknowledgeNotification}
@@ -218,9 +225,9 @@ const Patient = translate()(class extends React.Component {
         user={this.props.user}
       />
     );
-  };
+  },
 
-  componentDidMount() {
+  componentDidMount: function() {
     if (this.props.trackMetric) {
       if (this.props.shareOnly) {
         this.props.trackMetric('Viewed Share');
@@ -228,9 +235,9 @@ const Patient = translate()(class extends React.Component {
         this.props.trackMetric('Viewed Profile')
       }
     }
-  }
+  },
 
-  doFetching = (nextProps) => {
+  doFetching: function(nextProps) {
     if (!nextProps.fetchers) {
       return
     }
@@ -238,15 +245,15 @@ const Patient = translate()(class extends React.Component {
     nextProps.fetchers.forEach(fetcher => {
       fetcher();
     });
-  };
+  },
 
   /**
    * Before rendering for first time
    * begin fetching any required data
    */
-  componentWillMount() {
+  UNSAFE_componentWillMount: function() {
     this.doFetching(this.props);
-  }
-});
+  },
+}));
 
 export default Patient;

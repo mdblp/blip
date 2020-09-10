@@ -61,7 +61,7 @@ class SimpleForm extends React.Component {
     return formValues;
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // Keep form values in sync with upstream changes
     // (here `setState` will not trigger a double render)
     var formValues =

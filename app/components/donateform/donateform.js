@@ -54,7 +54,7 @@ export default translate()(class DonateForm extends Component {
     return _.reject(dataDonationAccounts, { email: TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL });
   }
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     if (!this.props.dataDonationAccountsFetched && nextProps.dataDonationAccountsFetched ) {
       const initialFormValues = this.getInitialFormValues(nextProps);
 

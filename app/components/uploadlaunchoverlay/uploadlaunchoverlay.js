@@ -42,7 +42,7 @@ const UploadLaunchOverlay = translate()(class UploadLaunchOverlay extends Compon
     modalDismissHandler: PropTypes.func.isRequired,
   };
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     const uploaderRepo = github.getRepo('tidepool-org/chrome-uploader');
     uploaderRepo.listReleases((err, releases, request) => {
       if(err){
