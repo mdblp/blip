@@ -241,7 +241,7 @@ export let Login = translate()(class extends React.Component {
    * Before rendering for first time
    * begin fetching any required data
    */
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.doFetching(this.props);
   }
 });

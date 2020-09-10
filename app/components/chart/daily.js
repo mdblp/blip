@@ -265,7 +265,7 @@ class Daily extends Component {
     };
   };
 
-  componentWillReceiveProps = nextProps => {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     if (this.props.loading && !nextProps.loading) {
       this.refs.chart.getWrappedInstance().rerenderChart();
     }

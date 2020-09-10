@@ -99,12 +99,12 @@ var TrendsSubNav = translate()(class extends React.Component {
     }
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.areWeekdaysActive(this.props);
     this.areWeekendsActive(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.areWeekdaysActive(nextProps);
     this.areWeekendsActive(nextProps);
   }

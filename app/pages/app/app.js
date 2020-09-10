@@ -136,7 +136,7 @@ export class AppComponent extends React.Component {
    * Before rendering for first time
    * begin fetching any required data
    */
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.doFetching(this.props);
   }
 
@@ -144,7 +144,7 @@ export class AppComponent extends React.Component {
    * Before any subsequent re-rendering
    * begin fetching any required data
    */
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {
       showingDonateBanner,
       showingDexcomConnectBanner,

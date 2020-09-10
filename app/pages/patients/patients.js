@@ -328,7 +328,7 @@ export let Patients = translate()(class extends React.Component {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (this.props.currentPatientInViewId) {
       this.props.clearPatientData(this.props.currentPatientInViewId);
     }
@@ -350,7 +350,7 @@ export let Patients = translate()(class extends React.Component {
     this.doFetching(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let { loading, loggedInUserId, patients, invites, location, showingWelcomeMessage, user } = nextProps;
 
     if (!loading && loggedInUserId && location.query.justLoggedIn) {

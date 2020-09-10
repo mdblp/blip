@@ -109,11 +109,11 @@ export let Signup = translate()(class extends React.Component {
     return inputs;
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({loading: false});
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!utils.isOnSamePage(this.props, nextProps)) {
       const state = this.getFormStateFromPath(nextProps.location.pathname)
       this.setState(state);
