@@ -39,7 +39,7 @@ const t = i18next.t.bind(i18next);
 class UserProfile extends React.Component {
   static propTypes = {
     fetchingUser: PropTypes.bool.isRequired,
-    history: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     user: PropTypes.shape({
