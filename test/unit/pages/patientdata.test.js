@@ -1,12 +1,3 @@
-/* global chai */
-/* global describe */
-/* global sinon */
-/* global it */
-/* global before */
-/* global beforeEach */
-/* global afterEach */
-/* global context */
-/* global after */
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
@@ -15,6 +6,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { mount, shallow } from 'enzyme';
 import sinon from 'sinon';
+import chai from 'chai';
 import { components as vizComponents } from '@tidepool/viz';
 import i18next from '../../../app/core/language';
 import utils from '../../../app/core/utils';
@@ -484,6 +476,7 @@ describe('PatientData', function () {
             elem.setInitialChartType(processedData);
           };
 
+          // eslint-disable-next-line new-cap
           elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},
@@ -767,7 +760,9 @@ describe('PatientData', function () {
               loading: false,
               chartType: elem.deriveChartTypeFromLatestData(data[0], []),
             });
-          }
+          };
+
+          // eslint-disable-next-line new-cap
           elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},
@@ -818,7 +813,9 @@ describe('PatientData', function () {
               loading: false,
               chartType: elem.deriveChartTypeFromLatestData(data[0]),
             });
-          }
+          };
+
+          // eslint-disable-next-line new-cap
           elem.UNSAFE_componentWillReceiveProps({
             patient: _.assign({}, props.patient, {
               settings: {},

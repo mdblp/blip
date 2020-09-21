@@ -1,10 +1,8 @@
-/* global chai */
-/* global describe */
-/* global sinon */
-/* global it */
 
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
+import sinon from 'sinon';
+import chai from 'chai';
 
 import mutationTracker from 'object-invariant-test-helper';
 
@@ -73,6 +71,7 @@ describe('Patients', () => {
         showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(window.location.pathname).to.not.equal('/patients/1/data');
     });
@@ -93,6 +92,7 @@ describe('Patients', () => {
         showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(window.location.pathname).to.equal(currentPath);
     });
@@ -116,6 +116,7 @@ describe('Patients', () => {
           showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(window.location.pathname).to.equal(currentPath);
     });
@@ -139,6 +140,7 @@ describe('Patients', () => {
           showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(nextProps.showWelcomeMessage.callCount).to.equal(1);
     });
@@ -149,7 +151,7 @@ describe('Patients', () => {
       };
       var elem = React.createElement(Patients, props);
       var render = TestUtils.renderIntoDocument(elem).getWrappedInstance();
-      var currentPath = window.location.pathname;
+
       var nextProps = Object.assign({}, props, {
           loading: false,
           location: { query: {
@@ -162,6 +164,7 @@ describe('Patients', () => {
           showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(nextProps.showWelcomeMessage.callCount).to.equal(0);
     });
@@ -172,7 +175,7 @@ describe('Patients', () => {
       };
       var elem = React.createElement(Patients, props);
       var render = TestUtils.renderIntoDocument(elem).getWrappedInstance();
-      var currentPath = window.location.pathname;
+
       var nextProps = Object.assign({}, props, {
           loading: false,
           location: { query: {
@@ -185,6 +188,7 @@ describe('Patients', () => {
           showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(nextProps.showWelcomeMessage.callCount).to.equal(0);
     });
@@ -209,6 +213,7 @@ describe('Patients', () => {
         }
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(window.location.pathname).to.not.equal('/patients/1/data');
     });
@@ -231,6 +236,7 @@ describe('Patients', () => {
         showingWelcomeMessage: null
       });
 
+      // eslint-disable-next-line new-cap
       render.UNSAFE_componentWillReceiveProps(nextProps);
       expect(window.location.pathname).to.equal('/patients/1/data');
     });
@@ -302,7 +308,7 @@ describe('Patients', () => {
         fetchingMetrics: {
           inProgress: false,
           completed: null,
-        },  
+        },
       }, api);
       expect(completedResult.length).to.equal(0);
     });
@@ -383,7 +389,7 @@ describe('Patients', () => {
       });
 
       it('should map pendingReceivedInvites to invites', () => {
-        expect(result.pendingReceivedInvites)
+        expect(result.pendingReceivedInvites);
       });
 
       it('should map fetchingMetrics not completed field to loading', () => {
@@ -395,11 +401,11 @@ describe('Patients', () => {
       });
 
       it('should map working.fetchingPendingReceivedInvites to fetchingPendingReceivedInvites', () => {
-        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites)
+        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites);
       });
 
       it('should map working.fetchingAssociatedAccounts to fetchingAssociatedAccounts', () => {
-        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts)
+        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts);
       });
     });
 
@@ -455,7 +461,7 @@ describe('Patients', () => {
       });
 
       it('should map pendingReceivedInvites to invites', () => {
-        expect(result.pendingReceivedInvites)
+        expect(result.pendingReceivedInvites);
       });
 
       it('should map fetchingMetrics not completed field to loading', () => {
@@ -467,11 +473,11 @@ describe('Patients', () => {
       });
 
       it('should map working.fetchingPendingReceivedInvites to fetchingPendingReceivedInvites', () => {
-        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites)
+        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites);
       });
 
       it('should map working.fetchingAssociatedAccounts to fetchingAssociatedAccounts', () => {
-        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts)
+        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts);
       });
     });
 
@@ -506,7 +512,7 @@ describe('Patients', () => {
           fetchingUser: {inProgress: false},
           fetchingMetrics: {
             inProgress: false,
-            notification: {type: 'error',message: 'not available'}, 
+            notification: {type: 'error',message: 'not available'},
             completed: false}
         }
       };
@@ -549,7 +555,7 @@ describe('Patients', () => {
       });
 
       it('should map pendingReceivedInvites to invites', () => {
-        expect(result.pendingReceivedInvites)
+        expect(result.pendingReceivedInvites);
       });
 
       it('should map fetchingMetrics on error field to loading done', () => {
@@ -561,11 +567,11 @@ describe('Patients', () => {
       });
 
       it('should map working.fetchingPendingReceivedInvites to fetchingPendingReceivedInvites', () => {
-        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites)
+        expect(result.fetchingPendingReceivedInvites).to.deep.equal(state.working.fetchingPendingReceivedInvites);
       });
 
       it('should map working.fetchingAssociatedAccounts to fetchingAssociatedAccounts', () => {
-        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts)
+        expect(result.fetchingAssociatedAccounts).to.deep.equal(state.working.fetchingAssociatedAccounts);
       });
     });
   });
