@@ -4,7 +4,7 @@ import { StaticWebSiteStack } from '../lib/staticwebsite-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 
 // Variable
-const AWS_ACCOUNT = process.env.AWS_ACCOUNT
+const AWS_ACCOUNT = process.env.AWS_ACCOUNT;
 const AWS_DEFAULT_REGION = process.env.AWS_DEFAULT_REGION;
 const STACK_PREFIX_NAME = process.env.STACK_PREFIX_NAME;
 const STACK_VERSION = process.env.STACK_VERSION;
