@@ -18,7 +18,7 @@ import React from 'react';
 import { render as reactDOMRender } from 'react-dom';
 import bows from 'bows';
 
-import i18n from './core/language'; // Set the language before loading components
+import i18n from './core/language';
 import blipCreateStore from './redux/store';
 import AppRoot from './redux/containers/Root';
 
@@ -90,7 +90,7 @@ class Bootstrap {
       }
       if (legals !== null) {
         _.assign(BrandConfig.diabeloop, legals);
-        this.log.info('brandin', BrandConfig.diabeloop);
+        this.log.info('branding', BrandConfig.diabeloop);
       }
       this.countryInfos.lang = lang;
     }

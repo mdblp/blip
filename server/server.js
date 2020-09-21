@@ -98,7 +98,6 @@ function redirectMiddleware(req, res, next) {
     }
   }
 
-  console.log('default index.html');
   // Not found, send the modified index.html by default (no 404)
   res.header('Cache-Control', 'public, max-age=0');
   res.header('Content-Type', 'text/html; charset=utf-8');
