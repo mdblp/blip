@@ -31,10 +31,15 @@ import personUtils from './core/personutils';
 import detectTouchScreen from './core/notouch';
 
 /**
- * @typedef {object} TermsObject Terms object inside the legal JSON
+ * @typedef {object} TermsURLObject Terms object inside the legal JSON
  * @property {string} terms - Terms document URL
  * @property {string} dataPrivacy - data privacy document URL
  * @property {string} intendedUse - Intended use document URL
+ *
+ * @typedef {{ [x: string]: TermsURLObject }} TermsLangObject Terms by languages
+ * @typedef {{ [x: string]: TermsLangObject }} TermsCountriesObject Terms by country / language
+ * @typedef {{ language: string, countries?: { [x: string]: string } }} DefaultsLangCountries Default values
+ * @typedef {{ defaults: DefaultsLangCountries, languages?: TermsLangObject, countries?: TermsCountriesObject }} TermsObject Terms object definition
  */
 
 class Bootstrap {
@@ -51,8 +56,8 @@ class Bootstrap {
     /** Default country info, which should be returned by the localization service */
     this.countryInfos = {
       lang: null,
-      code: 'US',
-      name: 'USA',
+      code: null,
+      name: null,
       timeZone: 'UTC',
     };
     this.trackMetric = this.trackMetric.bind(this);
@@ -74,25 +79,56 @@ class Bootstrap {
 
   /**
    * i18next callback
-   * @param {string} lang
+   * @param {string} language
    */
-  onLanguageChanged(lang) {
+  onLanguageChanged(language) {
+    /** @type {string | null} */
+    let country = this.countryInfos.code;
+    let lang = language;
+    if (_.isString(lang) && lang.indexOf('-') > 0) {
+      const s = language.split('-');
+      lang = s[0];
+      country = country === null ? s[1] : country;
+    }
+
+    /** @type {TermsURLObject} */
+    let termsURLs = null;
+
+    // Update only if we can, and if there is a change
     if (this.terms !== null && lang !== this.countryInfos.lang) {
-      let legals = _.get(this.terms, `${this.countryInfos.code}.${lang}`, null);
-      if (legals === null) {
-        this.log.warn(`not terms for ${this.countryInfos.code}.${lang}`);
-        const countryCode = _.get(this.terms, `defaultCountries.${lang}`, null);
-        legals = _.get(this.terms, `${countryCode}.${lang}`, null);
+      this.countryInfos.lang = lang;
+
+      this.log.debug(`Language change to ${lang}-${country}`);
+
+      // Do we have the terms for the country?
+      if (country !== null && !_.isEmpty(this.terms.countries) && _.has(this.terms.countries, country)) {
+        // Do we have the terms for the language too?
+        let langForCountry = lang;
+        if (!_.has(this.terms.countries, `${country}.${langForCountry}`)) {
+          // no, use the default language for the country
+          langForCountry = _.get(this.terms.defaults.countries, country, null);
+          this.log.warn(`No terms found for ${lang}-${country}, using default country lang ${langForCountry}`);
+        }
+        if (langForCountry !== null) {
+          termsURLs = _.get(this.terms.countries, `${country}.${langForCountry}`, null);
+        }
       }
-      if (legals === null) {
-        this.log.warn(`not terms for defaultCountries.${lang}`);
-        legals = _.get(this.terms, 'defaults', null);
+
+      // No terms for country/lang found, try by lang only
+      if (termsURLs === null && !_.isEmpty(this.terms.languages)) {
+        if (!_.has(this.terms.languages, lang)) {
+          this.log.warn(`Missing term for lang ${lang}, using default: ${this.terms.defaults.language}`);
+          lang = this.terms.defaults.language;
+        }
+        termsURLs = _.get(this.terms.languages, lang, null);
       }
-      if (legals !== null) {
-        _.assign(BrandConfig.diabeloop, legals);
+
+      if (termsURLs === null) {
+        this.log.warn(`No terms & conditions for ${lang}-${country} found`);
+      } else {
+        _.assign(BrandConfig.diabeloop, termsURLs);
         this.log.info('branding', BrandConfig.diabeloop);
       }
-      this.countryInfos.lang = lang;
     }
   }
 
@@ -103,11 +139,11 @@ class Bootstrap {
 
     if (config.BRANDING === 'diabeloop') {
       try {
-        let response = await fetch('country.json');
-        this.countryInfos = await response.json();
+        let response;
 
         if (this.config.ASSETS_URL !== DUMMY_URL) {
-          response = await fetch(`${this.config.ASSETS_URL}/legal/legal.json`);
+          const url = new URL('legal/legal.json', this.config.ASSETS_URL);
+          response = await fetch(url.toString());
           this.terms = await response.json();
         } else {
           response = await fetch('legal/legal.json');
@@ -116,11 +152,24 @@ class Bootstrap {
 
         if (navigator.language) {
           this.onLanguageChanged(navigator.language);
+        } else if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
+          this.onLanguageChanged(navigator.languages[0]);
         }
+
         i18n.on('languageChanged', this.onLanguageChanged.bind(this));
 
       } catch (e) {
         this.log.error('Error fetching legal information', e);
+      }
+
+      try {
+        if (!_.isEmpty(this.terms.countries)) {
+          // We have countries definitions, so the country.json service should be available
+          const response = await fetch('country.json');
+          this.countryInfos = await response.json();
+        }
+      } catch (e) {
+        this.log.error('Error getting current country', e);
       }
     }
 

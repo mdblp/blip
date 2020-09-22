@@ -42,58 +42,79 @@ It produces updated translations files such as `/locales/[language]/translation.
 
 __Important Note:__ you have first to copy the content of viz and tideline modules into your node_modules blip local folder otherwise some labels will be missed. 
 
-### Terms & co
+### Terms & conditions
 
-In order to localize the terms & conditions by country and language you will need:
-- A server returning the current country for the user's browser client in JSON on `/country.json`
-Example:
-```json
-{"code":"FR","name":"France","timeZone":"Europe/Paris"}
-```
 - A manually prepared JSON file with the documents URLs for each country/languages, served by `/legal/legal.json` or `$ASSETS_URL/legal/legal.json`:
 Example:
 ```json
 {
   "defaults": {
-    "terms": "legal/terms.pdf",
-    "dataPrivacy": "legal/data-privacy.pdf",
-    "intendedUse": "legal/intended-use.pdf"
-  },
-  "defaultCountries": {
-    "en": "US",
-    "fr": "FR",
-    "de": "DE"
-  },
-  "FR": {
-    "fr": {
-      "terms": "legal/terms.fr-FR.pdf",
-      "dataPrivacy": "legal/data-privacy.fr-FR.pdf",
-      "intendedUse": "legal/intended-use.fr-FR.pdf"
+    "language": "en",
+    "countries": {
+      "US": "en",
+      "FR": "fr",
+      "DE": "de",
+      "BE": "fr"
     }
   },
-  "BE": {
-    "fr": {
-      "terms": "legal/terms.fr-BE.pdf",
-      "dataPrivacy": "legal/data-privacy.fr-BE.pdf",
-      "intendedUse": "legal/intended-use.fr-BE.pdf"
+  "languages": {
+    "en": {
+      "terms": "legal/terms.en.pdf",
+      "dataPrivacy": "legal/data-privacy.en.pdf",
+      "intendedUse": "legal/intended-use.en.pdf"
     },
-    "nl": {
-      "terms": "legal/terms.nl-BE.pdf",
-      "dataPrivacy": "legal/data-privacy.nl-BE.pdf",
-      "intendedUse": "legal/intended-use.nl-BE.pdf"
+    "fr": {
+      "terms": "legal/terms.fr.pdf",
+      "dataPrivacy": "legal/data-privacy.fr.pdf",
+      "intendedUse": "legal/intended-use.fr.pdf"
     }
   },
-  "DE": {
-    "de": {
-      "terms": "https://example.com/terms.de-DE.pdf",
-      "dataPrivacy": "https://example.com/data-privacy.de-DE.pdf",
-      "intendedUse": "https://example.com/intended-use.de-DE.pdf"
+  "countries": {
+    "FR": {
+      "fr": {
+        "terms": "legal/terms.fr-FR.pdf",
+        "dataPrivacy": "legal/data-privacy.fr-FR.pdf",
+        "intendedUse": "legal/intended-use.fr-FR.pdf"
+      }
+    },
+    "BE": {
+      "fr": {
+        "terms": "legal/terms.fr-BE.pdf",
+        "dataPrivacy": "legal/data-privacy.fr-BE.pdf",
+        "intendedUse": "legal/intended-use.fr-BE.pdf"
+      },
+      "nl": {
+        "terms": "legal/terms.nl-BE.pdf",
+        "dataPrivacy": "legal/data-privacy.nl-BE.pdf",
+        "intendedUse": "legal/intended-use.nl-BE.pdf"
+      }
+    },
+    "DE": {
+      "de": {
+        "terms": "https://example.com/terms.de-DE.pdf",
+        "dataPrivacy": "https://example.com/data-privacy.de-DE.pdf",
+        "intendedUse": "https://example.com/intended-use.de-DE.html"
+      }
     }
   }
 }
 ```
 
-Note: Documents URLs can be relative, or absolute. A PDF is not mandatory.
+Notes:
+- If the `legal.json` can't be fetch, the previous URL will be used, ex `ASSETS_URL/terms.pdf`.
+- Documents URLs can be relative, or absolute. A PDF is not mandatory.
+- If no countries are present in the JSON, blip will not try to get the users current country.
+- If both countries and languages are present, the country / language will be prioritized over the lang only.
+- If no localized version can be found for the language, the default language will be used.
+
+#### Country enabled build
+
+To fetch terms & conditions by country and language you will need:
+- A server returning the current country for the user's browser client in JSON on `/country.json`
+Example:
+```json
+{"code":"FR","name":"France","timeZone":"Europe/Paris"}
+```
 
 #### CloudFront lambda edge for `/country.json`
 
