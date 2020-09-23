@@ -60,8 +60,9 @@ if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
   rsync -r --exclude-from=.artifactignore cloudfront-dist/deployment/ dist/cloudfront-dist/deployment
   rsync config.app.js package.json dist/
 
-  buildArchive -d "./dist" -n
-  buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
+  #buildArchive -d "./dist" -n
+  #buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
+  buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "cloudfront-distribution-deployment"
   publishDockerImage
   npm install --save-dev "ci-toolbox@latest"
   BUILD_SOUP="true"
