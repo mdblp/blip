@@ -27,6 +27,11 @@ COPY ./dist/config.app.js ./config.app.js
 COPY ./dist/package.json ./package.json
 
 FROM base as final
+RUN apk --no-cache update && \
+  apk --no-cache upgrade && \
+  apk add --no-cache --virtual .user-deps shadow && \
+  usermod -u 10669 node && groupmod -g 10669 node && \
+  apk del .user-deps
 ENV AWS_ACCESS_KEY_ID=
 ENV AWS_SECRET_ACCESS_KEY=
 ENV AWS_ACCOUNT=
@@ -47,4 +52,6 @@ COPY --from=content /content/static-dist ./cloudfront-dist/static-dist/blip
 COPY --from=content /content/templates ./templates
 COPY --from=content /content/config.app.js ./config.app.js
 COPY --from=content /content/package.json ./package.json
-ENTRYPOINT ["sh"]
+RUN chown -R node:node /dist
+ENTRYPOINT [ "/bin/sh" ]
+CMD [ "deploy.sh" ]
