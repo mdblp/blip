@@ -242,16 +242,25 @@ function withTemplate(err, data) {
 
 
 /*** Main ***/
+
+// Check required ENV variables
 if (typeof process.env.TARGET_ENVIRONMENT !== 'string' || process.env.TARGET_ENVIRONMENT.length < 1) {
   console.error('Missing environnement variable TARGET_ENVIRONMENT');
   process.exit(1);
-} else if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST)) {
+}
+
+if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST)) {
   console.error('Missing or invalid environnement variable API_HOST');
   process.exit(1);
 }
 
-// Determined dist dir location
-distDir = path.resolve(`${__dirname}/../static-dist`);
+if (typeof process.env.STATIC_DIR !== 'string' || process.env.STATIC_DIR.length < 1) {
+  console.error('Missing or invalid environnement variable STATIC_DIR');
+  process.exit(1);
+}
+
+// Determined dist dir location ${__dirname}/../static-dist
+distDir = path.resolve(`${process.env.STATIC_DIR}`);
 console.info(`Using dist directory: ${distDir}`);
 
 // Determined template dir location:

@@ -1,0 +1,50 @@
+FROM node:10.15.3-alpine AS base
+ENV AWS_CDK_VERSION=1.61.0
+WORKDIR /dist
+RUN npm install -g aws-cdk@${AWS_CDK_VERSION}
+
+# This part contains the deployment source code only
+FROM node:10.15.3-alpine as deployment
+WORKDIR /cloudfront-dist
+COPY ./cloudfront-dist/deployment/bin ./deployment/bin
+COPY ./cloudfront-dist/deployment/lib ./deployment/lib
+COPY ./cloudfront-dist/deployment/package.json ./deployment/package.json
+COPY ./cloudfront-dist/deployment/package-lock.json ./deployment/package-lock.json
+COPY ./cloudfront-dist/deployment/.npmignore ./deployment/npmignore
+COPY ./cloudfront-dist/deployment/tsconfig.json ./deployment/tsconfig.json
+COPY ./cloudfront-dist/deployment/cdk.json ./deployment/cdk.json
+COPY ./cloudfront-dist/cloudfront-gen-lambda.js ./cloudfront-gen-lambda.js
+COPY ./cloudfront-dist/template.lambda-request-viewer.js ./template.lambda-request-viewer.js
+COPY ./cloudfront-dist/deploy.sh ./deploy.sh
+RUN cd deployment && npm install
+
+# this part contains the site content
+FROM node:10.15.3-alpine as content
+WORKDIR /content
+COPY ./static-dist ./static-dist/
+COPY ./dist/templates ./templates
+COPY ./dist/config.app.js ./config.app.js
+COPY ./dist/package.json ./package.json
+
+FROM base as final
+ENV AWS_ACCESS_KEY_ID=
+ENV AWS_SECRET_ACCESS_KEY=
+ENV AWS_ACCOUNT=
+ENV AWS_DEFAULT_REGION='eu-west-1'
+ENV STACK_PREFIX_NAME=
+ENV STACK_VERSION=
+ENV DNS_ZONE=
+ENV DOMAIN_NAME=
+ENV BUCKET=
+ENV FRONT_APP_NAME=blip
+ENV TARGET_ENVIRONMENT=
+ENV API_HOST=
+ENV STATIC_DIR=./cloudfront-dist/static-dist/blip
+WORKDIR /dist
+COPY --from=deployment /cloudfront-dist ./cloudfront-dist
+COPY --from=deployment /cloudfront-dist/deploy.sh ./deploy.sh
+COPY --from=content /content/static-dist ./cloudfront-dist/static-dist/blip
+COPY --from=content /content/templates ./templates
+COPY --from=content /content/config.app.js ./config.app.js
+COPY --from=content /content/package.json ./package.json
+ENTRYPOINT ["sh"]
