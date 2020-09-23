@@ -30,7 +30,7 @@ export class StaticWebSiteStack extends core.Stack {
             this.formatArn({
               service: 'ssm',
               region: 'us-east-1',
-              resource: `parameter/blip/${props?.prefix}/lambda-edge-arn`
+              resource: `parameter/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
             })
           ]
         })
@@ -40,7 +40,7 @@ export class StaticWebSiteStack extends core.Stack {
         service: 'SSM',
         action: 'getParameter',
         parameters: {
-          Name: `/blip/${props?.prefix}/lambda-edge-arn`
+          Name: `/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
         },
         region: 'us-east-1',
         physicalResourceId: rsc.PhysicalResourceId.of(Date.now().toString()) // Update physical id to always fetch the latest version
@@ -64,11 +64,11 @@ export class StaticWebSiteStack extends core.Stack {
       this,
       `${id}-cloudfront`,
       {
-        comment: `cloudfront deployment for ${props?.prefix} blip ${props?.version}`,
+        comment: `cloudfront deployment for ${props?.prefix} ${props?.FrontAppName} ${props?.version}`,
         originConfigs: [
           {
             s3OriginSource: {
-              originPath: `/blip/${props?.version}`,
+              originPath: `/${props?.FrontAppName}/${props?.version}`,
               s3BucketSource: bucket,
             },
             behaviors: [
@@ -77,7 +77,7 @@ export class StaticWebSiteStack extends core.Stack {
                 lambdaFunctionAssociations: [
                   {
                     eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props?.prefix}-blip-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
+                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props?.prefix}-${props?.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
                   },
                 ],
               },
@@ -122,19 +122,6 @@ export class StaticWebSiteStack extends core.Stack {
               },
             ],
           },
-          {
-            s3OriginSource: {
-              originPath: `/blip/portal/${props?.version}`,
-              s3BucketSource: bucket,
-            },
-            behaviors: [
-              {
-
-                isDefaultBehavior: false,
-                pathPattern: '/portal/*',
-              },
-            ],
-          },
         ],
         viewerCertificate: 
         {
@@ -154,14 +141,14 @@ export class StaticWebSiteStack extends core.Stack {
     new route53.CnameRecord(this, `${id}-websitealiasrecord`, {
       zone: zone,
       recordName: `${props?.domainName}`,
-      domainName: distribution.domainName
+      domainName: distribution.distributionDomainName
     });
 
     //  Publish the site content to the S3 bucket (with --delete and invalidation)
     new s3deploy.BucketDeployment(this, `${id}-deploymentwithinvalidation`, {
-      sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist`)],
+      sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist/${props?.FrontAppName}`)],
       destinationBucket: bucket,
-      destinationKeyPrefix: `blip/${props?.version}`,
+      destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
       distribution, //
       distributionPaths: [`/index.html`], // invalidate previous version
     });
