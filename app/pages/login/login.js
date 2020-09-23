@@ -17,10 +17,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { translate, Trans } from 'react-i18next';
+import { translate } from 'react-i18next';
 import { Link } from 'react-router';
 import _ from 'lodash';
-import moment from 'moment';
 
 import * as actions from '../../redux/actions';
 import utils from '../../core/utils';
@@ -29,7 +28,6 @@ import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 import config from '../../config'
-import { CONFIG } from '../../core/constants';
 
 
 export let Login = translate()(React.createClass({
