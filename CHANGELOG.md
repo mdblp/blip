@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - YLP-111 Display localized CGU and data privacy
+- YLP-158 Delete Consent banner from all environments.
 
 ## 1.4.2 - 2020-09-09  
 ### Fixed
