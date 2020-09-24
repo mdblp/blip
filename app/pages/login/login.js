@@ -19,11 +19,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { translate, Trans } from 'react-i18next';
+import { translate } from 'react-i18next';
 import { Link } from 'react-router';
 import _ from 'lodash';
-import moment from 'moment';
-import CookieConsent from 'react-cookie-consent';
 
 import * as actions from '../../redux/actions';
 import utils from '../../core/utils';
@@ -32,7 +30,6 @@ import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 import config from '../../config'
-import { CONFIG } from '../../core/constants';
 
 
 export let Login = translate()(class extends React.Component {
@@ -99,24 +96,6 @@ export let Login = translate()(class extends React.Component {
     const inviteIntro = this.renderInviteIntroduction();
     const browserWarning = this.renderBrowserWarning();
 
-    const urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
-    const urlTermsOfUse = CONFIG[config.BRANDING].terms;
-
-    const cookieText = (
-      <Trans i18nKey="html.cookie-content" ns="main">
-          Please consult our <a href={urlPrivacyPolicy} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Data Privacy</a>
-          and our <a href={urlTermsOfUse} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
-      </Trans>
-    );
-
-    let cookieName = 'CookieConsent';
-    let lastUpdateText = null;
-    if (typeof config.TERMS_PRIVACY_DATE === 'string' && config.TERMS_PRIVACY_DATE.length > 0) {
-      const m = moment.utc(config.TERMS_PRIVACY_DATE);
-      cookieName = `CookieConsent-${m.format('YYYY-MM-DD')}`; // format not translated, there is no need here.
-      lastUpdateText = (<span>{t('Last updated on {{termsPrivacyDate}}.', { termsPrivacyDate: m.format(t('MM/DD/YYYY')) })}</span>);
-    }
-
     return (
       <div>
         <LoginNav
@@ -131,20 +110,6 @@ export let Login = translate()(class extends React.Component {
             <div className="login-simpleform">{form}</div>
           </div>
         </div>
-        <CookieConsent
-          location="bottom"
-          buttonText={t('Accept')}
-          cookieName={cookieName}
-          disableStyles={true}
-          containerClasses="login-cookie-consent-container"
-          contentClasses="login-cookie-consent-content"
-          buttonClasses="simple-form-submit btn btn-primary"
-          buttonId="btn-accept-cookies"
-          expires={365}
-          onAccept={() => { this.props.trackMetric('CookieConsent', 365 * 24); }}>
-            {cookieText}
-            {lastUpdateText}
-        </CookieConsent>
       </div>
     );
   }
