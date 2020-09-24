@@ -3,6 +3,7 @@ set -eu
 BASEDIR="$(dirname $0)"
 APP_NAME="$(echo 'const c = require("./package.json"); console.log(c.name);' | node -)"
 APP_VERSION="$(echo 'const c = require("./package.json"); console.log(c.version);' | node -)"
+STATIC_DIR=./static-dist/
 echo "Running artifacts for ${APP_NAME} v${APP_VERSION}"
 
 . ./server/version.sh

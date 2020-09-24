@@ -59,7 +59,7 @@ function stringOption(value, defaultValue) {
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
 const config = {
-  VERSION: stringOption(process.env.BLIP_VERSION, '0.1.0'),
+  VERSION: stringOption(process.env.APP_VERSION, '0.1.0'),
   UPLOAD_API: stringOption(process.env.UPLOAD_API, 'https://tidepool.org/uploader'),
   API_HOST: stringOption(process.env.API_HOST, null),
   LATEST_TERMS: stringOption(process.env.LATEST_TERMS, '1970-01-01'),
