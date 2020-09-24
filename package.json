@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -30,6 +30,13 @@
   "engines": {
     "node": ">=10.x",
     "npm": ">=6.x"
+  },
+  "dependencies": {
+    "tidepool-viz": "file:packages/viz",
+    "blip": "file:packages/blip",
+    "sundial": "file:packages/sundial",
+    "tideline": "file:packages/tideline",
+    "tidepool-platform-client": "file:packages/platform-client"
   },
   "devDependencies": {
     "@babel/cli": "7.10.3",
@@ -92,12 +99,5 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0",
     "webpack-subresource-integrity": "^1.4.1"
-  },
-  "dependencies": {
-    "tidepool-viz": "file:packages/viz",
-    "blip": "file:packages/blip",
-    "sundial": "file:packages/sundial",
-    "tideline": "file:packages/tideline",
-    "tidepool-platform-client": "file:packages/platform-client"
   }
 }

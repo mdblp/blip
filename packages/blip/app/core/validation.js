@@ -246,7 +246,7 @@ export const validateField = (type, fieldLabel, fieldValue, prerequisites, isOth
  *
  * @return {Object} an object which is either empty (valid form) or contains entries for field names with error messages
  */
-export const validateForm = (form, isOtherPerson) => {
+export const validateForm = (form, isOtherPerson = false) => {
   if (!form) { // @TODO: Gordon Dent: may want to check if not object too
     return {};
   }
