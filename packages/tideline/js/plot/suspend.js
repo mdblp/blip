@@ -15,13 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-/* jshint esversion:6 */
-var i18next = require('i18next');
-var t = i18next.t.bind(i18next);
+import _ from 'lodash';
 
-var _ = require('lodash');
-
-var format = require('../data/util/format');
 var dt = require('../data/util/datetime');
 
 module.exports = function(pool, opts) {

@@ -15,11 +15,11 @@
  * == BSD2 LICENSE ==
  */
 
-var i18next = require('i18next');
-const moment = require('moment-timezone');
-var d3 = require('d3');
-var _ = require('lodash');
+import _ from 'lodash';
+import i18next from 'i18next';
+import moment from 'moment-timezone';
 
+var d3 = require('d3');
 
 var { AUTOMATED_BASAL_LABELS, SCHEDULED_BASAL_LABELS, H_MM_A_FORMAT } = require('../data/util/constants');
 var format = require('../data/util/format');

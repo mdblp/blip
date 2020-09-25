@@ -15,15 +15,11 @@
  * == BSD2 LICENSE ==
  */
 
-/* jshint esversion:6 */
+import _ from 'lodash';
+import i18next from 'i18next';
 
-var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
 
-// in order to get d3.chart dependency
-var tideline = require('../../../js/');
-
-var _ = require('lodash');
 var PropTypes = require('prop-types');
 var React = require('react');
 

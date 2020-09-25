@@ -1,26 +1,22 @@
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
  * License as published by the Open Source Initiative at opensource.org.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the License for more details.
- * 
+ *
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
 
-var d3 = require('d3');
 var _ = require('lodash');
-
 var commonbolus = require('./commonbolus');
-var dt = require('../../data/util/datetime');
-var format = require('../../data/util/format');
 
 module.exports = function(pool, opts) {
   opts = opts || {};
@@ -43,7 +39,6 @@ module.exports = function(pool, opts) {
   _.defaults(opts, defaults);
 
   var top = opts.yScale.range()[0];
-  var bottom = top - opts.bolusStroke / 2;
   var mainGroup = pool.parent();
 
   var pluckBolus = function(d) {
@@ -362,7 +357,7 @@ module.exports = function(pool, opts) {
       add: function(d, rect) {
         if (_.get(opts, 'onBolusHover', false)) {
           opts.onBolusHover({
-            data: d, 
+            data: d,
             rect: rect
           });
         }

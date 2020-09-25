@@ -1,16 +1,14 @@
-/* global chai */
-/* global sinon */
 
 import _ from 'lodash';
 import React from 'react';
 import TestUtils from 'react-dom/test-utils';
 import mutationTracker from 'object-invariant-test-helper';
 import { mount } from 'enzyme';
-import * as i18n from 'i18next';
+import chai from 'chai';
+import sinon from 'sinon';
+import i18n from 'i18next';
 
 import { PatientNew, mapStateToProps } from '../../../app/pages/patientnew/patientnew';
-
-
 
 var assert = chai.assert;
 var expect = chai.expect;
@@ -132,7 +130,7 @@ describe('PatientNew', function () {
       it('should call onSubmit with valid form values when local=fr', function(){
           wrapper.instance().handleSubmit(formValues);
           expect(props.onSubmit.callCount).to.equal(1);
-  
+
           sinon.assert.calledWith(props.onSubmit, {
             profile: {
               firstName: 'John',
@@ -146,7 +144,7 @@ describe('PatientNew', function () {
             },
           });
           expect(props.onUpdateDataDonationAccounts.callCount).to.equal(0);
-          expect(props.trackMetric.callCount).to.equal(0); 
+          expect(props.trackMetric.callCount).to.equal(0);
         });
     });
 

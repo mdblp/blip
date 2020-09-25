@@ -15,11 +15,11 @@
  * == BSD2 LICENSE ==
  */
 
-var _ = require('lodash');
-var PropTypes = require('prop-types');
-var React = require('react');
-var cx = require('classnames');
-var i18next = require('i18next');
+import i18next from 'i18next';
+import React from 'react';
+import PropTypes from 'prop-types';
+import cx from 'classnames';
+
 var t = i18next.t.bind(i18next);
 
 var constants = require('../../logic/constants');

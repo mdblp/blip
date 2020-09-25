@@ -22,7 +22,7 @@
     "test-watch": "TZ=UTC NODE_ENV=test karma start --no-single-run --reporters=mocha",
     "start": "NODE_ENV=development webpack-dev-server -d --cache --colors --progress --content-base example --port 8081",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
-    "lint": "eslint js plugins example test"
+    "lint": "eslint --quiet js plugins example test"
   },
   "dependencies": {
     "bows": "1.7.2",
@@ -32,7 +32,7 @@
     "d3": "3.5.17",
     "d3.chart": "0.3.0",
     "duration-js": "4.0.0",
-    "i18next": "11.9.0",
+    "i18next": "^19.7.0",
     "lodash": "^4.17.20",
     "moment-timezone": "0.5.31",
     "react": "^16.13.1",
