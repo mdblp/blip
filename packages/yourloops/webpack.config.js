@@ -4,6 +4,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SriWebpackPlugin = require('webpack-subresource-integrity');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const blipWebpack = require('./webpack.config.blip');
 const buildConfig = require('../../server/config.app');
 const pkg = require('./package.json');
 
@@ -16,29 +18,6 @@ const isDev = !isProduction;
 if (buildConfig.BRANDING !== 'diabeloop') {
   throw new Error('Invalid branding');
 }
-
-// const cssLoaderConfiguration = {
-//   test: /\.css$/,
-//   use: [
-//     {
-//       loader: 'css-loader',
-//       options: {
-//         importLoaders: 1,
-//         sourceMap: true,
-//       },
-//     },
-//     // {
-//     //   loader: 'postcss-loader',
-//     //   options: {
-//     //     sourceMap: true,
-//     //     ident: 'postcss',
-//     //     config: {
-//     //       path: __dirname,
-//     //     }
-//     //   },
-//     // }
-//   ],
-// };
 
 /** @type {boolean | "auto" | HtmlWebpackPlugin.MinifyOptions} */
 let htmlWebpackPluginMimifyOptions = false;
@@ -59,6 +38,7 @@ const alias = {
   "branding/theme-base.css": path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/theme-base.css`),
   "branding/theme.css": path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/theme.css`),
   "branding/logo.png": path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
+  ...blipWebpack.resolve.alias,
 };
 
 /** @type {webpack.Configuration} */
@@ -90,8 +70,11 @@ const webpackConfig = {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
       { test: /\.tsx?$/, loader: "ts-loader" },
-      { test: /\.css$/, use: ["style-loader", "css-loader"] },
-      { test: /\.(ttf|woff2?)$/, use: ["file-loader"] },
+      blipWebpack.babelLoaderConfiguration,
+      blipWebpack.lessLoaderConfiguration,
+      blipWebpack.cssLoaderConfiguration,
+      // { test: /\.css$/, use: ["style-loader", "css-loader"] },
+      { test: /\.(ttf|eot|woff2?)$/, use: ["file-loader"] },
       { test: /\.(png|svg|jpg|gif)$/, use: ["url-loader"] },
 
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
@@ -100,7 +83,10 @@ const webpackConfig = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      BUILD_CONFIG: `'${JSON.stringify({DEV: isDev, TEST: isTest})}'`,
+      BUILD_CONFIG: `'${JSON.stringify({ DEV: isDev, TEST: isTest })}'`,
+    }),
+    new MiniCssExtractPlugin({
+      filename: isDev ? 'style.css' : 'style.[contenthash].css',
     }),
     new SriWebpackPlugin({
       hashFuncNames: ['sha512'],

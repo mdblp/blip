@@ -9,7 +9,7 @@
   "scripts": {
     "mrproper": "rm -rf dist node_modules coverage deploy artifact_node.sh artifact_packaging.sh artifact_images.sh",
     "clean": "rm -rf dist deploy coverage node_modules/.cache",
-    "pretest-docker": "docker build --tag blip:test -f test/Dockerfile --build-arg npm_token=${nexus_token} .",
+    "pretest-docker": "docker build --tag blip:test -f test/Dockerfile --build-arg npm_token=${NEXUS_TOKEN} .",
     "test-docker": "docker run blip:test",
     "test": "TZ=UTC NODE_ENV=test karma --log-level debug start",
     "test-watch": "TZ=UTC NODE_ENV=test karma start --no-single-run --reporters=mocha",
@@ -19,10 +19,6 @@
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack",
     "postbuild-dev": "NODE_ENV=development node ../../server/build-config.js",
-    "prebuild-iframe": "rm -rf dist",
-    "build-iframe": "NODE_ENV=production webpack --config webpack.config.iframe.js",
-    "prebuild-iframe-dev": "rm -rf dist",
-    "build-iframe-dev": "NODE_ENV=development webpack --config webpack.config.iframe.js",
     "server": "NODE_ENV=development node ../../server/server.js dist",
     "lint": "eslint app test",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
@@ -32,6 +28,9 @@
     "node": ">=10.x",
     "npm": ">=6.x"
   },
+  "browser": "app-patient-data/index.js",
+  "main": "app-patient-data/index.js",
+  "types": "app-patient-data/index.d.ts",
   "dependencies": {
     "@hot-loader/react-dom": "^16.11.0",
     "async": "3.2.0",
@@ -50,7 +49,7 @@
     "history": "3.3.0",
     "i18next": "11.9.0",
     "immutability-helper": "^3.1.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "moment-timezone": "0.5.31",
     "morgan": "1.10.0",
     "prop-types": "15.7.2",

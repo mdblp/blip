@@ -2,7 +2,6 @@
 /* eslint-disable no-var */
 
 import { AppConfig } from "./lib/config";
-import { API } from "./lib/api";
 
 declare global {
   // var window: Window & typeof globalThis & ExtendedWindow;
@@ -11,7 +10,6 @@ declare global {
     _paq: any[];
     zE: (...args: any) => void;
     config?: AppConfig;
-    renderIframe?: (config: AppConfig, api: API) => void;
   }
   const BUILD_CONFIG: string;
 }

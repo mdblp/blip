@@ -11,7 +11,7 @@ FROM base as test-base
 WORKDIR /app
 COPY package.json .npmrc ./
 ARG npm_token
-ENV nexus_token=$npm_token
+ENV NEXUS_TOKEN=$npm_token
 RUN \
   chown -R node:node /app && \
   npm install

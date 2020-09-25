@@ -28,12 +28,11 @@ import Button from '@material-ui/core/Button';
 // import AddCircle from '@material-ui/icons/AddCircle';
 
 import { User } from "../../models/shoreline";
-import { waitTimeout } from "../../lib/utils";
 import appConfig from "../../lib/config";
 import appApi, { apiClient } from "../../lib/api";
 import { t } from "../../lib/language";
+import Blip from "blip";
 
-// type ListItemType = typeof ListItem;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataProps extends RouteComponentProps {
@@ -115,13 +114,11 @@ function PatientsList(props: PatientListProps): JSX.Element {
 
 class PatientData extends React.Component<PatientDataProps, PatientDataState> {
   private log: Console;
-  private waitLoops: number;
 
   constructor(props: PatientDataProps) {
     super(props);
 
     this.log = bows('PatientData');
-    this.waitLoops = 0;
 
     this.state = {
       iframeLoaded: false,
@@ -140,10 +137,6 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
     });
   }
 
-  public componentDidUpdate(): void {
-    this.waitLoops = 0;
-  }
-
   public render(): JSX.Element {
     const { users, selectedUser } = this.state;
     let listPatients: JSX.Element | null = null;
@@ -155,41 +148,12 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
     return (
       <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: '100vh', overflow: "hidden" }}>
         <PatientToolBar />
-        <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, overflow: "hidden" }}>
+        <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, overflowY: "scroll" }}>
           {listPatients}
-          <iframe id="iframe-patient-data" src="blip.html" onLoad={this.onIFrameLoaded.bind(this)} style={{ flexGrow: 1 }} />
+          <Blip config={appConfig} api={appApi} />
         </div>
       </div>
     );
-  }
-
-  private onIFrameLoaded() {
-    this.log.info('iframe loaded');
-    this.waitIFrameReady().then(() => {
-      this.setState({ iframeLoaded: true });
-    }).catch((reason: unknown) => {
-      this.log.error('Failed to load iframe:', reason);
-    });
-  }
-
-  private async waitIFrameReady() {
-    const maxLoops = 20;
-    const timeoutMs = 100;
-
-    if (this.waitLoops > maxLoops) {
-      throw new Error('Timeout!');
-    }
-    this.waitLoops++;
-    this.log.info(`Wait ${this.waitLoops}...`);
-    await waitTimeout(timeoutMs);
-
-    const iFrame = document.getElementById("iframe-patient-data") as HTMLIFrameElement;
-    if (iFrame.contentWindow !== null && typeof iFrame.contentWindow.renderIframe === 'function') {
-      iFrame.contentWindow.renderIframe(appConfig, appApi);
-    } else {
-      // Recursive call!!! => not good
-      await this.waitIFrameReady();
-    }
   }
 
   private onSelectPatient(user: User): void {

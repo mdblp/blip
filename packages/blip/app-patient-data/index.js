@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import PropType from 'prop-types';
 import _ from 'lodash';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -54,27 +53,17 @@ ReduxProvider.propTypes = {
   api: PropType.object.isRequired,
 };
 
-function renderIframe(config, api) {
-  const logger = bows('iframe');
+const logger = bows('blip');
+
+function Blip(props) {
   try {
+    const { config, api } = props;
     const blipConfig = updateConfig(config);
-    logger.info('iframe config:', blipConfig);
+    logger.info('blip config:', blipConfig);
 
-    let mainDiv = document.getElementById('main');
-    if (mainDiv) {
-      console.info('Removing previous div');
-      mainDiv.parentElement.removeChild(mainDiv);
-    }
-
-    mainDiv = document.createElement('div');
-    mainDiv.id = 'main';
-    document.body.appendChild(mainDiv);
-
-    ReactDOM.render((
-      <ReduxProvider api={api} />
-    ), mainDiv);
+    return <ReduxProvider api={api} />;
   } catch (err) {
-    console.error('renderIframe:',err);
+    console.error('Blip:',err);
   }
 }
 
@@ -86,5 +75,4 @@ window.onerror = (event, source, lineno, colno, error) => {
   document.body.appendChild(p);
 };
 
-// @ts-ignore
-window.renderIframe = renderIframe;
+export default Blip;

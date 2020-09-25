@@ -218,7 +218,7 @@ class PatientDataPage extends React.Component {
     }
 
     return (
-      <div className="patient-data js-patient-data-page">
+      <div className="patient-data js-patient-data-container">
         {messages}
         {patientData}
         {loader}

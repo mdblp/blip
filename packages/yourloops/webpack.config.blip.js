@@ -1,11 +1,8 @@
 /* eslint-disable lodash/prefer-lodash-typecheck */
 const path = require('path');
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const SriWebpackPlugin = require('webpack-subresource-integrity');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const buildConfig = require('../../server/config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
@@ -29,12 +26,11 @@ const lessLoaderConfiguration = {
       options: {
         importLoaders: 2,
         sourceMap: true,
-        onlyLocals: false,
         modules: {
           auto: true,
           exportGlobals: true,
           localIdentName,
-        }
+        },
       },
     },
     {
@@ -43,7 +39,7 @@ const lessLoaderConfiguration = {
         sourceMap: true,
         config: {
           path: __dirname,
-        }
+        },
       },
     },
     {
@@ -70,7 +66,7 @@ const cssLoaderConfiguration = {
         sourceMap: true,
         modules: {
           localIdentName,
-        }
+        },
       },
     },
     {
@@ -80,29 +76,21 @@ const cssLoaderConfiguration = {
         ident: 'postcss',
         config: {
           path: __dirname,
-        }
+        },
       },
-    }
+    },
   ],
 };
 
-const babelLoaderConfiguration = [
-  {
-    test: /\.js$/,
-    use: {
-      loader: 'babel-loader',
-      options: {
-        cacheDirectory: true,
-      },
+const babelLoaderConfiguration = {
+  test: /\.js$/,
+  use: {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
     },
   },
-  {
-    test: /\.js$/,
-    use: {
-      loader: 'source-map-loader',
-    },
-  },
-];
+};
 
 // This is needed for webpack to import static images in JavaScript files
 const imageLoaderConfiguration = {
@@ -115,73 +103,6 @@ const imageLoaderConfiguration = {
     },
   },
 };
-
-const fontLoaderConfiguration = [
-  {
-    test: /\.eot$/,
-    use: {
-      loader: 'url-loader',
-      query: {
-        limit: 10000,
-        mimetype: 'application/vnd.ms-fontobject',
-      },
-    },
-  },
-  {
-    test: /\.woff$/,
-    use: {
-      loader: 'url-loader',
-      query: {
-        limit: 10000,
-        mimetype: 'application/font-woff',
-      },
-    },
-  },
-  {
-    test: /\.ttf$/,
-    use: {
-      loader: 'url-loader',
-      query: {
-        limit: 10000,
-        mimetype: 'application/octet-stream',
-      },
-    },
-  },
-];
-
-const localesLoader = {
-  test: /locales\/languages\.json$/,
-  use: {
-    loader: './locales-loader.js'
-  }
-};
-
-const plugins = [
-  // these values are required in the config.app.js file -- we can't use
-  // process.env with webpack, we have to create these magic constants
-  // individually.
-  // When running the test, we always use the default config.
-  new webpack.DefinePlugin({
-    BUILD_CONFIG: `'${JSON.stringify(isTest ? {DEV: isDev, TEST: isTest} : buildConfig)}'`,
-    __DEV__: isDev,
-    __TEST__: isTest,
-  }),
-  new MiniCssExtractPlugin({
-    filename: isDev ? 'blip.css' : 'blip.[contenthash].css',
-  }),
-  new SriWebpackPlugin({
-    hashFuncNames: ['sha512'],
-    enabled: isProduction,
-  }),
-  new HtmlWebpackPlugin({
-    minify: false,
-    scriptLoading: 'defer',
-    inject: 'body',
-    showErrors: true,
-    title: buildConfig.BRANDING,
-    filename: 'blip.html'
-  }),
-];
 
 const minimizer = [
   new TerserPlugin({
@@ -199,9 +120,9 @@ const minimizer = [
       compress: {},
       output: {
         comments: false,
-        beautify: false
-      }
-    }
+        beautify: false,
+      },
+    },
   }),
   new OptimizeCSSAssetsPlugin({}),
 ];
@@ -225,44 +146,13 @@ const resolve = {
   alias: {
     pdfkit: 'pdfkit/js/pdfkit.standalone.js',
     './images/tidepool/logo.png': path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
-  }
+  },
 };
 
-let entry = [ './iframe/index.js' ];
-let devtool = 'source-map';
-
 module.exports = {
-  devtool,
-  entry,
-  mode: isDev || isTest ? 'development' : 'production',
-  module: {
-    rules: [
-      ...babelLoaderConfiguration,
-      imageLoaderConfiguration,
-      lessLoaderConfiguration,
-      cssLoaderConfiguration,
-      ...fontLoaderConfiguration,
-      localesLoader,
-    ],
-  },
-  optimization: {
-    noEmitOnErrors: true,
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.(css|less)$/,
-          chunks: 'all',
-          enforce: true
-        }
-      }
-    },
-    minimize: isProduction,
-    minimizer
-  },
-  output,
-  plugins,
+  babelLoaderConfiguration,
+  lessLoaderConfiguration,
+  cssLoaderConfiguration,
+  imageLoaderConfiguration,
   resolve,
-  resolveLoader: resolve,
-  cache: isDev,
 };
