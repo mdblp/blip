@@ -2,9 +2,12 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## unreleased 
+## Unreleased 
 ### Changed
+- YLP-152 Design update consent screen.
 - YLP-158 Delete Consent banner from all environments.
+- YLP-159 Upgrade blip, viz and tideline from react15 to react16
+- YLP-180 Create separate string for bolus type
 
 ## 1.4.2 - 2020-09-09  
 ### Fixed
@@ -305,4 +308,3 @@ It is based on Tidepool Blip 1.27.
    - user automatically disconnected [PT-69]
    - Fix race condition [PT-17]
    - Fix Unknown DOM property class [PT-163]
-
