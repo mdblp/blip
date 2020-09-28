@@ -1,10 +1,10 @@
-FROM node:10.15.3-alpine AS base
+FROM node:12.18.3-alpine AS base
 ENV AWS_CDK_VERSION=1.61.0
 WORKDIR /dist
 RUN npm install -g aws-cdk@${AWS_CDK_VERSION}
 
 # This part contains the deployment source code only
-FROM node:10.15.3-alpine as deployment
+FROM node:12.18.3-alpine as deployment
 WORKDIR /cloudfront-dist
 COPY ./cloudfront-dist/deployment/bin ./deployment/bin
 COPY ./cloudfront-dist/deployment/lib ./deployment/lib
@@ -19,7 +19,7 @@ COPY ./cloudfront-dist/deploy.sh ./deploy.sh
 RUN cd deployment && npm install
 
 # this part contains the site content
-FROM node:10.15.3-alpine as content
+FROM node:12.18.3-alpine as content
 WORKDIR /content
 COPY ./static-dist ./static-dist/
 COPY ./dist/templates ./templates
