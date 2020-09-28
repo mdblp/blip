@@ -266,11 +266,6 @@ if (typeof process.env.API_HOST !== 'string' || !reUrl.test(process.env.API_HOST
   process.exit(1);
 }
 
-if (typeof process.env.STATIC_DIR !== 'string' || process.env.STATIC_DIR.length < 1) {
-  console.error('Missing or invalid environnement variable STATIC_DIR');
-  process.exit(1);
-}
-
 // Determined dist dir location ${__dirname}/../static-dist
 distDir = getDistDir(`${__dirname}/../dist`);
 console.info(`Using dist directory: ${distDir}`);
