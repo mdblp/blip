@@ -2,6 +2,7 @@
 import * as cdk from '@aws-cdk/core';
 import { StaticWebSiteStack } from '../lib/staticwebsite-stack';
 import { LambdaStack } from '../lib/lambda-stack';
+import * as path from 'path';
 
 // Variable
 const AWS_ACCOUNT = process.env.AWS_ACCOUNT;
@@ -18,8 +19,14 @@ const APP_STACK_NAME = `${STACK_PREFIX_NAME}-${FRONT_APP_NAME}`;
 
 const app = new cdk.App();
 
+let distDir = path.resolve('../../../dist');
+if(process.env.DIST_DIR !== undefined && process.env.DIST_DIR !== '') {
+  distDir = path.resolve(process.env.DIST_DIR);
+}
+console.info(`Using app dist directory: '${distDir}'`);
+
 // Create edge Lambda
-const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, {
+const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, distDir, {
   env: {
         region: 'us-east-1' // harcored because it should not change with current version of AWS !
       }
@@ -27,11 +34,11 @@ const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, {
   STACK_PREFIX_NAME);
 
 // Create ressouce needed to static hosting with cloudfront
-new StaticWebSiteStack(app, APP_STACK_NAME,  {
+new StaticWebSiteStack(app, APP_STACK_NAME, distDir, {
     env: {
       account: AWS_ACCOUNT,
       region: AWS_DEFAULT_REGION
-    },
+    }, 
     domainName: DOMAIN_NAME,
     zone: DNS_ZONE,
     FrontAppName: FRONT_APP_NAME, 

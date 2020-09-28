@@ -10,7 +10,7 @@ import * as route53 from '@aws-cdk/aws-route53';
 import { WebStackProps } from './props/WebStackProps';
 
 export class StaticWebSiteStack extends core.Stack {
-  constructor(scope: core.Construct, id: string, props?: WebStackProps) {
+  constructor(scope: core.Construct, id: string, distDir: string, props?: WebStackProps) {
     super(scope, id, props);
 
     // Create the bucket
@@ -146,7 +146,7 @@ export class StaticWebSiteStack extends core.Stack {
 
     //  Publish the site content to the S3 bucket (with --delete and invalidation)
     new s3deploy.BucketDeployment(this, `${id}-deploymentwithinvalidation`, {
-      sources: [s3deploy.Source.asset(`${__dirname}/../../static-dist/${props?.FrontAppName}`)],
+      sources: [s3deploy.Source.asset(`${distDir}/static`)],
       destinationBucket: bucket,
       destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
       distribution, //
