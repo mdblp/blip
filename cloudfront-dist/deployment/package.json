@@ -1,8 +1,8 @@
 {
-  "name": "blip-awscdk",
+  "name": "staticwebsite-cdk",
   "version": "0.1.0",
   "bin": {
-    "blip-awscdk": "bin/blip-awscdk.js"
+    "staticwebsite-cdk": "bin/staticwebsite-cdk.js"
   },
   "scripts": {
     "build": "tsc",
