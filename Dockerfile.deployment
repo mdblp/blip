@@ -21,10 +21,9 @@ RUN cd deployment && npm install
 # this part contains the site content
 FROM node:12.18.3-alpine as content
 WORKDIR /content
-COPY ./static-dist ./static-dist/
-COPY ./dist/templates ./templates
-COPY ./dist/config.app.js ./config.app.js
-COPY ./dist/package.json ./package.json
+COPY ./dist/static ./static-dist/
+COPY ./templates ./templates
+COPY ./config.app.js ./config.app.js
 
 FROM base as final
 RUN apk --no-cache update && \
@@ -51,7 +50,6 @@ COPY --from=deployment /cloudfront-dist/deploy.sh ./deploy.sh
 COPY --from=content /content/static-dist ./cloudfront-dist/static-dist/blip
 COPY --from=content /content/templates ./templates
 COPY --from=content /content/config.app.js ./config.app.js
-COPY --from=content /content/package.json ./package.json
 RUN chown -R node:node /dist
 ENTRYPOINT [ "/bin/sh" ]
 CMD [ "deploy.sh" ]
