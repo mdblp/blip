@@ -220,7 +220,7 @@ const minimizer = [
 /** @type {webpack.Output} */
 const output = {
   filename: isDev || isTest ? 'bundle.js' : 'bundle.[hash].js',
-  path: path.join(__dirname, 'static-dist'),
+  path: path.join(__dirname, 'dist/static'),
   globalObject: `(typeof self !== 'undefined' ? self : this)`, // eslint-disable-line quotes
 };
 

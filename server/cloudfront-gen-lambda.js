@@ -179,8 +179,7 @@ function genOutputFile() {
     TARGET_ENVIRONMENT: process.env.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
-    CSP: '',
-    DIST: distDir,
+    CSP: ''
   };
 
   const csp = genContentSecurityPolicy();
@@ -195,9 +194,9 @@ function genOutputFile() {
   const lambdaFile = template(templateParameters);
 
   template = handlebars.compile(outputFilenameTemplate, { noEscape: true });
-  const outputFilename = `${__dirname}/lambda/${template(templateParameters)}`;
+  const outputFilename = `${distDir}/lambda/${template(templateParameters)}`;
   console.log(`Saving to ${outputFilename}`);
-  fs.mkdir(`${__dirname}/lambda`, { recursive: true }, (err) => { if (err) throw err; });
+  fs.mkdir(`${distDir}/lambda`, { recursive: true }, (err) => { if (err) throw err; });
   fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
 }
 
@@ -240,6 +239,19 @@ function withTemplate(err, data) {
   genOutputFile();
 }
 
+function getDistDir(defaultDir) {
+  let dir = null;
+  if (process.argv.length === 3) {
+    dir = path.resolve(process.argv[2]);
+  } else if(process.env.DIST_DIR !== undefined && process.env.DIST_DIR !== '') {
+    dir = path.resolve(process.env.DIST_DIR);
+  } else {
+    dir = path.resolve(defaultDir);
+  }
+  console.info(`Using dist directory: '${dir}'`);
+  return dir;
+}
+
 
 /*** Main ***/
 
@@ -260,7 +272,7 @@ if (typeof process.env.STATIC_DIR !== 'string' || process.env.STATIC_DIR.length 
 }
 
 // Determined dist dir location ${__dirname}/../static-dist
-distDir = path.resolve(`${process.env.STATIC_DIR}`);
+distDir = getDistDir(`${__dirname}/../dist`);
 console.info(`Using dist directory: ${distDir}`);
 
 // Determined template dir location:
@@ -270,7 +282,7 @@ console.info(`Using template directory: ${templateDir}`);
 // Display configuration used
 console.info('Using configuration:', blipConfig);
 
-const indexHtmlPath = path.resolve(`${__dirname}/pre-compiled-index.html`);
+const indexHtmlPath = path.resolve(`${distDir}/static/index.html`);
 indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 if (typeof process.env.BRANDING === 'string') {
   const title = process.env.BRANDING.replace(/^\w/, (c) => { return c.toUpperCase(); });
@@ -343,7 +355,7 @@ case 'matomo':
     const matomoConfigScripts = `  ${matomoConfigScript}\n  ${matomoScript}\n`;
     indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`);
 
-    fs.writeFileSync(`${distDir}/${fileName}`, matomoJs);
+    fs.writeFileSync(`${distDir}/static/${fileName}`, matomoJs);
   } else {
     console.error('  /!\\ Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable /!\\');
   }

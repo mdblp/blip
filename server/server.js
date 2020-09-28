@@ -1,6 +1,5 @@
 /* eslint-disable lodash/prefer-lodash-typecheck */
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -10,8 +9,22 @@ const compression = require('compression');
 const morgan = require('morgan');
 const request = require('request');
 
-const jsonPackage = require('../package.json');
-const serverConfig = require('./config.server');
+let httpPort = 3000;
+
+/** @type {string[]} */
+const fileList = [];
+/** @type {http.Server} */
+let httpServer = null;
+let lambdaUrl = 'http://localhost:9001';
+
+// If ports specified override the default value (3000)
+if (process.env.PORT !== undefined && process.env.PORT !== '') {
+  httpPort = Number.parseInt(process.env.PORT, 10);
+}
+
+if (process.env.LAMBDA_URL !== undefined && process.env.LAMBDA_URL !== '') {
+  lambdaUrl = process.env.LAMBDA_URL;
+}
 
 function getStaticDir(defaultDir) {
   let dir = null;
@@ -23,13 +36,6 @@ function getStaticDir(defaultDir) {
   console.info(`Serving from: '${dir}'`);
   return dir;
 }
-
-/** @type {string[]} */
-const fileList = [];
-/** @type {http.Server} */
-let httpServer = null;
-/** @type {https.Server} */
-let httpsServer = null;
 
 /**
  * Get the list of files we can serve
@@ -52,11 +58,11 @@ function fetchFilesList(dir) {
 function redirectMiddleware(req, res, next) {
   const reqURL = req.url;
   const payload = {
-    "Records": [
+    'Records': [
       {
-        "cf": {
-          "request": {
-            "uri": reqURL
+        'cf': {
+          'request': {
+            'uri': reqURL
           }
         }
       }
@@ -64,9 +70,9 @@ function redirectMiddleware(req, res, next) {
   };
   const options = {
     method: 'POST',
-    url: 'http://localhost:9001/2015-03-31/functions/func/invocations',
+    url: `${lambdaUrl}/2015-03-31/functions/func/invocations`,
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   };
@@ -83,7 +89,7 @@ function redirectMiddleware(req, res, next) {
             res.header(hd, resBody.headers[hd][0].value);
           }
           // set body
-          if (resBody.bodyEncoding === "base64") {
+          if (resBody.bodyEncoding === 'base64') {
             const b = Buffer.from(resBody.body, 'base64');
             res.status(resBody.status).send(b);
           } else {
@@ -94,11 +100,6 @@ function redirectMiddleware(req, res, next) {
         }
       }
   });
-}
-
-function printVersion() {
-  const now = new Date().toISOString();
-  console.log(`${now} ${jsonPackage.name} v${jsonPackage.version}`);
 }
 
 /**
@@ -112,20 +113,14 @@ async function stopServer(app) {
     httpServer.removeAllListeners();
     httpServer = null;
   }
-  if (httpsServer !== null) {
-    httpsServer.close();
-    httpsServer.removeAllListeners();
-    httpsServer = null;
-  }
 
   if (app !== null) {
     app.removeAllListeners();
   }
 }
 
-const staticDir = getStaticDir('../static-dist');
+const staticDir = getStaticDir(`${__dirname}/../dist/static`);
 
-printVersion();
 fetchFilesList(staticDir);
 const app = express();
 app.use(morgan(':date[iso] :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]'));
@@ -149,24 +144,11 @@ app.use(express.static(staticDir, {
   index: false,
 }));
 
-// If no ports specified, just start on default HTTP port
-if (!(serverConfig.httpPort || serverConfig.httpsPort)) {
-  serverConfig.httpPort = 3000;
-}
-
-if (serverConfig.httpPort) {
-  httpServer = http.createServer(app).listen(serverConfig.httpPort, () => {
+if (httpPort) {
+  httpServer = http.createServer(app).listen(httpPort, () => {
     const now = new Date().toISOString();
-    console.log(`${now} Connect server started on HTTP port`, serverConfig.httpPort);
-    console.log(`${now} Serving static directory "${staticDir}/"`);
-  });
-}
-
-if (serverConfig.httpsPort && serverConfig.httpsConfig) {
-  httpsServer = https.createServer(serverConfig.httpsConfig, app).listen(serverConfig.httpsPort, () => {
-    const now = new Date().toISOString();
-    console.log(`${now} Connect server started on HTTP port`, serverConfig.httpPort);
-    console.log(`${now} Serving static directory "${staticDir}/"`);
+    console.log(`${now} Connect server started on HTTP port`, httpPort);
+    console.log(`${now} Serving static directory '${staticDir}/'`);
   });
 }
 
