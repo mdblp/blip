@@ -64,7 +64,7 @@ if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
 
   #buildArchive -d "./dist" -n
   #buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
-  buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "cloudfront-distribution-deployment"
+  buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
   publishDockerImage
   npm install --save-dev "ci-toolbox@latest"
   BUILD_SOUP="true"
