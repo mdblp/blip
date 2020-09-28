@@ -170,18 +170,28 @@ To do it manually, fist be sure to set the environment variables needed (see the
 To publish blip to CloudFront, follow theses steps (quick summary):
 - Load the environment variables for your build (see `config/*.sh`)
 - build the package: `npm run build`
-- generate the lambda script: `TARGET_ENVIRONMENT=<env> npm run gen-lambda` replacing `<env>` with yours (ex: `preview`, `production`)
+- generate the lambda script (from the server directory): `TARGET_ENVIRONMENT=<env> npm run gen-lambda` replacing `<env>` with yours (ex: `preview`, `production`)
 - Publish on S3 the files located in static-dist
-- Publish the new lambda edge version with the content of `cloudfront-dist/cloudfront-<env-blip-request-viewer.js`
+- Publish the new lambda edge version with the content of `dist/lambda/cloudfront-<env-blip-request-viewer.js`
 - Update the lambda edge version in the CloudFront distribution, using the new ARN link.
 
-TODO: create a target `deploy-cf` to automatically deploy a new cloudfront distrib for a given environment.  
-`TARGET_ENVIRONMENT=<env> npm run deploy-cf`
 
 ### Local testing
-To test blip locally as if it was running on CloudFront with a lambda@edge middleware you can execute the following command (from root):
-`npm run local-stack`
+To test blip locally as if it was running on CloudFront with a lambda@edge middleware you can execute the following command (from root dir):
+* launch a docker container docker lambci/lambda:nodejs10.x in "watch mode": `docker run --rm -e DOCKER_LAMBDA_WATCH=1 -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v $PWD/dist/lambda:/var/task:ro,delegated -d --name blip-middleware lambci/lambda:nodejs10.x cloudfront-test-blip-request-viewer.handler` assuming you compile the lambda script with $TARGET_ENVIRONMENT=test.
+* the docker container will pickup any changes you apply to the lambda script
+* source the relevant env file: `. ./config/local.sh`
+* then start blip server to serve static js files: `npm run server`
 
+### Deploy and test on a k8s cluster
+To run blip on k8s (or even on a simple docker compose) you can re-use the deployment image.  
+Create a deployment with 2 pods: 
+* lambci/lambda:nodejs10.x to execute the lambda
+* node:10-alpine to execute the server
+Attach these 2 pods to a volume and use an init container to copy the app files (lambda script + static dist) on the volume.
+`docker run -v blip:/www --env-file .docker.env blip-deployment "-c" "cd server && npm run gen-lambda && cp -R /dist/static /www && cp -R /dist/lambda /static"`
+
+ 
 ## Documentation for developers
 
 + [Blip developer guide](docs/StartHere.md)
