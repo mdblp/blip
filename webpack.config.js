@@ -8,7 +8,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SriWebpackPlugin = require('webpack-subresource-integrity');
 const DblpHtmlWebpackPlugin = require('./dblp-webpack-html-plugin');
-const buildConfig = require('./config.app');
+const buildConfig = require('./server/config.app');
 
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');

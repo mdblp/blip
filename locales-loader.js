@@ -1,4 +1,4 @@
-const buildConfig = require('./config.app');
+const buildConfig = require('./server/config.app');
 
 function localesLoader(source) {
   if (buildConfig.TEST) {

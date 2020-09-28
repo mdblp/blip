@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const handlebars = require('handlebars');
-const blipConfig = require('../config.app');
+const blipConfig = require('./config.app');
 
 const _ = require('lodash');
 
@@ -196,8 +196,14 @@ function genOutputFile() {
   template = handlebars.compile(outputFilenameTemplate, { noEscape: true });
   const outputFilename = `${distDir}/lambda/${template(templateParameters)}`;
   console.log(`Saving to ${outputFilename}`);
-  fs.mkdir(`${distDir}/lambda`, { recursive: true }, (err) => { if (err) throw err; });
-  fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
+  fs.mkdir(`${distDir}/lambda`, { recursive: true }, (err) => { 
+    if (err) {
+      throw err; 
+    } else {
+      fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
+    }
+  });
+
 }
 
 /**
@@ -380,7 +386,7 @@ if (process.env.CROWDIN === 'enabled') {
   const fileHash = getHash(crowdinJs);
   const integrity = getIntegrity(crowdinJs);
   const fileName = `crowdin.${fileHash}.js`;
-  fs.writeFileSync(`${distDir}/${fileName}`, crowdinJs);
+  fs.writeFileSync(`${distDir}/static/${fileName}`, crowdinJs);
 
   const crowdinScripts = `\
   <script type="text/javascript" defer src="${fileName}" integrity="sha512-${integrity}" crossorigin="anonymous"></script>\n\
@@ -397,7 +403,7 @@ if (process.env.CROWDIN === 'enabled') {
 
 const templateFilename = path.resolve(`${__dirname}/template.lambda-request-viewer.js`);
 
-fs.readdir(distDir, withFilesList);
+fs.readdir(`${distDir}/static`, withFilesList);
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate);
 indexHtml = indexHtml.replace(/(<!-- config -->)/, scriptConfigJs);
 indexHtml = indexHtml.replace(/<(script)/g, '<$1 nonce="${nonce}"');
