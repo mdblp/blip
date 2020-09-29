@@ -60,5 +60,5 @@ if [ "10.15.3" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
   BUILD_SOUP="true"
   buildSOUP
 else
-  echo "Not publishing docker image: Node version ${TRAVIS_NODE_VERSION:-0.0.0} != ${ARTIFACT_NODE_VERSION}"
+  echo "Not publishing docker image: Node version ${TRAVIS_NODE_VERSION:-0.0.0}"
 fi
