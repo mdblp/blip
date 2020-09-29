@@ -51,7 +51,7 @@ npm run test-cloudfront
 # Publish only on the main node version build
 # TODO: Get node version using: "$(node --version | cut -c 2-)" to make this script usable on another build system ?
 echo ${TRAVIS_NODE_VERSION}
-if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
+if [ "10.15.3" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
   #buildArchive -d "./dist" -n
   #buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
   buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
