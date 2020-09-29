@@ -7,8 +7,6 @@ export STATIC_DIR="./static-dist/"
 
 echo "Running artifacts for ${APP_NAME} v${APP_VERSION} with dir ${STATIC_DIR}"
 
-. ./server/version.sh
-
 wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_packaging.sh'
 wget -q -O artifact_images.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_images.sh'
 
@@ -52,16 +50,8 @@ npm run test-cloudfront
 
 # Publish only on the main node version build
 # TODO: Get node version using: "$(node --version | cut -c 2-)" to make this script usable on another build system ?
+echo ${TRAVIS_NODE_VERSION}
 if [ "${ARTIFACT_NODE_VERSION}" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
-  # Prepare cloudfront distrib
-  rm -rf dist
-  mkdir dist
-  rsync static-dist/* dist/static-dist
-  rsync templates/* dist/templates
-  rsync --exclude="cloudfront*viewer.js" cloudfront-dist/* dist/cloudfront-dist
-  rsync -r --exclude-from=.artifactignore cloudfront-dist/deployment/ dist/cloudfront-dist/deployment
-  rsync config.app.js package.json dist/
-
   #buildArchive -d "./dist" -n
   #buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
   buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
