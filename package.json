@@ -22,7 +22,7 @@
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_ENV=development webpack --progress",
     "server": "node server/server.js dist/static",
-    "lint": "eslint app test server",
+    "lint": "eslint app test",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
     "update-translations": "i18next 'app/**/*.js' 'node_modules/tideline/{plugins,js}/**/*.js' 'node_modules/@tidepool/viz/src/**/*.js' -c i18next-parser.config.json -o .",
     "build-soup": "release-helper gen-dep-report --deep-dep 'sundial,tideline,tidepool-platform-client,@tidepool/viz' doc/${npm_package_name}-${npm_package_version}-soup.md"
