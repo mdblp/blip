@@ -166,15 +166,7 @@ To do it manually, fist be sure to set the environment variables needed (see the
 ```
 
 ## Integration with CloudFront
-
-To publish blip to CloudFront, follow theses steps (quick summary):
-- Load the environment variables for your build (see `config/*.sh`)
-- build the package: `npm run build`
-- generate the lambda script (from the server directory): `TARGET_ENVIRONMENT=<env> npm run gen-lambda` replacing `<env>` with yours (ex: `preview`, `production`)
-- Publish on S3 the files located in static-dist
-- Publish the new lambda edge version with the content of `dist/lambda/cloudfront-<env-blip-request-viewer.js`
-- Update the lambda edge version in the CloudFront distribution, using the new ARN link.
-
+Blip is designed to be published on AWS Cloudfront. The "static" js and html content (result of webpack) is published on an s3 bucket and the configuration and security stuff is handled by a lambda edge function.
 
 ### Local testing
 To test blip locally as if it was running on CloudFront with a lambda@edge middleware you can execute the following command (from root dir):
@@ -191,6 +183,12 @@ Create a deployment with 2 pods:
 Attach these 2 pods to a volume and use an init container to copy the app files (lambda script + static dist) on the volume.
 `docker run -v blip:/www --env-file .docker.env blip-deployment "-c" "cd server && npm run gen-lambda && cp -R /dist/static /www && cp -R /dist/lambda /static"`
 
+### Deploy to aws cloud front
+To publish blip to CloudFront the simplest solution is to build the docker image provided under ./cloudfront-dist and use it.  
+1. From the root folder execute: `docker build -t blip-deploy -f cloudfront-dist/Dockerfile.deployment .` 
+1. Prepare an environment file that contains the configuration for the environment you want to deploy to. You can use the template provided in ./cloudfront-dist/docker.template.env.  
+1. Execute the docker image built just above: `docker run --env-file ./cloudfront-dist/deployment/cf-blip.env -it blip-deploy`
+Et voila, the deployment starts. Of course you need credentials for the aws account you target ;)
  
 ## Documentation for developers
 

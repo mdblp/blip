@@ -19,7 +19,7 @@ const APP_STACK_NAME = `${STACK_PREFIX_NAME}-${FRONT_APP_NAME}`;
 
 const app = new cdk.App();
 
-let distDir = path.resolve('../../../dist');
+let distDir = path.resolve(__dirname, '../../../dist');
 if(process.env.DIST_DIR !== undefined && process.env.DIST_DIR !== '') {
   distDir = path.resolve(process.env.DIST_DIR);
 }
@@ -28,7 +28,7 @@ console.info(`Using app dist directory: '${distDir}'`);
 // Create edge Lambda
 const ls = new LambdaStack(app, LAMBDA_EDGE_STACK_NAME, distDir, {
   env: {
-        region: 'us-east-1' // harcored because it should not change with current version of AWS !
+        region: 'us-east-1' // hardcoded because it should not change with current version of AWS !
       }
   },
   STACK_PREFIX_NAME);

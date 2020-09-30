@@ -72,6 +72,7 @@ let distribFiles = null;
 
 let distDir = null;
 let templateDir = null;
+const templateFilename = path.resolve(`${__dirname}/template.lambda-request-viewer.js`);
 
 function getHash(str) {
 	const hash = crypto.createHash('md5');
@@ -196,9 +197,9 @@ function genOutputFile() {
   template = handlebars.compile(outputFilenameTemplate, { noEscape: true });
   const outputFilename = `${distDir}/lambda/${template(templateParameters)}`;
   console.log(`Saving to ${outputFilename}`);
-  fs.mkdir(`${distDir}/lambda`, { recursive: true }, (err) => { 
+  fs.mkdir(`${distDir}/lambda`, { recursive: true }, (err) => {
     if (err) {
-      throw err; 
+      throw err;
     } else {
       fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
     }
@@ -220,8 +221,8 @@ function withFilesList(err, files) {
   const selectedFiles = ["'config.js'"];
   for (const file of files) {
     const filename = path.basename(file);
-    if (/^config(\.[0-9a-z])?.js$/.test(filename)) {
-      // Exclude the config.[contenthash].js file
+    if (filename === 'index.html') {
+      // Exclude the index.html file, send in the lambda
       continue;
     }
     selectedFiles.push(`'${filename}'`);
@@ -400,8 +401,6 @@ if (process.env.CROWDIN === 'enabled') {
   console.info('- Crowdin is disabled');
   indexHtml = indexHtml.replace(reCrowdin, '$1  <!-- disabled -->\n$3');
 }
-
-const templateFilename = path.resolve(`${__dirname}/template.lambda-request-viewer.js`);
 
 fs.readdir(`${distDir}/static`, withFilesList);
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate);

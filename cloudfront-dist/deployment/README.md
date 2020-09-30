@@ -24,11 +24,9 @@ After the installation of the pre-requisites software you need to build a blip p
 
 ```sh
 cd blip/
-export TARGET_ENVIRONMENT=ppd
+export TARGET_ENVIRONMENT=<target env>
 npm install
 source ./config/env.$TARGET_ENVIRONMENT.sh && npm run build
-source ./config/env.$TARGET_ENVIRONMENT.sh && npm run gen-lambda
-mv ./static-dist ./cloudfront-dist/
 ```
 
 ### Installation
@@ -62,7 +60,7 @@ export AWS_PROFILE=fso-dev
 now that the installation is complete, you could perform a deployment:
 
 ```sh
-cdk synth
+cdk synth # to test the deployment
 cdk deploy <STACK_PREFIX_NAME>-blip
 ```
 

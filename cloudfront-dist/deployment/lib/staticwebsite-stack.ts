@@ -85,32 +85,6 @@ export class StaticWebSiteStack extends core.Stack {
           },
           {
             s3OriginSource: {
-              originPath: '/legal',
-              s3BucketSource: bucket,
-            },
-            behaviors: [
-              {
-
-                isDefaultBehavior: false,
-                pathPattern: '/legal/*',
-              },
-            ],
-          },
-          { 
-            s3OriginSource: {
-              originPath: '/legal',
-              s3BucketSource: bucket,
-            },
-            behaviors: [
-              {
-                // missing cache key 
-                isDefaultBehavior: false,
-                pathPattern: 'country.json',
-              },
-            ],
-          },
-          {
-            s3OriginSource: {
               originPath: '/maintenance',
               s3BucketSource: bucket,
             },
@@ -149,8 +123,7 @@ export class StaticWebSiteStack extends core.Stack {
       sources: [s3deploy.Source.asset(`${distDir}/static`)],
       destinationBucket: bucket,
       destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
-      distribution, //
-      distributionPaths: [`/index.html`], // invalidate previous version
+      distribution
     });
 
   }

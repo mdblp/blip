@@ -15,4 +15,4 @@ RUN npm install
 
 FROM buildServer AS production
 USER node
-CMD [ "node",  "server.js", "dist" ]
+CMD [ "node", "server.js", "dist" ]

@@ -3,9 +3,8 @@ set -eu
 BASEDIR="$(dirname $0)"
 APP_NAME="$(echo 'const c = require("./package.json"); console.log(c.name);' | node -)"
 export APP_VERSION="$(echo 'const c = require("./package.json"); console.log(c.version);' | node -)"
-export STATIC_DIR="./static-dist/"
 
-echo "Running artifacts for ${APP_NAME} v${APP_VERSION} with dir ${STATIC_DIR}"
+echo "Running artifacts for ${APP_NAME} v${APP_VERSION}"
 
 wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_packaging.sh'
 wget -q -O artifact_images.sh 'https://raw.githubusercontent.com/mdblp/tools/dblp/artifact/artifact_images.sh'
@@ -52,9 +51,7 @@ npm run test-cloudfront
 # TODO: Get node version using: "$(node --version | cut -c 2-)" to make this script usable on another build system ?
 echo ${TRAVIS_NODE_VERSION}
 if [ "10.15.3" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
-  #buildArchive -d "./dist" -n
-  #buildDockerImage -f "server/Dockerfile" -d "server" -t "latest" -s "buildServer"
-  buildDockerImage -f "Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
+  buildDockerImage -f "cloudfront-dist/Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
   publishDockerImage
   npm install --save-dev "ci-toolbox@latest"
   BUILD_SOUP="true"

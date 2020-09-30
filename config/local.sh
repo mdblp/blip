@@ -19,8 +19,6 @@ export PASSWORD_MAX_LENGTH='72'
 export MAX_FAILED_LOGIN_ATTEMPTS='5'
 export DELAY_BEFORE_NEXT_LOGIN_ATTEMPT='1'
 export LATEST_TERMS='1970-01-01'
-export TERMS_PRIVACY_DATE='2020-02-26'
-
 # External services:
 # URL to HELP system
 export HELP_LINK='disabled'
@@ -37,3 +35,5 @@ export SUPPORT_WEB_ADDRESS='https://example.com/'
 export REGULATORY_WEB_ADDRESS='https://example.com/'
 # Crowdin translation service (enabled / disabled):
 export CROWDIN='disabled'
+# CF config
+export TARGET_ENVIRONMENT=dev
