@@ -34,6 +34,7 @@ deploy:
   # option to `master` means Travis will only attempt a deployment on
   # builds of your repo's master branch (e.g., after you merge a PR).
   - provider: s3
+    edge: true
     on:
       tags: true
       node_js: 10.15.3
@@ -53,6 +54,7 @@ deploy:
     cache_control: "max-age=21600"
   # Deploy SOUP list
   - provider: s3
+    edge: true
     on:
       tags: true
       node_js: 10.15.3
@@ -70,7 +72,5 @@ script:
   - npm run lint
   - npm run test
   - npm run security-checks
-  - bash server/update-version.sh
-  - npm run clean
-  - bash build.sh
+  - bash artifact.sh
   - bash show-npm-logs.sh
