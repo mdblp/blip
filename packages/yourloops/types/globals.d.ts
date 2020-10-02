@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-var */
 
-import { AppConfig } from "./lib/config";
+import { AppConfig } from "../lib/config";
 
 declare global {
   // var window: Window & typeof globalThis & ExtendedWindow;
@@ -12,9 +12,4 @@ declare global {
     config?: AppConfig;
   }
   const BUILD_CONFIG: string;
-}
-
-declare module "*.png" {
-  const value: any;
-  export default value;
 }

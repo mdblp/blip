@@ -186,12 +186,12 @@ class API extends EventTarget {
    * @return {Promise<User>} Return the logged-in user or a promise rejection.
    */
   async login(username: string, password: string): Promise<User> {
-    try {
-      this.loginLock = true;
-      return this.loginPrivate(username, password);
-    } finally {
+    this.loginLock = true;
+    return this.loginPrivate(username, password).then((user: User) => {
+      return this.getUserProfile(user);
+    }).finally(() => {
       this.loginLock = false;
-    }
+    });
   }
 
   /**

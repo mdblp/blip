@@ -31,7 +31,8 @@
     "test/*.ts"
   ],
   "include": [
+    "./types/*.d.ts",
     "**/*.ts",
-    "**/*.tsx",
+    "**/*.tsx"
   ]
 }

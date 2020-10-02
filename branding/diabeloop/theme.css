@@ -12,17 +12,3 @@ body {
 	height: 100vh;
 	margin: 0px;
 }
-
-img.toolbar-logo {
-  content: url(./logo.png);
-  height: 45px;
-}
-
-div#login-card-logo {
-  content: url(./logo.png);
-  height: 60px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 1em;
-  padding-bottom: 1em;
-}

@@ -20,12 +20,8 @@
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
     "prebuild-soup": "mkdir -pv doc",
     "build-soup": "release-helper gen-dep-report --deep-dep 'blip,sundial,tideline,tidepool-platform-client,tidepool-viz' doc/${npm_package_name}-${npm_package_version}-soup.md",
-    "prebuild-dev": "rm -rf packages/blip/dist server/dist",
-    "build-dev": "lerna run --stream --scope blip build-dev",
-    "postbuild-dev": "mv -v packages/blip/dist server/dist",
-    "start-dev": "cd $PWD/packages/blip && lerna run --stream --scope blip start-dev",
-    "server-dev": "lerna run --stream --scope blip server",
-    "server": "NODE_ENV=development node server/server.js server/dist"
+    "build-dev": "lerna run --stream --scope yourloops build-dev",
+    "start-dev": "lerna run --stream --scope yourloops start-dev"
   },
   "engines": {
     "node": ">=10.x",

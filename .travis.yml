@@ -6,6 +6,7 @@ dist: bionic
 env:
   global:
     - SECURITY_SCAN=true
+    - NODE_OPTIONS='--max-old-space-size=4096'
 
 jobs:
   include:

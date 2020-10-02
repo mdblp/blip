@@ -19,15 +19,9 @@
     "build": "npm run build-prod",
     "prebuild-prod": "npm run clean",
     "build-prod": "NODE_ENV=production webpack --mode=production",
-    "prebuild-dev": "npm run clean && npm run build-blip-dev",
-    "build-dev": "webpack --mode=development --progress",
-    "postbuild-dev": "mv -iv ../blip/dist/* dist/",
-    "build-blip-dev": "webpack --mode=development --progress --config webpack.config.blip.js",
-    "prebuild-dev-only": "npm run clean",
-    "build-dev-only": "webpack --mode=development --progress",
-    "postbuild-dev-only": "cp -iv ../blip/dist/* dist/",
-    "server": "NODE_ENV=development node ../../server/server.js dist",
-    "start-dev": "NODE_ENV=development webpack-dev-server --cache --colors --progress --port 3001 --host 0.0.0.0"
+    "prebuild-dev": "npm run clean",
+    "build-dev": "webpack --mode=development",
+    "start-dev": "NODE_ENV=development webpack-dev-server --cache --colors --port 3001 --host 0.0.0.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

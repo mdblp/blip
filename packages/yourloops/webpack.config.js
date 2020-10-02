@@ -56,6 +56,14 @@ const webpackConfig = {
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
 
+  devServer: {
+    before: (app /*, server, compiler */) => {
+      app.get('/patient', (req, res) => {
+        res.redirect('/');
+      });
+    },
+  },
+
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions. , ".js", ".json", ".css", ".html"
     extensions: [".ts", ".tsx", ".js", ".css"],
@@ -69,16 +77,18 @@ const webpackConfig = {
   module: {
     rules: [
       // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
-      { test: /\.tsx?$/, loader: "ts-loader" },
+      { test: /\.tsx?$/, loader: "ts-loader", exclude: /node_modules/ },
       blipWebpack.babelLoaderConfiguration,
       blipWebpack.lessLoaderConfiguration,
       blipWebpack.cssLoaderConfiguration,
+      // blipWebpack.imageLoaderConfiguration,
       // { test: /\.css$/, use: ["style-loader", "css-loader"] },
       { test: /\.(ttf|eot|woff2?)$/, use: ["file-loader"] },
-      { test: /\.(png|svg|jpg|gif)$/, use: ["url-loader"] },
+      { test: /\.(png|svg|jpe?g|gif)$/, use: ["file-loader"] },
 
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+      { test: /locales\/languages\.json$/, use: { loader: '../blip/locales-loader.js' } },
     ],
   },
   plugins: [
@@ -95,7 +105,7 @@ const webpackConfig = {
     new HtmlWebpackPlugin({
       title: "YourLoops",
       showErrors: !isProduction,
-      template: path.resolve(__dirname, "../../server/templates/index.html"),
+      template: path.resolve(__dirname, "../../templates/index.html"),
       scriptLoading: "defer",
       inject: "body",
       hash: false,

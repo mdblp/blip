@@ -15,24 +15,21 @@
  */
 
 import * as React from 'react';
-import { RouteComponentProps, globalHistory } from "@reach/router";
+import { RouteComponentProps } from "@reach/router";
 import bows from 'bows';
 
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 // import AddCircle from '@material-ui/icons/AddCircle';
 
 import { User } from "../../models/shoreline";
 import appConfig from "../../lib/config";
 import appApi, { apiClient } from "../../lib/api";
-import { t } from "../../lib/language";
+// import { t } from "../../lib/language";
+import HeaderBar from "../../components/header-bar";
 import Blip from "blip";
-
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataProps extends RouteComponentProps {
@@ -50,44 +47,6 @@ interface PatientListProps {
   onClickPatient: (user: User) => void;
 }
 
-const toolbarStyles = makeStyles((/* theme */) => ({
-  toolBar: {
-    backgroundColor: "var(--mdc-theme-surface, white)",
-  },
-  logoutButton: {
-    color: "var(--mdc-theme-text-button-on-surface, black)",
-    marginLeft: "auto",
-    "&:hover": {
-      color: "var(--mdc-theme-text-button-hover-on-surface, black)",
-    },
-  },
-  logo: {
-  },
-}));
-
-function PatientToolBar(): JSX.Element {
-  const classes = toolbarStyles();
-
-  return (
-    <AppBar position="static">
-      <Toolbar className={classes.toolBar}>
-        <div className={classes.logo}>
-          <img className="toolbar-logo" alt={t("Logo")} />
-        </div>
-        {/* <Typography variant="h6" className={classes.title}>
-          Yourloops
-        </Typography> */}
-        {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-        <Button color="inherit">Login</Button> */}
-        <Button className={classes.logoutButton} onClick={() => globalHistory.navigate("/")}>
-          {t("Logout")}
-        </Button>
-      </Toolbar>
-    </AppBar>
-  );
-}
 
 function PatientsList(props: PatientListProps): JSX.Element {
   const items: JSX.Element[] = [];
@@ -118,7 +77,7 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
   constructor(props: PatientDataProps) {
     super(props);
 
-    this.log = bows('PatientData');
+    this.log = bows("PatientData");
 
     this.state = {
       iframeLoaded: false,
@@ -146,8 +105,10 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
     }
 
     return (
-      <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: '100vh', overflow: "hidden" }}>
-        <PatientToolBar />
+      <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
+        <HeaderBar>
+
+        </HeaderBar>
         <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, overflowY: "scroll" }}>
           {listPatients}
           <Blip config={appConfig} api={appApi} />

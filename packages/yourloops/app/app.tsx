@@ -31,11 +31,11 @@ class Yourloops {
   private log: Console;
 
   constructor() {
-    this.log = bows('Yourloops');
+    this.log = bows("Yourloops");
   }
 
   public async init(): Promise<void> {
-    this.log.info('Init');
+    this.log.info("Init");
 
     await initI18n();
     this.log.debug("i18next initialized");

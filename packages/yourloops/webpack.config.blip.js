@@ -1,4 +1,4 @@
-/* eslint-disable lodash/prefer-lodash-typecheck */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -127,7 +127,6 @@ const minimizer = [
   new OptimizeCSSAssetsPlugin({}),
 ];
 
-/** @type {webpack.Output} */
 const output = {
   filename: isDev || isTest ? 'blip.js' : 'blip.[hash].js',
   path: path.join(__dirname, 'dist'),
@@ -155,4 +154,5 @@ module.exports = {
   cssLoaderConfiguration,
   imageLoaderConfiguration,
   resolve,
+  minimizer,
 };
