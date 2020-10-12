@@ -107,8 +107,7 @@ export class StaticWebSiteStack extends core.Stack {
             minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2018
           },
 
-        },
-        loggingConfig: {}
+        }
       }
     );
 
