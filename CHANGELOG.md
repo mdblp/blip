@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - YLP-203 Change menu item "System settings" to "DBL settings"
+- YLP-205 Change menu item "print"
 
 ## 1.5.0 - 2020-10-05  
 ### Changed
