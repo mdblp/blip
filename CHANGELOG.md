@@ -2,6 +2,9 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+- YLP-173 Loop mode label
+
 ## 1.5.0 - 2020-10-05  
 ### Changed
 - YLP-152 Design update consent screen.
@@ -335,4 +338,3 @@ It is based on Tidepool Blip 1.27.
    - user automatically disconnected [PT-69]
    - Fix race condition [PT-17]
    - Fix Unknown DOM property class [PT-163]
-
