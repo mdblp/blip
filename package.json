@@ -74,7 +74,7 @@
     "regenerator-runtime": "0.13.5",
     "reselect": "3.0.1",
     "sundial": "github:mdblp/sundial#dblp.0.2.0",
-    "tideline": "github:mdblp/tideline#feature/ylp173-loop-mode-labels",
+    "tideline": "github:mdblp/tideline#feature/feature/ylp173-loop-mode-labels",
     "tidepool-platform-client": "github:mdblp/platform-client#dblp.0.3.0"
   },
   "devDependencies": {
