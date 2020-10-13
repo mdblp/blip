@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.11.0",
-    "@tidepool/viz": "github:mdblp/viz#dblp.0.16.1",
+    "@tidepool/viz": "github:mdblp/viz#feature/ylp173-loop-mode-labels",
     "async": "3.2.0",
     "babel-core": "^7.0.0-bridge.0",
     "body-parser": "1.19.0",
@@ -74,7 +74,7 @@
     "regenerator-runtime": "0.13.5",
     "reselect": "3.0.1",
     "sundial": "github:mdblp/sundial#dblp.0.2.0",
-    "tideline": "github:mdblp/tideline#dblp.1.13.0",
+    "tideline": "github:mdblp/tideline#feature/ylp173-loop-mode-labels",
     "tidepool-platform-client": "github:mdblp/platform-client#dblp.0.3.0"
   },
   "devDependencies": {
