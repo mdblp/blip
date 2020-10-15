@@ -105,7 +105,7 @@ class UserProfile extends React.Component {
 
   formInputs() {
     const inputs = [];
-    const disabled = personUtils.isPatient(this.props.user);
+    const disabled = false;
     const firstName = { 
       name: 'firstName', 
       label: t('First name'), 
@@ -266,10 +266,9 @@ class UserProfile extends React.Component {
   validateFormValues(formValues) {
 
     let form = [];
-    if (!personUtils.isPatient(this.props.user)) {
-      form.push({ type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName });
-      form.push({ type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName });
-    }
+    
+    form.push({ type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName });
+    form.push({ type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName });
 
     if (this.isUserAllowedToChangeEmail()) {
       form.push({ type: 'email', name: 'username', label: t('email'), value: formValues.username });
@@ -299,13 +298,12 @@ class UserProfile extends React.Component {
   prepareFormValuesForSubmit(formValues) {
     const result = {};
 
-    if (!personUtils.isPatient(this.props.user)) {
-      result.profile = {
-        firstName: formValues.firstName,
-        lastName: formValues.lastName,
-        fullName: `${formValues.firstName} ${formValues.lastName}`
-      };
-    }
+
+    result.profile = {
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      fullName: `${formValues.firstName} ${formValues.lastName}`
+    };
 
     if (this.isUserAllowedToChangeEmail()) {
       result.username = formValues.username;
