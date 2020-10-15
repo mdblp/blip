@@ -3,7 +3,11 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Changed
+- YLP-26 Make bolus and basal graph more readable
 - YLP-173 Loop mode label
+- YLP-203 Change menu item "System settings" to "DBL settings"
+- YLP-205 Change menu item "print"
 
 ## 1.5.0 - 2020-10-05  
 ### Changed
