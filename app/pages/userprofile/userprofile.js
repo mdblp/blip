@@ -105,23 +105,17 @@ class UserProfile extends React.Component {
 
   formInputs() {
     const inputs = [];
-    const disabled = false;
     const firstName = { 
       name: 'firstName', 
       label: t('First name'), 
       type: 'text', 
-      disabled: disabled
     };
     const lastName = { 
       name: 'lastName', 
       label: t('Last name'), 
       type: 'text', 
-      disabled: disabled
     };
-    if (disabled) {
-      firstName.info = t('This field can only be modified from your handset');
-      lastName.info = t('This field can only be modified from your handset');
-    }
+    
     inputs.push(firstName);
     inputs.push(lastName);
 
@@ -224,8 +218,6 @@ class UserProfile extends React.Component {
   }
 
   renderForm() {
-    const disabled = this.isResettingUserData();
-
     return (
       <SimpleForm
         inputs={this.formInputs()}
@@ -233,8 +225,7 @@ class UserProfile extends React.Component {
         validationErrors={this.state.validationErrors}
         submitButtonText={t('Save')}
         onSubmit={this.handleSubmit}
-        notification={this.state.notification}
-        disabled={disabled} />
+        notification={this.state.notification} />
     );
   }
 
