@@ -14,8 +14,6 @@
  */
 /* eslint-disable lodash/prefer-lodash-typecheck */
 
-const pkg = require('./package.json');
-
 function booleanFromText(value, defaultValue) {
   if (value === 'true') {
     return true;
@@ -61,7 +59,7 @@ function stringOption(value, defaultValue) {
 const isDev = (process.env.NODE_ENV === 'development');
 const isTest = (process.env.NODE_ENV === 'test');
 const config = {
-  VERSION: pkg.version,
+  VERSION: stringOption(process.env.APP_VERSION, '0.1.0'),
   UPLOAD_API: stringOption(process.env.UPLOAD_API, 'https://tidepool.org/uploader'),
   API_HOST: stringOption(process.env.API_HOST, null),
   LATEST_TERMS: stringOption(process.env.LATEST_TERMS, '1970-01-01'),
@@ -85,7 +83,6 @@ const config = {
   METRICS_SERVICE: stringOption(process.env.METRICS_SERVICE, 'disabled'),
   MAX_FAILED_LOGIN_ATTEMPTS: integerFromText(process.env.MAX_FAILED_LOGIN_ATTEMPTS, 5),
   DELAY_BEFORE_NEXT_LOGIN_ATTEMPT: integerFromText(process.env.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT, 10),
-  TERMS_PRIVACY_DATE: stringOption(process.env.TERMS_PRIVACY_DATE, ''),
   DEV: isDev || isTest,
   TEST: isTest,
 };

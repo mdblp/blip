@@ -14,14 +14,14 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import PropTypes from 'prop-types';
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { translate, Trans } from 'react-i18next';
+import { translate } from 'react-i18next';
 import { Link } from 'react-router';
 import _ from 'lodash';
-import moment from 'moment';
-import CookieConsent from 'react-cookie-consent';
 
 import * as actions from '../../redux/actions';
 import utils from '../../core/utils';
@@ -30,23 +30,38 @@ import LoginNav from '../../components/loginnav';
 import LoginLogo from '../../components/loginlogo';
 import SimpleForm from '../../components/simpleform';
 import config from '../../config'
-import { CONFIG } from '../../core/constants';
 
 
-export let Login = translate()(React.createClass({
-  propTypes: {
-    acknowledgeNotification: React.PropTypes.func.isRequired,
-    confirmSignup: React.PropTypes.func.isRequired,
-    fetchers: React.PropTypes.array.isRequired,
-    isInvite: React.PropTypes.bool.isRequired,
-    notification: React.PropTypes.object,
-    onSubmit: React.PropTypes.func.isRequired,
-    seedEmail: React.PropTypes.string,
-    trackMetric: React.PropTypes.func.isRequired,
-    working: React.PropTypes.bool.isRequired
-  },
+export let Login = translate()(class extends React.Component {
+  static propTypes = {
+    acknowledgeNotification: PropTypes.func.isRequired,
+    confirmSignup: PropTypes.func.isRequired,
+    fetchers: PropTypes.array.isRequired,
+    isInvite: PropTypes.bool.isRequired,
+    notification: PropTypes.object,
+    onSubmit: PropTypes.func.isRequired,
+    seedEmail: PropTypes.string,
+    trackMetric: PropTypes.func.isRequired,
+    working: PropTypes.bool.isRequired
+  };
 
-  formInputs: function() {
+  constructor(props) {
+    super(props);
+    var formValues = {};
+    var email = props.seedEmail;
+
+    if (email) {
+      formValues.username = email;
+    }
+
+    this.state = {
+      formValues: formValues,
+      validationErrors: {},
+      notification: null
+    };
+  }
+
+  formInputs = () => {
     const { t } = this.props;
 
     let pwdType = config.CAN_SEE_PWD_LOGIN ? 'passwordShowHide' : 'password';
@@ -55,24 +70,9 @@ export let Login = translate()(React.createClass({
       { name: 'username', placeholder: t('Email'), type: 'email', disabled: !!this.props.seedEmail },
       { name: 'password', placeholder: t('Password'), type: pwdType }
     ];
-  },
+  };
 
-  getInitialState: function() {
-    var formValues = {};
-    var email = this.props.seedEmail;
-
-    if (email) {
-      formValues.username = email;
-    }
-
-    return {
-      formValues: formValues,
-      validationErrors: {},
-      notification: null
-    };
-  },
-
-  componentDidMount: function() {
+  componentDidMount() {
     if (this.props.trackMetric) {
       this.props.trackMetric('User Reached login page');
     }
@@ -88,31 +88,13 @@ export let Login = translate()(React.createClass({
         }
       };
     }
-  },
+  }
 
-  render: function() {
+  render() {
     const { t } = this.props;
     const form = this.renderForm();
     const inviteIntro = this.renderInviteIntroduction();
     const browserWarning = this.renderBrowserWarning();
-
-    const urlPrivacyPolicy = CONFIG[config.BRANDING].privacy;
-    const urlTermsOfUse = CONFIG[config.BRANDING].terms;
-
-    const cookieText = (
-      <Trans i18nKey="html.cookie-content" ns="main">
-          Please consult our <a href={urlPrivacyPolicy} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Data Privacy</a>
-          and our <a href={urlTermsOfUse} className="link-cookie-consent" target="_blank" rel="noreferrer noopener">Terms of Use</a>
-      </Trans>
-    );
-
-    let cookieName = 'CookieConsent';
-    let lastUpdateText = null;
-    if (typeof config.TERMS_PRIVACY_DATE === 'string' && config.TERMS_PRIVACY_DATE.length > 0) {
-      const m = moment.utc(config.TERMS_PRIVACY_DATE);
-      cookieName = `CookieConsent-${m.format('YYYY-MM-DD')}`; // format not translated, there is no need here.
-      lastUpdateText = (<span>{t('Last updated on {{termsPrivacyDate}}.', { termsPrivacyDate: m.format(t('MM/DD/YYYY')) })}</span>);
-    }
 
     return (
       <div>
@@ -128,25 +110,11 @@ export let Login = translate()(React.createClass({
             <div className="login-simpleform">{form}</div>
           </div>
         </div>
-        <CookieConsent
-          location="bottom"
-          buttonText={t('Accept')}
-          cookieName={cookieName}
-          disableStyles={true}
-          containerClasses="login-cookie-consent-container"
-          contentClasses="login-cookie-consent-content"
-          buttonClasses="simple-form-submit btn btn-primary"
-          buttonId="btn-accept-cookies"
-          expires={365}
-          onAccept={() => { this.props.trackMetric('CookieConsent', 365 * 24); }}>
-            {cookieText}
-            {lastUpdateText}
-        </CookieConsent>
       </div>
     );
-  },
+  }
 
-  renderInviteIntroduction: function(){
+  renderInviteIntroduction = () => {
     const { t } = this.props;
     if (!this.props.isInvite) {
       return null;
@@ -157,9 +125,9 @@ export let Login = translate()(React.createClass({
         <p>{t('You\'ve been invited to Tidepool.')}</p><p>{t('Log in to view the invitation.')}</p>
       </div>
     );
-  },
+  };
 
-  renderBrowserWarning: function() {
+  renderBrowserWarning = () => {
     const { t } = this.props;
 
     if (!utils.isChrome()) {
@@ -170,9 +138,9 @@ export let Login = translate()(React.createClass({
         </div>
       );
     }
-  },
+  };
 
-  renderForm: function() {
+  renderForm = () => {
     const { t } = this.props;
 
     var submitButtonText = this.props.working ? t('Logging in...') : t('Login');
@@ -190,18 +158,18 @@ export let Login = translate()(React.createClass({
         {<div className="login-forgotpassword">{forgotPassword}</div>}
       </SimpleForm>
     );
-  },
+  };
 
-  logPasswordReset : function() {
+  logPasswordReset = () => {
     this.props.trackMetric('Clicked Forgot Password');
-  },
+  };
 
-  renderForgotPassword: function() {
+  renderForgotPassword = () => {
     const { t } = this.props;
     return <Link to="/request-password-reset">{t('Forgot your password?')}</Link>;
-  },
+  };
 
-  handleSubmit: function(formValues) {
+  handleSubmit = (formValues) => {
     var self = this;
 
     if (this.props.working) {
@@ -218,18 +186,18 @@ export let Login = translate()(React.createClass({
     const { user, options } = this.prepareFormValuesForSubmit(formValues);
 
     this.props.onSubmit(user, options);
-  },
+  };
 
-  resetFormStateBeforeSubmit: function(formValues) {
+  resetFormStateBeforeSubmit = (formValues) => {
     this.props.acknowledgeNotification('loggingIn');
     this.setState({
       formValues: formValues,
       validationErrors: {},
       notification: null
     });
-  },
+  };
 
-  validateFormValues: function(formValues) {
+  validateFormValues = (formValues) => {
     const { t } = this.props;
     var form = [
       { type: 'name', name: 'password', label: t('this field'), value: formValues.password },
@@ -249,34 +217,34 @@ export let Login = translate()(React.createClass({
     }
 
     return validationErrors;
-  },
+  };
 
-  prepareFormValuesForSubmit: function(formValues) {
+  prepareFormValuesForSubmit = (formValues) => {
     return {
       user: {
         username: formValues.username,
         password: formValues.password
       }
     };
-  },
+  };
 
-  doFetching: function(nextProps) {
+  doFetching = (nextProps) => {
     if (!nextProps.fetchers) {
       return;
     }
     nextProps.fetchers.forEach(fetcher => {
       fetcher();
     });
-  },
+  };
 
   /**
    * Before rendering for first time
    * begin fetching any required data
    */
-  componentWillMount: function() {
+  UNSAFE_componentWillMount() {
     this.doFetching(this.props);
   }
-}));
+});
 
 /**
  * Expose "Smart" Component that is connect-ed to Redux

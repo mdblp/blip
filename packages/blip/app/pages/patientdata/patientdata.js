@@ -14,6 +14,7 @@
  */
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
@@ -59,7 +60,9 @@ const { commonStats, getStatDefinition, statFetchMethods } = vizUtils.stat;
 
 const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES,t=>t!=='food');
 
-export let PatientData = translate()(React.createClass({
+export let PatientData = translate()(createReactClass({
+  displayName: 'PatientData',
+
   propTypes: {
     addPatientNote: PropTypes.func.isRequired,
     clearPatientData: PropTypes.func.isRequired,
@@ -718,8 +721,6 @@ export let PatientData = translate()(React.createClass({
   },
 
   handleShowMessageThread: function(messageThread) {
-    var self = this;
-
     var fetchMessageThread = this.props.onFetchMessageThread;
     if (fetchMessageThread) {
       fetchMessageThread(messageThread);
@@ -956,7 +957,7 @@ export let PatientData = translate()(React.createClass({
     }, cb);
   },
 
-  componentWillMount: function() {
+  UNSAFE_componentWillMount: function() {
     this.doFetching(this.props);
     var params = this.props.queryParams;
 
@@ -971,7 +972,7 @@ export let PatientData = translate()(React.createClass({
     }
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  UNSAFE_componentWillReceiveProps: function(nextProps) {
     const userId = this.props.currentPatientInViewId;
     const nextPatientData = _.get(nextProps, ['patientDataMap', userId], null);
     const patientSettings = _.get(nextProps, ['patient', 'settings'], null);
@@ -1018,59 +1019,6 @@ export let PatientData = translate()(React.createClass({
     }
   },
 
-  deriveChartTypeFromLatestData: function(latestData, uploads) {
-    let chartType = 'basics'; // Default to 'basics'
-
-    if (latestData && uploads) {
-      // Ideally, we determine the default view based on the device type
-      // so that, for instance, if the latest data type is cgm, but comes from
-      // an insulin-pump, we still direct them to the basics view
-      const deviceMap = _.keyBy(uploads, 'deviceId');
-      const latestDataDevice = deviceMap[latestData.deviceId];
-
-      if (latestDataDevice) {
-        const tags = deviceMap[latestData.deviceId].deviceTags;
-
-        switch(true) {
-          case (_.includes(tags, 'insulin-pump')):
-            chartType = 'basics';
-            break;
-
-          case (_.includes(tags, 'cgm')):
-            chartType = 'trends';
-            break;
-
-          case (_.includes(tags, 'bgm')):
-            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
-            break;
-        }
-      }
-      else {
-        // If we were unable, for some reason, to get the device tags for the
-        // latest upload, we can fall back to setting the default view by the data type
-        const type = latestData.type;
-
-        switch(type) {
-          case 'bolus':
-          case 'basal':
-          case 'wizard':
-            chartType = 'basics';
-            break;
-
-          case 'cbg':
-            chartType = 'trends';
-            break;
-
-          case 'smbg':
-            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
-            break;
-        }
-      }
-    }
-
-    return chartType;
-  },
-
   setInitialChartType: function(processedData) {
     // Determine default chart type and date from latest data
     const uploads = _.get(processedData.grouped, 'upload', []);
@@ -1078,10 +1026,7 @@ export let PatientData = translate()(React.createClass({
 
     if (uploads && latestData) {
       // Allow overriding the default chart type via a query param (helps for development);
-      const chartType = _.get(
-        this.props, 'queryParams.chart',
-        this.deriveChartTypeFromLatestData(latestData, uploads)
-      );
+      const chartType = 'daily';
 
       const latestDataDateCeiling = getLocalizedCeiling(latestData.time, this.state.timePrefs);
       const timezone = getTimezoneFromTimePrefs(this.state.timePrefs);
@@ -1096,7 +1041,7 @@ export let PatientData = translate()(React.createClass({
           .tz(timezone)
           .toISOString());
 
-      let state = {
+      const state = {
         chartType,
         datetimeLocation,
         initialDatetimeLocation: datetimeLocation,
@@ -1105,9 +1050,7 @@ export let PatientData = translate()(React.createClass({
 
       this.dataUtil.chartPrefs = this.state.chartPrefs[chartType];
 
-      this.setState(state, () => {
-        this.props.trackMetric(`web - default to ${chartType === 'bgLog' ? 'weekly' : chartType}`);
-      });
+      this.setState(state);
     }
   },
 
@@ -1481,7 +1424,7 @@ export let PatientData = translate()(React.createClass({
     nextProps.fetchers.forEach(function(fetcher) {
       fetcher();
     });
-  }
+  },
 }));
 
 /**
@@ -1504,7 +1447,7 @@ export function getFetchers(dispatchProps, ownProps, stateProps, api, options) {
   }
 
   return fetchers;
-};
+}
 
 export function mapStateToProps(state, props) {
   let user = null;

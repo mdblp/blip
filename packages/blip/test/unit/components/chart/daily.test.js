@@ -1,23 +1,16 @@
-/* global chai */
-/* global describe */
-/* global sinon */
-/* global it */
-/* global before */
-/* global beforeEach */
-/* global afterEach */
-/* global after */
-
 import _ from 'lodash';
 import React from 'react';
-
 import { shallow, mount } from 'enzyme';
 import { translate } from 'react-i18next';
+import sinon from 'sinon';
+import chai from 'chai';
 
 import i18next from '../../../../app/core/language';
 import DataUtilStub from '../../../helpers/DataUtil';
 import Daily from '../../../../app/components/chart/daily';
 import { MGDL_UNITS } from '../../../../app/core/constants';
 import { components as vizComponents } from 'tidepool-viz';
+import createReactClass from 'create-react-class';
 
 var expect = chai.expect;
 const { Loader } = vizComponents;
@@ -114,7 +107,7 @@ describe('Daily', () => {
 
   describe('render', () => {
     before(() => {
-      Daily.__Rewire__('DailyChart', translate()(React.createClass({
+      Daily.__Rewire__('DailyChart', translate()(createReactClass({
         rerenderChart: sinon.stub(),
         render: () => <div className='fake-daily-chart' />,
       })));
