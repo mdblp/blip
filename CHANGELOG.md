@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-173 Loop mode label
 - YLP-203 Change menu item "System settings" to "DBL settings"
 - YLP-205 Change menu item "print"
+- YLP-229 Make "Daily" view the homepage of YourLoops instead of "Overview"
 
 ## 1.5.0 - 2020-10-05  
 ### Changed
