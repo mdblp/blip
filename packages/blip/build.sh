@@ -13,6 +13,3 @@ echo "Building blib..."
 webpack
 # Use verbose mode, if no usable output in travis to know the reason of the crash:
 # webpack --verbose
-
-echo "Building config..."
-exec node ../../server/build-config.js

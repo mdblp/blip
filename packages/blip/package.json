@@ -18,7 +18,6 @@
     "build": "bash build.sh",
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack",
-    "postbuild-dev": "NODE_ENV=development node ../../server/build-config.js",
     "server": "NODE_ENV=development node ../../server/server.js dist",
     "lint": "eslint app test",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
