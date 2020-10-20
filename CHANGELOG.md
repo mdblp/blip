@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-229 Make "Daily" view the homepage of YourLoops instead of "Overview"
 - YLP-111 Display localized CGU and data privacy
 
+### Engineering Use
+- YLP-221: move to Jenkins and automatically deploy our master branch (dblp) to cloudfront preview env.
+
 ## 1.5.0 - 2020-10-05  
 ### Changed
 - YLP-152 Design update consent screen.
@@ -18,7 +21,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-180 Create separate string for bolus type
 
 
-### Other Notes
+### Engineering Use
 - YLP-128 Refactor to move to Cloudfront
 - Prevent from security scan to run
 
