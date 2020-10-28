@@ -10,9 +10,6 @@ wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/
 
 NO_DEFAULT_PACKAGING="true"
 source ./artifact_packaging.sh
-source "${BASEDIR}/artifact-lang.sh"
-
-retrieveLanguageParameters
 
 if [ ! -d "node_modules" ]; then
   npm install
