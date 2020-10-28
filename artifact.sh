@@ -10,8 +10,9 @@ wget -q -O artifact_packaging.sh 'https://raw.githubusercontent.com/mdblp/tools/
 
 NO_DEFAULT_PACKAGING="true"
 source ./artifact_packaging.sh
+source "${BASEDIR}/artifact-lang.sh"
 
-bash "${BASEDIR}/artifact-lang.sh"
+retrieveLanguageParameters
 
 if [ ! -d "node_modules" ]; then
   npm install
@@ -24,7 +25,7 @@ npm run test-cloudfront
 
 # Publish only on the main node version build
 # TODO: Get node version using: "$(node --version | cut -c 2-)" to make this script usable on another build system ?
-echo ${TRAVIS_NODE_VERSION}
+echo ${TRAVIS_NODE_VERSION:-0.0.0}
 if [ "10.15.3" = "${TRAVIS_NODE_VERSION:-0.0.0}" ]; then
   buildDockerImage -f "cloudfront-dist/Dockerfile.deployment" -d . -t "latest" -r "blip-deployment" -s "final"
   publishDockerImage
