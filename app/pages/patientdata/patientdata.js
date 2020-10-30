@@ -1236,7 +1236,7 @@ export let PatientData = translate()(createReactClass({
         };
 
         this.dataUtil = new DataUtil(
-          processedData.data.concat(_.get(processedData, 'grouped.upload', [])),
+          processedData.data.concat(_.get(processedData, 'grouped.upload', []), _.last(_.get(processedData, 'grouped.pumpSettings', []))),
           { bgPrefs, timePrefs }
         );
 
