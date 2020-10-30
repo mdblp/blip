@@ -3,7 +3,10 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Added
+- YLP-247 Add Dutch language
 ### Changed
+- YLP-173 Loop mode label
 - YLP-206 allow name edition for patient profile
 - YLP-203 Change menu item "System settings" to "DBL settings"
 - YLP-205 Change menu item "print"
