@@ -1,6 +1,3 @@
-
-var React = require('react');
-
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -16,48 +13,24 @@ var React = require('react');
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
-import { translate } from 'react-i18next';
-var Link = require('react-router').Link;
+import i18n from '../../core/language';
 
-var LoginNav = translate()(class extends React.Component {
-  static propTypes = {
-    page: PropTypes.string,
-    hideLinks: PropTypes.bool,
-    trackMetric: PropTypes.func.isRequired
-  };
+function LoginNav(props) {
+  const { page, hideLinks, trackMetric } = props;
+  const t = i18n.t.bind(i18n);
 
-  render() {
-    var link = this.renderLink();
-
-    return (
-      <div className="container-nav-outer login-nav">
-        <div className="container-nav-inner nav-wrapper">
-          <ul className="nav nav-right">
-            <li>
-              {link}
-            </li>
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
-  renderLink = () => {
-    if (this.props.hideLinks) {
-      return null;
-    }
-
-
-    var self = this;
-    const {page, t} = this.props;
-    var href = '/signup/clinician';
-    var className = 'js-signup-link';
-    var icon = 'icon-add';
-    var text = t('Sign up');
-    var handleClick = function() {
-      self.props.trackMetric('Clicked Sign Up Link');
+  let link = null;
+  if (!hideLinks) {
+    let href = '/signup/clinician';
+    let className = 'js-signup-link';
+    let icon = 'icon-add';
+    let text = t('Sign up');
+    let handleClick = () => {
+      trackMetric('Clicked Sign Up Link');
     };
 
     if (page === 'signup') {
@@ -65,17 +38,40 @@ var LoginNav = translate()(class extends React.Component {
       className = 'js-login-link';
       icon = 'icon-login';
       text = t('Log in');
-      handleClick = function() {
-        self.props.trackMetric('Clicked Log In Link');
+      handleClick = () => {
+        trackMetric('Clicked Log In Link');
       };
     }
 
-    return (
-      <Link
-        to={href}
-        className={className}><i className={icon}></i>{' ' + text}</Link>
+    link = (
+      <Link to={href} onClick={handleClick} className={className}>
+        <i className={icon}></i>{' ' + text}
+      </Link>
     );
-  };
-});
+  }
 
-module.exports = LoginNav;
+  return (
+    <div className="container-nav-outer login-nav">
+      <div className="container-nav-inner nav-wrapper">
+        <ul className="nav nav-right">
+          <li>
+            {link}
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+LoginNav.propTypes = {
+  page: PropTypes.string,
+  hideLinks: PropTypes.bool,
+  trackMetric: PropTypes.func.isRequired
+};
+
+LoginNav.defaultProps = {
+  page: '',
+  hideLinks: false,
+};
+
+export default LoginNav;
