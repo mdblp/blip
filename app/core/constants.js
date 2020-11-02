@@ -14,6 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+/* eslint-disable no-underscore-dangle */
 
 import i18next from './language';
 import config from '../config';
@@ -37,16 +38,21 @@ export const CONFIG = {
     privacy: 'https://tidepool.org/privacy-policy',
     get privacyText() { return t('Privacy Policy'); }
   },
-  'diabeloop': {
+  diabeloop: {
     name: 'YourLoops',
-    support: 'https://www.diabeloop.com',
+    supportURL: 'https://www.diabeloop.com',
     get supportText() { return t('Diabeloop'); },
-    terms: `${config.ASSETS_URL}terms.pdf`,
+    _termsURL: `${config.ASSETS_URL}terms.pdf`,
+    get termsURL() { return this._termsURL; },
+    set termsURL(value) { this._termsURL = value; },
     get termsText() { return t('Diabeloop Applications Terms of Use'); },
-    dataPrivacy: `${config.ASSETS_URL}data-privacy.pdf`,
-    get privacy() { return this.dataPrivacy; },
-    get privacyText() { return t('Privacy Policy'); },
-    intendedUse: config.REGULATORY_WEB_ADDRESS,
+    _dataPrivacyURL: `${config.ASSETS_URL}data-privacy.pdf`,
+    get dataPrivacyURL() { return this._privacyURL; },
+    set dataPrivacyURL(value) { this._privacyURL = value; },
+    get dataPrivacyText() { return t('Privacy Policy'); },
+    _intendedUseURL: `${config.ASSETS_URL}intendedUse.pdf`,
+    get intendedUseURL() { return this._intendedUseURL; },
+    set intendedUseURL(value) { this._intendedUseURL = value; },
     get intendedUseText() { return t('Regulatory Information'); },
   }
 };

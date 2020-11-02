@@ -18,29 +18,17 @@ import React from 'react';
 import { render as reactDOMRender } from 'react-dom';
 import bows from 'bows';
 
-import i18n from './core/language';
+import i18n, { i18nOptions } from './core/language';
 import blipCreateStore from './redux/store';
 import AppRoot from './redux/containers/Root';
 
 import { getRoutes } from './routes';
 
-import config, { DUMMY_URL } from './config';
+import config from './config';
 import api from './core/api';
 import { CONFIG as BrandConfig } from './core/constants';
 import personUtils from './core/personutils';
 import detectTouchScreen from './core/notouch';
-
-/**
- * @typedef {object} TermsURLObject Terms object inside the legal JSON
- * @property {string} terms - Terms document URL
- * @property {string} dataPrivacy - data privacy document URL
- * @property {string} intendedUse - Intended use document URL
- *
- * @typedef {{ [x: string]: TermsURLObject }} TermsLangObject Terms by languages
- * @typedef {{ [x: string]: TermsLangObject }} TermsCountriesObject Terms by country / language
- * @typedef {{ language: string, countries?: { [x: string]: string } }} DefaultsLangCountries Default values
- * @typedef {{ defaults: DefaultsLangCountries, languages?: TermsLangObject, countries?: TermsCountriesObject }} TermsObject Terms object definition
- */
 
 class Bootstrap {
   constructor() {
@@ -51,15 +39,6 @@ class Bootstrap {
     this.config = config;
     this.store = null;
     this.routing = null;
-    /** @type {TermsObject|null} Terms URLs by countries/languages */
-    this.terms = null;
-    /** Default country info, which should be returned by the localization service */
-    this.countryInfos = {
-      lang: null,
-      code: null,
-      name: null,
-      timeZone: 'UTC',
-    };
     this.trackMetric = this.trackMetric.bind(this);
   }
 
@@ -82,53 +61,33 @@ class Bootstrap {
    * @param {string} language
    */
   onLanguageChanged(language) {
-    /** @type {string | null} */
-    let country = this.countryInfos.code;
     let lang = language;
     if (_.isString(lang) && lang.indexOf('-') > 0) {
       const s = language.split('-');
       lang = s[0];
-      country = country === null ? s[1] : country;
     }
 
-    /** @type {TermsURLObject} */
-    let termsURLs = null;
-
-    // Update only if we can, and if there is a change
-    if (this.terms !== null && lang !== this.countryInfos.lang) {
-      this.countryInfos.lang = lang;
-
-      this.log.debug(`Language change to ${lang}-${country}`);
-
-      // Do we have the terms for the country?
-      if (country !== null && !_.isEmpty(this.terms.countries) && _.has(this.terms.countries, country)) {
-        // Do we have the terms for the language too?
-        let langForCountry = lang;
-        if (!_.has(this.terms.countries, `${country}.${langForCountry}`)) {
-          // no, use the default language for the country
-          langForCountry = _.get(this.terms.defaults.countries, country, null);
-          this.log.warn(`No terms found for ${lang}-${country}, using default country lang ${langForCountry}`);
-        }
-        if (langForCountry !== null) {
-          termsURLs = _.get(this.terms.countries, `${country}.${langForCountry}`, null);
-        }
+    try {
+      const assetsURL = new URL(`${config.ASSETS_URL}/${lang}/`);
+      if (!_.has(i18nOptions.resources, lang)) {
+        lang = i18nOptions.fallbackLng;
       }
 
-      // No terms for country/lang found, try by lang only
-      if (termsURLs === null && !_.isEmpty(this.terms.languages)) {
-        if (!_.has(this.terms.languages, lang)) {
-          this.log.warn(`Missing term for lang ${lang}, using default: ${this.terms.defaults.language}`);
-          lang = this.terms.defaults.language;
-        }
-        termsURLs = _.get(this.terms.languages, lang, null);
-      }
+      this.log.info('Update URL language to', lang);
 
-      if (termsURLs === null) {
-        this.log.warn(`No terms & conditions for ${lang}-${country} found`);
-      } else {
-        _.assign(BrandConfig.diabeloop, termsURLs);
-        this.log.info('branding', BrandConfig.diabeloop);
-      }
+      const pathname = assetsURL.pathname.replace(/\/\//g, '/');
+      let url = new URL(pathname + 'data-privacy.pdf', assetsURL);
+      BrandConfig.diabeloop.dataPrivacyURL = url.toString();
+
+      url = new URL(pathname + 'intended-use.pdf', assetsURL);
+      BrandConfig.diabeloop.intendedUseURL = url.toString();
+
+      url = new URL(pathname + 'terms.pdf', assetsURL);
+      BrandConfig.diabeloop.termsURL = url.toString();
+
+    } catch (err) {
+      this.log.error('Invalid assets URL', config.ASSETS_URL);
+      this.log.error(err);
     }
   }
 
@@ -139,17 +98,6 @@ class Bootstrap {
 
     if (config.BRANDING === 'diabeloop') {
       try {
-        let response;
-
-        if (this.config.ASSETS_URL !== DUMMY_URL) {
-          const url = new URL('legal/legal.json', this.config.ASSETS_URL);
-          response = await fetch(url.toString());
-          this.terms = await response.json();
-        } else {
-          response = await fetch('legal/legal.json');
-          this.terms = await response.json();
-        }
-
         if (navigator.language) {
           this.onLanguageChanged(navigator.language);
         } else if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
@@ -160,16 +108,6 @@ class Bootstrap {
 
       } catch (e) {
         this.log.error('Error fetching legal information', e);
-      }
-
-      try {
-        if (!_.isEmpty(this.terms.countries)) {
-          // We have countries definitions, so the country.json service should be available
-          const response = await fetch('country.json');
-          this.countryInfos = await response.json();
-        }
-      } catch (e) {
-        this.log.error('Error getting current country', e);
       }
     }
 

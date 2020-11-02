@@ -109,16 +109,16 @@ function diabeloopFooter(metricFnMkr) {
     <div className='footer-section-diabeloop'>
       <div className='footer-column footer-column-1'>
         <a
-          href={brandConfig.dataPrivacy}
+          href={brandConfig.dataPrivacyURL}
           className='footer-link'
           id='privacy-link'
           onClick={metricFnMkr('Privacy')}
           target='_blank'
           rel="noreferrer">
-            {brandConfig.privacyText}
+            {brandConfig.dataPrivacyText}
         </a>
         <a
-          href={brandConfig.terms}
+          href={brandConfig.termsURL}
           id='terms-link'
           className='footer-link'
           onClick={metricFnMkr('TermsOfUSe')}
@@ -132,7 +132,7 @@ function diabeloopFooter(metricFnMkr) {
       </div>
       <div className='footer-column footer-column-3 justify-space-around'>
         <a
-          href={brandConfig.support}
+          href={brandConfig.supportURL}
           id='support-link'
           className='footer-link'
           onClick={metricFnMkr('CompanyInformation')}
@@ -141,7 +141,7 @@ function diabeloopFooter(metricFnMkr) {
             {brandConfig.supportText}
         </a>
         <a
-          href={brandConfig.intendedUse}
+          href={brandConfig.intendedUseURL}
           id='regulatory-link'
           className='footer-link'
           onClick={metricFnMkr('RegulatoryInformation')}
