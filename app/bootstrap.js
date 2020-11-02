@@ -70,16 +70,16 @@ class Bootstrap {
     this.log.info('Update URL language to', lang);
 
     try {
-      const assetsURL = new URL(`${config.ASSETS_URL}/${lang}/`);
+      const assetsURL = new URL(config.ASSETS_URL + '/');
 
       const pathname = assetsURL.pathname.replace(/\/\//g, '/');
-      let url = new URL(pathname + 'data-privacy.pdf', assetsURL);
+      let url = new URL(pathname + `data-privacy.${lang}.pdf`, assetsURL);
       BrandConfig.diabeloop.dataPrivacyURL = url.toString();
 
-      url = new URL(pathname + 'intended-use.pdf', assetsURL);
+      url = new URL(pathname + `intended-use.${lang}.pdf`, assetsURL);
       BrandConfig.diabeloop.intendedUseURL = url.toString();
 
-      url = new URL(pathname + 'terms.pdf', assetsURL);
+      url = new URL(pathname + `terms.${lang}.pdf`, assetsURL);
       BrandConfig.diabeloop.termsURL = url.toString();
 
     } catch (err) {
@@ -94,13 +94,8 @@ class Bootstrap {
     document.title = BrandConfig[config.BRANDING].name;
 
     if (config.BRANDING === 'diabeloop') {
-      try {
-        this.onLanguageChanged(i18nOptions.lng);
-        i18n.on('languageChanged', this.onLanguageChanged.bind(this));
-
-      } catch (e) {
-        this.log.error('Error fetching legal information', e);
-      }
+      this.onLanguageChanged(i18nOptions.lng);
+      i18n.on('languageChanged', this.onLanguageChanged.bind(this));
     }
 
     await new Promise((resolve) => {
