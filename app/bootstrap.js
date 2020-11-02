@@ -67,13 +67,10 @@ class Bootstrap {
       lang = s[0];
     }
 
+    this.log.info('Update URL language to', lang);
+
     try {
       const assetsURL = new URL(`${config.ASSETS_URL}/${lang}/`);
-      if (!_.has(i18nOptions.resources, lang)) {
-        lang = i18nOptions.fallbackLng;
-      }
-
-      this.log.info('Update URL language to', lang);
 
       const pathname = assetsURL.pathname.replace(/\/\//g, '/');
       let url = new URL(pathname + 'data-privacy.pdf', assetsURL);
@@ -98,12 +95,7 @@ class Bootstrap {
 
     if (config.BRANDING === 'diabeloop') {
       try {
-        if (navigator.language) {
-          this.onLanguageChanged(navigator.language);
-        } else if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
-          this.onLanguageChanged(navigator.languages[0]);
-        }
-
+        this.onLanguageChanged(i18nOptions.lng);
         i18n.on('languageChanged', this.onLanguageChanged.bind(this));
 
       } catch (e) {
