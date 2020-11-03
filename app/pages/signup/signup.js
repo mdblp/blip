@@ -353,11 +353,11 @@ export let Signup = translate()(class extends React.Component {
 
   renderAcceptTermsLabel = () => {
     const brandConfig = CONFIG[config.BRANDING];
-    const urlTermsOfUse = brandConfig.terms;
+    const urlTermsOfUse = brandConfig.termsURL;
     const textTermsOfUse = brandConfig.termsText;
 
-    const urlPrivacyPolicy = brandConfig.privacy;
-    const textPrivacyPolicy = brandConfig.privacyText;
+    const urlPrivacyPolicy = brandConfig.dataPrivacyURL;
+    const textPrivacyPolicy = brandConfig.dataPrivacyText;
 
     return (
       <Trans parent="span" i18nKey="html.signup-terms-of-use">

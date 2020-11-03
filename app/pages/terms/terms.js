@@ -72,9 +72,9 @@ export class Terms extends React.Component {
     const branding = CONFIG[config.BRANDING];
     const {
       termsText: textTermsOfUse,
-      privacyText: textPrivacyPolicy,
-      terms: urlTermsOfUse,
-      privacy: urlPrivacyPolicy
+      dataPrivacyText: textPrivacyPolicy,
+      termsURL: urlTermsOfUse,
+      dataPrivacyURL: urlPrivacyPolicy
     } = branding;
 
     // TODO Reuse <Trans /> from react-i18next after update to v11.6.0+

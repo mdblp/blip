@@ -33,10 +33,10 @@ export const CONFIG = {
     name: 'Tidepool',
     support:'http://support.tidepool.org/',
     legal:'http://tidepool.org/legal/',
-    terms: 'https://tidepool.org/terms-of-use',
+    termsURL: 'https://tidepool.org/terms-of-use',
     get termsText() { return t('Tidepool Applications Terms of Use'); },
-    privacy: 'https://tidepool.org/privacy-policy',
-    get privacyText() { return t('Privacy Policy'); }
+    dataPrivacyURL: 'https://tidepool.org/privacy-policy',
+    get dataPrivacyText() { return t('Privacy Policy'); }
   },
   diabeloop: {
     name: 'YourLoops',
