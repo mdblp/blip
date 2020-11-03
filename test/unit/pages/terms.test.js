@@ -78,7 +78,6 @@ describe('Terms', () => {
         try {
           let a = document.getElementById('link-url-terms');
           expect(a).to.be.not.null;
-          console.info('link-url-terms', a.getAttribute('href'), a);
           expect(a.getAttribute('href')).to.be.a('string', 'href link-url-terms');
           expect(a.getAttribute('href').length).to.be.above(1);
           expect(a.firstChild).to.be.not.null;
@@ -86,7 +85,6 @@ describe('Terms', () => {
 
           a = document.getElementById('link-url-privacy');
           expect(a).to.be.not.null;
-          console.info('link-url-privacy', a.getAttribute('href'), a);
           expect(a.getAttribute('href')).to.be.a('string', 'href link-url-privacy');
           expect(a.getAttribute('href').length).to.be.above(1);
           expect(a.firstChild).to.be.not.null;

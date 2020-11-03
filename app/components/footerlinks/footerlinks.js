@@ -25,7 +25,6 @@ import { CONFIG } from '../../core/constants';
 import './images/jdrf.png';
 import './images/jdrf_hover.png';
 
-const branding = config.BRANDING || 'tidepool';
 const t = i18next.t.bind(i18next);
 
 function renderVersion() {
@@ -37,8 +36,8 @@ function renderVersion() {
 }
 
 function tidepoolFooter(metricFnMkr) {
-  const urlSupport = CONFIG[branding].support;
-  const urlLegal = CONFIG[branding].legal;
+  const urlSupport = CONFIG.tidepool.support;
+  const urlLegal = CONFIG.tidepool.legal;
 
   return (
     <div className='footer-section-tidepool footer-section-top'>
@@ -158,12 +157,12 @@ function FooterLinks(props) {
   const { shouldDisplayFooterLinks, trackMetric } = props;
   const metricFnMkr = (link) => {
     return () => trackMetric(`Clicked Footer ${link}`);
-  }
+  };
 
   let footerContent = null;
   let versionContent = null;
   if (shouldDisplayFooterLinks) {
-    if (branding === 'diabeloop') {
+    if (config.BRANDING === 'diabeloop') {
       footerContent = diabeloopFooter(metricFnMkr);
     } else {
       footerContent = tidepoolFooter(metricFnMkr);

@@ -361,7 +361,7 @@ export let Signup = translate()(class extends React.Component {
 
     return (
       <Trans parent="span" i18nKey="html.signup-terms-of-use">
-        I accept the terms of the <a href={urlTermsOfUse} target='_blank'>{textTermsOfUse}</a> and <a href={urlPrivacyPolicy} target='_blank'>{textPrivacyPolicy}</a>
+        I accept the terms of the <a id="signup-terms-link" href={urlTermsOfUse} target='_blank'>{textTermsOfUse}</a> and <a id="signup-privacy-link" href={urlPrivacyPolicy} target='_blank'>{textPrivacyPolicy}</a>
       </Trans>
     );
   };
@@ -386,8 +386,6 @@ export let Signup = translate()(class extends React.Component {
   };
 
   handleSubmit = (formValues) => {
-    var self = this;
-
     if (this.props.working) {
       return;
     }
