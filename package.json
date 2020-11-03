@@ -1,6 +1,6 @@
 {
   "name": "blip",
-  "version": "1.5.0",
+  "version": "1.6.0-alpha",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -77,7 +77,7 @@
     "regenerator-runtime": "0.13.5",
     "reselect": "3.0.1",
     "sundial": "github:mdblp/sundial#dblp.0.2.0",
-    "tideline": "github:mdblp/tideline#dblp.1.14.0",
+    "tideline": "github:mdblp/tideline#fix/update-pump-settiings-schema",
     "tidepool-platform-client": "github:mdblp/platform-client#dblp.0.3.0"
   },
   "devDependencies": {
