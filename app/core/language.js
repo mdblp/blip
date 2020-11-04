@@ -1,4 +1,6 @@
+/* eslint-disable lodash/prefer-lodash-typecheck */
 // @ts-nocheck
+import _ from 'lodash';
 import i18n from 'i18next';
 import { reactI18nextModule } from 'react-i18next';
 import getLocale from 'browser-locale';
@@ -10,6 +12,10 @@ const crowdinActive = typeof _jipt === 'object';
 let language = getLocale();
 if (self.localStorage && self.localStorage.lang) {
   language = self.localStorage.lang;
+
+  if (!_.has(locales.resources, language)) {
+    language = locales.fallback;
+  }
 
   if (typeof window.zE === 'function') {
     window.zE('webWidget', 'setLocale', language);
@@ -77,4 +83,5 @@ i18n.on('languageChanged', (lng) => {
 
 i18n.init(i18nOptions);
 
+export { i18nOptions };
 export default i18n;
