@@ -43,7 +43,6 @@ const i18nOptions = {
   react: {
     wait: true,
     withRef: true,
-    defaultTransParent: 'div', // a valid react element - required before react 16
     transSupportBasicHtmlNodes: true, // allow <br/> and simple html elements in translations
   },
   ns: locales.namespaces,

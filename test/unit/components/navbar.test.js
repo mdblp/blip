@@ -1,43 +1,44 @@
-/* global after, before, chai, describe, it, sinon */
-
+import _ from 'lodash';
 import React from 'react';
+import sinon from 'sinon';
+import chai from 'chai';
 import { shallow } from 'enzyme';
 
 import '../../../app/core/language';
 import Navbar from '../../../app/components/navbar';
 
-const expect = chai.expect;
 
-describe('Navbar', ()  => {
+describe('Navbar', () => {
+  const { expect } = chai;
   let wrapper;
   const props = { trackMetric: sinon.spy() };
+
   before(() => {
-    console.error = sinon.spy();
-    // we have to rewire IndexLink because React Router throws an error
-    // when rendering a IndexLink or Link out of the routing context :(
-    Navbar.__Rewire__('IndexLink', (props) => {
-      return (
-        <div>
-          {props.children}
-        </div>
-      );
-    });
-    // The HOC makes it difficult to access / set properties of the pure component,
-    // in this case the trackMetric property of PureNavbar. So we test
-    // on the pure component instead.
-    wrapper = shallow(<Navbar.WrappedComponent {...props} />);
+    try {
+      // FIXME should not protect this call
+      sinon.spy(console, 'error');
+    } catch (e) {
+      console.error = sinon.stub();
+    }
+
+    wrapper = shallow(<Navbar {...props} />);
   });
 
   after(() => {
-    Navbar.__ResetDependency__('IndexLink');
+    if (_.isFunction(_.get(console, 'error.restore'))) {
+      // @ts-ignore
+      console.error.restore();
+    }
   });
 
   it('should be exposed as a module and be of type function', function() {
+    console.info('Navbar', typeof Navbar, Navbar);
     expect(Navbar).to.be.a('function');
   });
 
   describe('render', () => {
     it('should render without problems when required props present', () => {
+      // @ts-ignore
       expect(console.error.callCount).to.equal(0);
     });
   });
