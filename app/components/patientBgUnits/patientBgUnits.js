@@ -98,8 +98,8 @@ export default class PatientBgUnits extends Component {
     return {};
   }
 
-  getBgPatientUnitUsed() {
-    let unit = this.state.formValues.bgUnits;
+  getBgPatientUnitUsed = () => {
+    const unit = this.state.formValues.bgUnits;
     return [
       {
         label: unit,
