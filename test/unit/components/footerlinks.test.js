@@ -66,11 +66,11 @@ describe('FooterLinks', () => {
     const links = [{
       id: 'privacy-link',
       text: 'Privacy Policy',
-      href: 'https://example.com/data-privacy.pdf',
+      href: 'https://example.com/data-privacy.en.pdf',
     }, {
       id: 'terms-link',
       text: 'Diabeloop Applications Terms of Use',
-      href: 'https://example.com/terms.pdf',
+      href: 'https://example.com/terms.en.pdf',
     }, {
       id: 'support-link',
       text: 'Diabeloop',
@@ -78,7 +78,7 @@ describe('FooterLinks', () => {
     }, {
       id: 'regulatory-link',
       text: 'Regulatory Information',
-      href: 'https://example.com/intendedUse.pdf',
+      href: 'https://example.com/intended-use.en.pdf',
     }];
 
     links.forEach((link) => {

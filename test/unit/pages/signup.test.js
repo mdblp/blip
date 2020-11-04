@@ -251,13 +251,13 @@ describe('Signup', function () {
       let a = wrapper.find('#signup-terms-link');
       expect(a.is('a')).to.be.true;
       let aProps = a.props();
-      expect(aProps.href).to.be.equal('https://example.com/terms.pdf');
+      expect(aProps.href).to.be.equal('https://example.com/terms.en.pdf');
       expect(aProps.children[0]).to.be.equal('Diabeloop Applications Terms of Use');
 
       a = wrapper.find('#signup-privacy-link');
       expect(a.is('a')).to.be.true;
       aProps = a.props();
-      expect(aProps.href).to.be.equal('https://example.com/data-privacy.pdf');
+      expect(aProps.href).to.be.equal('https://example.com/data-privacy.en.pdf');
       expect(aProps.children[0]).to.be.equal('Privacy Policy');
     });
   });
