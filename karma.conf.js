@@ -14,7 +14,7 @@ if (!isWSL) {
   browsers.push('FirefoxHeadless');
 }
 const karmaConfig = {
-  autoWatch: true,
+  autoWatch: false,
   browserNoActivityTimeout: 60000,
   browsers,
   captureTimeout: 60000,
