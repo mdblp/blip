@@ -23,7 +23,7 @@ import { bindActionCreators } from 'redux';
 import _ from 'lodash';
 
 import i18next from '../../core/language';
-import languages from '../../../locales/languages.json'
+import languages from '../../../locales/languages.json';
 import * as actions from '../../redux/actions';
 
 import { validateForm } from '../../core/validation';
@@ -105,17 +105,20 @@ class UserProfile extends React.Component {
 
   formInputs() {
     const inputs = [];
-    const firstName = { 
-      name: 'firstName', 
-      label: t('First name'), 
-      type: 'text', 
+    const nameDisabled = !this.isUserAllowedToChangeName();
+    const firstName = {
+      name: 'firstName',
+      label: t('First name'),
+      type: 'text',
+      disabled: nameDisabled,
     };
-    const lastName = { 
-      name: 'lastName', 
-      label: t('Last name'), 
-      type: 'text', 
+    const lastName = {
+      name: 'lastName',
+      label: t('Last name'),
+      type: 'text',
+      disabled: nameDisabled,
     };
-    
+
     inputs.push(firstName);
     inputs.push(lastName);
 
@@ -155,7 +158,6 @@ class UserProfile extends React.Component {
         placeholder: t('Select language...')
       });
     }
-
     return inputs;
   }
 
@@ -187,7 +189,7 @@ class UserProfile extends React.Component {
     };
 
     let organization = '';
-    if (user && _.get(user, 'profile.organization.name',false)) {
+    if (user && _.get(user, 'profile.organization.name', false)) {
       organization = user.profile.organization.name + ' / ';
     }
 
@@ -257,10 +259,10 @@ class UserProfile extends React.Component {
   validateFormValues(formValues) {
 
     let form = [];
-    
-    form.push({ type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName });
-    form.push({ type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName });
-
+    if (this.isUserAllowedToChangeName()) {
+      form.push({ type: 'name', name: 'firstName', label: t('first name'), value: formValues.firstName });
+      form.push({ type: 'name', name: 'lastName', label: t('last name'), value: formValues.lastName });
+    }
     if (this.isUserAllowedToChangeEmail()) {
       form.push({ type: 'email', name: 'username', label: t('email'), value: formValues.username });
     }
@@ -289,12 +291,13 @@ class UserProfile extends React.Component {
   prepareFormValuesForSubmit(formValues) {
     const result = {};
 
-
-    result.profile = {
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      fullName: `${formValues.firstName} ${formValues.lastName}`
-    };
+    if (this.isUserAllowedToChangeName()) {
+      result.profile = {
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        fullName: `${formValues.firstName} ${formValues.lastName}`
+      };
+    }
 
     if (this.isUserAllowedToChangeEmail()) {
       result.username = formValues.username;
@@ -330,9 +333,10 @@ class UserProfile extends React.Component {
   isUserAllowedToChangePassword() {
     return !personUtils.isPatient(this.props.user) || config.ALLOW_PATIENT_CHANGE_PASSWORD;
   }
+  isUserAllowedToChangeName() {
+    return !personUtils.isPatient(this.props.user) || config.ALLOW_PATIENT_CHANGE_NAME;
+  }
 }
-
-
 
 /**
  * Expose "Smart" Component that is connect-ed to Redux
