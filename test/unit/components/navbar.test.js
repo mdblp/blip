@@ -7,7 +7,6 @@ import { shallow } from 'enzyme';
 import '../../../app/core/language';
 import Navbar from '../../../app/components/navbar';
 
-
 describe('Navbar', () => {
   const { expect } = chai;
   let wrapper;
@@ -15,7 +14,6 @@ describe('Navbar', () => {
 
   before(() => {
     try {
-      // FIXME should not protect this call
       sinon.spy(console, 'error');
     } catch (e) {
       console.error = sinon.stub();
@@ -32,7 +30,6 @@ describe('Navbar', () => {
   });
 
   it('should be exposed as a module and be of type function', function() {
-    console.info('Navbar', typeof Navbar, Navbar);
     expect(Navbar).to.be.a('function');
   });
 

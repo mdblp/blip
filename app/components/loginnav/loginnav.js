@@ -24,8 +24,6 @@ function LoginNav(props) {
   const t = i18n.t.bind(i18n);
   const [ isLangMenuOpened, setLangMenuOpened ] = useState(false);
 
-  console.info('LoginNav isLangMenuOpened', isLangMenuOpened);
-
   let link = null;
   if (!hideLinks) {
     let href = '/signup/clinician';
@@ -61,7 +59,6 @@ function LoginNav(props) {
     if (Object.prototype.hasOwnProperty.call(i18nOptions.resources, lang)) {
       const language = i18nOptions.resources[lang].name;
       const handleClick = () => {
-        console.info('changeLanguage (click)', lang);
         i18n.changeLanguage(lang);
       };
 
@@ -69,7 +66,6 @@ function LoginNav(props) {
         switch (e.key) {
         case 'Enter':
         case ' ':
-          console.info('changeLanguage (key)', lang);
           i18n.changeLanguage(lang);
           setLangMenuOpened(false);
           break;
@@ -90,7 +86,6 @@ function LoginNav(props) {
     function handleClickOutside(e) {
       if (isLangMenuOpened) {
         e.preventDefault();
-        console.debug('outside click: close menu');
         setLangMenuOpened(false);
       }
     }
@@ -100,7 +95,6 @@ function LoginNav(props) {
       body.addEventListener('click', handleClickOutside);
 
       return function cleanup() {
-        console.debug('LoginNav: cleanup');
         body.removeEventListener('click', handleClickOutside);
       };
     }
@@ -108,12 +102,9 @@ function LoginNav(props) {
   });
 
   const handleClickShowLangs = () => {
-    console.debug('lang selector: show/hide menu');
     setLangMenuOpened(!isLangMenuOpened);
   };
   const handleKeyShowLangs = (/** @type {React.KeyboardEvent<HTMLSpanElement>} */ e) => {
-    console.info('handleKeyShowLangs key', e.key, e);
-
     switch (e.key) {
     case 'Enter':
     case ' ':

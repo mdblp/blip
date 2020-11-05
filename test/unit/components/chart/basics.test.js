@@ -15,17 +15,10 @@
  * == BSD2 LICENSE ==
  */
 
-/* global chai */
-/* global describe */
-/* global it */
-/* global beforeEach */
-/* global afterEach */
-/* global sinon */
-
-var expect = chai.expect;
-
 import React from 'react';
 import _ from 'lodash';
+import sinon from 'sinon';
+import chai from 'chai';
 import { mount, shallow } from 'enzyme';
 
 import DataUtilStub from '../../../helpers/DataUtil';
@@ -34,6 +27,8 @@ import { MGDL_UNITS } from '../../../../app/core/constants';
 import i18next from '../../../../app/core/language';
 
 describe('Basics', () => {
+  const { expect } = chai;
+
   const bgPrefs = {
     bgClasses: {
       'very-low': {
@@ -80,7 +75,7 @@ describe('Basics', () => {
   let wrapper;
   beforeEach(() => {
     wrapper = shallow(<Basics.WrappedComponent {...baseProps} />);
-  })
+  });
 
   afterEach(() => {
     baseProps.onClickPrint.reset();
@@ -92,7 +87,7 @@ describe('Basics', () => {
   describe('render', () => {
     it('should render the missing data text if no data has been uploaded', () => {
       wrapper = mount(<Basics {...baseProps} />);
-      const noDataMessage = wrapper.find('.patient-data-message').hostNodes();
+      const noDataMessage = wrapper.find('.patient-data-message');
       const chart = wrapper.hostNodes('BasicsChart');
       expect(noDataMessage.length).to.equal(1);
       expect(chart.length).to.equal(0);
