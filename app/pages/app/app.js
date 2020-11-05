@@ -231,7 +231,10 @@ export class AppComponent extends React.Component {
       '/signup',
       '/signup/personal',
       '/signup/clinician',
-      '/terms'
+      '/terms',
+      // Be sure the user can't bypass this step
+      // even if he is logged-in.
+      '/clinician-details'
     ];
     if (!_.includes(LOGIN_NAV_ROUTES, this.props.location)) {
       if (this.props.authenticated ||

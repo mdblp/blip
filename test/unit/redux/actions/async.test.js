@@ -1,17 +1,12 @@
-/* global chai */
-/* global sinon */
-/* global describe */
-/* global it */
-/* global expect */
-/* global beforeEach */
-/* global afterEach */
-/* global context */
+// @ts-nocheck
 
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import trackingMiddleware from '../../../../app/redux/utils/trackingMiddleware';
 import moment from 'moment';
 import _ from 'lodash';
+import sinon from 'sinon';
+import chai from 'chai';
 
 import isTSA from '../../../helpers/tidepoolStandardAction';
 
@@ -25,6 +20,7 @@ import { TIDEPOOL_DATA_DONATION_ACCOUNT_EMAIL, MMOLL_UNITS } from '../../../../a
 // need to require() async in order to rewire utils inside
 const async = require('../../../../app/redux/actions/async');
 
+const { expect } = chai;
 describe('Actions', () => {
   const trackMetric = sinon.spy();
   const mockStore = configureStore([
@@ -54,7 +50,7 @@ describe('Actions', () => {
           { type: 'SIGNUP_SUCCESS', payload: { user: { id: 27 } } },
           { type: '@@router/TRANSITION', payload: { args: [ '/email-verification' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -111,7 +107,7 @@ describe('Actions', () => {
           { type: 'SIGNUP_REQUEST' },
           { type: 'SIGNUP_FAILURE', error: err, meta: { apiError: {status: 409, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -139,7 +135,7 @@ describe('Actions', () => {
           { type: 'SIGNUP_REQUEST' },
           { type: 'SIGNUP_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -166,7 +162,7 @@ describe('Actions', () => {
           { type: 'CONFIRM_SIGNUP_REQUEST' },
           { type: 'CONFIRM_SIGNUP_SUCCESS' }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -193,7 +189,7 @@ describe('Actions', () => {
           { type: 'CONFIRM_SIGNUP_REQUEST' },
           { type: 'CONFIRM_SIGNUP_FAILURE', error: err, payload: { signupKey: 'fakeSignupKey' }, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -224,7 +220,7 @@ describe('Actions', () => {
           { type: 'CONFIRM_SIGNUP_FAILURE', error: err, payload: { signupKey: 'fakeSignupKey' }, meta: { apiError: {status: 409, message: 'User does not have a password'} } },
           { type: '@@router/TRANSITION', payload: { args: [ '/verification-with-password?signupKey=fakeSignupKey&signupEmail=g@a.com' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -292,7 +288,7 @@ describe('Actions', () => {
           { type: 'VERIFY_CUSTODIAL_SUCCESS' },
           { type: '@@router/TRANSITION', payload: { args: [ '/patients?justLoggedIn=true' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -330,7 +326,7 @@ describe('Actions', () => {
           { type: 'VERIFY_CUSTODIAL_REQUEST' },
           { type: 'VERIFY_CUSTODIAL_FAILURE', error: err, payload: { signupKey: 'fakeSignupKey' }, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -361,7 +357,7 @@ describe('Actions', () => {
           { type: 'RESEND_EMAIL_VERIFICATION_REQUEST' },
           { type: 'RESEND_EMAIL_VERIFICATION_SUCCESS', payload: {notification: {type: 'alert', message: 'We just sent you an e-mail.'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -389,7 +385,7 @@ describe('Actions', () => {
           { type: 'RESEND_EMAIL_VERIFICATION_REQUEST' },
           { type: 'RESEND_EMAIL_VERIFICATION_FAILURE', error: err, meta: {apiError: {status: 500, body: 'Error!'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -558,7 +554,7 @@ describe('Actions', () => {
           { type: 'ACCEPT_TERMS_REQUEST' },
           { type: 'ACCEPT_TERMS_SUCCESS', payload: { userId: user.id, acceptedDate: acceptedDate } },
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -593,7 +589,7 @@ describe('Actions', () => {
           { type: 'ACCEPT_TERMS_REQUEST' },
           { type: 'ACCEPT_TERMS_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -629,7 +625,7 @@ describe('Actions', () => {
           { type: 'LOGIN_SUCCESS', payload: { user: user } },
           { type: '@@router/TRANSITION', payload: { args: [ '/patients?justLoggedIn=true' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -669,7 +665,7 @@ describe('Actions', () => {
           { type: 'LOGIN_SUCCESS', payload: { user: _.merge({}, user, patient) } },
           { type: '@@router/TRANSITION', payload: { args: [ '/patients?justLoggedIn=true' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -706,7 +702,7 @@ describe('Actions', () => {
           { type: 'LOGIN_SUCCESS', payload: { user } },
           { type: '@@router/TRANSITION', payload: { method: 'push', args: [ '/clinician-details' ] } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -745,7 +741,7 @@ describe('Actions', () => {
           { type: 'LOGIN_SUCCESS', payload: { user } },
           { type: '@@router/TRANSITION', payload: { method: 'push', args: ['/patients?justLoggedIn=true'] } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -778,7 +774,7 @@ describe('Actions', () => {
           { type: 'LOGIN_REQUEST' },
           { type: 'LOGIN_FAILURE', error: err, payload: null, meta: { apiError: {status: 400, body: 'Error!'}}}
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -810,7 +806,7 @@ describe('Actions', () => {
           { type: 'LOGIN_REQUEST' },
           { type: 'LOGIN_FAILURE', error: err, payload: null, meta: { apiError: {status: 401, body: 'Wrong password!'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -843,7 +839,7 @@ describe('Actions', () => {
           { type: 'LOGIN_FAILURE', error: err, payload: payload, meta: { apiError: {status: 403, body: 'E-mail not verified!'}} },
           { type: '@@router/TRANSITION', payload: { args: [ '/email-verification' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -875,7 +871,7 @@ describe('Actions', () => {
           { type: 'FETCH_USER_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } },
           { type: 'LOGIN_FAILURE', error: err, payload: null, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -916,7 +912,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_FAILURE', error: err, payload: { link: null }, meta: { apiError: {status: 500, body: 'Error!'} } },
           { type: 'LOGIN_FAILURE', error: err, payload: null, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -948,7 +944,7 @@ describe('Actions', () => {
           { type: 'LOGOUT_SUCCESS' },
           { type: '@@router/TRANSITION', payload: { args: [ '/' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -976,7 +972,7 @@ describe('Actions', () => {
           { type: 'SETUP_DATA_STORAGE_SUCCESS', payload: { userId: loggedInUserId, patient: patient } },
           { type: '@@router/TRANSITION', payload: { args: [ '/patients/27/data' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let initialStateForTest = _.merge({}, initialState, { blip: { loggedInUserId: loggedInUserId } });
@@ -1007,7 +1003,7 @@ describe('Actions', () => {
           { type: 'SETUP_DATA_STORAGE_REQUEST' },
           { type: 'SETUP_DATA_STORAGE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1047,7 +1043,7 @@ describe('Actions', () => {
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_REQUEST' },
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_SUCCESS', payload: { patients } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1076,7 +1072,7 @@ describe('Actions', () => {
           { type: 'REMOVE_MEMBERSHIP_IN_OTHER_CARE_TEAM_REQUEST' },
           { type: 'REMOVE_MEMBERSHIP_IN_OTHER_CARE_TEAM_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1112,7 +1108,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient: patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1148,7 +1144,7 @@ describe('Actions', () => {
           { type: 'REMOVE_MEMBER_FROM_TARGET_CARE_TEAM_REQUEST' },
           { type: 'REMOVE_MEMBER_FROM_TARGET_CARE_TEAM_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1186,7 +1182,7 @@ describe('Actions', () => {
           { type: 'SEND_INVITE_REQUEST' },
           { type: 'SEND_INVITE_SUCCESS', payload: { invite: invite } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1221,7 +1217,7 @@ describe('Actions', () => {
           { type: 'FETCH_PENDING_SENT_INVITES_REQUEST' },
           { type: 'SEND_INVITE_SUCCESS', payload: { invite: invite } },
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1258,7 +1254,7 @@ describe('Actions', () => {
           { type: 'SEND_INVITE_REQUEST' },
           { type: 'SEND_INVITE_FAILURE', error: err, meta: { apiError: {status: 409, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1298,7 +1294,7 @@ describe('Actions', () => {
           { type: 'SEND_INVITE_REQUEST' },
           { type: 'SEND_INVITE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1332,7 +1328,7 @@ describe('Actions', () => {
           { type: 'CANCEL_SENT_INVITE_REQUEST' },
           { type: 'CANCEL_SENT_INVITE_SUCCESS', payload: { removedEmail: email } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1365,7 +1361,7 @@ describe('Actions', () => {
           { type: 'CANCEL_SENT_INVITE_REQUEST' },
           { type: 'CANCEL_SENT_INVITE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1416,7 +1412,7 @@ describe('Actions', () => {
             removeAccounts: _.map(removeAccounts, account => account.email),
           }}}
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1462,7 +1458,7 @@ describe('Actions', () => {
           { type: 'UPDATE_DATA_DONATION_ACCOUNTS_FAILURE', error: err, meta: { apiError: { status: 500, body: 'Error!' } } },
         ];
 
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1505,7 +1501,7 @@ describe('Actions', () => {
           } } },
         ];
 
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1541,7 +1537,7 @@ describe('Actions', () => {
           } } },
         ];
 
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1577,7 +1573,7 @@ describe('Actions', () => {
           } } },
         ];
 
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1609,7 +1605,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient : patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1636,7 +1632,7 @@ describe('Actions', () => {
           { type: 'ACCEPT_RECEIVED_INVITE_REQUEST', payload: { acceptedReceivedInvite: invitation } },
           { type: 'ACCEPT_RECEIVED_INVITE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1664,7 +1660,7 @@ describe('Actions', () => {
           { type: 'REJECT_RECEIVED_INVITE_REQUEST', payload: { rejectedReceivedInvite: invitation } },
           { type: 'REJECT_RECEIVED_INVITE_SUCCESS', payload: { rejectedReceivedInvite: invitation } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1690,7 +1686,7 @@ describe('Actions', () => {
           { type: 'REJECT_RECEIVED_INVITE_REQUEST', payload: { rejectedReceivedInvite: invitation } },
           { type: 'REJECT_RECEIVED_INVITE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1732,7 +1728,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient: patient } },
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1763,7 +1759,7 @@ describe('Actions', () => {
           { type: 'SET_MEMBER_PERMISSIONS_REQUEST' },
           { type: 'SET_MEMBER_PERMISSIONS_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1791,7 +1787,7 @@ describe('Actions', () => {
           { type: 'UPDATE_PATIENT_REQUEST' },
           { type: 'UPDATE_PATIENT_SUCCESS', payload: { updatedPatient: patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1818,7 +1814,7 @@ describe('Actions', () => {
           { type: 'UPDATE_PATIENT_REQUEST' },
           { type: 'UPDATE_PATIENT_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1849,7 +1845,7 @@ describe('Actions', () => {
           { type: 'UPDATE_PREFERENCES_REQUEST' },
           { type: 'UPDATE_PREFERENCES_SUCCESS', payload: { updatedPreferences: preferences } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1878,7 +1874,7 @@ describe('Actions', () => {
           { type: 'UPDATE_PREFERENCES_REQUEST' },
           { type: 'UPDATE_PREFERENCES_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -1909,7 +1905,7 @@ describe('Actions', () => {
           { type: 'UPDATE_SETTINGS_REQUEST' },
           { type: 'UPDATE_SETTINGS_SUCCESS', payload: { userId: patientId, updatedSettings: settings } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -1938,7 +1934,7 @@ describe('Actions', () => {
             { type: 'UPDATE_PATIENT_BG_UNITS_SUCCESS', payload: { userId: patientId, updatedSettings: settings } },
           ];
 
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
 
@@ -1968,7 +1964,7 @@ describe('Actions', () => {
           { type: 'UPDATE_SETTINGS_REQUEST' },
           { type: 'UPDATE_SETTINGS_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -2006,7 +2002,7 @@ describe('Actions', () => {
           { type: 'UPDATE_PATIENT_BG_UNITS_FAILURE', error: bgErr, meta: { apiError: {status: 500, body: 'Error!'} } },
         ];
 
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -2090,7 +2086,7 @@ describe('Actions', () => {
           { type: 'UPDATE_USER_REQUEST', payload: { userId: loggedInUserId, updatingUser: updatingUser} },
           { type: 'UPDATE_USER_SUCCESS', payload: { userId: loggedInUserId, updatedUser: updatedUser } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -2159,7 +2155,7 @@ describe('Actions', () => {
           { type: 'UPDATE_USER_REQUEST', payload: { userId: loggedInUserId, updatingUser: updatingUser} },
           { type: 'UPDATE_USER_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -2174,151 +2170,141 @@ describe('Actions', () => {
       });
     });
 
-    describe('updateClinicianProfile', () => {
-      it('should trigger UPDATE_USER_SUCCESS and it should call updateClinicianProfile once for a successful request and route user', () => {
-        let loggedInUserId = 400;
-        let currentUser = {
-          profile: {
-            name: 'Joe Bloggs',
-            age: 29
-          },
+    describe('createClinicianProfile', () => {
+      it('should trigger UPDATE_USER_SUCCESS and it should call createClinicianProfile once for a successful request and route user', () => {
+        const loggedInUserId = 400;
+        const currentUser = {
           password: 'foo',
           emails: [
             'joe@bloggs.com'
           ],
-          username: 'Joe'
+          username: 'joe@bloggs.com'
         };
 
-        let formValues = {
+        const formValues = {
           profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
+            fullName: 'Joe The Taxi',
+            firstName: 'Joe',
+            lastName: 'The Taxi',
+            clinic: {
+              role: 'diabetes_educator'
+            }
           },
-        };
-
-        let updatingUser = {
-          profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
+          preferences: {
+            displayLanguageCode: 'fr'
           },
-          emails: [
-            'joe@bloggs.com'
-          ],
-          username: 'Joe'
-        };
-
-        let userUpdates = {
-          profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
-          },
-          password: 'foo'
-        };
-
-        let updatedUser = {
-          profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
-          },
-          emails: [
-            'joe@bloggs.com'
-          ],
-          username: 'Joe',
-          password: 'foo'
-        };
-
-        let api = {
-          user: {
-            put: sinon.stub().callsArgWith(1, null, updatedUser)
+          settings: {
+            country: 'FR'
           }
         };
 
-        let initialStateForTest = _.merge({}, initialState, { allUsersMap: { [loggedInUserId] : currentUser }, loggedInUserId: loggedInUserId });
+        const updatingUser = _.assign({}, _.omit(currentUser, 'password'), formValues);
+        const updatedUser = _.assign({}, currentUser, formValues);
 
-        let expectedActions = [
+        const api = {
+          metadata: {
+            profile: {
+              put: sinon.stub().callsArgWith(2, null),
+            },
+            preferences: {
+              put: sinon.stub().callsArgWith(2, null),
+            },
+            settings: {
+              put: sinon.stub().callsArgWith(2, null),
+            },
+          },
+        };
+
+        const initialStateForTest = _.merge({}, initialState, { allUsersMap: { [loggedInUserId] : currentUser }, loggedInUserId: loggedInUserId });
+
+        const expectedActions = [
           { type: 'UPDATE_USER_REQUEST', payload: { userId: loggedInUserId, updatingUser: updatingUser} },
           { type: 'UPDATE_USER_SUCCESS', payload: { userId: loggedInUserId, updatedUser: updatedUser } },
           { type: '@@router/TRANSITION', payload: { args: [ '/patients?justLoggedIn=true' ], method: 'push' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
-        let store = mockStore({ blip : initialStateForTest });
-        store.dispatch(async.updateClinicianProfile(api, formValues));
+        const store = mockStore({ blip : initialStateForTest });
+        store.dispatch(async.createClinicianProfile(api, formValues));
 
         const actions = store.getActions();
         expect(actions).to.eql(expectedActions);
-        expect(api.user.put.calledWith(userUpdates)).to.be.true;
+        expect(api.metadata.profile.put.calledWith(loggedInUserId, formValues.profile)).to.be.true;
+        expect(api.metadata.preferences.put.calledWith(loggedInUserId, formValues.preferences)).to.be.true;
+        expect(api.metadata.settings.put.calledWith(loggedInUserId, formValues.settings)).to.be.true;
         expect(trackMetric.calledWith('Updated Account')).to.be.true;
       });
 
-      it('should trigger UPDATE_USER_FAILURE and it should call updateClinicianProfile once for a failed request', () => {
-        let loggedInUserId = 400;
-        let currentUser = {
-          profile: {
-            name: 'Joe Bloggs',
-            age: 29
-          },
+      it('should trigger UPDATE_USER_FAILURE and it should call createClinicianProfile once for a failed request', () => {
+        const loggedInUserId = 400;
+        const currentUser = {
           password: 'foo',
           emails: [
             'joe@bloggs.com'
           ],
-          username: 'Joe'
+          username: 'joe@bloggs.com'
         };
 
-        let formValues = {
+        const formValues = {
           profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
+            fullName: 'Joe The Taxi',
+            firstName: 'Joe',
+            lastName: 'The Taxi',
+            clinic: {
+              role: 'diabetes_educator'
+            }
+          },
+          preferences: {
+            displayLanguageCode: 'fr'
+          },
+          settings: {
+            country: 'FR'
           }
         };
 
-        let updatingUser = {
-          profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
+        const updatingUser = _.assign({}, _.omit(currentUser, 'password'), formValues);
+
+        const apiError = {status: 500, body: 'Error!'};
+        const api = {
+          metadata: {
+            profile: {
+              put: sinon.stub().callsArgWith(2, apiError),
+            },
+            preferences: {
+              put: sinon.stub().callsArgWith(2, null),
+            },
+            settings: {
+              put: sinon.stub().callsArgWith(2, null),
+            },
           },
-          emails: [
-            'joe@bloggs.com'
-          ],
-          username: 'Joe'
         };
 
-        let userUpdates = {
-          profile: {
-            name: 'Joe Steven Bloggs',
-            age: 30
-          },
-          password: 'foo'
-        };
-        let api = {
-          user: {
-            put: sinon.stub().callsArgWith(1, {status: 500, body: 'Error!'})
-          }
-        };
-
-        let err = new Error(ErrorMessages.ERR_UPDATING_USER);
+        const err = new Error(ErrorMessages.ERR_UPDATING_USER);
         err.status = 500;
 
-        let initialStateForTest = _.merge({}, initialState, { allUsersMap: { [loggedInUserId] : currentUser }, loggedInUserId: loggedInUserId });
+        const initialStateForTest = _.merge({}, initialState, { allUsersMap: { [loggedInUserId] : currentUser }, loggedInUserId: loggedInUserId });
 
-        let expectedActions = [
+        const expectedActions = [
           { type: 'UPDATE_USER_REQUEST', payload: { userId: loggedInUserId, updatingUser: updatingUser} },
-          { type: 'UPDATE_USER_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'}} }
+          { type: 'UPDATE_USER_FAILURE', error: err, meta: { apiError } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
-        let store = mockStore({ blip : initialStateForTest });
-        store.dispatch(async.updateClinicianProfile(api, formValues));
+        const store = mockStore({ blip : initialStateForTest });
+        store.dispatch(async.createClinicianProfile(api, formValues));
+
+        expect(api.metadata.profile.put.calledWith(loggedInUserId, formValues.profile)).to.be.true;
+        expect(api.metadata.preferences.put.notCalled).to.be.true;
+        expect(api.metadata.settings.put.notCalled).to.be.true;
 
         const actions = store.getActions();
         expect(actions[1].error).to.deep.include({ message: ErrorMessages.ERR_UPDATING_USER });
         expectedActions[1].error = actions[1].error;
         expect(actions).to.eql(expectedActions);
-        expect(api.user.put.calledWith(userUpdates)).to.be.true;
       });
     });
 
@@ -2335,7 +2321,7 @@ describe('Actions', () => {
           { type: 'REQUEST_PASSWORD_RESET_REQUEST' },
           { type: 'REQUEST_PASSWORD_RESET_SUCCESS' }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2361,7 +2347,7 @@ describe('Actions', () => {
           { type: 'REQUEST_PASSWORD_RESET_REQUEST' },
           { type: 'REQUEST_PASSWORD_RESET_FAILURE', error: err, meta: {apiError: {status: 500, body: 'Error!'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2388,7 +2374,7 @@ describe('Actions', () => {
           { type: 'CONFIRM_PASSWORD_RESET_REQUEST' },
           { type: 'CONFIRM_PASSWORD_RESET_SUCCESS' }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2414,7 +2400,7 @@ describe('Actions', () => {
           { type: 'CONFIRM_PASSWORD_RESET_REQUEST' },
           { type: 'CONFIRM_PASSWORD_RESET_FAILURE', error: err, meta: {apiError: {status: 500, body: 'Error!'}} }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2447,7 +2433,7 @@ describe('Actions', () => {
           { type: 'LOG_ERROR_REQUEST' },
           { type: 'LOG_ERROR_SUCCESS' }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2473,7 +2459,7 @@ describe('Actions', () => {
           { type: 'FETCH_USER_REQUEST' },
           { type: 'FETCH_USER_SUCCESS', payload: { user : user } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2497,7 +2483,7 @@ describe('Actions', () => {
           { type: 'FETCH_USER_REQUEST' },
           { type: 'FETCH_USER_FAILURE', error: new Error(ErrorMessages.ERR_EMAIL_NOT_VERIFIED), meta: { apiError: null } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -2525,7 +2511,7 @@ describe('Actions', () => {
           { type: 'FETCH_USER_REQUEST' },
           { type: 'FETCH_USER_FAILURE', error: null, meta: { apiError: { status: 401 } } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2552,7 +2538,7 @@ describe('Actions', () => {
           { type: 'FETCH_USER_REQUEST' },
           { type: 'FETCH_USER_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2580,7 +2566,7 @@ describe('Actions', () => {
           { type: 'FETCH_PENDING_SENT_INVITES_REQUEST' },
           { type: 'FETCH_PENDING_SENT_INVITES_SUCCESS', payload: { pendingSentInvites : pendingSentInvites } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2607,7 +2593,7 @@ describe('Actions', () => {
           { type: 'FETCH_PENDING_SENT_INVITES_REQUEST' },
           { type: 'FETCH_PENDING_SENT_INVITES_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2635,7 +2621,7 @@ describe('Actions', () => {
           { type: 'FETCH_PENDING_RECEIVED_INVITES_REQUEST' },
           { type: 'FETCH_PENDING_RECEIVED_INVITES_SUCCESS', payload: { pendingReceivedInvites : pendingReceivedInvites } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2662,7 +2648,7 @@ describe('Actions', () => {
           { type: 'FETCH_PENDING_RECEIVED_INVITES_REQUEST' },
           { type: 'FETCH_PENDING_RECEIVED_INVITES_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2690,7 +2676,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient : patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2713,7 +2699,7 @@ describe('Actions', () => {
         let expectedActions = [
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient : patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: {
@@ -2743,7 +2729,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_SUCCESS', payload: { patient : patient } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: {
@@ -2776,7 +2762,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_FAILURE', error: err, payload: {link: null}, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2806,7 +2792,7 @@ describe('Actions', () => {
           { type: 'FETCH_PATIENT_REQUEST' },
           { type: 'FETCH_PATIENT_FAILURE', error: err, payload: {link: {to: '/patients/new', text: UserMessages.YOUR_ACCOUNT_DATA_SETUP}}, meta: { apiError: {status: 404, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: thisInitialState });
@@ -2836,7 +2822,7 @@ describe('Actions', () => {
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_REQUEST' },
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_SUCCESS', payload: { patients : patients } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -2865,7 +2851,7 @@ describe('Actions', () => {
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_REQUEST' },
           { type: 'FETCH_ASSOCIATED_ACCOUNTS_FAILURE', error: err, meta: { apiError: {status: 500, body: {status: 500, body: 'Error!'}} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3024,7 +3010,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3064,7 +3050,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3127,7 +3113,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3187,7 +3173,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3234,7 +3220,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3280,7 +3266,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3326,7 +3312,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3370,7 +3356,7 @@ describe('Actions', () => {
                 },
               },
             ];
-            _.each(expectedActions, (action) => {
+            _.forEach(expectedActions, (action) => {
               expect(isTSA(action)).to.be.true;
             });
 
@@ -3404,7 +3390,7 @@ describe('Actions', () => {
               },
             },
           ];
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
 
@@ -3437,7 +3423,7 @@ describe('Actions', () => {
             { type: 'FETCH_PATIENT_DATA_REQUEST' },
             { type: 'FETCH_PATIENT_DATA_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
           ];
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
           let store = mockStore({ blip: initialState });
@@ -3478,7 +3464,7 @@ describe('Actions', () => {
             { type: 'FETCH_PATIENT_DATA_REQUEST' },
             { type: 'FETCH_PATIENT_DATA_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
           ];
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
           let store = mockStore({ blip: initialState });
@@ -3517,7 +3503,7 @@ describe('Actions', () => {
             { type: 'FETCH_PATIENT_DATA_REQUEST' },
             { type: 'FETCH_PATIENT_DATA_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
           ];
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
           let store = mockStore({ blip: initialState });
@@ -3548,7 +3534,7 @@ describe('Actions', () => {
             { type: 'FETCH_PATIENT_DATA_REQUEST' },
             { type: 'FETCH_MESSAGE_THREAD_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
           ];
-          _.each(expectedActions, (action) => {
+          _.forEach(expectedActions, (action) => {
             expect(isTSA(action)).to.be.true;
           });
 
@@ -3581,7 +3567,7 @@ describe('Actions', () => {
           { type: 'FETCH_SETTINGS_REQUEST' },
           { type: 'FETCH_SETTINGS_SUCCESS', payload: { settings: settings } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3609,7 +3595,7 @@ describe('Actions', () => {
           { type: 'FETCH_SETTINGS_REQUEST' },
           { type: 'FETCH_SETTINGS_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -3641,7 +3627,7 @@ describe('Actions', () => {
           { type: 'FETCH_MESSAGE_THREAD_REQUEST' },
           { type: 'FETCH_MESSAGE_THREAD_SUCCESS', payload: { messageThread : messageThread } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -3671,7 +3657,7 @@ describe('Actions', () => {
           { type: 'FETCH_MESSAGE_THREAD_REQUEST' },
           { type: 'FETCH_MESSAGE_THREAD_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3702,7 +3688,7 @@ describe('Actions', () => {
           { type: 'FETCH_DATA_SOURCES_REQUEST' },
           { type: 'FETCH_DATA_SOURCES_SUCCESS', payload: { dataSources : dataSources } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -3728,7 +3714,7 @@ describe('Actions', () => {
           { type: 'FETCH_DATA_SOURCES_REQUEST' },
           { type: 'FETCH_DATA_SOURCES_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3759,7 +3745,7 @@ describe('Actions', () => {
             authorizedDataSource : { id: 'fitbit', url: url}}
           }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -3786,7 +3772,7 @@ describe('Actions', () => {
           { type: 'CONNECT_DATA_SOURCE_REQUEST' },
           { type: 'CONNECT_DATA_SOURCE_FAILURE', error: err, meta: { apiError: 'Unknown data source type' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3815,7 +3801,7 @@ describe('Actions', () => {
           { type: 'CONNECT_DATA_SOURCE_REQUEST' },
           { type: 'CONNECT_DATA_SOURCE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3843,7 +3829,7 @@ describe('Actions', () => {
           { type: 'DISCONNECT_DATA_SOURCE_REQUEST' },
           { type: 'DISCONNECT_DATA_SOURCE_SUCCESS', payload: {}}
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
 
@@ -3868,7 +3854,7 @@ describe('Actions', () => {
           { type: 'DISCONNECT_DATA_SOURCE_REQUEST' },
           { type: 'DISCONNECT_DATA_SOURCE_FAILURE', error: err, meta: { apiError: 'Unknown data source type' } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });
@@ -3895,7 +3881,7 @@ describe('Actions', () => {
           { type: 'DISCONNECT_DATA_SOURCE_REQUEST' },
           { type: 'DISCONNECT_DATA_SOURCE_FAILURE', error: err, meta: { apiError: {status: 500, body: 'Error!'} } }
         ];
-        _.each(expectedActions, (action) => {
+        _.forEach(expectedActions, (action) => {
           expect(isTSA(action)).to.be.true;
         });
         let store = mockStore({ blip: initialState });

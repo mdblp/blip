@@ -21,10 +21,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import i18n from '../../core/language';
+import config from '../../config';
 import { validateForm } from '../../core/validation';
 import * as actions from '../../redux/actions';
 import SimpleForm from '../../components/simpleform';
 import personUtils from '../../core/personutils';
+import LoginLogo from '../../components/loginlogo';
 
 const t = i18n.t.bind(i18n);
 
@@ -38,52 +40,68 @@ class ClinicianDetails extends React.Component {
         firstName: this.getUserFirstName(),
         lastName: this.getUserLastName(),
         clinicalRole: '',
+        country: '',
       },
       validationErrors: {},
-    }
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   formInputs() {
-    return [
-    {
-      name: 'firstName',
-      label: t('First Name'),
-      type: 'text',
-      placeholder: t('First name')
-    },
-    {
-      name: 'lastName',
-      label: t('Last Name'),
-      type: 'text',
-      placeholder: t('Last name')
-    },
-    {
-      name: 'clinicalRole',
-      label: t('Clinical Role'),
-      type: 'select',
-      value: '',
-      placeholder: t('Select Role...'),
-      items: [
-        {value: 'clinic_manager', label: t('Clinic Manager')},
-        {value: 'diabetes_educator', label: t('Diabetes Educator')},
-        {value: 'endocrinologist', label: t('Endocrinologist')},
-        {value: 'front_desk', label: t('Front Desk')},
-        {value: 'information_technology', label: t('IT/Technology')},
-        {value: 'medical_assistant', label: t('Medical Assistant')},
-        {value: 'nurse', label: t('Nurse/Nurse Practitioner')},
-        {value: 'primary_care_physician', label: t('Primary Care Physician')},
-        {value: 'physician_assistant', label: t('Physician Assistant')},
-        {value: 'other', label: t('Other')}
-      ]
+    const inputs = [
+      {
+        name: 'firstName',
+        label: t('First Name'),
+        type: 'text',
+        placeholder: t('First name')
+      },
+      {
+        name: 'lastName',
+        label: t('Last Name'),
+        type: 'text',
+        placeholder: t('Last name')
+      },
+      {
+        name: 'clinicalRole',
+        label: t('Clinical Role'),
+        type: 'select',
+        value: '',
+        placeholder: t('Select Role...'),
+        items: [
+          { value: 'clinic_manager', label: t('Clinic Manager') },
+          { value: 'diabetes_educator', label: t('Diabetes Educator') },
+          { value: 'endocrinologist', label: t('Endocrinologist') },
+          { value: 'front_desk', label: t('Front Desk') },
+          { value: 'information_technology', label: t('IT/Technology') },
+          { value: 'medical_assistant', label: t('Medical Assistant') },
+          { value: 'nurse', label: t('Nurse/Nurse Practitioner') },
+          { value: 'primary_care_physician', label: t('Primary Care Physician') },
+          { value: 'physician_assistant', label: t('Physician Assistant') },
+          { value: 'other', label: t('Other') }
+        ]
+      },
+    ];
+    if (config.ALLOW_SELECT_COUNTRY) {
+      inputs.push({
+        name: 'country',
+        label: t('Country'),
+        type: 'select',
+        placeholder: t('Select Country...'),
+        value: '',
+        items: [
+          { value: 'FR', label: t('France') },
+          { value: 'DE', label: t('Germany') },
+          { value: 'NL', label: t('Netherlands') },
+        ],
+      });
     }
-  ]}
+
+    return inputs;
+  }
 
   componentDidMount() {
-    if (this.props.trackMetric) {
-      this.props.trackMetric('Web - Clinician Details Setup');
-    }
+    this.props.trackMetric('Web - Clinician Details Setup');
   }
 
   getUserFirstName() {
@@ -96,16 +114,11 @@ class ClinicianDetails extends React.Component {
 
   canSubmit() {
     const { formValues } = this.state;
-    if (
-      _.get(formValues,'firstName.length') &&
-      _.get(formValues,'lastName.length') &&
-      _.get(formValues,'clinicalRole.length') 
-    )
-      {
-        return true;
-      } else {
-        return false;
-      }
+
+    return _.get(formValues, 'firstName.length', 0) > 0 &&
+      _.get(formValues, 'lastName.length', 0) > 0 &&
+      _.get(formValues, 'clinicalRole.length', 0) > 0 &&
+      (_.get(formValues, 'country.length', 0) > 0 || !config.ALLOW_SELECT_COUNTRY);
   }
 
   render() {
@@ -117,6 +130,7 @@ class ClinicianDetails extends React.Component {
           <div className="container-box-inner ClinicianDetails-contentInner">
             <div className="ClinicianDetails-content">
               <div className="ClinicianDetails-head">
+                <LoginLogo />
                 {t('Clinician Setup')}
               </div>
               <div className="ClinicianDetails-subTitle">
@@ -190,7 +204,13 @@ class ClinicianDetails extends React.Component {
         clinic: {
           role: formValues.clinicalRole
         }
-      }
+      },
+      preferences: {
+        displayLanguageCode: i18n.language,
+      },
+      settings: {
+        country: formValues.country,
+      },
     };
     this.props.onSubmit(user);
   }
@@ -199,7 +219,8 @@ class ClinicianDetails extends React.Component {
     const form = [
       { type: 'name', name: 'firstName', label: 'first name', value: formValues.firstName },
       { type: 'name', name: 'lastName', label: 'last name', value: formValues.lastName },
-      { type: 'clinicalRole', name: 'clinicalRole', label: 'clinical role', value: formValues.clinicalRole }
+      { type: 'clinicalRole', name: 'clinicalRole', label: 'clinical role', value: formValues.clinicalRole },
+      { type: 'name', name: 'country', label: 'country', value: formValues.country },
     ];
     const validationErrors = validateForm(form, false);
 
@@ -223,7 +244,7 @@ ClinicianDetails.propTypes = {
   fetchingUser: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  user: PropTypes.object,
+  user: PropTypes.object.isRequired,
   working: PropTypes.bool.isRequired
 };
 
@@ -233,29 +254,30 @@ ClinicianDetails.propTypes = {
 
 export function mapStateToProps(state) {
   let user = null;
-  if (state.blip.allUsersMap){
+  if (state.blip.allUsersMap) {
     if (state.blip.loggedInUserId) {
       user = state.blip.allUsersMap[state.blip.loggedInUserId];
     }
   }
 
   return {
-    user: user,
+    user,
     fetchingUser: state.blip.working.fetchingUser.inProgress,
     working: state.blip.working.updatingUser.inProgress,
   };
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  updateClinicianProfile: actions.async.updateClinicianProfile
+  createClinicianProfile: actions.async.createClinicianProfile
 }, dispatch);
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const api = ownProps.routes[0].api;
   return Object.assign({}, stateProps, {
-    onSubmit: dispatchProps.updateClinicianProfile.bind(null, api),
+    onSubmit: dispatchProps.createClinicianProfile.bind(null, api),
     trackMetric: ownProps.routes[0].trackMetric
   });
 };
 
+export { ClinicianDetails };
 export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(ClinicianDetails);

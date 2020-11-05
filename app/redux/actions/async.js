@@ -482,7 +482,7 @@ export function rejectReceivedInvite(api, invite) {
         dispatch(sync.rejectReceivedInviteSuccess(invite));
       }
     });
-  }
+  };
 }
 
 /**
@@ -654,39 +654,61 @@ export function updateUser(api, formValues) {
 }
 
 /**
- * Update Clinician Profile Action Creator
+ * Create Clinician Profile
  *
  * @param  {Object} api an instance of the API wrapper
- * @param {userId} userId
  * @param  {Object} formValues
+ * @returns {(dispatch, getState) => void}
  */
-export function updateClinicianProfile(api, formValues) {
+export function createClinicianProfile(api, formValues) {
   return (dispatch, getState) => {
-    const { blip: { loggedInUserId, allUsersMap } } = getState();
-    const loggedInUser = allUsersMap[loggedInUserId];
+    const state = getState();
+    const { loggedInUserId: userId, allUsersMap } = state.blip;
+    const { profile, preferences, settings } = formValues;
 
-    const newUser = _.assign({},
-      _.omit(loggedInUser, 'profile'),
-      _.omit(formValues, 'profile'),
-      { profile: _.assign({}, loggedInUser.profile, formValues.profile) }
-    );
-
-    dispatch(sync.updateUserRequest(loggedInUserId, _.omit(newUser, 'password')));
-
-    var userUpdates = _.cloneDeep(newUser);
-    if (userUpdates.username === loggedInUser.username) {
-      userUpdates = _.omit(userUpdates, 'username', 'emails');
+    if (_.isEmpty(profile) || _.isEmpty(preferences) || _.isEmpty(settings)) {
+      const err = new Error('Missing profile informations');
+      dispatch(sync.updateUserFailure(
+        createActionError(ErrorMessages.ERR_UPDATING_USER, err), err
+      ));
+      return;
     }
 
-    api.user.put(userUpdates, (err, updatedUser) => {
+    const updatedUser = _.cloneDeep(allUsersMap[userId]);
+    updatedUser.profile = profile;
+    updatedUser.preferences = preferences;
+    updatedUser.settings = settings;
+
+    dispatch(sync.updateUserRequest(userId, _.omit(updatedUser, 'password')));
+
+    api.metadata.profile.put(userId, profile, (err) => {
       if (err) {
         dispatch(sync.updateUserFailure(
           createActionError(ErrorMessages.ERR_UPDATING_USER, err), err
         ));
-      } else {
-        dispatch(sync.updateUserSuccess(loggedInUserId, updatedUser));
-        dispatch(routeActions.push('/patients?justLoggedIn=true'));
+        return;
       }
+
+      api.metadata.preferences.put(userId, preferences, (err) => {
+        if (err) {
+          dispatch(sync.updateUserFailure(
+            createActionError(ErrorMessages.ERR_UPDATING_USER, err), err
+          ));
+          return;
+        }
+
+        api.metadata.settings.put(userId, settings, (err) => {
+          if (err) {
+            dispatch(sync.updateUserFailure(
+              createActionError(ErrorMessages.ERR_UPDATING_USER, err), err
+            ));
+            return;
+          }
+
+          dispatch(sync.updateUserSuccess(userId, updatedUser));
+          dispatch(routeActions.push('/patients?justLoggedIn=true'));
+        });
+      });
     });
   };
 }
@@ -707,9 +729,9 @@ export function requestPasswordReset(api, email) {
           createActionError(ErrorMessages.ERR_REQUESTING_PASSWORD_RESET, err), err
         ));
       } else {
-        dispatch(sync.requestPasswordResetSuccess())
+        dispatch(sync.requestPasswordResetSuccess());
       }
-    })
+    });
   };
 }
 
@@ -731,7 +753,7 @@ export function confirmPasswordReset(api, formValues) {
       } else {
         dispatch(sync.confirmPasswordResetSuccess())
       }
-    })
+    });
   };
 }
 
@@ -754,7 +776,7 @@ export function logError(api, error, message, properties) {
         dispatch(sync.logErrorSuccess());
       }
     });
-  }
+  };
 }
 
 /**
