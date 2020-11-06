@@ -15,6 +15,7 @@ if (!isWSL) {
 }
 const karmaConfig = {
   autoWatch: false,
+  port: '8080',
   browserNoActivityTimeout: 60000,
   browsers,
   captureTimeout: 60000,
