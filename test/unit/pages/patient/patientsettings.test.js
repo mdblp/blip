@@ -194,7 +194,6 @@ describe('PatientSettings', function () {
       user: {},
       patient: {
         userid: 1234,
-        settings: {},
       },
       onUpdatePatientSettings: sinon.stub(),
       trackMetric: sinon.stub(),

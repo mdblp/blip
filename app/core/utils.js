@@ -311,7 +311,7 @@ utils.roundBgTarget = (value, units) => {
  * 
  */
 utils.getSettings = (sourceSettings) => {
-  const units = (sourceSettings.units && sourceSettings.units.bg) ? sourceSettings.units.bg : MGDL_UNITS;
+  const units = _.get(sourceSettings, 'units.bg', MGDL_UNITS);
   return _.defaultsDeep({},
     sourceSettings,
     { bgTarget: DEFAULT_BG_TARGETS[units] },
