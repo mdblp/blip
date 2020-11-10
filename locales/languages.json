@@ -27,7 +27,7 @@
       "params": {}
     },
     "de": {
-      "name": "German",
+      "name": "Deutsch",
       "main": {
         "Log in": "Einloggen"
       },
@@ -39,6 +39,17 @@
         "Log in": "Inloggen"
       },
       "params": {}
+    }
+  },
+  "countries": {
+    "FR": {
+      "name": "France"
+    },
+    "DE": {
+      "name": "Germany"
+    },
+    "NL": {
+      "name": "Netherlands"
     }
   }
 }
