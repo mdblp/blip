@@ -42,8 +42,6 @@ import nurseShark from 'tideline/plugins/nurseshark/';
 import Messages from '../../components/messages';
 import UploaderButton from '../../components/uploaderbutton';
 
-import { DEFAULT_BG_SETTINGS } from '../patient/patientsettings';
-
 import {
   MGDL_UNITS,
   MMOLL_UNITS,
@@ -1159,7 +1157,7 @@ export let PatientData = translate()(createReactClass({
 
       const patientNotes = _.get(props, ['patientNotesMap', patientID], []);
       let patientSettings = _.cloneDeep(_.get(props, ['patient', 'settings'], null));
-      _.defaultsDeep(patientSettings, DEFAULT_BG_SETTINGS);
+      patientSettings = utils.getSettings(patientSettings);
 
       // Determine how far back into the unprocessed patient data we want to process.
       const timezoneSettings = this.state.timePrefs.timezoneAware
@@ -1235,10 +1233,12 @@ export let PatientData = translate()(createReactClass({
           bgUnits: processedData.bgUnits
         };
 
-        this.dataUtil = new DataUtil(
-          processedData.data.concat(_.get(processedData, 'grouped.upload', [])),
-          { bgPrefs, timePrefs }
-        );
+        let dataUtilArray = processedData.data.concat(_.get(processedData, 'grouped.upload', []));
+        const pumpSettings = _.get(processedData, 'grouped.pumpSettings', []);
+        if (pumpSettings.length > 0) {
+          dataUtilArray = dataUtilArray.concat([_.last(pumpSettings)]);
+        }
+        this.dataUtil = new DataUtil(dataUtilArray, { bgPrefs, timePrefs });
 
         // Set default bgSource for basics based on whether there is any cbg data in the current view.
         const basicsChartPrefs = _.assign({}, this.state.chartPrefs.basics, {
