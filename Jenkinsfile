@@ -45,6 +45,11 @@ pipeline {
                 pack()
             }
         }
+        stage('Documentation') {
+            steps {
+                genDocumentation()
+            }
+        }
         stage('Publish') {
             when { branch "dblp" }
             steps {
