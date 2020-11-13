@@ -10,7 +10,7 @@ function retrieveLanguageParameters() {
   REPO=translations
   # GIT_BRANCH can be a branch or a tag
   # GIT_BRANCH=master
-  GIT_BRANCH=dblp.feature/ylp300-es-it
+  GIT_BRANCH=feature/ylp300-es-it
 
   if [ -n "${GIT_TOKEN:-}" ]; then
     echo "Having GIT_TOKEN, fetching parameters translation"
