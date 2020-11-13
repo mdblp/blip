@@ -30,18 +30,20 @@ const migrations = {
       return false;
     },
     migrate: (profile = {}) => {
-      profile.fullName = `${profile.firstName} ${profile.lastName}`;
-      return profile;
+      const p = _.cloneDeep(profile);
+      p.fullName = `${p.firstName} ${p.lastName}`;
+      return p;
     }
   },
 
   country: {
-    isRequired: (settings = {}) => {
-      return _.isEmpty(settings.country);
+    isRequired: (settings) => {
+      return _.isEmpty(settings) || (_.isObject(settings) && _.isEmpty(settings.country));
     },
     migrate: (settings = {}) => {
-      settings.country = 'FR';
-      return settings;
+      const s = _.cloneDeep(settings);
+      s.country = 'FR';
+      return s;
     }
   }
 };

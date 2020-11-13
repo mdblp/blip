@@ -261,8 +261,8 @@ api.user.get = (cb) => {
       }
       if (migrations.country.isRequired(settings)) {
         api.log(`Migrating and saving user [${userId}] settings with default country`);
-        migrations.country.migrate(settings);
-        return api.metadata.settings.put(userId, settings, cb);
+        const updatedSettings = migrations.country.migrate(settings);
+        return api.metadata.settings.put(userId, updatedSettings, cb);
       }
       return cb(null, settings);
     });
@@ -284,6 +284,7 @@ api.user.get = (cb) => {
         // The logged-in user's permissions are always root
         user.permissions = { root: {} };
       }
+      api.log('api.user.get', user);
       cb(null, user);
     });
 };
@@ -581,26 +582,24 @@ api.metadata.preferences.put = function(patientId, preferences, cb) {
 
 api.metadata.settings = {};
 
-api.metadata.settings.get = function(patientId, cb) {
-  api.log('GET /metadata/' + patientId + '/settings');
+api.metadata.settings.get = function(userId, cb) {
+  api.log(`GET /metadata/${userId}/settings`);
 
   // We don't want to fire an error if the patient has no settings saved yet,
   // so we check if the error status is not 404 first.
-  tidepool.findSettings(patientId, function(err, payload) {
+  tidepool.findSettings(userId, (err, payload) => {
     if (err && err.status !== 404) {
       return cb(err);
     }
 
-    var settings = payload || {};
-
-    return cb(null, settings);
+    return cb(null, payload || {});
   });
 };
 
-api.metadata.settings.put = function(patientId, settings, cb) {
-  api.log('PUT /metadata/' + patientId + '/settings');
+api.metadata.settings.put = function(userId, settings, cb) {
+  api.log(`PUT /metadata/${userId}/settings`);
 
-  tidepool.addOrUpdateSettings(patientId, settings, function(err) {
+  tidepool.addOrUpdateSettings(userId, settings, (err) => {
     if (err) {
       return cb(err);
     }
