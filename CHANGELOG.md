@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-298 Enable Spanish and Italian languages
+### Fixed
+- YLP-211 Rework Cloudfront deployment services
 
 ## 1.6.0 - 2020-11-10
 ### Added
