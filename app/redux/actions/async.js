@@ -733,7 +733,7 @@ export function requestPasswordReset(api, email) {
   return (dispatch) => {
     dispatch(sync.requestPasswordResetRequest());
 
-    api.user.requestPasswordReset(email, function (err) {
+    api.user.requestPasswordReset(email, (err) => {
       if (err) {
         dispatch(sync.requestPasswordResetFailure(
           createActionError(ErrorMessages.ERR_REQUESTING_PASSWORD_RESET, err), err
@@ -1055,8 +1055,8 @@ export function fetchPatientData(api, options, id) {
         // No data in first pull. Pull all data.
         refetchOptions.startDate = null;
         refetchRequired = true;
-        delete (fetched.patientData);
-        delete (fetched.teamNotes);
+        delete fetched.patientData;
+        delete fetched.teamNotes;
       } else if (range.spanInDays < minDays) {
         // Not enough data from first pull. Pull data from 30 days prior to latest data time.
         refetchOptions.startDate = moment
@@ -1066,8 +1066,8 @@ export function fetchPatientData(api, options, id) {
           .toISOString();
 
         refetchRequired = true;
-        delete (fetched.patientData);
-        delete (fetched.teamNotes);
+        delete fetched.patientData;
+        delete fetched.teamNotes;
       }
 
       if (!latestPumpSettings) {
