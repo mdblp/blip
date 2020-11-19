@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-298 Enable Spanish and Italian languages
+### Fixed
+- YLP-292 Error messages not translated when creating an account
 ### Changed
 - YLP-280 Make France as default country for existing users
 ### Engineering Use
