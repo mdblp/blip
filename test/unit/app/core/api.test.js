@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import sinon from 'sinon';
+import { expect } from 'chai';
 
 import api from '../../../../app/core/api';
-const currentUserId = 'a1b2c3';
 
 describe('api', () => {
+  const currentUserId = 'a1b2c3';
   let tidepool;
 
   before(() => {
     tidepool = {
       findProfile: sinon.stub(),
+      findConsents: sinon.stub().callsArgWith(1, null),
       getUserId: sinon.stub().returns(currentUserId),
       getCurrentUser: sinon.stub(),
       getAssociatedUsersDetails: sinon.stub(),
@@ -17,14 +19,15 @@ describe('api', () => {
     };
 
     api.__Rewire__('tidepool', tidepool);
+    console.info(api.log);
   });
 
   beforeEach(() => {
-    tidepool.findProfile.resetHistory();
     tidepool.getUserId.resetHistory();
     tidepool.getCurrentUser.resetHistory();
     tidepool.getAssociatedUsersDetails.resetHistory();
     tidepool.findProfile.resetHistory();
+    tidepool.findConsents.resetHistory();
     tidepool.addOrUpdateSettings.resetHistory();
   });
 
@@ -38,31 +41,46 @@ describe('api', () => {
       let preferencesStub;
       /** @type {sinon.SinonStub} */
       let settingsStub;
+      /** @type {sinon.SinonStub} */
+      let consentsStub;
 
       before(() => {
         preferencesStub = sinon.stub(api.metadata.preferences, 'get');
         settingsStub = sinon.stub(api.metadata.settings, 'get');
+        consentsStub = sinon.stub(api.metadata.consents, 'get');
       });
 
       beforeEach(() => {
         preferencesStub.resetHistory();
         settingsStub.resetHistory();
+        consentsStub.resetHistory();
       });
 
       after(() => {
         preferencesStub.restore();
         settingsStub.restore();
+        consentsStub.restore();
       });
 
-      it('should fetch the current logged-in user account, preferences, profile, and settings', () => {
-        tidepool.getCurrentUser.callsArgWith(0, null, {
+      it('should fetch the current logged-in user account, preferences, profile, settings and consents', () => {
+        const user = {
           userid: currentUserId,
-        });
-        tidepool.findProfile.callsArgWith(1, null);
-        preferencesStub.callsArgWith(1, null);
-        settingsStub.callsArgWith(1, null);
+        };
+        const profile = {};
+        const preferences = {};
+        const consents = {};
+        const settings = {
+          country: 'FR',
+        };
+        tidepool.getCurrentUser.callsArgWith(0, null, user);
+        tidepool.findProfile.callsArgWith(1, null, profile);
+        preferencesStub.callsArgWith(1, null, preferences);
+        settingsStub.callsArgWith(1, null, settings);
+        consentsStub.callsArgWith(1, null, consents);
 
-        api.user.get(_.noop);
+        const cb = sinon.spy();
+        api.user.get(cb);
+
         sinon.assert.calledOnce(tidepool.getCurrentUser);
         sinon.assert.calledOnce(tidepool.getUserId);
 
@@ -74,6 +92,20 @@ describe('api', () => {
 
         sinon.assert.calledOnce(settingsStub);
         sinon.assert.calledWith(settingsStub, currentUserId);
+
+        sinon.assert.calledOnce(consentsStub);
+        sinon.assert.calledWith(consentsStub, currentUserId);
+
+        expect(cb.calledOnce).to.be.true;
+        const cbArgs = cb.getCall(0).args;
+        const expectArgs = [null, {
+          ...user,
+          settings,
+          profile,
+          preferences,
+          consents,
+        }];
+        expect(cbArgs, JSON.stringify({ cbArgs, expectArgs })).to.be.deep.equal(expectArgs);
       });
 
       it('should fetch the current logged-in user settings when a patient profile is returned', () => {
@@ -149,12 +181,14 @@ describe('api', () => {
 
         preferencesStub.callsArgWith(1, null, {});
         settingsStub.callsArgWith(1, null, { country: 'DE' });
+        consentsStub.callsArgWith(1, null, {});
 
         const cb = sinon.stub();
 
         api.user.get(cb);
         sinon.assert.calledOnce(cb);
         sinon.assert.calledWith(cb, null, {
+          consents: {},
           permissions: { root: {} },
           preferences: {},
           profile: { patient: { fullName: 'Jenny Doe' } },
@@ -181,6 +215,7 @@ describe('api', () => {
         sinon.assert.calledWith(tidepool.addOrUpdateSettings, currentUserId, { country: 'FR' });
         sinon.assert.calledOnce(cb);
         sinon.assert.calledWith(cb, null, {
+          consents: {},
           preferences: {},
           profile: { fullName: 'Doctor Jay' },
           settings: { country: 'FR' },
