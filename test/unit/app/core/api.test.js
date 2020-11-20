@@ -20,7 +20,6 @@ describe('api', () => {
     };
 
     api.__Rewire__('tidepool', tidepool);
-    console.info(api.log);
   });
 
   beforeEach(() => {
@@ -85,7 +84,7 @@ describe('api', () => {
         const settings = {
           country: 'FR',
         };
-        tidepool.getCurrentUser.callsArgWith(0, null, user);
+        tidepool.getCurrentUser.callsArgWith(0, null, _.cloneDeep(user));
         tidepool.findProfile.callsArgWith(1, null, profile);
         preferencesStub.callsArgWith(1, null, preferences);
         settingsStub.callsArgWith(1, null, settings);
@@ -116,7 +115,7 @@ describe('api', () => {
           // settings,
           profile,
           preferences,
-          // consents,
+          consents,
         }];
         expect(cbArgs, JSON.stringify({ cbArgs, expectArgs })).to.be.deep.equal(expectArgs);
       });
