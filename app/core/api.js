@@ -360,8 +360,16 @@ function userFromAccountAndProfile(results) {
   // Event: UPDATE_USER_SUCCESS
 
   const user = _.get(results, 'account', {});
-  user.profile = _.get(results, 'profile', {});
-  user.preferences = _.get(results, 'preferences', {});
+
+  const profile = _.get(results, 'profile', null);
+  if (!_.isEmpty(profile)) {
+    user.profile = profile;
+  }
+
+  const preferences = _.get(results, 'preferences', null);
+  if (!_.isEmpty(preferences)) {
+    user.preferences = preferences;
+  }
 
   // const settings = _.get(results, 'settings', null);
   // if (!_.isEmpty(settings)) {

@@ -16,6 +16,7 @@ describe('api', () => {
       getCurrentUser: sinon.stub(),
       getAssociatedUsersDetails: sinon.stub(),
       addOrUpdateSettings: sinon.stub(),
+      addOrUpdateProfile: sinon.stub(),
     };
 
     api.__Rewire__('tidepool', tidepool);
@@ -29,6 +30,7 @@ describe('api', () => {
     tidepool.findProfile.resetHistory();
     tidepool.findConsents.resetHistory();
     tidepool.addOrUpdateSettings.resetHistory();
+    tidepool.addOrUpdateProfile.resetHistory();
   });
 
   after(() => {
@@ -66,9 +68,20 @@ describe('api', () => {
         const user = {
           userid: currentUserId,
         };
-        const profile = {};
-        const preferences = {};
-        const consents = {};
+        const profile = {
+          firstName: 'a',
+          lastName: 'b',
+          fullName: 'ab',
+        };
+        const preferences = {
+          displayLanguageCode: 'en',
+        };
+        const consents = {
+          yourLoopsData: {
+            date: '2020-11-03T15:30:41.035Z',
+            value: true,
+          },
+        };
         const settings = {
           country: 'FR',
         };
@@ -100,10 +113,10 @@ describe('api', () => {
         const cbArgs = cb.getCall(0).args;
         const expectArgs = [null, {
           ...user,
-          settings,
+          // settings,
           profile,
           preferences,
-          consents,
+          // consents,
         }];
         expect(cbArgs, JSON.stringify({ cbArgs, expectArgs })).to.be.deep.equal(expectArgs);
       });
@@ -173,13 +186,21 @@ describe('api', () => {
       });
 
       it('should return a patient account object with merged preferences, and profile, and root permissions, and settings', () => {
+        const profile = {
+          patient: {
+            fullName: 'Jenny Doe'
+          }
+        };
+        const preferences = {
+          displayLanguageCode: 'en',
+        };
+
         tidepool.getCurrentUser.callsArgWith(0, null, {
           userid: currentUserId,
         });
 
-        tidepool.findProfile.callsArgWith(1, null, { patient: { fullName: 'Jenny Doe' } });
-
-        preferencesStub.callsArgWith(1, null, {});
+        tidepool.findProfile.callsArgWith(1, null, profile);
+        preferencesStub.callsArgWith(1, null, preferences);
         settingsStub.callsArgWith(1, null, { country: 'DE' });
         consentsStub.callsArgWith(1, null, {});
 
@@ -187,14 +208,15 @@ describe('api', () => {
 
         api.user.get(cb);
         sinon.assert.calledOnce(cb);
-        sinon.assert.calledWith(cb, null, {
-          consents: {},
+        const expectArgs = [null, {
           permissions: { root: {} },
-          preferences: {},
-          profile: { patient: { fullName: 'Jenny Doe' } },
-          settings: { country: 'DE' },
+          preferences,
+          profile,
+          // settings: { country: 'DE' },
           userid: currentUserId,
-        });
+        }];
+        const cbArgs = cb.getCall(0).args;
+        expect(cbArgs, JSON.stringify([expectArgs, cbArgs])).to.be.deep.equal(expectArgs);
       });
 
       it('should return a non-patient account object with merged preferences, profile and settings', () => {
@@ -215,10 +237,9 @@ describe('api', () => {
         sinon.assert.calledWith(tidepool.addOrUpdateSettings, currentUserId, { country: 'FR' });
         sinon.assert.calledOnce(cb);
         sinon.assert.calledWith(cb, null, {
-          consents: {},
-          preferences: {},
+          // preferences: {},
           profile: { fullName: 'Doctor Jay' },
-          settings: { country: 'FR' },
+          // settings: { country: 'FR' },
           userid: currentUserId,
         });
       });
