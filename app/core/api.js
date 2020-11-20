@@ -315,7 +315,6 @@ api.user.put = function(user, cb) {
   const account = accountFromUser(user);
   const profile = profileFromUser(user);
   const preferences = preferencesFromUser(user);
-  const consents = consentsFromUser(user);
 
   async.series({
     account: tidepool.updateCurrentUser.bind(tidepool, account),
@@ -327,7 +326,6 @@ api.user.put = function(user, cb) {
         return cb(err);
       }
 
-      results.consents = consents;
       const updatedUser = userFromAccountAndProfile(results);
       api.log.debug('Updated user:', updatedUser);
       cb(null, updatedUser);
@@ -355,18 +353,25 @@ function preferencesFromUser(user) {
   return _.cloneDeep(user.preferences);
 }
 
-function consentsFromUser(user) {
-  return _.cloneDeep(_.get(user, 'consents', {}));
-}
-
 function userFromAccountAndProfile(results) {
-  // sometimes `account` isn't in the results after e.g., password update
+  // Missing information in the result will be kept
+  // if previously present
+  // See redux / reducer: app/redux/reducers/misc.js:241
+  // Event: UPDATE_USER_SUCCESS
+
   const user = _.get(results, 'account', {});
-  // sometimes `profile` isn't in the results after e.g., after account signup
   user.profile = _.get(results, 'profile', {});
   user.preferences = _.get(results, 'preferences', {});
-  user.settings = _.get(results, 'settings', {});
-  user.consents = _.get(results, 'consents', {});
+
+  // const settings = _.get(results, 'settings', null);
+  // if (!_.isEmpty(settings)) {
+  //   user.settings = settings;
+  // }
+
+  const consents = _.get(results, 'consents', null);
+  if (!_.isEmpty(consents)) {
+    user.consents = consents;
+  }
 
   return user;
 }
