@@ -333,9 +333,9 @@ api.user.put = function(user, cb) {
 };
 
 function userAcceptMetrics(/** @type{object} */ user) {
-  let accept = config.METRICS_ALWAYS_ENABLED;
+  let accept = config.METRICS_FORCED;
   accept = accept || personUtils.isClinic(user);
-  accept = accept || _.get(user, 'consents.yourLoopsData.value', false);
+  accept = accept || _.get(user, 'consents.yourLoopsData.value', true);
   api.log.debug('User accept metrics:', accept);
   return accept;
 }
