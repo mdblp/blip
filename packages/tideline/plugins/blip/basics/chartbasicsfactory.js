@@ -15,13 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-/* jshint esversion:6 */
-
 var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
-
-// in order to get d3.chart dependency
-var tideline = require('../../../js/');
 
 var _ = require('lodash');
 var PropTypes = require('prop-types');
@@ -152,11 +147,10 @@ class BasicsChart extends React.Component {
     return deviceTypes;
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     var basicsData = this.props.patientData.basicsData;
     if (basicsData.sections == null) {
       var dataMunger = dataMungerMkr(this.props.bgClasses, this.props.bgUnits);
-      var basalUtil = this.props.patientData.basalUtil;
       var latestPump = dataMunger.getLatestPumpUploaded(this.props.patientData);
       basicsData = _.assign({}, basicsData, basicsState(latestPump));
 
