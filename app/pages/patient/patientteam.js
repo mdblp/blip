@@ -16,13 +16,13 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { translate } from 'react-i18next'
+import { translate } from 'react-i18next';
 import _ from 'lodash';
 import cx from 'classnames';
 import config from '../../config';
 
+import InputGroup from '../../components/inputgroup';
 var ModalOverlay = require('../../components/modaloverlay');
-var InputGroup = require('../../components/inputgroup');
 var personUtils = require('../../core/personutils');
 var utils = require('../../core/utils');
 
@@ -39,7 +39,7 @@ var PermissionInputGroup = translate()(class PermissionInputGroup extends React.
   };
 
   state = {
-    name: 'permission' + parseInt(Math.random() * 10000)
+    name: 'permission' + (Math.random() * 10000).toString(10)
   };
 
   handleChange = (obj) => {
@@ -380,7 +380,7 @@ var PatientTeam = translate()(class extends React.Component {
           <div className="PatientTeam-blocks PatientInfo-blocks">
             <div className="PatientInfo-blockRow">
               <div className="PatientInfo-block PatientInfo-block--withArrow" title={invite.email}><div>{invite.email}</div></div>
-              <a href="" className="PatientTeam-icon PatientTeam-icon--remove" title='Dismiss invitation' onClick={this.handleCancelInvite(invite)}><i className="icon-delete"></i></a>
+              <a href="" className="PatientTeam-icon PatientTeam-icon--remove" title={t('Dismiss invitation')} onClick={this.handleCancelInvite(invite)}><i className="icon-delete"></i></a>
               <div className="clear"></div>
               <div className="PatientInfo-waiting">{t('Waiting for confirmation')}</div>
             </div>
@@ -558,7 +558,7 @@ var PatientTeam = translate()(class extends React.Component {
   }
 });
 
-module.exports = {
+export {
   PatientTeam,
   MemberInviteForm
 };
