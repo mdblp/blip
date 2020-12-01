@@ -34,6 +34,8 @@ var { MGDL_UNITS } = require('../../js/data/util/constants');
 // Create a 'One Day' chart object that is a wrapper around Tideline components
 function chartDailyFactory(el, options) {
   var log = bows('Daily Factory');
+  log.info('Initializing...');
+
   options = options || {};
   var defaults = {
     bgUnits: MGDL_UNITS,
@@ -125,7 +127,7 @@ function chartDailyFactory(el, options) {
         'light': ` (${t('g')})`
       }])
       .labelBaseline(options.labelBaseline)
-      .legend(['bolus', 'carbs', 'rescuecarbs'])
+      .legend(['rescuecarbs', 'carbs', 'bolus'])
       .index(chart.pools().indexOf(poolBolus))
       .heightRatio(1.35)
       .gutterWeight(1.0);
@@ -187,12 +189,6 @@ function chartDailyFactory(el, options) {
   chart.load = function(tidelineData) {
     var data = tidelineData.data;
     chart.tidelineData = tidelineData;
-
-    var basalUtil = tidelineData.basalUtil;
-    var bolusUtil = tidelineData.bolusUtil;
-    var cbgUtil = tidelineData.cbgUtil;
-    var settingsUtil = tidelineData.settingsUtil;
-    var smbgUtil = tidelineData.smbgUtil;
 
     // initialize chart with data
     chart.data(tidelineData).setAxes().setNav().setScrollNav();
@@ -306,22 +302,33 @@ function chartDailyFactory(el, options) {
       onSMBGOut: options.onSMBGOut,
     }), true, true);
 
-    // TODO: when we bring responsiveness in
-    // decide number of ticks for these scales based on container height?
     // bolus & carbs pool
-    var scaleBolus = scales.bolus(tidelineData.grouped.bolus.concat(tidelineData.grouped.wizard), poolBolus);
-    var scaleCarbs = options.dynamicCarbs ? scales.carbs(tidelineData.grouped.wizard, poolBolus) : null;
+    const scaleBolus = scales.bolus(tidelineData.grouped.bolus.concat(tidelineData.grouped.wizard), poolBolus);
     // set up y-axis for bolus
+    const bolusTickValues = [0, 1, 5, 10];
+    const maxBolusValue = scaleBolus.domain()[1];
+    // Add additional legends
+    while (maxBolusValue > bolusTickValues[bolusTickValues.length - 1] && bolusTickValues.length < 7) {
+      const currentMax = bolusTickValues[bolusTickValues.length - 1];
+      const bolusTick = currentMax < 20 ? 5 : 10;
+      // [0, 5, 10, 15, 20, 30, 40]
+      bolusTickValues.push(currentMax + bolusTick);
+    }
+
+    log.debug('scaleBolus domain', scaleBolus.domain(), '=> tick values', bolusTickValues);
+
     poolBolus.yAxis(d3.svg.axis()
       .scale(scaleBolus)
       .orient('left')
       .outerTickSize(0)
-      .ticks(2));
+      .ticks(2)
+      .tickValues(bolusTickValues));
 
     // add background fill rectangles to bolus pool
-    var scaleHeight = d3.scale.linear()
-      .domain([0, poolBolus.height()])
-      .range([0, poolBolus.height()]);
+    const poolBolusHeight = [0, poolBolus.height()];
+    const scaleHeight = d3.scale.log()
+      .domain(poolBolusHeight)
+      .range(poolBolusHeight);
 
     poolBolus.addPlotType('fill', fill(poolBolus, {
       endpoints: chart.endpoints,
@@ -332,7 +339,6 @@ function chartDailyFactory(el, options) {
     // add wizard data to wizard pool
     poolBolus.addPlotType('wizard', tideline.plot.wizard(poolBolus, {
       yScale: scaleBolus,
-      yScaleCarbs: scaleCarbs,
       emitter: emitter,
       subdueOpacity: 0.4,
       timezoneAware: chart.options.timePrefs.timezoneAware,
