@@ -1,0 +1,38 @@
+{
+  "name": "tideline",
+  "version": "1.14.1",
+  "description": "Tidepool's timeline data visualization",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tidepool-org/tideline.git"
+  },
+  "publishConfig": {
+    "registry": "https://nexus.ci.diabeloop.eu/repository/your-loops-npm/"
+  },
+  "main": "js/index.js",
+  "license": "BSD-2-Clause",
+  "scripts": {
+    "mrproper": "rm -rf dist coverage node_modules",
+    "clean": "rm -rf dist coverage",
+    "pretest": "rm -rf coverage",
+    "test": "TZ=UTC NODE_ENV=test karma start",
+    "lint": "eslint js plugins test"
+  },
+  "dependencies": {
+    "bows": "1.7.2",
+    "classnames": "2.2.6",
+    "create-react-class": "^15.6.3",
+    "crossfilter2": "1.4.8",
+    "d3": "3.5.17",
+    "d3.chart": "0.3.0",
+    "duration-js": "4.0.0",
+    "i18next": "11.9.0",
+    "lodash": "^4.17.20",
+    "moment-timezone": "^0.5.32",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-sizeme": "2.6.12",
+    "util": "^0.12.3",
+    "sundial": "file:../sundial"
+  }
+}

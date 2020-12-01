@@ -1,0 +1,51 @@
+{
+  "name": "sundial",
+  "version": "0.2.0",
+  "description": "Tidepool's datetime wrapper",
+  "keywords": [
+    "datetime",
+    "date",
+    "time"
+  ],
+  "homepage": "https://github.com/mdblp/sundial",
+  "bugs": "https://github.com/tidepool-org/sundial/issues",
+  "license": "BSD-2-Clause",
+  "author": {
+    "name": "Eric Tschetter",
+    "url": "https://github.com/cheddar"
+  },
+  "contributors": [
+    {
+      "name": "Jamie Bate",
+      "email": "jamie@tidepool.org",
+      "url": "https://github.com/jh-bate"
+    },
+    {
+      "name": "Jana Beck",
+      "url": "https://github.com/jebeck"
+    },
+    {
+      "name": "Kent Quirk",
+      "email": "kent@tidepool.org",
+      "url": "https://github.com/kentquirk"
+    }
+  ],
+  "files": [
+    "sundial.js",
+    "lib"
+  ],
+  "main": "sundial.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdblp/blip.git"
+  },
+  "scripts": {
+    "mrproper": "rm -rf node_modules",
+    "lint": "eslint sundial.js lib test",
+    "test": "TZ=UTC LANG=C mocha --exit --check-leaks test/**/*.test.js ",
+    "security-checks": "npm audit --production --registry=https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "moment-timezone": "^0.5.32"
+  }
+}
