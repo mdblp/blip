@@ -1,26 +1,61 @@
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
  * License as published by the Open Source Initiative at opensource.org.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the License for more details.
- * 
+ *
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
 
-var d3 = require('d3');
-var _ = require('lodash');
+const _ = require('lodash');
 
-var commonbolus = require('./commonbolus');
-var dt = require('../../data/util/datetime');
-var format = require('../../data/util/format');
+const commonbolus = require('./commonbolus');
+
+const BolusTypes = {
+  meal: 1,
+  micro: 2,
+  manual: 3,
+};
+
+/**
+ * @param {object} b The bolus or wizard
+ * @returns {number} The type of bolus
+ */
+function bolusToLegend(b) {
+  if (b.type === 'wizard') {
+    return BolusTypes.meal;
+  }
+  const bolus = commonbolus.getBolus(b);
+  if (bolus.presciptor === 'manual') {
+    return BolusTypes.manual;
+  }
+  return BolusTypes.micro;
+}
+
+/**
+ * @param {object} b The bolus or wizard
+ * @param {string} baseClass default/prepend class
+ * @return {string} The SVG class
+ */
+function bolusClass(b, baseClass) {
+  switch (bolusToLegend(b)) {
+    case BolusTypes.manual:
+      return `${baseClass} d3-bolus-manual`;
+    case BolusTypes.meal:
+      return `${baseClass} d3-bolus-meal`;
+    case BolusTypes.micro:
+      return `${baseClass} d3-bolus-micro`;
+    }
+    return baseClass;
+}
 
 module.exports = function(pool, opts) {
   opts = opts || {};
@@ -43,7 +78,6 @@ module.exports = function(pool, opts) {
   _.defaults(opts, defaults);
 
   var top = opts.yScale.range()[0];
-  var bottom = top - opts.bolusStroke / 2;
   var mainGroup = pool.parent();
 
   var pluckBolus = function(d) {
@@ -134,11 +168,16 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return opts.yScale(commonbolus.getDelivered(d));
           },
-          width: opts.width,
+          width: (d) => {
+            if (bolusToLegend(d) === BolusTypes.micro) {
+              return opts.width / 2;
+            }
+            return opts.width;
+          },
           height: function(d) {
             return top - opts.yScale(commonbolus.getDelivered(d));
           },
-          'class': 'd3-rect-bolus d3-bolus',
+          'class': (b) => bolusClass(b, 'd3-bolus d3-rect-bolus'),
           id: function(d) {
             d = pluckBolus(d);
             return 'bolus_' + d.id;
@@ -156,31 +195,43 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return opts.yScale(commonbolus.getMaxValue(d));
           },
-          width: opts.width,
-          height: function(d) {
-            d = pluckBolus(d);
-            return opts.yScale(commonbolus.getDelivered(d)) - opts.yScale(commonbolus.getMaxValue(d)) - 1;
+          width: (d) => {
+            if (bolusToLegend(d) === BolusTypes.micro) {
+              return opts.width / 2;
+            }
+            return opts.width;
           },
-          'class': 'd3-rect-suspended-bolus d3-bolus'
+          height: (b) => {
+            const d = commonbolus.getDelivered(b);
+            const m = commonbolus.getMaxValue(b);
+            return opts.yScale(d) - opts.yScale(m);
+          },
+          'class': 'd3-rect-suspended-bolus d3-bolus',
+          'id': (b) => `${b.type}_suspended_${b.id}`,
         });
 
       // draw the line
-      suspended.append('rect')
-        .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            if (commonbolus.getDelivered(d) === 0) {
-              return opts.yScale(0) - opts.markerHeight;
-            }
-            return opts.yScale(commonbolus.getDelivered(d));
-          },
-          width: opts.width,
-          height: opts.markerHeight,
-          'class': 'd3-rect-suspended d3-bolus'
-        });
+      // suspended.append('rect')
+      //   .attr({
+      //     x: function(d) {
+      //       d = pluckBolus(d);
+      //       return xPosition(d);
+      //     },
+      //     y: function(d) {
+      //       if (commonbolus.getDelivered(d) === 0) {
+      //         return opts.yScale(0) - opts.markerHeight;
+      //       }
+      //       return opts.yScale(commonbolus.getDelivered(d));
+      //     },
+      //     width: (d) => {
+      //       if (bolusToLegend(d) === BolusTypes.micro) {
+      //         return opts.width / 2;
+      //       }
+      //       return opts.width;
+      //     },
+      //     height: opts.markerHeight,
+      //     'class': 'd3-rect-suspended d3-bolus'
+      //   });
     },
     underride: function(underride) {
       underride = underride.filter(function(d) {
@@ -195,7 +246,12 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return opts.yScale(commonbolus.getRecommended(d));
           },
-          width: opts.width,
+          width: (d) => {
+            if (bolusToLegend(d) === BolusTypes.micro) {
+              return opts.width / 2;
+            }
+            return opts.width;
+          },
           height: function(d) {
             return opts.yScale(commonbolus.getDelivered(d)) - opts.yScale(commonbolus.getRecommended(d));
           },
@@ -221,7 +277,12 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return opts.yScale(commonbolus.getDelivered(d));
           },
-          width: opts.width,
+          width: (d) => {
+            if (bolusToLegend(d) === BolusTypes.micro) {
+              return opts.width / 2;
+            }
+            return opts.width;
+          },
           height: opts.markerHeight,
           'class': 'd3-rect-override d3-bolus'
         });
@@ -258,7 +319,12 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight;
           },
-          width: opts.width,
+          width: (d) => {
+            if (bolusToLegend(d) === BolusTypes.micro) {
+              return opts.width / 2;
+            }
+            return opts.width;
+          },
           height: opts.markerHeight,
           'class': 'd3-rect-override d3-bolus'
         });
@@ -362,7 +428,7 @@ module.exports = function(pool, opts) {
       add: function(d, rect) {
         if (_.get(opts, 'onBolusHover', false)) {
           opts.onBolusHover({
-            data: d, 
+            data: d,
             rect: rect
           });
         }

@@ -203,16 +203,16 @@ svg {
 .d3-rect-carbs {
   fill: @carbs;
 }
-.d3-rect-carbs-legend {
-  .d3-rect-carbs;
+.d3-circle-carbs-legend {
+  fill: @carbs;
   stroke: @carbs;
   stroke-width: 1.5;
 }
 .d3-rect-rescuecarbs {
   fill: @rescuecarbs;
 }
-.d3-rect-rescuecarbs-legend {
-  .d3-rect-rescuecarbs;
+.d3-circle-rescuecarbs-legend {
+  fill: @rescuecarbs;
   stroke: @rescuecarbs;
   stroke-width: 1.5;
 }
@@ -266,12 +266,24 @@ svg {
 }
 // boluses
 .d3-bolus {
-  &.d3-rect-bolus {
-    fill: @bolus;
+  &.d3-bolus-meal {
+    fill: @bolus-meal !important;
+    stroke: @bolus-meal;
+  }
+  &.d3-bolus-micro {
+    fill: @bolus-micro !important;
+    stroke: @bolus-micro;
+    opacity: 0.6;
+  }
+  &.d3-bolus-manual {
+    fill: @bolus-manual !important;
+    stroke: @bolus-manual;
+  }
+  &.d3-bolus-undelivered {
+    fill: @bolus-undelivered !important;
+    stroke: @bolus-undelivered;
   }
   &.d3-rect-bolus-legend {
-    .d3-rect-bolus;
-    stroke: @bolus;
     stroke-width: 1.5;
   }
   &.d3-path-bolus {
@@ -289,41 +301,36 @@ svg {
     fill: @bolus;
   }
   &.d3-path-extended-triangle-suspended {
-    stroke: @undelivered;
-    fill: @undelivered;
+    stroke: @bolus-undelivered;
+    fill: @bolus-undelivered;
   }
   &.d3-path-suspended {
-    stroke: @suspended;
-    fill: @suspended;
+    stroke: @bolus-interrupted;
+    fill: @bolus-interrupted;
   }
   &.d3-rect-suspended-bolus {
-    stroke: @undelivered;
-    fill: @undelivered;
+    stroke: @bolus-undelivered;
+    fill: @bolus-undelivered;
   }
   &.d3-path-extended-suspended {
-    stroke: @undelivered;
-    fill: @undelivered;
+    stroke: @bolus-undelivered;
+    fill: @bolus-undelivered;
   }
   &.d3-path-suspended-triangle {
-    stroke: @suspended;
+    stroke: @bolus-interrupted;
     fill: none;
   }
   &.d3-rect-recommended {
-    fill: @undelivered;
-  }
-  &.d3-rect-recommended-legend {
-    .d3-rect-recommended;
-    stroke: @undelivered;
-    stroke-width: 1.5;
+    fill: @bolus-undelivered;
   }
   &.d3-rect-suspended {
-    fill: @suspended;
+    fill: @bolus-interrupted;
   }
   &.d3-rect-override {
-    fill: @override;
+    filter: brightness(35%);
   }
   &.d3-polygon-override {
-    fill: @override;
+    filter: brightness(50%);
   }
 }
 
