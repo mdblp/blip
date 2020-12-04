@@ -57,10 +57,8 @@ function bolusClass(b, baseClass) {
     return baseClass;
 }
 
-module.exports = function(pool, opts) {
-  opts = opts || {};
-
-  var defaults = {
+module.exports = function(pool, opts = {}) {
+  const defaults = {
     width: 12,
     r: 14,
     suspendMarkerWidth: 5,
@@ -77,15 +75,14 @@ module.exports = function(pool, opts) {
 
   _.defaults(opts, defaults);
 
+  const halfWidth = opts.width / 2;
   var top = opts.yScale.range()[0];
   var mainGroup = pool.parent();
 
-  var pluckBolus = function(d) {
-    return d.bolus ? d.bolus : d;
-  };
+  const pluckBolus = commonbolus.getBolus;
 
   var xPosition = function(d) {
-    var x = opts.xScale(Date.parse(d.normalTime)) - opts.width/2;
+    var x = opts.xScale(Date.parse(d.normalTime)) - halfWidth;
     return x;
   };
   var computePathHeight = function(d) {
@@ -96,9 +93,9 @@ module.exports = function(pool, opts) {
     return base;
   };
 
-  var triangleLeft = function(x) { return x + opts.width/2 - opts.triangleOffset; };
-  var triangleRight = function(x) { return x + opts.width/2 + opts.triangleOffset; };
-  var triangleMiddle = function(x) { return x + opts.width/2; };
+  var triangleLeft = function(x) { return x + halfWidth - opts.triangleOffset; };
+  var triangleRight = function(x) { return x + halfWidth + opts.triangleOffset; };
+  var triangleMiddle = function(x) { return x + halfWidth; };
 
   var extendedTriangle = function(x, y) {
     var top = (x + opts.triangleSize) + ' ' + (y + opts.triangleSize/2);
@@ -122,7 +119,7 @@ module.exports = function(pool, opts) {
   return {
     carb: function(carbs) {
       var xPos = function(d) {
-        return xPosition(d) + opts.width/2;
+        return xPosition(d) + halfWidth;
       };
 
       var yPos = function(d) {
@@ -441,8 +438,8 @@ module.exports = function(pool, opts) {
         }
       }
     },
-    annotations: function(data, selection) {
-      _.each(data, function(d) {
+    annotations: function(data /*, selection */) {
+      _.forEach(data, function(d) {
         var annotationOpts = {
           x: opts.xScale(Date.parse(d.normalTime)),
           y: opts.yScale(commonbolus.getMaxValue(d)),

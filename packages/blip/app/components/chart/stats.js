@@ -221,6 +221,6 @@ class Stats extends Component {
 
     this.setState({ stats });
   };
-};
+}
 
 export default Stats;

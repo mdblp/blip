@@ -14,8 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+// @ts-nocheck
 
-/* jshint esversion:6 */
 var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
 
@@ -39,8 +39,6 @@ function chartDailyFactory(el, options) {
   options = options || {};
   var defaults = {
     bgUnits: MGDL_UNITS,
-    bolusRatio: 0.35,
-    dynamicCarbs: false,
     labelBaseline: 4,
     timePrefs: {
       timezoneAware: false,
@@ -439,8 +437,8 @@ function chartDailyFactory(el, options) {
       var minusHalf = new Date(start);
       minusHalf.setUTCHours(minusHalf.getUTCHours() - 12);
       if ((start.valueOf() < chart.endpoints[0]) || (start.valueOf() > chart.endpoints[1])) {
-        log('Please don\'t ask tideline to locate at a date that\'s outside of your data!');
-        log('Rendering most recent data instead.');
+        log.error('Please don\'t ask tideline to locate at a date that\'s outside of your data!');
+        log.error('Rendering most recent data instead.');
         mostRecent();
       }
       else if (plusHalf.valueOf() > chart.endpoints[1]) {
@@ -462,7 +460,7 @@ function chartDailyFactory(el, options) {
     chart.renderedData([start, end]);
 
     // render pools
-    _.each(chart.pools(), function(pool) {
+    _.forEach(chart.pools(), function(pool) {
       pool.render(chart.poolGroup(), chart.renderedData());
     });
 
@@ -476,7 +474,7 @@ function chartDailyFactory(el, options) {
   };
 
   chart.createMessage = function(message) {
-    log('New message created:', message);
+    log.info('New message created:', message);
     chart.tidelineData.addData([message]);
     chart.data(chart.tidelineData);
     chart.emitter.emit('messageCreated', message);
@@ -484,7 +482,7 @@ function chartDailyFactory(el, options) {
   };
 
   chart.editMessage = function(message) {
-    log('Message edited:', message);
+    log.info('Message edited:', message);
     // tideline only cares if the edited message was a top-level note
     // not a comment
     if (_.isEmpty(message.parentMessage)) {

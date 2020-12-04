@@ -129,7 +129,7 @@ var scales = function(opts) {
     },
     basal: function(data, pool) {
       var scale = d3.scale.linear()
-        .domain([0, d3.max(data, function(d) {
+        .domain([0, d3.max(data, (d) => {
           return d.rate;
         }) * 1.1])
         .rangeRound([pool.height(), 0]);

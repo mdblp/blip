@@ -18,8 +18,6 @@
 var d3 = require('d3');
 var _ = require('lodash');
 
-var log = require('bows')('Wizard');
-
 var commonbolus = require('./util/commonbolus');
 var drawbolus = require('./util/drawbolus');
 
@@ -33,7 +31,6 @@ module.exports = function(pool, opts) {
   _.defaults(opts, defaults);
 
   var drawBolus = drawbolus(pool, opts);
-  var mainGroup = pool.parent();
 
   return function(selection) {
     opts.xScale = pool.xScale().copy();
