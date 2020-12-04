@@ -251,7 +251,7 @@ function TidelineData(data, opts) {
     this.physicalActivities = _.map(physicalActivity, (value) => value[0]);
   };
 
-  this.setEvents = function (data = [], filter = {}, order = ['deviceTime']) {
+  this.setEvents = function (data = [], filter = {}, order = ['inputTime']) {
     const sourceEvents = _.groupBy(_.filter( data, filter ), 'eventId');
     const events = {};
     _.forEach(sourceEvents, function(value, key) {
@@ -793,8 +793,6 @@ function TidelineData(data, opts) {
     {type: 'deviceEvent', subType: 'zen'},
     ['inputTime']
   );
-  console.log(this.data);
-  console.log(this.zenEvents);
   this.confidentialEvents = this.setEvents(
     data, 
     {type: 'deviceEvent', subType: 'confidential'},

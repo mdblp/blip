@@ -152,37 +152,8 @@ module.exports = function(pool, opts) {
           }
         });      
         zenModeEvent.exit().remove();
-
-      // highlight is disabled for now but we may decide to use it later one
-      // var highlight = pool.highlight('.d3-event-group', opts);
-
-      // tooltips
-      // selection.selectAll('.d3-event-group').on('mouseover', function(d) {
-      //     var parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
-      //     var container = this.getBoundingClientRect();
-      //     container.y = container.top - parentContainer.top;
-
-      //     zenModeEvent.addToolTip(d3.select(this).datum(), container);
-
-      //   // highlight is disabled for now but we may decide to use it later one
-      //   // highlight.on(d3.select(this));
-      // });
-      // selection.selectAll('.d3-event-group').on('mouseout', function(d) {
-      //   // drawEvent.tooltip.remove(d);
-      //   opts.onZenModeOut();
-      //   // highlight is disabled for now but we may decide to use it later one
-      //   // highlight.off();
-      // });
     });
   };
 
-  zenModeEvent.addToolTip = function(d, rect) {
-    if (_.get(opts, 'onParameterHover', false)) {
-      opts.onZenModeHover({
-        data: d,
-        rect: rect
-      });
-    }
-  };
   return zenModeEvent;
 };
