@@ -43,6 +43,7 @@ const FoodTooltip = vizComponents.FoodTooltip;
 const ReservoirTooltip = vizComponents.ReservoirTooltip;
 const PhysicalTooltip = vizComponents.PhysicalTooltip;
 const ParameterTooltip = vizComponents.ParameterTooltip;
+// const ZenModeToolTip = vizComponents.ZenModeToolTip;
 
 import Header from './header';
 import Footer from './footer';
@@ -78,6 +79,8 @@ const DailyChart = translate()(class DailyChart extends Component {
     onPhysicalOut: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
     onParameterOut: PropTypes.func.isRequired,
+    // onZenModeHover: PropTypes.func.isRequired,
+    // onZenModeOut: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -103,6 +106,8 @@ const DailyChart = translate()(class DailyChart extends Component {
       'onPhysicalOut',
       'onParameterHover',
       'onParameterOut',
+      // 'onZenModeHover',
+      // 'onZenModeOut',
     ];
 
     this.log = bows('Daily Chart');
@@ -336,6 +341,8 @@ class Daily extends Component {
                 onPhysicalOut={this.handlePhysicalOut}
                 onParameterHover={this.handleParameterHover}
                 onParameterOut={this.handleParameterOut}
+                // onZenModeHover={this.handleZenModeHover}
+                // onZenModeOut={this.handleZenModeOut}
                 ref="chart" />
             </div>
           </div>
@@ -420,6 +427,16 @@ class Daily extends Component {
           }}
           side={this.state.hoveredPhysical.side}
           physicalActivity={this.state.hoveredPhysical.data}
+          bgPrefs={this.props.bgPrefs}
+          timePrefs={timePrefs}
+        />}
+        {this.state.hoveredZenMode && <ZenModeToolTip
+          position={{
+            top: this.state.hoveredZenMode.top,
+            left: this.state.hoveredZenMode.left
+          }}
+          side={this.state.hoveredZenMode.side}
+          zenMode={this.state.hoveredZenMode.data}
           bgPrefs={this.props.bgPrefs}
           timePrefs={timePrefs}
         />}
@@ -669,6 +686,29 @@ class Daily extends Component {
       hoveredPhysical: false
     });
   };
+
+  // handleZenModeHover = zen => {
+  //   var rect = zen.rect;
+  //   // range here is -12 to 12
+  //   var hoursOffset = sundial.dateDifference(zen.data.normalTime, this.state.datetimeLocation, 'h');
+  //   zen.top = rect.top + (rect.height / 2)
+  //   if(hoursOffset > 5) {
+  //     zen.side = 'left';
+  //     zen.left = rect.left;
+  //   } else {
+  //     zen.side = 'right';
+  //     zen.left = rect.left + rect.width;
+  //   }
+  //   this.setState({
+  //     hoveredZenMode: zen
+  //   });
+  // };
+
+  // handleZenModeOut = () => {
+  //   this.setState({
+  //     hoveredZenMode: false
+  //   });
+  // };
 
   handleParameterHover = parameter => {
     const { rect } = parameter;
