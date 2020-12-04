@@ -61,6 +61,11 @@
   font-weight: bold;
 }
 
+.undelivered {
+  composes: row;
+  font-weight: bold;
+}
+
 .delivered {
   composes: row;
   font-weight: bold;
@@ -72,31 +77,7 @@
   font-weight: bold;
 }
 
-.interrupted {
-  composes: row;
-  color: var(--bolus-interrupted);
-  font-weight: bold;
-}
-
-.normal {
-  color: var(--gray-medium);
-  composes: row;
-}
-
-.extended {
-  color: var(--gray-medium);
-  composes: row;
-}
-
-.programmed {
-  composes: row;
-}
-
 .carbs {
-  composes: row;
-}
-
-.bg {
   composes: row;
 }
 
@@ -121,18 +102,6 @@
 }
 
 .target {
-  composes: row;
-}
-
-.isf {
-  composes: row;
-}
-
-.carbRatio {
-  composes: row;
-}
-
-.annotation {
   composes: row;
 }
 
