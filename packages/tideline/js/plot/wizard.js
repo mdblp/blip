@@ -89,28 +89,24 @@ module.exports = function(pool, opts) {
       var extended = boluses.filter(function(d) {
         return d.bolus.extended || d.bolus.expectedExtended;
       });
-
       drawBolus.extended(extended);
 
       // boluses where recommended > delivered
       var underride = boluses.filter(function(d) {
         return commonbolus.getRecommended(d) > commonbolus.getDelivered(d);
       });
-
       drawBolus.underride(underride);
 
       // boluses where delivered > recommended
       var override = boluses.filter(function(d) {
         return commonbolus.getDelivered(d) > commonbolus.getRecommended(d);
       });
-
       drawBolus.override(override);
 
       // boluses where programmed differs from delivered
       var suspended = boluses.filter(function(d) {
         return commonbolus.getDelivered(d) !== commonbolus.getProgrammed(d);
       });
-
       drawBolus.suspended(suspended);
 
       var extendedSuspended = boluses.filter(function(d) {
@@ -119,7 +115,6 @@ module.exports = function(pool, opts) {
         }
         return false;
       });
-
       drawBolus.extendedSuspended(extendedSuspended);
 
       wizards.exit().remove();

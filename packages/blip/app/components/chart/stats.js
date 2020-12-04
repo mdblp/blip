@@ -202,7 +202,7 @@ class Stats extends Component {
     const { bgBounds, bgUnits, days, latestPump } = dataUtil;
     const { manufacturer } = latestPump;
 
-    _.each(stats, (stat, i) => {
+    _.forEach(stats, (stat, i) => {
       const data = dataUtil[statFetchMethods[stat.id]]();
       const opts = {
         bgSource: bgSource,
@@ -218,9 +218,6 @@ class Stats extends Component {
       stats[i].annotations = getStatAnnotations(data, stat.id, opts);
       stats[i].title = getStatTitle(stat.id, opts);
     });
-
-
-    this.log('stats', stats);
 
     this.setState({ stats });
   };
