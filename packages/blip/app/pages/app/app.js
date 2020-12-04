@@ -183,23 +183,25 @@ export class AppComponent extends React.Component {
       }
     }
     if (config.HELP_LINK !== null && typeof window.zE === 'function') {
-      if (this.props.authenticated) {
-        let name = this.props.user.profile.fullName;
-        let email = this.props.user.emails[0];
-
-        window.zE('webWidget', 'prefill', {
-          name: { value: name, readOnly: true },
-          email: { value: email, readOnly: true },
-        });
-      } else {
-        // Put all of them to be sure
-        window.zE('webWidget', 'close');
-        window.zE('webWidget', 'logout');
-        window.zE('webWidget', 'clear');
-        window.zE('webWidget', 'reset');
-      }
+      this.renderZenDeskWidget();
     }
+  }
 
+  renderZenDeskWidget() {
+    if (this.props.authenticated) {
+      let name = this.props.user.profile.fullName;
+      let email = this.props.user.emails[0];
+      window.zE('webWidget', 'prefill', {
+        name: { value: name, readOnly: true },
+        email: { value: email, readOnly: true },
+      });
+    } else {
+      // Put all of them to be sure
+      window.zE('webWidget', 'close');
+      window.zE('webWidget', 'logout');
+      window.zE('webWidget', 'clear');
+      window.zE('webWidget', 'reset');
+    }
   }
 
   /**
