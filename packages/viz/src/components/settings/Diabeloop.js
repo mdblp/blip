@@ -127,8 +127,8 @@ const Diabeloop = (props) => {
       <div className={styles.settingsContainer}>
         <div className={styles.categoryContainer}>
           <div className={styles.categoryTitle}>{t('Device')}</div>
-          <PumpTable pump={pump}></PumpTable>
-          <CgmTable cgm={cgm}></CgmTable>
+          <PumpTable pump={pump} timePrefs={timePrefs}> </PumpTable>
+          <CgmTable cgm={cgm} timePrefs={timePrefs}> </CgmTable>
         </div>
         {renderDiabeloopParameters(parametersByLevel)}
         <div className={styles.categoryContainer}>

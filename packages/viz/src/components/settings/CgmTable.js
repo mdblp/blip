@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment-timezone';
 import i18next from 'i18next';
+import _ from 'lodash';
 import styles from './Diabeloop.css';
 import * as datetime from '../../utils/datetime';
 
@@ -33,9 +34,12 @@ class CgmTable extends React.Component {
   }
 
   formatDate(value) {
-    return moment.tz(value, 'UTC')
-      .tz(datetime.getBrowserTimezone())
-      .format('MMM D, YYYY');
+    if (_.isEmpty(value))
+    {
+      return null;
+    }
+
+    return datetime.formatLocalizedFromUTC(value, this.props.timePrefs, 'MMM D, YYYY');
   }
 }
 

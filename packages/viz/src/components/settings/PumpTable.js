@@ -1,7 +1,9 @@
 import React from 'react';
 import moment from 'moment-timezone';
+import _ from 'lodash';
 import i18next from 'i18next';
 import styles from './Diabeloop.css';
+import * as datetime from '../../utils/datetime';
 
 const t = i18next.t.bind(i18next);
 
@@ -11,10 +13,7 @@ class PumpTable extends React.Component {
   }
 
   render() {
-    const pumpExpirationDate = 
-      moment.tz(this.props.pump.expirationDate, 'UTC')
-      .tz(datetime.getBrowserTimezone())
-      .format('MMM D, YYYY');
+    const pumpExpirationDate = this.formatDate(this.props.pump.expirationDate);
     
     return (
       <table className={styles.settingsTable}>
@@ -29,6 +28,15 @@ class PumpTable extends React.Component {
         </tbody>
       </table>
     );
+  }
+
+  formatDate(value) {
+    if (_.isEmpty(value))
+    {
+      return null;
+    }
+
+    return datetime.formatLocalizedFromUTC(value, this.props.timePrefs, 'MMM D, YYYY');
   }
 }
 
