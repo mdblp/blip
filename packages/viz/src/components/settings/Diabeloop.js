@@ -28,6 +28,8 @@ import HistoryTable from './DiabeloopHistoryParameters';
 
 import * as datetime from '../../utils/datetime';
 import * as dblData from '../../utils/settings/diabeloopData';
+import PumpTable from './PumpTable.js';
+import CgmTable from './CgmTable.js';
 import { deviceName, getDeviceMeta } from '../../utils/settings/data';
 
 import styles from './Diabeloop.css';
@@ -97,6 +99,8 @@ const Diabeloop = (props) => {
 
   const parameters = _.get(pumpSettings, 'payload.parameters', null);
   const device = _.get(pumpSettings, 'payload.device', null);
+  const pump = _.get(pumpSettings, 'payload.pump', null);
+  const cgm = _.get(pumpSettings, 'payload.cgm', null);
   const history = _.sortBy(_.cloneDeep(_.get(pumpSettings, 'payload.history', null)), ['changeDate']);
 
   if (parameters === null || device === null) {
@@ -123,17 +127,8 @@ const Diabeloop = (props) => {
       <div className={styles.settingsContainer}>
         <div className={styles.categoryContainer}>
           <div className={styles.categoryTitle}>{t('Device')}</div>
-          <table className={styles.settingsTable}>
-            <caption className={styles.bdlgSettingsHeader}>
-              {t('Device')}<span className={styles.secondaryLabelWithMain}>{device.name}</span>
-            </caption>
-            <tbody>
-              <tr><td>{t('Manufacturer')}</td><td>{device.manufacturer}</td></tr>
-              <tr><td>{t('Identifier')}</td><td>{device.deviceId}</td></tr>
-              <tr><td>{t('IMEI')}</td><td>{device.imei}</td></tr>
-              <tr><td>{t('Software version')}</td><td>{device.swVersion}</td></tr>
-            </tbody>
-          </table>
+          <PumpTable pump={pump}></PumpTable>
+          <CgmTable cgm={cgm}></CgmTable>
         </div>
         {renderDiabeloopParameters(parametersByLevel)}
         <div className={styles.categoryContainer}>
