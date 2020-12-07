@@ -59,16 +59,10 @@ module.exports = function(pool, opts) {
   var height = pool.height() - 20
   var offset = height / 5;
 
-  // var drawEvent = drawZenModeEvent(pool, opts);
-  var mainGroup = pool.parent();
-  console.log("zenMode");
-
   function zenModeEvent(selection) {
     opts.xScale = pool.xScale().copy();
 
     selection.each(function() {
-      console.log("zenMode");
-      console.log(opts.data);
       var currentData = opts.data;
       var zenModeEvent = d3.select(this)
         .selectAll('g.d3-event-group')
@@ -76,7 +70,7 @@ module.exports = function(pool, opts) {
           return d.id;
         });
 
-      var groups = zenModeEvent.enter()
+      var zenGroup = zenModeEvent.enter()
         .append('g')
         .attr({
           'class': 'd3-event-group',
@@ -85,7 +79,7 @@ module.exports = function(pool, opts) {
           }
         });
 
-      groups.append('rect')
+      zenGroup.append('rect')
       .attr({
         x: function(d) {
           return xPos(d);
@@ -104,7 +98,7 @@ module.exports = function(pool, opts) {
           return 'zen_' + d.id;
         }
       });
-      groups.append('circle').attr({
+      zenGroup.append('circle').attr({
         cx: function(d) {
           return xPos(d) + calculateWidth(d)/2;
         },
@@ -120,7 +114,7 @@ module.exports = function(pool, opts) {
           return 'zen_' + d.id;
         }
       });
-      groups.append('text')
+      zenGroup.append('text')
         .text('ZEN')
         .attr({
           x: function(d) {
@@ -132,7 +126,7 @@ module.exports = function(pool, opts) {
           class: 'd3-zen-text'
         });
   
-      groups.append('rect')
+      zenGroup.append('rect')
         .attr({
           x: function(d) {
             return xPos(d);
