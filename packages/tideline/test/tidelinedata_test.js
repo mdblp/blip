@@ -1046,7 +1046,6 @@ describe('TidelineData', function() {
 
     console.log(thisTd.zenEvents);
     it('should deduplicate Events based on eventId', function() {
-      // PA1, PA2 and undefined
       expect(thisTd.zenEvents.length).to.equal(3);
       expect(Zen1.length).to.equal(1);
       expect(Zen2.length).to.equal(1);

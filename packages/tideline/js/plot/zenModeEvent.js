@@ -17,10 +17,7 @@
 
 var d3 = require('d3');
 var _ = require('lodash');
-const { duration } = require('moment-timezone');
 var dt = require('../data/util/datetime');
-
-// var drawZenModeEvent = require('./util/drawZenEvent');
 
 module.exports = function(pool, opts) {
   opts = opts || {};
@@ -40,23 +37,17 @@ module.exports = function(pool, opts) {
     var units = d.duration.units;
     var msfactor = 1000;
     switch (units) {
-      case 'seconds':
-        msfactor = msfactor;
-        break;
       case 'minutes': 
         msfactor = msfactor * 60;
         break;
       case 'hours':
         msfactor = msfactor * 60 * 60;
         break;
-      default:
-        msfactor = msfactor;
-        break;
     }
     var e = Date.parse(dt.addDuration(s, d.duration.value * msfactor)); 
     return opts.xScale(e) - opts.xScale(s);
   };
-  var height = pool.height() - 20
+  var height = pool.height() - 20;
   var offset = height / 5;
 
   function zenModeEvent(selection) {

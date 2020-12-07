@@ -459,7 +459,6 @@ function TidelineData(data, opts) {
       {type: 'deviceEvent', subType: 'zen'},
       ['inputTime']
     );
-    console.log(this.zenEvents);
     this.confidentialEvents = this.setEvents(
       this.data, 
       {type: 'deviceEvent', subType: 'confidential'},
