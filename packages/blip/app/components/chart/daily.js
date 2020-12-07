@@ -423,16 +423,6 @@ class Daily extends Component {
           bgPrefs={this.props.bgPrefs}
           timePrefs={timePrefs}
         />}
-        {this.state.hoveredZenMode && <ZenModeToolTip
-          position={{
-            top: this.state.hoveredZenMode.top,
-            left: this.state.hoveredZenMode.left
-          }}
-          side={this.state.hoveredZenMode.side}
-          zenMode={this.state.hoveredZenMode.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
         {this.state.hoveredParameter && <ParameterTooltip
           position={{
             top: this.state.hoveredParameter.top,
@@ -679,29 +669,6 @@ class Daily extends Component {
       hoveredPhysical: false
     });
   };
-
-  // handleZenModeHover = zen => {
-  //   var rect = zen.rect;
-  //   // range here is -12 to 12
-  //   var hoursOffset = sundial.dateDifference(zen.data.normalTime, this.state.datetimeLocation, 'h');
-  //   zen.top = rect.top + (rect.height / 2)
-  //   if(hoursOffset > 5) {
-  //     zen.side = 'left';
-  //     zen.left = rect.left;
-  //   } else {
-  //     zen.side = 'right';
-  //     zen.left = rect.left + rect.width;
-  //   }
-  //   this.setState({
-  //     hoveredZenMode: zen
-  //   });
-  // };
-
-  // handleZenModeOut = () => {
-  //   this.setState({
-  //     hoveredZenMode: false
-  //   });
-  // };
 
   handleParameterHover = parameter => {
     const { rect } = parameter;
