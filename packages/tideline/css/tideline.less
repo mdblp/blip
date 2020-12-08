@@ -279,6 +279,12 @@ svg {
     opacity: 0.2;
   }
 }
+.d3-confidential {
+  &.d3-rect-confidential {
+    fill: @confidentialmode;
+    opacity: 1;
+  }
+}
 // boluses
 .d3-bolus {
   &.d3-rect-bolus {
@@ -862,6 +868,7 @@ text.d3-tabular-ui {
 .d3-pa-group,
 .d3-reservoir-group,
 .d3-event-group,
+.d3-confidential-group,
 .d3-param-group,
 .d3-bolus-group,
 .d3-carb-group {

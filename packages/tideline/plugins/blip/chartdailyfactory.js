@@ -312,6 +312,13 @@ function chartDailyFactory(el, options) {
       onSMBGOut: options.onSMBGOut,
     }), true, true);
 
+    // add confidential mode to BG pool
+    poolBG.addPlotType('deviceEvent', tideline.plot.confidentialModeEvent(poolBG, {
+      yScale: scaleBG,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      data: tidelineData.confidentialEvents,
+    }), true, true);
+
     // TODO: when we bring responsiveness in
     // decide number of ticks for these scales based on container height?
     // bolus & carbs pool
@@ -363,6 +370,13 @@ function chartDailyFactory(el, options) {
       onBolusOut: options.onBolusOut,
     }), true, true);
 
+    // add confidential mode to Bolus pool
+    poolBolus.addPlotType('deviceEvent', tideline.plot.confidentialModeEvent(poolBolus, {
+      yScale: scaleBolus,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      data: tidelineData.confidentialEvents,
+    }), false, true);
+
     // basal pool
     var scaleBasal = scales.basal(tidelineData.grouped.basal, poolBasal);
     // set up y-axis
@@ -389,6 +403,13 @@ function chartDailyFactory(el, options) {
       data: tidelineData.grouped.deviceEvent,
       timezoneAware: chart.options.timePrefs.timezoneAware
     }), true, true);
+
+    // add confidential mode to Basal pool
+    poolBasal.addPlotType('deviceEvent', tideline.plot.confidentialModeEvent(poolBasal, {
+      yScale: scaleBolus,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      data: tidelineData.confidentialEvents,
+    }), false, true);
 
     // messages pool
     // add background fill rectangles to messages pool
