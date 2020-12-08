@@ -298,6 +298,18 @@ if (!reZendesk.test(indexHtml)) {
   process.exit(1);
 }
 if (typeof process.env.HELP_SCRIPT_URL === 'string' && process.env.HELP_SCRIPT_URL.startsWith('https://')) {
+  console.info('- Using HELP_SCRIPT_URL:', process.env.HELP_SCRIPT_URL);
+  let zdkJs = fs.readFileSync(`${templateDir}/zendesk.js`, 'utf8');
+
+  let fileHash = getHash(zdkJs);
+  let integrity = getIntegrity(zdkJs);
+  let fileName = `zdk.${fileHash}.js`;
+  fs.writeFileSync(`${distDir}/static/${fileName}`, zdkJs);
+
+  helpLink = `\
+  <script type="text/javascript" defer src="${fileName}" integrity="sha512-${integrity}" crossorigin="anonymous"></script>\n\
+  <script id="ze-snippet" type="text/javascript" defer src="${process.env.HELP_SCRIPT_URL}"></script>`;
+
 } else {
   console.info('- Help link is disabled');
 }

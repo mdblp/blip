@@ -2,7 +2,7 @@ window.zESettings = {
   webWidget: {
     authenticate: {
       jwtFn: function (callback) {
-        let authToken = window.localStorage.getItem('authToken');
+        let authToken = window.sessionStorage.getItem('zdkToken');
         callback(authToken);
       }
     }
