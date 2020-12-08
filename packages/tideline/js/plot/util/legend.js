@@ -161,6 +161,21 @@ const legend = {
     },
   ],
   bolus: [
+    // Bolus Text
+    {
+      create: (opts) => {
+        return opts.selection.append('text')
+          .attr({
+            'class': 'd3-pool-legend'
+          })
+          .text(t('Bolus Legend'))
+          .each(function() {
+            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN);
+            opts.textHeight = this.getBoundingClientRect().height;
+          });
+      },
+      type: 'text'
+    },
     // Meal Bolus
     {
       create: function(opts) {

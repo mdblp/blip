@@ -61,12 +61,12 @@ module.exports = function(pool, opts) {
       drawBolus.bolus(normal);
 
       // boluses where programmed differs from delivered
-      const suspended = bolusGroups.filter((bolus) => {
+      const undelivered = bolusGroups.filter((bolus) => {
         const d = commonbolus.getDelivered(bolus);
         const p = commonbolus.getProgrammed(bolus);
-        return Number.isFinite(d) && Number.isFinite(p) && Math.abs(d - p) > Number.EPSILON;
+        return Number.isFinite(d) && Number.isFinite(p) && p > d;
       });
-      drawBolus.suspended(suspended);
+      drawBolus.undelivered(undelivered);
 
       // Not currently in use:
       // const extended = bolusGroups.filter(function(d) {

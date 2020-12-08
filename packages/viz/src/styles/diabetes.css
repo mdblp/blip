@@ -90,7 +90,7 @@
 }
 
 .bolusRideTriangle {
-  fill: var(--bolus--ride);
+  fill: var(--bolus-override);
 }
 
 .bolusUndelivered {

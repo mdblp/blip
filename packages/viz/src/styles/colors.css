@@ -25,12 +25,15 @@
   --text-basal-automated: #3a90a4;
   --bolus: #6FC3BB;
   --bolus-interrupted: #FF8B7C;
-  --bolus--ride: #107EA8;
+  --bolus-ride: #E7E7E7;
+  --bolus-override: #107EA8;
+  --bolus-underride: #107EA8;
   --bolus--undelivered: #7E7E7E;
   --bolus-meal: #6FC3BB;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;
   --carbs: #6FC3BB;
+  --carbs-text: black;
   --rescuecarbs: #E98D7C;
   --collapsible--border: #EDEDED;
   --table-stripe--light: #F7F7F7;

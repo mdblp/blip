@@ -73,7 +73,7 @@
 
 .override {
   composes: row;
-  color: var(--bolus--ride);
+  color: var(--bolus-override);
   font-weight: bold;
 }
 

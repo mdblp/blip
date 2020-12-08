@@ -56,7 +56,7 @@ const commonBolus = {
         rec = 0;
       }
     }
-    return rec > programmed ? rec : programmed;
+    return Math.max(rec, programmed);
   },
   getDelivered: function(d) {
     const bolus = commonBolus.getBolus(d);

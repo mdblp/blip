@@ -220,7 +220,7 @@ svg {
   fill: @carbs;
 }
 .d3-carbs-text {
-  fill: @text;
+  fill: var(--carbs-text, @text);
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
@@ -268,20 +268,29 @@ svg {
 .d3-bolus {
   &.d3-bolus-meal {
     fill: @bolus-meal !important;
-    stroke: @bolus-meal;
   }
   &.d3-bolus-micro {
     fill: @bolus-micro !important;
-    stroke: @bolus-micro;
     opacity: 0.6;
   }
   &.d3-bolus-manual {
     fill: @bolus-manual !important;
-    stroke: @bolus-manual;
   }
   &.d3-bolus-undelivered {
     fill: @bolus-undelivered !important;
-    stroke: @bolus-undelivered;
+  }
+  &.d3-rect-undelivered {
+    fill: @bolus-undelivered;
+  }
+  &.d3-rect-underride {
+    fill: @bolus-underride;
+  }
+  &.d3-rect-ride {
+    fill: @bolus-ride;
+  }
+  &.d3-polygon-ride {
+    stroke: @bolus-ride;
+    fill: @bolus-ride;
   }
   &.d3-rect-bolus-legend {
     stroke-width: 1.5;
@@ -308,10 +317,6 @@ svg {
     stroke: @bolus-interrupted;
     fill: @bolus-interrupted;
   }
-  &.d3-rect-suspended-bolus {
-    stroke: @bolus-undelivered;
-    fill: @bolus-undelivered;
-  }
   &.d3-path-extended-suspended {
     stroke: @bolus-undelivered;
     fill: @bolus-undelivered;
@@ -319,18 +324,6 @@ svg {
   &.d3-path-suspended-triangle {
     stroke: @bolus-interrupted;
     fill: none;
-  }
-  &.d3-rect-recommended {
-    fill: @bolus-undelivered;
-  }
-  &.d3-rect-suspended {
-    fill: @bolus-interrupted;
-  }
-  &.d3-rect-override {
-    filter: brightness(35%);
-  }
-  &.d3-polygon-override {
-    filter: brightness(50%);
   }
 }
 

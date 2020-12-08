@@ -69,8 +69,8 @@ export function getProgrammed(insulinEvent) {
   let bolus = insulinEvent;
   if (_.get(insulinEvent, 'type') === 'wizard') {
     bolus = getBolusFromInsulinEvent(insulinEvent);
-    if (!_.inRange(bolus.normal, Infinity) && !_.inRange(bolus.extended, Infinity)) {
-      return NaN;
+    if (!(_.isFinite(bolus.normal) || _.isFinite(bolus.extended))) {
+      return Number.NaN;
     }
   }
   if (bolus.extended != null && bolus.expectedExtended != null) {

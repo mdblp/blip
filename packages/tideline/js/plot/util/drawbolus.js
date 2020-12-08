@@ -34,8 +34,11 @@ function bolusToLegend(b) {
     return BolusTypes.meal;
   }
   const bolus = commonbolus.getBolus(b);
-  if (bolus.presciptor === 'manual') {
+  if (bolus.subType === 'pen' || bolus.presciptor === 'manual') {
     return BolusTypes.manual;
+  }
+  if (bolus.subType === 'biphasic') {
+    return BolusTypes.meal;
   }
   return BolusTypes.micro;
 }
@@ -181,16 +184,16 @@ module.exports = function(pool, opts = {}) {
           }
         });
     },
-    suspended: function(suspended) {
-      // draw color in the suspended portion
-      suspended.append('rect')
+    undelivered: function(undelivered) {
+      // draw color in the undelivered portion
+      undelivered.append('rect')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
             return xPosition(d);
           },
           y: function(d) {
-            return opts.yScale(commonbolus.getMaxValue(d));
+            return opts.yScale(commonbolus.getProgrammed(d));
           },
           width: (d) => {
             if (bolusToLegend(d) === BolusTypes.micro) {
@@ -200,40 +203,14 @@ module.exports = function(pool, opts = {}) {
           },
           height: (b) => {
             const d = commonbolus.getDelivered(b);
-            const m = commonbolus.getMaxValue(b);
+            const m = commonbolus.getProgrammed(b);
             return opts.yScale(d) - opts.yScale(m);
           },
-          'class': 'd3-rect-suspended-bolus d3-bolus',
-          'id': (b) => `${b.type}_suspended_${b.id}`,
+          'class': 'd3-rect-undelivered d3-bolus',
+          'id': (b) => `${b.type}_undelivered_${b.id}`,
         });
-
-      // draw the line
-      // suspended.append('rect')
-      //   .attr({
-      //     x: function(d) {
-      //       d = pluckBolus(d);
-      //       return xPosition(d);
-      //     },
-      //     y: function(d) {
-      //       if (commonbolus.getDelivered(d) === 0) {
-      //         return opts.yScale(0) - opts.markerHeight;
-      //       }
-      //       return opts.yScale(commonbolus.getDelivered(d));
-      //     },
-      //     width: (d) => {
-      //       if (bolusToLegend(d) === BolusTypes.micro) {
-      //         return opts.width / 2;
-      //       }
-      //       return opts.width;
-      //     },
-      //     height: opts.markerHeight,
-      //     'class': 'd3-rect-suspended d3-bolus'
-      //   });
     },
     underride: function(underride) {
-      underride = underride.filter(function(d) {
-        return commonbolus.getDelivered(d) > 0;
-      });
       underride.append('rect')
         .attr({
           x: function(d) {
@@ -243,71 +220,54 @@ module.exports = function(pool, opts = {}) {
           y: function(d) {
             return opts.yScale(commonbolus.getRecommended(d));
           },
-          width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
-              return opts.width / 2;
-            }
-            return opts.width;
-          },
+          width: opts.width,
           height: function(d) {
-            return opts.yScale(commonbolus.getDelivered(d)) - opts.yScale(commonbolus.getRecommended(d));
+            return opts.yScale(commonbolus.getProgrammed(d)) - opts.yScale(commonbolus.getRecommended(d));
           },
-          'class': 'd3-rect-recommended d3-bolus',
-          id: function(d) {
-            d = pluckBolus(d);
-            return 'bolus_' + d.id;
-          }
+          'class': 'd3-rect-underride d3-bolus',
+          id: (d) => `bolus_underride_${pluckBolus(d).id}`,
         });
 
-      // draw the line iff the programmed and delivered are the same
+      // draw the line if the programmed and delivered are the same
       // to avoid too much confusing clutter
       // tooltip still exposes fact that suggested and programmed differed
-      var uninterrupted = underride.filter(function(d) {
-        return commonbolus.getProgrammed(d) === commonbolus.getDelivered(d);
-      });
-      uninterrupted.append('rect')
+      // var uninterrupted = underride.filter(function(d) {
+      //   return commonbolus.getProgrammed(d) === commonbolus.getDelivered(d);
+      // });
+      underride.append('rect')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
             return xPosition(d);
           },
           y: function(d) {
-            return opts.yScale(commonbolus.getDelivered(d));
+            return opts.yScale(commonbolus.getProgrammed(d));
           },
-          width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
-              return opts.width / 2;
-            }
-            return opts.width;
-          },
+          width: opts.width,
           height: opts.markerHeight,
-          'class': 'd3-rect-override d3-bolus'
+          'class': 'd3-rect-ride d3-bolus',
+          id: (d) => `bolus_ride_rect_${pluckBolus(d).id}`,
         });
 
-      uninterrupted.append('polygon')
+        underride.append('polygon')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
             return xPosition(d);
           },
           y: function(d) {
-            return opts.yScale(commonbolus.getDelivered(d));
+            return opts.yScale(commonbolus.getProgrammed(d));
           },
           points: function(d) {
             var bolus = pluckBolus(d);
-            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getDelivered(d)));
+            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getProgrammed(d)));
           },
-          'class': 'd3-polygon-override d3-bolus'
+          'class': 'd3-polygon-ride d3-bolus',
+          id: (d) => `bolus_ride_polygon_${pluckBolus(d).id}`,
         });
     },
     override: function(override) {
-      // draw the line iff the programmed and delivered are the same
-      // to avoid too much confusing clutter
-      // tooltip still exposes fact that suggested and programmed differed
-      var uninterrupted = override.filter(function(d) {
-        return commonbolus.getProgrammed(d) === commonbolus.getDelivered(d);
-      });
-      uninterrupted.append('rect')
+      override.append('rect')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
@@ -323,10 +283,11 @@ module.exports = function(pool, opts = {}) {
             return opts.width;
           },
           height: opts.markerHeight,
-          'class': 'd3-rect-override d3-bolus'
+          'class': 'd3-rect-ride d3-bolus',
+          id: (d) => `bolus_override_rect_${pluckBolus(d).id}`,
         });
 
-      uninterrupted.append('polygon')
+      override.append('polygon')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
@@ -339,7 +300,8 @@ module.exports = function(pool, opts = {}) {
             var bolus = pluckBolus(d);
             return overrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight);
           },
-          'class': 'd3-polygon-override d3-bolus'
+          'class': 'd3-polygon-ride d3-bolus',
+          id: (d) => `bolus_override_polygon_${pluckBolus(d).id}`,
         });
     },
     extended: function(extended) {
