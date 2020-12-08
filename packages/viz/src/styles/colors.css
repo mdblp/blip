@@ -80,7 +80,10 @@
 
 
 :export {
-  bolus: #6fc3bb;
+  bolus: var(--bolus);
+  bolusMeal: var(--bolus-meal);
+  bolusMicro: var(--bolus-micro);
+  bolusManual: var(--bolus-manual);
   basal: #19A0D7;
   basalManual: #a8c8d4;
   statDark: #27385b;

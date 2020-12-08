@@ -45,6 +45,31 @@ export function getBolusFromInsulinEvent(insulinEvent) {
   return insulinEvent;
 }
 
+// From packages/tideline/js/plot/util/drawbolus.js
+export const BolusTypes = {
+  meal: 1,
+  micro: 2,
+  manual: 3,
+};
+
+/**
+ *
+ * @param {object} b bolus or wizard
+ */
+export function getBolusType(b) {
+  if (b.type === 'wizard') {
+    return BolusTypes.meal;
+  }
+  const bolus = getBolusFromInsulinEvent(b);
+  if (bolus.subType === 'pen' || bolus.presciptor === 'manual') {
+    return BolusTypes.manual;
+  }
+  if (bolus.subType === 'biphasic') {
+    return BolusTypes.meal;
+  }
+  return BolusTypes.micro;
+}
+
 /**
  * getCarbs
  * @param {Object} insulinEvent - a Tidepool wizard or bolus object

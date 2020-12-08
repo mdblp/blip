@@ -249,11 +249,32 @@ class BolusTooltip extends React.Component {
       timePrefs,
     };
 
+    let tailColor = this.props.tailColor;
+    let borderColor = this.props.borderColor;
+    const bolusType = bolusUtils.getBolusType(bolus);
+
+    switch (bolusType) {
+    case bolusUtils.BolusTypes.meal:
+      tailColor = colors.bolusMeal;
+      borderColor = colors.bolusMeal;
+      break;
+    case bolusUtils.BolusTypes.manual:
+      tailColor = colors.bolusManual;
+      borderColor = colors.bolusManual;
+      break;
+    case bolusUtils.BolusTypes.micro:
+      tailColor = colors.bolusMicro;
+      borderColor = colors.bolusMicro;
+      break;
+    }
+
     return (
       <Tooltip
         {...this.props}
         dateTitle={dateTitle}
         content={this.renderBolus()}
+        tailColor={tailColor}
+        borderColor={borderColor}
       />
     );
   }
@@ -271,11 +292,11 @@ BolusTooltip.propTypes = {
   }),
   tail: PropTypes.bool.isRequired,
   side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
-  tailColor: PropTypes.string.isRequired,
+  tailColor: PropTypes.string,
   tailWidth: PropTypes.number.isRequired,
   tailHeight: PropTypes.number.isRequired,
   backgroundColor: PropTypes.string,
-  borderColor: PropTypes.string.isRequired,
+  borderColor: PropTypes.string,
   borderWidth: PropTypes.number.isRequired,
   bolus: PropTypes.shape({
     type: PropTypes.string.isRequired,
