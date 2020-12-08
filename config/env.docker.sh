@@ -24,7 +24,7 @@ export LATEST_TERMS='1970-01-01'
 
 # External services:
 # URL to HELP system
-export HELP_LINK='disabled'
+export HELP_SCRIPT_URL='disabled'
 # url to web server hosting the asset files
 # such as terms of use, data privacy, etc.
 export ASSETS_URL='https://example.com/'
