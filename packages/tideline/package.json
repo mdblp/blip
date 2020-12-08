@@ -33,6 +33,7 @@
     "react-dom": "^16.13.1",
     "react-sizeme": "2.6.12",
     "util": "^0.12.3",
-    "sundial": "file:../sundial"
+    "sundial": "file:../sundial",
+    "@material-ui/icons": "^4.9.1"
   }
 }

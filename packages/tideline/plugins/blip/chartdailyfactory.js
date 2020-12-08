@@ -317,6 +317,8 @@ function chartDailyFactory(el, options) {
       yScale: scaleBG,
       timezoneAware: chart.options.timePrefs.timezoneAware,
       data: tidelineData.confidentialEvents,
+      onConfidentialHover: options.onConfidentialHover,
+      onConfidentialOut: options.onConfidentialOut,
     }), true, true);
 
     // TODO: when we bring responsiveness in
@@ -375,6 +377,8 @@ function chartDailyFactory(el, options) {
       yScale: scaleBolus,
       timezoneAware: chart.options.timePrefs.timezoneAware,
       data: tidelineData.confidentialEvents,
+      onConfidentialHover: options.onConfidentialHover,
+      onConfidentialOut: options.onConfidentialOut,
     }), false, true);
 
     // basal pool
@@ -409,6 +413,8 @@ function chartDailyFactory(el, options) {
       yScale: scaleBolus,
       timezoneAware: chart.options.timePrefs.timezoneAware,
       data: tidelineData.confidentialEvents,
+      onConfidentialHover: options.onConfidentialHover,
+      onConfidentialOut: options.onConfidentialOut,
     }), false, true);
 
     // messages pool

@@ -280,9 +280,14 @@ svg {
   }
 }
 .d3-confidential {
-  &.d3-rect-confidential {
+  &.d3-back-confidential {
     fill: @confidentialmode;
     opacity: 1;
+    stroke: @confidentialtext;
+    stroke-width: 1;
+  }
+  &.d3-rect-confidential {
+    fill: @confidentialmode;
   }
 }
 // boluses
