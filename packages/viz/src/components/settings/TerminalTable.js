@@ -6,7 +6,7 @@ import styles from './Diabeloop.css';
 const t = i18next.t.bind(i18next);
 const DEFAULT_VALUE = '-';
 
-class DeviceTable extends React.Component {
+class TerminalTable extends React.Component {
   constructor(props) {
       super(props);
   }
@@ -17,7 +17,7 @@ class DeviceTable extends React.Component {
     return (
       <table className={styles.deviceTable}>
         <caption className={styles.bdlgSettingsHeader}>
-          {t('Device')}<span className={styles.secondaryLabelWithMain}>{device.name}</span>
+          {device.name}
         </caption>
         <tbody>
           <tr><td>{t('Manufacturer')}</td><td>{device.manufacturer}</td></tr>
@@ -31,7 +31,7 @@ class DeviceTable extends React.Component {
 }
 
 // if the value is not present
-DeviceTable.defaultProps = {
+TerminalTable.defaultProps = {
   device: {
     deviceId: DEFAULT_VALUE,
     imei: DEFAULT_VALUE,
@@ -41,7 +41,7 @@ DeviceTable.defaultProps = {
   }
 };
 
-DeviceTable.propTypes = {
+TerminalTable.propTypes = {
   device: PropTypes.shape({
     deviceId: PropTypes.string.isRequired,
     imei: PropTypes.string.isRequired,
@@ -51,4 +51,4 @@ DeviceTable.propTypes = {
   }).isRequired
 }; 
 
-export default DeviceTable;
+export default TerminalTable;

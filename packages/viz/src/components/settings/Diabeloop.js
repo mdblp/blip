@@ -30,7 +30,7 @@ import * as datetime from '../../utils/datetime';
 import * as dblData from '../../utils/settings/diabeloopData';
 import PumpTable from './PumpTable';
 import CgmTable from './CgmTable';
-import DeviceTable from './DeviceTable';
+import TerminalTable from './TerminalTable';
 
 import { deviceName, getDeviceMeta } from '../../utils/settings/data';
 
@@ -129,7 +129,7 @@ const Diabeloop = (props) => {
       <div className={styles.settingsContainer}>
         <div className={styles.categoryContainer}>
           <div className={styles.categoryTitle}>{t('Device')}</div>
-          <DeviceTable device={device}> </DeviceTable>
+          <TerminalTable device={device}> </TerminalTable>
           <PumpTable pump={pump} timePrefs={timePrefs}> </PumpTable>
           <CgmTable cgm={cgm} timePrefs={timePrefs}> </CgmTable>
         </div>
