@@ -10,7 +10,7 @@ const DEFAULT_VALUE = '-';
 
 class CgmTable extends React.Component {
   constructor(props) {
-      super(props);
+    super(props);
   }
 
   render() {
@@ -41,10 +41,9 @@ class CgmTable extends React.Component {
       return DEFAULT_VALUE;
     }
 
-    return datetime.formatLocalizedFromUTC(value, timePrefs, 'MMM D, YYYY');
+    return datetime.formatLocalizedFromUTC(value, timePrefs, t('MMM D, YYYY'));
   }
 }
-
 
 // if the value is not present
 CgmTable.defaultProps = {

@@ -10,7 +10,7 @@ const DEFAULT_VALUE = '-';
 
 class PumpTable extends React.Component {
   constructor(props) {
-      super(props);
+    super(props);
   }
 
   render() {
@@ -38,7 +38,7 @@ class PumpTable extends React.Component {
       return DEFAULT_VALUE;
     }
 
-    return datetime.formatLocalizedFromUTC(value, timePrefs, 'MMM D, YYYY');
+    return datetime.formatLocalizedFromUTC(value, timePrefs, t('MMM D, YYYY'));
   }
 }
 
