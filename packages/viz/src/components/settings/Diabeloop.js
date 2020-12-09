@@ -105,10 +105,6 @@ const Diabeloop = (props) => {
   const cgm = _.get(pumpSettings, 'payload.cgm', null);
   const history = _.sortBy(_.cloneDeep(_.get(pumpSettings, 'payload.history', null)), ['changeDate']);
 
-  if (parameters === null || device === null) {
-    return null;
-  }
-
   const parametersByLevel = dblData.getParametersByLevel(parameters);
 
   return (
@@ -129,9 +125,9 @@ const Diabeloop = (props) => {
       <div className={styles.settingsContainer}>
         <div className={styles.categoryContainer}>
           <div className={styles.categoryTitle}>{t('Device')}</div>
-          <TerminalTable device={device}> </TerminalTable>
-          <PumpTable pump={pump} timePrefs={timePrefs}> </PumpTable>
-          <CgmTable cgm={cgm} timePrefs={timePrefs}> </CgmTable>
+          <TerminalTable device={device} />
+          <PumpTable pump={pump} timePrefs={timePrefs} />
+          <CgmTable cgm={cgm} timePrefs={timePrefs} />
         </div>
         {renderDiabeloopParameters(parametersByLevel)}
         <div className={styles.categoryContainer}>
@@ -164,6 +160,7 @@ Diabeloop.propTypes = {
   deviceKey: PropTypes.oneOf(['diabeloop']).isRequired,
   pumpSettings: PropTypes.shape({
     deviceId: PropTypes.string.isRequired,
+    deviceTime: PropTypes.string.isRequired,
     payload: PropTypes.shape({
       device: PropTypes.shape({
         deviceId: PropTypes.string.isRequired,
@@ -201,5 +198,6 @@ Diabeloop.propTypes = {
     timezoneName: PropTypes.string,
   }).isRequired,
   user: PropTypes.object.isRequired,
+  handleClickHistory: PropTypes.func.isRequired,
 };
 export default Diabeloop;

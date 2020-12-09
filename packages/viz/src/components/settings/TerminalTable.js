@@ -14,6 +14,10 @@ class TerminalTable extends React.Component {
   render() {
     const { device } = this.props; 
 
+    if (device === null) {
+      return null;
+    }
+
     return (
       <table className={styles.deviceTable}>
         <caption className={styles.bdlgSettingsHeader}>
@@ -48,7 +52,7 @@ TerminalTable.propTypes = {
     name: PropTypes.string.isRequired,
     manufacturer: PropTypes.string.isRequired,
     swVersion: PropTypes.string.isRequired,
-  }).isRequired
+  }).isRequired,
 }; 
 
 export default TerminalTable;

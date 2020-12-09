@@ -15,6 +15,11 @@ class PumpTable extends React.Component {
 
   render() {
     const { pump } = this.props; 
+
+    if ( pump === null) {
+      return null;
+    }
+    
     const pumpExpirationDate = this.formatDate(pump.expirationDate);
     
     return (

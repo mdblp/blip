@@ -15,6 +15,11 @@ class CgmTable extends React.Component {
 
   render() {
     const { cgm } = this.props;
+
+    if (cgm === null) {
+      return null;
+    }
+
     const cgmEndOfLife = this.formatDate(cgm.endOfLifeTransmitterDate);
     const cgmSensorExpirationDate = this.formatDate(cgm.expirationDate);
   
@@ -69,7 +74,7 @@ CgmTable.propTypes = {
   timePrefs: PropTypes.shape({
     timezoneAware: PropTypes.bool.isRequired,
     timezoneName: PropTypes.string,
-  }).isRequired
+  }).isRequired,
 };
 
 export default CgmTable;
