@@ -13,7 +13,8 @@ class PumpTable extends React.Component {
   }
 
   render() {
-    const pumpExpirationDate = this.formatDate(this.props.pump.expirationDate);
+    const { pump } = this.props; 
+    const pumpExpirationDate = this.formatDate(pump.expirationDate);
     
     return (
       <table className={styles.settingsTable}>
@@ -21,9 +22,9 @@ class PumpTable extends React.Component {
           {t('Pump')}
         </caption>
         <tbody>
-          <tr><td>{t('Manufacturer')}</td><td>{this.props.pump.manufacturer}</td></tr>
-          <tr><td>{t('Serial Number')}</td><td>{this.props.pump.serialNumber}</td></tr>
-          <tr><td>{t('Pump Version')}</td><td>{this.props.pump.swVersion}</td></tr>
+          <tr><td>{t('Manufacturer')}</td><td>{pump.manufacturer}</td></tr>
+          <tr><td>{t('Serial Number')}</td><td>{pump.serialNumber}</td></tr>
+          <tr><td>{t('Pump Version')}</td><td>{pump.swVersion}</td></tr>
           <tr><td>{t('Cartridge expiration date')}</td><td>{pumpExpirationDate}</td></tr>
         </tbody>
       </table>
@@ -31,12 +32,13 @@ class PumpTable extends React.Component {
   }
 
   formatDate(value) {
+    const { timePrefs } = this.props;
     if (_.isEmpty(value))
     {
       return null;
     }
 
-    return datetime.formatLocalizedFromUTC(value, this.props.timePrefs, 'MMM D, YYYY');
+    return datetime.formatLocalizedFromUTC(value, timePrefs, 'MMM D, YYYY');
   }
 }
 

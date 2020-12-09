@@ -13,8 +13,9 @@ class CgmTable extends React.Component {
   }
 
   render() {
-    const cgmEndOfLife = this.formatDate(this.props.cgm.endOfLifeTransmitterDate);
-    const cgmSensorExpirationDate = this.formatDate(this.props.cgm.expirationDate);
+    const { cgm } = this.props;
+    const cgmEndOfLife = this.formatDate(cgm.endOfLifeTransmitterDate);
+    const cgmSensorExpirationDate = this.formatDate(cgm.expirationDate);
   
     return (
       <table className={styles.settingsTable}>
@@ -22,11 +23,11 @@ class CgmTable extends React.Component {
           {t('CGM')}
         </caption>
         <tbody>
-          <tr><td>{t('Manufacturer')}</td><td>{this.props.cgm.manufacturer}</td></tr>
-          <tr><td>{t('Product')}</td><td>{this.props.cgm.name}</td></tr>
-          <tr><td>{t('Sensor Expiration date')}</td><td>{cgmSensorExpirationDate}</td></tr>
-          <tr><td>{t('Transmitter software version')}</td><td>{this.props.cgm.swVersionTransmitter}</td></tr>
-          <tr><td>{t('Transmitter ID')}</td><td>{this.props.cgm.transmitterId}</td></tr>
+          <tr><td>{t('Manufacturer')}</td><td>{cgm.manufacturer}</td></tr>
+          <tr><td>{t('Product')}</td><td>{cgm.name}</td></tr>
+          <tr><td>{t('Sensor expiration date')}</td><td>{cgmSensorExpirationDate}</td></tr>
+          <tr><td>{t('Transmitter software version')}</td><td>{cgm.swVersionTransmitter}</td></tr>
+          <tr><td>{t('Transmitter ID')}</td><td>{cgm.transmitterId}</td></tr>
           <tr><td>{t('Transmitter end of life')}</td><td>{cgmEndOfLife}</td></tr>
         </tbody>
       </table>
@@ -34,12 +35,12 @@ class CgmTable extends React.Component {
   }
 
   formatDate(value) {
-    if (_.isEmpty(value))
-    {
+    const { timePrefs } = this.props;
+    if (_.isEmpty(value)) {
       return null;
     }
 
-    return datetime.formatLocalizedFromUTC(value, this.props.timePrefs, 'MMM D, YYYY');
+    return datetime.formatLocalizedFromUTC(value, timePrefs, 'MMM D, YYYY');
   }
 }
 
