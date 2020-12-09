@@ -28,8 +28,10 @@ import HistoryTable from './DiabeloopHistoryParameters';
 
 import * as datetime from '../../utils/datetime';
 import * as dblData from '../../utils/settings/diabeloopData';
-import PumpTable from './PumpTable.js';
-import CgmTable from './CgmTable.js';
+import PumpTable from './PumpTable';
+import CgmTable from './CgmTable';
+import DeviceTable from './DeviceTable';
+
 import { deviceName, getDeviceMeta } from '../../utils/settings/data';
 
 import styles from './Diabeloop.css';
@@ -127,6 +129,7 @@ const Diabeloop = (props) => {
       <div className={styles.settingsContainer}>
         <div className={styles.categoryContainer}>
           <div className={styles.categoryTitle}>{t('Device')}</div>
+          <DeviceTable device={device}> </DeviceTable>
           <PumpTable pump={pump} timePrefs={timePrefs}> </PumpTable>
           <CgmTable cgm={cgm} timePrefs={timePrefs}> </CgmTable>
         </div>

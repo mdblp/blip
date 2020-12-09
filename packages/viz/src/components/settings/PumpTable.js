@@ -1,11 +1,12 @@
-import React from 'react';
-import moment from 'moment-timezone';
-import _ from 'lodash';
 import i18next from 'i18next';
-import styles from './Diabeloop.css';
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
 import * as datetime from '../../utils/datetime';
+import styles from './Diabeloop.css';
 
 const t = i18next.t.bind(i18next);
+const DEFAULT_VALUE = '-';
 
 class PumpTable extends React.Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class PumpTable extends React.Component {
     const pumpExpirationDate = this.formatDate(pump.expirationDate);
     
     return (
-      <table className={styles.settingsTable}>
+      <table className={styles.pumpTable}>
         <caption className={styles.bdlgSettingsHeader}>
           {t('Pump')}
         </caption>
@@ -33,13 +34,36 @@ class PumpTable extends React.Component {
 
   formatDate(value) {
     const { timePrefs } = this.props;
-    if (_.isEmpty(value))
-    {
-      return null;
+    if (_.isEmpty(value)) {
+      return DEFAULT_VALUE;
     }
 
     return datetime.formatLocalizedFromUTC(value, timePrefs, 'MMM D, YYYY');
   }
 }
+
+// if the value is not present
+PumpTable.defaultProps = {
+  pump : {
+    manufacturer: DEFAULT_VALUE,
+    serialNumber: DEFAULT_VALUE,
+    swVersion: DEFAULT_VALUE,
+    expirationDate: DEFAULT_VALUE,
+  }
+};
+
+PumpTable.propTypes = {
+  pump : PropTypes.shape({
+    manufacturer: PropTypes.string.isRequired,
+    serialNumber: PropTypes.string.isRequired,
+    swVersion: PropTypes.string.isRequired,
+    expirationDate: PropTypes.string.isRequired,
+  }).isRequired,
+  timePrefs: PropTypes.shape({
+    timezoneAware: PropTypes.bool.isRequired,
+    timezoneName: PropTypes.string,
+  }).isRequired,
+};
+
 
 export default PumpTable;
