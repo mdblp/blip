@@ -26,7 +26,7 @@ class PumpTable extends React.Component {
           <tr><td>{t('Manufacturer')}</td><td>{pump.manufacturer}</td></tr>
           <tr><td>{t('Serial number')}</td><td>{pump.serialNumber}</td></tr>
           <tr><td>{t('Pump version')}</td><td>{pump.swVersion}</td></tr>
-          <tr><td>{t('Cartridge expiration date')}</td><td>{pumpExpirationDate}</td></tr>
+          <tr><td>{t('Pump cartridge expiration date')}</td><td>{pumpExpirationDate}</td></tr>
         </tbody>
       </table>
     );
