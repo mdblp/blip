@@ -32,7 +32,6 @@
   "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it.": "**Warum ist diese Statistik leer?**\n\n\nZur Berechnung sind die vorhandenen Daten nicht ausreichend.",
   "1 week": "1 Woche",
   "1 year ago": "1 Jahr zuvor",
-  "1 year old": "1 Jahr zuvor",
   "100% of Readings": "100% der Messwerte",
   "2 weeks": "2 Wochen",
   "3 months": "3 Monate",
@@ -128,7 +127,6 @@
   "bolus_normal": "Standard",
   "bolus_pen": "Pen",
   "bolus_type": "Bolus Typ",
-  "Born this year": "In diesem Jahr geboren",
   "BrowserWarning": "Browser Warnung",
   "Calculator": "Vorschlag",
   "Calibration": "Calibration",
@@ -751,6 +749,5 @@
   "{{patientName}} does not have any data yet.": "{{patientName}} sind noch keine Daten vorhanden.",
   "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.",
   "{{title}} (cont.)": "{{title}} (kont.)",
-  "{{yearsAgo}} years ago": "{{yearsAgo}} Jahre her",
-  "{{yrsAgo}} years old": "{{yrsAgo}} Jahre alt"
+  "{{yearsAgo}} years ago": "{{yearsAgo}} Jahre her"
 }
