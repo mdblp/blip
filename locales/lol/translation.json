@@ -32,7 +32,6 @@
   "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it.": "crwdns35656:0crwdne35656:0",
   "1 week": "crwdns35668:0crwdne35668:0",
   "1 year ago": "crwdns35670:0crwdne35670:0",
-  "1 year old": "crwdns35672:0crwdne35672:0",
   "100% of Readings": "crwdns35674:0crwdne35674:0",
   "2 weeks": "crwdns35676:0crwdne35676:0",
   "3 months": "crwdns35678:0crwdne35678:0",
@@ -128,7 +127,6 @@
   "bolus_normal": "crwdns42926:0crwdne42926:0",
   "bolus_pen": "crwdns42928:0crwdne42928:0",
   "bolus_type": "crwdns43464:0crwdne43464:0",
-  "Born this year": "crwdns35854:0crwdne35854:0",
   "BrowserWarning": "crwdns35856:0crwdne35856:0",
   "Calculator": "crwdns37598:0crwdne37598:0",
   "Calibration": "crwdns45306:0crwdne45306:0",
@@ -751,6 +749,5 @@
   "{{patientName}} does not have any data yet.": "crwdns35598:0{{patientName}}crwdne35598:0",
   "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "crwdns35600:0{{source}}crwdne35600:0",
   "{{title}} (cont.)": "crwdns35602:0{{title}}crwdne35602:0",
-  "{{yearsAgo}} years ago": "crwdns35604:0{{yearsAgo}}crwdne35604:0",
-  "{{yrsAgo}} years old": "crwdns35606:0{{yrsAgo}}crwdne35606:0"
+  "{{yearsAgo}} years ago": "crwdns35604:0{{yearsAgo}}crwdne35604:0"
 }
