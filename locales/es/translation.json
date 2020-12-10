@@ -32,7 +32,6 @@
   "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it.": "**¿Por qué está en blanco esta estadística?**\n\nNo hay datos suficientes disponibles en esta vista para realizar el cálculo.",
   "1 week": "1 semana",
   "1 year ago": "Hace un 1 año",
-  "1 year old": "1 año de antigüedad",
   "100% of Readings": "100 % de las lecturas",
   "2 weeks": "2 semanas",
   "3 months": "3 meses",
@@ -128,7 +127,6 @@
   "bolus_normal": "Estándar",
   "bolus_pen": "Bolígrafo de insulina",
   "bolus_type": "Tipo de bolo",
-  "Born this year": "Nacido este año",
   "BrowserWarning": "YourLoops está optimizado para Google Chrome. El uso de un navegador de internet distinto no garantiza el máximo nivel de experiencia.",
   "Calculator": "Recomendación",
   "Calibration": "Calibration",
@@ -751,6 +749,5 @@
   "{{patientName}} does not have any data yet.": "{{patientName}} no tiene datos todavía.",
   "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "{{source}} pumps don't capture the details of how combo boluses are split between the normal and extended amounts.",
   "{{title}} (cont.)": "{{title}} (cont.)",
-  "{{yearsAgo}} years ago": "Hace {{yearsAgo}} años",
-  "{{yrsAgo}} years old": "{{yrsAgo}} años de antigüedad"
+  "{{yearsAgo}} years ago": "Hace {{yearsAgo}} años"
 }
