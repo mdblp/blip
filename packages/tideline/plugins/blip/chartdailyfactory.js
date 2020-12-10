@@ -291,6 +291,14 @@ function chartDailyFactory(el, options) {
       data: tidelineData.deviceParameters,
     }), true, true);
 
+    // add confidential mode to BG pool
+    poolBG.addPlotType('deviceEvent', tideline.plot.confidentialModeEvent(poolBG, {
+      yScale: scaleBG,
+      timezoneAware: chart.options.timePrefs.timezoneAware,
+      data: tidelineData.confidentialEvents,
+      onConfidentialHover: options.onConfidentialHover,
+      onConfidentialOut: options.onConfidentialOut,
+    }), true, true);
 
     // add CBG data to BG pool
     poolBG.addPlotType('cbg', tideline.plot.cbg(poolBG, {
@@ -310,15 +318,6 @@ function chartDailyFactory(el, options) {
       timezoneAware: chart.options.timePrefs.timezoneAware,
       onSMBGHover: options.onSMBGHover,
       onSMBGOut: options.onSMBGOut,
-    }), true, true);
-
-    // add confidential mode to BG pool
-    poolBG.addPlotType('deviceEvent', tideline.plot.confidentialModeEvent(poolBG, {
-      yScale: scaleBG,
-      timezoneAware: chart.options.timePrefs.timezoneAware,
-      data: tidelineData.confidentialEvents,
-      onConfidentialHover: options.onConfidentialHover,
-      onConfidentialOut: options.onConfidentialOut,
     }), true, true);
 
     // TODO: when we bring responsiveness in

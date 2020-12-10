@@ -14,207 +14,102 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+// @ts-nocheck
 
-var d3 = require('d3');
-var _ = require('lodash');
-var dt = require('../data/util/datetime');
-// const LockIcon = require('@material-ui/icons/Lock');
+const d3 = require('d3');
+const _ = require('lodash');
 
-var picto = require('../../img/lock.png');
+const dt = require('../data/util/datetime');
+const lockIcon = require('lock.svg');
 
-module.exports = function(pool, opts) {
-  opts = opts || {};
+module.exports = function (pool, options = {}) {
+  const height = pool.height() - 2;
+  const imageSize = 24;
 
-  var defaults = {
-    width: 20,
-    r: 14,
-  };
+  const opts = _.cloneDeep(options);
+  opts.xScale = pool.xScale().copy();
+  const poolId = pool.id();
 
-  var mainGroup = pool.parent();
+  const xPos = (d) => opts.xScale(Date.parse(d.normalTime)) + 1;
 
-  _.defaults(opts, defaults);
-
-  var xPos = function(d) {
-    return opts.xScale(Date.parse(d.normalTime));
-  };
-  var calculateWidth = function(d) {
-    var s = Date.parse(d.normalTime);
-    var units = d.duration.units;
-    var msfactor = 1000;
+  const calculateWidth = (d) => {
+    const s = Date.parse(d.normalTime);
+    const units = d.duration.units;
+    let msfactor = 1000;
     switch (units) {
-      case 'minutes': 
-        msfactor = msfactor * 60;
-        break;
-      case 'hours':
-        msfactor = msfactor * 60 * 60;
-        break;
+    case 'minutes':
+      msfactor *= 60;
+      break;
+    case 'hours':
+      msfactor *= 60 * 60;
+      break;
     }
-    var e = Date.parse(dt.addDuration(s, d.duration.value * msfactor)); 
-    return opts.xScale(e) - opts.xScale(s);
+    const e = Date.parse(dt.addDuration(s, d.duration.value * msfactor));
+    return opts.xScale(e) - opts.xScale(s) - 1;
   };
-  var height = pool.height();
-  var offset = 20;
 
   function confidentialModeEvent(selection) {
-    opts.xScale = pool.xScale().copy();
-
-    selection.each(function() {
-      var currentData = opts.data;
-      var events = d3.select(this)
+    selection.each(function () {
+      const currentData = opts.data;
+      const events = d3.select(this)
         .selectAll('g.d3-confidential-group')
-        .data(currentData, function(d) {
-          return d.id;
-      });
-        
-      var back = events.enter()
-      .append('g')
-      .attr({
-        'class': 'd3-confidential-back',
-        id: function(d) {
-          return 'event_back_' + d.id;
-        }
-      });
-      back.append('rect')
-      .attr({
-        x: function(d) {
-          return xPos(d);
-        },
-        y: function(d) {
-          return 0;
-        },
-        width: function(d) {
-          return calculateWidth(d);
-        }, 
-        height: function() {
-          return height;
-        },
-        class: 'd3-back-confidential d3-confidential',
-        id: function(d) {
-          return 'confidential_' + d.id;
-        }
-      });
-      
-      var groups = events.enter()
+        .data(currentData, (d) => d.id);
+
+      const backGroup = events.enter()
         .append('g')
         .attr({
           'class': 'd3-confidential-group',
-          id: function(d) {
-            return 'event_group_' + d.id;
-          }
+          id: (d) => `${poolId}_confidential_group_${d.id}`,
         });
-      
-      // 1st block at the top
-      groups.append('rect')
-      .attr({
-        x: function(d) {
-          return xPos(d);
-        },
-        y: function(d) {
-          return 0;
-        },
-        width: function(d) {
-          return calculateWidth(d);
-        }, 
-        height: function() {
-          return (height-offset)/2 + 2;
-        },
-        class: 'd3-rect-confidential d3-confidential',
-        id: function(d) {
-          return 'confidential_' + d.id;
-        }
-      });
-
-      // 2nd block with logo in th emiddle
-      groups.append('rect').attr({
-        x: function(d) {
-          return xPos(d);
-        },
-        y: function(d) {
-          return (height-offset)/2;
-        },
-        width: function(d) {
-          return calculateWidth(d);
-        }, 
-        height: function() {
-          return offset + 2;
-        },
-        class: 'd3-rect-confidential d3-confidential',
-        id: function(d) {
-          return 'confidential_' + d.id;
-        }
-      });
-      groups.append('image')
-      .attr({
-        x: function(d) {
-          return xPos(d);
-        },
-        y: function(d) {
-          return (height-offset)/2;
-        },
-        width: function(d) {
-          return calculateWidth(d);
-        }, 
-        height: function() {
-          return offset;
-        },
-        'xlink:href' : picto,
-      });
-  
-      //   }).append('svg').append('path').attr({
-      //     'd': 'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z'}
-      // );
-
-      groups.append('rect')
+      backGroup.append('rect')
         .attr({
-          x: function(d) {
-            return xPos(d);
-          },
-          y: function(d) {
-            return ((height-offset)/2) + offset;
-          },
-          width: function(d) {
-            return calculateWidth(d);
-          }, 
-          height: function() {
-            return (height-offset)/2;
-          },
-          class: 'd3-rect-confidential d3-confidential',
-          id: function(d) {
-            return 'confidential_' + d.id;
-          }
+          x: xPos,
+          y: 1,
+          width: calculateWidth,
+          height,
+          class: 'd3-back-confidential d3-confidential',
+          id: (d) => `${poolId}_confidential_back_${d.id}`,
         });
+      backGroup.append('image')
+        .attr({
+          x: (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2,
+          y: (height - imageSize) / 2,
+          id: (d) => `${poolId}_confidential_lock_${d.id}`,
+          'xlink:href': lockIcon,
+        });
+
       events.exit().remove();
 
       // tooltips
-      selection.selectAll('.d3-confidential-group').on('mouseover', function(d) {
-        console.log('mouseover');
-        var parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
-        var container = this.getBoundingClientRect();
+      selection.selectAll('.d3-confidential-group').on('mouseover', function (d) {
+        const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
+        const container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
         confidentialModeEvent.addTooltip(d, container);
       });
 
-      selection.selectAll('.d3-confidential-group').on('mouseout', function(d) {
+      selection.selectAll('.d3-confidential-group').on('mouseout', function (d) {
         confidentialModeEvent.remove(d);
       });
     });
-  };
+  }
 
-  confidentialModeEvent.addTooltip = function(d, rect) {
+  confidentialModeEvent.addTooltip = function addTooltip(d, rect) {
     if (_.get(opts, 'onConfidentialHover', false)) {
       opts.onConfidentialHover({
-        data: d, 
+        data: d,
         rect: rect
       });
     }
   };
 
-  confidentialModeEvent.remove = function(d) {
-    if (_.get(opts, 'onConfidentialOut', false)){
+  confidentialModeEvent.remove = function remove(d) {
+    if (_.get(opts, 'onConfidentialOut', false)) {
       opts.onConfidentialOut({
         data: d
       });
     }
   };
+
   return confidentialModeEvent;
 };
