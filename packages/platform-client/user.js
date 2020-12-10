@@ -244,10 +244,11 @@ module.exports = function (common, config, deps) {
 
         var theUserId = res.body.userid;
         var theToken = res.headers[common.SESSION_TOKEN_HEADER];
-
-        saveSession(theUserId, theToken, options);
-        return cb(null,{userid: theUserId, user: res.body});
-      });
+          // Get a token for zendesk:
+          saveSession(theUserId, theToken, options);
+          return zendeskAuth(theToken, function (err) {
+            cb(err, {userid: theUserId, user: res.body});
+          });
   }
   /**
    * Logout user
@@ -272,6 +273,30 @@ module.exports = function (common, config, deps) {
       {200: onSuccess},
       cb
     );
+  }
+  /**
+   * Get a JWT token signed for Zendesk
+   *
+   * @param user object with a username and password to login
+   * @param options (optional) object with `remember` boolean attribute
+   * @param cb
+   * @returns {cb}  cb(err, response)
+   */
+  function zendeskAuth(token, cb) {
+    superagent.post(common.makeAPIUrl('/auth/sso/zendesk'))
+      .set(common.SESSION_TOKEN_HEADER, token)
+      .end(
+        function (err, res) {
+          if (err) {
+            err.body = (err.response && err.response.body) || '';
+            return cb(err, null);
+          }
+          if (res.status !== 200) {
+            return common.handleHttpError(res, cb);
+          }
+          store.setItem(ZDK_TOKEN_LOCAL_KEY, res.headers[common.ZENDESK_TOKEN_HEADER]);
+          return cb(null);
+        });
   }
   /**
    * Signup user to the Tidepool platform
