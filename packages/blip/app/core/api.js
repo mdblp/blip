@@ -111,7 +111,7 @@ api.user.login = function(user, options, cb) {
     if (typeof data.user === 'object' && Array.isArray(data.user.roles) && data.user.roles.includes('clinic')) {
       userProfile = 'clinical';
     }
-
+    window.zE('webWidget', 'helpCenter:reauthenticate');
     api.metrics.track('api', ['Login succeed', userProfile], cb);
   });
 };
@@ -216,6 +216,9 @@ api.user.logout = function(cb) {
       cb();
     }
   });
+  window.zE('webWidget', 'logout');
+  window.zE('webWidget', 'clear');
+  window.zE('webWidget', 'reset');
 };
 
 api.user.acceptTerms = function(termsData, cb) {
