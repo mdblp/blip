@@ -401,9 +401,9 @@ describe('Actions', () => {
 
     describe('acceptTerms', () => {
       it('should trigger ACCEPT_TERMS_SUCCESS and it should call acceptTerms once for a successful request', () => {
-        const acceptedDate = new Date();
+        const acceptedDate = moment().format();
         const loggedInUserId = 'abc';
-        const termsData = { termsAccepted: new Date() };
+        const termsData = { termsAccepted: acceptedDate };
         const user = {
           emailVerified: true,
           username: 'john.doe@example.com',
