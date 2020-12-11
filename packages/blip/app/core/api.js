@@ -33,6 +33,8 @@ var api = {
   log: bows('Api')
 };
 
+const zendeskSSOEnabled = _.isFunction(window.zE);
+
 api.init = function(cb) {
   var tidepoolLog = bows('Tidepool');
 
@@ -52,7 +54,8 @@ api.init = function(cb) {
     },
     localStore: window.sessionStorage,
     metricsSource: 'blip',
-    metricsVersion: config.VERSION
+    metricsVersion: config.VERSION,
+    zendeskSSOEnabled,
   });
 
   api.tidepool = tidepool;
@@ -111,7 +114,11 @@ api.user.login = function(user, options, cb) {
     if (typeof data.user === 'object' && Array.isArray(data.user.roles) && data.user.roles.includes('clinic')) {
       userProfile = 'clinical';
     }
-    window.zE('webWidget', 'helpCenter:reauthenticate');
+
+    if (zendeskSSOEnabled) {
+      window.zE('webWidget', 'helpCenter:reauthenticate');
+    }
+
     api.metrics.track('api', ['Login succeed', userProfile], cb);
   });
 };
@@ -198,6 +205,12 @@ api.user.logout = function(cb) {
   api.metrics.track('resetUserId');
   api.metrics.track('setConsentGiven');
 
+  if (zendeskSSOEnabled) {
+    window.zE('webWidget', 'logout');
+    window.zE('webWidget', 'clear');
+    window.zE('webWidget', 'reset');
+  }
+
   if (!api.user.isAuthenticated()) {
     api.log('not authenticated but still destroySession');
     tidepool.destroySession();
@@ -216,9 +229,6 @@ api.user.logout = function(cb) {
       cb();
     }
   });
-  window.zE('webWidget', 'logout');
-  window.zE('webWidget', 'clear');
-  window.zE('webWidget', 'reset');
 };
 
 api.user.acceptTerms = function(termsData, cb) {
