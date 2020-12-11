@@ -77,8 +77,11 @@ ConfidentialTooltip.propTypes = {
 };
 
 ConfidentialTooltip.defaultProps = {
-  tail: false,
+  tail: true,
   side: 'right',
+  tailWidth: 9,
+  tailHeight: 17,
+  tailColor: colors.confidentialMode,
   borderColor: colors.confidentialMode,
   borderWidth: 2,
   title: null,

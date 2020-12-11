@@ -18,21 +18,26 @@
 
 const d3 = require('d3');
 const _ = require('lodash');
+const i18next = require('i18next');
 
 const lockIcon = require('lock.svg');
 const utils = require('./util/utils');
 
+const t = i18next.t.bind(i18next);
+
 module.exports = function (pool, options = {}) {
   const height = pool.height() - 2;
   const imageSize = 24;
+  // 3 hours max for the tooltip
+  const MaxSizeWithTooltip = 1000 * 60 * 60 * 3;
 
   const opts = _.cloneDeep(options);
   opts.xScale = pool.xScale().copy();
   const poolId = pool.id();
 
   const xPos = (d) => utils.xPos(d, opts);
-
   const calculateWidth = (d) => utils.calculateWidth(d, opts);
+  const DisplayTooltip = (d) => (utils.getDuration(d).duration < MaxSizeWithTooltip);
 
   function confidentialModeEvent(selection) {
     selection.each(function () {
@@ -63,26 +68,28 @@ module.exports = function (pool, options = {}) {
           id: (d) => `${poolId}_confidential_lock_${d.id}`,
           'xlink:href': lockIcon,
         });
+        // display the text when no tooltip
+        backGroup.filter((d) => !DisplayTooltip(d))
+          .append('text')
+          .text(t('Confidential Mode'))
+          .attr({
+            x: (d) => xPos(d) + (calculateWidth(d)) / 2,
+            y: ((height - imageSize) / 2) + imageSize + 5,
+            class: 'd3-confidential-text',
+            id: (d) => `${poolId}_confidential_lock_${d.id}`,
+          });
 
       events.exit().remove();
 
       // tooltips
       selection.selectAll('.d3-confidential-group').on('mouseover', function (d) {
-        const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
-        const container = this.getBoundingClientRect();
-        // console.log('parentContainer');
-        // console.log(parentContainer);
-        // console.log('container');
-        // console.log(container);
-        // var coordinates= d3.mouse(document.getElementsByClassName('patient-data')[0]);
-        // console.log('coordinates');
-        // console.log(coordinates);
-        // var coordinates= d3.mouse(this);
-        // console.log('coordinates');
-        // console.log(coordinates);
-        container.y = container.top - parentContainer.top;
-        container.x = container.x - (container.width/2) + 20;
-        confidentialModeEvent.addTooltip(d, container);
+        const {duration} = utils.getDuration(d);
+        if ( duration < MaxSizeWithTooltip) {
+          const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
+          const container = this.getBoundingClientRect();
+          container.y = container.top - parentContainer.top;
+          confidentialModeEvent.addTooltip(d, container);
+        }
       });
 
       selection.selectAll('.d3-confidential-group').on('mouseout', function (d) {

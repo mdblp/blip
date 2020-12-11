@@ -6,8 +6,9 @@ var utils = {
     return opts.xScale(Date.parse(d.normalTime)) + 1;
   },
 
-  calculateWidth: function(d, opts) {
-    const s = Date.parse(d.normalTime);
+  // get duration in milliseconds
+  getDuration: function(d) {
+    const start = Date.parse(d.normalTime);
     const units = d.duration.units;
     let msfactor = 1000;
     switch (units) {
@@ -18,8 +19,13 @@ var utils = {
       msfactor *= 60 * 60;
       break;
     }
-    const e = Date.parse(dt.addDuration(s, d.duration.value * msfactor));
-    return opts.xScale(e) - opts.xScale(s) - 1;
+    const end = Date.parse(dt.addDuration(start, d.duration.value * msfactor));
+    return { start, end , duration: end - start};
+  },
+
+  calculateWidth: function(d, opts) {
+    const {start, end} = this.getDuration(d);
+    return opts.xScale(end) - opts.xScale(start) - 1;
   }
 
 }
