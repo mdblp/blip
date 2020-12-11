@@ -747,16 +747,14 @@ describe('stat', () => {
           value: 9.123,
           valueString: '9.1',
           units: 'U',
-          title: 'Bolus Insulin',
-          legendTitle: 'Bolus',
+          title: 'Bolus',
         },
         {
           id: 'basal',
           value: 6.892,
           valueString: '6.9',
           units: 'U',
-          title: 'Basal Insulin',
-          legendTitle: 'Basal',
+          title: 'Basal',
         },
       ];
       expect(statData.data, JSON.stringify({having: statData.data, expected: expectStatDataData})).to.eql(expectStatDataData);

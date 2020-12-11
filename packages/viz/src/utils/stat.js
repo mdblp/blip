@@ -422,16 +422,14 @@ export const getStatData = (data, type, opts = {}) => {
           value: ensureNumeric(data.bolus),
           valueString: formatDecimalNumber(ensureNumeric(data.bolus), 1),
           units: t('U'),
-          title: t('Bolus Insulin'),
-          legendTitle: t('Bolus'),
+          title: t('Bolus'),
         },
         {
           id: 'basal',
           value: ensureNumeric(data.basal),
           valueString: formatDecimalNumber(ensureNumeric(data.basal), 1),
           units: t('U'),
-          title: t('Basal Insulin'),
-          legendTitle: t('Basal'),
+          title: t('Basal'),
         },
       ];
       statData.total = { id: 'insulin', value: getSum(statData.data) };
