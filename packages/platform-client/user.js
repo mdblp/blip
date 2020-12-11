@@ -114,9 +114,6 @@ module.exports = function (common, config, deps) {
     var currVersion = ++loginVersion;
 
     if (newToken == null) {
-      if (config.zendeskSSOEnabled) {
-        store.removeItem(ZDK_TOKEN_LOCAL_KEY);
-      }
       store.removeItem(TOKEN_LOCAL_KEY);
       log.info('Destroyed local session');
       return;
@@ -153,6 +150,10 @@ module.exports = function (common, config, deps) {
    * Destroy user session (in-memory and stored in browser)
    */
   function destroySession() {
+    if (config.zendeskSSOEnabled) {
+      log.info('Removing zendesk token');
+      window.sessionStorage.removeItem(ZDK_TOKEN_LOCAL_KEY);
+    }
     return saveSession(null, null);
   }
   /**
@@ -271,8 +272,7 @@ module.exports = function (common, config, deps) {
     }
 
     var onSuccess = function (res) {
-      saveSession(null, null);
-      store.removeItem(ZDK_TOKEN_LOCAL_KEY);
+      destroySession();
       return res.status;
     };
 
@@ -295,21 +295,26 @@ module.exports = function (common, config, deps) {
       return;
     }
 
-    superagent.post(common.makeAPIUrl('/auth/sso/zendesk'))
-      .set(common.SESSION_TOKEN_HEADER, token)
-      .end(
-        (err, res) => {
-          if (err) {
-            err.body = (err.response && err.response.body) || '';
-            return cb(err);
-          }
-          if (res.status !== 200) {
-            return common.handleHttpError(res, cb);
-          }
-          store.setItem(ZDK_TOKEN_LOCAL_KEY, res.headers[common.ZENDESK_TOKEN_HEADER]);
-          cb(null);
-        }
-      );
+    /** @type {string} */
+    const url = common.makeAPIUrl('/auth/sso/zendesk');
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'x-tidepool-session-token': token,
+        'x-tidepool-trace-session': common.getSessionTrace(),
+      },
+      cache: 'no-cache',
+    }).then((response) => {
+      if (response.ok) {
+        const zendeskToken = response.headers.get(common.ZENDESK_TOKEN_HEADER);
+        log.info('Setup zendesk token in sessionStorage:', ZDK_TOKEN_LOCAL_KEY);
+        window.sessionStorage.setItem(ZDK_TOKEN_LOCAL_KEY, zendeskToken);
+        return cb(null);
+      }
+      cb(new Error(`Invalid HTTP response ${response.status}`));
+    }).catch((reason) => {
+      cb(reason);
+    });
   }
   /**
    * Signup user to the Tidepool platform

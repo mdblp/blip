@@ -43,7 +43,7 @@ module.exports = function(options) {
   }
 
   var localStore = options.localStore;
-  if (_.isEmpty(localStore)) {
+  if (localStore == null) {
     localStore = {
       getItem: _.noop,
       setItem: _.noop,
