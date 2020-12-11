@@ -19,8 +19,8 @@
 const d3 = require('d3');
 const _ = require('lodash');
 
-const dt = require('../data/util/datetime');
 const lockIcon = require('lock.svg');
+const utils = require('./util/utils');
 
 module.exports = function (pool, options = {}) {
   const height = pool.height() - 2;
@@ -30,23 +30,9 @@ module.exports = function (pool, options = {}) {
   opts.xScale = pool.xScale().copy();
   const poolId = pool.id();
 
-  const xPos = (d) => opts.xScale(Date.parse(d.normalTime)) + 1;
+  const xPos = (d) => utils.xPos(d, opts);
 
-  const calculateWidth = (d) => {
-    const s = Date.parse(d.normalTime);
-    const units = d.duration.units;
-    let msfactor = 1000;
-    switch (units) {
-    case 'minutes':
-      msfactor *= 60;
-      break;
-    case 'hours':
-      msfactor *= 60 * 60;
-      break;
-    }
-    const e = Date.parse(dt.addDuration(s, d.duration.value * msfactor));
-    return opts.xScale(e) - opts.xScale(s) - 1;
-  };
+  const calculateWidth = (d) => utils.calculateWidth(d, opts);
 
   function confidentialModeEvent(selection) {
     selection.each(function () {
@@ -84,7 +70,18 @@ module.exports = function (pool, options = {}) {
       selection.selectAll('.d3-confidential-group').on('mouseover', function (d) {
         const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
         const container = this.getBoundingClientRect();
+        // console.log('parentContainer');
+        // console.log(parentContainer);
+        // console.log('container');
+        // console.log(container);
+        // var coordinates= d3.mouse(document.getElementsByClassName('patient-data')[0]);
+        // console.log('coordinates');
+        // console.log(coordinates);
+        // var coordinates= d3.mouse(this);
+        // console.log('coordinates');
+        // console.log(coordinates);
         container.y = container.top - parentContainer.top;
+        container.x = container.x - (container.width/2) + 20;
         confidentialModeEvent.addTooltip(d, container);
       });
 

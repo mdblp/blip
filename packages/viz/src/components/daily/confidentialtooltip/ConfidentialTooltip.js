@@ -24,10 +24,7 @@ import colors from '../../../styles/colors.css';
 import styles from './ConfidentialTooltip.css';
 
 import {Grid} from '@material-ui/core';
-// import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import LockIcon from '@material-ui/icons/LockOutlined';
-
-// import lock from '../../../images/lock.png';
 
 const t = i18next.t.bind(i18next);
 
@@ -36,7 +33,6 @@ class ConfidentialTooltip extends React.Component {
   renderConfidential(c) {
     return <Grid container direction="row" alignItems="center" justify="center">
       <Grid item> 
-      {/* <img src={lock} height={20} className={styles.icon}/> */}
       <LockIcon className={styles.icon} /> 
       </Grid>
       <Grid item> {t('Confidential Mode')} </Grid>
@@ -44,21 +40,11 @@ class ConfidentialTooltip extends React.Component {
   }
 
   render() {
-    const { confidential, timePrefs, title } = this.props;
-    let dateTitle = null;
-    if (title === null) {
-      dateTitle = {
-        normalTime: confidential.normalTime,
-        timezone: _.get(confidential, 'timezone', 'UTC'),
-        timePrefs,
-      };
-    }
+    const { confidential } = this.props;
 
     return (
       <Tooltip
         {...this.props}
-        title={title}
-        dateTitle={dateTitle}
         content={this.renderConfidential(confidential)}
       />
     );
@@ -78,9 +64,6 @@ ConfidentialTooltip.propTypes = {
   title: PropTypes.node,
   tail: PropTypes.bool.isRequired,
   side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
-  tailColor: PropTypes.string.isRequired,
-  tailWidth: PropTypes.number.isRequired,
-  tailHeight: PropTypes.number.isRequired,
   backgroundColor: PropTypes.string,
   borderColor: PropTypes.string.isRequired,
   borderWidth: PropTypes.number.isRequired,
@@ -94,11 +77,8 @@ ConfidentialTooltip.propTypes = {
 };
 
 ConfidentialTooltip.defaultProps = {
-  tail: true,
+  tail: false,
   side: 'right',
-  tailWidth: 9,
-  tailHeight: 17,
-  tailColor: colors.confidentialMode,
   borderColor: colors.confidentialMode,
   borderWidth: 2,
   title: null,

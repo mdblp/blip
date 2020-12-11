@@ -447,7 +447,6 @@ class Daily extends Component {
           }}
           side={this.state.hoveredConfidential.side}
           confidential={this.state.hoveredConfidential.data}
-          bgPrefs={this.props.bgPrefs}
           timePrefs={timePrefs}
         />}
 
