@@ -42,8 +42,8 @@ module.exports = function (common, config, deps) {
   // This is a 'version' counter for the number of times we've logged in.
   // It is used to invalidate stale attempts at refreshing a token
   var loginVersion = 0;
-  var TOKEN_LOCAL_KEY = 'authToken';
-  var ZDK_TOKEN_LOCAL_KEY = 'zdkToken';
+  const TOKEN_LOCAL_KEY = 'authToken';
+  const ZDK_TOKEN_LOCAL_KEY = 'zdkToken';
 
   /*jshint unused:false */
   var log = requireDep(deps, 'log');
@@ -52,7 +52,7 @@ module.exports = function (common, config, deps) {
 
   //config
   config = _.clone(config);
-  defaultProperty(config, 'tokenRefreshInterval', 10 * 60 * 1000); // 10 minutes
+  defaultProperty(config, 'tokenRefreshInterval', 60 * 60 * 1000); // 1 hour
 
   /**
    * Initialize client for user
@@ -150,6 +150,10 @@ module.exports = function (common, config, deps) {
    * Destroy user session (in-memory and stored in browser)
    */
   function destroySession() {
+    if (config.zendeskSSOEnabled) {
+      log.info('Removing zendesk token');
+      window.sessionStorage.removeItem(ZDK_TOKEN_LOCAL_KEY);
+    }
     return saveSession(null, null);
   }
   /**
@@ -210,10 +214,9 @@ module.exports = function (common, config, deps) {
   /**
    * Login user to the Tidepool platform
    *
-   * @param user object with a username and password to login
-   * @param options (optional) object with `remember` boolean attribute
-   * @param cb
-   * @returns {cb}  cb(err, response)
+   * @param {{username: string, password: string}} user object with a username and password to login
+   * @param {object?} options (optional) object with `remember` boolean attribute
+   * @param {(err: object|null, data: {userid: string, user: object}) => void} cb The callback
    */
   function login(user, options, cb) {
     options = options || {};
@@ -233,7 +236,7 @@ module.exports = function (common, config, deps) {
       .post(common.makeAPIUrl('/auth/login', user.longtermkey))
       .auth(user.username, user.password)
       .end(
-        function (err, res) {
+        (err, res) => {
           if (err != null) {
             err.body = (err.response && err.response.body) || '';
             return cb(err, null);
@@ -243,12 +246,16 @@ module.exports = function (common, config, deps) {
             return common.handleHttpError(res, cb);
           }
 
-          var theUserId = res.body.userid;
-          var theToken = res.headers[common.SESSION_TOKEN_HEADER];
+          const userId = res.body.userid;
+          const token = res.headers[common.SESSION_TOKEN_HEADER];
           // Get a token for zendesk:
-          saveSession(theUserId, theToken, options);
-          return zendeskAuth(theToken, function (err) {
-            cb(err, {userid: theUserId, user: res.body});
+          return zendeskAuth(token, (err) => {
+            if (_.isEmpty(err)) {
+              saveSession(userId, token, options);
+              cb(null, {userid: userId, user: res.body});
+            } else {
+              cb(err, null);
+            }
           });
         });
   }
@@ -265,8 +272,7 @@ module.exports = function (common, config, deps) {
     }
 
     var onSuccess = function (res) {
-      saveSession(null, null);
-      store.removeItem(ZDK_TOKEN_LOCAL_KEY);
+      destroySession();
       return res.status;
     };
 
@@ -280,26 +286,35 @@ module.exports = function (common, config, deps) {
   /**
    * Get a JWT token signed for Zendesk
    *
-   * @param user object with a username and password to login
-   * @param options (optional) object with `remember` boolean attribute
-   * @param cb
-   * @returns {cb}  cb(err, response)
+   * @param {string} token The shoreline tidepool user token
+   * @param {(err?: object) => void} cb The callback
    */
   function zendeskAuth(token, cb) {
-    superagent.post(common.makeAPIUrl('/auth/sso/zendesk'))
-      .set(common.SESSION_TOKEN_HEADER, token)
-      .end(
-        function (err, res) {
-          if (err) {
-            err.body = (err.response && err.response.body) || '';
-            return cb(err, null);
-          }
-          if (res.status !== 200) {
-            return common.handleHttpError(res, cb);
-          }
-          store.setItem(ZDK_TOKEN_LOCAL_KEY, res.headers[common.ZENDESK_TOKEN_HEADER]);
-          return cb(null);
-        });
+    if (config.zendeskSSOEnabled !== true) {
+      cb(null);
+      return;
+    }
+
+    /** @type {string} */
+    const url = common.makeAPIUrl('/auth/sso/zendesk');
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'x-tidepool-session-token': token,
+        'x-tidepool-trace-session': common.getSessionTrace(),
+      },
+      cache: 'no-cache',
+    }).then((response) => {
+      if (response.ok) {
+        const zendeskToken = response.headers.get(common.ZENDESK_TOKEN_HEADER);
+        log.info('Setup zendesk token in sessionStorage:', ZDK_TOKEN_LOCAL_KEY);
+        window.sessionStorage.setItem(ZDK_TOKEN_LOCAL_KEY, zendeskToken);
+        return cb(null);
+      }
+      cb(new Error(`Invalid HTTP response ${response.status}`));
+    }).catch((reason) => {
+      cb(reason);
+    });
   }
   /**
    * Signup user to the Tidepool platform
