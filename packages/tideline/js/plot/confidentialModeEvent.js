@@ -37,7 +37,7 @@ module.exports = function (pool, options = {}) {
 
   const xPos = (d) => utils.xPos(d, opts);
   const calculateWidth = (d) => utils.calculateWidth(d, opts);
-  const DisplayTooltip = (d) => (utils.getDuration(d).duration < MaxSizeWithTooltip);
+  const displayTooltip = (d) => (utils.getDuration(d).duration < MaxSizeWithTooltip);
 
   function confidentialModeEvent(selection) {
     selection.each(function () {
@@ -69,7 +69,7 @@ module.exports = function (pool, options = {}) {
           'xlink:href': lockIcon,
         });
         // display the text when no tooltip
-        backGroup.filter((d) => !DisplayTooltip(d))
+        backGroup.filter((d) => !displayTooltip(d))
           .append('text')
           .text(t('Confidential Mode'))
           .attr({
