@@ -29,6 +29,8 @@ import { translate } from 'react-i18next';
 import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import { BG_DATA_TYPES } from '../../core/constants';
+import config from '../../config';
+import logoSrc from './images/tidepool/logo.png';
 
 // tideline dependencies & plugins
 import tidelineBlip from 'tideline/plugins/blip';
@@ -164,11 +166,15 @@ const DailyChart = translate()(class DailyChart extends Component {
   };
 
   render = () => {
-    /* jshint ignore:start */
+    let logoTop = null;
+    if (config.BRANDING === 'dexcom') {
+      logoTop = <img src={logoSrc} alt="Dexcom logo" style={{height: '10px', marginBottom: '10px', marginTop: '10px', float: 'right' }} />;
+    }
     return (
-      <div id="tidelineContainer" className="patient-data-chart"></div>
+      <div id="tidelineContainer" className="patient-data-chart">
+        {logoTop}
+      </div>
       );
-    /* jshint ignore:end */
   };
 
   // handlers
@@ -279,6 +285,12 @@ class Daily extends Component {
 
   render = () => {
     const { timePrefs } = this.props.patientData.opts;
+
+    let logoTop2 = null;
+    if (config.BRANDING === 'dexcom') {
+      logoTop2 = <img src={logoSrc} alt="Dexcom logo" style={{height: '20px', marginBottom: '20px', marginTop: '20px' }} />;
+    }
+
     return (
       <div id="tidelineMain" className="daily">
         <Header
@@ -341,13 +353,16 @@ class Daily extends Component {
           </div>
           <div className="container-box-inner patient-data-sidebar">
             <div className="patient-data-sidebar-inner">
-              <BgSourceToggle
-                bgSource={this.props.dataUtil.bgSource}
-                bgSources={this.props.dataUtil.bgSources}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                onClickBgSourceToggle={this.toggleBgDataSource}
-              />
+              <div className="patient-data-sidebar-top" style={{display: 'flex', flexDirection:'row'}}>
+                  {logoTop2}
+                  <BgSourceToggle
+                    bgSource={this.props.dataUtil.bgSource}
+                    bgSources={this.props.dataUtil.bgSources}
+                    chartPrefs={this.props.chartPrefs}
+                    chartType={this.chartType}
+                    onClickBgSourceToggle={this.toggleBgDataSource}
+                  />
+                </div>
               <Stats
                 bgPrefs={this.props.bgPrefs}
                 bgSource={this.props.dataUtil.bgSource}

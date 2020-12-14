@@ -288,7 +288,8 @@ module.exports = function(pool, opts) {
   };
 
   basal.tooltipHtml = function(group, datum, showSheduledLabel) {
-    const defaultSource = _.get(window, 'config.BRANDING', 'tidepool') === 'diabeloop' ? 'Diabeloop' : 'default';
+    const branding = _.get(window, 'config.BRANDING', 'diabeloop');
+    const defaultSource = ['diabeloop', 'dexcom'].includes(branding) ? 'Diabeloop' : 'default';
     /** @type {string} */
     const source = _.get(datum, 'source', defaultSource);
     switch (datum.deliveryType) {

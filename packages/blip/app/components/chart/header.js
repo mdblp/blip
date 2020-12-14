@@ -79,7 +79,7 @@ class TidelineHeader extends React.Component {
 
     const bgLogLinkClass = cx({
       'js-bgLog': true,
-      'd-none': config.BRANDING === 'diabeloop',
+      'd-none': ['diabeloop', 'dexcom'].includes(config.BRANDING),
       'patient-data-subnav-active': this.props.chartType === 'bgLog',
       'patient-data-subnav-hidden': this.props.chartType === 'no-data',
     });

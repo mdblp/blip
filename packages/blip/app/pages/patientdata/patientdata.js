@@ -789,7 +789,7 @@ export let PatientData = translate()(createReactClass({
   },
 
   handleSwitchToBgLog: function(datetime) {
-    if (config.BRANDING === 'diabeloop') {
+    if (['diabeloop', 'dexcom'].includes(config.BRANDING)) {
       return this.handleSwitchToDaily(datetime, 'BgLog');
     }
 

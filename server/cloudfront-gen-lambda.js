@@ -378,6 +378,7 @@ if (process.env.CROWDIN === 'enabled') {
   let crowdinProject = blipConfig.BRANDING;
   switch (blipConfig.BRANDING) {
   case 'diabeloop':
+  case 'dexcom':
     crowdinProject = 'yourloops';
     break;
   }

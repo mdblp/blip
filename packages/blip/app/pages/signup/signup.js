@@ -238,7 +238,7 @@ export let Signup = translate()(class SignupPage extends React.Component {
         );
         break;
     }
-    if (config.BRANDING === 'diabeloop') {
+    if (['diabeloop', 'dexcom'].includes(config.BRANDING)) {
       content = '';
     }
 

@@ -162,7 +162,7 @@ function FooterLinks(props) {
   let footerContent = null;
   let versionContent = null;
   if (shouldDisplayFooterLinks) {
-    if (config.BRANDING === 'diabeloop') {
+    if (['diabeloop', 'dexcom'].includes(config.BRANDING)) {
       footerContent = diabeloopFooter(metricFnMkr);
     } else {
       footerContent = tidepoolFooter(metricFnMkr);

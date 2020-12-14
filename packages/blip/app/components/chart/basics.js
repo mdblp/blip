@@ -5,19 +5,21 @@ import bows from 'bows';
 import sundial from 'sundial';
 import { translate, Trans } from 'react-i18next';
 
-// tideline dependencies & plugins
-import tidelineBlip from 'tideline/plugins/blip';
-const BasicsChart = tidelineBlip.basics;
-
 import { components as vizComponents, utils as vizUtils } from 'tidepool-viz';
-const Loader = vizComponents.Loader;
-const getLocalizedCeiling = vizUtils.datetime.getLocalizedCeiling;
+import tidelineBlip from 'tideline/plugins/blip';
+
+import config from '../../config';
+import logoSrc from './images/tidepool/logo.png';
 
 import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import Header from './header';
 import Footer from './footer';
 import { BG_DATA_TYPES } from '../../core/constants';
+
+const BasicsChart = tidelineBlip.basics;
+const Loader = vizComponents.Loader;
+const getLocalizedCeiling = vizUtils.datetime.getLocalizedCeiling;
 
 class Basics extends Component {
   static propTypes = {
@@ -76,6 +78,11 @@ class Basics extends Component {
   };
 
   render = () => {
+    let logoTop = null;
+    if (config.BRANDING === 'dexcom') {
+      logoTop = <img src={logoSrc} alt="Dexcom logo" style={{height: '20px', marginBottom: '20px', marginTop: '20px' }} />;
+    }
+
     return (
       <div id="tidelineMain" className="basics">
         <Header
@@ -102,7 +109,8 @@ class Basics extends Component {
           </div>
           <div className="container-box-inner patient-data-sidebar">
             <div className="patient-data-sidebar-inner">
-              <div>
+              <div className="patient-data-sidebar-top" style={{display: 'flex', flexDirection:'row'}}>
+                {logoTop}
                 <BgSourceToggle
                   bgSource={this.props.dataUtil.bgSource}
                   bgSources={this.props.dataUtil.bgSources}
@@ -110,15 +118,15 @@ class Basics extends Component {
                   chartType={this.chartType}
                   onClickBgSourceToggle={this.toggleBgDataSource}
                 />
-                <Stats
-                  bgPrefs={this.props.bgPrefs}
-                  bgSource={this.props.dataUtil.bgSource}
-                  chartPrefs={this.props.chartPrefs}
-                  chartType={this.chartType}
-                  dataUtil={this.props.dataUtil}
-                  endpoints={this.props.endpoints}
-                />
               </div>
+              <Stats
+                bgPrefs={this.props.bgPrefs}
+                bgSource={this.props.dataUtil.bgSource}
+                chartPrefs={this.props.chartPrefs}
+                chartType={this.chartType}
+                dataUtil={this.props.dataUtil}
+                endpoints={this.props.endpoints}
+              />
             </div>
           </div>
         </div>
@@ -131,8 +139,13 @@ class Basics extends Component {
   };
 
   renderChart = () => {
+    let logoTop = null;
+    if (config.BRANDING === 'dexcom') {
+      logoTop = <img src={logoSrc} alt="Dexcom logo" style={{height: '20px', marginBottom: '20px', marginTop: '20px' }} />;
+    }
     return (
       <div id="tidelineContainer" className="patient-data-chart-growing">
+        {logoTop}
         <BasicsChart
           bgClasses={this.props.bgPrefs.bgClasses}
           bgUnits={this.props.bgPrefs.bgUnits}

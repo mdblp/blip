@@ -17,10 +17,13 @@
 
 const i18next = require('i18next');
 const _ = require('lodash');
+const logoSrc = require('./images/tidepool/logo.png');
 
 const t = i18next.t.bind(i18next);
 
 const rectLoopMode = 7;
+
+let haveDexcomLogo = false;
 
 const legend = {
   SHAPE_MARGIN: 3,
@@ -268,6 +271,28 @@ const legend = {
     return _.reduce(b, function(sum, num) { return sum + num; });
   },
   draw: function(selection, type) {
+    if (_.get(window.config, 'BRANDING', 'diabeloop') === 'dexcom' && haveDexcomLogo === false) {
+      haveDexcomLogo = true;
+      const dexcomLogo = {
+        create: (opts) => {
+          return opts.selection.append('image')
+            .attr({
+              width: 67,
+              height: 10,
+              x: -70,
+              y: -10,
+              'xlink:href': logoSrc,
+            }).each(function() {
+              opts.widths.push(70);
+            });
+        },
+        type: 'text'
+      };
+      legend.basal.push(dexcomLogo);
+      legend.bg.push(dexcomLogo);
+      legend.rescuecarbs.push(dexcomLogo);
+    }
+
     var opts = {
       selection: selection,
       widths: [],

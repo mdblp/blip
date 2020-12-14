@@ -54,6 +54,23 @@ export const CONFIG = {
     get intendedUseURL() { return this._intendedUseURL; },
     set intendedUseURL(value) { this._intendedUseURL = value; },
     get intendedUseText() { return t('Regulatory Information'); },
+  },
+  dexcom: {
+    name: 'YourLoops',
+    supportURL: 'https://www.dexcom.com',
+    get supportText() { return t('Dexcom'); },
+    _termsURL: `${config.ASSETS_URL}terms.pdf`,
+    get termsURL() { return this._termsURL; },
+    set termsURL(value) { this._termsURL = value; },
+    get termsText() { return t('Dexcom Applications Terms of Use'); },
+    _dataPrivacyURL: `${config.ASSETS_URL}data-privacy.pdf`,
+    get dataPrivacyURL() { return this._dataPrivacyURL; },
+    set dataPrivacyURL(value) { this._dataPrivacyURL = value; },
+    get dataPrivacyText() { return t('Privacy Policy'); },
+    _intendedUseURL: `${config.ASSETS_URL}intendedUse.pdf`,
+    get intendedUseURL() { return this._intendedUseURL; },
+    set intendedUseURL(value) { this._intendedUseURL = value; },
+    get intendedUseText() { return t('Regulatory Information'); },
   }
 };
 

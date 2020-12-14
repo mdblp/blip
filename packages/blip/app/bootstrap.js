@@ -93,7 +93,7 @@ class Bootstrap {
 
     document.title = BrandConfig[config.BRANDING].name;
 
-    if (config.BRANDING === 'diabeloop') {
+    if (['diabeloop', 'dexcom'].includes(config.BRANDING)) {
       this.onLanguageChanged(i18nOptions.lng);
       i18n.on('languageChanged', this.onLanguageChanged.bind(this));
     }

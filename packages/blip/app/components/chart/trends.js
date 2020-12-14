@@ -31,6 +31,8 @@ import BgSourceToggle from './bgSourceToggle';
 import Footer from './footer';
 import { RangeDatePicker } from '../datepicker';
 import { BG_DATA_TYPES } from '../../core/constants';
+import config from '../../config';
+import logoSrc from './images/tidepool/logo.png';
 
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
 const FocusedRangeLabels = viz.components.FocusedRangeLabels;
@@ -369,6 +371,11 @@ class Trends extends React.PureComponent {
 
   render() {
     const { currentPatientInViewId } = this.props;
+
+    let logoTop = null;
+    if (config.BRANDING === 'dexcom') {
+      logoTop = <img src={logoSrc} alt="Dexcom logo" style={{height: '20px', marginBottom: '20px', marginTop: '20px' }} />;
+    }
     return (
       <div id="tidelineMain" className="trends grid">
         {this.renderHeader()}
@@ -387,14 +394,17 @@ class Trends extends React.PureComponent {
           </div>
           <div className="container-box-inner patient-data-sidebar">
             <div className="patient-data-sidebar-inner">
-              <BgSourceToggle
-                bgSource={this.props.dataUtil.bgSource}
-                bgSources={this.props.dataUtil.bgSources}
-                chartPrefs={this.props.chartPrefs}
-                chartType={this.chartType}
-                dataUtil={this.props.dataUtil}
-                onClickBgSourceToggle={this.toggleBgDataSource}
-              />
+              <div className="patient-data-sidebar-top" style={{display: 'flex', flexDirection:'row'}}>
+                {logoTop}
+                <BgSourceToggle
+                  bgSource={this.props.dataUtil.bgSource}
+                  bgSources={this.props.dataUtil.bgSources}
+                  chartPrefs={this.props.chartPrefs}
+                  chartType={this.chartType}
+                  dataUtil={this.props.dataUtil}
+                  onClickBgSourceToggle={this.toggleBgDataSource}
+                />
+              </div>
               <Stats
                 bgPrefs={this.props.bgPrefs}
                 bgSource={this.props.dataUtil.bgSource}
