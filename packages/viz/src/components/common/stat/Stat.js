@@ -663,6 +663,7 @@ class Stat extends React.Component {
         chartProps.renderer = NoBar;
         chartProps.data = data.data;
         chartProps.id = props.id;
+        chartProps.animate = false;
         break;
 
       case 'simple':
