@@ -317,7 +317,7 @@
   "html.patients-setup-data-storage": "You can also <1>setup data storage</1> for someone’s diabetes data.",
   "html.patientsettings-target-range": "My target range <1>is</1>",
   "html.peopletable-instructions": "Type a patient name in the search box or click <1>Show All</1> to display all patients.",
-  "html.setting-no-uploaded-data": "<0>The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn't sent data yet.</0><1>Try <1>refreshing</1>.</1>",
+  "html.setting-no-uploaded-data": "<0>This view shows your current settings, history of change and device information, but it looks like your system hasn't sent data yet.</0><1>Try <1>refreshing</1>.</1>",
   "html.signup-clinician": "If you are a Healthcare Provider and want to create an account, please <1>click here</1>.",
   "html.signup-invited": "<0>You've been invited to YourLoops.</0><1>Sign up to view the invitation.</1>",
   "html.signup-personal": " If you are a provider who lives with diabetes and wants to track and manage your personal diabetes data, please create a separate <1>personal account</1>.",
