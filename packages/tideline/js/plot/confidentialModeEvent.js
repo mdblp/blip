@@ -1,6 +1,6 @@
 /*
  * == BSD2 LICENSE ==
- * Copyright (c) 2014, Tidepool Project
+ * Copyright (c) 2020, Diabeloop
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -29,7 +29,7 @@ module.exports = function (pool, options = {}) {
   const height = pool.height() - 2;
   const imageSize = 24;
   // 3 hours max for the tooltip
-  const MaxSizeWithTooltip = 1000 * 60 * 60 * 3;
+  const maxSizeWithTooltip = 1000 * 60 * 60 * 3;
 
   const opts = _.cloneDeep(options);
   opts.xScale = pool.xScale().copy();
@@ -37,7 +37,7 @@ module.exports = function (pool, options = {}) {
 
   const xPos = (d) => utils.xPos(d, opts);
   const calculateWidth = (d) => utils.calculateWidth(d, opts);
-  const displayTooltip = (d) => (utils.getDuration(d).duration < MaxSizeWithTooltip);
+  const displayTooltip = (d) => (utils.getDuration(d).duration < maxSizeWithTooltip);
 
   function confidentialModeEvent(selection) {
     selection.each(function () {
@@ -84,7 +84,7 @@ module.exports = function (pool, options = {}) {
       // tooltips
       selection.selectAll('.d3-confidential-group').on('mouseover', function (d) {
         const {duration} = utils.getDuration(d);
-        if ( duration < MaxSizeWithTooltip) {
+        if ( duration < maxSizeWithTooltip) {
           const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
           const container = this.getBoundingClientRect();
           container.y = container.top - parentContainer.top;

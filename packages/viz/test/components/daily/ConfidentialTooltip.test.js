@@ -1,6 +1,6 @@
 /*
  * == BSD2 LICENSE ==
- * Copyright (c) 2016, Tidepool Project
+ * Copyright (c) 2020, Diabeloop
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
