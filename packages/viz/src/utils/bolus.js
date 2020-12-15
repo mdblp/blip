@@ -61,7 +61,7 @@ export function getBolusType(b) {
     return BolusTypes.meal;
   }
   const bolus = getBolusFromInsulinEvent(b);
-  if (bolus.subType === 'pen' || bolus.presciptor === 'manual') {
+  if (bolus.subType === 'pen' || bolus.prescriptor === 'manual') {
     return BolusTypes.manual;
   }
   if (bolus.subType === 'biphasic') {

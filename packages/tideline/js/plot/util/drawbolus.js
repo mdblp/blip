@@ -34,7 +34,7 @@ function bolusToLegend(b) {
     return BolusTypes.meal;
   }
   const bolus = commonbolus.getBolus(b);
-  if (bolus.subType === 'pen' || bolus.presciptor === 'manual') {
+  if (bolus.subType === 'pen' || bolus.prescriptor === 'manual') {
     return BolusTypes.manual;
   }
   if (bolus.subType === 'biphasic') {
@@ -231,62 +231,24 @@ module.exports = function(pool, opts = {}) {
       // draw the line if the programmed and delivered are the same
       // to avoid too much confusing clutter
       // tooltip still exposes fact that suggested and programmed differed
-      // var uninterrupted = underride.filter(function(d) {
-      //   return commonbolus.getProgrammed(d) === commonbolus.getDelivered(d);
-      // });
-      underride.append('rect')
+      underride.append('polygon')
         .attr({
           x: function(d) {
             d = pluckBolus(d);
             return xPosition(d);
           },
           y: function(d) {
-            return opts.yScale(commonbolus.getProgrammed(d));
-          },
-          width: opts.width,
-          height: opts.markerHeight,
-          'class': 'd3-rect-ride d3-bolus',
-          id: (d) => `bolus_ride_rect_${pluckBolus(d).id}`,
-        });
-
-        underride.append('polygon')
-        .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getProgrammed(d));
+            return opts.yScale(commonbolus.getRecommended(d));
           },
           points: function(d) {
             var bolus = pluckBolus(d);
-            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getProgrammed(d)));
+            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)));
           },
           'class': 'd3-polygon-ride d3-bolus',
           id: (d) => `bolus_ride_polygon_${pluckBolus(d).id}`,
         });
     },
     override: function(override) {
-      override.append('rect')
-        .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight;
-          },
-          width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
-              return opts.width / 2;
-            }
-            return opts.width;
-          },
-          height: opts.markerHeight,
-          'class': 'd3-rect-ride d3-bolus',
-          id: (d) => `bolus_override_rect_${pluckBolus(d).id}`,
-        });
-
       override.append('polygon')
         .attr({
           x: function(d) {

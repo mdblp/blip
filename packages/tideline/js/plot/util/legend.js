@@ -275,6 +275,31 @@ const legend = {
           });
       },
       type: 'text'
+    },
+    // Override (technically an Underride)
+    {
+      create: function(opts) {
+        opts.widths.push(opts.SHAPE_WIDTH * 1.5);
+        return opts.selection.append('rect')
+          .attr({
+            'class': 'd3-bolus d3-rect-bolus-legend d3-bolus-underride'
+          });
+      },
+      type: 'rect'
+    },
+    {
+      create: function(opts) {
+        return opts.selection.append('text')
+          .attr({
+            'class': 'd3-pool-legend'
+          })
+          .text(t('Override'))
+          .each(function() {
+            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN);
+            opts.textHeight = this.getBoundingClientRect().height;
+          });
+      },
+      type: 'text'
     }
   ].reverse(),
   carbs: [
