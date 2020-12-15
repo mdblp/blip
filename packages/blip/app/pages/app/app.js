@@ -188,13 +188,24 @@ export class AppComponent extends React.Component {
   }
 
   renderZenDeskWidget() {
-    if (this.props.authenticated) {
-      let name = this.props.user.profile.fullName;
-      let email = this.props.user.emails[0];
-      window.zE('webWidget', 'prefill', {
-        name: { value: name, readOnly: true },
-        email: { value: email, readOnly: true },
-      });
+    const { authenticated, user } = this.props;
+    if (authenticated) {
+      const name = _.get(user, 'profile.fullName', null);
+      const email = _.get(user, 'emails[0]', null);
+      if (_.isString(name) && _.isString(email)) {
+        window.zE('webWidget', 'prefill', {
+          name: { value: name, readOnly: true },
+          email: { value: email, readOnly: true },
+        });
+      } else if (_.isString(email)) {
+        window.zE('webWidget', 'prefill', {
+          email: { value: email, readOnly: true },
+        });
+      } else if (_.isString(name)) {
+        window.zE('webWidget', 'prefill', {
+          name: { value: name, readOnly: true },
+        });
+      }
     } else {
       // Put all of them to be sure
       window.zE('webWidget', 'close');
