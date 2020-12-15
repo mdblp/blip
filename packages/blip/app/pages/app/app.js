@@ -78,6 +78,7 @@ export class AppComponent extends React.Component {
     }).isRequired,
     showingDonateBanner: PropTypes.bool,
     showingDexcomConnectBanner: PropTypes.bool,
+    onClickDexcomConnectBanner: PropTypes.func.isRequired,
     showBanner: PropTypes.func.isRequired,
     hideBanner: PropTypes.func.isRequired,
     termsAccepted: PropTypes.string,
@@ -86,6 +87,7 @@ export class AppComponent extends React.Component {
     userIsCurrentPatient: PropTypes.bool.isRequired,
     userIsDonor: PropTypes.bool.isRequired,
     userIsSupportingNonprofit: PropTypes.bool.isRequired,
+    userHasConnectedDataSources: PropTypes.bool.isRequired,
     permsOfLoggedInUser: PropTypes.object,
   };
 
