@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-759 Add Austria
 ### Engineering Use
+- YLP-418 CloudFront certificates: Allow more than one DNS alternate names
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
 - YLP-816 Add JUnit reports to Jenkins
