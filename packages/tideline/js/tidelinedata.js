@@ -705,8 +705,13 @@ function TidelineData(data, opts) {
           d.localDayOfWeek = dt.getLocalDayOfWeek(date, opts.timePrefs.timezoneName);
           d.localDate = dt.getLocalDate(date, opts.timePrefs.timezoneName);
           d.msPer24 = dt.getMsPer24(d.normalTime, opts.timePrefs.timezoneName);
+          }
+        if (d.type === 'deviceEvent' && d.subType === 'confidential') {
+          const m = moment.utc(d.time);
+          m.add(_.get(d, 'duration.value', 0), _.get(d, 'duration.units', 'hours'));
+          d.normalEnd = m.toISOString();
         }
-      };
+    };
     }
     else {
       watson = function(d) {
