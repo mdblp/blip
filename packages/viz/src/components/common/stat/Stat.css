@@ -258,9 +258,9 @@ svg.statWheelTimeInAuto .offEllipse {
   border-width: 2px;
   border-color: var(--stat-disabled);
   border-style: solid;
-  border-radius: 12px;
+  border-radius: 14px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
 }
 .nobar .nobarRowPercent {
   text-align: right;
