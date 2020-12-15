@@ -540,7 +540,7 @@
   "Software version": "Software version",
   "Some entries are invalid.": "Some entries are invalid.",
   "Something went wrong sending an outgoing invitation to a care team.": "Something went wrong sending an outgoing invitation to a care team.",
-  "Something went wrong trying to leave a care team.": "Something went wrong trying to leave a care team.",
+  "Something went wrong trying to leave a care team.": "Something went wrong trying to leave a patient team.",
   "Something went wrong trying to remove a member from a care team.": "Something went wrong trying to remove someone's access to your data.",
   "Something went wrong trying to request a password reset e-mail.": "Something went wrong trying to request a password reset e-mail.",
   "Something went wrong trying to resend verification e-mail.": "Something went wrong trying to resend verification e-mail.",
