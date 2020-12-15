@@ -16,20 +16,6 @@
  */
 @import '../../../styles/colors.css';
 
-.container {
-  opacity: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 100px;
-  margin: 2px 0;
-  max-width: 180px;
-}
-
 .icon {
-  color: #85B179;
-}
-
-.title {
-  composes: smallSize from '../../../styles/typography.css';
-  text-align: right;
+  color: var(--text-black, black);
 }

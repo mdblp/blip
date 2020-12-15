@@ -55,11 +55,11 @@ describe('ConfidentialTooltip', () => {
       .at(0)
       .find(formatClassesAsSelector(styles.icon)))
       .to.have.length(1);
-    // expect(wrapper
-    //   .find(formatClassesAsSelector('MuiGrid-item'))
-    //   .at(1)
-    //   .text())
-    //   .to.equal(t('Confidential Mode'));
+    expect(wrapper
+      .find(formatClassesAsSelector('MuiGrid-item'))
+      .at(1)
+      .text())
+      .to.equal(t('Confidential Mode'));
     });
 
 });
