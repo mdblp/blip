@@ -15,9 +15,13 @@ export class StaticWebSiteStack extends core.Stack {
   constructor(scope: core.Construct, id: string, distDir: string, props?: WebStackProps, isUnderMaintenance=false) {
     super(scope, id, props);
 
+    if (typeof props !== "object") {
+      throw new Error('Missing props');
+    }
+
     // Create the bucket
-    const bucket = new s3.Bucket(this, `${props?.rootBucketName}.${props?.prefix}`, {
-      bucketName: `${props?.rootBucketName}.${props?.prefix}`,
+    const bucket = new s3.Bucket(this, `${props.rootBucketName}.${props.prefix}`, {
+      bucketName: `${props.rootBucketName}.${props.prefix}`,
       removalPolicy: core.RemovalPolicy.DESTROY,
       publicReadAccess: true,
     });
@@ -32,7 +36,7 @@ export class StaticWebSiteStack extends core.Stack {
             this.formatArn({
               service: 'ssm',
               region: 'us-east-1',
-              resource: `parameter/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
+              resource: `parameter/${props.frontAppName}/${props.prefix}/lambda-edge-arn`
             })
           ]
         })
@@ -42,7 +46,7 @@ export class StaticWebSiteStack extends core.Stack {
         service: 'SSM',
         action: 'getParameter',
         parameters: {
-          Name: `/${props?.FrontAppName}/${props?.prefix}/lambda-edge-arn`
+          Name: `/${props.frontAppName}/${props.prefix}/lambda-edge-arn`
         },
         region: 'us-east-1',
         physicalResourceId: rsc.PhysicalResourceId.of(Date.now().toString()) // Update physical id to always fetch the latest version
@@ -50,15 +54,15 @@ export class StaticWebSiteStack extends core.Stack {
     });
 
     // AWS variable are required here for getting dns zone
-    const zone = route53.HostedZone.fromLookup(this, 'domainName', {
-      domainName: `${props?.zone}`
-    });
+    const zone = route53.HostedZone.fromLookup(this, 'domainName', { domainName: props.zone });
 
     // Create the Certificate
+    const allAltDomainNames = (props.altDomainNames ?? []).concat(props.subjectAlternativeNames ?? []);
+    console.info(`Certificate alternative domain names: ${JSON.stringify(allAltDomainNames)}`);
     const cert = new DnsValidatedCertificate(this, `${id}-certificate`, {
       hostedZone: zone,
-      domainName: `${props?.domainName}`,
-      subjectAlternativeNames: [`${props?.altDomainName}`],
+      domainName: props.domainName,
+      subjectAlternativeNames: allAltDomainNames,
       region: 'us-east-1',
     });
 
@@ -67,11 +71,11 @@ export class StaticWebSiteStack extends core.Stack {
       this,
       `${id}-cloudfront`,
       {
-        comment: `cloudfront deployment for ${props?.prefix} ${props?.FrontAppName} ${props?.version}`,
+        comment: `cloudfront deployment for ${props.prefix} ${props.frontAppName} ${props.version}`,
         originConfigs: [
           {
             s3OriginSource: {
-              originPath: `/${props?.FrontAppName}/${props?.version}`,
+              originPath: `/${props.frontAppName}/${props.version}`,
               s3BucketSource: bucket,
             },
             behaviors: [
@@ -81,7 +85,7 @@ export class StaticWebSiteStack extends core.Stack {
                 lambdaFunctionAssociations: [
                   {
                     eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props?.prefix}-${props?.FrontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
+                    lambdaFunction: lambda.Version.fromVersionArn(this, `${props.prefix}-${props.frontAppName}-request-viewer`, lambdaParameter.getResponseField('Parameter.Value') )
                   },
                 ],
               },
@@ -102,7 +106,7 @@ export class StaticWebSiteStack extends core.Stack {
         ],
         viewerCertificate:
         {
-          aliases: [`${props?.domainName}`, `${props?.altDomainName}`],
+          aliases: [props.domainName].concat(allAltDomainNames),
           props: {
             acmCertificateArn: cert.certificateArn,
             sslSupportMethod: cloudfront.SSLMethod.SNI,
@@ -127,26 +131,30 @@ export class StaticWebSiteStack extends core.Stack {
     );
 
     // associate the distribution to a dns record
-    new route53.CnameRecord(this, `${id}-websitealiasrecord`, {
+    console.info(`Add Route53 CNAME record ${props.domainName}`);
+    new route53.CnameRecord(this, `${id}-dns-cname-${props.domainName}`, {
       zone: zone,
-      recordName: `${props?.domainName}`,
+      recordName: props.domainName,
       domainName: distribution.distributionDomainName,
       ttl: Duration.minutes(5)
     });
-    if (props?.altDomainName !== undefined) {
-      new route53.CnameRecord(this, `${id}-websitealiasrecord2`, {
-        zone: zone,
-        recordName: `${props?.altDomainName}`,
-        domainName: distribution.distributionDomainName,
-        ttl: Duration.minutes(5)
-      });
+    if (Array.isArray(props.altDomainNames)) {
+      for (const altDomainName of props.altDomainNames) {
+        console.info(`Add Route53 CNAME record ${altDomainName}`);
+        new route53.CnameRecord(this, `${id}-dns-cname-${altDomainName}`, {
+          zone: zone,
+          recordName: altDomainName,
+          domainName: distribution.distributionDomainName,
+          ttl: Duration.minutes(5)
+        });
+      }
     }
 
     //  Publish the site content to the S3 bucket (with --delete and invalidation)
     new s3deploy.BucketDeployment(this, `${id}-deploymentwithinvalidation`, {
       sources: [s3deploy.Source.asset(`${distDir}/static`)],
       destinationBucket: bucket,
-      destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
+      destinationKeyPrefix: `${props.frontAppName}/${props.version}`,
       distribution,
       distributionPaths: ['/index.html']
     });

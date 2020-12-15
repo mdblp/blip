@@ -33,7 +33,7 @@ source ./config/env.$TARGET_ENVIRONMENT.sh && npm run build
 
 In the directory cloudfront-dist/deployment (cd cloudfront-dist/deployment):
 
-1. Install or update the AWS CDK CLI from npm/yarn (requires Node.js ≥ 10.13.0). We recommend using a version in Active LTS
+1. Install or update the AWS CDK CLI from npm/yarn (requires Node.js ≥ 14). We recommend using a version in Active LTS
 
     ```bash
     npm install -g aws-cdk@1.61.1
@@ -83,3 +83,12 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `cdk deploy --require-approval never`      deploy this stack to your default AWS account/region
 * `cdk diff`        compare deployed stack with current state
 * `cdk synth`       emits the synthesized CloudFormation template
+
+## Environment variables
+ * `DOMAIN_NAME` Main domain name
+ * `ALT_DOMAIN_NAMES` JSON array of alternative domains (DNS CNAME records will be created)
+ * `SUBJECT_ALTERNATIVE_NAMES` JSON array of alternative domains (only added to the SSL certificate)
+ * `DNS_ZONE` ?
+ * `FRONT_APP_NAME` blip?
+ * `STACK_PREFIX_NAME` ?
+ * `STACK_VERSION` Yourloops version
