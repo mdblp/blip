@@ -43,7 +43,6 @@ module.exports = function (common, config, deps) {
   // It is used to invalidate stale attempts at refreshing a token
   var loginVersion = 0;
   const TOKEN_LOCAL_KEY = 'authToken';
-  const ZDK_TOKEN_LOCAL_KEY = 'zdkToken';
 
   /*jshint unused:false */
   var log = requireDep(deps, 'log');
@@ -248,15 +247,8 @@ module.exports = function (common, config, deps) {
 
           const userId = res.body.userid;
           const token = res.headers[common.SESSION_TOKEN_HEADER];
-          // Get a token for zendesk:
-          return zendeskAuth(token, (err) => {
-            if (_.isEmpty(err)) {
-              saveSession(userId, token, options);
-              cb(null, {userid: userId, user: res.body});
-            } else {
-              cb(err, null);
-            }
-          });
+          saveSession(userId, token, options);
+          cb(null, {userid: userId, user: res.body});
         });
   }
   /**
@@ -282,39 +274,6 @@ module.exports = function (common, config, deps) {
       { 200: onSuccess },
       cb
     );
-  }
-  /**
-   * Get a JWT token signed for Zendesk
-   *
-   * @param {string} token The shoreline tidepool user token
-   * @param {(err?: object) => void} cb The callback
-   */
-  function zendeskAuth(token, cb) {
-    if (config.zendeskSSOEnabled !== true) {
-      cb(null);
-      return;
-    }
-
-    /** @type {string} */
-    const url = common.makeAPIUrl('/auth/sso/zendesk');
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'x-tidepool-session-token': token,
-        'x-tidepool-trace-session': common.getSessionTrace(),
-      },
-      cache: 'no-cache',
-    }).then((response) => {
-      if (response.ok) {
-        const zendeskToken = response.headers.get(common.ZENDESK_TOKEN_HEADER);
-        log.info('Setup zendesk token in sessionStorage:', ZDK_TOKEN_LOCAL_KEY);
-        window.sessionStorage.setItem(ZDK_TOKEN_LOCAL_KEY, zendeskToken);
-        return cb(null);
-      }
-      cb(new Error(`Invalid HTTP response ${response.status}`));
-    }).catch((reason) => {
-      cb(reason);
-    });
   }
   /**
    * Signup user to the Tidepool platform

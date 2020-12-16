@@ -36,7 +36,6 @@ module.exports = function (cfg, deps) {
 
   //constants
   var SESSION_TOKEN_HEADER = 'x-tidepool-session-token';
-  var ZENDESK_TOKEN_HEADER = 'x-external-session-token';
   var TRACE_SESSION_HEADER = 'x-tidepool-trace-session';
   var DIGEST_HEADER = 'Digest';
   var STATUS_BAD_REQUEST = 400;
@@ -405,7 +404,6 @@ module.exports = function (cfg, deps) {
   return {
     //Constants
     SESSION_TOKEN_HEADER : SESSION_TOKEN_HEADER,
-    ZENDESK_TOKEN_HEADER : ZENDESK_TOKEN_HEADER,
     TRACE_SESSION_HEADER : TRACE_SESSION_HEADER,
     DIGEST_HEADER : DIGEST_HEADER,
     STATUS_BAD_REQUEST : STATUS_BAD_REQUEST,
