@@ -149,10 +149,6 @@ module.exports = function (common, config, deps) {
    * Destroy user session (in-memory and stored in browser)
    */
   function destroySession() {
-    if (config.zendeskSSOEnabled) {
-      log.info('Removing zendesk token');
-      window.sessionStorage.removeItem(ZDK_TOKEN_LOCAL_KEY);
-    }
     return saveSession(null, null);
   }
   /**
