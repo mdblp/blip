@@ -79,57 +79,46 @@ module.exports = function(pool, opts = {}) {
   _.defaults(opts, defaults);
 
   const halfWidth = opts.width / 2;
-  var top = opts.yScale.range()[0];
-  var mainGroup = pool.parent();
+  const top = opts.yScale.range()[0];
+  const mainGroup = pool.parent();
 
-  const pluckBolus = commonbolus.getBolus;
-
-  var xPosition = function(d) {
-    var x = opts.xScale(Date.parse(d.normalTime)) - halfWidth;
-    return x;
-  };
-  var computePathHeight = function(d) {
-    var base = opts.yScale(d.extended) + opts.bolusStroke / 2;
+  const xPosition = (d) => opts.xScale(Date.parse(d.normalTime)) - halfWidth;
+  const computePathHeight = (d) => {
+    const base = opts.yScale(d.extended) + opts.bolusStroke / 2;
     if (d.extended === 0) {
       return base - opts.bolusStroke;
     }
     return base;
   };
 
-  var triangleLeft = function(x) { return x + halfWidth - opts.triangleOffset; };
-  var triangleRight = function(x) { return x + halfWidth + opts.triangleOffset; };
-  var triangleMiddle = function(x) { return x + halfWidth; };
+  const triangleLeft = (x) => { return x + halfWidth - opts.triangleOffset; };
+  const triangleRight = (x) => { return x + halfWidth + opts.triangleOffset; };
+  const triangleMiddle = (x) => { return x + halfWidth; };
 
-  var extendedTriangle = function(x, y) {
-    var top = (x + opts.triangleSize) + ' ' + (y + opts.triangleSize/2);
-    var bottom = (x + opts.triangleSize) + ' ' + (y - opts.triangleSize/2);
-    var point = x + ' ' + y;
+  const extendedTriangle = (x, y) => {
+    const top = (x + opts.triangleSize) + ' ' + (y + opts.triangleSize/2);
+    const bottom = (x + opts.triangleSize) + ' ' + (y - opts.triangleSize/2);
+    const point = x + ' ' + y;
     return 'M' + top + 'L' + bottom + 'L' + point + 'Z';
   };
 
-  var underrideTriangle = function(x, y) {
-    return triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
-      triangleMiddle(x) + ',' + (y + opts.markerHeight/2 + opts.triangleHeight) + ' ' +
-      triangleRight(x) + ',' + (y + opts.markerHeight/2);
-  };
+  const underrideTriangle = (x, y) =>
+    triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
+    triangleMiddle(x) + ',' + (y + opts.markerHeight/2 + opts.triangleHeight) + ' ' +
+    triangleRight(x) + ',' + (y + opts.markerHeight/2);
 
-  var overrideTriangle = function(x, y) {
-    return triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
-      triangleMiddle(x) + ',' + (y + opts.markerHeight/2 - opts.triangleHeight) + ' ' +
-      triangleRight(x) + ',' + (y + opts.markerHeight/2);
-  };
+  const overrideTriangle = (x, y) =>
+    triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
+    triangleMiddle(x) + ',' + (y + opts.markerHeight/2 - opts.triangleHeight) + ' ' +
+    triangleRight(x) + ',' + (y + opts.markerHeight/2);
 
   return {
     carb: function(carbs) {
-      var xPos = function(d) {
-        return xPosition(d) + halfWidth;
-      };
-
-      var yPos = function(d) {
-        var r = opts.yScaleCarbs ? opts.yScaleCarbs(d.carbInput) : opts.r;
-
-        var bolusValue = d.bolus ? commonbolus.getMaxValue(d) : 0;
-
+      const xPos = (d) => xPosition(d) + halfWidth;
+      const yScaleCarbs = (ci) => opts.yScaleCarbs ? opts.yScaleCarbs(ci) : opts.r;
+      const yPos = (d) => {
+        const r = yScaleCarbs(d.carbInput);
+        const bolusValue = d.bolus ? commonbolus.getMaxValue(d) : 0;
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0);
       };
 
@@ -137,9 +126,7 @@ module.exports = function(pool, opts = {}) {
         .attr({
           cx: xPos,
           cy: yPos,
-          r: function(d) {
-            return opts.yScaleCarbs ? opts.yScaleCarbs(d.carbInput) : opts.r;
-          },
+          r: (d) => yScaleCarbs(d.carbInput),
           'stroke-width': 0,
           'class': 'd3-circle-carbs d3-carbs',
           id: function(d) {
@@ -148,9 +135,7 @@ module.exports = function(pool, opts = {}) {
         });
 
       carbs.append('text')
-        .text(function(d) {
-          return d.carbInput;
-        })
+        .text((d) => d.carbInput)
         .attr({
           x: xPos,
           y: yPos,
@@ -161,40 +146,25 @@ module.exports = function(pool, opts = {}) {
       // delivered amount of bolus
       boluses.append('rect')
         .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getDelivered(d));
-          },
+          x: (d) => xPosition(commonbolus.getBolus(d)),
+          y: (d) => opts.yScale(commonbolus.getDelivered(d)),
           width: (d) => {
             if (bolusToLegend(d) === BolusTypes.micro) {
               return opts.width / 2;
             }
             return opts.width;
           },
-          height: function(d) {
-            return top - opts.yScale(commonbolus.getDelivered(d));
-          },
+          height: (d) => top - opts.yScale(commonbolus.getDelivered(d)),
           'class': (b) => bolusClass(b, 'd3-bolus d3-rect-bolus'),
-          id: function(d) {
-            d = pluckBolus(d);
-            return 'bolus_' + d.id;
-          }
+          id: (d) => `bolus_${commonbolus.getBolus(d)}`,
         });
     },
     undelivered: function(undelivered) {
       // draw color in the undelivered portion
       undelivered.append('rect')
         .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getProgrammed(d));
-          },
+          x: (d) => xPosition(commonbolus.getBolus(d)),
+          y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
           width: (d) => {
             if (bolusToLegend(d) === BolusTypes.micro) {
               return opts.width / 2;
@@ -211,59 +181,31 @@ module.exports = function(pool, opts = {}) {
         });
     },
     underride: function(underride) {
-      underride.append('rect')
-        .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getRecommended(d));
-          },
-          width: opts.width,
-          height: function(d) {
-            return opts.yScale(commonbolus.getProgrammed(d)) - opts.yScale(commonbolus.getRecommended(d));
-          },
-          'class': 'd3-rect-underride d3-bolus',
-          id: (d) => `bolus_underride_${pluckBolus(d).id}`,
-        });
-
-      // draw the line if the programmed and delivered are the same
-      // to avoid too much confusing clutter
-      // tooltip still exposes fact that suggested and programmed differed
       underride.append('polygon')
         .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
-          y: function(d) {
-            return opts.yScale(commonbolus.getRecommended(d));
-          },
+          x: (d) => xPosition(commonbolus.getBolus(d)),
+          y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
           points: function(d) {
-            var bolus = pluckBolus(d);
-            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)));
+            const bolus = commonbolus.getBolus(d);
+            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getProgrammed(d)));
           },
           'class': 'd3-polygon-ride d3-bolus',
-          id: (d) => `bolus_ride_polygon_${pluckBolus(d).id}`,
+          id: (d) => `bolus_ride_polygon_${commonbolus.getBolus(d).id}`,
         });
     },
     override: function(override) {
       override.append('polygon')
         .attr({
-          x: function(d) {
-            d = pluckBolus(d);
-            return xPosition(d);
-          },
+          x: (d) => xPosition(commonbolus.getBolus(d)),
           y: function(d) {
             return opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight;
           },
           points: function(d) {
-            var bolus = pluckBolus(d);
+            const bolus = commonbolus.getBolus(d);
             return overrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight);
           },
           'class': 'd3-polygon-ride d3-bolus',
-          id: (d) => `bolus_override_polygon_${pluckBolus(d).id}`,
+          id: (d) => `bolus_override_polygon_${commonbolus.getBolus(d).id}`,
         });
     },
     extended: function(extended) {
@@ -271,7 +213,7 @@ module.exports = function(pool, opts = {}) {
       extended.append('path')
         .attr({
           d: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             var rightEdge = xPosition(d) + opts.width;
             var doseHeight = computePathHeight(d);
             var doseEnd = opts.xScale(Date.parse(d.normalTime) + commonbolus.getMaxDuration(d));
@@ -280,7 +222,7 @@ module.exports = function(pool, opts = {}) {
           'stroke-width': opts.bolusStroke,
           'class': 'd3-path-extended d3-bolus',
           id: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             return 'bolus_' + d.id;
           }
         });
@@ -289,14 +231,14 @@ module.exports = function(pool, opts = {}) {
       extended.append('path')
         .attr({
           d: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             var doseHeight = computePathHeight(d);
             var doseEnd = opts.xScale(Date.parse(d.normalTime) + commonbolus.getMaxDuration(d)) - opts.triangleSize;
             return extendedTriangle(doseEnd, doseHeight);
           },
           'stroke-width': opts.bolusStroke,
           'class': function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
 
             if (d.expectedExtended) {
               return 'd3-path-extended-triangle-suspended d3-bolus';
@@ -305,7 +247,7 @@ module.exports = function(pool, opts = {}) {
             return 'd3-path-extended-triangle d3-bolus';
           },
           id: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             return 'bolus_' + d.id;
           }
         });
@@ -315,7 +257,7 @@ module.exports = function(pool, opts = {}) {
       suspended.append('path')
         .attr({
           d: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             var doseHeight = computePathHeight(d);
             var rightEdge = opts.xScale(Date.parse(d.normalTime) + d.duration);
             var pathEnd = rightEdge + opts.suspendMarkerWidth;
@@ -330,7 +272,7 @@ module.exports = function(pool, opts = {}) {
       suspended.append('path')
         .attr({
           d: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             var doseHeight = computePathHeight(d);
             var pathEnd = opts.xScale(Date.parse(d.normalTime) + d.duration) + opts.suspendMarkerWidth;
             var doseEnd = opts.xScale(Date.parse(d.normalTime) + d.expectedDuration);
@@ -340,7 +282,7 @@ module.exports = function(pool, opts = {}) {
           'stroke-width': opts.bolusStroke,
           'class': 'd3-path-extended-suspended d3-bolus',
           id: function(d) {
-            d = pluckBolus(d);
+            d = commonbolus.getBolus(d);
             return 'bolus_' + d.id;
           }
         });

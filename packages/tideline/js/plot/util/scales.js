@@ -120,7 +120,7 @@ var scales = function(opts) {
       /** @type {number} */
       const maxValue = data.reduce((/** @type{number} */ p, /** @type{object} */ c) => {
         /** @type{number} */
-        const v = commonbolus.getMaxValue(c);
+        const v = commonbolus.getProgrammed(c);
         return Math.max(p, (Number.isFinite(v) ? v : 0));
       }, 0);
       const bolusDomain = [0, maxValue];

@@ -64,6 +64,7 @@
 .undelivered {
   composes: row;
   font-weight: bold;
+  color: var(--bolus-undelivered);
 }
 
 .delivered {
@@ -73,7 +74,7 @@
 
 .override {
   composes: row;
-  color: var(--bolus-override);
+  color: var(--bolus-undelivered);
   font-weight: bold;
 }
 

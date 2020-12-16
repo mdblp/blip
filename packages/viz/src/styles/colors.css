@@ -24,10 +24,10 @@
   --text-basal: #a4a4a4;
   --text-basal-automated: #3a90a4;
   --bolus: #6FC3BB;
-  --bolus-ride: #E7E7E7;
+  --bolus-ride: #7E7E7E;
   --bolus-override: #7E7E7E;
   --bolus-underride: #7E7E7E;
-  --bolus--undelivered: #E98D7C;
+  --bolus-undelivered: #E98D7C;
   --bolus-meal: #6FC3BB;
   --bolus-micro: #9A78BD;
   --bolus-manual: #8C65D6;

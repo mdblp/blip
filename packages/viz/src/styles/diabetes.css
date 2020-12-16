@@ -94,13 +94,13 @@
 }
 
 .bolusUndelivered {
-  color: var(--bolus--undelivered);
-  fill: var(--bolus--undelivered);
+  color: var(--bolus-undelivered);
+  fill: var(--bolus-undelivered);
 }
 
 .bolusUnderride {
-  color: var(--bolus--undelivered);
-  fill: var(--bolus--undelivered);
+  color: var(--bolus-undelivered);
+  fill: var(--bolus-undelivered);
 }
 
 .carbs {

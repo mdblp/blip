@@ -279,13 +279,28 @@ const legend = {
     // Override (technically an Underride)
     {
       create: function(opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5);
-        return opts.selection.append('rect')
+        opts.widths.push(25);
+        const g = opts.selection.append('g').attr({'class': 'd3-bolus d3-rect-bolus-legend'});
+        g.append('rect')
           .attr({
-            'class': 'd3-bolus d3-rect-bolus-legend d3-bolus-underride'
+            'class': 'd3-bolus-underride',
+            transform: 'translate(-5, -5) rotate(45) translate(-10,10)',
+            width: 10,
+            height: 10,
           });
+        g.append('rect')
+          .attr({
+            width: 14.5,
+            height: 1,
+            fill: 'var(--bkgrnd,white)',
+            stroke: 'transparent',
+            x: -19,
+            y: -5.875,
+            transform: 'translate(0,4.9)',
+          });
+        return g;
       },
-      type: 'rect'
+      type: 'group'
     },
     {
       create: function(opts) {
@@ -360,30 +375,29 @@ const legend = {
     return _.reduce(b, function(sum, num) { return sum + num; });
   },
   draw: function(selection, type) {
-    var opts = {
+    const opts = {
       selection: selection,
       widths: [],
       SHAPE_WIDTH: this.SHAPE_WIDTH
     };
-    var typeFns = this[type];
+    const typeFns = this[type];
     _.forEach(typeFns, _.bind(function(fn, i) {
-      var created = fn.create(opts), w;
+      const created = fn.create(opts);
       if (fn.type === 'text' || fn.type === 'group') {
         if (opts.widths[i - 1]) {
-          w = this.cumWidth(opts.widths, i);
+          const w = this.cumWidth(opts.widths, i);
           if ((i === typeFns.length - 1) && (i !== 1)) {
-            var s = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2;
+            const s = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2;
             created.attr('transform', 'translate(' + (-(w + s/2)) + ',0)');
-          }
-          else {
+          } else {
             created.attr('transform', 'translate(' + (-w) + ',0)');
           }
         }
       }
       else if (fn.type === 'circle') {
         if (opts.widths[i - 1]) {
-          w = this.cumWidth(opts.widths, i);
-          var r = (this.SHAPE_WIDTH - this.SHAPE_MARGIN*2)/2;
+          const w = this.cumWidth(opts.widths, i);
+          const r = (this.SHAPE_WIDTH - this.SHAPE_MARGIN*2)/2;
           created.attr({
             'cx': -(w + 2*r),
             'cy': -opts.textHeight/4,
@@ -392,13 +406,13 @@ const legend = {
         }
       }
       else if (fn.type === 'rect') {
-        var side = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2;
+        const side = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2;
         created.attr({
           'width': side,
           'height': side
         });
         if (opts.widths[i - 1]) {
-          w = this.cumWidth(opts.widths, i);
+          const w = this.cumWidth(opts.widths, i);
           created.attr({
             'x': -w - this.SHAPE_WIDTH
           });

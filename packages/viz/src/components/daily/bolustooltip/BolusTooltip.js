@@ -31,9 +31,9 @@ class BolusTooltip extends React.Component {
   getBolusTypeLine(bolusType) {
     if (bolusType !== null) {
       return (
-        <div className={styles.bolus}>
-          <div className={styles.label}>{t('bolus_type')}</div>
-          <div className={styles.value}>{t(`bolus_${bolusType}`)}</div>
+        <div className={styles.bolus} id="bolus-tooltip-line-type">
+          <div className={styles.label} id="bolus-tooltip-line-type-label">{t('bolus_type')}</div>
+          <div className={styles.value} id="bolus-tooltip-line-type-value">{t(`bolus_${bolusType}`)}</div>
         </div>
       );
     }
@@ -43,10 +43,10 @@ class BolusTooltip extends React.Component {
   getIobLine(iob) {
     if (iob !== null) {
       return (
-        <div className={styles.iob}>
-          <div className={styles.label}>{t('IOB')}</div>
-          <div className={styles.value}>{formatInsulin(iob)}</div>
-          <div className={styles.units}>U</div>
+        <div className={styles.iob} id="bolus-tooltip-line-iob">
+          <div className={styles.label} id="bolus-tooltip-line-iob-label">{t('IOB')}</div>
+          <div className={styles.value} id="bolus-tooltip-line-iob-value">{formatInsulin(iob)}</div>
+          <div className={styles.units} id="bolus-tooltip-line-iob-units">{t('U')}</div>
         </div>
       );
     }
@@ -56,8 +56,8 @@ class BolusTooltip extends React.Component {
   getPrescriptorLine(prescriptor) {
     if (_.isString(prescriptor) && prescriptor !== 'manual') {
       return (
-        <div className={styles.prescriptor}>
-          <div className={styles.label}>{t('Prescribed by Loop Mode')}</div>
+        <div className={styles.prescriptor} id="bolus-tooltip-line-prescriptor">
+          <div className={styles.label} id="bolus-tooltip-line-prescriptor-label">{t('Prescribed by Loop Mode')}</div>
         </div>
       );
     }
@@ -67,32 +67,33 @@ class BolusTooltip extends React.Component {
   getDeliveredLine(delivered) {
     if (_.isFinite(delivered)) {
       return (
-        <div className={styles.delivered}>
-          <div className={styles.label}>{t('Delivered')}</div>
-          <div className={styles.value}>{`${formatInsulin(delivered)}`}</div>
-          <div className={styles.units}>U</div>
+        <div className={styles.delivered} id="bolus-tooltip-line-delivered">
+          <div className={styles.label} id="bolus-tooltip-line-delivered-label">{t('Delivered')}</div>
+          <div className={styles.value} id="bolus-tooltip-line-delivered-value">{`${formatInsulin(delivered)}`}</div>
+          <div className={styles.units} id="bolus-tooltip-line-delivered-units">{t('U')}</div>
         </div>
       );
     }
     return null;
   }
 
-  getUndeliveredLine(undelivered) {
+  getUndeliveredLine(/** @type{number} */ undelivered) {
+    const value = undelivered > 0 ? `-${formatInsulin(undelivered)}` : `+${(-undelivered).toFixed(2)}`;
     return (
-      <div className={styles.undelivered}>
-        <div className={styles.label}>{t('Undelivered')}</div>
-        <div className={styles.value}>{`-${formatInsulin(undelivered)}`}</div>
-        <div className={styles.units}>U</div>
+      <div className={styles.undelivered} id="bolus-tooltip-line-undelivered">
+        <div className={styles.label} id="bolus-tooltip-line-undelivered-label">{t('Undelivered')}</div>
+        <div className={styles.value} id="bolus-tooltip-line-undelivered-value">{value}</div>
+        <div className={styles.units} id="bolus-tooltip-line-undelivered-units">{t('U')}</div>
       </div>
     );
   }
 
   getRecommandedLine(recommanded) {
     return (
-      <div className={styles.suggested}>
-        <div className={styles.label}>{t('Recommended')}</div>
-        <div className={styles.value}>{formatInsulin(recommanded)}</div>
-        <div className={styles.units}>U</div>
+      <div className={styles.suggested} id="bolus-tooltip-line-recommanded">
+        <div className={styles.label} id="bolus-tooltip-line-recommanded-label">{t('Recommended')}</div>
+        <div className={styles.value} id="bolus-tooltip-line-recommanded-value">{formatInsulin(recommanded)}</div>
+        <div className={styles.units} id="bolus-tooltip-line-recommanded-units">{t('U')}</div>
       </div>
     );
   }
@@ -100,23 +101,15 @@ class BolusTooltip extends React.Component {
   getOverrideLine(programmed, recommended) {
     let overrideLine = null;
     if (Number.isFinite(programmed) && Number.isFinite(recommended)) {
-      if (programmed > recommended) {
-        overrideLine = (
-          <div className={styles.override}>
-            <div className={styles.label}>{t('Override')}</div>
-            <div className={styles.value}>{`+${formatInsulin(programmed - recommended)}`}</div>
-            <div className={styles.units}>U</div>
-          </div>
-        );
-      } else {
-        overrideLine = (
-          <div className={styles.override}>
-            <div className={styles.label}>{t('Underride')}</div>
-            <div className={styles.value}>{`-${formatInsulin(recommended - programmed)}`}</div>
-            <div className={styles.units}>U</div>
-          </div>
-        );
-      }
+      let value = formatInsulin(Math.abs(programmed - recommended));
+      value = programmed > recommended ? `+${value}` : `-${value}`;
+      overrideLine = (
+        <div className={styles.override} id="bolus-tooltip-line-override">
+          <div className={styles.label} id="bolus-tooltip-line-override-label">{t('Override')}</div>
+          <div className={styles.value} id="bolus-tooltip-line-override-value">{value}</div>
+          <div className={styles.units} id="bolus-tooltip-line-override-units">{t('U')}</div>
+        </div>
+      );
     }
     return overrideLine;
   }
@@ -124,10 +117,10 @@ class BolusTooltip extends React.Component {
   getCarbsLine(carbs) {
     if (carbs !== null) {
       return (
-        <div className={styles.carbs}>
-          <div className={styles.label}>{t('Carbs')}</div>
-          <div className={styles.value}>{carbs}</div>
-          <div className={styles.units}>g</div>
+        <div className={styles.carbs} id="bolus-tooltip-line-carbs">
+          <div className={styles.label} id="bolus-tooltip-line-carbs-label">{t('Carbs')}</div>
+          <div className={styles.value} id="bolus-tooltip-line-carbs-value">{carbs}</div>
+          <div className={styles.units} id="bolus-tooltip-line-carbs-units">{t('g')}</div>
         </div>
       );
     }
@@ -137,8 +130,8 @@ class BolusTooltip extends React.Component {
   getMealLine(fatMeal) {
     if (fatMeal === 'yes') {
       return (
-        <div className={styles.fat}>
-          <div className={styles.label}>{t('High fat meal')}</div>
+        <div className={styles.fat} id="bolus-tooltip-line-fat">
+          <div className={styles.label} id="bolus-tooltip-line-fat-label">{t('High fat meal')}</div>
         </div>
       );
     }
@@ -148,8 +141,10 @@ class BolusTooltip extends React.Component {
   getInputTimeLine(inputTime, timePrefs) {
     if (inputTime !== null) {
       return (
-        <div className={styles.input}>
-          <div className={styles.label}>{t('Entered at')} {formatInputTime(inputTime, timePrefs)}</div>
+        <div className={styles.input} id="bolus-tooltip-line-input">
+          <div className={styles.label} id="bolus-tooltip-line-input-label">
+            {t('Entered at')} {formatInputTime(inputTime, timePrefs)}
+          </div>
         </div>
       );
     }
@@ -219,7 +214,7 @@ class BolusTooltip extends React.Component {
     const deliveredLine = this.getDeliveredLine(delivered);
 
     return (
-      <div className={styles.container}>
+      <div className={styles.container} id="bolus-tooltip-content">
         {iobLine}
         {prescriptorLine}
         {bolusTypeLine}
