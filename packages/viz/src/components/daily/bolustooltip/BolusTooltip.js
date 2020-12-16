@@ -88,12 +88,12 @@ class BolusTooltip extends React.Component {
     );
   }
 
-  getRecommandedLine(recommanded) {
+  getRecommendedLine(recommended) {
     return (
-      <div className={styles.suggested} id="bolus-tooltip-line-recommanded">
-        <div className={styles.label} id="bolus-tooltip-line-recommanded-label">{t('Recommended')}</div>
-        <div className={styles.value} id="bolus-tooltip-line-recommanded-value">{formatInsulin(recommanded)}</div>
-        <div className={styles.units} id="bolus-tooltip-line-recommanded-units">{t('U')}</div>
+      <div className={styles.suggested} id="bolus-tooltip-line-recommended">
+        <div className={styles.label} id="bolus-tooltip-line-recommended-label">{t('Recommended')}</div>
+        <div className={styles.value} id="bolus-tooltip-line-recommended-value">{formatInsulin(recommended)}</div>
+        <div className={styles.units} id="bolus-tooltip-line-recommended-units">{t('U')}</div>
       </div>
     );
   }
@@ -169,7 +169,7 @@ class BolusTooltip extends React.Component {
     const overrideLine = this.getOverrideLine(programmed, recommended);
     const deliveredLine = this.getDeliveredLine(delivered);
     const undeliveredLine = isInterrupted ? this.getUndeliveredLine(programmed - delivered) : null;
-    const recommendedLine = (isInterrupted || overrideLine !== null) && suggested !== null ? this.getRecommandedLine(suggested) : null;
+    const recommendedLine = (isInterrupted || overrideLine !== null) && suggested !== null ? this.getRecommendedLine(suggested) : null;
     const carbsLine = this.getCarbsLine(carbs);
 
     const iobLine = this.getIobLine(iob);

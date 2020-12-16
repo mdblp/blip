@@ -96,7 +96,7 @@ describe('common bolus functions', function() {
         correction: 0.0
       }
     },
-    recommandedEmpty: {
+    recommendedEmpty: {
       type: 'wizard',
       recommended: {
       },
@@ -105,7 +105,7 @@ describe('common bolus functions', function() {
         normal: 0.3,
       }
     },
-    recommandedEmptyBolus: {
+    recommendedEmptyBolus: {
       type: 'wizard',
       recommended: {
         net: 1.0,
@@ -213,12 +213,12 @@ describe('common bolus functions', function() {
       expect(commonbolus.getMaxValue(fixtures.override)).to.equal(fixtures.override.bolus.normal);
     });
 
-    it('should return the programme bolus value when recommanded is missing', () => {
-      expect(commonbolus.getMaxValue(fixtures.recommandedEmpty)).to.be.equals(fixtures.recommandedEmpty.bolus.normal);
+    it('should return the programme bolus value when recommended is missing', () => {
+      expect(commonbolus.getMaxValue(fixtures.recommendedEmpty)).to.be.equals(fixtures.recommendedEmpty.bolus.normal);
     });
 
     it('should return the recommended when bolus values not wrong', () => {
-      expect(commonbolus.getMaxValue(fixtures.recommandedEmptyBolus)).to.be.equals(fixtures.recommandedEmptyBolus.recommended.net);
+      expect(commonbolus.getMaxValue(fixtures.recommendedEmptyBolus)).to.be.equals(fixtures.recommendedEmptyBolus.recommended.net);
     });
   });
 
