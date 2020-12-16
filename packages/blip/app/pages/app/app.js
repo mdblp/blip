@@ -184,12 +184,12 @@ export class AppComponent extends React.Component {
         this.props.hideBanner('dexcom');
       }
     }
-    if (config.HELP_LINK !== null && typeof window.zE === 'function') {
-      this.renderZenDeskWidget();
+    if (_.isFunction(window.zE)) {
+      this.setupZendeskWidget();
     }
   }
 
-  renderZenDeskWidget() {
+  setupZendeskWidget() {
     const { authenticated, user } = this.props;
     if (authenticated) {
       const name = _.get(user, 'profile.fullName', null);
