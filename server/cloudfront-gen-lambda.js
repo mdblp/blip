@@ -72,6 +72,7 @@ let distribFiles = null;
 
 let distDir = null;
 let templateDir = null;
+let zendeskEnabled = false;
 const templateFilename = path.resolve(`${__dirname}/../templates/lambda-request-viewer.js`);
 
 function getHash(str) {
@@ -113,7 +114,7 @@ function afterGenOutputFile(err) {
  * @returns {string} The CSP for the template.
  */
 function genContentSecurityPolicy() {
-  if (typeof blipConfig.HELP_SCRIPT_URL === 'string' && reUrl.test(blipConfig.HELP_SCRIPT_URL)) {
+  if (zendeskEnabled) {
     // Assume Zendesk
     console.log('Zendesk is enabled');
     const helpUrl = blipConfig.HELP_SCRIPT_URL.replace(reUrl, '$1');
@@ -204,7 +205,6 @@ function genOutputFile() {
       fs.writeFile(outputFilename, lambdaFile, { encoding: 'utf-8' }, afterGenOutputFile);
     }
   });
-
 }
 
 /**
@@ -292,13 +292,17 @@ if (typeof process.env.BRANDING === 'string') {
 }
 
 // *** ZenDesk ***
+zendeskEnabled = typeof blipConfig.HELP_SCRIPT_URL === 'string' && reUrl.test(blipConfig.HELP_SCRIPT_URL);
+zendeskEnabled = zendeskEnabled && typeof blipConfig.HELP_PAGE_URL === 'string' && reUrl.test(blipConfig.HELP_PAGE_URL);
+
 let helpLink = '<!-- Zendesk disabled -->';
 if (!reZendesk.test(indexHtml)) {
   console.error(`/!\\ Can't find help pattern in index.html: ${reZendesk.source} /!\\`);
   process.exit(1);
 }
-if (typeof process.env.HELP_SCRIPT_URL === 'string' && process.env.HELP_SCRIPT_URL.startsWith('https://')) {
+if (zendeskEnabled) {
   console.info('- Using HELP_SCRIPT_URL:', process.env.HELP_SCRIPT_URL);
+  console.info('- Using HELP_PAGE_URL:', process.env.HELP_PAGE_URL);
   let zdkJs = fs.readFileSync(`${templateDir}/zendesk.js`, 'utf8');
 
   let fileHash = getHash(zdkJs);

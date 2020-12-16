@@ -26,9 +26,9 @@ class DblpHtmlWebpackPlugin {
           // Tell webpack to move on
           cb(null, data);
         }
-      )
-    })
+      );
+    });
   }
 }
 
-module.exports = DblpHtmlWebpackPlugin
+module.exports = DblpHtmlWebpackPlugin;
