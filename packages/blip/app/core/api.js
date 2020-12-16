@@ -229,9 +229,6 @@ api.user.logout = function(cb) {
       cb();
     }
   });
-  window.zE('webWidget', 'logout');
-  window.zE('webWidget', 'clear');
-  window.zE('webWidget', 'reset');
 };
 
 api.user.acceptTerms = function(termsData, cb) {
