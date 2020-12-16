@@ -118,7 +118,7 @@ module.exports = function(pool, opts = {}) {
       const yScaleCarbs = (ci) => opts.yScaleCarbs ? opts.yScaleCarbs(ci) : opts.r;
       const yPos = (d) => {
         const r = yScaleCarbs(d.carbInput);
-        const bolusValue = d.bolus ? commonbolus.getMaxValue(d) : 0;
+        const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0;
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0);
       };
 
