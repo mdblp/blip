@@ -100,7 +100,7 @@ class BolusTooltip extends React.Component {
 
   getOverrideLine(programmed, recommended) {
     let overrideLine = null;
-    if (Number.isFinite(programmed) && Number.isFinite(recommended)) {
+    if (Number.isFinite(programmed) && Number.isFinite(recommended) && programmed !== recommended) {
       let value = formatInsulin(Math.abs(programmed - recommended));
       value = programmed > recommended ? `+${value}` : `-${value}`;
       overrideLine = (

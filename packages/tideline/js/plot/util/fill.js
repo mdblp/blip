@@ -47,7 +47,7 @@ module.exports = function(pool, opts) {
     }
 
     if (opts.guidelines) {
-      fill.drawGuidelines(/* selection */);
+      fill.drawGuidelines();
     }
 
     selection.each(function(currentData) {
@@ -163,7 +163,7 @@ module.exports = function(pool, opts) {
     return opts.xScale(e) - opts.xScale(s);
   };
 
-  fill.drawGuidelines = function(/* selection */) {
+  fill.drawGuidelines = function() {
     var linesGroup = pool.group().selectAll('#' + pool.id() + '_guidelines').data([opts.guidelines]);
     linesGroup.enter().append('g').attr('id', pool.id() + '_guidelines');
     linesGroup.selectAll('line')

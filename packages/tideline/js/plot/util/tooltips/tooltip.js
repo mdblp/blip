@@ -203,7 +203,6 @@ function Tooltips(container, tooltipsGroup) {
     }
     var atRightEdge = opts.edge === 'right';
     var atLeftEdge = opts.edge === 'left';
-    // var thisOrientation = !(atLeftEdge || atRightEdge) ? 'default' : atLeftEdge ? 'leftEdge' : 'rightEdge';
     // isDefaultNormal catches low and target smbg tooltips
     // (but not high, which default to down orientations)
     var isDefaultNormal = opts.orientation && opts.orientation['default'] === 'normal';
