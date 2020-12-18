@@ -198,7 +198,7 @@
   "Date of diagnosis: {{date}}": "Datum der Diagnose: {{date}}",
   "Date range: ": "Datumsbereich: ",
   "Date": "Datum",
-  "date.format": "TMJ",
+  "date.format": "DMY",
   "Day": "Tag",
   "day": "Tag",
   "Days In Report": "Tage im Bericht",
