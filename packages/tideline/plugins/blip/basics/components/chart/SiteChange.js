@@ -33,10 +33,15 @@ class SiteChange extends React.Component {
   render() {
     var type = this.props.subtotalType || constants.SITE_CHANGE_RESERVOIR;
     var value = this.getValue();
+    const manufacturer = _.get(_.last(value.data), 'pump.manufacturer', 'default').toLowerCase();
     value.count = value.count || 1; //default value
+    // Reservoir Change
+
+    // TODO 
+    // add colored svg to replace existing logos
     var siteChangeComponent = 
       ( value.type === constants.SITE_CHANGE) ?
-        <Change daysSince={value.daysSince} count={value.count} type={type} /> :
+        <Change daysSince={value.daysSince} count={value.count} type={type} manufacturer={manufacturer} /> :
         <NoChange />;
     return (
       <div className='SiteChange'>

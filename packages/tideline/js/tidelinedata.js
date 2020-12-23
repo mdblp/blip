@@ -174,7 +174,7 @@ function TidelineData(data, opts) {
   }
 
   this.updateCrossFilters = function() {
-    startTimer('crossfilter');
+    startTimer('crossfilter');    
     this.filterData = crossfilter(this.data);
     this.smbgData = crossfilter(this.grouped.smbg || []);
     this.cbgData = crossfilter(this.grouped.cbg || []);
@@ -862,6 +862,20 @@ function TidelineData(data, opts) {
   if (this.activeScheduleIsAutomated()) {
     this.setLastManualBasalSchedule();
   }
+
+  // get latest pump manufacturer
+  var lastPump = _.maxBy(
+    this.grouped.pumpSettings, 
+    (el) => el.normalTime
+    );
+  const defaultPumpManufacturer = { 
+    payload: { pump: { manufacturer: "default" } } 
+  };
+  const pump = _.get(_.assign(defaultPumpManufacturer, lastPump), 'payload.pump',);
+  // inject the manufacturer in the deviceEvents
+  _.forEach(this.grouped.deviceEvent, (val, key) => {
+    _.assign(this.grouped.deviceEvent[key], { pump });
+  });
 
   startTimer('setUtilities');
   this.setUtilities();

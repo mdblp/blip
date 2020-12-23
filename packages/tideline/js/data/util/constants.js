@@ -46,6 +46,9 @@ const DDDD_H_MM_A = 'dddd, h:mm a'; // Sunday, 3:25:50 pm
 const DEVICE_PARAMS_OFFSET = 30 * 60 * 1000;
 const MS_IN_DAY = 864e5;
 
+const INFUSION_SITE_CHANGE = 'infusion';
+const CARTRIDGE_CHANGE = 'cartridge';
+
 module.exports = {
   AUTOMATED_BASAL_DEVICE_MODELS: {
     Medtronic: ['1580', '1581', '1582', '1780', '1781', '1782'],
@@ -108,4 +111,10 @@ module.exports = {
   get MMM_D_FORMAT() { return t(MMM_D_FORMAT); },
   DEVICE_PARAMS_OFFSET,
   MS_IN_DAY,
+  INFUSION_SITE_CHANGE,
+  CARTRIDGE_CHANGE,
+  SITE_CHANGE_BY_MANUFACTURER: {
+    'default': INFUSION_SITE_CHANGE,
+    'roche': CARTRIDGE_CHANGE,
+  }  
 };

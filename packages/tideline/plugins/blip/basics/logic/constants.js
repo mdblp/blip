@@ -16,4 +16,8 @@ module.exports = {
   ANIMAS: 'Animas',
   MEDTRONIC: 'Medtronic',
   DIABELOOP: 'Diabeloop',
+  SITE_CHANGE_BY_MANUFACTURER: {
+      'default': 'Change--site',
+      'roche': 'Change--reservoir',
+    }
 };

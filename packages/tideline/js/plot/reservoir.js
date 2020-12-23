@@ -20,10 +20,12 @@
 var d3 = require('d3');
 var _ = require('lodash');
 
+const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE } = require('../data/util/constants');
+
 module.exports = function(pool, opts) {
   var defaults = {
     r: 14,
-    carbPadding: 4
+    padding: 4
   };
 
   _.defaults(opts, defaults);
@@ -32,49 +34,64 @@ module.exports = function(pool, opts) {
   var height = pool.height();
   var offset = height / 5 ;
   var width = 40;
-  var xPos = function(d) {
-    return opts.xScale(Date.parse(d.normalTime)) - (width / 2) ;
+
+  const xPos = (d) => opts.xScale(Date.parse(d.normalTime));
+  const isTypeOfChange = (d, value) => {
+    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', 'default').toLowerCase(), SITE_CHANGE_BY_MANUFACTURER['default']);
+    return change === value;
   };
 
   function reservoir(selection) {
-    var yPos = opts.r + opts.carbPadding;
+    const yPos = opts.r + opts.padding;
     opts.xScale = pool.xScale().copy();
+
     selection.each(function(currentData) {
-      // console.log("reservoir");
       var filteredData = _.filter(currentData, {
           subType: 'reservoirChange'
         });
-      // console.log(filteredData);
+
       var allReservoirs = d3
         .select(this)
         .selectAll('circle.d3-reservoir-only')
-        .data(filteredData, function(d) {
-          return d.id;
-        });
+        .data(filteredData, (d) => d.id);
+
       var reservoirGroup = allReservoirs.enter()
         .append('g')
         .attr({
           'class': 'd3-reservoir-group',
-          id: function(d) {
-            return 'reservoir_group_' + d.id;
-          }
+          id: (d) => 'reservoir_group_' + d.id,
         });
-        
-      reservoirGroup.append('image')
+      // Infusion Site 
+      reservoirGroup.filter((d) => isTypeOfChange(d, INFUSION_SITE_CHANGE))
+        .append('image')
         .attr({
-          x: function(d) {
-            return xPos(d);
-          },
-          y: function(d) {
-            return 0;
-          },
-          width: width, 
-          height: function() {
-            return offset;
-          },
+          x: (d) => xPos(d) - (width / 2) ,
+          y: 0,
+          width, 
+          height: offset,
           'xlink:href': picto,
         });
-
+        
+      // Cartridge Change 
+      reservoirGroup.filter((d) => isTypeOfChange(d, CARTRIDGE_CHANGE))
+        .append('circle').attr({
+          cx: xPos,
+          cy: yPos,
+          r: opts.r,
+          'stroke-width': 0,
+          class: 'd3-circle-reservoir',
+          id: (d) => `reservoir_circle_${d.id}`,
+        })
+        reservoirGroup.filter((d) => isTypeOfChange(d, CARTRIDGE_CHANGE))
+        .append('text')
+        .text('C')
+        .attr({
+          x: xPos,
+          y: yPos,
+          class: 'd3-circle-reservoir-text',
+          id: (d) => `reservoir_text_${d.id}`,
+        });
+  
       allReservoirs.exit().remove();
 
       // tooltips

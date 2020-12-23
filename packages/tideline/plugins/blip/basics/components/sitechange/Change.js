@@ -29,6 +29,7 @@ class Change extends React.Component {
     daysSince: PropTypes.number.isRequired,
     count: PropTypes.number,
     type: PropTypes.string.isRequired,
+    manufacturer: PropTypes.string.isRequired,
   };
 
   render() {
@@ -45,12 +46,14 @@ class Change extends React.Component {
         x{this.props.count}
       </div>;
     }
+    const manufacturerClass = _.get(
+      constants.SITE_CHANGE_BY_MANUFACTURER, 
+      this.props.manufacturer, 
+      constants.SITE_CHANGE_BY_MANUFACTURER['default']);
 
     var changeClass = cx({
       'Change': true,
-      'Change--cannula': (this.props.type === constants.SITE_CHANGE_CANNULA),
-      'Change--tubing': (this.props.type === constants.SITE_CHANGE_TUBING),
-      'Change--reservoir--diabeloop': (this.props.type === constants.SITE_CHANGE_RESERVOIR),
+      [`${manufacturerClass}`]: (manufacturerClass !== undefined),
     });
 
     return (
