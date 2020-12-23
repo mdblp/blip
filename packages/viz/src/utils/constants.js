@@ -69,6 +69,7 @@ export const TANDEM = 'Tandem';
 export const ANIMAS = 'Animas';
 export const MEDTRONIC = 'Medtronic';
 export const DIABELOOP = 'Diabeloop';
+export const ROCHE = 'Roche';
 
 export const pumpVocabulary = {
   [ANIMAS]: {
@@ -115,3 +116,11 @@ export const AUTOMATED_BASAL_DEVICE_MODELS = {
 export const PRESCRIPTOR_AUTO = 'auto';
 export const PRESCRIPTOR_MODIFIED = 'hybrid';
 export const PRESCRIPTOR_NONE = 'manual';
+
+export const RESERVOIR_CHANGE = 'reservoir';
+export const INFUSION_SITE_CHANGE = 'site';
+
+export const SITE_CHANGE_BY_MANUFACTURER = {
+  'default': INUSION_SITE_CHANGE,
+  [ROCHE]: RESERVOIR_CHANGE,
+};
