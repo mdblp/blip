@@ -307,6 +307,24 @@ function TidelineData(data, opts) {
     return res;
   };
 
+  this.addManufacturer = function(grouped = {}) {
+    // get latest pump manufacturer
+    const lastPump = _.maxBy(
+      grouped.pumpSettings, 
+      (el) => el.normalTime
+      );
+    console.log('lastPump');
+    console.log(lastPump);
+    const defaultPumpManufacturer = { 
+      payload: { pump: { manufacturer: 'default' } } 
+    };
+    const pump = _.get(_.assign(defaultPumpManufacturer, lastPump), 'payload.pump',);
+    // inject the manufacturer in the deviceEvents
+    _.forEach(grouped.deviceEvent, (val, key) => {
+      _.assign(grouped.deviceEvent[key], { pump });
+    });
+  };
+
   this.checkTimezone = function() {
     if (!Array.isArray(this.grouped.upload)) {
       return;
@@ -520,6 +538,8 @@ function TidelineData(data, opts) {
     startTimer('setUtilities');
     this.setUtilities();
     endTimer('setUtilities');
+
+    this.addManufacturer(this.grouped);
 
     // Update the crossfilters
     this.updateCrossFilters();
@@ -863,19 +883,7 @@ function TidelineData(data, opts) {
     this.setLastManualBasalSchedule();
   }
 
-  // get latest pump manufacturer
-  var lastPump = _.maxBy(
-    this.grouped.pumpSettings, 
-    (el) => el.normalTime
-    );
-  const defaultPumpManufacturer = { 
-    payload: { pump: { manufacturer: "default" } } 
-  };
-  const pump = _.get(_.assign(defaultPumpManufacturer, lastPump), 'payload.pump',);
-  // inject the manufacturer in the deviceEvents
-  _.forEach(this.grouped.deviceEvent, (val, key) => {
-    _.assign(this.grouped.deviceEvent[key], { pump });
-  });
+  this.addManufacturer(this.grouped);
 
   startTimer('setUtilities');
   this.setUtilities();

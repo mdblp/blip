@@ -121,6 +121,6 @@ export const RESERVOIR_CHANGE = 'reservoir';
 export const INFUSION_SITE_CHANGE = 'site';
 
 export const SITE_CHANGE_BY_MANUFACTURER = {
-  'default': INUSION_SITE_CHANGE,
+  'default': INFUSION_SITE_CHANGE,
   [ROCHE]: RESERVOIR_CHANGE,
 };

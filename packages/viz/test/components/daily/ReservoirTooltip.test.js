@@ -27,6 +27,13 @@ import styles from '../../../src/components/daily/reservoirtooltip/ReservoirTool
 const normal = {
   type: 'deviceEvent',
   subType: 'reservoirChange',
+  pump: { manufacturer: 'default'}
+};
+
+const normalCartridge = {
+  type: 'deviceEvent',
+  subType: 'reservoirChange',
+  pump: { manufacturer: 'Roche'}
 };
 
 const props = {
@@ -35,8 +42,18 @@ const props = {
 };
 
 describe('reservoirTooltip', () => {
-  it('should render without issue when all properties provided', () => {
+  it('should render without issue when all properties provided for Default manufacturer', () => {
     const wrapper = mount(<ReservoirTooltip {...props} reservoir={normal} />);
+    expect(wrapper.find(formatClassesAsSelector(styles.pa))).to.have.length(1);
+    expect(wrapper
+      .find(formatClassesAsSelector(styles.pa))
+      .at(0)
+      .find(formatClassesAsSelector(styles.label))
+      .text()).to.equal('Infusion Site Change');
+    });
+
+  it('should render without issue when all properties provided for Roche manufacturer', () => {
+    const wrapper = mount(<ReservoirTooltip {...props} reservoir={normalCartridge} />);
     expect(wrapper.find(formatClassesAsSelector(styles.pa))).to.have.length(1);
     expect(wrapper
       .find(formatClassesAsSelector(styles.pa))
@@ -44,4 +61,5 @@ describe('reservoirTooltip', () => {
       .find(formatClassesAsSelector(styles.label))
       .text()).to.equal('Reservoir Change');
     });
-});
+  
+  });
