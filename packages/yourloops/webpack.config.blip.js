@@ -37,7 +37,7 @@ const lessLoaderConfiguration = {
       loader: 'postcss-loader',
       options: {
         sourceMap: true,
-        config: {
+        postcssOptions: {
           path: __dirname,
         },
       },
@@ -73,8 +73,7 @@ const cssLoaderConfiguration = {
       loader: 'postcss-loader',
       options: {
         sourceMap: true,
-        ident: 'postcss',
-        config: {
+        postcssOptions: {
           path: __dirname,
         },
       },
@@ -145,6 +144,7 @@ const resolve = {
   alias: {
     pdfkit: 'pdfkit/js/pdfkit.standalone.js',
     './images/tidepool/logo.png': path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
+    'lock.svg': path.resolve(__dirname, `../../branding/lock.svg`),
   },
 };
 

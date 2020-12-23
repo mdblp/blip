@@ -40,14 +40,14 @@ const alias = {
   "branding/logo.png": path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
   ...blipWebpack.resolve.alias,
 };
-
-/** @type {webpack.Configuration} */
+// needed to remove type to have dev part enable
+///** @type {webpack.Configuration} */
 const webpackConfig = {
   entry: {
     main: "./app/index.ts",
   },
   output: {
-    filename: "yourloops.[contenthash].js",
+    filename: "yourloops.[hash].js",
     path: path.resolve(__dirname, "dist"),
   },
   target: "web",
@@ -55,8 +55,13 @@ const webpackConfig = {
 
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
-
+  // todo: enhance this part
   devServer: {
+    publicPath: 'http://localhost:3001/',
+    historyApiFallback: true,
+    hot: true,
+    clientLogLevel: 'info',
+    disableHostCheck: true,
     before: (app /*, server, compiler */) => {
       app.get('/patient', (req, res) => {
         res.redirect('/');
