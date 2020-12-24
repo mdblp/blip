@@ -19,9 +19,12 @@ import App from './app';
 // TODO: window.onerror
 
 const app = new App();
-app.init().then(() => {
-  app.render();
-  console.log("Application started");
-}).catch((reason: unknown) => {
-  console.error("Failed to start the application", reason);
-});
+
+app
+  .init()
+  .then(() => {
+    app.render();
+    console.log("Application started");
+  }).catch((reason: unknown) => {
+    console.error("Failed to start the application", reason);
+  });
