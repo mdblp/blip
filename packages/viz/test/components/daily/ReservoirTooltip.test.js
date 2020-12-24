@@ -23,11 +23,12 @@ import { formatClassesAsSelector } from '../../helpers/cssmodules';
 
 import ReservoirTooltip from '../../../src/components/daily/reservoirtooltip/ReservoirTooltip';
 import styles from '../../../src/components/daily/reservoirtooltip/ReservoirTooltip.css';
+import { DEFAULT_MANUFACTURER } from '../../../src/utils/constants';
 
 const normal = {
   type: 'deviceEvent',
   subType: 'reservoirChange',
-  pump: { manufacturer: 'default'}
+  pump: { manufacturer: [DEFAULT_MANUFACTURER]}
 };
 
 const normalCartridge = {

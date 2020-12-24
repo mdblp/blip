@@ -20,7 +20,7 @@
 var d3 = require('d3');
 var _ = require('lodash');
 
-const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE } = require('../data/util/constants');
+const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE, DEFAULT_MANUFACTURER } = require('../../plugins/blip/basics/logic/constants');
 
 module.exports = function(pool, opts) {
   var defaults = {
@@ -37,7 +37,7 @@ module.exports = function(pool, opts) {
 
   const xPos = (d) => opts.xScale(Date.parse(d.normalTime));
   const isTypeOfChange = (d, value) => {
-    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', 'default').toLowerCase(), SITE_CHANGE_BY_MANUFACTURER['default']);
+    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', DEFAULT_MANUFACTURER), SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]);
     return change === value;
   };
 

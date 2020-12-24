@@ -75,7 +75,8 @@ function TidelineData(data, opts) {
       timezoneAware: false,
       timezoneName: 'UTC',
       timezoneOffset: 0,
-    }
+    },
+    latestPumpManufacturer: 'default',
   };
 
   _.defaultsDeep(opts, defaults);
@@ -313,8 +314,6 @@ function TidelineData(data, opts) {
       grouped.pumpSettings, 
       (el) => el.normalTime
       );
-    console.log('lastPump');
-    console.log(lastPump);
     const defaultPumpManufacturer = { 
       payload: { pump: { manufacturer: 'default' } } 
     };
@@ -323,6 +322,7 @@ function TidelineData(data, opts) {
     _.forEach(grouped.deviceEvent, (val, key) => {
       _.assign(grouped.deviceEvent[key], { pump });
     });
+    return pump.manufacturer;
   };
 
   this.checkTimezone = function() {
@@ -539,7 +539,7 @@ function TidelineData(data, opts) {
     this.setUtilities();
     endTimer('setUtilities');
 
-    this.addManufacturer(this.grouped);
+    this.latestPumpManufacturer = this.addManufacturer(this.grouped);
 
     // Update the crossfilters
     this.updateCrossFilters();
@@ -883,7 +883,7 @@ function TidelineData(data, opts) {
     this.setLastManualBasalSchedule();
   }
 
-  this.addManufacturer(this.grouped);
+  this.latestPumpManufacturer = this.addManufacturer(this.grouped);
 
   startTimer('setUtilities');
   this.setUtilities();

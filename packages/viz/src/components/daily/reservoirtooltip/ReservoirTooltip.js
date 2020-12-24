@@ -23,7 +23,7 @@ import _ from 'lodash';
 import Tooltip from '../../common/tooltips/Tooltip';
 import colors from '../../../styles/colors.css';
 import styles from './ReservoirTooltip.css';
-import { SITE_CHANGE_BY_MANUFACTURER, RESERVOIR_CHANGE } from '../../../utils/constants';
+import { SITE_CHANGE_BY_MANUFACTURER, RESERVOIR_CHANGE, DEFAULT_MANUFACTURER } from '../../../utils/constants';
 
 class ReservoirTooltip extends React.Component {
   renderReservoir(typeOfChange) {
@@ -50,7 +50,7 @@ class ReservoirTooltip extends React.Component {
         timePrefs,
       };
     }
-    const typeOfChange = _.get(SITE_CHANGE_BY_MANUFACTURER, reservoir.pump.manufacturer, SITE_CHANGE_BY_MANUFACTURER['default']);
+    const typeOfChange = _.get(SITE_CHANGE_BY_MANUFACTURER, reservoir.pump.manufacturer, SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]);
 
     return (
       <Tooltip

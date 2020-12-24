@@ -70,6 +70,7 @@ export const ANIMAS = 'Animas';
 export const MEDTRONIC = 'Medtronic';
 export const DIABELOOP = 'Diabeloop';
 export const ROCHE = 'Roche';
+export const DEFAULT_MANUFACTURER = 'default';
 
 export const pumpVocabulary = {
   [ANIMAS]: {
@@ -121,6 +122,6 @@ export const RESERVOIR_CHANGE = 'reservoir';
 export const INFUSION_SITE_CHANGE = 'site';
 
 export const SITE_CHANGE_BY_MANUFACTURER = {
-  'default': INFUSION_SITE_CHANGE,
+  [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,
   [ROCHE]: RESERVOIR_CHANGE,
 };

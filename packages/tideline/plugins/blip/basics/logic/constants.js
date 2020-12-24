@@ -1,3 +1,16 @@
+const ROCHE = 'Roche';
+const DEFAULT_MANUFACTURER = 'default';
+
+// labels have to be translated
+const INFUSION_SITE_CHANGE = {
+  label: 'Infusion site changes',
+  class: 'Change--site'
+};
+const CARTRIDGE_CHANGE = {
+  label: 'Reservoir Change',
+  class: 'Change--reservoir'
+};
+
 module.exports = {
   CGM_CALCULATED: 'calculatedCGM',
   CGM_IN_DAY: 288,
@@ -16,8 +29,12 @@ module.exports = {
   ANIMAS: 'Animas',
   MEDTRONIC: 'Medtronic',
   DIABELOOP: 'Diabeloop',
+  ROCHE,
+  DEFAULT_MANUFACTURER,
+  INFUSION_SITE_CHANGE,
+  CARTRIDGE_CHANGE,
   SITE_CHANGE_BY_MANUFACTURER: {
-      'default': 'Change--site',
-      'roche': 'Change--reservoir',
-    }
+      [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,
+      [ROCHE]: CARTRIDGE_CHANGE,
+    },
 };

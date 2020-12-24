@@ -22,7 +22,7 @@ var cx = require('classnames');
 var i18next = require('i18next');
 var t = i18next.t.bind(i18next);
 
-var constants = require('../../logic/constants');
+const { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } = require('../../logic/constants');
 
 class Change extends React.Component {
   static propTypes = {
@@ -47,9 +47,11 @@ class Change extends React.Component {
       </div>;
     }
     const manufacturerClass = _.get(
-      constants.SITE_CHANGE_BY_MANUFACTURER, 
-      this.props.manufacturer, 
-      constants.SITE_CHANGE_BY_MANUFACTURER['default']);
+      _.get(
+        SITE_CHANGE_BY_MANUFACTURER, 
+        this.props.manufacturer, 
+        SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
+      'class');
 
     var changeClass = cx({
       'Change': true,
