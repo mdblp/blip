@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import bows from 'bows';
 
 import List from "@material-ui/core/List";
@@ -28,29 +28,26 @@ import { User } from "../../models/shoreline";
 import appConfig from "../../lib/config";
 import appApi, { apiClient } from "../../lib/api";
 // import { t } from "../../lib/language";
-import HeaderBar from "../../components/header-bar";
 import Blip from "blip";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataProps extends RouteComponentProps {
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataState {
-  iframeLoaded: boolean;
   users: User[] | null;
-  selectedUser: User | null;
 }
 
 interface PatientListProps {
   users: User[];
-  selectedUser: User | null;
   onClickPatient: (user: User) => void;
 }
 
 
 function PatientsList(props: PatientListProps): JSX.Element {
   const items: JSX.Element[] = [];
-  const { users, selectedUser, onClickPatient } = props;
+  const { users, onClickPatient } = props;
   for (const user of users) {
     const userName = user.profile?.fullName ?? user.username;
     const onClick = () => {
@@ -61,7 +58,6 @@ function PatientsList(props: PatientListProps): JSX.Element {
         button={true}
         key={user.userid}
         onClick={onClick}
-        selected={user.userid === selectedUser?.userid}
       >
         <ListItemText primary={userName} />
       </ListItem>
@@ -80,9 +76,7 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
     this.log = bows("PatientData");
 
     this.state = {
-      iframeLoaded: false,
       users: null,
-      selectedUser: null,
     };
 
     this.onSelectPatient = this.onSelectPatient.bind(this);
@@ -97,18 +91,15 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
   }
 
   public render(): JSX.Element {
-    const { users, selectedUser } = this.state;
+    const { users } = this.state;
     let listPatients: JSX.Element | null = null;
 
     if (users !== null) {
-      listPatients = <PatientsList users={users} onClickPatient={this.onSelectPatient} selectedUser={selectedUser} />;
+      listPatients = <PatientsList users={users} onClickPatient={this.onSelectPatient} />;
     }
 
     return (
       <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
-        <HeaderBar>
-
-        </HeaderBar>
         <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, overflowY: "scroll" }}>
           {listPatients}
           <Blip config={appConfig} api={appApi} />
@@ -119,7 +110,6 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
 
   private onSelectPatient(user: User): void {
     this.log.info('Click on', user);
-    this.setState({ selectedUser: user });
     apiClient.loadPatientData(user.userid).catch((reason: unknown) => {
       this.log.error(reason);
     });
@@ -127,4 +117,4 @@ class PatientData extends React.Component<PatientDataProps, PatientDataState> {
 
 }
 
-export default PatientData;
+export default withRouter(PatientData);

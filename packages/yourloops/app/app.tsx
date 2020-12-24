@@ -16,7 +16,12 @@
 
 import * as React from 'react';
 import { render as renderDOM } from "react-dom";
-import { Router, globalHistory } from "@reach/router";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
 import bows from 'bows';
 
 import "fontsource-roboto";
@@ -25,7 +30,7 @@ import "branding/theme.css";
 
 import { initI18n } from '../lib/language';
 import Login from '../pages/login';
-import PatientData from '../pages/patient-data';
+import Main from '../pages/main';
 
 class Yourloops {
   private log: Console;
@@ -40,9 +45,9 @@ class Yourloops {
     await initI18n();
     this.log.debug("i18next initialized");
 
-    globalHistory.listen(({ location, action }) => {
-      this.log.info({ location, action });
-    });
+    // globalHistory.listen(({ location, action }) => {
+    //   this.log.info({ location, action });
+    // });
   }
 
   public render(): void {
@@ -58,10 +63,26 @@ class Yourloops {
 
   private router(): JSX.Element {
     return (
-      <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      <Router>
+        {/* 
+        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
         <Login path="/" />
         <Login path="/login" />
-        <PatientData path="/patient" />
+        <PatientData path="/patient" /> 
+        */}
+          {/*
+            A <Switch> looks through all its children <Route>
+            elements and renders the first one whose path
+            matches the current URL. Use a <Switch> any time
+            you have multiple routes, but you want only one
+            of them to render at a time
+            style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+          */}
+          <Switch>
+            <Route exact path="/" component={Login} />
+            <Route path="/login" component= {Login} />
+            <Route path="/home" component={Main} />
+          </Switch>
       </Router>
     );
   }

@@ -16,7 +16,7 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps, globalHistory } from "@reach/router";
+import { RouteComponentProps } from "react-router-dom";
 import bows from "bows";
 
 import {
@@ -172,12 +172,13 @@ class Login extends React.Component<LoginProps, LoginState> {
       return;
     }
     this.setState({ validateError: false });
-    api.login(username, password).then((user: User) => {
-      this.log.info(user);
-      globalHistory.navigate("/patient");
-    }).catch((reason: unknown) => {
-      this.log.error(reason);
-    });
+    api.login(username, password)
+      .then((user: User) => {
+        this.log.info(user);
+        this.props.history.push("/home");
+      }).catch((reason: unknown) => {
+        this.log.error(reason);
+      });
   }
 
   private onClickForgotPassword() {
