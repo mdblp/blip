@@ -32,6 +32,7 @@ import {
   InputLabel,
   IconButton,
   TextField,
+  Grid,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -86,58 +87,67 @@ class Login extends React.Component<LoginProps, LoginState> {
 
     const emptyUsername = _.isEmpty(username);
     const emptyPassword = _.isEmpty(password);
-
     return (
-      <Container fixed={true} maxWidth="sm" style={{ margin: "auto" }}>
-        <Card>
-          <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-            <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} />
-          </CardMedia>
-          <CardContent>
-            <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
-              <TextField
-                id="login-username"
-                label={t("Email")}
-                value={username}
-                required
-                error={validateError && emptyUsername}
-                onChange={this.onUsernameChange}
-              />
-              <FormControl>
-                <InputLabel htmlFor="login-password">{t("Password")}</InputLabel>
-                <Input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
+      <Container maxWidth="sm" style={{ margin: "auto" }}>
+        <Grid
+          container
+          spacing={0}
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: '100vh' }}
+        >
+          <Grid item xs={12}>
+            <Card>
+              <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
+                <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} />
+              </CardMedia>
+              <CardContent>
+              <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
+                <TextField
+                  id="login-username"
+                  label={t("Email")}
+                  value={username}
                   required
-                  error={validateError && emptyPassword}
-                  onChange={this.onPasswordChange}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={this.onClickShowPasswordVisibility}
-                        onMouseDown={this.onMouseDownPassword.bind(this)}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
+                  error={validateError && emptyUsername}
+                  onChange={this.onUsernameChange}
                 />
-              </FormControl>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.onClickLoginButton}
-              disabled={emptyUsername || emptyPassword}
-            >
-              {t("Login")}
-            </Button>
-          </CardActions>
-        </Card>
+                <FormControl>
+                  <InputLabel htmlFor="login-password">{t("Password")}</InputLabel>
+                  <Input
+                    id="login-password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    required
+                    error={validateError && emptyPassword}
+                    onChange={this.onPasswordChange}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={this.onClickShowPasswordVisibility}
+                          onMouseDown={this.onMouseDownPassword.bind(this)}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              </form>
+            </CardContent>
+              <CardActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.onClickLoginButton}
+                  disabled={emptyUsername || emptyPassword}
+                >
+                  {t("Login")}
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        </Grid>
       </Container>
     );
   }

@@ -16,7 +16,7 @@ class Main extends React.Component {
           <Route exact path="/home/patients">
             <PatientData />
           </Route>
-          <Route exact path="/careteams">
+          <Route exact path="/home/careteams">
             {/* <Careteams /> */}
           </Route>
         </Switch>
