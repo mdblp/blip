@@ -126,6 +126,8 @@ const fontLoaderConfiguration = [
 const resolve = {
   alias: {
     'lock.svg': path.resolve(__dirname, `../../branding/lock.svg`),
+    'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
+    'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png')
     // Theses aliases will be needed for webpack 5.x :
     // crypto: require.resolve('crypto-browserify'),
     // path: require.resolve('path-browserify'),

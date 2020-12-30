@@ -22,27 +22,25 @@ var _ = require('lodash');
 
 const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE, DEFAULT_MANUFACTURER } = require('../../plugins/blip/basics/logic/constants');
 
+const pictoInfusion = require('infusion.png');
+const pictoCartridge = require('cartridge.png');
+
 module.exports = function(pool, opts) {
-  var defaults = {
-    r: 14,
-    padding: 4
-  };
-
-  _.defaults(opts, defaults);
-
-  var picto = require('../../img/sitechange-diabeloop.png');
-  var height = pool.height();
-  var offset = height / 5 ;
-  var width = 40;
+  const height = pool.height() / 5 ;
+  const width = 40;
 
   const xPos = (d) => opts.xScale(Date.parse(d.normalTime));
-  const isTypeOfChange = (d, value) => {
+  const getPicto = (d) => {
     const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', DEFAULT_MANUFACTURER), SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]);
-    return change === value;
-  };
+    switch (change) {
+      case CARTRIDGE_CHANGE:
+        return pictoCartridge;    
+      default:
+        return pictoInfusion;
+    }    
+  }
 
   function reservoir(selection) {
-    const yPos = opts.r + opts.padding;
     opts.xScale = pool.xScale().copy();
 
     selection.each(function(currentData) {
@@ -61,35 +59,14 @@ module.exports = function(pool, opts) {
           'class': 'd3-reservoir-group',
           id: (d) => 'reservoir_group_' + d.id,
         });
-      // Infusion Site 
-      reservoirGroup.filter((d) => isTypeOfChange(d, INFUSION_SITE_CHANGE))
+      reservoirGroup
         .append('image')
         .attr({
           x: (d) => xPos(d) - (width / 2) ,
           y: 0,
           width, 
-          height: offset,
-          'xlink:href': picto,
-        });
-        
-      // Cartridge Change 
-      reservoirGroup.filter((d) => isTypeOfChange(d, CARTRIDGE_CHANGE))
-        .append('circle').attr({
-          cx: xPos,
-          cy: yPos,
-          r: opts.r,
-          'stroke-width': 0,
-          class: 'd3-circle-reservoir',
-          id: (d) => `reservoir_circle_${d.id}`,
-        })
-        reservoirGroup.filter((d) => isTypeOfChange(d, CARTRIDGE_CHANGE))
-        .append('text')
-        .text('C')
-        .attr({
-          x: xPos,
-          y: yPos,
-          class: 'd3-circle-reservoir-text',
-          id: (d) => `reservoir_text_${d.id}`,
+          height,
+          'xlink:href': (d) => getPicto(d),
         });
   
       allReservoirs.exit().remove();
