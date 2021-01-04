@@ -52,6 +52,7 @@ interface LoginState {
   password: string;
   showPassword: boolean;
   validateError: boolean;
+  helperTextValue: string | null;
   loginFormStyles: string[];
 }
 
@@ -69,6 +70,7 @@ class Login extends React.Component<LoginProps, LoginState> {
       password: "",
       validateError: false,
       showPassword: false,
+      helperTextValue: "",
       loginFormStyles: ["stage-transition-container-variant"],
     };
 
@@ -83,7 +85,7 @@ class Login extends React.Component<LoginProps, LoginState> {
   }
 
   public render(): JSX.Element {
-    const { username, password, showPassword, validateError } = this.state;
+    const { username, password, showPassword, validateError, helperTextValue } = this.state;
 
     const emptyUsername = _.isEmpty(username);
     const emptyPassword = _.isEmpty(password);
@@ -110,6 +112,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                   required
                   error={validateError && emptyUsername}
                   onChange={this.onUsernameChange}
+                  helperText={helperTextValue}
                 />
                 <FormControl>
                   <InputLabel htmlFor="login-password">{t("Password")}</InputLabel>
@@ -186,7 +189,9 @@ class Login extends React.Component<LoginProps, LoginState> {
       .then((user: User) => {
         this.log.info(user);
         this.props.history.push("/home");
-      }).catch((reason: unknown) => {
+      }).catch((reason: Error) => {
+        console.log(reason);
+        this.setState({ validateError: true, helperTextValue: reason.message });
         this.log.error(reason);
       });
   }

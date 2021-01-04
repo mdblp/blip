@@ -35,7 +35,7 @@ export interface AppConfig {
   SUPPORT_EMAIL_ADDRESS?: string;
   SUPPORT_WEB_ADDRESS?: string;
   REGULATORY_WEB_ADDRESS?: string;
-  HELP_LINK?: string | null;
+  HELP_LINK?: string | null; // TODO ++++++++++++++++++++++
   ASSETS_URL?: string | null;
   METRICS_SERVICE?: string | null;
   MAX_FAILED_LOGIN_ATTEMPTS?: number;

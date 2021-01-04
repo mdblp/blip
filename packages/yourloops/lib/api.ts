@@ -187,10 +187,11 @@ class API extends EventTarget {
    */
   async login(username: string, password: string): Promise<User> {
     this.loginLock = true;
-    return this.loginPrivate(username, password).then((user: User) => {
-      return this.getUserProfile(user);
-    }).finally(() => {
-      this.loginLock = false;
+    return this.loginPrivate(username, password)
+      .then((user: User) => {
+        return this.getUserProfile(user);
+      }).finally(() => {
+        this.loginLock = false;
     });
   }
 
@@ -257,6 +258,7 @@ class API extends EventTarget {
         [SESSION_TOKEN_HEADER]: this.sessionToken as string,
       },
     });
+
     if (response.ok) {
       user.profile = await response.json() as Profile;
     } else {
