@@ -1154,6 +1154,7 @@ describe('TidelineData', function() {
   
   describe('addManufacturer', function() {
     const pumpManufacturer = { pump: { manufacturer: 'unknown'} };
+    const oldpumpManufacturer = { pump: { manufacturer: 'too-old'} };
     const defaultpumpManufacturer = { pump: { manufacturer: 'default'} };
 
     const data = [
@@ -1182,10 +1183,15 @@ describe('TidelineData', function() {
         source: 'Diabeloop',
         payload: { ...pumpManufacturer },
         deviceTime: '2020-12-02T10:30:00',
-      })
+      }),
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { ...oldpumpManufacturer },
+        deviceTime: '2019-12-02T10:30:00',
+      }),
     ];
-    const expectedPumpManufacturer = _.update(pumpManufacturer, 'pump.manufacturer', (o) => {return _.upperFirst(o)});
-    const expectedDefaultPumpManufacturer = _.update(defaultpumpManufacturer, 'pump.manufacturer', (o) => {return _.upperFirst(o)});
+    const expectedPumpManufacturer = _.update(pumpManufacturer, 'pump.manufacturer', (o) => {return _.capitalize(o)});
+    const expectedDefaultPumpManufacturer = _.update(defaultpumpManufacturer, 'pump.manufacturer', (o) => {return _.capitalize(o)});
 
     const thisTd = new TidelineData(_.cloneDeep(data), {});
 
@@ -1193,8 +1199,11 @@ describe('TidelineData', function() {
       assert.isFunction(thisTd.addManufacturer);
     });
 
-    it('deviceEvent should contain the manufacturer property when set in pumpSettings', function() {
+    it('should retrieve the last pump manufacturer', function() {
+      expect(thisTd.latestPumpManufacturer).to.deep.equal(expectedPumpManufacturer.pump.manufacturer);
+    });
 
+    it('deviceEvent should contain the manufacturer property when set in pumpSettings', function() {
       expect(thisTd.grouped.deviceEvent.length).to.equal(4);
       _.forEach(thisTd.grouped.deviceEvent, 
         (d) => expect(d.pump).to.deep.equal(expectedPumpManufacturer.pump)

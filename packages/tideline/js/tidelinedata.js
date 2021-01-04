@@ -310,10 +310,7 @@ function TidelineData(data, opts) {
 
   this.addManufacturer = function(grouped = {}) {
     // get latest pump manufacturer
-    const lastPump = _.last(_.sortBy(
-      grouped.pumpSettings,
-      'normalTime',
-    ));
+    const lastPump = _.maxBy(grouped.pumpSettings, 'normalTime');
     const defaultPumpManufacturer = {
       payload: { pump: { manufacturer: 'default' } }
     };
