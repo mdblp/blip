@@ -175,7 +175,7 @@ function TidelineData(data, opts) {
   }
 
   this.updateCrossFilters = function() {
-    startTimer('crossfilter');    
+    startTimer('crossfilter');
     this.filterData = crossfilter(this.data);
     this.smbgData = crossfilter(this.grouped.smbg || []);
     this.cbgData = crossfilter(this.grouped.cbg || []);
@@ -310,16 +310,16 @@ function TidelineData(data, opts) {
 
   this.addManufacturer = function(grouped = {}) {
     // get latest pump manufacturer
-    const lastPump = _.maxBy(
-      grouped.pumpSettings, 
-      (el) => el.normalTime
-      );
-    const defaultPumpManufacturer = { 
-      payload: { pump: { manufacturer: 'default' } } 
+    const lastPump = _.last(_.sortBy(
+      grouped.pumpSettings,
+      'normalTime',
+    ));
+    const defaultPumpManufacturer = {
+      payload: { pump: { manufacturer: 'default' } }
     };
     const pump = _.get(_.merge({}, defaultPumpManufacturer, lastPump), 'payload.pump');
     // make sure to use the correct format
-    _.update(pump, 'manufacturer', (o) => {return _.upperFirst(o)})
+    _.update(pump, 'manufacturer', (o) => _.capitalize(o));
     // inject the manufacturer in the deviceEvents
     _.forEach(grouped.deviceEvent, (val, key) => {
       _.assign(grouped.deviceEvent[key], { pump });
