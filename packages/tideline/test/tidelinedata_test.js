@@ -1184,6 +1184,9 @@ describe('TidelineData', function() {
         deviceTime: '2020-12-02T10:30:00',
       })
     ];
+    const expectedPumpManufacturer = _.update(pumpManufacturer, 'pump.manufacturer', (o) => {return _.upperFirst(o)});
+    const expectedDefaultPumpManufacturer = _.update(defaultpumpManufacturer, 'pump.manufacturer', (o) => {return _.upperFirst(o)});
+
     const thisTd = new TidelineData(_.cloneDeep(data), {});
 
     it('should be a function', function() {
@@ -1191,9 +1194,10 @@ describe('TidelineData', function() {
     });
 
     it('deviceEvent should contain the manufacturer property when set in pumpSettings', function() {
+
       expect(thisTd.grouped.deviceEvent.length).to.equal(4);
       _.forEach(thisTd.grouped.deviceEvent, 
-        (d) => expect(d.pump).to.deep.equal(pumpManufacturer.pump)
+        (d) => expect(d.pump).to.deep.equal(expectedPumpManufacturer.pump)
         )
     });
 
@@ -1207,7 +1211,7 @@ describe('TidelineData', function() {
     it('deviceEvent should contain the default manufacturer property when not set in last pumpSettings', function() {
       expect(thisTd2.grouped.deviceEvent.length).to.equal(4);
       _.forEach(thisTd2.grouped.deviceEvent, 
-        (d) => expect(d.pump).to.deep.equal(defaultpumpManufacturer.pump)
+        (d) => expect(d.pump).to.deep.equal(expectedDefaultPumpManufacturer.pump)
         )
     });
   });
