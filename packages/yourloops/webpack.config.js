@@ -26,7 +26,7 @@ if (isProduction) {
   htmlWebpackPluginMimifyOptions = {
     minifyCSS: true,
     minifyJS: true,
-    removeComments: true,
+    removeComments: false,
     collapseWhitespace: true,
   };
 }
