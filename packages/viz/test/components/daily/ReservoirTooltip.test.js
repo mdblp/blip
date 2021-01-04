@@ -50,7 +50,7 @@ describe('reservoirTooltip', () => {
       .find(formatClassesAsSelector(styles.pa))
       .at(0)
       .find(formatClassesAsSelector(styles.label))
-      .text()).to.equal('Infusion Site Change');
+      .text()).to.equal('Infusion site change');
     });
 
   it('should render without issue when all properties provided for Roche manufacturer', () => {
