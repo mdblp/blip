@@ -1061,6 +1061,97 @@ describe('TidelineData', function() {
     })
   });
 
+  describe('Sort Settings', function(){
+    const unorderedParameters = { parameters: [
+      {
+        name: 'SMALL_MEAL_BREAKFAST',
+      },
+      {
+        name: 'WEIGHT',
+      },
+      {
+        name: 'MEDIUM_MEAL_BREAKFAST',
+      },
+      {
+        name: 'MEDIUM_MEAL_LUNCH',
+      },
+    ]};
+    const orderedParameters = { parameters: [
+      {
+        name: 'MEDIUM_MEAL_BREAKFAST',
+      },
+      {
+        name: 'MEDIUM_MEAL_LUNCH',
+      },
+      {
+        name: 'WEIGHT',
+      },
+      {
+        name: 'SMALL_MEAL_BREAKFAST',
+      },
+    ]};
+    const dataNoParams = [
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { },
+        deviceTime: '2020-12-02T10:30:00',
+      }),
+    ];
+    const data = [
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { ...unorderedParameters },
+        deviceTime: '2020-12-02T10:30:00',
+      }),
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { ...orderedParameters },
+        deviceTime: '2020-12-10T10:30:00',
+      }),
+    ];
+    const unorderedUnknownParameters = _.cloneDeep(unorderedParameters);
+    const orderedUnknownParameters = _.cloneDeep(orderedParameters);
+    // add unknown parameter at the beginning of the array
+    unorderedUnknownParameters.parameters.unshift({ name: 'UNKNOWN'});
+    // add the unknown parameter at the end of the array
+    orderedUnknownParameters.parameters.push({ name: 'UNKNOWN'});
+
+    const unknownData = [      
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { ...unorderedUnknownParameters },
+        deviceTime: '2020-12-02T10:30:00',
+      }),
+      new types.Settings({
+        source: 'Diabeloop',
+        payload: { ...orderedUnknownParameters },
+        deviceTime: '2020-12-10T10:30:00',
+      }),
+    ];
+    const noParamsTd = new TidelineData(_.cloneDeep(dataNoParams), {});
+    const thisTd = new TidelineData(_.cloneDeep(data), {});
+    const thisUnknownTd = new TidelineData(_.cloneDeep(unknownData), {});
+
+    it('should work if no parameters', function() {
+      expect(noParamsTd.grouped.pumpSettings.length).to.equal(1);
+    });    
+
+    it('should work and sort parameters', function() {
+      expect(thisTd.grouped.pumpSettings.length).to.equal(2);
+      _.forEach(thisTd.grouped.pumpSettings, item => {
+        expect(item.payload.parameters).to.deep.have.ordered.members(orderedParameters.parameters);
+      });
+    });
+
+    it('should work and push unknonwn parameters at the end', function() {
+      expect(thisUnknownTd.grouped.pumpSettings.length).to.equal(2);
+      _.forEach(thisUnknownTd.grouped.pumpSettings, item => {
+        expect(item.payload.parameters).to.deep.have.ordered.members(orderedUnknownParameters.parameters);
+      });
+    });
+
+  });
+  
   describe('addManufacturer', function() {
     const pumpManufacturer = { pump: { manufacturer: 'unknown'} };
     const defaultpumpManufacturer = { pump: { manufacturer: 'default'} };
@@ -1119,8 +1210,5 @@ describe('TidelineData', function() {
         (d) => expect(d.pump).to.deep.equal(defaultpumpManufacturer.pump)
         )
     });
-
   });
-
-
 });
