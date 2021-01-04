@@ -190,9 +190,7 @@ const props = {
   bgPrefs,
 };
 
-const bgValueSelector = `${formatClassesAsSelector(styles.confirmBg)} ${formatClassesAsSelector(styles.value)}`;
 const sourceLabelSelector = `${formatClassesAsSelector(styles.source)} ${formatClassesAsSelector(styles.label)}`;
-const sourceValueSelector = `${formatClassesAsSelector(styles.source)} ${formatClassesAsSelector(styles.value)}`;
 const glucoseValueSelector = `${formatClassesAsSelector(styles.bg)} ${formatClassesAsSelector(styles.value)}`;
 
 describe('SMBGTooltip', () => {
