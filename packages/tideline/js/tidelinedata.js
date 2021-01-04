@@ -317,7 +317,7 @@ function TidelineData(data, opts) {
     const defaultPumpManufacturer = { 
       payload: { pump: { manufacturer: 'default' } } 
     };
-    const pump = _.get(_.assign(defaultPumpManufacturer, lastPump), 'payload.pump',);
+    const pump = _.get(_.merge({}, defaultPumpManufacturer, lastPump), 'payload.pump');
     // inject the manufacturer in the deviceEvents
     _.forEach(grouped.deviceEvent, (val, key) => {
       _.assign(grouped.deviceEvent[key], { pump });
