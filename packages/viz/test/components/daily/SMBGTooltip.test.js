@@ -231,10 +231,10 @@ describe('SMBGTooltip', () => {
     expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryLow);
   });
 
-  it('should render "Source" for a manual smbg', () => {
+  it('should render "Calibration" for a manual smbg', () => {
     const wrapper = mount(<SMBGTooltip {...props} smbg={manual} />);
     expect(wrapper.find(formatClassesAsSelector(styles.source))).to.have.length(1);
-    expect(wrapper.find(sourceLabelSelector).text()).to.equal('Source');
+    expect(wrapper.find(sourceLabelSelector).text()).to.equal('Calibration');
   });
 
   it('should render "High" and an annotation for a "very-high" smbg', () => {
