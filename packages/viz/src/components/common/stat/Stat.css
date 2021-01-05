@@ -253,7 +253,7 @@ svg.statWheelTimeInAuto .offEllipse {
   pointer-events: none;
 }
 .nobar .nobarRowTitle {
-  color: var(--text-medium-contrast);
+  color: var(--stat--default);
 }
 .nobar .nobarRowValue {
   border-width: 2px;
