@@ -54,8 +54,6 @@ const DailyChart = translate()(class DailyChart extends Component {
   static propTypes = {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
-    bolusRatio: PropTypes.number,
-    dynamicCarbs: PropTypes.bool,
     initialDatetimeLocation: PropTypes.string,
     patient: PropTypes.object,
     patientData: PropTypes.object.isRequired,
@@ -91,8 +89,6 @@ const DailyChart = translate()(class DailyChart extends Component {
     this.chartOpts = [
       'bgClasses',
       'bgUnits',
-      'bolusRatio',
-      'dynamicCarbs',
       'timePrefs',
       'onBolusHover',
       'onBolusOut',
@@ -325,8 +321,6 @@ class Daily extends Component {
               <DailyChart
                 bgClasses={this.props.bgPrefs.bgClasses}
                 bgUnits={this.props.bgPrefs.bgUnits}
-                bolusRatio={this.props.chartPrefs.bolusRatio}
-                dynamicCarbs={this.props.chartPrefs.dynamicCarbs}
                 initialDatetimeLocation={this.props.initialDatetimeLocation}
                 patientData={this.props.patientData}
                 timePrefs={timePrefs}
@@ -566,7 +560,7 @@ class Daily extends Component {
     const rect = bolus.rect;
     // range here is -12 to 12
     const hoursOffset = sundial.dateDifference(bolus.data.normalTime, this.state.datetimeLocation, 'h');
-    bolus.top = rect.top + (rect.height / 2)
+    bolus.top = rect.top + (rect.height / 2);
     if(hoursOffset > 5) {
       bolus.side = 'left';
       bolus.left = rect.left;

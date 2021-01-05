@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-298 Enable Spanish and Italian languages
 - YLP-317 Add Switzerland in country list
 ### Fixed
+- YLP-216 Interrupted bolus is not correctly displayed
 - YLP-289 RescueCarbs: recommendation is always set to 0 for automatic mode
 - YLP-292 Error messages not translated when creating an account
 - YLP-306 Change the language on login page may prevent the login
@@ -17,6 +18,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-322 Units change after an update done in patient settings
 - YLP-336 Block DBL settings display order
 ### Changed
+- YLP-26 Make bolus graph more readable
+- YLP-52 Review clinician direct signup flow
 - YLP-267 Delete BG readings calendar from overview
 - YLP-280 Make France as default country for existing users
 - YLP-273 Translate units in DBL settings table and display depending on patient profile
@@ -25,11 +28,11 @@ It is based on Tidepool Blip 1.27.
 - YLP-305 Change patient age to birthdate in their profile
 - YLP-313 Create dedicated key for bolus graph title
 - YLP-324 Pump and CGM information in DBL settings
+- YLP-337 Update settings labels
 - YLP-342 Add missing translation keys for CBG/SMBG tooltips
-- YLP-52 Review clinician direct signup flow
 ### Engineering Use
-- YLP-211 Rework Cloudfront deployment services to use an alternate domain name
 - YLP-147 Merge blip dependencies
+- YLP-211 Rework Cloudfront deployment services to use an alternate domain name
 - YLP-345 Add a "maintenance state" to our CloudFront config
 
 ## 1.6.0 - 2020-11-10
