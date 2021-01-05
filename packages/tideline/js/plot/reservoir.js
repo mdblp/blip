@@ -20,7 +20,7 @@
 var d3 = require('d3');
 var _ = require('lodash');
 
-const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE, DEFAULT_MANUFACTURER } = require('../../plugins/blip/basics/logic/constants');
+const { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } = require('../../plugins/blip/basics/logic/constants');
 
 module.exports = function(pool, opts) {
   const height = pool.height() / 5 ;
@@ -29,7 +29,6 @@ module.exports = function(pool, opts) {
   const xPos = (d) => opts.xScale(Date.parse(d.normalTime));
   const getPicto = (d) => {
     const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', DEFAULT_MANUFACTURER), SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]);
-    console.log(change);
     return change.picto;
   }
 
