@@ -14,7 +14,7 @@
     "postclean": "rm -rf doc dist",
     "info": "lerna info",
     "prebuild": "rm -rf dist",
-    "build": "lerna --stream --concurrency 1 run build",
+    "build": "lerna --stream --scope yourloops run build",
     "postbuild": "mkdir dist && mv packages/yourloops/dist dist/static",
     "gen-lambda": "node server/cloudfront-gen-lambda.js",
     "lint": "lerna run lint",

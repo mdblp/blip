@@ -19,18 +19,6 @@ if (buildConfig.BRANDING !== 'diabeloop') {
   throw new Error('Invalid branding');
 }
 
-/** @type {boolean | "auto" | HtmlWebpackPlugin.MinifyOptions} */
-let htmlWebpackPluginMimifyOptions = false;
-// If prod mode:
-if (isProduction) {
-  htmlWebpackPluginMimifyOptions = {
-    minifyCSS: true,
-    minifyJS: true,
-    removeComments: false,
-    collapseWhitespace: true,
-  };
-}
-
 console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}`);
 console.log(`Branding: ${buildConfig.BRANDING}`);
 
@@ -115,7 +103,7 @@ const webpackConfig = {
       inject: "body",
       hash: false,
       favicon: path.resolve(__dirname, "../../branding/diabeloop/favicon.ico"),
-      minify: htmlWebpackPluginMimifyOptions,
+      minify: false,
     }),
   ],
 };
