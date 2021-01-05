@@ -1,14 +1,22 @@
 const ROCHE = 'Roche';
+const KALEIDO = 'Kaleido';
 const DEFAULT_MANUFACTURER = 'default';
 
 // labels have to be translated
 const INFUSION_SITE_CHANGE = {
   label: 'Infusion site changes',
-  class: 'Change--site'
+  class: 'Change--site',
+  picto: require('infusion.png'),
 };
 const CARTRIDGE_CHANGE = {
   label: 'Reservoir Change',
-  class: 'Change--reservoir'
+  class: 'Change--reservoir',
+  picto: require('cartridge.png'),
+};
+const CARTRIDGE_KALEIDO_CHANGE = {
+  label: 'Reservoir Change',
+  class: 'Change--reservoir--kaleido',
+  picto: require('cartridge-kaleido.png'),
 };
 
 module.exports = {
@@ -30,11 +38,13 @@ module.exports = {
   MEDTRONIC: 'Medtronic',
   DIABELOOP: 'Diabeloop',
   ROCHE,
+  KALEIDO,
   DEFAULT_MANUFACTURER,
   INFUSION_SITE_CHANGE,
   CARTRIDGE_CHANGE,
   SITE_CHANGE_BY_MANUFACTURER: {
       [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,
       [ROCHE]: CARTRIDGE_CHANGE,
+      [KALEIDO]: CARTRIDGE_KALEIDO_CHANGE,
     },
 };

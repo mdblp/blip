@@ -22,9 +22,6 @@ var _ = require('lodash');
 
 const { SITE_CHANGE_BY_MANUFACTURER, CARTRIDGE_CHANGE, INFUSION_SITE_CHANGE, DEFAULT_MANUFACTURER } = require('../../plugins/blip/basics/logic/constants');
 
-const pictoInfusion = require('infusion.png');
-const pictoCartridge = require('cartridge.png');
-
 module.exports = function(pool, opts) {
   const height = pool.height() / 5 ;
   const width = 40;
@@ -32,12 +29,8 @@ module.exports = function(pool, opts) {
   const xPos = (d) => opts.xScale(Date.parse(d.normalTime));
   const getPicto = (d) => {
     const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', DEFAULT_MANUFACTURER), SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]);
-    switch (change) {
-      case CARTRIDGE_CHANGE:
-        return pictoCartridge;    
-      default:
-        return pictoInfusion;
-    }    
+    console.log(change);
+    return change.picto;
   }
 
   function reservoir(selection) {
