@@ -11,7 +11,6 @@ import _ from 'lodash';
 import React from 'react';
 
 import { shallow, mount } from 'enzyme';
-import { translate } from 'react-i18next';
 
 import i18next from '../../../../app/core/language';
 import DataUtilStub from '../../../helpers/DataUtil';
@@ -115,10 +114,10 @@ describe('Daily', () => {
 
   describe('render', () => {
     before(() => {
-      Daily.__Rewire__('DailyChart', translate()(createReactClass({
+      Daily.__Rewire__('DailyChart', createReactClass({
         rerenderChart: sinon.stub(),
         render: () => <div className='fake-daily-chart' />,
-      })));
+      }));
     });
 
     beforeEach(() => {
