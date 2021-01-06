@@ -1,5 +1,5 @@
 const ROCHE = 'Roche';
-const KALEIDO = 'Kaleido';
+const VICENTRA = 'Vicentra';
 const DEFAULT_MANUFACTURER = 'default';
 
 // labels have to be translated
@@ -13,10 +13,10 @@ const CARTRIDGE_CHANGE = {
   class: 'Change--reservoir',
   picto: require('cartridge.png'),
 };
-const CARTRIDGE_KALEIDO_CHANGE = {
+const CARTRIDGE_VICENTRA_CHANGE = {
   label: 'Reservoir Change',
-  class: 'Change--reservoir--kaleido',
-  picto: require('cartridge-kaleido.png'),
+  class: 'Change--reservoir--vicentra',
+  picto: require('cartridge-vicentra.png'),
 };
 
 module.exports = {
@@ -38,13 +38,13 @@ module.exports = {
   MEDTRONIC: 'Medtronic',
   DIABELOOP: 'Diabeloop',
   ROCHE,
-  KALEIDO,
+  VICENTRA,
   DEFAULT_MANUFACTURER,
   INFUSION_SITE_CHANGE,
   CARTRIDGE_CHANGE,
   SITE_CHANGE_BY_MANUFACTURER: {
       [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,
       [ROCHE]: CARTRIDGE_CHANGE,
-      [KALEIDO]: CARTRIDGE_KALEIDO_CHANGE,
+      [VICENTRA]: CARTRIDGE_VICENTRA_CHANGE,
     },
 };
