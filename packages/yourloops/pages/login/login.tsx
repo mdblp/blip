@@ -38,7 +38,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { t } from "../../lib/language";
-import api from "../../lib/api";
+import authApi from "../../lib/auth/api";
 import { User } from "models/shoreline";
 
 import brandingLogo from "branding/logo.png";
@@ -167,10 +167,10 @@ class Login extends React.Component<LoginProps, LoginState> {
     const { showPassword } = this.state;
     if (showPassword) {
       this.setState({ showPassword: false });
-      api.sendMetrics("Hide password");
+      authApi.sendMetrics("Hide password");
     } else {
       this.setState({ showPassword: true });
-      api.sendMetrics("Show password");
+      authApi.sendMetrics("Show password");
     }
   }
 
@@ -181,11 +181,11 @@ class Login extends React.Component<LoginProps, LoginState> {
   private onClickLoginButton() {
     const { username, password } = this.state;
     if (_.isEmpty(username) || _.isEmpty(password)) {
-      this.setState({ validateError: true });
+      this.setState({ validateError: true, });
       return;
     }
     this.setState({ validateError: false });
-    api.login(username, password)
+    authApi.login(username, password)
       .then((user: User) => {
         this.log.info(user);
         if (api.userIsPatient) {

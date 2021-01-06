@@ -25,7 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import { t } from "../lib/language";
-import apiClient from "../lib/api";
+import apiClient from "../lib/auth/api";
 
 import brandingLogo from "branding/logo.png";
 import { RouteComponentProps, withRouter } from "react-router-dom";

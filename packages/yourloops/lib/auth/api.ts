@@ -22,11 +22,11 @@ import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
 
-import { defer } from "./utils";
-import appConfig from "./config";
-import { t } from "./language";
+import { defer } from "../utils";
+import appConfig from "../config";
+import { t } from "../language";
 
-import http from "./http-status-codes";
+import http from "../http-status-codes";
 
 const SESSION_TOKEN_KEY = "session-token";
 const TRACE_TOKEN_KEY = "trace-token";
@@ -45,7 +45,7 @@ export class PatientDataLoadedEvent extends Event {
   }
 }
 
-class API extends EventTarget {
+class AuthApi extends EventTarget {
   /** JWT token as a string */
   private sessionToken: string | null;
   /** Trace token is used to trace the calls betweens different microservices API calls for debug purpose. */
@@ -381,7 +381,7 @@ class API extends EventTarget {
   }
 }
 
-const apiClient = new API();
+const apiClient = new AuthApi();
 
 export default apiClient;
-export { API, apiClient };
+export { AuthApi as API, apiClient };
