@@ -27,9 +27,7 @@ import {
   CardMedia,
   Container,
   FormControl,
-  Input,
   InputAdornment,
-  InputLabel,
   IconButton,
   TextField,
   Grid,
@@ -115,25 +113,28 @@ class Login extends React.Component<LoginProps, LoginState> {
                   helperText={helperTextValue}
                 />
                 <FormControl>
-                  <InputLabel htmlFor="login-password">{t("Password")}</InputLabel>
-                  <Input
+                  <TextField
                     id="login-password"
+                    label={t("Password")}
                     type={showPassword ? "text" : "password"}
                     value={password}
                     required
                     error={validateError && emptyPassword}
                     onChange={this.onPasswordChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={this.onClickShowPasswordVisibility}
-                          onMouseDown={this.onMouseDownPassword.bind(this)}
-                        >
-                          {showPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
+                    helperText={helperTextValue}
+                    InputProps={{
+                      endAdornment : (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={this.onClickShowPasswordVisibility}
+                            onMouseDown={this.onMouseDownPassword.bind(this)}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
                 </FormControl>
               </form>
