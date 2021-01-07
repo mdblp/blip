@@ -1,15 +1,7 @@
-/* global chai */
-/* global describe */
-/* global sinon */
-/* global it */
-/* global before */
-/* global beforeEach */
-/* global afterEach */
-/* global after */
-
 import _ from 'lodash';
 import React from 'react';
-
+import sinon from 'sinon';
+import { expect } from 'chai';
 import { shallow, mount } from 'enzyme';
 
 import i18next from '../../../../app/core/language';
@@ -19,7 +11,6 @@ import { MGDL_UNITS } from '../../../../app/core/constants';
 import { components as vizComponents } from 'tidepool-viz';
 import createReactClass from 'create-react-class';
 
-var expect = chai.expect;
 const { Loader } = vizComponents;
 
 require('tideline/css/tideline.less');
@@ -100,7 +91,7 @@ describe('Daily', () => {
   let instance;
 
   beforeEach(() => {
-    wrapper = shallow(<Daily.WrappedComponent {...baseProps} />);
+    wrapper = shallow(<Daily {...baseProps} />);
     instance = wrapper.instance();
   });
 
