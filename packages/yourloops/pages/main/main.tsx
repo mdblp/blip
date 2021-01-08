@@ -1,4 +1,4 @@
-import PrimaryNavBar from '../../components/PrimaryNavBar';
+import PrimaryNavBar from '../../components/primary-nav-bar';
 import PatientData from '../patient-data';
 import * as React from 'react';
 import {
