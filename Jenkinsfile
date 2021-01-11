@@ -63,24 +63,25 @@ pipeline {
                 def config = getConfig()
                 env.module = config.module
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
-                docker.image('docker.ci.diabeloop.eu/ci-toolbox').inside() {
-                    env.version = sh (
-                        script: 'release-helper get-version',
-                        returnStdout: true
-                    ).trim().toUpperCase()
+                    docker.image('docker.ci.diabeloop.eu/ci-toolbox').inside() {
+                        env.version = sh (
+                            script: 'release-helper get-version',
+                            returnStdout: true
+                        ).trim().toUpperCase()
 
-                    def soupFileName = utils.getSoupFileName(module, version)
+                        def soupFileName = utils.getSoupFileName(module, version)
 
-                    sh """
-                        mkdir -p output
-                        echo "Soup list generation"
-                        release-helper gen-dep-report --deep-dep 'blip,sundial,tideline,tidepool-platform-client,tidepool-viz' "output/${soupFileName}"
-                        rm -fv deps-errors.txt deps-prod.json
-                    """
+                        sh """
+                            mkdir -p output
+                            echo "Soup list generation"
+                            release-helper gen-dep-report --deep-dep 'blip,sundial,tideline,tidepool-platform-client,tidepool-viz' "output/${soupFileName}"
+                            rm -fv deps-errors.txt deps-prod.json
+                        """
 
-                    dir("output") {
-                        archiveArtifacts artifacts: "${soupFileName}"
-                        stash name: utils.docStashName, includes: "*", allowEmtpy: true
+                        dir("output") {
+                            archiveArtifacts artifacts: "${soupFileName}"
+                            stash name: utils.docStashName, includes: "*", allowEmtpy: true
+                        }
                     }
                 }
             }
@@ -102,5 +103,4 @@ pipeline {
             }
         }
     }
-
 }
