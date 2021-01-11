@@ -26,7 +26,6 @@ import {
   CardContent,
   CardMedia,
   Container,
-  FormControl,
   InputAdornment,
   IconButton,
   TextField,
@@ -140,31 +139,29 @@ function Login(props : LoginProps ) : JSX.Element {
                     onChange={onUsernameChange}
                     helperText={helperTextValue}
                   />
-                  <FormControl>
-                    <TextField
-                      id="login-password"
-                      label={t("Password")}
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      required
-                      error={validateError && emptyPassword}
-                      onChange={onPasswordChange}
-                      helperText={helperTextValue}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={onClickShowPasswordVisibility}
-                              //onMouseDown={onMouseDownPassword.bind(this)}
-                            >
-                              {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </FormControl>
+                  <TextField
+                    id="login-password"
+                    label={t("Password")}
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    required
+                    error={validateError && emptyPassword}
+                    onChange={onPasswordChange}
+                    helperText={helperTextValue}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={onClickShowPasswordVisibility}
+                            //onMouseDown={onMouseDownPassword.bind(this)}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
                 </form>
               </CardContent>
               <CardActions>
