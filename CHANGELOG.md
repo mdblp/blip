@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 1.7.2 2021-01-11
 ### Fixed
 - Fix SOUP list generation
+- Fix translations
 
 ## 1.7.1 2021-01-08
 ### Fixed
