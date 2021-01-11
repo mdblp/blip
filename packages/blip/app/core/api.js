@@ -283,6 +283,11 @@ api.user.get = (cb) => {
         const updatedSettings = migrations.country.migrate(settings);
         return api.metadata.settings.put(userId, updatedSettings, cb);
       }
+      if (migrations.bgUnits.isRequired(settings)) {
+        api.log(`Migrating and saving user [${userId}] settings with bg units`);
+        const updatedSettings = migrations.bgUnits.migrate(settings);
+        return api.metadata.settings.put(userId, updatedSettings, cb);
+      }
       return cb(null, settings);
     });
   };
@@ -386,12 +391,7 @@ function userFromAccountAndProfile(results) {
 
   const settings = _.get(results, 'settings', null);
   if (!_.isEmpty(settings)) {
-    const s = _.cloneDeep(settings);    
-    if (_.has(settings, 'bg') && !_.has(settings, 'units')){
-      delete s.bg;
-      _.assign(s, {units: {bg: settings.bg}});
-    }
-    user.settings = s;
+    user.settings = settings;
   }
 
   const consents = _.get(results, 'consents', null);
