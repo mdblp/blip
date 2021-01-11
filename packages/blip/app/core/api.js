@@ -386,7 +386,12 @@ function userFromAccountAndProfile(results) {
 
   const settings = _.get(results, 'settings', null);
   if (!_.isEmpty(settings)) {
-    user.settings = settings;
+    const s = _.cloneDeep(settings);    
+    if (_.has(settings, 'bg') && !_.has(settings, 'units')){
+      delete s.bg;
+      _.assign(s, {units: {bg: settings.bg}});
+    }
+    user.settings = s;
   }
 
   const consents = _.get(results, 'consents', null);
