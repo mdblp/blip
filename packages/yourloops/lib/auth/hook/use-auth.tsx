@@ -51,7 +51,7 @@ function useProvideAuth() {
   };
 
   const logout = (): void => {
-    console.log('test signout');
+    AuthApiClient.logout();
   };
 
   // Subscribe to user on mount

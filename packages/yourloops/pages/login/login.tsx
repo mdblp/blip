@@ -137,7 +137,6 @@ function Login(props : LoginProps ) : JSX.Element {
                     required
                     error={validateError && emptyUsername}
                     onChange={onUsernameChange}
-                    helperText={helperTextValue}
                   />
                   <TextField
                     id="login-password"
