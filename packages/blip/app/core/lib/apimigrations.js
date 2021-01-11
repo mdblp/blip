@@ -49,7 +49,7 @@ const migrations = {
 
   bgUnits: {
     isRequired: (settings) => {
-      return _.has(settings, 'bg') && !_.has(settings, 'units.bg');
+      return !_.isEmpty(settings) && _.has(settings, 'bg') && !_.has(settings, 'units.bg');
     },
     migrate: (settings = {}) => {
       const units = _.get(settings, 'bg', 'mg/dL');
