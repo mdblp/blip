@@ -67,14 +67,16 @@ pipeline {
             }
             steps {
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
-                    env.version = sh (
-                        script: 'release-helper get-version',
-                        returnStdout: true
-                    ).trim().toUpperCase()
-                    def config = getConfig()
-                    env.module = config.module
+                    script {
+                        env.version = sh (
+                            script: 'release-helper get-version',
+                            returnStdout: true
+                        ).trim().toUpperCase()
+                        def config = getConfig()
+                        env.module = config.module
 
-                    def soupFileName = utils.getSoupFileName(module, version)
+                        def soupFileName = utils.getSoupFileName(module, version)
+                    }
 
                     sh """
                         mkdir -p output
