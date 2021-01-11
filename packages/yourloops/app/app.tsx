@@ -33,6 +33,7 @@ import { initI18n } from "../lib/language";
 import LoginPage from '../pages/login';
 import HcpPage from '../pages/hcp';
 import PatientPage from "../pages/patient";
+import { AuthProvider } from '../lib/auth/hook/use-auth';
 
 class Yourloops {
   private log: Console;
@@ -69,14 +70,16 @@ class Yourloops {
 
   private router(): JSX.Element {
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/" component={LoginPage} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/hcp" component={HcpPage} />
-          <Route path= "/patient" component={PatientPage} />
-        </Switch>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={LoginPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/hcp" component={HcpPage} />
+            <Route path= "/patient" component={PatientPage} />
+          </Switch>
+        </Router>
+      </AuthProvider>
     );
   }
 }
