@@ -60,14 +60,14 @@ pipeline {
         }
         stage('Documentation') {
             steps {
-                def config = getConfig()
-                env.module = config.module
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                     docker.image('docker.ci.diabeloop.eu/ci-toolbox').inside() {
                         env.version = sh (
                             script: 'release-helper get-version',
                             returnStdout: true
                         ).trim().toUpperCase()
+                        def config = getConfig()
+                        env.module = config.module
 
                         def soupFileName = utils.getSoupFileName(module, version)
 
