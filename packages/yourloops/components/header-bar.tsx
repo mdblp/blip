@@ -15,7 +15,7 @@
  */
 
 import * as React from "react";
-import { globalHistory } from "@reach/router";
+import { useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -30,14 +30,15 @@ import apiClient from "../lib/api";
 import brandingLogo from "branding/logo.png";
 
 interface HeaderProps {
-  children: JSX.Element[];
+  children: JSX.Element | JSX.Element[];
 }
 
 const toolbarStyles = makeStyles((/* theme */) => ({
   toolBar: {
     backgroundColor: "var(--mdc-theme-surface, white)",
-    display: "flex",
-    flexDirection: "row",
+    display: "grid",
+    gridTemplateColumns: "auto auto auto",
+    gridTemplateRows: "auto",
   },
   accountMenu: {
     marginLeft: "auto",
@@ -61,6 +62,7 @@ const toolbarStyles = makeStyles((/* theme */) => ({
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles();
+  const history = useHistory();
 
   // Context menu for profile/logout
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -76,7 +78,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    globalHistory.navigate("/");
+    history.push("/");
   };
 
   let accountMenu = null;
@@ -124,7 +126,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
         <img className={classes.toolbarLogo} alt={t("Logo")} src={brandingLogo} />
-        {...props.children}
+        {props.children}
         {accountMenu}
       </Toolbar>
     </AppBar>

@@ -266,6 +266,7 @@ class API extends EventTarget {
       throw new Error(t(responseBody.reason));
     }
 
+    sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
     return user;
   }
 
