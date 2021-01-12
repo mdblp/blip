@@ -23,7 +23,6 @@
     "build-yourloops": "lerna --stream --scope yourloops run build",
     "security-checks": "npm audit --production --audit-level=high --registry=https://registry.npmjs.org/",
     "prebuild-soup": "mkdir -pv doc",
-    "build-soup": "release-helper gen-dep-report --deep-dep 'blip,sundial,tideline,tidepool-platform-client,tidepool-viz' doc/${npm_package_name}-${npm_package_version}-soup.md",
     "prebuild-dev": "rm -rf dist",
     "build-dev": "lerna run --stream --scope yourloops build-dev",
     "postbuild-dev": "mkdir dist && mv packages/yourloops/dist dist/static",
