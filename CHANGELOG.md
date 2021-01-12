@@ -2,6 +2,12 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 1.7.2 2021-01-12
+### Fixed
+- Fix SOUP list generation
+- Fix translations
+- YLP-442 DBLG1 sends units at the wrong place
+
 ## 1.7.1 2021-01-08
 ### Fixed
 - Fix translations
