@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020, Diabeloop
- * Patient data page
+ * Health care pro nav bar
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -15,18 +15,27 @@
  */
 
 import * as React from "react";
+import { globalHistory } from "@reach/router";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import { t } from "../lib/language";
 import HeaderBar from './header-bar';
 
+function clickPatients() {
+  globalHistory.navigate("/hcp/patients");
+}
+
+function clickCareTeams() {
+  globalHistory.navigate("/hcp/careteams");
+}
+
 function CareTeamNavBar() : JSX.Element {
   return (
     <HeaderBar>
       <Tabs value={0} indicatorColor="primary" textColor="primary" centered>
-        <Tab label={t("Patients")} />
-        <Tab label={t("Care teams")} />
+        <Tab label={t("Patients")} onClick={clickPatients} />
+        <Tab label={t("Care teams")} onClick={clickCareTeams} />
       </Tabs>
     </HeaderBar>
   );

@@ -15,7 +15,7 @@
  */
 
 import * as React from "react";
-import { useHistory } from "react-router-dom";
+import { globalHistory } from "@reach/router";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -62,7 +62,6 @@ const toolbarStyles = makeStyles((/* theme */) => ({
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles();
-  const history = useHistory();
 
   // Context menu for profile/logout
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -78,7 +77,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   const handleLogout = () => {
     setAnchorEl(null);
-    history.push("/");
+    globalHistory.navigate("/");
   };
 
   let accountMenu = null;

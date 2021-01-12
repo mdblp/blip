@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2020, Diabeloop
- * Patient data page
+ * Copyright (c) 2021, Diabeloop
+ * HCPs index
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -13,6 +13,5 @@
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
-
-import PatientData from './patient-data';
-export default PatientData;
+import HcpPage from './hcp';
+export default HcpPage;

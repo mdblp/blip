@@ -16,12 +16,7 @@
 
 import * as React from 'react';
 import { render as renderDOM } from "react-dom";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-
+import { Router, globalHistory } from "@reach/router";
 import bows from 'bows';
 
 import "fontsource-roboto";
@@ -30,7 +25,7 @@ import "branding/theme.css";
 
 import { initI18n } from '../lib/language';
 import Login from '../pages/login';
-import Main from '../pages/main';
+import HcpPage from '../pages/hcp';
 
 class Yourloops {
   private log: Console;
@@ -45,9 +40,9 @@ class Yourloops {
     await initI18n();
     this.log.debug("i18next initialized");
 
-    // globalHistory.listen(({ location, action }) => {
-    //   this.log.info({ location, action });
-    // });
+    globalHistory.listen(({ location, action }) => {
+      this.log.info({ location, action });
+    });
   }
 
   public render(): void {
@@ -63,12 +58,14 @@ class Yourloops {
 
   private router(): JSX.Element {
     return (
-      <Router>
-        {/* 
-        style={{ height: "100vh", display: "flex", flexDirection: "column" }}
+      <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <Login path="/" />
+        <HcpPage path="/hcp/*" />
+        {/*
+
         <Login path="/" />
         <Login path="/login" />
-        <PatientData path="/patient" /> 
+        <PatientData path="/patient" />
         */}
           {/*
             A <Switch> looks through all its children <Route>
@@ -78,11 +75,11 @@ class Yourloops {
             of them to render at a time
             style={{ height: "100vh", display: "flex", flexDirection: "column" }}
           */}
-          <Switch>
+          {/* <Switch>
             <Route exact path="/" component={Login} />
             <Route path="/login" component= {Login} />
-            <Route path="/home" component={Main} />
-          </Switch>
+            <Route path="/hcp" component={HcpPage} />
+          </Switch> */}
       </Router>
     );
   }
