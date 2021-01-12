@@ -120,13 +120,14 @@ module.exports = function(pool, opts) {
     });
 
     var foGroup = tooltip.foGroup;
+    const msgDate = format.datestamp(d.normalTime, d.displayOffset);
+    const msgTime = format.timestamp(d.normalTime, d.displayOffset);
+    const msgDateTime = `<span class="fromto">${t('{{date}} - {{time}}', {date: msgDate, time: msgTime})}</span>`;
     tooltip.foGroup.append('p')
       .attr('class', 'messageTooltip')
       .append('span')
       .attr('class', 'secondary')
-      .html(format.datestamp(d.normalTime, d.displayOffset) +
-        ' <span class="fromto">at</span> ' +
-        format.timestamp(d.normalTime, d.displayOffset));
+      .html(msgDateTime);
     tooltip.foGroup.append('p')
       .attr('class', 'messageTooltip')
       .append('span')
