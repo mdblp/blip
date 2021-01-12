@@ -122,7 +122,7 @@ module.exports = function(pool, opts) {
     var foGroup = tooltip.foGroup;
     const msgDate = format.datestamp(d.normalTime, d.displayOffset);
     const msgTime = format.timestamp(d.normalTime, d.displayOffset);
-    const msgDateTime = `${msgDate} <span class="fromto">${t('at')}</span> ${msgTime}`;
+    const msgDateTime = `<span class="fromto">${t('{{date}} - {{time}}', {date: msgDate, time: msgTime})}</span>`;
     tooltip.foGroup.append('p')
       .attr('class', 'messageTooltip')
       .append('span')
