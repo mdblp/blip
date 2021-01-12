@@ -84,7 +84,7 @@
   "Avg. Daily Time In Loop Mode": "Prom. tiempo diario en modo loop",
   "Avg. Daily Total Insulin": "Prom. total de insulina diario",
   "Avg. Glucose ({{bgSourceLabel}})": "Prom. glucemia ({{bgSourceLabel}})",
-  "A_Label": "L",
+  "A_Label": "ON",
   "Back": "Volver",
   "Basal Events": "Eventos basales",
   "Basal insulin keeps your glucose within your target range when you are not eating.  Bolus insulin is mostly used to cover the carbohydrates you eat or to bring a high glucose back into your target range. This ratio allows you to compare how much of the insulin you are taking is used for each purpose. We will only show numbers if there is enough basal data - 24 hours in the one day view and 7 days in the two week view.": "Basal insulin keeps your glucose within your target range when you are not eating.  Bolus insulin is mostly used to cover the carbohydrates you eat or to bring a high glucose back into your target range. This ratio allows you to compare how much of the insulin you are taking is used for each purpose. We will only show numbers if there is enough basal data - 24 hours in the one day view and 7 days in the two week view.",
