@@ -21,7 +21,7 @@ import Tab from "@material-ui/core/Tab";
 import { t } from "../lib/language";
 import HeaderBar from './header-bar';
 
-function PrimaryNavBar() : JSX.Element {
+function CareTeamNavBar() : JSX.Element {
   return (
     <HeaderBar>
       <Tabs value={0} indicatorColor="primary" textColor="primary" centered>
@@ -32,4 +32,4 @@ function PrimaryNavBar() : JSX.Element {
   );
 }
 
-export default PrimaryNavBar;
+export default CareTeamNavBar;

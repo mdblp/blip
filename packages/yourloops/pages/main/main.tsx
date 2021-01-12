@@ -1,4 +1,4 @@
-import PrimaryNavBar from '../../components/primary-nav-bar';
+import CareTeamNavBar from '../../components/careteam-nav-bar';
 import PatientData from '../patient-data';
 import * as React from 'react';
 import {
@@ -10,7 +10,7 @@ class Main extends React.Component {
   public render() : JSX.Element {
     return (
       <div>
-        <PrimaryNavBar />
+        <CareTeamNavBar />
 
         <Switch>
           <Route exact path="/home/patients">
