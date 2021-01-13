@@ -28,12 +28,12 @@ import PatientDataPage from './patient-data';
 function HcpPage(props: RouteComponentProps) : JSX.Element | null {
   const log = bows("HCP Page");
 
-  if (props.path === "/hcp") {
+  if (globalHistory.location.pathname === "/hcp") {
     log.info("Redirecting to the patients list", props);
     globalHistory.navigate("/hcp/patients");
     return null;
   }
-  log.info("Current path:", props.path);
+  // log.info("Current path:", props.path);
   return (
     <div>
       <CareTeamNavBar />
@@ -41,12 +41,6 @@ function HcpPage(props: RouteComponentProps) : JSX.Element | null {
       <Router>
         <PatientListPage path="patients" />
         <PatientDataPage path="patient/:patientId" />
-        {/* <Route exact path="/hcp/patients">
-          <PatientData />
-        </Route> */}
-        {/*<Route exact path="/hcp/careteams">
-          <Careteams />
-        </Route>*/}
       </Router>
     </div>
   );

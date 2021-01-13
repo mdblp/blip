@@ -31,9 +31,11 @@ function clickCareTeams() {
 }
 
 function CareTeamNavBar() : JSX.Element {
+  const isPatientsPath = globalHistory.location.pathname.startsWith("/hcp/patient");
+
   return (
     <HeaderBar>
-      <Tabs value={0} indicatorColor="primary" textColor="primary" centered>
+      <Tabs value={isPatientsPath ? 0 : 1} indicatorColor="primary" textColor="primary" centered>
         <Tab label={t("Patients")} onClick={clickPatients} />
         <Tab label={t("Care teams")} onClick={clickCareTeams} />
       </Tabs>
