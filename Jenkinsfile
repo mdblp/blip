@@ -16,6 +16,9 @@ pipeline {
                 }
             }
             steps {
+                script {
+                  utils.initPipeline()
+                }
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                     sh 'npm install'
                 }
