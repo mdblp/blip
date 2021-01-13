@@ -62,10 +62,8 @@ class PatientDataPage extends React.Component<PatientDataProps, PatientDataState
 
   public render(): JSX.Element {
     return (
-      <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
-        <div style={{ display: "flex", flexDirection: "row", flexGrow: 1, overflowY: "scroll" }}>
-          <Blip config={appConfig} api={appApi} />
-        </div>
+      <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+        <Blip config={appConfig} api={appApi} />
       </div>
     );
   }
