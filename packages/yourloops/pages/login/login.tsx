@@ -188,7 +188,11 @@ class Login extends React.Component<LoginProps, LoginState> {
     api.login(username, password)
       .then((user: User) => {
         this.log.info(user);
-        globalHistory.navigate("/hcp");
+        if (api.userIsPatient) {
+          globalHistory.navigate("/patient");
+        } else {
+          globalHistory.navigate("/hcp");
+        }
       }).catch((reason: Error) => {
         console.log(reason);
         this.setState({ validateError: true, helperTextValue: reason.message });

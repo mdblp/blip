@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2020, Diabeloop
- * HCPs patient data page
+ * Copyright (c) 2021, Diabeloop
+ * Patient data page
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -22,11 +22,9 @@ import Blip from "blip";
 
 import appConfig from "../../lib/config";
 import apiClient from "../../lib/api";
-// import { User } from "../../models/shoreline";
-// import { t } from "../../lib/language";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataProps extends RouteComponentProps {
-  patientId?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -39,7 +37,7 @@ class PatientDataPage extends React.Component<PatientDataProps, PatientDataState
   constructor(props: PatientDataProps) {
     super(props);
 
-    this.log = bows("HCPPatientData");
+    this.log = bows("PatientData");
 
     this.state = {
       user: null,
@@ -47,20 +45,22 @@ class PatientDataPage extends React.Component<PatientDataProps, PatientDataState
   }
 
   public componentDidMount(): void {
-    const { patientId } = this.props;
-
     this.log.debug("Mounted");
 
-    if (typeof patientId === "string") {
-      apiClient.loadPatientData(patientId).catch((reason: unknown) => {
+    if (apiClient.isLoggedIn) {
+      const user = apiClient.whoami;
+      const userId = user?.userid as string;
+      this.log.debug("Loading patient data", userId);
+      apiClient.loadPatientData(userId).catch((reason: unknown) => {
         this.log.error(reason);
       });
     } else {
-      this.log.error('Invalid patientId', patientId, this.props);
+      this.log.error("Not logged-in");
     }
   }
 
   public render(): JSX.Element {
+    this.log.debug("render");
     return (
       <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
         <Blip config={appConfig} api={apiClient} />

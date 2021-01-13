@@ -23,9 +23,12 @@ import "fontsource-roboto";
 import "branding/theme-base.css";
 import "branding/theme.css";
 
-import { initI18n } from '../lib/language';
-import Login from '../pages/login';
+import { initI18n } from "../lib/language";
+import apiClient from "../lib/api";
+
+import LoginPage from '../pages/login';
 import HcpPage from '../pages/hcp';
+import PatientPage from "../pages/patient";
 
 class Yourloops {
   private log: Console;
@@ -43,6 +46,10 @@ class Yourloops {
     globalHistory.listen(({ location, action }) => {
       this.log.info({ location, action });
     });
+
+    apiClient.addEventListener("logout", () => {
+      globalHistory.navigate("/");
+    });
   }
 
   public render(): void {
@@ -59,27 +66,9 @@ class Yourloops {
   private router(): JSX.Element {
     return (
       <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-        <Login path="/" />
+        <LoginPage path="/" />
         <HcpPage path="/hcp/*" />
-        {/*
-
-        <Login path="/" />
-        <Login path="/login" />
-        <PatientData path="/patient" />
-        */}
-          {/*
-            A <Switch> looks through all its children <Route>
-            elements and renders the first one whose path
-            matches the current URL. Use a <Switch> any time
-            you have multiple routes, but you want only one
-            of them to render at a time
-            style={{ height: "100vh", display: "flex", flexDirection: "column" }}
-          */}
-          {/* <Switch>
-            <Route exact path="/" component={Login} />
-            <Route path="/login" component= {Login} />
-            <Route path="/hcp" component={HcpPage} />
-          </Switch> */}
+        <PatientPage path="/patient/*" />
       </Router>
     );
   }

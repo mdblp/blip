@@ -30,7 +30,7 @@ function clickCareTeams() {
   globalHistory.navigate("/hcp/careteams");
 }
 
-function CareTeamNavBar() : JSX.Element {
+function HcpNavBar() : JSX.Element {
   const isPatientsPath = globalHistory.location.pathname.startsWith("/hcp/patient");
 
   return (
@@ -43,4 +43,4 @@ function CareTeamNavBar() : JSX.Element {
   );
 }
 
-export default CareTeamNavBar;
+export default HcpNavBar;

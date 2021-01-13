@@ -18,7 +18,7 @@ import * as React from 'react';
 import { Router, RouteComponentProps, globalHistory } from "@reach/router";
 import bows from 'bows';
 
-import CareTeamNavBar from '../../components/hcp-nav-bar';
+import HcpNavBar from '../../components/hcp-nav-bar';
 import PatientListPage from './patients-list';
 import PatientDataPage from './patient-data';
 
@@ -36,7 +36,7 @@ function HcpPage(props: RouteComponentProps) : JSX.Element | null {
   // log.info("Current path:", props.path);
   return (
     <div>
-      <CareTeamNavBar />
+      <HcpNavBar />
 
       <Router>
         <PatientListPage path="patients" />
