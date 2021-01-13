@@ -17,7 +17,7 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 //import bows from "bows";
 
 import {
@@ -95,6 +95,10 @@ function Login(props : LoginProps ) : JSX.Element {
         setHelperTextValue(reason.message);
       });
   }
+
+  function onClickLoginReset() {
+    props.history.push("/request-password-reset");
+  }
   
   // function onClickForgotPassword() {
   //   //this.log.debug("onClickForgotPassword");
@@ -164,6 +168,11 @@ function Login(props : LoginProps ) : JSX.Element {
                 </form>
               </CardContent>
               <CardActions>
+                <Link 
+                  to="/request-password-reset" 
+                  onClick={onClickLoginReset}>
+                  {t('Forgot your password?')}
+                </Link>
                 <Button
                   variant="contained"
                   color="primary"

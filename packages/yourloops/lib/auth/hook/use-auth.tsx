@@ -9,6 +9,7 @@ interface IAuthContext {
   logout(): void,
   signup(username: string , password: string): void,
   isLoggedIn(): boolean,
+  sendPasswordResetEmail(username: string): Promise<boolean>,
 }
 
 export const AuthContext = createContext({} as IAuthContext);
@@ -58,6 +59,11 @@ function useProvideAuth() {
     return AuthApiClient.isLoggedIn;
   };
 
+  const sendPasswordResetEmail = (username: string) : Promise<boolean> => {
+    console.log("send password reset email ",username);
+    return Promise.resolve(true);
+  };
+
   // Subscribe to user on mount
   // Because this sets state in the callback it will cause any
   // component that utilizes this hook to re-render with the
@@ -83,6 +89,7 @@ function useProvideAuth() {
     logout,
     signup,
     isLoggedIn,
+    sendPasswordResetEmail,
   };
 }
 
