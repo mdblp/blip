@@ -16,9 +16,6 @@ pipeline {
                 }
             }
             steps {
-                script {
-                  utils.initPipeline()
-                }
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                     sh 'npm install'
                 }
@@ -64,6 +61,7 @@ pipeline {
         stage('Documentation') {
             steps {
                 script {
+                    utils.initPipeline()
                     withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                         docker.image('docker.ci.diabeloop.eu/ci-toolbox').inside() {
                             env.version = sh (
