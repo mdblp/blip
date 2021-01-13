@@ -8,6 +8,7 @@ interface IAuthContext {
   login(username: string , password: string): Promise<User>,
   logout(): void,
   signup(username: string , password: string): void,
+  isLoggedIn(): boolean,
 }
 
 export const AuthContext = createContext({} as IAuthContext);
@@ -32,12 +33,11 @@ export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const [user, setUser] = useState({ userid: '-1', username: "noemail" });
+  const [user, setUser] = useState<User | null>(null);
 
-  // Wrap any Firebase methods we want to use making sure ...
-  // ... to save the user to state.
+  // Wrap any Firebase methods we want to use making sure 
+  // to save the user to state.
   const login = (username: string, password: string) => {
-    console.log('test signin: ', username, password);
     return AuthApiClient
       .login(username, password)
       .then((user: User) => {
@@ -52,6 +52,10 @@ function useProvideAuth() {
 
   const logout = (): void => {
     AuthApiClient.logout();
+  };
+
+  const isLoggedIn = () : boolean => {
+    return AuthApiClient.isLoggedIn;
   };
 
   // Subscribe to user on mount
@@ -78,6 +82,7 @@ function useProvideAuth() {
     login,
     logout,
     signup,
+    isLoggedIn,
   };
 }
 

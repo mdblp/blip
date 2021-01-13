@@ -72,14 +72,14 @@ class AuthApi extends EventTarget {
       this.user = JSON.parse(loggedInUser);
     }
 
-    this.log = bows("API");
+    this.log = bows("Auth API");
     this.loginLock = false;
     this.wrongCredentialCount = 0;
     // Listen to storage events, to be able to monitor
     // logout on others tabs.
     window.addEventListener("storage", this.onStorageChange.bind(this));
 
-    this.log.info("API initialized");
+    this.log.info("Auth API initialized");
   }
 
   /**
@@ -158,6 +158,7 @@ class AuthApi extends EventTarget {
 
       switch (response.status) {
         case http.StatusUnauthorized:
+          // eslint-disable-next-line no-undefined
           if (appConfig.MAX_FAILED_LOGIN_ATTEMPTS !== undefined) {
             if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
               reason = `Your account has been locked for ${appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT} minutes. You have reached the maximum number of login attempts.`;
@@ -218,27 +219,30 @@ class AuthApi extends EventTarget {
    * Logout the user => Clear the session & trace tokens
    */
   logout(): void {
+    this.log.debug("debug logout");
     if (this.loginLock && this.isLoggedIn) {
-      this.sessionToken = null;
-      this.traceToken = null;
-      this.user = null;
-      this.patients = null;
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(LOGGED_IN_USER);
+      this.log.debug("logout with a loginlock ");
+      this.removeAuthInfofromSessionStorage();
     } else if (this.isLoggedIn) {
+      this.log.debug("logout with no loginlock");
       this.loginLock = true;
       this.sendMetrics("resetUserId");
-      this.sessionToken = null;
-      this.traceToken = null;
-      this.user = null;
-      this.patients = null;
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(LOGGED_IN_USER);
+      this.removeAuthInfofromSessionStorage();
       this.dispatchEvent(new Event("logout"));
       this.loginLock = false;
     }
+  }
+
+  /**
+   * Clear the session & trace tokens
+   */
+  private removeAuthInfofromSessionStorage() {
+    this.sessionToken = null;
+    this.traceToken = null;
+    this.user = null;
+    sessionStorage.removeItem(TRACE_TOKEN_KEY);
+    sessionStorage.removeItem(TRACE_TOKEN_KEY);
+    sessionStorage.removeItem(LOGGED_IN_USER);
   }
 
   public async getUserShares(): Promise<User[]> {
