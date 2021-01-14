@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import { render as renderDOM } from "react-dom";
+import { ThemeProvider } from "@material-ui/core/styles";
 import { Router, globalHistory } from "@reach/router";
 import bows from 'bows';
 
@@ -26,6 +27,7 @@ import "branding/theme.css";
 import { initI18n } from "../lib/language";
 import apiClient from "../lib/api";
 
+import { theme } from "../components/theme";
 import LoginPage from '../pages/login';
 import HcpPage from '../pages/hcp';
 import PatientPage from "../pages/patient";
@@ -65,11 +67,13 @@ class Yourloops {
 
   private router(): JSX.Element {
     return (
-      <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-        <LoginPage path="/" />
-        <HcpPage path="/hcp/*" />
-        <PatientPage path="/patient/*" />
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+          <LoginPage path="/" />
+          <HcpPage path="/hcp/*" />
+          <PatientPage path="/patient/*" />
+        </Router>
+      </ThemeProvider>
     );
   }
 }

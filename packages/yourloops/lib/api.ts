@@ -208,7 +208,7 @@ class API extends EventTarget {
       this.traceToken = null;
       this.user = null;
       this.patients = null;
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
       sessionStorage.removeItem(TRACE_TOKEN_KEY);
       sessionStorage.removeItem(LOGGED_IN_USER);
     } else if (this.isLoggedIn) {
@@ -218,7 +218,7 @@ class API extends EventTarget {
       this.traceToken = null;
       this.user = null;
       this.patients = null;
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
       sessionStorage.removeItem(TRACE_TOKEN_KEY);
       sessionStorage.removeItem(LOGGED_IN_USER);
       this.dispatchEvent(new Event("logout"));
@@ -274,6 +274,32 @@ class API extends EventTarget {
 
     sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
     return user;
+  }
+
+  public async flagPatient(userId: string): Promise<string[]> {
+    if (!this.isLoggedIn || this.user === null) {
+      // Users should never see this:
+      throw new Error(t("You are not logged-in"));
+    }
+    if (typeof this.user.preferences !== "object" || this.user.preferences === null) {
+      this.user.preferences = {
+        patientsStarred: [],
+      };
+    }
+    if (!Array.isArray(this.user.preferences.patientsStarred)) {
+      this.user.preferences.patientsStarred = [];
+    }
+    const userIdIdx = this.user.preferences.patientsStarred.indexOf(userId);
+    // eslint-disable-next-line no-magic-numbers
+    if (userIdIdx > -1) {
+      this.user.preferences.patientsStarred.splice(userIdIdx, 1);
+      this.log.info("Unflag patient", userId);
+    } else {
+      this.user.preferences.patientsStarred.push(userId);
+      this.log.info("Flag patient", userId);
+    }
+
+    return this.user.preferences.patientsStarred;
   }
 
   public async loadPatientData(userID: string): Promise<PatientData> {

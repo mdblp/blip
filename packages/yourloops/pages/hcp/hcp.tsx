@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import { Router, RouteComponentProps, globalHistory } from "@reach/router";
+import Container from "@material-ui/core/Container";
 import bows from 'bows';
 
 import HcpNavBar from '../../components/hcp-nav-bar';
@@ -25,7 +26,7 @@ import PatientDataPage from './patient-data';
 /**
  * Health care professional page
  */
-function HcpPage(props: RouteComponentProps) : JSX.Element | null {
+function HcpPage(props: RouteComponentProps): JSX.Element | null {
   const log = bows("HCP Page");
 
   if (globalHistory.location.pathname === "/hcp") {
@@ -33,16 +34,19 @@ function HcpPage(props: RouteComponentProps) : JSX.Element | null {
     globalHistory.navigate("/hcp/patients");
     return null;
   }
-  // log.info("Current path:", props.path);
+
   return (
-    <div>
+    <React.Fragment>
       <HcpNavBar />
 
-      <Router>
-        <PatientListPage path="patients" />
-        <PatientDataPage path="patient/:patientId" />
-      </Router>
-    </div>
+      <Container maxWidth="lg">
+        <Router>
+          <PatientListPage path="patients" />
+          <PatientDataPage path="patient/:patientId" />
+        </Router>
+      </Container>
+
+    </React.Fragment>
   );
 }
 export default HcpPage;

@@ -33,17 +33,12 @@ interface HeaderProps {
   children?: JSX.Element | JSX.Element[];
 }
 
-const toolbarStyles = makeStyles((/* theme */) => ({
+const toolbarStyles = makeStyles({
   toolBar: {
     backgroundColor: "var(--mdc-theme-surface, white)",
     display: "grid",
     gridTemplateRows: "auto",
-  },
-  toolBarWithChildren: {
-    gridTemplateColumns: "auto auto auto",
-  },
-  toolBarWithoutChildren: {
-    gridTemplateColumns: "auto auto",
+    gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "auto auto" : "auto auto auto",
   },
   accountMenu: {
     marginLeft: "auto",
@@ -63,10 +58,10 @@ const toolbarStyles = makeStyles((/* theme */) => ({
   toolbarLogo: {
     height: "45px",
   },
-}));
+});
 
 function HeaderBar(props: HeaderProps): JSX.Element {
-  const classes = toolbarStyles();
+  const classes = toolbarStyles(props);
 
   // Context menu for profile/logout
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -96,7 +91,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           <div className={classes.accountType}>{role}</div>
         </div>
         <IconButton
-          aria-label={t("account of current user")}
+          aria-label={t("aria-current-user-account")}
           aria-controls="menu-appbar"
           aria-haspopup="true"
           onClick={handleMenu}
@@ -126,16 +121,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     );
   }
 
-  let toolbarStyle = classes.toolBar;
-  if (_.isEmpty(props.children)) {
-    toolbarStyle = `${toolbarStyle} ${classes.toolBarWithoutChildren}`;
-  } else {
-    toolbarStyle = `${toolbarStyle} ${classes.toolBarWithChildren}`;
-  }
   return (
     <AppBar position="static">
-      <Toolbar className={toolbarStyle}>
-        <img className={classes.toolbarLogo} alt={t("Logo")} src={brandingLogo} />
+      <Toolbar className={classes.toolBar}>
+        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} />
         {props.children}
         {accountMenu}
       </Toolbar>

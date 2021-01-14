@@ -36,8 +36,8 @@ function HcpNavBar() : JSX.Element {
   return (
     <HeaderBar>
       <Tabs value={isPatientsPath ? 0 : 1} indicatorColor="primary" textColor="primary" centered>
-        <Tab label={t("Patients")} onClick={clickPatients} />
-        <Tab label={t("Care teams")} onClick={clickCareTeams} />
+        <Tab label={t("header-patients-tab")} onClick={clickPatients} />
+        <Tab label={t("header-careteams-tab")} onClick={clickCareTeams} />
       </Tabs>
     </HeaderBar>
   );

@@ -14,45 +14,102 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import { RouteComponentProps, globalHistory } from "@reach/router";
-import bows from 'bows';
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
+import bows from "bows";
+import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+// import { DataGrid, RowsProp, ColDef, RowParams, CellParams } from "@material-ui/data-grid";
+// import Grid from "@material-ui/core/Grid";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
+import FlagIcon from "@material-ui/icons/Flag";
+import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+
+import { t } from "../../lib/language";
 import apiClient from "../../lib/api";
 import { User } from "../../models/shoreline";
 
 interface PatientListProps {
   patients: User[];
+  flagged: string[];
   onClickPatient: (user: User) => void;
+  onFlagPatient: (userId: string) => void;
 }
 
 interface PatientListPageState {
   patients: null | User[];
+  flagged: string[];
 }
 
+const patientListStyle = makeStyles((/* theme_or_props */) => {
+  return {
+    table: {
+      width: "100%",
+    },
+    tableRow: {
+      cursor: "pointer",
+    },
+  };
+});
+
+
 function PatientsList(props: PatientListProps): JSX.Element {
-  const items: JSX.Element[] = [];
-  const { patients, onClickPatient } = props;
-  for (const user of patients) {
-    const userName = user.profile?.fullName ?? user.username;
-    const onClick = () => {
-      onClickPatient(user);
+  const { patients, flagged, onClickPatient, onFlagPatient } = props;
+  const classes = patientListStyle();
+  const elems = [];
+  const nPatients = patients.length;
+
+  for (let i=0; i<nPatients; i++) {
+    const patient = patients[i];
+    const userId = patient.userid;
+    const firstName = patient.profile?.firstName ?? "";
+    const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
+    const isFlagged = flagged.includes(userId);
+    const onClickFlag = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      console.log("onClickFlag", e);
+      onFlagPatient(userId);
     };
-    items.push((
-      <ListItem
-        button={true}
-        key={user.userid}
-        onClick={onClick}
-      >
-        <ListItemText primary={userName} />
-      </ListItem>
-    ));
+    const onRowClick = (e: React.MouseEvent) => {
+      console.log("onRowClick", patient, e);
+      onClickPatient(patient);
+    };
+    elems.push(
+      <TableRow id={`patients-list-row-${userId}`} key={userId} tabIndex={-1} hover onClick={onRowClick} className={classes.tableRow}>
+        <TableCell id={`patients-list-row-flag-${userId}`}>
+          <IconButton aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
+            {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell id={`patients-list-row-lastname-${userId}`}>{lastName}</TableCell>
+        <TableCell id={`patients-list-row-firstname-${userId}`}>{firstName}</TableCell>
+      </TableRow>
+    );
   }
 
-  return <List style={{ overflow: "scroll" }}>{items}</List>;
+  return (
+    <TableContainer component={Paper}>
+      <Table className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
+        <TableHead>
+          <TableRow>
+            <TableCell id="patients-list-header-flag" />
+            <TableCell id="patients-list-header-lastname">{t("list-patient-lastname")}</TableCell>
+            <TableCell id="patients-list-header-firstname">{t("list-patient-firstname")}</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {elems}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
 
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
@@ -63,11 +120,14 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     this.log = bows("PatientListPage");
 
+    const whoAmI = apiClient.whoami;
     this.state = {
       patients: null,
+      flagged: whoAmI?.preferences?.patientsStarred ?? [],
     };
 
     this.onSelectPatient = this.onSelectPatient.bind(this);
+    this.onFlagPatient = this.onFlagPatient.bind(this);
   }
 
   public componentDidMount(): void {
@@ -81,11 +141,11 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   render(): JSX.Element | null {
-    const { patients } = this.state;
+    const { patients, flagged } = this.state;
     let listPatients: JSX.Element | null = null;
 
     if (patients !== null) {
-      listPatients = <PatientsList patients={patients} onClickPatient={this.onSelectPatient} />;
+      listPatients = <PatientsList patients={patients} flagged={flagged} onClickPatient={this.onSelectPatient} onFlagPatient={this.onFlagPatient} />;
     }
     return listPatients;
   }
@@ -93,6 +153,12 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   private onSelectPatient(user: User): void {
     this.log.info('Click on', user);
     globalHistory.navigate(`/hcp/patient/${user.userid}`);
+  }
+
+  private onFlagPatient(userId: string): void {
+    apiClient.flagPatient(userId).then((flagged: string[]) => {
+      this.setState({ flagged });
+    });
   }
 }
 

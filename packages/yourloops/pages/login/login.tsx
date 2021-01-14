@@ -101,7 +101,7 @@ class Login extends React.Component<LoginProps, LoginState> {
           <Grid item xs={12}>
             <Card>
               <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-                <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t('Login Branding Logo')} />
+                <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t("alt-img-logo")} />
               </CardMedia>
               <CardContent>
               <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
@@ -126,7 +126,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
-                          aria-label="toggle password visibility"
+                          aria-label={t("aria-toggle-password-visibility")}
                           onClick={this.onClickShowPasswordVisibility}
                           onMouseDown={this.onMouseDownPassword.bind(this)}
                         >

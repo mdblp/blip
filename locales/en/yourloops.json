@@ -1,0 +1,17 @@
+{
+  "alt-img-logo": "Branding Logo",
+  "aria-current-user-account": "Current user account",
+  "aria-toggle-password-visibility": "Toggle password visibility",
+  "header-patients-tab": "Patients",
+  "header-careteams-tab": "Care Teams",
+  "Invalid response from server": "Invalid response from server",
+  "list-patient-lastname": "Name",
+  "list-patient-firstname": "Firstname",
+  "Must specify a username": "Must specify a username",
+  "Must specify a password": "Must specify a password",
+  "Email": "Email",
+  "Logout": "Logout",
+  "Password": "Password",
+  "Profile": "Profile",
+  "You are not logged-in": "You are not logged-in"
+}
