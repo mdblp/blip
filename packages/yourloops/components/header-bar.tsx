@@ -28,8 +28,9 @@ import { t } from "../lib/language";
 import apiClient from "../lib/api";
 
 import brandingLogo from "branding/logo.png";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-interface HeaderProps {
+interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
 }
 
@@ -143,4 +144,4 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   );
 }
 
-export default HeaderBar;
+export default withRouter(HeaderBar);
