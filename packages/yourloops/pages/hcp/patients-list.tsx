@@ -19,8 +19,9 @@ import { RouteComponentProps, globalHistory } from "@reach/router";
 import bows from "bows";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
-// import { DataGrid, RowsProp, ColDef, RowParams, CellParams } from "@material-ui/data-grid";
-// import Grid from "@material-ui/core/Grid";
+
+import Alert from "@material-ui/lab/Alert";
+import Grid from "@material-ui/core/Grid";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -172,6 +173,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     apiClient.getUserShares().then((patients: User[]) => {
       this.setState({ patients });
+      this.onSortList(this.state.orderBy, this.state.order);
     }).catch((reason: unknown) => {
       this.log.error(reason);
     });
@@ -193,7 +195,14 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
           onSortList={this.onSortList} />
       );
     }
-    return listPatients;
+    return (
+      <React.Fragment>
+        <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
+          <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
+        </Grid>
+        {listPatients}
+      </React.Fragment>
+    );
   }
 
   private onSelectPatient(user: User): void {

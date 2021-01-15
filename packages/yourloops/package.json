@@ -26,6 +26,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "latest",
     "blip": "file:../blip",
     "bows": "^1.7.2",
     "browser-locale": "^1.0.3",

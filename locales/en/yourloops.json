@@ -4,6 +4,7 @@
   "aria-toggle-password-visibility": "Toggle password visibility",
   "header-patients-tab": "Patients",
   "header-careteams-tab": "Care Teams",
+  "Data's are calculated for the last two weeks": "Data's are calculated for the last two weeks",
   "Invalid response from server": "Invalid response from server",
   "list-patient-avg-glucose": "Avg. Glucose",
   "list-patient-lastname": "Name",
