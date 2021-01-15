@@ -17,7 +17,11 @@
 import * as React from 'react';
 import { render as renderDOM } from "react-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Router, globalHistory } from "@reach/router";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 import bows from 'bows';
 
 import "fontsource-roboto";
@@ -25,7 +29,6 @@ import "branding/theme-base.css";
 import "branding/theme.css";
 
 import { initI18n } from "../lib/language";
-import apiClient from "../lib/api";
 
 import { theme } from "../components/theme";
 import LoginPage from '../pages/login';
@@ -44,14 +47,6 @@ class Yourloops {
 
     await initI18n();
     this.log.debug("i18next initialized");
-
-    globalHistory.listen(({ location, action }) => {
-      this.log.info({ location, action });
-    });
-
-    apiClient.addEventListener("logout", () => {
-      globalHistory.navigate("/");
-    });
   }
 
   public render(): void {
@@ -68,10 +63,13 @@ class Yourloops {
   private router(): JSX.Element {
     return (
       <ThemeProvider theme={theme}>
-        <Router style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-          <LoginPage path="/" />
-          <HcpPage path="/hcp/*" />
-          <PatientPage path="/patient/*" />
+        <Router>
+          <Switch>
+            <Route exact path="/" component={LoginPage} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/hcp" component={HcpPage} />
+            <Route path="/patient" component={PatientPage} />
+          </Switch>
         </Router>
       </ThemeProvider>
     );

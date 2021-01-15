@@ -16,6 +16,7 @@
 
 import _ from "lodash";
 import * as React from "react";
+import { RouteComponentProps, withRouter, useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -29,7 +30,7 @@ import apiClient from "../lib/api";
 
 import brandingLogo from "branding/logo.png";
 
-interface HeaderProps {
+interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
 }
 
@@ -62,6 +63,7 @@ const toolbarStyles = makeStyles({
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles(props);
+  const history = useHistory();
 
   // Context menu for profile/logout
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -78,6 +80,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const handleLogout = () => {
     setAnchorEl(null);
     apiClient.logout();
+    history.push("/");
   };
 
   let accountMenu = null;
@@ -122,9 +125,9 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   }
 
   return (
-    <AppBar position="static" color="transparent">
-      <Toolbar className={classes.toolBar} >
-        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} />
+    <AppBar position="static">
+      <Toolbar className={classes.toolBar}>
+        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={`/${brandingLogo}` } />
         {props.children}
         {accountMenu}
       </Toolbar>
@@ -132,4 +135,4 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   );
 }
 
-export default HeaderBar;
+export default withRouter(HeaderBar);

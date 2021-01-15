@@ -16,7 +16,7 @@
 
 import * as React from "react";
 import bows from "bows";
-import { globalHistory, RouteComponentProps } from "@reach/router";
+import { useHistory, RouteComponentProps } from "react-router-dom";
 
 import Alert from "@material-ui/lab/Alert";
 import AppBar from "@material-ui/core/AppBar";
@@ -152,9 +152,10 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 function AppBarPage(props: BarProps): JSX.Element {
   const { filter, onFilter } = props;
   const classes = pageBarStyles();
+  const history = useHistory();
   const handleClickMyPatients = (e: React.MouseEvent) => {
     e.preventDefault();
-    globalHistory.navigate("/hcp/patients");
+    history.push("/hcp/patients");
   };
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -329,7 +330,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
   private onSelectPatient(user: User): void {
     this.log.info('Click on', user);
-    globalHistory.navigate(`/hcp/patient/${user.userid}`);
+    this.props.history.push(`/hcp/patient/${user.userid}`);
   }
 
   private onFlagPatient(userId: string): void {
