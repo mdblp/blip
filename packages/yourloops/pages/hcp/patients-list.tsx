@@ -61,9 +61,16 @@ interface PatientListProps {
 
 interface PatientListPageState {
   patients: User[];
+  allPatients: User[];
   flagged: string[];
   order: SortDirection;
   orderBy: SortFields;
+  filter: string;
+}
+
+interface BarProps {
+  filter: string;
+  onFilter: (text: string) => void;
 }
 
 const patientListStyle = makeStyles((/* theme_or_props */) => {
@@ -142,11 +149,16 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function AppBarPage(): JSX.Element {
+function AppBarPage(props: BarProps): JSX.Element {
+  const { filter, onFilter } = props;
   const classes = pageBarStyles();
   const handleClickMyPatients = (e: React.MouseEvent) => {
     e.preventDefault();
     globalHistory.navigate("/hcp/patients");
+  };
+  const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    onFilter(value);
   };
 
   return (
@@ -172,6 +184,8 @@ function AppBarPage(): JSX.Element {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": t("aria-search") }}
+              value={filter}
+              onChange={handleFilterPatients}
             />
           </div>
         </div>
@@ -267,21 +281,24 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     const whoAmI = apiClient.whoami;
     this.state = {
       patients: [],
+      allPatients: [],
       flagged: whoAmI?.preferences?.patientsStarred ?? [],
       order: "asc",
       orderBy: "lastname",
+      filter: "",
     };
 
     this.onSelectPatient = this.onSelectPatient.bind(this);
     this.onFlagPatient = this.onFlagPatient.bind(this);
     this.onSortList = this.onSortList.bind(this);
+    this.onFilter = this.onFilter.bind(this);
   }
 
   public componentDidMount(): void {
     this.log.debug("Mounted");
 
     apiClient.getUserShares().then((patients: User[]) => {
-      this.setState({ patients });
+      this.setState({ patients, allPatients: patients });
       this.onSortList(this.state.orderBy, this.state.order);
     }).catch((reason: unknown) => {
       this.log.error(reason);
@@ -289,10 +306,10 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   render(): JSX.Element | null {
-    const { patients, flagged, order, orderBy } = this.state;
+    const { patients, flagged, order, orderBy, filter } = this.state;
     return (
       <React.Fragment>
-        <AppBarPage />
+        <AppBarPage filter={filter} onFilter={this.onFilter} />
         <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
           <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
         </Grid>
@@ -348,7 +365,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   private onSortList(orderBy: SortFields, order: SortDirection): void {
     const { patients, flagged } = this.state;
 
-    patients?.sort((a: User, b: User): number => {
+    patients.sort((a: User, b: User): number => {
       const aFlagged = flagged.includes(a.userid);
       const bFlagged = flagged.includes(b.userid);
       // Flagged: always first
@@ -372,6 +389,31 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     });
 
     this.setState({ patients, order, orderBy });
+  }
+
+  private onFilter(filter: string): void {
+    const { allPatients, orderBy, order } = this.state;
+    this.log.info("Filter patients with", filter);
+
+    if (filter.length > 0) {
+      const searchText = filter.toLocaleLowerCase();
+      const patients = allPatients.filter((patient: User): boolean => {
+        const firstName = patient.profile?.firstName ?? "";
+        if (firstName.toLocaleLowerCase().includes(searchText)) {
+          return true;
+        }
+        const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
+        if (lastName.toLocaleLowerCase().includes(searchText)) {
+          return true;
+        }
+        return false;
+      });
+      this.setState({ filter, patients }, () => this.onSortList(orderBy, order));
+    } else {
+      this.setState({ filter, patients: allPatients }, () => this.onSortList(orderBy, order));
+    }
+
+    this.log.info("done");
   }
 }
 
