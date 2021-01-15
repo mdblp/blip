@@ -18,9 +18,10 @@ import * as React from 'react';
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import bows from 'bows';
 
-import HcpNavBar from '../../components/hcp-nav-bar';
-import PatientListPage from './patients-list';
-import PatientDataPage from './patient-data';
+import { defer } from "../../lib/utils";
+import HcpNavBar from "../../components/hcp-nav-bar";
+import PatientListPage from "./patients-list";
+import PatientDataPage from "./patient-data";
 
 /**
  * Health care professional page
@@ -30,7 +31,7 @@ function HcpPage(props: RouteComponentProps): JSX.Element | null {
   log.info("in HCP page ", props.history.location);
   if (props.history.location.pathname === "/hcp") {
     log.info("Redirecting to the patients list", props);
-    props.history.push("/hcp/patients");
+    defer(() => props.history.push("/hcp/patients"));
     return null;
   }
 
