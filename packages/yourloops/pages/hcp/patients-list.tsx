@@ -15,27 +15,35 @@
  */
 
 import * as React from "react";
-import { RouteComponentProps, globalHistory } from "@reach/router";
 import bows from "bows";
-import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
+import { globalHistory, RouteComponentProps } from "@reach/router";
 
 import Alert from "@material-ui/lab/Alert";
+import AppBar from "@material-ui/core/AppBar";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import InputBase from "@material-ui/core/InputBase";
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import { darken, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Toolbar from "@material-ui/core/Toolbar";
 
+import HomeIcon from "@material-ui/icons/Home";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+import SearchIcon from "@material-ui/icons/Search";
 
-import { t } from "../../lib/language";
 import apiClient from "../../lib/api";
+import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
 
 type SortDirection = "asc" | "desc";
@@ -52,7 +60,7 @@ interface PatientListProps {
 }
 
 interface PatientListPageState {
-  patients: null | User[];
+  patients: User[];
   flagged: string[];
   order: SortDirection;
   orderBy: SortFields;
@@ -72,6 +80,107 @@ const patientListStyle = makeStyles((/* theme_or_props */) => {
   };
 });
 
+const pageBarStyles = makeStyles((theme: Theme) => {
+  /* eslint-disable no-magic-numbers */
+  return {
+    toolBar: {
+      display: "grid",
+      gridTemplateRows: "auto",
+      gridTemplateColumns: "auto auto auto",
+    },
+    toolBarMiddle: {
+      display: "flex",
+      flexDirection: "column",
+      marginRight: "auto",
+      marginLeft: "auto",
+    },
+    homeIcon: {
+      marginRight: "0.5em",
+    },
+    breadcrumbLink: {
+      display: "flex",
+    },
+    search: {
+      display: "flex",
+      position: "relative",
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: theme.palette.secondary.light,
+      "&:hover": {
+        backgroundColor: darken(theme.palette.secondary.light, 0.05),
+      },
+      transition: theme.transitions.create("background-color"),
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: theme.spacing(3),
+        width: "15em",
+      },
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: theme.palette.primary.main,
+    },
+    inputRoot: {
+      color: 'black',
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
+      },
+    },
+  };
+});
+
+function AppBarPage(): JSX.Element {
+  const classes = pageBarStyles();
+  const handleClickMyPatients = (e: React.MouseEvent) => {
+    e.preventDefault();
+    globalHistory.navigate("/hcp/patients");
+  };
+
+  return (
+    <AppBar position="static" color="secondary">
+      <Toolbar className={classes.toolBar}>
+        <div id="patients-list-toolbar-item-left">
+          <Breadcrumbs aria-label={t("breadcrumb")}>
+            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/patients" onClick={handleClickMyPatients}>
+              <HomeIcon className={classes.homeIcon} />
+              {t("My Patients")}
+            </Link>
+          </Breadcrumbs>
+        </div>
+        <div id="patients-list-toolbar-item-middle">
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder={t("placeholder-search")}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": t("aria-search") }}
+            />
+          </div>
+        </div>
+        <div id="patients-list-toolbar-item-right">
+        </div>
+      </Toolbar>
+    </AppBar>
+  );
+}
 
 function PatientsList(props: PatientListProps): JSX.Element {
   const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
@@ -79,7 +188,7 @@ function PatientsList(props: PatientListProps): JSX.Element {
   const elems = [];
   const nPatients = patients.length;
 
-  for (let i=0; i<nPatients; i++) {
+  for (let i = 0; i < nPatients; i++) {
     const patient = patients[i];
     const userId = patient.userid;
     const firstName = patient.profile?.firstName ?? "";
@@ -157,7 +266,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     const whoAmI = apiClient.whoami;
     this.state = {
-      patients: null,
+      patients: [],
       flagged: whoAmI?.preferences?.patientsStarred ?? [],
       order: "asc",
       orderBy: "lastname",
@@ -181,26 +290,22 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
   render(): JSX.Element | null {
     const { patients, flagged, order, orderBy } = this.state;
-    let listPatients: JSX.Element | null = null;
-
-    if (patients !== null) {
-      listPatients = (
-        <PatientsList
-          patients={patients}
-          flagged={flagged}
-          order={order}
-          orderBy={orderBy}
-          onClickPatient={this.onSelectPatient}
-          onFlagPatient={this.onFlagPatient}
-          onSortList={this.onSortList} />
-      );
-    }
     return (
       <React.Fragment>
+        <AppBarPage />
         <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
           <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
         </Grid>
-        {listPatients}
+        <Container maxWidth="lg">
+          <PatientsList
+            patients={patients}
+            flagged={flagged}
+            order={order}
+            orderBy={orderBy}
+            onClickPatient={this.onSelectPatient}
+            onFlagPatient={this.onFlagPatient}
+            onSortList={this.onSortList} />
+        </Container>
       </React.Fragment>
     );
   }

@@ -23,10 +23,14 @@ export const theme = createMuiTheme({
       main: "#109182",
     },
     secondary: {
-      main: "#575756",
+      main: "#e5f0f0",
+      light: "#f5f9f9",
     },
     error: {
       main: "#de514b",
+    },
+    text: {
+      primary: "black",
     },
   },
 });

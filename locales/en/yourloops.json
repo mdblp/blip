@@ -2,8 +2,10 @@
   "alt-img-logo": "Branding Logo",
   "aria-current-user-account": "Current user account",
   "aria-toggle-password-visibility": "Toggle password visibility",
+  "aria-search": "search",
   "header-patients-tab": "Patients",
   "header-careteams-tab": "Care Teams",
+  "breadcrumb": "breadcrumb",
   "Data's are calculated for the last two weeks": "Data's are calculated for the last two weeks",
   "Invalid response from server": "Invalid response from server",
   "list-patient-avg-glucose": "Avg. Glucose",
@@ -14,9 +16,11 @@
   "list-patient-upload": "Upload Status",
   "Must specify a username": "Must specify a username",
   "Must specify a password": "Must specify a password",
+  "My Patients": "My Patients",
   "Email": "Email",
   "Logout": "Logout",
   "Password": "Password",
   "Profile": "Profile",
+  "placeholder-search": "Search…",
   "You are not logged-in": "You are not logged-in"
 }

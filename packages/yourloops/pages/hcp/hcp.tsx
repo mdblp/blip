@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { Router, RouteComponentProps, globalHistory } from "@reach/router";
-import Container from "@material-ui/core/Container";
 import bows from 'bows';
 
 import HcpNavBar from '../../components/hcp-nav-bar';
@@ -38,14 +37,10 @@ function HcpPage(props: RouteComponentProps): JSX.Element | null {
   return (
     <React.Fragment>
       <HcpNavBar />
-
-      <Container maxWidth="lg">
-        <Router>
-          <PatientListPage path="patients" />
-          <PatientDataPage path="patient/:patientId" />
-        </Router>
-      </Container>
-
+      <Router>
+        <PatientListPage path="patients" />
+        <PatientDataPage path="patient/:patientId" />
+      </Router>
     </React.Fragment>
   );
 }

@@ -18,12 +18,12 @@ import * as React from 'react';
 import { RouteComponentProps } from "@reach/router";
 import bows from 'bows';
 
+import Container from "@material-ui/core/Container";
+
 import Blip from "blip";
 
 import appConfig from "../../lib/config";
 import apiClient from "../../lib/api";
-// import { User } from "../../models/shoreline";
-// import { t } from "../../lib/language";
 
 interface PatientDataProps extends RouteComponentProps {
   patientId?: string;
@@ -62,9 +62,9 @@ class PatientDataPage extends React.Component<PatientDataProps, PatientDataState
 
   public render(): JSX.Element {
     return (
-      <div id="patient-data" style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <Container maxWidth="lg">
         <Blip config={appConfig} api={apiClient} />
-      </div>
+      </Container>
     );
   }
 }
