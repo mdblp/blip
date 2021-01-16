@@ -21,6 +21,7 @@ import { useHistory, RouteComponentProps } from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import AppBar from "@material-ui/core/AppBar";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -60,6 +61,7 @@ interface PatientListProps {
 }
 
 interface PatientListPageState {
+  loading: boolean;
   patients: User[];
   allPatients: User[];
   flagged: string[];
@@ -72,6 +74,7 @@ interface BarProps {
   filter: string;
   onFilter: (text: string) => void;
 }
+const log = bows("PatientListPage");
 
 const patientListStyle = makeStyles((/* theme_or_props */) => {
   return {
@@ -117,9 +120,8 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       },
       transition: theme.transitions.create("background-color"),
       marginRight: theme.spacing(2),
-      marginLeft: 0,
+      marginLeft: "auto",
       [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
         width: "15em",
       },
     },
@@ -173,7 +175,7 @@ function AppBarPage(props: BarProps): JSX.Element {
             </Link>
           </Breadcrumbs>
         </div>
-        <div id="patients-list-toolbar-item-middle">
+        <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -272,15 +274,12 @@ function PatientsList(props: PatientListProps): JSX.Element {
 }
 
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
-  private log: Console;
-
   constructor(props: RouteComponentProps) {
     super(props);
 
-    this.log = bows("PatientListPage");
-
     const whoAmI = apiClient.whoami;
     this.state = {
+      loading: true,
       patients: [],
       allPatients: [],
       flagged: whoAmI?.preferences?.patientsStarred ?? [],
@@ -296,18 +295,25 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   public componentDidMount(): void {
-    this.log.debug("Mounted");
+    log.debug("Mounted");
 
     apiClient.getUserShares().then((patients: User[]) => {
-      this.setState({ patients, allPatients: patients });
+      this.setState({ patients, allPatients: patients, loading: false });
       this.onSortList(this.state.orderBy, this.state.order);
     }).catch((reason: unknown) => {
-      this.log.error(reason);
+      log.error(reason);
     });
   }
 
   render(): JSX.Element | null {
-    const { patients, flagged, order, orderBy, filter } = this.state;
+    const { loading, patients, flagged, order, orderBy, filter } = this.state;
+
+    if (loading) {
+      return (
+        <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
+      );
+    }
+
     return (
       <React.Fragment>
         <AppBarPage filter={filter} onFilter={this.onFilter} />
@@ -329,7 +335,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onSelectPatient(user: User): void {
-    this.log.info('Click on', user);
+    log.info('Click on', user);
     this.props.history.push(`/hcp/patient/${user.userid}`);
   }
 
@@ -394,7 +400,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
   private onFilter(filter: string): void {
     const { allPatients, orderBy, order } = this.state;
-    this.log.info("Filter patients with", filter);
+    log.info("Filter patients with", filter);
 
     if (filter.length > 0) {
       const searchText = filter.toLocaleLowerCase();
@@ -413,8 +419,6 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     } else {
       this.setState({ filter, patients: allPatients }, () => this.onSortList(orderBy, order));
     }
-
-    this.log.info("done");
   }
 }
 
