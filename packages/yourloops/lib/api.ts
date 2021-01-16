@@ -13,7 +13,7 @@
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, validate as validateUuid } from "uuid";
 import bows from "bows";
 import _ from "lodash";
 
@@ -59,19 +59,40 @@ class API extends EventTarget {
 
   constructor() {
     super();
-    this.sessionToken = sessionStorage.getItem(SESSION_TOKEN_KEY);
-    this.traceToken = sessionStorage.getItem(TRACE_TOKEN_KEY);
 
     this.user = null;
     this.patients = null;
-
-    const loggedInUser = sessionStorage.getItem(LOGGED_IN_USER);
-    if (loggedInUser !== null) {
-      this.user = JSON.parse(loggedInUser);
-    }
-
     this.log = bows("API");
     this.loginLock = false;
+
+    this.sessionToken = sessionStorage.getItem(SESSION_TOKEN_KEY);
+    this.traceToken = sessionStorage.getItem(TRACE_TOKEN_KEY);
+    const loggedInUser = sessionStorage.getItem(LOGGED_IN_USER);
+
+    if (this.sessionToken !== null && this.sessionToken.length < 1) {
+      this.sessionToken = null;
+      this.log.warn("Invalid session token in session storage");
+    }
+    if (this.traceToken !== null && validateUuid(this.traceToken) === false) {
+      this.traceToken = null;
+      this.log.warn("Invalid trace token in session storage");
+    }
+    if (loggedInUser !== null) {
+      try {
+        this.user = JSON.parse(loggedInUser);
+      } catch (e) {
+        this.log.warn("Invalid user in session storage", e);
+      }
+    }
+
+    if (!this.isLoggedIn) {
+      this.user = null;
+      this.traceToken = null;
+      this.sessionToken = null;
+      sessionStorage.removeItem(SESSION_TOKEN_KEY);
+      sessionStorage.removeItem(TRACE_TOKEN_KEY);
+      sessionStorage.removeItem(LOGGED_IN_USER);
+    }
 
     // Listen to storage events, to be able to monitor
     // logout on others tabs.
