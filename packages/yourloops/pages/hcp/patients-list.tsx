@@ -81,6 +81,7 @@ interface PatientListProps {
 
 interface PatientListPageState {
   loading: boolean;
+  errorMessage: string | null;
   patients: User[];
   allPatients: User[];
   teams: Team[];
@@ -454,6 +455,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     const whoAmI = apiClient.whoami;
     this.state = {
       loading: true,
+      errorMessage: null,
       patients: [],
       allPatients: [],
       teams: [{ // FIXME
@@ -476,25 +478,29 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     this.onSortList = this.onSortList.bind(this);
     this.onFilter = this.onFilter.bind(this);
     this.onFilterType = this.onFilterType.bind(this);
+    this.onRefresh = this.onRefresh.bind(this);
     this.updatePatientList = this.updatePatientList.bind(this);
   }
 
   public componentDidMount(): void {
     log.debug("Mounted");
-
-    apiClient.getUserShares().then((patients: User[]) => {
-      this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
-    }).catch((reason: unknown) => {
-      log.error(reason);
-    });
+    this.onRefresh();
   }
 
   render(): JSX.Element | null {
-    const { loading, patients, teams, flagged, order, orderBy, filter, filterType } = this.state;
+    const { loading, patients, teams, flagged, order, orderBy, filter, filterType, errorMessage } = this.state;
 
     if (loading) {
       return (
         <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
+      );
+    }
+    if (errorMessage !== null) {
+      return (
+        <div id="div-api-error-message" className="api-error-message">
+          <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>{errorMessage}</Alert>
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>{t("Again !")}</Button>
+        </div>
       );
     }
 
@@ -524,6 +530,25 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     );
   }
 
+  private onRefresh(): void {
+    this.setState({ loading: true, errorMessage: null }, async () => {
+      try {
+        const patients = await apiClient.getUserShares();
+        this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
+      } catch (reason: unknown) {
+        log.error("onRefresh", reason);
+        let errorMessage: string;
+        if (reason instanceof Error) {
+          errorMessage = reason.message;
+        } else {
+          const s = new String(reason);
+          errorMessage = s.toString();
+        }
+        this.setState({ loading: false, errorMessage });
+      }
+    });
+  }
+
   private onSelectPatient(user: User): void {
     log.info("Click on", user);
     this.props.history.push(`/hcp/patient/${user.userid}`);
@@ -537,13 +562,20 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
   private onInvitePatient(username: string, teamId: string): void {
     log.info("onInvitePatient", username, teamId);
-    this.setState({ loading: true }, async () => {
+    this.setState({ loading: true, errorMessage: null }, async () => {
       try {
         // await apiClient.invitePatient(username, teamId);
         const patients = await apiClient.getUserShares();
         this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
       } catch (reason: unknown) {
-        log.error(reason);
+        let errorMessage: string;
+        if (reason instanceof Error) {
+          errorMessage = reason.message;
+        } else {
+          const s = new String(reason);
+          errorMessage = s.toString();
+        }
+        this.setState({ loading: false, errorMessage });
       }
     });
   }
