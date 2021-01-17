@@ -23,12 +23,14 @@ import AppBar from "@material-ui/core/AppBar";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from "@material-ui/core/Container";
+import FormControl from '@material-ui/core/FormControl';
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
-import { darken, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import NativeSelect from '@material-ui/core/NativeSelect';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -49,6 +51,7 @@ import { User } from "../../models/shoreline";
 
 type SortDirection = "asc" | "desc";
 type SortFields = "lastname" | "firstname";
+type FilterType = "all" | "flagged" | "pending" | string;
 
 interface PatientListProps {
   patients: User[];
@@ -68,15 +71,18 @@ interface PatientListPageState {
   order: SortDirection;
   orderBy: SortFields;
   filter: string;
+  filterType: FilterType;
 }
 
 interface BarProps {
   filter: string;
+  filterType: FilterType;
   onFilter: (text: string) => void;
+  onFilterType: (filterType: FilterType) => void;
 }
-const log = bows("PatientListPage");
 
-const patientListStyle = makeStyles((/* theme_or_props */) => {
+const log = bows("PatientListPage");
+const patientListStyle = makeStyles(( /* theme: Theme */) => {
   return {
     table: {
       width: "100%",
@@ -89,7 +95,6 @@ const patientListStyle = makeStyles((/* theme_or_props */) => {
     },
   };
 });
-
 const pageBarStyles = makeStyles((theme: Theme) => {
   /* eslint-disable no-magic-numbers */
   return {
@@ -100,7 +105,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     },
     toolBarMiddle: {
       display: "flex",
-      flexDirection: "column",
+      flexDirection: "row",
       marginRight: "auto",
       marginLeft: "auto",
     },
@@ -116,7 +121,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.secondary.light,
       "&:hover": {
-        backgroundColor: darken(theme.palette.secondary.light, 0.05),
+        backgroundColor: theme.palette.secondary.dark,
       },
       transition: theme.transitions.create("background-color"),
       marginRight: theme.spacing(2),
@@ -148,11 +153,33 @@ const pageBarStyles = makeStyles((theme: Theme) => {
         width: '20ch',
       },
     },
+    formControl: {
+      marginRight: theme.spacing(1),
+      minWidth: 120,
+    },
+    nativeSelect: {
+      flex: "1",
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: theme.palette.secondary.light,
+      transition: theme.transitions.create("background-color"),
+      "&:active": {
+        backgroundColor: theme.palette.secondary.dark,
+      },
+      "&:hover": {
+        backgroundColor: theme.palette.secondary.dark,
+      },
+    },
   };
 });
 
 function AppBarPage(props: BarProps): JSX.Element {
-  const { filter, onFilter } = props;
+  const selectFilterValues = [
+    { value: "all", label: t("select-all-patients") },
+    { value: "flagged", label: t("🏴 Only flagged patients") },
+    { value: "pending", label: t("🕓 Pending invitations") },
+  ];
+
+  const { filter, filterType, onFilter, onFilterType } = props;
   const classes = pageBarStyles();
   const history = useHistory();
   const handleClickMyPatients = (e: React.MouseEvent) => {
@@ -160,9 +187,16 @@ function AppBarPage(props: BarProps): JSX.Element {
     history.push("/hcp/patients");
   };
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    onFilter(value);
+    onFilter(e.target.value);
   };
+  const handleFilterTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+    onFilterType(e.target.value as string);
+  };
+
+  const selectFilterElements: JSX.Element[] = [];
+  for (const sfv of selectFilterValues) {
+    selectFilterElements.push(<option value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.label}</option>);
+  }
 
   return (
     <AppBar position="static" color="secondary">
@@ -176,6 +210,11 @@ function AppBarPage(props: BarProps): JSX.Element {
           </Breadcrumbs>
         </div>
         <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
+          <FormControl color="primary" className={classes.formControl}>
+            <NativeSelect id="select-patientlist-filtertype" className={classes.nativeSelect} value={filterType} onChange={handleFilterTeam}>
+              {selectFilterElements}
+            </NativeSelect>
+          </FormControl>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -213,11 +252,11 @@ function PatientsList(props: PatientListProps): JSX.Element {
     const isFlagged = flagged.includes(userId);
     const onClickFlag = (e: React.MouseEvent) => {
       e.stopPropagation();
-      console.log("onClickFlag", e);
+      log.debug("onClickFlag", e);
       onFlagPatient(userId);
     };
     const onRowClick = (e: React.MouseEvent) => {
-      console.log("onRowClick", patient, e);
+      log.debug("onRowClick", patient, e);
       onClickPatient(patient);
     };
     elems.push(
@@ -286,12 +325,14 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       order: "asc",
       orderBy: "lastname",
       filter: "",
+      filterType: "all",
     };
 
     this.onSelectPatient = this.onSelectPatient.bind(this);
     this.onFlagPatient = this.onFlagPatient.bind(this);
     this.onSortList = this.onSortList.bind(this);
     this.onFilter = this.onFilter.bind(this);
+    this.onFilterType = this.onFilterType.bind(this);
   }
 
   public componentDidMount(): void {
@@ -306,7 +347,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   render(): JSX.Element | null {
-    const { loading, patients, flagged, order, orderBy, filter } = this.state;
+    const { loading, patients, flagged, order, orderBy, filter, filterType } = this.state;
 
     if (loading) {
       return (
@@ -316,7 +357,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     return (
       <React.Fragment>
-        <AppBarPage filter={filter} onFilter={this.onFilter} />
+        <AppBarPage filter={filter} filterType={filterType} onFilter={this.onFilter} onFilterType={this.onFilterType} />
         <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
           <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
         </Grid>
@@ -370,8 +411,60 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onSortList(orderBy: SortFields, order: SortDirection): void {
-    const { patients, flagged } = this.state;
+    log.info("Sort patients", orderBy, order);
+    this.setState({ order, orderBy }, () => this.updatePatientList());
+  }
 
+  private onFilter(filter: string): void {
+    log.info("Filter patients name", filter);
+    this.setState({ filter }, () => this.updatePatientList());
+  }
+
+  private onFilterType(filterType: FilterType): void {
+    log.info("Filter patients with", filterType);
+    this.setState({ filterType }, () => this.updatePatientList());
+  }
+
+  private updatePatientList() {
+    const { allPatients, filter, filterType, flagged, order, orderBy } = this.state;
+
+    let patients = allPatients;
+    if (filter.length > 0) {
+      const searchText = filter.toLocaleLowerCase();
+      patients = allPatients.filter((patient: User): boolean => {
+        switch (filterType) {
+        case "all":
+          break;
+        case "flagged":
+          if (!flagged.includes(patient.userid)) {
+            return false;
+          }
+          break;
+        case "pending":
+          return false; // TODO
+        default:
+          break;
+        }
+
+        const firstName = patient.profile?.firstName ?? "";
+        if (firstName.toLocaleLowerCase().includes(searchText)) {
+          return true;
+        }
+        const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
+        if (lastName.toLocaleLowerCase().includes(searchText)) {
+          return true;
+        }
+        return false;
+      });
+    } else if (filterType === "flagged") {
+      patients = allPatients.filter((patient: User): boolean => flagged.includes(patient.userid));
+    } else if (filterType === "pending") {
+      patients = []; // TODO
+    } else if (filterType !== "all") {
+      // TODO
+    }
+
+    // Sort the patients
     patients.sort((a: User, b: User): number => {
       const aFlagged = flagged.includes(a.userid);
       const bFlagged = flagged.includes(b.userid);
@@ -395,30 +488,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       return order === "asc" ? c : -c;
     });
 
-    this.setState({ patients, order, orderBy });
-  }
-
-  private onFilter(filter: string): void {
-    const { allPatients, orderBy, order } = this.state;
-    log.info("Filter patients with", filter);
-
-    if (filter.length > 0) {
-      const searchText = filter.toLocaleLowerCase();
-      const patients = allPatients.filter((patient: User): boolean => {
-        const firstName = patient.profile?.firstName ?? "";
-        if (firstName.toLocaleLowerCase().includes(searchText)) {
-          return true;
-        }
-        const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
-        if (lastName.toLocaleLowerCase().includes(searchText)) {
-          return true;
-        }
-        return false;
-      });
-      this.setState({ filter, patients }, () => this.onSortList(orderBy, order));
-    } else {
-      this.setState({ filter, patients: allPatients }, () => this.onSortList(orderBy, order));
-    }
+    this.setState({ patients });
   }
 }
 
