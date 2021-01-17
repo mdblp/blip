@@ -40,6 +40,8 @@ const toolbarStyles = makeStyles({
     display: "grid",
     gridTemplateRows: "auto",
     gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "auto auto" : "auto auto auto",
+    paddingLeft: "6em",
+    paddingRight: "6em",
   },
   accountMenu: {
     marginLeft: "auto",

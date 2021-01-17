@@ -20,38 +20,54 @@ import { useHistory, RouteComponentProps } from "react-router-dom";
 
 import Alert from "@material-ui/lab/Alert";
 import AppBar from "@material-ui/core/AppBar";
+import Backdrop from "@material-ui/core/Backdrop";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
-import FormControl from '@material-ui/core/FormControl';
+import Fade from "@material-ui/core/Fade";
+import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
+import InputLabel from "@material-ui/core/InputLabel";
+import Link from "@material-ui/core/Link";
+import Modal from "@material-ui/core/Modal";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import NativeSelect from '@material-ui/core/NativeSelect';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import NativeSelect from "@material-ui/core/NativeSelect";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 
 import HomeIcon from "@material-ui/icons/Home";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
 
 import apiClient from "../../lib/api";
+import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
 
 type SortDirection = "asc" | "desc";
 type SortFields = "lastname" | "firstname";
 type FilterType = "all" | "flagged" | "pending" | string;
+
+/**
+ * FIXME: Remove me when we have the team API
+ */
+interface Team {
+  id: string;
+  name: string;
+}
 
 interface PatientListProps {
   patients: User[];
@@ -67,6 +83,7 @@ interface PatientListPageState {
   loading: boolean;
   patients: User[];
   allPatients: User[];
+  teams: Team[];
   flagged: string[];
   order: SortDirection;
   orderBy: SortFields;
@@ -75,13 +92,16 @@ interface PatientListPageState {
 }
 
 interface BarProps {
+  teams: Team[];
   filter: string;
   filterType: FilterType;
   onFilter: (text: string) => void;
   onFilterType: (filterType: FilterType) => void;
+  onInvitePatient: (username: string, teamId: string) => void;
 }
 
 const log = bows("PatientListPage");
+const modalBackdropTimeout = 300;
 const patientListStyle = makeStyles(( /* theme: Theme */) => {
   return {
     table: {
@@ -102,12 +122,17 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       display: "grid",
       gridTemplateRows: "auto",
       gridTemplateColumns: "auto auto auto",
+      paddingLeft: "6em",
+      paddingRight: "6em",
     },
     toolBarMiddle: {
       display: "flex",
       flexDirection: "row",
       marginRight: "auto",
       marginLeft: "auto",
+    },
+    toolBarRight: {
+      display: "flex",
     },
     homeIcon: {
       marginRight: "0.5em",
@@ -132,32 +157,32 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     },
     searchIcon: {
       padding: theme.spacing(0, 2),
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      height: "100%",
+      position: "absolute",
+      pointerEvents: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       color: theme.palette.primary.main,
     },
     inputRoot: {
-      color: 'black',
+      color: "black",
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
+      transition: theme.transitions.create("width"),
+      width: "100%",
+      [theme.breakpoints.up("md")]: {
+        width: "20ch",
       },
     },
     formControl: {
       marginRight: theme.spacing(1),
       minWidth: 120,
     },
-    nativeSelect: {
+    nativeSelectFilter: {
       flex: "1",
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.secondary.light,
@@ -169,6 +194,37 @@ const pageBarStyles = makeStyles((theme: Theme) => {
         backgroundColor: theme.palette.secondary.dark,
       },
     },
+    buttonAddPatient: {
+      marginLeft: "auto",
+    },
+    modalAddPatient: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    divModal: {
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: theme.shape.borderRadius,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+      width: "25em",
+    },
+    formModal: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    formControlSelectTeam: {
+      marginTop: "1.5em",
+    },
+    divModalButtons: {
+      display: "inline-flex",
+      flexDirection: "row",
+      marginTop: "2.5em",
+    },
+    divModalButtonCancel: {
+      marginLeft: "auto",
+      marginRight: theme.spacing(1),
+    },
   };
 });
 
@@ -179,9 +235,13 @@ function AppBarPage(props: BarProps): JSX.Element {
     { value: "pending", label: t("🕓 Pending invitations") },
   ];
 
-  const { filter, filterType, onFilter, onFilterType } = props;
+  const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
   const classes = pageBarStyles();
   const history = useHistory();
+  const [modalAddPatientOpen, setModalAddPatientOpen] = React.useState(false);
+  const [modalSelectedTeam, setModalSelectedTeam] = React.useState("");
+  const [modalUsername, setModalUsername] = React.useState("");
+
   const handleClickMyPatients = (e: React.MouseEvent) => {
     e.preventDefault();
     history.push("/hcp/patients");
@@ -192,11 +252,40 @@ function AppBarPage(props: BarProps): JSX.Element {
   const handleFilterTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
     onFilterType(e.target.value as string);
   };
+  const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setModalUsername(e.target.value);
+  };
+  const handleChangeAddPatientTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
+    setModalSelectedTeam(e.target.value as string);
+  };
+  const handleOpenModalAddPatient = () => {
+    setModalAddPatientOpen(true);
+  };
+  const handleCloseModalAddPatient = () => {
+    defer(() => setModalUsername(""), modalBackdropTimeout);
+    defer(() => setModalSelectedTeam(""), modalBackdropTimeout);
+    setModalAddPatientOpen(false);
+  };
+  const handleModalAddPatient = () => {
+    setModalAddPatientOpen(false);
+    onInvitePatient(modalUsername, modalSelectedTeam);
+  };
 
-  const selectFilterElements: JSX.Element[] = [];
+  const optionsFilterCommonElements: JSX.Element[] = [];
   for (const sfv of selectFilterValues) {
-    selectFilterElements.push(<option value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.label}</option>);
+    optionsFilterCommonElements.push(<option value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.label}</option>);
   }
+
+  const optionsFilterTeamsElements: JSX.Element[] = [];
+  const optionsTeamsElements: JSX.Element[] = [
+    <option aria-label={t("aria-none")} value="" key="none" />,
+  ];
+  for (const team of teams) {
+    optionsFilterTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
+    optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
+  }
+
+  const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
 
   return (
     <AppBar position="static" color="secondary">
@@ -211,8 +300,11 @@ function AppBarPage(props: BarProps): JSX.Element {
         </div>
         <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
           <FormControl color="primary" className={classes.formControl}>
-            <NativeSelect id="select-patientlist-filtertype" className={classes.nativeSelect} value={filterType} onChange={handleFilterTeam}>
-              {selectFilterElements}
+            <NativeSelect id="select-patient-list-filtertype" className={classes.nativeSelectFilter} value={filterType} onChange={handleFilterTeam}>
+              {optionsFilterCommonElements}
+              <optgroup label={t("Teams")}>
+                {optionsFilterTeamsElements}
+              </optgroup>
             </NativeSelect>
           </FormControl>
           <div className={classes.search}>
@@ -231,7 +323,50 @@ function AppBarPage(props: BarProps): JSX.Element {
             />
           </div>
         </div>
-        <div id="patients-list-toolbar-item-right">
+        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
+          <Button
+            id="patient-list-toolbar-add-patient"
+            color="primary"
+            variant="contained"
+            className={classes.buttonAddPatient}
+            onClick={handleOpenModalAddPatient}
+          >
+            <PersonAddIcon />&nbsp;{t("button-add-patient")}
+          </Button>
+          <Modal
+            id="patient-list-toolbar-modal-add-patient"
+            aria-labelledby={t("aria-modal-add-patient")}
+            className={classes.modalAddPatient}
+            open={modalAddPatientOpen}
+            onClose={handleCloseModalAddPatient}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: modalBackdropTimeout,
+            }}
+          >
+            <Fade in={modalAddPatientOpen}>
+              <div className={classes.divModal}>
+                <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
+                <form noValidate autoComplete="off" className={classes.formModal}>
+                  <TextField required id="patient-list-toolbar-modal-add-patient-username" onChange={handleChangeUsername} value={modalUsername} label={t("Required")} />
+                  <FormControl className={classes.formControlSelectTeam}>
+                    <InputLabel htmlFor="select-patient-list-modal-team">{t("Team")}</InputLabel>
+                    <NativeSelect
+                      value={modalSelectedTeam}
+                      onChange={handleChangeAddPatientTeam}
+                      inputProps={{ name: "teamid", id: "select-patient-list-modal-team" }}>
+                      {optionsTeamsElements}
+                    </NativeSelect>
+                  </FormControl>
+                  <div className={classes.divModalButtons}>
+                    <Button id="patients-list-modal-button-close" className={classes.divModalButtonCancel} variant="contained" onClick={handleCloseModalAddPatient}>{t("Cancel")}</Button>
+                    <Button id="patients-list-modal-button-create" disabled={buttonCreateDisabled} onClick={handleModalAddPatient} color="primary" variant="contained">{t("Create")}</Button>
+                  </div>
+                </form>
+              </div>
+            </Fade>
+          </Modal>
         </div>
       </Toolbar>
     </AppBar>
@@ -321,6 +456,13 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       loading: true,
       patients: [],
       allPatients: [],
+      teams: [{ // FIXME
+        id: "team-1",
+        name: "CHU Grenoble",
+      }, {
+        id: "team-2",
+        name: "Clinique Nantes",
+      }],
       flagged: whoAmI?.preferences?.patientsStarred ?? [],
       order: "asc",
       orderBy: "lastname",
@@ -330,24 +472,25 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     this.onSelectPatient = this.onSelectPatient.bind(this);
     this.onFlagPatient = this.onFlagPatient.bind(this);
+    this.onInvitePatient = this.onInvitePatient.bind(this);
     this.onSortList = this.onSortList.bind(this);
     this.onFilter = this.onFilter.bind(this);
     this.onFilterType = this.onFilterType.bind(this);
+    this.updatePatientList = this.updatePatientList.bind(this);
   }
 
   public componentDidMount(): void {
     log.debug("Mounted");
 
     apiClient.getUserShares().then((patients: User[]) => {
-      this.setState({ patients, allPatients: patients, loading: false });
-      this.onSortList(this.state.orderBy, this.state.order);
+      this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
     }).catch((reason: unknown) => {
       log.error(reason);
     });
   }
 
   render(): JSX.Element | null {
-    const { loading, patients, flagged, order, orderBy, filter, filterType } = this.state;
+    const { loading, patients, teams, flagged, order, orderBy, filter, filterType } = this.state;
 
     if (loading) {
       return (
@@ -357,11 +500,17 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     return (
       <React.Fragment>
-        <AppBarPage filter={filter} filterType={filterType} onFilter={this.onFilter} onFilterType={this.onFilterType} />
+        <AppBarPage
+          filter={filter}
+          filterType={filterType}
+          teams={teams}
+          onFilter={this.onFilter}
+          onFilterType={this.onFilterType}
+          onInvitePatient={this.onInvitePatient} />
         <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
           <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
         </Grid>
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" style={{ marginBottom: "2em" }}>
           <PatientsList
             patients={patients}
             flagged={flagged}
@@ -376,13 +525,26 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onSelectPatient(user: User): void {
-    log.info('Click on', user);
+    log.info("Click on", user);
     this.props.history.push(`/hcp/patient/${user.userid}`);
   }
 
   private onFlagPatient(userId: string): void {
     apiClient.flagPatient(userId).then((flagged: string[]) => {
       this.setState({ flagged });
+    });
+  }
+
+  private onInvitePatient(username: string, teamId: string): void {
+    log.info("onInvitePatient", username, teamId);
+    this.setState({ loading: true }, async () => {
+      try {
+        // await apiClient.invitePatient(username, teamId);
+        const patients = await apiClient.getUserShares();
+        this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
+      } catch (reason: unknown) {
+        log.error(reason);
+      }
     });
   }
 
@@ -412,17 +574,17 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
   private onSortList(orderBy: SortFields, order: SortDirection): void {
     log.info("Sort patients", orderBy, order);
-    this.setState({ order, orderBy }, () => this.updatePatientList());
+    this.setState({ order, orderBy }, this.updatePatientList);
   }
 
   private onFilter(filter: string): void {
     log.info("Filter patients name", filter);
-    this.setState({ filter }, () => this.updatePatientList());
+    this.setState({ filter }, this.updatePatientList);
   }
 
   private onFilterType(filterType: FilterType): void {
     log.info("Filter patients with", filterType);
-    this.setState({ filterType }, () => this.updatePatientList());
+    this.setState({ filterType }, this.updatePatientList);
   }
 
   private updatePatientList() {
