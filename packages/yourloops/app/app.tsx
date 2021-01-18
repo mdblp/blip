@@ -79,7 +79,7 @@ class Yourloops {
             <Route path="/login" component={LoginPage} />
             <Route path="/request-password-reset" component={RequestPasswordReset} />
             <PrivateRoute path="/hcp" component={HcpPage} />
-            <PrivateRoute path= "/patient" component={PatientPage} />
+            <PrivateRoute path="/patient" component={PatientPage} />
           </Switch>
         </Router>
       </AuthProvider>
