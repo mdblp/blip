@@ -15,8 +15,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import _ from "lodash";
-
 interface Profile {
   fullName: string;
   firstName?: string;
@@ -24,12 +22,7 @@ interface Profile {
   patient?: unknown;
 }
 
-class User {
-  constructor() {
-    this.userid = "-1";
-    this.username = "no-email";
-  }
-
+interface User {
   /** The user id */
   userid: string;
   /** The username (login) */
@@ -44,10 +37,6 @@ class User {
   emailVerified?: boolean;
   /** User profile */
   profile?: Profile;
-
-  public get isPatient(): boolean {
-    return !_.isEmpty(this.profile?.patient);
-  }
 }
 
 export { User, Profile };

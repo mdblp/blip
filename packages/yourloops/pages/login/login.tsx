@@ -82,7 +82,9 @@ function Login(props : LoginProps ) : JSX.Element {
     // eslint-disable-next-line no-use-before-define
     auth.login(username, password)
       .then((user) => {
-        if (user.isPatient) {
+        // for now, simply read the profile
+        // we will refactor by creating a class obj with IsPatient method
+        if (!_.isEmpty(user?.profile?.patient)) {
           props.history.push("/patient");
         } else {
           props.history.push("/hcp");
