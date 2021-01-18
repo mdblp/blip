@@ -32,10 +32,14 @@ import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import MenuItem from "@material-ui/core/MenuItem";
+import { MenuProps } from "@material-ui/core/Menu";
 import Modal from "@material-ui/core/Modal";
+import NativeSelect from "@material-ui/core/NativeSelect";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import NativeSelect from "@material-ui/core/NativeSelect";
+import Select from "@material-ui/core/Select";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -46,6 +50,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
 
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import HomeIcon from "@material-ui/icons/Home";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
@@ -183,7 +188,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       marginRight: theme.spacing(1),
       minWidth: 120,
     },
-    nativeSelectFilter: {
+    selectFilter: {
       flex: "1",
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.secondary.light,
@@ -194,6 +199,18 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       "&:hover": {
         backgroundColor: theme.palette.secondary.dark,
       },
+      [theme.breakpoints.up("sm")]: {
+        width: "15em",
+      },
+    },
+    selectFilterInnerDiv: {
+      display: "inline-flex",
+      alignItems: "center",
+      paddingLeft: ".5em",
+    },
+    selectFilterIcon: {
+      margin: "0 .5em 0 0",
+      alignSelf: "flex-start",
     },
     buttonAddPatient: {
       marginLeft: "auto",
@@ -230,11 +247,17 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 });
 
 function AppBarPage(props: BarProps): JSX.Element {
-  const selectFilterValues = [
-    { value: "all", label: t("select-all-patients") },
-    { value: "flagged", label: t("select-flagged-patients") },
-    { value: "pending", label: t("select-pending-invitation-patients") },
-  ];
+  const selectMenuProps: Partial<MenuProps> = {
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "left",
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "left",
+    },
+    getContentAnchorEl: null,
+  };
 
   const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
   const classes = pageBarStyles();
@@ -242,6 +265,11 @@ function AppBarPage(props: BarProps): JSX.Element {
   const [modalAddPatientOpen, setModalAddPatientOpen] = React.useState(false);
   const [modalSelectedTeam, setModalSelectedTeam] = React.useState("");
   const [modalUsername, setModalUsername] = React.useState("");
+  const selectFilterValues = [
+    { value: "all", label: t("select-all-patients"), icon: null },
+    { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
+    { value: "pending", label: t("select-pending-invitation-patients"), icon: <AccessTimeIcon className={classes.selectFilterIcon} /> },
+  ];
 
   const handleClickMyPatients = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -274,16 +302,19 @@ function AppBarPage(props: BarProps): JSX.Element {
 
   const optionsFilterCommonElements: JSX.Element[] = [];
   for (const sfv of selectFilterValues) {
-    optionsFilterCommonElements.push(<option value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.label}</option>);
+    optionsFilterCommonElements.push(<MenuItem value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.icon}{sfv.label}</MenuItem>);
   }
 
   const optionsFilterTeamsElements: JSX.Element[] = [];
   const optionsTeamsElements: JSX.Element[] = [
     <option aria-label={t("aria-none")} value="" key="none" />,
   ];
-  for (const team of teams) {
-    optionsFilterTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
-    optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
+  if (teams.length > 0) {
+    optionsFilterTeamsElements.push(<ListSubheader>{t("Teams")}</ListSubheader>);
+    for (const team of teams) {
+      optionsFilterTeamsElements.push(<MenuItem value={team.id} key={team.id} aria-label={team.name}>{team.name}</MenuItem>);
+      optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
+    }
   }
 
   const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
@@ -301,12 +332,10 @@ function AppBarPage(props: BarProps): JSX.Element {
         </div>
         <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
           <FormControl color="primary" className={classes.formControl}>
-            <NativeSelect id="select-patient-list-filtertype" className={classes.nativeSelectFilter} value={filterType} onChange={handleFilterTeam}>
+            <Select id="select-patient-list-filtertype" value={filterType} onChange={handleFilterTeam} classes={{ root: classes.selectFilterInnerDiv }} className={classes.selectFilter} disableUnderline MenuProps={selectMenuProps}>
               {optionsFilterCommonElements}
-              <optgroup label={t("Teams")}>
-                {optionsFilterTeamsElements}
-              </optgroup>
-            </NativeSelect>
+              {optionsFilterTeamsElements}
+            </Select>
           </FormControl>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
