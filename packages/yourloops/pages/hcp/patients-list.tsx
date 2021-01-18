@@ -518,7 +518,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onRefresh(): void {
-    this.setState({ loading: true, errorMessage: null }, async () => {
+    this.setState({ loading: true, errorMessage: null, teams: [], allPatients: [], patients: [] }, async () => {
       try {
         const patients = await apiClient.getUserShares();
         const teams = await apiClient.fetchTeams();
