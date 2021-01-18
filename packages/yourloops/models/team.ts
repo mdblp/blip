@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2020, Diabeloop
- * Yourloops API client type definition for patient-data
+ * Copyright (c) 2021, Diabeloop
+ * Yourloops API client type definition for teams
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -13,19 +13,20 @@
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
-/* eslint-disable no-undef */
 
-interface PatientDatum {
+export type TeamType = "medical" | "personal";
+
+/**
+ * FIXME: Remove me when we have the team API
+ */
+export interface Team {
   id: string;
-  /** The user id */
-  _userId: string;
-  /** time ISO string */
-  time: string;
-  timezone?: string;
-  /** others properties */
-  [x: string]: unknown;
+  name: string;
+  code: string;
+  type: TeamType;
+  ownerId: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  description?: string;
 }
-
-type PatientData = PatientDatum[];
-
-export { PatientDatum, PatientData };
