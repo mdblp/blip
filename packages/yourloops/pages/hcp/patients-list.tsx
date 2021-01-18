@@ -232,8 +232,8 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 function AppBarPage(props: BarProps): JSX.Element {
   const selectFilterValues = [
     { value: "all", label: t("select-all-patients") },
-    { value: "flagged", label: t("🏴 Only flagged patients") },
-    { value: "pending", label: t("🕓 Pending invitations") },
+    { value: "flagged", label: t("select-flagged-patients") },
+    { value: "pending", label: t("select-pending-invitation-patients") },
   ];
 
   const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
@@ -583,7 +583,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   /**
    * Compare two patient for sorting the patient table
    * @param a A patient
-   * @param b A âtient
+   * @param b A patient
    * @param flagged Pinned patient
    * @param orderBy Sort field
    */
