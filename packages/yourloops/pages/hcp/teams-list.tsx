@@ -16,17 +16,20 @@
 
 import * as React from "react";
 import bows from "bows";
-import { RouteComponentProps } from "react-router-dom";
+import { useHistory, RouteComponentProps } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import Alert from "@material-ui/lab/Alert";
 import AppBar from "@material-ui/core/AppBar";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Link from "@material-ui/core/Link";
 import Toolbar from "@material-ui/core/Toolbar";
 
 import AddIcon from "@material-ui/icons/Add";
+import HomeIcon from "@material-ui/icons/Home";
 
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
@@ -56,6 +59,12 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     toolBarRight: {
       display: "flex",
     },
+    breadcrumbLink: {
+      display: "flex",
+    },
+    homeIcon: {
+      marginRight: "0.5em",
+    },
     buttonAddTeam: {
       marginLeft: "auto",
     },
@@ -63,16 +72,29 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 });
 
 function AppBarPage(props: BarProps): JSX.Element {
+  const { onCreateTeam } = props;
   const classes = pageBarStyles();
+  const history = useHistory();
 
+  const handleClickMyTeams = (e: React.MouseEvent) => {
+    e.preventDefault();
+    history.push("/hcp/teams");
+  };
   const handleOpenModalAddTeam = () => {
-    props.onCreateTeam("");
+    onCreateTeam("");
   };
 
   return (
     <AppBar position="static" color="secondary">
       <Toolbar className={classes.toolBar}>
-        <div id="team-list-toolbar-item-left"></div>
+        <div id="team-list-toolbar-item-left">
+          <Breadcrumbs aria-label={t("breadcrumb")}>
+            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/teams" onClick={handleClickMyTeams}>
+              <HomeIcon className={classes.homeIcon} />
+              {t("My Teams")}
+            </Link>
+          </Breadcrumbs>
+        </div>
         <div id="team-list-toolbar-item-middle"></div>
         <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
           <Button
@@ -135,7 +157,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
   }
 
   onRefresh(): void {
-    this.setState({ loading: true, errorMessage: null }, async () => {
+    this.setState({ loading: true, errorMessage: null, teams: [] }, async () => {
       try {
         const teams = await apiClient.fetchTeams();
         this.setState({ teams, loading: false });
