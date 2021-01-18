@@ -81,13 +81,12 @@ function Login(props : LoginProps ) : JSX.Element {
     setValidateError(false);
     // eslint-disable-next-line no-use-before-define
     auth.login(username, password)
-      .then(() => {
-        props.history.push("/home");
-        // if (api.userIsPatient) {
-        //   this.props.history.push("/patient");
-        // } else {
-        //   this.props.history.push("/hcp");
-        // }
+      .then((user) => {
+        if (user.isPatient) {
+          props.history.push("/patient");
+        } else {
+          props.history.push("/hcp");
+        }
       }).catch((reason: Error) => {
         console.log(reason);
         //this.log.error(reason);
