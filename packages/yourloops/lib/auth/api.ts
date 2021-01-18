@@ -31,6 +31,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { User, Profile } from "models/shoreline";
+import { Team } from "models/team";
 import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
@@ -431,6 +432,24 @@ class AuthApi extends EventTarget {
 
     const responseBody = await response.json() as APIErrorResponse;
     throw new Error(t(responseBody.reason));
+  }
+
+  public async fetchTeams(): Promise<Team[]> {
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random()*200);
+    return [{ // FIXME
+      id: "team-1",
+      name: "CHU Grenoble",
+      code: "123456789",
+      ownerId: "abcdef",
+      type: "medical",
+    }, {
+      id: "team-2",
+      name: "Clinique Nantes",
+      code: "987654321",
+      ownerId: "abcdef",
+      type: "medical",
+    }];
   }
 
   /**

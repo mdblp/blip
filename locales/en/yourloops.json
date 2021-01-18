@@ -9,6 +9,8 @@
   "header-careteams-tab": "Care Teams",
   "breadcrumb": "breadcrumb",
   "button-add-patient": "Add patient",
+  "button-add-team": "Create a team",
+  "button-refresh-page-on-error": "Again !",
   "modal-add-patient": "New Patient",
   "select-all-patients": "All patients",
   "select-flagged-patients": "Flagged",

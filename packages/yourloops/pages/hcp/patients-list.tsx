@@ -71,13 +71,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       errorMessage: null,
       patients: [],
       allPatients: [],
-      teams: [{ // FIXME
-        id: "team-1",
-        name: "CHU Grenoble",
-      }, {
-        id: "team-2",
-        name: "Clinique Nantes",
-      }],
+      teams: [],
       flagged: whoAmI?.preferences?.patientsStarred ?? [],
       order: "asc",
       orderBy: "lastname",
@@ -102,7 +96,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     this.onRefresh();
   }
 
-  render(): JSX.Element | null {
+  render(): JSX.Element {
     const { loading, patients, teams, flagged, order, orderBy, filter, filterType, errorMessage } = this.state;
 
     if (loading) {
@@ -114,7 +108,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       return (
         <div id="div-api-error-message" className="api-error-message">
           <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>{errorMessage}</Alert>
-          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>{t("Again !")}</Button>
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>{t("button-refresh-page-on-error")}</Button>
         </div>
       );
     }
@@ -150,7 +144,8 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     this.setState({ loading: true, errorMessage: null }, async () => {
       try {
         const patients = await apiClient.getUserShares();
-        this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
+        const teams = await apiClient.fetchTeams();
+        this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
       } catch (reason: unknown) {
         this.log.error("onRefresh", reason);
         let errorMessage: string;
