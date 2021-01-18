@@ -52,7 +52,7 @@ class PatientDataPage extends React.Component<RouteComponentProps<PatientDataPro
     this.log.debug("Mounted", this.props.match.params.patientId);
 
     if (typeof patientId === "string") {
-      apiClient.loadPatientData(patientId).catch((reason: unknown) => {
+      this.refresh(patientId).catch((reason: unknown) => {
         this.log.error(reason);
       });
     } else {
@@ -66,6 +66,13 @@ class PatientDataPage extends React.Component<RouteComponentProps<PatientDataPro
         <Blip config={appConfig} api={apiClient} />
       </Container>
     );
+  }
+
+  private async refresh(patientId: string): Promise<void> {
+    if (!apiClient.havePatientsShare) {
+      await apiClient.getUserShares();
+    }
+    await apiClient.loadPatientData(patientId);
   }
 }
 

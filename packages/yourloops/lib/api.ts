@@ -123,6 +123,10 @@ class API extends EventTarget {
     return this.isLoggedIn && !_.isEmpty(this.user?.profile?.patient);
   }
 
+  public get havePatientsShare(): boolean {
+    return !_.isEmpty(this.patients);
+  }
+
   /**
    * Listen to session storage events, to know if another tab is logged out.
    * @param {StorageEvent} ev A change in the storage
