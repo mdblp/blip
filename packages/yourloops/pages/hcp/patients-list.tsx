@@ -543,7 +543,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
           onFilterType={this.onFilterType}
           onInvitePatient={this.onInvitePatient} />
         <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-          <Alert severity="info">{t("Data's are calculated for the last two weeks")}</Alert>
+          <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
         </Grid>
         <Container maxWidth="lg" style={{ marginBottom: "2em" }}>
           <PatientsList
