@@ -240,7 +240,7 @@ class AuthApi extends EventTarget {
     this.sessionToken = null;
     this.traceToken = null;
     this.user = null;
-    sessionStorage.removeItem(TRACE_TOKEN_KEY);
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
     sessionStorage.removeItem(TRACE_TOKEN_KEY);
     sessionStorage.removeItem(LOGGED_IN_USER);
   }
