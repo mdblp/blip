@@ -158,35 +158,37 @@ function AppBarPage(props: BarProps): JSX.Element {
 function TeamElement(props: TeamElementProps): JSX.Element {
   const { team } = props;
   const classes = teamPaperStyles();
+
+  // FIXME: if (team.users[currentUser].role === "admin") { ... show buttons }
+  const buttonEdit = (
+    <Button id={`button-team-edit-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<EditIcon color="primary" />}>
+      {t("button-team-edit")}
+    </Button>
+  );
+  const buttonDelete = (
+    <Button id={`button-team-delete-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<DeleteIcon color="primary" />}>
+      {t("button-team-delete")}
+    </Button>
+  );
+  const buttonAddMember = (
+    <Button id={`button-team-add-member-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<PersonAddIcon color="primary" />}>
+      {t("button-team-add-member")}
+    </Button>
+  );
+
   return (
     <Paper className={classes.paper} classes={{ root: classes.paperRoot }}>
       <div className={classes.firstRow}>
         <h2 className={classes.teamName}>{team.name}</h2>
         <div className={classes.divActions}>
-          <Button
-            id={`button-team-edit-${team.id}`}
-            classes={{ root: classes.buttonActionFirstRow }}
-            startIcon={<EditIcon color="primary" />}
-          >
-            {t("button-team-edit")}
-          </Button>
-          <Button
-            id={`button-team-delete-${team.id}`}
-            classes={{ root: classes.buttonActionFirstRow }}
-            startIcon={<DeleteIcon color="primary" />}
-          >
-            {t("button-team-delete")}
-          </Button>
-          <Button
-            id={`button-team-add-member-${team.id}`}
-            classes={{ root: classes.buttonActionFirstRow }}
-            startIcon={<PersonAddIcon color="primary" />}
-          >
-            {t("button-team-add-member")}
-          </Button>
+          {buttonEdit}
+          {buttonDelete}
+          {buttonAddMember}
         </div>
       </div>
-      <div className={classes.secondRow}></div>
+      <div className={classes.secondRow}>
+
+      </div>
     </Paper>
   );
 }
