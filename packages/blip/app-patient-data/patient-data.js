@@ -219,7 +219,7 @@ class PatientDataPage extends React.Component {
       loader = <Loader />;
       break;
     default:
-      errorDisplay = errorMessage ? <p>{errorMessage}</p> : <p>{t('Failed somewhere')}</p>;
+      errorDisplay = <p>{errorMessage ?? t('Failed somewhere')}</p>;
       break;
     }
 
@@ -816,13 +816,7 @@ class PatientDataPage extends React.Component {
   }
 
   onLoadingFailure(err) {
-    let errorMessage = null;
-    if (_.isError(err)) {
-      errorMessage = err.message;
-    } else {
-      const s = new String(err);
-      errorMessage = s.toString();
-    }
+    const errorMessage = _.isError(err) ? err.message : (new String(err)).toString()
     this.log.error(errorMessage, err);
     this.setState({ loadingState: LOADING_STATE_ERROR, errorMessage });
   }
