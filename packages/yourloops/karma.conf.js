@@ -31,7 +31,7 @@ const _ = require("lodash");
 const webpack = require("./webpack.config.js");
 
 const isWSL = _.isString(process.env.WSL_DISTRO_NAME);
-const browsers = ["ChromeHeadless"];
+const browsers = ["CustomChromeHeadless"];
 if (!isWSL) {
   browsers.push("FirefoxHeadless");
 }
@@ -49,6 +49,27 @@ const karmaConfig = {
   concurrency: 1,
   singleRun: true,
   browsers,
+  customLaunchers: {
+    CustomChromeHeadless: {
+      base: 'ChromeHeadless',
+      flags: [
+        '--enable-automation',
+        '--no-default-browser-check',
+        '--no-first-run',
+        '--disable-default-apps',
+        '--disable-popup-blocking',
+        '--disable-translate',
+        '--disable-background-timer-throttling',
+        '--disable-renderer-backgrounding',
+        '--disable-device-discovery-notifications',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--headless',
+        '--no-sandbox',
+        '--remote-debugging-port=9222',
+      ],
+    },
+  },
   coverageReporter: {
     dir: path.join(__dirname, "coverage"),
     reporters: [
@@ -59,7 +80,7 @@ const karmaConfig = {
   mime: {
     "text/x-typescript": ["ts", "tsx"],
   },
-  files: [ "test/index.ts" ],
+  files: ["test/index.ts"],
   frameworks: ["mocha"],
   preprocessors: {
     "test/index.ts": "webpack",
