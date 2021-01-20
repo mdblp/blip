@@ -778,7 +778,6 @@ class PatientDataPage extends React.Component {
     const { patient } = this.state;
 
     if (patient !== null) {
-      const patientId = patient.userid;
       this.setState({
         loadingState: LOADING_STATE_INITIAL_FETCH,
         endpoints: [],
@@ -793,7 +792,7 @@ class PatientDataPage extends React.Component {
         canPrint: false,
       }, async () => {
         try {
-          await api.loadPatientData(patientId);
+          await api.loadPatientData(patient.userid);
         } catch (e) {
           this.onLoadingFailure(e);
         }

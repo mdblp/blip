@@ -19,7 +19,7 @@ import * as React from "react";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -45,7 +45,7 @@ interface PatientListProps {
   onSortList: (field: SortFields, direction: SortDirection) => void;
 }
 
-const patientListStyle = makeStyles(( /* theme: Theme */) => {
+const patientListStyle = makeStyles((theme: Theme) => {
   return {
     table: {
       width: "100%",
@@ -55,6 +55,9 @@ const patientListStyle = makeStyles(( /* theme: Theme */) => {
     },
     tableRowHeader: {
       fontVariant: "small-caps",
+    },
+    flag: {
+      color: theme.palette.primary.main,
     },
   };
 });
@@ -83,7 +86,7 @@ function PatientsList(props: PatientListProps): JSX.Element {
     elems.push(
       <TableRow id={`patients-list-row-${userId}`} key={userId} tabIndex={-1} hover onClick={onRowClick} className={classes.tableRow}>
         <TableCell id={`patients-list-row-flag-${userId}`}>
-          <IconButton aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
+          <IconButton className={classes.flag} aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
             {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
           </IconButton>
         </TableCell>
