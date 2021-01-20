@@ -1,6 +1,6 @@
 // A wrapper for <Route> that redirects to the login
 
-import React from "react";
+import * as React from "react";
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import { useAuth } from "../lib/auth/hook/use-auth";
 
@@ -9,27 +9,22 @@ interface PrivateRouteProps extends RouteProps {
   component: any,
 }
 
-// screen if you're not yet authenticated.
-function PrivateRoute( props : PrivateRouteProps ) : JSX.Element {
+/**
+ * Perform a redirect if you are not authenticated yet
+ * @param props RouteProps with the component to render.
+ */
+function PrivateRoute(props: PrivateRouteProps): JSX.Element {
   const auth = useAuth();
   const { component: Component, ...rest } = props;
-  return (
-    <Route
-      {...rest}
-      render={( routeProps ) =>
-        auth.isLoggedIn() ? (
-          <Component {...routeProps} />
-        ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: routeProps.location },
-              }}
-            />
-        )
-      }
-    />
-  );
+
+  const render = (routeProps: RouteProps) => {
+    if (auth.isLoggedIn()) {
+      return <Component {...routeProps} />;
+    }
+    return <Redirect to={{ pathname: "/", state: { from: routeProps.location } }} />;
+  };
+
+  return <Route {...rest} render={render} />;
 }
 
 export default PrivateRoute;

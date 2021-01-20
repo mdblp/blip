@@ -66,7 +66,7 @@ const toolbarStyles = makeStyles((/* theme */) => ({
   },
 }));
 
-function HeaderBar(props : HeaderProps) : JSX.Element {
+function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

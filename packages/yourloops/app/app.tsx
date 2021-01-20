@@ -76,7 +76,6 @@ class Yourloops {
         <Router>
           <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route path="/login" component={LoginPage} />
             <Route path="/request-password-reset" component={RequestPasswordReset} />
             <PrivateRoute path="/hcp" component={HcpPage} />
             <PrivateRoute path="/patient" component={PatientPage} />
