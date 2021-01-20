@@ -95,11 +95,20 @@ pipeline {
             }
         }
         stage('Publish') {
-            when { branch "dblp" }
+            when { 
+                anyOf {
+                    branch "dblp"
+                    branch "engineering/team-managment-v1"
+                    }
+                }
             steps {
                 script {
                     if (env.version == "UNRELEASED") {
-                        env.version = "master"
+                        if (env.GIT_BRANCH == "engineering/team-managment-v1") {
+                            env.version = "2.0.0-alpha"
+                        } else {
+                            env.version = "master"
+                        }
                     }
                 }
                 withCredentials([string(credentialsId: 'DEV_AWS_ACCESS_KEY', variable: 'AWS_ACCESS_KEY_ID'),
