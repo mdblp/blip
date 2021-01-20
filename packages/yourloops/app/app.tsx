@@ -34,6 +34,9 @@ import { theme } from "../components/theme";
 import LoginPage from '../pages/login';
 import HcpPage from '../pages/hcp';
 import PatientPage from "../pages/patient";
+import RequestPasswordReset from '../pages/request-passord-reset';
+import { AuthProvider } from '../lib/auth/hook/use-auth';
+import PrivateRoute from '../components/private-route';
 
 class Yourloops {
   private log: Console;
@@ -63,14 +66,16 @@ class Yourloops {
   private router(): JSX.Element {
     return (
       <ThemeProvider theme={theme}>
-        <Router>
-          <Switch>
-            <Route exact path="/" component={LoginPage} />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/hcp" component={HcpPage} />
-            <Route path="/patient" component={PatientPage} />
-          </Switch>
-        </Router>
+        <AuthProvider>
+          <Router>
+            <Switch>
+              <Route exact path="/" component={LoginPage} />
+              <Route path="/request-password-reset" component={RequestPasswordReset} />
+              <PrivateRoute path="/hcp" component={HcpPage} />
+              <PrivateRoute path="/patient" component={PatientPage} />
+            </Switch>
+          </Router>
+        </AuthProvider>
       </ThemeProvider>
     );
   }
