@@ -22,11 +22,11 @@ import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
 
-import { defer } from "./utils";
-import appConfig from "./config";
-import { t } from "./language";
+import { defer } from "../utils";
+import appConfig from "../config";
+import { t } from "../language";
 
-import http from "./http-status-codes";
+import http from "../http-status-codes";
 
 const SESSION_TOKEN_KEY = "session-token";
 const TRACE_TOKEN_KEY = "trace-token";
@@ -45,7 +45,7 @@ export class PatientDataLoadedEvent extends Event {
   }
 }
 
-class API extends EventTarget {
+class AuthApi extends EventTarget {
   /** JWT token as a string */
   private sessionToken: string | null;
   /** Trace token is used to trace the calls betweens different microservices API calls for debug purpose. */
@@ -54,6 +54,8 @@ class API extends EventTarget {
   private user: User | null;
   private log: Console;
   private loginLock: boolean;
+  /** number of wrong tentative connection */
+  private wrongCredentialCount: number;
   /** patients list */
   private patients: User[] | null;
 
@@ -64,6 +66,7 @@ class API extends EventTarget {
     this.patients = null;
     this.log = bows("API");
     this.loginLock = false;
+    this.wrongCredentialCount = 0;
 
     this.sessionToken = sessionStorage.getItem(SESSION_TOKEN_KEY);
     this.traceToken = sessionStorage.getItem(TRACE_TOKEN_KEY);
@@ -86,19 +89,14 @@ class API extends EventTarget {
     }
 
     if (!this.isLoggedIn) {
-      this.user = null;
-      this.traceToken = null;
-      this.sessionToken = null;
-      sessionStorage.removeItem(SESSION_TOKEN_KEY);
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(LOGGED_IN_USER);
+      this.removeAuthInfoFromSessionStorage();
     }
 
     // Listen to storage events, to be able to monitor
     // logout on others tabs.
     window.addEventListener("storage", this.onStorageChange.bind(this));
 
-    this.log.info("API initialized");
+    this.log.info("Auth API initialized");
   }
 
   /**
@@ -149,7 +147,7 @@ class API extends EventTarget {
    * @param {string} password The account password
    * @return {Promise<User>} Return the logged-in user or a promise rejection.
    */
-  private async loginPrivate(username: string, password: string): Promise<User> {
+  private async authenticate(username: string, password: string): Promise<User> {
     let reason: string | null = null;
     this.logout(); // To be sure to reset the values
 
@@ -177,35 +175,49 @@ class API extends EventTarget {
       },
     });
 
-    if (response.ok && response.status === http.StatusOK) {
-      this.sessionToken = response.headers.get(SESSION_TOKEN_HEADER);
-    } else {
-      /** @type{APIErrorResponse} */
-      const responseBody = await response.json() as APIErrorResponse;
-      reason = t(responseBody.reason);
-    }
-
-    if (this.sessionToken === null) {
-      reason = t("Invalid response from server");
-    } else {
-      this.user = await response.json() as User;
-      if (!Array.isArray(this.user.roles)) {
-        this.user.roles = ["patient"];
+    if (!response.ok || response.status !== http.StatusOK) {
+      switch (response.status) {
+      case http.StatusUnauthorized:
+        if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
+          if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
+            reason = t("Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
+              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT });
+          } else {
+            reason = t("Wrong username or password");
+          }
+        }
+        break;
+      // missing handling 403 status => email not verified
+      default:
+        reason = t("An error occurred while logging in.");
+        break;
       }
+
+      if (reason === null) {
+        reason = t("Login Failed");
+      }
+
+      this.sendMetrics("Login failed", reason);
+      return Promise.reject(new Error(reason as string));
+    }
+
+    this.wrongCredentialCount = 0;
+    this.sessionToken = response.headers.get(SESSION_TOKEN_HEADER);
+    this.user = await response.json() as User;
+
+    if (!Array.isArray(this.user.roles)) {
+      this.user.roles = ["patient"];
+    }
+
+    // ???
+    if (this.sessionToken !== null) {
       sessionStorage.setItem(SESSION_TOKEN_KEY, this.sessionToken);
-      sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
-
-      this.sendMetrics("setUserId", this.user.userid);
-
-      return this.user;
     }
+    sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
 
-    if (reason === null) {
-      reason = "Internal error";
-    }
+    this.sendMetrics("setUserId", this.user.userid);
 
-    this.sendMetrics("Login failed", reason);
-    return Promise.reject(new Error(reason));
+    return this.user;
   }
 
   /**
@@ -216,7 +228,7 @@ class API extends EventTarget {
    */
   async login(username: string, password: string): Promise<User> {
     this.loginLock = true;
-    return this.loginPrivate(username, password)
+    return this.authenticate(username, password)
       .then((user: User) => {
         return this.getUserProfile(user);
       }).finally(() => {
@@ -228,27 +240,31 @@ class API extends EventTarget {
    * Logout the user => Clear the session & trace tokens
    */
   logout(): void {
+    this.log.debug("debug logout");
     if (this.loginLock && this.isLoggedIn) {
-      this.sessionToken = null;
-      this.traceToken = null;
-      this.user = null;
-      this.patients = null;
-      sessionStorage.removeItem(SESSION_TOKEN_KEY);
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(LOGGED_IN_USER);
+      this.log.debug("logout with a loginlock ");
+      this.removeAuthInfoFromSessionStorage();
     } else if (this.isLoggedIn) {
+      this.log.debug("logout with no loginlock");
       this.loginLock = true;
       this.sendMetrics("resetUserId");
-      this.sessionToken = null;
-      this.traceToken = null;
-      this.user = null;
-      this.patients = null;
-      sessionStorage.removeItem(SESSION_TOKEN_KEY);
-      sessionStorage.removeItem(TRACE_TOKEN_KEY);
-      sessionStorage.removeItem(LOGGED_IN_USER);
+      this.removeAuthInfoFromSessionStorage();
       this.dispatchEvent(new Event("logout"));
       this.loginLock = false;
     }
+  }
+
+  /**
+   * Clear the session & trace tokens
+   */
+  private removeAuthInfoFromSessionStorage() {
+    this.sessionToken = null;
+    this.traceToken = null;
+    this.user = null;
+    this.patients = null;
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(TRACE_TOKEN_KEY);
+    sessionStorage.removeItem(LOGGED_IN_USER);
   }
 
   public async getUserShares(): Promise<User[]> {
@@ -265,6 +281,7 @@ class API extends EventTarget {
         [SESSION_TOKEN_HEADER]: this.sessionToken as string,
       },
     });
+
     if (response.ok) {
       this.patients = await response.json() as User[];
       return this.patients;
@@ -297,7 +314,9 @@ class API extends EventTarget {
       throw new Error(t(responseBody.reason));
     }
 
-    sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
+    if (this.user?.userid === user.userid) {
+      sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
+    }
     return user;
   }
 
@@ -389,6 +408,7 @@ class API extends EventTarget {
         },
       }),
     });
+
     if (response.ok) {
       const result = await response.json();
       return result.id as string;
@@ -432,7 +452,7 @@ class API extends EventTarget {
   }
 }
 
-const apiClient = new API();
+const apiClient = new AuthApi();
 
 export default apiClient;
-export { API, apiClient };
+export { AuthApi as API, apiClient };

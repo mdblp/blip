@@ -23,7 +23,7 @@ import Container from "@material-ui/core/Container";
 import Blip from "blip";
 
 import appConfig from "../../lib/config";
-import apiClient from "../../lib/api";
+import apiClient from "../../lib/auth/api";
 
 interface PatientDataProps {
   patientId?: string;

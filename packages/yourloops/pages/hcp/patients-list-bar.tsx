@@ -245,7 +245,7 @@ function PatientListBar(props: PatientListBarProps): JSX.Element {
     <option aria-label={t("aria-none")} value="" key="none" />,
   ];
   if (teams.length > 0) {
-    optionsFilterTeamsElements.push(<ListSubheader>{t("Teams")}</ListSubheader>);
+    optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>);
     for (const team of teams) {
       optionsFilterTeamsElements.push(<MenuItem value={team.id} key={team.id} aria-label={team.name}>{team.name}</MenuItem>);
       optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
