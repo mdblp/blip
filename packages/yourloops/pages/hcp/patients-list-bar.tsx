@@ -46,7 +46,7 @@ import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { t } from "../../lib/language";
 import { FilterType, Team } from "./types";
 
-interface BarProps {
+export interface PatientListBarProps {
   teams: Team[];
   filter: string;
   filterType: FilterType;
@@ -181,7 +181,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function AppBarPage(props: BarProps): JSX.Element {
+function PatientListBar(props: PatientListBarProps): JSX.Element {
   const selectMenuProps: Partial<MenuProps> = {
     anchorOrigin: {
       vertical: "bottom",
@@ -338,4 +338,4 @@ function AppBarPage(props: BarProps): JSX.Element {
   );
 }
 
-export default AppBarPage;
+export default PatientListBar;
