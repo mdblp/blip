@@ -91,9 +91,18 @@ i18n.on('languageChanged', (lng: string) => {
 async function initI18n(): Promise<TFunction> {
   return i18n.init(i18nOptions);
 }
-const t = (s: string, p?: TOptions | string): string => {
+
+/**
+ *
+ * @param s The string to translate
+ * @param p Optional translation parameters
+ * @returns The translated string
+ * @example t("translate-me");
+ * @example t("translate-{{someone}}", { someone: "me" });
+ */
+function t(s: string, p?: TOptions | string): string {
   return i18n.t(`yourloops|${s}`, p);
-};
+}
 
 export { initI18n, t };
 export default i18n;

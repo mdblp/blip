@@ -16,66 +16,21 @@
 
 import * as React from "react";
 import bows from "bows";
-import { useHistory, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
 import Alert from "@material-ui/lab/Alert";
-import AppBar from "@material-ui/core/AppBar";
-import Backdrop from "@material-ui/core/Backdrop";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
-import Fade from "@material-ui/core/Fade";
-import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import InputBase from "@material-ui/core/InputBase";
-import InputLabel from "@material-ui/core/InputLabel";
-import Link from "@material-ui/core/Link";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import MenuItem from "@material-ui/core/MenuItem";
-import { MenuProps } from "@material-ui/core/Menu";
-import Modal from "@material-ui/core/Modal";
-import NativeSelect from "@material-ui/core/NativeSelect";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TextField from "@material-ui/core/TextField";
-import Toolbar from "@material-ui/core/Toolbar";
-
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import HomeIcon from "@material-ui/icons/Home";
-import FlagIcon from "@material-ui/icons/Flag";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import SearchIcon from "@material-ui/icons/Search";
 
 import apiClient from "../../lib/api";
-import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
 import { Team } from "../../models/team";
-
-type SortDirection = "asc" | "desc";
-type SortFields = "lastname" | "firstname";
-type FilterType = "all" | "flagged" | "pending" | string;
-
-interface PatientListProps {
-  patients: User[];
-  flagged: string[];
-  order: SortDirection;
-  orderBy: SortFields;
-  onClickPatient: (user: User) => void;
-  onFlagPatient: (userId: string) => void;
-  onSortList: (field: SortFields, direction: SortDirection) => void;
-}
+import { SortDirection, FilterType, SortFields } from "./types";
+import AppBarPage from "./patients-list-bar";
+import PatientsList from "./patients-list-table";
 
 interface PatientListPageState {
   loading: boolean;
@@ -90,387 +45,9 @@ interface PatientListPageState {
   filterType: FilterType;
 }
 
-interface BarProps {
-  teams: Team[];
-  filter: string;
-  filterType: FilterType;
-  onFilter: (text: string) => void;
-  onFilterType: (filterType: FilterType) => void;
-  onInvitePatient: (username: string, teamId: string) => void;
-}
-
-const log = bows("PatientListPage");
-const modalBackdropTimeout = 300;
-const patientListStyle = makeStyles(( /* theme: Theme */) => {
-  return {
-    table: {
-      width: "100%",
-    },
-    tableRow: {
-      cursor: "pointer",
-    },
-    tableRowHeader: {
-      fontVariant: "small-caps",
-    },
-  };
-});
-const pageBarStyles = makeStyles((theme: Theme) => {
-  /* eslint-disable no-magic-numbers */
-  return {
-    toolBar: {
-      display: "grid",
-      gridTemplateRows: "auto",
-      gridTemplateColumns: "auto auto auto",
-      paddingLeft: theme.spacing(12),
-      paddingRight: theme.spacing(12),
-    },
-    toolBarMiddle: {
-      display: "flex",
-      flexDirection: "row",
-      marginRight: "auto",
-      marginLeft: "auto",
-    },
-    toolBarRight: {
-      display: "flex",
-    },
-    homeIcon: {
-      marginRight: "0.5em",
-    },
-    breadcrumbLink: {
-      display: "flex",
-    },
-    search: {
-      display: "flex",
-      position: "relative",
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: theme.palette.secondary.light,
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.dark,
-      },
-      transition: theme.transitions.create("background-color"),
-      marginRight: theme.spacing(2),
-      marginLeft: "auto",
-      [theme.breakpoints.up("sm")]: {
-        width: "15em",
-      },
-    },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: theme.palette.primary.main,
-    },
-    inputRoot: {
-      color: "black",
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
-    formControl: {
-      marginRight: theme.spacing(1),
-      minWidth: 120,
-    },
-    selectFilter: {
-      flex: "1",
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: theme.palette.secondary.light,
-      transition: theme.transitions.create("background-color"),
-      "&:active": {
-        backgroundColor: theme.palette.secondary.dark,
-      },
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.dark,
-      },
-      [theme.breakpoints.up("sm")]: {
-        width: "15em",
-      },
-    },
-    selectFilterInnerDiv: {
-      display: "inline-flex",
-      alignItems: "center",
-      paddingLeft: ".5em",
-    },
-    selectFilterIcon: {
-      margin: "0 .5em 0 0",
-      alignSelf: "flex-start",
-    },
-    buttonAddPatient: {
-      marginLeft: "auto",
-    },
-    modalAddPatient: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    divModal: {
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: theme.shape.borderRadius,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
-      width: "25em",
-    },
-    formModal: {
-      display: "flex",
-      flexDirection: "column",
-    },
-    formControlSelectTeam: {
-      marginTop: "1.5em",
-    },
-    divModalButtons: {
-      display: "inline-flex",
-      flexDirection: "row",
-      marginTop: "2.5em",
-    },
-    divModalButtonCancel: {
-      marginLeft: "auto",
-      marginRight: theme.spacing(1),
-    },
-  };
-});
-
-function AppBarPage(props: BarProps): JSX.Element {
-  const selectMenuProps: Partial<MenuProps> = {
-    anchorOrigin: {
-      vertical: "bottom",
-      horizontal: "left",
-    },
-    transformOrigin: {
-      vertical: "top",
-      horizontal: "left",
-    },
-    getContentAnchorEl: null,
-  };
-
-  const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
-  const classes = pageBarStyles();
-  const history = useHistory();
-  const [modalAddPatientOpen, setModalAddPatientOpen] = React.useState(false);
-  const [modalSelectedTeam, setModalSelectedTeam] = React.useState("");
-  const [modalUsername, setModalUsername] = React.useState("");
-  const selectFilterValues = [
-    { value: "all", label: t("select-all-patients"), icon: null },
-    { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
-    { value: "pending", label: t("select-pending-invitation-patients"), icon: <AccessTimeIcon className={classes.selectFilterIcon} /> },
-  ];
-
-  const handleClickMyPatients = (e: React.MouseEvent) => {
-    e.preventDefault();
-    history.push("/hcp/patients");
-  };
-  const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onFilter(e.target.value);
-  };
-  const handleFilterTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-    onFilterType(e.target.value as string);
-  };
-  const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setModalUsername(e.target.value);
-  };
-  const handleChangeAddPatientTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>) => {
-    setModalSelectedTeam(e.target.value as string);
-  };
-  const handleOpenModalAddPatient = () => {
-    setModalAddPatientOpen(true);
-  };
-  const handleCloseModalAddPatient = () => {
-    defer(() => setModalUsername(""), modalBackdropTimeout);
-    defer(() => setModalSelectedTeam(""), modalBackdropTimeout);
-    setModalAddPatientOpen(false);
-  };
-  const handleModalAddPatient = () => {
-    setModalAddPatientOpen(false);
-    onInvitePatient(modalUsername, modalSelectedTeam);
-  };
-
-  const optionsFilterCommonElements: JSX.Element[] = [];
-  for (const sfv of selectFilterValues) {
-    optionsFilterCommonElements.push(<MenuItem value={sfv.value} key={sfv.value} aria-label={sfv.label}>{sfv.icon}{sfv.label}</MenuItem>);
-  }
-
-  const optionsFilterTeamsElements: JSX.Element[] = [];
-  const optionsTeamsElements: JSX.Element[] = [
-    <option aria-label={t("aria-none")} value="" key="none" />,
-  ];
-  if (teams.length > 0) {
-    optionsFilterTeamsElements.push(<ListSubheader>{t("Teams")}</ListSubheader>);
-    for (const team of teams) {
-      optionsFilterTeamsElements.push(<MenuItem value={team.id} key={team.id} aria-label={team.name}>{team.name}</MenuItem>);
-      optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
-    }
-  }
-
-  const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
-
-  return (
-    <AppBar position="static" color="secondary">
-      <Toolbar className={classes.toolBar}>
-        <div id="patients-list-toolbar-item-left">
-          <Breadcrumbs aria-label={t("breadcrumb")}>
-            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/patients" onClick={handleClickMyPatients}>
-              <HomeIcon className={classes.homeIcon} />
-              {t("My Patients")}
-            </Link>
-          </Breadcrumbs>
-        </div>
-        <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
-          <FormControl color="primary" className={classes.formControl}>
-            <Select id="select-patient-list-filtertype" value={filterType} onChange={handleFilterTeam} classes={{ root: classes.selectFilterInnerDiv }} className={classes.selectFilter} disableUnderline MenuProps={selectMenuProps}>
-              {optionsFilterCommonElements}
-              {optionsFilterTeamsElements}
-            </Select>
-          </FormControl>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder={t("placeholder-search")}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": t("aria-search") }}
-              value={filter}
-              onChange={handleFilterPatients}
-            />
-          </div>
-        </div>
-        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
-          <Button
-            id="patient-list-toolbar-add-patient"
-            color="primary"
-            variant="contained"
-            className={classes.buttonAddPatient}
-            onClick={handleOpenModalAddPatient}
-          >
-            <PersonAddIcon />&nbsp;{t("button-add-patient")}
-          </Button>
-          <Modal
-            id="patient-list-toolbar-modal-add-patient"
-            aria-labelledby={t("aria-modal-add-patient")}
-            className={classes.modalAddPatient}
-            open={modalAddPatientOpen}
-            onClose={handleCloseModalAddPatient}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: modalBackdropTimeout,
-            }}
-          >
-            <Fade in={modalAddPatientOpen}>
-              <div className={classes.divModal}>
-                <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
-                <form noValidate autoComplete="off" className={classes.formModal}>
-                  <TextField required id="patient-list-toolbar-modal-add-patient-username" onChange={handleChangeUsername} value={modalUsername} label={t("Required")} />
-                  <FormControl className={classes.formControlSelectTeam}>
-                    <InputLabel htmlFor="select-patient-list-modal-team">{t("Team")}</InputLabel>
-                    <NativeSelect
-                      value={modalSelectedTeam}
-                      onChange={handleChangeAddPatientTeam}
-                      inputProps={{ name: "teamid", id: "select-patient-list-modal-team" }}>
-                      {optionsTeamsElements}
-                    </NativeSelect>
-                  </FormControl>
-                  <div className={classes.divModalButtons}>
-                    <Button id="patients-list-modal-button-close" className={classes.divModalButtonCancel} variant="contained" onClick={handleCloseModalAddPatient}>{t("Cancel")}</Button>
-                    <Button id="patients-list-modal-button-create" disabled={buttonCreateDisabled} onClick={handleModalAddPatient} color="primary" variant="contained">{t("Create")}</Button>
-                  </div>
-                </form>
-              </div>
-            </Fade>
-          </Modal>
-        </div>
-      </Toolbar>
-    </AppBar>
-  );
-}
-
-function PatientsList(props: PatientListProps): JSX.Element {
-  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
-  const classes = patientListStyle();
-  const elems = [];
-  const nPatients = patients.length;
-
-  for (let i = 0; i < nPatients; i++) {
-    const patient = patients[i];
-    const userId = patient.userid;
-    const firstName = patient.profile?.firstName ?? "";
-    const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
-    const isFlagged = flagged.includes(userId);
-    const onClickFlag = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      log.debug("onClickFlag", e);
-      onFlagPatient(userId);
-    };
-    const onRowClick = (e: React.MouseEvent) => {
-      log.debug("onRowClick", patient, e);
-      onClickPatient(patient);
-    };
-    elems.push(
-      <TableRow id={`patients-list-row-${userId}`} key={userId} tabIndex={-1} hover onClick={onRowClick} className={classes.tableRow}>
-        <TableCell id={`patients-list-row-flag-${userId}`}>
-          <IconButton aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
-            {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell id={`patients-list-row-lastname-${userId}`}>{lastName}</TableCell>
-        <TableCell id={`patients-list-row-firstname-${userId}`}>{firstName}</TableCell>
-        <TableCell id={`patients-list-row-tir-${userId}`}>{t("N/A")}</TableCell>
-        <TableCell id={`patients-list-row-avg-glucose-${userId}`}>{t("N/A")}</TableCell>
-        <TableCell id={`patients-list-row-tbr-${userId}`}>{t("N/A")}</TableCell>
-        <TableCell id={`patients-list-row-upload-${userId}`}>{t("N/A")}</TableCell>
-      </TableRow>
-    );
-  }
-
-  const createSortHandler = (property: SortFields) => {
-    return (/* event: React.MouseEvent */): void => {
-      onSortList(property, order === "asc" ? "desc" : "asc");
-    };
-  };
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
-        <TableHead>
-          <TableRow className={classes.tableRowHeader}>
-            <TableCell id="patients-list-header-flag" />
-            <TableCell id="patients-list-header-lastname">
-              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler("lastname")}>
-                {t("list-patient-lastname")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-firstname">
-              <TableSortLabel active={orderBy === "firstname"} direction={order} onClick={createSortHandler("firstname")}>
-                {t("list-patient-firstname")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-tir">{t("list-patient-tir")}</TableCell>
-            <TableCell id="patients-list-header-avg-glucose">{t("list-patient-avg-glucose")}</TableCell>
-            <TableCell id="patients-list-header-tbr">{t("list-patient-tbr")}</TableCell>
-            <TableCell id="patients-list-header-upload">{t("list-patient-upload")}</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {elems}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
-
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
+  private log: Console;
+
   constructor(props: RouteComponentProps) {
     super(props);
 
@@ -488,6 +65,8 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       filterType: "all",
     };
 
+    this.log = bows("PatientListPage");
+
     this.onSelectPatient = this.onSelectPatient.bind(this);
     this.onFlagPatient = this.onFlagPatient.bind(this);
     this.onInvitePatient = this.onInvitePatient.bind(this);
@@ -499,7 +78,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   public componentDidMount(): void {
-    log.debug("Mounted");
+    this.log.debug("Mounted");
     this.onRefresh();
   }
 
@@ -538,6 +117,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
             flagged={flagged}
             order={order}
             orderBy={orderBy}
+            log={this.log}
             onClickPatient={this.onSelectPatient}
             onFlagPatient={this.onFlagPatient}
             onSortList={this.onSortList} />
@@ -553,7 +133,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
         const teams = await apiClient.fetchTeams();
         this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
       } catch (reason: unknown) {
-        log.error("onRefresh", reason);
+        this.log.error("onRefresh", reason);
         let errorMessage: string;
         if (reason instanceof Error) {
           errorMessage = reason.message;
@@ -567,7 +147,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onSelectPatient(user: User): void {
-    log.info("Click on", user);
+    this.log.info("Click on", user);
     this.props.history.push(`/hcp/patient/${user.userid}`);
   }
 
@@ -578,7 +158,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onInvitePatient(username: string, teamId: string): void {
-    log.info("onInvitePatient", username, teamId);
+    this.log.info("onInvitePatient", username, teamId);
     this.setState({ loading: true, errorMessage: null }, async () => {
       try {
         // await apiClient.invitePatient(username, teamId);
@@ -622,17 +202,17 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onSortList(orderBy: SortFields, order: SortDirection): void {
-    log.info("Sort patients", orderBy, order);
+    this.log.info("Sort patients", orderBy, order);
     this.setState({ order, orderBy }, this.updatePatientList);
   }
 
   private onFilter(filter: string): void {
-    log.info("Filter patients name", filter);
+    this.log.info("Filter patients name", filter);
     this.setState({ filter }, this.updatePatientList);
   }
 
   private onFilterType(filterType: FilterType): void {
-    log.info("Filter patients with", filterType);
+    this.log.info("Filter patients with", filterType);
     this.setState({ filterType }, this.updatePatientList);
   }
 

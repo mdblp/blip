@@ -219,7 +219,7 @@ class PatientDataPage extends React.Component {
       loader = <Loader />;
       break;
     default:
-      errorDisplay = errorMessage ? <p>{errorMessage}</p> : <p>{t('Failed somewhere')}</p>;
+      errorDisplay = <p>{errorMessage ?? t('Failed somewhere')}</p>;
       break;
     }
 
@@ -778,7 +778,6 @@ class PatientDataPage extends React.Component {
     const { patient } = this.state;
 
     if (patient !== null) {
-      const patientId = patient.userid;
       this.setState({
         loadingState: LOADING_STATE_INITIAL_FETCH,
         endpoints: [],
@@ -793,7 +792,7 @@ class PatientDataPage extends React.Component {
         canPrint: false,
       }, async () => {
         try {
-          await api.loadPatientData(patientId);
+          await api.loadPatientData(patient.userid);
         } catch (e) {
           this.onLoadingFailure(e);
         }
@@ -816,13 +815,7 @@ class PatientDataPage extends React.Component {
   }
 
   onLoadingFailure(err) {
-    let errorMessage = null;
-    if (_.isError(err)) {
-      errorMessage = err.message;
-    } else {
-      const s = new String(err);
-      errorMessage = s.toString();
-    }
+    const errorMessage = _.isError(err) ? err.message : (new String(err)).toString()
     this.log.error(errorMessage, err);
     this.setState({ loadingState: LOADING_STATE_ERROR, errorMessage });
   }
