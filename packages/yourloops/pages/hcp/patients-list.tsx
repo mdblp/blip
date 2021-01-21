@@ -60,19 +60,18 @@ interface PatientListPageState {
 
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
   private log: Console;
-  public context!: React.ContextType<typeof AuthContext>;
+  declare context: React.ContextType<typeof AuthContext>
 
   constructor(props: RouteComponentProps) {
     super(props);
 
-    const whoAmI = this.context.user;
     this.state = {
       loading: true,
       errorMessage: null,
       patients: [],
       allPatients: [],
       teams: [],
-      flagged: whoAmI?.preferences?.patientsStarred ?? [],
+      flagged: [],
       order: "asc",
       orderBy: "lastname",
       filter: "",
@@ -141,6 +140,9 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
   }
 
   private onRefresh(): void {
+    const whoAmI = this.context.user;
+    this.setState({ flagged: whoAmI?.preferences?.patientsStarred ?? [] });
+
     this.setState({ loading: true, errorMessage: null, teams: [], allPatients: [], patients: [] }, async () => {
       try {
         const patients = await apiClient.getUserShares();
