@@ -19,6 +19,7 @@ import _ from "lodash";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 
+import { makeStyles /*, Theme */ } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -39,6 +40,15 @@ import { useState } from "react";
 interface RequestPasswordResetProps extends RouteComponentProps {
 }
 
+const formStyle = makeStyles(( /* theme: Theme */) => {
+  return {
+    mainContainer: { margin: "auto" },
+    Button: {
+      marginLeft: "auto",
+    },
+  };
+});
+
 /**
  * ConfirmPasswordReset page
  */
@@ -52,6 +62,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
   const [confirmNewPasswordChangeHelperTextValue, setConfirmNewPasswordChangeHelperTextValue ] = useState("");
   const emptyUsername = _.isEmpty(username);
   const defaultErr = { username: false, newPassword: false, confirmNewPassword: false };
+  const classes = formStyle();
 
   const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     setUserName(event.target.value);
@@ -124,7 +135,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
   };
 
   return (
-    <Container maxWidth="sm" style={{ margin: "auto" }}>
+    <Container maxWidth="sm" className={classes.mainContainer}>
       <Grid
         container
         spacing={0}
@@ -176,6 +187,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                 variant="contained"
                 color="secondary"
                 onClick={onGotoLogin}
+                className={classes.Button}
               >
                 {t('Cancel')}
               </Button>
@@ -184,6 +196,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                 color="primary"
                 onClick={onSendResetPassword}
                 disabled={emptyUsername}
+                className={classes.Button}
               >
                 {t('Save')}
               </Button>
