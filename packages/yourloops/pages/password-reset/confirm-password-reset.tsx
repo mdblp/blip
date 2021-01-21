@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2021, Diabeloop
- * RequestPasswordReset page
+ * COnfirm Password Reset page
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -37,7 +37,7 @@ import brandingLogo from "branding/logo.png";
 import { useState } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface RequestPasswordResetProps extends RouteComponentProps {
+interface ConfirmPasswordResetProps extends RouteComponentProps {
 }
 
 const formStyle = makeStyles(( /* theme: Theme */) => {
@@ -52,7 +52,7 @@ const formStyle = makeStyles(( /* theme: Theme */) => {
 /**
  * ConfirmPasswordReset page
  */
-function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Element {
+function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Element {
   const [username, setUserName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
