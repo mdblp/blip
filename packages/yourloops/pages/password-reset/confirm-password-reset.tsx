@@ -46,11 +46,12 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
   const [username, setUserName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [validateError, setValidateError ] = useState(false);
+  const [errors, setErrors ] = useState({ username: false, newPassword: false, confirmNewPassword: false });
   const [userNameHelperTextValue, setUserNameHelperTextValue ] = useState("");
   const [newPasswordChangeHelperTextValue, setNewPasswordChangeHelperTextValue ] = useState("");
   const [confirmNewPasswordChangeHelperTextValue, setConfirmNewPasswordChangeHelperTextValue ] = useState("");
   const emptyUsername = _.isEmpty(username);
+  const defaultErr = { username: false, newPassword: false, confirmNewPassword: false };
 
   const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     setUserName(event.target.value);
@@ -69,58 +70,56 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
   };
 
   const resetFormState = (): void => {
-    setValidateError(false);
+    setErrors(defaultErr);
     setUserNameHelperTextValue("");
     setNewPasswordChangeHelperTextValue("");
     setConfirmNewPasswordChangeHelperTextValue("");
   };
 
   const validateForm = (): void => {
-    
+    // Is there a better way to handle errors...
     if (_.isEmpty(username)) {
-      setValidateError(true);
-      return;
+      setErrors(Object.assign(defaultErr,{ username: true }));
     }
 
     const IS_REQUIRED = t('This field is required.');
 
     if (!username) {
       setUserNameHelperTextValue(IS_REQUIRED);
-      setValidateError(true);
+      setErrors(Object.assign(defaultErr,{ username: true }));
     }
 
     if (username && !REGEX_EMAIL.test(username)) {
       setUserNameHelperTextValue(t('Invalid email address.'));
-      setValidateError(true);
+      setErrors(Object.assign(defaultErr,{ username: true }));
     }
 
     if (!newPassword) {
       setNewPasswordChangeHelperTextValue(IS_REQUIRED);
-      setValidateError(true);
+      setErrors(Object.assign(defaultErr,{ newPassword: true }));
     }
 
     if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
       setNewPasswordChangeHelperTextValue(t('Password must be at least {{minLength}} characters long.', { minLength: appConfig.PASSWORD_MIN_LENGTH }));
-      setValidateError(true);
+      setErrors(Object.assign(defaultErr,{ newPassword: true }));
     }
+    
     if (newPassword) {
       if (!confirmNewPassword) {
         setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
-        setValidateError(true);
+        setErrors(Object.assign(defaultErr,{ confirmNewPassword: true }));
       } else if (confirmNewPassword !== newPassword) {
         setConfirmNewPasswordChangeHelperTextValue(t('Passwords don\'t match.'));
-        setValidateError(true);
+        setErrors(Object.assign(defaultErr,{ confirmNewPassword: true }));
       }
     }
 
   };
 
   const onSendResetPassword = (): void => {
-
     resetFormState();
-
     validateForm();
-
+    // next to come the api call
   };
 
   return (
@@ -147,7 +146,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                   label={t("Email")}
                   value={username}
                   required
-                  error={validateError}
+                  error={errors.username}
                   onChange={onUsernameChange}
                   helperText={userNameHelperTextValue}
                 />
@@ -156,7 +155,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                   label={t("New password")}
                   value={newPassword}
                   required
-                  error={validateError}
+                  error={errors.newPassword}
                   onChange={onNewPasswordChange}
                   helperText={newPasswordChangeHelperTextValue}
                 />
@@ -165,7 +164,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                   label={t("confirm new password")}
                   value={confirmNewPassword}
                   required
-                  error={validateError}
+                  error={errors.confirmNewPassword}
                   onChange={onConfirmNewPasswordChange}
                   helperText={confirmNewPasswordChangeHelperTextValue}
                 />
