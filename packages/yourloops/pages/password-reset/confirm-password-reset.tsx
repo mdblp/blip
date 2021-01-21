@@ -87,7 +87,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
   const onConfirmNewPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     setConfirmNewPassword(event.target.value);
   };
-  
+
   const onGotoLogin = (): void => {
     props.history.push("/");
   };
@@ -127,7 +127,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
       setNewPasswordChangeHelperTextValue(t('Password must be at least {{minLength}} characters long.', { minLength: appConfig.PASSWORD_MIN_LENGTH }));
       setErrors(Object.assign(defaultErr,{ newPassword: true }));
     }
-    
+
     if (newPassword) {
       if (!confirmNewPassword) {
         setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
@@ -158,7 +158,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
         <Grid item xs={12}>
           <Card>
             <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-              <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} />
+              <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t('Login Branding Logo')} />
             </CardMedia>
             <CardContent>
               <Typography variant="h6" gutterBottom>
