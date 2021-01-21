@@ -58,6 +58,7 @@ const teamCardStyles = makeStyles((theme: Theme) => {
     paper: {
       display: "flex",
       flexDirection: "column",
+      backgroundColor: theme.palette.primary.light,
     },
     paperRoot: {
       padding: "1em",
@@ -70,6 +71,7 @@ const teamCardStyles = makeStyles((theme: Theme) => {
     secondRow: {
       display: "flex",
       flexDirection: "row",
+      justifyContent: "space-between",
     },
     teamName: {
       minWidth: "8em",
@@ -87,19 +89,38 @@ const teamCardStyles = makeStyles((theme: Theme) => {
   };
 });
 
+const teamInfoStyles = makeStyles((theme: Theme) => {
+  return {
+    card: {
+      display: "flex",
+      flexDirection:  "row",
+    },
+    divLabelValue: {
+      display: "flex",
+      flexDirection: "column",
+      marginLeft: theme.spacing(2),
+      fontSize: theme.typography.fontSize,
+    },
+    spanValue: {
+      fontWeight: "bold",
+    },
+  };
+});
+
 function TeamInfo(props: TeamInfoProps): JSX.Element | null {
   const { label, value, icon } = props;
+  const classes = teamInfoStyles();
 
   if (typeof value !== "string") {
     return null;
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
+    <div className={classes.card}>
       <Avatar>{icon}</Avatar>
-      <div style={{ display: "flex", flexDirection: "column", marginLeft: "2em" }}>
+      <div className={classes.divLabelValue}>
         <span>{t(label)}</span>
-        <span style={{ fontWeight: "bold" }}>{value}</span>
+        <span className={classes.spanValue}>{value}</span>
       </div>
     </div>
   );
