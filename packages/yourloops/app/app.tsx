@@ -24,7 +24,7 @@ import {
 } from "react-router-dom";
 import bows from 'bows';
 
-import "fontsource-roboto";
+import "@fontsource/roboto";
 import "branding/theme-base.css";
 import "branding/theme.css";
 
