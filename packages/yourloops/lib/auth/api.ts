@@ -72,6 +72,7 @@ class AuthApi extends EventTarget {
   private wrongCredentialCount: number;
   /** patients list */
   private patients: User[] | null;
+  private teams: Team[] | null;
 
   constructor() {
     super();
@@ -105,6 +106,20 @@ class AuthApi extends EventTarget {
     if (!this.isLoggedIn) {
       this.removeAuthInfoFromSessionStorage();
     }
+
+    this.teams = [{ // FIXME
+      id: "team-1",
+      name: "CHU Grenoble",
+      code: "123456789",
+      ownerId: "abcdef",
+      type: "medical",
+    }, {
+      id: "team-2",
+      name: "Clinique Nantes",
+      code: "987654321",
+      ownerId: "abcdef",
+      type: "medical",
+    }];
 
     // Listen to storage events, to be able to monitor
     // logout on others tabs.
@@ -450,6 +465,16 @@ class AuthApi extends EventTarget {
       ownerId: "abcdef",
       type: "medical",
     }];
+  }
+
+  public async createTeam(team: Team): Promise<Team[]> {
+    if (this.teams === null) {
+      this.teams = [];
+    }
+    this.teams.push(team);
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random()*200);
+    return this.teams;
   }
 
   /**

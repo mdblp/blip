@@ -52,6 +52,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
 import apiClient from "../../lib/auth/api";
+import { AuthContext } from '../../lib/auth/hook/use-auth';
 
 interface TeamsListPageState {
   loading: boolean;
@@ -209,6 +210,8 @@ function TeamElement(props: TeamElementProps): JSX.Element {
  * HCP page to manage teams
  */
 class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageState> {
+  declare context: React.ContextType<typeof AuthContext>
+
   constructor(props: RouteComponentProps) {
     super(props);
 
@@ -283,7 +286,15 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
   }
 
   async onCreateTeam(name: string): Promise<void> {
+    const { teams } = this.state;
     log.info("Create team", name);
+    await apiClient.createTeam({
+      id: `team-${teams.length}`,
+      code: "123-456-789",
+      type: "medical",
+      ownerId: this.context.user?.userid as string,
+      name,
+    });
   }
 }
 
