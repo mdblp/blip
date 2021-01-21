@@ -29,18 +29,29 @@
 import * as React from "react";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import EmailIcon from '@material-ui/icons/Email';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PhoneIcon from '@material-ui/icons/Phone';
 
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
 
 interface TeamCardProps {
   team: Team;
+}
+
+interface TeamInfoProps {
+  label: string;
+  value?: string;
+  icon: JSX.Element;
 }
 
 const teamCardStyles = makeStyles((theme: Theme) => {
@@ -77,6 +88,24 @@ const teamCardStyles = makeStyles((theme: Theme) => {
   };
 });
 
+function TeamInfo(props: TeamInfoProps): JSX.Element | null {
+  const { label, value, icon } = props;
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      <Avatar>{icon}</Avatar>
+      <div style={{ display: "flex", flexDirection: "column", marginLeft: "2em" }}>
+        <span>{t(label)}</span>
+        <span style={{ fontWeight: "bold" }}>{value}</span>
+      </div>
+    </div>
+  );
+}
+
 function TeamCard(props: TeamCardProps): JSX.Element {
   const { team } = props;
   const classes = teamCardStyles();
@@ -109,7 +138,10 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         </div>
       </div>
       <div id={`team-card-${team.id}-infos`} className={classes.secondRow}>
-
+        <TeamInfo label="label-team-card-code" value={team.code} icon={<FingerprintIcon />} />
+        <TeamInfo label="label-team-card-phone" value={team.phone} icon={<PhoneIcon />} />
+        <TeamInfo label="label-team-card-address" value={team.address} icon={<LocationOnIcon />} />
+        <TeamInfo label="label-team-card-email" value={team.email} icon={<EmailIcon />} />
       </div>
     </Paper>
   );
