@@ -19,19 +19,19 @@ import _ from "lodash";
 import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
 
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Container,
-  TextField,
-  Grid,
-  Button,
-  Typography,
-} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import { t } from "../../lib/language";
+import { REGEX_EMAIL } from "../../lib/utils";
+import appConfig from "../../lib/config";
 import brandingLogo from "branding/logo.png";
 import { useState } from "react";
 
@@ -42,37 +42,86 @@ interface RequestPasswordResetProps extends RouteComponentProps {
 /**
  * ConfirmPasswordReset page
  */
-function ConfirmPasswordReset(props: RequestPasswordResetProps) : JSX.Element {
+function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Element {
   const [username, setUserName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [validateError, setValidateError ] = useState(false);
-  const [helperTextValue, setHelperTextValue ] = useState("");
-
+  const [userNameHelperTextValue, setUserNameHelperTextValue ] = useState("");
+  const [newPasswordChangeHelperTextValue, setNewPasswordChangeHelperTextValue ] = useState("");
+  const [confirmNewPasswordChangeHelperTextValue, setConfirmNewPasswordChangeHelperTextValue ] = useState("");
   const emptyUsername = _.isEmpty(username);
-  function onUsernameChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    setUserName(event.target.value);
-  }
 
-  function onUsernameChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     setUserName(event.target.value);
-  }
+  };
 
-  function onUsernameChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    setUserName(event.target.value);
-  }
+  const onNewPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    setNewPassword(event.target.value);
+  };
+
+  const onConfirmNewPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    setConfirmNewPassword(event.target.value);
+  };
   
-  function onGotoLogin() {
-    console.log("on back", props.history);
-    // requires two back for going to login page
+  const onGotoLogin = (): void => {
     props.history.push("/");
-  }
+  };
 
-  function onSendResetPassword() {
+  const resetFormState = (): void => {
+    setValidateError(false);
+    setUserNameHelperTextValue("");
+    setNewPasswordChangeHelperTextValue("");
+    setConfirmNewPasswordChangeHelperTextValue("");
+  };
+
+  const validateForm = (): void => {
+    
     if (_.isEmpty(username)) {
       setValidateError(true);
       return;
     }
-    setValidateError(false);
-  }
+
+    const IS_REQUIRED = t('This field is required.');
+
+    if (!username) {
+      setUserNameHelperTextValue(IS_REQUIRED);
+      setValidateError(true);
+    }
+
+    if (username && !REGEX_EMAIL.test(username)) {
+      setUserNameHelperTextValue(t('Invalid email address.'));
+      setValidateError(true);
+    }
+
+    if (!newPassword) {
+      setNewPasswordChangeHelperTextValue(IS_REQUIRED);
+      setValidateError(true);
+    }
+
+    if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
+      setNewPasswordChangeHelperTextValue(t('Password must be at least {{minLength}} characters long.', { minLength: appConfig.PASSWORD_MIN_LENGTH }));
+      setValidateError(true);
+    }
+    if (newPassword) {
+      if (!confirmNewPassword) {
+        setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
+        setValidateError(true);
+      } else if (confirmNewPassword !== newPassword) {
+        setConfirmNewPasswordChangeHelperTextValue(t('Passwords don\'t match.'));
+        setValidateError(true);
+      }
+    }
+
+  };
+
+  const onSendResetPassword = (): void => {
+
+    resetFormState();
+
+    validateForm();
+
+  };
 
   return (
     <Container maxWidth="sm" style={{ margin: "auto" }}>
@@ -98,27 +147,27 @@ function ConfirmPasswordReset(props: RequestPasswordResetProps) : JSX.Element {
                   label={t("Email")}
                   value={username}
                   required
-                  error={validateError || emptyUsername}
+                  error={validateError}
                   onChange={onUsernameChange}
-                  helperText={helperTextValue}
+                  helperText={userNameHelperTextValue}
                 />
                 <TextField
                   id="password"
                   label={t("New password")}
-                  value={username}
+                  value={newPassword}
                   required
-                  error={validateError || emptyUsername}
+                  error={validateError}
                   onChange={onNewPasswordChange}
-                  helperText={helperTextValue}
+                  helperText={newPasswordChangeHelperTextValue}
                 />
                 <TextField
                   id="confirm-password"
                   label={t("confirm new password")}
-                  value={username}
+                  value={confirmNewPassword}
                   required
-                  error={validateError || emptyUsername}
+                  error={validateError}
                   onChange={onConfirmNewPasswordChange}
-                  helperText={helperTextValue}
+                  helperText={confirmNewPasswordChangeHelperTextValue}
                 />
               </form>
             </CardContent>
@@ -143,7 +192,7 @@ function ConfirmPasswordReset(props: RequestPasswordResetProps) : JSX.Element {
         </Grid>
       </Grid>
     </Container>
-  ); 
+  );
 }
 
-export default ConfirmPasswordReset;
+export default ConfirmPasswordResetPage;

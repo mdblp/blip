@@ -14,5 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import ConfirmPasswordReset from './confirm-password-reset';
-export default ConfirmPasswordReset;
+import ConfirmPasswordResetPage from './confirm-password-reset';
+import RequestPasswordResetPage from './request-password-reset';
+export { RequestPasswordResetPage, ConfirmPasswordResetPage };
