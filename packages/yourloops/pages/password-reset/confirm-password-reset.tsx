@@ -77,6 +77,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
   };
 
   const validateForm = (): void => {
+    // for now duplicated blip validation logic
     // Is there a better way to handle errors...
     if (_.isEmpty(username)) {
       setErrors(Object.assign(defaultErr,{ username: true }));
@@ -176,7 +177,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                 color="secondary"
                 onClick={onGotoLogin}
               >
-                {t('button-cancel')}
+                {t('Cancel')}
               </Button>
               <Button
                 variant="contained"
@@ -184,7 +185,7 @@ function ConfirmPasswordResetPage(props: RequestPasswordResetProps) : JSX.Elemen
                 onClick={onSendResetPassword}
                 disabled={emptyUsername}
               >
-                {t('button-save')}
+                {t('Save')}
               </Button>
             </CardActions>
           </Card>
