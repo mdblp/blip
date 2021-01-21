@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  * Copyright (c) 2020, Diabeloop
  * Yourloops API client type definition for shoreline

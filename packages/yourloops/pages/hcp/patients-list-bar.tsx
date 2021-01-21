@@ -57,7 +57,6 @@ export interface PatientListBarProps {
 
 const modalBackdropTimeout = 300;
 const pageBarStyles = makeStyles((theme: Theme) => {
-  /* eslint-disable no-magic-numbers */
   return {
     toolBar: {
       display: "grid",
@@ -112,7 +111,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // eslint-disable-line no-magic-numbers
       transition: theme.transitions.create("width"),
       width: "100%",
       [theme.breakpoints.up("md")]: {
@@ -158,8 +157,8 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     divModal: {
       backgroundColor: theme.palette.background.paper,
       borderRadius: theme.shape.borderRadius,
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
+      boxShadow: theme.shadows[5], // eslint-disable-line no-magic-numbers
+      padding: theme.spacing(2, 4, 3), // eslint-disable-line no-magic-numbers
       width: "25em",
     },
     formModal: {

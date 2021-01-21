@@ -24,17 +24,13 @@ import appConfig from "../../lib/config";
 import apiClient from "../../lib/auth/api";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface PatientDataProps extends RouteComponentProps {
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataState {
 }
 
-class PatientDataPage extends React.Component<PatientDataProps, PatientDataState> {
+class PatientDataPage extends React.Component<RouteComponentProps, PatientDataState> {
   private log: Console;
 
-  constructor(props: PatientDataProps) {
+  constructor(props: RouteComponentProps) {
     super(props);
 
     this.log = bows("PatientData");

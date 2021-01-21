@@ -268,7 +268,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
       const bFlagged = flagged.includes(b.userid);
       // Flagged: always first
       if (aFlagged && !bFlagged) {
-        return -1; // eslint-disable-line no-magic-numbers
+        return -1;
       }
       if (!aFlagged && bFlagged) {
         return 1;

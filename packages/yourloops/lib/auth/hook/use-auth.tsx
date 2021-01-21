@@ -26,6 +26,10 @@ interface IAuthContext {
   sendPasswordResetEmail(username: string): Promise<boolean>,
 }
 
+interface IAuthProvider {
+  children?: React.ReactNode;
+}
+
 export const AuthContext = React.createContext({} as IAuthContext);
 
 // Hook for child components to get the auth object
@@ -33,18 +37,6 @@ export const AuthContext = React.createContext({} as IAuthContext);
 export function useAuth() : IAuthContext {
   return React.useContext(AuthContext);
 }
-
-// Provider component that wraps your app and makes auth object
-// available to any child component that calls useAuth().
-// eslint-disable-next-line react/prop-types
-export const AuthProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const auth = useProvideAuth();
-  return (
-    <AuthContext.Provider value={ auth }>
-      { children }
-    </AuthContext.Provider>
-  );
-};
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
@@ -100,3 +92,14 @@ function useProvideAuth() {
     sendPasswordResetEmail,
   };
 }
+
+// Provider component that wraps your app and makes auth object
+// available to any child component that calls useAuth().
+export const AuthProvider: React.FC<React.ReactNode> = ({ children }: IAuthProvider) => {
+  const auth = useProvideAuth();
+  return (
+    <AuthContext.Provider value={ auth }>
+      { children }
+    </AuthContext.Provider>
+  );
+};

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-var */
 
 import { AppConfig } from "../lib/config";
 
@@ -10,6 +9,9 @@ declare global {
     _paq: any[];
     zE: (...args: any) => void;
     config?: AppConfig;
+  }
+  interface Navigator {
+    userLanguage?: string;
   }
   const BUILD_CONFIG: string;
 }

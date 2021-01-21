@@ -22,7 +22,7 @@ import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
 
-import { defer } from "../utils";
+import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
 
@@ -334,7 +334,6 @@ class AuthApi extends EventTarget {
       this.user.preferences.patientsStarred = [];
     }
     const userIdIdx = this.user.preferences.patientsStarred.indexOf(userId);
-    // eslint-disable-next-line no-magic-numbers
     if (userIdIdx > -1) {
       this.user.preferences.patientsStarred.splice(userIdIdx, 1);
       this.log.info("Unflag patient", userId);
@@ -342,6 +341,9 @@ class AuthApi extends EventTarget {
       this.user.preferences.patientsStarred.push(userId);
       this.log.info("Flag patient", userId);
     }
+
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(50 + Math.random()*100);
 
     return this.user.preferences.patientsStarred;
   }

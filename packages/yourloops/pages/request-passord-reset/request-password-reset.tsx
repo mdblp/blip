@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2021, Diabeloop
  * RequestPasswordReset page
