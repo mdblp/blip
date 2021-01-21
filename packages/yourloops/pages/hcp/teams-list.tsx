@@ -51,7 +51,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
-import apiClient from "../../lib/api";
+import apiClient from "../../lib/auth/api";
 
 interface TeamsListPageState {
   loading: boolean;

@@ -36,11 +36,12 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import apiClient from "../../lib/auth/api";
-import { AuthContext } from '../../lib/auth/hook/use-auth';
 import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
-import { SortDirection, FilterType, SortFields, Team } from "./types";
+import { Team } from "../../models/team";
+import { SortDirection, FilterType, SortFields } from "./types";
+import apiClient from "../../lib/auth/api";
+import { AuthContext } from '../../lib/auth/hook/use-auth';
 import PatientListBar from "./patients-list-bar";
 import PatientListTable from "./patients-list-table";
 
@@ -59,13 +60,12 @@ interface PatientListPageState {
 
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
   private log: Console;
-
-  context!: React.ContextType<typeof AuthContext>;
+  public context!: React.ContextType<typeof AuthContext>;
 
   constructor(props: RouteComponentProps) {
     super(props);
 
-    const whoAmI = apiClient.whoami;
+    const whoAmI = this.context.user;
     this.state = {
       loading: true,
       errorMessage: null,
