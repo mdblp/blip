@@ -23,7 +23,7 @@ import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
 
-import { defer } from "../utils";
+import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
 
