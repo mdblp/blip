@@ -33,7 +33,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 
-import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailIcon from '@material-ui/icons/Email';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
@@ -116,11 +115,6 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       {t("button-team-edit")}
     </Button>
   );
-  const buttonDelete = (
-    <Button id={`team-card-${team.id}-button-delete`} className={classes.buttonActionFirstRow} startIcon={<DeleteIcon color="primary" />}>
-      {t("button-team-delete")}
-    </Button>
-  );
   const buttonAddMember = (
     <Button id={`team-card-${team.id}-button-add-member`} className={classes.buttonActionFirstRow} startIcon={<PersonAddIcon color="primary" />}>
       {t("button-team-add-member")}
@@ -133,7 +127,6 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         <h2 id={`team-card-${team.id}-name`} className={classes.teamName}>{team.name}</h2>
         <div className={classes.divActions}>
           {buttonEdit}
-          {buttonDelete}
           {buttonAddMember}
         </div>
       </div>
