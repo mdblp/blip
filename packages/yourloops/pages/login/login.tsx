@@ -16,94 +16,123 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import bows from "bows";
 
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Container,
-  FormControl,
-  Input,
-  InputAdornment,
-  InputLabel,
-  IconButton,
-  TextField,
-  Grid,
-} from "@material-ui/core";
+import { makeStyles /*, Theme */ } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
+
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { t } from "../../lib/language";
-import api from "../../lib/api";
-import { User } from "models/shoreline";
-
 import brandingLogo from "branding/logo.png";
+import { useState } from "react";
+import { useAuth } from "../../lib/auth/hook/use-auth";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface LoginProps extends RouteComponentProps {
-}
-
-interface LoginState {
-  username: string;
-  password: string;
-  showPassword: boolean;
-  validateError: boolean;
-  helperTextValue: string | null;
-  loginFormStyles: string[];
-}
+const loginStyle = makeStyles(( /* theme: Theme */) => {
+  return {
+    mainContainer: { margin: "auto" },
+    loginButton: {
+      marginLeft: "auto !important",
+    },
+  };
+});
 
 /**
  * Login page
  */
-class Login extends React.Component<LoginProps, LoginState> {
-  private log: Console;
+function Login(props: RouteComponentProps): JSX.Element {
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [validateError, setValidateError] = useState(false);
+  const [helperTextValue, setHelperTextValue] = useState("");
+  const auth = useAuth();
+  const classes = loginStyle();
+  const emptyUsername = _.isEmpty(username);
+  const emptyPassword = _.isEmpty(password);
+  const log = bows("Login");
 
-  constructor(props: LoginProps) {
-    super(props);
+  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    setUserName(event.target.value);
+  };
 
-    this.state = {
-      username: "",
-      password: "",
-      validateError: false,
-      showPassword: false,
-      helperTextValue: "",
-      loginFormStyles: ["stage-transition-container-variant"],
-    };
+  const onPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    setPassword(event.target.value);
+  };
 
-    this.log = bows("Login");
+  const onClickShowPasswordVisibility = (): void => {
+    if (showPassword) {
+      setShowPassword(false);
+      //authApi.sendMetrics("Hide password");
+    } else {
+      setShowPassword(true);
+      // authApi.sendMetrics("Show password");
+    }
+  };
 
-    this.onUsernameChange = this.onUsernameChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
-    this.onClickShowPasswordVisibility = this.onClickShowPasswordVisibility.bind(this);
-    this.onClickLoginButton = this.onClickLoginButton.bind(this);
-    this.onClickForgotPassword = this.onClickForgotPassword.bind(this);
-    this.onClickSignup = this.onClickSignup.bind(this);
-  }
+  const onClickLoginButton = async (): Promise<void> => {
+    if (_.isEmpty(username) || _.isEmpty(password)) {
+      setValidateError(true);
+      return;
+    }
+    setValidateError(false);
+    setHelperTextValue("");
 
-  public render(): JSX.Element {
-    const { username, password, showPassword, validateError, helperTextValue } = this.state;
+    try {
+      const user = await auth.login(username, password);
+      // for now, simply read the profile
+      // we will refactor by creating a class obj with IsPatient method
+      if (!_.isEmpty(user?.profile?.patient)) {
+        props.history.push("/patient");
+      } else {
+        props.history.push("/hcp");
+      }
+    } catch (reason: unknown) {
+      log.error(reason);
+      setValidateError(true);
+      const message = _.isError(reason) ? reason.message : (new String(reason)).toString();
+      setHelperTextValue(message);
+    }
+  };
 
-    const emptyUsername = _.isEmpty(username);
-    const emptyPassword = _.isEmpty(password);
-    return (
-      <Container maxWidth="sm" style={{ margin: "auto" }}>
-        <Grid
-          container
-          spacing={0}
-          alignItems="center"
-          justify="center"
-          style={{ minHeight: '100vh' }}
-        >
-          <Grid item xs={12}>
-            <Card>
-              <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-                <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t("alt-img-logo")} />
-              </CardMedia>
-              <CardContent>
+  const onClickLoginReset = (): void => {
+    props.history.push("/request-password-reset");
+  };
+
+  // function onClickForgotPassword() {
+  //   //this.log.debug("onClickForgotPassword");
+  // }
+
+  // function onClickSignup() {
+  //   //this.log.debug("onClickSignup");
+  // }
+
+  return (
+    <Container maxWidth="sm" className={classes.mainContainer}>
+      <Grid
+        container
+        spacing={0}
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item xs={12}>
+          <Card>
+            <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
+              <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t('Login Branding Logo')} />
+            </CardMedia>
+            <CardContent>
               <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
                 <TextField
                   id="login-username"
@@ -111,102 +140,50 @@ class Login extends React.Component<LoginProps, LoginState> {
                   value={username}
                   required
                   error={validateError && emptyUsername}
-                  onChange={this.onUsernameChange}
-                  helperText={helperTextValue}
+                  onChange={onUsernameChange}
                 />
-                <FormControl>
-                  <InputLabel htmlFor="login-password">{t("Password")}</InputLabel>
-                  <Input
-                    id="login-password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    required
-                    error={validateError && emptyPassword}
-                    onChange={this.onPasswordChange}
-                    endAdornment={
+                <TextField
+                  id="login-password"
+                  label={t("Password")}
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  required
+                  error={validateError && (emptyPassword || helperTextValue.length > 0)}
+                  onChange={onPasswordChange}
+                  helperText={helperTextValue}
+                  InputProps={{
+                    endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton
-                          aria-label={t("aria-toggle-password-visibility")}
-                          onClick={this.onClickShowPasswordVisibility}
-                          onMouseDown={this.onMouseDownPassword.bind(this)}
-                        >
+                        <IconButton aria-label={t("aria-toggle-password-visibility")} onClick={onClickShowPasswordVisibility}>
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
-                    }
-                  />
-                </FormControl>
+                    ),
+                  }}
+                />
               </form>
             </CardContent>
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.onClickLoginButton}
-                  disabled={emptyUsername || emptyPassword}
-                >
-                  {t("Login")}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
+            <CardActions>
+              <Link
+                to="/request-password-reset"
+                onClick={onClickLoginReset}>
+                {t('Forgot your password?')}
+              </Link>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onClickLoginButton}
+                className={classes.loginButton}
+                disabled={emptyUsername || emptyPassword}
+              >
+                {t("Login")}
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
-      </Container>
-    );
-  }
-
-  private onUsernameChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    this.setState({ username: event.target.value });
-  }
-
-  private onPasswordChange(event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    this.setState({ password: event.target.value });
-  }
-
-  private onClickShowPasswordVisibility() {
-    const { showPassword } = this.state;
-    if (showPassword) {
-      this.setState({ showPassword: false });
-      api.sendMetrics("Hide password");
-    } else {
-      this.setState({ showPassword: true });
-      api.sendMetrics("Show password");
-    }
-  }
-
-  private onMouseDownPassword(ev: React.MouseEvent): void {
-    this.log.debug("onMouseDownPassword", ev);
-  }
-
-  private onClickLoginButton() {
-    const { username, password } = this.state;
-    if (_.isEmpty(username) || _.isEmpty(password)) {
-      this.setState({ validateError: true });
-      return;
-    }
-    this.setState({ validateError: false });
-    api.login(username, password)
-      .then((user: User) => {
-        this.log.info(user);
-        if (api.userIsPatient) {
-          this.props.history.push("/patient");
-        } else {
-          this.props.history.push("/hcp");
-        }
-      }).catch((reason: Error) => {
-        console.log(reason);
-        this.setState({ validateError: true, helperTextValue: reason.message });
-        this.log.error(reason);
-      });
-  }
-
-  private onClickForgotPassword() {
-    this.log.debug("onClickForgotPassword");
-  }
-
-  private onClickSignup() {
-    this.log.debug("onClickSignup");
-  }
+      </Grid>
+    </Container>
+  );
 }
 
 export default Login;

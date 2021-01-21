@@ -34,7 +34,7 @@ import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
 import { SortDirection, SortFields } from "./types";
 
-interface PatientListProps {
+export interface PatientListTableProps {
   patients: User[];
   flagged: string[];
   order: SortDirection;
@@ -62,7 +62,7 @@ const patientListStyle = makeStyles((theme: Theme) => {
   };
 });
 
-function PatientsList(props: PatientListProps): JSX.Element {
+function PatientListTable(props: PatientListTableProps): JSX.Element {
   const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList, log } = props;
   const classes = patientListStyle();
   const elems = [];
@@ -136,4 +136,4 @@ function PatientsList(props: PatientListProps): JSX.Element {
   );
 }
 
-export default PatientsList;
+export default PatientListTable;

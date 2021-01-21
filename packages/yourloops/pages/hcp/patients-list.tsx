@@ -24,13 +24,14 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import apiClient from "../../lib/api";
 import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
 import { Team } from "../../models/team";
 import { SortDirection, FilterType, SortFields } from "./types";
-import AppBarPage from "./patients-list-bar";
-import PatientsList from "./patients-list-table";
+import apiClient from "../../lib/auth/api";
+import { AuthContext } from '../../lib/auth/hook/use-auth';
+import PatientListBar from "./patients-list-bar";
+import PatientListTable from "./patients-list-table";
 
 interface PatientListPageState {
   loading: boolean;
@@ -47,11 +48,12 @@ interface PatientListPageState {
 
 class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
   private log: Console;
+  public context!: React.ContextType<typeof AuthContext>;
 
   constructor(props: RouteComponentProps) {
     super(props);
 
-    const whoAmI = apiClient.whoami;
+    const whoAmI = this.context.user;
     this.state = {
       loading: true,
       errorMessage: null,
@@ -101,7 +103,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
 
     return (
       <React.Fragment>
-        <AppBarPage
+        <PatientListBar
           filter={filter}
           filterType={filterType}
           teams={teams}
@@ -112,7 +114,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
           <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
         </Grid>
         <Container maxWidth="lg" style={{ marginBottom: "2em" }}>
-          <PatientsList
+          <PatientListTable
             patients={patients}
             flagged={flagged}
             order={order}

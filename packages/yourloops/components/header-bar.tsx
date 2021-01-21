@@ -16,7 +16,7 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps, withRouter, useHistory } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -26,9 +26,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import { t } from "../lib/language";
-import apiClient from "../lib/api";
 
 import brandingLogo from "branding/logo.png";
+import { useAuth } from "../lib/auth/hook/use-auth";
 
 interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
@@ -65,9 +65,7 @@ const toolbarStyles = makeStyles({
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles(props);
-  const history = useHistory();
-
-  // Context menu for profile/logout
+  const auth = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -80,14 +78,15 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   };
 
   const handleLogout = () => {
+    const { history } = props;
     setAnchorEl(null);
-    apiClient.logout();
+    auth.logout();
     history.push("/");
   };
 
   let accountMenu = null;
-  if (apiClient.isLoggedIn) {
-    const user = apiClient.whoami;
+  if (auth.isLoggedIn()) {
+    const user = auth.user;
     const role = user?.roles ? user.roles[0] : "unknown";
     accountMenu = (
       <div className={classes.accountMenu}>

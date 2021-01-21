@@ -47,7 +47,7 @@ import HomeIcon from "@material-ui/icons/Home";
 
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
-import apiClient from "../../lib/api";
+import apiClient from "../../lib/auth/api";
 import TeamCard from "./team-card";
 
 interface TeamsListPageState {

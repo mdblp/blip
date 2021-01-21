@@ -42,12 +42,12 @@ import FlagIcon from "@material-ui/icons/Flag";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
 
-import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { Team } from "../../models/team";
+import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { t } from "../../lib/language";
 import { FilterType } from "./types";
 
-interface BarProps {
+export interface PatientListBarProps {
   teams: Team[];
   filter: string;
   filterType: FilterType;
@@ -182,7 +182,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function AppBarPage(props: BarProps): JSX.Element {
+function PatientListBar(props: PatientListBarProps): JSX.Element {
   const selectMenuProps: Partial<MenuProps> = {
     anchorOrigin: {
       vertical: "bottom",
@@ -246,7 +246,7 @@ function AppBarPage(props: BarProps): JSX.Element {
     <option aria-label={t("aria-none")} value="" key="none" />,
   ];
   if (teams.length > 0) {
-    optionsFilterTeamsElements.push(<ListSubheader>{t("Teams")}</ListSubheader>);
+    optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>);
     for (const team of teams) {
       optionsFilterTeamsElements.push(<MenuItem value={team.id} key={team.id} aria-label={team.name}>{team.name}</MenuItem>);
       optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
@@ -339,4 +339,4 @@ function AppBarPage(props: BarProps): JSX.Element {
   );
 }
 
-export default AppBarPage;
+export default PatientListBar;
