@@ -20,8 +20,11 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
+import _ from 'lodash';
+
 import {
   Button,
   TextField,
@@ -33,6 +36,7 @@ import {
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import HeaderBar from '../../components/header-bar';
 import { User } from 'models/shoreline';
+import { REGEX_EMAIL } from '../../lib/utils';
 
 const getMockUser = (userid: User['userid']): User => ({
   userid,
@@ -59,6 +63,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+type Errors = {
+  firstName: boolean;
+  name: boolean;
+  mail: boolean;
+  password: boolean;
+  passwordConfirmation: boolean;
+};
 
 export const ProfilePage: FunctionComponent = () => {
   const [firstName, setFirstName] = useState('');
@@ -100,6 +112,17 @@ export const ProfilePage: FunctionComponent = () => {
     setLocale(event.target.value as string);
   };
 
+  const errors: Errors = useMemo(
+    () => ({
+      firstName: _.isEmpty(firstName),
+      name: _.isEmpty(name),
+      mail: !REGEX_EMAIL.test(mail),
+      password: password.length < 10,
+      passwordConfirmation: passwordConfirmation !== password,
+    }),
+    [firstName, name, mail, password, passwordConfirmation]
+  );
+
   const onSave = useCallback(() => {
     console.log('save'); // TODO: API Call
   }, [firstName, name, mail]);
@@ -115,6 +138,8 @@ export const ProfilePage: FunctionComponent = () => {
           label='firstName'
           value={firstName}
           onChange={(e) => handleChange(e, setFirstName)}
+          error={errors.firstName}
+          helperText={errors.firstName && 'Field required'}
           variant='outlined'
           style={textFieldStyle}
         />
@@ -123,6 +148,8 @@ export const ProfilePage: FunctionComponent = () => {
           label='lastName'
           value={name}
           onChange={(e) => handleChange(e, setName)}
+          error={errors.name}
+          helperText={errors.name && 'Field required'}
           variant='outlined'
           style={textFieldStyle}
         />
@@ -131,6 +158,32 @@ export const ProfilePage: FunctionComponent = () => {
           label='mail'
           value={mail}
           onChange={(e) => handleChange(e, setMail)}
+          error={errors.mail}
+          helperText={errors.mail && 'Mail incorrect'}
+          variant='outlined'
+          style={textFieldStyle}
+        />
+        <TextField
+          id='password'
+          label='password'
+          type='password'
+          value={password}
+          onChange={(e) => handleChange(e, setPassword)}
+          error={errors.password}
+          helperText={errors.password && 'Password too weak'}
+          variant='outlined'
+          style={textFieldStyle}
+        />
+        <TextField
+          id='passwordConfirmation'
+          label='password confirmation'
+          type='password'
+          value={passwordConfirmation}
+          onChange={(e) => handleChange(e, setPasswordConfirmation)}
+          error={errors.passwordConfirmation}
+          helperText={
+            errors.passwordConfirmation && 'Passwords are not matching'
+          }
           variant='outlined'
           style={textFieldStyle}
         />
@@ -154,24 +207,6 @@ export const ProfilePage: FunctionComponent = () => {
             ))}
           </Select>
         </FormControl>
-        <TextField
-          id='password'
-          label='password'
-          type='password'
-          value={password}
-          onChange={(e) => handleChange(e, setPassword)}
-          variant='outlined'
-          style={textFieldStyle}
-        />
-        <TextField
-          id='passwordConfirmation'
-          label='passwordConfirmation'
-          type='password'
-          value={passwordConfirmation}
-          onChange={(e) => handleChange(e, setPasswordConfirmation)}
-          variant='outlined'
-          style={textFieldStyle}
-        />
         <Button
           variant='contained'
           color='primary'

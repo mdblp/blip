@@ -94,7 +94,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   const history = useHistory();
   const handleOpenProfilePage = () => {
-    history.push("/tmp");
+    history.push("/account-preferences");
   };
 
   const handleLogout = () => {
