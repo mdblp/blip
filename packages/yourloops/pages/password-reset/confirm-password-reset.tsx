@@ -65,27 +65,22 @@ const formStyle = makeStyles(( /* theme: Theme */) => {
  * ConfirmPasswordReset page
  */
 function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Element {
+  const defaultErr = { username: false, newPassword: false, confirmNewPassword: false };
   const [username, setUserName] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [errors, setErrors ] = useState({ username: false, newPassword: false, confirmNewPassword: false });
+  const [errors, setErrors ] = useState(defaultErr);
   const [userNameHelperTextValue, setUserNameHelperTextValue ] = useState("");
   const [newPasswordChangeHelperTextValue, setNewPasswordChangeHelperTextValue ] = useState("");
   const [confirmNewPasswordChangeHelperTextValue, setConfirmNewPasswordChangeHelperTextValue ] = useState("");
   const emptyUsername = _.isEmpty(username);
-  const defaultErr = { username: false, newPassword: false, confirmNewPassword: false };
   const classes = formStyle();
 
-  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setUserName(event.target.value);
-  };
-
-  const onNewPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setNewPassword(event.target.value);
-  };
-
-  const onConfirmNewPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setConfirmNewPassword(event.target.value);
+  const onChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    setState: React.Dispatch<React.SetStateAction<string>>
+  ): void => {
+    setState(event.target.value);
   };
 
   const onGotoLogin = (): void => {
@@ -103,38 +98,38 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
     // for now duplicated blip validation logic
     // Is there a better way to handle errors...
     if (_.isEmpty(username)) {
-      setErrors(Object.assign(defaultErr,{ username: true }));
+      setErrors({ ...defaultErr, username: true });
     }
 
     const IS_REQUIRED = t('This field is required.');
 
     if (!username) {
       setUserNameHelperTextValue(IS_REQUIRED);
-      setErrors(Object.assign(defaultErr,{ username: true }));
+      setErrors({ ...defaultErr, username: true });
     }
 
     if (username && !REGEX_EMAIL.test(username)) {
       setUserNameHelperTextValue(t('Invalid email address.'));
-      setErrors(Object.assign(defaultErr,{ username: true }));
+      setErrors({ ...defaultErr, username: true });
     }
 
     if (!newPassword) {
       setNewPasswordChangeHelperTextValue(IS_REQUIRED);
-      setErrors(Object.assign(defaultErr,{ newPassword: true }));
+      setErrors({ ...defaultErr, newPassword: true });
     }
 
     if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
       setNewPasswordChangeHelperTextValue(t('Password must be at least {{minLength}} characters long.', { minLength: appConfig.PASSWORD_MIN_LENGTH }));
-      setErrors(Object.assign(defaultErr,{ newPassword: true }));
+      setErrors({ ...defaultErr, newPassword: true });
     }
 
     if (newPassword) {
       if (!confirmNewPassword) {
         setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
-        setErrors(Object.assign(defaultErr,{ confirmNewPassword: true }));
+        setErrors({ ...defaultErr, confirmNewPassword: true });
       } else if (confirmNewPassword !== newPassword) {
         setConfirmNewPasswordChangeHelperTextValue(t('Passwords don\'t match.'));
-        setErrors(Object.assign(defaultErr,{ confirmNewPassword: true }));
+        setErrors( { ...defaultErr, confirmNewPassword: true });
       }
     }
 
@@ -171,7 +166,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
                   value={username}
                   required
                   error={errors.username}
-                  onChange={onUsernameChange}
+                  onChange={(e) => onChange(e, setUserName)}
                   helperText={userNameHelperTextValue}
                 />
                 <TextField
@@ -180,7 +175,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
                   value={newPassword}
                   required
                   error={errors.newPassword}
-                  onChange={onNewPasswordChange}
+                  onChange={(e) => onChange(e, setNewPassword)}
                   helperText={newPasswordChangeHelperTextValue}
                 />
                 <TextField
@@ -189,7 +184,7 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
                   value={confirmNewPassword}
                   required
                   error={errors.confirmNewPassword}
-                  onChange={onConfirmNewPasswordChange}
+                  onChange={(e) => onChange(e, setConfirmNewPassword)}
                   helperText={confirmNewPasswordChangeHelperTextValue}
                 />
               </form>
