@@ -1,5 +1,6 @@
 {
   "alt-img-logo": "Branding Logo",
+  "aria-breadcrumbs": "Breadcrumbs",
   "aria-current-user-account": "Current user account",
   "aria-none": "None",
   "aria-modal-add-patient": "Add patient",
@@ -27,6 +28,7 @@
   "select-all-patients": "All patients",
   "select-flagged-patients": "Flagged",
   "select-pending-invitation-patients": "Pending",
+  "team-list-breadcrumbs-title-my-teams": "My Teams",
   "team-modal-edit-placeholder-addr-line1": "Address 1",
   "team-modal-edit-placeholder-addr-line2": "Address 2",
   "team-modal-edit-placeholder-addr-city": "City (State / Province)",
@@ -48,7 +50,6 @@
   "Must specify a username": "Must specify a username",
   "Must specify a password": "Must specify a password",
   "My Patients": "My Patients",
-  "My Teams": "My Teams",
   "Email": "Email",
   "Logout": "Logout",
   "Password": "Password",

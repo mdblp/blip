@@ -138,7 +138,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
     setModalOpen(true);
   };
 
-  // FIXME: if (team.users[currentUser].role === "admin") { ... show buttons }
+  // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
   const buttonEdit = (
     <Button id={`team-card-${team.id}-button-edit`} className={classes.buttonActionFirstRow} startIcon={<EditIcon color="primary" />} onClick={handleClickEdit}>
       {t("button-team-edit")}
