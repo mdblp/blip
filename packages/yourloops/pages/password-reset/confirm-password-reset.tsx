@@ -41,6 +41,10 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { t } from "../../lib/language";
 import { REGEX_EMAIL } from "../../lib/utils";
@@ -73,6 +77,8 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
   const [userNameHelperTextValue, setUserNameHelperTextValue ] = useState("");
   const [newPasswordChangeHelperTextValue, setNewPasswordChangeHelperTextValue ] = useState("");
   const [confirmNewPasswordChangeHelperTextValue, setConfirmNewPasswordChangeHelperTextValue ] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const emptyUsername = _.isEmpty(username);
   const classes = formStyle();
 
@@ -81,6 +87,18 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
     setState: React.Dispatch<React.SetStateAction<string>>
   ): void => {
     setState(event.target.value);
+  };
+
+  const onClick = (
+    _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    showPassword: boolean,
+    setState: React.Dispatch<React.SetStateAction<boolean>>
+  ): void => {
+    if (showPassword) {
+      setState(false);
+    } else {
+      setState(true);
+    }
   };
 
   const onGotoLogin = (): void => {
@@ -172,20 +190,43 @@ function ConfirmPasswordResetPage(props: ConfirmPasswordResetProps) : JSX.Elemen
                 <TextField
                   id="password"
                   label={t("New password")}
+                  type={showNewPassword ? "text" : "password"}
                   value={newPassword}
                   required
                   error={errors.newPassword}
                   onChange={(e) => onChange(e, setNewPassword)}
                   helperText={newPasswordChangeHelperTextValue}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label={t("aria-toggle-password-visibility")}
+                          onClick={(e) => onClick(e, showNewPassword, setShowNewPassword)}>
+                          {showNewPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
                 <TextField
                   id="confirm-password"
                   label={t("confirm new password")}
+                  type={showConfirmNewPassword ? "text" : "password"}
                   value={confirmNewPassword}
                   required
                   error={errors.confirmNewPassword}
                   onChange={(e) => onChange(e, setConfirmNewPassword)}
                   helperText={confirmNewPasswordChangeHelperTextValue}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton aria-label={t("aria-toggle-password-visibility")}
+                          onClick={(e) => onClick(e, showConfirmNewPassword, setShowConfirmNewPassword)}>
+                          {showConfirmNewPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </form>
             </CardContent>
