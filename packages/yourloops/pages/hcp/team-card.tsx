@@ -130,7 +130,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
   const { team } = props;
   const classes = teamCardStyles();
 
-  // FIXME: if (team.users[currentUser].role === "admin") { ... show buttons }
+  // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
   const buttonEdit = (
     <Button id={`team-card-${team.id}-button-edit`} className={classes.buttonActionFirstRow} startIcon={<EditIcon color="primary" />}>
       {t("button-team-edit")}

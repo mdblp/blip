@@ -1,5 +1,6 @@
 {
   "alt-img-logo": "Branding Logo",
+  "aria-breadcrumbs": "Breadcrumbs",
   "aria-current-user-account": "Current user account",
   "aria-none": "None",
   "aria-modal-add-patient": "Add patient",
@@ -21,6 +22,7 @@
   "select-all-patients": "All patients",
   "select-flagged-patients": "Flagged",
   "select-pending-invitation-patients": "Pending",
+  "team-list-breadcrumbs-title-my-teams": "My Teams",
   "Cancel": "Cancel",
   "Create": "Create",
   "alert-patient-list-data-computed": "Data from the last 24h",
@@ -34,7 +36,6 @@
   "Must specify a username": "Must specify a username",
   "Must specify a password": "Must specify a password",
   "My Patients": "My Patients",
-  "My Teams": "My Teams",
   "Email": "Email",
   "Logout": "Logout",
   "Password": "Password",
