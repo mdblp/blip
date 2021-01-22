@@ -95,17 +95,26 @@ pipeline {
             }
         }
         stage('Publish') {
-            when { branch "dblp" }
+            when { 
+                anyOf {
+                    branch "dblp"
+                    branch "engineering/team-managment-v1"
+                    }
+                }
             steps {
                 script {
+                    env.target = "preview"
+                    env.version = "master"
                     if (env.version == "UNRELEASED") {
-                        env.version = "master"
+                        if (env.GIT_BRANCH == "engineering/team-managment-v1") {
+                            env.target = "next"
+                        }
                     }
                 }
                 withCredentials([string(credentialsId: 'DEV_AWS_ACCESS_KEY', variable: 'AWS_ACCESS_KEY_ID'),
                     string(credentialsId: 'DEV_AWS_SECRET_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                     string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT')]) {
-                    sh 'docker run --rm -e STACK_VERSION=${version}:${GIT_COMMIT} -e APP_VERSION=${version}:${GIT_COMMIT} -e AWS_ACCOUNT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY --env-file ./cloudfront-dist/deployment/preview.env blip:${GIT_COMMIT}'
+                    sh 'docker run --rm -e STACK_VERSION=${version}:${GIT_COMMIT} -e APP_VERSION=${version}:${GIT_COMMIT} -e AWS_ACCOUNT -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY --env-file ./cloudfront-dist/deployment/${target}.env blip:${GIT_COMMIT}'
                 }
                 publish()
             }
