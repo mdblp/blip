@@ -28,7 +28,7 @@
 
 import * as React from "react";
 import bows from "bows";
-import { useHistory, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -39,9 +39,9 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -130,12 +130,7 @@ const teamPaperStyles = makeStyles((theme: Theme) => {
 function AppBarPage(props: BarProps): JSX.Element {
   const { onCreateTeam } = props;
   const classes = pageBarStyles();
-  const history = useHistory();
 
-  const handleClickMyTeams = (e: React.MouseEvent) => {
-    e.preventDefault();
-    history.push("/hcp/teams");
-  };
   const handleOpenModalAddTeam = () => {
     onCreateTeam("");
   };
@@ -144,11 +139,11 @@ function AppBarPage(props: BarProps): JSX.Element {
     <AppBar position="static" color="secondary">
       <Toolbar className={classes.toolBar}>
         <div id="team-list-toolbar-item-left">
-          <Breadcrumbs aria-label={t("breadcrumb")}>
-            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/teams" onClick={handleClickMyTeams}>
+          <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
+            <Typography color="textPrimary" className={classes.breadcrumbLink}>
               <HomeIcon className={classes.homeIcon} />
-              {t("My Teams")}
-            </Link>
+              {t("team-list-breadcrumbs-title-my-teams")}
+            </Typography>
           </Breadcrumbs>
         </div>
         <div id="team-list-toolbar-item-middle"></div>
@@ -172,7 +167,7 @@ function TeamElement(props: TeamElementProps): JSX.Element {
   const { team } = props;
   const classes = teamPaperStyles();
 
-  // FIXME: if (team.users[currentUser].role === "admin") { ... show buttons }
+  // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
   const buttonEdit = (
     <Button id={`button-team-edit-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<EditIcon color="primary" />}>
       {t("button-team-edit")}
