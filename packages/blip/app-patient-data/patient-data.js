@@ -89,7 +89,7 @@ class PatientDataPage extends React.Component {
 
     this.state = {
       // New states info
-      chartType: 'basics',
+      chartType: 'daily',
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
       endpoints: [],
@@ -180,7 +180,7 @@ class PatientDataPage extends React.Component {
         loadingState: LOADING_STATE_INITIAL_PROCESS,
         errorMessage: null,
         patient,
-        chartType: 'basics',
+        chartType: 'daily',
         createMessageDatetime: null,
         canPrint: false,
         pdf: null,
