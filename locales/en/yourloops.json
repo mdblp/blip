@@ -18,6 +18,7 @@
   "label-team-card-phone": "Phone number",
   "label-team-card-address": "Address",
   "label-team-card-email": "E-Mail",
+  "button-team-delete": "Delete",
   "modal-add-patient": "New Patient",
   "select-all-patients": "All patients",
   "select-flagged-patients": "Flagged",
