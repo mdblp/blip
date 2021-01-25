@@ -32,11 +32,20 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import HeaderBar from '../../components/header-bar';
 import { User } from 'models/shoreline';
 import { REGEX_EMAIL } from '../../lib/utils';
+import { Password } from '../../components/utils/password';
+
+enum Units {
+  mole = 'mmol/L',
+  gram = 'mg/dL',
+}
 
 const getMockUser = (userid: User['userid']): User => ({
   userid,
@@ -79,6 +88,7 @@ export const ProfilePage: FunctionComponent = () => {
   const [locale, setLocale] = useState(availableLocalesMock[0]);
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [unit, setUnit] = useState(Units.mole);
 
   const userid = 'userid';
   const classes = useStyles();
@@ -110,6 +120,14 @@ export const ProfilePage: FunctionComponent = () => {
     }>
   ) => {
     setLocale(event.target.value as string);
+  };
+
+  const handleUnitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === Units.mole) {
+      setUnit(Units.mole);
+    } else if (event.target.value === Units.gram) {
+      setUnit(Units.gram);
+    }
   };
 
   const errors: Errors = useMemo(
@@ -163,29 +181,23 @@ export const ProfilePage: FunctionComponent = () => {
           variant='outlined'
           style={textFieldStyle}
         />
-        <TextField
+        <Password
           id='password'
           label='password'
-          type='password'
           value={password}
-          onChange={(e) => handleChange(e, setPassword)}
           error={errors.password}
-          helperText={errors.password && 'Password too weak'}
-          variant='outlined'
+          helperText={'Password too weak'}
           style={textFieldStyle}
+          setState={setPassword}
         />
-        <TextField
+        <Password
           id='passwordConfirmation'
           label='password confirmation'
-          type='password'
           value={passwordConfirmation}
-          onChange={(e) => handleChange(e, setPasswordConfirmation)}
           error={errors.passwordConfirmation}
-          helperText={
-            errors.passwordConfirmation && 'Passwords are not matching'
-          }
-          variant='outlined'
+          helperText={'Passwords are not matching'}
           style={textFieldStyle}
+          setState={setPasswordConfirmation}
         />
         <FormControl variant='outlined' className={classes.formControl}>
           <InputLabel
@@ -206,6 +218,28 @@ export const ProfilePage: FunctionComponent = () => {
               </MenuItem>
             ))}
           </Select>
+        </FormControl>
+        <FormControl>
+          <RadioGroup
+            row
+            aria-label='position'
+            name='unit'
+            value={unit}
+            onChange={handleUnitChange}
+          >
+            <FormControlLabel
+              value={Units.mole}
+              control={<Radio color='primary' />}
+              label={Units.mole}
+              labelPlacement='start'
+            />
+            <FormControlLabel
+              value={Units.gram}
+              control={<Radio color='primary' />}
+              label={Units.gram}
+              labelPlacement='start'
+            />
+          </RadioGroup>
         </FormControl>
         <Button
           variant='contained'
