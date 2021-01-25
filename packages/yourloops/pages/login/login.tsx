@@ -28,11 +28,10 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Link as RouterLink, RouteComponentProps } from "react-router-dom";
 import bows from "bows";
 
-import { makeStyles /*, Theme */ } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -43,6 +42,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
+import Link from '@material-ui/core/Link';
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -50,11 +50,27 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 
-const loginStyle = makeStyles((/* theme: Theme */) => {
+const loginStyle = makeStyles(( theme: Theme) => {
   return {
     mainContainer: { margin: "auto" },
+    root: { minHeight: '100vh' },
     loginButton: {
       marginLeft: "auto !important",
+    },
+    rightLink: {
+      padding: theme.spacing(2),
+      textAlign: 'start',
+    },
+    centeredLink: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+    },
+    leftLink: {
+      padding: theme.spacing(2),
+      textAlign: 'end',
+    },
+    selection: {
+      textAlign: 'center',
     },
   };
 });
@@ -134,7 +150,13 @@ function Login(props: RouteComponentProps): JSX.Element {
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer}>
-      <Grid container spacing={0} alignItems="center" justify="center" style={{ minHeight: "100vh" }}>
+      <Grid
+        container
+        spacing={0}
+        alignItems="center"
+        justify="center"
+        className={classes.root}
+      >
         <Grid item xs={12}>
           <Card>
             <CardMedia
@@ -185,8 +207,11 @@ function Login(props: RouteComponentProps): JSX.Element {
               </form>
             </CardContent>
             <CardActions>
-              <Link to="/request-password-reset" onClick={onClickLoginReset}>
-                {t("Forgot your password?")}
+              <Link
+                component={RouterLink}
+                to="/request-password-reset"
+                onClick={onClickLoginReset}>
+                {t('Forgot your password?')}
               </Link>
               <Button
                 variant="contained"
@@ -198,6 +223,26 @@ function Login(props: RouteComponentProps): JSX.Element {
               </Button>
             </CardActions>
           </Card>
+          <Grid container>
+            <Grid item xs={12} className={classes.selection}>
+              <p>language selection</p>
+            </Grid>
+            <Grid item xs={4} className={classes.rightLink} >
+              <Link href="#" >Privacy Policy</Link>
+            </Grid>
+            <Grid item xs={4} className={classes.centeredLink}>
+              <Link href="#">Yourloops 1.13.0</Link>
+            </Grid>
+            <Grid item xs={4} className={classes.leftLink}>
+              <Link href="#">Diabeloop</Link>
+            </Grid>
+            <Grid item xs={6} className={classes.rightLink}>
+              <Link href="#" >Terms of use</Link>
+            </Grid>
+            <Grid item xs={6} className={classes.leftLink}>
+              <Link href="#" >Intented use</Link>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Container>
