@@ -40,6 +40,7 @@ import React, {
   useState,
 } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import i18n, { t } from '../../lib/language';
 
 import HeaderBar from '../../components/header-bar';
 import HomeIcon from '@material-ui/icons/Home';
@@ -47,14 +48,12 @@ import { Password } from '../../components/utils/password';
 import { REGEX_EMAIL } from '../../lib/utils';
 import _ from 'lodash';
 import apiClient from '../../lib/auth/api';
-import { t } from '../../lib/language';
+import locales from '../../../../locales/languages.json';
 
 enum Units {
   mole = 'mmol/L',
   gram = 'mg/dL',
 }
-
-const availableLocalesMock = ['français', 'anglais', 'italien'];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,17 +88,45 @@ type Errors = {
   passwordConfirmation: boolean;
 };
 
+const getCurrentLocaleName = (): string => {
+  const shortLocale = i18n.language.split('-')[0] as
+    | 'en'
+    | 'de'
+    | 'es'
+    | 'fr'
+    | 'it'
+    | 'nl';
+
+  return locales.resources[shortLocale]?.name;
+};
+
+const getLocaleShortname = (locale: string): string => {
+  let shortName = '';
+  _.forEach(locales.resources, ({ name }, key) => {
+    if (name === locale) {
+      shortName = key;
+    }
+  });
+
+  return shortName;
+};
+
 export const ProfilePage: FunctionComponent = () => {
   const [firstName, setFirstName] = useState('');
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
-  const [locale, setLocale] = useState(availableLocalesMock[0]);
+  const [locale, setLocale] = useState(getCurrentLocaleName());
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [unit, setUnit] = useState(Units.mole);
   const [hasChanged, setHasChanged] = useState(false);
 
   const classes = useStyles();
+
+  const availableLocales = useMemo(
+    () => _.map(locales.resources, ({ name }) => name),
+    []
+  );
 
   useEffect(() => {
     const user = apiClient.whoami;
@@ -156,8 +183,12 @@ export const ProfilePage: FunctionComponent = () => {
 
   const onSave = useCallback(() => {
     setHasChanged(false);
+    if (getCurrentLocaleName() !== locale) {
+      const newLocale = getLocaleShortname(locale);
+      i18n.changeLanguage(newLocale);
+    }
     console.log('save'); // TODO: API Call
-  }, [firstName, name, mail]);
+  }, [firstName, name, mail, locale]);
 
   const textFieldStyle: CSSProperties = { margin: '8px' };
 
@@ -243,7 +274,7 @@ export const ProfilePage: FunctionComponent = () => {
               value={locale}
               onChange={handleLocaleChange}
             >
-              {availableLocalesMock.map((locale) => (
+              {availableLocales.map((locale) => (
                 <MenuItem key={locale} value={locale}>
                   {locale}
                 </MenuItem>
@@ -279,7 +310,7 @@ export const ProfilePage: FunctionComponent = () => {
             onClick={onSave}
             style={{ margin: '8px' }}
           >
-            Save
+            {t('Save')}
           </Button>
         </div>
       </Container>
