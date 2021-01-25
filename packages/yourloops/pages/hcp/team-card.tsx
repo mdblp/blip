@@ -137,6 +137,9 @@ function TeamCard(props: TeamCardProps): JSX.Element {
   const handleClickEdit = (): void => {
     setModalOpen(true);
   };
+  const onSaveTeam = (team: Partial<Team>): Promise<void> => {
+    return props.onEditTeam(team as Team);
+  };
 
   // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
   const buttonEdit = (
@@ -171,7 +174,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         <TeamInfo label="label-team-card-address" value={address} icon={<LocationOnIcon />} />
         <TeamInfo label="label-team-card-email" value={team.email} icon={<EmailIcon />} />
       </div>
-      <TeamEditModal action="edit" team={team} modalOpened={modalOpened} setModalOpen={setModalOpen} onEditTeam={props.onEditTeam} />
+      <TeamEditModal action="edit" team={team} modalOpened={modalOpened} setModalOpen={setModalOpen} onSaveTeam={onSaveTeam} />
     </Paper>
   );
 }

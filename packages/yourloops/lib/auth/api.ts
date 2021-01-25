@@ -464,12 +464,18 @@ class AuthApi extends EventTarget {
     return _.cloneDeep(this.teams ?? []);
   }
 
-  public async createTeam(team: Team): Promise<Team[]> {
+  public async createTeam(team: Partial<Team>): Promise<Team[]> {
     if (this.teams === null) {
       this.teams = [];
     }
+
+    // id, code, owner fields will be set by the back-end API
+
+    // eslint-disable-next-line no-magic-numbers
+    team.id = `team-${Math.round(Math.random() * 1000)}`;
+    team.code = "123-456-789";
     team.ownerId = this.user?.userid as string;
-    this.teams.push(team);
+    this.teams.push(team as Team);
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random()*200);
     return _.cloneDeep(this.teams);

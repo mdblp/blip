@@ -52,10 +52,10 @@ interface LocalesCountries {
 
 interface TeamEditModalProps {
   action: "edit" | "create";
-  team: Team;
+  team: Partial<Team>;
   modalOpened: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onEditTeam: (team: Team) => Promise<void>;
+  onSaveTeam: (team: Partial<Team>) => Promise<void>;
 }
 
 const modalStyles = makeStyles((theme: Theme) => {
@@ -96,7 +96,7 @@ const modalStyles = makeStyles((theme: Theme) => {
 });
 
 function TeamEditModal(props: TeamEditModalProps): JSX.Element {
-  const { action, team, modalOpened, setModalOpen, onEditTeam } = props;
+  const { action, team, modalOpened, setModalOpen, onSaveTeam } = props;
   const modalBackdropTimeout = 300;
 
   const classes = modalStyles();
@@ -104,7 +104,7 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
 
   console.info("TeamEditModal", auth.user?.settings?.country);
 
-  const [ teamName, setTeamName ] = React.useState(team.name);
+  const [ teamName, setTeamName ] = React.useState(team.name ?? "");
   const [ teamPhone, setTeamPhone ] = React.useState(team.phone ?? "");
   const [ teamEmail, setTeamEmail ] = React.useState(team.email ?? "");
   const [ addrLine1, setAddrLine1 ] = React.useState(team.address?.line1 ?? "");
@@ -168,7 +168,7 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
     if (addrLine2.length < 1) {
       delete team.address?.line2;
     }
-    onEditTeam(team);
+    onSaveTeam(team);
   };
   const handleChangeTeamName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setTeamName(e.target.value);

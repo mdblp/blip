@@ -57,7 +57,7 @@ interface TeamsListPageState {
   teams: Team[];
 }
 interface BarProps {
-  onCreateTeam: (team: Team) => Promise<void>
+  onCreateTeam: (team: Partial<Team>) => Promise<void>
 }
 
 const log = bows("TeamsListPage");
@@ -88,7 +88,6 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 });
 
 function AppBarPage(props: BarProps): JSX.Element {
-  const { onCreateTeam } = props;
   const classes = pageBarStyles();
 
   const [ modalOpened, setModalOpen ] = React.useState(false);
@@ -97,12 +96,8 @@ function AppBarPage(props: BarProps): JSX.Element {
     setModalOpen(true);
   };
 
-  const fakeNewTeam: Team = {
-    id: `team-${Math.round(Math.random() * 1000)}`,
-    code: "123-456-789",
+  const fakeNewTeam: Partial<Team> = {
     type: "medical",
-    ownerId: "",
-    name: "",
   };
 
   return (
@@ -131,7 +126,7 @@ function AppBarPage(props: BarProps): JSX.Element {
           </div>
         </Toolbar>
       </AppBar>
-      <TeamEditModal action="create" modalOpened={modalOpened} setModalOpen={setModalOpen} team={fakeNewTeam} onEditTeam={onCreateTeam} />
+      <TeamEditModal action="create" modalOpened={modalOpened} setModalOpen={setModalOpen} team={fakeNewTeam} onSaveTeam={props.onCreateTeam} />
     </React.Fragment>
   );
 }
@@ -215,7 +210,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     });
   }
 
-  async onCreateTeam(team: Team): Promise<void> {
+  async onCreateTeam(team: Partial<Team>): Promise<void> {
     log.info("Create team", team);
     const newTeams = await apiClient.createTeam(team);
     this.setState({ teams: newTeams });
