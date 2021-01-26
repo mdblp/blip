@@ -96,17 +96,16 @@ pipeline {
         }
         stage('Publish') {
             when { 
-                anyOf {
-                    branch "dblp"
-                    branch "engineering/team-managment-v1"
+                expression {
+                    env.GIT_BRANCH == "dblp" || env.CHANGE_BRANCH == "engineering/team-managment-v1"
                     }
                 }
             steps {
                 script {
                     env.target = "preview"
-                    env.version = "master"
                     if (env.version == "UNRELEASED") {
-                        if (env.GIT_BRANCH == "engineering/team-managment-v1") {
+                        env.version = "master"
+                        if (env.CHANGE_BRANCH == "engineering/team-managment-v1") {
                             env.target = "next"
                         }
                     }
