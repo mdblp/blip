@@ -39,20 +39,17 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import HomeIcon from "@material-ui/icons/Home";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 import { Team } from "../../models/team";
 import { t } from "../../lib/language";
 import apiClient from "../../lib/auth/api";
-import { AuthContext } from '../../lib/auth/hook/use-auth';
+import TeamCard from "./team-card";
+import TeamEditModal from "./team-edit-modal";
 
 interface TeamsListPageState {
   loading: boolean;
@@ -60,10 +57,7 @@ interface TeamsListPageState {
   teams: Team[];
 }
 interface BarProps {
-  onCreateTeam: (name: string) => Promise<void>
-}
-interface TeamElementProps {
-  team: Team;
+  onCreateTeam: (team: Partial<Team>) => Promise<void>
 }
 
 const log = bows("TeamsListPage");
@@ -93,120 +87,53 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const teamPaperStyles = makeStyles((theme: Theme) => {
-  return {
-    paper: {
-      display: "flex",
-      flexDirection: "column",
-    },
-    paperRoot: {
-      padding: "1em",
-    },
-    firstRow: {
-      display: "flex",
-      flexDirection: "row",
-      marginBottom: theme.spacing(2),
-    },
-    secondRow: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    teamName: {
-      minWidth: "8em",
-    },
-    buttonActionFirstRow: {
-      alignSelf: "center",
-      marginRight: "1em",
-    },
-    divActions: {
-      marginLeft: "2em",
-      display: "flex",
-      flexGrow: 1,
-      justifyContent: "flex-start",
-    },
-  };
-});
-
 function AppBarPage(props: BarProps): JSX.Element {
-  const { onCreateTeam } = props;
   const classes = pageBarStyles();
 
-  const handleOpenModalAddTeam = () => {
-    onCreateTeam("");
+  const [ modalOpened, setModalOpen ] = React.useState(false);
+
+  const handleOpenModalAddTeam = (): void => {
+    setModalOpen(true);
+  };
+
+  const fakeNewTeam: Partial<Team> = {
+    type: "medical",
   };
 
   return (
-    <AppBar position="static" color="secondary">
-      <Toolbar className={classes.toolBar}>
-        <div id="team-list-toolbar-item-left">
-          <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-            <Typography color="textPrimary" className={classes.breadcrumbLink}>
-              <HomeIcon className={classes.homeIcon} />
-              {t("team-list-breadcrumbs-title-my-teams")}
-            </Typography>
-          </Breadcrumbs>
-        </div>
-        <div id="team-list-toolbar-item-middle"></div>
-        <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
-          <Button
-            id="team-list-toolbar-add-team"
-            color="primary"
-            variant="contained"
-            className={classes.buttonAddTeam}
-            onClick={handleOpenModalAddTeam}
-          >
-            <AddIcon />&nbsp;{t("button-add-team")}
-          </Button>
-        </div>
-      </Toolbar>
-    </AppBar>
+    <React.Fragment>
+      <AppBar position="static" color="secondary">
+        <Toolbar className={classes.toolBar}>
+          <div id="team-list-toolbar-item-left">
+            <Breadcrumbs aria-label={t("breadcrumb")}>
+              <Typography color="textPrimary" className={classes.breadcrumbLink}>
+                <HomeIcon className={classes.homeIcon} />
+                {t("team-list-breadcrumbs-title-my-teams")}
+              </Typography>
+            </Breadcrumbs>
+          </div>
+          <div id="team-list-toolbar-item-middle"></div>
+          <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
+            <Button
+              id="team-list-toolbar-add-team"
+              color="primary"
+              variant="contained"
+              className={classes.buttonAddTeam}
+              onClick={handleOpenModalAddTeam}
+            >
+              <AddIcon />&nbsp;{t("button-add-team")}
+            </Button>
+          </div>
+        </Toolbar>
+      </AppBar>
+      <TeamEditModal action="create" modalOpened={modalOpened} setModalOpen={setModalOpen} team={fakeNewTeam} onSaveTeam={props.onCreateTeam} />
+    </React.Fragment>
   );
 }
-
-function TeamElement(props: TeamElementProps): JSX.Element {
-  const { team } = props;
-  const classes = teamPaperStyles();
-
-  // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
-  const buttonEdit = (
-    <Button id={`button-team-edit-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<EditIcon color="primary" />}>
-      {t("button-team-edit")}
-    </Button>
-  );
-  const buttonDelete = (
-    <Button id={`button-team-delete-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<DeleteIcon color="primary" />}>
-      {t("button-team-delete")}
-    </Button>
-  );
-  const buttonAddMember = (
-    <Button id={`button-team-add-member-${team.id}`} className={classes.buttonActionFirstRow} startIcon={<PersonAddIcon color="primary" />}>
-      {t("button-team-add-member")}
-    </Button>
-  );
-
-  return (
-    <Paper className={classes.paper} classes={{ root: classes.paperRoot }}>
-      <div className={classes.firstRow}>
-        <h2 className={classes.teamName}>{team.name}</h2>
-        <div className={classes.divActions}>
-          {buttonEdit}
-          {buttonDelete}
-          {buttonAddMember}
-        </div>
-      </div>
-      <div className={classes.secondRow}>
-
-      </div>
-    </Paper>
-  );
-}
-
 /**
  * HCP page to manage teams
  */
 class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageState> {
-  declare context: React.ContextType<typeof AuthContext>
-
   constructor(props: RouteComponentProps) {
     super(props);
 
@@ -217,9 +144,11 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     };
 
     this.onCreateTeam = this.onCreateTeam.bind(this);
+    this.onEditTeam = this.onEditTeam.bind(this);
   }
 
   componentDidMount(): void {
+    console.log("TeamListPage", { userid: this.context.user?.userid });
     this.onRefresh();
   }
 
@@ -244,7 +173,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     for (const team of teams) {
       teamsItems.push(
         <Grid item xs={12} key={team.id}>
-          <TeamElement team={team} />
+          <TeamCard team={team} onEditTeam={this.onEditTeam} />
         </Grid>
       );
     }
@@ -280,16 +209,15 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     });
   }
 
-  async onCreateTeam(name: string): Promise<void> {
-    const { teams } = this.state;
-    log.info("Create team", name);
-    await apiClient.createTeam({
-      id: `team-${teams.length}`,
-      code: "123-456-789",
-      type: "medical",
-      ownerId: this.context.user?.userid as string,
-      name,
-    });
+  async onCreateTeam(team: Partial<Team>): Promise<void> {
+    log.info("Create team", team);
+    const newTeams = await apiClient.createTeam(team);
+    this.setState({ teams: newTeams });
+  }
+
+  async onEditTeam(team: Team): Promise<void> {
+    const teams = await apiClient.editTeam(team);
+    this.setState({ teams });
   }
 }
 
