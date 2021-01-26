@@ -272,7 +272,7 @@ function PatientListBar(props: PatientListBarProps): JSX.Element {
           <Breadcrumbs aria-label={t("breadcrumb")}>
             <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/patients" onClick={handleClickMyPatients}>
               <HomeIcon className={classes.homeIcon} />
-              {t("My Patients")}
+              {t("my-patients-title")}
             </Link>
           </Breadcrumbs>
         </div>
