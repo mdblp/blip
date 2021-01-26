@@ -130,7 +130,6 @@ function AppBarPage(props: BarProps): JSX.Element {
     </React.Fragment>
   );
 }
-
 /**
  * HCP page to manage teams
  */
