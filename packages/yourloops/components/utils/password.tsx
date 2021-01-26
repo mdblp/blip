@@ -27,9 +27,10 @@
  */
 
 import { IconButton, InputAdornment, TextField } from '@material-ui/core';
+import React, { CSSProperties, FunctionComponent, useState } from 'react';
+
 import { Visibility } from '@material-ui/icons';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import React, { CSSProperties, FunctionComponent, useState } from 'react';
 import { t } from '../../lib/language';
 
 enum PasswordVisibility {
@@ -44,7 +45,7 @@ type PasswordProps = {
   setState: React.Dispatch<React.SetStateAction<string>>;
   error: boolean;
   helperText: string;
-  style: CSSProperties;
+  style?: CSSProperties;
 };
 
 export const Password: FunctionComponent<PasswordProps> = ({
@@ -70,15 +71,17 @@ export const Password: FunctionComponent<PasswordProps> = ({
   return (
     <TextField
       id={id}
-      label={label}
       value={value}
       error={error}
       type={showPassword ? PasswordVisibility.text : PasswordVisibility.hidden}
       onChange={onChange}
       helperText={error && helperText}
-      variant='outlined'
       style={style}
+      inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
       InputProps={{
+        startAdornment: (
+          <InputAdornment position='start'>{t(label)}</InputAdornment>
+        ),
         endAdornment: (
           <InputAdornment position='end'>
             <IconButton

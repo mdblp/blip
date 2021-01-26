@@ -264,22 +264,22 @@ class AuthApi extends EventTarget {
 
     if (!response.ok || response.status !== http.StatusOK) {
       switch (response.status) {
-      case http.StatusUnauthorized:
-        if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
-          if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-            reason = t(
-              "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
-              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
-            );
-          } else {
-            reason = t("Wrong username or password");
+        case http.StatusUnauthorized:
+          if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
+            if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
+              reason = t(
+                "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
+                { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
+              );
+            } else {
+              reason = t("Wrong username or password");
+            }
           }
-        }
-        break;
-      // missing handling 403 status => email not verified
-      default:
-        reason = t("An error occurred while logging in.");
-        break;
+          break;
+        // missing handling 403 status => email not verified
+        default:
+          reason = t("An error occurred while logging in.");
+          break;
       }
 
       if (reason === null) {
@@ -690,29 +690,33 @@ class AuthApi extends EventTarget {
     let matomoPaq = null;
     this.log.info("Metrics:", eventName, properties);
     switch (appConfig.METRICS_SERVICE) {
-    case "matomo":
-      matomoPaq = window._paq;
-      if (!_.isObject(matomoPaq)) {
-        this.log.error("Matomo do not seems to be available, wrong configuration");
-        return;
-      }
-      if (eventName === "CookieConsent") {
-        matomoPaq.push(["setConsentGiven", properties]);
-      } else if (eventName === "setCustomUrl") {
-        matomoPaq.push(["setCustomUrl", properties]);
-      } else if (eventName === "setUserId") {
-        matomoPaq.push(["setUserId", properties]);
-      } else if (eventName === "resetUserId") {
-        matomoPaq.push(["resetUserId"]);
-      } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
-        matomoPaq.push(["setDocumentTitle", properties]);
-      } else if (typeof properties === "undefined") {
-        matomoPaq.push(["trackEvent", eventName]);
-      } else {
-        matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
-      }
-      break;
+      case "matomo":
+        matomoPaq = window._paq;
+        if (!_.isObject(matomoPaq)) {
+          this.log.error("Matomo do not seems to be available, wrong configuration");
+          return;
+        }
+        if (eventName === "CookieConsent") {
+          matomoPaq.push(["setConsentGiven", properties]);
+        } else if (eventName === "setCustomUrl") {
+          matomoPaq.push(["setCustomUrl", properties]);
+        } else if (eventName === "setUserId") {
+          matomoPaq.push(["setUserId", properties]);
+        } else if (eventName === "resetUserId") {
+          matomoPaq.push(["resetUserId"]);
+        } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
+          matomoPaq.push(["setDocumentTitle", properties]);
+        } else if (typeof properties === "undefined") {
+          matomoPaq.push(["trackEvent", eventName]);
+        } else {
+          matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
+        }
+        break;
     }
+  }
+
+  updateUserProfile(user: User): void {
+    console.log("user updated : ", user);
   }
 }
 

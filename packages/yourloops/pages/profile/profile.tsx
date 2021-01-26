@@ -20,18 +20,14 @@ import {
   Button,
   Container,
   FormControl,
-  FormControlLabel,
-  InputLabel,
+  InputAdornment,
   Link,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Toolbar,
 } from '@material-ui/core';
 import React, {
-  CSSProperties,
   Fragment,
   FunctionComponent,
   useCallback,
@@ -45,10 +41,12 @@ import HeaderBar from '../../components/header-bar';
 import HomeIcon from '@material-ui/icons/Home';
 import { Password } from '../../components/utils/password';
 import { REGEX_EMAIL } from '../../lib/utils';
+import { User } from 'models/shoreline';
 import _ from 'lodash';
 import apiClient from '../../lib/auth/api';
 import { i18n } from 'i18next';
 import locales from '../../../../locales/languages.json';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 enum Units {
@@ -58,9 +56,10 @@ enum Units {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    select: { padding: '1em 2em' },
     formControl: {
-      margin: theme.spacing(1),
       minWidth: 120,
+      textAlign: 'right',
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -77,6 +76,15 @@ const useStyles = makeStyles((theme: Theme) =>
       gridTemplateColumns: 'auto auto auto',
       paddingLeft: '6em',
       paddingRight: '6em',
+    },
+    textField: {
+      '& input:disabled': {
+        backgroundColor: '#f7f7f8',
+      },
+    },
+    title: {
+      textAlign: 'center',
+      color: theme.palette.primary.main,
     },
   })
 );
@@ -114,6 +122,9 @@ const getLocaleShortname = (locale: string): string => {
 
 export const ProfilePage: FunctionComponent = () => {
   const { t, i18n } = useTranslation('yourloops');
+  const classes = useStyles();
+  const history = useHistory();
+
   const [firstName, setFirstName] = useState('');
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
@@ -121,9 +132,6 @@ export const ProfilePage: FunctionComponent = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [unit, setUnit] = useState(Units.mole);
-  const [hasChanged, setHasChanged] = useState(false);
-
-  const classes = useStyles();
 
   const availableLocales = useMemo(
     () => _.map(locales.resources, ({ name }) => name),
@@ -147,7 +155,6 @@ export const ProfilePage: FunctionComponent = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setState: React.Dispatch<React.SetStateAction<string>>
   ): void => {
-    setHasChanged(true);
     setState(event.target.value);
   };
 
@@ -157,14 +164,15 @@ export const ProfilePage: FunctionComponent = () => {
       value: string | unknown;
     }>
   ): void => {
-    setHasChanged(true);
     setLocale(event.target.value as string);
   };
 
   const handleUnitChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: string | unknown;
+    }>
   ): void => {
-    setHasChanged(true);
     if (event.target.value === Units.mole) {
       setUnit(Units.mole);
     } else if (event.target.value === Units.gram) {
@@ -183,16 +191,53 @@ export const ProfilePage: FunctionComponent = () => {
     [firstName, name, mail, password, passwordConfirmation]
   );
 
+  const hasChanged: boolean = useMemo(() => {
+    if (i18n && getCurrentLocaleName(i18n) !== locale) {
+      return true;
+    }
+    const user = apiClient.whoami;
+    if (user) {
+      const newUser: User = {
+        ...user,
+        emails: [mail],
+        profile: {
+          ...user.profile,
+          fullName: firstName + ' ' + name,
+          firstName,
+          lastName: name,
+        },
+      };
+      return !_.isEqual(user, newUser);
+    }
+
+    return false;
+  }, [firstName, name, mail, password, passwordConfirmation, locale]);
+
   const onSave = useCallback(() => {
-    setHasChanged(false);
     if (i18n && getCurrentLocaleName(i18n) !== locale) {
       const newLocale = getLocaleShortname(locale);
       i18n.changeLanguage(newLocale);
     }
-    console.log(t('AFTER_MEAL_FORCE_MD_DURATION')); // TODO: API Call
+
+    const user = apiClient.whoami;
+    if (user) {
+      const newUser: User = {
+        ...user,
+        emails: [mail],
+        profile: {
+          ...user.profile,
+          fullName: firstName + ' ' + name,
+          firstName,
+          lastName: name,
+        },
+      };
+      if (!_.isEqual(user, newUser)) {
+        apiClient.updateUserProfile(newUser);
+      }
+    }
   }, [firstName, name, mail, locale, i18n, t]);
 
-  const textFieldStyle: CSSProperties = { margin: '8px' };
+  const onCancel = (): void => history.goBack();
 
   return (
     <Fragment>
@@ -215,66 +260,82 @@ export const ProfilePage: FunctionComponent = () => {
         <div
           style={{ display: 'flex', flexDirection: 'column', margin: '16px' }}
         >
+          <div className={classes.title}>
+            Update your personal info and preferences
+          </div>
           <TextField
             id='firstName'
-            label='firstName'
             value={firstName}
             onChange={(e) => handleChange(e, setFirstName)}
             error={errors.firstName}
             helperText={errors.firstName && 'Field required'}
-            variant='outlined'
-            style={textFieldStyle}
+            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  {t('First Name')}
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             id='lastName'
-            label='lastName'
             value={name}
             onChange={(e) => handleChange(e, setName)}
             error={errors.name}
             helperText={errors.name && 'Field required'}
-            variant='outlined'
-            style={textFieldStyle}
+            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  {t('Last Name')}
+                </InputAdornment>
+              ),
+            }}
           />
           <TextField
             id='mail'
-            label='mail'
             value={mail}
+            disabled
             onChange={(e) => handleChange(e, setMail)}
             error={errors.mail}
             helperText={errors.mail && 'Mail incorrect'}
-            variant='outlined'
-            style={textFieldStyle}
+            className={classes.textField}
+            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>{t('Email')}</InputAdornment>
+              ),
+            }}
           />
           <Password
             id='password'
-            label='password'
+            label='Password'
             value={password}
             error={errors.password}
             helperText={'Password too weak'}
-            style={textFieldStyle}
             setState={setPassword}
           />
           <Password
             id='passwordConfirmation'
-            label='password confirmation'
+            label='Confirm password'
             value={passwordConfirmation}
             error={errors.passwordConfirmation}
             helperText={'Passwords are not matching'}
-            style={textFieldStyle}
             setState={setPasswordConfirmation}
           />
-          <FormControl variant='outlined' className={classes.formControl}>
-            <InputLabel
-              style={{ backgroundColor: '#f7f7f8', padding: ' 0 8px' }}
-              id='locale-selector'
-            >
-              Locale
-            </InputLabel>
+          <FormControl className={classes.formControl}>
             <Select
               labelId='locale-selector'
               id='locale-selector'
               value={locale}
               onChange={handleLocaleChange}
+              classes={{ root: classes.select }}
+              startAdornment={
+                <InputAdornment position='start'>
+                  {t('Language')}
+                </InputAdornment>
+              }
             >
               {availableLocales.map((locale) => (
                 <MenuItem key={locale} value={locale}>
@@ -283,37 +344,40 @@ export const ProfilePage: FunctionComponent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl>
-            <RadioGroup
-              row
-              aria-label='position'
-              name='unit'
+          <FormControl className={classes.formControl}>
+            <Select
+              labelId='unit-selector'
+              id='unit-selector'
               value={unit}
               onChange={handleUnitChange}
+              classes={{ root: classes.select }}
+              startAdornment={
+                <InputAdornment position='start'>{t('Units')}</InputAdornment>
+              }
             >
-              <FormControlLabel
-                value={Units.mole}
-                control={<Radio color='primary' />}
-                label={Units.mole}
-                labelPlacement='start'
-              />
-              <FormControlLabel
-                value={Units.gram}
-                control={<Radio color='primary' />}
-                label={Units.gram}
-                labelPlacement='start'
-              />
-            </RadioGroup>
+              <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
+              <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
+            </Select>
           </FormControl>
-          <Button
-            variant='contained'
-            disabled={!hasChanged}
-            color='primary'
-            onClick={onSave}
-            style={{ margin: '8px' }}
-          >
-            {t('SAVE')}
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={onCancel}
+              style={{ margin: '2em 1em' }}
+            >
+              {t('CANCEL')}
+            </Button>
+            <Button
+              variant='contained'
+              disabled={!hasChanged}
+              color='primary'
+              onClick={onSave}
+              style={{ margin: '2em 1em' }}
+            >
+              {t('SAVE')}
+            </Button>
+          </div>
         </div>
       </Container>
     </Fragment>
