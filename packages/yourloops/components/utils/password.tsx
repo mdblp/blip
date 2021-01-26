@@ -92,6 +92,7 @@ export const Password: FunctionComponent<PasswordProps> = ({
       style={style}
       className={classes.textField}
       InputProps={{
+        startAdornment: <InputAdornment position="start">{t(label)}</InputAdornment>,
         endAdornment: (
           <InputAdornment position="end">
             <IconButton aria-label={t("aria-toggle-password-visibility")} onClick={handleShowPasswordChange}>
