@@ -148,7 +148,7 @@ function Login(props: RouteComponentProps): JSX.Element {
               <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
                 <TextField
                   id="login-username"
-                  label={t("Email")}
+                  label={t("email")}
                   value={username}
                   required
                   error={validateError && emptyUsername}
@@ -156,7 +156,7 @@ function Login(props: RouteComponentProps): JSX.Element {
                 />
                 <TextField
                   id="login-password"
-                  label={t("Password")}
+                  label={t("password")}
                   type={showPassword ? "text" : "password"}
                   value={password}
                   required

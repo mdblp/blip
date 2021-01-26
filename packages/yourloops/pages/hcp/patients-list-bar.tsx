@@ -256,7 +256,7 @@ function PatientListBar(props: PatientListBarProps): JSX.Element {
     <option aria-label={t("aria-none")} value="" key="none" />,
   ];
   if (teams.length > 0) {
-    optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>);
+    optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("teams")}</ListSubheader>);
     for (const team of teams) {
       optionsFilterTeamsElements.push(<MenuItem value={team.id} key={team.id} aria-label={team.name}>{team.name}</MenuItem>);
       optionsTeamsElements.push(<option value={team.id} key={team.id} aria-label={team.name}>{team.name}</option>);
@@ -325,9 +325,9 @@ function PatientListBar(props: PatientListBarProps): JSX.Element {
               <div className={classes.divModal}>
                 <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
                 <form noValidate autoComplete="off" className={classes.formModal}>
-                  <TextField required id="patient-list-toolbar-modal-add-patient-username" onChange={handleChangeUsername} value={modalUsername} label={t("Required")} />
+                  <TextField required id="patient-list-toolbar-modal-add-patient-username" onChange={handleChangeUsername} value={modalUsername} label={t("required")} />
                   <FormControl className={classes.formControlSelectTeam}>
-                    <InputLabel htmlFor="select-patient-list-modal-team">{t("Team")}</InputLabel>
+                    <InputLabel htmlFor="select-patient-list-modal-team">{t("team")}</InputLabel>
                     <NativeSelect
                       value={modalSelectedTeam}
                       onChange={handleChangeAddPatientTeam}
@@ -336,8 +336,8 @@ function PatientListBar(props: PatientListBarProps): JSX.Element {
                     </NativeSelect>
                   </FormControl>
                   <div className={classes.divModalButtons}>
-                    <Button id="patients-list-modal-button-close" className={classes.divModalButtonCancel} variant="contained" onClick={handleCloseModalAddPatient}>{t("Cancel")}</Button>
-                    <Button id="patients-list-modal-button-create" disabled={buttonCreateDisabled} onClick={handleModalAddPatient} color="primary" variant="contained">{t("Create")}</Button>
+                    <Button id="patients-list-modal-button-close" className={classes.divModalButtonCancel} variant="contained" onClick={handleCloseModalAddPatient}>{t("cancel")}</Button>
+                    <Button id="patients-list-modal-button-create" disabled={buttonCreateDisabled} onClick={handleModalAddPatient} color="primary" variant="contained">{t("create")}</Button>
                   </div>
                 </form>
               </div>
