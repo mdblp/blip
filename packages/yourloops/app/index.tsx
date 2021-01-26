@@ -26,17 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import App from './app';
+import '../lib/language';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Yourloops from './app';
 
 // TODO: window.onerror
 
-const app = new App();
-
-app
-  .init()
-  .then(() => {
-    app.render();
-    console.log("Application started");
-  }).catch((reason: unknown) => {
-    console.error("Failed to start the application", reason);
-  });
+let div = document.getElementById('app');
+if (div === null) {
+  div = document.createElement('div');
+  div.id = 'app';
+  document.body.appendChild(div);
+}
+ReactDOM.render(<Yourloops />, div);
