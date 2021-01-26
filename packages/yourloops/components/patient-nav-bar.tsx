@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+<<<<<<< HEAD:packages/yourloops/components/patient-nav-bar.tsx
 import * as React from "react";
 
 import HeaderBar from "./header-bar";
@@ -35,3 +36,20 @@ function PatientNavBar(): JSX.Element {
 }
 
 export default PatientNavBar;
+=======
+import '../lib/language';
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Yourloops from './app';
+
+// TODO: window.onerror
+
+let div = document.getElementById('app');
+if (div === null) {
+  div = document.createElement('div');
+  div.id = 'app';
+  document.body.appendChild(div);
+}
+ReactDOM.render(<Yourloops />, div);
+>>>>>>> Set up i18n with hooks:packages/yourloops/app/index.tsx

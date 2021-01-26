@@ -26,9 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+<<<<<<< HEAD
 import i18n, { InitOptions, Resource, TOptions } from "i18next";
 import moment from "moment-timezone";
 import { initReactI18next } from "react-i18next";
+=======
+import i18n, { InitOptions, Resource, TOptions } from 'i18next';
+
+import getLocale from './browser-locale';
+import { initReactI18next } from 'react-i18next';
+import locales from '../../../locales/languages.json';
+import moment from 'moment-timezone';
+>>>>>>> Set up i18n with hooks
 
 import getLocale from "./browser-locale";
 import locales from "../../../locales/languages.json";
@@ -73,12 +82,21 @@ async function init(): Promise<void> {
     resources: locales.resources,
   };
 
+<<<<<<< HEAD
   if (crowdinActive) {
     i18nOptions.fallbackLng = locales.crowdin.fallback;
     (i18nOptions.resources as Resource)[locales.crowdin.fallback] = locales.crowdin.resources;
   }
 
   i18n.use(initReactI18next);
+=======
+if (crowdinActive) {
+  i18nOptions.fallbackLng = locales.crowdin.fallback;
+  (i18nOptions.resources as Resource)[locales.crowdin.fallback] =
+    locales.crowdin.resources;
+}
+i18n.use(initReactI18next);
+>>>>>>> Set up i18n with hooks
 
   // Update moment with the right language, for date display
   i18n.on("languageChanged", (lng: string) => {
@@ -102,9 +120,13 @@ async function init(): Promise<void> {
     }
   });
 
+<<<<<<< HEAD
   await i18n.init(i18nOptions);
 }
 
+=======
+i18n.init(i18nOptions);
+>>>>>>> Set up i18n with hooks
 /**
  *
  * @param s The string to translate
@@ -117,5 +139,9 @@ function t(s: string, p?: TOptions | string): string {
   return i18n.t(`yourloops|${s}`, p);
 }
 
+<<<<<<< HEAD
 export { init, t };
+=======
+export { t };
+>>>>>>> Set up i18n with hooks
 export default i18n;

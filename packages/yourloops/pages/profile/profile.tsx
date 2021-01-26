@@ -40,7 +40,6 @@ import React, {
   useState,
 } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import i18n, { t } from '../../lib/language';
 
 import HeaderBar from '../../components/header-bar';
 import HomeIcon from '@material-ui/icons/Home';
@@ -48,7 +47,9 @@ import { Password } from '../../components/utils/password';
 import { REGEX_EMAIL } from '../../lib/utils';
 import _ from 'lodash';
 import apiClient from '../../lib/auth/api';
+import { i18n } from 'i18next';
 import locales from '../../../../locales/languages.json';
+import { useTranslation } from 'react-i18next';
 
 enum Units {
   mole = 'mmol/L',
@@ -88,7 +89,7 @@ type Errors = {
   passwordConfirmation: boolean;
 };
 
-const getCurrentLocaleName = (): string => {
+const getCurrentLocaleName = (i18n: i18n): string => {
   const shortLocale = i18n.language.split('-')[0] as
     | 'en'
     | 'de'
@@ -112,10 +113,11 @@ const getLocaleShortname = (locale: string): string => {
 };
 
 export const ProfilePage: FunctionComponent = () => {
+  const { t, i18n } = useTranslation('yourloops');
   const [firstName, setFirstName] = useState('');
   const [name, setName] = useState('');
   const [mail, setMail] = useState('');
-  const [locale, setLocale] = useState(getCurrentLocaleName());
+  const [locale, setLocale] = useState(getCurrentLocaleName(i18n));
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [unit, setUnit] = useState(Units.mole);
@@ -183,12 +185,12 @@ export const ProfilePage: FunctionComponent = () => {
 
   const onSave = useCallback(() => {
     setHasChanged(false);
-    if (getCurrentLocaleName() !== locale) {
+    if (i18n && getCurrentLocaleName(i18n) !== locale) {
       const newLocale = getLocaleShortname(locale);
       i18n.changeLanguage(newLocale);
     }
-    console.log('save'); // TODO: API Call
-  }, [firstName, name, mail, locale]);
+    console.log(t('AFTER_MEAL_FORCE_MD_DURATION')); // TODO: API Call
+  }, [firstName, name, mail, locale, i18n, t]);
 
   const textFieldStyle: CSSProperties = { margin: '8px' };
 
@@ -310,7 +312,7 @@ export const ProfilePage: FunctionComponent = () => {
             onClick={onSave}
             style={{ margin: '8px' }}
           >
-            {t('Save')}
+            {t('SAVE')}
           </Button>
         </div>
       </Container>
