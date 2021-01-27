@@ -26,18 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from 'react';
-import { Route, RouteComponentProps } from "react-router-dom";
-import bows from 'bows';
+import * as React from "react";
 
-import PatientNavBar from '../../components/patient-nav-bar';
-// import PatientListPage from './patients-list';
-import PatientDataPage from './patient-data';
+import { Route, RouteComponentProps } from "react-router-dom";
+
+import PatientDataPage from "./patient-data";
+import PatientNavBar from "../../components/patient-nav-bar";
+import bows from "bows";
 
 /**
  * Patient page
  */
-function PatientPage(props: RouteComponentProps) : JSX.Element | null {
+function PatientPage(props: RouteComponentProps): JSX.Element | null {
   const log = bows("Patient Page");
   log.info("Patient page", props.history.location.pathname);
   if (props.history.location.pathname === "/patient") {
@@ -51,7 +51,6 @@ function PatientPage(props: RouteComponentProps) : JSX.Element | null {
       <PatientNavBar />
 
       <Route path="/patient/data" component={PatientDataPage} />
-
     </div>
   );
 }

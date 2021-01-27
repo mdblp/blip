@@ -26,9 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps } from "react-router-dom";
 
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -37,26 +35,31 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import { RouteComponentProps } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-
-import { t } from "../../lib/language";
+import _ from "lodash";
 import brandingLogo from "branding/logo.png";
-import { useState } from "react";
 import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Login page
  */
-function RequestPasswordResetPage(props: RouteComponentProps ): JSX.Element {
+function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
+  const { t } = useTranslation("yourloops");
+
   const [username, setUserName] = useState("");
-  const [validateError, setValidateError ] = useState(false);
-  const [helperTextValue, setHelperTextValue ] = useState("");
+  const [validateError, setValidateError] = useState(false);
+  const [helperTextValue, setHelperTextValue] = useState("");
   //const loginFormStyles = useState(["stage-transition-container-variant"]);
   const auth = useAuth();
   const emptyUsername = _.isEmpty(username);
 
-  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const onUsernameChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setUserName(event.target.value);
   };
 
@@ -72,10 +75,12 @@ function RequestPasswordResetPage(props: RouteComponentProps ): JSX.Element {
       return;
     }
     setValidateError(false);
-    auth.sendPasswordResetEmail(username)
+    auth
+      .sendPasswordResetEmail(username)
       .then(() => {
         props.history.push("/password-reset-confirmed");
-      }).catch((reason: Error) => {
+      })
+      .catch((reason: Error) => {
         setValidateError(true);
         setHelperTextValue(reason.message);
       });
@@ -88,21 +93,39 @@ function RequestPasswordResetPage(props: RouteComponentProps ): JSX.Element {
         spacing={0}
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
+        style={{ minHeight: "100vh" }}
       >
         <Grid item xs={12}>
           <Card>
-            <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-              <img src={brandingLogo} alt={t('Login Branding Logo')} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} />
+            <CardMedia
+              style={{
+                display: "flex",
+                paddingTop: "1em",
+                paddingBottom: "1em",
+              }}
+            >
+              <img
+                src={brandingLogo}
+                alt={t("Login Branding Logo")}
+                style={{
+                  height: "60px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              />
             </CardMedia>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                {t('Forgot your password?')}
+                {t("Forgot your password?")}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                {t('Please enter your email address.')}
+                {t("Please enter your email address.")}
               </Typography>
-              <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
+              <form
+                style={{ display: "flex", flexDirection: "column" }}
+                noValidate
+                autoComplete="off"
+              >
                 <TextField
                   id="username"
                   label={t("Email")}
@@ -115,12 +138,8 @@ function RequestPasswordResetPage(props: RouteComponentProps ): JSX.Element {
               </form>
             </CardContent>
             <CardActions>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={onBack}
-              >
-                {t('Cancel')}
+              <Button variant="contained" color="secondary" onClick={onBack}>
+                {t("Cancel")}
               </Button>
               <Button
                 variant="contained"
@@ -128,7 +147,7 @@ function RequestPasswordResetPage(props: RouteComponentProps ): JSX.Element {
                 onClick={onSendResetLink}
                 disabled={emptyUsername}
               >
-                {t('Send reset link')}
+                {t("Send reset link")}
               </Button>
             </CardActions>
           </Card>

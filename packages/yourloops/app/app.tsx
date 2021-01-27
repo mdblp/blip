@@ -26,45 +26,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import '@fontsource/roboto';
-import 'branding/theme-base.css';
-import 'branding/theme.css';
+import "@fontsource/roboto";
+import "branding/theme-base.css";
+import "branding/theme.css";
 
-import * as React from 'react';
+import * as React from "react";
 
 import {
   ConfirmPasswordResetPage,
   RequestPasswordResetPage,
-} from '../pages/password-reset';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+} from "../pages/password-reset";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 
-import { AuthProvider } from '../lib/auth/hook/use-auth';
-import HcpPage from '../pages/hcp';
-import LoginPage from '../pages/login';
-import PatientPage from '../pages/patient';
-import PrivateRoute from '../components/private-route';
-import { Suspense } from 'react';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { theme } from '../components/theme';
+import { AuthProvider } from "../lib/auth/hook/use-auth";
+import HcpPage from "../pages/hcp";
+import LoginPage from "../pages/login";
+import PatientPage from "../pages/patient";
+import PrivateRoute from "../components/private-route";
+import { Suspense } from "react";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { theme } from "../components/theme";
 
 const Yourloops: React.FunctionComponent = () => {
   return (
-    <Suspense fallback='loading'>
+    <Suspense fallback="loading">
       <ThemeProvider theme={theme}>
         <AuthProvider>
           <Router>
             <Switch>
-              <Route exact path='/' component={LoginPage} />
+              <Route exact path="/" component={LoginPage} />
               <Route
-                path='/request-password-reset'
+                path="/request-password-reset"
                 component={RequestPasswordResetPage}
               />
               <Route
-                path='/confirm-password-reset'
+                path="/confirm-password-reset"
                 component={ConfirmPasswordResetPage}
               />
-              <PrivateRoute path='/hcp' component={HcpPage} />
-              <PrivateRoute path='/patient' component={PatientPage} />
+              <PrivateRoute path="/hcp" component={HcpPage} />
+              <PrivateRoute path="/patient" component={PatientPage} />
             </Switch>
           </Router>
         </AuthProvider>

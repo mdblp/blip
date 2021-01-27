@@ -26,18 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import '../lib/language';
+import "../lib/language";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Yourloops from './app';
+import React from "react";
+import ReactDOM from "react-dom";
+import Yourloops from "./app";
 
 // TODO: window.onerror
 
-let div = document.getElementById('app');
+let div = document.getElementById("app");
 if (div === null) {
-  div = document.createElement('div');
-  div.id = 'app';
+  div = document.createElement("div");
+  div.id = "app";
   document.body.appendChild(div);
 }
 ReactDOM.render(<Yourloops />, div);

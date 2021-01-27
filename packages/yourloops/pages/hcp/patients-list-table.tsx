@@ -28,23 +28,22 @@
 
 import * as React from "react";
 
+import { SortDirection, SortFields } from "./types";
+import { Theme, makeStyles } from "@material-ui/core/styles";
+
+import FlagIcon from "@material-ui/icons/Flag";
+import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-
-import FlagIcon from "@material-ui/icons/Flag";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
-
-import { t } from "../../lib/language";
 import { User } from "../../models/shoreline";
-import { SortDirection, SortFields } from "./types";
+import { useTranslation } from "react-i18next";
 
 export interface PatientListTableProps {
   patients: User[];
@@ -75,7 +74,17 @@ const patientListStyle = makeStyles((theme: Theme) => {
 });
 
 function PatientListTable(props: PatientListTableProps): JSX.Element {
-  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList, log } = props;
+  const {
+    patients,
+    flagged,
+    order,
+    orderBy,
+    onClickPatient,
+    onFlagPatient,
+    onSortList,
+    log,
+  } = props;
+  const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const elems = [];
   const nPatients = patients.length;
@@ -84,7 +93,10 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
     const patient = patients[i];
     const userId = patient.userid;
     const firstName = patient.profile?.firstName ?? "";
-    const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
+    const lastName =
+      patient.profile?.lastName ??
+      patient.profile?.fullName ??
+      patient.username;
     const isFlagged = flagged.includes(userId);
     const onClickFlag = (e: React.MouseEvent): void => {
       e.stopPropagation();
@@ -96,23 +108,43 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
       onClickPatient(patient);
     };
     elems.push(
-      <TableRow id={`patients-list-row-${userId}`} key={userId} tabIndex={-1} hover onClick={onRowClick} className={classes.tableRow}>
+      <TableRow
+        id={`patients-list-row-${userId}`}
+        key={userId}
+        tabIndex={-1}
+        hover
+        onClick={onRowClick}
+        className={classes.tableRow}
+      >
         <TableCell id={`patients-list-row-flag-${userId}`}>
-          <IconButton className={classes.flag} aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
+          <IconButton
+            className={classes.flag}
+            aria-label={t("aria-flag-patient")}
+            size="small"
+            onClick={onClickFlag}
+          >
             {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
           </IconButton>
         </TableCell>
-        <TableCell id={`patients-list-row-lastname-${userId}`}>{lastName}</TableCell>
-        <TableCell id={`patients-list-row-firstname-${userId}`}>{firstName}</TableCell>
+        <TableCell id={`patients-list-row-lastname-${userId}`}>
+          {lastName}
+        </TableCell>
+        <TableCell id={`patients-list-row-firstname-${userId}`}>
+          {firstName}
+        </TableCell>
         <TableCell id={`patients-list-row-tir-${userId}`}>{t("N/A")}</TableCell>
-        <TableCell id={`patients-list-row-avg-glucose-${userId}`}>{t("N/A")}</TableCell>
+        <TableCell id={`patients-list-row-avg-glucose-${userId}`}>
+          {t("N/A")}
+        </TableCell>
         <TableCell id={`patients-list-row-tbr-${userId}`}>{t("N/A")}</TableCell>
-        <TableCell id={`patients-list-row-upload-${userId}`}>{t("N/A")}</TableCell>
+        <TableCell id={`patients-list-row-upload-${userId}`}>
+          {t("N/A")}
+        </TableCell>
       </TableRow>
     );
   }
 
-  const createSortHandler = (property: SortFields): () => void => {
+  const createSortHandler = (property: SortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
       onSortList(property, order === "asc" ? "desc" : "asc");
     };
@@ -120,29 +152,47 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
+      <Table
+        className={classes.table}
+        aria-label={t("aria-table-list-patient")}
+        stickyHeader
+      >
         <TableHead>
           <TableRow className={classes.tableRowHeader}>
             <TableCell id="patients-list-header-flag" />
             <TableCell id="patients-list-header-lastname">
-              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler("lastname")}>
+              <TableSortLabel
+                active={orderBy === "lastname"}
+                direction={order}
+                onClick={createSortHandler("lastname")}
+              >
                 {t("list-patient-lastname")}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patients-list-header-firstname">
-              <TableSortLabel active={orderBy === "firstname"} direction={order} onClick={createSortHandler("firstname")}>
+              <TableSortLabel
+                active={orderBy === "firstname"}
+                direction={order}
+                onClick={createSortHandler("firstname")}
+              >
                 {t("list-patient-firstname")}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patients-list-header-tir">{t("list-patient-tir")}</TableCell>
-            <TableCell id="patients-list-header-avg-glucose">{t("list-patient-avg-glucose")}</TableCell>
-            <TableCell id="patients-list-header-tbr">{t("list-patient-tbr")}</TableCell>
-            <TableCell id="patients-list-header-upload">{t("list-patient-upload")}</TableCell>
+            <TableCell id="patients-list-header-tir">
+              {t("list-patient-tir")}
+            </TableCell>
+            <TableCell id="patients-list-header-avg-glucose">
+              {t("list-patient-avg-glucose")}
+            </TableCell>
+            <TableCell id="patients-list-header-tbr">
+              {t("list-patient-tbr")}
+            </TableCell>
+            <TableCell id="patients-list-header-upload">
+              {t("list-patient-upload")}
+            </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {elems}
-        </TableBody>
+        <TableBody>{elems}</TableBody>
       </Table>
     </TableContainer>
   );

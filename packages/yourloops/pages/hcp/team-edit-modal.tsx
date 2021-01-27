@@ -28,21 +28,21 @@
 
 import * as React from "react";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { Theme, makeStyles } from "@material-ui/core/styles";
+
 import Backdrop from "@material-ui/core/Backdrop";
 import Button from "@material-ui/core/Button";
 import Fade from "@material-ui/core/Fade";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Modal from "@material-ui/core/Modal";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
-
-import locales from '../../../../locales/languages.json';
-import { t } from "../../lib/language";
 import { REGEX_EMAIL } from "../../lib/utils";
+import Select from "@material-ui/core/Select";
 import { Team } from "../../models/team";
+import TextField from "@material-ui/core/TextField";
+import locales from "../../../../locales/languages.json";
 import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useTranslation } from "react-i18next";
 
 interface LocalesCountries {
   [code: string]: {
@@ -97,6 +97,7 @@ const modalStyles = makeStyles((theme: Theme) => {
 
 function TeamEditModal(props: TeamEditModalProps): JSX.Element {
   const { action, team, modalOpened, setModalOpen, onSaveTeam } = props;
+  const { t } = useTranslation("yourloops");
   const modalBackdropTimeout = 300;
 
   const classes = modalStyles();
@@ -104,26 +105,39 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
 
   console.info("TeamEditModal", auth.user?.settings?.country);
 
-  const [ teamName, setTeamName ] = React.useState(team.name ?? "");
-  const [ teamPhone, setTeamPhone ] = React.useState(team.phone ?? "");
-  const [ teamEmail, setTeamEmail ] = React.useState(team.email ?? "");
-  const [ addrLine1, setAddrLine1 ] = React.useState(team.address?.line1 ?? "");
-  const [ addrLine2, setAddrLine2 ] = React.useState(team.address?.line2 ?? "");
-  const [ addrZipCode, setAddrZipCode ] = React.useState(team.address?.zip ?? "");
-  const [ addrCity, setAddrCity ] = React.useState(team.address?.city ?? "");
-  const [ addrCountry, setAddrCountry ] = React.useState(auth.user?.settings?.country ?? "FR");
-  const [ formIsIncomplete, setFormIsIncomplete ] = React.useState(true);
+  const [teamName, setTeamName] = React.useState(team.name ?? "");
+  const [teamPhone, setTeamPhone] = React.useState(team.phone ?? "");
+  const [teamEmail, setTeamEmail] = React.useState(team.email ?? "");
+  const [addrLine1, setAddrLine1] = React.useState(team.address?.line1 ?? "");
+  const [addrLine2, setAddrLine2] = React.useState(team.address?.line2 ?? "");
+  const [addrZipCode, setAddrZipCode] = React.useState(team.address?.zip ?? "");
+  const [addrCity, setAddrCity] = React.useState(team.address?.city ?? "");
+  const [addrCountry, setAddrCountry] = React.useState(
+    auth.user?.settings?.country ?? "FR"
+  );
+  const [formIsIncomplete, setFormIsIncomplete] = React.useState(true);
 
-  const ariaModal = action === "create" ? t("aria-modal-team-add") : t("aria-modal-team-edit");
-  const modalTitle = action === "create" ? t("modal-team-add-title") : t("modal-team-edit-title");
-  const modalButtonValidate = action === "create" ? t("modal-team-button-create") : t("modal-team-button-edit");
+  const ariaModal =
+    action === "create" ? t("aria-modal-team-add") : t("aria-modal-team-edit");
+  const modalTitle =
+    action === "create"
+      ? t("modal-team-add-title")
+      : t("modal-team-edit-title");
+  const modalButtonValidate =
+    action === "create"
+      ? t("modal-team-button-create")
+      : t("modal-team-button-edit");
 
   const countries: LocalesCountries = locales.countries;
   const optionsCountries: JSX.Element[] = [];
   for (const entry in countries) {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
       const { name } = countries[entry];
-      optionsCountries.push(<option value={entry} key={name} aria-label={name}>{name}</option>);
+      optionsCountries.push(
+        <option value={entry} key={name} aria-label={name}>
+          {name}
+        </option>
+      );
     }
   }
   optionsCountries.sort((a: JSX.Element, b: JSX.Element) => {
@@ -170,28 +184,44 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
     }
     onSaveTeam(team);
   };
-  const handleChangeTeamName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeTeamName = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setTeamName(e.target.value);
   };
-  const handleChangeTeamPhone = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeTeamPhone = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setTeamPhone(e.target.value);
   };
-  const handleChangeTeamEmail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeTeamEmail = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setTeamEmail(e.target.value);
   };
-  const handleChangeAddrLine1 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeAddrLine1 = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setAddrLine1(e.target.value);
   };
-  const handleChangeAddrLine2 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeAddrLine2 = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setAddrLine2(e.target.value);
   };
-  const handleChangeAddrZip = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeAddrZip = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setAddrZipCode(e.target.value);
   };
-  const handleChangeAddrCity = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeAddrCity = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     setAddrCity(e.target.value);
   };
-  const handleChangeAddrCountry = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown; }>): void => {
+  const handleChangeAddrCountry = (
+    e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+  ): void => {
     const country = e.target.value as string;
     setAddrCountry(country);
   };
@@ -201,35 +231,137 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
   }
 
   return (
-    <Modal id="team-modal-edit" aria-labelledby={ariaModal} className={classes.modal} open={modalOpened} BackdropComponent={Backdrop} BackdropProps={{ timeout: modalBackdropTimeout }}>
+    <Modal
+      id="team-modal-edit"
+      aria-labelledby={ariaModal}
+      className={classes.modal}
+      open={modalOpened}
+      BackdropComponent={Backdrop}
+      BackdropProps={{ timeout: modalBackdropTimeout }}
+    >
       <Fade in={modalOpened}>
         <div className={classes.divMain}>
           <h2 id="team-modal-edit-title">{modalTitle}</h2>
           <form noValidate autoComplete="off" className={classes.form}>
-            <TextField id="team-modal-edit-field-name" className={classes.formChild} variant="outlined" onChange={handleChangeTeamName} name="name" value={teamName} label={t("team-modal-edit-placeholder-name")} required={true} aria-required="true" />
+            <TextField
+              id="team-modal-edit-field-name"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeTeamName}
+              name="name"
+              value={teamName}
+              label={t("team-modal-edit-placeholder-name")}
+              required={true}
+              aria-required="true"
+            />
 
-            <TextField id="team-modal-edit-field-line1" className={classes.formChild} variant="outlined" onChange={handleChangeAddrLine1} name="addr-line1" value={addrLine1} label={t("team-modal-edit-placeholder-addr-line1")} required={true} aria-required="true" />
-            <TextField id="team-modal-edit-field-line2" className={classes.formChild} variant="outlined" onChange={handleChangeAddrLine2} name="addr-line2" value={addrLine2} label={t("team-modal-edit-placeholder-addr-line2")} required={false} aria-required="false" />
-            <TextField id="team-modal-edit-field-zip" className={classes.formChild} variant="outlined" onChange={handleChangeAddrZip} name="addr-zip" value={addrZipCode} label={t("team-modal-edit-placeholder-addr-zip")} required={true} aria-required="true" />
-            <TextField id="team-modal-edit-field-city" className={classes.formChild} variant="outlined" onChange={handleChangeAddrCity} name="addr-city" value={addrCity} label={t("team-modal-edit-placeholder-addr-city")} required={true} aria-required="true" />
-            <FormControl className={classes.formChild} required={true} variant="outlined">
-              <InputLabel htmlFor="team-modal-edit-select-country">{t("team-modal-edit-placeholder-addr-country")}</InputLabel>
+            <TextField
+              id="team-modal-edit-field-line1"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeAddrLine1}
+              name="addr-line1"
+              value={addrLine1}
+              label={t("team-modal-edit-placeholder-addr-line1")}
+              required={true}
+              aria-required="true"
+            />
+            <TextField
+              id="team-modal-edit-field-line2"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeAddrLine2}
+              name="addr-line2"
+              value={addrLine2}
+              label={t("team-modal-edit-placeholder-addr-line2")}
+              required={false}
+              aria-required="false"
+            />
+            <TextField
+              id="team-modal-edit-field-zip"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeAddrZip}
+              name="addr-zip"
+              value={addrZipCode}
+              label={t("team-modal-edit-placeholder-addr-zip")}
+              required={true}
+              aria-required="true"
+            />
+            <TextField
+              id="team-modal-edit-field-city"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeAddrCity}
+              name="addr-city"
+              value={addrCity}
+              label={t("team-modal-edit-placeholder-addr-city")}
+              required={true}
+              aria-required="true"
+            />
+            <FormControl
+              className={classes.formChild}
+              required={true}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="team-modal-edit-select-country">
+                {t("team-modal-edit-placeholder-addr-country")}
+              </InputLabel>
               <Select
                 native
                 label={t("team-modal-edit-placeholder-addr-country")}
                 value={addrCountry}
                 onChange={handleChangeAddrCountry}
-                inputProps={{ name: "country", id: "team-modal-edit-select-country" }}>
+                inputProps={{
+                  name: "country",
+                  id: "team-modal-edit-select-country",
+                }}
+              >
                 {optionsCountries}
               </Select>
             </FormControl>
 
-            <TextField id="team-modal-edit-field-phone" className={classes.formChild} variant="outlined" onChange={handleChangeTeamPhone} name="phone" value={teamPhone} label={t("team-modal-edit-placeholder-phone")} required={true} aria-required="true" />
-            <TextField id="team-modal-edit-field-email" className={classes.formChild} variant="outlined" onChange={handleChangeTeamEmail} name="email" value={teamEmail} label={t("team-modal-edit-placeholder-email")} required={false} aria-required="false" />
+            <TextField
+              id="team-modal-edit-field-phone"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeTeamPhone}
+              name="phone"
+              value={teamPhone}
+              label={t("team-modal-edit-placeholder-phone")}
+              required={true}
+              aria-required="true"
+            />
+            <TextField
+              id="team-modal-edit-field-email"
+              className={classes.formChild}
+              variant="outlined"
+              onChange={handleChangeTeamEmail}
+              name="email"
+              value={teamEmail}
+              label={t("team-modal-edit-placeholder-email")}
+              required={false}
+              aria-required="false"
+            />
           </form>
           <div className={classes.divModalButtons}>
-            <Button id="team-modal-edit-button-close" className={classes.divModalButtonCancel} variant="contained" onClick={handleCloseModal}>{t("Cancel")}</Button>
-            <Button id="team-modal-edit-button-create" disabled={formIsIncomplete} onClick={handleValidateModal} color="primary" variant="contained">{modalButtonValidate}</Button>
+            <Button
+              id="team-modal-edit-button-close"
+              className={classes.divModalButtonCancel}
+              variant="contained"
+              onClick={handleCloseModal}
+            >
+              {t("Cancel")}
+            </Button>
+            <Button
+              id="team-modal-edit-button-create"
+              disabled={formIsIncomplete}
+              onClick={handleValidateModal}
+              color="primary"
+              variant="contained"
+            >
+              {modalButtonValidate}
+            </Button>
           </div>
         </div>
       </Fade>
