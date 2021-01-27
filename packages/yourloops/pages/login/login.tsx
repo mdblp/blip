@@ -30,6 +30,7 @@ import _ from "lodash";
 import * as React from "react";
 import { Link as RouterLink, RouteComponentProps } from "react-router-dom";
 import bows from "bows";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -42,35 +43,41 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
-import Link from '@material-ui/core/Link';
+import Link from "@material-ui/core/Link";
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth/hook/use-auth";
+import LanguageSelect from "../../components/language-select";
+import diabeloopUrls from "../../lib/diabeloop-url";
+import { Typography } from "@material-ui/core";
+import config from "../../lib/config";
 
-const loginStyle = makeStyles(( theme: Theme) => {
+const loginStyle = makeStyles((theme: Theme) => {
   return {
     mainContainer: { margin: "auto" },
-    root: { minHeight: '100vh' },
+    root: { minHeight: "100vh" },
     loginButton: {
       marginLeft: "auto !important",
     },
     rightLink: {
-      padding: theme.spacing(2),
-      textAlign: 'start',
+      padding: theme.spacing(1),
+      textAlign: "start",
     },
     centeredLink: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
+      padding: theme.spacing(1),
+      textAlign: "center",
+      color: "#109182",
     },
     leftLink: {
-      padding: theme.spacing(2),
-      textAlign: 'end',
+      padding: theme.spacing(1),
+      textAlign: "end",
     },
     selection: {
-      textAlign: 'center',
+      padding: theme.spacing(1),
+      textAlign: "center",
     },
   };
 });
@@ -79,7 +86,7 @@ const loginStyle = makeStyles(( theme: Theme) => {
  * Login page
  */
 function Login(props: RouteComponentProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation();
   const auth = useAuth();
   const classes = loginStyle();
 
@@ -93,11 +100,15 @@ function Login(props: RouteComponentProps): JSX.Element {
   const emptyPassword = _.isEmpty(password);
   const log = bows("Login");
 
-  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const onUsernameChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setUserName(event.target.value);
   };
 
-  const onPasswordChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const onPasswordChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setPassword(event.target.value);
   };
 
@@ -131,7 +142,9 @@ function Login(props: RouteComponentProps): JSX.Element {
     } catch (reason: unknown) {
       log.error(reason);
       setValidateError(true);
-      const message = _.isError(reason) ? reason.message : new String(reason).toString();
+      const message = _.isError(reason)
+        ? reason.message
+        : new String(reason).toString();
       setHelperTextValue(message);
     }
   };
@@ -164,7 +177,8 @@ function Login(props: RouteComponentProps): JSX.Element {
                 display: "flex",
                 paddingTop: "1em",
                 paddingBottom: "1em",
-              }}>
+              }}
+            >
               <img
                 src={brandingLogo}
                 style={{
@@ -176,7 +190,11 @@ function Login(props: RouteComponentProps): JSX.Element {
               />
             </CardMedia>
             <CardContent>
-              <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
+              <form
+                style={{ display: "flex", flexDirection: "column" }}
+                noValidate
+                autoComplete="off"
+              >
                 <TextField
                   id="login-username"
                   label={t("Email")}
@@ -191,13 +209,19 @@ function Login(props: RouteComponentProps): JSX.Element {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   required
-                  error={validateError && (emptyPassword || helperTextValue.length > 0)}
+                  error={
+                    validateError &&
+                    (emptyPassword || helperTextValue.length > 0)
+                  }
                   onChange={onPasswordChange}
                   helperText={helperTextValue}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton aria-label={t("aria-toggle-password-visibility")} onClick={onClickShowPasswordVisibility}>
+                        <IconButton
+                          aria-label={t("aria-toggle-password-visibility")}
+                          onClick={onClickShowPasswordVisibility}
+                        >
                           {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                       </InputAdornment>
@@ -210,8 +234,9 @@ function Login(props: RouteComponentProps): JSX.Element {
               <Link
                 component={RouterLink}
                 to="/request-password-reset"
-                onClick={onClickLoginReset}>
-                {t('Forgot your password?')}
+                onClick={onClickLoginReset}
+              >
+                {t("Forgot your password?")}
               </Link>
               <Button
                 variant="contained"
@@ -225,22 +250,30 @@ function Login(props: RouteComponentProps): JSX.Element {
           </Card>
           <Grid container>
             <Grid item xs={12} className={classes.selection}>
-              <p>language selection</p>
+              <LanguageSelect />
             </Grid>
-            <Grid item xs={4} className={classes.rightLink} >
-              <Link href="#" >Privacy Policy</Link>
+            <Grid item xs={4} className={classes.rightLink}>
+              <Link href={diabeloopUrls.PrivacyPolicyUrL}>
+                {t(diabeloopUrls.PrivacyPolicy)}
+              </Link>
             </Grid>
             <Grid item xs={4} className={classes.centeredLink}>
-              <Link href="#">Yourloops 1.13.0</Link>
+              <Typography>{`${t("Yourloops")} ${config.VERSION}`}</Typography>
             </Grid>
             <Grid item xs={4} className={classes.leftLink}>
-              <Link href="#">Diabeloop</Link>
+              <Link href={diabeloopUrls.SupportUrl}>
+                {t(diabeloopUrls.Support)}
+              </Link>
             </Grid>
             <Grid item xs={6} className={classes.rightLink}>
-              <Link href="#" >Terms of use</Link>
+              <Link href={diabeloopUrls.TermsUrL}>
+                {t(diabeloopUrls.Terms)}
+              </Link>
             </Grid>
             <Grid item xs={6} className={classes.leftLink}>
-              <Link href="#" >Intented use</Link>
+              <Link href={diabeloopUrls.IntendedUseUrL}>
+                {t(diabeloopUrls.IntendedUse)}
+              </Link>
             </Grid>
           </Grid>
         </Grid>
