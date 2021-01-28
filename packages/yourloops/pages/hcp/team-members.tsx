@@ -53,7 +53,11 @@ import { t } from "../../lib/language";
 
 interface TeamMembersProps {
   team: Team;
-  onSwitchAdminRole: (team: Team, userId: string, admin: boolean) => Promise<void>;
+  onSwitchAdminRole: (
+    team: Team,
+    userId: string,
+    admin: boolean
+  ) => Promise<void>;
   onShowModalRemoveMember: (team: Team, userId: string) => void;
 }
 
@@ -75,9 +79,20 @@ function PersonRemoveIcon(): JSX.Element {
   // Source: https://material.io/resources/icons/?icon=person_remove&style=baseline
   return (
     <SvgIcon>
-      <svg xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24" className="MuiSvgIcon-root">
-        <g><rect fill="none" height="24" width="24"/></g>
-        <g><path d="M14,8c0-2.21-1.79-4-4-4S6,5.79,6,8s1.79,4,4,4S14,10.21,14,8z M17,10v2h6v-2H17z M2,18v2h16v-2c0-2.66-5.33-4-8-4 S2,15.34,2,18z"/></g>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        enableBackground="new 0 0 24 24"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        className="MuiSvgIcon-root"
+      >
+        <g>
+          <rect fill="none" height="24" width="24" />
+        </g>
+        <g>
+          <path d="M14,8c0-2.21-1.79-4-4-4S6,5.79,6,8s1.79,4,4,4S14,10.21,14,8z M17,10v2h6v-2H17z M2,18v2h16v-2c0-2.66-5.33-4-8-4 S2,15.34,2,18z" />
+        </g>
       </svg>
     </SvgIcon>
   );
@@ -103,7 +118,9 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
 
   const [updatingUser, setUpdatingUser] = React.useState("");
 
-  const handleSwitchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+  const handleSwitchRole = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     const userId = event.target.name;
     const isAdmin = event.target.checked;
     console.log("handleSwitchRole", { userId, isAdmin });
@@ -112,64 +129,112 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     setUpdatingUser("");
   };
 
-  const rows: JSX.Element[] = members.map((member: TeamMember): JSX.Element => {
-    const userId = member.userId;
-    const lastname = member.user?.profile?.lastName ?? member.user?.profile?.fullName ?? member.user?.username ?? member.userId;
-    const firstname = member.user?.profile?.firstName ?? "";
-    const email = member.user?.username ?? "";
-    const isAdmin = member.role === "admin";
+  const rows: JSX.Element[] = members.map(
+    (member: TeamMember): JSX.Element => {
+      const userId = member.userId;
+      const lastname =
+        member.user?.profile?.lastName ??
+        member.user?.profile?.fullName ??
+        member.user?.username ??
+        member.userId;
+      const firstname = member.user?.profile?.firstName ?? "";
+      const email = member.user?.username ?? "";
+      const isAdmin = member.role === "admin";
 
-    // Determine if the current user can change the admin role for this member
-    let checkboxAdminDisabled = updatingUser.length > 0 || !userIsAdmin;
-    if (userIsAdmin && nAdmin < 2 && userId === currentUserId) {
-      // An admin user, can't remove it's admin role if he is the only team admin
-      checkboxAdminDisabled = true;
-    }
+      // Determine if the current user can change the admin role for this member
+      let checkboxAdminDisabled = updatingUser.length > 0 || !userIsAdmin;
+      if (userIsAdmin && nAdmin < 2 && userId === currentUserId) {
+        // An admin user, can't remove it's admin role if he is the only team admin
+        checkboxAdminDisabled = true;
+      }
 
-    let checkboxElement: JSX.Element | null = null;
-    if (updatingUser === userId) {
-      // Disabled while update in progress (backend api call in progress)
-      checkboxElement = (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px" }}>
-          <CircularProgress disableShrink size={17} />
-        </div>
+      let checkboxElement: JSX.Element | null = null;
+      if (updatingUser === userId) {
+        // Disabled while update in progress (backend api call in progress)
+        checkboxElement = (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "42px",
+              height: "42px",
+            }}
+          >
+            <CircularProgress disableShrink size={17} />
+          </div>
+        );
+      } else {
+        checkboxElement = (
+          <Checkbox
+            disabled={checkboxAdminDisabled}
+            id={`team-members-list-${team.id}-row-${member.userId}-role-checkbox`}
+            color="primary"
+            name={member.userId}
+            checked={isAdmin}
+            onChange={handleSwitchRole}
+          />
+        );
+      }
+
+      let removeMemberButton: JSX.Element | null = null;
+      if (userIsAdmin && userId !== currentUserId) {
+        const handleClickRemoveMember = (): void =>
+          onShowModalRemoveMember(team, userId);
+        removeMemberButton = (
+          <IconButton
+            color="primary"
+            aria-label="aria-team-remove-member"
+            component="span"
+            onClick={handleClickRemoveMember}
+          >
+            <PersonRemoveIcon />
+          </IconButton>
+        );
+      }
+
+      return (
+        <TableRow
+          id={`team-members-list-${team.id}-row-${member.userId}`}
+          key={member.userId}
+        >
+          <TableCell
+            id={`team-members-list-${team.id}-row-${member.userId}-lastname`}
+          >
+            {lastname}
+          </TableCell>
+          <TableCell
+            id={`team-members-list-${team.id}-row-${member.userId}-firstname`}
+          >
+            {firstname}
+          </TableCell>
+          <TableCell
+            id={`team-members-list-${team.id}-row-${member.userId}-email`}
+          >
+            <Link
+              id={`team-members-list-${team.id}-row-${member.userId}-email-link`}
+              href={`mailto:${email}`}
+            >
+              {email}
+            </Link>
+          </TableCell>
+          <TableCell
+            id={`team-members-list-${team.id}-row-${member.userId}-role`}
+          >
+            {checkboxElement}
+          </TableCell>
+          <TableCell
+            id={`team-members-list-${team.id}-row-${member.userId}-actions`}
+            align="right"
+          >
+            {removeMemberButton}
+          </TableCell>
+        </TableRow>
       );
-    } else {
-      checkboxElement = <Checkbox disabled={checkboxAdminDisabled} id={`team-members-list-${team.id}-row-${member.userId}-role-checkbox`} color="primary" name={member.userId} checked={isAdmin} onChange={handleSwitchRole} />;
     }
-
-    let removeMemberButton: JSX.Element | null = null;
-    if (userIsAdmin && userId !== currentUserId) {
-      const handleClickRemoveMember = (): void => onShowModalRemoveMember(team, userId);
-      removeMemberButton = (
-        <IconButton color="primary" aria-label="aria-team-remove-member" component="span" onClick={handleClickRemoveMember}>
-          <PersonRemoveIcon />
-        </IconButton>
-      );
-    }
-
-    return (
-      <TableRow id={`team-members-list-${team.id}-row-${member.userId}`} key={member.userId}>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-lastname`}>{lastname}</TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-firstname`}>{firstname}</TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-email`}>
-          <Link id={`team-members-list-${team.id}-row-${member.userId}-email-link`} href={`mailto:${email}`}>{email}</Link>
-        </TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-role`}>
-          {checkboxElement}
-        </TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-actions`} align="right">
-          {removeMemberButton}
-        </TableCell>
-      </TableRow>
-    );
-  });
-
-  return (
-    <TableBody>
-      {rows}
-    </TableBody>
   );
+
+  return <TableBody>{rows}</TableBody>;
 }
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
@@ -182,18 +247,37 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   return (
     <div id={`team-members-list-${team.id}`} className={classes.root}>
       <Accordion TransitionProps={{ unmountOnExit: true }}>
-        <AccordionSummary id={`team-members-list-${team.id}-header`} expandIcon={<ExpandMoreIcon />} aria-label={t("aria-expand-team-members")} aria-controls={`team-members-list-${team.id}-content`}>
+        <AccordionSummary
+          id={`team-members-list-${team.id}-header`}
+          expandIcon={<ExpandMoreIcon />}
+          aria-label={t("aria-expand-team-members")}
+          aria-controls={`team-members-list-${team.id}-content`}
+        >
           <Typography>{t("team-members-list-header", { nMembers })}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Table>
             <TableHead className={classes.tableRowHeader}>
               <TableRow>
-                <TableCell id={`team-members-list-${team.id}-cellheader-lastname`}>{t("team-members-header-lastname")}</TableCell>
-                <TableCell id={`team-members-list-${team.id}-cellheader-firstname`}>{t("team-members-header-firstname")}</TableCell>
-                <TableCell id={`team-members-list-${team.id}-cellheader-email`}>{t("team-members-header-email")}</TableCell>
-                <TableCell id={`team-members-list-${team.id}-cellheader-role`}>{t("team-members-header-role")}</TableCell>
-                <TableCell id={`team-members-list-${team.id}-cellheader-actions`}></TableCell>
+                <TableCell
+                  id={`team-members-list-${team.id}-cellheader-lastname`}
+                >
+                  {t("team-members-header-lastname")}
+                </TableCell>
+                <TableCell
+                  id={`team-members-list-${team.id}-cellheader-firstname`}
+                >
+                  {t("team-members-header-firstname")}
+                </TableCell>
+                <TableCell id={`team-members-list-${team.id}-cellheader-email`}>
+                  {t("team-members-header-email")}
+                </TableCell>
+                <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
+                  {t("team-members-header-role")}
+                </TableCell>
+                <TableCell
+                  id={`team-members-list-${team.id}-cellheader-actions`}
+                ></TableCell>
               </TableRow>
             </TableHead>
             <MembersTableBody {...props} />
