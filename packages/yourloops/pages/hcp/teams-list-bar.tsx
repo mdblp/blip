@@ -44,7 +44,7 @@ import { t } from "../../lib/language";
 import TeamEditModal from "./team-edit-modal";
 
 interface BarProps {
-  onCreateTeam: (team: Partial<Team>) => Promise<void>
+  onCreateTeam: (team: Partial<Team>) => Promise<void>;
 }
 
 const pageBarStyles = makeStyles((theme: Theme) => {
@@ -75,7 +75,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 function TeamsListBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();
 
-  const [ modalOpened, setModalOpen ] = React.useState(false);
+  const [modalOpened, setModalOpen] = React.useState(false);
 
   const handleOpenModalAddTeam = (): void => {
     setModalOpen(true);
@@ -91,14 +91,20 @@ function TeamsListBar(props: BarProps): JSX.Element {
         <Toolbar className={classes.toolBar}>
           <div id="team-list-toolbar-item-left">
             <Breadcrumbs aria-label={t("breadcrumb")}>
-              <Typography color="textPrimary" className={classes.breadcrumbLink}>
+              <Typography
+                color="textPrimary"
+                className={classes.breadcrumbLink}
+              >
                 <HomeIcon className={classes.homeIcon} />
                 {t("team-list-breadcrumbs-title-my-teams")}
               </Typography>
             </Breadcrumbs>
           </div>
           <div id="team-list-toolbar-item-middle"></div>
-          <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
+          <div
+            id="team-list-toolbar-item-right"
+            className={classes.toolBarRight}
+          >
             <Button
               id="team-list-toolbar-add-team"
               color="primary"
@@ -106,12 +112,19 @@ function TeamsListBar(props: BarProps): JSX.Element {
               className={classes.buttonAddTeam}
               onClick={handleOpenModalAddTeam}
             >
-              <AddIcon />&nbsp;{t("button-add-team")}
+              <AddIcon />
+              &nbsp;{t("button-add-team")}
             </Button>
           </div>
         </Toolbar>
       </AppBar>
-      <TeamEditModal action="create" modalOpened={modalOpened} setModalOpen={setModalOpen} team={fakeNewTeam} onSaveTeam={props.onCreateTeam} />
+      <TeamEditModal
+        action="create"
+        modalOpened={modalOpened}
+        setModalOpen={setModalOpen}
+        team={fakeNewTeam}
+        onSaveTeam={props.onCreateTeam}
+      />
     </React.Fragment>
   );
 }

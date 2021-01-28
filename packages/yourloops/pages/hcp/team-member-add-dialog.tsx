@@ -31,12 +31,12 @@ import * as React from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextField from "@material-ui/core/TextField";
 
 import { TeamMemberRole } from "../../models/team";
@@ -75,12 +75,17 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
     teamName = addMember.team.name;
   }
 
-  const handleChangeEMail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeEMail = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const eMail = e.target.value;
     setEMail(eMail);
     setButtonDisabled(!REGEX_EMAIL.test(eMail));
   };
-  const handleChangeRole = (_e: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
+  const handleChangeRole = (
+    _e: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ): void => {
     setRole(checked ? "admin" : "viewer");
   };
 
@@ -99,34 +104,68 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
   };
 
   return (
-    <Dialog id="team-members-dialog-add-member" open={addMember !== null}
-      aria-labelledby={t("aria-team-members-dialog-add-member-title", { teamName })}
-      BackdropProps={{ invisible: true }}>
-
+    <Dialog
+      id="team-members-dialog-add-member"
+      open={addMember !== null}
+      aria-labelledby={t("aria-team-members-dialog-add-member-title", {
+        teamName,
+      })}
+      BackdropProps={{ invisible: true }}
+    >
       <DialogTitle id="team-members-dialog-add-member-title">
         <strong>{t("team-members-dialog-add-member-title")}</strong>
         <br />
-        <span id="team-members-dialog-add-member-title-team-name">{teamName}</span>
+        <span id="team-members-dialog-add-member-title-team-name">
+          {teamName}
+        </span>
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
-        <TextField id="team-members-dialog-add-member-field-email" variant="outlined" onChange={handleChangeEMail}
-          name="name" value={email} label={t("Email")} required={true} aria-required="true" type="email" />
+        <TextField
+          id="team-members-dialog-add-member-field-email"
+          variant="outlined"
+          onChange={handleChangeEMail}
+          name="name"
+          value={email}
+          label={t("Email")}
+          required={true}
+          aria-required="true"
+          type="email"
+        />
 
         <FormControlLabel
-          control={<Checkbox checked={role === "admin"} onChange={handleChangeRole} name="role" color="primary" />}
-          label={t("team-members-dialog-add-member-checkbox-admin")} />
+          control={
+            <Checkbox
+              checked={role === "admin"}
+              onChange={handleChangeRole}
+              name="role"
+              color="primary"
+            />
+          }
+          label={t("team-members-dialog-add-member-checkbox-admin")}
+        />
       </DialogContent>
 
       <DialogActions>
-        <Button id="team-members-dialog-add-member-button-cancel" onClick={handleClickClose} className={classes.buttonCancel} color="secondary" variant="contained">
+        <Button
+          id="team-members-dialog-add-member-button-cancel"
+          onClick={handleClickClose}
+          className={classes.buttonCancel}
+          color="secondary"
+          variant="contained"
+        >
           {t("Cancel")}
         </Button>
-        <Button id="team-members-dialog-add-member-button-add" onClick={handleClickAdd} color="primary" variant="contained" disabled={buttonDisabled}>
+        <Button
+          id="team-members-dialog-add-member-button-add"
+          onClick={handleClickAdd}
+          color="primary"
+          variant="contained"
+          disabled={buttonDisabled}
+        >
           {t("team-members-dialog-add-member-button-add")}
         </Button>
       </DialogActions>
-
     </Dialog>
   );
 }

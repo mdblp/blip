@@ -36,7 +36,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from '@material-ui/core/Typography';
+import Typography from "@material-ui/core/Typography";
 
 import { t } from "../../lib/language";
 import { useAuth } from "../../lib/auth/hook/use-auth";
@@ -78,15 +78,21 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
   };
 
   return (
-    <Dialog id="team-members-dialog-switch-role" open={switchAdminRole !== null}
-      aria-labelledby={t("aria-team-members-dialog-switch-role-title", { teamName })}
+    <Dialog
+      id="team-members-dialog-switch-role"
+      open={switchAdminRole !== null}
+      aria-labelledby={t("aria-team-members-dialog-switch-role-title", {
+        teamName,
+      })}
       aria-describedby={t("aria-team-members-dialog-switch-role-question")}
-      BackdropProps={{ invisible: true }}>
-
+      BackdropProps={{ invisible: true }}
+    >
       <DialogTitle id="team-members-dialog-switch-role-title">
         <strong>{t("team-members-dialog-switch-role-title")}</strong>
         <br />
-        <span id="team-members-dialog-switch-role-title-team-name">{teamName}</span>
+        <span id="team-members-dialog-switch-role-title-team-name">
+          {teamName}
+        </span>
       </DialogTitle>
 
       <DialogContent>
@@ -110,14 +116,24 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
       </DialogContent>
 
       <DialogActions>
-        <Button id="team-members-dialog-switch-role-button-cancel" onClick={handleClose} className={classes.buttonCancel} color="secondary" variant="contained">
+        <Button
+          id="team-members-dialog-switch-role-button-cancel"
+          onClick={handleClose}
+          className={classes.buttonCancel}
+          color="secondary"
+          variant="contained"
+        >
           {t("Cancel")}
         </Button>
-        <Button id="team-members-dialog-switch-role-button-remove" onClick={handleClickRemoveTeamMyself} color="primary" variant="contained">
+        <Button
+          id="team-members-dialog-switch-role-button-remove"
+          onClick={handleClickRemoveTeamMyself}
+          color="primary"
+          variant="contained"
+        >
           {t("team-members-dialog-switch-role-button-remove")}
         </Button>
       </DialogActions>
-
     </Dialog>
   );
 }
