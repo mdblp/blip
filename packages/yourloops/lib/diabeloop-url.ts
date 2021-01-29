@@ -31,32 +31,54 @@ import config from "./config";
  * Class containing all URLs related to Diableloop
  */
 class DiabeloopUrl {
+  private rootPathName: string;
   private termsUrl: string;
   private privacyPolicyUrl: string;
   private intendedUseUrL: string;
   private supportUrL: string;
 
   constructor() {
-    this.termsUrl = `${config.ASSETS_URL}terms.pdf`;
-    this.privacyPolicyUrl = `${config.ASSETS_URL}data-privacy.pdf`;
-    this.intendedUseUrL = `${config.ASSETS_URL}intendedUse.pdf`;
+    this.rootPathName = `${config.ASSETS_URL}`;
+    this.termsUrl = `${this.rootPathName}terms.pdf`;
+    this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`;
+    this.intendedUseUrL = `${this.rootPathName}intended-use.pdf`;
     this.supportUrL = "https://www.diabeloop.com";
   }
 
-  get Support(): string { return 'Diabeloop'; }
-  get SupportUrl(): string { return this.supportUrL; }
+  get Support(): string {
+    return "Diabeloop";
+  }
 
-  get Terms(): string { return 'Diabeloop Applications Terms of Use'; }
-  get TermsUrL(): string { return this.termsUrl; }
-  set TermsUrL(value: string) { this.termsUrl = value; }
+  get SupportUrl(): string {
+    return this.supportUrL;
+  }
 
-  get PrivacyPolicy(): string { return 'Privacy Policy'; }
-  get PrivacyPolicyUrL(): string { return this.privacyPolicyUrl; }
-  set PrivacyPolicyUrL(value: string) { this.privacyPolicyUrl = value; }
+  get Terms(): string {
+    return "Diabeloop Applications Terms of Use";
+  }
 
-  get IntendedUse(): string { return 'Regulatory Information'; }
-  get IntendedUseUrL(): string { return this.intendedUseUrL; }
-  set IntendedUseUrL(value: string) { this.intendedUseUrL = value; }
+  getTermsUrL(currentLangue: string): string {
+    this.termsUrl = `${this.rootPathName}terms.${currentLangue}.pdf`;
+    return this.termsUrl;
+  }
+
+  get PrivacyPolicy(): string {
+    return "Privacy Policy";
+  }
+
+  getPrivacyPolicyUrL(currentLangue: string): string {
+    this.privacyPolicyUrl = `${this.rootPathName}data-privacy.${currentLangue}.pdf`;
+    return this.privacyPolicyUrl;
+  }
+
+  get IntendedUse(): string {
+    return "Regulatory Information";
+  }
+
+  getIntendedUseUrL(currentLangue: string): string {
+    this.intendedUseUrL = `${this.rootPathName}intended-use.${currentLangue}.pdf`;
+    return this.intendedUseUrL;
+  }
 }
 
 const diabeloopUrl = new DiabeloopUrl();

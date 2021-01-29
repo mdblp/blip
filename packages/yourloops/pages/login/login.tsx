@@ -63,21 +63,24 @@ const loginStyle = makeStyles((theme: Theme) => {
       marginLeft: "auto !important",
     },
     rightLink: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(0.5),
       textAlign: "start",
+      fontSize: "small",
     },
     centeredLink: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(0.5),
       textAlign: "center",
       color: "#109182",
     },
     leftLink: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(0.5),
       textAlign: "end",
+      fontSize: "small",
     },
     selection: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(2),
       textAlign: "center",
+      fontSize: "small",
     },
   };
 });
@@ -86,7 +89,7 @@ const loginStyle = makeStyles((theme: Theme) => {
  * Login page
  */
 function Login(props: RouteComponentProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const auth = useAuth();
   const classes = loginStyle();
 
@@ -253,12 +256,14 @@ function Login(props: RouteComponentProps): JSX.Element {
               <LanguageSelect />
             </Grid>
             <Grid item xs={4} className={classes.rightLink}>
-              <Link href={diabeloopUrls.PrivacyPolicyUrL}>
+              <Link href={diabeloopUrls.getPrivacyPolicyUrL(i18n.language)}>
                 {t(diabeloopUrls.PrivacyPolicy)}
               </Link>
             </Grid>
             <Grid item xs={4} className={classes.centeredLink}>
-              <Typography>{`${t("Yourloops")} ${config.VERSION}`}</Typography>
+              <Typography style={{ fontSize: "small" }}>
+                {`${t("Yourloops")} ${config.VERSION}`}
+              </Typography>
             </Grid>
             <Grid item xs={4} className={classes.leftLink}>
               <Link href={diabeloopUrls.SupportUrl}>
@@ -266,12 +271,12 @@ function Login(props: RouteComponentProps): JSX.Element {
               </Link>
             </Grid>
             <Grid item xs={6} className={classes.rightLink}>
-              <Link href={diabeloopUrls.TermsUrL}>
+              <Link href={diabeloopUrls.getTermsUrL(i18n.language)}>
                 {t(diabeloopUrls.Terms)}
               </Link>
             </Grid>
             <Grid item xs={6} className={classes.leftLink}>
-              <Link href={diabeloopUrls.IntendedUseUrL}>
+              <Link href={diabeloopUrls.getIntendedUseUrL(i18n.language)}>
                 {t(diabeloopUrls.IntendedUse)}
               </Link>
             </Grid>
