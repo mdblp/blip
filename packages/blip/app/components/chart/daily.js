@@ -250,6 +250,7 @@ class Daily extends React.Component {
   constructor(props) {
     super(props);
 
+    this.chartRef = React.createRef();
     this.chartType = 'daily';
     this.log = bows('Daily View');
     this.state = this.getInitialState();
@@ -267,7 +268,7 @@ class Daily extends React.Component {
 
   UNSAFE_componentWillReceiveProps = nextProps => {
     if (this.props.loading && !nextProps.loading) {
-      this.refs.chart.getWrappedInstance().rerenderChart();
+      this.chartRef.current.rerenderChart();
     }
   };
 
@@ -336,7 +337,7 @@ class Daily extends React.Component {
                 onParameterOut={this.handleParameterOut}
                 onConfidentialHover={this.handleConfidentialHover}
                 onConfidentialOut={this.handleConfidentialOut}
-                ref="chart" />
+                ref={this.chartRef} />
             </div>
           </div>
           <div className="container-box-inner patient-data-sidebar">
@@ -475,14 +476,14 @@ class Daily extends React.Component {
   };
 
   handleWindowResize = () => {
-    this.refs.chart && this.refs.chart.rerenderChart();
+    this.chartRef.current && this.chartRef.current.rerenderChart();
   };
 
   handleClickTrends = e => {
     if (e) {
       e.preventDefault();
     }
-    const datetime = this.refs.chart.getCurrentDay();
+    const datetime = this.chartRef.current.getCurrentDay();
     this.props.onSwitchToTrends(datetime);
   };
 
@@ -490,7 +491,7 @@ class Daily extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    this.refs.chart.goToMostRecent();
+    this.chartRef.current.goToMostRecent();
   };
 
   handleClickOneDay = e => {
@@ -504,7 +505,7 @@ class Daily extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    const datetime = this.refs.chart.getCurrentDay();
+    const datetime = this.chartRef.current.getCurrentDay();
     this.props.onSwitchToBgLog(datetime);
   };
 
@@ -735,27 +736,27 @@ class Daily extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    this.refs.chart.getWrappedInstance().panBack();
+    this.chartRef.current.panBack();
   };
 
   handlePanForward = e => {
     if (e) {
       e.preventDefault();
     }
-    this.refs.chart.getWrappedInstance().panForward();
+    this.chartRef.current.panForward();
   };
 
   // methods for messages
   closeMessageThread = () => {
-    return this.refs.chart.getWrappedInstance().closeMessage();
+    return this.chartRef.current.closeMessage();
   };
 
   createMessageThread = message => {
-    return this.refs.chart.getWrappedInstance().createMessage(message);
+    return this.chartRef.current.createMessage(message);
   };
 
   editMessageThread = message => {
-    return this.refs.chart.getWrappedInstance().editMessage(message);
+    return this.chartRef.current.editMessage(message);
   };
 }
 
