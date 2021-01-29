@@ -26,7 +26,7 @@ import {
   Select,
   TextField,
   Toolbar,
-} from '@material-ui/core';
+} from "@material-ui/core";
 import React, {
   Fragment,
   FunctionComponent,
@@ -34,56 +34,56 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+} from "react";
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 
-import HeaderBar from '../../components/header-bar';
-import HomeIcon from '@material-ui/icons/Home';
-import { Password } from '../../components/utils/password';
-import { REGEX_EMAIL } from '../../lib/utils';
-import { User } from 'models/shoreline';
-import _ from 'lodash';
-import apiClient from '../../lib/auth/api';
-import { i18n } from 'i18next';
-import locales from '../../../../locales/languages.json';
-import { useHistory } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import HeaderBar from "../../components/header-bar";
+import HomeIcon from "@material-ui/icons/Home";
+import { Password } from "../../components/utils/password";
+import { REGEX_EMAIL } from "../../lib/utils";
+import { User } from "models/shoreline";
+import _ from "lodash";
+import apiClient from "../../lib/auth/api";
+import { i18n } from "i18next";
+import locales from "../../../../locales/languages.json";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 enum Units {
-  mole = 'mmol/L',
-  gram = 'mg/dL',
+  mole = "mmol/L",
+  gram = "mg/dL",
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    select: { padding: '1em 2em' },
+    select: { padding: "1em 2em" },
     formControl: {
       minWidth: 120,
-      textAlign: 'right',
+      textAlign: "right",
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
     homeIcon: {
-      marginRight: '0.5em',
+      marginRight: "0.5em",
     },
     breadcrumbLink: {
-      display: 'flex',
+      display: "flex",
     },
     toolBar: {
-      display: 'grid',
-      gridTemplateRows: 'auto',
-      gridTemplateColumns: 'auto auto auto',
-      paddingLeft: '6em',
-      paddingRight: '6em',
+      display: "grid",
+      gridTemplateRows: "auto",
+      gridTemplateColumns: "auto auto auto",
+      paddingLeft: "6em",
+      paddingRight: "6em",
     },
     textField: {
-      '& input:disabled': {
-        backgroundColor: '#f7f7f8',
+      "& input:disabled": {
+        backgroundColor: "#f7f7f8",
       },
     },
     title: {
-      textAlign: 'center',
+      textAlign: "center",
       color: theme.palette.primary.main,
     },
   })
@@ -98,19 +98,19 @@ type Errors = {
 };
 
 const getCurrentLocaleName = (i18n: i18n): string => {
-  const shortLocale = i18n.language.split('-')[0] as
-    | 'en'
-    | 'de'
-    | 'es'
-    | 'fr'
-    | 'it'
-    | 'nl';
+  const shortLocale = i18n.language.split("-")[0] as
+    | "en"
+    | "de"
+    | "es"
+    | "fr"
+    | "it"
+    | "nl";
 
   return locales.resources[shortLocale]?.name;
 };
 
 const getLocaleShortname = (locale: string): string => {
-  let shortName = '';
+  let shortName = "";
   _.forEach(locales.resources, ({ name }, key) => {
     if (name === locale) {
       shortName = key;
@@ -121,16 +121,16 @@ const getLocaleShortname = (locale: string): string => {
 };
 
 export const ProfilePage: FunctionComponent = () => {
-  const { t, i18n } = useTranslation('yourloops');
+  const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
   const history = useHistory();
 
-  const [firstName, setFirstName] = useState('');
-  const [name, setName] = useState('');
-  const [mail, setMail] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [name, setName] = useState("");
+  const [mail, setMail] = useState("");
   const [locale, setLocale] = useState(getCurrentLocaleName(i18n));
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [unit, setUnit] = useState(Units.mole);
 
   const availableLocales = useMemo(
@@ -152,11 +152,10 @@ export const ProfilePage: FunctionComponent = () => {
   }, []);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setState: React.Dispatch<React.SetStateAction<string>>
-  ): void => {
-    setState(event.target.value);
-  };
+  ): ((
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void) => (event) => setState(event.target.value);
 
   const handleLocaleChange = (
     event: React.ChangeEvent<{
@@ -202,7 +201,7 @@ export const ProfilePage: FunctionComponent = () => {
         emails: [mail],
         profile: {
           ...user.profile,
-          fullName: firstName + ' ' + name,
+          fullName: firstName + " " + name,
           firstName,
           lastName: name,
         },
@@ -226,7 +225,7 @@ export const ProfilePage: FunctionComponent = () => {
         emails: [mail],
         profile: {
           ...user.profile,
-          fullName: firstName + ' ' + name,
+          fullName: firstName + " " + name,
           firstName,
           lastName: name,
         },
@@ -242,98 +241,113 @@ export const ProfilePage: FunctionComponent = () => {
   return (
     <Fragment>
       <HeaderBar />
-      <AppBar position='static' color='secondary'>
+      <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
-          <Breadcrumbs aria-label={t('breadcrumb')}>
+          <Breadcrumbs aria-label={t("breadcrumb")}>
             <Link
               className={classes.breadcrumbLink}
-              color='textPrimary'
-              href='/hcp'
+              color="textPrimary"
+              href="/hcp"
             >
               <HomeIcon className={classes.homeIcon} />
-              {t('My Patients')}
+              {t("My Patients")}
             </Link>
           </Breadcrumbs>
         </Toolbar>
       </AppBar>
-      <Container maxWidth='lg'>
+      <Container maxWidth="lg">
         <div
-          style={{ display: 'flex', flexDirection: 'column', margin: '16px' }}
+          style={{ display: "flex", flexDirection: "column", margin: "16px" }}
         >
           <div className={classes.title}>
             Update your personal info and preferences
           </div>
           <TextField
-            id='firstName'
+            id="firstName"
             value={firstName}
-            onChange={(e) => handleChange(e, setFirstName)}
+            onChange={handleChange(setFirstName)}
             error={errors.firstName}
-            helperText={errors.firstName && 'Field required'}
-            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            helperText={errors.firstName && "Field required"}
+            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
-                  {t('First Name')}
+                <InputAdornment position="start">
+                  {t("First Name")}
                 </InputAdornment>
               ),
             }}
           />
           <TextField
-            id='lastName'
+            id="lastName"
             value={name}
-            onChange={(e) => handleChange(e, setName)}
+            onChange={handleChange(setName)}
             error={errors.name}
-            helperText={errors.name && 'Field required'}
-            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            helperText={errors.name && "Field required"}
+            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
-                  {t('Last Name')}
+                <InputAdornment position="start">
+                  {t("Last Name")}
                 </InputAdornment>
               ),
             }}
           />
           <TextField
-            id='mail'
+            id="mail"
             value={mail}
             disabled
-            onChange={(e) => handleChange(e, setMail)}
+            onChange={handleChange(setMail)}
             error={errors.mail}
-            helperText={errors.mail && 'Mail incorrect'}
+            helperText={errors.mail && "Mail incorrect"}
             className={classes.textField}
-            inputProps={{ style: { textAlign: 'right', padding: '1em 2em' } }}
+            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>{t('Email')}</InputAdornment>
+                <InputAdornment position="start">{t("Email")}</InputAdornment>
               ),
             }}
           />
           <Password
-            id='password'
-            label='Password'
+            id="password"
+            label="Password"
             value={password}
             error={errors.password}
-            helperText={'Password too weak'}
+            helperText={"Password too weak"}
             setState={setPassword}
           />
           <Password
-            id='passwordConfirmation'
-            label='Confirm password'
+            id="passwordConfirmation"
+            label="Confirm password"
             value={passwordConfirmation}
             error={errors.passwordConfirmation}
-            helperText={'Passwords are not matching'}
+            helperText={"Passwords are not matching"}
             setState={setPasswordConfirmation}
           />
           <FormControl className={classes.formControl}>
             <Select
-              labelId='locale-selector'
-              id='locale-selector'
+              labelId="unit-selector"
+              id="unit-selector"
+              value={unit}
+              onChange={handleUnitChange}
+              classes={{ root: classes.select }}
+              startAdornment={
+                <InputAdornment position="start">{t("Units")}</InputAdornment>
+              }
+            >
+              <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
+              <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <Select
+              labelId="locale-selector"
+              id="locale-selector"
               value={locale}
               onChange={handleLocaleChange}
               classes={{ root: classes.select }}
               startAdornment={
-                <InputAdornment position='start'>
-                  {t('Language')}
+                <InputAdornment position="start">
+                  {t("Language")}
                 </InputAdornment>
               }
             >
@@ -344,38 +358,23 @@ export const ProfilePage: FunctionComponent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl className={classes.formControl}>
-            <Select
-              labelId='unit-selector'
-              id='unit-selector'
-              value={unit}
-              onChange={handleUnitChange}
-              classes={{ root: classes.select }}
-              startAdornment={
-                <InputAdornment position='start'>{t('Units')}</InputAdornment>
-              }
-            >
-              <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
-              <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
-            </Select>
-          </FormControl>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
-              variant='contained'
-              color='secondary'
+              variant="contained"
+              color="secondary"
               onClick={onCancel}
-              style={{ margin: '2em 1em' }}
+              style={{ margin: "2em 1em" }}
             >
-              {t('CANCEL')}
+              {t("CANCEL")}
             </Button>
             <Button
-              variant='contained'
+              variant="contained"
               disabled={!hasChanged}
-              color='primary'
+              color="primary"
               onClick={onSave}
-              style={{ margin: '2em 1em' }}
+              style={{ margin: "2em 1em" }}
             >
-              {t('SAVE')}
+              {t("SAVE")}
             </Button>
           </div>
         </div>
