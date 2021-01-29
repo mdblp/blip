@@ -26,9 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import bows from 'bows';
+import bows from "bows";
 
 import Container from "@material-ui/core/Container";
 
@@ -42,8 +42,7 @@ interface PatientDataProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface PatientDataState {
-}
+interface PatientDataState {}
 
 class PatientDataPage extends React.Component<RouteComponentProps<PatientDataProps>, PatientDataState> {
   private log: Console;
@@ -68,7 +67,7 @@ class PatientDataPage extends React.Component<RouteComponentProps<PatientDataPro
         this.log.error(reason);
       });
     } else {
-      this.log.error('Invalid patientId', patientId, this.props);
+      this.log.error("Invalid patientId", patientId, this.props);
     }
   }
 

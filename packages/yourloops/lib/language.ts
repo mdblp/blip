@@ -27,11 +27,11 @@
  */
 
 import i18n, { InitOptions, Resource, TOptions } from "i18next";
+import moment from "moment-timezone";
 
 import getLocale from "./browser-locale";
 import { initReactI18next } from "react-i18next";
 import locales from "../../../locales/languages.json";
-import moment from "moment-timezone";
 
 const crowdinActive = typeof window._jipt === "object";
 
@@ -75,8 +75,7 @@ const i18nOptions: InitOptions = {
 
 if (crowdinActive) {
   i18nOptions.fallbackLng = locales.crowdin.fallback;
-  (i18nOptions.resources as Resource)[locales.crowdin.fallback] =
-    locales.crowdin.resources;
+  (i18nOptions.resources as Resource)[locales.crowdin.fallback] = locales.crowdin.resources;
 }
 i18n.use(initReactI18next);
 
@@ -103,6 +102,7 @@ i18n.on("languageChanged", (lng: string) => {
 });
 
 i18n.init(i18nOptions);
+
 /**
  *
  * @param s The string to translate

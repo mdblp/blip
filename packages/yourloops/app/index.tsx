@@ -26,11 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import "../lib/language";
-
 import React from "react";
 import ReactDOM from "react-dom";
 import Yourloops from "./app";
+
+import "../lib/language";
 
 // TODO: window.onerror
 

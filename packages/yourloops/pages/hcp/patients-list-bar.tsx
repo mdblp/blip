@@ -27,20 +27,17 @@
  */
 
 import * as React from "react";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import { FilterType, Team } from "./types";
-import { REGEX_EMAIL, defer } from "../../lib/utils";
 import { Theme, makeStyles } from "@material-ui/core/styles";
 
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import AppBar from "@material-ui/core/AppBar";
 import Backdrop from "@material-ui/core/Backdrop";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import Fade from "@material-ui/core/Fade";
-import FlagIcon from "@material-ui/icons/Flag";
 import FormControl from "@material-ui/core/FormControl";
-import HomeIcon from "@material-ui/icons/Home";
 import InputBase from "@material-ui/core/InputBase";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
@@ -49,13 +46,19 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { MenuProps } from "@material-ui/core/Menu";
 import Modal from "@material-ui/core/Modal";
 import NativeSelect from "@material-ui/core/NativeSelect";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import SearchIcon from "@material-ui/icons/Search";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import HomeIcon from "@material-ui/icons/Home";
+import FlagIcon from "@material-ui/icons/Flag";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import SearchIcon from "@material-ui/icons/Search";
+
+import { defer, REGEX_EMAIL } from "../../lib/utils";
+import { Team } from "../../models/team";
+import { FilterType } from "./types";
 
 export interface PatientListBarProps {
   teams: Team[];
@@ -220,11 +223,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   const [modalUsername, setModalUsername] = React.useState("");
   const selectFilterValues = [
     { value: "all", label: t("select-all-patients"), icon: null },
-    {
-      value: "flagged",
-      label: t("select-flagged-patients"),
-      icon: <FlagIcon className={classes.selectFilterIcon} />,
-    },
+    { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
     {
       value: "pending",
       label: t("select-pending-invitation-patients"),
@@ -241,9 +240,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   ): void => {
     onFilter(e.target.value);
   };
-  const handleFilterTeam = (
-    e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ): void => {
+  const handleFilterTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
     onFilterType(e.target.value as string);
   };
   const handleChangeUsername = (
@@ -251,9 +248,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   ): void => {
     setModalUsername(e.target.value);
   };
-  const handleChangeAddPatientTeam = (
-    e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ): void => {
+  const handleChangeAddPatientTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
     setModalSelectedTeam(e.target.value as string);
   };
   const handleOpenModalAddPatient = (): void => {
@@ -280,9 +275,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   }
 
   const optionsFilterTeamsElements: JSX.Element[] = [];
-  const optionsTeamsElements: JSX.Element[] = [
-    <option aria-label={t("aria-none")} value="" key="none" />,
-  ];
+  const optionsTeamsElements: JSX.Element[] = [<option aria-label={t("aria-none")} value="" key="none" />];
   if (teams.length > 0) {
     optionsFilterTeamsElements.push(
       <ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>
@@ -309,13 +302,12 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     <AppBar position="static" color="secondary">
       <Toolbar className={classes.toolBar}>
         <div id="patients-list-toolbar-item-left">
-          <Breadcrumbs aria-label={t("breadcrumb")}>
+          <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
             <Link
               color="textPrimary"
               className={classes.breadcrumbLink}
               href="/hcp/patients"
-              onClick={handleClickMyPatients}
-            >
+              onClick={handleClickMyPatients}>
               <HomeIcon className={classes.homeIcon} />
               {t("My Patients")}
             </Link>
@@ -333,8 +325,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
               classes={{ root: classes.selectFilterInnerDiv }}
               className={classes.selectFilter}
               disableUnderline
-              MenuProps={selectMenuProps}
-            >
+              MenuProps={selectMenuProps}>
               {optionsFilterCommonElements}
               {optionsFilterTeamsElements}
             </Select>
@@ -364,8 +355,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
             color="primary"
             variant="contained"
             className={classes.buttonAddPatient}
-            onClick={handleOpenModalAddPatient}
-          >
+            onClick={handleOpenModalAddPatient}>
             <PersonAddIcon />
             &nbsp;{t("button-add-patient")}
           </Button>
@@ -379,18 +369,11 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
             BackdropComponent={Backdrop}
             BackdropProps={{
               timeout: modalBackdropTimeout,
-            }}
-          >
+            }}>
             <Fade in={modalAddPatientOpen}>
               <div className={classes.divModal}>
-                <h2 id="patient-list-toolbar-modal-add-patient-title">
-                  {t("modal-add-patient")}
-                </h2>
-                <form
-                  noValidate
-                  autoComplete="off"
-                  className={classes.formModal}
-                >
+                <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
+                <form noValidate autoComplete="off" className={classes.formModal}>
                   <TextField
                     required
                     id="patient-list-toolbar-modal-add-patient-username"
@@ -418,8 +401,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
                       id="patients-list-modal-button-close"
                       className={classes.divModalButtonCancel}
                       variant="contained"
-                      onClick={handleCloseModalAddPatient}
-                    >
+                      onClick={handleCloseModalAddPatient}>
                       {t("Cancel")}
                     </Button>
                     <Button
@@ -427,8 +409,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
                       disabled={buttonCreateDisabled}
                       onClick={handleModalAddPatient}
                       color="primary"
-                      variant="contained"
-                    >
+                      variant="contained">
                       {t("Create")}
                     </Button>
                   </div>

@@ -27,25 +27,29 @@
  */
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+
 import EditIcon from "@material-ui/icons/Edit";
 import EmailIcon from "@material-ui/icons/Email";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FingerprintIcon from "@material-ui/icons/Fingerprint";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-import Paper from "@material-ui/core/Paper";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import PhoneIcon from "@material-ui/icons/Phone";
+
 import { Team } from "../../models/team";
 import TeamEditModal from "./team-edit-modal";
-import { useTranslation } from "react-i18next";
 
 interface TeamCardProps {
   team: Team;
   onEditTeam: (team: Team) => Promise<void>;
+  onShowModalLeaveTeam: (team: Team | null) => void;
+  onShowAddMemberDialog: (team: Team) => void;
 }
 
 interface TeamInfoProps {
@@ -110,8 +114,8 @@ const teamInfoStyles = makeStyles((theme: Theme) => {
 
 function TeamInfo(props: TeamInfoProps): JSX.Element | null {
   const { label, value, icon } = props;
-  const { t } = useTranslation("yourloops");
   const classes = teamInfoStyles();
+  const { t } = useTranslation("yourloops");
 
   if (typeof value !== "string") {
     return null;
@@ -129,16 +133,25 @@ function TeamInfo(props: TeamInfoProps): JSX.Element | null {
 }
 
 function TeamCard(props: TeamCardProps): JSX.Element {
-  const { team } = props;
-  const { t } = useTranslation("yourloops");
+  const { team, onShowModalLeaveTeam, onShowAddMemberDialog } = props;
   const classes = teamCardStyles();
+  const { t } = useTranslation("yourloops");
   const [modalOpened, setModalOpen] = React.useState(false);
+  const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
 
   const handleClickEdit = (): void => {
     setModalOpen(true);
   };
   const onSaveTeam = (team: Partial<Team>): Promise<void> => {
     return props.onEditTeam(team as Team);
+  };
+  const handleClickLeaveTeam = (): void => {
+    onShowModalLeaveTeam(team);
+  };
+  const handleClickAddMember = async (): Promise<void> => {
+    setButtonsDisabled(true);
+    await onShowAddMemberDialog(team);
+    setButtonsDisabled(false);
   };
 
   // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
@@ -148,7 +161,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       className={classes.buttonActionFirstRow}
       startIcon={<EditIcon color="primary" />}
       onClick={handleClickEdit}
-    >
+      disabled={buttonsDisabled}>
       {t("button-team-edit")}
     </Button>
   );
@@ -157,8 +170,19 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       id={`team-card-${team.id}-button-add-member`}
       className={classes.buttonActionFirstRow}
       startIcon={<PersonAddIcon color="primary" />}
-    >
+      onClick={handleClickAddMember}
+      disabled={buttonsDisabled}>
       {t("button-team-add-member")}
+    </Button>
+  );
+  const buttonLeaveTeam = (
+    <Button
+      id={`team-card-${team.id}-button-leave-team`}
+      className={classes.buttonActionFirstRow}
+      startIcon={<ExitToAppIcon color="primary" />}
+      onClick={handleClickLeaveTeam}
+      disabled={buttonsDisabled}>
+      {t("button-team-leave")}
     </Button>
   );
 
@@ -177,37 +201,16 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         <div className={classes.divActions}>
           {buttonEdit}
           {buttonAddMember}
+          {buttonLeaveTeam}
         </div>
       </div>
       <div id={`team-card-${team.id}-infos`} className={classes.secondRow}>
-        <TeamInfo
-          label="label-team-card-code"
-          value={team.code}
-          icon={<FingerprintIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-phone"
-          value={team.phone}
-          icon={<PhoneIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-address"
-          value={address}
-          icon={<LocationOnIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-email"
-          value={team.email}
-          icon={<EmailIcon />}
-        />
+        <TeamInfo label="label-team-card-code" value={team.code} icon={<FingerprintIcon />} />
+        <TeamInfo label="label-team-card-phone" value={team.phone} icon={<PhoneIcon />} />
+        <TeamInfo label="label-team-card-address" value={address} icon={<LocationOnIcon />} />
+        <TeamInfo label="label-team-card-email" value={team.email} icon={<EmailIcon />} />
       </div>
-      <TeamEditModal
-        action="edit"
-        team={team}
-        modalOpened={modalOpened}
-        setModalOpen={setModalOpen}
-        onSaveTeam={onSaveTeam}
-      />
+      <TeamEditModal action="edit" team={team} modalOpened={modalOpened} setModalOpen={setModalOpen} onSaveTeam={onSaveTeam} />
     </Paper>
   );
 }

@@ -27,12 +27,12 @@
  */
 
 import * as React from "react";
-
 import { Route, RouteComponentProps } from "react-router-dom";
-
-import PatientDataPage from "./patient-data";
-import PatientNavBar from "../../components/patient-nav-bar";
 import bows from "bows";
+
+import PatientNavBar from "../../components/patient-nav-bar";
+// import PatientListPage from './patients-list';
+import PatientDataPage from "./patient-data";
 
 /**
  * Patient page
@@ -49,7 +49,6 @@ function PatientPage(props: RouteComponentProps): JSX.Element | null {
   return (
     <div>
       <PatientNavBar />
-
       <Route path="/patient/data" component={PatientDataPage} />
     </div>
   );

@@ -27,23 +27,24 @@
  */
 
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
-import { SortDirection, SortFields } from "./types";
-import { Theme, makeStyles } from "@material-ui/core/styles";
-
-import FlagIcon from "@material-ui/icons/Flag";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+
+import FlagIcon from "@material-ui/icons/Flag";
+import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+
 import { User } from "../../models/shoreline";
-import { useTranslation } from "react-i18next";
+import { SortDirection, SortFields } from "./types";
 
 export interface PatientListTableProps {
   patients: User[];
@@ -114,8 +115,7 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
         tabIndex={-1}
         hover
         onClick={onRowClick}
-        className={classes.tableRow}
-      >
+        className={classes.tableRow}>
         <TableCell id={`patients-list-row-flag-${userId}`}>
           <IconButton
             className={classes.flag}
