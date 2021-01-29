@@ -207,14 +207,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     getContentAnchorEl: null,
   };
 
-  const {
-    filter,
-    filterType,
-    teams,
-    onFilter,
-    onFilterType,
-    onInvitePatient,
-  } = props;
+  const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = pageBarStyles();
   const history = useHistory();
@@ -235,17 +228,13 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     e.preventDefault();
     history.push("/hcp/patients");
   };
-  const handleFilterPatients = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     onFilter(e.target.value);
   };
   const handleFilterTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
     onFilterType(e.target.value as string);
   };
-  const handleChangeUsername = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeUsername = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setModalUsername(e.target.value);
   };
   const handleChangeAddPatientTeam = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
@@ -277,9 +266,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   const optionsFilterTeamsElements: JSX.Element[] = [];
   const optionsTeamsElements: JSX.Element[] = [<option aria-label={t("aria-none")} value="" key="none" />];
   if (teams.length > 0) {
-    optionsFilterTeamsElements.push(
-      <ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>
-    );
+    optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("Teams")}</ListSubheader>);
     for (const team of teams) {
       optionsFilterTeamsElements.push(
         <MenuItem value={team.id} key={team.id} aria-label={team.name}>
@@ -294,29 +281,20 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     }
   }
 
-  const buttonCreateDisabled = !(
-    REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0
-  );
+  const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
 
   return (
     <AppBar position="static" color="secondary">
       <Toolbar className={classes.toolBar}>
         <div id="patients-list-toolbar-item-left">
           <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-            <Link
-              color="textPrimary"
-              className={classes.breadcrumbLink}
-              href="/hcp/patients"
-              onClick={handleClickMyPatients}>
+            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/patients" onClick={handleClickMyPatients}>
               <HomeIcon className={classes.homeIcon} />
               {t("My Patients")}
             </Link>
           </Breadcrumbs>
         </div>
-        <div
-          id="patients-list-toolbar-item-middle"
-          className={classes.toolBarMiddle}
-        >
+        <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
           <FormControl color="primary" className={classes.formControl}>
             <Select
               id="select-patient-list-filtertype"
@@ -346,10 +324,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
             />
           </div>
         </div>
-        <div
-          id="patients-list-toolbar-item-right"
-          className={classes.toolBarRight}
-        >
+        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
           <Button
             id="patient-list-toolbar-add-patient"
             color="primary"
@@ -382,17 +357,14 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
                     label={t("Required")}
                   />
                   <FormControl className={classes.formControlSelectTeam}>
-                    <InputLabel htmlFor="select-patient-list-modal-team">
-                      {t("Team")}
-                    </InputLabel>
+                    <InputLabel htmlFor="select-patient-list-modal-team">{t("Team")}</InputLabel>
                     <NativeSelect
                       value={modalSelectedTeam}
                       onChange={handleChangeAddPatientTeam}
                       inputProps={{
                         name: "teamid",
                         id: "select-patient-list-modal-team",
-                      }}
-                    >
+                      }}>
                       {optionsTeamsElements}
                     </NativeSelect>
                   </FormControl>
