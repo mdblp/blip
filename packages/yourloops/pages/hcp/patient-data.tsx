@@ -44,10 +44,7 @@ interface PatientDataProps {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface PatientDataState {}
 
-class PatientDataPage extends React.Component<
-  RouteComponentProps<PatientDataProps>,
-  PatientDataState
-> {
+class PatientDataPage extends React.Component<RouteComponentProps<PatientDataProps>, PatientDataState> {
   private log: Console;
 
   constructor(props: PatientDataProps) {

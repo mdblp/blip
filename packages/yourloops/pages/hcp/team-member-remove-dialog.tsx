@@ -66,9 +66,8 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
   let teamName = "n/a";
   if (userToBeRemoved !== null) {
     teamName = userToBeRemoved.team.name ?? "";
-    const teamMember = userToBeRemoved.team.members?.find(
-      (tm: TeamMember) => tm.userId === userToBeRemoved.userId
-    );
+    const teamMember = userToBeRemoved.team.members?.find((tm: TeamMember) => tm.userId === userToBeRemoved.userId);
+
     hcpName =
       teamMember?.user?.profile?.fullName ??
       `${teamMember?.user?.profile?.firstName} ${teamMember?.user?.profile?.lastName}` ??
@@ -87,23 +86,12 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
     <Dialog
       id="team-members-dialog-rmmember"
       open={userToBeRemoved !== null}
-      aria-labelledby={t("aria-team-members-dialog-rmmember-title", {
-        teamName,
-      })}
-      aria-describedby={t("aria-team-members-dialog-rmmember-question", {
-        hcpName,
-      })}
-      BackdropProps={{ invisible: true }}
-    >
+      aria-labelledby={t("aria-team-members-dialog-rmmember-title", { teamName })}
+      aria-describedby={t("aria-team-members-dialog-rmmember-question", { hcpName })}
+      BackdropProps={{ invisible: true }}>
       <DialogTitle id="team-members-dialog-rmmember-title">
-        <Trans
-          i18nKey="team-members-dialog-rmmember-title"
-          t={t}
-          components={{ strong: <strong /> }}
-          parent={React.Fragment}
-        >
-          Remove a healthcare professional from the team{" "}
-          <strong>{{ teamName }}</strong>
+        <Trans i18nKey="team-members-dialog-rmmember-title" t={t} components={{ strong: <strong /> }} parent={React.Fragment}>
+          Remove a healthcare professional from the team <strong>{{ teamName }}</strong>
         </Trans>
       </DialogTitle>
 
@@ -113,10 +101,8 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
             i18nKey="team-members-dialog-rmmember-question"
             t={t}
             components={{ strong: <strong /> }}
-            parent={React.Fragment}
-          >
-            Are you sure you want to remove <strong>{{ hcpName }}</strong> from
-            this medical team?
+            parent={React.Fragment}>
+            Are you sure you want to remove <strong>{{ hcpName }}</strong> from this medical team?
           </Trans>
         </DialogContentText>
         <DialogContentText id="team-members-dialog-rmmember-consequences">
@@ -131,8 +117,7 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
           disabled={buttonsDisabled}
           className={classes.buttonCancel}
           color="secondary"
-          variant="contained"
-        >
+          variant="contained">
           {t("Cancel")}
         </Button>
         <Button
@@ -140,8 +125,7 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
           onClick={handleClickRemoveTeamMember}
           disabled={buttonsDisabled}
           color="primary"
-          variant="contained"
-        >
+          variant="contained">
           {t("team-members-dialog-rmmember-button-remove")}
         </Button>
       </DialogActions>

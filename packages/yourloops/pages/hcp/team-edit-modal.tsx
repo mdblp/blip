@@ -109,21 +109,12 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
   const [addrLine2, setAddrLine2] = React.useState(team.address?.line2 ?? "");
   const [addrZipCode, setAddrZipCode] = React.useState(team.address?.zip ?? "");
   const [addrCity, setAddrCity] = React.useState(team.address?.city ?? "");
-  const [addrCountry, setAddrCountry] = React.useState(
-    auth.user?.settings?.country ?? "FR"
-  );
+  const [addrCountry, setAddrCountry] = React.useState(auth.user?.settings?.country ?? "FR");
   const [formIsIncomplete, setFormIsIncomplete] = React.useState(true);
 
-  const ariaModal =
-    action === "create" ? t("aria-modal-team-add") : t("aria-modal-team-edit");
-  const modalTitle =
-    action === "create"
-      ? t("modal-team-add-title")
-      : t("modal-team-edit-title");
-  const modalButtonValidate =
-    action === "create"
-      ? t("modal-team-button-create")
-      : t("modal-team-button-edit");
+  const ariaModal = action === "create" ? t("aria-modal-team-add") : t("aria-modal-team-edit");
+  const modalTitle = action === "create" ? t("modal-team-add-title") : t("modal-team-edit-title");
+  const modalButtonValidate = action === "create" ? t("modal-team-button-create") : t("modal-team-button-edit");
 
   const countries: LocalesCountries = locales.countries;
   const optionsCountries: JSX.Element[] = [];
@@ -181,44 +172,28 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
     }
     onSaveTeam(team);
   };
-  const handleChangeTeamName = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeTeamName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setTeamName(e.target.value);
   };
-  const handleChangeTeamPhone = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeTeamPhone = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setTeamPhone(e.target.value);
   };
-  const handleChangeTeamEmail = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeTeamEmail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setTeamEmail(e.target.value);
   };
-  const handleChangeAddrLine1 = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeAddrLine1 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setAddrLine1(e.target.value);
   };
-  const handleChangeAddrLine2 = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeAddrLine2 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setAddrLine2(e.target.value);
   };
-  const handleChangeAddrZip = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeAddrZip = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setAddrZipCode(e.target.value);
   };
-  const handleChangeAddrCity = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  const handleChangeAddrCity = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setAddrCity(e.target.value);
   };
-  const handleChangeAddrCountry = (
-    e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
-  ): void => {
+  const handleChangeAddrCountry = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
     const country = e.target.value as string;
     setAddrCountry(country);
   };
@@ -234,11 +209,11 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
       className={classes.modal}
       open={modalOpened}
       BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: modalBackdropTimeout }}
-    >
+      BackdropProps={{ timeout: modalBackdropTimeout }}>
       <Fade in={modalOpened}>
         <div className={classes.divMain}>
           <h2 id="team-modal-edit-title">{modalTitle}</h2>
+
           <form noValidate autoComplete="off" className={classes.form}>
             <TextField
               id="team-modal-edit-field-name"
@@ -296,24 +271,14 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
               required={true}
               aria-required="true"
             />
-            <FormControl
-              className={classes.formChild}
-              required={true}
-              variant="outlined"
-            >
-              <InputLabel htmlFor="team-modal-edit-select-country">
-                {t("team-modal-edit-placeholder-addr-country")}
-              </InputLabel>
+            <FormControl className={classes.formChild} required={true} variant="outlined">
+              <InputLabel htmlFor="team-modal-edit-select-country">{t("team-modal-edit-placeholder-addr-country")}</InputLabel>
               <Select
                 native
                 label={t("team-modal-edit-placeholder-addr-country")}
                 value={addrCountry}
                 onChange={handleChangeAddrCountry}
-                inputProps={{
-                  name: "country",
-                  id: "team-modal-edit-select-country",
-                }}
-              >
+                inputProps={{ name: "country", id: "team-modal-edit-select-country" }}>
                 {optionsCountries}
               </Select>
             </FormControl>
@@ -341,13 +306,13 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
               aria-required="false"
             />
           </form>
+
           <div className={classes.divModalButtons}>
             <Button
               id="team-modal-edit-button-close"
               className={classes.divModalButtonCancel}
               variant="contained"
-              onClick={handleCloseModal}
-            >
+              onClick={handleCloseModal}>
               {t("Cancel")}
             </Button>
             <Button
@@ -355,8 +320,7 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
               disabled={formIsIncomplete}
               onClick={handleValidateModal}
               color="primary"
-              variant="contained"
-            >
+              variant="contained">
               {modalButtonValidate}
             </Button>
           </div>

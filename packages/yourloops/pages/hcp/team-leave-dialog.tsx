@@ -78,10 +78,7 @@ const leaveTeamDialogClasses = makeStyles((theme: Theme) => {
  * @param team The team to test
  * @param userId The current user id
  */
-function isUserIsTheOnlyAdministrator(
-  team: Team | null,
-  userId: string
-): boolean {
+function isUserIsTheOnlyAdministrator(team: Team | null, userId: string): boolean {
   if (team === null) {
     return false;
   }
@@ -100,9 +97,7 @@ function isUserIsTheOnlyAdministrator(
   return userIsAdmin && nAdmin === 1;
 }
 
-function LeaveTeamDialogTitle(
-  props: LeaveTeamDialogElementsProps
-): JSX.Element | null {
+function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element | null {
   const { team, teamName, onlyMember, userIsTheOnlyAdministrator } = props;
 
   if (team === null) {
@@ -138,9 +133,7 @@ function LeaveTeamDialogTitle(
   );
 }
 
-function LeaveTeamDialogContent(
-  props: LeaveTeamDialogElementsProps
-): JSX.Element | null {
+function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Element | null {
   const { team, teamName, onlyMember, userIsTheOnlyAdministrator } = props;
 
   if (team === null) {
@@ -151,20 +144,12 @@ function LeaveTeamDialogContent(
     return (
       <DialogContent>
         <DialogContentText id="team-leave-dialog-question">
-          <Trans
-            i18nKey="team-leave-dialog-and-del-question"
-            t={t}
-            components={{ strong: <strong /> }}
-            parent={React.Fragment}
-          >
-            Since you are the only &quot;member&quot; in this team,{" "}
-            {{ teamName }} will be <strong>permanently deleted</strong> if you
-            leave it.
+          <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} parent={React.Fragment}>
+            Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently deleted</strong> if
+            you leave it.
           </Trans>
         </DialogContentText>
-        <DialogContentText id="team-leave-dialog-consequences">
-          {t("team-leave-dialog-and-del-consequences")}
-        </DialogContentText>
+        <DialogContentText id="team-leave-dialog-consequences">{t("team-leave-dialog-and-del-consequences")}</DialogContentText>
       </DialogContent>
     );
   }
@@ -173,15 +158,9 @@ function LeaveTeamDialogContent(
     return (
       <DialogContent>
         <DialogContentText id="team-leave-dialog-consequences">
-          <Trans
-            i18nKey="team-leave-dialog-only-admin-consequences"
-            t={t}
-            components={{ strong: <strong /> }}
-            parent={React.Fragment}
-          >
-            Since you are the only team&apos;s administrator, you need to{" "}
-            <strong>give administrator permission to another member</strong>{" "}
-            before leaving.
+          <Trans i18nKey="team-leave-dialog-only-admin-consequences" t={t} components={{ strong: <strong /> }} parent={React.Fragment}>
+            Since you are the only team&apos;s administrator, you need to
+            <strong>give administrator permission to another member</strong> before leaving.
           </Trans>
         </DialogContentText>
       </DialogContent>
@@ -190,27 +169,14 @@ function LeaveTeamDialogContent(
 
   return (
     <DialogContent>
-      <DialogContentText id="team-leave-dialog-question">
-        {t("team-leave-dialog-question")}
-      </DialogContentText>
-      <DialogContentText id="team-leave-dialog-consequences">
-        {t("team-leave-dialog-consequences")}
-      </DialogContentText>
+      <DialogContentText id="team-leave-dialog-question">{t("team-leave-dialog-question")}</DialogContentText>
+      <DialogContentText id="team-leave-dialog-consequences">{t("team-leave-dialog-consequences")}</DialogContentText>
     </DialogContent>
   );
 }
 
-function LeaveTeamDialogActions(
-  props: LeaveTeamDialogElementsProps
-): JSX.Element | null {
-  const {
-    team,
-    onlyMember,
-    userIsTheOnlyAdministrator,
-    buttonsDisabled,
-    handleClose,
-    handleLeaveTeam,
-  } = props;
+function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element | null {
+  const { team, onlyMember, userIsTheOnlyAdministrator, buttonsDisabled, handleClose, handleLeaveTeam } = props;
   const classes = leaveTeamDialogClasses();
 
   if (team === null) {
@@ -226,8 +192,7 @@ function LeaveTeamDialogActions(
           disabled={buttonsDisabled}
           className={classes.buttonCancel}
           color="secondary"
-          variant="contained"
-        >
+          variant="contained">
           {t("Cancel")}
         </Button>
         <Button
@@ -236,8 +201,7 @@ function LeaveTeamDialogActions(
           disabled={buttonsDisabled}
           color="secondary"
           className={classes.buttonLeaveAndDel}
-          variant="contained"
-        >
+          variant="contained">
           {t("team-leave-dialog-button-leave-and-del")}
         </Button>
       </DialogActions>
@@ -252,8 +216,7 @@ function LeaveTeamDialogActions(
           onClick={handleClose}
           disabled={buttonsDisabled}
           color="primary"
-          variant="contained"
-        >
+          variant="contained">
           {t("button-ok")}
         </Button>
       </DialogActions>
@@ -268,8 +231,7 @@ function LeaveTeamDialogActions(
         disabled={buttonsDisabled}
         className={classes.buttonCancel}
         color="secondary"
-        variant="contained"
-      >
+        variant="contained">
         {t("Cancel")}
       </Button>
       <Button
@@ -277,8 +239,7 @@ function LeaveTeamDialogActions(
         onClick={handleLeaveTeam}
         disabled={buttonsDisabled}
         color="primary"
-        variant="contained"
-      >
+        variant="contained">
         {t("team-leave-dialog-button-leave")}
       </Button>
     </DialogActions>
@@ -293,10 +254,7 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const auth = useAuth();
   const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
 
-  const userIsTheOnlyAdministrator = isUserIsTheOnlyAdministrator(
-    team,
-    auth.user?.userid as string
-  );
+  const userIsTheOnlyAdministrator = isUserIsTheOnlyAdministrator(team, auth.user?.userid as string);
 
   const handleClose = () => {
     onShowModalLeaveTeam(null);
@@ -322,11 +280,12 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
       open={team !== null}
       aria-labelledby={t("aria-team-leave-dialog-title")}
       aria-describedby={t("aria-team-leave-dialog-question", { teamName })}
-      BackdropProps={{ invisible: true }}
-    >
+      BackdropProps={{ invisible: true }}>
+
       <LeaveTeamDialogTitle {...dialogProps} />
       <LeaveTeamDialogContent {...dialogProps} />
       <LeaveTeamDialogActions {...dialogProps} />
+
     </Dialog>
   );
 }

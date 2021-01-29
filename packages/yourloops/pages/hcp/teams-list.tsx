@@ -42,10 +42,7 @@ import { t } from "../../lib/language";
 import { errorTextFromException } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 
-import {
-  SwitchRoleDialogContentProps,
-  AddMemberDialogContentProps,
-} from "./types";
+import { SwitchRoleDialogContentProps, AddMemberDialogContentProps } from "./types";
 import AddMemberDialog from "./team-member-add-dialog";
 import TeamCard from "./team-card";
 import TeamsListBar from "./teams-list-bar";
@@ -74,10 +71,7 @@ interface TeamsListPageState {
 /**
  * HCP page to manage teams
  */
-class TeamsListPage extends React.Component<
-  RouteComponentProps,
-  TeamsListPageState
-> {
+class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageState> {
   private log: Console;
 
   constructor(props: RouteComponentProps) {
@@ -117,45 +111,20 @@ class TeamsListPage extends React.Component<
   }
 
   render(): JSX.Element {
-    const {
-      loading,
-      errorMessage,
-      teams,
-      apiReturnAlert,
-      userToBeRemoved,
-      teamToLeave,
-      switchAdminRole,
-      addMember,
-    } = this.state;
+    const { loading, errorMessage, teams, apiReturnAlert, userToBeRemoved, teamToLeave, switchAdminRole, addMember } = this.state;
 
     if (loading) {
       return (
-        <CircularProgress
-          disableShrink
-          style={{
-            position: "absolute",
-            top: "calc(50vh - 20px)",
-            left: "calc(50vw - 20px)",
-          }}
-        />
+        <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
       );
     }
     if (errorMessage !== null) {
       return (
         <div id="div-api-error-message" className="api-error-message">
-          <Alert
-            id="alert-api-error-message"
-            severity="error"
-            style={{ marginBottom: "1em" }}
-          >
+          <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
             {errorMessage}
           </Alert>
-          <Button
-            id="button-api-error-message"
-            variant="contained"
-            color="secondary"
-            onClick={this.onRefresh}
-          >
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>
             {t("button-refresh-page-on-error")}
           </Button>
         </div>
@@ -184,10 +153,7 @@ class TeamsListPage extends React.Component<
     return (
       <React.Fragment>
         <TeamsListBar onCreateTeam={this.onCreateTeam} />
-        <Container
-          maxWidth="lg"
-          style={{ marginTop: "4em", marginBottom: "2em" }}
-        >
+        <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
           <Grid container spacing={3}>
             {teamsItems}
           </Grid>
@@ -198,11 +164,7 @@ class TeamsListPage extends React.Component<
           handleClose={this.onHideModalRemoveMember}
           handleRemoveTeamMember={this.onRemoveTeamMember}
         />
-        <LeaveTeamDialog
-          team={teamToLeave}
-          onLeaveTeam={this.onLeaveTeam}
-          onShowModalLeaveTeam={this.onShowModalLeaveTeam}
-        />
+        <LeaveTeamDialog team={teamToLeave} onLeaveTeam={this.onLeaveTeam} onShowModalLeaveTeam={this.onShowModalLeaveTeam} />
         <SwitchRoleDialog switchAdminRole={switchAdminRole} />
         <AddMemberDialog addMember={addMember} />
 
@@ -210,12 +172,8 @@ class TeamsListPage extends React.Component<
           open={apiReturnAlert !== null}
           autoHideDuration={6000}
           onClose={this.onCloseAlert}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={this.onCloseAlert}
-            severity={apiReturnAlert?.severity}
-          >
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+          <Alert onClose={this.onCloseAlert} severity={apiReturnAlert?.severity}>
             {apiReturnAlert?.message}
           </Alert>
         </Snackbar>
@@ -268,15 +226,9 @@ class TeamsListPage extends React.Component<
 
     if (userToBeRemoved !== null) {
       try {
-        const teams = await apiClient.removeTeamMember(
-          userToBeRemoved.team,
-          userToBeRemoved.userId
-        );
+        const teams = await apiClient.removeTeamMember(userToBeRemoved.team, userToBeRemoved.userId);
         const message = t("team-list-success-remove-member");
-        this.setState({
-          teams,
-          apiReturnAlert: { message, severity: "success" },
-        });
+        this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
         const message = t("team-list-failed-remove-member", { errorMessage });
@@ -303,22 +255,15 @@ class TeamsListPage extends React.Component<
     this.log.info("onLeaveTeam", { teamToLeave });
 
     if (teamToLeave === null) {
-      this.log.error(
-        "onLeaveTeam: Should not have been called with no team to leave"
-      );
+      this.log.error("onLeaveTeam: Should not have been called with no team to leave");
       return;
     }
 
     try {
       const onlyMember = !((teamToLeave.members?.length ?? 0) > 1);
       const teams = await apiClient.leaveTeam(teamToLeave);
-      const message = onlyMember
-        ? t("team-list-success-deleted")
-        : t("team-list-success-leave");
-      this.setState({
-        teams,
-        apiReturnAlert: { message, severity: "success" },
-      });
+      const message = onlyMember ? t("team-list-success-deleted") : t("team-list-success-leave");
+      this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       const message = t("team-list-failed-leave", { errorMessage });
@@ -329,11 +274,7 @@ class TeamsListPage extends React.Component<
     this.setState({ teamToLeave: null });
   }
 
-  async onSwitchAdminRole(
-    team: Team,
-    userId: string,
-    admin: boolean
-  ): Promise<void> {
+  async onSwitchAdminRole(team: Team, userId: string, admin: boolean): Promise<void> {
     this.log.info("onSwitchAdminRole", { team, userId, admin });
 
     const confirm = await this.getConfirmSwitchAdminRole(team, userId, admin);
@@ -353,11 +294,7 @@ class TeamsListPage extends React.Component<
     }
   }
 
-  getConfirmSwitchAdminRole(
-    team: Team,
-    userId: string,
-    admin: boolean
-  ): Promise<boolean> {
+  getConfirmSwitchAdminRole(team: Team, userId: string, admin: boolean): Promise<boolean> {
     return new Promise((resolve: (value: boolean) => void): void => {
       const switchAdminRole = { team, userId, admin, onDialogResult: resolve };
       this.setState({ switchAdminRole });
@@ -366,17 +303,10 @@ class TeamsListPage extends React.Component<
 
   async onShowAddMemberDialog(team: Team): Promise<void> {
     const getMemberEmail = () =>
-      new Promise(
-        (
-          resolve: (result: {
-            email: string | null;
-            role: TeamMemberRole;
-          }) => void
-        ): void => {
-          const addMember = { team, onDialogResult: resolve };
-          this.setState({ addMember });
-        }
-      );
+      new Promise((resolve: (result: { email: string | null; role: TeamMemberRole }) => void): void => {
+        const addMember = { team, onDialogResult: resolve };
+        this.setState({ addMember });
+      });
 
     const { email, role } = await getMemberEmail();
     this.setState({ addMember: null });
@@ -386,12 +316,7 @@ class TeamsListPage extends React.Component<
 
     try {
       await apiClient.inviteHcpTeamMember(team, email, role);
-      this.setState({
-        apiReturnAlert: {
-          message: t("team-list-success-invite-hcp", { email }),
-          severity: "success",
-        },
-      });
+      this.setState({ apiReturnAlert: { message: t("team-list-success-invite-hcp", { email }), severity: "success" } });
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       const message = t("team-list-failed-invite-hcp", { errorMessage });
