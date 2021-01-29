@@ -27,14 +27,7 @@ import {
   TextField,
   Toolbar,
 } from "@material-ui/core";
-import React, {
-  Fragment,
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Fragment, FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 
 import HeaderBar from "../../components/header-bar";
@@ -98,13 +91,7 @@ type Errors = {
 };
 
 const getCurrentLocaleName = (i18n: i18n): string => {
-  const shortLocale = i18n.language.split("-")[0] as
-    | "en"
-    | "de"
-    | "es"
-    | "fr"
-    | "it"
-    | "nl";
+  const shortLocale = i18n.language.split("-")[0] as "en" | "de" | "es" | "fr" | "it" | "nl";
 
   return locales.resources[shortLocale]?.name;
 };
@@ -132,19 +119,21 @@ export const ProfilePage: FunctionComponent = () => {
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [unit, setUnit] = useState(Units.mole);
+  const [role, setRole] = useState("");
 
-  const availableLocales = useMemo(
-    () => _.map(locales.resources, ({ name }) => name),
-    []
-  );
+  const availableLocales = useMemo(() => _.map(locales.resources, ({ name }) => name), []);
 
   useEffect(() => {
     const user = apiClient.whoami;
+    console.log("user", user);
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
     }
     if (user?.profile?.lastName) {
       setName(user.profile.lastName);
+    }
+    if (user?.roles) {
+      setRole(user.roles[0]);
     }
     if (user?.emails && user.emails.length) {
       setMail(user.emails[0]);
@@ -153,9 +142,7 @@ export const ProfilePage: FunctionComponent = () => {
 
   const handleChange = (
     setState: React.Dispatch<React.SetStateAction<string>>
-  ): ((
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void) => (event) => setState(event.target.value);
+  ): ((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void) => (event) => setState(event.target.value);
 
   const handleLocaleChange = (
     event: React.ChangeEvent<{
@@ -244,11 +231,7 @@ export const ProfilePage: FunctionComponent = () => {
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
           <Breadcrumbs aria-label={t("breadcrumb")}>
-            <Link
-              className={classes.breadcrumbLink}
-              color="textPrimary"
-              href="/hcp"
-            >
+            <Link className={classes.breadcrumbLink} color="textPrimary" href="/hcp">
               <HomeIcon className={classes.homeIcon} />
               {t("My Patients")}
             </Link>
@@ -256,12 +239,8 @@ export const ProfilePage: FunctionComponent = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        <div
-          style={{ display: "flex", flexDirection: "column", margin: "16px" }}
-        >
-          <div className={classes.title}>
-            Update your personal info and preferences
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
+          <div className={classes.title}>Update your personal info and preferences</div>
           <TextField
             id="firstName"
             value={firstName}
@@ -270,11 +249,7 @@ export const ProfilePage: FunctionComponent = () => {
             helperText={errors.firstName && "Field required"}
             inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {t("First Name")}
-                </InputAdornment>
-              ),
+              startAdornment: <InputAdornment position="start">{t("First Name")}</InputAdornment>,
             }}
           />
           <TextField
@@ -285,55 +260,81 @@ export const ProfilePage: FunctionComponent = () => {
             helperText={errors.name && "Field required"}
             inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  {t("Last Name")}
-                </InputAdornment>
-              ),
+              startAdornment: <InputAdornment position="start">{t("Last Name")}</InputAdornment>,
             }}
           />
-          <TextField
-            id="mail"
-            value={mail}
-            disabled
-            onChange={handleChange(setMail)}
-            error={errors.mail}
-            helperText={errors.mail && "Mail incorrect"}
-            className={classes.textField}
-            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">{t("Email")}</InputAdornment>
-              ),
-            }}
-          />
-          <Password
-            id="password"
-            label="Password"
-            value={password}
-            error={errors.password}
-            helperText={"Password too weak"}
-            setState={setPassword}
-          />
-          <Password
-            id="passwordConfirmation"
-            label="Confirm password"
-            value={passwordConfirmation}
-            error={errors.passwordConfirmation}
-            helperText={"Passwords are not matching"}
-            setState={setPasswordConfirmation}
-          />
+
+          {role === "clinic" ? (
+            <Fragment>
+              <TextField
+                id="mail"
+                value={mail}
+                disabled
+                onChange={handleChange(setMail)}
+                error={errors.mail}
+                helperText={errors.mail && "Mail incorrect"}
+                className={classes.textField}
+                inputProps={{
+                  style: { textAlign: "right", padding: "1em 2em" },
+                }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">{t("Email")}</InputAdornment>,
+                }}
+              />
+              <Password
+                id="password"
+                label="Password"
+                value={password}
+                error={errors.password}
+                helperText={"Password too weak"}
+                setState={setPassword}
+              />
+              <Password
+                id="passwordConfirmation"
+                label="Confirm password"
+                value={passwordConfirmation}
+                error={errors.passwordConfirmation}
+                helperText={"Passwords are not matching"}
+                setState={setPasswordConfirmation}
+              />
+            </Fragment>
+          ) : (
+            <Fragment>
+              <TextField //TODO:
+                id="birthDate"
+                value={firstName}
+                onChange={handleChange(setFirstName)}
+                error={errors.firstName}
+                helperText={errors.firstName && "Field required"}
+                inputProps={{
+                  style: { textAlign: "right", padding: "1em 2em" },
+                }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">{t("date-of-birth")}</InputAdornment>,
+                }}
+              />
+              <TextField //TODO:
+                id="hb1c"
+                disabled
+                value={"8.5%"}
+                inputProps={{
+                  style: { textAlign: "right", padding: "1em 2em" },
+                }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">{t("initial-hb1c")}</InputAdornment>,
+                }}
+              />
+            </Fragment>
+          )}
           <FormControl className={classes.formControl}>
             <Select
+              disabled={role !== "clinic"}
               labelId="unit-selector"
               id="unit-selector"
               value={unit}
               onChange={handleUnitChange}
               classes={{ root: classes.select }}
-              startAdornment={
-                <InputAdornment position="start">{t("Units")}</InputAdornment>
-              }
-            >
+              startAdornment={<InputAdornment position="start">{t("Units")}</InputAdornment>}>
               <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
               <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
             </Select>
@@ -345,12 +346,7 @@ export const ProfilePage: FunctionComponent = () => {
               value={locale}
               onChange={handleLocaleChange}
               classes={{ root: classes.select }}
-              startAdornment={
-                <InputAdornment position="start">
-                  {t("Language")}
-                </InputAdornment>
-              }
-            >
+              startAdornment={<InputAdornment position="start">{t("Language")}</InputAdornment>}>
               {availableLocales.map((locale) => (
                 <MenuItem key={locale} value={locale}>
                   {locale}
@@ -359,21 +355,10 @@ export const ProfilePage: FunctionComponent = () => {
             </Select>
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={onCancel}
-              style={{ margin: "2em 1em" }}
-            >
+            <Button variant="contained" color="secondary" onClick={onCancel} style={{ margin: "2em 1em" }}>
               {t("CANCEL")}
             </Button>
-            <Button
-              variant="contained"
-              disabled={!hasChanged}
-              color="primary"
-              onClick={onSave}
-              style={{ margin: "2em 1em" }}
-            >
+            <Button variant="contained" disabled={!hasChanged} color="primary" onClick={onSave} style={{ margin: "2em 1em" }}>
               {t("SAVE")}
             </Button>
           </div>
