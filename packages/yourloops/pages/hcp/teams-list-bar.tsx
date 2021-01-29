@@ -90,28 +90,21 @@ function TeamsListBar(props: BarProps): JSX.Element {
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
           <div id="team-list-toolbar-item-left">
-            <Breadcrumbs aria-label={t("breadcrumb")}>
-              <Typography
-                color="textPrimary"
-                className={classes.breadcrumbLink}
-              >
+            <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
+              <Typography color="textPrimary" className={classes.breadcrumbLink}>
                 <HomeIcon className={classes.homeIcon} />
                 {t("team-list-breadcrumbs-title-my-teams")}
               </Typography>
             </Breadcrumbs>
           </div>
           <div id="team-list-toolbar-item-middle"></div>
-          <div
-            id="team-list-toolbar-item-right"
-            className={classes.toolBarRight}
-          >
+          <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
             <Button
               id="team-list-toolbar-add-team"
               color="primary"
               variant="contained"
               className={classes.buttonAddTeam}
-              onClick={handleOpenModalAddTeam}
-            >
+              onClick={handleOpenModalAddTeam}>
               <AddIcon />
               &nbsp;{t("button-add-team")}
             </Button>

@@ -81,18 +81,14 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
     <Dialog
       id="team-members-dialog-switch-role"
       open={switchAdminRole !== null}
-      aria-labelledby={t("aria-team-members-dialog-switch-role-title", {
-        teamName,
-      })}
+      aria-labelledby={t("aria-team-members-dialog-switch-role-title", { teamName })}
       aria-describedby={t("aria-team-members-dialog-switch-role-question")}
-      BackdropProps={{ invisible: true }}
-    >
+      BackdropProps={{ invisible: true }}>
+
       <DialogTitle id="team-members-dialog-switch-role-title">
         <strong>{t("team-members-dialog-switch-role-title")}</strong>
         <br />
-        <span id="team-members-dialog-switch-role-title-team-name">
-          {teamName}
-        </span>
+        <span id="team-members-dialog-switch-role-title-team-name">{teamName}</span>
       </DialogTitle>
 
       <DialogContent>
@@ -103,15 +99,9 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
           {t("team-members-dialog-switch-role-consequences")}
         </DialogContentText>
         <Typography component="ul" variant="body1" color="textSecondary">
-          <li id="team-members-dialog-switch-role-consequences-1">
-            {t("team-members-dialog-switch-role-consequences-1")}
-          </li>
-          <li id="team-members-dialog-switch-role-consequences-2">
-            {t("team-members-dialog-switch-role-consequences-2")}
-          </li>
-          <li id="team-members-dialog-switch-role-consequences-3">
-            {t("team-members-dialog-switch-role-consequences-3")}
-          </li>
+          <li id="team-members-dialog-switch-role-consequences-1">{t("team-members-dialog-switch-role-consequences-1")}</li>
+          <li id="team-members-dialog-switch-role-consequences-2">{t("team-members-dialog-switch-role-consequences-2")}</li>
+          <li id="team-members-dialog-switch-role-consequences-3">{t("team-members-dialog-switch-role-consequences-3")}</li>
         </Typography>
       </DialogContent>
 
@@ -121,19 +111,18 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
           onClick={handleClose}
           className={classes.buttonCancel}
           color="secondary"
-          variant="contained"
-        >
+          variant="contained">
           {t("Cancel")}
         </Button>
         <Button
           id="team-members-dialog-switch-role-button-remove"
           onClick={handleClickRemoveTeamMyself}
           color="primary"
-          variant="contained"
-        >
+          variant="contained">
           {t("team-members-dialog-switch-role-button-remove")}
         </Button>
       </DialogActions>
+
     </Dialog>
   );
 }

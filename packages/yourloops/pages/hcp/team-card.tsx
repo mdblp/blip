@@ -160,8 +160,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       className={classes.buttonActionFirstRow}
       startIcon={<EditIcon color="primary" />}
       onClick={handleClickEdit}
-      disabled={buttonsDisabled}
-    >
+      disabled={buttonsDisabled}>
       {t("button-team-edit")}
     </Button>
   );
@@ -171,8 +170,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       className={classes.buttonActionFirstRow}
       startIcon={<PersonAddIcon color="primary" />}
       onClick={handleClickAddMember}
-      disabled={buttonsDisabled}
-    >
+      disabled={buttonsDisabled}>
       {t("button-team-add-member")}
     </Button>
   );
@@ -182,8 +180,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       className={classes.buttonActionFirstRow}
       startIcon={<ExitToAppIcon color="primary" />}
       onClick={handleClickLeaveTeam}
-      disabled={buttonsDisabled}
-    >
+      disabled={buttonsDisabled}>
       {t("button-team-leave")}
     </Button>
   );
@@ -207,34 +204,12 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         </div>
       </div>
       <div id={`team-card-${team.id}-infos`} className={classes.secondRow}>
-        <TeamInfo
-          label="label-team-card-code"
-          value={team.code}
-          icon={<FingerprintIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-phone"
-          value={team.phone}
-          icon={<PhoneIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-address"
-          value={address}
-          icon={<LocationOnIcon />}
-        />
-        <TeamInfo
-          label="label-team-card-email"
-          value={team.email}
-          icon={<EmailIcon />}
-        />
+        <TeamInfo label="label-team-card-code" value={team.code} icon={<FingerprintIcon />} />
+        <TeamInfo label="label-team-card-phone" value={team.phone} icon={<PhoneIcon />} />
+        <TeamInfo label="label-team-card-address" value={address} icon={<LocationOnIcon />} />
+        <TeamInfo label="label-team-card-email" value={team.email} icon={<EmailIcon />} />
       </div>
-      <TeamEditModal
-        action="edit"
-        team={team}
-        modalOpened={modalOpened}
-        setModalOpen={setModalOpen}
-        onSaveTeam={onSaveTeam}
-      />
+      <TeamEditModal action="edit" team={team} modalOpened={modalOpened} setModalOpen={setModalOpen} onSaveTeam={onSaveTeam} />
     </Paper>
   );
 }

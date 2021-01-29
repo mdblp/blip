@@ -59,10 +59,7 @@ interface PatientListPageState {
   filterType: FilterType;
 }
 
-class PatientListPage extends React.Component<
-  RouteComponentProps,
-  PatientListPageState
-> {
+class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
   private log: Console;
   declare context: React.ContextType<typeof AuthContext>;
 
@@ -100,46 +97,20 @@ class PatientListPage extends React.Component<
   }
 
   render(): JSX.Element {
-    const {
-      loading,
-      patients,
-      teams,
-      flagged,
-      order,
-      orderBy,
-      filter,
-      filterType,
-      errorMessage,
-    } = this.state;
+    const { loading, patients, teams, flagged, order, orderBy, filter, filterType, errorMessage } = this.state;
 
     if (loading) {
       return (
-        <CircularProgress
-          disableShrink
-          style={{
-            position: "absolute",
-            top: "calc(50vh - 20px)",
-            left: "calc(50vw - 20px)",
-          }}
-        />
+        <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
       );
     }
     if (errorMessage !== null) {
       return (
         <div id="div-api-error-message" className="api-error-message">
-          <Alert
-            id="alert-api-error-message"
-            severity="error"
-            style={{ marginBottom: "1em" }}
-          >
+          <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
             {errorMessage}
           </Alert>
-          <Button
-            id="button-api-error-message"
-            variant="contained"
-            color="secondary"
-            onClick={this.onRefresh}
-          >
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>
             {t("button-refresh-page-on-error")}
           </Button>
         </div>
@@ -161,8 +132,7 @@ class PatientListPage extends React.Component<
           direction="row"
           justify="center"
           alignItems="center"
-          style={{ marginTop: "1.5em", marginBottom: "1.5em" }}
-        >
+          style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
           <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
         </Grid>
         <Container maxWidth="lg" style={{ marginBottom: "2em" }}>
@@ -185,29 +155,17 @@ class PatientListPage extends React.Component<
     const whoAmI = this.context.user;
     this.setState({ flagged: whoAmI?.preferences?.patientsStarred ?? [] });
 
-    this.setState(
-      {
-        loading: true,
-        errorMessage: null,
-        teams: [],
-        allPatients: [],
-        patients: [],
-      },
-      async () => {
-        try {
-          const patients = await apiClient.getUserShares();
-          const teams = await apiClient.fetchTeams();
-          this.setState(
-            { patients, allPatients: patients, teams, loading: false },
-            this.updatePatientList
-          );
-        } catch (reason: unknown) {
-          this.log.error("onRefresh", reason);
-          const errorMessage = errorTextFromException(reason);
-          this.setState({ loading: false, errorMessage });
-        }
+    this.setState({ loading: true, errorMessage: null, teams: [], allPatients: [], patients: [] }, async () => {
+      try {
+        const patients = await apiClient.getUserShares();
+        const teams = await apiClient.fetchTeams();
+        this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
+      } catch (reason: unknown) {
+        this.log.error("onRefresh", reason);
+        const errorMessage = errorTextFromException(reason);
+        this.setState({ loading: false, errorMessage });
       }
-    );
+    });
   }
 
   private onSelectPatient(user: User): void {
@@ -227,10 +185,7 @@ class PatientListPage extends React.Component<
       try {
         // await apiClient.invitePatient(username, teamId);
         const patients = await apiClient.getUserShares();
-        this.setState(
-          { patients, allPatients: patients, loading: false },
-          this.updatePatientList
-        );
+        this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
       } catch (reason: unknown) {
         let errorMessage: string;
         if (reason instanceof Error) {
@@ -255,14 +210,14 @@ class PatientListPage extends React.Component<
     let aValue: string;
     let bValue: string;
     switch (orderBy) {
-      case "firstname":
-        aValue = a.profile?.firstName ?? "😀";
-        bValue = b.profile?.firstName ?? "😀";
-        break;
-      case "lastname":
-        aValue = a.profile?.lastName ?? a.profile?.fullName ?? a.username;
-        bValue = b.profile?.lastName ?? b.profile?.fullName ?? b.username;
-        break;
+    case "firstname":
+      aValue = a.profile?.firstName ?? "😀";
+      bValue = b.profile?.firstName ?? "😀";
+      break;
+    case "lastname":
+      aValue = a.profile?.lastName ?? a.profile?.fullName ?? a.username;
+      bValue = b.profile?.lastName ?? b.profile?.fullName ?? b.username;
+      break;
     }
 
     return aValue.localeCompare(bValue);
@@ -284,50 +239,38 @@ class PatientListPage extends React.Component<
   }
 
   private updatePatientList() {
-    const {
-      allPatients,
-      filter,
-      filterType,
-      flagged,
-      order,
-      orderBy,
-    } = this.state;
+    const { allPatients, filter, filterType, flagged, order, orderBy } = this.state;
 
     let patients = allPatients;
     if (filter.length > 0) {
       const searchText = filter.toLocaleLowerCase();
       patients = allPatients.filter((patient: User): boolean => {
         switch (filterType) {
-          case "all":
-            break;
-          case "flagged":
-            if (!flagged.includes(patient.userid)) {
-              return false;
-            }
-            break;
-          case "pending":
-            return false; // TODO
-          default:
-            break;
+        case "all":
+          break;
+        case "flagged":
+          if (!flagged.includes(patient.userid)) {
+            return false;
+          }
+          break;
+        case "pending":
+          return false; // TODO
+        default:
+          break;
         }
 
         const firstName = patient.profile?.firstName ?? "";
         if (firstName.toLocaleLowerCase().includes(searchText)) {
           return true;
         }
-        const lastName =
-          patient.profile?.lastName ??
-          patient.profile?.fullName ??
-          patient.username;
+        const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
         if (lastName.toLocaleLowerCase().includes(searchText)) {
           return true;
         }
         return false;
       });
     } else if (filterType === "flagged") {
-      patients = allPatients.filter((patient: User): boolean =>
-        flagged.includes(patient.userid)
-      );
+      patients = allPatients.filter((patient: User): boolean => flagged.includes(patient.userid));
     } else if (filterType === "pending") {
       patients = []; // TODO
     } else if (filterType !== "all") {
