@@ -79,6 +79,14 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       color: theme.palette.primary.main,
     },
+    inputTitle: { color: "black" },
+    container: {
+      border: "solid",
+      borderRadius: "15px",
+      marginTop: "32px",
+      borderColor: theme.palette.grey[300],
+      borderWidth: "1px",
+    },
   })
 );
 
@@ -88,6 +96,7 @@ type Errors = {
   mail: boolean;
   password: boolean;
   passwordConfirmation: boolean;
+  birthDate: boolean;
 };
 
 const getCurrentLocaleName = (i18n: i18n): string => {
@@ -120,6 +129,8 @@ export const ProfilePage: FunctionComponent = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [unit, setUnit] = useState(Units.mole);
   const [role, setRole] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [hb1c, setHb1c] = useState("8.5%"); // FIXME:
 
   const availableLocales = useMemo(() => _.map(locales.resources, ({ name }) => name), []);
 
@@ -173,6 +184,7 @@ export const ProfilePage: FunctionComponent = () => {
       mail: !REGEX_EMAIL.test(mail),
       password: password.length > 0 && password.length < 10,
       passwordConfirmation: passwordConfirmation !== password,
+      birthDate: _.isEmpty(birthDate),
     }),
     [firstName, name, mail, password, passwordConfirmation]
   );
@@ -238,18 +250,22 @@ export const ProfilePage: FunctionComponent = () => {
           </Breadcrumbs>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="lg">
+      <Container className={classes.container} maxWidth="md">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
-          <div className={classes.title}>Update your personal info and preferences</div>
+          <div className={classes.title}>{t("account-preferences-title")}</div>
           <TextField
             id="firstName"
             value={firstName}
             onChange={handleChange(setFirstName)}
             error={errors.firstName}
-            helperText={errors.firstName && "Field required"}
+            helperText={errors.firstName && t("field-required")}
             inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{t("First Name")}</InputAdornment>,
+              startAdornment: (
+                <InputAdornment className={classes.inputTitle} position="start">
+                  <span>{t("first-name")}</span>
+                </InputAdornment>
+              ),
             }}
           />
           <TextField
@@ -257,10 +273,14 @@ export const ProfilePage: FunctionComponent = () => {
             value={name}
             onChange={handleChange(setName)}
             error={errors.name}
-            helperText={errors.name && "Field required"}
+            helperText={errors.name && t("field-required")}
             inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{t("Last Name")}</InputAdornment>,
+              startAdornment: (
+                <InputAdornment className={classes.inputTitle} position="start">
+                  <span>{t("last-name")}</span>
+                </InputAdornment>
+              ),
             }}
           />
 
@@ -272,13 +292,17 @@ export const ProfilePage: FunctionComponent = () => {
                 disabled
                 onChange={handleChange(setMail)}
                 error={errors.mail}
-                helperText={errors.mail && "Mail incorrect"}
+                helperText={errors.mail && t("incorrect-mail")}
                 className={classes.textField}
                 inputProps={{
                   style: { textAlign: "right", padding: "1em 2em" },
                 }}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">{t("Email")}</InputAdornment>,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <span>{t("email")}</span>
+                    </InputAdornment>
+                  ),
                 }}
               />
               <Password
@@ -286,7 +310,7 @@ export const ProfilePage: FunctionComponent = () => {
                 label="Password"
                 value={password}
                 error={errors.password}
-                helperText={"Password too weak"}
+                helperText={t("password-too-weak")}
                 setState={setPassword}
               />
               <Password
@@ -294,7 +318,7 @@ export const ProfilePage: FunctionComponent = () => {
                 label="Confirm password"
                 value={passwordConfirmation}
                 error={errors.passwordConfirmation}
-                helperText={"Passwords are not matching"}
+                helperText={t("not-mathing-password")}
                 setState={setPasswordConfirmation}
               />
             </Fragment>
@@ -302,26 +326,36 @@ export const ProfilePage: FunctionComponent = () => {
             <Fragment>
               <TextField //TODO:
                 id="birthDate"
-                value={firstName}
-                onChange={handleChange(setFirstName)}
-                error={errors.firstName}
-                helperText={errors.firstName && "Field required"}
+                value={birthDate}
+                onChange={handleChange(setBirthDate)}
+                error={errors.birthDate}
+                helperText={errors.birthDate && t("field-required")}
                 inputProps={{
                   style: { textAlign: "right", padding: "1em 2em" },
                 }}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">{t("date-of-birth")}</InputAdornment>,
+                  startAdornment: (
+                    <InputAdornment className={classes.inputTitle} position="start">
+                      <span>{t("birthdate")}</span>
+                    </InputAdornment>
+                  ),
                 }}
               />
               <TextField //TODO:
                 id="hb1c"
                 disabled
-                value={"8.5%"}
+                value={hb1c}
+                onChange={handleChange(setHb1c)}
+                className={classes.textField}
                 inputProps={{
                   style: { textAlign: "right", padding: "1em 2em" },
                 }}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start">{t("initial-hb1c")}</InputAdornment>,
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <span>{t("initial-hb1c")}</span>
+                    </InputAdornment>
+                  ),
                 }}
               />
             </Fragment>
@@ -334,7 +368,11 @@ export const ProfilePage: FunctionComponent = () => {
               value={unit}
               onChange={handleUnitChange}
               classes={{ root: classes.select }}
-              startAdornment={<InputAdornment position="start">{t("Units")}</InputAdornment>}>
+              startAdornment={
+                <InputAdornment className={role === "clinic" ? classes.inputTitle : ""} position="start">
+                  <span>{t("units")}</span>
+                </InputAdornment>
+              }>
               <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
               <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
             </Select>
@@ -346,7 +384,11 @@ export const ProfilePage: FunctionComponent = () => {
               value={locale}
               onChange={handleLocaleChange}
               classes={{ root: classes.select }}
-              startAdornment={<InputAdornment position="start">{t("Language")}</InputAdornment>}>
+              startAdornment={
+                <InputAdornment position="start">
+                  <span>{t("language")}</span>
+                </InputAdornment>
+              }>
               {availableLocales.map((locale) => (
                 <MenuItem key={locale} value={locale}>
                   {locale}
@@ -356,10 +398,10 @@ export const ProfilePage: FunctionComponent = () => {
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button variant="contained" color="secondary" onClick={onCancel} style={{ margin: "2em 1em" }}>
-              {t("CANCEL")}
+              {t("cancel")}
             </Button>
             <Button variant="contained" disabled={!hasChanged} color="primary" onClick={onSave} style={{ margin: "2em 1em" }}>
-              {t("SAVE")}
+              {t("save")}
             </Button>
           </div>
         </div>

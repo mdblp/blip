@@ -26,7 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-<<<<<<< HEAD
 import * as React from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -60,50 +59,6 @@ const Yourloops: React.FunctionComponent = () => {
         </Router>
       </AuthProvider>
     </ThemeProvider>
-=======
-import '@fontsource/roboto';
-import 'branding/theme-base.css';
-import 'branding/theme.css';
-
-import * as React from 'react';
-
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-
-import { AuthProvider } from '../lib/auth/hook/use-auth';
-import HcpPage from '../pages/hcp';
-import LoginPage from '../pages/login';
-import PatientPage from '../pages/patient';
-import PrivateRoute from '../components/private-route';
-import ProfilePage from '../pages/profile';
-import RequestPasswordReset from '../pages/request-passord-reset';
-import { Suspense } from 'react';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { theme } from '../components/theme';
-
-const Yourloops: React.FunctionComponent = () => {
-  return (
-    <Suspense fallback='loading'>
-      <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <Router>
-            <Switch>
-              <Route exact path='/' component={LoginPage} />
-              <Route
-                path='/request-password-reset'
-                component={RequestPasswordReset}
-              />
-              <PrivateRoute path='/hcp' component={HcpPage} />
-              <PrivateRoute path='/patient' component={PatientPage} />
-              <PrivateRoute
-                path='/account-preferences'
-                component={ProfilePage}
-              />
-            </Switch>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </Suspense>
->>>>>>> Set up i18n with hooks
   );
 };
 
