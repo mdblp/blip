@@ -1,10 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
-<<<<<<< HEAD
  * Main App file
-=======
- * Patient nav bar
->>>>>>> Set up i18n with hooks
  *
  * All rights reserved.
  *
@@ -30,7 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-<<<<<<< HEAD
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Yourloops from "./app";
@@ -48,32 +43,3 @@ i18nInit().then(() => {
   }
   ReactDOM.render(<Yourloops />, div);
 });
-=======
-<<<<<<< HEAD:packages/yourloops/components/patient-nav-bar.tsx
-import * as React from "react";
-
-import HeaderBar from "./header-bar";
-
-function PatientNavBar(): JSX.Element {
-  return <HeaderBar />;
-}
-
-export default PatientNavBar;
-=======
-import '../lib/language';
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Yourloops from './app';
-
-// TODO: window.onerror
-
-let div = document.getElementById('app');
-if (div === null) {
-  div = document.createElement('div');
-  div.id = 'app';
-  document.body.appendChild(div);
-}
-ReactDOM.render(<Yourloops />, div);
->>>>>>> Set up i18n with hooks:packages/yourloops/app/index.tsx
->>>>>>> Set up i18n with hooks
