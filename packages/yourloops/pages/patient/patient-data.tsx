@@ -26,9 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import bows from 'bows';
+import bows from "bows";
 
 import Blip from "blip";
 
@@ -36,8 +36,7 @@ import appConfig from "../../lib/config";
 import apiClient from "../../lib/auth/api";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface PatientDataState {
-}
+interface PatientDataState {}
 
 class PatientDataPage extends React.Component<RouteComponentProps, PatientDataState> {
   private log: Console;

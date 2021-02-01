@@ -28,13 +28,15 @@
 
 import * as React from "react";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import Tabs from "@material-ui/core/Tabs";
+import { useTranslation } from "react-i18next";
+
 import Tab from "@material-ui/core/Tab";
+import Tabs from "@material-ui/core/Tabs";
 
-import { t } from "../lib/language";
-import HeaderBar from './header-bar';
+import HeaderBar from "./header-bar";
 
-function HcpNavBar(props: RouteComponentProps) : JSX.Element {
+function HcpNavBar(props: RouteComponentProps): JSX.Element {
+  const { t } = useTranslation("yourloops");
 
   const isPatientsPath = props.history.location.pathname.startsWith("/hcp/patient");
 

@@ -29,6 +29,7 @@
 import _ from "lodash";
 import * as React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import bows from "bows";
 
 import { makeStyles /*, Theme */ } from "@material-ui/core/styles";
@@ -46,12 +47,10 @@ import TextField from "@material-ui/core/TextField";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-import { t } from "../../lib/language";
 import brandingLogo from "branding/logo.png";
-import { useState } from "react";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 
-const loginStyle = makeStyles(( /* theme: Theme */) => {
+const loginStyle = makeStyles((/* theme: Theme */) => {
   return {
     mainContainer: { margin: "auto" },
     loginButton: {
@@ -64,13 +63,16 @@ const loginStyle = makeStyles(( /* theme: Theme */) => {
  * Login page
  */
 function Login(props: RouteComponentProps): JSX.Element {
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [validateError, setValidateError] = useState(false);
-  const [helperTextValue, setHelperTextValue] = useState("");
+  const { t } = useTranslation("yourloops");
   const auth = useAuth();
   const classes = loginStyle();
+
+  const [username, setUserName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [validateError, setValidateError] = React.useState(false);
+  const [helperTextValue, setHelperTextValue] = React.useState("");
+
   const emptyUsername = _.isEmpty(username);
   const emptyPassword = _.isEmpty(password);
   const log = bows("Login");
@@ -113,7 +115,7 @@ function Login(props: RouteComponentProps): JSX.Element {
     } catch (reason: unknown) {
       log.error(reason);
       setValidateError(true);
-      const message = _.isError(reason) ? reason.message : (new String(reason)).toString();
+      const message = _.isError(reason) ? reason.message : new String(reason).toString();
       setHelperTextValue(message);
     }
   };
@@ -132,17 +134,24 @@ function Login(props: RouteComponentProps): JSX.Element {
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer}>
-      <Grid
-        container
-        spacing={0}
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: '100vh' }}
-      >
+      <Grid container spacing={0} alignItems="center" justify="center" style={{ minHeight: "100vh" }}>
         <Grid item xs={12}>
           <Card>
-            <CardMedia style={{ display: "flex", paddingTop: "1em", paddingBottom: "1em" }}>
-              <img src={brandingLogo} style={{ height: "60px", marginLeft: "auto", marginRight: "auto" }} alt={t('Login Branding Logo')} />
+            <CardMedia
+              style={{
+                display: "flex",
+                paddingTop: "1em",
+                paddingBottom: "1em",
+              }}>
+              <img
+                src={brandingLogo}
+                style={{
+                  height: "60px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+                alt={t("Login Branding Logo")}
+              />
             </CardMedia>
             <CardContent>
               <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
@@ -176,18 +185,15 @@ function Login(props: RouteComponentProps): JSX.Element {
               </form>
             </CardContent>
             <CardActions>
-              <Link
-                to="/request-password-reset"
-                onClick={onClickLoginReset}>
-                {t('Forgot your password?')}
+              <Link to="/request-password-reset" onClick={onClickLoginReset}>
+                {t("Forgot your password?")}
               </Link>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={onClickLoginButton}
                 className={classes.loginButton}
-                disabled={emptyUsername || emptyPassword}
-              >
+                disabled={emptyUsername || emptyPassword}>
                 {t("Login")}
               </Button>
             </CardActions>
