@@ -17,6 +17,7 @@
  */
 import _ from 'lodash';
 import React from 'react';
+import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import i18n from '../../core/language';
@@ -38,6 +39,7 @@ class TidelineHeader extends React.Component {
     iconNext: PropTypes.string,
     iconMostRecent: PropTypes.string,
     canPrint: PropTypes.bool.isRequired,
+    permsOfLoggedInUser: PropTypes.object,
     onClickBack: PropTypes.func,
     onClickBasics: PropTypes.func,
     onClickTrends: PropTypes.func,
@@ -53,11 +55,28 @@ class TidelineHeader extends React.Component {
     inTransition: false,
   };
 
+  getPatientLink(patient) {
+    if (!patient || !patient.userid) {
+      return '';
+    }
+    // TO BE DEFINED
+    return '/hcp/patients/' + patient.userid + '/profile';
+  }
+
   renderStandard = () => {
     const { canPrint } = this.props;
 
     const printViews = ['basics', 'daily', 'bgLog', 'settings'];
     const showPrintLink = _.includes(printViews, this.props.chartType);
+    const showHome = _.has(this.props.permsOfLoggedInUser, 'view');
+    const homeValue = _.get(this.props.patient, 'profile.fullName', t('Home'));
+    const patientLink =  this.getPatientLink(this.props.patient);
+
+    const home = cx({
+      'js-home': true,
+      'patient-data-subnav-active': showHome,
+      'patient-data-subnav-hidden': !showHome,
+    });
 
     const basicsLinkClass = cx({
       'js-basics': true,
@@ -146,9 +165,18 @@ class TidelineHeader extends React.Component {
       </button>
       );
     }
+    const handleClick = function(e) {
+      self.props.trackMetric('Clicked Navbar Name');
+    };
 
     return (
       <div className="grid patient-data-subnav">
+        <div className="app-no-print patient-data-subnav-left">
+          {/* Here we can add the home icon */}
+          <Link className={home} to={patientLink} onClick={handleClick} title={t('Profile')}>
+            <div>{homeValue}</div>
+          </Link>
+        </div>
         <div className="app-no-print patient-data-subnav-left">
             <a href="" className={basicsLinkClass} onClick={this.props.onClickBasics}>{t('Basics')}</a>
             <a href="" className={dayLinkClass} onClick={this.props.onClickOneDay}>{t('Daily')}</a>

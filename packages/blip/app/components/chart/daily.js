@@ -238,7 +238,7 @@ class Daily extends React.Component {
     onSwitchToDaily: PropTypes.func.isRequired,
     onClickPrint: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
-    onSwitchToBgLog: PropTypes.func.isRequired,
+    onSwitchToBgLog: PropTypes.func,
     onSwitchToTrends: PropTypes.func.isRequired,
     // PatientData state updaters
     onUpdateChartDateRange: PropTypes.func.isRequired,
@@ -291,6 +291,7 @@ class Daily extends React.Component {
           iconBack={'icon-back'}
           iconNext={'icon-next'}
           iconMostRecent={'icon-most-recent'}
+          permsOfLoggedInUser={this.props.permsOfLoggedInUser}
           canPrint={this.props.canPrint}
           onClickBack={this.handlePanBack}
           onClickBasics={this.props.onSwitchToBasics}

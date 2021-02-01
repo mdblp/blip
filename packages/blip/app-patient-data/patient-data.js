@@ -310,6 +310,7 @@ class PatientDataPage extends React.Component {
             patient={patient}
             patientData={this.state.processedPatientData}
             canPrint={canPrint}
+            permsOfLoggedInUser={this.state.permsOfLoggedInUser}
             onClickRefresh={this.handleClickRefresh}
             onClickNoDataRefresh={this.handleClickNoDataRefresh}
             onSwitchToBasics={this.handleSwitchToBasics}
@@ -372,6 +373,7 @@ class PatientDataPage extends React.Component {
             patientData={this.state.processedPatientData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            permsOfLoggedInUser={permsOfLoggedInUser}
             onClickRefresh={this.handleClickRefresh}
             onCreateMessage={this.handleShowMessageCreation}
             onShowMessageThread={this.handleShowMessageThread}
@@ -399,6 +401,7 @@ class PatientDataPage extends React.Component {
             patientData={this.state.processedPatientData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            permsOfLoggedInUser={permsOfLoggedInUser}
             onClickRefresh={this.handleClickRefresh}
             onSwitchToBasics={this.handleSwitchToBasics}
             onSwitchToDaily={this.handleSwitchToDaily}
