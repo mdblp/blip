@@ -17,12 +17,12 @@
  */
 import _ from 'lodash';
 import React from 'react';
-import { Link } from 'react-router';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import i18n from '../../core/language';
 import config from '../../config';
 
+import Link from '@material-ui/core/Link';
 import Timeline from '@material-ui/icons/Timeline';
 import StayCurrentPortrait from '@material-ui/icons/StayCurrentPortrait';
 
@@ -38,6 +38,7 @@ class TidelineHeader extends React.Component {
     iconBack: PropTypes.string,
     iconNext: PropTypes.string,
     iconMostRecent: PropTypes.string,
+    trackMetric: PropTypes.func.isRequired,
     canPrint: PropTypes.bool.isRequired,
     permsOfLoggedInUser: PropTypes.object,
     onClickBack: PropTypes.func,
@@ -55,22 +56,22 @@ class TidelineHeader extends React.Component {
     inTransition: false,
   };
 
-  getPatientLink(patient) {
+  getPatientLink() {
+    const { patient } = this.props;
     if (!patient || !patient.userid) {
-      return '';
+      return '/hcp/patients';
     }
-    // TO BE DEFINED
-    return '/hcp/patients/' + patient.userid + '/profile';
+    return `/hcp/profile/${patient.userid}`;
   }
 
-  renderStandard = () => {
+  renderStandard() {
     const { canPrint } = this.props;
 
     const printViews = ['basics', 'daily', 'bgLog', 'settings'];
     const showPrintLink = _.includes(printViews, this.props.chartType);
     const showHome = _.has(this.props.permsOfLoggedInUser, 'view');
     const homeValue = _.get(this.props.patient, 'profile.fullName', t('Home'));
-    const patientLink =  this.getPatientLink(this.props.patient);
+    const patientLink =  this.getPatientLink();
 
     const home = cx({
       'js-home': true,
@@ -165,9 +166,13 @@ class TidelineHeader extends React.Component {
       </button>
       );
     }
-    const handleClick = function(e) {
-      self.props.trackMetric('Clicked Navbar Name');
-    };
+
+    /** @type {(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void} */
+      const handleClick = (/* e */) => {
+      // e.preventDefault();
+      // FIXME: Find a way to use the react-router-dom
+      this.props.trackMetric('Clicked Navbar Name');
+      };
 
     return (
       <div className="grid patient-data-subnav">
@@ -202,26 +207,7 @@ class TidelineHeader extends React.Component {
     );
   };
 
-  printTitle = () => {
-    const { chartType } = this.props;
-    switch (chartType) {
-      case 'basics':
-        return t('Basics');
-      case 'daily':
-        return t('Daily');
-      case 'bgLog':
-        return t('BG Log');
-      case 'trends':
-        return t('Trends');
-      case 'settings':
-        return t('Pump Settings');
-      case 'no-data':
-      default:
-        return '';
-    }
-  };
-
-  render = () => {
+  render() {
     return (
       <div className="container-box-outer patient-data-subnav-outer">
         <div className="container-box-inner patient-data-subnav-inner">
@@ -241,7 +227,7 @@ class TidelineHeader extends React.Component {
    *
    * @return {JSX.Element}
    */
-  renderNavButton = (buttonClass, clickAction, icon) => {
+  renderNavButton(buttonClass, clickAction, icon){
     const nullAction = function(e) {
       if (e) {
         e.preventDefault();

@@ -85,6 +85,7 @@ class Basics extends Component {
           inTransition={this.state.inTransition}
           title={this.state.title}
           canPrint={this.props.canPrint}
+          trackMetric={this.props.trackMetric}
           permsOfLoggedInUser={this.props.permsOfLoggedInUser}
           onClickBasics={this.handleClickBasics}
           onClickOneDay={this.handleClickOneDay}

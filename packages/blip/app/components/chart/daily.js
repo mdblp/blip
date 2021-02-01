@@ -293,6 +293,7 @@ class Daily extends React.Component {
           iconMostRecent={'icon-most-recent'}
           permsOfLoggedInUser={this.props.permsOfLoggedInUser}
           canPrint={this.props.canPrint}
+          trackMetric={this.props.trackMetric}
           onClickBack={this.handlePanBack}
           onClickBasics={this.props.onSwitchToBasics}
           onClickTrends={this.handleClickTrends}

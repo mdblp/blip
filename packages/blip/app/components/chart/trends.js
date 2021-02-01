@@ -434,6 +434,7 @@ class Trends extends React.PureComponent {
         inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
         title={title}
+        trackMetric={this.props.trackMetric}
         iconBack={'icon-back'}
         iconNext={'icon-next'}
         iconMostRecent={'icon-most-recent'}
