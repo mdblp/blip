@@ -45,6 +45,7 @@ import apiClient from "../../lib/auth/api";
 import {
   SwitchRoleDialogContentProps,
   AddMemberDialogContentProps,
+  RemoveMemberDialogContentProps,
   TeamEditModalContentProps,
   TeamLeaveDialogContentProps,
 } from "./types";
@@ -65,10 +66,7 @@ interface TeamsListPageState {
     message: string;
     severity: "error" | "warning" | "info" | "success";
   };
-  userToBeRemoved: null | {
-    team: Team;
-    userId: string;
-  };
+  userToBeRemoved: RemoveMemberDialogContentProps | null;
   addMember: AddMemberDialogContentProps | null;
   switchAdminRole: SwitchRoleDialogContentProps | null;
   teamToLeave: TeamLeaveDialogContentProps | null;
@@ -89,10 +87,8 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     this.log = bows("TeamsListPage");
 
     this.onCloseAlert = this.onCloseAlert.bind(this);
-    this.onShowModalRemoveMember = this.onShowModalRemoveMember.bind(this);
-    this.onHideModalRemoveMember = this.onHideModalRemoveMember.bind(this);
     this.onShowModalLeaveTeam = this.onShowModalLeaveTeam.bind(this);
-    this.onRemoveTeamMember = this.onRemoveTeamMember.bind(this);
+    this.onShowRemoveTeamMemberDialog = this.onShowRemoveTeamMemberDialog.bind(this);
     this.onShowModalEditTeam = this.onShowModalEditTeam.bind(this);
     this.onSwitchAdminRole = this.onSwitchAdminRole.bind(this);
     this.onShowAddMemberDialog = this.onShowAddMemberDialog.bind(this);
@@ -160,7 +156,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
           <TeamMembers
             team={team}
             onSwitchAdminRole={this.onSwitchAdminRole}
-            onShowModalRemoveMember={this.onShowModalRemoveMember}
+            onShowRemoveTeamMemberDialog={this.onShowRemoveTeamMemberDialog}
           />
         </Grid>
       );
@@ -175,13 +171,8 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
           </Grid>
         </Container>
 
-        <RemoveMemberDialog
-          userToBeRemoved={userToBeRemoved}
-          handleClose={this.onHideModalRemoveMember}
-          handleRemoveTeamMember={this.onRemoveTeamMember}
-        />
-
         <TeamEditModal teamToEdit={teamToEdit} />
+        <RemoveMemberDialog userToBeRemoved={userToBeRemoved} />
         <LeaveTeamDialog teamToLeave={teamToLeave} />
         <SwitchRoleDialog switchAdminRole={switchAdminRole} />
         <AddMemberDialog addMember={addMember} />
@@ -223,16 +214,6 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     this.setState({ apiReturnAlert: null });
   }
 
-  onShowModalRemoveMember(team: Team, userId: string): void {
-    this.log.debug("onShowModalRemoveMember", userId, team);
-    this.setState({ userToBeRemoved: { team, userId } });
-  }
-
-  onHideModalRemoveMember(): void {
-    this.log.debug("onHideModalRemoveMember");
-    this.setState({ userToBeRemoved: null });
-  }
-
   async onShowModalLeaveTeam(team: Team): Promise<void> {
     this.log.debug("onShowModalLeaveTeam", { team });
 
@@ -244,8 +225,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     };
 
     const isConfirmed = await getConfirmation();
-    // Hide the dialog:
-    this.setState({ teamToLeave: null });
+    this.setState({ teamToLeave: null }); // Hide the dialog
 
     if (isConfirmed) {
       try {
@@ -258,17 +238,25 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
         const message = t("team-list-failed-leave", { errorMessage });
         this.setState({ apiReturnAlert: { message, severity: "error" } });
       }
-
     }
   }
 
-  async onRemoveTeamMember(): Promise<void> {
-    const { userToBeRemoved } = this.state;
-    this.log.info("onRemoveTeamMember", userToBeRemoved);
+  async onShowRemoveTeamMemberDialog(team: Team, userId: string): Promise<void> {
+    this.log.info("onShowRemoveTeamMemberDialog", { team, userId });
 
-    if (userToBeRemoved !== null) {
+    const getConfirmation = (): Promise<boolean> => {
+      return new Promise((resolve: (value: boolean) => void): void => {
+        const userToBeRemoved = { team, userId, onDialogResult: resolve };
+        this.setState({ userToBeRemoved });
+      });
+    };
+
+    const isConfirmed = await getConfirmation();
+    this.setState({ userToBeRemoved: null }); // Hide the dialog
+
+    if (isConfirmed) {
       try {
-        const teams = await apiClient.removeTeamMember(userToBeRemoved.team, userToBeRemoved.userId);
+        const teams = await apiClient.removeTeamMember(team, userId);
         const message = t("team-list-success-remove-member");
         this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
       } catch (reason: unknown) {
@@ -277,7 +265,6 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
         this.setState({ apiReturnAlert: { message, severity: "error" } });
       }
     }
-    this.onHideModalRemoveMember();
   }
 
   async onShowModalEditTeam(team: Team | null): Promise<void> {
@@ -318,16 +305,16 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
   async onSwitchAdminRole(team: Team, userId: string, admin: boolean): Promise<void> {
     this.log.info("onSwitchAdminRole", { team, userId, admin });
 
-    const getConfirmSwitchAdminRole = (): Promise<boolean> => {
+    const getConfirmation = (): Promise<boolean> => {
       return new Promise((resolve: (value: boolean) => void): void => {
         const switchAdminRole = { team, userId, admin, onDialogResult: resolve };
         this.setState({ switchAdminRole });
       });
     };
 
-    const confirm = await getConfirmSwitchAdminRole();
-    this.setState({ switchAdminRole: null });
-    if (!confirm) {
+    const isConfirmed = await getConfirmation();
+    this.setState({ switchAdminRole: null }); // Hide the dialog
+    if (!isConfirmed) {
       this.log.info("Change not confirmed");
       return;
     }

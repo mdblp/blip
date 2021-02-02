@@ -54,7 +54,7 @@ import { useAuth } from "../../lib/auth/hook/use-auth";
 interface TeamMembersProps {
   team: Team;
   onSwitchAdminRole: (team: Team, userId: string, admin: boolean) => Promise<void>;
-  onShowModalRemoveMember: (team: Team, userId: string) => void;
+  onShowRemoveTeamMemberDialog: (team: Team, userId: string) => Promise<void>;
 }
 
 const teamMembersStyles = makeStyles((theme: Theme) => {
@@ -83,7 +83,7 @@ function PersonRemoveIcon(props: SvgIconProps): JSX.Element {
 }
 
 function MembersTableBody(props: TeamMembersProps): JSX.Element {
-  const { team, onSwitchAdminRole, onShowModalRemoveMember } = props;
+  const { team, onSwitchAdminRole, onShowRemoveTeamMemberDialog } = props;
   const members = team.members ?? [];
 
   let userIsAdmin = false;
@@ -148,7 +148,9 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
 
     let removeMemberButton: JSX.Element | null = null;
     if (userIsAdmin && userId !== currentUserId) {
-      const handleClickRemoveMember = (): void => onShowModalRemoveMember(team, userId);
+      const handleClickRemoveMember = async (): Promise<void> => {
+        await onShowRemoveTeamMemberDialog(team, userId);
+      };
       removeMemberButton = (
         <IconButton color="primary" aria-label="aria-team-remove-member" component="span" onClick={handleClickRemoveMember}>
           <PersonRemoveIcon />
