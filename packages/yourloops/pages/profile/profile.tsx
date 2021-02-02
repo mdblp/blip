@@ -161,7 +161,7 @@ export const ProfilePage: FunctionComponent = () => {
       firstName: _.isEmpty(firstName),
       name: _.isEmpty(name),
       mail: !REGEX_EMAIL.test(mail),
-      password: password.length > 0 && password.length < 10, //TODO: define rules
+      password: password.length > 0 && password.length < 10, // TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: _.isEmpty(birthDate),
     }),

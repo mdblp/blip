@@ -118,13 +118,13 @@ function t(s: string, p?: TOptions | string): string {
   return i18n.t(`yourloops|${s}`, p);
 }
 
-export const getCurrentLocaleName = (i18n: i18next): string => {
+const getCurrentLocaleName = (i18n: i18next): string => {
   const shortLocale = i18n.language.split("-")[0] as "en" | "de" | "es" | "fr" | "it" | "nl";
 
   return locales.resources[shortLocale]?.name;
 };
 
-export const getLocaleShortname = (locale: string): string => {
+const getLocaleShortname = (locale: string): string => {
   let shortName = "";
   _.forEach(locales.resources, ({ name }, key) => {
     if (name === locale) {
@@ -135,7 +135,7 @@ export const getLocaleShortname = (locale: string): string => {
   return shortName;
 };
 
-export const availableLocales = _.map(locales.resources, ({ name }) => name);
+const availableLocales = _.map(locales.resources, ({ name }) => name);
 
-export { init, t };
+export { init, t, getCurrentLocaleName, getLocaleShortname, availableLocales };
 export default i18n;
