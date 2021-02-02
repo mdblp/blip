@@ -90,6 +90,7 @@ const useStyles = makeStyles((theme: Theme) =>
       border: "solid",
       borderRadius: "15px",
       marginTop: "32px",
+      // eslint-disable-next-line no-magic-numbers
       borderColor: theme.palette.grey[300],
       borderWidth: "1px",
     },
@@ -165,6 +166,7 @@ export const ProfilePage: FunctionComponent = () => {
       firstName: _.isEmpty(firstName),
       name: _.isEmpty(name),
       mail: !REGEX_EMAIL.test(mail),
+      // eslint-disable-next-line no-magic-numbers
       password: password.length > 0 && password.length < 10, // TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: !REGEX_BIRTHDATE.test(birthDate),
@@ -222,7 +224,7 @@ export const ProfilePage: FunctionComponent = () => {
           .then(() => setHasProfileChanged(false));
       }
     }
-  }, [haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n]);
+  }, [haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit]);
 
   const onCancel = (): void => history.goBack();
 

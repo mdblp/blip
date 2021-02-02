@@ -45,10 +45,7 @@
       }
     ],
     "eol-last": ["error", "always"],
-    "max-lines": [
-      "error",
-      { "max": 1000, "skipComments": true, "skipBlankLines": true }
-    ],
+    "max-lines": ["error", { "max": 1000, "skipComments": true, "skipBlankLines": true }],
     "no-implied-eval": "error",
     "no-eq-null": "error",
     "no-else-return": "error",
@@ -78,7 +75,8 @@
     "semi": "error",
     "lodash/prefer-lodash-typecheck": "off",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": "off"
   },
   "settings": {
     "react": {
