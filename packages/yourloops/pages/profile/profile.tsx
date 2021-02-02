@@ -101,16 +101,18 @@ export const ProfilePage: FunctionComponent = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const [firstName, setFirstName] = useState("");
-  const [name, setName] = useState("");
-  const [mail, setMail] = useState("");
-  const [locale, setLocale] = useState(getCurrentLocaleName(i18n));
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [mail, setMail] = useState<string>("");
+  const [locale, setLocale] = useState<string>(getCurrentLocaleName(i18n));
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [unit, setUnit] = useState<Units>(Units.mole);
   const [role, setRole] = useState<Roles | null>(null);
-  const [birthDate, setBirthDate] = useState("01/01/2021"); //FIXME:
-  const [hb1c, setHb1c] = useState("8.5%"); // FIXME:
+  const [birthDate, setBirthDate] = useState<string>("01/01/2021"); // TODO
+  const [hb1c, setHb1c] = useState<string>("8.5%"); // TODO
+  const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
+  const [haveSettingsChanged, setHaveSettingsChanged] = useState<boolean>(false);
 
   useEffect(() => {
     const user = apiClient.whoami;
@@ -121,7 +123,7 @@ export const ProfilePage: FunctionComponent = () => {
     if (user?.profile?.lastName) {
       setName(user.profile.lastName);
     }
-    if (user?.roles) {
+    if (user?.roles && user.roles.length) {
       setRole(user.roles[0]);
     }
     if (user?.emails && user.emails.length) {
@@ -159,15 +161,22 @@ export const ProfilePage: FunctionComponent = () => {
       firstName: _.isEmpty(firstName),
       name: _.isEmpty(name),
       mail: !REGEX_EMAIL.test(mail),
-      password: password.length > 0 && password.length < 10,
+      password: password.length > 0 && password.length < 10, //TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: _.isEmpty(birthDate),
     }),
     [firstName, name, mail, password, passwordConfirmation]
   );
 
-  const hasProfileChanged: boolean = useMemo(() => {
+  useEffect(() => {
     const user = apiClient.whoami;
+
+    const newSettings: Settings = {
+      units: { bg: unit },
+      country: locale,
+    };
+    setHaveSettingsChanged(!_.isEqual(user?.settings, newSettings));
+
     if (user) {
       const newProfile: Profile = {
         ...user.profile,
@@ -175,24 +184,11 @@ export const ProfilePage: FunctionComponent = () => {
         firstName,
         lastName: name,
       };
-
-      return !_.isEqual(user.profile, newProfile);
+      setHasProfileChanged(!_.isEqual(user.profile, newProfile));
+    } else {
+      setHasProfileChanged(false);
     }
-    return false;
-  }, [firstName, name]);
-
-  const haveSettingsChanged: boolean = useMemo(() => {
-    const user = apiClient.whoami;
-    if (user) {
-      const newSettings: Settings = {
-        units: { bg: unit },
-        country: locale,
-      };
-
-      return !_.isEqual(user.settings, newSettings);
-    }
-    return false;
-  }, [unit, locale]);
+  }, [firstName, name, unit, locale]);
 
   const onSave = useCallback(() => {
     const user = apiClient.whoami;
@@ -203,19 +199,23 @@ export const ProfilePage: FunctionComponent = () => {
           const newLocale = getLocaleShortname(locale);
           i18n.changeLanguage(newLocale);
         }
-        apiClient.updateUserSettings({ ...user, settings: { units: { bg: unit }, country: locale } });
+        apiClient
+          .updateUserSettings({ ...user, settings: { units: { bg: unit }, country: locale } })
+          .then(() => setHaveSettingsChanged(false));
       }
 
       if (hasProfileChanged) {
-        apiClient.updateUserProfile({
-          ...user,
-          profile: {
-            ...user.profile,
-            fullName: firstName + " " + name,
-            firstName,
-            lastName: name,
-          },
-        });
+        apiClient
+          .updateUserProfile({
+            ...user,
+            profile: {
+              ...user.profile,
+              fullName: firstName + " " + name,
+              firstName,
+              lastName: name,
+            },
+          })
+          .then(() => setHasProfileChanged(false));
       }
     }
   }, [haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n]);
@@ -290,7 +290,7 @@ export const ProfilePage: FunctionComponent = () => {
               />
               <Password
                 id="password"
-                label="Password"
+                label="password"
                 value={password}
                 error={errors.password}
                 helperText={t("password-too-weak")}
@@ -298,10 +298,10 @@ export const ProfilePage: FunctionComponent = () => {
               />
               <Password
                 id="passwordConfirmation"
-                label="Confirm password"
+                label="confirm-password"
                 value={passwordConfirmation}
                 error={errors.passwordConfirmation}
-                helperText={t("not-mathing-password")}
+                helperText={t("not-matching-password")}
                 setState={setPasswordConfirmation}
               />
             </Fragment>
