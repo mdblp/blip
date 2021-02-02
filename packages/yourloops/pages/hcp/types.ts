@@ -39,6 +39,11 @@ export interface SwitchRoleDialogContentProps {
   onDialogResult: (result: boolean) => void;
 }
 
+export interface TeamLeaveDialogContentProps {
+  team: Team;
+  onDialogResult: (result: boolean) => void;
+}
+
 export interface AddMemberDialogContentProps {
   team: Team;
   onDialogResult: (result: { email: string | null; role: TeamMemberRole }) => void;

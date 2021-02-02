@@ -49,8 +49,8 @@ import { Team } from "../../models/team";
 interface TeamCardProps {
   team: Team;
   onShowModalEditTeam: (team: Team | null) => Promise<void>;
-  onShowModalLeaveTeam: (team: Team | null) => void;
-  onShowAddMemberDialog: (team: Team) => void;
+  onShowModalLeaveTeam: (team: Team) => Promise<void>;
+  onShowAddMemberDialog: (team: Team) => Promise<void>;
 }
 
 interface TeamInfoProps {
@@ -165,8 +165,10 @@ function TeamCard(props: TeamCardProps): JSX.Element {
     await onShowModalEditTeam(team);
     setButtonsDisabled(false);
   };
-  const handleClickLeaveTeam = (): void => {
-    onShowModalLeaveTeam(team);
+  const handleClickLeaveTeam = async (): Promise<void> => {
+    setButtonsDisabled(true);
+    await onShowModalLeaveTeam(team);
+    setButtonsDisabled(false);
   };
   const handleClickAddMember = async (): Promise<void> => {
     setButtonsDisabled(true);

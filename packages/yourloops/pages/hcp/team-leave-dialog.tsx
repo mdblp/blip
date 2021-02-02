@@ -41,11 +41,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { Team } from "models/team";
 import { useAuth } from "../../lib/auth/hook/use-auth";
+import { TeamLeaveDialogContentProps } from "./types";
 
 interface LeaveTeamDialogProps {
-  team: Team | null;
-  onShowModalLeaveTeam: (team: Team | null) => void;
-  onLeaveTeam: () => Promise<void>;
+  teamToLeave: TeamLeaveDialogContentProps | null;
 }
 
 interface LeaveTeamDialogElementsProps {
@@ -55,7 +54,7 @@ interface LeaveTeamDialogElementsProps {
   userIsTheOnlyAdministrator: boolean;
   buttonsDisabled: boolean;
   handleClose: () => void;
-  handleLeaveTeam: () => Promise<void>;
+  handleLeaveTeam: () => void;
 }
 
 const leaveTeamDialogClasses = makeStyles((theme: Theme) => {
@@ -253,14 +252,14 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
 }
 
 function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
-  const { team, onShowModalLeaveTeam, onLeaveTeam } = props;
+  const { teamToLeave } = props;
+  const team = teamToLeave?.team ?? null;
   const teamName = team?.name ?? "";
   const onlyMember = !((team?.members?.length ?? 0) > 1);
-  const dialogIsOpen = team !== null;
+  const dialogIsOpen = teamToLeave !== null;
 
   const auth = useAuth();
   const { t } = useTranslation("yourloops");
-  const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
 
   const userIsTheOnlyAdministrator = isUserIsTheOnlyAdministrator(team, auth.user?.userid as string);
 
@@ -268,12 +267,10 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const ariaQuestion = t("aria-team-leave-dialog-question", { teamName });
 
   const handleClose = () => {
-    onShowModalLeaveTeam(null);
+    teamToLeave?.onDialogResult(false);
   };
-  const handleLeaveTeam = async () => {
-    setButtonsDisabled(true);
-    await onLeaveTeam();
-    setButtonsDisabled(false);
+  const handleLeaveTeam = () => {
+    teamToLeave?.onDialogResult(true);
   };
 
   const dialogProps = {
@@ -281,13 +278,18 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
     teamName,
     onlyMember,
     userIsTheOnlyAdministrator,
-    buttonsDisabled,
+    buttonsDisabled: !dialogIsOpen,
     handleClose,
     handleLeaveTeam,
   };
 
   return (
-    <Dialog id="team-leave-dialog" open={dialogIsOpen} aria-labelledby={ariaTitle} aria-describedby={ariaQuestion}>
+    <Dialog
+      id="team-leave-dialog"
+      open={dialogIsOpen}
+      aria-labelledby={ariaTitle}
+      aria-describedby={ariaQuestion}
+      onClose={handleClose}>
       <LeaveTeamDialogTitle {...dialogProps} />
       <LeaveTeamDialogContent {...dialogProps} />
       <LeaveTeamDialogActions {...dialogProps} />
