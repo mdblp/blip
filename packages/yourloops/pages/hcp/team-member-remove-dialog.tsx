@@ -62,17 +62,15 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
   const classes = removeMemberDialogClasses();
   const { t } = useTranslation("yourloops");
 
-  let hcpName = "n/a";
+  let hcpFirstName = "n/a";
+  let hcpLastName = "n/a";
   let teamName = "n/a";
   if (userToBeRemoved !== null) {
     teamName = userToBeRemoved.team.name ?? "";
     const teamMember = userToBeRemoved.team.members?.find((tm: TeamMember) => tm.userId === userToBeRemoved.userId);
 
-    hcpName =
-      teamMember?.user?.profile?.fullName ??
-      `${teamMember?.user?.profile?.firstName} ${teamMember?.user?.profile?.lastName}` ??
-      teamMember?.user?.username ??
-      userToBeRemoved.userId;
+    hcpLastName = teamMember?.user?.profile?.lastName ?? teamMember?.user?.profile?.fullName ?? teamMember?.user?.username ?? userToBeRemoved.userId;
+    hcpFirstName = teamMember?.user?.profile?.firstName ?? "";
   }
 
   const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
@@ -87,8 +85,7 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
       id="team-members-dialog-rmmember"
       open={userToBeRemoved !== null}
       aria-labelledby={t("aria-team-members-dialog-rmmember-title", { teamName })}
-      aria-describedby={t("aria-team-members-dialog-rmmember-question", { hcpName })}
-      BackdropProps={{ invisible: true }}>
+      aria-describedby={t("aria-team-members-dialog-rmmember-question", { hcpFirstName, hcpLastName })}>
       <DialogTitle id="team-members-dialog-rmmember-title">
         <Trans i18nKey="team-members-dialog-rmmember-title" t={t} components={{ strong: <strong /> }} parent={React.Fragment}>
           Remove a healthcare professional from the team <strong>{{ teamName }}</strong>
@@ -101,8 +98,9 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
             i18nKey="team-members-dialog-rmmember-question"
             t={t}
             components={{ strong: <strong /> }}
+            values={{ hcpFirstName, hcpLastName }}
             parent={React.Fragment}>
-            Are you sure you want to remove <strong>{{ hcpName }}</strong> from this medical team?
+            Are you sure you want to remove <strong>{hcpFirstName} {hcpLastName}</strong> from this medical team?
           </Trans>
         </DialogContentText>
         <DialogContentText id="team-members-dialog-rmmember-consequences">

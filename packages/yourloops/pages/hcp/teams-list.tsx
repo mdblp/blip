@@ -47,7 +47,7 @@ import AddMemberDialog from "./team-member-add-dialog";
 import TeamCard from "./team-card";
 import TeamEditModal from "./team-edit-modal";
 import TeamsListBar from "./teams-list-bar";
-import TeamMembers from "./team-members";
+import TeamMembers from "./team-members-table";
 import RemoveMemberDialog from "./team-member-remove-dialog";
 import LeaveTeamDialog from "./team-leave-dialog";
 import SwitchRoleDialog from "./team-member-switch-role-dialog";
