@@ -42,9 +42,10 @@ import { t } from "../../lib/language";
 import { errorTextFromException } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 
-import { SwitchRoleDialogContentProps, AddMemberDialogContentProps } from "./types";
+import { SwitchRoleDialogContentProps, AddMemberDialogContentProps, TeamEditModalContentProps } from "./types";
 import AddMemberDialog from "./team-member-add-dialog";
 import TeamCard from "./team-card";
+import TeamEditModal from "./team-edit-modal";
 import TeamsListBar from "./teams-list-bar";
 import TeamMembers from "./team-members";
 import RemoveMemberDialog from "./team-member-remove-dialog";
@@ -66,6 +67,7 @@ interface TeamsListPageState {
   addMember: null | AddMemberDialogContentProps;
   switchAdminRole: null | SwitchRoleDialogContentProps;
   teamToLeave: Team | null;
+  teamToEdit: TeamEditModalContentProps | null;
 }
 
 /**
@@ -86,8 +88,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     this.onHideModalRemoveMember = this.onHideModalRemoveMember.bind(this);
     this.onShowModalLeaveTeam = this.onShowModalLeaveTeam.bind(this);
     this.onRemoveTeamMember = this.onRemoveTeamMember.bind(this);
-    this.onCreateTeam = this.onCreateTeam.bind(this);
-    this.onEditTeam = this.onEditTeam.bind(this);
+    this.onShowModalEditTeam = this.onShowModalEditTeam.bind(this);
     this.onLeaveTeam = this.onLeaveTeam.bind(this);
     this.onSwitchAdminRole = this.onSwitchAdminRole.bind(this);
     this.onShowAddMemberDialog = this.onShowAddMemberDialog.bind(this);
@@ -103,6 +104,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
       addMember: null,
       switchAdminRole: null,
       teamToLeave: null,
+      teamToEdit: null,
     };
   }
 
@@ -111,7 +113,17 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
   }
 
   render(): JSX.Element {
-    const { loading, errorMessage, teams, apiReturnAlert, userToBeRemoved, teamToLeave, switchAdminRole, addMember } = this.state;
+    const {
+      loading,
+      errorMessage,
+      teams,
+      apiReturnAlert,
+      userToBeRemoved,
+      teamToLeave,
+      switchAdminRole,
+      addMember,
+      teamToEdit,
+    } = this.state;
 
     if (loading) {
       return (
@@ -137,7 +149,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
         <Grid item xs={12} key={team.id}>
           <TeamCard
             team={team}
-            onEditTeam={this.onEditTeam}
+            onShowModalEditTeam={this.onShowModalEditTeam}
             onShowModalLeaveTeam={this.onShowModalLeaveTeam}
             onShowAddMemberDialog={this.onShowAddMemberDialog}
           />
@@ -152,7 +164,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
 
     return (
       <React.Fragment>
-        <TeamsListBar onCreateTeam={this.onCreateTeam} />
+        <TeamsListBar onShowModalEditTeam={this.onShowModalEditTeam} />
         <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
           <Grid container spacing={3}>
             {teamsItems}
@@ -164,6 +176,8 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
           handleClose={this.onHideModalRemoveMember}
           handleRemoveTeamMember={this.onRemoveTeamMember}
         />
+
+        <TeamEditModal teamToEdit={teamToEdit} />
         <LeaveTeamDialog team={teamToLeave} onLeaveTeam={this.onLeaveTeam} onShowModalLeaveTeam={this.onShowModalLeaveTeam} />
         <SwitchRoleDialog switchAdminRole={switchAdminRole} />
         <AddMemberDialog addMember={addMember} />
@@ -238,16 +252,38 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     this.onHideModalRemoveMember();
   }
 
-  async onCreateTeam(team: Partial<Team>): Promise<void> {
-    this.log.info("onCreateTeam", team);
-    const newTeams = await apiClient.createTeam(team);
-    this.setState({ teams: newTeams });
-  }
+  async onShowModalEditTeam(team: Team | null): Promise<void> {
+    this.log.debug("onShowModalEditTeam:", team);
 
-  async onEditTeam(team: Team): Promise<void> {
-    this.log.info("onEditTeam", team);
-    const teams = await apiClient.editTeam(team);
-    this.setState({ teams });
+    // Promise which show the modal to edit a team, and return the edited team infos
+    const getEditedTeamInfo = () => new Promise((resolve: (result: Partial<Team> | null) => void) => {
+      const teamToEdit = { team: team ?? {}, onSaveTeam: resolve };
+      this.setState({ teamToEdit });
+    });
+
+    const editedTeam = await getEditedTeamInfo();
+    this.setState({ teamToEdit: null });
+    apiClient.sendMetrics("edit-medical-team", { cancel: editedTeam === null, mode: team === null ? "create" : "edit" });
+
+    if (editedTeam === null) {
+      // Edit cancelled
+      return;
+    }
+
+    try {
+      let teams: Team[] = [];
+      if (team === null) {
+        editedTeam.type = "medical";
+        teams = await apiClient.createTeam(editedTeam);
+      } else {
+        teams = await apiClient.editTeam(editedTeam as Team);
+      }
+      this.setState({ teams, apiReturnAlert: { message: t("team-list-success-edit"), severity: "success" } });
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason);
+      const message = t("team-list-failed-edit", { errorMessage });
+      this.setState({ apiReturnAlert: { message, severity: "error" } });
+    }
   }
 
   async onLeaveTeam(): Promise<void> {

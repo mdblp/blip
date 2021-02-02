@@ -43,11 +43,10 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import PhoneIcon from "@material-ui/icons/Phone";
 
 import { Team } from "../../models/team";
-import TeamEditModal from "./team-edit-modal";
 
 interface TeamCardProps {
   team: Team;
-  onEditTeam: (team: Team) => Promise<void>;
+  onShowModalEditTeam: (team: Team | null) => Promise<void>;
   onShowModalLeaveTeam: (team: Team | null) => void;
   onShowAddMemberDialog: (team: Team) => void;
 }
@@ -133,17 +132,15 @@ function TeamInfo(props: TeamInfoProps): JSX.Element | null {
 }
 
 function TeamCard(props: TeamCardProps): JSX.Element {
-  const { team, onShowModalLeaveTeam, onShowAddMemberDialog } = props;
+  const { team, onShowModalEditTeam, onShowModalLeaveTeam, onShowAddMemberDialog } = props;
   const classes = teamCardStyles();
   const { t } = useTranslation("yourloops");
-  const [modalOpened, setModalOpen] = React.useState(false);
   const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
 
-  const handleClickEdit = (): void => {
-    setModalOpen(true);
-  };
-  const onSaveTeam = (team: Partial<Team>): Promise<void> => {
-    return props.onEditTeam(team as Team);
+  const handleClickEdit = async (): Promise<void> => {
+    setButtonsDisabled(true);
+    await onShowModalEditTeam(team);
+    setButtonsDisabled(false);
   };
   const handleClickLeaveTeam = (): void => {
     onShowModalLeaveTeam(team);
@@ -210,7 +207,6 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         <TeamInfo label="label-team-card-address" value={address} icon={<LocationOnIcon />} />
         <TeamInfo label="label-team-card-email" value={team.email} icon={<EmailIcon />} />
       </div>
-      <TeamEditModal action="edit" team={team} modalOpened={modalOpened} setModalOpen={setModalOpen} onSaveTeam={onSaveTeam} />
     </Paper>
   );
 }

@@ -43,3 +43,9 @@ export interface AddMemberDialogContentProps {
   team: Team;
   onDialogResult: (result: { email: string | null; role: TeamMemberRole }) => void;
 }
+
+export interface TeamEditModalContentProps {
+  team: Partial<Team>;
+  /** Promise callback for the modal. null means cancel edit */
+  onSaveTeam: (team: Partial<Team> | null) => void;
+}

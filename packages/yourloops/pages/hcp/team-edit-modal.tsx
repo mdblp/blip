@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import _ from "lodash";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -41,8 +42,8 @@ import TextField from "@material-ui/core/TextField";
 
 import locales from "../../../../locales/languages.json";
 import { REGEX_EMAIL } from "../../lib/utils";
-import { Team } from "../../models/team";
 import { useAuth } from "../../lib/auth/hook/use-auth";
+import { TeamEditModalContentProps } from "./types";
 
 interface LocalesCountries {
   [code: string]: {
@@ -51,11 +52,7 @@ interface LocalesCountries {
 }
 
 interface TeamEditModalProps {
-  action: "edit" | "create";
-  team: Partial<Team>;
-  modalOpened: boolean;
-  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onSaveTeam: (team: Partial<Team>) => Promise<void>;
+  teamToEdit: TeamEditModalContentProps | null;
 }
 
 const modalStyles = makeStyles((theme: Theme) => {
@@ -95,27 +92,41 @@ const modalStyles = makeStyles((theme: Theme) => {
   };
 });
 
+const modalBackdropTimeout = 300;
+const teamFieldsLimits = {
+  name: { min: 1, max: 64 },
+  phone: { min: 3, max: 32 },
+  addLine1: { min: 1, max: 128 },
+  addLine2: { min: -1, max: 128 },
+  zipCode: { min: 1, max: 16 },
+  city: { min: 1, max: 128 },
+  country: { min: 1, max: 4 },
+  email: { min: 0, max: 64 },
+};
+
+/**
+ * Show the modal to edit a team.
+ * If the team in props.team is empty, the modal is used to create a team.
+ * @param props null to hide the modal
+ */
 function TeamEditModal(props: TeamEditModalProps): JSX.Element {
-  const { action, team, modalOpened, setModalOpen, onSaveTeam } = props;
-  const modalBackdropTimeout = 300;
+  const { teamToEdit } = props;
+  const { team, onSaveTeam } = teamToEdit ?? { team: {}, onSaveTeam: _.noop } as TeamEditModalContentProps;
 
   const classes = modalStyles();
   const auth = useAuth();
   const { t } = useTranslation("yourloops");
 
-  const [teamName, setTeamName] = React.useState(team.name ?? "");
-  const [teamPhone, setTeamPhone] = React.useState(team.phone ?? "");
-  const [teamEmail, setTeamEmail] = React.useState(team.email ?? "");
-  const [addrLine1, setAddrLine1] = React.useState(team.address?.line1 ?? "");
-  const [addrLine2, setAddrLine2] = React.useState(team.address?.line2 ?? "");
-  const [addrZipCode, setAddrZipCode] = React.useState(team.address?.zip ?? "");
-  const [addrCity, setAddrCity] = React.useState(team.address?.city ?? "");
-  const [addrCountry, setAddrCountry] = React.useState(auth.user?.settings?.country ?? "FR");
+  const [modalOpened, setModalOpened] = React.useState(false);
+  const [teamName, setTeamName] = React.useState("");
+  const [teamPhone, setTeamPhone] = React.useState("");
+  const [teamEmail, setTeamEmail] = React.useState("");
+  const [addrLine1, setAddrLine1] = React.useState("");
+  const [addrLine2, setAddrLine2] = React.useState("");
+  const [addrZipCode, setAddrZipCode] = React.useState("");
+  const [addrCity, setAddrCity] = React.useState("");
+  const [addrCountry, setAddrCountry] = React.useState("FR");
   const [formIsIncomplete, setFormIsIncomplete] = React.useState(true);
-
-  const ariaModal = action === "create" ? t("aria-modal-team-add") : t("aria-modal-team-edit");
-  const modalTitle = action === "create" ? t("modal-team-add-title") : t("modal-team-edit-title");
-  const modalButtonValidate = action === "create" ? t("modal-team-button-create") : t("modal-team-button-edit");
 
   const countries: LocalesCountries = locales.countries;
   const optionsCountries: JSX.Element[] = [];
@@ -136,42 +147,53 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
   });
 
   const isFormIsIncomplete = (): boolean => {
-    let valid = teamName.length > 1;
-    valid = valid && teamPhone.length > 1;
-    valid = valid && addrLine1.length > 1;
-    valid = valid && addrZipCode.length > 1;
-    valid = valid && addrCity.length > 1;
-    valid = valid && addrCountry.length > 1;
-    valid = valid && (teamEmail.length < 1 || REGEX_EMAIL.test(teamEmail));
+    const inLimit = (value: string, limits: { min: number, max: number }): boolean => {
+      const len = value.length;
+      return len > limits.min && len < limits.max;
+    };
+    let valid = inLimit(teamName.trim(), teamFieldsLimits.name);
+    valid = valid && inLimit(teamPhone.trim(), teamFieldsLimits.phone);
+    valid = valid && inLimit(addrLine1.trim(), teamFieldsLimits.addLine1);
+    valid = valid && inLimit(addrLine2.trim(), teamFieldsLimits.addLine2);
+    valid = valid && inLimit(addrZipCode.trim(), teamFieldsLimits.zipCode);
+    valid = valid && inLimit(addrCity.trim(), teamFieldsLimits.city);
+    valid = valid && inLimit(addrCountry.trim(), teamFieldsLimits.country);
+
+    const email = teamEmail.trim();
+    if (valid && inLimit(email, teamFieldsLimits.email)) {
+      valid = REGEX_EMAIL.test(email);
+    }
+
     return !valid;
   };
 
   const handleCloseModal = (): void => {
-    setModalOpen(false);
+    onSaveTeam(null);
   };
   const handleValidateModal = (): void => {
-    setModalOpen(false);
+    const updatedTeam = _.cloneDeep(team);
+    updatedTeam.name = teamName.trim();
+    updatedTeam.phone = teamPhone.trim();
 
-    team.name = teamName;
-    team.phone = teamPhone;
-
-    if (teamEmail.length > 0) {
-      team.email = teamEmail;
+    const email = teamEmail.trim();
+    if (email.length > 0) {
+      updatedTeam.email = email;
     } else {
-      delete team.email;
+      delete updatedTeam.email;
     }
 
-    team.address = {
-      line1: addrLine1,
-      line2: addrLine2,
-      zip: addrZipCode,
-      city: addrCity,
-      country: addrCountry,
+    const line2 = addrLine2.trim();
+    updatedTeam.address = {
+      line1: addrLine1.trim(),
+      line2,
+      zip: addrZipCode.trim(),
+      city: addrCity.trim(),
+      country: addrCountry.trim(),
     };
-    if (addrLine2.length < 1) {
-      delete team.address?.line2;
+    if (line2.length < 1) {
+      delete updatedTeam.address.line2;
     }
-    onSaveTeam(team);
+    onSaveTeam(updatedTeam);
   };
   const handleChangeTeamName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     setTeamName(e.target.value);
@@ -195,12 +217,41 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
     setAddrCity(e.target.value);
   };
   const handleChangeAddrCountry = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
-    const country = e.target.value as string;
-    setAddrCountry(country);
+    const country = e.target.value;
+    if (typeof country === "string") {
+      setAddrCountry(country);
+    }
   };
+
+  if (modalOpened !== (teamToEdit !== null)) {
+    setModalOpened(teamToEdit !== null);
+
+    setAddrCity(team.address?.city ?? "");
+    setAddrCountry(team.address?.country ?? auth.user?.settings?.country ?? "FR");
+    setAddrLine1(team.address?.line1 ?? "");
+    setAddrLine2(team.address?.line2 ?? "");
+    setAddrZipCode(team.address?.zip ?? "");
+    setTeamEmail(team.email ?? "");
+    setTeamName(team.name ?? "");
+    setTeamPhone(team.phone ?? "");
+  }
 
   if (formIsIncomplete !== isFormIsIncomplete()) {
     setFormIsIncomplete(!formIsIncomplete);
+  }
+
+  let ariaModal = "";
+  let modalTitle = "";
+  let modalButtonValidate = "";
+  if (_.isEmpty(team)) {
+    // Create a new team
+    ariaModal = t("aria-modal-team-add");
+    modalTitle = t("modal-team-add-title");
+    modalButtonValidate = t("modal-team-button-create");
+  } else {
+    ariaModal = t("aria-modal-team-edit");
+    modalTitle = t("modal-team-edit-title");
+    modalButtonValidate = t("modal-team-button-edit");
   }
 
   return (

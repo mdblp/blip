@@ -41,10 +41,9 @@ import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 
 import { Team } from "../../models/team";
-import TeamEditModal from "./team-edit-modal";
 
 interface BarProps {
-  onCreateTeam: (team: Partial<Team>) => Promise<void>;
+  onShowModalEditTeam: (team: Team | null) => Promise<void>;
 }
 
 const pageBarStyles = makeStyles((theme: Theme) => {
@@ -76,14 +75,8 @@ function TeamsListBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();
   const { t } = useTranslation("yourloops");
 
-  const [modalOpened, setModalOpen] = React.useState(false);
-
-  const handleOpenModalAddTeam = (): void => {
-    setModalOpen(true);
-  };
-
-  const fakeNewTeam: Partial<Team> = {
-    type: "medical",
+  const handleOpenModalAddTeam = async (): Promise<void> => {
+    await props.onShowModalEditTeam(null);
   };
 
   return (
@@ -112,13 +105,6 @@ function TeamsListBar(props: BarProps): JSX.Element {
           </div>
         </Toolbar>
       </AppBar>
-      <TeamEditModal
-        action="create"
-        modalOpened={modalOpened}
-        setModalOpen={setModalOpen}
-        team={fakeNewTeam}
-        onSaveTeam={props.onCreateTeam}
-      />
     </React.Fragment>
   );
 }
