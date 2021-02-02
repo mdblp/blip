@@ -26,7 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18n, { InitOptions, Resource, TOptions } from "i18next";
+import _ from "lodash";
+import i18n, { InitOptions, Resource, TOptions, i18n as i18next } from "i18next";
 import moment from "moment-timezone";
 import { initReactI18next } from "react-i18next";
 
@@ -116,6 +117,25 @@ async function init(): Promise<void> {
 function t(s: string, p?: TOptions | string): string {
   return i18n.t(`yourloops|${s}`, p);
 }
+
+export const getCurrentLocaleName = (i18n: i18next): string => {
+  const shortLocale = i18n.language.split("-")[0] as "en" | "de" | "es" | "fr" | "it" | "nl";
+
+  return locales.resources[shortLocale]?.name;
+};
+
+export const getLocaleShortname = (locale: string): string => {
+  let shortName = "";
+  _.forEach(locales.resources, ({ name }, key) => {
+    if (name === locale) {
+      shortName = key;
+    }
+  });
+
+  return shortName;
+};
+
+export const availableLocales = _.map(locales.resources, ({ name }) => name);
 
 export { init, t };
 export default i18n;

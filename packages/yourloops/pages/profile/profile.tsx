@@ -14,6 +14,12 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+import React, { Fragment, FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
+import _ from "lodash";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
   Breadcrumbs,
@@ -27,29 +33,28 @@ import {
   TextField,
   Toolbar,
 } from "@material-ui/core";
-import React, { Fragment, FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import HomeIcon from "@material-ui/icons/Home";
 
 import HeaderBar from "../../components/header-bar";
-import HomeIcon from "@material-ui/icons/Home";
 import { Password } from "../../components/utils/password";
 import { REGEX_EMAIL } from "../../lib/utils";
-import { User } from "models/shoreline";
-import _ from "lodash";
 import apiClient from "../../lib/auth/api";
-import { i18n } from "i18next";
-import locales from "../../../../locales/languages.json";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
+import { Profile, Roles, Settings, Units } from "../../models/shoreline";
 
-enum Units {
-  mole = "mmol/L",
-  gram = "mg/dL",
-}
+type Errors = {
+  firstName: boolean;
+  name: boolean;
+  mail: boolean;
+  password: boolean;
+  passwordConfirmation: boolean;
+  birthDate: boolean;
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: { padding: "1em 2em" },
+    button: { margin: "2em 1em" },
     formControl: {
       minWidth: 120,
       textAlign: "right",
@@ -80,6 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.main,
     },
     inputTitle: { color: "black" },
+    inputProps: { textAlign: "right", padding: "1em 2em" },
     container: {
       border: "solid",
       borderRadius: "15px",
@@ -89,32 +95,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-type Errors = {
-  firstName: boolean;
-  name: boolean;
-  mail: boolean;
-  password: boolean;
-  passwordConfirmation: boolean;
-  birthDate: boolean;
-};
-
-const getCurrentLocaleName = (i18n: i18n): string => {
-  const shortLocale = i18n.language.split("-")[0] as "en" | "de" | "es" | "fr" | "it" | "nl";
-
-  return locales.resources[shortLocale]?.name;
-};
-
-const getLocaleShortname = (locale: string): string => {
-  let shortName = "";
-  _.forEach(locales.resources, ({ name }, key) => {
-    if (name === locale) {
-      shortName = key;
-    }
-  });
-
-  return shortName;
-};
 
 export const ProfilePage: FunctionComponent = () => {
   const { t, i18n } = useTranslation("yourloops");
@@ -127,16 +107,14 @@ export const ProfilePage: FunctionComponent = () => {
   const [locale, setLocale] = useState(getCurrentLocaleName(i18n));
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [unit, setUnit] = useState(Units.mole);
-  const [role, setRole] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [unit, setUnit] = useState<Units>(Units.mole);
+  const [role, setRole] = useState<Roles | null>(null);
+  const [birthDate, setBirthDate] = useState("01/01/2021"); //FIXME:
   const [hb1c, setHb1c] = useState("8.5%"); // FIXME:
-
-  const availableLocales = useMemo(() => _.map(locales.resources, ({ name }) => name), []);
 
   useEffect(() => {
     const user = apiClient.whoami;
-    console.log("user", user);
+
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
     }
@@ -148,6 +126,9 @@ export const ProfilePage: FunctionComponent = () => {
     }
     if (user?.emails && user.emails.length) {
       setMail(user.emails[0]);
+    }
+    if (user?.settings?.units?.bg) {
+      setUnit(user?.settings?.units?.bg);
     }
   }, []);
 
@@ -170,11 +151,7 @@ export const ProfilePage: FunctionComponent = () => {
       value: string | unknown;
     }>
   ): void => {
-    if (event.target.value === Units.mole) {
-      setUnit(Units.mole);
-    } else if (event.target.value === Units.gram) {
-      setUnit(Units.gram);
-    }
+    setUnit(event.target.value as Units);
   };
 
   const errors: Errors = useMemo(
@@ -189,51 +166,59 @@ export const ProfilePage: FunctionComponent = () => {
     [firstName, name, mail, password, passwordConfirmation]
   );
 
-  const hasChanged: boolean = useMemo(() => {
-    if (i18n && getCurrentLocaleName(i18n) !== locale) {
-      return true;
-    }
+  const hasProfileChanged: boolean = useMemo(() => {
     const user = apiClient.whoami;
     if (user) {
-      const newUser: User = {
-        ...user,
-        emails: [mail],
-        profile: {
-          ...user.profile,
-          fullName: firstName + " " + name,
-          firstName,
-          lastName: name,
-        },
+      const newProfile: Profile = {
+        ...user.profile,
+        fullName: firstName + " " + name,
+        firstName,
+        lastName: name,
       };
-      return !_.isEqual(user, newUser);
-    }
 
+      return !_.isEqual(user.profile, newProfile);
+    }
     return false;
-  }, [firstName, name, mail, password, passwordConfirmation, locale]);
+  }, [firstName, name]);
+
+  const haveSettingsChanged: boolean = useMemo(() => {
+    const user = apiClient.whoami;
+    if (user) {
+      const newSettings: Settings = {
+        units: { bg: unit },
+        country: locale,
+      };
+
+      return !_.isEqual(user.settings, newSettings);
+    }
+    return false;
+  }, [unit, locale]);
 
   const onSave = useCallback(() => {
-    if (i18n && getCurrentLocaleName(i18n) !== locale) {
-      const newLocale = getLocaleShortname(locale);
-      i18n.changeLanguage(newLocale);
-    }
-
     const user = apiClient.whoami;
+
     if (user) {
-      const newUser: User = {
-        ...user,
-        emails: [mail],
-        profile: {
-          ...user.profile,
-          fullName: firstName + " " + name,
-          firstName,
-          lastName: name,
-        },
-      };
-      if (!_.isEqual(user, newUser)) {
-        apiClient.updateUserProfile(newUser);
+      if (haveSettingsChanged) {
+        if (i18n && getCurrentLocaleName(i18n) !== locale) {
+          const newLocale = getLocaleShortname(locale);
+          i18n.changeLanguage(newLocale);
+        }
+        apiClient.updateUserSettings({ ...user, settings: { units: { bg: unit }, country: locale } });
+      }
+
+      if (hasProfileChanged) {
+        apiClient.updateUserProfile({
+          ...user,
+          profile: {
+            ...user.profile,
+            fullName: firstName + " " + name,
+            firstName,
+            lastName: name,
+          },
+        });
       }
     }
-  }, [firstName, name, mail, locale, i18n, t]);
+  }, [haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n]);
 
   const onCancel = (): void => history.goBack();
 
@@ -259,7 +244,7 @@ export const ProfilePage: FunctionComponent = () => {
             onChange={handleChange(setFirstName)}
             error={errors.firstName}
             helperText={errors.firstName && t("field-required")}
-            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
+            inputProps={{ className: classes.inputProps }}
             InputProps={{
               startAdornment: (
                 <InputAdornment className={classes.inputTitle} position="start">
@@ -274,7 +259,7 @@ export const ProfilePage: FunctionComponent = () => {
             onChange={handleChange(setName)}
             error={errors.name}
             helperText={errors.name && t("field-required")}
-            inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
+            inputProps={{ className: classes.inputProps }}
             InputProps={{
               startAdornment: (
                 <InputAdornment className={classes.inputTitle} position="start">
@@ -284,7 +269,7 @@ export const ProfilePage: FunctionComponent = () => {
             }}
           />
 
-          {role === "clinic" ? (
+          {role === Roles.clinic ? (
             <Fragment>
               <TextField
                 id="mail"
@@ -294,9 +279,7 @@ export const ProfilePage: FunctionComponent = () => {
                 error={errors.mail}
                 helperText={errors.mail && t("incorrect-mail")}
                 className={classes.textField}
-                inputProps={{
-                  style: { textAlign: "right", padding: "1em 2em" },
-                }}
+                inputProps={{ className: classes.inputProps }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -324,15 +307,13 @@ export const ProfilePage: FunctionComponent = () => {
             </Fragment>
           ) : (
             <Fragment>
-              <TextField //TODO:
+              <TextField
                 id="birthDate"
                 value={birthDate}
                 onChange={handleChange(setBirthDate)}
                 error={errors.birthDate}
                 helperText={errors.birthDate && t("field-required")}
-                inputProps={{
-                  style: { textAlign: "right", padding: "1em 2em" },
-                }}
+                inputProps={{ className: classes.inputProps }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment className={classes.inputTitle} position="start">
@@ -341,15 +322,13 @@ export const ProfilePage: FunctionComponent = () => {
                   ),
                 }}
               />
-              <TextField //TODO:
+              <TextField
                 id="hb1c"
                 disabled
                 value={hb1c}
                 onChange={handleChange(setHb1c)}
                 className={classes.textField}
-                inputProps={{
-                  style: { textAlign: "right", padding: "1em 2em" },
-                }}
+                inputProps={{ className: classes.inputProps }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -362,14 +341,14 @@ export const ProfilePage: FunctionComponent = () => {
           )}
           <FormControl className={classes.formControl}>
             <Select
-              disabled={role !== "clinic"}
+              disabled={role !== Roles.clinic}
               labelId="unit-selector"
               id="unit-selector"
               value={unit}
               onChange={handleUnitChange}
               classes={{ root: classes.select }}
               startAdornment={
-                <InputAdornment className={role === "clinic" ? classes.inputTitle : ""} position="start">
+                <InputAdornment className={role === Roles.clinic ? classes.inputTitle : ""} position="start">
                   <span>{t("units")}</span>
                 </InputAdornment>
               }>
@@ -397,10 +376,15 @@ export const ProfilePage: FunctionComponent = () => {
             </Select>
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" color="secondary" onClick={onCancel} style={{ margin: "2em 1em" }}>
+            <Button variant="contained" color="secondary" onClick={onCancel} className={classes.button}>
               {t("cancel")}
             </Button>
-            <Button variant="contained" disabled={!hasChanged} color="primary" onClick={onSave} style={{ margin: "2em 1em" }}>
+            <Button
+              variant="contained"
+              disabled={!hasProfileChanged && !haveSettingsChanged}
+              color="primary"
+              onClick={onSave}
+              className={classes.button}>
               {t("save")}
             </Button>
           </div>

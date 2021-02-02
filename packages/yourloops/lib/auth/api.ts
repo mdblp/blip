@@ -30,8 +30,6 @@ import { v4 as uuidv4, validate as validateUuid } from "uuid";
 import bows from "bows";
 import _ from "lodash";
 
-import { User, Profile } from "models/shoreline";
-import { Team, TeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
@@ -40,6 +38,8 @@ import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
 import http from "../http-status-codes";
+import { User, Profile, Settings, Roles } from "../../models/shoreline";
+import { Team, TeamMember, TeamMemberRole, TeamType } from "../../models/team";
 
 const SESSION_TOKEN_KEY = "session-token";
 const TRACE_TOKEN_KEY = "trace-token";
@@ -295,7 +295,7 @@ class AuthApi extends EventTarget {
     this.user = (await response.json()) as User;
 
     if (!Array.isArray(this.user.roles)) {
-      this.user.roles = ["patient"];
+      this.user.roles = [Roles.patient];
     }
 
     // ???
@@ -715,8 +715,54 @@ class AuthApi extends EventTarget {
     }
   }
 
-  updateUserProfile(user: User): void {
-    console.log("user updated : ", user);
+  public async updateUserProfile({ userid, profile }: User): Promise<void> {
+    if (!this.isLoggedIn) {
+      // Users should never see this:
+      throw new Error(t("You are not logged-in"));
+    }
+
+    const seagullURL = new URL(`/metadata/${userid}/profile`, appConfig.API_HOST);
+
+    const response = await fetch(seagullURL.toString(), {
+      method: "POST",
+      headers: {
+        [TRACE_SESSION_HEADER]: this.traceToken as string,
+        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+      },
+      body: JSON.stringify({ profile }),
+    });
+
+    if (response.ok) {
+      profile = (await response.json()) as Profile;
+    } else {
+      const responseBody = (await response.json()) as APIErrorResponse;
+      throw new Error(t(responseBody.reason));
+    }
+  }
+
+  public async updateUserSettings({ userid, settings }: User): Promise<void> {
+    if (!this.isLoggedIn) {
+      // Users should never see this:
+      throw new Error(t("You are not logged-in"));
+    }
+
+    const seagullURL = new URL(`/metadata/${userid}/settings`, appConfig.API_HOST);
+
+    const response = await fetch(seagullURL.toString(), {
+      method: "POST",
+      headers: {
+        [TRACE_SESSION_HEADER]: this.traceToken as string,
+        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+      },
+      body: JSON.stringify({ settings }),
+    });
+
+    if (response.ok) {
+      settings = (await response.json()) as Settings;
+    } else {
+      const responseBody = (await response.json()) as APIErrorResponse;
+      throw new Error(t(responseBody.reason));
+    }
   }
 }
 
