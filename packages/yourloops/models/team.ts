@@ -20,8 +20,19 @@
 
 import { User } from "./shoreline";
 
-export type TeamType = "medical" | "personal";
-export type TeamMemberRole = "admin" | "viewer" | "patient";
+export enum TeamType {
+  medical = "medical",
+  personal = "personal",
+}
+
+export enum TeamMemberRole {
+  admin = "admin",
+  viewer = "viewer",
+  patient = "patient"
+}
+
+// export type TeamTypeStrings = keyof typeof TeamType;
+// export type TeamMemberRoleStrings = keyof typeof TeamMemberRole;
 
 export interface TeamMember {
   userId: string;

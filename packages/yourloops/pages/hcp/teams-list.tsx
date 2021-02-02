@@ -37,7 +37,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Snackbar from "@material-ui/core/Snackbar";
 
-import { Team, TeamMemberRole } from "../../models/team";
+import { Team, TeamMemberRole, TeamType } from "../../models/team";
 import { t } from "../../lib/language";
 import { errorTextFromException } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
@@ -273,7 +273,7 @@ class TeamsListPage extends React.Component<RouteComponentProps, TeamsListPageSt
     try {
       let teams: Team[] = [];
       if (team === null) {
-        editedTeam.type = "medical";
+        editedTeam.type = TeamType.medical;
         teams = await apiClient.createTeam(editedTeam);
       } else {
         teams = await apiClient.editTeam(editedTeam as Team);
