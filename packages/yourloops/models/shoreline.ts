@@ -40,7 +40,13 @@ interface Profile {
   fullName: string;
   firstName?: string;
   lastName?: string;
-  patient?: unknown;
+  patient?: Patient;
+}
+
+interface Patient {
+  birthday?: string;
+  diagnosisDate?: string;
+  diagnosisType?: string;
 }
 
 interface Settings {

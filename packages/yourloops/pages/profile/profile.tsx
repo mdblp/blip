@@ -37,7 +37,7 @@ import HomeIcon from "@material-ui/icons/Home";
 
 import HeaderBar from "../../components/header-bar";
 import { Password } from "../../components/utils/password";
-import { REGEX_EMAIL } from "../../lib/utils";
+import { REGEX_BIRTHDATE, REGEX_EMAIL } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
 import { Profile, Roles, Settings, Units } from "../../models/shoreline";
@@ -109,13 +109,14 @@ export const ProfilePage: FunctionComponent = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [unit, setUnit] = useState<Units>(Units.mole);
   const [role, setRole] = useState<Roles | null>(null);
-  const [birthDate, setBirthDate] = useState<string>("01/01/2021"); // TODO
+  const [birthDate, setBirthDate] = useState<string>("");
   const [hb1c, setHb1c] = useState<string>("8.5%"); // TODO
   const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
   const [haveSettingsChanged, setHaveSettingsChanged] = useState<boolean>(false);
 
   useEffect(() => {
     const user = apiClient.whoami;
+    console.log("user", user);
 
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
@@ -131,6 +132,9 @@ export const ProfilePage: FunctionComponent = () => {
     }
     if (user?.settings?.units?.bg) {
       setUnit(user?.settings?.units?.bg);
+    }
+    if (user?.profile?.patient?.birthday) {
+      setBirthDate(user.profile.patient.birthday.split("T")[0]);
     }
   }, []);
 
@@ -163,9 +167,9 @@ export const ProfilePage: FunctionComponent = () => {
       mail: !REGEX_EMAIL.test(mail),
       password: password.length > 0 && password.length < 10, // TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
-      birthDate: _.isEmpty(birthDate),
+      birthDate: !REGEX_BIRTHDATE.test(birthDate),
     }),
-    [firstName, name, mail, password, passwordConfirmation]
+    [firstName, name, mail, password, passwordConfirmation, birthDate]
   );
 
   useEffect(() => {
