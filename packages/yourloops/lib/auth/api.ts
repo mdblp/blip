@@ -117,6 +117,7 @@ class AuthApi extends EventTarget {
         type: "medical",
         address: {
           line1: "Boulevard de la Chantourne",
+          line2: "Cedex 38703",
           zip: "38700",
           city: "La Tronche",
           country: "FR",
@@ -126,32 +127,38 @@ class AuthApi extends EventTarget {
         members: [
           {
             teamId: "team-1",
-            userId: "132abc",
+            userId: "a0a1a2a3",
             role: "viewer",
             user: {
-              userid: "132abc",
-              username: "a@b.fr",
-              profile: { firstName: "A", lastName: "B", fullName: "A B" },
+              userid: "a0a1a2a3",
+              username: "jean.dupont@chu-grenoble.fr",
+              profile: { firstName: "Jean", lastName: "Dupont", fullName: "Jean Dupont" },
             },
           },
         ],
       },
       {
         id: "team-2",
-        name: "Clinique Nantes",
+        name: "Charité – Universitätsmedizin Berlin",
         code: "987654321",
-        phone: "00-00-00-00-00",
+        phone: "+49 30 450 - 50",
+        address: {
+          line1: "Charitéplatz 1",
+          city: "Berlin",
+          zip: "10117",
+          country: "DE",
+        },
         ownerId: "abcdef",
         type: "medical",
         members: [
           {
             teamId: "team-2",
-            userId: "132abc",
+            userId: "b0b1b2b3",
             role: "viewer",
             user: {
-              userid: "132abc",
-              username: "a@b.fr",
-              profile: { firstName: "A", lastName: "B", fullName: "A B" },
+              userid: "b0b1b2b3",
+              username: "adelheide.alvar@charite.de",
+              profile: { firstName: "Adelheide", lastName: "Alvar", fullName: "Adelheide Alvar" },
             },
           },
         ],
