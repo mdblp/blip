@@ -101,7 +101,8 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
       id="team-members-dialog-add-member"
       open={addMember !== null}
       aria-labelledby={t("aria-team-members-dialog-add-member-title", { teamName })}
-      BackdropProps={{ invisible: true }}>
+      onClose={handleClickClose}>
+
       <DialogTitle id="team-members-dialog-add-member-title">
         <strong>{t("team-members-dialog-add-member-title")}</strong>
         <br />

@@ -84,6 +84,7 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
     <Dialog
       id="team-members-dialog-rmmember"
       open={userToBeRemoved !== null}
+      onClose={handleClose}
       aria-labelledby={t("aria-team-members-dialog-rmmember-title", { teamName })}
       aria-describedby={t("aria-team-members-dialog-rmmember-question", { hcpFirstName, hcpLastName })}>
       <DialogTitle id="team-members-dialog-rmmember-title">

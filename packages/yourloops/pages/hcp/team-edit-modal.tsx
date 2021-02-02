@@ -31,7 +31,6 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import Backdrop from "@material-ui/core/Backdrop";
 import Button from "@material-ui/core/Button";
 import Fade from "@material-ui/core/Fade";
 import FormControl from "@material-ui/core/FormControl";
@@ -92,7 +91,6 @@ const modalStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const modalBackdropTimeout = 300;
 const teamFieldsLimits = {
   name: { min: 1, max: 64 },
   phone: { min: 3, max: 32 },
@@ -260,8 +258,7 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
       aria-labelledby={ariaModal}
       className={classes.modal}
       open={modalOpened}
-      BackdropComponent={Backdrop}
-      BackdropProps={{ timeout: modalBackdropTimeout }}>
+      onClose={handleCloseModal}>
       <Fade in={modalOpened}>
         <div className={classes.divMain}>
           <h2 id="team-modal-edit-title">{modalTitle}</h2>
