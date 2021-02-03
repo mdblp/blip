@@ -50,10 +50,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth/hook/use-auth";
-import LanguageSelect from "../../components/language-select";
-import diabeloopUrls from "../../lib/diabeloop-url";
-import { Typography } from "@material-ui/core";
-import config from "../../lib/config";
+import LoginFooterLink from "./login-footer-link";
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
@@ -89,7 +86,7 @@ const loginStyle = makeStyles((theme: Theme) => {
  * Login page
  */
 function Login(props: RouteComponentProps): JSX.Element {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const auth = useAuth();
   const classes = loginStyle();
 
@@ -246,41 +243,13 @@ function Login(props: RouteComponentProps): JSX.Element {
                 color="primary"
                 onClick={onClickLoginButton}
                 className={classes.loginButton}
-                disabled={emptyUsername || emptyPassword}>
+                disabled={emptyUsername || emptyPassword}
+              >
                 {t("Login")}
               </Button>
             </CardActions>
           </Card>
-          <Grid container>
-            <Grid item xs={12} className={classes.selection}>
-              <LanguageSelect />
-            </Grid>
-            <Grid item xs={4} className={classes.rightLink}>
-              <Link href={diabeloopUrls.getPrivacyPolicyUrL(i18n.language)}>
-                {t(diabeloopUrls.PrivacyPolicy)}
-              </Link>
-            </Grid>
-            <Grid item xs={4} className={classes.centeredLink}>
-              <Typography style={{ fontSize: "small" }}>
-                {`${t("Yourloops")} ${config.VERSION}`}
-              </Typography>
-            </Grid>
-            <Grid item xs={4} className={classes.leftLink}>
-              <Link href={diabeloopUrls.SupportUrl}>
-                {t(diabeloopUrls.Support)}
-              </Link>
-            </Grid>
-            <Grid item xs={6} className={classes.rightLink}>
-              <Link href={diabeloopUrls.getTermsUrL(i18n.language)}>
-                {t(diabeloopUrls.Terms)}
-              </Link>
-            </Grid>
-            <Grid item xs={6} className={classes.leftLink}>
-              <Link href={diabeloopUrls.getIntendedUseUrL(i18n.language)}>
-                {t(diabeloopUrls.IntendedUse)}
-              </Link>
-            </Grid>
-          </Grid>
+          <LoginFooterLink/>
         </Grid>
       </Grid>
     </Container>
