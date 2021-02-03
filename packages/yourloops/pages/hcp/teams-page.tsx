@@ -50,7 +50,7 @@ import {
   TeamLeaveDialogContentProps,
 } from "./types";
 
-import TeamsListBar from "./teams-list-bar";
+import TeamsNavBar from "./teams-nav-bar";
 import TeamCard from "./team-card";
 import TeamMembers from "./team-members-table";
 
@@ -166,7 +166,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     return (
       <React.Fragment>
-        <TeamsListBar onShowEditTeamDialog={this.onShowEditTeamDialog} />
+        <TeamsNavBar onShowEditTeamDialog={this.onShowEditTeamDialog} />
         <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
           <Grid container spacing={3}>
             {teamsItems}
@@ -200,13 +200,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
         this.setState({ teams, loading: false });
       } catch (reason: unknown) {
         this.log.error("onRefresh", reason);
-        let errorMessage: string;
-        if (reason instanceof Error) {
-          errorMessage = reason.message;
-        } else {
-          const s = new String(reason);
-          errorMessage = s.toString();
-        }
+        const errorMessage = t("error-failed-display-teams", { errorMessage: errorTextFromException(reason) });
         this.setState({ loading: false, errorMessage });
       }
     });
@@ -217,7 +211,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
   }
 
   async onShowLeaveTeamDialog(team: Team): Promise<void> {
-    this.log.debug("onShowModalLeaveTeam", { team });
+    this.log.debug("onShowLeaveTeamDialog", { team });
 
     const getConfirmation = (): Promise<boolean> => {
       return new Promise((resolve: (value: boolean) => void) => {
@@ -233,11 +227,12 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
       try {
         const onlyMember = !((team.members?.length ?? 0) > 1);
         const teams = await apiClient.leaveTeam(team);
-        const message = onlyMember ? t("team-list-success-deleted") : t("team-list-success-leave");
+        const message = onlyMember ? t("team-page-success-deleted") : t("team-page-success-leave");
         this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
       } catch (reason: unknown) {
+        this.log.error("onShowLeaveTeamDialog", reason);
         const errorMessage = errorTextFromException(reason);
-        const message = t("team-list-failed-leave", { errorMessage });
+        const message = t("team-page-failed-leave", { errorMessage });
         this.setState({ apiReturnAlert: { message, severity: "error" } });
       }
     }
@@ -259,18 +254,19 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
     if (isConfirmed) {
       try {
         const teams = await apiClient.removeTeamMember(team, userId);
-        const message = t("team-list-success-remove-member");
+        const message = t("team-page-success-remove-member");
         this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
       } catch (reason: unknown) {
+        this.log.error("onShowRemoveTeamMemberDialog", reason);
         const errorMessage = errorTextFromException(reason);
-        const message = t("team-list-failed-remove-member", { errorMessage });
+        const message = t("team-page-failed-remove-member", { errorMessage });
         this.setState({ apiReturnAlert: { message, severity: "error" } });
       }
     }
   }
 
   async onShowEditTeamDialog(team: Team | null): Promise<void> {
-    this.log.debug("onShowModalEditTeam:", team);
+    this.log.debug("onShowEditTeamDialog:", team);
 
     // Promise which show the modal to edit a team, and return the edited team infos
     const getEditedTeamInfo = () =>
@@ -296,15 +292,18 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
       } else {
         teams = await apiClient.editTeam(editedTeam as Team);
       }
-      this.setState({ teams, apiReturnAlert: { message: t("team-list-success-edit"), severity: "success" } });
+      this.setState({ teams, apiReturnAlert: { message: t("team-page-success-edit"), severity: "success" } });
     } catch (reason: unknown) {
+      this.log.error("onShowEditTeamDialog", reason);
       const errorMessage = errorTextFromException(reason);
-      const message = t("team-list-failed-edit", { errorMessage });
+      const message = t("team-page-failed-edit", { errorMessage });
       this.setState({ apiReturnAlert: { message, severity: "error" } });
     }
   }
 
   async onShowAddMemberDialog(team: Team): Promise<void> {
+    this.log.debug("onShowAddMemberDialog:", team);
+
     const getMemberEmail = () =>
       new Promise((resolve: (result: { email: string | null; role: TeamMemberRole }) => void): void => {
         const addMember = { team, onDialogResult: resolve };
@@ -319,10 +318,11 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     try {
       await apiClient.inviteHcpTeamMember(team, email, role);
-      this.setState({ apiReturnAlert: { message: t("team-list-success-invite-hcp", { email }), severity: "success" } });
+      this.setState({ apiReturnAlert: { message: t("team-page-success-invite-hcp", { email }), severity: "success" } });
     } catch (reason: unknown) {
+      this.log.error("onShowAddMemberDialog", reason);
       const errorMessage = errorTextFromException(reason);
-      const message = t("team-list-failed-invite-hcp", { errorMessage });
+      const message = t("team-page-failed-invite-hcp", { errorMessage });
       this.setState({ apiReturnAlert: { message, severity: "error" } });
     }
   }
@@ -348,8 +348,9 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
       const teams = await apiClient.changeTeamUserRole(team, userId, admin);
       this.setState({ teams });
     } catch (reason: unknown) {
+      this.log.error("onSwitchAdminRole", reason);
       const errorMessage = errorTextFromException(reason);
-      const message = t("team-list-failed-update-role", { errorMessage });
+      const message = t("team-page-failed-update-role", { errorMessage });
       this.setState({ apiReturnAlert: { message, severity: "error" } });
     }
   }

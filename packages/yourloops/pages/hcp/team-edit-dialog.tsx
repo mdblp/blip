@@ -254,103 +254,103 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
 
   return (
     <Modal
-      id="team-modal-edit"
+      id="team-edit-dialog"
       aria-labelledby={ariaModal}
       className={classes.modal}
       open={modalOpened}
       onClose={handleCloseModal}>
       <Fade in={modalOpened}>
         <div className={classes.divMain}>
-          <h2 id="team-modal-edit-title">{modalTitle}</h2>
+          <h2 id="team-edit-dialog-title">{modalTitle}</h2>
 
           <form noValidate autoComplete="off" className={classes.form}>
             <TextField
-              id="team-modal-edit-field-name"
+              id="team-edit-dialog-field-name"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeTeamName}
               name="name"
               value={teamName}
-              label={t("team-modal-edit-placeholder-name")}
+              label={t("team-edit-dialog-placeholder-name")}
               required={true}
               aria-required="true"
             />
 
             <TextField
-              id="team-modal-edit-field-line1"
+              id="team-edit-dialog-field-line1"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeAddrLine1}
               name="addr-line1"
               value={addrLine1}
-              label={t("team-modal-edit-placeholder-addr-line1")}
+              label={t("team-edit-dialog-placeholder-addr-line1")}
               required={true}
               aria-required="true"
             />
             <TextField
-              id="team-modal-edit-field-line2"
+              id="team-edit-dialog-field-line2"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeAddrLine2}
               name="addr-line2"
               value={addrLine2}
-              label={t("team-modal-edit-placeholder-addr-line2")}
+              label={t("team-edit-dialog-placeholder-addr-line2")}
               required={false}
               aria-required="false"
             />
             <TextField
-              id="team-modal-edit-field-zip"
+              id="team-edit-dialog-field-zip"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeAddrZip}
               name="addr-zip"
               value={addrZipCode}
-              label={t("team-modal-edit-placeholder-addr-zip")}
+              label={t("team-edit-dialog-placeholder-addr-zip")}
               required={true}
               aria-required="true"
             />
             <TextField
-              id="team-modal-edit-field-city"
+              id="team-edit-dialog-field-city"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeAddrCity}
               name="addr-city"
               value={addrCity}
-              label={t("team-modal-edit-placeholder-addr-city")}
+              label={t("team-edit-dialog-placeholder-addr-city")}
               required={true}
               aria-required="true"
             />
             <FormControl className={classes.formChild} required={true} variant="outlined">
-              <InputLabel htmlFor="team-modal-edit-select-country">{t("team-modal-edit-placeholder-addr-country")}</InputLabel>
+              <InputLabel htmlFor="team-edit-dialog-select-country">{t("team-edit-dialog-placeholder-addr-country")}</InputLabel>
               <Select
                 native
-                label={t("team-modal-edit-placeholder-addr-country")}
+                label={t("team-edit-dialog-placeholder-addr-country")}
                 value={addrCountry}
                 onChange={handleChangeAddrCountry}
-                inputProps={{ name: "country", id: "team-modal-edit-select-country" }}>
+                inputProps={{ name: "country", id: "team-edit-dialog-select-country" }}>
                 {optionsCountries}
               </Select>
             </FormControl>
 
             <TextField
-              id="team-modal-edit-field-phone"
+              id="team-edit-dialog-field-phone"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeTeamPhone}
               name="phone"
               value={teamPhone}
-              label={t("team-modal-edit-placeholder-phone")}
+              label={t("team-edit-dialog-placeholder-phone")}
               required={true}
               aria-required="true"
             />
             <TextField
-              id="team-modal-edit-field-email"
+              id="team-edit-dialog-field-email"
               className={classes.formChild}
               variant="outlined"
               onChange={handleChangeTeamEmail}
               name="email"
               value={teamEmail}
-              label={t("team-modal-edit-placeholder-email")}
+              label={t("team-edit-dialog-placeholder-email")}
               required={false}
               aria-required="false"
             />
@@ -358,14 +358,14 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
 
           <div className={classes.divModalButtons}>
             <Button
-              id="team-modal-edit-button-close"
+              id="team-edit-dialog-button-close"
               className={classes.divModalButtonCancel}
               variant="contained"
               onClick={handleCloseModal}>
               {t("Cancel")}
             </Button>
             <Button
-              id="team-modal-edit-button-create"
+              id="team-edit-dialog-button-create"
               disabled={formIsIncomplete}
               onClick={handleValidateModal}
               color="primary"

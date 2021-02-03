@@ -71,7 +71,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function TeamsListBar(props: BarProps): JSX.Element {
+function TeamsNavBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();
   const { t } = useTranslation("yourloops");
 
@@ -83,18 +83,18 @@ function TeamsListBar(props: BarProps): JSX.Element {
     <React.Fragment>
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
-          <div id="team-list-toolbar-item-left">
+          <div id="teams-navbar-item-left">
             <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
               <Typography color="textPrimary" className={classes.breadcrumbLink}>
                 <HomeIcon className={classes.homeIcon} />
-                {t("team-list-breadcrumbs-title-my-teams")}
+                {t("teams-navbar-breadcrumbs-title-my-teams")}
               </Typography>
             </Breadcrumbs>
           </div>
-          <div id="team-list-toolbar-item-middle"></div>
-          <div id="team-list-toolbar-item-right" className={classes.toolBarRight}>
+          <div id="teams-navbar-item-middle"></div>
+          <div id="teams-navbar-item-right" className={classes.toolBarRight}>
             <Button
-              id="team-list-toolbar-add-team"
+              id="teams-navbar-add-team"
               color="primary"
               variant="contained"
               className={classes.buttonAddTeam}
@@ -109,4 +109,4 @@ function TeamsListBar(props: BarProps): JSX.Element {
   );
 }
 
-export default TeamsListBar;
+export default TeamsNavBar;

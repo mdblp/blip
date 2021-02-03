@@ -105,7 +105,6 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
   const handleSwitchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const userId = event.target.name;
     const isAdmin = event.target.checked;
-    console.log("handleSwitchRole", { userId, isAdmin });
     setUpdatingUser(userId);
     await onSwitchAdminRole(team, userId, isAdmin);
     setUpdatingUser("");
