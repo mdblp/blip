@@ -48,7 +48,15 @@ interface PasswordProps {
   style?: CSSProperties;
 }
 
-export const Password: FunctionComponent<PasswordProps> = ({ id, label, value, error, helperText, style, setState }) => {
+export const Password: FunctionComponent<PasswordProps> = ({
+  id,
+  label,
+  value,
+  error,
+  helperText,
+  style,
+  setState,
+}: PasswordProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPasswordChange = () => {
     setShowPassword(!showPassword);
