@@ -30,7 +30,7 @@ import _ from "lodash";
 import * as React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 
-import { makeStyles /*, Theme */ } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -56,11 +56,37 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SignUpProps extends RouteComponentProps {}
 
-const formStyle = makeStyles((/* theme: Theme */) => {
+const formStyle = makeStyles((theme: Theme) => {
   return {
     mainContainer: { margin: "auto" },
     Button: {
-      marginLeft: "auto",
+      marginLeft: "auto !important",
+    },
+    Typography: {
+      alignItems: "center",
+    },
+    Card: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      textAlign: "center",
+      padding: theme.spacing(4),
+    },
+    CardContent: {
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+    },
+    CardActions: {
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+    },
+    TextField: {
+      marginLeft: theme.spacing(0),
+      marginRight: theme.spacing(1),
+    },
+    Checkbox: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
     },
   };
 });
@@ -68,7 +94,6 @@ const formStyle = makeStyles((/* theme: Theme */) => {
 /**
  * Signup page
  */
-
 function SignUpPage(_props: SignUpProps): JSX.Element {
   const defaultErr = {
     username: false,
@@ -179,7 +204,7 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
         style={{ minHeight: "100vh" }}
       >
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.Card}>
             <CardMedia
               style={{
                 display: "flex",
@@ -197,7 +222,7 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
                 alt={t("Login Branding Logo")}
               />
             </CardMedia>
-            <CardContent>
+            <CardContent className={classes.CardContent}>
               <Typography variant="h6" gutterBottom>
                 {t("signup-create-information-message")}
               </Typography>
@@ -205,12 +230,18 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
                 {t("signup-owner-information-message")}
               </Typography>
               <form
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
                 noValidate
                 autoComplete="off"
               >
                 <TextField
                   id="username"
+                  className={classes.TextField}
+                  margin="normal"
                   label={t("Email")}
                   variant="outlined"
                   value={username}
@@ -221,6 +252,8 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
                 />
                 <TextField
                   id="password"
+                  className={classes.TextField}
+                  margin="normal"
                   label={t("New password")}
                   variant="outlined"
                   type={showNewPassword ? "text" : "password"}
@@ -246,7 +279,9 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
                 />
                 <TextField
                   id="confirm-password"
-                  label={t("confirm new password")}
+                  className={classes.TextField}
+                  margin="normal"
+                  label={t("Confirm new password")}
                   variant="outlined"
                   type={showConfirmNewPassword ? "text" : "password"}
                   value={confirmNewPassword}
@@ -287,11 +322,11 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
                       }}
                     />
                   }
-                  label="I accept ..."
+                  label={t("I accept ...")}
                 />
               </form>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.CardActions}>
               <Link to="/">{t("Log in instead")}</Link>
               <Button
                 variant="contained"
