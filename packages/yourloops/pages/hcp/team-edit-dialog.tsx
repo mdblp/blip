@@ -103,11 +103,11 @@ const teamFieldsLimits = {
 };
 
 /**
- * Show the modal to edit a team.
+ * Show a dialog to edit a team.
  * If the team in props.team is empty, the modal is used to create a team.
  * @param props null to hide the modal
  */
-function TeamEditModal(props: TeamEditModalProps): JSX.Element {
+function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const { teamToEdit } = props;
   const { team, onSaveTeam } = teamToEdit ?? { team: {}, onSaveTeam: _.noop } as TeamEditModalContentProps;
 
@@ -379,4 +379,4 @@ function TeamEditModal(props: TeamEditModalProps): JSX.Element {
   );
 }
 
-export default TeamEditModal;
+export default TeamEditDialog;

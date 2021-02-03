@@ -48,8 +48,8 @@ import { Team } from "../../models/team";
 
 interface TeamCardProps {
   team: Team;
-  onShowModalEditTeam: (team: Team | null) => Promise<void>;
-  onShowModalLeaveTeam: (team: Team) => Promise<void>;
+  onShowEditTeamDialog: (team: Team | null) => Promise<void>;
+  onShowLeaveTeamDialog: (team: Team) => Promise<void>;
   onShowAddMemberDialog: (team: Team) => Promise<void>;
 }
 
@@ -155,19 +155,19 @@ function TeamInfo(props: TeamInfoProps): JSX.Element | null {
 }
 
 function TeamCard(props: TeamCardProps): JSX.Element {
-  const { team, onShowModalEditTeam, onShowModalLeaveTeam, onShowAddMemberDialog } = props;
+  const { team, onShowEditTeamDialog, onShowLeaveTeamDialog, onShowAddMemberDialog } = props;
   const classes = teamCardStyles();
   const { t } = useTranslation("yourloops");
   const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
 
   const handleClickEdit = async (): Promise<void> => {
     setButtonsDisabled(true);
-    await onShowModalEditTeam(team);
+    await onShowEditTeamDialog(team);
     setButtonsDisabled(false);
   };
   const handleClickLeaveTeam = async (): Promise<void> => {
     setButtonsDisabled(true);
-    await onShowModalLeaveTeam(team);
+    await onShowLeaveTeamDialog(team);
     setButtonsDisabled(false);
   };
   const handleClickAddMember = async (): Promise<void> => {

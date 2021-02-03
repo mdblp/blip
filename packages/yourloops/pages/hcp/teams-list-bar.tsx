@@ -43,7 +43,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import { Team } from "../../models/team";
 
 interface BarProps {
-  onShowModalEditTeam: (team: Team | null) => Promise<void>;
+  onShowEditTeamDialog: (team: Team | null) => Promise<void>;
 }
 
 const pageBarStyles = makeStyles((theme: Theme) => {
@@ -76,7 +76,7 @@ function TeamsListBar(props: BarProps): JSX.Element {
   const { t } = useTranslation("yourloops");
 
   const handleOpenModalAddTeam = async (): Promise<void> => {
-    await props.onShowModalEditTeam(null);
+    await props.onShowEditTeamDialog(null);
   };
 
   return (
