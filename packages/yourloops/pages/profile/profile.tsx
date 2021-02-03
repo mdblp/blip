@@ -42,14 +42,14 @@ import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
 import { Profile, Roles, Settings, Units } from "../../models/shoreline";
 
-type Errors = {
+interface Errors {
   firstName: boolean;
   name: boolean;
   mail: boolean;
   password: boolean;
   passwordConfirmation: boolean;
   birthDate: boolean;
-};
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -117,7 +117,6 @@ export const ProfilePage: FunctionComponent = () => {
 
   useEffect(() => {
     const user = apiClient.whoami;
-    console.log("user", user);
 
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);

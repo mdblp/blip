@@ -38,7 +38,7 @@ enum PasswordVisibility {
   hidden = "password",
 }
 
-type PasswordProps = {
+interface PasswordProps {
   id: string;
   label: string;
   value: string;
@@ -46,7 +46,7 @@ type PasswordProps = {
   error: boolean;
   helperText: string;
   style?: CSSProperties;
-};
+}
 
 export const Password: FunctionComponent<PasswordProps> = ({ id, label, value, error, helperText, style, setState }) => {
   const [showPassword, setShowPassword] = useState(false);
