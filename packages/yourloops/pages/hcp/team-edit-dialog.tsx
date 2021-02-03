@@ -109,7 +109,7 @@ const teamFieldsLimits = {
  */
 function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const { teamToEdit } = props;
-  const { team, onSaveTeam } = teamToEdit ?? { team: {}, onSaveTeam: _.noop } as TeamEditModalContentProps;
+  const { team, onSaveTeam } = teamToEdit ?? ({ team: {}, onSaveTeam: _.noop } as TeamEditModalContentProps);
 
   const classes = modalStyles();
   const auth = useAuth();
@@ -123,8 +123,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrLine2, setAddrLine2] = React.useState("");
   const [addrZipCode, setAddrZipCode] = React.useState("");
   const [addrCity, setAddrCity] = React.useState("");
-  const [addrCountry, setAddrCountry] = React.useState("FR");
-  const [formIsIncomplete, setFormIsIncomplete] = React.useState(true);
+  const [addrCountry, setAddrCountry] = React.useState(auth.user?.settings?.country ?? "FR");
 
   const countries: LocalesCountries = locales.countries;
   const optionsCountries: JSX.Element[] = [];
@@ -145,7 +144,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   });
 
   const isFormIsIncomplete = (): boolean => {
-    const inLimit = (value: string, limits: { min: number, max: number }): boolean => {
+    const inLimit = (value: string, limits: { min: number; max: number }): boolean => {
       const len = value.length;
       return len > limits.min && len < limits.max;
     };
@@ -165,9 +164,21 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     return !valid;
   };
 
+  const formIsIncomplete = React.useMemo(isFormIsIncomplete, [
+    teamName,
+    teamEmail,
+    teamPhone,
+    addrCity,
+    addrCountry,
+    addrLine1,
+    addrLine2,
+    addrZipCode,
+  ]);
+
   const handleCloseModal = (): void => {
     onSaveTeam(null);
   };
+
   const handleValidateModal = (): void => {
     const updatedTeam = _.cloneDeep(team);
     updatedTeam.name = teamName.trim();
@@ -193,37 +204,9 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     }
     onSaveTeam(updatedTeam);
   };
-  const handleChangeTeamName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setTeamName(e.target.value);
-  };
-  const handleChangeTeamPhone = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setTeamPhone(e.target.value);
-  };
-  const handleChangeTeamEmail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setTeamEmail(e.target.value);
-  };
-  const handleChangeAddrLine1 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setAddrLine1(e.target.value);
-  };
-  const handleChangeAddrLine2 = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setAddrLine2(e.target.value);
-  };
-  const handleChangeAddrZip = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setAddrZipCode(e.target.value);
-  };
-  const handleChangeAddrCity = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setAddrCity(e.target.value);
-  };
-  const handleChangeAddrCountry = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
-    const country = e.target.value;
-    if (typeof country === "string") {
-      setAddrCountry(country);
-    }
-  };
 
-  if (modalOpened !== (teamToEdit !== null)) {
+  React.useEffect((): void => {
     setModalOpened(teamToEdit !== null);
-
     setAddrCity(team.address?.city ?? "");
     setAddrCountry(team.address?.country ?? auth.user?.settings?.country ?? "FR");
     setAddrLine1(team.address?.line1 ?? "");
@@ -232,11 +215,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     setTeamEmail(team.email ?? "");
     setTeamName(team.name ?? "");
     setTeamPhone(team.phone ?? "");
-  }
-
-  if (formIsIncomplete !== isFormIsIncomplete()) {
-    setFormIsIncomplete(!formIsIncomplete);
-  }
+  }, [teamToEdit, team, auth]);
 
   let ariaModal = "";
   let modalTitle = "";
@@ -268,7 +247,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-name"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeTeamName}
+              onChange={(e) => setTeamName(e.target.value)}
               name="name"
               value={teamName}
               label={t("team-edit-dialog-placeholder-name")}
@@ -280,7 +259,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-line1"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeAddrLine1}
+              onChange={(e) => setAddrLine1(e.target.value)}
               name="addr-line1"
               value={addrLine1}
               label={t("team-edit-dialog-placeholder-addr-line1")}
@@ -291,7 +270,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-line2"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeAddrLine2}
+              onChange={(e) => setAddrLine2(e.target.value)}
               name="addr-line2"
               value={addrLine2}
               label={t("team-edit-dialog-placeholder-addr-line2")}
@@ -302,7 +281,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-zip"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeAddrZip}
+              onChange={(e) => setAddrZipCode(e.target.value)}
               name="addr-zip"
               value={addrZipCode}
               label={t("team-edit-dialog-placeholder-addr-zip")}
@@ -313,7 +292,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-city"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeAddrCity}
+              onChange={(e) => setAddrCity(e.target.value)}
               name="addr-city"
               value={addrCity}
               label={t("team-edit-dialog-placeholder-addr-city")}
@@ -326,7 +305,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
                 native
                 label={t("team-edit-dialog-placeholder-addr-country")}
                 value={addrCountry}
-                onChange={handleChangeAddrCountry}
+                onChange={(e) => setAddrCountry(e.target.value as string)}
                 inputProps={{ name: "country", id: "team-edit-dialog-select-country" }}>
                 {optionsCountries}
               </Select>
@@ -336,7 +315,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-phone"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeTeamPhone}
+              onChange={(e) => setTeamPhone(e.target.value)}
               name="phone"
               value={teamPhone}
               label={t("team-edit-dialog-placeholder-phone")}
@@ -347,7 +326,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-email"
               className={classes.formChild}
               variant="outlined"
-              onChange={handleChangeTeamEmail}
+              onChange={(e) => setTeamEmail(e.target.value)}
               name="email"
               value={teamEmail}
               label={t("team-edit-dialog-placeholder-email")}

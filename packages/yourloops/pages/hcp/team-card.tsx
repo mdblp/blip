@@ -139,7 +139,7 @@ function TeamInfo(props: TeamInfoProps): JSX.Element | null {
   const classes = teamInfoStyles();
   const { t } = useTranslation("yourloops");
 
-  if (_.isUndefined(value)) {
+  if (typeof value === "undefined") {
     return null;
   }
 

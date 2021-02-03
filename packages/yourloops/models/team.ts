@@ -31,9 +31,6 @@ export enum TeamMemberRole {
   patient = "patient"
 }
 
-// export type TeamTypeStrings = keyof typeof TeamType;
-// export type TeamMemberRoleStrings = keyof typeof TeamMemberRole;
-
 export interface TeamMember {
   userId: string;
   teamId: string;
