@@ -148,7 +148,7 @@ function TeamInfo(props: TeamInfoProps): JSX.Element | null {
       <Avatar className={classes.avatar}>{icon}</Avatar>
       <div className={classes.divLabelValue}>
         <span>{t(label)}</span>
-        <span className={classes.spanValue}>{value ?? ""}</span>
+        <span className={classes.spanValue}>{value}</span>
       </div>
     </div>
   );
