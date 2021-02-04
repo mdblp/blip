@@ -196,10 +196,12 @@ export const ProfilePage: FunctionComponent = () => {
       // eslint-disable-next-line no-magic-numbers
       password: password.length > 0 && password.length < 10, // TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
-      birthDate: !REGEX_BIRTHDATE.test(birthDate),
+      birthDate: role === Roles.patient && !REGEX_BIRTHDATE.test(birthDate),
     }),
-    [firstName, name, mail, password, passwordConfirmation, birthDate]
+    [firstName, name, mail, password, passwordConfirmation, birthDate, role]
   );
+
+  const isAnyError: boolean = useMemo(() => _.some(errors), [errors]);
 
   useEffect(() => {
     const newSettings: Settings = {
@@ -219,7 +221,7 @@ export const ProfilePage: FunctionComponent = () => {
     } else {
       setHasProfileChanged(false);
     }
-  }, [firstName, name, unit, locale]);
+  }, [firstName, name, unit, locale, user]);
 
   const onSave = useCallback(() => {
     if (user) {
@@ -259,7 +261,7 @@ export const ProfilePage: FunctionComponent = () => {
           .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
       }
     }
-  }, [user, haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit]);
+  }, [user, haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit, setUser]);
 
   const onCancel = (): void => history.goBack();
   const onCloseAlert = (): void => setApiReturnAlert(null);
@@ -413,7 +415,7 @@ export const ProfilePage: FunctionComponent = () => {
             </Button>
             <Button
               variant="contained"
-              disabled={!hasProfileChanged && !haveSettingsChanged}
+              disabled={(!hasProfileChanged && !haveSettingsChanged) || isAnyError}
               color="primary"
               onClick={onSave}
               className={classes.button}>
