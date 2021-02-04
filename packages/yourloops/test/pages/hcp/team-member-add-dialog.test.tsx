@@ -26,7 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// import _ from "lodash";
 import * as React from "react";
 import { expect } from "chai";
 import { mount, ReactWrapper } from "enzyme";

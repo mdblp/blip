@@ -99,8 +99,8 @@ function testTeamCard(): void {
     expect((defaultProps.onShowLeaveTeamDialog as sinon.SinonSpy).calledOnce).to.be.true;
   });
 
-  describe("TeamInfo", () => {
-    it("should be able to render - TeamInfo", () => {
+  describe("Info", () => {
+    it("should be able to render", () => {
       component = shallow(<TeamInfo id="test" label="label" value="value" icon={<div id="icon" />} />);
       expect(component.find(`#team-card-info-test-label`).length).to.be.equal(1);
       expect(component.find("#icon").length).to.be.equal(1);

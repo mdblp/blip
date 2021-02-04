@@ -38,9 +38,9 @@ function testHCPPage(): void {
     describe("Table", testPatientListTable);
   });
   describe("Teams", () => {
-    describe("Team card", testTeamCard);
-    describe("Team edit dialog", testTeamEditDialog);
-    describe("Team add member dialog", testTeamAddMemberDialog);
+    describe("Card", testTeamCard);
+    describe("Edit dialog", testTeamEditDialog);
+    describe("Add member dialog", testTeamAddMemberDialog);
   });
 }
 
