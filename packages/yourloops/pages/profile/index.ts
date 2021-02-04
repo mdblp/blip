@@ -14,7 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import { withRouter } from 'react-router-dom';
-import { ProfilePage } from './profile';
+import { ProfilePage } from "./profile";
 
-export default withRouter(ProfilePage);
+export default ProfilePage;

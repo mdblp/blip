@@ -30,6 +30,7 @@ import {
   Link,
   MenuItem,
   Select,
+  Snackbar,
   TextField,
   Toolbar,
 } from "@material-ui/core";
@@ -40,7 +41,9 @@ import { Password } from "../../components/utils/password";
 import { REGEX_BIRTHDATE, REGEX_EMAIL } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
-import { Profile, Roles, Settings, Units } from "../../models/shoreline";
+import { Profile, Roles, Settings, Units, User } from "../../models/shoreline";
+import { useAuth } from "../../lib/auth/hook/use-auth";
+import { Alert } from "@material-ui/lab";
 
 interface Errors {
   firstName: boolean;
@@ -49,6 +52,10 @@ interface Errors {
   password: boolean;
   passwordConfirmation: boolean;
   birthDate: boolean;
+}
+interface ApiReturnAlert {
+  message: string;
+  severity: "error" | "warning" | "info" | "success";
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,10 +104,32 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const ProfileHeader = () => {
+  const { t } = useTranslation("yourloops");
+  const classes = useStyles();
+
+  return (
+    <Fragment>
+      <HeaderBar />
+      <AppBar position="static" color="secondary">
+        <Toolbar className={classes.toolBar}>
+          <Breadcrumbs aria-label={t("breadcrumb")}>
+            <Link className={classes.breadcrumbLink} color="textPrimary" href="/hcp">
+              <HomeIcon className={classes.homeIcon} />
+              {t("account-preferences")}
+            </Link>
+          </Breadcrumbs>
+        </Toolbar>
+      </AppBar>
+    </Fragment>
+  );
+};
+
 export const ProfilePage: FunctionComponent = () => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
   const history = useHistory();
+  const { user, setUser } = useAuth();
 
   const [firstName, setFirstName] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -114,10 +143,9 @@ export const ProfilePage: FunctionComponent = () => {
   const [hbA1c, setHbA1c] = useState<string>("8.5%"); // TODO
   const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
   const [haveSettingsChanged, setHaveSettingsChanged] = useState<boolean>(false);
+  const [apiReturnAlert, setApiReturnAlert] = useState<ApiReturnAlert | null>(null);
 
   useEffect(() => {
-    const user = apiClient.whoami;
-
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
     }
@@ -136,7 +164,7 @@ export const ProfilePage: FunctionComponent = () => {
     if (user?.profile?.patient?.birthday) {
       setBirthDate(user.profile.patient.birthday.split("T")[0]);
     }
-  }, []);
+  }, [user]);
 
   const handleChange = (
     setState: React.Dispatch<React.SetStateAction<string>>
@@ -174,8 +202,6 @@ export const ProfilePage: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    const user = apiClient.whoami;
-
     const newSettings: Settings = {
       units: { bg: unit },
       country: locale,
@@ -196,50 +222,51 @@ export const ProfilePage: FunctionComponent = () => {
   }, [firstName, name, unit, locale]);
 
   const onSave = useCallback(() => {
-    const user = apiClient.whoami;
-
     if (user) {
       if (haveSettingsChanged) {
         if (i18n && getCurrentLocaleName(i18n) !== locale) {
           const newLocale = getLocaleShortname(locale);
           i18n.changeLanguage(newLocale);
         }
+        const newUser: User = { ...user, settings: { units: { bg: unit }, country: locale } };
         apiClient
-          .updateUserSettings({ ...user, settings: { units: { bg: unit }, country: locale } })
-          .then(() => setHaveSettingsChanged(false));
+          .updateUserSettings(newUser)
+          .then(() => {
+            setHaveSettingsChanged(false);
+            setUser(newUser);
+            setApiReturnAlert({ message: "Settings updated", severity: "success" });
+          })
+          .catch(() => setApiReturnAlert({ message: "Settings update failed", severity: "error" }));
       }
 
       if (hasProfileChanged) {
+        const newUser: User = {
+          ...user,
+          profile: {
+            ...user.profile,
+            fullName: firstName + " " + name,
+            firstName,
+            lastName: name,
+          },
+        };
         apiClient
-          .updateUserProfile({
-            ...user,
-            profile: {
-              ...user.profile,
-              fullName: firstName + " " + name,
-              firstName,
-              lastName: name,
-            },
+          .updateUserProfile(newUser)
+          .then(() => {
+            setHasProfileChanged(false);
+            setUser(newUser);
+            setApiReturnAlert({ message: "Profile updated", severity: "success" });
           })
-          .then(() => setHasProfileChanged(false));
+          .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
       }
     }
-  }, [haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit]);
+  }, [user, haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit]);
 
   const onCancel = (): void => history.goBack();
+  const onCloseAlert = (): void => setApiReturnAlert(null);
 
   return (
     <Fragment>
-      <HeaderBar />
-      <AppBar position="static" color="secondary">
-        <Toolbar className={classes.toolBar}>
-          <Breadcrumbs aria-label={t("breadcrumb")}>
-            <Link className={classes.breadcrumbLink} color="textPrimary" href="/hcp">
-              <HomeIcon className={classes.homeIcon} />
-              {t("My Patients")}
-            </Link>
-          </Breadcrumbs>
-        </Toolbar>
-      </AppBar>
+      <ProfileHeader />
       <Container className={classes.container} maxWidth="md">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
           <div className={classes.title}>{t("account-preferences-title")}</div>
@@ -248,7 +275,7 @@ export const ProfilePage: FunctionComponent = () => {
             value={firstName}
             onChange={handleChange(setFirstName)}
             error={errors.firstName}
-            helperText={errors.firstName && t("field-required")}
+            helperText={errors.firstName && t("required-field")}
             inputProps={{ className: classes.inputProps }}
             InputProps={{
               startAdornment: (
@@ -263,7 +290,7 @@ export const ProfilePage: FunctionComponent = () => {
             value={name}
             onChange={handleChange(setName)}
             error={errors.name}
-            helperText={errors.name && t("field-required")}
+            helperText={errors.name && t("required-field")}
             inputProps={{ className: classes.inputProps }}
             InputProps={{
               startAdornment: (
@@ -303,7 +330,7 @@ export const ProfilePage: FunctionComponent = () => {
               />
               <Password
                 id="passwordConfirmation"
-                label="confirm password"
+                label="confirm-password"
                 value={passwordConfirmation}
                 error={errors.passwordConfirmation}
                 helperText={t("not-matching-password")}
@@ -317,7 +344,7 @@ export const ProfilePage: FunctionComponent = () => {
                 value={birthDate}
                 onChange={handleChange(setBirthDate)}
                 error={errors.birthDate}
-                helperText={errors.birthDate && t("field-required")}
+                helperText={errors.birthDate && t("required-field")}
                 inputProps={{ className: classes.inputProps }}
                 InputProps={{
                   startAdornment: (
@@ -395,6 +422,15 @@ export const ProfilePage: FunctionComponent = () => {
           </div>
         </div>
       </Container>
+      <Snackbar
+        open={apiReturnAlert !== null}
+        autoHideDuration={6000}
+        onClose={onCloseAlert}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+        <Alert onClose={onCloseAlert} severity={apiReturnAlert?.severity}>
+          {apiReturnAlert?.message}
+        </Alert>
+      </Snackbar>
     </Fragment>
   );
 };
