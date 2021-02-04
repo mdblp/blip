@@ -60,17 +60,17 @@ const loginStyle = makeStyles((theme: Theme) => {
       marginLeft: "auto !important",
     },
     rightLink: {
-      padding: theme.spacing(0.5),
+      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
       textAlign: "start",
       fontSize: "small",
     },
     centeredLink: {
-      padding: theme.spacing(0.5),
+      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
       textAlign: "center",
       color: "#109182",
     },
     leftLink: {
-      padding: theme.spacing(0.5),
+      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
       textAlign: "end",
       fontSize: "small",
     },
@@ -249,7 +249,7 @@ function Login(props: RouteComponentProps): JSX.Element {
               </Button>
             </CardActions>
           </Card>
-          <LoginFooterLink/>
+          <LoginFooterLink />
         </Grid>
       </Grid>
     </Container>
