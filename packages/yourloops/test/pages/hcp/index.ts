@@ -29,6 +29,7 @@
 import testPatientsListAppBar from "./patients-list-bar.test";
 import testPatientListTable from "./patients-list-table.test";
 import testTeamCard from "./team-card.test";
+import testTeamEditDialog from "./team-edit-dialog.test";
 
 function testHCPPage(): void {
   describe("Patient List", () => {
@@ -36,7 +37,8 @@ function testHCPPage(): void {
     describe("Table", testPatientListTable);
   });
   describe("Teams", () => {
-    describe("Team Card", testTeamCard);
+    describe("Team card", testTeamCard);
+    describe("Team edit dialog", testTeamEditDialog);
   });
 }
 
