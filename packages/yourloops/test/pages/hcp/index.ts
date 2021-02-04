@@ -28,11 +28,15 @@
 
 import testPatientsListAppBar from "./patients-list-bar.test";
 import testPatientListTable from "./patients-list-table.test";
+import testTeamCard from "./team-card.test";
 
 function testHCPPage(): void {
   describe("Patient List", () => {
     describe("AppBar", testPatientsListAppBar);
     describe("Table", testPatientListTable);
+  });
+  describe("Teams", () => {
+    describe("Team Card", testTeamCard);
   });
 }
 
