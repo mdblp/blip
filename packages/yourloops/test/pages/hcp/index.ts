@@ -31,6 +31,7 @@ import testPatientListTable from "./patients-list-table.test";
 import testTeamCard from "./team-card.test";
 import testTeamEditDialog from "./team-edit-dialog.test";
 import testTeamAddMemberDialog from "./team-member-add-dialog.test";
+import testTeamRemoveMemberDialog from "./team-member-remove-dialog.test";
 
 function testHCPPage(): void {
   describe("Patient List", () => {
@@ -41,6 +42,7 @@ function testHCPPage(): void {
     describe("Card", testTeamCard);
     describe("Edit dialog", testTeamEditDialog);
     describe("Add member dialog", testTeamAddMemberDialog);
+    describe("Remove member dialog", testTeamRemoveMemberDialog);
   });
 }
 
