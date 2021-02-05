@@ -27,7 +27,25 @@
  */
 
 import { TeamMemberRole, TeamType } from "../../models/team";
+import { IAuthContext } from "../../lib/auth/hook/use-auth";
+import sinon from "sinon";
 
+/**
+ * Logged in users for test, choose one suitable
+ */
+export const loggedInUsers = {
+  hcp: {
+    userid: "a0000000",
+    username: "john.doe@example.com",
+    profile: { firstName: "John", lastName: "Doe", fullName: "John Doe" },
+  },
+  patient: {},
+  careGiver: {},
+};
+
+/**
+ * An example list of teams for the unit tests
+ */
 export const teams = [
   {
     // FIXME
@@ -46,6 +64,12 @@ export const teams = [
     phone: "+33 (0)4 76 76 75 75",
     email: "secretariat-diabethologie@chu-grenoble.fr",
     members: [
+      {
+        teamId: "team-1",
+        userId: loggedInUsers.hcp.userid,
+        role: TeamMemberRole.admin,
+        user: loggedInUsers.hcp,
+      },
       {
         teamId: "team-1",
         userId: "a0a1a2a3",
@@ -74,6 +98,12 @@ export const teams = [
     members: [
       {
         teamId: "team-2",
+        userId: loggedInUsers.hcp.userid,
+        role: TeamMemberRole.viewer,
+        user: loggedInUsers.hcp,
+      },
+      {
+        teamId: "team-2",
         userId: "b0b1b2b3",
         role: TeamMemberRole.admin,
         user: {
@@ -85,3 +115,14 @@ export const teams = [
     ],
   },
 ];
+
+export function TestAuthProviderHCP(): IAuthContext {
+  return {
+    user: loggedInUsers.hcp,
+    isLoggedIn: sinon.stub().returns(true),
+    login: sinon.spy(),
+    logout: sinon.spy(),
+    sendPasswordResetEmail: sinon.stub().returns(true),
+    signup: sinon.spy(),
+  };
+}

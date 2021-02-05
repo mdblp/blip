@@ -69,7 +69,7 @@
   "team-members-dialog-switch-role-consequences-1": "Invite / remove team members",
   "team-members-dialog-switch-role-consequences-2": "Edit team information",
   "team-members-dialog-switch-role-consequences-3": "Give or remove admin permissions",
-  "team-members-dialog-switch-role-button-remove": "Remove myself",
+  "team-members-dialog-switch-role-button-ok": "Remove myself",
   "team-add-member-dialog-title": "New Member",
   "team-add-member-dialog-checkbox-admin": "Define as administrator",
   "team-add-member-dialog-button-add": "Invite",
