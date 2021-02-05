@@ -68,7 +68,10 @@ function testTeamEditDialog(): void {
   });
 
   after(() => {
-    mountOptions.attachTo?.parentElement?.removeChild(mountOptions.attachTo);
+    const { attachTo } = mountOptions;
+    if (attachTo instanceof HTMLElement) {
+      document.body.removeChild(attachTo);
+    }
   });
 
   afterEach(() => {
