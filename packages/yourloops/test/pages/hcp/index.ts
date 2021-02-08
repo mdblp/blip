@@ -35,6 +35,7 @@ import testTeamRemoveMemberDialog from "./team-member-remove-dialog.test";
 import testTeamSwitchRoleDialog from "./team-member-switch-role-dialog.test";
 import testTeamMembersTable from "./team-members-table.test";
 import testTeamNavBar from "./teams-nav-bar.test";
+import testTeamPage from "./teams-page.test";
 
 function testHCPPage(): void {
   describe("Patient List", () => {
@@ -49,6 +50,7 @@ function testHCPPage(): void {
     describe("Switch role dialog", testTeamSwitchRoleDialog);
     describe("Members Table", testTeamMembersTable);
     describe("Nav bar", testTeamNavBar);
+    describe("Page", testTeamPage);
   });
 }
 
