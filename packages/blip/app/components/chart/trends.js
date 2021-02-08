@@ -14,23 +14,23 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import _ from 'lodash';
-import bows from 'bows';
-import moment from 'moment';
-import React from 'react';
-import PropTypes from 'prop-types';
-import sundial from 'sundial';
-import WindowSizeListener from 'react-window-size-listener';
-import * as viz from 'tidepool-viz';
+import _ from "lodash";
+import bows from "bows";
+import moment from "moment";
+import React from "react";
+import PropTypes from "prop-types";
+import sundial from "sundial";
+import WindowSizeListener from "react-window-size-listener";
+import * as viz from "tidepool-viz";
 
-import i18n from '../../core/language';
-import Header from './header';
-import SubNav from './trendssubnav';
-import Stats from './stats';
-import BgSourceToggle from './bgSourceToggle';
-import Footer from './footer';
-import { RangeDatePicker } from '../datepicker';
-import { BG_DATA_TYPES } from '../../core/constants';
+import i18n from "../../core/language";
+import Header from "./header";
+import SubNav from "./trendssubnav";
+import Stats from "./stats";
+import BgSourceToggle from "./bgSourceToggle";
+import Footer from "./footer";
+import { RangeDatePicker } from "../datepicker";
+import { BG_DATA_TYPES } from "../../core/constants";
 
 const t = i18n.t.bind(i18n);
 const CBGDateTraceLabel = viz.components.CBGDateTraceLabel;
@@ -66,15 +66,16 @@ class Trends extends React.PureComponent {
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     updateDatetimeLocation: PropTypes.func.isRequired,
-    uploadUrl: PropTypes.string.isRequired
+    uploadUrl: PropTypes.string.isRequired,
+    profileDialog: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
 
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs);
-    this.chartType = 'trends';
-    this.log = bows('Trends');
+    this.chartType = "trends";
+    this.log = bows("Trends");
 
     this.state = {
       atMostRecent: true,
@@ -113,13 +114,13 @@ class Trends extends React.PureComponent {
   formatDate(datetime) {
     const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
 
-    return sundial.formatInTimezone(datetime, timezone, t('MMM D, YYYY'));
+    return sundial.formatInTimezone(datetime, timezone, t("MMM D, YYYY"));
   }
 
   getNewDomain(current, extent) {
     const timezone = getTimezoneFromTimePrefs(this.props.timePrefs);
     const end = getLocalizedCeiling(current.valueOf(), this.props.timePrefs);
-    const start = moment(end.toISOString()).tz(timezone).subtract(extent, 'days');
+    const start = moment(end.toISOString()).tz(timezone).subtract(extent, "days");
     const dateDomain = [start.toISOString(), end.toISOString()];
 
     return dateDomain;
@@ -128,7 +129,7 @@ class Trends extends React.PureComponent {
   getExtendSize(domain) {
     const startDate = moment(domain[0]);
     const endDate = moment(domain[1]);
-    return endDate.diff(startDate, 'days');
+    return endDate.diff(startDate, "days");
   }
 
   getTitle() {
@@ -136,13 +137,13 @@ class Trends extends React.PureComponent {
     const { displayCalendar } = this.state;
 
     if (endpoints.length !== 2) {
-      return t('Loading...');
+      return t("Loading...");
     }
 
     const timezone = getTimezoneFromTimePrefs(timePrefs);
     const startDate = moment.utc(endpoints[0]).tz(timezone);
     // endpoint is exclusive, so need to subtract a day:
-    const endDate = moment.utc(endpoints[1]).tz(timezone).subtract(1, 'days');
+    const endDate = moment.utc(endpoints[1]).tz(timezone).subtract(1, "days");
 
     const displayStartDate = this.formatDate(startDate);
     const displayEndDate = this.formatDate(endDate);
@@ -152,7 +153,7 @@ class Trends extends React.PureComponent {
       this.setState({ displayCalendar: true });
     };
     const handleChange = (begin, end) => {
-      const newDomain = [begin.toISOString(), end.add(1, 'days').toISOString()];
+      const newDomain = [begin.toISOString(), end.add(1, "days").toISOString()];
       this.setState({ displayCalendar: false }, () => {
         const prefs = _.cloneDeep(this.props.chartPrefs);
         const extentSize = this.getExtendSize(newDomain);
@@ -168,28 +169,31 @@ class Trends extends React.PureComponent {
     };
 
     let calendar = null;
-    let divClass = 'chart-title-clickable';
+    let divClass = "chart-title-clickable";
     if (displayCalendar) {
       calendar = (
         <RangeDatePicker
           timezone={timezone}
           begin={startDate}
           end={endDate}
-          max={moment().add(1, 'days').utc().startOf('day')}
+          max={moment().add(1, "days").utc().startOf("day")}
           minDuration={1}
           maxDuration={90}
-          aboveMaxDurationMessage={t('The period must be less than {{days}} days', { days: 90 })}
+          aboveMaxDurationMessage={t("The period must be less than {{days}} days", { days: 90 })}
           allowSelectDateOutsideDuration={true}
           onChange={handleChange}
           onCancel={handleCancel}
-          value={startDate} />
+          value={startDate}
+        />
       );
       divClass = `${divClass} active`;
     }
 
     return (
       <div className={divClass} onClick={handleClickTitle}>
-        <span>{displayStartDate}&nbsp;-&nbsp;{displayEndDate}</span>
+        <span>
+          {displayStartDate}&nbsp;-&nbsp;{displayEndDate}
+        </span>
         {calendar}
       </div>
     );
@@ -275,8 +279,8 @@ class Trends extends React.PureComponent {
   }
 
   handleDatetimeLocationChange(datetimeLocationEndpoints, atMostRecent, cb) {
-    if (typeof atMostRecent !== 'boolean') {
-      this.log.error('handleDatetimeLocationChange: Invalid parameter atMostRecent');
+    if (typeof atMostRecent !== "boolean") {
+      this.log.error("handleDatetimeLocationChange: Invalid parameter atMostRecent");
       atMostRecent = false;
     }
 
@@ -300,8 +304,8 @@ class Trends extends React.PureComponent {
       e.preventDefault();
     }
 
-    const showingCbg = bgSource === 'cbg';
-    const changedTo = showingCbg ? 'CGM' : 'BGM';
+    const showingCbg = bgSource === "cbg";
+    const changedTo = showingCbg ? "CGM" : "BGM";
     this.props.trackMetric(`Trends Click to ${changedTo}`);
 
     const prefs = _.cloneDeep(this.props.chartPrefs);
@@ -342,13 +346,13 @@ class Trends extends React.PureComponent {
   toggleWeekdays(allActive) {
     const prefs = _.cloneDeep(this.props.chartPrefs);
     prefs.trends.activeDays = {
-      'monday': !allActive,
-      'tuesday': !allActive,
-      'wednesday': !allActive,
-      'thursday': !allActive,
-      'friday': !allActive,
-      'saturday': prefs.trends.activeDays.saturday,
-      'sunday': prefs.trends.activeDays.sunday
+      monday: !allActive,
+      tuesday: !allActive,
+      wednesday: !allActive,
+      thursday: !allActive,
+      friday: !allActive,
+      saturday: prefs.trends.activeDays.saturday,
+      sunday: prefs.trends.activeDays.sunday,
     };
     this.props.updateChartPrefs(prefs);
   }
@@ -356,13 +360,13 @@ class Trends extends React.PureComponent {
   toggleWeekends(allActive) {
     const prefs = _.cloneDeep(this.props.chartPrefs);
     prefs.trends.activeDays = {
-      'monday': prefs.trends.activeDays.monday,
-      'tuesday': prefs.trends.activeDays.tuesday,
-      'wednesday': prefs.trends.activeDays.wednesday,
-      'thursday': prefs.trends.activeDays.thursday,
-      'friday': prefs.trends.activeDays.friday,
-      'saturday': !allActive,
-      'sunday': !allActive
+      monday: prefs.trends.activeDays.monday,
+      tuesday: prefs.trends.activeDays.tuesday,
+      wednesday: prefs.trends.activeDays.wednesday,
+      thursday: prefs.trends.activeDays.thursday,
+      friday: prefs.trends.activeDays.friday,
+      saturday: !allActive,
+      sunday: !allActive,
     };
     this.props.updateChartPrefs(prefs);
   }
@@ -419,7 +423,8 @@ class Trends extends React.PureComponent {
           showingSmbg={this.props.chartPrefs.trends.showingSmbg}
           displayFlags={this.props.trendsState[currentPatientInViewId].cbgFlags}
           currentPatientInViewId={currentPatientInViewId}
-          ref="footer" />
+          ref="footer"
+        />
         <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
     );
@@ -429,15 +434,16 @@ class Trends extends React.PureComponent {
     const title = this.getTitle();
     return (
       <Header
+        ProfileDialog={this.props.profileDialog}
         chartType={this.chartType}
         patient={this.props.patient}
         inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
         title={title}
         trackMetric={this.props.trackMetric}
-        iconBack={'icon-back'}
-        iconNext={'icon-next'}
-        iconMostRecent={'icon-most-recent'}
+        iconBack={"icon-back"}
+        iconNext={"icon-next"}
+        iconMostRecent={"icon-most-recent"}
         permsOfLoggedInUser={this.props.permsOfLoggedInUser}
         onClickBack={this.handleClickBack}
         onClickBasics={this.props.onSwitchToBasics}
@@ -447,7 +453,8 @@ class Trends extends React.PureComponent {
         onClickOneDay={this.handleClickDaily}
         onClickBgLog={this.handleClickBgLog}
         onClickSettings={this.handleClickSettings}
-        ref="header" />
+        ref="header"
+      />
     );
   }
 
@@ -457,15 +464,16 @@ class Trends extends React.PureComponent {
         activeDays={this.props.chartPrefs.trends.activeDays}
         extentSize={this.props.chartPrefs.trends.extentSize}
         domainClickHandlers={{
-          '1 week': (e) => this.handleClickPresetWeeks(e, 7),
-          '2 weeks': (e) => this.handleClickPresetWeeks(e, 14),
-          '4 weeks': (e) => this.handleClickPresetWeeks(e, 28),
-          '3 months': (e) => this.handleClickPresetWeeks(e, 90),
+          "1 week": (e) => this.handleClickPresetWeeks(e, 7),
+          "2 weeks": (e) => this.handleClickPresetWeeks(e, 14),
+          "4 weeks": (e) => this.handleClickPresetWeeks(e, 28),
+          "3 months": (e) => this.handleClickPresetWeeks(e, 90),
         }}
         onClickDay={this.toggleDay}
         toggleWeekdays={this.toggleWeekdays}
         toggleWeekends={this.toggleWeekends}
-        ref="subnav" />
+        ref="subnav"
+      />
     );
   }
 
@@ -503,34 +511,38 @@ class Trends extends React.PureComponent {
 
   renderFocusedCbgDateTraceLabel() {
     const { currentPatientInViewId, trendsState } = this.props;
-    const focusedCbgDateTrace = _.get(trendsState, [currentPatientInViewId, 'focusedCbgDateTrace']);
+    const focusedCbgDateTrace = _.get(trendsState, [currentPatientInViewId, "focusedCbgDateTrace"]);
     if (focusedCbgDateTrace) {
-      return (
-        <CBGDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />
-      );
+      return <CBGDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />;
     }
     return null;
   }
 
   renderFocusedRangeLabels() {
     const { currentPatientInViewId, trendsState } = this.props;
-    const { chartPrefs: { trends: { showingCbg, showingSmbg } } } = this.props;
+    const {
+      chartPrefs: {
+        trends: { showingCbg, showingSmbg },
+      },
+    } = this.props;
     if (showingCbg) {
       return (
         <FocusedRangeLabels
           bgPrefs={this.props.bgPrefs}
-          dataType={'cbg'}
+          dataType={"cbg"}
           focusedKeys={trendsState[currentPatientInViewId].focusedCbgSliceKeys}
           focusedSlice={trendsState[currentPatientInViewId].focusedCbgSlice}
-          timePrefs={this.props.timePrefs} />
+          timePrefs={this.props.timePrefs}
+        />
       );
     } else if (showingSmbg) {
       return (
         <FocusedRangeLabels
           bgPrefs={this.props.bgPrefs}
-          dataType={'smbg'}
+          dataType={"smbg"}
           focusedRange={trendsState[currentPatientInViewId].focusedSmbgRangeAvg}
-          timePrefs={this.props.timePrefs} />
+          timePrefs={this.props.timePrefs}
+        />
       );
     }
     return null;
@@ -547,7 +559,8 @@ class Trends extends React.PureComponent {
         timePrefs={this.props.timePrefs}
         grouped={this.props.chartPrefs.trends.smbgGrouped}
         lines={this.props.chartPrefs.trends.smbgLines}
-        focusedPoint={this.props.trendsState[currentPatientInViewId].focusedSmbg} />
+        focusedPoint={this.props.trendsState[currentPatientInViewId].focusedSmbg}
+      />
     );
   }
 }
