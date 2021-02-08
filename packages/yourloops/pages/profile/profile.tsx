@@ -26,7 +26,7 @@ import {
   Button,
   Container,
   FormControl,
-  InputAdornment,
+  InputLabel,
   Link,
   MenuItem,
   Select,
@@ -60,15 +60,8 @@ interface ApiReturnAlert {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    select: { padding: "1em 2em" },
     button: { margin: "2em 1em" },
-    formControl: {
-      minWidth: 120,
-      textAlign: "right",
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
+    formControl: { marginTop: "1em", minWidth: 120 },
     homeIcon: {
       marginRight: "0.5em",
     },
@@ -83,23 +76,25 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: "6em",
     },
     textField: {
+      marginTop: "1em",
       "& input:disabled": {
-        backgroundColor: "#f7f7f8",
+        backgroundColor: "white",
       },
     },
     title: {
       textAlign: "center",
       color: theme.palette.primary.main,
+      margin: "16px",
     },
-    inputTitle: { color: "black" },
-    inputProps: { textAlign: "right", padding: "1em 2em" },
     container: {
+      backgroundColor: "white",
       border: "solid",
       borderRadius: "15px",
       marginTop: "32px",
       // eslint-disable-next-line no-magic-numbers
       borderColor: theme.palette.grey[300],
       borderWidth: "1px",
+      padding: "0 64px",
     },
   })
 );
@@ -236,9 +231,9 @@ export const ProfilePage: FunctionComponent = () => {
           .then(() => {
             setHaveSettingsChanged(false);
             setUser(newUser);
-            setApiReturnAlert({ message: "Settings updated", severity: "success" });
+            setApiReturnAlert({ message: "Profile updated", severity: "success" });
           })
-          .catch(() => setApiReturnAlert({ message: "Settings update failed", severity: "error" }));
+          .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
       }
 
       if (hasProfileChanged) {
@@ -269,58 +264,39 @@ export const ProfilePage: FunctionComponent = () => {
   return (
     <Fragment>
       <ProfileHeader />
-      <Container className={classes.container} maxWidth="md">
+      <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
           <div className={classes.title}>{t("account-preferences-title")}</div>
           <TextField
             id="firstName"
+            label={t("First name")}
             value={firstName}
             onChange={handleChange(setFirstName)}
             error={errors.firstName}
             helperText={errors.firstName && t("required-field")}
-            inputProps={{ className: classes.inputProps }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment className={classes.inputTitle} position="start">
-                  <span>{t("First name")}</span>
-                </InputAdornment>
-              ),
-            }}
+            className={classes.textField}
           />
           <TextField
             id="lastName"
+            label={t("Last name")}
             value={name}
             onChange={handleChange(setName)}
             error={errors.name}
             helperText={errors.name && t("required-field")}
-            inputProps={{ className: classes.inputProps }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment className={classes.inputTitle} position="start">
-                  <span>{t("Last name")}</span>
-                </InputAdornment>
-              ),
-            }}
+            className={classes.textField}
           />
 
           {role === Roles.clinic ? (
             <Fragment>
               <TextField
                 id="mail"
+                label={t("Email")}
                 value={mail}
                 disabled
                 onChange={handleChange(setMail)}
                 error={errors.mail}
                 helperText={errors.mail && t("Invalid email address.")}
                 className={classes.textField}
-                inputProps={{ className: classes.inputProps }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <span>{t("Email")}</span>
-                    </InputAdornment>
-                  ),
-                }}
               />
               <Password
                 id="password"
@@ -343,65 +319,37 @@ export const ProfilePage: FunctionComponent = () => {
             <Fragment>
               <TextField
                 id="birthDate"
+                label={t("Date of birth")}
                 value={birthDate}
                 onChange={handleChange(setBirthDate)}
                 error={errors.birthDate}
                 helperText={errors.birthDate && t("required-field")}
-                inputProps={{ className: classes.inputProps }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment className={classes.inputTitle} position="start">
-                      <span>{t("Date of birth")}</span>
-                    </InputAdornment>
-                  ),
-                }}
               />
               <TextField
                 id="hbA1c"
+                label={t("initial-hbA1c")}
                 disabled
                 value={hbA1c}
                 onChange={handleChange(setHbA1c)}
                 className={classes.textField}
-                inputProps={{ className: classes.inputProps }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <span>{t("initial-hbA1c")}</span>
-                    </InputAdornment>
-                  ),
-                }}
               />
             </Fragment>
           )}
           <FormControl className={classes.formControl}>
+            <InputLabel id="units-input-label">{t("units")}</InputLabel>
             <Select
               disabled={role !== Roles.clinic}
               labelId="unit-selector"
               id="unit-selector"
               value={unit}
-              onChange={handleUnitChange}
-              classes={{ root: classes.select }}
-              startAdornment={
-                <InputAdornment className={role === Roles.clinic ? classes.inputTitle : ""} position="start">
-                  <span>{t("units")}</span>
-                </InputAdornment>
-              }>
+              onChange={handleUnitChange}>
               <MenuItem value={Units.mole}>{Units.mole}</MenuItem>
               <MenuItem value={Units.gram}>{Units.gram}</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={classes.formControl}>
-            <Select
-              labelId="locale-selector"
-              id="locale-selector"
-              value={locale}
-              onChange={handleLocaleChange}
-              classes={{ root: classes.select }}
-              startAdornment={
-                <InputAdornment position="start">
-                  <span>{t("Language")}</span>
-                </InputAdornment>
-              }>
+            <InputLabel id="language-input-label">{t("Language")}</InputLabel>
+            <Select labelId="locale-selector" id="locale-selector" value={locale} onChange={handleLocaleChange}>
               {availableLocales.map((locale) => (
                 <MenuItem key={locale} value={locale}>
                   {locale}

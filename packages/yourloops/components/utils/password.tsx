@@ -26,12 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { IconButton, InputAdornment, TextField } from "@material-ui/core";
+import { createStyles, IconButton, InputAdornment, makeStyles, TextField } from "@material-ui/core";
 import React, { CSSProperties, FunctionComponent, useState } from "react";
 
 import { Visibility } from "@material-ui/icons";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { t } from "../../lib/language";
+import { useTranslation } from "react-i18next";
 
 enum PasswordVisibility {
   text = "text",
@@ -48,6 +48,17 @@ interface PasswordProps {
   style?: CSSProperties;
 }
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    textField: {
+      marginTop: "1em",
+      "& input:disabled": {
+        backgroundColor: "white",
+      },
+    },
+  })
+);
+
 export const Password: FunctionComponent<PasswordProps> = ({
   id,
   label,
@@ -57,6 +68,9 @@ export const Password: FunctionComponent<PasswordProps> = ({
   style,
   setState,
 }: PasswordProps) => {
+  const classes = useStyles();
+  const { t } = useTranslation("yourloops");
+
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPasswordChange = () => {
     setShowPassword(!showPassword);
@@ -69,19 +83,15 @@ export const Password: FunctionComponent<PasswordProps> = ({
   return (
     <TextField
       id={id}
+      label={t(label)}
       value={value}
       error={error}
       type={showPassword ? PasswordVisibility.text : PasswordVisibility.hidden}
       onChange={onChange}
       helperText={error && helperText}
       style={style}
-      inputProps={{ style: { textAlign: "right", padding: "1em 2em" } }}
+      className={classes.textField}
       InputProps={{
-        startAdornment: (
-          <InputAdornment style={{ color: "black" }} position="start">
-            <span>{t(label)}</span>
-          </InputAdornment>
-        ),
         endAdornment: (
           <InputAdornment position="end">
             <IconButton aria-label={t("aria-toggle-password-visibility")} onClick={handleShowPasswordChange}>
