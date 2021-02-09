@@ -59,11 +59,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     inputTitle: { color: "black" },
     inputProps: { textAlign: "right", padding: "1em 2em" },
-    listItems: { display: "flex", padding: 0 },
+    listItems: {
+      display: "flex",
+      padding: 0,
+    },
     listItemText: {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+    },
+    primaryListItemText: {
+      // eslint-disable-next-line no-magic-numbers
+      color: theme.palette.grey[600],
+      fontSize: "14px",
+    },
+    secondaryListItemText: {
+      // eslint-disable-next-line no-magic-numbers
+      color: theme.palette.grey[800],
     },
   })
 );
@@ -77,41 +89,80 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
   const birthDate = user?.profile?.patient?.birthday?.split("T")[0];
 
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog fullWidth={true} maxWidth="xs" open={isOpen} onClose={handleClose}>
       <DialogTitle className={classes.title} id="patient-dialog-title">
         {t("patient-profile")}
       </DialogTitle>
       <DialogContent>
         <List>
-          <ListItem className={classes.listItems}>
+          <ListItem divider className={classes.listItems}>
             <ListItemText
               id="firstName"
-              className={classes.listItemText}
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
               primary={t("First name")}
               secondary={user.profile?.firstName}
             />
           </ListItem>
-          <ListItem className={classes.listItems}>
+          <ListItem divider className={classes.listItems}>
             <ListItemText
               id="lastname"
-              className={classes.listItemText}
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
               primary={t("Last name")}
               secondary={user.profile?.lastName}
             />
           </ListItem>
-          <ListItem className={classes.listItems}>
-            <ListItemText id="birthDate" className={classes.listItemText} primary={t("Date of birth")} secondary={birthDate} />
+          <ListItem divider className={classes.listItems}>
+            <ListItemText
+              id="birthDate"
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
+              primary={t("Date of birth")}
+              secondary={birthDate}
+            />
           </ListItem>
-          <ListItem className={classes.listItems}>
-            <ListItemText id="mail" className={classes.listItemText} primary={t("Email")} secondary={mail} />
+          <ListItem divider className={classes.listItems}>
+            <ListItemText
+              id="mail"
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
+              primary={t("Email")}
+              secondary={mail}
+            />
           </ListItem>
-          <ListItem className={classes.listItems}>
-            <ListItemText id="hbA1c" className={classes.listItemText} primary={t("initial-hbA1c")} secondary={hbA1c} />
+          <ListItem divider className={classes.listItems}>
+            <ListItemText
+              id="hbA1c"
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
+              primary={t("initial-hbA1c")}
+              secondary={hbA1c}
+            />
           </ListItem>
-          <ListItem className={classes.listItems}>
+          <ListItem divider className={classes.listItems}>
             <ListItemText
               id="units"
-              className={classes.listItemText}
+              classes={{
+                root: classes.listItemText,
+                primary: classes.primaryListItemText,
+                secondary: classes.secondaryListItemText,
+              }}
               primary={t("units")}
               secondary={user?.settings?.units?.bg}
             />
