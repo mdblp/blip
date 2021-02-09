@@ -38,8 +38,9 @@ import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
 import http from "../http-status-codes";
-import { User, Profile, Settings, Roles } from "../../models/shoreline";
+import { User, Profile, Settings, Roles, Preferences } from "../../models/shoreline";
 import { Team, TeamMember, TeamMemberRole, TeamType } from "../../models/team";
+import HttpStatus from "../http-status-codes";
 
 const SESSION_TOKEN_KEY = "session-token";
 const TRACE_TOKEN_KEY = "trace-token";
@@ -415,7 +416,15 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      user.profile = (await response.json()) as Profile;
+      try {
+        user.profile = (await response.json()) as Profile;
+      } catch (e) {
+        user.profile = {} as Profile;
+        this.log.debug(e);
+      }
+    } else if (response.status === HttpStatus.StatusNotFound) {
+      user.profile = {} as Profile;
+      this.log.debug("Error : 404 not found");
     } else {
       const responseBody = (await response.json()) as APIErrorResponse;
       throw new Error(t(responseBody.reason));
@@ -724,8 +733,9 @@ class AuthApi extends EventTarget {
     const seagullURL = new URL(`/metadata/${userid}/profile`, appConfig.API_HOST);
 
     const response = await fetch(seagullURL.toString(), {
-      method: "POST",
+      method: "PUT",
       headers: {
+        "Content-Type": "application/json",
         [TRACE_SESSION_HEADER]: this.traceToken as string,
         [SESSION_TOKEN_HEADER]: this.sessionToken as string,
       },
@@ -733,7 +743,7 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      profile = (await response.json()) as Profile;
+      profile = (await response.json()).profile as Profile;
     } else {
       const responseBody = (await response.json()) as APIErrorResponse;
       throw new Error(t(responseBody.reason));
@@ -749,8 +759,9 @@ class AuthApi extends EventTarget {
     const seagullURL = new URL(`/metadata/${userid}/settings`, appConfig.API_HOST);
 
     const response = await fetch(seagullURL.toString(), {
-      method: "POST",
+      method: "PUT",
       headers: {
+        "Content-Type": "application/json",
         [TRACE_SESSION_HEADER]: this.traceToken as string,
         [SESSION_TOKEN_HEADER]: this.sessionToken as string,
       },
@@ -758,7 +769,65 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      settings = (await response.json()) as Settings;
+      settings = (await response.json()).settings as Settings;
+    } else {
+      const responseBody = (await response.json()) as APIErrorResponse;
+      throw new Error(t(responseBody.reason));
+    }
+  }
+
+  public async getUserPreferences(user: User): Promise<Preferences> {
+    if (!this.isLoggedIn) {
+      // Users should never see this:
+      throw new Error(t("You are not logged-in"));
+    }
+    const seagullURL = new URL(`/metadata/${user.userid}/preferences`, appConfig.API_HOST);
+    const response = await fetch(seagullURL.toString(), {
+      method: "GET",
+      headers: {
+        [TRACE_SESSION_HEADER]: this.traceToken as string,
+        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+      },
+    });
+
+    if (response.ok) {
+      try {
+        user.preferences = (await response.json()).preferences as Preferences;
+      } catch (e) {
+        user.preferences = {} as Preferences;
+        this.log.debug(e);
+      }
+    } else if (response.status === HttpStatus.StatusNotFound) {
+      user.preferences = {} as Preferences;
+      this.log.debug("Error : 404 not found");
+    } else {
+      const responseBody = (await response.json()) as APIErrorResponse;
+      throw new Error(t(responseBody.reason));
+    }
+
+    return user.preferences;
+  }
+
+  public async updateUserPreferences({ userid, preferences }: User): Promise<void> {
+    if (!this.isLoggedIn) {
+      // Users should never see this:
+      throw new Error(t("You are not logged-in"));
+    }
+
+    const seagullURL = new URL(`/metadata/${userid}/preferences`, appConfig.API_HOST);
+
+    const response = await fetch(seagullURL.toString(), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        [TRACE_SESSION_HEADER]: this.traceToken as string,
+        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+      },
+      body: JSON.stringify({ preferences }),
+    });
+
+    if (response.ok) {
+      preferences = (await response.json()).preferences as Preferences;
     } else {
       const responseBody = (await response.json()) as APIErrorResponse;
       throw new Error(t(responseBody.reason));

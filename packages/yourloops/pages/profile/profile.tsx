@@ -41,7 +41,7 @@ import { Password } from "../../components/utils/password";
 import { REGEX_BIRTHDATE, REGEX_EMAIL } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
-import { Profile, Roles, Settings, Units, User } from "../../models/shoreline";
+import { Preferences, Profile, Roles, Settings, Units, User } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 import { Alert } from "@material-ui/lab";
 
@@ -129,18 +129,41 @@ export const ProfilePage: FunctionComponent = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [mail, setMail] = useState<string>("");
-  const [locale, setLocale] = useState<string>(getCurrentLocaleName(i18n));
+  const [locale, setLocale] = useState<string>(
+    getCurrentLocaleName(i18n.language.split("-")[0] as Preferences["displayLanguageCode"])
+  );
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
-  const [unit, setUnit] = useState<Units>(Units.mole);
+  const [unit, setUnit] = useState<Units>(Units.gram);
   const [role, setRole] = useState<Roles | null>(null);
   const [birthDate, setBirthDate] = useState<string>("");
   const [hbA1c, setHbA1c] = useState<string>("8.5%"); // TODO
   const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
   const [haveSettingsChanged, setHaveSettingsChanged] = useState<boolean>(false);
+  const [havePreferencesChanged, setHavePreferencesChanged] = useState<boolean>(false);
   const [apiReturnAlert, setApiReturnAlert] = useState<ApiReturnAlert | null>(null);
 
+  const handleUserUpdate = useCallback(
+    (promise: Promise<void>, newUser: User, setChanged: React.Dispatch<React.SetStateAction<boolean>>): void => {
+      promise
+        .then(() => {
+          setChanged(false);
+          setUser(newUser);
+          setApiReturnAlert({ message: "Profile updated", severity: "success" });
+        })
+        .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
+    },
+    []
+  );
+
   useEffect(() => {
+    if (user) {
+      apiClient.getUserPreferences(user).then((response) => {
+        if (response.displayLanguageCode) {
+          setLocale(getCurrentLocaleName(response.displayLanguageCode));
+        }
+      });
+    }
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
     }
@@ -199,13 +222,16 @@ export const ProfilePage: FunctionComponent = () => {
   const isAnyError: boolean = useMemo(() => _.some(errors), [errors]);
 
   useEffect(() => {
-    const newSettings: Settings = {
-      units: { bg: unit },
-      country: locale,
-    };
-    setHaveSettingsChanged(!_.isEqual(user?.settings, newSettings));
-
     if (user) {
+      const newSettings: Settings = {
+        ...user.settings,
+        units: { bg: unit },
+      };
+      setHaveSettingsChanged(!_.isEqual(user.settings, newSettings));
+
+      const newPreferences: Preferences = { ...user.preferences, displayLanguageCode: getLocaleShortname(locale) };
+      setHavePreferencesChanged(!_.isEqual(user.preferences, newPreferences));
+
       const newProfile: Profile = {
         ...user.profile,
         fullName: firstName + " " + name,
@@ -214,30 +240,37 @@ export const ProfilePage: FunctionComponent = () => {
       };
       setHasProfileChanged(!_.isEqual(user.profile, newProfile));
     } else {
+      setHaveSettingsChanged(false);
+      setHavePreferencesChanged(false);
       setHasProfileChanged(false);
     }
   }, [firstName, name, unit, locale, user]);
 
   const onSave = useCallback(() => {
     if (user) {
-      if (haveSettingsChanged) {
-        if (i18n && getCurrentLocaleName(i18n) !== locale) {
-          const newLocale = getLocaleShortname(locale);
-          i18n.changeLanguage(newLocale);
+      if (havePreferencesChanged) {
+        const localeShortname = getLocaleShortname(locale);
+        if (i18n) {
+          const lang = i18n.language.split("-")[0] as Preferences["displayLanguageCode"];
+          if (getCurrentLocaleName(lang) !== locale) {
+            i18n.changeLanguage(localeShortname!);
+          }
         }
-        const newUser: User = { ...user, settings: { units: { bg: unit }, country: locale } };
-        apiClient
-          .updateUserSettings(newUser)
-          .then(() => {
-            setHaveSettingsChanged(false);
-            setUser(newUser);
-            setApiReturnAlert({ message: "Profile updated", severity: "success" });
-          })
-          .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
+
+        const newPrefUser: User = {
+          ...user,
+          preferences: { ...user.preferences, displayLanguageCode: localeShortname },
+        };
+        handleUserUpdate(apiClient.updateUserPreferences(newPrefUser), newPrefUser, setHavePreferencesChanged);
+      }
+
+      if (haveSettingsChanged) {
+        const newSettingsUser: User = { ...user, settings: { ...user.settings, units: { bg: unit } } };
+        handleUserUpdate(apiClient.updateUserSettings(newSettingsUser), newSettingsUser, setHaveSettingsChanged);
       }
 
       if (hasProfileChanged) {
-        const newUser: User = {
+        const newProfileUser: User = {
           ...user,
           profile: {
             ...user.profile,
@@ -246,17 +279,10 @@ export const ProfilePage: FunctionComponent = () => {
             lastName: name,
           },
         };
-        apiClient
-          .updateUserProfile(newUser)
-          .then(() => {
-            setHasProfileChanged(false);
-            setUser(newUser);
-            setApiReturnAlert({ message: "Profile updated", severity: "success" });
-          })
-          .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
+        handleUserUpdate(apiClient.updateUserProfile(newProfileUser), newProfileUser, setHasProfileChanged);
       }
     }
-  }, [user, haveSettingsChanged, hasProfileChanged, firstName, name, locale, i18n, unit, setUser]);
+  }, [user, haveSettingsChanged, havePreferencesChanged, hasProfileChanged, firstName, name, locale, i18n, unit, setUser]);
 
   const onCancel = (): void => history.goBack();
   const onCloseAlert = (): void => setApiReturnAlert(null);
@@ -363,7 +389,7 @@ export const ProfilePage: FunctionComponent = () => {
             </Button>
             <Button
               variant="contained"
-              disabled={(!hasProfileChanged && !haveSettingsChanged) || isAnyError}
+              disabled={(!hasProfileChanged && !haveSettingsChanged && !havePreferencesChanged) || isAnyError}
               color="primary"
               onClick={onSave}
               className={classes.button}>

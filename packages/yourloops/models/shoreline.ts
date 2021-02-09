@@ -57,7 +57,7 @@ interface Settings {
 }
 
 interface Preferences {
-  displayLanguageCode?: string;
+  displayLanguageCode?: "en" | "de" | "es" | "fr" | "it" | "nl";
   patientsStarred?: string[];
 }
 interface User {
@@ -81,4 +81,4 @@ interface User {
   preferences?: Preferences;
 }
 
-export { User, Profile, Settings, Units, Roles };
+export { User, Profile, Settings, Units, Roles, Preferences };
