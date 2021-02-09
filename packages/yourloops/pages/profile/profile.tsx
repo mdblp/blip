@@ -144,10 +144,10 @@ export const ProfilePage: FunctionComponent = () => {
   const [apiReturnAlert, setApiReturnAlert] = useState<ApiReturnAlert | null>(null);
 
   const handleUserUpdate = useCallback(
-    (promise: Promise<void>, newUser: User, setChanged: React.Dispatch<React.SetStateAction<boolean>>): void => {
-      promise
+    (promises: Promise<void>[], newUser: User, callbacks: React.Dispatch<React.SetStateAction<boolean>>[]): void => {
+      Promise.all(promises)
         .then(() => {
-          setChanged(false);
+          callbacks.forEach((callback) => callback(false));
           setUser(newUser);
           setApiReturnAlert({ message: "Profile updated", severity: "success" });
         })
@@ -157,13 +157,6 @@ export const ProfilePage: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    if (user) {
-      apiClient.getUserPreferences(user).then((response) => {
-        if (response.displayLanguageCode) {
-          setLocale(getCurrentLocaleName(response.displayLanguageCode));
-        }
-      });
-    }
     if (user?.profile?.firstName) {
       setFirstName(user.profile.firstName);
     }
@@ -248,38 +241,44 @@ export const ProfilePage: FunctionComponent = () => {
 
   const onSave = useCallback(() => {
     if (user) {
+      const localeShortname = getLocaleShortname(locale);
+      const promises: Promise<void>[] = [];
+      const callbacks: React.Dispatch<React.SetStateAction<boolean>>[] = [];
+      const newUser: User = {
+        ...user,
+        preferences: havePreferencesChanged ? { ...user.preferences, displayLanguageCode: localeShortname } : user.preferences,
+        settings: haveSettingsChanged ? { ...user.settings, units: { bg: unit } } : user.settings,
+        profile: hasProfileChanged
+          ? {
+              ...user.profile,
+              fullName: firstName + " " + name,
+              firstName,
+              lastName: name,
+            }
+          : user.profile,
+      };
       if (havePreferencesChanged) {
-        const localeShortname = getLocaleShortname(locale);
         if (i18n) {
           const lang = i18n.language.split("-")[0] as Preferences["displayLanguageCode"];
           if (getCurrentLocaleName(lang) !== locale) {
             i18n.changeLanguage(localeShortname!);
           }
         }
-
-        const newPrefUser: User = {
-          ...user,
-          preferences: { ...user.preferences, displayLanguageCode: localeShortname },
-        };
-        handleUserUpdate(apiClient.updateUserPreferences(newPrefUser), newPrefUser, setHavePreferencesChanged);
+        promises.push(apiClient.updateUserPreferences(newUser));
+        callbacks.push(setHavePreferencesChanged);
       }
 
       if (haveSettingsChanged) {
-        const newSettingsUser: User = { ...user, settings: { ...user.settings, units: { bg: unit } } };
-        handleUserUpdate(apiClient.updateUserSettings(newSettingsUser), newSettingsUser, setHaveSettingsChanged);
+        promises.push(apiClient.updateUserSettings(newUser));
+        callbacks.push(setHaveSettingsChanged);
       }
 
       if (hasProfileChanged) {
-        const newProfileUser: User = {
-          ...user,
-          profile: {
-            ...user.profile,
-            fullName: firstName + " " + name,
-            firstName,
-            lastName: name,
-          },
-        };
-        handleUserUpdate(apiClient.updateUserProfile(newProfileUser), newProfileUser, setHasProfileChanged);
+        promises.push(apiClient.updateUserProfile(newUser));
+        callbacks.push(setHasProfileChanged);
+      }
+      if (promises.length) {
+        handleUserUpdate(promises, newUser, callbacks);
       }
     }
   }, [user, haveSettingsChanged, havePreferencesChanged, hasProfileChanged, firstName, name, locale, i18n, unit, setUser]);
