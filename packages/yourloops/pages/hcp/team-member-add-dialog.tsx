@@ -67,7 +67,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
 
   const { t } = useTranslation("yourloops");
   const [email, setEMail] = React.useState("");
-  const [role, setRole] = React.useState("viewer" as TeamMemberRole);
+  const [role, setRole] = React.useState(TeamMemberRole.viewer);
   const [buttonDisabled, setButtonDisabled] = React.useState(true);
   const classes = dialogClasses();
 
@@ -79,41 +79,41 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
     setButtonDisabled(!REGEX_EMAIL.test(eMail));
   };
   const handleChangeRole = (_e: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
-    setRole(checked ? "admin" : "viewer");
+    setRole(checked ? TeamMemberRole.admin : TeamMemberRole.viewer);
   };
 
   const handleClickClose = (): void => {
     addMember?.onDialogResult({ email: null, role });
     setEMail("");
     setButtonDisabled(true);
-    setRole("viewer");
+    setRole(TeamMemberRole.viewer);
   };
 
   const handleClickAdd = (): void => {
     addMember?.onDialogResult({ email, role });
     setEMail("");
     setButtonDisabled(true);
-    setRole("viewer");
+    setRole(TeamMemberRole.viewer);
   };
 
   return (
     <Dialog
-      id="team-members-dialog-add-member"
+      id="team-add-member-dialog"
       open={addMember !== null}
-      aria-labelledby={t("aria-team-members-dialog-add-member-title", { teamName })}
-      BackdropProps={{ invisible: true }}>
-      <DialogTitle id="team-members-dialog-add-member-title">
-        <strong>{t("team-members-dialog-add-member-title")}</strong>
+      aria-labelledby={t("aria-team-add-member-dialog-title", { teamName })}
+      onClose={handleClickClose}>
+      <DialogTitle id="team-add-member-dialog-title">
+        <strong>{t("team-add-member-dialog-title")}</strong>
         <br />
-        <span id="team-members-dialog-add-member-title-team-name">{teamName}</span>
+        <span id="team-add-member-dialog-title-team-name">{teamName}</span>
       </DialogTitle>
 
       <DialogContent className={classes.dialogContent}>
         <TextField
-          id="team-members-dialog-add-member-field-email"
+          id="team-add-member-dialog-field-email"
           variant="outlined"
           onChange={handleChangeEMail}
-          name="name"
+          name="email"
           value={email}
           label={t("Email")}
           required={true}
@@ -121,14 +121,22 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           type="email"
         />
         <FormControlLabel
-          control={<Checkbox checked={role === "admin"} onChange={handleChangeRole} name="role" color="primary" />}
-          label={t("team-members-dialog-add-member-checkbox-admin")}
+          control={
+            <Checkbox
+              id="team-add-member-dialog-checkbox-admin"
+              checked={role === TeamMemberRole.admin}
+              onChange={handleChangeRole}
+              name="role"
+              color="primary"
+            />
+          }
+          label={t("team-add-member-dialog-checkbox-admin")}
         />
       </DialogContent>
 
       <DialogActions>
         <Button
-          id="team-members-dialog-add-member-button-cancel"
+          id="team-add-member-dialog-button-cancel"
           onClick={handleClickClose}
           className={classes.buttonCancel}
           color="secondary"
@@ -136,12 +144,12 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           {t("Cancel")}
         </Button>
         <Button
-          id="team-members-dialog-add-member-button-add"
+          id="team-add-member-dialog-button-add"
           onClick={handleClickAdd}
           color="primary"
           variant="contained"
           disabled={buttonDisabled}>
-          {t("team-members-dialog-add-member-button-add")}
+          {t("team-add-member-dialog-button-add")}
         </Button>
       </DialogActions>
     </Dialog>
