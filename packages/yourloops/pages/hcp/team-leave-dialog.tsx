@@ -245,8 +245,8 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
   return (
     <DialogActions>
-      {buttonOK}
       {buttonCancel}
+      {buttonOK}
     </DialogActions>
   );
 }
