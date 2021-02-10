@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { User } from "../../models/shoreline";
+import { Units, User } from "../../models/shoreline";
 import React, { FunctionComponent } from "react";
 import {
   Button,
@@ -35,10 +35,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  List,
-  ListItem,
-  ListItemText,
   makeStyles,
+  TextField,
   Theme,
 } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
@@ -51,38 +49,29 @@ interface ProfileDialogProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    select: { padding: "1em 2em" },
-    button: { margin: "2em 1em" },
     title: {
       textAlign: "center",
       color: theme.palette.primary.main,
     },
-    inputTitle: { color: "black" },
-    inputProps: { textAlign: "right", padding: "1em 2em" },
-    listItems: {
-      display: "flex",
-      padding: 0,
+    textField: {
+      marginTop: "1em",
+      "& input:disabled": {
+        backgroundColor: "white",
+        color: theme.palette.grey[800],
+      },
     },
-    listItemText: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    primaryListItemText: {
-      // eslint-disable-next-line no-magic-numbers
-      color: theme.palette.grey[600],
-      fontSize: "14px",
-    },
-    secondaryListItemText: {
-      // eslint-disable-next-line no-magic-numbers
-      color: theme.palette.grey[800],
+    disabled: {
+      "&&:before": {
+        borderBottom: "0.5px solid",
+        color: theme.palette.grey[400],
+      },
     },
   })
 );
 
 export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
-  const { t } = useTranslation();
-  const classes = useStyles();
+  const { t } = useTranslation("yourloops");
+  const { textField, title, disabled } = useStyles();
 
   const mail = user?.emails ? user.emails[0] : "";
   const hbA1c = "8.5%"; // TODO
@@ -90,84 +79,64 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
 
   return (
     <Dialog fullWidth={true} maxWidth="xs" open={isOpen} onClose={handleClose}>
-      <DialogTitle className={classes.title} id="patient-dialog-title">
+      <DialogTitle className={title} id="patient-dialog-title">
         {t("patient-profile")}
       </DialogTitle>
       <DialogContent>
-        <List>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="firstName"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("First name")}
-              secondary={user.profile?.firstName}
-            />
-          </ListItem>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="lastname"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("Last name")}
-              secondary={user.profile?.lastName}
-            />
-          </ListItem>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="birthDate"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("Date of birth")}
-              secondary={birthDate}
-            />
-          </ListItem>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="mail"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("Email")}
-              secondary={mail}
-            />
-          </ListItem>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="hbA1c"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("initial-hbA1c")}
-              secondary={hbA1c}
-            />
-          </ListItem>
-          <ListItem divider className={classes.listItems}>
-            <ListItemText
-              id="units"
-              classes={{
-                root: classes.listItemText,
-                primary: classes.primaryListItemText,
-                secondary: classes.secondaryListItemText,
-              }}
-              primary={t("units")}
-              secondary={user?.settings?.units?.bg}
-            />
-          </ListItem>
-        </List>
+        <TextField
+          fullWidth
+          disabled
+          id="firstname"
+          label={t("First name")}
+          value={user.profile?.firstName}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
+        <TextField
+          fullWidth
+          disabled
+          id="lastname"
+          label={t("Last name")}
+          value={user.profile?.lastName}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
+        <TextField
+          fullWidth
+          disabled
+          id="birthDate"
+          label={t("Date of birth")}
+          value={birthDate}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
+        <TextField
+          fullWidth
+          disabled
+          id="mail"
+          label={t("Email")}
+          value={mail}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
+        <TextField
+          fullWidth
+          disabled
+          id="hbA1c"
+          label={t("initial-hbA1c")}
+          value={hbA1c}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
+        <TextField
+          fullWidth
+          disabled
+          id="units"
+          label={t("units")}
+          value={user.settings?.units?.bg || Units.gram}
+          className={textField}
+          InputProps={{ classes: { disabled } }}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
