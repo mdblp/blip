@@ -55,7 +55,7 @@
   "team-page-failed-leave": "Failed to leave a team: {{errorMessage}}",
   "team-page-failed-invite-hcp": "Failed to invite: {{errorMessage}}",
   "team-page-success-remove-member": "Healthcare professional is no longer part of your medical team.",
-  "team-page-success-edit": "Team infos successfully saved",
+  "team-page-success-edit": "Team information successfully saved",
   "team-page-success-leave": "You're no longer a member of the team.",
   "team-page-success-deleted": "Medical team has been deleted.",
   "team-page-success-invite-hcp": "Invitation to {{email}} sent!",
