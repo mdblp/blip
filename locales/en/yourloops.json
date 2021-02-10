@@ -46,6 +46,8 @@
   "not-matching-password": "Password are not matching",
   "password": "Password",
   "password-too-weak": "Password too weak",
+  "profile-updated": "Profile updated",
+  "profile-update-failed": "Profile update failed",
   "required-field": "Required field",
   "select-all-patients": "All patients",
   "select-flagged-patients": "Flagged",

@@ -149,11 +149,11 @@ export const ProfilePage: FunctionComponent = () => {
         .then(() => {
           callbacks.forEach((callback) => callback(false));
           setUser(newUser);
-          setApiReturnAlert({ message: "Profile updated", severity: "success" });
+          setApiReturnAlert({ message: t("profile-updated"), severity: "success" });
         })
-        .catch(() => setApiReturnAlert({ message: "Profile update failed", severity: "error" }));
+        .catch(() => setApiReturnAlert({ message: t("profile-update-failed"), severity: "error" }));
     },
-    []
+    [t]
   );
 
   useEffect(() => {
