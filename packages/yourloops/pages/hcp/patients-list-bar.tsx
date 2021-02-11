@@ -332,11 +332,11 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
             className={classes.buttonAddPatient}
             onClick={handleOpenModalAddPatient}>
             <PersonAddIcon />
-            &nbsp;{t("button-add-patient")}
+            &nbsp;{t("add-patient")}
           </Button>
           <Modal
             id="patient-list-toolbar-modal-add-patient"
-            aria-labelledby={t("aria-modal-add-patient")}
+            aria-labelledby={t("add-patient")}
             className={classes.modalAddPatient}
             open={modalAddPatientOpen}
             onClose={handleCloseModalAddPatient}
@@ -382,7 +382,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
                       onClick={handleModalAddPatient}
                       color="primary"
                       variant="contained">
-                      {t("Create")}
+                      {t("create")}
                     </Button>
                   </div>
                 </form>
