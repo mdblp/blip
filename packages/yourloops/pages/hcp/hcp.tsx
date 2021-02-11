@@ -26,15 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from 'react';
+import * as React from "react";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
-import bows from 'bows';
+import bows from "bows";
 
 import { defer } from "../../lib/utils";
 import HcpNavBar from "../../components/hcp-nav-bar";
 import PatientListPage from "./patients-list";
 import PatientDataPage from "./patient-data";
-import TeamsListPage from "./teams-list";
+import TeamsPage from "./teams-page";
+
+/**
+ * Patient profile page for HCPs
+ */
+function PatientProfile(): JSX.Element {
+  return <div>TODO</div>;
+}
 
 /**
  * Health care professional page
@@ -53,8 +60,9 @@ function HcpPage(props: RouteComponentProps): JSX.Element | null {
       <HcpNavBar />
       <Switch>
         <Route path="/hcp/patients" component={PatientListPage} />
+        <Route path="/hcp/profile/:patientId" component={PatientProfile} />
         <Route path="/hcp/patient/:patientId" component={PatientDataPage} />
-        <Route path="/hcp/teams" component={TeamsListPage} />
+        <Route path="/hcp/teams" component={TeamsPage} />
       </Switch>
     </React.Fragment>
   );

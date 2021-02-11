@@ -31,7 +31,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { User, Profile } from "models/shoreline";
-import { Team } from "models/team";
+import { Team, TeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
@@ -39,7 +39,6 @@ import { MessageNote } from "models/message";
 import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
-
 import http from "../http-status-codes";
 
 const SESSION_TOKEN_KEY = "session-token";
@@ -107,28 +106,78 @@ class AuthApi extends EventTarget {
       this.removeAuthInfoFromSessionStorage();
     }
 
-    this.teams = [{ // FIXME
-      id: "team-1",
-      name: "CHU Grenoble",
-      code: "123456789",
-      ownerId: "abcdef",
-      type: "medical",
-      address: {
-        line1: "Boulevard de la Chantourne",
-        zip: "38700",
-        city: "La Tronche",
-        country: "FR",
+    this.teams = [
+      {
+        // FIXME
+        id: "team-1",
+        name: "CHU Grenoble",
+        code: "123456789",
+        ownerId: "abcdef",
+        type: TeamType.medical,
+        address: {
+          line1: "Boulevard de la Chantourne",
+          line2: "Cedex 38703",
+          zip: "38700",
+          city: "La Tronche",
+          country: "FR",
+        },
+        phone: "+33 (0)4 76 76 75 75",
+        email: "secretariat-diabethologie@chu-grenoble.fr",
+        members: [
+          {
+            teamId: "team-1",
+            userId: "a0a1a2a3",
+            role: TeamMemberRole.viewer,
+            user: {
+              userid: "a0a1a2a3",
+              username: "jean.dupont@chu-grenoble.fr",
+              profile: { firstName: "Jean", lastName: "Dupont", fullName: "Jean Dupont" },
+            },
+          },
+        ],
       },
-      phone: "+33 (0)4 76 76 75 75",
-      email: "secretariat-diabethologie@chu-grenoble.fr",
-    }, {
-      id: "team-2",
-      name: "Clinique Nantes",
-      code: "987654321",
-      phone: "00-00-00-00-00",
-      ownerId: "abcdef",
-      type: "medical",
-    }];
+      {
+        id: "team-2",
+        name: "Charité – Universitätsmedizin Berlin",
+        code: "987654321",
+        phone: "+49 30 450 - 50",
+        address: {
+          line1: "Charitéplatz 1",
+          city: "Berlin",
+          zip: "10117",
+          country: "DE",
+        },
+        ownerId: "abcdef",
+        type: TeamType.medical,
+        members: [
+          {
+            teamId: "team-2",
+            userId: "b0b1b2b3",
+            role: TeamMemberRole.admin,
+            user: {
+              userid: "b0b1b2b3",
+              username: "adelheide.alvar@charite.de",
+              profile: { firstName: "Adelheide", lastName: "Alvar", fullName: "Adelheide Alvar" },
+            },
+          },
+        ],
+      },
+    ];
+
+    if (this.user !== null) {
+      this.teams[0].members?.push({
+        teamId: "team-1",
+        userId: this.user.userid,
+        role: TeamMemberRole.admin,
+        user: this.user,
+      });
+      this.teams[1].members?.push({
+        teamId: "team-2",
+        userId: this.user.userid,
+        role: TeamMemberRole.admin,
+        user: this.user,
+      });
+    }
 
     // Listen to storage events, to be able to monitor
     // logout on others tabs.
@@ -190,12 +239,12 @@ class AuthApi extends EventTarget {
     this.logout(); // To be sure to reset the values
 
     if (!_.isString(username) || _.isEmpty(username)) {
-      reason = t("Must specify a username") as string;
+      reason = t("no-username") as string;
       return Promise.reject(new Error(reason));
     }
 
     if (!_.isString(password) || _.isEmpty(password)) {
-      reason = t("Must specify a password") as string;
+      reason = t("no-password") as string;
       return Promise.reject(new Error(reason));
     }
 
@@ -218,8 +267,10 @@ class AuthApi extends EventTarget {
       case http.StatusUnauthorized:
         if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
           if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-            reason = t("Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
-              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT });
+            reason = t(
+              "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
+              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
+            );
           } else {
             reason = t("Wrong username or password");
           }
@@ -241,7 +292,7 @@ class AuthApi extends EventTarget {
 
     this.wrongCredentialCount = 0;
     this.sessionToken = response.headers.get(SESSION_TOKEN_HEADER);
-    this.user = await response.json() as User;
+    this.user = (await response.json()) as User;
 
     if (!Array.isArray(this.user.roles)) {
       this.user.roles = ["patient"];
@@ -254,6 +305,23 @@ class AuthApi extends EventTarget {
     sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
 
     this.sendMetrics("setUserId", this.user.userid);
+
+    // FIXME: Remove me!
+    if (this.teams !== null) {
+      this.teams[0].members?.push({
+        teamId: "team-1",
+        userId: this.user.userid,
+        role: TeamMemberRole.admin,
+        user: this.user,
+      });
+      this.teams[1].members?.push({
+        teamId: "team-2",
+        userId: this.user.userid,
+        role: TeamMemberRole.admin,
+        user: this.user,
+      });
+    }
+    // END FIXME
 
     return this.user;
   }
@@ -269,7 +337,8 @@ class AuthApi extends EventTarget {
     return this.authenticate(username, password)
       .then((user: User) => {
         return this.getUserProfile(user);
-      }).finally(() => {
+      })
+      .finally(() => {
         this.loginLock = false;
       });
   }
@@ -308,7 +377,7 @@ class AuthApi extends EventTarget {
   public async getUserShares(): Promise<User[]> {
     if (!this.isLoggedIn) {
       // Users should never see this:
-      throw new Error(t("You are not logged-in"));
+      throw new Error(t("not-logged-in"));
     }
 
     const seagullURL = new URL(`/metadata/users/${this.user?.userid}/users`, appConfig.API_HOST);
@@ -321,18 +390,18 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      this.patients = await response.json() as User[];
+      this.patients = (await response.json()) as User[];
       return this.patients;
     }
 
-    const responseBody = await response.json() as APIErrorResponse;
+    const responseBody = (await response.json()) as APIErrorResponse;
     throw new Error(t(responseBody.reason));
   }
 
   public async getUserProfile(user: User): Promise<User> {
     if (!this.isLoggedIn) {
       // Users should never see this:
-      throw new Error(t("You are not logged-in"));
+      throw new Error(t("not-logged-in"));
     }
 
     const seagullURL = new URL(`/metadata/${user.userid}/profile`, appConfig.API_HOST);
@@ -346,9 +415,9 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      user.profile = await response.json() as Profile;
+      user.profile = (await response.json()) as Profile;
     } else {
-      const responseBody = await response.json() as APIErrorResponse;
+      const responseBody = (await response.json()) as APIErrorResponse;
       throw new Error(t(responseBody.reason));
     }
 
@@ -361,7 +430,7 @@ class AuthApi extends EventTarget {
   public async flagPatient(userId: string): Promise<string[]> {
     if (!this.isLoggedIn || this.user === null) {
       // Users should never see this:
-      throw new Error(t("You are not logged-in"));
+      throw new Error(t("not-logged-in"));
     }
     if (typeof this.user.preferences !== "object" || this.user.preferences === null) {
       this.user.preferences = {
@@ -381,7 +450,7 @@ class AuthApi extends EventTarget {
     }
 
     // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(50 + Math.random()*100);
+    await waitTimeout(50 + Math.random() * 100);
 
     return this.user.preferences.patientsStarred;
   }
@@ -411,7 +480,7 @@ class AuthApi extends EventTarget {
     });
 
     if (response.ok) {
-      const patientData = await response.json() as PatientData;
+      const patientData = (await response.json()) as PatientData;
 
       defer(() => {
         this.dispatchEvent(new PatientDataLoadedEvent(patient as User, patientData));
@@ -420,7 +489,7 @@ class AuthApi extends EventTarget {
       return patientData;
     }
 
-    const responseBody = await response.json() as APIErrorResponse;
+    const responseBody = (await response.json()) as APIErrorResponse;
     throw new Error(t(responseBody.reason));
   }
 
@@ -431,7 +500,7 @@ class AuthApi extends EventTarget {
   public async startMessageThread(message: MessageNote): Promise<string> {
     if (!this.isLoggedIn) {
       // Users should never see this:
-      throw new Error(t("You are not logged-in"));
+      throw new Error(t("not-logged-in"));
     }
 
     const messageURL = new URL(`/message/send/${message.groupid}`, appConfig.API_HOST);
@@ -454,13 +523,13 @@ class AuthApi extends EventTarget {
       return result.id as string;
     }
 
-    const responseBody = await response.json() as APIErrorResponse;
+    const responseBody = (await response.json()) as APIErrorResponse;
     throw new Error(t(responseBody.reason));
   }
 
   public async fetchTeams(): Promise<Team[]> {
     // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random()*200);
+    await waitTimeout(500 + Math.random() * 200);
     return _.cloneDeep(this.teams ?? []);
   }
 
@@ -477,7 +546,7 @@ class AuthApi extends EventTarget {
     team.ownerId = this.user?.userid as string;
     this.teams.push(team as Team);
     // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random()*200);
+    await waitTimeout(500 + Math.random() * 200);
     return _.cloneDeep(this.teams);
   }
 
@@ -494,8 +563,121 @@ class AuthApi extends EventTarget {
       }
     }
     // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random()*200);
+    await waitTimeout(500 + Math.random() * 200);
     return _.cloneDeep(this.teams);
+  }
+
+  public async leaveTeam(team: Team): Promise<Team[]> {
+    if (this.teams === null || this.teams.length < 1) {
+      throw new Error("Empty team list !");
+    }
+    if (this.user === null) {
+      throw new Error("Not logged-in !");
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    if (Math.random() < 0.2) {
+      // eslint-disable-next-line no-magic-numbers
+      await waitTimeout(500 + Math.random() * 200);
+      throw new Error("A random error");
+    }
+
+    const nTeams = this.teams.length;
+    for (let i = 0; i < nTeams; i++) {
+      const thisTeam = this.teams[i];
+      if (thisTeam.id === team.id && Array.isArray(thisTeam.members)) {
+        const userId = this.user.userid;
+        const idx = thisTeam.members.findIndex((tm: TeamMember) => tm.userId === userId);
+        if (idx > -1) {
+          this.teams.splice(i, 1);
+        }
+        break;
+      }
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random() * 200);
+    return _.cloneDeep(this.teams);
+  }
+
+  public async removeTeamMember(team: Team, userId: string): Promise<Team[]> {
+    if (this.teams === null || this.teams.length < 1) {
+      throw new Error("Empty team list!");
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    if (Math.random() < 0.2) {
+      // eslint-disable-next-line no-magic-numbers
+      await waitTimeout(500 + Math.random() * 200);
+      throw new Error("A random error");
+    }
+
+    const nTeams = this.teams.length;
+    for (let i = 0; i < nTeams; i++) {
+      const thisTeam = this.teams[i];
+      if (thisTeam.id === team.id) {
+        if (Array.isArray(thisTeam.members)) {
+          const idx = thisTeam.members.findIndex((tm: TeamMember): boolean => tm.userId === userId);
+          if (idx > -1) {
+            thisTeam.members.splice(idx, 1);
+          }
+        }
+        break;
+      }
+    }
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random() * 200);
+    return _.cloneDeep(this.teams);
+  }
+
+  public async changeTeamUserRole(team: Team, userId: string, admin: boolean): Promise<Team[]> {
+    if (this.teams === null || this.teams.length < 1) {
+      throw new Error("Empty team list!");
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    if (Math.random() < 0.2) {
+      // eslint-disable-next-line no-magic-numbers
+      await waitTimeout(500 + Math.random() * 200);
+      throw new Error("A random error");
+    }
+
+    const nTeams = this.teams.length;
+    for (let i = 0; i < nTeams; i++) {
+      const thisTeam = this.teams[i];
+      if (thisTeam.id === team.id) {
+        if (!Array.isArray(thisTeam.members)) {
+          throw new Error("No member for this team !");
+        }
+        for (const member of thisTeam.members) {
+          if (member.userId === userId) {
+            member.role = admin ? TeamMemberRole.admin : TeamMemberRole.viewer;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random() * 200);
+    return _.cloneDeep(this.teams);
+  }
+
+  public async inviteHcpTeamMember(team: Team, email: string, role: TeamMemberRole): Promise<void> {
+    if (this.teams === null || this.teams.length < 1) {
+      throw new Error("Empty team list!");
+    }
+
+    // eslint-disable-next-line no-magic-numbers
+    if (Math.random() < 0.2) {
+      // eslint-disable-next-line no-magic-numbers
+      await waitTimeout(500 + Math.random() * 200);
+      throw new Error("A random error");
+    }
+
+    this.log.info(`Invite ${email} to ${team.name} with role ${role}`);
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random() * 200);
   }
 
   /**
@@ -512,7 +694,9 @@ class AuthApi extends EventTarget {
       matomoPaq = window._paq;
       if (!_.isObject(matomoPaq)) {
         this.log.error("Matomo do not seems to be available, wrong configuration");
-      } if (eventName === "CookieConsent") {
+        return;
+      }
+      if (eventName === "CookieConsent") {
         matomoPaq.push(["setConsentGiven", properties]);
       } else if (eventName === "setCustomUrl") {
         matomoPaq.push(["setCustomUrl", properties]);

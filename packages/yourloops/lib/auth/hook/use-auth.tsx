@@ -30,29 +30,35 @@ import * as React from "react";
 import { User } from "models/shoreline";
 import AuthApiClient from "../api";
 
-interface IAuthContext {
-  user: User | null,
-  login(username: string , password: string): Promise<User>,
-  logout(): void,
-  signup(username: string , password: string): void,
-  isLoggedIn(): boolean,
-  sendPasswordResetEmail(username: string): Promise<boolean>,
+/**
+ * The auth provider hook return values.
+ */
+export interface IAuthContext {
+  user: User | null;
+  login(username: string, password: string): Promise<User>;
+  logout(): void;
+  signup(username: string, password: string): void;
+  isLoggedIn(): boolean;
+  sendPasswordResetEmail(username: string): Promise<boolean>;
 }
 
-interface IAuthProvider {
+export interface IAuthProvider {
   children?: React.ReactNode;
+  provider: () => IAuthContext;
 }
 
 export const AuthContext = React.createContext({} as IAuthContext);
 
 // Hook for child components to get the auth object
 // and re-render when it changes.
-export function useAuth() : IAuthContext {
+export function useAuth(): IAuthContext {
   return React.useContext(AuthContext);
 }
 
-// Provider hook that creates auth object and handles state
-function useProvideAuth() {
+/**
+ * Provider hook that creates auth object and handles state
+ */
+export function DefaultAuthProvider(): IAuthContext {
   const [user, setUser] = React.useState<User | null>(AuthApiClient.whoami);
 
   // Wrap any methods we want to use making sure
@@ -64,15 +70,15 @@ function useProvideAuth() {
   };
 
   const signup = (username: string, password: string): void => {
-    console.log('test signup', username, password);
+    console.log("test signup", username, password);
   };
 
   const logout = (): void => AuthApiClient.logout();
 
-  const isLoggedIn = () : boolean => AuthApiClient.isLoggedIn;
+  const isLoggedIn = (): boolean => AuthApiClient.isLoggedIn;
 
-  const sendPasswordResetEmail = (username: string) : Promise<boolean> => {
-    console.log("send password reset email ",username);
+  const sendPasswordResetEmail = (username: string): Promise<boolean> => {
+    console.log("send password reset email ", username);
     return Promise.resolve(true);
   };
 
@@ -89,10 +95,8 @@ function useProvideAuth() {
   //       setUser(null);
   //     }
   //   });
-
   //   // Cleanup subscription on unmount
   //   return () => unsubscribe();
-
   // }, []);
 
   // Return the user object and auth methods
@@ -106,13 +110,14 @@ function useProvideAuth() {
   };
 }
 
-// Provider component that wraps your app and makes auth object
-// available to any child component that calls useAuth().
-export const AuthProvider: React.FC<React.ReactNode> = ({ children }: IAuthProvider) => {
-  const auth = useProvideAuth();
-  return (
-    <AuthContext.Provider value={ auth }>
-      { children }
-    </AuthContext.Provider>
-  );
-};
+/**
+ * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
+ * @param props for auth provider & children
+ */
+export function CustomAuthProvider(props: IAuthProvider): JSX.Element {
+  const { provider, children } = props;
+  const auth = provider();
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+export default CustomAuthProvider;
