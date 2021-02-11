@@ -233,7 +233,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
     {
       value: TeamType.private,
-      label: t("private-pratice"),
+      label: t("private-practice"),
       icon: <MedicalServiceIcon className={classes.selectFilterIcon} />,
     },
     {
