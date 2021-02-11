@@ -14,10 +14,17 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-export interface PostalAddress {
+enum Units {
+  mole = "mmol/L",
+  gram = "mg/dL",
+}
+
+interface PostalAddress {
   line1: string;
   line2?: string;
   zip: string;
   city: string;
   country: string;
 }
+
+export { PostalAddress, Units };

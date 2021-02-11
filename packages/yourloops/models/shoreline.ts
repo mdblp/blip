@@ -26,10 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Units {
-  mole = "mmol/L",
-  gram = "mg/dL",
-}
+import { Units } from "./generic";
 
 enum UserRoles {
   hcp = "hcp",
@@ -82,4 +79,4 @@ interface User {
   preferences?: Preferences;
 }
 
-export { User, Preferences, Profile, Settings, Units, UserRoles };
+export { User, Preferences, Profile, Settings, UserRoles };

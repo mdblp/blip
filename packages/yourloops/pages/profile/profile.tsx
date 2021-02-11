@@ -41,7 +41,8 @@ import { Password } from "../../components/utils/password";
 import { REGEX_BIRTHDATE, REGEX_EMAIL } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
-import { Preferences, Profile, Roles, Settings, Units, User } from "../../models/shoreline";
+import { Units } from "../../models/generic";
+import { Preferences, Profile, UserRoles, Settings, User } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 import { Alert } from "@material-ui/lab";
 
@@ -135,7 +136,7 @@ export const ProfilePage: FunctionComponent = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [unit, setUnit] = useState<Units>(Units.gram);
-  const [role, setRole] = useState<Roles | null>(null);
+  const [role, setRole] = useState<UserRoles | null>(null);
   const [birthDate, setBirthDate] = useState<string>("");
   const [hbA1c, setHbA1c] = useState<string>("8.5%"); // TODO
   const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
@@ -207,7 +208,7 @@ export const ProfilePage: FunctionComponent = () => {
       // eslint-disable-next-line no-magic-numbers
       password: password.length > 0 && password.length < 10, // TODO: define rules
       passwordConfirmation: passwordConfirmation !== password,
-      birthDate: role === Roles.patient && !REGEX_BIRTHDATE.test(birthDate),
+      birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
     }),
     [firstName, name, mail, password, passwordConfirmation, birthDate, role]
   );
@@ -311,7 +312,7 @@ export const ProfilePage: FunctionComponent = () => {
             className={classes.textField}
           />
 
-          {role === Roles.clinic ? (
+          {role !== UserRoles.patient ? (
             <Fragment>
               <TextField
                 id="mail"
@@ -363,7 +364,7 @@ export const ProfilePage: FunctionComponent = () => {
           <FormControl className={classes.formControl}>
             <InputLabel id="units-input-label">{t("units")}</InputLabel>
             <Select
-              disabled={role !== Roles.clinic}
+              disabled={role === UserRoles.patient}
               labelId="unit-selector"
               id="unit-selector"
               value={unit}
