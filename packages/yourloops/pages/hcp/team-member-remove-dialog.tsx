@@ -105,10 +105,10 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
             components={{ strong: <strong /> }}
             values={{ hcpFirstName, hcpLastName }}
             parent={React.Fragment}>
-            Are you sure you want to remove
+            Are you sure you want to remove{" "}
             <strong>
               {hcpFirstName} {hcpLastName}
-            </strong>
+            </strong>{" "}
             from this medical team?
           </Trans>
         </DialogContentText>
