@@ -34,21 +34,25 @@ import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
 import { t } from "../../../lib/language";
+import { Teams, Team } from "../../../lib/team";
 import apiClient from "../../../lib/auth/api";
 import TeamsPage from "../../../pages/hcp/teams-page";
 
 import { waitTimeout } from "../../../lib/utils";
 import {
   teams,
+  patients,
   loggedInUsers,
 } from "../../common";
 
 function testTeamPage(): void {
   const apiTimeout = 50;
+  const team0 = new Team(teams[0]);
   let component: ReactWrapper | null = null;
 
   before(() => {
     sinon.stub(apiClient, "whoami").returns(loggedInUsers.hcp);
+    sinon.stub(apiClient, "getUserShares");
     sinon.stub(apiClient, "fetchTeams");
     sinon.stub(apiClient, "leaveTeam");
   });
@@ -62,8 +66,13 @@ function testTeamPage(): void {
       component = null;
     }
     (apiClient.fetchTeams as sinon.SinonStub).resetHistory();
-    (apiClient.fetchTeams as sinon.SinonStub).resolves(_.cloneDeep(teams));
+    (apiClient.getUserShares as sinon.SinonStub).resetHistory();
     (apiClient.leaveTeam as sinon.SinonStub).resetHistory();
+
+    (apiClient.fetchTeams as sinon.SinonStub).resolves(_.cloneDeep(teams));
+    (apiClient.getUserShares as sinon.SinonStub).resolves(_.cloneDeep(patients));
+
+    Teams.reset();
   });
 
   async function createComponent(): Promise<ReactWrapper> {
@@ -118,7 +127,7 @@ function testTeamPage(): void {
       expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title not exists").to.be.false;
 
       const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(teams[0]);
+      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
 
       await waitTimeout(apiTimeout);
       component.update();
@@ -142,14 +151,14 @@ function testTeamPage(): void {
 
       component = await createComponent();
       const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(teams[0]);
+      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
       await waitTimeout(apiTimeout);
       component.update();
       component.find("#team-leave-dialog-button-leave").last().simulate("click");
 
       await showDialog;
       expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
-      expect(leaveTeamStub.calledWith(teams[0]), "calledWith").to.be.true;
+      expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
 
       expect(teamPage.state.apiReturnAlert).to.be.deep.equal({ message: t("team-page-leave-success"), severity: "success" });
     });
@@ -161,14 +170,14 @@ function testTeamPage(): void {
 
       component = await createComponent();
       const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(teams[0]);
+      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
       await waitTimeout(apiTimeout);
       component.update();
       component.find("#team-leave-dialog-button-leave").last().simulate("click");
 
       await showDialog;
       expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
-      expect(leaveTeamStub.calledWith(teams[0]), "calledWith").to.be.true;
+      expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
 
       const apiReturnAlert = teamPage.state.apiReturnAlert;
       const apiReturnAlertExpected = {

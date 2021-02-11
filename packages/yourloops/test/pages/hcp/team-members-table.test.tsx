@@ -33,13 +33,14 @@ import sinon from "sinon";
 
 import { waitTimeout } from "../../../lib/utils";
 import AuthProvider from "../../../lib/auth/hook/use-auth";
+import { Team } from "../../../lib/team";
 import TeamMembers, { TeamMembersProps } from "../../../pages/hcp/team-members-table";
 import { teams, TestAuthProviderHCP, loggedInUsers } from "../../common";
 
 function testTeamMembersTable(): void {
   const apiTimeout = 50;
   const defaultProps: TeamMembersProps = {
-    team: teams[0],
+    team: new Team(teams[0]),
     onShowRemoveTeamMemberDialog: sinon.stub().returns(waitTimeout(apiTimeout)),
     onSwitchAdminRole: sinon.stub().returns(waitTimeout(apiTimeout)),
   };
@@ -161,7 +162,7 @@ function testTeamMembersTable(): void {
     it("should not display the remove team member button and switch role checkbox must be disabled", () => {
       const props: TeamMembersProps = {
         ...defaultProps,
-        team: teams[1],
+        team: new Team(teams[1]),
       };
       component = mount(
         <AuthProvider provider={TestAuthProviderHCP}>

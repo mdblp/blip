@@ -37,8 +37,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
 import { t } from "../../lib/language";
-import { User } from "../../models/shoreline";
-import { Team } from "../../models/team";
+import { Teams, Team, TeamUser } from "../../lib/team";
 import { SortDirection, FilterType, SortFields } from "./types";
 import { errorTextFromException } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
@@ -48,8 +47,8 @@ import PatientListTable from "./patients-list-table";
 interface PatientListPageState {
   loading: boolean;
   errorMessage: string | null;
-  patients: User[];
-  allPatients: User[];
+  patients: TeamUser[];
+  allPatients: TeamUser[];
   teams: Team[];
   flagged: string[];
   order: SortDirection;
@@ -111,7 +110,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
           <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
             {errorMessage}
           </Alert>
-          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={() => this.onRefresh(true)}>
             {t("button-refresh-page-on-error")}
           </Button>
         </div>
@@ -142,7 +141,6 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
             flagged={flagged}
             order={order}
             orderBy={orderBy}
-            log={this.log}
             onClickPatient={this.onSelectPatient}
             onFlagPatient={this.onFlagPatient}
             onSortList={this.onSortList}
@@ -152,24 +150,26 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     );
   }
 
-  private onRefresh(): void {
-    this.setState(PatientListPage.getInitialState(), async () => {
-      try {
-        const [teams, patients] = await Promise.all([apiClient.fetchTeams(), apiClient.getUserShares()]);
-        this.log.info("Fetching teams & patients: OK");
-        this.setState({ flagged: apiClient.whoami?.preferences?.patientsStarred ?? [] });
-        this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
-      } catch (reason: unknown) {
-        this.log.error("onRefresh", reason);
-        const errorMessage = errorTextFromException(reason);
-        this.setState({ loading: false, errorMessage });
-      }
-    });
+  private onRefresh(forceRefresh = false): void {
+    this.setState(PatientListPage.getInitialState(), () => this.doRefresh(forceRefresh));
   }
 
-  private onSelectPatient(user: User): void {
+  private async doRefresh(forceRefresh = false) {
+    try {
+      const teams = await Teams.refresh(forceRefresh);
+      const patients = Teams.getPatients();
+      this.setState({ flagged: apiClient.whoami?.preferences?.patientsStarred ?? [] });
+      this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
+    } catch (reason: unknown) {
+      this.log.error("doRefresh", reason);
+      const errorMessage = errorTextFromException(reason);
+      this.setState({ loading: false, errorMessage });
+    }
+  }
+
+  private onSelectPatient(user: TeamUser): void {
     this.log.info("Click on", user);
-    this.props.history.push(`/hcp/patient/${user.userid}`);
+    this.props.history.push(`/hcp/patient/${user.userId}`);
   }
 
   private onFlagPatient(userId: string): void {
@@ -182,17 +182,10 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     this.log.info("onInvitePatient", username, teamId);
     this.setState({ loading: true, errorMessage: null }, async () => {
       try {
-        // await apiClient.invitePatient(username, teamId);
-        const patients = await apiClient.getUserShares();
-        this.setState({ patients, allPatients: patients, loading: false }, this.updatePatientList);
+        await apiClient.invitePatient(username, teamId);
+        await this.doRefresh();
       } catch (reason: unknown) {
-        let errorMessage: string;
-        if (reason instanceof Error) {
-          errorMessage = reason.message;
-        } else {
-          const s = new String(reason);
-          errorMessage = s.toString();
-        }
+        const errorMessage = errorTextFromException(reason);
         this.setState({ loading: false, errorMessage });
       }
     });
@@ -205,7 +198,7 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
    * @param flagged Pinned patient
    * @param orderBy Sort field
    */
-  private doCompare(a: User, b: User, orderBy: SortFields): number {
+  private doCompare(a: TeamUser, b: TeamUser, orderBy: SortFields): number {
     let aValue: string;
     let bValue: string;
     switch (orderBy) {
@@ -243,46 +236,47 @@ class PatientListPage extends React.Component<RouteComponentProps, PatientListPa
     let patients = allPatients;
     if (filter.length > 0) {
       const searchText = filter.toLocaleLowerCase();
-      patients = allPatients.filter((patient: User): boolean => {
+      patients = allPatients.filter((patient: TeamUser): boolean => {
         switch (filterType) {
         case "all":
           break;
         case "flagged":
-          if (!flagged.includes(patient.userid)) {
+          if (!flagged.includes(patient.userId)) {
             return false;
           }
           break;
         case "pending":
-          return false; // TODO
+          if (!patient.isInvitationPending()) {
+            return false;
+          }
+          break;
         default:
-          if ((patient.teams?.includes(filterType) ?? false) === false) {
+          if (!patient.isInTeam(filterType)) {
             return false;
           }
           break;
         }
 
-        const firstName = patient.profile?.firstName ?? "";
-        if (firstName.toLocaleLowerCase().includes(searchText)) {
+        if (patient.firstName.toLocaleLowerCase().includes(searchText)) {
           return true;
         }
-        const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
-        if (lastName.toLocaleLowerCase().includes(searchText)) {
+        if (patient.lastName.toLocaleLowerCase().includes(searchText)) {
           return true;
         }
         return false;
       });
     } else if (filterType === "flagged") {
-      patients = allPatients.filter((patient: User): boolean => flagged.includes(patient.userid));
+      patients = allPatients.filter((patient: TeamUser): boolean => flagged.includes(patient.userId));
     } else if (filterType === "pending") {
-      patients = []; // TODO
+      patients = allPatients.filter((patient) => patient.isInvitationPending());
     } else if (filterType !== "all") {
-      patients = allPatients.filter((patient: User): boolean => patient.teams?.includes(filterType) ?? false);
+      patients = allPatients.filter((patient: TeamUser): boolean => patient.isInTeam(filterType) ?? false);
     }
 
     // Sort the patients
-    patients.sort((a: User, b: User): number => {
-      const aFlagged = flagged.includes(a.userid);
-      const bFlagged = flagged.includes(b.userid);
+    patients.sort((a: TeamUser, b: TeamUser): number => {
+      const aFlagged = flagged.includes(a.userId);
+      const bFlagged = flagged.includes(b.userId);
       // Flagged: always first
       if (aFlagged && !bFlagged) {
         return -1;

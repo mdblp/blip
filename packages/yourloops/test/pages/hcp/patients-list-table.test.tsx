@@ -39,7 +39,6 @@ function testPatientListTable(): void {
     flagged: [],
     order: "asc",
     orderBy: "lastname",
-    log: console,
     onClickPatient: sinon.spy(),
     onFlagPatient: sinon.spy(),
     onSortList: sinon.spy(),

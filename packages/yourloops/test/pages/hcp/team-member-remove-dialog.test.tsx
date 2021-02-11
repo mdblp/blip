@@ -31,13 +31,14 @@ import { expect } from "chai";
 import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
+import { Team } from "../../../lib/team";
 import RemoveMemberDialog from "../../../pages/hcp/team-member-remove-dialog";
 import { RemoveMemberDialogContentProps } from "../../../pages/hcp/types";
 import { teams } from "../../common";
 
 function testTeamRemoveMemberDialog(): void {
   const defaultProps: RemoveMemberDialogContentProps = {
-    team: teams[0],
+    team: new Team(teams[0]),
     userId: teams[0].members[0].userId,
     onDialogResult: sinon.spy(),
   };
@@ -64,7 +65,7 @@ function testTeamRemoveMemberDialog(): void {
     expect(component.html()).to.be.a("string").not.empty;
     const user = teams[0].members[0].user;
     const question = component.find("#team-members-dialog-rmmember-question").last();
-    expect(question.text()).to.be.equal(`Are you sure you want to remove ${user.profile.firstName} ${user.profile.lastName} from this medical team?`);
+    expect(question.text()).to.be.equal(`Are you sure you want to remove ${user.profile?.firstName} ${user.profile?.lastName} from this medical team?`);
   });
 
   it("should return false if the user click on the cancel button", () => {

@@ -31,13 +31,14 @@ import { expect } from "chai";
 import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
+import { Team } from "../../../lib/team";
 import AddMemberDialog from "../../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../../pages/hcp/types";
 import { teams } from "../../common";
 
 function testTeamAddMemberDialog(): void {
   const defaultProps: AddMemberDialogContentProps = {
-    team: teams[0],
+    team: new Team(teams[0]),
     onDialogResult: sinon.spy(),
   };
 

@@ -26,11 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team, TeamMemberRole } from "../../models/team";
+import { ITeam, TeamMemberRole, TeamType } from "../../models/team";
+import { Team } from "../../lib/team";
 
 export type SortDirection = "asc" | "desc";
 export type SortFields = "lastname" | "firstname";
-export type FilterType = "all" | "flagged" | "pending" | "private" | string;
+export type FilterType = "all" | "flagged" | "pending" | TeamType.private | string;
 
 export interface SwitchRoleDialogContentProps {
   team: Team;
@@ -56,7 +57,7 @@ export interface RemoveMemberDialogContentProps {
 }
 
 export interface TeamEditModalContentProps {
-  team: Partial<Team>;
+  team: Team | null;
   /** Promise callback for the modal. null means cancel edit */
-  onSaveTeam: (team: Partial<Team> | null) => void;
+  onSaveTeam: (team: Partial<ITeam> | null) => void;
 }

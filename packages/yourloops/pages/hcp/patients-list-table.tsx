@@ -43,16 +43,16 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
-import { User } from "../../models/shoreline";
+import apiClient from "../../lib/auth/api";
+import { TeamUser } from "../../lib/team";
 import { SortDirection, SortFields } from "./types";
 
 export interface PatientListTableProps {
-  patients: User[];
+  patients: TeamUser[];
   flagged: string[];
   order: SortDirection;
   orderBy: SortFields;
-  log: Console;
-  onClickPatient: (user: User) => void;
+  onClickPatient: (user: TeamUser) => void;
   onFlagPatient: (userId: string) => void;
   onSortList: (field: SortFields, direction: SortDirection) => void;
 }
@@ -65,6 +65,10 @@ const patientListStyle = makeStyles((theme: Theme) => {
     tableRow: {
       cursor: "pointer",
     },
+    tableRowPending: {
+      cursor: "pointer",
+      backgroundColor: "grey",
+    },
     tableRowHeader: {
       fontVariant: "small-caps",
     },
@@ -75,7 +79,7 @@ const patientListStyle = makeStyles((theme: Theme) => {
 });
 
 function PatientListTable(props: PatientListTableProps): JSX.Element {
-  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList, log } = props;
+  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const elems = [];
@@ -83,17 +87,15 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
 
   for (let i = 0; i < nPatients; i++) {
     const patient = patients[i];
-    const userId = patient.userid;
-    const firstName = patient.profile?.firstName ?? "";
-    const lastName = patient.profile?.lastName ?? patient.profile?.fullName ?? patient.username;
+    const userId = patient.userId;
     const isFlagged = flagged.includes(userId);
     const onClickFlag = (e: React.MouseEvent): void => {
       e.stopPropagation();
-      log.debug("onClickFlag", e);
+      apiClient.sendMetrics("flag-patient", { flagged: !isFlagged });
       onFlagPatient(userId);
     };
-    const onRowClick = (e: React.MouseEvent): void => {
-      log.debug("onRowClick", patient, e);
+    const onRowClick = (/* e: React.MouseEvent */): void => {
+      apiClient.sendMetrics("show-patient-data", { flagged: isFlagged });
       onClickPatient(patient);
     };
     elems.push(
@@ -109,8 +111,8 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
             {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
           </IconButton>
         </TableCell>
-        <TableCell id={`patients-list-row-lastname-${userId}`}>{lastName}</TableCell>
-        <TableCell id={`patients-list-row-firstname-${userId}`}>{firstName}</TableCell>
+        <TableCell id={`patients-list-row-lastname-${userId}`}>{patient.lastName}</TableCell>
+        <TableCell id={`patients-list-row-firstname-${userId}`}>{patient.firstName}</TableCell>
         <TableCell id={`patients-list-row-tir-${userId}`}>{t("N/A")}</TableCell>
         <TableCell id={`patients-list-row-avg-glucose-${userId}`}>{t("N/A")}</TableCell>
         <TableCell id={`patients-list-row-tbr-${userId}`}>{t("N/A")}</TableCell>

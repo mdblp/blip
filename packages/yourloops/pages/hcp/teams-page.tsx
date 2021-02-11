@@ -37,7 +37,8 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Snackbar from "@material-ui/core/Snackbar";
 
-import { Team, TeamMemberRole, TeamType } from "../../models/team";
+import { ITeam, TeamMemberRole, TeamType } from "../../models/team";
+import { Teams, Team } from "../../lib/team";
 import { t } from "../../lib/language";
 import { errorTextFromException } from "../../lib/utils";
 import apiClient from "../../lib/auth/api";
@@ -142,7 +143,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
           <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
             {errorMessage}
           </Alert>
-          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={this.onRefresh}>
+          <Button id="button-api-error-message" variant="contained" color="secondary" onClick={() => this.onRefresh(true)}>
             {t("button-refresh-page-on-error")}
           </Button>
         </div>
@@ -151,6 +152,9 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     const teamsItems: JSX.Element[] = [];
     for (const team of teams) {
+      if (team.type !== TeamType.medical) {
+        continue;
+      }
       teamsItems.push(
         <Grid item xs={12} key={team.id}>
           <TeamCard
@@ -196,11 +200,11 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
     );
   }
 
-  onRefresh(): void {
+  onRefresh(forceRefresh = false): void {
     this.log.info("Refreshing the page");
     this.setState(TeamsPage.initialState(), async () => {
       try {
-        const teams = await apiClient.fetchTeams();
+        const teams = await Teams.refresh(forceRefresh);
         this.setState({ teams, loading: false });
       } catch (reason: unknown) {
         this.log.error("onRefresh", reason);
@@ -214,7 +218,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
     this.setState({ apiReturnAlert: null });
   }
 
-  async onShowLeaveTeamDialog(team: Team): Promise<void> {
+  async onShowLeaveTeamDialog(team: Team): Promise<boolean> {
     this.log.debug("onShowLeaveTeamDialog", { team });
 
     const getConfirmation = (): Promise<boolean> => {
@@ -229,10 +233,13 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     if (isConfirmed) {
       try {
-        const onlyMember = !((team.members?.length ?? 0) > 1);
-        const teams = await apiClient.leaveTeam(team);
+        const onlyMember = !((team.members.length ?? 0) > 1);
+        await apiClient.leaveTeam(team);
+        const teams = await Teams.refresh(true);
         const message = onlyMember ? t("team-page-success-deleted") : t("team-page-leave-success");
         this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
+        return true;
+
       } catch (reason: unknown) {
         this.log.error("onShowLeaveTeamDialog", reason);
         const errorMessage = errorTextFromException(reason);
@@ -240,6 +247,7 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
         this.setState({ apiReturnAlert: { message, severity: "error" } });
       }
     }
+    return false;
   }
 
   async onShowRemoveTeamMemberDialog(team: Team, userId: string): Promise<void> {
@@ -257,7 +265,8 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     if (isConfirmed) {
       try {
-        const teams = await apiClient.removeTeamMember(team, userId);
+        await apiClient.removeTeamMember(team, userId);
+        const teams = await Teams.refresh(true);
         const message = t("team-page-success-remove-member");
         this.setState({ teams, apiReturnAlert: { message, severity: "success" } });
       } catch (reason: unknown) {
@@ -274,8 +283,8 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
 
     // Promise which show the modal to edit a team, and return the edited team infos
     const getEditedTeamInfo = () =>
-      new Promise((resolve: (result: Partial<Team> | null) => void) => {
-        const teamToEdit = { team: team ?? {}, onSaveTeam: resolve };
+      new Promise((resolve: (result: Partial<ITeam> | null) => void) => {
+        const teamToEdit = { team, onSaveTeam: resolve };
         this.setState({ teamToEdit });
       });
 
@@ -289,13 +298,12 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
     }
 
     try {
-      let teams: Team[] = [];
       if (team === null) {
-        editedTeam.type = TeamType.medical;
-        teams = await apiClient.createTeam(editedTeam);
+        await apiClient.createTeam(editedTeam);
       } else {
-        teams = await apiClient.editTeam(editedTeam as Team);
+        await apiClient.editTeam(editedTeam as ITeam);
       }
+      const teams = await Teams.refresh(true);
       this.setState({ teams, apiReturnAlert: { message: t("team-page-success-edit"), severity: "success" } });
     } catch (reason: unknown) {
       this.log.error("onShowEditTeamDialog", reason);
@@ -349,7 +357,8 @@ class TeamsPage extends React.Component<RouteComponentProps, TeamsListPageState>
     }
 
     try {
-      const teams = await apiClient.changeTeamUserRole(team, userId, admin);
+      await apiClient.changeTeamUserRole(team, userId, admin);
+      const teams = await Teams.refresh(true);
       this.setState({ teams });
     } catch (reason: unknown) {
       this.log.error("onSwitchAdminRole", reason);

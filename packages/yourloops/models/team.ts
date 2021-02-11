@@ -19,40 +19,45 @@
  */
 
 import { User } from "./shoreline";
+import { PostalAddress } from "models/generic";
 
 export enum TeamType {
   medical = "medical",
-  personal = "personal",
+  /** A team for patient: to whom the patient share his data */
+  caregiver = "caregiver",
+  /** Virtual team for hcp & caregiver mostly: share 1 to 1 -> which patients share with me */
+  private = "private",
 }
 
 export enum TeamMemberRole {
   admin = "admin",
   viewer = "viewer",
-  patient = "patient"
+  patient = "patient",
 }
 
-export interface TeamMember {
+export enum TeamMemberStatus {
+  pending = "pending",
+  accepted = "accepted",
+  rejected = "rejected",
+}
+
+export interface ITeamMember {
   userId: string;
   teamId: string;
   role: TeamMemberRole;
-  user?: User;
+  invitationStatus: TeamMemberStatus;
+  user: User;
 }
 
-export interface Team {
-  id: string;
+export interface ITeam {
+  readonly id: string;
   name: string;
-  code: string;
-  type: TeamType;
-  ownerId: string;
+  readonly code: string;
+  readonly type: TeamType;
+  readonly ownerId: string;
   phone?: string;
   email?: string;
-  address?: {
-    line1: string;
-    line2?: string;
-    zip: string;
-    city: string;
-    country: string;
-  };
+  address?: PostalAddress;
   description?: string;
-  members?: TeamMember[];
+  members: ITeamMember[];
 }

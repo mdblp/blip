@@ -57,8 +57,9 @@ import FlagIcon from "@material-ui/icons/Flag";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
 
+import { TeamType } from "../../models/team";
 import { defer, REGEX_EMAIL } from "../../lib/utils";
-import { Team } from "../../models/team";
+import { Team } from "../../lib/team";
 import { FilterType } from "./types";
 
 export interface PatientListBarProps {
@@ -231,7 +232,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     { value: "all", label: t("select-all-patients"), icon: null },
     { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
     {
-      value: "private",
+      value: TeamType.private,
       label: t("private-pratice"),
       icon: <MedicalServiceIcon className={classes.selectFilterIcon} />,
     },
@@ -286,6 +287,9 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   if (teams.length > 0) {
     optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("teams")}</ListSubheader>);
     for (const team of teams) {
+      if (team.type !== TeamType.medical) {
+        continue;
+      }
       optionsFilterTeamsElements.push(
         <MenuItem value={team.id} key={team.id} aria-label={team.name}>
           {team.name}

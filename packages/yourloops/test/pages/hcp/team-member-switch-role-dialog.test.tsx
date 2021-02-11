@@ -32,13 +32,14 @@ import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
 import AuthProvider from "../../../lib/auth/hook/use-auth";
+import { Team } from "../../../lib/team";
 import SwitchRoleDialog from "../../../pages/hcp/team-member-switch-role-dialog";
 import { SwitchRoleDialogContentProps } from "../../../pages/hcp/types";
 import { teams, TestAuthProviderHCP, loggedInUsers } from "../../common";
 
 function testTeamSwitchRoleDialog(): void {
   const defaultProps: SwitchRoleDialogContentProps = {
-    team: teams[0],
+    team: new Team(teams[0]),
     userId: loggedInUsers.hcp.userid,
     admin: true,
     onDialogResult: sinon.spy(),

@@ -33,12 +33,13 @@ import _ from "lodash";
 import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
+import { User, UserRoles, Profile, Preferences, Settings } from "../../models/shoreline";
+import { ITeam, ITeamMember, TeamMemberRole, TeamMemberStatus, TeamType } from "../../models/team";
 
+import { Team } from "../team";
 import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
-import { User, Profile, Settings, Roles, Preferences } from "../../models/shoreline";
-import { Team, TeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import HttpStatus from "../http-status-codes";
 
 const SESSION_TOKEN_KEY = "session-token";
@@ -70,8 +71,8 @@ class AuthApi extends EventTarget {
   /** number of wrong tentative connection */
   private wrongCredentialCount: number;
   /** patients list */
-  private patients: User[] | null;
-  private teams: Team[] | null;
+  private patients: ITeamMember[] | null;
+  private teams: ITeam[] | null;
 
   constructor() {
     super();
@@ -192,22 +193,22 @@ class AuthApi extends EventTarget {
 
     if (!response.ok || response.status !== HttpStatus.StatusOK) {
       switch (response.status) {
-        case HttpStatus.StatusUnauthorized:
-          if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
-            if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-              reason = t(
-                "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
-                { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
-              );
-            } else {
-              reason = t("Wrong username or password");
-            }
+      case HttpStatus.StatusUnauthorized:
+        if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
+          if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
+            reason = t(
+              "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
+              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
+            );
+          } else {
+            reason = t("Wrong username or password");
           }
-          break;
-        // missing handling 403 status => email not verified
-        default:
-          reason = t("An error occurred while logging in.");
-          break;
+        }
+        break;
+      // missing handling 403 status => email not verified
+      default:
+        reason = t("An error occurred while logging in.");
+        break;
       }
 
       if (reason === null) {
@@ -223,7 +224,7 @@ class AuthApi extends EventTarget {
     this.user = (await response.json()) as User;
 
     if (!Array.isArray(this.user.roles)) {
-      this.user.roles = [Roles.patient];
+      this.user.roles = [UserRoles.patient];
     }
 
     // ???
@@ -300,7 +301,7 @@ class AuthApi extends EventTarget {
     sessionStorage.removeItem(LOGGED_IN_USER);
   }
 
-  public async getUserShares(): Promise<User[]> {
+  public async getUserShares(): Promise<ITeamMember[]> {
     if (!this.isLoggedIn) {
       // Users should never see this:
       throw new Error(t("not-logged-in"));
@@ -317,18 +318,62 @@ class AuthApi extends EventTarget {
       },
     });
 
+    this.patients = [];
     if (response.ok) {
-      this.patients = (await response.json()) as User[];
+      const users = (await response.json()) as User[];
       // FIXME will be removed with the team API call
-      const nPatients = this.patients.length;
+      const nPatients = users.length;
+      let nPrivate = 0;
       for (let i = 0; i < nPatients; i++) {
-        const patient = this.patients[i];
-        const val = (Math.random() * 10)|0;
-        patient.teams = [`team-${val % 2}`];
+        const user = users[i];
+
+        // Randomize the teams associations
+        const val = (Math.random() * 10) | 0;
+        let teamIds = [];
         if (i < 2) {
-          patient.teams.push("private");
+          teamIds = ["private"];
+        } else if (val < 6) { // eslint-disable-line no-magic-numbers
+          teamIds = ["team-0"];
+        } else if (val < 8) { // eslint-disable-line no-magic-numbers
+          teamIds = ["team-1"];
+        } else {
+          teamIds = ["team-0", "team-1"];
         }
+        // eslint-disable-next-line no-magic-numbers
+        if (nPrivate < 3 && !teamIds.includes("private")) {
+          nPrivate++;
+          teamIds.push("private");
+        }
+
+        teamIds.forEach((teamId) => {
+          const member: ITeamMember = {
+            invitationStatus: TeamMemberStatus.accepted,
+            role: TeamMemberRole.patient,
+            teamId,
+            userId: user.userid,
+            user,
+          };
+
+          this.patients?.push(member);
+        });
       }
+      // Pending invite patient
+      this.patients.push({
+        invitationStatus: TeamMemberStatus.pending,
+        role: TeamMemberRole.patient,
+        teamId: "team-0",
+        userId: "a0a0a0b0",
+        user: {
+          userid: "a0a0a0b0",
+          username: "gerard.dumoulin@example.com",
+          termsAccepted: "2021-01-05T15:00:00.000Z",
+          profile: {
+            firstName: "Gerard",
+            lastName: "Dumoulin",
+            fullName: "Gerard D.",
+          },
+        },
+      });
       // FIXME end
       return this.patients;
     }
@@ -466,7 +511,7 @@ class AuthApi extends EventTarget {
     if (this.userIsPatient) {
       patient = this.user;
     } else if (this.isLoggedIn && this.patients !== null) {
-      patient = this.patients.find((user: User) => user.userid === userID);
+      patient = this.patients.find((member: ITeamMember) => member.userId === userID)?.user;
     }
 
     if (_.isEmpty(patient)) {
@@ -532,12 +577,12 @@ class AuthApi extends EventTarget {
     throw new Error(t(responseBody.reason));
   }
 
-  public async fetchTeams(): Promise<Team[]> {
-    if (this.teams === null) {
-      this.log.info("Fetching teams...");
-      // eslint-disable-next-line no-magic-numbers
-      await waitTimeout(1000 + Math.random() * 200);
+  public async fetchTeams(): Promise<ITeam[]> {
+    this.log.info("Fetching teams...");
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(1000 + Math.random() * 200);
 
+    if (this.teams === null) {
       this.teams = [
         {
           // FIXME
@@ -558,12 +603,27 @@ class AuthApi extends EventTarget {
           members: [
             {
               teamId: "team-0",
-              userId: "a0a1a2a3",
+              userId: "a0a0a0a0",
               role: TeamMemberRole.viewer,
+              invitationStatus: TeamMemberStatus.accepted,
               user: {
-                userid: "a0a1a2a3",
+                userid: "a0a0a0a0",
                 username: "jean.dupont@chu-grenoble.fr",
+                termsAccepted: "2019-01-25T17:47:56+01:00",
+                roles: [ UserRoles.hcp ],
                 profile: { firstName: "Jean", lastName: "Dupont", fullName: "Jean Dupont" },
+              },
+            },
+            {
+              // Pending member invitation -> user not validated (missing termsAccepted field)
+              teamId: "team-0",
+              userId: "a0a0a0a1",
+              role: TeamMemberRole.viewer,
+              invitationStatus: TeamMemberStatus.pending,
+              user: {
+                userid: "a0a0a0a1",
+                roles: [ UserRoles.hcp ],
+                username: "michelle.dupuis@chu-grenoble.fr",
               },
             },
           ],
@@ -586,9 +646,12 @@ class AuthApi extends EventTarget {
               teamId: "team-1",
               userId: "b0b1b2b3",
               role: TeamMemberRole.admin,
+              invitationStatus: TeamMemberStatus.accepted,
               user: {
                 userid: "b0b1b2b3",
+                roles: [ UserRoles.hcp ],
                 username: "adelheide.alvar@charite.de",
+                termsAccepted: "2019-01-25T17:47:56+01:00",
                 profile: { firstName: "Adelheide", lastName: "Alvar", fullName: "Adelheide Alvar" },
               },
             },
@@ -596,44 +659,66 @@ class AuthApi extends EventTarget {
         },
       ];
 
-      const user = this.whoami;
-      if (user !== null) {
-        this.teams[0].members?.push({
+      // Add ourselves to the teams:
+      if (this.user !== null) {
+        const me = _.cloneDeep(this.user);
+        this.teams[0].members.push({
           teamId: "team-0",
-          userId: user.userid,
+          userId: me.userid,
           role: TeamMemberRole.admin,
-          user,
+          invitationStatus: TeamMemberStatus.accepted,
+          user: me,
         });
-        this.teams[1].members?.push({
+        this.teams[1].members.push({
           teamId: "team-1",
-          userId: user.userid,
+          userId: me.userid,
           role: TeamMemberRole.admin,
-          user,
+          invitationStatus: TeamMemberStatus.accepted,
+          user: me,
         });
       }
     }
-
-    return _.cloneDeep(this.teams ?? []);
+    return _.cloneDeep(this.teams);
   }
 
-  public async createTeam(team: Partial<Team>): Promise<Team[]> {
+  public async invitePatient(username: string, teamId: string): Promise<void> {
+    // eslint-disable-next-line no-magic-numbers
+    await waitTimeout(500 + Math.random() * 200);
+    // For future!
+    const team = this.teams?.find(t => t.id === teamId);
+    if (typeof team === "object") {
+      team.members.push({
+        invitationStatus: TeamMemberStatus.pending,
+        role: TeamMemberRole.patient,
+        teamId,
+        userId: username,
+        user: {
+          userid: username,
+          username,
+        },
+      });
+    }
+  }
+
+  public async createTeam(team: Partial<ITeam>): Promise<void> {
     if (this.teams === null) {
       this.teams = [];
     }
 
     // id, code, owner fields will be set by the back-end API
+    const tmpTeam = {
+      ...team,
+      id: `team-${Math.round(Math.random() * 1000)}`, // eslint-disable-line no-magic-numbers
+      code: "123-456-789",
+      ownerId: this.user?.userid as string,
+    };
 
-    // eslint-disable-next-line no-magic-numbers
-    team.id = `team-${Math.round(Math.random() * 1000)}`;
-    team.code = "123-456-789";
-    team.ownerId = this.user?.userid as string;
-    this.teams.push(team as Team);
+    this.teams.push(tmpTeam as ITeam);
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random() * 200);
-    return _.cloneDeep(this.teams);
   }
 
-  public async editTeam(editedTeam: Team): Promise<Team[]> {
+  public async editTeam(editedTeam: ITeam): Promise<void> {
     if (this.teams === null || this.teams.length < 1) {
       throw new Error("Empty team list!");
     }
@@ -647,10 +732,9 @@ class AuthApi extends EventTarget {
     }
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random() * 200);
-    return _.cloneDeep(this.teams);
   }
 
-  public async leaveTeam(team: Team): Promise<Team[]> {
+  public async leaveTeam(team: Team): Promise<void> {
     if (this.teams === null || this.teams.length < 1) {
       throw new Error("Empty team list !");
     }
@@ -668,22 +752,18 @@ class AuthApi extends EventTarget {
     const nTeams = this.teams.length;
     for (let i = 0; i < nTeams; i++) {
       const thisTeam = this.teams[i];
-      if (thisTeam.id === team.id && Array.isArray(thisTeam.members)) {
-        const userId = this.user.userid;
-        const idx = thisTeam.members.findIndex((tm: TeamMember) => tm.userId === userId);
-        if (idx > -1) {
-          this.teams.splice(i, 1);
-        }
+      if (thisTeam.id === team.id) {
+        this.log.debug(`Removing team ${thisTeam.id}`);
+        this.teams.splice(i, 1);
         break;
       }
     }
 
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random() * 200);
-    return _.cloneDeep(this.teams);
   }
 
-  public async removeTeamMember(team: Team, userId: string): Promise<Team[]> {
+  public async removeTeamMember(team: Team, userId: string): Promise<void> {
     if (this.teams === null || this.teams.length < 1) {
       throw new Error("Empty team list!");
     }
@@ -700,7 +780,7 @@ class AuthApi extends EventTarget {
       const thisTeam = this.teams[i];
       if (thisTeam.id === team.id) {
         if (Array.isArray(thisTeam.members)) {
-          const idx = thisTeam.members.findIndex((tm: TeamMember): boolean => tm.userId === userId);
+          const idx = thisTeam.members.findIndex((tm: ITeamMember): boolean => tm.userId === userId);
           if (idx > -1) {
             thisTeam.members.splice(idx, 1);
           }
@@ -710,10 +790,9 @@ class AuthApi extends EventTarget {
     }
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random() * 200);
-    return _.cloneDeep(this.teams);
   }
 
-  public async changeTeamUserRole(team: Team, userId: string, admin: boolean): Promise<Team[]> {
+  public async changeTeamUserRole(team: Team, userId: string, admin: boolean): Promise<void> {
     if (this.teams === null || this.teams.length < 1) {
       throw new Error("Empty team list!");
     }
@@ -743,7 +822,6 @@ class AuthApi extends EventTarget {
     }
     // eslint-disable-next-line no-magic-numbers
     await waitTimeout(500 + Math.random() * 200);
-    return _.cloneDeep(this.teams);
   }
 
   public async inviteHcpTeamMember(team: Team, email: string, role: TeamMemberRole): Promise<void> {
@@ -773,28 +851,28 @@ class AuthApi extends EventTarget {
     let matomoPaq = null;
     this.log.info("Metrics:", eventName, properties);
     switch (appConfig.METRICS_SERVICE) {
-      case "matomo":
-        matomoPaq = window._paq;
-        if (!_.isObject(matomoPaq)) {
-          this.log.error("Matomo do not seems to be available, wrong configuration");
-          return;
-        }
-        if (eventName === "CookieConsent") {
-          matomoPaq.push(["setConsentGiven", properties]);
-        } else if (eventName === "setCustomUrl") {
-          matomoPaq.push(["setCustomUrl", properties]);
-        } else if (eventName === "setUserId") {
-          matomoPaq.push(["setUserId", properties]);
-        } else if (eventName === "resetUserId") {
-          matomoPaq.push(["resetUserId"]);
-        } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
-          matomoPaq.push(["setDocumentTitle", properties]);
-        } else if (typeof properties === "undefined") {
-          matomoPaq.push(["trackEvent", eventName]);
-        } else {
-          matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
-        }
-        break;
+    case "matomo":
+      matomoPaq = window._paq;
+      if (!_.isObject(matomoPaq)) {
+        this.log.error("Matomo do not seems to be available, wrong configuration");
+        return;
+      }
+      if (eventName === "CookieConsent") {
+        matomoPaq.push(["setConsentGiven", properties]);
+      } else if (eventName === "setCustomUrl") {
+        matomoPaq.push(["setCustomUrl", properties]);
+      } else if (eventName === "setUserId") {
+        matomoPaq.push(["setUserId", properties]);
+      } else if (eventName === "resetUserId") {
+        matomoPaq.push(["resetUserId"]);
+      } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
+        matomoPaq.push(["setDocumentTitle", properties]);
+      } else if (typeof properties === "undefined") {
+        matomoPaq.push(["trackEvent", eventName]);
+      } else {
+        matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
+      }
+      break;
     }
   }
 

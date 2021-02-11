@@ -31,12 +31,13 @@ import { expect } from "chai";
 import { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import sinon from "sinon";
 
+import { Team } from "../../../lib/team";
 import TeamCard, { TeamCardProps, TeamInfo } from "../../../pages/hcp/team-card";
 import { teams } from "../../common";
 
 function testTeamCard(): void {
   const defaultProps: TeamCardProps = {
-    team: teams[0],
+    team: new Team(teams[0]),
     onShowAddMemberDialog: sinon.spy(),
     onShowEditTeamDialog: sinon.spy(),
     onShowLeaveTeamDialog: sinon.spy(),
@@ -69,7 +70,7 @@ function testTeamCard(): void {
   it("should not render the 2nd addr line if not present", () => {
     const props: TeamCardProps = {
       ...defaultProps,
-      team: teams[1],
+      team: new Team(teams[1]),
     };
     component = mount(<TeamCard {...props} />);
     expect(component.find(`#team-card-info-${props.team.id}-address-value`).find("br").length).to.be.equal(1);
@@ -107,7 +108,7 @@ function testTeamCard(): void {
     });
 
     it("should not render if value is not net", () => {
-      component = shallow(<TeamInfo id="test" label="label" icon={<div id="icon" />} />);
+      component = shallow(<TeamInfo id="test" label="label" value={null} icon={<div id="icon" />} />);
       expect(component.find(`#team-card-info-test-label`).length).to.be.equal(0);
       expect(component.find("#icon").length).to.be.equal(0);
       expect(component.html()).to.be.null;

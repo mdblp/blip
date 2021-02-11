@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Yourloops API client type definition for shoreline
+ * A team member
  *
  * All rights reserved.
  *
@@ -26,60 +26,65 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Units {
-  mole = "mmol/L",
-  gram = "mg/dL",
+import { ITeamMember, TeamMemberStatus, TeamMemberRole } from "../../models/team";
+import Team from "./team";
+import TeamUser from "./team-user";
+
+class TeamMember {
+  private parent: Team;
+  private teamUser: TeamUser;
+  private mRole: TeamMemberRole;
+  private mStatus: TeamMemberStatus;
+
+  constructor(team: Team, member: ITeamMember) {
+    this.parent = team;
+    this.mRole = member.role;
+    this.mStatus = member.invitationStatus;
+    this.teamUser = new TeamUser(this, member.user);
+  }
+
+  public get role(): TeamMemberRole {
+    return this.mRole;
+  }
+
+  public get status(): TeamMemberStatus {
+    return this.mStatus;
+  }
+
+  public get userId(): string {
+    return this.teamUser.userId;
+  }
+
+  public get firstName(): string {
+    return this.teamUser.firstName;
+  }
+
+  public get lastName(): string {
+    return this.teamUser.lastName;
+  }
+
+  public get email(): string {
+    return this.teamUser.email;
+  }
+
+  public get team(): Team {
+    return this.parent;
+  }
+
+  public get user(): TeamUser {
+    return this.teamUser;
+  }
+
+  /**
+   * Update our underlying user (shared with other teams)
+   */
+  public set user(tu: TeamUser) {
+    const tm = tu.memberships.find((m) => m.team.id === this.team.id);
+    if (typeof tm === "undefined") {
+      tu.memberships.push(this);
+    }
+    this.teamUser = tu;
+  }
 }
 
-enum UserRoles {
-  hcp = "hcp",
-  caregiver = "caregiver",
-  patient = "patient",
-}
-
-interface Profile {
-  fullName: string;
-  firstName?: string;
-  lastName?: string;
-  patient?: Patient;
-}
-
-interface Patient {
-  birthday?: string;
-  diagnosisDate?: string;
-  diagnosisType?: string;
-}
-
-interface Settings {
-  units?: {
-    bg?: Units;
-  };
-  country?: string;
-}
-
-interface Preferences {
-  displayLanguageCode?: "en" | "de" | "es" | "fr" | "it" | "nl";
-  patientsStarred?: string[];
-}
-interface User {
-  /** The user id */
-  readonly userid: string;
-  /** The username (login) */
-  readonly username: string;
-  /** Roles of the users  */
-  /*readonly*/ roles?: UserRoles[];
-  /** Emails of the users */
-  emails?: string[];
-  /** Date of the last accepted terms */
-  readonly termsAccepted?: string;
-  /** true if the account has been verified */
-  readonly emailVerified?: boolean;
-  /** User profile */
-  profile?: Profile;
-  /** User settings (read-only for patient only?) */
-  settings?: Settings;
-  /** User preferences */
-  preferences?: Preferences;
-}
-
-export { User, Preferences, Profile, Settings, Units, UserRoles };
+export default TeamMember;
