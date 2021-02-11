@@ -36,7 +36,7 @@ import "branding/theme.css";
 
 import { theme } from "../components/theme";
 import LoginPage from "../pages/login";
-import SignUpPage from "../pages/signup";
+import { SignUpPage } from "../pages/signup";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";

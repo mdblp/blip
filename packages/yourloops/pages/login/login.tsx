@@ -43,7 +43,6 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -60,25 +59,25 @@ const loginStyle = makeStyles((theme: Theme) => {
     loginButton: {
       marginLeft: "auto !important",
     },
-    rightLink: {
-      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
-      textAlign: "start",
-      fontSize: "small",
-    },
-    centeredLink: {
-      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
+    Card: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
       textAlign: "center",
-      color: "#109182",
+      padding: theme.spacing(4),
     },
-    leftLink: {
-      padding: theme.spacing(0.5), // eslint-disable-line no-magic-numbers
-      textAlign: "end",
-      fontSize: "small",
+    CardContent: {
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
     },
-    selection: {
+    CardActions: {
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
       padding: theme.spacing(2),
-      textAlign: "center",
-      fontSize: "small",
+    },
+    TextField: {
+      marginLeft: theme.spacing(0),
+      marginRight: theme.spacing(1),
     },
   };
 });
@@ -158,10 +157,6 @@ function Login(props: RouteComponentProps): JSX.Element {
   //   //this.log.debug("onClickForgotPassword");
   // }
 
-  // function onClickSignup() {
-  //   //this.log.debug("onClickSignup");
-  // }
-
   return (
     <Container maxWidth="sm" className={classes.mainContainer}>
       <Grid
@@ -172,7 +167,7 @@ function Login(props: RouteComponentProps): JSX.Element {
         className={classes.root}
       >
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.Card}>
             <CardMedia
               style={{
                 display: "flex",
@@ -190,15 +185,22 @@ function Login(props: RouteComponentProps): JSX.Element {
                 alt={t("Login Branding Logo")}
               />
             </CardMedia>
-            <CardContent>
+            <CardContent className={classes.CardContent}>
               <form
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
                 noValidate
                 autoComplete="off"
               >
                 <TextField
                   id="login-username"
+                  className={classes.TextField}
+                  margin="normal"
                   label={t("email")}
+                  variant="outlined"
                   value={username}
                   required
                   error={validateError && emptyUsername}
@@ -206,7 +208,10 @@ function Login(props: RouteComponentProps): JSX.Element {
                 />
                 <TextField
                   id="login-password"
+                  margin="normal"
+                  className={classes.TextField}
                   label={t("password")}
+                  variant="outlined"
                   type={showPassword ? "text" : "password"}
                   value={password}
                   required
@@ -230,15 +235,16 @@ function Login(props: RouteComponentProps): JSX.Element {
                   }}
                 />
               </form>
-            </CardContent>
-            <CardActions>
-              <Link
+              <RouterLink
                 component={RouterLink}
                 to="/request-password-reset"
                 onClick={onClickLoginReset}
               >
                 {t("Forgot your password?")}
-              </Link>
+              </RouterLink>
+            </CardContent>
+            <CardActions className={classes.CardActions}>
+              <RouterLink to="/signup">{t("Create account")}</RouterLink>
               <Button
                 variant="contained"
                 color="primary"

@@ -26,4 +26,5 @@
  */
 
 import SignUpPage from "./signup";
-export default SignUpPage;
+import SignUpStepper from "./signup-stepper";
+export { SignUpPage, SignUpStepper };
