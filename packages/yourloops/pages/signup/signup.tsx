@@ -28,33 +28,17 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Checkbox from "@material-ui/core/Checkbox";
 
-import { t } from "../../lib/language";
-import { REGEX_EMAIL } from "../../lib/utils";
-import appConfig from "../../lib/config";
 import brandingLogo from "branding/logo.png";
-import { useState } from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface SignUpProps extends RouteComponentProps {}
+import SignUpStepper from "./signup-stepper";
+import { useTranslation } from "react-i18next";
+import CardContent from "@material-ui/core/CardContent";
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -73,20 +57,8 @@ const formStyle = makeStyles((theme: Theme) => {
       padding: theme.spacing(4),
     },
     CardContent: {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-    },
-    CardActions: {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-    },
-    TextField: {
-      marginLeft: theme.spacing(0),
-      marginRight: theme.spacing(1),
-    },
-    Checkbox: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
     },
   };
 });
@@ -94,105 +66,9 @@ const formStyle = makeStyles((theme: Theme) => {
 /**
  * Signup page
  */
-function SignUpPage(_props: SignUpProps): JSX.Element {
-  const defaultErr = {
-    username: false,
-    newPassword: false,
-    confirmNewPassword: false,
-  };
-  const [username, setUserName] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [errors, setErrors] = useState(defaultErr);
-  const [userNameHelperTextValue, setUserNameHelperTextValue] = useState("");
-  const [
-    newPasswordChangeHelperTextValue,
-    setNewPasswordChangeHelperTextValue,
-  ] = useState("");
-  const [
-    confirmNewPasswordChangeHelperTextValue,
-    setConfirmNewPasswordChangeHelperTextValue,
-  ] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const emptyUsername = _.isEmpty(username);
+function SignUpPage(): JSX.Element {
+  const { t } = useTranslation("yourloops");
   const classes = formStyle();
-
-  const onChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    setState: React.Dispatch<React.SetStateAction<string>>
-  ): void => {
-    setState(event.target.value);
-  };
-
-  const onClick = (
-    _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    showPassword: boolean,
-    setState: React.Dispatch<React.SetStateAction<boolean>>
-  ): void => {
-    if (showPassword) {
-      setState(false);
-    } else {
-      setState(true);
-    }
-  };
-
-  const resetFormState = (): void => {
-    setErrors(defaultErr);
-    setUserNameHelperTextValue("");
-    setNewPasswordChangeHelperTextValue("");
-    setConfirmNewPasswordChangeHelperTextValue("");
-  };
-
-  const validateForm = (): void => {
-    // for now duplicated blip validation logic
-    // Is there a better way to handle errors...
-    if (_.isEmpty(username)) {
-      setErrors({ ...defaultErr, username: true });
-    }
-
-    const IS_REQUIRED = t("This field is required.");
-
-    if (!username) {
-      setUserNameHelperTextValue(IS_REQUIRED);
-      setErrors({ ...defaultErr, username: true });
-    }
-
-    if (username && !REGEX_EMAIL.test(username)) {
-      setUserNameHelperTextValue(t("Invalid email address."));
-      setErrors({ ...defaultErr, username: true });
-    }
-
-    if (!newPassword) {
-      setNewPasswordChangeHelperTextValue(IS_REQUIRED);
-      setErrors({ ...defaultErr, newPassword: true });
-    }
-
-    if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
-      setNewPasswordChangeHelperTextValue(
-        t("Password must be at least {{minLength}} characters long.", {
-          minLength: appConfig.PASSWORD_MIN_LENGTH,
-        })
-      );
-      setErrors({ ...defaultErr, newPassword: true });
-    }
-
-    if (newPassword) {
-      if (!confirmNewPassword) {
-        setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
-        setErrors({ ...defaultErr, confirmNewPassword: true });
-      } else if (confirmNewPassword !== newPassword) {
-        setConfirmNewPasswordChangeHelperTextValue(t("Passwords don't match."));
-        setErrors({ ...defaultErr, confirmNewPassword: true });
-      }
-    }
-  };
-
-  const onSignUp = (): void => {
-    resetFormState();
-    validateForm();
-    // next to come the api call
-  };
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer}>
@@ -223,121 +99,8 @@ function SignUpPage(_props: SignUpProps): JSX.Element {
               />
             </CardMedia>
             <CardContent className={classes.CardContent}>
-              <Typography variant="h6" gutterBottom>
-                {t("signup-create-information-message")}
-              </Typography>
-              <Typography variant="subtitle1" gutterBottom>
-                {t("signup-owner-information-message")}
-              </Typography>
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  id="username"
-                  className={classes.TextField}
-                  margin="normal"
-                  label={t("Email")}
-                  variant="outlined"
-                  value={username}
-                  required
-                  error={errors.username}
-                  onChange={(e) => onChange(e, setUserName)}
-                  helperText={userNameHelperTextValue}
-                />
-                <TextField
-                  id="password"
-                  className={classes.TextField}
-                  margin="normal"
-                  label={t("New password")}
-                  variant="outlined"
-                  type={showNewPassword ? "text" : "password"}
-                  value={newPassword}
-                  required
-                  error={errors.newPassword}
-                  onChange={(e) => onChange(e, setNewPassword)}
-                  helperText={newPasswordChangeHelperTextValue}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label={t("aria-toggle-password-visibility")}
-                          onClick={(e) =>
-                            onClick(e, showNewPassword, setShowNewPassword)
-                          }
-                        >
-                          {showNewPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  id="confirm-password"
-                  className={classes.TextField}
-                  margin="normal"
-                  label={t("Confirm new password")}
-                  variant="outlined"
-                  type={showConfirmNewPassword ? "text" : "password"}
-                  value={confirmNewPassword}
-                  required
-                  error={errors.confirmNewPassword}
-                  onChange={(e) => onChange(e, setConfirmNewPassword)}
-                  helperText={confirmNewPasswordChangeHelperTextValue}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label={t("aria-toggle-password-visibility")}
-                          onClick={(e) =>
-                            onClick(
-                              e,
-                              showConfirmNewPassword,
-                              setShowConfirmNewPassword
-                            )
-                          }
-                        >
-                          {showConfirmNewPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      defaultChecked
-                      color="default"
-                      inputProps={{
-                        "aria-label": "checkbox with default color",
-                      }}
-                    />
-                  }
-                  label={t("I accept ...")}
-                />
-              </form>
+              <SignUpStepper />
             </CardContent>
-            <CardActions className={classes.CardActions}>
-              <Link to="/">{t("Log in instead")}</Link>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onSignUp}
-                disabled={emptyUsername}
-                className={classes.Button}
-              >
-                {t("Sign Up")}
-              </Button>
-            </CardActions>
           </Card>
         </Grid>
       </Grid>
