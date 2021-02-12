@@ -40,7 +40,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
 import locales from "../../../../locales/languages.json";
-import { ITeam, TeamType } from "../../models/team";
+import { Team } from "../../lib/team";
 import { REGEX_EMAIL } from "../../lib/utils";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 import { TeamEditModalContentProps } from "./types";
@@ -181,7 +181,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   };
 
   const handleValidateModal = (): void => {
-    const updatedTeam = team === null ? { type: TeamType.medical } as ITeam : team.toJSON();
+    const updatedTeam = team === null ? {} as Partial<Team> : team;
     updatedTeam.name = teamName.trim();
     updatedTeam.phone = teamPhone.trim();
 

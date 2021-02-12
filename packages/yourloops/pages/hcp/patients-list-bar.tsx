@@ -65,7 +65,7 @@ import { FilterType } from "./types";
 export interface PatientListBarProps {
   teams: Team[];
   filter: string;
-  filterType: FilterType;
+  filterType: FilterType | string;
   onFilter: (text: string) => void;
   onFilterType: (filterType: FilterType) => void;
   onInvitePatient: (username: string, teamId: string) => void;

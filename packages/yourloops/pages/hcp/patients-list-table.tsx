@@ -44,7 +44,7 @@ import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import apiClient from "../../lib/auth/api";
-import { TeamUser } from "../../lib/team";
+import { TeamUser, useTeam } from "../../lib/team";
 import { SortDirection, SortFields } from "./types";
 
 export interface PatientListTableProps {
@@ -82,13 +82,13 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
   const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
-  const elems = [];
-  const nPatients = patients.length;
+  const teamHook = useTeam();
 
-  for (let i = 0; i < nPatients; i++) {
-    const patient = patients[i];
-    const userId = patient.userId;
+  const patientsRows = patients.map((patient: TeamUser): JSX.Element => {
+    const userId = patient.userid;
     const isFlagged = flagged.includes(userId);
+    const firstName = teamHook.getUserFirstName(patient);
+    const lastName = teamHook.getUserLastName(patient);
     const onClickFlag = (e: React.MouseEvent): void => {
       e.stopPropagation();
       apiClient.sendMetrics("flag-patient", { flagged: !isFlagged });
@@ -98,7 +98,7 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
       apiClient.sendMetrics("show-patient-data", { flagged: isFlagged });
       onClickPatient(patient);
     };
-    elems.push(
+    return (
       <TableRow
         id={`patients-list-row-${userId}`}
         key={userId}
@@ -111,19 +111,19 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
             {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
           </IconButton>
         </TableCell>
-        <TableCell id={`patients-list-row-lastname-${userId}`}>{patient.lastName}</TableCell>
-        <TableCell id={`patients-list-row-firstname-${userId}`}>{patient.firstName}</TableCell>
+        <TableCell id={`patients-list-row-lastname-${userId}`}>{lastName}</TableCell>
+        <TableCell id={`patients-list-row-firstname-${userId}`}>{firstName}</TableCell>
         <TableCell id={`patients-list-row-tir-${userId}`}>{t("N/A")}</TableCell>
         <TableCell id={`patients-list-row-avg-glucose-${userId}`}>{t("N/A")}</TableCell>
         <TableCell id={`patients-list-row-tbr-${userId}`}>{t("N/A")}</TableCell>
         <TableCell id={`patients-list-row-upload-${userId}`}>{t("N/A")}</TableCell>
       </TableRow>
     );
-  }
+  });
 
   const createSortHandler = (property: SortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
-      onSortList(property, order === "asc" ? "desc" : "asc");
+      onSortList(property, order === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
     };
   };
 
@@ -134,12 +134,12 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
           <TableRow className={classes.tableRowHeader}>
             <TableCell id="patients-list-header-flag" />
             <TableCell id="patients-list-header-lastname">
-              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler("lastname")}>
+              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler(SortFields.lastname)}>
                 {t("lastname")}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patients-list-header-firstname">
-              <TableSortLabel active={orderBy === "firstname"} direction={order} onClick={createSortHandler("firstname")}>
+              <TableSortLabel active={orderBy === "firstname"} direction={order} onClick={createSortHandler(SortFields.firstname)}>
                 {t("firstname")}
               </TableSortLabel>
             </TableCell>
@@ -149,7 +149,7 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
             <TableCell id="patients-list-header-upload">{t("list-patient-upload")}</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>{elems}</TableBody>
+        <TableBody>{patientsRows}</TableBody>
       </Table>
     </TableContainer>
   );

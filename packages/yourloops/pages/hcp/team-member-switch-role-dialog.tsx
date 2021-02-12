@@ -65,12 +65,12 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
     return null;
   }
 
-  if (switchAdminRole.userId !== auth.user?.userid) {
+  if (switchAdminRole.member.user.userid !== auth.user?.userid) {
     switchAdminRole.onDialogResult(true);
     return null;
   }
 
-  const teamName = switchAdminRole.team.name;
+  const teamName = switchAdminRole.member.team.name;
 
   const handleClose = () => {
     switchAdminRole.onDialogResult(false);

@@ -26,17 +26,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ITeam, TeamMemberRole, TeamType } from "../../models/team";
-import { Team } from "../../lib/team";
+import { TypeTeamMemberRole } from "../../models/team";
+import { Team, TeamMember } from "../../lib/team";
 
-export type SortDirection = "asc" | "desc";
-export type SortFields = "lastname" | "firstname";
-export type FilterType = "all" | "flagged" | "pending" | TeamType.private | string;
+export enum SortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+export enum SortFields {
+  lastname = "lastname",
+  firstname = "firstname",
+}
+export enum FilterType {
+  all = "all",
+  flagged = "flagged",
+  pending = "pending",
+  private = "private",
+}
 
 export interface SwitchRoleDialogContentProps {
-  team: Team;
-  userId: string;
-  admin: boolean;
+  member: TeamMember;
+  role: Exclude<TypeTeamMemberRole, "patient">;
   onDialogResult: (result: boolean) => void;
 }
 
@@ -47,17 +57,16 @@ export interface TeamLeaveDialogContentProps {
 
 export interface AddMemberDialogContentProps {
   team: Team;
-  onDialogResult: (result: { email: string | null; role: TeamMemberRole }) => void;
+  onDialogResult: (result: { email: string | null; role: Exclude<TypeTeamMemberRole, "patient"> }) => void;
 }
 
 export interface RemoveMemberDialogContentProps {
-  team: Team;
-  userId: string;
+  member: TeamMember;
   onDialogResult: (result: boolean) => void;
 }
 
 export interface TeamEditModalContentProps {
   team: Team | null;
   /** Promise callback for the modal. null means cancel edit */
-  onSaveTeam: (team: Partial<ITeam> | null) => void;
+  onSaveTeam: (team: Partial<Team> | null) => void;
 }

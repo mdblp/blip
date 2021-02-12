@@ -1,0 +1,468 @@
+/**
+ * Copyright (c) 2021, Diabeloop
+ * Teams management & helpers - hook version
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+import * as React from "react";
+import bows from "bows";
+import { useTranslation } from "react-i18next";
+
+import { PostalAddress } from "../../models/generic";
+import { User } from "../../models/shoreline";
+import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, TeamMemberStatus } from "../../models/team";
+
+import { useAuth } from "../auth/hook/use-auth";
+import {
+  fetchTeams,
+  fetchPatients,
+  invitePatient as apiInvitePatient,
+  inviteMember as apiInviteMember,
+  createTeam as apiCreateTeam,
+  editTeam as apiEditTeam,
+  leaveTeam as apiLeaveTeam,
+  removeMember as apiRemoveMember,
+  changeMemberRole as apiChangeMemberRole,
+} from "./api";
+
+export interface TeamUser extends User {
+  members: TeamMember[];
+}
+
+export interface TeamMember {
+  team: Team;
+  role: TeamMemberRole;
+  status: TeamMemberStatus;
+  user: TeamUser;
+}
+
+export interface Team {
+  readonly id: string;
+  name: string;
+  readonly code: string;
+  readonly type: TeamType;
+  readonly ownerId: string;
+  phone?: string;
+  email?: string;
+  address?: PostalAddress;
+  description?: string;
+  members: TeamMember[];
+}
+
+export interface TeamContext {
+  teams: Team[];
+  /**
+   * Refresh the team list & members.
+   *
+   * @param forceRefresh if true, re-fetch the team
+   */
+  refresh: (forceRefresh: boolean) => Promise<void>;
+  /**
+   * Return the team for a teamId or null of not found
+   * @param teamId The technical team id
+   */
+  getTeam: (teamId: string) => Team | null;
+  /**
+   * Return the user which the userId belongs to.
+   * *All your base are belong to us*
+   * @param userId The user we want
+   */
+  getUser: (userId: string) => TeamUser | null;
+  /**
+   * Return all patients (team user) we have
+   */
+  getPatients: () => TeamUser[];
+  /**
+   * Return the medical members of a team.
+   */
+  getMedicalMembers: (team: Team) => TeamMember[];
+  /**
+   * Return the user first name
+   */
+  getUserFirstName: (user: User) => string;
+  /**
+   * Return the user last name
+   */
+  getUserLastName: (user: User) => string;
+  /**
+   * Return the number of medical members
+   */
+  getNumMedicalMembers: (team: Team) => number;
+  /**
+   * Return true if the userId is an administrator of this team.
+   * @param userId The user id to test
+   */
+  isUserAdministrator: (team: Team, userId: string) => boolean;
+  /**
+   * Return true if the userId is the only administrator of this team.
+   * @param userId The user id to test
+   */
+  isUserTheOnlyAdministrator: (team: Team, userId: string) => boolean;
+  /**
+   * @param user The user to test
+   * @returns true is the user has an invitation pending on one team
+   */
+  isInvitationPending: (user: TeamUser) => boolean;
+  /**
+   * Return true if this user is in a specific team
+   * @param user The user to test
+   * @param teamId A team id
+   */
+  isInTeam(user: TeamUser, teamId: string): boolean;
+  /**
+   * As an HCP invite a patient to a team.
+   * @param team The team to invite the patient
+   * @param username The patient email
+   */
+  invitePatient(team: Team, username: string): Promise<void>;
+  /**
+   * As an HCP invite a member (non patient)
+   * @param team The team to invite the member
+   * @param username The member email
+   * @param role The member role
+   */
+  inviteMember(team: Team, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void>;
+  /**
+   * Create a new team
+   * @param team The team to create
+   */
+  createTeam(team: Partial<Team>): Promise<void>;
+  /**
+   * Change some team infos (name, address...)
+   * @param team The updated team
+   */
+  editTeam(team: Team): Promise<void>;
+  /**
+   * Leave a team
+   * @param team The team to leave
+   */
+  leaveTeam(team: Team): Promise<void>;
+  /**
+   * Remove a team member from a team
+   * @param member The member to remove
+   */
+  removeMember(member: TeamMember): Promise<void>;
+  /**
+   * Change a member role
+   * @param member The concerned member
+   * @param role The new role
+   */
+  changeMemberRole(member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void>;
+}
+
+export interface TeamProvider {
+  children: React.ReactNode;
+  context: () => TeamContext;
+}
+
+const log = bows("TeamHook");
+export function DefaultTeamContext(): TeamContext {
+  // hooks (private or public variables)
+  const [teams, setTeams] = React.useState<Team[]>([]);
+  const { t } = useTranslation("yourloops");
+  const auth = useAuth();
+
+  const getAuthInfos = () => {
+    if (!auth.isLoggedIn()) {
+      // Users should never see this:
+      throw new Error(t("not-logged-in"));
+    }
+
+    const user = auth.user as User;
+    const traceToken = auth.traceToken as string;
+    const sessionToken = auth.sessionToken as string;
+
+    return { traceToken, sessionToken, user };
+  };
+
+  // public methods
+
+  const getTeam = (teamId: string): Team | null => {
+    return teams.find((t) => t.id === teamId) ?? null;
+  };
+
+  const getUser = (userId: string): TeamUser | null => {
+    // Sorry for the "for", I know it's now forbidden
+    // But today it's too late for me to think how to use a magic function
+    // to have this info.
+    for (const team of teams) {
+      for (const member of team.members) {
+        if (member.user.userid === userId) {
+          return member.user;
+        }
+      }
+    }
+    return null;
+  };
+
+  const refresh = async (forceRefresh: boolean): Promise<void> => {
+    log.debug("Refreshing teams list", { forceRefresh });
+
+    if (teams.length < 1 || forceRefresh) {
+      const { traceToken, sessionToken, user } = getAuthInfos();
+      const users = new Map<string, TeamUser>();
+      const [apiTeams, apiPatients] = await Promise.all([
+        fetchTeams(traceToken, sessionToken, user),
+        fetchPatients(traceToken, sessionToken, user),
+      ]);
+
+      const privateTeam: Team = {
+        code: TeamType.private,
+        id: TeamType.private,
+        members: [],
+        name: TeamType.private,
+        ownerId: user.userid,
+        type: TeamType.private,
+      };
+
+      const tmpTeams: Team[] = [privateTeam];
+      apiTeams.forEach((apiTeam: ITeam) => {
+        const team: Team = {
+          ...apiTeam,
+          members: [],
+        };
+
+        // Detect duplicate users, and update the member if needed
+        apiTeam.members.forEach((apiTeamMember) => {
+          const userId = apiTeamMember.userId;
+
+          let teamUser = users.get(userId);
+          if (typeof teamUser === "undefined") {
+            teamUser = {
+              ...apiTeamMember.user,
+              members: [],
+            };
+            users.set(userId, teamUser);
+          }
+
+          const teamMember: TeamMember = {
+            team,
+            role: apiTeamMember.role,
+            status: apiTeamMember.invitationStatus,
+            user: teamUser,
+          };
+          teamUser.members.push(teamMember);
+        });
+
+        tmpTeams.push(team);
+      });
+
+      // Merge patients
+      const nPatients = apiPatients.length;
+      for (let i = 0; i < nPatients; i++) {
+        const apiPatient = apiPatients[i];
+        const userId = apiPatient.userId;
+
+        let team = getTeam(apiPatient.teamId);
+        if (team === null) {
+          log.error(`Missing teamId ${apiPatient.teamId} for patient member`, apiPatient);
+          // Use the private team
+          team = privateTeam;
+        }
+
+        let user = users.get(userId);
+        if (typeof user === "undefined") {
+          user = {
+            ...apiPatient.user,
+            members: [],
+          };
+          users.set(userId, user);
+        }
+        const member: TeamMember = {
+          role: apiPatient.role,
+          status: apiPatient.invitationStatus,
+          team,
+          user,
+        };
+        user.members.push(member);
+        team.members.push(member);
+      }
+
+      // End, cleanup to show it
+      users.clear();
+      // Update the state (force refresh the UI)
+      setTeams(tmpTeams);
+    }
+  };
+
+  const getPatients = (): TeamUser[] => {
+    const patients = new Map<string, TeamUser>();
+    const nTeams = teams.length;
+    for (let i = 0; i < nTeams; i++) {
+      const team = teams[i];
+      const members = team.members;
+      const nMembers = members.length;
+      for (let j = 0; j < nMembers; j++) {
+        const member = members[j];
+        if (member.role === TeamMemberRole.patient && !patients.has(member.user.userid)) {
+          patients.set(member.user.userid, member.user);
+        }
+      }
+    }
+    return Array.from(patients.values());
+  };
+
+  const getMedicalMembers = (team: Team): TeamMember[] => {
+    return team.members.filter((member) => member.role === TeamMemberRole.patient);
+  };
+
+  const getNumMedicalMembers = (team: Team): number => {
+    return team.members.reduce<number>((num, member) => {
+      return member.role === TeamMemberRole.patient ? num : num + 1;
+    }, 0);
+  };
+
+  const getUserFirstName = (user: User): string => {
+    return user.profile?.firstName ?? "";
+  };
+
+  const getUserLastName = (user: User): string => {
+    return user.profile?.lastName ?? user.profile?.fullName ?? user.username;
+  };
+
+  const isUserAdministrator = (team: Team, userId: string): boolean => {
+    const result = team.members.find((member) => member.role === TeamMemberRole.admin && member.user.userid === userId);
+    return typeof result === "object";
+  };
+
+  const isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
+    const admins = team.members.filter((member) => member.role === TeamMemberRole.admin);
+    return admins.length === 1 && admins[0].user.userid === userId;
+  };
+
+  const isInvitationPending = (user: TeamUser): boolean => {
+    const tm = user.members.find((tm) => tm.status === TeamMemberStatus.pending);
+    return typeof tm === "object";
+  };
+
+  const isInTeam = (user: TeamUser, teamId: string): boolean => {
+    const tm = user.members.find((tm) => tm.team.id === teamId);
+    return typeof tm === "object";
+  };
+
+  const invitePatient = async (team: Team, username: string): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    await apiInvitePatient(traceToken, sessionToken, team.id, username);
+    await refresh(true);
+  };
+
+  const inviteMember = async (team: Team, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    await apiInviteMember(traceToken, sessionToken, team.id, username, role);
+    await refresh(true);
+  };
+
+  const createTeam = async (team: Partial<Team>): Promise<void> => {
+    const { traceToken, sessionToken, user } = getAuthInfos();
+    const apiTeam: Partial<ITeam> = {
+      address: team.address,
+      description: team.description,
+      email: team.email,
+      name: team.name,
+      phone: team.phone,
+      type: team.type,
+    };
+    await apiCreateTeam(traceToken, sessionToken, user, apiTeam);
+    await refresh(true);
+  };
+
+  const editTeam = async (team: Team): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    const apiTeam: ITeam = {
+      ...team,
+      members: [],
+    };
+    await apiEditTeam(traceToken, sessionToken, apiTeam);
+    await refresh(true);
+  };
+
+  const leaveTeam = async (team: Team): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    await apiLeaveTeam(traceToken, sessionToken, team.id);
+    await refresh(true);
+  };
+
+  const removeMember = async (member: TeamMember): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    await apiRemoveMember(traceToken, sessionToken, member.team.id, member.user.userid);
+    await refresh(true);
+  };
+
+  const changeMemberRole = async (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
+    const { traceToken, sessionToken } = getAuthInfos();
+    await apiChangeMemberRole(traceToken, sessionToken, member.team.id, member.user.userid, role);
+    await refresh(true);
+  };
+
+  log.debug("DefaultTeamProvider");
+
+  return {
+    teams,
+    refresh,
+    getTeam,
+    getUser,
+    getPatients,
+    getMedicalMembers,
+    getNumMedicalMembers,
+    getUserFirstName,
+    getUserLastName,
+    isUserAdministrator,
+    isUserTheOnlyAdministrator,
+    isInvitationPending,
+    isInTeam,
+    invitePatient,
+    inviteMember,
+    createTeam,
+    editTeam,
+    leaveTeam,
+    removeMember,
+    changeMemberRole,
+  };
+}
+
+const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
+
+/**
+ * Provider component that wraps your app and makes auth object available to any child component that calls useTeam().
+ * @param props for auth provider & children
+ */
+export function TeamContextProvider(props: TeamProvider): JSX.Element {
+  const { context, children } = props;
+  const teamContext = context();
+  return (
+    <ReactTeamContext.Provider value={teamContext}>
+      {children}
+    </ReactTeamContext.Provider>
+  );
+}
+
+/**
+ * Hook for child components to get the teams functionalities
+ *
+ * Trigger a re-render when it change.
+ */
+export function useTeam(): TeamContext {
+  return React.useContext(ReactTeamContext);
+}

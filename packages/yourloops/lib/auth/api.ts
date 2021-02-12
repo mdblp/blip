@@ -34,9 +34,8 @@ import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
 import { MessageNote } from "models/message";
 import { User, UserRoles, Profile, Preferences, Settings } from "../../models/shoreline";
-import { ITeam, ITeamMember, TeamMemberRole, TeamMemberStatus, TeamType } from "../../models/team";
+import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
-import { Team } from "../team";
 import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
@@ -45,8 +44,7 @@ import HttpStatus from "../http-status-codes";
 const SESSION_TOKEN_KEY = "session-token";
 const TRACE_TOKEN_KEY = "trace-token";
 const LOGGED_IN_USER = "logged-in-user";
-const SESSION_TOKEN_HEADER = "x-tidepool-session-token";
-const TRACE_SESSION_HEADER = "x-tidepool-trace-session";
+
 
 export class PatientDataLoadedEvent extends Event {
   public user: User;
@@ -70,16 +68,11 @@ class AuthApi extends EventTarget {
   private loginLock: boolean;
   /** number of wrong tentative connection */
   private wrongCredentialCount: number;
-  /** patients list */
-  private patients: ITeamMember[] | null;
-  private teams: ITeam[] | null;
 
   constructor() {
     super();
 
     this.user = null;
-    this.patients = null;
-    this.teams = null;
     this.log = bows("API");
     this.loginLock = false;
     this.wrongCredentialCount = 0;
@@ -118,8 +111,13 @@ class AuthApi extends EventTarget {
   /**
    * @returns {string|null} the session token or null
    */
-  public get token(): string | null {
+  public getSessionToken(): string | null {
     return this.sessionToken;
+  }
+
+  /** The trace token */
+  public getTraceToken(): string | null {
+    return this.traceToken;
   }
 
   public get whoami(): User | null {
@@ -137,10 +135,6 @@ class AuthApi extends EventTarget {
     return this.isLoggedIn && !_.isEmpty(this.user?.profile?.patient);
   }
 
-  public get havePatientsShare(): boolean {
-    return !_.isEmpty(this.patients);
-  }
-
   /**
    * Listen to session storage events, to know if another tab is logged out.
    * @param {StorageEvent} ev A change in the storage
@@ -151,7 +145,7 @@ class AuthApi extends EventTarget {
       const token = sessionStorage.getItem(SESSION_TOKEN_KEY);
       if (token === null) {
         this.logout();
-      } else if (token !== this.token) {
+      } else if (token !== this.sessionToken) {
         // We should not see this
       }
     }
@@ -186,7 +180,7 @@ class AuthApi extends EventTarget {
     const response = await fetch(authURL.toString(), {
       method: "POST",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken,
+        [HttpHeaderKeys.traceToken]: this.traceToken,
         Authorization: `Basic ${btoa(`${username}:${password}`)}`,
       },
     });
@@ -220,7 +214,7 @@ class AuthApi extends EventTarget {
     }
 
     this.wrongCredentialCount = 0;
-    this.sessionToken = response.headers.get(SESSION_TOKEN_HEADER);
+    this.sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
     this.user = (await response.json()) as User;
 
     if (!Array.isArray(this.user.roles)) {
@@ -295,91 +289,9 @@ class AuthApi extends EventTarget {
     this.sessionToken = null;
     this.traceToken = null;
     this.user = null;
-    this.patients = null;
     sessionStorage.removeItem(SESSION_TOKEN_KEY);
     sessionStorage.removeItem(TRACE_TOKEN_KEY);
     sessionStorage.removeItem(LOGGED_IN_USER);
-  }
-
-  public async getUserShares(): Promise<ITeamMember[]> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("not-logged-in"));
-    }
-
-    this.log.info("Fetching patients...");
-
-    const seagullURL = new URL(`/metadata/users/${this.user?.userid}/users`, appConfig.API_HOST);
-    const response = await fetch(seagullURL.toString(), {
-      method: "GET",
-      headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
-      },
-    });
-
-    this.patients = [];
-    if (response.ok) {
-      const users = (await response.json()) as User[];
-      // FIXME will be removed with the team API call
-      const nPatients = users.length;
-      let nPrivate = 0;
-      for (let i = 0; i < nPatients; i++) {
-        const user = users[i];
-
-        // Randomize the teams associations
-        const val = (Math.random() * 10) | 0;
-        let teamIds = [];
-        if (i < 2) {
-          teamIds = ["private"];
-        } else if (val < 6) { // eslint-disable-line no-magic-numbers
-          teamIds = ["team-0"];
-        } else if (val < 8) { // eslint-disable-line no-magic-numbers
-          teamIds = ["team-1"];
-        } else {
-          teamIds = ["team-0", "team-1"];
-        }
-        // eslint-disable-next-line no-magic-numbers
-        if (nPrivate < 3 && !teamIds.includes("private")) {
-          nPrivate++;
-          teamIds.push("private");
-        }
-
-        teamIds.forEach((teamId) => {
-          const member: ITeamMember = {
-            invitationStatus: TeamMemberStatus.accepted,
-            role: TeamMemberRole.patient,
-            teamId,
-            userId: user.userid,
-            user,
-          };
-
-          this.patients?.push(member);
-        });
-      }
-      // Pending invite patient
-      this.patients.push({
-        invitationStatus: TeamMemberStatus.pending,
-        role: TeamMemberRole.patient,
-        teamId: "team-0",
-        userId: "a0a0a0b0",
-        user: {
-          userid: "a0a0a0b0",
-          username: "gerard.dumoulin@example.com",
-          termsAccepted: "2021-01-05T15:00:00.000Z",
-          profile: {
-            firstName: "Gerard",
-            lastName: "Dumoulin",
-            fullName: "Gerard D.",
-          },
-        },
-      });
-      // FIXME end
-      return this.patients;
-    }
-
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
   }
 
   public async getUserProfile(user: User): Promise<Profile | null> {
@@ -393,8 +305,8 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "GET",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
     });
 
@@ -424,8 +336,8 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "GET",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
     });
 
@@ -455,8 +367,8 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "GET",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
     });
 
@@ -505,27 +417,15 @@ class AuthApi extends EventTarget {
     return this.user.preferences.patientsStarred;
   }
 
-  public async loadPatientData(userID: string): Promise<PatientData> {
-    let patient: User | null | undefined = null;
-
-    if (this.userIsPatient) {
-      patient = this.user;
-    } else if (this.isLoggedIn && this.patients !== null) {
-      patient = this.patients.find((member: ITeamMember) => member.userId === userID)?.user;
-    }
-
-    if (_.isEmpty(patient)) {
-      throw new Error(`Missing patient ${userID}`);
-    }
-
+  public async loadPatientData(patient: User): Promise<PatientData> {
     this.dispatchEvent(new Event("patient-data-loading"));
 
-    const dataURL = new URL(`/data/${userID}`, appConfig.API_HOST);
+    const dataURL = new URL(`/data/${patient.userid}`, appConfig.API_HOST);
     const response = await fetch(dataURL.toString(), {
       method: "GET",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
     });
 
@@ -557,8 +457,8 @@ class AuthApi extends EventTarget {
     const response = await fetch(messageURL.toString(), {
       method: "POST",
       headers: {
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
       body: JSON.stringify({
         message: {
@@ -575,270 +475,6 @@ class AuthApi extends EventTarget {
 
     const responseBody = (await response.json()) as APIErrorResponse;
     throw new Error(t(responseBody.reason));
-  }
-
-  public async fetchTeams(): Promise<ITeam[]> {
-    this.log.info("Fetching teams...");
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(1000 + Math.random() * 200);
-
-    if (this.teams === null) {
-      this.teams = [
-        {
-          // FIXME
-          id: "team-0",
-          name: "CHU Grenoble",
-          code: "123456789",
-          ownerId: "abcdef",
-          type: TeamType.medical,
-          address: {
-            line1: "Boulevard de la Chantourne",
-            line2: "Cedex 38703",
-            zip: "38700",
-            city: "La Tronche",
-            country: "FR",
-          },
-          phone: "+33 (0)4 76 76 75 75",
-          email: "secretariat-diabethologie@chu-grenoble.fr",
-          members: [
-            {
-              teamId: "team-0",
-              userId: "a0a0a0a0",
-              role: TeamMemberRole.viewer,
-              invitationStatus: TeamMemberStatus.accepted,
-              user: {
-                userid: "a0a0a0a0",
-                username: "jean.dupont@chu-grenoble.fr",
-                termsAccepted: "2019-01-25T17:47:56+01:00",
-                roles: [ UserRoles.hcp ],
-                profile: { firstName: "Jean", lastName: "Dupont", fullName: "Jean Dupont" },
-              },
-            },
-            {
-              // Pending member invitation -> user not validated (missing termsAccepted field)
-              teamId: "team-0",
-              userId: "a0a0a0a1",
-              role: TeamMemberRole.viewer,
-              invitationStatus: TeamMemberStatus.pending,
-              user: {
-                userid: "a0a0a0a1",
-                roles: [ UserRoles.hcp ],
-                username: "michelle.dupuis@chu-grenoble.fr",
-              },
-            },
-          ],
-        },
-        {
-          id: "team-1",
-          name: "Charité – Universitätsmedizin Berlin",
-          code: "987654321",
-          phone: "+49 30 450 - 50",
-          address: {
-            line1: "Charitéplatz 1",
-            city: "Berlin",
-            zip: "10117",
-            country: "DE",
-          },
-          ownerId: "abcdef",
-          type: TeamType.medical,
-          members: [
-            {
-              teamId: "team-1",
-              userId: "b0b1b2b3",
-              role: TeamMemberRole.admin,
-              invitationStatus: TeamMemberStatus.accepted,
-              user: {
-                userid: "b0b1b2b3",
-                roles: [ UserRoles.hcp ],
-                username: "adelheide.alvar@charite.de",
-                termsAccepted: "2019-01-25T17:47:56+01:00",
-                profile: { firstName: "Adelheide", lastName: "Alvar", fullName: "Adelheide Alvar" },
-              },
-            },
-          ],
-        },
-      ];
-
-      // Add ourselves to the teams:
-      if (this.user !== null) {
-        const me = _.cloneDeep(this.user);
-        this.teams[0].members.push({
-          teamId: "team-0",
-          userId: me.userid,
-          role: TeamMemberRole.admin,
-          invitationStatus: TeamMemberStatus.accepted,
-          user: me,
-        });
-        this.teams[1].members.push({
-          teamId: "team-1",
-          userId: me.userid,
-          role: TeamMemberRole.admin,
-          invitationStatus: TeamMemberStatus.accepted,
-          user: me,
-        });
-      }
-    }
-    return _.cloneDeep(this.teams);
-  }
-
-  public async invitePatient(username: string, teamId: string): Promise<void> {
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-    // For future!
-    const team = this.teams?.find(t => t.id === teamId);
-    if (typeof team === "object") {
-      team.members.push({
-        invitationStatus: TeamMemberStatus.pending,
-        role: TeamMemberRole.patient,
-        teamId,
-        userId: username,
-        user: {
-          userid: username,
-          username,
-        },
-      });
-    }
-  }
-
-  public async createTeam(team: Partial<ITeam>): Promise<void> {
-    if (this.teams === null) {
-      this.teams = [];
-    }
-
-    // id, code, owner fields will be set by the back-end API
-    const tmpTeam = {
-      ...team,
-      id: `team-${Math.round(Math.random() * 1000)}`, // eslint-disable-line no-magic-numbers
-      code: "123-456-789",
-      ownerId: this.user?.userid as string,
-    };
-
-    this.teams.push(tmpTeam as ITeam);
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-  }
-
-  public async editTeam(editedTeam: ITeam): Promise<void> {
-    if (this.teams === null || this.teams.length < 1) {
-      throw new Error("Empty team list!");
-    }
-    const nTeams = this.teams.length;
-    for (let i = 0; i < nTeams; i++) {
-      const team = this.teams[i];
-      if (editedTeam.id === team.id) {
-        this.teams[i] = editedTeam;
-        break;
-      }
-    }
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-  }
-
-  public async leaveTeam(team: Team): Promise<void> {
-    if (this.teams === null || this.teams.length < 1) {
-      throw new Error("Empty team list !");
-    }
-    if (this.user === null) {
-      throw new Error("Not logged-in !");
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (Math.random() < 0.2) {
-      // eslint-disable-next-line no-magic-numbers
-      await waitTimeout(500 + Math.random() * 200);
-      throw new Error("A random error");
-    }
-
-    const nTeams = this.teams.length;
-    for (let i = 0; i < nTeams; i++) {
-      const thisTeam = this.teams[i];
-      if (thisTeam.id === team.id) {
-        this.log.debug(`Removing team ${thisTeam.id}`);
-        this.teams.splice(i, 1);
-        break;
-      }
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-  }
-
-  public async removeTeamMember(team: Team, userId: string): Promise<void> {
-    if (this.teams === null || this.teams.length < 1) {
-      throw new Error("Empty team list!");
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (Math.random() < 0.2) {
-      // eslint-disable-next-line no-magic-numbers
-      await waitTimeout(500 + Math.random() * 200);
-      throw new Error("A random error");
-    }
-
-    const nTeams = this.teams.length;
-    for (let i = 0; i < nTeams; i++) {
-      const thisTeam = this.teams[i];
-      if (thisTeam.id === team.id) {
-        if (Array.isArray(thisTeam.members)) {
-          const idx = thisTeam.members.findIndex((tm: ITeamMember): boolean => tm.userId === userId);
-          if (idx > -1) {
-            thisTeam.members.splice(idx, 1);
-          }
-        }
-        break;
-      }
-    }
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-  }
-
-  public async changeTeamUserRole(team: Team, userId: string, admin: boolean): Promise<void> {
-    if (this.teams === null || this.teams.length < 1) {
-      throw new Error("Empty team list!");
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (Math.random() < 0.2) {
-      // eslint-disable-next-line no-magic-numbers
-      await waitTimeout(500 + Math.random() * 200);
-      throw new Error("A random error");
-    }
-
-    const nTeams = this.teams.length;
-    for (let i = 0; i < nTeams; i++) {
-      const thisTeam = this.teams[i];
-      if (thisTeam.id === team.id) {
-        if (!Array.isArray(thisTeam.members)) {
-          throw new Error("No member for this team !");
-        }
-        for (const member of thisTeam.members) {
-          if (member.userId === userId) {
-            member.role = admin ? TeamMemberRole.admin : TeamMemberRole.viewer;
-            break;
-          }
-        }
-        break;
-      }
-    }
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
-  }
-
-  public async inviteHcpTeamMember(team: Team, email: string, role: TeamMemberRole): Promise<void> {
-    if (this.teams === null || this.teams.length < 1) {
-      throw new Error("Empty team list!");
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    if (Math.random() < 0.2) {
-      // eslint-disable-next-line no-magic-numbers
-      await waitTimeout(500 + Math.random() * 200);
-      throw new Error("A random error");
-    }
-
-    this.log.info(`Invite ${email} to ${team.name} with role ${role}`);
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(500 + Math.random() * 200);
   }
 
   /**
@@ -887,9 +523,9 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
       body: JSON.stringify(profile),
     });
@@ -917,9 +553,9 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
       body: JSON.stringify(settings),
     });
@@ -947,9 +583,9 @@ class AuthApi extends EventTarget {
     const response = await fetch(seagullURL.toString(), {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
-        [TRACE_SESSION_HEADER]: this.traceToken as string,
-        [SESSION_TOKEN_HEADER]: this.sessionToken as string,
+        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+        [HttpHeaderKeys.traceToken]: this.traceToken as string,
+        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
       },
       body: JSON.stringify(preferences),
     });

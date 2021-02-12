@@ -48,13 +48,14 @@ import Typography from "@material-ui/core/Typography";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import { Team, TeamMember } from "../../lib/team";
+import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
+import { Team, TeamMember, useTeam } from "../../lib/team";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 
 export interface TeamMembersProps {
   team: Team;
-  onSwitchAdminRole: (team: Team, userId: string, admin: boolean) => Promise<void>;
-  onShowRemoveTeamMemberDialog: (team: Team, userId: string) => Promise<void>;
+  onSwitchAdminRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<void>;
+  onShowRemoveTeamMemberDialog: (member: TeamMember) => Promise<void>;
 }
 
 const teamMembersStyles = makeStyles((theme: Theme) => {
@@ -87,25 +88,20 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
 
   // Hooks
   const authContext = useAuth();
+  const teamHook = useTeam();
   const [updatingUser, setUpdatingUser] = React.useState("");
+
   // Local variables
   const currentUserId = authContext.user?.userid as string;
-  const userIsAdmin = team.isUserAdministrator(currentUserId);
-  const userIsTheOnlyAdministrator = team.isUserTheOnlyAdministrator(currentUserId);
+  const userIsAdmin = teamHook.isUserAdministrator(team, currentUserId);
+  const userIsTheOnlyAdministrator = teamHook.isUserTheOnlyAdministrator(team, currentUserId);
 
-  const handleSwitchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const userId = event.target.name;
-    const isAdmin = event.target.checked;
-    setUpdatingUser(userId);
-    await onSwitchAdminRole(team, userId, isAdmin);
-    setUpdatingUser("");
-  };
-
-  // prettier-ignore
-  const rows: JSX.Element[] = team.medicalMembers.map((member: Readonly<TeamMember>): JSX.Element => {
-    const userId = member.userId;
+  const rows: JSX.Element[] = teamHook.getMedicalMembers(team).map((member: Readonly<TeamMember>): JSX.Element => {
+    const userId = member.user.userid;
     const email = member.user.username ?? "";
-    const isAdmin = member.role === "admin";
+    const firstName = teamHook.getUserFirstName(member.user);
+    const lastName = teamHook.getUserLastName(member.user);
+    const isAdmin = member.role === TeamMemberRole.admin;
 
     // Determine if the current user can change the admin role for this member
     // - Must be an admin
@@ -122,12 +118,19 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
         </div>
       );
     } else {
+      const handleSwitchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+        const userId = event.target.name;
+        const isAdmin = event.target.checked;
+        setUpdatingUser(userId);
+        await onSwitchAdminRole(member, isAdmin ? TeamMemberRole.admin : TeamMemberRole.viewer);
+        setUpdatingUser("");
+      };
       checkboxElement = (
         <Checkbox
           disabled={checkboxAdminDisabled}
-          id={`team-members-list-${team.id}-row-${member.userId}-role-checkbox`}
+          id={`team-members-list-${team.id}-row-${userId}-role-checkbox`}
           color="primary"
-          name={member.userId}
+          name={userId}
           checked={isAdmin}
           onChange={handleSwitchRole} />
       );
@@ -136,11 +139,11 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     let removeMemberButton: JSX.Element | null = null;
     if (userIsAdmin && userId !== currentUserId) {
       const handleClickRemoveMember = async (): Promise<void> => {
-        await onShowRemoveTeamMemberDialog(team, userId);
+        await onShowRemoveTeamMemberDialog(member);
       };
       removeMemberButton = (
         <IconButton
-          id={`team-members-list-${team.id}-row-${member.userId}-action-remove`}
+          id={`team-members-list-${team.id}-row-${userId}-action-remove`}
           color="primary"
           aria-label="aria-team-remove-member"
           component="span"
@@ -151,16 +154,16 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     }
 
     return (
-      <TableRow id={`team-members-list-${team.id}-row-${member.userId}`} key={member.userId}>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-lastname`}>{member.lastName}</TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-firstname`}>{member.firstName}</TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-email`}>
-          <Link id={`team-members-list-${team.id}-row-${member.userId}-email-link`} href={`mailto:${email}`}>{email}</Link>
+      <TableRow id={`team-members-list-${team.id}-row-${userId}`} key={userId}>
+        <TableCell id={`team-members-list-${team.id}-row-${userId}-lastname`}>{lastName}</TableCell>
+        <TableCell id={`team-members-list-${team.id}-row-${userId}-firstname`}>{firstName}</TableCell>
+        <TableCell id={`team-members-list-${team.id}-row-${userId}-email`}>
+          <Link id={`team-members-list-${team.id}-row-${userId}-email-link`} href={`mailto:${email}`}>{email}</Link>
         </TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-role`}>
+        <TableCell id={`team-members-list-${team.id}-row-${userId}-role`}>
           {checkboxElement}
         </TableCell>
-        <TableCell id={`team-members-list-${team.id}-row-${member.userId}-actions`} align="right">
+        <TableCell id={`team-members-list-${team.id}-row-${userId}-actions`} align="right">
           {removeMemberButton}
         </TableCell>
       </TableRow>
@@ -172,10 +175,11 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
   const { team } = props;
-  const nMembers = team.numMedicalMembers;
 
   const classes = teamMembersStyles();
   const { t } = useTranslation("yourloops");
+  const teamHook = useTeam();
+  const nMembers = teamHook.getNumMedicalMembers(team);
 
   return (
     <div id={`team-members-list-${team.id}`} className={classes.root}>

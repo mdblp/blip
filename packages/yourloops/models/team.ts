@@ -35,12 +35,17 @@ export enum TeamMemberRole {
   patient = "patient",
 }
 
+export type TypeTeamMemberRole = keyof typeof TeamMemberRole;
+
 export enum TeamMemberStatus {
   pending = "pending",
   accepted = "accepted",
   rejected = "rejected",
 }
 
+/**
+ * Team member (API view)
+ */
 export interface ITeamMember {
   userId: string;
   teamId: string;
@@ -49,6 +54,9 @@ export interface ITeamMember {
   user: User;
 }
 
+/**
+ * Team interface (API view)
+ */
 export interface ITeam {
   readonly id: string;
   name: string;

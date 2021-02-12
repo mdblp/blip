@@ -28,13 +28,15 @@
 
 import * as React from "react";
 import { User } from "models/shoreline";
-import AuthApiClient from "../api";
+import apiClient from "../api";
 
 /**
  * The auth provider hook return values.
  */
 export interface IAuthContext {
   user: User | null;
+  sessionToken: string | null;
+  traceToken: string | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   login(username: string, password: string): Promise<User>;
   logout(): void;
@@ -60,13 +62,19 @@ export function useAuth(): IAuthContext {
  * Provider hook that creates auth object and handles state
  */
 export function DefaultAuthProvider(): IAuthContext {
-  const [user, setUser] = React.useState<User | null>(AuthApiClient.whoami);
+  // JWT token as a string.
+  const [sessionToken, setSessionToken] = React.useState<string | null>(null);
+  // Trace token is used to trace the calls betweens different microservices API calls for debug purpose.
+  const [traceToken, setTraceToken] = React.useState<string | null>(null);
+  const [user, setUser] = React.useState<User | null>(apiClient.whoami);
 
   // Wrap any methods we want to use making sure
   // to save the user to state.
   const login = async (username: string, password: string): Promise<User> => {
-    const user = await AuthApiClient.login(username, password);
+    const user = await apiClient.login(username, password);
     setUser(user);
+    setSessionToken(apiClient.getSessionToken());
+    setTraceToken(apiClient.getTraceToken());
     return user;
   };
 
@@ -74,14 +82,20 @@ export function DefaultAuthProvider(): IAuthContext {
     console.log("test signup", username, password);
   };
 
-  const logout = (): void => AuthApiClient.logout();
+  const logout = (): void => {
+    apiClient.logout();
+    setSessionToken(null);
+    setTraceToken(null);
+  };
 
-  const isLoggedIn = (): boolean => AuthApiClient.isLoggedIn;
+  const isLoggedIn = (): boolean => sessionToken !== null && traceToken !== null && user !== null;
 
   const sendPasswordResetEmail = (username: string): Promise<boolean> => {
     console.log("send password reset email ", username);
     return Promise.resolve(true);
   };
+
+
 
   // Keep this as we don't know if we are going to need it.
   // Subscribe to user on mount
@@ -103,6 +117,8 @@ export function DefaultAuthProvider(): IAuthContext {
   // Return the user object and auth methods
   return {
     user,
+    sessionToken,
+    traceToken,
     setUser,
     login,
     logout,
@@ -121,5 +137,3 @@ export function CustomAuthProvider(props: IAuthProvider): JSX.Element {
   const auth = provider();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }
-
-export default CustomAuthProvider;

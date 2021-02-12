@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * HCPs patient data page
+ * HCPs main page
  *
  * All rights reserved.
  *
@@ -27,63 +27,45 @@
  */
 
 import * as React from "react";
+import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import bows from "bows";
-import Container from "@material-ui/core/Container";
 
-import Blip from "blip";
+import { defer } from "../../lib/utils";
+import { TeamContextProvider, DefaultTeamContext } from "../../lib/team";
+import HcpNavBar from "../../components/hcp-nav-bar";
+import PatientListPage from "./patients-list";
+import PatientDataPage from "./patient-data";
+import TeamsPage from "./teams-page";
 
-import { UserRoles } from "models/shoreline";
-import appConfig from "../../lib/config";
-import apiClient from "../../lib/auth/api";
-import { useTeam } from "../../lib/team";
-
-interface PatientDataProps {
-  patientId?: string;
+/**
+ * Patient profile page for HCPs
+ */
+function PatientProfile(): JSX.Element {
+  return <div>TODO</div>;
 }
 
-interface PatientDataPageErrorProps {
-  msg: string;
-}
-
-const log = bows("PatientDataPage");
-
-function PatientDataPageError({ msg }: PatientDataPageErrorProps): JSX.Element {
-  return (
-    <Container maxWidth="lg">
-      <strong>{msg}</strong>
-    </Container>
-  );
-}
-
-function PatientDataPage(props: PatientDataProps): JSX.Element {
-  const { patientId } = props;
-
-  const [error, setError] = React.useState<string | null>(null);
-  const teamHook = useTeam();
-
-  if (typeof patientId === "undefined") {
-    return <PatientDataPageError msg="Invalid patient" />;
-  }
-
-  const user = teamHook.getUser(patientId);
-  if (user === null || !user.roles?.includes(UserRoles.patient)) {
-    return <PatientDataPageError msg="Invalid patient" />;
-  }
-
-  apiClient.loadPatientData(user).catch((reason: unknown) => {
-    log.error("loadPatientData", reason);
-    setError("Doesn't compute");
-  });
-
-  if (error !== null) {
-    return <PatientDataPageError msg={error} />;
+/**
+ * Health care professional page
+ */
+function HcpPage(props: RouteComponentProps): JSX.Element | null {
+  const log = bows("HCP Page");
+  log.info("in HCP page ", props.history.location);
+  if (props.history.location.pathname === "/hcp") {
+    log.info("Redirecting to the patients list", props);
+    defer(() => props.history.push("/hcp/patients"));
+    return null;
   }
 
   return (
-    <Container maxWidth="lg">
-      <Blip config={appConfig} api={apiClient} />
-    </Container>
+    <TeamContextProvider context={DefaultTeamContext}>
+      <HcpNavBar />
+      <Switch>
+        <Route path="/hcp/patients" component={PatientListPage} />
+        <Route path="/hcp/profile/:patientId" component={PatientProfile} />
+        <Route path="/hcp/patient/:patientId" component={PatientDataPage} />
+        <Route path="/hcp/teams" component={TeamsPage} />
+      </Switch>
+    </TeamContextProvider>
   );
 }
-
-export default PatientDataPage;
+export default HcpPage;

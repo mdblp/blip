@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * HCPs index
+ * Yourloops HTTP Header constants
  *
  * All rights reserved.
  *
@@ -26,5 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HcpPage from "./hcp";
-export default HcpPage;
+export enum HttpHeaderKeys {
+  contentType = "Content-Type",
+  sessionToken = "x-tidepool-session-token",
+  traceToken = "x-tidepool-trace-session",
+}
+
+export enum HttpHeaderValues {
+  contentType = "application/json",
+}
