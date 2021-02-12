@@ -1,23 +1,23 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
-import _ from "lodash";
-import bows from "bows";
-import sundial from "sundial";
-import { withTranslation, Trans } from "react-i18next";
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import _ from 'lodash';
+import bows from 'bows';
+import sundial from 'sundial';
+import { withTranslation, Trans } from 'react-i18next';
 
 // tideline dependencies & plugins
-import tidelineBlip from "tideline/plugins/blip";
+import tidelineBlip from 'tideline/plugins/blip';
 const BasicsChart = tidelineBlip.basics;
 
-import { components as vizComponents, utils as vizUtils } from "tidepool-viz";
+import { components as vizComponents, utils as vizUtils } from 'tidepool-viz';
 const Loader = vizComponents.Loader;
 const getLocalizedCeiling = vizUtils.datetime.getLocalizedCeiling;
 
-import Stats from "./stats";
-import BgSourceToggle from "./bgSourceToggle";
-import Header from "./header";
-import Footer from "./footer";
-import { BG_DATA_TYPES } from "../../core/constants";
+import Stats from './stats';
+import BgSourceToggle from './bgSourceToggle';
+import Header from './header';
+import Footer from './footer';
+import { BG_DATA_TYPES } from '../../core/constants';
 
 class Basics extends Component {
   static propTypes = {
@@ -47,12 +47,12 @@ class Basics extends Component {
     profileDialog: PropTypes.func.isRequired,
   };
 
-  static displayName = "Basics";
+  static displayName = 'Basics';
 
   constructor(props) {
     super(props);
-    this.chartType = "basics";
-    this.log = bows("Basics View");
+    this.chartType = 'basics';
+    this.log = bows('Basics View');
 
     this.state = this.getInitialState();
   }
@@ -64,7 +64,7 @@ class Basics extends Component {
   });
 
   UNSAFE_componentWillMount = () => {
-    const dateRange = _.get(this.props, "patientData.basicsData.dateRange");
+    const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
 
     if (dateRange) {
       const endpoints = [dateRange[0], getLocalizedCeiling(dateRange[1], this.props.timePrefs).toISOString()];
@@ -75,7 +75,7 @@ class Basics extends Component {
 
   render = () => {
     return (
-      <div id="tidelineMain" className="basics">
+      <div id='tidelineMain' className='basics'>
         <Header
           ProfileDialog={this.props.profileDialog}
           chartType={this.chartType}
@@ -93,17 +93,17 @@ class Basics extends Component {
           onClickSettings={this.props.onSwitchToSettings}
           onClickBgLog={this.handleClickBgLog}
           onClickPrint={this.props.onClickPrint}
-          ref="header"
+          ref='header'
         />
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content">
+        <div className='container-box-outer patient-data-content-outer'>
+          <div className='container-box-inner patient-data-content-inner'>
+            <div className='patient-data-content'>
               <Loader show={this.props.loading} overlay={true} />
               {this.isMissingBasics() ? this.renderMissingBasicsMessage() : this.renderChart()}
             </div>
           </div>
-          <div className="container-box-inner patient-data-sidebar">
-            <div className="patient-data-sidebar-inner">
+          <div className='container-box-inner patient-data-sidebar'>
+            <div className='patient-data-sidebar-inner'>
               <div>
                 <BgSourceToggle
                   bgSource={this.props.dataUtil.bgSource}
@@ -124,14 +124,14 @@ class Basics extends Component {
             </div>
           </div>
         </div>
-        <Footer chartType={this.chartType} onClickRefresh={this.props.onClickRefresh} ref="footer" />
+        <Footer chartType={this.chartType} onClickRefresh={this.props.onClickRefresh} ref='footer' />
       </div>
     );
   };
 
   renderChart = () => {
     return (
-      <div id="tidelineContainer" className="patient-data-chart-growing">
+      <div id='tidelineContainer' className='patient-data-chart-growing'>
         <BasicsChart
           bgClasses={this.props.bgPrefs.bgClasses}
           bgUnits={this.props.bgPrefs.bgUnits}
@@ -142,7 +142,7 @@ class Basics extends Component {
           timePrefs={this.props.timePrefs}
           updateBasicsData={this.props.updateBasicsData}
           updateBasicsSettings={this.props.updateBasicsSettings}
-          ref="chart"
+          ref='chart'
           trackMetric={this.props.trackMetric}
         />
       </div>
@@ -153,24 +153,24 @@ class Basics extends Component {
     const self = this;
     const { t } = this.props;
     const handleClickUpload = function () {
-      self.props.trackMetric("Clicked Partial Data Upload, No Pump Data for Basics");
+      self.props.trackMetric('Clicked Partial Data Upload, No Pump Data for Basics');
     };
 
     return (
-      <Trans className="patient-data-message patient-data-message-loading" i18nKey="html.basics-no-uploaded-data">
+      <Trans className='patient-data-message patient-data-message-loading' i18nKey='html.basics-no-uploaded-data'>
         <p>
           The Basics view shows a summary of your recent device activity, but it looks like you haven't uploaded device data yet.
         </p>
         <p>
-          To see the Basics,{" "}
-          <a href={this.props.uploadUrl} target="_blank" onClick={handleClickUpload}>
+          To see the Basics,{' '}
+          <a href={this.props.uploadUrl} target='_blank' onClick={handleClickUpload}>
             upload
-          </a>{" "}
+          </a>{' '}
           some device data.
         </p>
         <p>
-          If you just uploaded, try{" "}
-          <a href="" onClick={this.props.onClickNoDataRefresh}>
+          If you just uploaded, try{' '}
+          <a href='' onClick={this.props.onClickNoDataRefresh}>
             refreshing
           </a>
           .
@@ -182,27 +182,27 @@ class Basics extends Component {
   getTitle = () => {
     const { t } = this.props;
     if (this.isMissingBasics()) {
-      return "";
+      return '';
     }
     const timePrefs = this.props.timePrefs;
     let timezone;
     if (!timePrefs.timezoneAware) {
-      timezone = "UTC";
+      timezone = 'UTC';
     } else {
-      timezone = timePrefs.timezoneName || "UTC";
+      timezone = timePrefs.timezoneName || 'UTC';
     }
     const basicsData = this.props.patientData.basicsData;
-    const dtMask = t("MMM D, YYYY");
+    const dtMask = t('MMM D, YYYY');
 
     return (
       sundial.formatInTimezone(basicsData.dateRange[0], timezone, dtMask) +
-      " - " +
+      ' - ' +
       sundial.formatInTimezone(basicsData.dateRange[1], timezone, dtMask)
     );
   };
 
   isMissingBasics = () => {
-    const basicsData = _.get(this.props, "patientData.basicsData", {});
+    const basicsData = _.get(this.props, 'patientData.basicsData', {});
     let data;
 
     if (basicsData.data) {
@@ -212,7 +212,7 @@ class Basics extends Component {
     }
 
     // require at least one relevant data point to show The Basics
-    const basicsDataLength = _.flatten(_.map(_.values(data), "data")).length;
+    const basicsDataLength = _.flatten(_.map(_.values(data), 'data')).length;
     return basicsDataLength === 0;
   };
 
@@ -222,7 +222,7 @@ class Basics extends Component {
       e.preventDefault();
     }
 
-    const bgSourceLabel = bgSource === "cbg" ? "CGM" : "BGM";
+    const bgSourceLabel = bgSource === 'cbg' ? 'CGM' : 'BGM';
     this.props.trackMetric(`Basics Click to ${bgSourceLabel}`);
 
     const prefs = _.cloneDeep(this.props.chartPrefs);
@@ -241,7 +241,7 @@ class Basics extends Component {
     if (e) {
       e.preventDefault();
     }
-    const dateRange = _.get(this.props, "patientData.basicsData.dateRange");
+    const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
     this.props.onSwitchToTrends(dateRange[1]);
   };
 
@@ -249,7 +249,7 @@ class Basics extends Component {
     if (e) {
       e.preventDefault();
     }
-    const dateRange = _.get(this.props, "patientData.basicsData.dateRange");
+    const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
     this.props.onSwitchToDaily(dateRange[1]);
   };
 
@@ -257,7 +257,7 @@ class Basics extends Component {
     if (e) {
       e.preventDefault();
     }
-    const dateRange = _.get(this.props, "patientData.basicsData.dateRange");
+    const dateRange = _.get(this.props, 'patientData.basicsData.dateRange');
     this.props.onSwitchToBgLog(dateRange[1]);
   };
 

@@ -96,7 +96,6 @@ const useStyles = makeStyles((theme: Theme) =>
       borderWidth: "1px",
       padding: "0 64px",
     },
-    inputTitle: { color: "black" },
   })
 );
 

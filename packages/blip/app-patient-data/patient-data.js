@@ -15,41 +15,41 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import _ from "lodash";
-import bows from "bows";
-import moment from "moment";
+import React from 'react';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+import bows from 'bows';
+import moment from 'moment';
 
-import sundial from "../../sundial/sundial";
+import sundial from '../../sundial/sundial';
 
-import i18n from "../app/core/language";
-import config from "../app/config";
+import i18n from '../app/core/language';
+import config from '../app/config';
 
-import constants from "../../tideline/js/data/util/constants";
-import TidelineData from "../../tideline/js/tidelinedata";
+import constants from '../../tideline/js/data/util/constants';
+import TidelineData from '../../tideline/js/tidelinedata';
 
-import { utils as vizUtils, createPrintPDFPackage } from "../../viz/src/index";
-import Loader from "../../viz/src/components/common/loader/Loader";
-import DataUtils from "../../viz/src/utils/data";
+import { utils as vizUtils, createPrintPDFPackage } from '../../viz/src/index';
+import Loader from '../../viz/src/components/common/loader/Loader';
+import DataUtils from '../../viz/src/utils/data';
 
-import personUtils from "../app/core/personutils";
-import utils from "../app/core/utils";
-import { Header, Basics, Daily, Trends, Settings } from "../app/components/chart";
+import personUtils from '../app/core/personutils';
+import utils from '../app/core/utils';
+import { Header, Basics, Daily, Trends, Settings } from '../app/components/chart';
 
-import nurseShark from "../../tideline/plugins/nurseshark";
+import nurseShark from '../../tideline/plugins/nurseshark';
 
-import Messages from "../app/components/messages";
-import { FETCH_PATIENT_DATA_SUCCESS } from "../app/redux/constants/actionTypes";
+import Messages from '../app/components/messages';
+import { FETCH_PATIENT_DATA_SUCCESS } from '../app/redux/constants/actionTypes';
 
-import { MGDL_UNITS, DIABETES_DATA_TYPES } from "../app/core/constants";
+import { MGDL_UNITS, DIABETES_DATA_TYPES } from '../app/core/constants';
 
 const { waitTimeout } = utils;
 const { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs } = vizUtils.datetime;
 const { isAutomatedBasalDevice: isAutomatedBasalDeviceCheck } = vizUtils.device;
 const { commonStats, getStatDefinition, statFetchMethods } = vizUtils.stat;
 
-const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES, (t) => t !== "food");
+const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES, (t) => t !== 'food');
 
 /** @type {(s: string, p?: object) => string} */
 const t = i18n.t.bind(i18n);
@@ -77,7 +77,7 @@ class PatientDataPage extends React.Component {
   constructor(props) {
     super(props);
     const { api } = this.props;
-    this.log = bows("PatientData");
+    this.log = bows('PatientData');
 
     /** @type {(eventName: string, properties?: unknown) => void} */
     this.trackMetric = api.sendMetrics.bind(api);
@@ -86,13 +86,13 @@ class PatientDataPage extends React.Component {
 
     this.state = {
       // New states info
-      chartType: "daily",
+      chartType: 'daily',
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
       endpoints: [],
       timePrefs: {
         timezoneAware: false,
-        timezoneName: "UTC",
+        timezoneName: 'UTC',
       },
       bgPrefs: {
         bgUnits: MGDL_UNITS,
@@ -132,7 +132,7 @@ class PatientDataPage extends React.Component {
           smbgRangeOverlay: true,
         },
         bgLog: {
-          bgSource: "smbg",
+          bgSource: 'smbg',
         },
       },
       printOpts: {
@@ -167,10 +167,10 @@ class PatientDataPage extends React.Component {
 
   componentDidMount() {
     const { api } = this.props;
-    api.addEventListener("patient-data-loading", () => {
+    api.addEventListener('patient-data-loading', () => {
       this.setState({ loadingState: LOADING_STATE_INITIAL_FETCH });
     });
-    api.addEventListener("patient-data-loaded", (/** @type {PatientDataLoadedEvent} */ ev) => {
+    api.addEventListener('patient-data-loaded', (/** @type {PatientDataLoadedEvent} */ ev) => {
       const patient = ev.user;
 
       this.setState(
@@ -178,7 +178,7 @@ class PatientDataPage extends React.Component {
           loadingState: LOADING_STATE_INITIAL_PROCESS,
           errorMessage: null,
           patient,
-          chartType: "daily",
+          chartType: 'daily',
           createMessageDatetime: null,
           canPrint: false,
           pdf: null,
@@ -204,7 +204,7 @@ class PatientDataPage extends React.Component {
 
     switch (loadingState) {
       case LOADING_STATE_DONE:
-        if (chartType === "daily") {
+        if (chartType === 'daily') {
           messages = this.renderMessagesContainer();
         }
         patientData = this.renderPatientData();
@@ -219,12 +219,12 @@ class PatientDataPage extends React.Component {
         loader = <Loader />;
         break;
       default:
-        errorDisplay = <p>{errorMessage ?? t("Failed somewhere")}</p>;
+        errorDisplay = <p>{errorMessage ?? t('Failed somewhere')}</p>;
         break;
     }
 
     return (
-      <div className="patient-data patient-data-yourloops">
+      <div className='patient-data patient-data-yourloops'>
         {messages}
         {patientData}
         {loader}
@@ -241,7 +241,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderEmptyHeader() {
-    return <Header chartType={"no-data"} inTransition={false} atMostRecent={false} title={t("Data")} canPrint={false} />;
+    return <Header chartType={'no-data'} inTransition={false} atMostRecent={false} title={t('Data')} canPrint={false} />;
   }
 
   renderInitialLoading() {
@@ -249,9 +249,9 @@ class PatientDataPage extends React.Component {
     return (
       <div>
         {header}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content"></div>
+        <div className='container-box-outer patient-data-content-outer'>
+          <div className='container-box-inner patient-data-content-inner'>
+            <div className='patient-data-content'></div>
           </div>
         </div>
       </div>
@@ -260,20 +260,20 @@ class PatientDataPage extends React.Component {
 
   renderNoData() {
     const header = this.renderEmptyHeader();
-    const noDataText = t("{{patientName}} does not have any data yet.", {
+    const noDataText = t('{{patientName}} does not have any data yet.', {
       patientName: personUtils.patientFullName(this.state.patient),
     });
-    const reloadBtnText = t("Click to reload.");
+    const reloadBtnText = t('Click to reload.');
 
     return (
       <div>
         {header}
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content">
-              <div className="patient-data-message-no-data">
+        <div className='container-box-outer patient-data-content-outer'>
+          <div className='container-box-inner patient-data-content-inner'>
+            <div className='patient-data-content'>
+              <div className='patient-data-message-no-data'>
                 <p>{noDataText}</p>
-                <button type="button" className="btn btn-primary" onClick={this.handleClickNoDataRefresh}>
+                <button type='button' className='btn btn-primary' onClick={this.handleClickNoDataRefresh}>
                   {reloadBtnText}
                 </button>
               </div>
@@ -286,9 +286,9 @@ class PatientDataPage extends React.Component {
 
   isInsufficientPatientData() {
     /** @type {PatientData} */
-    const diabetesData = _.get(this.state, "processedPatientData.diabetesData", []);
+    const diabetesData = _.get(this.state, 'processedPatientData.diabetesData', []);
     if (_.isEmpty(diabetesData)) {
-      this.log.error("Sorry, tideline is kind of pointless with only messages.");
+      this.log.error('Sorry, tideline is kind of pointless with only messages.');
       return true;
     }
     return false;
@@ -298,7 +298,7 @@ class PatientDataPage extends React.Component {
     const { canPrint, patient } = this.state;
     return (
       <div>
-        <div className="app-no-print">
+        <div className='app-no-print'>
           <Settings
             bgPrefs={this.state.bgPrefs}
             chartPrefs={this.state.chartPrefs}
@@ -329,10 +329,10 @@ class PatientDataPage extends React.Component {
 
     const storeState = store.getState();
     this.log.debug(`renderChart(${this.state.chartType}): storeState = `, storeState);
-    const trendState = _.get(storeState, "viz.trends", {});
+    const trendState = _.get(storeState, 'viz.trends', {});
 
     switch (this.state.chartType) {
-      case "basics":
+      case 'basics':
         return (
           <Basics
             profileDialog={this.props.profileDialog}
@@ -361,7 +361,7 @@ class PatientDataPage extends React.Component {
             uploadUrl={config.UPLOAD_API}
           />
         );
-      case "daily":
+      case 'daily':
         return (
           <Daily
             profileDialog={this.props.profileDialog}
@@ -392,7 +392,7 @@ class PatientDataPage extends React.Component {
             }}
           />
         );
-      case "trends":
+      case 'trends':
         return (
           <Trends
             profileDialog={this.props.profileDialog}
@@ -421,7 +421,7 @@ class PatientDataPage extends React.Component {
             endpoints={this.state.endpoints}
           />
         );
-      case "settings":
+      case 'settings':
         return this.renderSettings();
     }
   }
@@ -458,13 +458,13 @@ class PatientDataPage extends React.Component {
 
   closeMessageThread() {
     this.chart.closeMessageThread();
-    this.trackMetric("Closed Message Thread Modal");
+    this.trackMetric('Closed Message Thread Modal');
   }
 
   closeMessageCreation() {
     this.setState({ createMessageDatetime: null });
     this.chart.closeMessageThread();
-    this.trackMetric("Closed New Message Modal");
+    this.trackMetric('Closed New Message Modal');
   }
 
   generatePDFStats(data, state) {
@@ -489,7 +489,7 @@ class PatientDataPage extends React.Component {
       });
     };
 
-    const basicsDateRange = _.get(data, "basics.dateRange");
+    const basicsDateRange = _.get(data, 'basics.dateRange');
     if (basicsDateRange) {
       data.basics.endpoints = [basicsDateRange[0], getLocalizedCeiling(basicsDateRange[1], state.timePrefs).toISOString()];
 
@@ -505,7 +505,7 @@ class PatientDataPage extends React.Component {
       };
     }
 
-    const dailyDateRanges = _.get(data, "daily.dataByDate");
+    const dailyDateRanges = _.get(data, 'daily.dataByDate');
     if (dailyDateRanges) {
       _.forIn(
         dailyDateRanges,
@@ -528,7 +528,7 @@ class PatientDataPage extends React.Component {
       );
     }
 
-    const bgLogDateRange = _.get(data, "bgLog.dateRange");
+    const bgLogDateRange = _.get(data, 'bgLog.dateRange');
     if (bgLogDateRange) {
       data.bgLog.endpoints = [
         getLocalizedCeiling(bgLogDateRange[0], state.timePrefs).toISOString(),
@@ -549,8 +549,8 @@ class PatientDataPage extends React.Component {
     const data = state.processedPatientData;
     const diabetesData = data.diabetesData;
 
-    const patientSettings = _.get(props, "patient.settings", {});
-    const siteChangeSource = state.updatedSiteChangeSource || _.get(props, "patient.settings.siteChangeSource");
+    const patientSettings = _.get(props, 'patient.settings', {});
+    const siteChangeSource = state.updatedSiteChangeSource || _.get(props, 'patient.settings.siteChangeSource');
     const pdfPatient = _.assign({}, props.patient, {
       settings: _.assign({}, patientSettings, { siteChangeSource }),
     });
@@ -566,14 +566,14 @@ class PatientDataPage extends React.Component {
 
     const dailyData = vizUtils.data.selectDailyViewData(
       mostRecent,
-      _.pick(data.grouped, ["basal", "bolus", "cbg", "food", "message", "smbg", "upload", "physicalActivity"]),
+      _.pick(data.grouped, ['basal', 'bolus', 'cbg', 'food', 'message', 'smbg', 'upload', 'physicalActivity']),
       state.printOpts.numDays.daily,
       state.timePrefs
     );
 
     const bgLogData = vizUtils.data.selectBgLogViewData(
       mostRecent,
-      _.pick(data.grouped, ["smbg"]),
+      _.pick(data.grouped, ['smbg']),
       state.printOpts.numDays.bgLog,
       state.timePrefs
     );
@@ -587,7 +587,7 @@ class PatientDataPage extends React.Component {
 
     this.generatePDFStats(pdfData, state);
 
-    this.log("Generating PDF with", pdfData, opts);
+    this.log('Generating PDF with', pdfData, opts);
 
     return createPrintPDFPackage(pdfData, opts);
   }
@@ -598,10 +598,10 @@ class PatientDataPage extends React.Component {
     if (dateMoment.isValid()) {
       let timezoneOffset = 0;
 
-      if (_.get(timezoneSettings, "timezoneAware")) {
+      if (_.get(timezoneSettings, 'timezoneAware')) {
         timezoneOffset = sundial.getOffsetFromZone(dateMoment.toISOString(), timezoneSettings.timezoneName);
       }
-      return dateMoment.subtract(timezoneOffset, "minutes").toISOString();
+      return dateMoment.subtract(timezoneOffset, 'minutes').toISOString();
     }
 
     return datetime;
@@ -615,7 +615,7 @@ class PatientDataPage extends React.Component {
   handleChartDateRangeUpdate(newEndpoints, cb = _.noop) {
     const { endpoints } = this.state;
     if (!_.isEqual(endpoints, newEndpoints)) {
-      this.log("Update endpoints from", endpoints, "to", newEndpoints);
+      this.log('Update endpoints from', endpoints, 'to', newEndpoints);
       this.setState({ endpoints: newEndpoints }, cb);
     }
   }
@@ -623,7 +623,7 @@ class PatientDataPage extends React.Component {
   handleMessageCreation(message) {
     this.chart.createMessageThread(nurseShark.reshapeMessage(message));
     this.props.addPatientNote(message);
-    this.trackMetric("Created New Message");
+    this.trackMetric('Created New Message');
   }
 
   handleReplyToMessage(comment, cb) {
@@ -631,7 +631,7 @@ class PatientDataPage extends React.Component {
     if (reply) {
       reply(comment, cb);
     }
-    this.trackMetric("Replied To Message");
+    this.trackMetric('Replied To Message');
   }
 
   handleEditMessage(message, cb) {
@@ -641,7 +641,7 @@ class PatientDataPage extends React.Component {
     }
     this.chart.editMessageThread(nurseShark.reshapeMessage(message));
     this.props.updatePatientNote(message);
-    this.trackMetric("Edit To Message");
+    this.trackMetric('Edit To Message');
   }
 
   handleShowMessageThread(messageThread) {
@@ -650,30 +650,30 @@ class PatientDataPage extends React.Component {
       fetchMessageThread(messageThread);
     }
 
-    this.trackMetric("Clicked Message Icon");
+    this.trackMetric('Clicked Message Icon');
   }
 
   handleShowMessageCreation(datetime) {
     this.setState({ createMessageDatetime: datetime });
-    this.trackMetric("Clicked Message Pool Background");
+    this.trackMetric('Clicked Message Pool Background');
   }
 
   handleSwitchToBasics(e) {
-    this.trackMetric("Clicked Switch To Basics", {
+    this.trackMetric('Clicked Switch To Basics', {
       fromChart: this.state.chartType,
     });
     if (e) {
       e.preventDefault();
     }
 
-    this.dataUtil.chartPrefs = this.state.chartPrefs["basics"];
+    this.dataUtil.chartPrefs = this.state.chartPrefs['basics'];
     this.setState({
-      chartType: "basics",
+      chartType: 'basics',
     });
   }
 
   handleSwitchToDaily(datetime, title) {
-    this.trackMetric("Clicked Basics " + title + " calendar", {
+    this.trackMetric('Clicked Basics ' + title + ' calendar', {
       fromChart: this.state.chartType,
     });
 
@@ -681,17 +681,17 @@ class PatientDataPage extends React.Component {
     const dateCeiling = getLocalizedCeiling(datetime || this.state.endpoints[1], this.state.timePrefs);
     const timezone = getTimezoneFromTimePrefs(this.state.timePrefs);
 
-    const datetimeLocation = moment.utc(dateCeiling.valueOf()).tz(timezone).subtract(1, "day").hours(12).toISOString();
+    const datetimeLocation = moment.utc(dateCeiling.valueOf()).tz(timezone).subtract(1, 'day').hours(12).toISOString();
 
-    this.dataUtil.chartPrefs = this.state.chartPrefs["daily"];
+    this.dataUtil.chartPrefs = this.state.chartPrefs['daily'];
     this.setState({
-      chartType: "daily",
+      chartType: 'daily',
       datetimeLocation,
     });
   }
 
   handleSwitchToTrends(datetime) {
-    this.trackMetric("Clicked Switch To Modal", {
+    this.trackMetric('Clicked Switch To Modal', {
       fromChart: this.state.chartType,
     });
 
@@ -701,22 +701,22 @@ class PatientDataPage extends React.Component {
 
     const datetimeLocation = moment.utc(dateCeiling.valueOf()).tz(timezone).toISOString();
 
-    this.dataUtil.chartPrefs = this.state.chartPrefs["trends"];
+    this.dataUtil.chartPrefs = this.state.chartPrefs['trends'];
     this.setState({
-      chartType: "trends",
+      chartType: 'trends',
       datetimeLocation,
     });
   }
 
   handleSwitchToSettings(e) {
-    this.trackMetric("Clicked Switch To Settings", {
+    this.trackMetric('Clicked Switch To Settings', {
       fromChart: this.state.chartType,
     });
     if (e) {
       e.preventDefault();
     }
     this.setState({
-      chartType: "settings",
+      chartType: 'settings',
     });
   }
 
@@ -731,7 +731,7 @@ class PatientDataPage extends React.Component {
       }
     }
 
-    this.trackMetric("Clicked Print", {
+    this.trackMetric('Clicked Print', {
       fromChart: this.state.chartType,
     });
 
@@ -744,7 +744,7 @@ class PatientDataPage extends React.Component {
         const { processingData, processedPatientData, loadingState } = this.state;
         let hasDiabetesData = false;
         if (processedPatientData !== null) {
-          hasDiabetesData = _.get(processedPatientData, "diabetesData.length", 0) > 0;
+          hasDiabetesData = _.get(processedPatientData, 'diabetesData.length', 0) > 0;
         }
 
         if (loadingState === LOADING_STATE_DONE && !processingData && hasDiabetesData) {
@@ -755,9 +755,9 @@ class PatientDataPage extends React.Component {
               resolve();
             })
             .catch((err) => {
-              this.log("generatePDF:", err);
+              this.log('generatePDF:', err);
               if (_.isFunction(window.onerror)) {
-                window.onerror("print", "patient-data", 0, 0, err);
+                window.onerror('print', 'patient-data', 0, 0, err);
               }
               reject(err);
             });
@@ -769,12 +769,12 @@ class PatientDataPage extends React.Component {
   }
 
   handleClickRefresh(/* e */) {
-    this.trackMetric("Clicked Refresh");
+    this.trackMetric('Clicked Refresh');
     this.handleRefresh();
   }
 
   handleClickNoDataRefresh(/* e */) {
-    this.trackMetric("Clicked No Data Refresh");
+    this.trackMetric('Clicked No Data Refresh');
     this.handleRefresh();
   }
 
@@ -844,7 +844,7 @@ class PatientDataPage extends React.Component {
   }
 
   updateBasicsSettings(patientId, settings, canUpdateSettings) {
-    this.log.warn("TODO", patientId, settings, canUpdateSettings);
+    this.log.warn('TODO', patientId, settings, canUpdateSettings);
     // if (canUpdateSettings) {
     //   this.props.updateBasicsSettings(patientId, settings);
     // }
@@ -892,29 +892,29 @@ class PatientDataPage extends React.Component {
   }
 
   deriveChartTypeFromLatestData(latestData, uploads) {
-    let chartType = "basics"; // Default to 'basics'
+    let chartType = 'basics'; // Default to 'basics'
 
     if (latestData && uploads) {
       // Ideally, we determine the default view based on the device type
       // so that, for instance, if the latest data type is cgm, but comes from
       // an insulin-pump, we still direct them to the basics view
-      const deviceMap = _.keyBy(uploads, "deviceId");
+      const deviceMap = _.keyBy(uploads, 'deviceId');
       const latestDataDevice = deviceMap[latestData.deviceId];
 
       if (latestDataDevice) {
         const tags = deviceMap[latestData.deviceId].deviceTags;
 
         switch (true) {
-          case _.includes(tags, "insulin-pump"):
-            chartType = "basics";
+          case _.includes(tags, 'insulin-pump'):
+            chartType = 'basics';
             break;
 
-          case _.includes(tags, "cgm"):
-            chartType = "trends";
+          case _.includes(tags, 'cgm'):
+            chartType = 'trends';
             break;
 
-          case _.includes(tags, "bgm"):
-            chartType = config.BRANDING === "diabeloop" ? "daily" : "bgLog";
+          case _.includes(tags, 'bgm'):
+            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
             break;
         }
       } else {
@@ -923,18 +923,18 @@ class PatientDataPage extends React.Component {
         const type = latestData.type;
 
         switch (type) {
-          case "bolus":
-          case "basal":
-          case "wizard":
-            chartType = "basics";
+          case 'bolus':
+          case 'basal':
+          case 'wizard':
+            chartType = 'basics';
             break;
 
-          case "cbg":
-            chartType = "trends";
+          case 'cbg':
+            chartType = 'trends';
             break;
 
-          case "smbg":
-            chartType = config.BRANDING === "diabeloop" ? "daily" : "bgLog";
+          case 'smbg':
+            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
             break;
         }
       }
@@ -947,20 +947,20 @@ class PatientDataPage extends React.Component {
     const { patient } = this.props;
     const patientID = patient.userid;
     // Return if we've already fetched all data, or are currently fetching
-    if (_.get(this.props, "fetchedPatientDataRange.fetchedUntil") === "start") {
+    if (_.get(this.props, 'fetchedPatientDataRange.fetchedUntil') === 'start') {
       if (cb) {
         cb();
       }
       return;
     }
 
-    this.log("fetching");
+    this.log('fetching');
 
-    const earliestRequestedData = _.get(this.props, "fetchedPatientDataRange.fetchedUntil");
+    const earliestRequestedData = _.get(this.props, 'fetchedPatientDataRange.fetchedUntil');
 
     const requestedPatientDataRange = {
-      start: moment.utc(earliestRequestedData).subtract(16, "weeks").toISOString(),
-      end: moment.utc(earliestRequestedData).subtract(1, "milliseconds").toISOString(),
+      start: moment.utc(earliestRequestedData).subtract(16, 'weeks').toISOString(),
+      end: moment.utc(earliestRequestedData).subtract(1, 'milliseconds').toISOString(),
     };
 
     const count = this.state.fetchEarlierDataCount + 1;
@@ -984,7 +984,7 @@ class PatientDataPage extends React.Component {
 
         this.props.onFetchEarlierData(fetchOpts, patientID);
 
-        this.trackMetric("Fetched earlier patient data", { patientID, count });
+        this.trackMetric('Fetched earlier patient data', { patientID, count });
         if (cb) {
           cb();
         }
@@ -1010,11 +1010,11 @@ class PatientDataPage extends React.Component {
       // If we didn't find a cutoff point (i.e. no diabetes datums beyond the cutoff time),
       // we process all the remaining fetched, unprocessed data.
       targetIndex = unprocessedData.length;
-      this.log("No diabetes data found beyond current processing slice.  Processing all remaining unprocessed data");
+      this.log('No diabetes data found beyond current processing slice.  Processing all remaining unprocessed data');
     } else if (diabetesDataCount === 1) {
       // If the first diabetes datum found was outside of our processing window, we need to include it.
       targetIndex++;
-      this.log("First diabetes datum found was outside current processing slice.  Adding it to slice");
+      this.log('First diabetes datum found was outside current processing slice.  Adding it to slice');
     }
 
     // Because targetIndex was set to the first one outside of our processing window, and we're
@@ -1036,20 +1036,20 @@ class PatientDataPage extends React.Component {
       ...bgPrefs,
     };
 
-    console.time("process data");
+    console.time('process data');
     const res = nurseShark.processData(data, opts.bgUnits);
     const tidelineData = new TidelineData(res.processedData, opts);
-    console.timeEnd("process data");
+    console.timeEnd('process data');
 
     if (_.isEmpty(tidelineData.data)) {
-      throw new Error(t("No data to display!"));
+      throw new Error(t('No data to display!'));
     }
 
     const endpoints = [tidelineData.data[0].normalTime, tidelineData.data[tidelineData.data.length - 1].normalTime];
 
-    this.log.info("Initial endpoints:", endpoints);
+    this.log.info('Initial endpoints:', endpoints);
 
-    this.dataUtil = new DataUtils(tidelineData.data.concat(_.get(tidelineData, "grouped.upload", [])), { bgPrefs, timePrefs });
+    this.dataUtil = new DataUtils(tidelineData.data.concat(_.get(tidelineData, 'grouped.upload', [])), { bgPrefs, timePrefs });
 
     this.setState(
       {
@@ -1058,7 +1058,7 @@ class PatientDataPage extends React.Component {
         endpoints,
       },
       () => {
-        this.log.debug("dispatch(FETCH_PATIENT_DATA_SUCCESS)");
+        this.log.debug('dispatch(FETCH_PATIENT_DATA_SUCCESS)');
         store.dispatch({
           type: FETCH_PATIENT_DATA_SUCCESS,
           payload: {
