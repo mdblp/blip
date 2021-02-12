@@ -87,7 +87,7 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
           fullWidth
           disabled
           id="firstname"
-          label={t("First name")}
+          label={t("firstName")}
           value={user.profile?.firstName}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -96,7 +96,7 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
           fullWidth
           disabled
           id="lastname"
-          label={t("Last name")}
+          label={t("lastName")}
           value={user.profile?.lastName}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -105,7 +105,7 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
           fullWidth
           disabled
           id="birthDate"
-          label={t("Date of birth")}
+          label={t("hcp-patient-profile-birthdate")}
           value={birthDate}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -114,7 +114,7 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
           fullWidth
           disabled
           id="mail"
-          label={t("Email")}
+          label={t("email")}
           value={mail}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -140,7 +140,7 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          {t("Close")}
+          {t("common-close")}
         </Button>
       </DialogActions>
     </Dialog>

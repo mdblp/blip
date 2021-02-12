@@ -234,5 +234,6 @@
   "modal-switch-hcp-action": "Switch to Professional",
   "modal-switch-hcp-failure": "Impossible to switch account. Please retry later.",
   "notif-hcp-invitation": "{hcpName} invites you to join {teamName}.",
-  "notif-caregiver-invitation": "{patientName} wants to share their diabetes data with you."
+  "notif-caregiver-invitation": "{patientName} wants to share their diabetes data with you.",
+  "patient-profile": "Patient profile"
 }
