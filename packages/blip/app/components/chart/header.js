@@ -55,7 +55,7 @@ class TidelineHeader extends React.Component {
     onClickBgLog: PropTypes.func,
     onClickSettings: PropTypes.func,
     onClickPrint: PropTypes.func,
-    ProfileDialog: PropTypes.func.isRequired,
+    ProfileDialog: PropTypes.func,
   };
 
   static defaultProps = {
@@ -184,7 +184,13 @@ class TidelineHeader extends React.Component {
       this.setState({ isDialogOpen: false });
     };
 
-    const ProfileDialog = this.props.ProfileDialog;
+    let profileDialog = null;
+    if (this.props.ProfileDialog) {
+      const ProfileDialog = this.props.ProfileDialog;
+      profileDialog = (
+        <ProfileDialog user={this.props.patient} isOpen={this.state.isDialogOpen} handleClose={handleDialogClose} />
+      );
+    }
 
     return (
       <div className='grid patient-data-subnav'>
@@ -193,7 +199,7 @@ class TidelineHeader extends React.Component {
           <Link className={home} to={patientLink} onClick={handleClick} title={t('Profile')}>
             <div>{homeValue}</div>
           </Link>
-          <ProfileDialog user={this.props.patient} isOpen={this.state.isDialogOpen} handleClose={handleDialogClose} />
+          {profileDialog}
         </div>
         <div className='app-no-print patient-data-subnav-left'>
           <a href='' className={basicsLinkClass} onClick={this.props.onClickBasics}>

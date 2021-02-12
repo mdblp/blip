@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
+const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
   const { t } = useTranslation("yourloops");
   const { textField, title, disabled } = useStyles();
 
@@ -146,3 +146,5 @@ export const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isO
     </Dialog>
   );
 };
+
+export default ProfileDialog;
