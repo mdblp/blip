@@ -143,7 +143,7 @@ function SignUpAccountSelector(props: any): JSX.Element {
           <Paper elevation={3} className={classes.Paper}>
             <FormControlLabel
               className={classes.FormControlLabel}
-              value="caregivers"
+              value="caregiver"
               control={<Radio />}
               label={
                 <RadioLabel
