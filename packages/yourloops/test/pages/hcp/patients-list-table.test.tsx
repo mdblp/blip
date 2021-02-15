@@ -32,13 +32,14 @@ import { shallow } from "enzyme";
 import sinon from "sinon";
 
 import PatientListTable, { PatientListTableProps } from "../../../pages/hcp/patients-list-table";
+import { SortDirection, SortFields } from "../../../pages/hcp//types";
 
 function testPatientListTable(): void {
   const defaultProps: PatientListTableProps = {
     patients: [],
     flagged: [],
-    order: "asc",
-    orderBy: "lastname",
+    order: SortDirection.asc,
+    orderBy: SortFields.lastname,
     onClickPatient: sinon.spy(),
     onFlagPatient: sinon.spy(),
     onSortList: sinon.spy(),

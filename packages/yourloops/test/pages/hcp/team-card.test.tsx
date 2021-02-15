@@ -32,12 +32,15 @@ import { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import sinon from "sinon";
 
 import { Team } from "../../../lib/team";
+import { loadTeams } from "../../../lib/team/hook";
 import TeamCard, { TeamCardProps, TeamInfo } from "../../../pages/hcp/team-card";
-import { teams } from "../../common";
+import { authHook } from "../../lib/auth/hook.test";
+import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamCard(): void {
+  let teams: Team[] = [];
   const defaultProps: TeamCardProps = {
-    team: new Team(teams[0]),
+    team: {} as Team,
     onShowAddMemberDialog: sinon.spy(),
     onShowEditTeamDialog: sinon.spy(),
     onShowLeaveTeamDialog: sinon.spy(),
@@ -45,14 +48,26 @@ function testTeamCard(): void {
 
   let component: ReactWrapper | ShallowWrapper | null = null;
 
+  const resetSpys = () => {
+    resetTeamAPIStubs();
+    (defaultProps.onShowEditTeamDialog as sinon.SinonSpy).resetHistory();
+    (defaultProps.onShowLeaveTeamDialog as sinon.SinonSpy).resetHistory();
+    (defaultProps.onShowAddMemberDialog as sinon.SinonSpy).resetHistory();
+  };
+
+  before(async () => {
+    resetSpys();
+    const result = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    teams = result.teams;
+    defaultProps.team = teams[1];
+  });
+
   afterEach(() => {
     if (component !== null) {
       component.unmount();
       component = null;
     }
-    (defaultProps.onShowEditTeamDialog as sinon.SinonSpy).resetHistory();
-    (defaultProps.onShowLeaveTeamDialog as sinon.SinonSpy).resetHistory();
-    (defaultProps.onShowAddMemberDialog as sinon.SinonSpy).resetHistory();
+    resetSpys();
   });
 
   it("should be able to render - TeamCard", () => {
@@ -70,7 +85,7 @@ function testTeamCard(): void {
   it("should not render the 2nd addr line if not present", () => {
     const props: TeamCardProps = {
       ...defaultProps,
-      team: new Team(teams[1]),
+      team: teams[2],
     };
     component = mount(<TeamCard {...props} />);
     expect(component.find(`#team-card-info-${props.team.id}-address-value`).find("br").length).to.be.equal(1);

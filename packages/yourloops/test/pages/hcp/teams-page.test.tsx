@@ -26,166 +26,175 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
+// import _ from "lodash";
 import * as React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+// import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
+import { mount, ReactWrapper, MountRendererProps } from "enzyme";
 import sinon from "sinon";
 
-import { t } from "../../../lib/language";
-import { Teams, Team } from "../../../lib/team";
-import apiClient from "../../../lib/auth/api";
+// import { t } from "../../../lib/language";
+import { CustomAuthProvider } from "../../../lib/auth";
+import { TeamContextProvider } from "../../../lib/team";
 import TeamsPage from "../../../pages/hcp/teams-page";
 
 import { waitTimeout } from "../../../lib/utils";
-import {
-  teams,
-  patients,
-  loggedInUsers,
-} from "../../common";
+// import { authHook } from "../../lib/auth/hook.test";
+import { teams } from "../../common";
+import { TestAuthProviderHCP } from "../../lib/auth/hook.test";
+import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamPage(): void {
   const apiTimeout = 50;
-  const team0 = new Team(teams[0]);
+  const mountOptions: MountRendererProps = {
+    attachTo: null,
+  };
   let component: ReactWrapper | null = null;
 
+  function TestTeamsPageComponent(): JSX.Element {
+    return (
+      <CustomAuthProvider provider={TestAuthProviderHCP}>
+        <TeamContextProvider api={teamAPI} >
+          <TeamsPage />
+        </TeamContextProvider>
+      </CustomAuthProvider>
+    );
+  }
+
+  async function createComponent(): Promise<ReactWrapper> {
+    const page = mount(<TestTeamsPageComponent />, mountOptions);
+
+    expect(document.getElementById("team-page-loading-progress")).to.be.not.null;
+    expect((teamAPI.fetchPatients as sinon.SinonStub).calledOnce).to.be.true;
+    expect((teamAPI.fetchTeams as sinon.SinonStub).calledOnce).to.be.true;
+    page.update();
+    await waitTimeout(0);
+    return page;
+  }
+
   before(() => {
-    sinon.stub(apiClient, "whoami").returns(loggedInUsers.hcp);
-    sinon.stub(apiClient, "getUserShares");
-    sinon.stub(apiClient, "fetchTeams");
-    sinon.stub(apiClient, "leaveTeam");
+    mountOptions.attachTo = document.getElementById("app");
+    if (mountOptions.attachTo === null) {
+      mountOptions.attachTo = document.createElement("div");
+      mountOptions.attachTo.id = "app";
+      document.body.appendChild(mountOptions.attachTo);
+    }
   });
   after(() => {
-    sinon.restore();
+    const { attachTo } = mountOptions;
+    if (attachTo instanceof HTMLElement) {
+      document.body.removeChild(attachTo);
+    }
   });
 
   afterEach(() => {
     if (component !== null) {
       component.unmount();
       component = null;
+      expect(document.getElementById("team-page-loading-progress")).to.be.null;
+      expect(document.getElementById("div-api-error-message")).to.be.null;
+      expect(document.getElementById("team-page-grid-list")).to.be.null;
     }
-    (apiClient.fetchTeams as sinon.SinonStub).resetHistory();
-    (apiClient.getUserShares as sinon.SinonStub).resetHistory();
-    (apiClient.leaveTeam as sinon.SinonStub).resetHistory();
-
-    (apiClient.fetchTeams as sinon.SinonStub).resolves(_.cloneDeep(teams));
-    (apiClient.getUserShares as sinon.SinonStub).resolves(_.cloneDeep(patients));
-
-    Teams.reset();
+    resetTeamAPIStubs();
   });
 
-  async function createComponent(): Promise<ReactWrapper> {
-    const spy = apiClient.fetchTeams as sinon.SinonStub;
-    const page = mount(
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" render={(props) => <TeamsPage {...props} />} />
-        </Switch>
-      </BrowserRouter>
-    );
-
-    expect(page.exists("#team-page-loading-progress"), "loading displayed").to.be.true;
-    expect(spy.calledOnce).to.be.true;
-    await waitTimeout(apiTimeout);
-    page.update();
-    return page;
-  }
-
   it("should show the loading progress when mounting", async () => {
-    const spy = apiClient.fetchTeams as sinon.SinonStub;
-    spy.rejects(new Error("Test error"));
-
+    const longWaitPromise = async () => {
+      await waitTimeout(apiTimeout);
+      return [];
+    };
+    (teamAPI.fetchTeams as sinon.SinonStub).returns(longWaitPromise());
     component = await createComponent();
+    await waitTimeout(2 * apiTimeout);
+    expect(document.getElementById("team-page-loading-progress")).to.be.null;
+    expect(document.getElementById("team-page-grid-list")).to.be.not.null;
   });
 
   it("should display an error message if loading failed", async () => {
-    const spy = apiClient.fetchTeams as sinon.SinonStub;
-    spy.rejects(new Error("Test error"));
+    (teamAPI.fetchTeams as sinon.SinonStub).rejects(new Error("Test error"));
 
     component = await createComponent();
-    expect(component.exists("#div-api-error-message"), "error displayed").to.be.true;
+    expect(document.getElementById("team-page-loading-progress"), "team-page-loading-progress").to.be.null;
+    expect(document.getElementById("div-api-error-message"), "div-api-error-message").to.be.not.null;
   });
 
   it("should display the team list on successful loading", async () => {
     component = await createComponent();
-    expect(component.exists("#team-page-grid-list")).to.be.true;
-  });
-
-  describe("Alert", () => {
-    it("should display an alert when apiReturnAlert state is set", async () => {
-      component = await createComponent();
-      component.find(TeamsPage).setState({ apiReturnAlert: { message: "test message", severity: "info" } });
-      component.update();
-      expect(component.exists("#team-page-alert"), "team-page-alert").to.be.true;
-    });
+    expect(document.getElementById("team-page-grid-list")).to.be.not.null;
   });
 
   describe("onShowLeaveTeamDialog", () => {
-    it("should display the leave dialog, and not call the api on cancel", async () => {
+    it("should display the leave dialog, and call the api on validate", async () => {
       component = await createComponent();
-      expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title not exists").to.be.false;
+      expect(component.exists("#team-leave-dialog-title"), "#team-leave-dialog-title not exists").to.be.false;
+      expect(component.exists("#team-page-alert"), "#team-page-alert not exists").to.be.false;
+      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
 
-      const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
+      let buttonId = `team-card-${teams[1].id}-button-leave-team`;
+      const button = document.getElementById(buttonId) as HTMLButtonElement;
+      expect(button, buttonId).to.be.not.null;
+
+      button.click();
 
       await waitTimeout(apiTimeout);
       component.update();
-      expect(teamPage.state.teamToLeave, "state.teamToLeave not null").to.be.not.null;
 
       expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
-      component.find("#team-leave-dialog-button-cancel").last().simulate("click");
 
-      await showDialog;
-      expect(teamPage.state.teamToLeave, "state.teamToLeave null").to.be.null;
+      buttonId = "team-leave-dialog-button-leave";
+      expect(component.exists(`#${buttonId}`), buttonId).to.be.true;
+      component.find(`#${buttonId}`).last().simulate("click");
 
-      const leaveTeamStub = apiClient.leaveTeam as sinon.SinonStub;
-      expect(leaveTeamStub.calledOnce, "calledOnce").to.be.false;
-    });
-
-    it("should display the leave dialog, and call the api on validate", async () => {
-      const leaveTeamStub = apiClient.leaveTeam as sinon.SinonStub;
-      const teamUpdates = _.cloneDeep(teams);
-      teamUpdates.splice(0, 1);
-      leaveTeamStub.resolves(teamUpdates);
-
-      component = await createComponent();
-      const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
-      await waitTimeout(apiTimeout);
       component.update();
-      component.find("#team-leave-dialog-button-leave").last().simulate("click");
-
-      await showDialog;
-      expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
-      expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
-
-      expect(teamPage.state.apiReturnAlert).to.be.deep.equal({ message: t("team-page-leave-success"), severity: "success" });
-    });
-
-    it("should display an error alert if the api call failed", async () => {
-      const errorMessage = "API error message";
-      const leaveTeamStub = apiClient.leaveTeam as sinon.SinonStub;
-      leaveTeamStub.rejects(new Error(errorMessage));
-
-      component = await createComponent();
-      const teamPage = component.find(TeamsPage).instance() as TeamsPage;
-      const showDialog = teamPage.onShowLeaveTeamDialog(team0);
       await waitTimeout(apiTimeout);
-      component.update();
-      component.find("#team-leave-dialog-button-leave").last().simulate("click");
 
-      await showDialog;
-      expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
-      expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
-
-      const apiReturnAlert = teamPage.state.apiReturnAlert;
-      const apiReturnAlertExpected = {
-        message: t("team-page-failed-leave", { errorMessage }),
-        severity: "error",
-      };
-      expect(apiReturnAlert, JSON.stringify({ apiReturnAlert, apiReturnAlertExpected })).to.be.deep.equal(apiReturnAlertExpected);
+      expect((teamAPI.leaveTeam as sinon.SinonStub).calledOnce, "leaveTeam calledOnce").to.be.true;
+      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.not.null;
     });
+
+    // it("should display the leave dialog, and call the api on validate", async () => {
+    //   const leaveTeamStub = apiClient.leaveTeam as sinon.SinonStub;
+    //   const teamUpdates = _.cloneDeep(teams);
+    //   teamUpdates.splice(0, 1);
+    //   leaveTeamStub.resolves(teamUpdates);
+
+    //   component = await createComponent();
+    //   const teamPage = component.find(TeamsPage).instance() as TeamsPage;
+    //   const showDialog = teamPage.onShowLeaveTeamDialog(team0);
+    //   await waitTimeout(apiTimeout);
+    //   component.update();
+    //   component.find("#team-leave-dialog-button-leave").last().simulate("click");
+
+    //   await showDialog;
+    //   expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
+    //   expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
+
+    //   expect(teamPage.state.apiReturnAlert).to.be.deep.equal({ message: t("team-page-leave-success"), severity: "success" });
+    // });
+
+    // it("should display an error alert if the api call failed", async () => {
+    //   const errorMessage = "API error message";
+    //   const leaveTeamStub = apiClient.leaveTeam as sinon.SinonStub;
+    //   leaveTeamStub.rejects(new Error(errorMessage));
+
+    //   component = await createComponent();
+    //   const teamPage = component.find(TeamsPage).instance() as TeamsPage;
+    //   const showDialog = teamPage.onShowLeaveTeamDialog(team0);
+    //   await waitTimeout(apiTimeout);
+    //   component.update();
+    //   component.find("#team-leave-dialog-button-leave").last().simulate("click");
+
+    //   await showDialog;
+    //   expect(leaveTeamStub.calledOnce, "calledOnce").to.be.true;
+    //   expect(leaveTeamStub.calledWith(team0), "calledWith").to.be.true;
+
+    //   const apiReturnAlert = teamPage.state.apiReturnAlert;
+    //   const apiReturnAlertExpected = {
+    //     message: t("team-page-failed-leave", { errorMessage }),
+    //     severity: "error",
+    //   };
+    //   expect(apiReturnAlert, JSON.stringify({ apiReturnAlert, apiReturnAlertExpected })).to.be.deep.equal(apiReturnAlertExpected);
+    // });
   });
 
   describe("onShowRemoveTeamMemberDialog", () => {

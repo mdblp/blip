@@ -32,15 +32,15 @@ import { expect } from "chai";
 import { mount, ReactWrapper, MountRendererProps } from "enzyme";
 import sinon from "sinon";
 
-import { Team } from "../../../lib/team";
+import { Team, loadTeams } from "../../../lib/team";
 import TeamEditDialog from "../../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../../pages/hcp/types";
-import { teams } from "../../common";
+import { authHook } from "../../lib/auth/hook.test";
+import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamEditDialog(): void {
-  const team0 = new Team(teams[0]);
   const defaultProps: TeamEditModalContentProps = {
-    team: team0,
+    team: {} as Team,
     onSaveTeam: sinon.spy(),
   };
   const textFieldIds = [
@@ -60,13 +60,15 @@ function testTeamEditDialog(): void {
     attachTo: null,
   };
 
-  before(() => {
+  before(async () => {
     mountOptions.attachTo = document.getElementById("app");
     if (mountOptions.attachTo === null) {
       mountOptions.attachTo = document.createElement("div");
       mountOptions.attachTo.id = "app";
       document.body.appendChild(mountOptions.attachTo);
     }
+    const { teams } = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    defaultProps.team = teams[1];
   });
 
   after(() => {
@@ -84,6 +86,7 @@ function testTeamEditDialog(): void {
       component = null;
     }
     (defaultProps.onSaveTeam as sinon.SinonSpy).resetHistory();
+    resetTeamAPIStubs();
   });
 
   it("should be closed if teamToEdit is null", () => {
@@ -148,7 +151,7 @@ function testTeamEditDialog(): void {
         value: "Updated name",
       },
     };
-    const updatedTeam = team0.toJSON();
+    const updatedTeam = { ...defaultProps.team, members: [] };
     updatedTeam.name = event.target.value;
 
     component.find("input").find("#team-edit-dialog-field-name").at(0).simulate("change", event);

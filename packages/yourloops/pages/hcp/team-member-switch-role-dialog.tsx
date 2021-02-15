@@ -42,7 +42,7 @@ import Typography from "@material-ui/core/Typography";
 import { useAuth } from "../../lib/auth";
 import { SwitchRoleDialogContentProps } from "./types";
 
-interface SwitchRoleDialogProps {
+export interface SwitchRoleDialogProps {
   switchAdminRole: null | SwitchRoleDialogContentProps;
 }
 

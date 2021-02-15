@@ -163,7 +163,7 @@ export async function loadTeams(
   return { teams, flaggedNotInResult };
 }
 
-export function TeamContextImpl(api: TeamAPI): TeamContext {
+function TeamContextImpl(api: TeamAPI): TeamContext {
   // hooks (private or public variables)
   const [teams, setTeams] = React.useState<Team[]>([]);
   const [initialized, setInitialized] = React.useState<boolean>(false);

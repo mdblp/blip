@@ -28,8 +28,6 @@
 
 import { User, UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamMemberStatus, TeamType } from "../../models/team";
-import { IAuthContext } from "../../lib/auth";
-import sinon from "sinon";
 
 const userHCP: User = {
   userid: "a0000000",
@@ -208,15 +206,3 @@ export const patients: ITeamMember[] = [
     },
   },
 ];
-
-export function TestAuthProviderHCP(): IAuthContext {
-  return {
-    user: loggedInUsers.hcp,
-    isLoggedIn: sinon.stub().returns(true),
-    login: sinon.spy(),
-    logout: sinon.spy(),
-    sendPasswordResetEmail: sinon.stub().returns(true),
-    signup: sinon.spy(),
-    setUser: sinon.spy(),
-  };
-}

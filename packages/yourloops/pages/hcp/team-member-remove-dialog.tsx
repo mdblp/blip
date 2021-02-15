@@ -41,7 +41,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useTeam } from "../../lib/team";
 import { RemoveMemberDialogContentProps } from "./types";
 
-interface RemoveMemberDialogProps {
+export interface RemoveMemberDialogProps {
   userToBeRemoved: RemoveMemberDialogContentProps | null;
 }
 

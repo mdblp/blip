@@ -45,28 +45,28 @@ export enum FilterType {
 }
 
 export interface SwitchRoleDialogContentProps {
-  member: TeamMember;
+  member: Readonly<TeamMember>;
   role: Exclude<TypeTeamMemberRole, "patient">;
   onDialogResult: (result: boolean) => void;
 }
 
 export interface TeamLeaveDialogContentProps {
-  team: Team;
+  team: Readonly<Team>;
   onDialogResult: (result: boolean) => void;
 }
 
 export interface AddMemberDialogContentProps {
-  team: Team;
+  team: Readonly<Team>;
   onDialogResult: (result: { email: string | null; role: Exclude<TypeTeamMemberRole, "patient"> }) => void;
 }
 
 export interface RemoveMemberDialogContentProps {
-  member: TeamMember;
+  member: Readonly<TeamMember>;
   onDialogResult: (result: boolean) => void;
 }
 
 export interface TeamEditModalContentProps {
-  team: Team | null;
+  team: Readonly<Team> | null;
   /** Promise callback for the modal. null means cancel edit */
   onSaveTeam: (team: Partial<Team> | null) => void;
 }

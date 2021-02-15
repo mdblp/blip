@@ -74,7 +74,7 @@ export interface TeamAPI {
 }
 
 export interface TeamContext {
-  teams: Team[];
+  teams: Readonly<Team>[];
   /** true if an initial team fetch has been done */
   initialized: boolean;
   /** The error message set if there is any error */
@@ -88,26 +88,26 @@ export interface TeamContext {
   /**
    * Return the medical teams only
    */
-  getMedicalTeams: () => Team[];
+  getMedicalTeams: () => Readonly<Team>[];
   /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
    */
-  getTeam: (teamId: string) => Team | null;
+  getTeam: (teamId: string) => Readonly<Team> | null;
   /**
    * Return the user which the userId belongs to.
    * *All your base are belong to us*
    * @param userId The user we want
    */
-  getUser: (userId: string) => TeamUser | null;
+  getUser: (userId: string) => Readonly<TeamUser> | null;
   /**
    * Return all patients (team user) we have
    */
-  getPatients: () => TeamUser[];
+  getPatients: () => Readonly<TeamUser>[];
   /**
    * Return the medical members of a team.
    */
-  getMedicalMembers: (team: Team) => TeamMember[];
+  getMedicalMembers: (team: Team) => Readonly<TeamMember>[];
   /**
    * Return the user first name
    */

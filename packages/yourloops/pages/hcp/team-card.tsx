@@ -47,7 +47,7 @@ import locales from "../../../../locales/languages.json";
 import { Team } from "../../lib/team";
 
 export interface TeamCardProps {
-  team: Team;
+  team: Readonly<Team>;
   onShowEditTeamDialog: (team: Team | null) => Promise<void>;
   onShowLeaveTeamDialog: (team: Team) => Promise<boolean>;
   onShowAddMemberDialog: (team: Team) => Promise<void>;

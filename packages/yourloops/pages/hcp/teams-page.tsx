@@ -297,7 +297,7 @@ function TeamsPage(): JSX.Element {
     );
   }
 
-  const teamsItems = teamHook.getMedicalTeams().map<(JSX.Element | null)>((team: Team): JSX.Element | null => {
+  const teamsItems = teamHook.getMedicalTeams().map<(JSX.Element | null)>((team: Readonly<Team>): JSX.Element | null => {
     return (
       <Grid item xs={12} key={team.id}>
         <TeamCard

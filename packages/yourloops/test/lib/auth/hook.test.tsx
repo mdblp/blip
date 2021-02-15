@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Teams management & helpers
+ * Auth hook tests
  *
  * All rights reserved.
  *
@@ -25,29 +25,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import {
-  Team,
-  TeamAPI,
-  TeamContext,
-  TeamMember,
-  TeamProvider,
-  TeamUser,
-} from "./models";
 
-import {
-  TeamContextProvider,
-  loadTeams,
-  useTeam,
-} from "./hook";
+import sinon from "sinon";
+import { v4 as uuidv4 } from "uuid";
 
-export {
-  Team,
-  TeamAPI,
-  TeamUser,
-  TeamMember,
-  TeamContext,
-  TeamProvider,
-  TeamContextProvider,
-  loadTeams,
-  useTeam,
+import { AuthContext } from "../../../lib/auth";
+import { loggedInUsers } from "../../common";
+
+export const authHook = {
+  user: loggedInUsers.hcp,
+  sessionToken: "",
+  traceToken: uuidv4(),
+  initialized: sinon.stub().returns(true),
+  setUser: sinon.spy(),
+  login: sinon.stub().resolves(loggedInUsers.hcp),
+  logout: sinon.spy(),
+  updateProfile: sinon.stub().resolves(loggedInUsers.hcp.profile),
+  updatePreferences: sinon.stub().resolves(loggedInUsers.hcp.profile),
+  updateSettings: sinon.stub().resolves(loggedInUsers.hcp.profile),
+  signup: sinon.spy(),
+  isLoggedIn: sinon.stub().returns(true),
+  sendPasswordResetEmail: sinon.stub().returns(true),
+  flagPatient: sinon.stub().resolves(),
+  setFlagPatients: sinon.stub().resolves(),
+  getFlagPatients: sinon.stub().returns([]),
 };
+
+export function TestAuthProviderHCP(): AuthContext {
+  return authHook;
+}
