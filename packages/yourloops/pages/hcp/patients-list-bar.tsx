@@ -59,16 +59,15 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import { TeamType } from "../../models/team";
 import { defer, REGEX_EMAIL } from "../../lib/utils";
-import { Team } from "../../lib/team";
+import { Team, useTeam } from "../../lib/team";
 import { FilterType } from "./types";
 
 export interface PatientListBarProps {
-  teams: Team[];
   filter: string;
   filterType: FilterType | string;
   onFilter: (text: string) => void;
-  onFilterType: (filterType: FilterType) => void;
-  onInvitePatient: (username: string, teamId: string) => void;
+  onFilterType: (filterType: FilterType | string) => void;
+  onInvitePatient: (team: Team, username: string) => void;
 }
 
 const modalBackdropTimeout = 300;
@@ -221,10 +220,11 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     getContentAnchorEl: null,
   };
 
-  const { filter, filterType, teams, onFilter, onFilterType, onInvitePatient } = props;
+  const { filter, filterType, onFilter, onFilterType, onInvitePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = pageBarStyles();
   const history = useHistory();
+  const teamHook = useTeam();
   const [modalAddPatientOpen, setModalAddPatientOpen] = React.useState(false);
   const [modalSelectedTeam, setModalSelectedTeam] = React.useState("");
   const [modalUsername, setModalUsername] = React.useState("");
@@ -269,7 +269,10 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   };
   const handleModalAddPatient = (): void => {
     setModalAddPatientOpen(false);
-    onInvitePatient(modalUsername, modalSelectedTeam);
+    const team = teamHook.getTeam(modalSelectedTeam);
+    if (team) {
+      onInvitePatient(team, modalUsername);
+    }
   };
 
   const optionsFilterCommonElements: JSX.Element[] = [];
@@ -284,12 +287,10 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
 
   const optionsFilterTeamsElements: JSX.Element[] = [];
   const optionsTeamsElements: JSX.Element[] = [<option aria-label={t("aria-none")} value="" key="none" />];
+  const teams = teamHook.getMedicalTeams();
   if (teams.length > 0) {
     optionsFilterTeamsElements.push(<ListSubheader key="team-sub-header">{t("teams")}</ListSubheader>);
     for (const team of teams) {
-      if (team.type !== TeamType.medical) {
-        continue;
-      }
       optionsFilterTeamsElements.push(
         <MenuItem value={team.id} key={team.id} aria-label={team.name}>
           {team.name}

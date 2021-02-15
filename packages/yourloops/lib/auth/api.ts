@@ -26,584 +26,270 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { v4 as uuidv4, validate as validateUuid } from "uuid";
 import bows from "bows";
 import _ from "lodash";
 
-import { PatientData } from "models/device-data";
 import { APIErrorResponse } from "models/error";
-import { MessageNote } from "models/message";
 import { User, UserRoles, Profile, Preferences, Settings } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
-import { defer, waitTimeout } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
 import HttpStatus from "../http-status-codes";
 
-const SESSION_TOKEN_KEY = "session-token";
-const TRACE_TOKEN_KEY = "trace-token";
-const LOGGED_IN_USER = "logged-in-user";
+import { Authenticate } from "./models";
 
+const log = bows("Auth API");
+const failedLoginCounter = new Map<string, number>();
 
-export class PatientDataLoadedEvent extends Event {
-  public user: User;
-  public patientData: PatientData;
+/**
+ * Perform a login.
+ * @param {string} username Generally an email
+ * @param {string} password The account password
+ * @param {string} traceToken A generated uuidv4 trace token
+ * @return {Promise<User>} Return the logged-in user or a promise rejection.
+ */
+async function authenticate(username: string, password: string, traceToken: string): Promise<Authenticate> {
+  let reason: string | null = null;
 
-  constructor(user: User, patientData: PatientData) {
-    super("patient-data-loaded");
-    this.user = user;
-    this.patientData = patientData;
-  }
-}
-
-class AuthApi extends EventTarget {
-  /** JWT token as a string */
-  private sessionToken: string | null;
-  /** Trace token is used to trace the calls betweens different microservices API calls for debug purpose. */
-  private traceToken: string | null;
-  /** Logged-in user information */
-  private user: User | null;
-  private log: Console;
-  private loginLock: boolean;
-  /** number of wrong tentative connection */
-  private wrongCredentialCount: number;
-
-  constructor() {
-    super();
-
-    this.user = null;
-    this.log = bows("API");
-    this.loginLock = false;
-    this.wrongCredentialCount = 0;
-
-    this.sessionToken = sessionStorage.getItem(SESSION_TOKEN_KEY);
-    this.traceToken = sessionStorage.getItem(TRACE_TOKEN_KEY);
-    const loggedInUser = sessionStorage.getItem(LOGGED_IN_USER);
-
-    if (this.sessionToken !== null && this.sessionToken.length < 1) {
-      this.sessionToken = null;
-      this.log.warn("Invalid session token in session storage");
-    }
-    if (this.traceToken !== null && validateUuid(this.traceToken) === false) {
-      this.traceToken = null;
-      this.log.warn("Invalid trace token in session storage");
-    }
-    if (loggedInUser !== null) {
-      try {
-        this.user = JSON.parse(loggedInUser);
-      } catch (e) {
-        this.log.warn("Invalid user in session storage", e);
-      }
-    }
-
-    if (!this.isLoggedIn) {
-      this.removeAuthInfoFromSessionStorage();
-    }
-
-    // Listen to storage events, to be able to monitor
-    // logout on others tabs.
-    window.addEventListener("storage", this.onStorageChange.bind(this));
-
-    this.log.info("Auth API initialized");
+  if (!_.isString(username) || _.isEmpty(username)) {
+    reason = t("no-username") as string;
+    return Promise.reject(new Error(reason));
   }
 
-  /**
-   * @returns {string|null} the session token or null
-   */
-  public getSessionToken(): string | null {
-    return this.sessionToken;
+  if (!_.isString(password) || _.isEmpty(password)) {
+    reason = t("no-password") as string;
+    return Promise.reject(new Error(reason));
   }
 
-  /** The trace token */
-  public getTraceToken(): string | null {
-    return this.traceToken;
-  }
+  log.debug("login: /auth/login", appConfig.API_HOST);
+  const authURL = new URL("/auth/login", appConfig.API_HOST);
 
-  public get whoami(): User | null {
-    return _.cloneDeep(this.user);
-  }
+  const response = await fetch(authURL.toString(), {
+    method: "POST",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      Authorization: `Basic ${btoa(`${username}:${password}`)}`,
+    },
+  });
 
-  /**
-   * @returns {boolean} true if the user is logged in.
-   */
-  public get isLoggedIn(): boolean {
-    return this.sessionToken !== null && this.traceToken !== null && this.user !== null;
-  }
-
-  public get userIsPatient(): boolean {
-    return this.isLoggedIn && !_.isEmpty(this.user?.profile?.patient);
-  }
-
-  /**
-   * Listen to session storage events, to know if another tab is logged out.
-   * @param {StorageEvent} ev A change in the storage
-   */
-  private onStorageChange(ev: StorageEvent): void {
-    this.log.debug("onStorageChange", ev);
-    if (!this.loginLock && ev.storageArea === sessionStorage) {
-      const token = sessionStorage.getItem(SESSION_TOKEN_KEY);
-      if (token === null) {
-        this.logout();
-      } else if (token !== this.sessionToken) {
-        // We should not see this
-      }
-    }
-  }
-
-  /**
-   * Perform a login.
-   * @param {string} username Generally an email
-   * @param {string} password The account password
-   * @return {Promise<User>} Return the logged-in user or a promise rejection.
-   */
-  private async authenticate(username: string, password: string): Promise<User> {
-    let reason: string | null = null;
-    this.logout(); // To be sure to reset the values
-
-    if (!_.isString(username) || _.isEmpty(username)) {
-      reason = t("no-username") as string;
-      return Promise.reject(new Error(reason));
-    }
-
-    if (!_.isString(password) || _.isEmpty(password)) {
-      reason = t("no-password") as string;
-      return Promise.reject(new Error(reason));
-    }
-
-    this.traceToken = uuidv4();
-    sessionStorage.setItem(TRACE_TOKEN_KEY, this.traceToken);
-
-    this.log.debug("login: /auth/login", appConfig.API_HOST);
-    const authURL = new URL("/auth/login", appConfig.API_HOST);
-
-    const response = await fetch(authURL.toString(), {
-      method: "POST",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken,
-        Authorization: `Basic ${btoa(`${username}:${password}`)}`,
-      },
-    });
-
-    if (!response.ok || response.status !== HttpStatus.StatusOK) {
-      switch (response.status) {
-      case HttpStatus.StatusUnauthorized:
-        if (_.isNumber(appConfig.MAX_FAILED_LOGIN_ATTEMPTS)) {
-          if (++this.wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-            reason = t(
-              "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
-              { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
-            );
-          } else {
-            reason = t("Wrong username or password");
-          }
+  if (!response.ok || response.status !== HttpStatus.StatusOK) {
+    switch (response.status) {
+    case HttpStatus.StatusUnauthorized:
+      if (typeof appConfig.MAX_FAILED_LOGIN_ATTEMPTS === "number") {
+        let wrongCredentialCount = failedLoginCounter.get(username) ?? 0;
+        wrongCredentialCount += 1;
+        failedLoginCounter.set(username, wrongCredentialCount);
+        if (wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
+          reason = t(
+            "Your account has been locked for {{numMinutes}} minutes. You have reached the maximum number of login attempts.",
+            { numMinutes: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT }
+          );
         }
-        break;
-      // missing handling 403 status => email not verified
-      default:
-        reason = t("An error occurred while logging in.");
-        break;
       }
-
       if (reason === null) {
-        reason = t("Login Failed");
-      }
-
-      this.sendMetrics("Login failed", reason);
-      return Promise.reject(new Error(reason as string));
-    }
-
-    this.wrongCredentialCount = 0;
-    this.sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
-    this.user = (await response.json()) as User;
-
-    if (!Array.isArray(this.user.roles)) {
-      this.user.roles = [UserRoles.patient];
-    }
-
-    // ???
-    if (this.sessionToken !== null) {
-      sessionStorage.setItem(SESSION_TOKEN_KEY, this.sessionToken);
-    }
-    sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
-
-    this.sendMetrics("setUserId", this.user.userid);
-
-    return this.user;
-  }
-
-  /**
-   * Perform a login.
-   * @param {string} username Generally an email
-   * @param {string} password The account password
-   * @return {Promise<User>} Return the logged-in user or a promise rejection.
-   */
-  async login(username: string, password: string): Promise<User> {
-    this.loginLock = true;
-    return this.authenticate(username, password)
-      .then(async (user: User) => {
-        const [profile, preferences, settings] = await Promise.all([
-          this.getUserProfile(user),
-          this.getUserPreferences(user),
-          this.getUserSettings(user),
-        ]);
-        if (profile !== null) {
-          user.profile = profile;
-        }
-        if (preferences !== null) {
-          user.preferences = preferences;
-        }
-        if (settings !== null) {
-          user.settings = settings;
-        }
-        sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(user));
-        return user;
-      })
-      .finally(() => {
-        this.loginLock = false;
-      });
-  }
-
-  /**
-   * Logout the user => Clear the session & trace tokens
-   */
-  logout(): void {
-    this.log.debug("debug logout");
-    if (this.loginLock && this.isLoggedIn) {
-      this.log.debug("logout with a loginlock ");
-      this.removeAuthInfoFromSessionStorage();
-    } else if (this.isLoggedIn) {
-      this.log.debug("logout with no loginlock");
-      this.loginLock = true;
-      this.sendMetrics("resetUserId");
-      this.removeAuthInfoFromSessionStorage();
-      this.dispatchEvent(new Event("logout"));
-      this.loginLock = false;
-    }
-  }
-
-  /**
-   * Clear the session & trace tokens
-   */
-  private removeAuthInfoFromSessionStorage() {
-    this.sessionToken = null;
-    this.traceToken = null;
-    this.user = null;
-    sessionStorage.removeItem(SESSION_TOKEN_KEY);
-    sessionStorage.removeItem(TRACE_TOKEN_KEY);
-    sessionStorage.removeItem(LOGGED_IN_USER);
-  }
-
-  public async getUserProfile(user: User): Promise<Profile | null> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("not-logged-in"));
-    }
-
-    const seagullURL = new URL(`/metadata/${user.userid}/profile`, appConfig.API_HOST);
-
-    const response = await fetch(seagullURL.toString(), {
-      method: "GET",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-    });
-
-    let profile: Profile | null = null;
-    if (response.ok) {
-      try {
-        profile = (await response.json()) as Profile;
-      } catch (e) {
-        this.log.debug(e);
-      }
-    } else if (response.status === HttpStatus.StatusNotFound) {
-      this.log.debug("Error : 404 not found");
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
-
-    return profile;
-  }
-
-  public async getUserPreferences({ userid }: User): Promise<Preferences | null> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("You are not logged-in"));
-    }
-    const seagullURL = new URL(`/metadata/${userid}/preferences`, appConfig.API_HOST);
-    const response = await fetch(seagullURL.toString(), {
-      method: "GET",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-    });
-
-    let preferences: Preferences | null = null;
-    if (response.ok) {
-      try {
-        preferences = (await response.json()) as Preferences;
-      } catch (e) {
-        this.log.debug(e);
-      }
-    } else if (response.status === HttpStatus.StatusNotFound) {
-      this.log.debug("Error : 404 not found");
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
-
-    return preferences;
-  }
-
-  public async getUserSettings({ userid }: User): Promise<Settings | null> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("You are not logged-in"));
-    }
-    const seagullURL = new URL(`/metadata/${userid}/settings`, appConfig.API_HOST);
-    const response = await fetch(seagullURL.toString(), {
-      method: "GET",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-    });
-
-    let settings: Settings | null = null;
-    if (response.ok) {
-      try {
-        settings = (await response.json()) as Settings;
-      } catch (e) {
-        this.log.debug(e);
-      }
-    } else if (response.status === HttpStatus.StatusNotFound) {
-      this.log.debug("Error : 404 not found");
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
-
-    return settings;
-  }
-
-  public async flagPatient(userId: string): Promise<string[]> {
-    if (!this.isLoggedIn || this.user === null) {
-      // Users should never see this:
-      throw new Error(t("not-logged-in"));
-    }
-    if (typeof this.user.preferences !== "object" || this.user.preferences === null) {
-      this.user.preferences = {
-        patientsStarred: [],
-      };
-    }
-    if (!Array.isArray(this.user.preferences.patientsStarred)) {
-      this.user.preferences.patientsStarred = [];
-    }
-    const userIdIdx = this.user.preferences.patientsStarred.indexOf(userId);
-    if (userIdIdx > -1) {
-      this.user.preferences.patientsStarred.splice(userIdIdx, 1);
-      this.log.info("Unflag patient", userId);
-    } else {
-      this.user.preferences.patientsStarred.push(userId);
-      this.log.info("Flag patient", userId);
-    }
-
-    // eslint-disable-next-line no-magic-numbers
-    await waitTimeout(50 + Math.random() * 100);
-
-    return this.user.preferences.patientsStarred;
-  }
-
-  public async loadPatientData(patient: User): Promise<PatientData> {
-    this.dispatchEvent(new Event("patient-data-loading"));
-
-    const dataURL = new URL(`/data/${patient.userid}`, appConfig.API_HOST);
-    const response = await fetch(dataURL.toString(), {
-      method: "GET",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-    });
-
-    if (response.ok) {
-      const patientData = (await response.json()) as PatientData;
-
-      defer(() => {
-        this.dispatchEvent(new PatientDataLoadedEvent(patient as User, patientData));
-      });
-
-      return patientData;
-    }
-
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
-  }
-
-  /**
-   * Create a new note
-   * @param message The note to send
-   */
-  public async startMessageThread(message: MessageNote): Promise<string> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("not-logged-in"));
-    }
-
-    const messageURL = new URL(`/message/send/${message.groupid}`, appConfig.API_HOST);
-    const response = await fetch(messageURL.toString(), {
-      method: "POST",
-      headers: {
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-      body: JSON.stringify({
-        message: {
-          ...message,
-          guid: uuidv4(),
-        },
-      }),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      return result.id as string;
-    }
-
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
-  }
-
-  /**
-   * Record something for the tracking metrics
-   * @param {string} eventName the text to send
-   * @param {any=} properties optional parameter
-   */
-  sendMetrics(eventName: string, properties?: unknown): void {
-    /** @type {any[]|null} */
-    let matomoPaq = null;
-    this.log.info("Metrics:", eventName, properties);
-    switch (appConfig.METRICS_SERVICE) {
-    case "matomo":
-      matomoPaq = window._paq;
-      if (!_.isObject(matomoPaq)) {
-        this.log.error("Matomo do not seems to be available, wrong configuration");
-        return;
-      }
-      if (eventName === "CookieConsent") {
-        matomoPaq.push(["setConsentGiven", properties]);
-      } else if (eventName === "setCustomUrl") {
-        matomoPaq.push(["setCustomUrl", properties]);
-      } else if (eventName === "setUserId") {
-        matomoPaq.push(["setUserId", properties]);
-      } else if (eventName === "resetUserId") {
-        matomoPaq.push(["resetUserId"]);
-      } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
-        matomoPaq.push(["setDocumentTitle", properties]);
-      } else if (typeof properties === "undefined") {
-        matomoPaq.push(["trackEvent", eventName]);
-      } else {
-        matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
+        reason = t("Wrong username or password");
       }
       break;
+    // missing handling 403 status => email not verified
+    default:
+      reason = t("An error occurred while logging in.");
+      break;
     }
+
+    if (reason === null) {
+      reason = t("Login Failed");
+    }
+
+    // this.sendMetrics("Login failed", reason);
+    return Promise.reject(new Error(reason as string));
   }
 
-  public async updateUserProfile({ userid, profile }: User): Promise<void> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("You are not logged-in"));
-    }
-
-    const seagullURL = new URL(`/metadata/${userid}/profile`, appConfig.API_HOST);
-
-    const response = await fetch(seagullURL.toString(), {
-      method: "PUT",
-      headers: {
-        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-      body: JSON.stringify(profile),
-    });
-
-    if (response.ok) {
-      profile = (await response.json()) as Profile;
-      if (this.user?.userid === userid) {
-        this.user.profile = profile;
-        sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
-      }
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
+  // this.wrongCredentialCount = 0;
+  const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
+  if (sessionToken === null) {
+    reason = t("An error occurred while logging in.");
+    return Promise.reject(new Error(reason as string));
   }
 
-  public async updateUserSettings({ userid, settings }: User): Promise<void> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("You are not logged-in"));
-    }
-
-    const seagullURL = new URL(`/metadata/${userid}/settings`, appConfig.API_HOST);
-
-    const response = await fetch(seagullURL.toString(), {
-      method: "PUT",
-      headers: {
-        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-      body: JSON.stringify(settings),
-    });
-
-    if (response.ok) {
-      settings = (await response.json()) as Settings;
-      if (this.user?.userid === userid) {
-        this.user.settings = settings;
-        sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
-      }
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
+  const user = (await response.json()) as User;
+  if (!Array.isArray(user.roles)) {
+    user.roles = [UserRoles.patient];
   }
 
-  public async updateUserPreferences({ userid, preferences }: User): Promise<void> {
-    if (!this.isLoggedIn) {
-      // Users should never see this:
-      throw new Error(t("You are not logged-in"));
-    }
+  // We may miss some case, but it's probably good enough:
+  failedLoginCounter.clear();
 
-    const seagullURL = new URL(`/metadata/${userid}/preferences`, appConfig.API_HOST);
-
-    const response = await fetch(seagullURL.toString(), {
-      method: "PUT",
-      headers: {
-        [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
-        [HttpHeaderKeys.traceToken]: this.traceToken as string,
-        [HttpHeaderKeys.sessionToken]: this.sessionToken as string,
-      },
-      body: JSON.stringify(preferences),
-    });
-
-    if (response.ok) {
-      preferences = (await response.json()) as Preferences;
-      if (this.user?.userid === userid) {
-        this.user.preferences = preferences;
-        sessionStorage.setItem(LOGGED_IN_USER, JSON.stringify(this.user));
-      }
-    } else {
-      const responseBody = (await response.json()) as APIErrorResponse;
-      throw new Error(t(responseBody.reason));
-    }
-  }
+  return { sessionToken, traceToken, user };
 }
 
-const apiClient = new AuthApi();
+async function getProfile(auth: Readonly<Authenticate>): Promise<Profile | null> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/profile`, appConfig.API_HOST);
 
-export default apiClient;
-export { AuthApi as API, apiClient };
+  const response = await fetch(seagullURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+  });
+
+  let profile: Profile | null = null;
+  if (response.ok) {
+    try {
+      profile = (await response.json()) as Profile;
+    } catch (e) {
+      log.debug(e);
+    }
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    log.debug("Error : 404 not found");
+  } else {
+    const responseBody = (await response.json()) as APIErrorResponse;
+    throw new Error(t(responseBody.reason));
+  }
+
+  return profile;
+}
+
+async function getPreferences(auth: Readonly<Authenticate>): Promise<Preferences | null> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/preferences`, appConfig.API_HOST);
+  const response = await fetch(seagullURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+  });
+
+  let preferences: Preferences | null = null;
+  if (response.ok) {
+    try {
+      preferences = (await response.json()) as Preferences;
+    } catch (e) {
+      log.debug(e);
+    }
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    log.debug("Error : 404 not found");
+  } else {
+    const responseBody = (await response.json()) as APIErrorResponse;
+    throw new Error(t(responseBody.reason));
+  }
+
+  return preferences;
+}
+
+async function getSettings(auth: Readonly<Authenticate>): Promise<Settings | null> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/settings`, appConfig.API_HOST);
+  const response = await fetch(seagullURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+  });
+
+  let settings: Settings | null = null;
+  if (response.ok) {
+    try {
+      settings = (await response.json()) as Settings;
+    } catch (e) {
+      log.debug(e);
+    }
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    log.debug("Error : 404 not found");
+  } else {
+    const responseBody = (await response.json()) as APIErrorResponse;
+    throw new Error(t(responseBody.reason));
+  }
+
+  return settings;
+}
+
+/**
+ * Perform a login.
+ * @param {string} username Generally an email
+ * @param {string} password The account password
+ * @param {string} traceToken A generated uuidv4 trace token
+ * @return {Promise<User>} Return the logged-in user or a promise rejection.
+ */
+export async function login(username: string, password: string, traceToken: string): Promise<Authenticate> {
+  const auth = await authenticate(username, password, traceToken);
+  const [profile, preferences, settings] = await Promise.all([
+    getProfile(auth),
+    getPreferences(auth),
+    getSettings(auth),
+  ]);
+  if (profile !== null) {
+    auth.user.profile = profile;
+  }
+  if (preferences !== null) {
+    auth.user.preferences = preferences;
+  }
+  if (settings !== null) {
+    auth.user.settings = settings;
+  }
+  return auth;
+}
+
+export async function updateProfile(auth: Readonly<Authenticate>): Promise<Profile> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/profile`, appConfig.API_HOST);
+  const profile = auth.user.profile ?? {};
+
+  const response = await fetch(seagullURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+    body: JSON.stringify(profile),
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Profile;
+  }
+  const responseBody = (await response.json()) as APIErrorResponse;
+  throw new Error(t(responseBody.reason));
+}
+
+export async function updatePreferences(auth: Readonly<Authenticate>): Promise<Preferences> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/preferences`, appConfig.API_HOST);
+  const preferences = auth.user.preferences ?? {};
+
+  const response = await fetch(seagullURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+    body: JSON.stringify(preferences),
+  });
+
+  if (response.ok) {
+    return response.json() as Promise<Preferences>;
+  }
+  const responseBody = (await response.json()) as APIErrorResponse;
+  throw new Error(t(responseBody.reason));
+}
+
+export async function updateSettings(auth: Readonly<Authenticate>): Promise<Settings> {
+  const seagullURL = new URL(`/metadata/${auth.user.userid}/settings`, appConfig.API_HOST);
+  const settings = auth.user.settings ?? {};
+
+  const response = await fetch(seagullURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.contentType,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+    body: JSON.stringify(settings),
+  });
+
+  if (response.ok) {
+    return (await response.json()) as Settings;
+  }
+  const responseBody = (await response.json()) as APIErrorResponse;
+  throw new Error(t(responseBody.reason));
+}

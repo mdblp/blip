@@ -56,7 +56,7 @@ export interface TeamCardProps {
 export interface TeamInfoProps {
   id: string;
   label: string;
-  value: null | string | JSX.Element;
+  value?: null | string | JSX.Element;
   icon: JSX.Element;
 }
 
@@ -140,7 +140,7 @@ export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
   const classes = teamInfoStyles();
   const { t } = useTranslation("yourloops");
 
-  if (value === null) {
+  if (value === null || typeof value === "undefined") {
     return null;
   }
 
@@ -214,7 +214,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
   );
 
   let address: JSX.Element | null = null;
-  const teamAddress = team.address;
+  const teamAddress = team.address ?? null;
   if (teamAddress !== null) {
     const { line1, line2, zip, city, country } = teamAddress;
     const countryName = _.get(locales, `countries.${country}.name`, country) as string;

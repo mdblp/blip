@@ -42,7 +42,7 @@ import TextField from "@material-ui/core/TextField";
 import locales from "../../../../locales/languages.json";
 import { Team } from "../../lib/team";
 import { REGEX_EMAIL } from "../../lib/utils";
-import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useAuth } from "../../lib/auth";
 import { TeamEditModalContentProps } from "./types";
 
 interface LocalesCountries {
@@ -181,7 +181,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   };
 
   const handleValidateModal = (): void => {
-    const updatedTeam = team === null ? {} as Partial<Team> : team;
+    const updatedTeam = team === null ? {} as Partial<Team> : { ...team, members: [] };
     updatedTeam.name = teamName.trim();
     updatedTeam.phone = teamPhone.trim();
 

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Teams management & helpers
+ * Hook for auth API - Interface declaration
  *
  * All rights reserved.
  *
@@ -25,27 +25,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import {
-  Team,
-  TeamAPI,
-  TeamContext,
-  TeamMember,
-  TeamProvider,
-  TeamUser,
-} from "./models";
 
-import {
-  TeamContextProvider,
-  useTeam,
-} from "./hook";
+import { User, Preferences, Profile, Settings } from "../../models/shoreline";
 
-export {
-  Team,
-  TeamAPI,
-  TeamUser,
-  TeamMember,
-  TeamContext,
-  TeamProvider,
-  TeamContextProvider,
-  useTeam,
-};
+/** Hook internal usage */
+export interface Authenticate {
+  user: User;
+  sessionToken: string;
+  traceToken: string;
+}
+
+/**
+ * The auth provider hook return values.
+ */
+export interface AuthContext {
+  user: Readonly<User> | null;
+  sessionToken: string | null;
+  traceToken: string | null;
+  initialized(): boolean;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  login(username: string, password: string): Promise<User>;
+  logout(): void;
+  updateProfile(user: Readonly<User>): Promise<Profile>;
+  updatePreferences(user: Readonly<User>): Promise<Preferences>;
+  updateSettings(user: Readonly<User>): Promise<Settings>;
+  signup(username: string, password: string): void;
+  isLoggedIn(): boolean;
+  sendPasswordResetEmail(username: string): Promise<boolean>;
+  /** Flag or un-flag one patient */
+  flagPatient: (userId: string) => Promise<void>;
+  /** Set the flagged patient */
+  setFlagPatients: (userIds: string[]) => Promise<void>;
+  getFlagPatients: () => string[];
+}
+
+export interface AuthProvider {
+  children?: React.ReactNode;
+  provider: () => AuthContext;
+}

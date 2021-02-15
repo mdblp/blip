@@ -39,7 +39,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
-import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useAuth } from "../../lib/auth";
 import { SwitchRoleDialogContentProps } from "./types";
 
 interface SwitchRoleDialogProps {

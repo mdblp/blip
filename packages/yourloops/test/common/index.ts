@@ -28,7 +28,7 @@
 
 import { User, UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamMemberStatus, TeamType } from "../../models/team";
-import { IAuthContext } from "../../lib/auth/hook/use-auth";
+import { IAuthContext } from "../../lib/auth";
 import sinon from "sinon";
 
 const userHCP: User = {

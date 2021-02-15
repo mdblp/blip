@@ -39,11 +39,10 @@ import HomeIcon from "@material-ui/icons/Home";
 import HeaderBar from "../../components/header-bar";
 import { Password } from "../../components/utils/password";
 import { REGEX_BIRTHDATE, REGEX_EMAIL } from "../../lib/utils";
-import apiClient from "../../lib/auth/api";
 import { getCurrentLocaleName, getLocaleShortname, availableLocales } from "../../lib/language";
 import { Units } from "../../models/generic";
 import { Preferences, Profile, UserRoles, Settings, User } from "../../models/shoreline";
-import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useAuth } from "../../lib/auth";
 import { Alert } from "@material-ui/lab";
 
 interface Errors {
@@ -125,7 +124,7 @@ export const ProfilePage: FunctionComponent = () => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
   const history = useHistory();
-  const { user, setUser } = useAuth();
+  const { user, setUser, updatePreferences, updateProfile, updateSettings } = useAuth();
 
   const [firstName, setFirstName] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -145,7 +144,7 @@ export const ProfilePage: FunctionComponent = () => {
   const [apiReturnAlert, setApiReturnAlert] = useState<ApiReturnAlert | null>(null);
 
   const handleUserUpdate = useCallback(
-    (promises: Promise<void>[], newUser: User, callbacks: React.Dispatch<React.SetStateAction<boolean>>[]): void => {
+    (promises: Promise<unknown>[], newUser: User, callbacks: React.Dispatch<React.SetStateAction<boolean>>[]): void => {
       Promise.all(promises)
         .then(() => {
           callbacks.forEach((callback) => callback(false));
@@ -154,7 +153,7 @@ export const ProfilePage: FunctionComponent = () => {
         })
         .catch(() => setApiReturnAlert({ message: t("profile-update-failed"), severity: "error" }));
     },
-    [t]
+    [t, setUser]
   );
 
   useEffect(() => {
@@ -243,7 +242,7 @@ export const ProfilePage: FunctionComponent = () => {
   const onSave = useCallback(() => {
     if (user) {
       const localeShortname = getLocaleShortname(locale);
-      const promises: Promise<void>[] = [];
+      const promises: Promise<unknown>[] = [];
       const callbacks: React.Dispatch<React.SetStateAction<boolean>>[] = [];
       const newUser: User = {
         ...user,
@@ -265,24 +264,38 @@ export const ProfilePage: FunctionComponent = () => {
             i18n.changeLanguage(localeShortname!);
           }
         }
-        promises.push(apiClient.updateUserPreferences(newUser));
+        promises.push(updatePreferences(newUser));
         callbacks.push(setHavePreferencesChanged);
       }
 
       if (haveSettingsChanged) {
-        promises.push(apiClient.updateUserSettings(newUser));
+        promises.push(updateSettings(newUser));
         callbacks.push(setHaveSettingsChanged);
       }
 
       if (hasProfileChanged) {
-        promises.push(apiClient.updateUserProfile(newUser));
+        promises.push(updateProfile(newUser));
         callbacks.push(setHasProfileChanged);
       }
       if (promises.length) {
         handleUserUpdate(promises, newUser, callbacks);
       }
     }
-  }, [user, haveSettingsChanged, havePreferencesChanged, hasProfileChanged, firstName, name, locale, i18n, unit, setUser]);
+  }, [
+    user,
+    haveSettingsChanged,
+    havePreferencesChanged,
+    hasProfileChanged,
+    firstName,
+    name,
+    locale,
+    i18n,
+    unit,
+    handleUserUpdate,
+    updatePreferences,
+    updateSettings,
+    updateProfile,
+  ]);
 
   const onCancel = (): void => history.goBack();
   const onCloseAlert = (): void => setApiReturnAlert(null);

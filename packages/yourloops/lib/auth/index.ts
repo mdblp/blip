@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Teams management & helpers
+ * Auth API
  *
  * All rights reserved.
  *
@@ -25,27 +25,20 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 import {
-  Team,
-  TeamAPI,
-  TeamContext,
-  TeamMember,
-  TeamProvider,
-  TeamUser,
+  AuthContext,
 } from "./models";
 
 import {
-  TeamContextProvider,
-  useTeam,
+  CustomAuthProvider,
+  DefaultAuthProvider,
+  useAuth,
 } from "./hook";
 
 export {
-  Team,
-  TeamAPI,
-  TeamUser,
-  TeamMember,
-  TeamContext,
-  TeamProvider,
-  TeamContextProvider,
-  useTeam,
+  AuthContext,
+  CustomAuthProvider,
+  DefaultAuthProvider,
+  useAuth,
 };

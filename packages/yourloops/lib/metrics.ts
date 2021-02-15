@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * HCPs main page
+ * Yourloops API client: Metrics
  *
  * All rights reserved.
  *
@@ -26,47 +26,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
+import _ from "lodash";
 import bows from "bows";
 
-import { TeamContextProvider } from "../../lib/team";
-import { DataContextProvider, DefaultDataContext } from "../../lib/data";
-import HcpNavBar from "../../components/hcp-nav-bar";
-import PatientListPage from "./patients-list";
-import PatientDataPage from "./patient-data";
-import TeamsPage from "./teams-page";
+import appConfig from "./config";
 
-const log = bows("HcpPage");
+const log = bows("Metrics");
 
 /**
- * Health care professional page
+ * Record something for the tracking metrics
+ * @param {string} eventName the text to send
+ * @param {any=} properties optional parameter
  */
-function HcpPage(): JSX.Element | null {
-  const historyHook = useHistory();
-  const pathname = historyHook.location.pathname;
-
-  React.useEffect(() => {
-    if (/^\/hcp\/?$/.test(pathname)) {
-      log.info("Redirecting to the patients list");
-      historyHook.push("/hcp/patients");
+function sendMetrics(eventName: string, properties?: unknown): void {
+  let matomoPaq: unknown[] | null = null;
+  log.info(eventName, properties);
+  switch (appConfig.METRICS_SERVICE) {
+  case "matomo":
+    matomoPaq = window._paq;
+    if (!_.isObject(matomoPaq)) {
+      log.error("Matomo do not seems to be available, wrong configuration");
+      return;
     }
-  }, [pathname, historyHook]);
-
-  log.info("render", pathname);
-
-  return (
-    <TeamContextProvider>
-      <HcpNavBar />
-      <Switch>
-        <Route path="/hcp/patients" component={PatientListPage} />
-        <Route path="/hcp/teams" component={TeamsPage} />
-        <DataContextProvider context={DefaultDataContext}>
-          <Route path="/hcp/patient/:patientId" component={PatientDataPage} />
-        </DataContextProvider>
-      </Switch>
-    </TeamContextProvider>
-  );
+    if (eventName === "CookieConsent") {
+      matomoPaq.push(["setConsentGiven", properties]);
+    } else if (eventName === "setCustomUrl") {
+      matomoPaq.push(["setCustomUrl", properties]);
+    } else if (eventName === "setUserId") {
+      matomoPaq.push(["setUserId", properties]);
+    } else if (eventName === "resetUserId") {
+      matomoPaq.push(["resetUserId"]);
+    } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
+      matomoPaq.push(["setDocumentTitle", properties]);
+    } else if (typeof properties === "undefined") {
+      matomoPaq.push(["trackEvent", eventName]);
+    } else {
+      matomoPaq.push(["trackEvent", eventName, JSON.stringify(properties)]);
+    }
+    break;
+  }
 }
 
-export default HcpPage;
+export default sendMetrics;

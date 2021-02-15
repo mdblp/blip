@@ -36,11 +36,11 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Snackbar from "@material-ui/core/Snackbar";
 
-import { TypeTeamMemberRole, TeamType } from "../../models/team";
+import { TypeTeamMemberRole } from "../../models/team";
+import sendMetrics from "../../lib/metrics";
 import { useTeam, Team, TeamMember } from "../../lib/team";
 import { t } from "../../lib/language";
 import { errorTextFromException } from "../../lib/utils";
-import apiClient from "../../lib/auth/api";
 
 import {
   SwitchRoleDialogContentProps,
@@ -71,8 +71,7 @@ const log = bows("TeamsListPage");
  * HCP page to manage teams
  */
 function TeamsPage(): JSX.Element {
-  log.debug("TeamsPage()");
-
+  const teamHook = useTeam(); // Captain
   const [loading, setLoading] = React.useState(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [apiAlert, setApiAlert] = React.useState<ApiAlert | null>(null);
@@ -82,7 +81,7 @@ function TeamsPage(): JSX.Element {
   const [switchAdminRole, setSwitchAdminRole] = React.useState<SwitchRoleDialogContentProps | null>(null);
   const [userToBeRemoved, setUserToBeRemoved] = React.useState<RemoveMemberDialogContentProps | null>(null);
 
-  const teamHook = useTeam(); // Captain
+  log.debug("TeamsPage()", { loading, errorMessage });
 
   const handleRefresh = async (force = false) => {
     log.debug("handleRefresh:", { force });
@@ -112,7 +111,7 @@ function TeamsPage(): JSX.Element {
 
     const editedTeam = await getEditedTeamInfo();
     setTeamToEdit(null);
-    apiClient.sendMetrics("edit-medical-team", { cancel: editedTeam === null, mode: team === null ? "create" : "edit" });
+    sendMetrics("edit-medical-team", { cancel: editedTeam === null, mode: team === null ? "create" : "edit" });
 
     if (editedTeam === null) {
       // Edit cancelled
@@ -240,6 +239,41 @@ function TeamsPage(): JSX.Element {
     }
   };
 
+  React.useEffect(() => {
+    const unmount = () => {
+      log.debug("useEffect unmount");
+    };
+
+    log.debug("useEffect", { teamHookInitialized: teamHook.initialized, teamHookErrorMessage: teamHook.errorMessage, loading });
+
+    if (!teamHook.initialized) {
+      if (!loading) {
+        log.debug("useEffect setLoading(true)");
+        setLoading(true);
+      }
+      return unmount;
+    }
+
+    if (teamHook.errorMessage !== null) {
+      const message = t("error-failed-display-teams", { errorMessage: teamHook.errorMessage });
+      if (message !== errorMessage) {
+        log.debug(`useEffect setErrorMessage(${message})`);
+        setErrorMessage(message);
+      }
+    } else if (errorMessage !== null) {
+      log.debug("useEffect setErrorMessage(null)");
+      setErrorMessage(null);
+    }
+
+    if (loading) {
+      log.debug("useEffect setLoading(false)");
+      setLoading(false);
+    }
+
+    return unmount;
+
+  }, [teamHook.initialized, teamHook.errorMessage, loading, errorMessage]);
+
   if (loading) {
     return (
       <CircularProgress
@@ -263,10 +297,7 @@ function TeamsPage(): JSX.Element {
     );
   }
 
-  const teamsItems = teamHook.teams.map<(JSX.Element | null)>((team: Team): JSX.Element | null => {
-    if (team.type !== TeamType.medical) {
-      return null;
-    }
+  const teamsItems = teamHook.getMedicalTeams().map<(JSX.Element | null)>((team: Team): JSX.Element | null => {
     return (
       <Grid item xs={12} key={team.id}>
         <TeamCard

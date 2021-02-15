@@ -28,7 +28,7 @@
 
 import * as React from "react";
 import bows from "bows";
-import { RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
@@ -37,36 +37,123 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
 import { t } from "../../lib/language";
-import { TeamUser, useTeam } from "../../lib/team";
+import sendMetrics from "../../lib/metrics";
+import { useAuth } from "../../lib/auth";
+import { Team, TeamContext, TeamUser, useTeam } from "../../lib/team";
 import { SortDirection, FilterType, SortFields } from "./types";
 import { errorTextFromException } from "../../lib/utils";
-import apiClient from "../../lib/auth/api";
 import PatientListBar from "./patients-list-bar";
 import PatientListTable from "./patients-list-table";
 
-
-// interface PatientListPageState {
-//   loading: boolean;
-//   errorMessage: string | null;
-//   patients: TeamUser[];
-//   allPatients: TeamUser[];
-//   teams: Team[];
-//   flagged: string[];
-//   order: SortDirection;
-//   orderBy: SortFields;
-//   filter: string;
-//   filterType: FilterType;
-// }
-
 const log = bows("PatientListPage");
-function PatientListPage(props: RouteComponentProps): JSX.Element {
+
+/**
+ * Compare two patient for sorting the patient table
+ * @param a A patient
+ * @param b A patient
+ * @param flagged Pinned patient
+ * @param orderBy Sort field
+ */
+function doCompare(a: TeamUser, b: TeamUser, orderBy: SortFields): number {
+  let aValue: string;
+  let bValue: string;
+  switch (orderBy) {
+  case SortFields.firstname:
+    aValue = a.profile?.firstName ?? "😀";
+    bValue = b.profile?.firstName ?? "😀";
+    break;
+  case SortFields.lastname:
+    aValue = a.profile?.lastName ?? a.profile?.fullName ?? a.username;
+    bValue = b.profile?.lastName ?? b.profile?.fullName ?? b.username;
+    break;
+  }
+
+  return aValue.localeCompare(bValue);
+}
+
+function updatePatientList(teamHook: TeamContext, flagged: string[], filter: string, filterType: FilterType | string, orderBy: SortFields, order: SortDirection): TeamUser[] {
+  const allPatients = teamHook.getPatients();
+  let patients = allPatients;
+  if (filter.length > 0) {
+    const searchText = filter.toLocaleLowerCase();
+    patients = allPatients.filter((patient: TeamUser): boolean => {
+      switch (filterType) {
+      case "all":
+        break;
+      case "flagged":
+        if (!flagged.includes(patient.userid)) {
+          return false;
+        }
+        break;
+      case "pending":
+        if (!teamHook.isInvitationPending(patient)) {
+          return false;
+        }
+        break;
+      default:
+        if (!teamHook.isInTeam(patient, filterType)) {
+          return false;
+        }
+        break;
+      }
+
+      const firstName = teamHook.getUserFirstName(patient);
+      if (firstName.toLocaleLowerCase().includes(searchText)) {
+        return true;
+      }
+      const lastName = teamHook.getUserLastName(patient);
+      if (lastName.toLocaleLowerCase().includes(searchText)) {
+        return true;
+      }
+      return false;
+    });
+  } else if (filterType === "flagged") {
+    patients = allPatients.filter((patient: TeamUser): boolean => flagged.includes(patient.userid));
+  } else if (filterType === "pending") {
+    patients = allPatients.filter((patient) => teamHook.isInvitationPending(patient));
+  } else if (filterType !== "all") {
+    patients = allPatients.filter((patient: TeamUser): boolean => teamHook.isInTeam(patient, filterType));
+  }
+
+  // Sort the patients
+  patients.sort((a: TeamUser, b: TeamUser): number => {
+    const aFlagged = flagged.includes(a.userid);
+    const bFlagged = flagged.includes(b.userid);
+    // Flagged: always first
+    if (aFlagged && !bFlagged) {
+      return -1;
+    }
+    if (!aFlagged && bFlagged) {
+      return 1;
+    }
+
+    let c = doCompare(a, b, orderBy);
+    if (c === 0) {
+      // In case of equality: choose another field
+      if (orderBy === SortFields.lastname) {
+        c = doCompare(a, b, SortFields.lastname);
+      } else {
+        c = doCompare(a, b, SortFields.firstname);
+      }
+    }
+    return order === "asc" ? c : -c;
+  });
+
+  return patients;
+}
+
+function PatientListPage(): JSX.Element {
+  const historyHook = useHistory();
+  const authHook = useAuth();
   const teamHook = useTeam();
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname);
   const [filter, setFilter] = React.useState<string>("");
   const [filterType, setFilterType] = React.useState<FilterType | string>(FilterType.all);
+
+  const flagged = authHook.getFlagPatients();
 
   const handleRefresh = async (force = false) => {
     log.debug("handleRefresh:", { force });
@@ -83,11 +170,81 @@ function PatientListPage(props: RouteComponentProps): JSX.Element {
   };
 
   const handleSelectPatient = (user: TeamUser): void => {
-    apiClient.sendMetrics("hcp-select-patient");
-    props.history.push(`/hcp/patient/${user.userid}`);
+    sendMetrics("hcp-select-patient");
+    historyHook.push(`/hcp/patient/${user.userid}`);
   };
 
-  log.debug("PatientListPage");
+  const handleFlagPatient = async (userId: string): Promise<void> => {
+    await authHook.flagPatient(userId);
+  };
+
+  const handleInvitePatient = async (team: Team, username: string): Promise<void> => {
+    log.info("handleInvitePatient", username, team);
+    setLoading(true);
+    setErrorMessage(null);
+    try {
+      await teamHook.invitePatient(team, username);
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason);
+      setErrorMessage(errorMessage);
+    }
+    setLoading(false);
+  };
+
+  const handleSortList = (orderBy: SortFields, order: SortDirection): void => {
+    log.info("Sort patients", orderBy, order);
+    setOrder(order);
+    setOrderBy(orderBy);
+  };
+
+  const handleFilter = (filter: string): void => {
+    log.info("Filter patients name", filter);
+    setFilter(filter);
+  };
+
+  const handleFilterType = (filterType: FilterType | string): void => {
+    log.info("Filter patients with", filterType);
+    setFilterType(filterType);
+  };
+
+  React.useEffect(() => {
+    const unmount = () => {
+      log.debug("useEffect unmount");
+    };
+
+    log.debug("useEffect", { teamHookInitialized: teamHook.initialized, teamHookErrorMessage: teamHook.errorMessage, loading });
+
+    if (!teamHook.initialized) {
+      if (!loading) {
+        log.debug("useEffect setLoading(true)");
+        setLoading(true);
+      }
+      log.debug("useEffect end");
+      return unmount;
+    }
+
+    if (teamHook.errorMessage !== null) {
+      const message = t("error-failed-display-teams", { errorMessage: teamHook.errorMessage });
+      if (message !== errorMessage) {
+        log.debug(`useEffect setErrorMessage(${message})`);
+        setErrorMessage(message);
+      }
+    } else if (errorMessage !== null) {
+      log.debug("useEffect setErrorMessage(null)");
+      setErrorMessage(null);
+    }
+
+    if (loading) {
+      log.debug("useEffect setLoading(false)");
+      setLoading(false);
+    }
+
+    log.debug("useEffect end");
+
+    return unmount;
+  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading]);
+
+  log.debug("PatientListPage", { loading, flagged });
 
   if (loading) {
     return (
@@ -108,15 +265,16 @@ function PatientListPage(props: RouteComponentProps): JSX.Element {
     );
   }
 
+  const patients = updatePatientList(teamHook, flagged, filter, filterType, orderBy, order);
+
   return (
     <React.Fragment>
       <PatientListBar
         filter={filter}
         filterType={filterType}
-        teams={teams}
-        onFilter={this.onFilter}
-        onFilterType={this.onFilterType}
-        onInvitePatient={this.onInvitePatient}
+        onFilter={handleFilter}
+        onFilterType={handleFilterType}
+        onInvitePatient={handleInvitePatient}
       />
       <Grid
         container
@@ -133,223 +291,12 @@ function PatientListPage(props: RouteComponentProps): JSX.Element {
           order={order}
           orderBy={orderBy}
           onClickPatient={handleSelectPatient}
-          onFlagPatient={this.onFlagPatient}
-          onSortList={this.onSortList}
+          onFlagPatient={handleFlagPatient}
+          onSortList={handleSortList}
         />
       </Container>
     </React.Fragment>
   );
 }
-
-// class PatientListPage extends React.Component<RouteComponentProps, PatientListPageState> {
-//   private log: Console;
-
-//   constructor(props: RouteComponentProps) {
-//     super(props);
-
-//     this.state = PatientListPage.getInitialState();
-//     this.log = bows("PatientListPage");
-
-//     this.onSelectPatient = this.onSelectPatient.bind(this);
-//     this.onFlagPatient = this.onFlagPatient.bind(this);
-//     this.onInvitePatient = this.onInvitePatient.bind(this);
-//     this.onSortList = this.onSortList.bind(this);
-//     this.onFilter = this.onFilter.bind(this);
-//     this.onFilterType = this.onFilterType.bind(this);
-//     this.onRefresh = this.onRefresh.bind(this);
-//     this.updatePatientList = this.updatePatientList.bind(this);
-//   }
-
-//   public componentDidMount(): void {
-//     this.log.debug("Mounted");
-//     this.onRefresh();
-//   }
-
-//   private static getInitialState(): PatientListPageState {
-//     return {
-//       loading: true,
-//       errorMessage: null,
-//       patients: [],
-//       allPatients: [],
-//       teams: [],
-//       flagged: [],
-//       order: "asc",
-//       orderBy: "lastname",
-//       filter: "",
-//       filterType: "all",
-//     };
-//   }
-
-//   render(): JSX.Element {
-//     const { loading, patients, teams, flagged, order, orderBy, filter, filterType, errorMessage } = this.state;
-
-//     if (loading) {
-//       return (
-//         <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
-//       );
-//     }
-//     if (errorMessage !== null) {
-//       return (
-//         <div id="div-api-error-message" className="api-error-message">
-//           <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
-//             {errorMessage}
-//           </Alert>
-//           <Button id="button-api-error-message" variant="contained" color="secondary" onClick={() => this.onRefresh(true)}>
-//             {t("button-refresh-page-on-error")}
-//           </Button>
-//         </div>
-//       );
-//     }
-
-
-//   }
-
-//   private onRefresh(forceRefresh = false): void {
-//     this.setState(PatientListPage.getInitialState(), () => this.doRefresh(forceRefresh));
-//   }
-
-//   private async doRefresh(forceRefresh = false) {
-//     try {
-//       const teams = await Teams.refresh(forceRefresh);
-//       const patients = Teams.getPatients();
-//       this.setState({ flagged: apiClient.whoami?.preferences?.patientsStarred ?? [] });
-//       this.setState({ patients, allPatients: patients, teams, loading: false }, this.updatePatientList);
-//     } catch (reason: unknown) {
-//       this.log.error("doRefresh", reason);
-//       const errorMessage = errorTextFromException(reason);
-//       this.setState({ loading: false, errorMessage });
-//     }
-//   }
-
-
-
-//   private onFlagPatient(userId: string): void {
-//     apiClient.flagPatient(userId).then((flagged: string[]) => {
-//       this.setState({ flagged });
-//     });
-//   }
-
-//   private onInvitePatient(username: string, teamId: string): void {
-//     this.log.info("onInvitePatient", username, teamId);
-//     this.setState({ loading: true, errorMessage: null }, async () => {
-//       try {
-//         await apiClient.invitePatient(username, teamId);
-//         await this.doRefresh();
-//       } catch (reason: unknown) {
-//         const errorMessage = errorTextFromException(reason);
-//         this.setState({ loading: false, errorMessage });
-//       }
-//     });
-//   }
-
-//   /**
-//    * Compare two patient for sorting the patient table
-//    * @param a A patient
-//    * @param b A patient
-//    * @param flagged Pinned patient
-//    * @param orderBy Sort field
-//    */
-//   private doCompare(a: TeamUser, b: TeamUser, orderBy: SortFields): number {
-//     let aValue: string;
-//     let bValue: string;
-//     switch (orderBy) {
-//     case "firstname":
-//       aValue = a.profile?.firstName ?? "😀";
-//       bValue = b.profile?.firstName ?? "😀";
-//       break;
-//     case "lastname":
-//       aValue = a.profile?.lastName ?? a.profile?.fullName ?? a.username;
-//       bValue = b.profile?.lastName ?? b.profile?.fullName ?? b.username;
-//       break;
-//     }
-
-//     return aValue.localeCompare(bValue);
-//   }
-
-//   private onSortList(orderBy: SortFields, order: SortDirection): void {
-//     this.log.info("Sort patients", orderBy, order);
-//     this.setState({ order, orderBy }, this.updatePatientList);
-//   }
-
-//   private onFilter(filter: string): void {
-//     this.log.info("Filter patients name", filter);
-//     this.setState({ filter }, this.updatePatientList);
-//   }
-
-//   private onFilterType(filterType: FilterType): void {
-//     this.log.info("Filter patients with", filterType);
-//     this.setState({ filterType }, this.updatePatientList);
-//   }
-
-//   private updatePatientList() {
-//     const { allPatients, filter, filterType, flagged, order, orderBy } = this.state;
-
-//     let patients = allPatients;
-//     if (filter.length > 0) {
-//       const searchText = filter.toLocaleLowerCase();
-//       patients = allPatients.filter((patient: TeamUser): boolean => {
-//         switch (filterType) {
-//         case "all":
-//           break;
-//         case "flagged":
-//           if (!flagged.includes(patient.userId)) {
-//             return false;
-//           }
-//           break;
-//         case "pending":
-//           if (!patient.isInvitationPending()) {
-//             return false;
-//           }
-//           break;
-//         default:
-//           if (!patient.isInTeam(filterType)) {
-//             return false;
-//           }
-//           break;
-//         }
-
-//         if (patient.firstName.toLocaleLowerCase().includes(searchText)) {
-//           return true;
-//         }
-//         if (patient.lastName.toLocaleLowerCase().includes(searchText)) {
-//           return true;
-//         }
-//         return false;
-//       });
-//     } else if (filterType === "flagged") {
-//       patients = allPatients.filter((patient: TeamUser): boolean => flagged.includes(patient.userId));
-//     } else if (filterType === "pending") {
-//       patients = allPatients.filter((patient) => patient.isInvitationPending());
-//     } else if (filterType !== "all") {
-//       patients = allPatients.filter((patient: TeamUser): boolean => patient.isInTeam(filterType) ?? false);
-//     }
-
-//     // Sort the patients
-//     patients.sort((a: TeamUser, b: TeamUser): number => {
-//       const aFlagged = flagged.includes(a.userId);
-//       const bFlagged = flagged.includes(b.userId);
-//       // Flagged: always first
-//       if (aFlagged && !bFlagged) {
-//         return -1;
-//       }
-//       if (!aFlagged && bFlagged) {
-//         return 1;
-//       }
-
-//       let c = this.doCompare(a, b, orderBy);
-//       if (c === 0) {
-//         // In case of equality: choose another field
-//         if (orderBy === "lastname") {
-//           c = this.doCompare(a, b, "firstname");
-//         } else {
-//           c = this.doCompare(a, b, "lastname");
-//         }
-//       }
-//       return order === "asc" ? c : -c;
-//     });
-
-//     this.setState({ patients });
-//   }
-// }
 
 export default PatientListPage;

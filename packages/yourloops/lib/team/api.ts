@@ -40,8 +40,8 @@ import { t } from "../language";
 const log = bows("TeamAPI");
 let teams: ITeam[] | null = null;
 
-export async function fetchTeams(traceToken: string, sessionToken: string, user: User): Promise<ITeam[]> {
-  log.info("fetchTeams()", traceToken, sessionToken);
+async function fetchTeams(traceToken: string, sessionToken: string, user: User): Promise<ITeam[]> {
+  log.info("fetchTeams()", { traceToken, sessionToken });
 
   // Simulate the fetch() wait network call:
   // eslint-disable-next-line no-magic-numbers
@@ -145,7 +145,7 @@ export async function fetchTeams(traceToken: string, sessionToken: string, user:
   return returnedTeam;
 }
 
-export async function fetchPatients(traceToken: string, sessionToken: string, user: User): Promise<ITeamMember[]> {
+async function fetchPatients(traceToken: string, sessionToken: string, user: User): Promise<ITeamMember[]> {
   log.info("fetchPatients()");
 
   const apiURL = new URL(`/metadata/users/${user.userid}/users`, appConfig.API_HOST);
@@ -171,7 +171,7 @@ export async function fetchPatients(traceToken: string, sessionToken: string, us
       let teamIds = [];
       if (i < 2) {
         teamIds = ["private"];
-      } else if (val < 6) { // eslint-disable-line no-magic-numbers
+      } else if (val < 7) { // eslint-disable-line no-magic-numbers
         teamIds = ["team-0"];
       } else if (val < 8) { // eslint-disable-line no-magic-numbers
         teamIds = ["team-1"];
@@ -182,6 +182,13 @@ export async function fetchPatients(traceToken: string, sessionToken: string, us
       if (nPrivate < 3 && !teamIds.includes("private")) {
         nPrivate++;
         teamIds.push("private");
+      }
+
+      // FIXME: The API will send this data
+      if (!Array.isArray(user.roles)) {
+        user.roles = [ UserRoles.patient ];
+      } else {
+        user.roles = [ UserRoles.hcp ];
       }
 
       // Not using teamIds.forEach(): eslint(no-loop-func)
@@ -227,7 +234,7 @@ export async function fetchPatients(traceToken: string, sessionToken: string, us
   }
 }
 
-export async function invitePatient(traceToken: string, sessionToken: string, teamId: string, username: string): Promise<void> {
+async function invitePatient(traceToken: string, sessionToken: string, teamId: string, username: string): Promise<void> {
   log.info(`invitePatient(${username}, ${teamId})`, traceToken, sessionToken);
   // eslint-disable-next-line no-magic-numbers
   await waitTimeout(500 + Math.random() * 200);
@@ -247,7 +254,7 @@ export async function invitePatient(traceToken: string, sessionToken: string, te
   }
 }
 
-export async function inviteMember(traceToken: string, sessionToken: string, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> {
+async function inviteMember(traceToken: string, sessionToken: string, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> {
   log.info("inviteMember()", traceToken, sessionToken, teamId, username, role);
   if (teams === null || teams.length < 1) {
     throw new Error("Empty team list!");
@@ -262,7 +269,7 @@ export async function inviteMember(traceToken: string, sessionToken: string, tea
   }
 }
 
-export async function createTeam(traceToken: string, sessionToken: string, user: User, team: Partial<ITeam>): Promise<void> {
+async function createTeam(traceToken: string, sessionToken: string, user: User, team: Partial<ITeam>): Promise<void> {
   log.info("createTeam()", traceToken, sessionToken, team);
   if (teams === null) {
     teams = [];
@@ -292,7 +299,7 @@ export async function createTeam(traceToken: string, sessionToken: string, user:
   await waitTimeout(500 + Math.random() * 200);
 }
 
-export async function editTeam(traceToken: string, sessionToken: string, editedTeam: ITeam): Promise<void> {
+async function editTeam(traceToken: string, sessionToken: string, editedTeam: ITeam): Promise<void> {
   log.info("editTeam()", traceToken, sessionToken, editedTeam);
   if (teams === null || teams.length < 1) {
     throw new Error("Empty team list!");
@@ -309,7 +316,7 @@ export async function editTeam(traceToken: string, sessionToken: string, editedT
   await waitTimeout(500 + Math.random() * 200);
 }
 
-export async function leaveTeam(traceToken: string, sessionToken: string, teamId: string): Promise<void> {
+async function leaveTeam(traceToken: string, sessionToken: string, teamId: string): Promise<void> {
   log.info("leaveTeam()", traceToken, sessionToken, teamId);
 
   if (teams === null || teams.length < 1) {
@@ -337,7 +344,7 @@ export async function leaveTeam(traceToken: string, sessionToken: string, teamId
   await waitTimeout(500 + Math.random() * 200);
 }
 
-export async function removeMember(traceToken: string, sessionToken: string, teamId: string, userId: string): Promise<void> {
+async function removeMember(traceToken: string, sessionToken: string, teamId: string, userId: string): Promise<void> {
   log.info("removeMember()", traceToken, sessionToken, teamId, userId);
   if (teams === null || teams.length < 1) {
     throw new Error("Empty team list!");
@@ -367,7 +374,7 @@ export async function removeMember(traceToken: string, sessionToken: string, tea
   await waitTimeout(500 + Math.random() * 200);
 }
 
-export async function changeMemberRole(traceToken: string, sessionToken: string, teamId: string, userId: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> {
+async function changeMemberRole(traceToken: string, sessionToken: string, teamId: string, userId: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> {
   log.info("changeMemberRole()", traceToken, sessionToken, teamId, userId, role);
   if (teams === null || teams.length < 1) {
     throw new Error("Empty team list!");
@@ -399,3 +406,15 @@ export async function changeMemberRole(traceToken: string, sessionToken: string,
   // eslint-disable-next-line no-magic-numbers
   await waitTimeout(500 + Math.random() * 200);
 }
+
+export default {
+  fetchTeams,
+  fetchPatients,
+  invitePatient,
+  inviteMember,
+  createTeam,
+  editTeam,
+  leaveTeam,
+  removeMember,
+  changeMemberRole,
+};

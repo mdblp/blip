@@ -43,7 +43,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
-import apiClient from "../../lib/auth/api";
+import sendMetrics from "../../lib/metrics";
 import { TeamUser, useTeam } from "../../lib/team";
 import { SortDirection, SortFields } from "./types";
 
@@ -53,7 +53,7 @@ export interface PatientListTableProps {
   order: SortDirection;
   orderBy: SortFields;
   onClickPatient: (user: TeamUser) => void;
-  onFlagPatient: (userId: string) => void;
+  onFlagPatient: (userId: string) => Promise<void>;
   onSortList: (field: SortFields, direction: SortDirection) => void;
 }
 
@@ -91,11 +91,11 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
     const lastName = teamHook.getUserLastName(patient);
     const onClickFlag = (e: React.MouseEvent): void => {
       e.stopPropagation();
-      apiClient.sendMetrics("flag-patient", { flagged: !isFlagged });
+      sendMetrics("flag-patient", { flagged: !isFlagged });
       onFlagPatient(userId);
     };
     const onRowClick = (/* e: React.MouseEvent */): void => {
-      apiClient.sendMetrics("show-patient-data", { flagged: isFlagged });
+      sendMetrics("show-patient-data", { flagged: isFlagged });
       onClickPatient(patient);
     };
     return (

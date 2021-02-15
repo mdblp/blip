@@ -28,16 +28,17 @@
 
 import * as React from "react";
 import bows from "bows";
+import { useParams } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 
-import { UserRoles } from "models/shoreline";
+import { errorTextFromException } from "../../lib/utils";
 import appConfig from "../../lib/config";
-import apiClient from "../../lib/auth/api";
 import { useTeam } from "../../lib/team";
+import { useData } from "../../lib/data";
 
-interface PatientDataProps {
+interface PatientDataParam {
   patientId?: string;
 }
 
@@ -55,25 +56,43 @@ function PatientDataPageError({ msg }: PatientDataPageErrorProps): JSX.Element {
   );
 }
 
-function PatientDataPage(props: PatientDataProps): JSX.Element {
-  const { patientId } = props;
+function PatientDataPage(): JSX.Element {
 
-  const [error, setError] = React.useState<string | null>(null);
+  const paramHook = useParams();
   const teamHook = useTeam();
+  const dataHook = useData();
+  const [initialized, setInitialized] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  if (typeof patientId === "undefined") {
-    return <PatientDataPageError msg="Invalid patient" />;
-  }
+  const { patientId } = paramHook as PatientDataParam;
+  log.debug("render", { patientId, initialized, error });
 
-  const user = teamHook.getUser(patientId);
-  if (user === null || !user.roles?.includes(UserRoles.patient)) {
-    return <PatientDataPageError msg="Invalid patient" />;
-  }
+  React.useEffect(() => {
+    if (!initialized) {
 
-  apiClient.loadPatientData(user).catch((reason: unknown) => {
-    log.error("loadPatientData", reason);
-    setError("Doesn't compute");
-  });
+      if (!teamHook.initialized) {
+        return;
+      }
+
+      setInitialized(true);
+
+      if (typeof patientId === "undefined") {
+        log.error("Invalid patient Id", patientId);
+        setError("Invalid patient Id");
+        return;
+      }
+      const patient = teamHook.getUser(patientId);
+      if (patient === null) {
+        log.error("Patient not found");
+        setError("Patient not found");
+        return;
+      }
+      dataHook.loadPatientData(patient).catch((reason: unknown) => {
+        log.error(reason);
+        setError(errorTextFromException(reason));
+      });
+    }
+  }, [patientId, initialized, dataHook, teamHook]);
 
   if (error !== null) {
     return <PatientDataPageError msg={error} />;
@@ -81,7 +100,7 @@ function PatientDataPage(props: PatientDataProps): JSX.Element {
 
   return (
     <Container maxWidth="lg">
-      <Blip config={appConfig} api={apiClient} />
+      <Blip config={appConfig} api={dataHook.blipApi} />
     </Container>
   );
 }

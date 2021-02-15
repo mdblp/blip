@@ -50,7 +50,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useAuth } from "../../lib/auth";
 
 export interface TeamMembersProps {
   team: Team;

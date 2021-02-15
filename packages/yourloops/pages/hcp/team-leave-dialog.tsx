@@ -40,7 +40,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { Team, useTeam } from "../../lib/team";
-import { useAuth } from "../../lib/auth/hook/use-auth";
+import { useAuth } from "../../lib/auth";
 import { TeamLeaveDialogContentProps } from "./types";
 
 interface LeaveTeamDialogProps {
