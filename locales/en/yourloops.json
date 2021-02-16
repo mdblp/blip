@@ -168,7 +168,7 @@
   "modal-add-patient-legal-placeholder": "By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations. Read our Terms of Use and Data Privacy.",
   "modal-team-code-descr-placeholder": "Communicate this identification code to your patient during a consultation so they can verify your identity.",
   "modal-team-code-descr-placeholder-2": "This identification code is always available in the team information on the “My teams”page.",
-  "team-member-pending": "Pending member",
+  "team-member-pending": "Pending invitation",
   "modal-add-team-member": "Add healthcare professional",
   "team-member-admin": "Admin",
   "modal-add-team-member-admin-info": "A team administrator can:",
