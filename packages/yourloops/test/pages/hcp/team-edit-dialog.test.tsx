@@ -152,8 +152,7 @@ function testTeamEditDialog(): void {
         value: "Updated name",
       },
     };
-    const updatedTeam = { ...defaultProps.team, members: [] };
-    updatedTeam.name = event.target.value;
+    const updatedTeam = { ...defaultProps.team, members: [], name: event.target.value };
 
     component.find("input").find("#team-edit-dialog-field-name").at(0).simulate("change", event);
     expect(component.find("#team-edit-dialog-button-validate").at(0).prop("disabled")).to.be.false;

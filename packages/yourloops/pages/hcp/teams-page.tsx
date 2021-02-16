@@ -240,37 +240,26 @@ function TeamsPage(): JSX.Element {
   };
 
   React.useEffect(() => {
-    const unmount = () => {
-      log.debug("useEffect unmount");
-    };
-
-    log.debug("useEffect", { teamHookInitialized: teamHook.initialized, teamHookErrorMessage: teamHook.errorMessage, loading });
-
     if (!teamHook.initialized) {
       if (!loading) {
-        log.debug("useEffect setLoading(true)");
         setLoading(true);
       }
-      return unmount;
+      return;
     }
 
     if (teamHook.errorMessage !== null) {
       const message = t("error-failed-display-teams", { errorMessage: teamHook.errorMessage });
       if (message !== errorMessage) {
-        log.debug(`useEffect setErrorMessage(${message})`);
+        log.error("errorMessage", message);
         setErrorMessage(message);
       }
     } else if (errorMessage !== null) {
-      log.debug("useEffect setErrorMessage(null)");
       setErrorMessage(null);
     }
 
     if (loading) {
-      log.debug("useEffect setLoading(false)");
       setLoading(false);
     }
-
-    return unmount;
 
   }, [teamHook.initialized, teamHook.errorMessage, loading, errorMessage]);
 

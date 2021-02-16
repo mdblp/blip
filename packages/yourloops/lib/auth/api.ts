@@ -113,8 +113,11 @@ async function authenticate(username: string, password: string, traceToken: stri
   }
 
   const user = (await response.json()) as User;
+  // FIXME will be sent correctly by the API
   if (!Array.isArray(user.roles)) {
     user.roles = [UserRoles.patient];
+  } else {
+    user.roles = [UserRoles.hcp];
   }
 
   // We may miss some case, but it's probably good enough:

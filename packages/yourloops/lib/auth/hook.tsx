@@ -45,7 +45,6 @@ const STORAGE_KEY_USER = "logged-in-user";
 
 const ReactAuthContext = React.createContext({} as AuthContext);
 const log = bows("AuthHook");
-let useEffectCounter = 0;
 
 /**
  * Provider hook that creates auth object and handles state
@@ -62,7 +61,6 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
   // Get the current location path, needed to redirect on refresh the page
   const pathname = historyHook.location.pathname;
-  log.debug("AuthContextImpl", { useEffectCounter, pathname, user });
 
   const initialized = (): boolean => traceToken !== null;
 
@@ -196,9 +194,9 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return Promise.resolve(true);
   };
 
-  React.useEffect(() => {
+  const initHook = () => {
     // const onStorageChange = (ev: StorageEvent) => {
-    //   log.debug("onStorageChange", { useEffectCounter });
+    //   log.debug("onStorageChange");
     //   if (ev.storageArea === sessionStorage) {
     //     log.info("onStorageChange", ev.storageArea);
     //     // Not sure on this one
@@ -207,15 +205,15 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     //   }
     // };
 
-    useEffectCounter += 1;
-    log.debug("useEffect", { useEffectCounter, pathname, location: historyHook.location.pathname });
-
     const unmount = () => {
-      log.debug("useEffect unmount", { useEffectCounter });
+      log.debug("TODO useEffect unmount");
+      // window.removeEventListener("storage", onStorageChange);
     };
 
     // Use traceToken to know if the API hook is initialized
     if (traceToken === null) {
+      log.info("init");
+
       const sessionTokenStored = sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN);
       const traceTokenStored = sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN);
       const userStored = sessionStorage.getItem(STORAGE_KEY_USER);
@@ -242,16 +240,15 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
           log.info("Token expiration date:", new Date(decoded.exp * 1000).toISOString());
 
-          log.debug("useEffect setSessionToken()");
           setSessionToken(sessionTokenStored);
-          log.debug("useEffect setTraceToken()");
           setTraceToken(traceTokenStored);
-          log.debug("useEffect setUser()");
           setUser(currentUser);
+
           if (pathname !== historyHook.location.pathname) {
             log.info("Reused session storage items, and redirect to", pathname);
             historyHook.push(pathname);
           }
+
         } catch (e) {
           log.warn("Invalid auth in session storage", e);
           sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
@@ -267,9 +264,11 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       // the DOM storage
       setTraceToken(uuidv4());
     }
-    log.debug("useEffect end", { useEffectCounter, pathname });
+
     return unmount;
-  }, [historyHook, pathname, traceToken]);
+  };
+
+  React.useEffect(initHook, [historyHook, pathname, traceToken]);
 
   // Return the user object and auth methods
   return {

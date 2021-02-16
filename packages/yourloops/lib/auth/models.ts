@@ -49,16 +49,16 @@ export interface AuthContext {
   user: Readonly<User> | null;
   sessionToken: string | null;
   traceToken: string | null;
-  initialized(): boolean;
+  initialized: () => boolean;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  login(username: string, password: string): Promise<User>;
-  logout(): void;
-  updateProfile(user: Readonly<User>): Promise<Profile>;
-  updatePreferences(user: Readonly<User>): Promise<Preferences>;
-  updateSettings(user: Readonly<User>): Promise<Settings>;
-  signup(username: string, password: string): void;
-  isLoggedIn(): boolean;
-  sendPasswordResetEmail(username: string): Promise<boolean>;
+  login: (username: string, password: string) => Promise<User>;
+  logout: () => void;
+  updateProfile: (user: Readonly<User>) => Promise<Profile>;
+  updatePreferences: (user: Readonly<User>) => Promise<Preferences>;
+  updateSettings: (user: Readonly<User>) => Promise<Settings>;
+  signup: (username: string, password: string) => void;
+  isLoggedIn: () => boolean;
+  sendPasswordResetEmail: (username: string) => Promise<boolean>;
   /** Flag or un-flag one patient */
   flagPatient: (userId: string) => Promise<void>;
   /** Set the flagged patient */

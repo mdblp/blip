@@ -308,7 +308,7 @@ async function editTeam(traceToken: string, sessionToken: string, editedTeam: IT
   for (let i = 0; i < nTeams; i++) {
     const team = teams[i];
     if (editedTeam.id === team.id) {
-      teams[i] = editedTeam;
+      teams[i] = { ...editedTeam, members: team.members };
       break;
     }
   }

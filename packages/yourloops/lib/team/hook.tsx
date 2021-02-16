@@ -35,15 +35,7 @@ import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, TeamMemberStatus }
 
 import { errorTextFromException } from "../utils";
 import { useAuth } from "../auth";
-import {
-  LoadTeams,
-  Team,
-  TeamAPI,
-  TeamContext,
-  TeamMember,
-  TeamProvider,
-  TeamUser,
-} from "./models";
+import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
 import TeamAPIImpl from "./api";
 
 const log = bows("TeamHook");
@@ -59,7 +51,6 @@ export async function loadTeams(
   fetchTeams: TeamAPI["fetchTeams"],
   fetchPatients: TeamAPI["fetchPatients"]
 ): Promise<LoadTeams> {
-
   const getFlagPatients = (): string[] => {
     const flagged = user.preferences?.patientsStarred;
     if (Array.isArray(flagged)) {
@@ -67,8 +58,6 @@ export async function loadTeams(
     }
     return [];
   };
-
-  log.debug("loadTeams begin");
 
   const users = new Map<string, TeamUser>();
   const [apiTeams, apiPatients] = await Promise.all([
@@ -159,7 +148,6 @@ export async function loadTeams(
 
   // End, cleanup to help the garbage collector
   users.clear();
-  log.debug("loadTeams end");
   return { teams, flaggedNotInResult };
 }
 
@@ -171,7 +159,6 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   const { t } = useTranslation("yourloops");
   const authHook = useAuth();
 
-  log.debug("TeamContextImpl", { initialized, lock, teams });
   const authInitialized = authHook.initialized();
   const isLoggedIn = authHook.isLoggedIn();
 
@@ -327,26 +314,19 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
     await refresh(true);
   };
 
-  React.useEffect(() => {
-    log.debug("useEffect", { authInitialized, initialized, lock });
-
-    const unmount = () => {
-      log.debug("useEffect unmount", { authInitialized, initialized, lock });
-    };
-
+  const initHook = () => {
     if (!authInitialized) {
       if (teams.length > 0) {
-        log.debug("useEffect setTeams([])");
         setTeams([]);
       }
       if (errorMessage !== null) {
-        log.debug("useEffect setErrorMessage(null)");
         setErrorMessage(null);
       }
-      return unmount;
+      return;
     }
 
     if (initialized === false && lock === false) {
+      log.info("init");
       lock = true;
 
       if (isLoggedIn) {
@@ -356,10 +336,8 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
 
         loadTeams(traceToken, sessionToken, user, api.fetchTeams, api.fetchPatients)
           .then(({ teams, flaggedNotInResult }: LoadTeams) => {
-            log.debug("useEffect setTeams");
             setTeams(teams);
             if (errorMessage !== null) {
-              log.debug("useEffect setErrorMessage(null)");
               setErrorMessage(null);
             }
 
@@ -373,34 +351,26 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
           .catch((reason: unknown) => {
             const message = errorTextFromException(reason);
             if (message !== errorMessage) {
-              log.error("useEffect setErrorMessage", message, reason);
               setErrorMessage(message);
             }
           })
           .finally(() => {
-            log.debug("useEffect finally setInitialized(true)");
             setInitialized(true);
             // Clear the lock
             lock = false;
-            log.debug("useEffect finally initialized (logged-in)");
           });
       } else {
         if (teams.length > 0) {
-          log.debug("useEffect setTeams([])");
           setTeams([]);
         }
-        log.debug("useEffect setInitialized(true)");
         setInitialized(true);
         // Clear the lock
         lock = false;
-        log.debug("useEffect finally initialized (not-logged-in)");
       }
     }
+  };
 
-    log.debug("useEffect end", { authInitialized, initialized, lock });
-
-    return unmount;
-  }, [initialized, errorMessage, teams, authInitialized, isLoggedIn, authHook, api]);
+  React.useEffect(initHook, [initialized, errorMessage, teams, authInitialized, isLoggedIn, authHook, api]);
 
   return {
     teams,

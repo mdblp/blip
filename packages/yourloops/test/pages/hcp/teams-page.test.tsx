@@ -64,7 +64,7 @@ function testTeamPage(): void {
     expect((teamAPI.fetchPatients as sinon.SinonStub).calledOnce).to.be.true;
     expect((teamAPI.fetchTeams as sinon.SinonStub).calledOnce).to.be.true;
     page.update();
-    await waitTimeout(0);
+    await waitTimeout(apiTimeout);
     return page;
   }
 
@@ -138,9 +138,9 @@ function testTeamPage(): void {
 
       expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
 
-      buttonId = "team-leave-dialog-button-leave";
-      expect(component.exists(`#${buttonId}`), buttonId).to.be.true;
-      component.find(`#${buttonId}`).last().simulate("click");
+      buttonId = "#team-leave-dialog-button-leave";
+      expect(component.exists(buttonId), buttonId).to.be.true;
+      component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
@@ -168,9 +168,9 @@ function testTeamPage(): void {
 
       expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
 
-      buttonId = "team-leave-dialog-button-cancel";
-      expect(component.exists(`#${buttonId}`), buttonId).to.be.true;
-      component.find(`#${buttonId}`).last().simulate("click");
+      buttonId = "#team-leave-dialog-button-cancel";
+      expect(component.exists(buttonId), buttonId).to.be.true;
+      component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
@@ -199,9 +199,9 @@ function testTeamPage(): void {
 
       expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
 
-      buttonId = "team-leave-dialog-button-leave";
-      expect(component.exists(`#${buttonId}`), buttonId).to.be.true;
-      component.find(`#${buttonId}`).last().simulate("click");
+      buttonId = "#team-leave-dialog-button-leave";
+      expect(component.exists(buttonId), buttonId).to.be.true;
+      component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
