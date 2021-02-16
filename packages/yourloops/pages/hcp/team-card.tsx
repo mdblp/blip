@@ -179,7 +179,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
     setButtonsDisabled(false);
   };
 
-  const id = team.id;
+  const { id } = team;
 
   // FIXME: if (team.isAdmin(currentUser)) { ... show buttons }
   const buttonEdit = (
