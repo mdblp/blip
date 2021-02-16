@@ -159,6 +159,19 @@ const legend = {
       },
       type: 'text'
     },
+    {
+      create: function(opts) {
+        return opts.selection.append('text')
+          .attr({
+            'class': 'd3-pool-legend d3-pool-legend-dexcom',
+          })
+          .text('Dexcom CGM - ')
+          .each(function() {
+            opts.widths.push(this.getBoundingClientRect().width);
+          });
+      },
+      type: 'text'
+    },
   ],
   bolus: [
     // Bolus Text
