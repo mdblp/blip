@@ -32,12 +32,12 @@ import { mount, ReactWrapper, MountRendererProps } from "enzyme";
 import sinon from "sinon";
 
 import { waitTimeout } from "../../../lib/utils";
-import { CustomAuthProvider } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { Team, TeamContextProvider, loadTeams } from "../../../lib/team";
 import TeamMembers, { TeamMembersProps } from "../../../pages/hcp/team-members-table";
 
 import { loggedInUsers } from "../../common";
-import { TestAuthProviderHCP, authHook } from "../../lib/auth/hook.test";
+import { authHookHcp, authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 import { TeamMemberRole } from "../../../models/team";
 
@@ -56,11 +56,11 @@ function testTeamMembersTable(): void {
 
   function TestTeamMembersComponent(props: TeamMembersProps): JSX.Element {
     return (
-      <CustomAuthProvider provider={TestAuthProviderHCP}>
-        <TeamContextProvider api={teamAPI} >
-          <TeamMembers { ...props} />
+      <AuthContextProvider value={authHookHcp}>
+        <TeamContextProvider api={teamAPI}>
+          <TeamMembers {...props} />
         </TeamContextProvider>
-      </CustomAuthProvider>
+      </AuthContextProvider>
     );
   }
 
@@ -71,7 +71,8 @@ function testTeamMembersTable(): void {
       mountOptions.attachTo.id = "app";
       document.body.appendChild(mountOptions.attachTo);
     }
-    const result = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const result = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     teams = result.teams;
     defaultProps.team = teams[1];
   });

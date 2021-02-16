@@ -27,20 +27,11 @@
  */
 
 import sinon from "sinon";
-// import * as React from "react";
-// import { v4 as uuidv4 } from "uuid";
-
-// import { ITeamMember, ITeam } from "../../../models/team";
-// import { TeamContext, Team, TeamAPI } from "../../../lib/team";
-// import { loadTeams } from "../../../lib/team/hook";
 import { TeamAPI } from "../../../lib/team";
 import {
   teams,
   patients,
 } from "../../common";
-
-// export const fetchTeams = sinon.stub().resolves(fetchedTeams); // (): Promise<ITeam[]> => sinon.stub().resolves(fetchedTeams);
-// export const fetchPatients = sinon.stub().resolves(fetchedPatients); // (): Promise<ITeamMember[]> => Promise.resolve(fetchedPatients);
 
 export const teamAPI: TeamAPI = {
   fetchTeams: sinon.stub().resolves(teams),
@@ -68,55 +59,3 @@ export function resetTeamAPIStubs(): void {
   (teamAPI.fetchTeams as sinon.SinonStub).resolves(teams);
   (teamAPI.fetchPatients as sinon.SinonStub).resolves(patients);
 }
-
-// /**
-//  * To be used by other tests
-//  */
-// export function TestTeamContext(): TeamContext {
-//   console.log("TestTeamContext");
-//   const [initialized, setInitialized] = React.useState<boolean>(false);
-//   const [teams, setTeams] = React.useState<Team[]>([]);
-
-//   const defaultTeamContext = DefaultTeamContext;
-//   const defaultContext = defaultTeamContext();
-
-//   React.useEffect(() => {
-//     console.log("TestTeamContext: useEffect");
-//     if (teams.length < 1) {
-//       const traceToken = uuidv4();
-//       const sessionToken = "";
-//       loadTeams(traceToken, sessionToken, loggedInUsers.hcp, fetchTeams, fetchPatients).then(({ teams }) => {
-//         setTeams(teams);
-//         setInitialized(true);
-//       });
-//     }
-//   }, [teams]);
-
-//   const medicalTeams = defaultContext.getMedicalTeams();
-
-//   return {
-//     teams,
-//     initialized,
-//     errorMessage: null,
-//     refresh: sinon.spy(),
-//     getTeam: sinon.spy(),
-//     getUser: sinon.spy(),
-//     getMedicalTeams: sinon.stub().returns(medicalTeams),
-//     getPatients: sinon.spy(),
-//     getMedicalMembers: sinon.spy(),
-//     getNumMedicalMembers: sinon.spy(),
-//     getUserFirstName: sinon.spy(),
-//     getUserLastName: sinon.spy(),
-//     isUserAdministrator: sinon.spy(),
-//     isUserTheOnlyAdministrator: sinon.spy(),
-//     isInvitationPending: sinon.spy(),
-//     isInTeam: sinon.spy(),
-//     invitePatient: sinon.spy(),
-//     inviteMember: sinon.spy(),
-//     createTeam: sinon.spy(),
-//     editTeam: sinon.spy(),
-//     leaveTeam: sinon.spy(),
-//     removeMember: sinon.spy(),
-//     changeMemberRole: sinon.spy(),
-//   };
-// }

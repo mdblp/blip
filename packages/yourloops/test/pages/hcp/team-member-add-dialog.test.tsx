@@ -35,7 +35,7 @@ import { Team } from "../../../lib/team";
 import { loadTeams } from "../../../lib/team/hook";
 import AddMemberDialog from "../../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../../pages/hcp/types";
-import { authHook } from "../../lib/auth/hook.test";
+import { authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamAddMemberDialog(): void {
@@ -47,7 +47,8 @@ function testTeamAddMemberDialog(): void {
   let component: ReactWrapper | null = null;
 
   before(async () => {
-    const { teams } = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const { teams } = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.team = teams[1];
   });
 

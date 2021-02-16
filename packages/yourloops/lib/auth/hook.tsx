@@ -36,13 +36,8 @@ import { useHistory } from "react-router-dom";
 
 import { User, Profile, Preferences, Settings } from "models/shoreline";
 import sendMetrics from "../metrics";
-import { Authenticate, AuthContext, AuthProvider } from "./models";
-import {
-  login as apiLogin,
-  updateProfile as apiUpdateProfile,
-  updatePreferences as apiUpdatePreferences,
-  updateSettings as apiUpdateSettings,
-} from "./api";
+import { Authenticate, AuthAPI, AuthContext, AuthProvider } from "./models";
+import AuthAPIImpl from "./api";
 
 const STORAGE_KEY_SESSION_TOKEN = "session-token";
 const STORAGE_KEY_TRACE_TOKEN = "trace-token";
@@ -55,7 +50,7 @@ let useEffectCounter = 0;
 /**
  * Provider hook that creates auth object and handles state
  */
-export function DefaultAuthProvider(): AuthContext {
+function AuthContextImpl(api: AuthAPI): AuthContext {
   const historyHook = useHistory();
   const { t } = useTranslation("yourloops");
   // Trace token is used to trace the calls betweens different microservices API calls for debug purpose.
@@ -65,8 +60,9 @@ export function DefaultAuthProvider(): AuthContext {
   // Current authenticated user
   const [user, setUser] = React.useState<User | null>(null);
 
+  // Get the current location path, needed to redirect on refresh the page
   const pathname = historyHook.location.pathname;
-  log.debug("DefaultAuthProvider", { useEffectCounter, pathname, user });
+  log.debug("AuthContextImpl", { useEffectCounter, pathname, user });
 
   const initialized = (): boolean => traceToken !== null;
 
@@ -84,7 +80,7 @@ export function DefaultAuthProvider(): AuthContext {
     if (traceToken === null) {
       throw new Error("not-yet-initialized");
     }
-    const auth = await apiLogin(username, password, traceToken);
+    const auth = await api.login(username, password, traceToken);
     sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, auth.sessionToken);
     sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, auth.traceToken);
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user));
@@ -98,7 +94,7 @@ export function DefaultAuthProvider(): AuthContext {
   const updateProfile = async (roUser: Readonly<User>): Promise<Profile> => {
     log.info("updateProfile", roUser.userid);
     const authInfo = await getAuthInfos();
-    const profile = await apiUpdateProfile({ ...authInfo, user: roUser });
+    const profile = await api.updateProfile({ ...authInfo, user: roUser });
     if (authInfo.user.userid === roUser.userid) {
       const updatedUser = _.cloneDeep(authInfo.user);
       updatedUser.profile = profile;
@@ -111,7 +107,7 @@ export function DefaultAuthProvider(): AuthContext {
   const updatePreferences = async (roUser: Readonly<User>): Promise<Preferences> => {
     log.info("updatePreferences", roUser.userid);
     const authInfo = await getAuthInfos();
-    const preferences = await apiUpdatePreferences({ ...authInfo, user: roUser });
+    const preferences = await api.updatePreferences({ ...authInfo, user: roUser });
     if (authInfo.user.userid === roUser.userid) {
       const updatedUser = _.cloneDeep(authInfo.user);
       updatedUser.preferences = preferences;
@@ -124,7 +120,7 @@ export function DefaultAuthProvider(): AuthContext {
   const updateSettings = async (roUser: Readonly<User>): Promise<Settings> => {
     log.info("updateSettings", roUser.userid);
     const authInfo = await getAuthInfos();
-    const settings = await apiUpdateSettings({ ...authInfo, user: roUser });
+    const settings = await api.updateSettings({ ...authInfo, user: roUser });
     if (authInfo.user.userid === roUser.userid) {
       const updatedUser = _.cloneDeep(authInfo.user);
       updatedUser.settings = settings;
@@ -156,7 +152,7 @@ export function DefaultAuthProvider(): AuthContext {
       updatedUser.preferences.patientsStarred.push(userId);
     }
     log.debug("starred", updatedUser.preferences.patientsStarred);
-    updatedUser.preferences = await apiUpdatePreferences({ ...authInfo, user: updatedUser });
+    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
@@ -170,7 +166,7 @@ export function DefaultAuthProvider(): AuthContext {
     }
     updatedUser.preferences.patientsStarred = userIds;
     log.debug("starred", updatedUser.preferences.patientsStarred);
-    updatedUser.preferences = await apiUpdatePreferences({ ...authInfo, user: updatedUser });
+    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedUser));
     setUser(updatedUser);
   };
@@ -252,8 +248,10 @@ export function DefaultAuthProvider(): AuthContext {
           setTraceToken(traceTokenStored);
           log.debug("useEffect setUser()");
           setUser(currentUser);
-          log.info("Reused session storage items, and redirect to", pathname);
-          historyHook.push(pathname);
+          if (pathname !== historyHook.location.pathname) {
+            log.info("Reused session storage items, and redirect to", pathname);
+            historyHook.push(pathname);
+          }
         } catch (e) {
           log.warn("Invalid auth in session storage", e);
           sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
@@ -304,8 +302,8 @@ export function useAuth(): AuthContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
  * @param props for auth provider & children
  */
-export function CustomAuthProvider(props: AuthProvider): JSX.Element {
-  const { provider, children } = props;
-  const auth = provider();
-  return <ReactAuthContext.Provider value={auth}>{children}</ReactAuthContext.Provider>;
+export function AuthContextProvider(props: AuthProvider): JSX.Element {
+  const { children, api, value } = props;
+  const authValue = value ?? AuthContextImpl(api ?? AuthAPIImpl); // eslint-disable-line new-cap
+  return <ReactAuthContext.Provider value={authValue}>{children}</ReactAuthContext.Provider>;
 }

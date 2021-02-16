@@ -28,22 +28,38 @@
 
 import sinon from "sinon";
 import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 
-import { AuthContext } from "../../../lib/auth";
+import { User } from "../../../models/shoreline";
+import { AuthAPI, Authenticate, AuthContext } from "../../../lib/auth";
 import { loggedInUsers } from "../../common";
 
-export const authHook = {
-  user: loggedInUsers.hcp,
+
+export const authHcp: Authenticate = {
+  user: _.cloneDeep(loggedInUsers.hcp),
   sessionToken: "",
   traceToken: uuidv4(),
+};
+
+export const authApiHcp: AuthAPI = {
+  login: sinon.stub().resolves(authHcp),
+  updatePreferences: sinon.stub().resolves(authHcp.user.preferences),
+  updateProfile: sinon.stub().resolves(authHcp.user.profile),
+  updateSettings: sinon.stub().resolves(authHcp.user.settings),
+};
+
+export const authHookHcp: AuthContext = {
+  user: authHcp.user,
+  sessionToken: authHcp.sessionToken,
+  traceToken: authHcp.traceToken,
   initialized: sinon.stub().returns(true),
-  setUser: sinon.spy(),
-  login: sinon.stub().resolves(loggedInUsers.hcp),
-  logout: sinon.spy(),
-  updateProfile: sinon.stub().resolves(loggedInUsers.hcp.profile),
-  updatePreferences: sinon.stub().resolves(loggedInUsers.hcp.profile),
-  updateSettings: sinon.stub().resolves(loggedInUsers.hcp.profile),
-  signup: sinon.spy(),
+  setUser: sinon.stub(),
+  login: sinon.stub().resolves(authHcp.user),
+  logout: sinon.stub(),
+  updateProfile: sinon.stub().resolves(authHcp.user.profile),
+  updatePreferences: sinon.stub().resolves(authHcp.user.profile),
+  updateSettings: sinon.stub().resolves(authHcp.user.profile),
+  signup: sinon.stub(),
   isLoggedIn: sinon.stub().returns(true),
   sendPasswordResetEmail: sinon.stub().returns(true),
   flagPatient: sinon.stub().resolves(),
@@ -51,6 +67,30 @@ export const authHook = {
   getFlagPatients: sinon.stub().returns([]),
 };
 
-export function TestAuthProviderHCP(): AuthContext {
-  return authHook;
+export function resetStubs(user: Readonly<User>, api: AuthAPI | null = null, context: AuthContext | null = null): void {
+  let stub: sinon.SinonStub;
+  authHcp.user = _.cloneDeep(user);
+  if (api !== null) {
+    stub = api.login as sinon.SinonStub;
+    stub.resetHistory();
+    stub.resolves(authHcp);
+
+    stub = api.updatePreferences as sinon.SinonStub;
+    stub.resetHistory();
+    stub.resolves(authHcp.user.preferences);
+
+    stub = api.updateProfile as sinon.SinonStub;
+    stub.resetHistory();
+    stub.resolves(authHcp.user.profile);
+
+    stub = api.updateSettings as sinon.SinonStub;
+    stub.resetHistory();
+    stub.resolves(authHcp.user.settings);
+  }
+  if (context !== null) {
+    context.user = authHcp.user;
+    stub = context.initialized as sinon.SinonStub;
+    stub.resetHistory();
+    // TODO the rest when needed
+  }
 }

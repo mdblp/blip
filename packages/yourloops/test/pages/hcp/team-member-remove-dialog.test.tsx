@@ -32,13 +32,13 @@ import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
 import { waitTimeout } from "../../../lib/utils";
-import { CustomAuthProvider } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { TeamMember, TeamContextProvider } from "../../../lib/team";
 import { loadTeams } from "../../../lib/team/hook";
 import RemoveMemberDialog, { RemoveMemberDialogProps } from "../../../pages/hcp/team-member-remove-dialog";
 import { RemoveMemberDialogContentProps } from "../../../pages/hcp/types";
 
-import { authHook, TestAuthProviderHCP } from "../../lib/auth/hook.test";
+import { authHookHcp, authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamRemoveMemberDialog(): void {
@@ -52,16 +52,17 @@ function testTeamRemoveMemberDialog(): void {
 
   function TestComponent(props: RemoveMemberDialogProps): JSX.Element {
     return (
-      <CustomAuthProvider provider={TestAuthProviderHCP}>
+      <AuthContextProvider value={authHookHcp} >
         <TeamContextProvider api={teamAPI} >
           <RemoveMemberDialog userToBeRemoved={ props.userToBeRemoved } />
         </TeamContextProvider>
-      </CustomAuthProvider>
+      </AuthContextProvider>
     );
   }
 
   before(async () => {
-    const { teams } = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const { teams } = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.member = teams[1].members[0];
   });
 

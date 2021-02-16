@@ -35,7 +35,7 @@ import sinon from "sinon";
 import { Team, loadTeams } from "../../../lib/team";
 import TeamEditDialog from "../../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../../pages/hcp/types";
-import { authHook } from "../../lib/auth/hook.test";
+import { authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamEditDialog(): void {
@@ -67,7 +67,8 @@ function testTeamEditDialog(): void {
       mountOptions.attachTo.id = "app";
       document.body.appendChild(mountOptions.attachTo);
     }
-    const { teams } = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const { teams } = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.team = teams[1];
   });
 

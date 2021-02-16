@@ -27,18 +27,20 @@
  */
 
 import {
+  AuthAPI,
   AuthContext,
+  Authenticate,
 } from "./models";
 
 import {
-  CustomAuthProvider,
-  DefaultAuthProvider,
+  AuthContextProvider,
   useAuth,
 } from "./hook";
 
 export {
+  AuthAPI,
   AuthContext,
-  CustomAuthProvider,
-  DefaultAuthProvider,
+  Authenticate,
+  AuthContextProvider,
   useAuth,
 };

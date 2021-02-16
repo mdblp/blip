@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { Units } from "../../models/generic";
 import { User, UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamMemberStatus, TeamType } from "../../models/team";
 
@@ -36,6 +37,8 @@ const userHCP: User = {
   termsAccepted: new Date().toISOString(),
   emailVerified: true,
   profile: { firstName: "John", lastName: "Doe", fullName: "John Doe" },
+  preferences: { displayLanguageCode: "en" },
+  settings: { units: { bg: Units.gram } },
 };
 
 /**

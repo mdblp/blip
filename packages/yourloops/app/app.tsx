@@ -39,7 +39,7 @@ import LoginPage from "../pages/login";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
-import { CustomAuthProvider, DefaultAuthProvider } from "../lib/auth";
+import { AuthContextProvider } from "../lib/auth";
 import { ProfilePage } from "../pages/profile/profile";
 import PrivateRoute from "../components/private-route";
 
@@ -47,7 +47,7 @@ const Yourloops: React.FunctionComponent = () => {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <CustomAuthProvider provider={DefaultAuthProvider}>
+        <AuthContextProvider>
           <Switch>
             <Route exact path="/" component={LoginPage} />
             <Route path="/request-password-reset" component={RequestPasswordResetPage} />
@@ -56,7 +56,7 @@ const Yourloops: React.FunctionComponent = () => {
             <PrivateRoute path="/patient" component={PatientPage} />
             <PrivateRoute path="/account-preferences" component={ProfilePage} />
           </Switch>
-        </CustomAuthProvider>
+        </AuthContextProvider>
       </Router>
     </ThemeProvider>
   );

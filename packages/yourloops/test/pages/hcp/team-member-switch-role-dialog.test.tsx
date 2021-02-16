@@ -31,14 +31,14 @@ import { expect } from "chai";
 import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
-import { waitTimeout } from "../../../lib/utils";
 import { TeamMemberRole } from "../../../models/team";
-import { CustomAuthProvider } from "../../../lib/auth";
+import { waitTimeout } from "../../../lib/utils";
+import { AuthContextProvider } from "../../../lib/auth";
 import { Team, TeamMember, TeamContextProvider, loadTeams } from "../../../lib/team";
 import SwitchRoleDialog, { SwitchRoleDialogProps } from "../../../pages/hcp/team-member-switch-role-dialog";
 import { SwitchRoleDialogContentProps } from "../../../pages/hcp/types";
 
-import { TestAuthProviderHCP, authHook } from "../../lib/auth/hook.test";
+import { authHookHcp, authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamSwitchRoleDialog(): void {
@@ -54,16 +54,17 @@ function testTeamSwitchRoleDialog(): void {
 
   function TestSwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element {
     return (
-      <CustomAuthProvider provider={TestAuthProviderHCP}>
-        <TeamContextProvider api={teamAPI} >
-          <SwitchRoleDialog switchAdminRole={ props.switchAdminRole } />
+      <AuthContextProvider value={authHookHcp}>
+        <TeamContextProvider api={teamAPI}>
+          <SwitchRoleDialog switchAdminRole={props.switchAdminRole} />
         </TeamContextProvider>
-      </CustomAuthProvider>
+      </AuthContextProvider>
     );
   }
 
   before(async () => {
-    const result = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const result = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     teams = result.teams;
     defaultProps.member = teams[1].members[0];
   });

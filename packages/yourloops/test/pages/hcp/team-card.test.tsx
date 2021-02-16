@@ -31,10 +31,9 @@ import { expect } from "chai";
 import { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import sinon from "sinon";
 
-import { Team } from "../../../lib/team";
-import { loadTeams } from "../../../lib/team/hook";
+import { Team, loadTeams } from "../../../lib/team";
 import TeamCard, { TeamCardProps, TeamInfo } from "../../../pages/hcp/team-card";
-import { authHook } from "../../lib/auth/hook.test";
+import { authHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamCard(): void {
@@ -57,7 +56,8 @@ function testTeamCard(): void {
 
   before(async () => {
     resetSpys();
-    const result = await loadTeams(authHook.traceToken, authHook.sessionToken, authHook.user, teamAPI.fetchTeams, teamAPI.fetchPatients);
+    const { traceToken, sessionToken, user } = authHcp;
+    const result = await loadTeams(traceToken, sessionToken, user, teamAPI.fetchTeams, teamAPI.fetchPatients);
     teams = result.teams;
     defaultProps.team = teams[1];
   });

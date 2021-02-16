@@ -35,6 +35,13 @@ export interface Authenticate {
   traceToken: string;
 }
 
+export interface AuthAPI {
+  login: (username: string, password: string, traceToken: string) => Promise<Authenticate>;
+  updateProfile: (auth: Readonly<Authenticate>) => Promise<Profile>;
+  updatePreferences: (auth: Readonly<Authenticate>) => Promise<Preferences>;
+  updateSettings: (auth: Readonly<Authenticate>) => Promise<Settings>;
+}
+
 /**
  * The auth provider hook return values.
  */
@@ -60,6 +67,9 @@ export interface AuthContext {
 }
 
 export interface AuthProvider {
-  children?: React.ReactNode;
-  provider: () => AuthContext;
+  children: React.ReactNode;
+  /** Used to test the hook */
+  api?: AuthAPI;
+  /** Used for test components which need this hook */
+  value?: AuthContext;
 }

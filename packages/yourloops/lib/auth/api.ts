@@ -212,13 +212,9 @@ async function getSettings(auth: Readonly<Authenticate>): Promise<Settings | nul
  * @param {string} traceToken A generated uuidv4 trace token
  * @return {Promise<User>} Return the logged-in user or a promise rejection.
  */
-export async function login(username: string, password: string, traceToken: string): Promise<Authenticate> {
+async function login(username: string, password: string, traceToken: string): Promise<Authenticate> {
   const auth = await authenticate(username, password, traceToken);
-  const [profile, preferences, settings] = await Promise.all([
-    getProfile(auth),
-    getPreferences(auth),
-    getSettings(auth),
-  ]);
+  const [profile, preferences, settings] = await Promise.all([getProfile(auth), getPreferences(auth), getSettings(auth)]);
   if (profile !== null) {
     auth.user.profile = profile;
   }
@@ -231,7 +227,7 @@ export async function login(username: string, password: string, traceToken: stri
   return auth;
 }
 
-export async function updateProfile(auth: Readonly<Authenticate>): Promise<Profile> {
+async function updateProfile(auth: Readonly<Authenticate>): Promise<Profile> {
   const seagullURL = new URL(`/metadata/${auth.user.userid}/profile`, appConfig.API_HOST);
   const profile = auth.user.profile ?? {};
 
@@ -252,7 +248,7 @@ export async function updateProfile(auth: Readonly<Authenticate>): Promise<Profi
   throw new Error(t(responseBody.reason));
 }
 
-export async function updatePreferences(auth: Readonly<Authenticate>): Promise<Preferences> {
+async function updatePreferences(auth: Readonly<Authenticate>): Promise<Preferences> {
   const seagullURL = new URL(`/metadata/${auth.user.userid}/preferences`, appConfig.API_HOST);
   const preferences = auth.user.preferences ?? {};
 
@@ -273,7 +269,7 @@ export async function updatePreferences(auth: Readonly<Authenticate>): Promise<P
   throw new Error(t(responseBody.reason));
 }
 
-export async function updateSettings(auth: Readonly<Authenticate>): Promise<Settings> {
+async function updateSettings(auth: Readonly<Authenticate>): Promise<Settings> {
   const seagullURL = new URL(`/metadata/${auth.user.userid}/settings`, appConfig.API_HOST);
   const settings = auth.user.settings ?? {};
 
@@ -293,3 +289,10 @@ export async function updateSettings(auth: Readonly<Authenticate>): Promise<Sett
   const responseBody = (await response.json()) as APIErrorResponse;
   throw new Error(t(responseBody.reason));
 }
+
+export default {
+  login,
+  updateProfile,
+  updatePreferences,
+  updateSettings,
+};

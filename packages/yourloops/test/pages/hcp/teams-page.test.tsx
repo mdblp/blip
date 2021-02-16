@@ -26,22 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// import _ from "lodash";
 import * as React from "react";
-// import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { expect } from "chai";
 import { mount, ReactWrapper, MountRendererProps } from "enzyme";
 import sinon from "sinon";
 
-// import { t } from "../../../lib/language";
-import { CustomAuthProvider } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { TeamContextProvider } from "../../../lib/team";
 import TeamsPage from "../../../pages/hcp/teams-page";
 
 import { waitTimeout } from "../../../lib/utils";
-// import { authHook } from "../../lib/auth/hook.test";
 import { teams } from "../../common";
-import { TestAuthProviderHCP } from "../../lib/auth/hook.test";
+import { authHookHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamPage(): void {
@@ -53,11 +49,11 @@ function testTeamPage(): void {
 
   function TestTeamsPageComponent(): JSX.Element {
     return (
-      <CustomAuthProvider provider={TestAuthProviderHCP}>
+      <AuthContextProvider value={authHookHcp} >
         <TeamContextProvider api={teamAPI} >
           <TeamsPage />
         </TeamContextProvider>
-      </CustomAuthProvider>
+      </AuthContextProvider>
     );
   }
 

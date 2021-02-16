@@ -171,8 +171,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   const { t } = useTranslation("yourloops");
   const authHook = useAuth();
 
-  log.debug("DefaultTeamContext", { initialized, lock, teams });
-
+  log.debug("TeamContextImpl", { initialized, lock, teams });
   const authInitialized = authHook.initialized();
   const isLoggedIn = authHook.isLoggedIn();
 

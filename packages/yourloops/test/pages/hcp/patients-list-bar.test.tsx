@@ -32,12 +32,12 @@ import { mount, ReactWrapper } from "enzyme";
 import sinon from "sinon";
 
 import { waitTimeout } from "../../../lib/utils";
-import { CustomAuthProvider } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { TeamContextProvider } from "../../../lib/team";
 import { FilterType } from "../../../pages/hcp/types";
 import AppBarPage, { PatientListBarProps } from "../../../pages/hcp/patients-list-bar";
 
-import { TestAuthProviderHCP } from "../../lib/auth/hook.test";
+import { authHookHcp } from "../../lib/auth/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testAppBar(): void {
@@ -66,11 +66,11 @@ function testAppBar(): void {
 
   it("should be able to render", async () => {
     component = mount(
-      <CustomAuthProvider provider={TestAuthProviderHCP}>
-        <TeamContextProvider api={teamAPI} >
+      <AuthContextProvider value={authHookHcp}>
+        <TeamContextProvider api={teamAPI}>
           <AppBarPage {...defaultProps} />
         </TeamContextProvider>
-      </CustomAuthProvider>
+      </AuthContextProvider>
     );
     // component.update();
     await waitTimeout(apiTimeout);
