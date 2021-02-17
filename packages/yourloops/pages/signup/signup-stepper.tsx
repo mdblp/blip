@@ -1,4 +1,5 @@
 import * as React from "react";
+import _ from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -12,7 +13,7 @@ import SignUpAccountForm from "./signup-account-form";
 import SignUpAccountSelector from "./signup-account-selector";
 import SignUpProfileForm from "./signup-profile-form";
 import SignUpConsent from "./signup-consent";
-import { SignUpFormStateProvider } from "./signup-formstate-context";
+import { useSignUpFormState } from "./signup-formstate-context";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +44,14 @@ export default function SignUpStepper() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const { state } = useSignUpFormState();
+  const [tittle, setTitle] = React.useState("");
+
+  React.useEffect(() => {
+    if (!_.isEmpty(state.formValues?.account_role)) {
+      setTitle(`signup-steppers-${state.formValues.account_role}-title`);
+    }
+  }, [state.formValues.account_role]);
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -93,10 +102,15 @@ export default function SignUpStepper() {
       default:
         return "Unknown step";
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
+      {activeStep > 0 && (
+        <Typography color="primary" variant="h4" gutterBottom>
+          {t(tittle)}
+        </Typography>
+      )}
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((label) => {
           const stepProps: { completed?: boolean } = {};
@@ -119,11 +133,7 @@ export default function SignUpStepper() {
             </Button>
           </div>
         ) : (
-          <div>
-            <SignUpFormStateProvider>
-              {getStepContent(activeStep)}
-            </SignUpFormStateProvider>
-          </div>
+          <div>{getStepContent(activeStep)}</div>
         )}
       </div>
     </div>

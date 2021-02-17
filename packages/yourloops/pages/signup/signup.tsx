@@ -39,6 +39,7 @@ import brandingLogo from "branding/logo.png";
 import SignUpStepper from "./signup-stepper";
 import { useTranslation } from "react-i18next";
 import CardContent from "@material-ui/core/CardContent";
+import { SignUpFormStateProvider } from "./signup-formstate-context";
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -80,28 +81,30 @@ function SignUpPage(): JSX.Element {
         style={{ minHeight: "100vh" }}
       >
         <Grid item xs={12}>
-          <Card className={classes.Card}>
-            <CardMedia
-              style={{
-                display: "flex",
-                paddingTop: "1em",
-                paddingBottom: "1em",
-              }}
-            >
-              <img
-                src={brandingLogo}
+          <SignUpFormStateProvider>
+            <Card className={classes.Card}>
+              <CardMedia
                 style={{
-                  height: "60px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
+                  display: "flex",
+                  paddingTop: "1em",
+                  paddingBottom: "1em",
                 }}
-                alt={t("Login Branding Logo")}
-              />
-            </CardMedia>
-            <CardContent className={classes.CardContent}>
-              <SignUpStepper />
-            </CardContent>
-          </Card>
+              >
+                <img
+                  src={brandingLogo}
+                  style={{
+                    height: "60px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  alt={t("Login Branding Logo")}
+                />
+              </CardMedia>
+              <CardContent className={classes.CardContent}>
+                <SignUpStepper />
+              </CardContent>
+            </Card>
+          </SignUpFormStateProvider>
         </Grid>
       </Grid>
     </Container>
