@@ -76,10 +76,10 @@ module.exports = function(pool, opts) {
       // tooltips
       selection.selectAll('.d3-circle-smbg').on('mouseover', function() {
         highlight.on(d3.select(this));
-        var parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
-        var container = this.getBoundingClientRect();
+        const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect();
+        const container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
-
+        container.x = container.left - parentContainer.left;
         smbg.addTooltip(d3.select(this).datum(), container);
       });
       selection.selectAll('.d3-circle-smbg').on('mouseout', function() {

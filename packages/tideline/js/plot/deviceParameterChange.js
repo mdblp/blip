@@ -62,7 +62,7 @@ module.exports = function(pool, opts) {
           y: function(d) {
             return 0;
           },
-          width, 
+          width,
           height: function() {
             return offset;
           },
@@ -74,11 +74,10 @@ module.exports = function(pool, opts) {
 
       // tooltips
       selection.selectAll('.d3-param-group').on('mouseover', function() {
-        var parentContainer = document
-          .getElementsByClassName('patient-data')[0]
-          .getBoundingClientRect();
-        var container = this.getBoundingClientRect();
+        const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect();
+        const container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
+        container.x = container.left - parentContainer.left;
 
         parameter.addTooltip(d3.select(this).datum(), container);
       });

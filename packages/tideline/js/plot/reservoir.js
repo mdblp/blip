@@ -56,21 +56,19 @@ module.exports = function(pool, opts) {
         .attr({
           x: (d) => xPos(d) - (width / 2) ,
           y: 0,
-          width, 
+          width,
           height,
           'xlink:href': (d) => getPicto(d),
         });
-  
+
       allReservoirs.exit().remove();
 
       // tooltips
-      selection.selectAll('.d3-reservoir-group').on('mouseover', function() {        
-        var parentContainer = document
-          .getElementsByClassName('patient-data')[0]
-          .getBoundingClientRect();
-        var container = this.getBoundingClientRect();
+      selection.selectAll('.d3-reservoir-group').on('mouseover', function() {
+        const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect();
+        const container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
-
+        container.x = container.left - parentContainer.left;
         reservoir.addTooltip(d3.select(this).datum(), container);
       });
 

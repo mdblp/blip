@@ -89,9 +89,10 @@ module.exports = function(pool, opts) {
       // tooltips
       selection.selectAll('.d3-bolus-group').on('mouseover', function(d) {
         highlight.on(d3.select(this));
-        const parentContainer = document.getElementsByClassName('patient-data')[0].getBoundingClientRect();
+        const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect();
         const container = this.getBoundingClientRect();
         container.y = container.top - parentContainer.top;
+        container.x = container.left - parentContainer.left;
 
         drawBolus.tooltip.add(d, container);
       });
