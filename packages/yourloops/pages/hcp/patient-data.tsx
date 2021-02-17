@@ -36,7 +36,7 @@ import Blip from "blip";
 
 import appConfig from "../../lib/config";
 import apiClient from "../../lib/auth/api";
-import ProfileDialog from "./profile-dialog";
+import ProfileDialog from "../../components/profile-dialog";
 
 interface PatientDataProps {
   patientId?: string;

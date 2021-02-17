@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * HCPs patient modale
+ * Patient profile modale
  *
  * All rights reserved.
  *
@@ -26,8 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units, User } from "../../models/shoreline";
+import moment from "moment";
 import React, { FunctionComponent } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
   Button,
   createStyles,
@@ -39,8 +41,8 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
 
+import { Units, User } from "../models/shoreline";
 interface ProfileDialogProps {
   user: User;
   isOpen: boolean;
@@ -75,7 +77,7 @@ const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, ha
 
   const mail = user?.emails ? user.emails[0] : "";
   const hbA1c = "8.5%"; // TODO
-  const birthDate = user?.profile?.patient?.birthday?.split("T")[0];
+  const birthDate = moment.utc(user?.profile?.patient?.birthday).format("L");
 
   return (
     <Dialog fullWidth={true} maxWidth="xs" open={isOpen} onClose={handleClose}>
@@ -133,14 +135,14 @@ const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, ha
           disabled
           id="units"
           label={t("units")}
-          value={user.settings?.units?.bg || Units.gram}
+          value={user.settings?.units?.bg ?? Units.gram}
           className={textField}
           InputProps={{ classes: { disabled } }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          {t("common-close")}
+          {t("close")}
         </Button>
       </DialogActions>
     </Dialog>
