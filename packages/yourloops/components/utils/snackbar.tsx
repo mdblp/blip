@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Snackbars file
+ * Snackbar file
  *
  * All rights reserved.
  *
@@ -25,46 +25,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-export enum AlertSeverity {
-  error = "error",
-  warning = "warning",
-  info = "info",
-  success = "success",
-}
 
-interface ApiAlert {
-  message: string;
-  severity: AlertSeverity;
-  id?: string;
-}
+import React, { useCallback } from "react";
 
-export const useSnackbar = () => {
-  const [apiAlerts, setApiAlerts] = useState<ApiAlert[]>([]);
-
-  const openSnackbar = useCallback(
-    (apiAlert: ApiAlert) => {
-      const id = uniqueId();
-      setApiAlerts([...apiAlerts, { ...apiAlert, id }]);
-    },
-    [apiAlerts]
-  );
-
-  const removeAlert = useCallback(
-    (apiAlertId: ApiAlert["id"]) => {
-      if (apiAlertId) {
-        setApiAlerts(apiAlerts.filter(({ id }) => apiAlertId !== id));
-      }
-    },
-    [apiAlerts]
-  );
-
-  return { openSnackbar, snackbarParams: { apiAlert: apiAlerts[0], removeAlert } };
-};
-
-import { Snackbar } from "@material-ui/core";
+import { Snackbar as SnackbarUI } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
-import { uniqueId } from "lodash";
-import React, { useCallback, useState } from "react";
+
+import { ApiAlert } from "../../lib/useSnackbar";
 
 interface SnackbarsProps {
   snackbarParams: {
@@ -73,7 +40,7 @@ interface SnackbarsProps {
   };
 }
 
-export const Snackbars = ({ snackbarParams: { apiAlert, removeAlert } }: SnackbarsProps): JSX.Element | null => {
+export const Snackbar = ({ snackbarParams: { apiAlert, removeAlert } }: SnackbarsProps): JSX.Element | null => {
   const onCloseAlert = useCallback(
     (id: ApiAlert["id"]) => (_: React.SyntheticEvent | MouseEvent, reason?: string) => {
       if (reason === "clickaway") {
@@ -85,7 +52,7 @@ export const Snackbars = ({ snackbarParams: { apiAlert, removeAlert } }: Snackba
   );
 
   return apiAlert ? (
-    <Snackbar
+    <SnackbarUI
       key={apiAlert.id}
       open={apiAlert !== null}
       autoHideDuration={6000}
@@ -94,6 +61,6 @@ export const Snackbars = ({ snackbarParams: { apiAlert, removeAlert } }: Snackba
       <Alert onClose={onCloseAlert(apiAlert?.id)} severity={apiAlert?.severity}>
         {apiAlert?.message}
       </Alert>
-    </Snackbar>
+    </SnackbarUI>
   ) : null;
 };
