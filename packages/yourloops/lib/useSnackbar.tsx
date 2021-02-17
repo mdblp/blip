@@ -41,7 +41,15 @@ export interface ApiAlert {
   id?: string;
 }
 
-export const useSnackbar = () => {
+interface UseSnackbar {
+  openSnackbar: (apiAlert: ApiAlert) => void;
+  snackbarParams: {
+    apiAlert: ApiAlert;
+    removeAlert: (apiAlertId: ApiAlert["id"]) => void;
+  };
+}
+
+export const useSnackbar = (): UseSnackbar => {
   const [apiAlerts, setApiAlerts] = useState<ApiAlert[]>([]);
 
   const openSnackbar = useCallback(

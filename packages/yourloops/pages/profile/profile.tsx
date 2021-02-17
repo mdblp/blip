@@ -256,8 +256,8 @@ export const ProfilePage: FunctionComponent = () => {
       if (havePreferencesChanged) {
         if (i18n) {
           const lang = i18n.language.split("-")[0] as Preferences["displayLanguageCode"];
-          if (getCurrentLocaleName(lang) !== locale) {
-            i18n.changeLanguage(localeShortname!);
+          if (getCurrentLocaleName(lang) !== locale && localeShortname) {
+            i18n.changeLanguage(localeShortname);
           }
         }
         promises.push(updatePreferences(newUser));
