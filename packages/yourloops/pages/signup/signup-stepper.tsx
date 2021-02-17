@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useHistory } from "react-router-dom";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 
@@ -42,10 +43,11 @@ function getSteps() {
 export default function SignUpStepper() {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
+  const { state, dispatch } = useSignUpFormState();
+  let history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = getSteps();
-  const { state } = useSignUpFormState();
   const [tittle, setTitle] = React.useState("");
+  const steps = getSteps();
 
   React.useEffect(() => {
     if (!_.isEmpty(state.formValues?.account_role)) {
@@ -59,14 +61,15 @@ export default function SignUpStepper() {
 
   const handleBack = () => {
     if (activeStep === 0) {
-      console.log("return to login");
+      history.push("/");
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
     }
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
+  const handleLogin = () => {
+    dispatch({ type: "RESET_FORMVALUES" });
+    history.push("/");
   };
 
   const getStepContent = (step: number) => {
@@ -80,24 +83,15 @@ export default function SignUpStepper() {
         );
       case 1:
         return (
-          <SignUpConsent
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
+          <SignUpConsent handleBack={handleBack} handleNext={handleNext} />
         );
       case 2:
         return (
-          <SignUpProfileForm
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
+          <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />
         );
       case 3:
         return (
-          <SignUpAccountForm
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
+          <SignUpAccountForm handleBack={handleBack} handleNext={handleNext} />
         );
       default:
         return "Unknown step";
@@ -126,10 +120,12 @@ export default function SignUpStepper() {
         {activeStep === steps.length ? (
           <div>
             <Typography className={classes.instructions}>
-              Ending message ?????
+              {t("signup-steppers-ending-message", {
+                email: state.formValues.account_username,
+              })}
             </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Go back to login
+            <Button onClick={handleLogin} className={classes.button}>
+              {t("signup-steppers-back-login")}
             </Button>
           </div>
         ) : (

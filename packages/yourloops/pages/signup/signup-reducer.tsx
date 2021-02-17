@@ -18,13 +18,12 @@ export const initialState: SignUpFormState = {
 export function SignupReducer(state: any, action: any) {
   switch (action.type) {
     case "EDIT_FORMVALUE":
-      state.formValues[action.key.toLowerCase()] = action.value;
-      return { ...state };
+      // clone input state in order to avoid initialstate mutation
+      const clone = _.cloneDeep(state);
+      clone.formValues[action.key.toLowerCase()] = action.value;
+      return clone;
     case "RESET_FORMVALUES":
-      return {
-        ...state,
-        formValues: initialState.formValues,
-      };
+      return initialState;
     default:
   }
   return state;
