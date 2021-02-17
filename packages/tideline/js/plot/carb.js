@@ -18,6 +18,8 @@
 var d3 = require('d3');
 var _ = require('lodash');
 
+const utils = require('./util/utils');
+
 module.exports = function(pool, opts) {
   var defaults = {
     r: 14,
@@ -80,12 +82,7 @@ module.exports = function(pool, opts) {
 
       // tooltips
       selection.selectAll('.d3-carb-group').on('mouseover', function() {
-        const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect();
-        const container = this.getBoundingClientRect();
-        container.y = container.top - parentContainer.top;
-        container.x = container.left - parentContainer.left;
-
-        carb.addTooltip(d3.select(this).datum(), container);
+        carb.addTooltip(d3.select(this).datum(), utils.getTooltipContainer(this));
       });
 
       selection.selectAll('.d3-carb-group').on('mouseout', function() {
