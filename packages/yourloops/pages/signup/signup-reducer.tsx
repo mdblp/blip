@@ -8,7 +8,7 @@ export const initialState: SignUpFormState = {
     account_role: "",
     profile_firstname: "",
     profile_lastname: "",
-    profile_country: null,
+    profile_country: "", // how to do better ?
     profile_phone: "",
     terms: false,
     privacypolicy: false,

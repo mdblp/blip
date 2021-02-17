@@ -36,6 +36,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSignUpFormState } from "./signup-formstate-context";
 import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+
+import { availableCountries } from "../../lib/language";
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -87,6 +93,20 @@ function SignUpProfileForm(props: any): JSX.Element {
     });
   };
 
+  const onCountryChange = (
+    event: React.ChangeEvent<{
+      name?: string | undefined;
+      value: string | unknown;
+    }>,
+    keyField: string
+  ): void => {
+    dispatch({
+      type: "EDIT_FORMVALUE",
+      key: keyField,
+      value: event.target.value as string,
+    });
+  };
+
   const resetFormState = (): void => {
     setErrors(defaultErr);
     setfirstnameHelperTextValue("");
@@ -104,7 +124,7 @@ function SignUpProfileForm(props: any): JSX.Element {
     // for now duplicated blip validation logic
     // Is there a better way to handle errors...
     if (_.isEmpty(state.formValues.profile_firstname)) {
-      firstname = true ;
+      firstname = true;
       errorSeen = true;
     }
 
@@ -116,10 +136,10 @@ function SignUpProfileForm(props: any): JSX.Element {
       errorSeen = true;
     }
 
-     if (_.isEmpty(state.formValues.profile_lastname)) {
-       lastName = true;
-       errorSeen = true;
-     }
+    if (_.isEmpty(state.formValues.profile_lastname)) {
+      lastName = true;
+      errorSeen = true;
+    }
 
     if (!state.formValues.profile_lastname) {
       setlastnameChangeHelperTextValue(IS_REQUIRED);
@@ -127,7 +147,7 @@ function SignUpProfileForm(props: any): JSX.Element {
       errorSeen = true;
     }
 
-    setErrors({ firstname: firstname, lastname: lastName, phone: false})
+    setErrors({ firstname: firstname, lastname: lastName, phone: false });
     return !errorSeen;
   };
 
@@ -185,6 +205,29 @@ function SignUpProfileForm(props: any): JSX.Element {
         onChange={(e) => onChange(e, "profile_phone")}
         helperText={phoneChangeHelperTextValue}
       />
+      <FormControl
+        variant="outlined"
+        className={classes.TextField}
+        margin="normal"
+      >
+        <InputLabel id="country-selector-input-label">
+          {t("country")}
+        </InputLabel>
+        <Select
+          labelId="country-selector-label"
+          label={t("country")}
+          id="country-selector"
+          value={state.formValues.profile_country}
+          onChange={(e) => onCountryChange(e, "profile_country")}
+        >
+          <MenuItem key="" value="" />
+          {availableCountries.map((country) => (
+            <MenuItem key={country} value={country}>
+              {country}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Button
         variant="contained"
         color="secondary"
