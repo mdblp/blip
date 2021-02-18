@@ -128,24 +128,24 @@ function SignUpAccountForm(props: any): JSX.Element {
 
     // for now duplicated blip validation logic
     // Is there a better way to handle errors...
-    if (_.isEmpty(state.formValues.account_username)) {
+    if (_.isEmpty(state.formValues.accountUsername)) {
       username = true;
       errorSeen = true;
     }
 
-    const IS_REQUIRED = t("This field is required.");
+    const IS_REQUIRED = t("is-required");
 
-    if (!state.formValues.account_username) {
+    if (!state.formValues.accountUsername) {
       setUserNameHelperTextValue(IS_REQUIRED);
       username = true;
       errorSeen = true;
     }
 
     if (
-      state.formValues.account_username &&
-      !REGEX_EMAIL.test(state.formValues.account_username)
+      state.formValues.accountUsername &&
+      !REGEX_EMAIL.test(state.formValues.accountUsername)
     ) {
-      setUserNameHelperTextValue(t("Invalid email address."));
+      setUserNameHelperTextValue(t("invalid-email"));
       username = true;
       errorSeen = true;
     }
@@ -158,7 +158,7 @@ function SignUpAccountForm(props: any): JSX.Element {
 
     if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
       setNewPasswordChangeHelperTextValue(
-        t("Password must be at least {{minLength}} characters long.", {
+        t("password-too-weak", {
           minLength: appConfig.PASSWORD_MIN_LENGTH,
         })
       );
@@ -167,11 +167,11 @@ function SignUpAccountForm(props: any): JSX.Element {
     }
 
     if (newPassword) {
-      if (!state.formValues.account_password) {
+      if (!state.formValues.accountPassword) {
         setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
         cfmPassword = true;
         errorSeen = true;
-      } else if (state.formValues.account_password !== newPassword) {
+      } else if (state.formValues.accountPassword !== newPassword) {
         setConfirmNewPasswordChangeHelperTextValue(t("password-dont-match"));
         cfmPassword = true;
         errorSeen = true;
@@ -209,12 +209,12 @@ function SignUpAccountForm(props: any): JSX.Element {
         id="username"
         className={classes.TextField}
         margin="normal"
-        label={t("Email")}
+        label={t("email")}
         variant="outlined"
-        value={state.formValues.account_username}
+        value={state.formValues.accountUsername}
         required
         error={errors.username}
-        onChange={(e) => onChange(e, "account_username")}
+        onChange={(e) => onChange(e, "accountUsername")}
         helperText={userNameHelperTextValue}
       />
       <TextField
@@ -246,13 +246,13 @@ function SignUpAccountForm(props: any): JSX.Element {
         id="confirm-password"
         className={classes.TextField}
         margin="normal"
-        label={t("Confirm new password")}
+        label={t("confirm-new-password")}
         variant="outlined"
         type={showConfirmNewPassword ? "text" : "password"}
-        value={state.formValues.account_password}
+        value={state.formValues.accountPassword}
         required
         error={errors.confirmNewPassword}
-        onChange={(e) => onChange(e, "account_password")}
+        onChange={(e) => onChange(e, "accountPassword")}
         helperText={confirmNewPasswordChangeHelperTextValue}
         InputProps={{
           endAdornment: (

@@ -126,25 +126,25 @@ function SignUpProfileForm(props: any): JSX.Element {
 
     // for now duplicated blip validation logic
     // Is there a better way to handle errors...
-    if (_.isEmpty(state.formValues.profile_firstname)) {
+    if (_.isEmpty(state.formValues.profileFirstname)) {
       firstname = true;
       errorSeen = true;
     }
 
     const IS_REQUIRED = t("This field is required.");
 
-    if (!state.formValues.profile_firstname) {
+    if (!state.formValues.profileFirstname) {
       setfirstnameHelperTextValue(IS_REQUIRED);
       firstname = true;
       errorSeen = true;
     }
 
-    if (_.isEmpty(state.formValues.profile_lastname)) {
+    if (_.isEmpty(state.formValues.profileLastname)) {
       lastName = true;
       errorSeen = true;
     }
 
-    if (!state.formValues.profile_lastname) {
+    if (!state.formValues.profileLastname) {
       setlastnameChangeHelperTextValue(IS_REQUIRED);
       lastName = true;
       errorSeen = true;
@@ -184,10 +184,10 @@ function SignUpProfileForm(props: any): JSX.Element {
         margin="normal"
         label={t("firstName")}
         variant="outlined"
-        value={state.formValues.profile_firstname}
+        value={state.formValues.profileFirstname}
         required
         error={errors.firstname}
-        onChange={(e) => onChange(e, "profile_firstname")}
+        onChange={(e) => onChange(e, "profileFirstname")}
         helperText={firstnameHelperTextValue}
       />
       <TextField
@@ -196,10 +196,10 @@ function SignUpProfileForm(props: any): JSX.Element {
         margin="normal"
         label={t("lastName")}
         variant="outlined"
-        value={state.formValues.profile_lastname}
+        value={state.formValues.profileLastname}
         required
         error={errors.lastname}
-        onChange={(e) => onChange(e, "profile_lastname")}
+        onChange={(e) => onChange(e, "profileLastname")}
         helperText={lastnameChangeHelperTextValue}
       />
       <FormControl
@@ -216,8 +216,8 @@ function SignUpProfileForm(props: any): JSX.Element {
           labelId="country-selector-label"
           label={t("signup-country")}
           id="country-selector"
-          value={state.formValues.profile_country}
-          onChange={(e) => onSelectChange(e, "profile_country")}
+          value={state.formValues.profileCountry}
+          onChange={(e) => onSelectChange(e, "profileCountry")}
         >
           <MenuItem key="" value="" />
           {availableCountries.map((country) => (
@@ -239,8 +239,8 @@ function SignUpProfileForm(props: any): JSX.Element {
           labelId="job-selector-label"
           label={t("signup-job")}
           id="job-selector"
-          value={state.formValues.profile_job}
-          onChange={(e) => onSelectChange(e, "profile_job")}
+          value={state.formValues.profileJob}
+          onChange={(e) => onSelectChange(e, "profileJob")}
         >
           <MenuItem key="" value="" />
           {Object.values(Jobs).map((jobTitle) => (
@@ -256,10 +256,10 @@ function SignUpProfileForm(props: any): JSX.Element {
         margin="normal"
         label={t("phone")}
         variant="outlined"
-        value={state.formValues.profile_phone}
+        value={state.formValues.profilePhone}
         required
         error={errors.phone}
-        onChange={(e) => onChange(e, "profile_phone")}
+        onChange={(e) => onChange(e, "profilePhone")}
         helperText={phoneChangeHelperTextValue}
       />
       <div id="signup-profileform-button-group">

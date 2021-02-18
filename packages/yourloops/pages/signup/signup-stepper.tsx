@@ -44,16 +44,16 @@ export default function SignUpStepper() {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
   const { state, dispatch } = useSignUpFormState();
-  let history = useHistory();
+  const history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
   const [tittle, setTitle] = React.useState("");
   const steps = getSteps();
 
   React.useEffect(() => {
-    if (!_.isEmpty(state.formValues?.account_role)) {
-      setTitle(`signup-steppers-${state.formValues.account_role}-title`);
+    if (!_.isEmpty(state.formValues?.accountRole)) {
+      setTitle(`signup-steppers-${state.formValues.accountRole}-title`);
     }
-  }, [state.formValues.account_role]);
+  }, [state.formValues.accountRole]);
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -121,7 +121,7 @@ export default function SignUpStepper() {
           <div>
             <Typography className={classes.instructions}>
               {t("signup-steppers-ending-message", {
-                email: state.formValues.account_username,
+                email: state.formValues.accountUsername,
               })}
             </Typography>
             <Button

@@ -57,7 +57,7 @@ export default function SignUpConsent(props: any): JSX.Element {
   };
 
   const valideForm = (): boolean => {
-    if (state.formValues?.terms && state.formValues?.privacypolicy) {
+    if (state.formValues?.terms && state.formValues?.privacyPolicy) {
       return true;
     }
 
@@ -97,8 +97,8 @@ export default function SignUpConsent(props: any): JSX.Element {
           className={classes.FormControlLabel}
           control={
             <Checkbox
-              checked={state.formValues.privacypolicy}
-              onChange={(e) => handleChange(e, "privacypolicy")}
+              checked={state.formValues.privacyPolicy}
+              onChange={(e) => handleChange(e, "privacyPolicy")}
               color="default"
               inputProps={{
                 "aria-label": "checkbox with default color",
@@ -106,7 +106,7 @@ export default function SignUpConsent(props: any): JSX.Element {
             />
           }
           label={t(
-            `signup-consent-${state.formValues.account_role}-privacy-policy`,
+            `signup-consent-${state.formValues.accountRole}-privacy-policy`,
             { privacyPolicy: "Privacy Policy" }
           )}
         />
@@ -123,7 +123,7 @@ export default function SignUpConsent(props: any): JSX.Element {
             />
           }
           label={t(
-            `signup-consent-${state.formValues.account_role}-terms-condition`,
+            `signup-consent-${state.formValues.accountRole}-terms-condition`,
             { terms: "Terms or Use" }
           )}
           labelPlacement="end"

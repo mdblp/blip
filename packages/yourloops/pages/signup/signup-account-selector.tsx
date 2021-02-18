@@ -94,9 +94,9 @@ function SignUpAccountSelector(props: any): JSX.Element {
   };
 
   const valideForm = (): boolean => {
-    if (_.isEmpty(state.formValues.account_role)) {
+    if (_.isEmpty(state.formValues.accountRole)) {
       setError(true);
-      setHelperText("you must select a account type");
+      setHelperText("signup-account-selection-error");
       return false;
     }
     return true;
@@ -107,7 +107,7 @@ function SignUpAccountSelector(props: any): JSX.Element {
     resetFormState();
     if (valideForm()) {
       handleNext();
-    };
+    }
   };
 
   return (
@@ -129,8 +129,8 @@ function SignUpAccountSelector(props: any): JSX.Element {
         <RadioGroup
           aria-label="account-selector"
           name="account-selector"
-          value={state.formValues.account_role}
-          onChange={(e) => handleRadioChange(e, "account_role")}
+          value={state.formValues.accountRole}
+          onChange={(e) => handleRadioChange(e, "accountRole")}
         >
           <Paper elevation={3} className={classes.Paper}>
             <FormControlLabel

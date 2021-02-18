@@ -29,7 +29,7 @@ export const SignUpFormStateProvider = ({ children }: any) => {
       {children}
     </SignUpFormStateContext.Provider>
   );
-}
+};
 
 
 /**

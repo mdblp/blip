@@ -3,25 +3,26 @@ import { SignUpFormState } from "./signup-formstate-context";
 
 export const initialState: SignUpFormState = {
   formValues: {
-    account_username: "",
-    account_password: "",
-    account_role: "",
-    profile_firstname: "",
-    profile_lastname: "",
-    profile_country: "", // how to do better ?
-    profile_phone: "",
-    profile_job: "",
+    accountUsername: "",
+    accountPassword: "",
+    accountRole: "",
+    profileFirstname: "",
+    profileLastname: "",
+    profileCountry: "", // how to do better ?
+    profilePhone: "",
+    profileJob: "",
     terms: false,
-    privacypolicy: false,
+    privacyPolicy: false,
   },
 };
 
 export function SignupReducer(state: any, action: any) {
+  let clone = null;
   switch (action.type) {
     case "EDIT_FORMVALUE":
       // clone input state in order to avoid initialstate mutation
-      const clone = _.cloneDeep(state);
-      clone.formValues[action.key.toLowerCase()] = action.value;
+      clone = _.cloneDeep(state);
+      clone.formValues[action.key] = action.value;
       return clone;
     case "RESET_FORMVALUES":
       return initialState;
