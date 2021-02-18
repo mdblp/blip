@@ -41,6 +41,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import { Jobs } from "../../models/shoreline";
 import { availableCountries } from "../../lib/language";
 
 const formStyle = makeStyles((theme: Theme) => {
@@ -69,6 +70,8 @@ function SignUpProfileForm(props: any): JSX.Element {
   const defaultErr = {
     firstname: false,
     lastname: false,
+    country: false,
+    job: false,
     phone: false,
   };
   const [errors, setErrors] = useState(defaultErr);
@@ -93,7 +96,7 @@ function SignUpProfileForm(props: any): JSX.Element {
     });
   };
 
-  const onCountryChange = (
+  const onSelectChange = (
     event: React.ChangeEvent<{
       name?: string | undefined;
       value: string | unknown;
@@ -147,7 +150,13 @@ function SignUpProfileForm(props: any): JSX.Element {
       errorSeen = true;
     }
 
-    setErrors({ firstname: firstname, lastname: lastName, phone: false });
+    setErrors({
+      firstname: firstname,
+      lastname: lastName,
+      country: false,
+      job: false,
+      phone: false,
+    });
     return !errorSeen;
   };
 
@@ -173,7 +182,7 @@ function SignUpProfileForm(props: any): JSX.Element {
         id="firstname"
         className={classes.TextField}
         margin="normal"
-        label={t("firstname")}
+        label={t("firstName")}
         variant="outlined"
         value={state.formValues.profile_firstname}
         required
@@ -185,7 +194,7 @@ function SignUpProfileForm(props: any): JSX.Element {
         id="lastname"
         className={classes.TextField}
         margin="normal"
-        label={t("lastname")}
+        label={t("lastName")}
         variant="outlined"
         value={state.formValues.profile_lastname}
         required
@@ -193,6 +202,54 @@ function SignUpProfileForm(props: any): JSX.Element {
         onChange={(e) => onChange(e, "profile_lastname")}
         helperText={lastnameChangeHelperTextValue}
       />
+      <FormControl
+        variant="outlined"
+        className={classes.TextField}
+        margin="normal"
+        required
+        error={errors.country}
+      >
+        <InputLabel id="country-selector-input-label">
+          {t("signup-country")}
+        </InputLabel>
+        <Select
+          labelId="country-selector-label"
+          label={t("signup-country")}
+          id="country-selector"
+          value={state.formValues.profile_country}
+          onChange={(e) => onSelectChange(e, "profile_country")}
+        >
+          <MenuItem key="" value="" />
+          {availableCountries.map((country) => (
+            <MenuItem key={country} value={country}>
+              {t(country)}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl
+        variant="outlined"
+        className={classes.TextField}
+        margin="normal"
+        required
+        error={errors.job}
+      >
+        <InputLabel id="job-selector-input-label">{t("signup-job")}</InputLabel>
+        <Select
+          labelId="job-selector-label"
+          label={t("signup-job")}
+          id="job-selector"
+          value={state.formValues.profile_job}
+          onChange={(e) => onSelectChange(e, "profile_job")}
+        >
+          <MenuItem key="" value="" />
+          {Object.values(Jobs).map((jobTitle) => (
+            <MenuItem key={jobTitle} value={jobTitle}>
+              {t(jobTitle)}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <TextField
         id="phone"
         className={classes.TextField}
@@ -205,29 +262,6 @@ function SignUpProfileForm(props: any): JSX.Element {
         onChange={(e) => onChange(e, "profile_phone")}
         helperText={phoneChangeHelperTextValue}
       />
-      <FormControl
-        variant="outlined"
-        className={classes.TextField}
-        margin="normal"
-      >
-        <InputLabel id="country-selector-input-label">
-          {t("country")}
-        </InputLabel>
-        <Select
-          labelId="country-selector-label"
-          label={t("country")}
-          id="country-selector"
-          value={state.formValues.profile_country}
-          onChange={(e) => onCountryChange(e, "profile_country")}
-        >
-          <MenuItem key="" value="" />
-          {availableCountries.map((country) => (
-            <MenuItem key={country} value={country}>
-              {country}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
       <Button
         variant="contained"
         color="secondary"

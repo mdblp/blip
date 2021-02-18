@@ -10,6 +10,7 @@ export const initialState: SignUpFormState = {
     profile_lastname: "",
     profile_country: "", // how to do better ?
     profile_phone: "",
+    profile_job: "",
     terms: false,
     privacypolicy: false,
   },
