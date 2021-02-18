@@ -34,7 +34,7 @@ import { renderHook } from "@testing-library/react-hooks/dom";
 
 import { AlertSeverity, ApiAlert, useSnackbar } from "../../lib/useSnackbar";
 
-const apiAlert = (id: string = "0"): ApiAlert => ({ id, message: "message", severity: AlertSeverity.warning });
+const apiAlert = (id = "0"): ApiAlert => ({ id, message: "message", severity: AlertSeverity.warning });
 
 function testUseSnackbar(): void {
   it("renders without crashing", () => {
