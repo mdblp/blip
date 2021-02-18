@@ -14,14 +14,17 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { AppBar, Breadcrumbs, createStyles, Link, makeStyles, Toolbar } from "@material-ui/core";
+import { AppBar, Breadcrumbs, Container, createStyles, Link, List, ListItem, makeStyles, Toolbar } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import HeaderBar from "../../components/header-bar";
+import { INotification, Notification, NotificationType } from "./notification";
+import { Roles } from "../../models/shoreline";
+import { useAuth } from "../../lib/auth/hook/use-auth";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -44,6 +47,11 @@ const useStyles = makeStyles(() =>
 const NotificationHeader = () => {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
+  const { user } = useAuth();
+
+  const homePage = useMemo(() => (user?.roles?.length && user.roles[0] === Roles.patient ? "/patient/data" : "/hcp/patients"), [
+    user,
+  ]);
 
   return (
     <Fragment>
@@ -51,7 +59,7 @@ const NotificationHeader = () => {
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
           <Breadcrumbs aria-label={t("breadcrumb")} separator={<NavigateNextIcon fontSize="small" />}>
-            <Link className={classes.breadcrumbLink} color="textPrimary" href="/hcp">
+            <Link className={classes.breadcrumbLink} color="textPrimary" href={homePage}>
               <HomeIcon className={classes.homeIcon} />
               {t("home")}
             </Link>
@@ -64,10 +72,30 @@ const NotificationHeader = () => {
 };
 
 export const NotificationsPage = (): JSX.Element => {
+  const fakeNotif1: INotification = {
+    date: "date",
+    emitter: { firstName: "Jean", lastName: "Dujardin", role: Roles.clinic },
+    type: NotificationType.joinGroup,
+    target: "Service de Diabétologie CH Angers",
+  };
+  const fakeNotif2: INotification = {
+    date: "SuperLongDate",
+    emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
+    type: NotificationType.dataShare,
+  };
+  const notifs: INotification[] = [fakeNotif1, fakeNotif2];
   return (
     <div>
       <NotificationHeader />
-      NOTIFICATIONS
+      <Container maxWidth="lg" style={{ marginTop: "1em" }}>
+        <List>
+          {notifs.map((notification, index) => (
+            <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
+              <Notification notification={notification} />
+            </ListItem>
+          ))}
+        </List>
+      </Container>
     </div>
   );
 };
