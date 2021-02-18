@@ -38,6 +38,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from "@material-ui/core/Toolbar";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 
@@ -57,8 +58,8 @@ const toolbarStyles = makeStyles({
     paddingLeft: "6em",
     paddingRight: "6em",
   },
+  toolbarRightSide: { display: "flex", justifyContent: "flex-end" },
   accountMenu: {
-    marginLeft: "auto",
     display: "flex",
     flexDirection: "row",
     color: "var(--mdc-theme-on-surface, black)",
@@ -95,6 +96,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const history = useHistory();
   const handleOpenProfilePage = () => {
     history.push("/account-preferences");
+  };
+
+  const handleOpenNotifications = () => {
+    history.push("/notifications");
   };
 
   const handleLogout = () => {
@@ -148,7 +153,12 @@ function HeaderBar(props: HeaderProps): JSX.Element {
       <Toolbar className={classes.toolBar}>
         <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} />
         {props.children}
-        {accountMenu}
+        <div className={classes.toolbarRightSide}>
+          <IconButton onClick={handleOpenNotifications}>
+            <NotificationsIcon />
+          </IconButton>
+          {accountMenu}
+        </div>
       </Toolbar>
     </AppBar>
   );
