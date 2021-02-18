@@ -36,6 +36,7 @@ import "branding/theme.css";
 
 import { theme } from "../components/theme";
 import LoginPage from "../pages/login";
+import NotificationsPage from "../pages/notifications";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
@@ -55,6 +56,7 @@ const Yourloops: React.FunctionComponent = () => {
             <PrivateRoute path="/hcp" component={HcpPage} />
             <PrivateRoute path="/patient" component={PatientPage} />
             <PrivateRoute path="/account-preferences" component={ProfilePage} />
+            <PrivateRoute path="/notifications" component={NotificationsPage} />
           </Switch>
         </AuthContextProvider>
       </Router>
