@@ -269,22 +269,24 @@ function SignUpAccountForm(props: any): JSX.Element {
           ),
         }}
       />
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.Button}
-        onClick={handleBack}
-      >
-        {t("signup-steppers-back")}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.Button}
-        onClick={onNext}
-      >
-        {t("signup-steppers-create-account")}
-      </Button>
+      <div id="signup-accountform-button-group">
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.Button}
+          onClick={handleBack}
+        >
+          {t("signup-steppers-back")}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.Button}
+          onClick={onNext}
+        >
+          {t("signup-steppers-create-account")}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -128,23 +128,25 @@ export default function SignUpConsent(props: any): JSX.Element {
           )}
           labelPlacement="end"
         />
-        <Button
-          variant="contained"
-          color="secondary"
-          disabled={props.activeStep === 0}
-          onClick={handleBack}
-          className={classes.Button}
-        >
-          {t("Back")}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.Button}
-          onClick={onNext}
-        >
-          {t("Next")}
-        </Button>
+        <div id="signup-consent-button-group">
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={props.activeStep === 0}
+            onClick={handleBack}
+            className={classes.Button}
+          >
+            {t("signup-steppers-back")}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.Button}
+            onClick={onNext}
+          >
+            {t("signup-steppers-next")}
+          </Button>
+        </div>
       </FormControl>
     </form>
   );

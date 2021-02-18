@@ -124,7 +124,12 @@ export default function SignUpStepper() {
                 email: state.formValues.account_username,
               })}
             </Typography>
-            <Button onClick={handleLogin} className={classes.button}>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+              onClick={handleLogin}
+            >
               {t("signup-steppers-back-login")}
             </Button>
           </div>

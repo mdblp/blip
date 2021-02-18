@@ -262,22 +262,24 @@ function SignUpProfileForm(props: any): JSX.Element {
         onChange={(e) => onChange(e, "profile_phone")}
         helperText={phoneChangeHelperTextValue}
       />
-      <Button
-        variant="contained"
-        color="secondary"
-        className={classes.Button}
-        onClick={handleBack}
-      >
-        {t("signup-steppers-back")}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.Button}
-        onClick={onNext}
-      >
-        {t("signup-steppers-next")}
-      </Button>
+      <div id="signup-profileform-button-group">
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.Button}
+          onClick={handleBack}
+        >
+          {t("signup-steppers-back")}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.Button}
+          onClick={onNext}
+        >
+          {t("signup-steppers-next")}
+        </Button>
+      </div>
     </form>
   );
 }

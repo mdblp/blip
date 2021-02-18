@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
     margin: theme.spacing(3),
   },
+  FormHelperText: {
+    textAlign: "center",
+  },
   Button: {
     marginRight: theme.spacing(1),
   },
@@ -120,7 +123,9 @@ function SignUpAccountSelector(props: any): JSX.Element {
         error={error}
         className={classes.FormControl}
       >
-        <FormHelperText>{t(helperText)}</FormHelperText>
+        <FormHelperText className={classes.FormHelperText}>
+          {t(helperText)}
+        </FormHelperText>
         <RadioGroup
           aria-label="account-selector"
           name="account-selector"
@@ -154,13 +159,15 @@ function SignUpAccountSelector(props: any): JSX.Element {
             />
           </Paper>
         </RadioGroup>
+      </FormControl>
+      <div id="signup-account-selector-button-group">
         <Button
           variant="contained"
           color="secondary"
           className={classes.Button}
           onClick={handleBack}
         >
-          {t("Back")}
+          {t("signup-steppers-back")}
         </Button>
         <Button
           variant="contained"
@@ -168,9 +175,9 @@ function SignUpAccountSelector(props: any): JSX.Element {
           className={classes.Button}
           onClick={onNext}
         >
-          {t("Next")}
+          {t("signup-steppers-next")}
         </Button>
-      </FormControl>
+      </div>
     </form>
   );
 }
