@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2021, Diabeloop
  *
@@ -28,21 +27,27 @@
 
 import _ from "lodash";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSignUpFormState } from "./signup-formstate-context";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import { useSignUpFormState } from "./signup-formstate-context";
 import { Jobs } from "../../models/shoreline";
 import { availableCountries } from "../../lib/language";
+
+interface Errors {
+  firstName: boolean;
+  lastName: boolean;
+  country: boolean;
+  job: boolean;
+  phone: boolean;
+}
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -67,22 +72,7 @@ function SignUpProfileForm(props: any): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
-  const defaultErr = {
-    firstname: false,
-    lastname: false,
-    country: false,
-    job: false,
-    phone: false,
-  };
-  const [errors, setErrors] = useState(defaultErr);
-  const [firstnameHelperTextValue, setfirstnameHelperTextValue] = useState("");
-  const [
-    lastnameChangeHelperTextValue,
-    setlastnameChangeHelperTextValue,
-  ] = useState("");
-  const [phoneChangeHelperTextValue, setphoneChangeHelperTextValue] = useState(
-    ""
-  );
+
   const classes = formStyle();
 
   const onChange = (
@@ -110,60 +100,28 @@ function SignUpProfileForm(props: any): JSX.Element {
     });
   };
 
-  const resetFormState = (): void => {
-    setErrors(defaultErr);
-    setfirstnameHelperTextValue("");
-    setlastnameChangeHelperTextValue("");
-    setphoneChangeHelperTextValue("");
-  };
+  const errors: Errors = React.useMemo(
+    () => ({
+      firstName: _.isEmpty(state.formValues?.profileFirstname.trim()),
+      lastName: _.isEmpty(state.formValues?.profileLastname.trim()),
+      country: _.isEmpty(state.formValues?.profileCountry),
+      job: _.isEmpty(state.formValues?.profileJob),
+      phone: _.isEmpty(state.formValues?.profilePhone),
+    }),
+    [
+      state.formValues?.profileFirstname,
+      state.formValues?.profileLastname,
+      state.formValues?.profileCountry,
+      state.formValues?.profileJob,
+      state.formValues?.profilePhone,
+    ]
+  );
 
-  const validateForm = (): boolean => {
-    let errorSeen = false;
-    let firstname = false;
-    let lastName = false;
-    //let phone = false;
-    //let country = false;
-
-    // for now duplicated blip validation logic
-    // Is there a better way to handle errors...
-    if (_.isEmpty(state.formValues.profileFirstname)) {
-      firstname = true;
-      errorSeen = true;
-    }
-
-    const IS_REQUIRED = t("This field is required.");
-
-    if (!state.formValues.profileFirstname) {
-      setfirstnameHelperTextValue(IS_REQUIRED);
-      firstname = true;
-      errorSeen = true;
-    }
-
-    if (_.isEmpty(state.formValues.profileLastname)) {
-      lastName = true;
-      errorSeen = true;
-    }
-
-    if (!state.formValues.profileLastname) {
-      setlastnameChangeHelperTextValue(IS_REQUIRED);
-      lastName = true;
-      errorSeen = true;
-    }
-
-    setErrors({
-      firstname: firstname,
-      lastname: lastName,
-      country: false,
-      job: false,
-      phone: false,
-    });
-    return !errorSeen;
-  };
+  const isErrorSeen: boolean = React.useMemo(() => _.some(errors), [errors]);
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    resetFormState();
-    if (validateForm()) {
+    if (!isErrorSeen) {
       handleNext();
     }
   };
@@ -184,11 +142,11 @@ function SignUpProfileForm(props: any): JSX.Element {
         margin="normal"
         label={t("firstName")}
         variant="outlined"
-        value={state.formValues.profileFirstname}
+        value={state.formValues?.profileFirstname}
         required
-        error={errors.firstname}
+        error={errors.firstName}
         onChange={(e) => onChange(e, "profileFirstname")}
-        helperText={firstnameHelperTextValue}
+        helperText={errors.firstName && t("required-field")}
       />
       <TextField
         id="lastname"
@@ -196,11 +154,11 @@ function SignUpProfileForm(props: any): JSX.Element {
         margin="normal"
         label={t("lastName")}
         variant="outlined"
-        value={state.formValues.profileLastname}
+        value={state.formValues?.profileLastname}
         required
-        error={errors.lastname}
+        error={errors.lastName}
         onChange={(e) => onChange(e, "profileLastname")}
-        helperText={lastnameChangeHelperTextValue}
+        helperText={errors.lastName && t("required-field")}
       />
       <FormControl
         variant="outlined"
@@ -216,7 +174,7 @@ function SignUpProfileForm(props: any): JSX.Element {
           labelId="country-selector-label"
           label={t("signup-country")}
           id="country-selector"
-          value={state.formValues.profileCountry}
+          value={state.formValues?.profileCountry}
           onChange={(e) => onSelectChange(e, "profileCountry")}
         >
           <MenuItem key="" value="" />
@@ -227,40 +185,44 @@ function SignUpProfileForm(props: any): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      <FormControl
-        variant="outlined"
-        className={classes.TextField}
-        margin="normal"
-        required
-        error={errors.job}
-      >
-        <InputLabel id="job-selector-input-label">{t("signup-job")}</InputLabel>
-        <Select
-          labelId="job-selector-label"
-          label={t("signup-job")}
-          id="job-selector"
-          value={state.formValues.profileJob}
-          onChange={(e) => onSelectChange(e, "profileJob")}
+      {state.formValues?.accountRole == "hcp" && (
+        <FormControl
+          variant="outlined"
+          className={classes.TextField}
+          margin="normal"
+          required
+          error={errors.job}
         >
-          <MenuItem key="" value="" />
-          {Object.values(Jobs).map((jobTitle) => (
-            <MenuItem key={jobTitle} value={jobTitle}>
-              {t(jobTitle)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          <InputLabel id="job-selector-input-label">
+            {t("signup-job")}
+          </InputLabel>
+          <Select
+            labelId="job-selector-label"
+            label={t("signup-job")}
+            id="job-selector"
+            value={state.formValues?.profileJob}
+            onChange={(e) => onSelectChange(e, "profileJob")}
+          >
+            <MenuItem key="" value="" />
+            {Object.values(Jobs).map((jobTitle) => (
+              <MenuItem key={jobTitle} value={jobTitle}>
+                {t(jobTitle)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
       <TextField
         id="phone"
         className={classes.TextField}
         margin="normal"
         label={t("phone")}
         variant="outlined"
-        value={state.formValues.profilePhone}
+        value={state.formValues?.profilePhone}
         required
         error={errors.phone}
         onChange={(e) => onChange(e, "profilePhone")}
-        helperText={phoneChangeHelperTextValue}
+        helperText={errors.phone && t("required-field")}
       />
       <div id="signup-profileform-button-group">
         <Button
