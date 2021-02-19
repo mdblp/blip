@@ -42,6 +42,12 @@ import { useSignUpFormState } from "./signup-formstate-context";
 import { REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
 
+interface Errors {
+  userName: boolean;
+  newPassword: boolean;
+  confirmNewPassword: boolean;
+}
+
 const formStyle = makeStyles((theme: Theme) => {
   return {
     Button: {
@@ -65,22 +71,7 @@ function SignUpAccountForm(props: any): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
-  const defaultErr = {
-    username: false,
-    newPassword: false,
-    confirmNewPassword: false,
-  };
   const [newPassword, setNewPassword] = useState("");
-  const [errors, setErrors] = useState(defaultErr);
-  const [userNameHelperTextValue, setUserNameHelperTextValue] = useState("");
-  const [
-    newPasswordChangeHelperTextValue,
-    setNewPasswordChangeHelperTextValue,
-  ] = useState("");
-  const [
-    confirmNewPasswordChangeHelperTextValue,
-    setConfirmNewPasswordChangeHelperTextValue,
-  ] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const classes = formStyle();
@@ -113,83 +104,30 @@ function SignUpAccountForm(props: any): JSX.Element {
     }
   };
 
-  const resetFormState = (): void => {
-    setErrors(defaultErr);
-    setUserNameHelperTextValue("");
-    setNewPasswordChangeHelperTextValue("");
-    setConfirmNewPasswordChangeHelperTextValue("");
-  };
+  const errors: Errors = React.useMemo(
+    () => ({
+      userName:
+        _.isEmpty(state.formValues?.accountUsername.trim()) ||
+        !REGEX_EMAIL.test(state.formValues?.accountUsername),
+      newPassword:
+        _.isEmpty(newPassword?.trim()) ||
+        newPassword?.length < appConfig.PASSWORD_MIN_LENGTH,
+      confirmNewPassword:
+        _.isEmpty(state.formValues?.accountPassword.trim()) ||
+        state.formValues?.accountPassword !== newPassword,
+    }),
+    [
+      state.formValues?.accountUsername,
+      newPassword,
+      state.formValues?.accountPassword,
+    ]
+  );
 
-  const validateForm = (): boolean => {
-    let errorSeen = false;
-    let username = false;
-    let password = false;
-    let cfmPassword = false;
-
-    // for now duplicated blip validation logic
-    // Is there a better way to handle errors...
-    if (_.isEmpty(state.formValues.accountUsername)) {
-      username = true;
-      errorSeen = true;
-    }
-
-    const IS_REQUIRED = t("is-required");
-
-    if (!state.formValues.accountUsername) {
-      setUserNameHelperTextValue(IS_REQUIRED);
-      username = true;
-      errorSeen = true;
-    }
-
-    if (
-      state.formValues.accountUsername &&
-      !REGEX_EMAIL.test(state.formValues.accountUsername)
-    ) {
-      setUserNameHelperTextValue(t("invalid-email"));
-      username = true;
-      errorSeen = true;
-    }
-
-    if (!newPassword) {
-      setNewPasswordChangeHelperTextValue(IS_REQUIRED);
-      password = true;
-      errorSeen = true;
-    }
-
-    if (newPassword && newPassword.length < appConfig.PASSWORD_MIN_LENGTH) {
-      setNewPasswordChangeHelperTextValue(
-        t("password-too-weak", {
-          minLength: appConfig.PASSWORD_MIN_LENGTH,
-        })
-      );
-      password = true;
-      errorSeen = true;
-    }
-
-    if (newPassword) {
-      if (!state.formValues.accountPassword) {
-        setConfirmNewPasswordChangeHelperTextValue(IS_REQUIRED);
-        cfmPassword = true;
-        errorSeen = true;
-      } else if (state.formValues.accountPassword !== newPassword) {
-        setConfirmNewPasswordChangeHelperTextValue(t("password-dont-match"));
-        cfmPassword = true;
-        errorSeen = true;
-      }
-    }
-
-    setErrors({
-      username: username,
-      newPassword: password,
-      confirmNewPassword: cfmPassword,
-    });
-    return !errorSeen;
-  };
+  const isErrorSeen: boolean = React.useMemo(() => _.some(errors), [errors]);
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    resetFormState();
-    if (validateForm()) {
+    if (!isErrorSeen) {
       // submit to api
       handleNext();
     }
@@ -213,9 +151,9 @@ function SignUpAccountForm(props: any): JSX.Element {
         variant="outlined"
         value={state.formValues.accountUsername}
         required
-        error={errors.username}
+        error={errors.userName}
         onChange={(e) => onChange(e, "accountUsername")}
-        helperText={userNameHelperTextValue}
+        helperText={errors.userName && t("required-field")}
       />
       <TextField
         id="password"
@@ -228,7 +166,9 @@ function SignUpAccountForm(props: any): JSX.Element {
         required
         error={errors.newPassword}
         onChange={(e) => onChange(e, "", setNewPassword)}
-        helperText={newPasswordChangeHelperTextValue}
+        helperText={errors.newPassword && t("password-too-weak", {
+          minLength: appConfig.PASSWORD_MIN_LENGTH,
+        })}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -253,7 +193,7 @@ function SignUpAccountForm(props: any): JSX.Element {
         required
         error={errors.confirmNewPassword}
         onChange={(e) => onChange(e, "accountPassword")}
-        helperText={confirmNewPasswordChangeHelperTextValue}
+        helperText={errors.confirmNewPassword && t("password-dont-match")}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
