@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AppBar, Breadcrumbs, Container, createStyles, Link, List, ListItem, makeStyles, Toolbar } from "@material-ui/core";
@@ -49,7 +49,8 @@ const NotificationHeader = () => {
   const classes = useStyles();
   const { user } = useAuth();
 
-  const homePage = useMemo(() => (user?.roles?.length && user.roles[0] === Roles.patient ? "/patient/data" : "/hcp/patients"), [
+  const homePage = useMemo(() => (user?.roles?.length && user.roles[0] === Roles.caregiver ? "/" : "/hcp/patients"), [
+    // FIXME: set the route for caregiver
     user,
   ]);
 
@@ -72,6 +73,9 @@ const NotificationHeader = () => {
 };
 
 export const NotificationsPage = (): JSX.Element => {
+  const { user } = useAuth();
+
+  useEffect(() => console.log("user", user), [user]);
   const fakeNotif1: INotification = {
     date: "date",
     emitter: { firstName: "Jean", lastName: "Dujardin", role: Roles.clinic },
@@ -91,7 +95,7 @@ export const NotificationsPage = (): JSX.Element => {
         <List>
           {notifs.map((notification, index) => (
             <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-              <Notification notification={notification} />
+              <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
             </ListItem>
           ))}
         </List>
