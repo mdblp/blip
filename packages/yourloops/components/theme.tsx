@@ -49,3 +49,24 @@ export const theme = createMuiTheme({
     background: { default: "#FFFFFF" },
   },
 });
+
+export const loginTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#109182",
+      light: "#F7F7F8",
+    },
+    secondary: {
+      main: "#E5F0F0",
+      light: "#F5F9F9",
+      dark: "#B8B9DD",
+    },
+    error: {
+      main: "#DE514B",
+    },
+    text: {
+      primary: "#000",
+    },
+    background: { default: "#F7F7F8" },
+  },
+});
