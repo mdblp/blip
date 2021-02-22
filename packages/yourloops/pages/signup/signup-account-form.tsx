@@ -71,6 +71,12 @@ function SignUpAccountForm(props: any): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
+  const defaultErr = {
+    userName: false,
+    newPassword: false,
+    confirmNewPassword: false,
+  };
+  const [errors, setErrors] = React.useState<Errors>(defaultErr);
   const [newPassword, setNewPassword] = useState("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
@@ -104,30 +110,45 @@ function SignUpAccountForm(props: any): JSX.Element {
     }
   };
 
-  const errors: Errors = React.useMemo(
-    () => ({
-      userName:
-        _.isEmpty(state.formValues?.accountUsername.trim()) ||
-        !REGEX_EMAIL.test(state.formValues?.accountUsername),
-      newPassword:
-        _.isEmpty(newPassword?.trim()) ||
-        newPassword?.length < appConfig.PASSWORD_MIN_LENGTH,
-      confirmNewPassword:
-        _.isEmpty(state.formValues?.accountPassword.trim()) ||
-        state.formValues?.accountPassword !== newPassword,
-    }),
-    [
-      state.formValues?.accountUsername,
-      newPassword,
-      state.formValues?.accountPassword,
-    ]
-  );
+  const isUserNameValid = (): boolean => {
+    let err = false;
+
+    if (_.isEmpty(state.formValues?.accountUsername.trim())) {
+      err = true;
+    }
+
+    if (!REGEX_EMAIL.test(state.formValues?.accountUsername)) {
+      err = true;
+    }
+
+    setErrors({ ...errors, userName: err });
+    return !err;
+  };
+
+  const isPasswordValid = (): boolean => {
+    const err =
+      _.isEmpty(newPassword?.trim()) ||
+      newPassword?.length < appConfig.PASSWORD_MIN_LENGTH;
+    setErrors({ ...errors, newPassword: err });
+    return !err;
+  };
+
+  const isConfirmNewPasswordValid = (): boolean => {
+    const err =
+      _.isEmpty(state.formValues?.accountPassword.trim()) ||
+      state.formValues?.accountPassword !== newPassword;
+    setErrors({ ...errors, confirmNewPassword: err });
+    return !err;
+  };
 
   const isErrorSeen: boolean = React.useMemo(() => _.some(errors), [errors]);
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    if (!isErrorSeen) {
+    if (
+      isUserNameValid() &&
+      isPasswordValid() &&
+      isConfirmNewPasswordValid()) {
       // submit to api
       handleNext();
     }
@@ -152,8 +173,9 @@ function SignUpAccountForm(props: any): JSX.Element {
         value={state.formValues.accountUsername}
         required
         error={errors.userName}
+        onBlur={() => isUserNameValid()}
         onChange={(e) => onChange(e, "accountUsername")}
-        helperText={errors.userName && t("required-field")}
+        helperText={errors.userName && t("invalid-email")}
       />
       <TextField
         id="password"
@@ -165,10 +187,14 @@ function SignUpAccountForm(props: any): JSX.Element {
         value={newPassword}
         required
         error={errors.newPassword}
+        onBlur={() => isPasswordValid()}
         onChange={(e) => onChange(e, "", setNewPassword)}
-        helperText={errors.newPassword && t("password-too-weak", {
-          minLength: appConfig.PASSWORD_MIN_LENGTH,
-        })}
+        helperText={
+          errors.newPassword &&
+          t("password-too-weak", {
+            minLength: appConfig.PASSWORD_MIN_LENGTH,
+          })
+        }
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -192,6 +218,7 @@ function SignUpAccountForm(props: any): JSX.Element {
         value={state.formValues.accountPassword}
         required
         error={errors.confirmNewPassword}
+        onBlur={() => isConfirmNewPasswordValid()}
         onChange={(e) => onChange(e, "accountPassword")}
         helperText={errors.confirmNewPassword && t("password-dont-match")}
         InputProps={{
@@ -221,6 +248,7 @@ function SignUpAccountForm(props: any): JSX.Element {
         <Button
           variant="contained"
           color="primary"
+          disabled={isErrorSeen}
           className={classes.Button}
           onClick={onNext}
         >
