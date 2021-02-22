@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import moment from "moment";
+import moment from "moment-timezone";
 import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -79,6 +79,9 @@ const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, ha
   const hbA1c = "8.5%"; // TODO
   const birthDate = moment.utc(user?.profile?.patient?.birthday).format("L");
 
+  const firstName = user.profile?.firstName ?? "";
+  const lastName = user.profile?.lastName ?? user.profile?.fullName ?? "";
+
   return (
     <Dialog fullWidth={true} maxWidth="xs" open={isOpen} onClose={handleClose}>
       <DialogTitle className={title} id="patient-dialog-title">
@@ -90,7 +93,7 @@ const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, ha
           disabled
           id="firstname"
           label={t("firstName")}
-          value={user.profile?.firstName}
+          value={firstName}
           className={textField}
           InputProps={{ classes: { disabled } }}
         />
@@ -99,7 +102,7 @@ const ProfileDialog: FunctionComponent<ProfileDialogProps> = ({ user, isOpen, ha
           disabled
           id="lastname"
           label={t("lastName")}
-          value={user.profile?.lastName}
+          value={lastName}
           className={textField}
           InputProps={{ classes: { disabled } }}
         />
