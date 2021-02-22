@@ -43,10 +43,12 @@ import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/pas
 import { AuthContextProvider } from "../lib/auth";
 import { ProfilePage } from "../pages/profile/profile";
 import PrivateRoute from "../components/private-route";
+import { CssBaseline } from "@material-ui/core";
 
 const Yourloops: React.FunctionComponent = () => {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Router>
         <AuthContextProvider>
           <Switch>

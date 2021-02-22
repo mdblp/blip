@@ -46,5 +46,6 @@ export const theme = createMuiTheme({
     text: {
       primary: "#000",
     },
+    background: { default: "#FFFFFF" },
   },
 });
