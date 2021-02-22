@@ -18,10 +18,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import GroupIcon from "@material-ui/icons/Group";
+import PersonIcon from "@material-ui/icons/Person";
 import { Button, createStyles, makeStyles } from "@material-ui/core";
 
 import { MedicalServiceIcon } from "../../components/Icons/MedicalServiceIcon";
-import { Roles } from "../../models/shoreline";
+import { UserRoles } from "../../models/shoreline";
 
 export enum NotificationType {
   dataShare,
@@ -30,13 +31,14 @@ export enum NotificationType {
 
 export interface INotification {
   type: NotificationType;
-  emitter: { role: string; firstName: string; lastName: string };
+  emitter: { role: UserRoles; firstName: string; lastName: string };
   date: string;
   target?: string;
 }
 
 interface NotificationProps {
   notification: INotification;
+  userRole: UserRoles | undefined;
 }
 
 const useStyles = makeStyles(() =>
@@ -49,7 +51,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export const Notification = ({ notification: { date, emitter, type, target } }: NotificationProps): JSX.Element => {
+export const Notification = ({ notification: { date, emitter, type, target }, userRole }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const { leftSide, container, notification, rightSide, button } = useStyles();
 
@@ -63,9 +65,11 @@ export const Notification = ({ notification: { date, emitter, type, target } }: 
       </span>
     );
 
+  const IconToDisplay: JSX.Element = getIconToDisplay(userRole, emitter.role);
+
   return (
     <div className={container}>
-      <div className={leftSide}>{emitter.role === Roles.patient ? <GroupIcon /> : <MedicalServiceIcon />}</div>
+      <div className={leftSide}>{IconToDisplay}</div>
       <span className={notification}>
         <strong>
           {emitter.firstName} {emitter.lastName}
@@ -85,4 +89,12 @@ export const Notification = ({ notification: { date, emitter, type, target } }: 
       </div>
     </div>
   );
+};
+
+const getIconToDisplay = (userRole: UserRoles | undefined, emitterRole: UserRoles): JSX.Element => {
+  if (userRole === UserRoles.caregiver) {
+    return <PersonIcon />;
+  } else {
+    return emitterRole === UserRoles.patient ? <MedicalServiceIcon /> : <GroupIcon />;
+  }
 };

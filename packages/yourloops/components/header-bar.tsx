@@ -44,6 +44,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../lib/auth";
+import { UserRoles } from "../models/shoreline";
 
 interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
@@ -84,6 +85,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const auth = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const userRole: UserRoles | undefined = React.useMemo(() => auth.user?.roles && auth.user.roles[0], [auth.user]);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -154,9 +157,11 @@ function HeaderBar(props: HeaderProps): JSX.Element {
         <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} />
         {props.children}
         <div className={classes.toolbarRightSide}>
-          <IconButton onClick={handleOpenNotifications}>
-            <NotificationsIcon />
-          </IconButton>
+          {userRole && userRole !== UserRoles.patient && (
+            <IconButton onClick={handleOpenNotifications}>
+              <NotificationsIcon />
+            </IconButton>
+          )}
           {accountMenu}
         </div>
       </Toolbar>
