@@ -100,9 +100,9 @@ const getIconToDisplay = (userRole: UserRoles | undefined, emitterRole: UserRole
 const getDateToDisplay = (emittedDate: string): string => {
   const { t } = useTranslation("yourlooops");
 
-  const currentDate = moment().utc();
   const date = moment(emittedDate).utc();
-  const diff = currentDate.diff(date, "days");
+
+  const diff = moment().utc().diff(date, "days");
 
   if (diff === 0) {
     return t("today");
