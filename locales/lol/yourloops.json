@@ -234,5 +234,6 @@
   "modal-switch-hcp-action": "crwdns47408:0crwdne47408:0",
   "modal-switch-hcp-failure": "crwdns47410:0crwdne47410:0",
   "notif-hcp-invitation": "crwdns47412:0{hcpName}crwdnd47412:0{teamName}crwdne47412:0",
-  "notif-caregiver-invitation": "crwdns47414:0{patientName}crwdne47414:0"
+  "notif-caregiver-invitation": "crwdns47414:0{patientName}crwdne47414:0",
+  "patient-profile": "crwdns50530:0crwdne50530:0"
 }
