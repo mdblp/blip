@@ -76,18 +76,18 @@ export const NotificationsPage = (): JSX.Element => {
   const { user } = useAuth();
 
   const fakeNotif1: INotification = {
-    date: new Date().toString(),
+    date: new Date().toISOString(),
     emitter: { firstName: "Jean", lastName: "Dujardin", role: Roles.clinic },
     type: NotificationType.joinGroup,
     target: "Service de Diabétologie CH Angers",
   };
   const fakeNotif2: INotification = {
-    date: new Date("2021-02-18T10:00:00").toString(),
+    date: "2021-02-18T10:00:00",
     emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
     type: NotificationType.dataShare,
   };
   const fakeNotif3: INotification = {
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toString(), // yesterday date
+    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // yesterday date
     emitter: { firstName: "Bob", lastName: "L'Eponge", role: Roles.clinic },
     type: NotificationType.joinGroup,
     target: "Crabe croustillant",
@@ -99,15 +99,16 @@ export const NotificationsPage = (): JSX.Element => {
       <NotificationHeader />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
-          {notifs
-            .sort((notifA, notifB) => Date.parse(notifB.date) - Date.parse(notifA.date))
-            .map((notification, index) => (
-              <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-                <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
-              </ListItem>
-            ))}
+          {notifs.sort(sortNotification).map((notification, index) => (
+            <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
+              <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
+            </ListItem>
+          ))}
         </List>
       </Container>
     </div>
   );
 };
+
+const sortNotification = (notifA: INotification, notifB: INotification): number =>
+  Date.parse(notifB.date) - Date.parse(notifA.date);
