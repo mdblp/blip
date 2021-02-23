@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Web pages tests
+ * Notification tests
  *
  * All rights reserved.
  *
@@ -26,12 +26,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import testHCPPage from "./hcp";
-import testNotificationsPage from "./notifications";
+import React from "react";
+import { expect } from "chai";
+import { shallow } from "enzyme";
+// import sinon from "sinon";
 
-function testPages(): void {
-  describe("HCP", testHCPPage);
-  describe("Notifications Page", testNotificationsPage);
+import { INotification, Notification, NotificationType } from "../../../pages/notifications/notification";
+import { Roles } from "../../../models/shoreline";
+
+function testNotification(): void {
+  const notif: INotification = {
+    date: new Date("2021-02-18T10:00:00").toString(),
+    emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
+    type: NotificationType.dataShare,
+  };
+
+  it("should be exported as a function", () => {
+    expect(Notification).to.be.a("function");
+  });
+
+  it("should render", () => {
+    const wrapper = shallow(<Notification notification={notif} userRole={Roles.caregiver} />);
+    expect(wrapper.find("div").length).to.be.ok;
+  });
 }
 
-export default testPages;
+export default testNotification;
