@@ -16,6 +16,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import moment from "moment-timezone";
 
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
@@ -44,7 +45,6 @@ interface NotificationProps {
 const useStyles = makeStyles(() =>
   createStyles({
     container: { display: "flex", alignItems: "center", flex: "1 1 auto" },
-    leftSide: {},
     rightSide: { width: "350px", display: "flex", justifyContent: "space-between", alignItems: "center" },
     notification: { marginLeft: "1em", flexGrow: 4 },
     button: { marginLeft: "1em" },
@@ -53,7 +53,7 @@ const useStyles = makeStyles(() =>
 
 export const Notification = ({ notification: { date, emitter, type, target }, userRole }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
-  const { leftSide, container, notification, rightSide, button } = useStyles();
+  const { container, notification, rightSide, button } = useStyles();
 
   const notif: JSX.Element =
     type === NotificationType.dataShare ? (
@@ -65,11 +65,9 @@ export const Notification = ({ notification: { date, emitter, type, target }, us
       </span>
     );
 
-  const IconToDisplay: JSX.Element = getIconToDisplay(userRole, emitter.role);
-
   return (
     <div className={container}>
-      <div className={leftSide}>{IconToDisplay}</div>
+      <div>{getIconToDisplay(userRole, emitter.role)}</div>
       <span className={notification}>
         <strong>
           {emitter.firstName} {emitter.lastName}
@@ -77,13 +75,13 @@ export const Notification = ({ notification: { date, emitter, type, target }, us
         {notif}
       </span>
       <div className={rightSide}>
-        <div>{date}</div>
+        <div>{getDateToDisplay(date)}</div>
         <div>
           <Button className={button} variant="contained" color="primary">
-            Accept
+            {t("accept")}
           </Button>
           <Button className={button} variant="contained" color="secondary">
-            Decline
+            {t("decline")}
           </Button>
         </div>
       </div>
@@ -96,5 +94,21 @@ const getIconToDisplay = (userRole: UserRoles | undefined, emitterRole: UserRole
     return <PersonIcon />;
   } else {
     return emitterRole === UserRoles.patient ? <MedicalServiceIcon /> : <GroupIcon />;
+  }
+};
+
+const getDateToDisplay = (emittedDate: string): string => {
+  const { t } = useTranslation("yourlooops");
+
+  const currentDate = moment().utc();
+  const date = moment(emittedDate).utc();
+  const diff = currentDate.diff(date, "days");
+
+  if (diff === 0) {
+    return t("today");
+  } else if (diff === 1) {
+    return t("yesterday");
+  } else {
+    return date.format("L");
   }
 };
