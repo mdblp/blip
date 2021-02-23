@@ -8,8 +8,11 @@ It is based on Tidepool Blip 1.27.
 - YLP-423 Add Dexcom branding to the glucose graph
 ### Fixed
 - YLP-511 Wrong string used for "serial number"
+
+## 1.7.3-rc1 2021-02-22
 ### Engineering Use
 - Fix init Jenkins pipeline
+- Add https dev server (docker) for OWASP ZAP
 
 ## 1.7.2 2021-01-12
 ### Fixed
