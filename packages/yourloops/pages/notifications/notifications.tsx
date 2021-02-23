@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { Fragment, useEffect, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AppBar, Breadcrumbs, Container, createStyles, Link, List, ListItem, makeStyles, Toolbar } from "@material-ui/core";
@@ -75,29 +75,37 @@ const NotificationHeader = () => {
 export const NotificationsPage = (): JSX.Element => {
   const { user } = useAuth();
 
-  useEffect(() => console.log("user", user), [user]);
   const fakeNotif1: INotification = {
-    date: "date",
+    date: new Date().toString(),
     emitter: { firstName: "Jean", lastName: "Dujardin", role: UserRoles.hcp },
     type: NotificationType.joinGroup,
     target: "Service de Diabétologie CH Angers",
   };
   const fakeNotif2: INotification = {
-    date: "SuperLongDate",
+    date: new Date("2021-02-18T10:00:00").toString(),
     emitter: { firstName: "Jeanne", lastName: "Dubois", role: UserRoles.patient },
     type: NotificationType.dataShare,
   };
-  const notifs: INotification[] = [fakeNotif1, fakeNotif2];
+  const fakeNotif3: INotification = {
+    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toString(), // yesterday date
+    emitter: { firstName: "Bob", lastName: "L'Eponge", role: UserRoles.hcp },
+    type: NotificationType.joinGroup,
+    target: "Crabe croustillant",
+  };
+  const notifs: INotification[] = [fakeNotif1, fakeNotif2, fakeNotif3];
+
   return (
     <div>
       <NotificationHeader />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
-          {notifs.map((notification, index) => (
-            <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-              <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
-            </ListItem>
-          ))}
+          {notifs
+            .sort((notifA, notifB) => Date.parse(notifB.date) - Date.parse(notifA.date))
+            .map((notification, index) => (
+              <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
+                <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
+              </ListItem>
+            ))}
         </List>
       </Container>
     </div>
