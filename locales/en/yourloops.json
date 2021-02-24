@@ -237,5 +237,7 @@
   "notif-caregiver-invitation": "{patientName} wants to share their diabetes data with you.",
   "patient-profile": "Patient profile",
   "datashare": "wants to share their diabetes data with you.",
-  "join-group": "invites you to join"
+  "join-group": "invites you to join",
+  "today": "Today",
+  "yesterday": "Yesterday"
 }
