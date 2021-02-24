@@ -15,7 +15,7 @@
  */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
+import { TFunction, useTranslation } from "react-i18next";
 import moment from "moment-timezone";
 
 import GroupIcon from "@material-ui/icons/Group";
@@ -51,31 +51,52 @@ const useStyles = makeStyles(() =>
   })
 );
 
+const getNotification = (type: NotificationType, t: TFunction<"yourloops">, target: string | undefined) =>
+  type === NotificationType.dataShare ? (
+    <span> {t("datashare")}</span>
+  ) : (
+    <span>
+      {" "}
+      {t("join-group")} <strong>{target}.</strong>
+    </span>
+  );
+
+const getIcon = (userRole: UserRoles | undefined, emitterRole: UserRoles): JSX.Element => {
+  if (userRole === UserRoles.caregiver) {
+    return <PersonIcon />;
+  }
+
+  return emitterRole === UserRoles.patient ? <MedicalServiceIcon /> : <GroupIcon />;
+};
+
+const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
+  const date = moment(emittedDate).utc();
+  const diff = moment().utc().diff(date, "days");
+
+  if (diff === 0) {
+    return t("today");
+  } else if (diff === 1) {
+    return t("yesterday");
+  }
+
+  return date.format("L");
+};
+
 export const Notification = ({ notification: { date, emitter, type, target }, userRole }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const { container, notification, rightSide, button } = useStyles();
 
-  const notif: JSX.Element =
-    type === NotificationType.dataShare ? (
-      <span> {t("datashare")}</span>
-    ) : (
-      <span>
-        {" "}
-        {t("join-group")} <strong>{target}.</strong>
-      </span>
-    );
-
   return (
     <div className={container}>
-      <div>{getIconToDisplay(userRole, emitter.role)}</div>
+      <div>{getIcon(userRole, emitter.role)}</div>
       <span className={notification}>
         <strong>
           {emitter.firstName} {emitter.lastName}
         </strong>
-        {notif}
+        {getNotification(type, t, target)}
       </span>
       <div className={rightSide}>
-        <div>{getDateToDisplay(date)}</div>
+        <div>{getDate(date, t)}</div>
         <div>
           <Button className={button} variant="contained" color="primary">
             {t("accept")}
@@ -87,28 +108,4 @@ export const Notification = ({ notification: { date, emitter, type, target }, us
       </div>
     </div>
   );
-};
-
-const getIconToDisplay = (userRole: UserRoles | undefined, emitterRole: UserRoles): JSX.Element => {
-  if (userRole === UserRoles.caregiver) {
-    return <PersonIcon />;
-  } else {
-    return emitterRole === UserRoles.patient ? <MedicalServiceIcon /> : <GroupIcon />;
-  }
-};
-
-const getDateToDisplay = (emittedDate: string): string => {
-  const { t } = useTranslation("yourlooops");
-
-  const date = moment(emittedDate).utc();
-
-  const diff = moment().utc().diff(date, "days");
-
-  if (diff === 0) {
-    return t("today");
-  } else if (diff === 1) {
-    return t("yesterday");
-  } else {
-    return date.format("L");
-  }
 };
