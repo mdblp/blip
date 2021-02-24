@@ -41,6 +41,7 @@ import Button from "@material-ui/core/Button";
 import { useSignUpFormState } from "./signup-formstate-context";
 import { REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
+import SignUpFormProps from "./signup-form-props";
 
 interface Errors {
   userName: boolean;
@@ -67,7 +68,7 @@ const formStyle = makeStyles((theme: Theme) => {
 /**
  * SignUpAccount Form
  */
-function SignUpAccountForm(props: any): JSX.Element {
+function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
@@ -145,10 +146,7 @@ function SignUpAccountForm(props: any): JSX.Element {
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    if (
-      isUserNameValid() &&
-      isPasswordValid() &&
-      isConfirmNewPasswordValid()) {
+    if (isUserNameValid() && isPasswordValid() && isConfirmNewPasswordValid()) {
       // submit to api
       handleNext();
     }

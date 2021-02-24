@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2021, Diabeloop
  *
@@ -54,6 +53,7 @@ const formStyle = makeStyles((theme: Theme) => {
       flexDirection: "column",
       justifyContent: "center",
       textAlign: "center",
+      // eslint-disable-next-line no-magic-numbers
       padding: theme.spacing(4),
     },
     CardContent: {

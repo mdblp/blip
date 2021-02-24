@@ -41,6 +41,7 @@ export type SignUpFormState = {
 const SignUpFormStateContext = createContext<{
   state: SignUpFormState;
   dispatch: Dispatch<any>;
+// eslint-disable-next-line lodash/prefer-constant
 }>({ state: initialState, dispatch: () => null });
 
 /*

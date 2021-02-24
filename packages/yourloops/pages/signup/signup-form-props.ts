@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /**
  * Copyright (c) 2021, Diabeloop
  *
@@ -26,39 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import { SignUpFormState } from "./signup-formstate-context";
-
-export const initialState: SignUpFormState = {
-  formValues: {
-    accountUsername: "",
-    accountPassword: "",
-    accountRole: "",
-    profileFirstname: "",
-    profileLastname: "",
-    profileCountry: "", // how to do better ?
-    profilePhone: "",
-    profileJob: "",
-    preferencesLanguage: "",
-    terms: false,
-    privacyPolicy: false,
-  },
-};
-
-export function SignupReducer(
-  state: SignUpFormState,
-  action: any
-): SignUpFormState {
-  let clone = null;
-  switch (action.type) {
-    case "EDIT_FORMVALUE":
-      // clone input state in order to avoid initialstate mutation
-      clone = _.cloneDeep(state);
-      clone.formValues[action.key] = action.value;
-      return clone;
-    case "RESET_FORMVALUES":
-      return initialState;
-    default:
-  }
-  return state;
+/**
+ * Signupform interface props
+ */
+interface SignUpFormProps {
+  activeStep?: number;
+  handleBack(): void;
+  handleNext(): void;
 }
+
+export default SignUpFormProps;

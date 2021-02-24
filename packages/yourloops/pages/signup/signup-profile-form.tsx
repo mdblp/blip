@@ -40,6 +40,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { useSignUpFormState } from "./signup-formstate-context";
 import { Jobs } from "../../models/shoreline";
 import { availableCountries } from "../../lib/language";
+import SignUpFormProps from "./signup-form-props";
 
 interface Errors {
   firstName: boolean;
@@ -68,7 +69,7 @@ const formStyle = makeStyles((theme: Theme) => {
 /**
  * SignUpProfileForm Form
  */
-function SignUpProfileForm(props: any): JSX.Element {
+function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
@@ -105,7 +106,9 @@ function SignUpProfileForm(props: any): JSX.Element {
       firstName: _.isEmpty(state.formValues?.profileFirstname.trim()),
       lastName: _.isEmpty(state.formValues?.profileLastname.trim()),
       country: _.isEmpty(state.formValues?.profileCountry),
-      job: _.isEmpty(state.formValues?.profileJob),
+      job:
+        state.formValues?.accountRole === "hcp" &&
+        _.isEmpty(state.formValues?.profileJob),
       phone: _.isEmpty(state.formValues?.profilePhone),
     }),
     [
@@ -114,6 +117,7 @@ function SignUpProfileForm(props: any): JSX.Element {
       state.formValues?.profileCountry,
       state.formValues?.profileJob,
       state.formValues?.profilePhone,
+      state.formValues?.accountRole,
     ]
   );
 
@@ -185,7 +189,7 @@ function SignUpProfileForm(props: any): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      {state.formValues?.accountRole == "hcp" && (
+      {state.formValues?.accountRole === "hcp" && (
         <FormControl
           variant="outlined"
           className={classes.TextField}

@@ -40,9 +40,11 @@ import { useTranslation } from "react-i18next";
 import RadioLabel from "./signup-radio-label";
 import { useSignUpFormState } from "./signup-formstate-context";
 import Button from "@material-ui/core/Button";
+import SignUpFormProps from "./signup-form-props";
 
 const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
+    // eslint-disable-next-line no-magic-numbers
     margin: theme.spacing(3),
   },
   FormHelperText: {
@@ -67,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 /**
  * Sign Up Account Selector
  */
-function SignUpAccountSelector(props: any): JSX.Element {
+function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
   const { state, dispatch } = useSignUpFormState();
