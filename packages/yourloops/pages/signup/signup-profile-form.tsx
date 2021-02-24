@@ -73,6 +73,14 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
+  const defaultErr = {
+    firstName: false,
+    lastName: false,
+    country: false,
+    job: false,
+    phone: false,
+  };
+  const [errors, setErrors] = React.useState<Errors>(defaultErr);
 
   const classes = formStyle();
 
@@ -101,31 +109,45 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     });
   };
 
-  const errors: Errors = React.useMemo(
-    () => ({
-      firstName: _.isEmpty(state.formValues?.profileFirstname.trim()),
-      lastName: _.isEmpty(state.formValues?.profileLastname.trim()),
-      country: _.isEmpty(state.formValues?.profileCountry),
-      job:
-        state.formValues?.accountRole === "hcp" &&
-        _.isEmpty(state.formValues?.profileJob),
-      phone: _.isEmpty(state.formValues?.profilePhone),
-    }),
-    [
-      state.formValues?.profileFirstname,
-      state.formValues?.profileLastname,
-      state.formValues?.profileCountry,
-      state.formValues?.profileJob,
-      state.formValues?.profilePhone,
-      state.formValues?.accountRole,
-    ]
-  );
+  const isFirstNameValid = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profileFirstname.trim());
+    setErrors({ ...errors, firstName: err });
+    return !err;
+  };
 
-  const isErrorSeen: boolean = React.useMemo(() => _.some(errors), [errors]);
+  const isLastNameValid = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profileLastname.trim());
+    setErrors({ ...errors, lastName: err });
+    return !err;
+  };
+
+  const isCountryValid = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profileCountry);
+    setErrors({ ...errors, country: err });
+    return !err;
+  };
+
+  const isJobValid = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profileJob);
+    setErrors({ ...errors, job: err });
+    return !err;
+  };
+
+  const isPhoneValid = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profilePhone);
+    setErrors({ ...errors, phone: err });
+    return !err;
+  };
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    if (!isErrorSeen) {
+    if (
+      isFirstNameValid() &&
+      isLastNameValid() &&
+      isCountryValid() &&
+      isJobValid() &&
+      isPhoneValid()
+    ) {
       handleNext();
     }
   };
@@ -149,6 +171,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profileFirstname}
         required
         error={errors.firstName}
+        onBlur={() => isFirstNameValid()}
         onChange={(e) => onChange(e, "profileFirstname")}
         helperText={errors.firstName && t("required-field")}
       />
@@ -161,6 +184,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profileLastname}
         required
         error={errors.lastName}
+        onBlur={() => isLastNameValid()}
         onChange={(e) => onChange(e, "profileLastname")}
         helperText={errors.lastName && t("required-field")}
       />
@@ -179,6 +203,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           label={t("signup-country")}
           id="country-selector"
           value={state.formValues?.profileCountry}
+          onBlur={() => isCountryValid()}
           onChange={(e) => onSelectChange(e, "profileCountry")}
         >
           <MenuItem key="" value="" />
@@ -205,6 +230,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
             label={t("signup-job")}
             id="job-selector"
             value={state.formValues?.profileJob}
+            onBlur={() => isJobValid()}
             onChange={(e) => onSelectChange(e, "profileJob")}
           >
             <MenuItem key="" value="" />
@@ -225,6 +251,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profilePhone}
         required
         error={errors.phone}
+        onBlur={() => isPhoneValid()}
         onChange={(e) => onChange(e, "profilePhone")}
         helperText={errors.phone && t("required-field")}
       />
