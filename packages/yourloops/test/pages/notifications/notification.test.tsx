@@ -39,7 +39,7 @@ import { MedicalServiceIcon } from "../../../components/Icons/MedicalServiceIcon
 import { INotification, Notification, NotificationType } from "../../../pages/notifications/notification";
 import { Roles } from "../../../models/shoreline";
 
-function testNotification(): void {
+export const testNotification = (): void => {
   const notif: INotification = {
     date: "2021-02-18T10:00:00",
     emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
@@ -120,16 +120,10 @@ function testNotification(): void {
     });
 
     it("should display yesterday", () => {
-      const wrapper = mount(
-        <Notification
-          notification={{ ...notif, date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() }}
-          userRole={Roles.clinic}
-        />
-      );
+      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const wrapper = mount(<Notification notification={{ ...notif, date: yesterday }} userRole={Roles.clinic} />);
 
       expect(wrapper.text().includes("yesterday")).to.be.true;
     });
   });
-}
-
-export default testNotification;
+};
