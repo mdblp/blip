@@ -95,7 +95,7 @@ export const NotificationsPage = (): JSX.Element => {
   const notifs: INotification[] = [fakeNotif1, fakeNotif2, fakeNotif3];
 
   return (
-    <div>
+    <Fragment>
       <NotificationHeader />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
@@ -106,7 +106,7 @@ export const NotificationsPage = (): JSX.Element => {
           ))}
         </List>
       </Container>
-    </div>
+    </Fragment>
   );
 };
 
