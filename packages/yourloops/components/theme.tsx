@@ -50,7 +50,7 @@ export const theme = createMuiTheme({
   },
 });
 
-export const loginTheme = createMuiTheme({
+export const publicRoutesTheme = createMuiTheme({
   palette: {
     primary: {
       main: "#109182",
