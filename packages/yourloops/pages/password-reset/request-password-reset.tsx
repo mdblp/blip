@@ -40,12 +40,9 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { ThemeProvider } from "@material-ui/core/styles";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth";
-import { publicRoutesTheme } from "../../components/theme";
 
 /**
  * Login page
@@ -88,60 +85,57 @@ function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
   };
 
   return (
-    <ThemeProvider theme={publicRoutesTheme}>
-      <CssBaseline />
-      <Container maxWidth="sm" style={{ margin: "auto" }}>
-        <Grid container spacing={0} alignItems="center" justify="center" style={{ minHeight: "100vh" }}>
-          <Grid item xs={12}>
-            <Card>
-              <CardMedia
+    <Container maxWidth="sm" style={{ margin: "auto" }}>
+      <Grid container spacing={0} alignItems="center" justify="center" style={{ minHeight: "100vh" }}>
+        <Grid item xs={12}>
+          <Card>
+            <CardMedia
+              style={{
+                display: "flex",
+                paddingTop: "1em",
+                paddingBottom: "1em",
+              }}>
+              <img
+                src={brandingLogo}
+                alt={t("Login Branding Logo")}
                 style={{
-                  display: "flex",
-                  paddingTop: "1em",
-                  paddingBottom: "1em",
-                }}>
-                <img
-                  src={brandingLogo}
-                  alt={t("Login Branding Logo")}
-                  style={{
-                    height: "60px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                  }}
+                  height: "60px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                }}
+              />
+            </CardMedia>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                {t("Forgot your password?")}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {t("Please enter your email address.")}
+              </Typography>
+              <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
+                <TextField
+                  id="username"
+                  label={t("email")}
+                  value={username}
+                  required
+                  error={validateError || emptyUsername}
+                  onChange={onUsernameChange}
+                  helperText={helperTextValue}
                 />
-              </CardMedia>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {t("Forgot your password?")}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  {t("Please enter your email address.")}
-                </Typography>
-                <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
-                  <TextField
-                    id="username"
-                    label={t("email")}
-                    value={username}
-                    required
-                    error={validateError || emptyUsername}
-                    onChange={onUsernameChange}
-                    helperText={helperTextValue}
-                  />
-                </form>
-              </CardContent>
-              <CardActions>
-                <Button variant="contained" color="secondary" onClick={onBack}>
-                  {t("Cancel")}
-                </Button>
-                <Button variant="contained" color="primary" onClick={onSendResetLink} disabled={emptyUsername}>
-                  {t("Send reset link")}
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
+              </form>
+            </CardContent>
+            <CardActions>
+              <Button variant="contained" color="secondary" onClick={onBack}>
+                {t("common-cancel")}
+              </Button>
+              <Button variant="contained" color="primary" onClick={onSendResetLink} disabled={emptyUsername}>
+                {t("Send reset link")}
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
-      </Container>
-    </ThemeProvider>
+      </Grid>
+    </Container>
   );
 }
 
