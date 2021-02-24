@@ -72,6 +72,9 @@ const NotificationHeader = () => {
   );
 };
 
+const sortNotification = (notifA: INotification, notifB: INotification): number =>
+  Date.parse(notifB.date) - Date.parse(notifA.date);
+
 export const NotificationsPage = (): JSX.Element => {
   const { user } = useAuth();
 
@@ -109,6 +112,3 @@ export const NotificationsPage = (): JSX.Element => {
     </div>
   );
 };
-
-const sortNotification = (notifA: INotification, notifB: INotification): number =>
-  Date.parse(notifB.date) - Date.parse(notifA.date);
