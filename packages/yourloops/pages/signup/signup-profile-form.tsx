@@ -41,6 +41,7 @@ import { useSignUpFormState } from "./signup-formstate-context";
 import { Jobs } from "../../models/shoreline";
 import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
+import { REGEX_PHONE } from "../../lib/utils";
 
 interface Errors {
   firstName: boolean;
@@ -128,13 +129,17 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   };
 
   const isJobValid = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profileJob);
+    const err =
+      state.formValues?.accountRole === "hcp" &&
+      _.isEmpty(state.formValues?.profileJob);
     setErrors({ ...errors, job: err });
     return !err;
   };
 
   const isPhoneValid = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profilePhone);
+    const err =
+      _.isEmpty(state.formValues?.profilePhone) ||
+      !REGEX_PHONE.test(state.formValues?.profilePhone);
     setErrors({ ...errors, phone: err });
     return !err;
   };
@@ -245,6 +250,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       <TextField
         id="phone"
         className={classes.TextField}
+        placeholder={"+countrycode 1 01 02 03 04"}
         margin="normal"
         label={t("phone")}
         variant="outlined"
@@ -253,7 +259,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         error={errors.phone}
         onBlur={() => isPhoneValid()}
         onChange={(e) => onChange(e, "profilePhone")}
-        helperText={errors.phone && t("required-field")}
+        helperText={errors.phone && t("invalid-phone-number")}
       />
       <div id="signup-profileform-button-group">
         <Button

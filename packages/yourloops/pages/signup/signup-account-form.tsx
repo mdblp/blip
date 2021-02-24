@@ -112,15 +112,9 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   };
 
   const isUserNameValid = (): boolean => {
-    let err = false;
-
-    if (_.isEmpty(state.formValues?.accountUsername.trim())) {
-      err = true;
-    }
-
-    if (!REGEX_EMAIL.test(state.formValues?.accountUsername)) {
-      err = true;
-    }
+    const err =
+      _.isEmpty(state.formValues?.accountUsername.trim()) ||
+        !REGEX_EMAIL.test(state.formValues?.accountUsername);
 
     setErrors({ ...errors, userName: err });
     return !err;
