@@ -78,7 +78,7 @@
   "team-members-dialog-rmmember-title": "Supprimer un·e professionnel·le de santé de l'équipe <strong>{{teamName}}</strong>",
   "team-members-dialog-rmmember-question": "Êtes-vous sûr•e de vouloir supprimer <strong>{{hcpFirstName}} {{hcpLastName}}</strong> de cette équipe de soin ?",
   "team-members-dialog-rmmember-consequences": "Il·elle n'aura plus accès aux données des patient·e·s.",
-  "team-members-dialog-rmmember-button-remove": "Supprimer de l'équipe",
+  "team-member-remove": "Remove from team",
   "team-members-dialog-switch-role-title": "Me retirer des administrateurs de l'équipe",
   "team-members-dialog-switch-role-question": "Êtes-vous sûr·e de vouloir vous retirer des administrateurs ?",
   "team-members-dialog-switch-role-consequences": "Vous ne pourrez plus :",
