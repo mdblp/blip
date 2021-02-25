@@ -34,15 +34,16 @@ import { Alert } from "@material-ui/lab";
 import { ApiAlert } from "../../lib/useSnackbar";
 
 interface SnackbarsProps {
-  snackbarParams: {
+  params: {
     apiAlert: ApiAlert;
     removeAlert: (apiAlertId: ApiAlert["id"]) => void;
   };
 }
 
-export const Snackbar = ({ snackbarParams: { apiAlert, removeAlert } }: SnackbarsProps): JSX.Element | null => {
+export const Snackbar = ({ params: { apiAlert, removeAlert } }: SnackbarsProps): JSX.Element | null => {
   const onCloseAlert = useCallback(
     (id: ApiAlert["id"]) => (_: React.SyntheticEvent | MouseEvent, reason?: string) => {
+      // We don't want the snackbar to be closed by any random click on the page
       if (reason === "clickaway") {
         return;
       }

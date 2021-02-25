@@ -298,7 +298,7 @@ export const ProfilePage: FunctionComponent = () => {
   return (
     <Fragment>
       <ProfileHeader />
-      <Snackbar snackbarParams={snackbarParams} />
+      <Snackbar params={snackbarParams} />
       <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
           <div className={classes.title}>{t("hcp-account-preferences-title")}</div>

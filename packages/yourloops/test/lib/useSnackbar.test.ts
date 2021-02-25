@@ -26,9 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// import * as React from "react";
 import { expect } from "chai";
-// import sinon from "sinon";
 
 import { renderHook } from "@testing-library/react-hooks/dom";
 
