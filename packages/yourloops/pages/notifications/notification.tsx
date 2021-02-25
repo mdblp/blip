@@ -39,6 +39,8 @@ export interface INotification {
 
 type NotificationProps = INotification & {
   userRole: UserRoles | undefined;
+  onAccept: () => void;
+  onDecline: () => void;
 };
 
 const useStyles = makeStyles(() =>
@@ -50,7 +52,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const getNotification = (type: NotificationType, t: TFunction<"yourloops">, target: string | undefined) =>
+const getNotification = (type: NotificationType, t: TFunction<"yourloops">, target: string | undefined): JSX.Element =>
   type === NotificationType.dataShare ? (
     <span> {t("datashare")}</span>
   ) : (
@@ -81,7 +83,7 @@ const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
   return date.format("L");
 };
 
-export const Notification = ({ date, emitter, type, target, userRole }: NotificationProps): JSX.Element => {
+export const Notification = ({ date, emitter, type, target, userRole, onDecline, onAccept }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const { container, notification, rightSide, button } = useStyles();
 
@@ -97,10 +99,10 @@ export const Notification = ({ date, emitter, type, target, userRole }: Notifica
       <div className={rightSide}>
         <div>{getDate(date, t)}</div>
         <div>
-          <Button className={button} variant="contained" color="primary">
+          <Button className={button} variant="contained" color="primary" onClick={onAccept}>
             {t("accept")}
           </Button>
-          <Button className={button} variant="contained" color="secondary">
+          <Button className={button} variant="contained" color="secondary" onClick={onDecline}>
             {t("decline")}
           </Button>
         </div>

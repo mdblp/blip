@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AppBar, Breadcrumbs, Container, createStyles, Link, List, ListItem, makeStyles, Toolbar } from "@material-ui/core";
@@ -22,9 +22,46 @@ import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import HeaderBar from "../../components/header-bar";
-import { Roles } from "../../models/shoreline";
+import { Roles, User } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth/hook/use-auth";
 import { INotification, Notification, NotificationType } from "./notification";
+
+enum InvitationStatus {
+  accepted = "accepted",
+  rejected = "rejected",
+}
+
+const fakeNotif1: INotification = {
+  date: new Date().toISOString(),
+  emitter: { firstName: "Jean", lastName: "Dujardin", role: Roles.clinic },
+  type: NotificationType.joinGroup,
+  target: "Service de Diabétologie CH Angers",
+};
+const fakeNotif2: INotification = {
+  date: "2021-02-18T10:00:00",
+  emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
+  type: NotificationType.dataShare,
+};
+const fakeNotif3: INotification = {
+  date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // yesterday date
+  emitter: { firstName: "Bob", lastName: "L'Eponge", role: Roles.clinic },
+  type: NotificationType.joinGroup,
+  target: "Crabe croustillant",
+};
+
+const getNotifications = (): Promise<INotification[]> => new Promise(() => [fakeNotif1, fakeNotif2, fakeNotif3]);
+
+const acceptInvitation = (notification: INotification): Promise<void> => {
+  console.log(notification);
+  console.log(InvitationStatus.accepted);
+  return new Promise(() => null);
+};
+
+const declineInvitation = (notification: INotification): Promise<void> => {
+  console.log(notification);
+  console.log(InvitationStatus.rejected);
+  return new Promise(() => null);
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -77,38 +114,47 @@ const sortNotification = (notifA: INotification, notifB: INotification): number 
 
 export const NotificationsPage = (): JSX.Element => {
   const { user } = useAuth();
+  const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const fakeNotif1: INotification = {
-    date: new Date().toISOString(),
-    emitter: { firstName: "Jean", lastName: "Dujardin", role: Roles.clinic },
-    type: NotificationType.joinGroup,
-    target: "Service de Diabétologie CH Angers",
+  useEffect(() => {
+    getNotifications().then((notifs) => setNotifications(notifs));
+  }, []);
+
+  const onAccept = (userid: User["userid"], notification: INotification): (() => void) => () => {
+    console.log(userid, notification);
+    acceptInvitation(notification).then(() => {
+      setNotifications(notifications.filter((notif) => notif !== notification));
+    });
   };
-  const fakeNotif2: INotification = {
-    date: "2021-02-18T10:00:00",
-    emitter: { firstName: "Jeanne", lastName: "Dubois", role: Roles.patient },
-    type: NotificationType.dataShare,
+  const onDecline = (userid: User["userid"], notification: INotification): (() => void) => () => {
+    console.log(userid, notification);
+    declineInvitation(notification).then(() => {
+      setNotifications(notifications.filter((notif) => notif !== notification));
+    });
   };
-  const fakeNotif3: INotification = {
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // yesterday date
-    emitter: { firstName: "Bob", lastName: "L'Eponge", role: Roles.clinic },
-    type: NotificationType.joinGroup,
-    target: "Crabe croustillant",
-  };
-  const notifs: INotification[] = [fakeNotif1, fakeNotif2, fakeNotif3];
 
   return (
-    <div>
+    <Fragment>
       <NotificationHeader />
-      <Container maxWidth="lg" style={{ marginTop: "1em" }}>
-        <List>
-          {notifs.sort(sortNotification).map((notification, index) => (
-            <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-              <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
-            </ListItem>
-          ))}
-        </List>
-      </Container>
-    </div>
+      {user && (
+        <Container maxWidth="lg" style={{ marginTop: "1em" }}>
+          <List>
+            {notifications.sort(sortNotification).map((notification, index) => (
+              <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifications.length - 1}>
+                <Notification
+                  date={notification.date}
+                  emitter={notification.emitter}
+                  type={notification.type}
+                  target={notification.target}
+                  userRole={user?.roles && user.roles[0]}
+                  onAccept={onAccept(user?.userid, notification)}
+                  onDecline={onDecline(user?.userid, notification)}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Container>
+      )}
+    </Fragment>
   );
 };
