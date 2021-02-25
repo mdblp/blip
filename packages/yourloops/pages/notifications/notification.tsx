@@ -37,10 +37,9 @@ export interface INotification {
   target?: string;
 }
 
-interface NotificationProps {
-  notification: INotification;
+type NotificationProps = INotification & {
   userRole: UserRoles | undefined;
-}
+};
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -70,8 +69,8 @@ const getIcon = (userRole: UserRoles | undefined, emitterRole: UserRoles): JSX.E
 };
 
 const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
-  const date = moment(emittedDate).utc();
-  const diff = moment().utc().diff(date, "days");
+  const date = moment.utc(emittedDate);
+  const diff = moment.utc().diff(date, "days");
 
   if (diff === 0) {
     return t("today");
@@ -82,7 +81,7 @@ const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
   return date.format("L");
 };
 
-export const Notification = ({ notification: { date, emitter, type, target }, userRole }: NotificationProps): JSX.Element => {
+export const Notification = ({ date, emitter, type, target, userRole }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const { container, notification, rightSide, button } = useStyles();
 
