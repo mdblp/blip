@@ -28,7 +28,7 @@
 
 import { expect } from "chai";
 
-import { NotificationsPage } from "../../../pages/notifications/notifications";
+import { NotificationsPage } from "../../../pages/notifications/notifications-list";
 
 export const testNotifications = (): void => {
   it("should be exported as a function", () => {

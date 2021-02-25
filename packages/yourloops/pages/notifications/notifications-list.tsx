@@ -102,9 +102,9 @@ export const NotificationsPage = (): JSX.Element => {
       <NotificationHeader />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
-          {notifs.sort(sortNotification).map((notification, index) => (
+          {notifs.sort(sortNotification).map(({ date, emitter, type, target }, index) => (
             <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-              <Notification notification={notification} userRole={user?.roles && user.roles[0]} />
+              <Notification date={date} emitter={emitter} type={type} target={target} userRole={user?.roles && user.roles[0]} />
             </ListItem>
           ))}
         </List>

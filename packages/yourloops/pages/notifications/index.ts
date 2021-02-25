@@ -14,6 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import { NotificationsPage } from "./notifications";
+import { NotificationsPage } from "./notifications-list";
 
 export default NotificationsPage;

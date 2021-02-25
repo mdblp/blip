@@ -27,7 +27,7 @@
  */
 
 import { testNotification } from "./notification.test";
-import { testNotifications } from "./notifications.test";
+import { testNotifications } from "./notifications-list.test";
 
 function testNotificationsPage(): void {
   describe("Notification", testNotification);
