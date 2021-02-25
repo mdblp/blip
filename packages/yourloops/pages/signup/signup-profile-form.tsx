@@ -57,6 +57,7 @@ const formStyle = makeStyles((theme: Theme) => {
       marginRight: theme.spacing(1),
     },
     TextField: {
+      textAlign: "start",
       marginLeft: theme.spacing(0),
       marginRight: theme.spacing(1),
     },

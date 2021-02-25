@@ -38,6 +38,7 @@ import SignUpStepper from "./signup-stepper";
 import { useTranslation } from "react-i18next";
 import CardContent from "@material-ui/core/CardContent";
 import { SignUpFormStateProvider } from "./signup-formstate-context";
+import LoginFooterLink from "../login/login-footer-link";
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -103,6 +104,7 @@ function SignUpPage(): JSX.Element {
                 <SignUpStepper />
               </CardContent>
             </Card>
+            <LoginFooterLink />
           </SignUpFormStateProvider>
         </Grid>
       </Grid>
