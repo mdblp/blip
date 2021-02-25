@@ -39,11 +39,11 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
+import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
-
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
@@ -64,14 +64,20 @@ const loginStyle = makeStyles((theme: Theme) => {
       flexDirection: "column",
       justifyContent: "center",
       textAlign: "center",
+      // eslint-disable-next-line no-magic-numbers
       padding: theme.spacing(4),
     },
     CardContent: {
+      textAlign: "start",
+      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
+      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
     },
     CardActions: {
+      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
+      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
       padding: theme.spacing(2),
     },
@@ -86,7 +92,7 @@ const loginStyle = makeStyles((theme: Theme) => {
  * Login page
  */
 function Login(props: RouteComponentProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t } = useTranslation("yourloops");
   const auth = useAuth();
   const classes = loginStyle();
 
@@ -148,14 +154,6 @@ function Login(props: RouteComponentProps): JSX.Element {
       setHelperTextValue(message);
     }
   };
-
-  const onClickLoginReset = (): void => {
-    props.history.push("/request-password-reset");
-  };
-
-  // function onClickForgotPassword() {
-  //   //this.log.debug("onClickForgotPassword");
-  // }
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer}>
@@ -235,16 +233,20 @@ function Login(props: RouteComponentProps): JSX.Element {
                   }}
                 />
               </form>
-              <RouterLink
+              <Link
                 component={RouterLink}
                 to="/request-password-reset"
-                onClick={onClickLoginReset}
               >
                 {t("Forgot your password?")}
-              </RouterLink>
+              </Link>
             </CardContent>
             <CardActions className={classes.CardActions}>
-              <RouterLink to="/signup">{t("Create account")}</RouterLink>
+              <Link
+                component={RouterLink}
+                to="/signup"
+              >
+                {t("signup-steppers-create-account")}
+              </Link>
               <Button
                 variant="contained"
                 color="primary"
