@@ -43,13 +43,51 @@ import Typography from "@material-ui/core/Typography";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { REGEX_EMAIL } from "../../lib/utils";
+
+const loginStyle = makeStyles((theme: Theme) => {
+  return {
+    mainContainer: { margin: "auto" },
+    root: { minHeight: "100vh" },
+    loginButton: {
+      marginLeft: "auto !important",
+    },
+    Card: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      textAlign: "center",
+      // eslint-disable-next-line no-magic-numbers
+      padding: theme.spacing(4),
+    },
+    CardContent: {
+      textAlign: "start",
+      // eslint-disable-next-line no-magic-numbers
+      marginLeft: theme.spacing(4),
+      // eslint-disable-next-line no-magic-numbers
+      marginRight: theme.spacing(4),
+    },
+    CardActions: {
+      // eslint-disable-next-line no-magic-numbers
+      marginLeft: theme.spacing(4),
+      // eslint-disable-next-line no-magic-numbers
+      marginRight: theme.spacing(4),
+      padding: theme.spacing(2),
+    },
+    TextField: {
+      marginLeft: theme.spacing(0),
+      marginRight: theme.spacing(1),
+    },
+  };
+});
 
 /**
- * Login page
+ * Request password page
  */
 function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-
+  const classes = loginStyle();
   const [username, setUserName] = React.useState("");
   const [validateError, setValidateError] = React.useState(false);
   const [helperTextValue, setHelperTextValue] = React.useState("");
@@ -57,38 +95,50 @@ function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
   const auth = useAuth();
   const emptyUsername = _.isEmpty(username);
 
-  const onUsernameChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const onUsernameChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ): void => {
     setUserName(event.target.value);
   };
 
   const onBack = (): void => {
-    console.log("on back", props.history);
     // requires two back for going to login page
     props.history.go(-2); // eslint-disable-line no-magic-numbers
   };
 
-  const onSendResetLink = (): void => {
-    if (_.isEmpty(username)) {
-      setValidateError(true);
-      return;
+  const isUserNameValid = (): boolean => {
+    const err = _.isEmpty(username.trim()) || !REGEX_EMAIL.test(username);
+    setValidateError(err);
+    if (err) {
+      setHelperTextValue("invalid-email");
     }
-    setValidateError(false);
-    auth
-      .sendPasswordResetEmail(username)
-      .then(() => {
-        props.history.push("/password-reset-confirmed");
-      })
-      .catch((reason: Error) => {
-        setValidateError(true);
-        setHelperTextValue(reason.message);
-      });
+    return !err;
+  };
+
+  const onSendResetLink = (): void => {
+    if (isUserNameValid()) {
+      auth
+        .sendPasswordResetEmail(username)
+        .then(() => {
+          props.history.push("/password-reset-confirmed");
+        })
+        .catch((reason: Error) => {
+          setValidateError(true);
+          setHelperTextValue(reason.message);
+        });
+    }
   };
 
   return (
     <Container maxWidth="sm" style={{ margin: "auto" }}>
-      <Grid container spacing={0} alignItems="center" justify="center" style={{ minHeight: "100vh" }}>
+      <Grid
+        container
+        spacing={0}
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: "100vh" }}>
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.Card}>
             <CardMedia
               style={{
                 display: "flex",
@@ -105,30 +155,45 @@ function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
                 }}
               />
             </CardMedia>
-            <CardContent>
+            <CardContent className={classes.CardContent}>
               <Typography variant="h6" gutterBottom>
                 {t("Forgot your password?")}
               </Typography>
               <Typography variant="body1" gutterBottom>
                 {t("Please enter your email address.")}
               </Typography>
-              <form style={{ display: "flex", flexDirection: "column" }} noValidate autoComplete="off">
+              <form
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+                noValidate
+                autoComplete="off">
                 <TextField
                   id="username"
+                  className={classes.TextField}
+                  margin="normal"
                   label={t("email")}
+                  variant="outlined"
                   value={username}
                   required
-                  error={validateError || emptyUsername}
+                  error={validateError}
+                  onBlur={() => isUserNameValid()}
                   onChange={onUsernameChange}
-                  helperText={helperTextValue}
+                  helperText={t(helperTextValue)}
                 />
               </form>
             </CardContent>
-            <CardActions>
+            <CardActions className={classes.CardActions}>
               <Button variant="contained" color="secondary" onClick={onBack}>
                 {t("common-cancel")}
               </Button>
-              <Button variant="contained" color="primary" onClick={onSendResetLink} disabled={emptyUsername}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onSendResetLink}
+                disabled={emptyUsername}>
                 {t("Send reset link")}
               </Button>
             </CardActions>
