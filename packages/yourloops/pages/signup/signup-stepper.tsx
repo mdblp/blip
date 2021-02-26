@@ -59,15 +59,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function getSteps() {
-  return [
-    "signup-steppers-step1",
-    "signup-steppers-step2",
-    "signup-steppers-step3",
-    "signup-steppers-step4",
-  ];
-}
-
 export default function SignUpStepper() : JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
@@ -75,7 +66,12 @@ export default function SignUpStepper() : JSX.Element {
   const history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
   const [tittle, setTitle] = React.useState("");
-  const steps = getSteps();
+  const steps = [
+    "signup-steppers-step1",
+    "signup-steppers-step2",
+    "signup-steppers-step3",
+    "signup-steppers-step4",
+  ];
 
   React.useEffect(() => {
     if (!_.isEmpty(state.formValues?.accountRole)) {

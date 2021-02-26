@@ -64,20 +64,15 @@ const loginStyle = makeStyles((theme: Theme) => {
       flexDirection: "column",
       justifyContent: "center",
       textAlign: "center",
-      // eslint-disable-next-line no-magic-numbers
       padding: theme.spacing(4),
     },
     CardContent: {
       textAlign: "start",
-      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
-      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
     },
     CardActions: {
-      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
-      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
       padding: theme.spacing(2),
     },

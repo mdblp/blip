@@ -111,25 +111,25 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     });
   };
 
-  const isFirstNameValid = (): boolean => {
+  const validateFirstName = (): boolean => {
     const err = _.isEmpty(state.formValues?.profileFirstname.trim());
     setErrors({ ...errors, firstName: err });
     return !err;
   };
 
-  const isLastNameValid = (): boolean => {
+  const validateLastName = (): boolean => {
     const err = _.isEmpty(state.formValues?.profileLastname.trim());
     setErrors({ ...errors, lastName: err });
     return !err;
   };
 
-  const isCountryValid = (): boolean => {
+  const validateCountry = (): boolean => {
     const err = _.isEmpty(state.formValues?.profileCountry);
     setErrors({ ...errors, country: err });
     return !err;
   };
 
-  const isJobValid = (): boolean => {
+  const validateJob = (): boolean => {
     const err =
       state.formValues?.accountRole === "hcp" &&
       _.isEmpty(state.formValues?.profileJob);
@@ -137,7 +137,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
-  const isPhoneValid = (): boolean => {
+  const validatePhone = (): boolean => {
     const err =
       _.isEmpty(state.formValues?.profilePhone) ||
       !REGEX_PHONE.test(state.formValues?.profilePhone);
@@ -148,11 +148,11 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (
-      isFirstNameValid() &&
-      isLastNameValid() &&
-      isCountryValid() &&
-      isJobValid() &&
-      isPhoneValid()
+      validateFirstName() &&
+      validateLastName() &&
+      validateCountry() &&
+      validateJob() &&
+      validatePhone()
     ) {
       handleNext();
     }
@@ -177,7 +177,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profileFirstname}
         required
         error={errors.firstName}
-        onBlur={() => isFirstNameValid()}
+        onBlur={() => validateFirstName()}
         onChange={(e) => onChange(e, "profileFirstname")}
         helperText={errors.firstName && t("required-field")}
       />
@@ -190,7 +190,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profileLastname}
         required
         error={errors.lastName}
-        onBlur={() => isLastNameValid()}
+        onBlur={() => validateLastName()}
         onChange={(e) => onChange(e, "profileLastname")}
         helperText={errors.lastName && t("required-field")}
       />
@@ -209,7 +209,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           label={t("signup-country")}
           id="country-selector"
           value={state.formValues?.profileCountry}
-          onBlur={() => isCountryValid()}
+          onBlur={() => validateCountry()}
           onChange={(e) => onSelectChange(e, "profileCountry")}
         >
           <MenuItem key="" value="" />
@@ -236,7 +236,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
             label={t("signup-job")}
             id="job-selector"
             value={state.formValues?.profileJob}
-            onBlur={() => isJobValid()}
+            onBlur={() => validateJob()}
             onChange={(e) => onSelectChange(e, "profileJob")}
           >
             <MenuItem key="" value="" />
@@ -258,7 +258,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues?.profilePhone}
         required
         error={errors.phone}
-        onBlur={() => isPhoneValid()}
+        onBlur={() => validatePhone()}
         onChange={(e) => onChange(e, "profilePhone")}
         helperText={errors.phone && t("invalid-phone-number")}
       />

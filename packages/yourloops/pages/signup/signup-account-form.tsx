@@ -104,14 +104,10 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     showPassword: boolean,
     setState: React.Dispatch<React.SetStateAction<boolean>>
   ): void => {
-    if (showPassword) {
-      setState(false);
-    } else {
-      setState(true);
-    }
+    setState(!showPassword);
   };
 
-  const isUserNameValid = (): boolean => {
+  const validateUserName = (): boolean => {
     const err =
       _.isEmpty(state.formValues?.accountUsername.trim()) ||
         !REGEX_EMAIL.test(state.formValues?.accountUsername);
@@ -120,7 +116,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
-  const isPasswordValid = (): boolean => {
+  const validatePassword = (): boolean => {
     const err =
       _.isEmpty(newPassword?.trim()) ||
       newPassword?.length < appConfig.PASSWORD_MIN_LENGTH;
@@ -128,7 +124,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
-  const isConfirmNewPasswordValid = (): boolean => {
+  const validateConfirmNewPassword = (): boolean => {
     const err =
       _.isEmpty(state.formValues?.accountPassword.trim()) ||
       state.formValues?.accountPassword !== newPassword;
@@ -140,7 +136,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
 
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    if (isUserNameValid() && isPasswordValid() && isConfirmNewPasswordValid()) {
+    if (validateUserName() && validatePassword() && validateConfirmNewPassword()) {
       // submit to api
       handleNext();
     }
@@ -165,7 +161,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues.accountUsername}
         required
         error={errors.userName}
-        onBlur={() => isUserNameValid()}
+        onBlur={() => validateUserName()}
         onChange={(e) => onChange(e, "accountUsername")}
         helperText={errors.userName && t("invalid-email")}
       />
@@ -179,7 +175,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         value={newPassword}
         required
         error={errors.newPassword}
-        onBlur={() => isPasswordValid()}
+        onBlur={() => validatePassword()}
         onChange={(e) => onChange(e, "", setNewPassword)}
         helperText={
           errors.newPassword &&
@@ -210,7 +206,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         value={state.formValues.accountPassword}
         required
         error={errors.confirmNewPassword}
-        onBlur={() => isConfirmNewPasswordValid()}
+        onBlur={() => validateConfirmNewPassword()}
         onChange={(e) => onChange(e, "accountPassword")}
         helperText={errors.confirmNewPassword && t("password-dont-match")}
         InputProps={{

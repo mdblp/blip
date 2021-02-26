@@ -40,7 +40,6 @@ import SignUpFormProps from "./signup-form-props";
 
 const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
-    // eslint-disable-next-line no-magic-numbers
     margin: theme.spacing(3),
   },
   FormHelperText: {
@@ -67,6 +66,11 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
   const [error, setError] = React.useState(false);
   const [helperText, setHelperText] = React.useState("");
 
+  const resetFormState = (): void => {
+    setError(false);
+    setHelperText("");
+  };
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     keyField: string
@@ -76,13 +80,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
       key: keyField,
       value: (event.target as HTMLInputElement).checked,
     });
-    setHelperText("");
-    setError(false);
-  };
-
-  const resetFormState = (): void => {
-    setError(false);
-    setHelperText("");
+    resetFormState();
   };
 
   const valideForm = (): boolean => {

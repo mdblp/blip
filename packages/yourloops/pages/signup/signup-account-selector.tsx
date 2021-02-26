@@ -44,7 +44,6 @@ import SignUpFormProps from "./signup-form-props";
 
 const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
-    // eslint-disable-next-line no-magic-numbers
     margin: theme.spacing(3),
   },
   FormHelperText: {
@@ -77,6 +76,11 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
   const { handleBack, handleNext } = props;
   const [helperText, setHelperText] = React.useState("");
 
+  const resetFormState = (): void => {
+    setError(false);
+    setHelperText("");
+  };
+
   const handleRadioChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     keyField: string
@@ -86,13 +90,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
       key: keyField,
       value: (event.target as HTMLInputElement).value,
     });
-    setHelperText("");
-    setError(false);
-  };
-
-  const resetFormState = (): void => {
-    setError(false);
-    setHelperText("");
+    resetFormState();
   };
 
   const valideForm = (): boolean => {
