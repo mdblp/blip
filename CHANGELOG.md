@@ -9,6 +9,8 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-511 Wrong string used for "serial number"
 - YLP-454 The Number of Login validation does not make the count for a single account
+### Engineering Use
+- Add jenkins lock on CloudFront publication
 
 ## 1.7.3-rc1 2021-02-22
 ### Engineering Use
