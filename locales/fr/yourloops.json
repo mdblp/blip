@@ -250,5 +250,9 @@
   "modal-switch-hcp-failure": "Impossible de changer de type de compte. Veuillez réessayer plus tard.",
   "notif-hcp-invitation": "{hcpName} vous invite à rejoindre {teamName}.",
   "notif-caregiver-invitation": "{patientName} souhaite partager les données de suivi de son diabète avec vous.",
-  "patient-profile": "Profil patient"
+  "patient-profile": "Profil patient",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "datashare": "wants to share their diabetes data with you.",
+  "join-group": "invites you to join"
 }
