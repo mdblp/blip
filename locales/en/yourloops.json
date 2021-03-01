@@ -211,7 +211,7 @@
   "modal-delete-patient-info-2": "You and your team members will no longer have access to their data.",
   "modal-delete-patient-success": "Patient is no longer monitored by your team",
   "modal-delete-patient-failure": "Impossible to remove patient. Please retry later.",
-  "modal-patient-share-team-action": "Join a team",
+  "modal-patient-share-team-action": "Accept invitation",
   "modal-patient-share-team-title": "Share your data with a care team",
   "modal-patient-share-team-info": "Your healthcare professional invites you to share your data with",
   "modal-patient-team-warning": "Please verify that the above details match the information provided by your healthcare professional before accepting the invitation.",
