@@ -250,5 +250,9 @@
   "modal-switch-hcp-failure": "Das Konto kann nicht umgestellt werden. Versuchen Sie es zu einem späteren Zeitpunkt erneut.",
   "notif-hcp-invitation": "{hcpName} lädt Sie ein, dem Team {teamName} beizutreten.",
   "notif-caregiver-invitation": "{patientName} möchte Diabetes-Daten mit Ihnen teilen.",
-  "patient-profile": "Patientenprofil"
+  "patient-profile": "Patientenprofil",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "datashare": "wants to share their diabetes data with you.",
+  "join-group": "invites you to join"
 }
