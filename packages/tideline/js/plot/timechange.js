@@ -19,7 +19,7 @@ import _ from "lodash";
 import i18next from "i18next";
 import moment from "moment-timezone";
 
-import constants from "../data/util/constants";
+import * as constants from "../data/util/constants";
 import timeChangeImage from "../../img/timechange/timechange.svg";
 
 /**
@@ -91,13 +91,13 @@ function plotTimeChange(pool, opts = {}) {
 
     let format = "h:mm a";
     if (mFrom.year() !== mTo.year()) {
-      format = constants.MMM_D_YYYY_H_MM_A_FORMAT;
+      format = constants.dateTimeFormats.MMM_D_YYYY_H_MM_A_FORMAT;
     } else if (mFrom.month() !== mTo.month()) {
-      format = constants.MMM_D_H_MM_A_FORMAT;
+      format = constants.dateTimeFormats.MMM_D_H_MM_A_FORMAT;
     } else if (mFrom.date() !== mTo.date()) {
-      format = constants.DDDD_H_MM_A;
+      format = constants.dateTimeFormats.DDDD_H_MM_A;
     } else {
-      format = constants.H_MM_A_FORMAT;
+      format = constants.dateTimeFormats.H_MM_A_FORMAT;
     }
 
     const fromDate = mFrom.format(format);

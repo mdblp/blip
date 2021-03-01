@@ -22,18 +22,20 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 
 import * as constants from '../../../../plugins/blip/basics/logic/constants';
+import basicsActions from '../../../../plugins/blip/basics/logic/actions';
 import Selector from '../../../../plugins/blip/basics/components/sitechange/Selector';
 
 describe('SiteChangeSelector', function () {
+  before(() => {
+    sinon.stub(basicsActions, 'setSiteChangeEvent');
+  });
 
-  var basicsActions = {
-    setSiteChangeEvent: sinon.stub()
-  };
-
-  Selector.__Rewire__('basicsActions', basicsActions);
+  after(() => {
+    sinon.restore();
+  });
 
   beforeEach(function() {
-    basicsActions.setSiteChangeEvent = sinon.stub();
+    basicsActions.setSiteChangeEvent.resetHistory();
     this.props = {
       selectedSubtotal: '',
       selectorOptions: {
@@ -54,10 +56,6 @@ describe('SiteChangeSelector', function () {
       sectionId: 'siteChanges',
       trackMetric: sinon.stub(),
     };
-  });
-
-  after(() => {
-    Selector.__ResetDependency__('basicsActions');
   });
 
   it('should be a function', function() {

@@ -28,8 +28,9 @@ const babelLoaderConfiguration = {
   use: {
     loader: 'babel-loader',
     options: {
+      rootMode: "upward",
+      configFile: path.resolve(__dirname, "../../babel.config.json"),
       cacheDirectory: true,
-      presets: ['@babel/preset-env', '@babel/preset-react'],
     },
   },
 };
@@ -138,6 +139,7 @@ const resolve = {
 module.exports = {
   devtool: 'sourcemap',
   entry: './js/index.js',
+  stats: "minimal", // See https://webpack.js.org/configuration/stats/
   output,
   mode: isDev || isTest ? 'development' : 'production',
   module: {

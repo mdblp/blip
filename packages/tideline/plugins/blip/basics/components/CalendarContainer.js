@@ -46,7 +46,7 @@ class CalendarContainer extends React.Component {
    *
    * @param  {String} date
    */
-  onHover =(date) => {
+  onHover = (date) => {
     this.setState({hoverDate: date});
   }
 
