@@ -62,6 +62,9 @@ const formStyle = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    Buttons: {
+      margin: theme.spacing(3),
+    },
   };
 });
 
@@ -224,7 +227,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
           ),
         }}
       />
-      <div id="signup-accountform-button-group">
+      <div id="signup-accountform-button-group" className={classes.Buttons}>
         <Button
           variant="contained"
           color="secondary"

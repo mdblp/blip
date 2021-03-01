@@ -154,6 +154,7 @@
   "signup-steppers-ending-message": "Please follow the link in the email we just sent you at {{email}} to verify and activate your account",
   "signup-steppers-back-login": "back to login",
   "signup-success-validation": "Account successfully created",
+  "signup-phone-placeholder": "+calling code 1 01 02 03 04",
   "invalid-phone-number": "Invalid phone number.",
   "diabetologist": "Diabetologist / Endocrinologist",
   "doctor": "Doctor",

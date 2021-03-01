@@ -65,6 +65,9 @@ const formStyle = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    Buttons: {
+      margin: theme.spacing(3),
+    },
   };
 });
 
@@ -251,7 +254,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       <TextField
         id="phone"
         className={classes.TextField}
-        placeholder={"+countrycode 1 01 02 03 04"}
+        placeholder={t("signup-phone-placeholder")}
         margin="normal"
         label={t("phone")}
         variant="outlined"
