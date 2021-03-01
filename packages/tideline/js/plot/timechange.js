@@ -19,10 +19,8 @@ import _ from "lodash";
 import i18next from "i18next";
 import moment from "moment-timezone";
 
-const d3 = require("d3");
-
-const constants = require("../data/util/constants");
-const timeChangeImage = require("../../img/timechange/timechange.svg");
+import constants from "../data/util/constants";
+import timeChangeImage from "../../img/timechange/timechange.svg";
 
 /**
  * Default configuration for this component
@@ -38,7 +36,8 @@ const defaults = {
  * @param  {typeof defaults} opts configuration options
  * @return {object}      time change object
  */
-module.exports = function timeChange(pool, opts) {
+function plotTimeChange(pool, opts = {}) {
+  const d3 = window.d3;
   _.defaults(opts, defaults);
 
   function timechange(selection) {
@@ -169,4 +168,6 @@ module.exports = function timeChange(pool, opts) {
   };
 
   return timechange;
-};
+}
+
+export default plotTimeChange;

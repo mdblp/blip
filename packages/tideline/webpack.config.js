@@ -1,6 +1,5 @@
 var path = require('path');
 var webpack = require('webpack');
-const buildConfig = require('../../server/config.app');
 
 const appDirectory = path.resolve(__dirname);
 const isDev = (process.env.NODE_ENV === 'development');

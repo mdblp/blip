@@ -15,16 +15,14 @@
  * == BSD2 LICENSE ==
  */
 
-/* global chai */
-/* global sinon */
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TestUtils from 'react-dom/test-utils';
+import sinon from 'sinon';
+import { expect } from 'chai';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TestUtils = require('react-dom/test-utils');
-var constants = require('../../../../plugins/blip/basics/logic/constants');
-var Selector = require('../../../../plugins/blip/basics/components/sitechange/Selector');
-
-var expect = chai.expect;
+import * as constants from '../../../../plugins/blip/basics/logic/constants';
+import Selector from '../../../../plugins/blip/basics/components/sitechange/Selector';
 
 describe('SiteChangeSelector', function () {
 
