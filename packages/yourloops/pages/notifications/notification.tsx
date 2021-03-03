@@ -43,9 +43,9 @@ type NotificationProps = INotification & {
 
 const useStyles = makeStyles(() =>
   createStyles({
-    container: { display: "flex", alignItems: "center", flex: "1 1 auto" },
-    rightSide: { width: "350px", display: "flex", justifyContent: "space-between", alignItems: "center" },
-    notification: { marginLeft: "1em", flexGrow: 4 },
+    container: { display: "flex", alignItems: "center", width: "100%" },
+    rightSide: { width: "300px", display: "flex", justifyContent: "space-between", alignItems: "center" },
+    notification: { marginLeft: "1em", flex: "1" },
     button: { marginLeft: "1em" },
   })
 );
