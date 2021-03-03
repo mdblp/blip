@@ -97,8 +97,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   };
 
   const onLogoClick = (): void => {
-    const role: UserRoles | null = auth.user?.roles ? auth.user.roles[0] : null;
-    history.push(role ? `/${role}` : "/");
+    history.push("/");
   };
 
   const handleClose = () => {
