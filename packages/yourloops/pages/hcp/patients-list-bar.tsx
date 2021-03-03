@@ -60,7 +60,7 @@ import { TeamType } from "../../models/team";
 import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { Team, useTeam } from "../../lib/team";
 import { FilterType } from "./types";
-import { MedicalServiceIcon } from "../../components/Icons/MedicalServiceIcon";
+import { MedicalServiceIcon } from "../../components/icons/MedicalServiceIcon";
 
 export interface PatientListBarProps {
   filter: string;

@@ -34,7 +34,7 @@ import moment from "moment-timezone";
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
 
-import { MedicalServiceIcon } from "../../../components/Icons/MedicalServiceIcon";
+import { MedicalServiceIcon } from "../../../components/icons/MedicalServiceIcon";
 
 import { INotification, Notification, NotificationType } from "../../../pages/notifications/notification";
 import { UserRoles } from "../../../models/shoreline";
