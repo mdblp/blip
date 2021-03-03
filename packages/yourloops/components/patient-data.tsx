@@ -81,10 +81,10 @@ function PatientDataPage(): JSX.Element | null {
     }
 
     let patientId: string | null = null;
-    if (typeof paramPatientId === "string") {
-      patientId = paramPatientId;
-    } else {
+    if (paramPatientId === null) {
       patientId = userId as string;
+    } else {
+      patientId = paramPatientId;
     }
 
     if (patientId === null) {
