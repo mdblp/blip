@@ -78,16 +78,16 @@ const loginStyle = makeStyles((theme: Theme) => {
  * Request password page
  */
 function RequestPasswordResetPage(): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t, i18n } = useTranslation("yourloops");
+  const history = useHistory();
+  const auth = useAuth();
   const { openSnackbar, snackbarParams } = useSnackbar();
   const classes = loginStyle();
   const [username, setUserName] = React.useState("");
   const [validateError, setValidateError] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
-  //const loginFormStyles = useState(["stage-transition-container-variant"]);
-  const auth = useAuth();
-  const history = useHistory();
+
 
   const onUsernameChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -109,11 +109,11 @@ function RequestPasswordResetPage(): JSX.Element {
     if (validateUserName()) {
       try {
         setInProgress(true);
-        await auth.sendPasswordResetEmail(username, "en");
-        setSuccess(true);
+        const success = await auth.sendPasswordResetEmail(username, i18n.language);
+        setSuccess(success);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
-        const message = t("reset-password-failed", { errorMessage });
+        const message = t(errorMessage);
         openSnackbar({ message, severity: AlertSeverity.error });
       }
       setInProgress(false);

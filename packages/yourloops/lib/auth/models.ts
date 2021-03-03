@@ -37,7 +37,7 @@ export interface Session {
 
 export interface AuthAPI {
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
-  requestPasswordReset: (username: string, traceToken: string, info: boolean, language: string) => Promise<boolean>;
+  requestPasswordReset: (username: string, traceToken: string, language?: string, info?: boolean) => Promise<boolean>;
   updateProfile: (auth: Readonly<Session>) => Promise<Profile>;
   updatePreferences: (auth: Readonly<Session>) => Promise<Preferences>;
   updateSettings: (auth: Readonly<Session>) => Promise<Settings>;

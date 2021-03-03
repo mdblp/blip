@@ -189,14 +189,21 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     setTraceToken(null);
   };
 
+  /**
+   * @returns true if the email was sucessfully sent.
+   */
   const sendPasswordResetEmail = async (username: string, language: string): Promise<boolean> => {
     log.info("sendPasswordResetEmail", username);
     if (traceToken === null) {
       throw new Error("not-yet-initialized");
     }
+    const response = await api.requestPasswordReset(
+      username,
+      traceToken,
+      language
+    );
 
-    await api.requestPasswordReset(username, traceToken, true, language);
-    return Promise.resolve(true); // FIXME
+    return response;
   };
 
   const initHook = () => {

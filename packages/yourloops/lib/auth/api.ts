@@ -127,7 +127,10 @@ async function authenticate(username: string, password: string, traceToken: stri
 }
 
 async function getProfile(auth: Readonly<Session>): Promise<Profile | null> {
-  const seagullURL = new URL(`/metadata/${auth.user.userid}/profile`, appConfig.API_HOST);
+  const seagullURL = new URL(
+    `/metadata/${auth.user.userid}/profile`,
+    appConfig.API_HOST
+  );
 
   const response = await fetch(seagullURL.toString(), {
     method: "GET",
@@ -233,8 +236,8 @@ async function login(username: string, password: string, traceToken: string): Pr
 async function requestPasswordReset(
   username: string,
   traceToken: string,
-  info = true,
-  language = "en"
+  language = "en",
+  info = true
 ): Promise<boolean> {
   const confirmURL = new URL(
     `/confirm/send/forgot/${username}${info ? "?info=ok" : ""}`,
@@ -253,8 +256,16 @@ async function requestPasswordReset(
   if (response.ok) {
     return Promise.resolve(true);
   }
-  const responseBody = (await response.json()) as APIErrorResponse;
-  throw new Error(t(responseBody.reason));
+
+  log.error(response?.status, response?.statusText);
+
+  switch (response?.status) {
+    case HttpStatus.StatusServiceUnavailable:
+    case HttpStatus.StatusInternalServerError:
+      throw new Error("error-http-500");
+    default:
+      throw new Error("error-http-40x");
+  }
 }
 
 async function updateProfile(auth: Readonly<Session>): Promise<Profile> {
