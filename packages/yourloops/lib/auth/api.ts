@@ -230,6 +230,33 @@ async function login(username: string, password: string, traceToken: string): Pr
   return auth;
 }
 
+async function requestPasswordReset(
+  username: string,
+  traceToken: string,
+  info = true,
+  language = "en"
+): Promise<boolean> {
+  const confirmURL = new URL(
+    `/confirm/send/forgot/${username}${info ? "?info=ok" : ""}`,
+    appConfig.API_HOST
+  );
+  const response = await fetch(confirmURL.toString(), {
+    method: "POST",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.language]: language,
+    },
+    cache: "no-cache",
+  });
+
+  if (response.ok) {
+    return Promise.resolve(true);
+  }
+  const responseBody = (await response.json()) as APIErrorResponse;
+  throw new Error(t(responseBody.reason));
+}
+
 async function updateProfile(auth: Readonly<Session>): Promise<Profile> {
   const seagullURL = new URL(`/metadata/${auth.user.userid}/profile`, appConfig.API_HOST);
   const profile = auth.user.profile ?? {};
@@ -295,6 +322,7 @@ async function updateSettings(auth: Readonly<Session>): Promise<Settings> {
 
 export default {
   login,
+  requestPasswordReset,
   updateProfile,
   updatePreferences,
   updateSettings,

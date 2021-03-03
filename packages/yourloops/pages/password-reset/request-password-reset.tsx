@@ -29,51 +29,43 @@
 import _ from "lodash";
 import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { RouteComponentProps } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../../lib/auth";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { REGEX_EMAIL } from "../../lib/utils";
+import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
+import RequestPasswordForm from "./request-password-form";
+import RequestPassordMessage from "./request-password-message";
+import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
+import { Snackbar } from "../../components/utils/snackbar";
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
     mainContainer: { margin: "auto" },
     root: { minHeight: "100vh" },
-    loginButton: {
-      marginLeft: "auto !important",
-    },
     Card: {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       textAlign: "center",
-      // eslint-disable-next-line no-magic-numbers
       padding: theme.spacing(4),
     },
     CardContent: {
       textAlign: "start",
-      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
-      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
     },
     CardActions: {
-      // eslint-disable-next-line no-magic-numbers
       marginLeft: theme.spacing(4),
-      // eslint-disable-next-line no-magic-numbers
       marginRight: theme.spacing(4),
       padding: theme.spacing(2),
+      justifyContent: "flex-end",
     },
     TextField: {
       marginLeft: theme.spacing(0),
@@ -85,15 +77,17 @@ const loginStyle = makeStyles((theme: Theme) => {
 /**
  * Request password page
  */
-function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
+function RequestPasswordResetPage(): JSX.Element {
   const { t } = useTranslation("yourloops");
+  const { openSnackbar, snackbarParams } = useSnackbar();
   const classes = loginStyle();
   const [username, setUserName] = React.useState("");
   const [validateError, setValidateError] = React.useState(false);
-  const [helperTextValue, setHelperTextValue] = React.useState("");
+  const [inProgress, setInProgress] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
   //const loginFormStyles = useState(["stage-transition-container-variant"]);
   const auth = useAuth();
-  const emptyUsername = _.isEmpty(username);
+  const history = useHistory();
 
   const onUsernameChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
@@ -102,42 +96,40 @@ function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
   };
 
   const onBack = (): void => {
-    // requires two back for going to login page
-    props.history.go(-2); // eslint-disable-line no-magic-numbers
+    history.goBack();
   };
 
-  const isUserNameValid = (): boolean => {
+  const validateUserName = (): boolean => {
     const err = _.isEmpty(username.trim()) || !REGEX_EMAIL.test(username);
     setValidateError(err);
-    if (err) {
-      setHelperTextValue("invalid-email");
-    }
     return !err;
   };
 
-  const onSendResetLink = (): void => {
-    if (isUserNameValid()) {
-      auth
-        .sendPasswordResetEmail(username)
-        .then(() => {
-          props.history.push("/password-reset-confirmed");
-        })
-        .catch((reason: Error) => {
-          setValidateError(true);
-          setHelperTextValue(reason.message);
-        });
+  const onSendResetLink = async (): Promise<void> => {
+    if (validateUserName()) {
+      try {
+        setInProgress(true);
+        await auth.sendPasswordResetEmail(username, "en");
+        setSuccess(true);
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        const message = t("reset-password-failed", { errorMessage });
+        openSnackbar({ message, severity: AlertSeverity.error });
+      }
+      setInProgress(false);
     }
   };
 
   return (
-    <Container maxWidth="sm" style={{ margin: "auto" }}>
+    <Container maxWidth="sm" className={classes.mainContainer}>
       <Grid
         container
         spacing={0}
         alignItems="center"
         justify="center"
-        style={{ minHeight: "100vh" }}>
+        className={classes.root}>
         <Grid item xs={12}>
+          <Snackbar params={snackbarParams} />
           <Card className={classes.Card}>
             <CardMedia
               style={{
@@ -155,48 +147,22 @@ function RequestPasswordResetPage(props: RouteComponentProps): JSX.Element {
                 }}
               />
             </CardMedia>
-            <CardContent className={classes.CardContent}>
-              <Typography variant="h6" gutterBottom>
-                {t("Forgot your password?")}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {t("Please enter your email address.")}
-              </Typography>
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-                noValidate
-                autoComplete="off">
-                <TextField
-                  id="username"
-                  className={classes.TextField}
-                  margin="normal"
-                  label={t("email")}
-                  variant="outlined"
-                  value={username}
-                  required
-                  error={validateError}
-                  onBlur={() => isUserNameValid()}
-                  onChange={onUsernameChange}
-                  helperText={t(helperTextValue)}
-                />
-              </form>
-            </CardContent>
-            <CardActions className={classes.CardActions}>
-              <Button variant="contained" color="secondary" onClick={onBack}>
-                {t("common-cancel")}
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onSendResetLink}
-                disabled={emptyUsername}>
-                {t("Send reset link")}
-              </Button>
-            </CardActions>
+            {success ? (
+              <RequestPassordMessage
+                header="Email sent!"
+                body="Check your email and follow the instructions to reset your password."
+              />
+            ) : (
+              <RequestPasswordForm
+                username={username}
+                error={validateError}
+                inProgress={inProgress}
+                onBack={onBack}
+                validateUserName={validateUserName}
+                onSendResetLink={onSendResetLink}
+                onUsernameChange={onUsernameChange}
+              />
+            )}
           </Card>
         </Grid>
       </Grid>

@@ -37,6 +37,7 @@ export interface Session {
 
 export interface AuthAPI {
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
+  requestPasswordReset: (username: string, traceToken: string, info: boolean, language: string) => Promise<boolean>;
   updateProfile: (auth: Readonly<Session>) => Promise<Profile>;
   updatePreferences: (auth: Readonly<Session>) => Promise<Preferences>;
   updateSettings: (auth: Readonly<Session>) => Promise<Settings>;
@@ -59,7 +60,7 @@ export interface AuthContext {
   updateSettings: (user: Readonly<User>) => Promise<Settings>;
   signup: (username: string, password: string) => void;
   isLoggedIn: () => boolean;
-  sendPasswordResetEmail: (username: string) => Promise<boolean>;
+  sendPasswordResetEmail: (username: string, language: string) => Promise<boolean>;
   /** Flag or un-flag one patient */
   flagPatient: (userId: string) => Promise<void>;
   /** Set the flagged patient */
