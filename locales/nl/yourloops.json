@@ -150,7 +150,7 @@
   "signup-steppers-step2": "Toestemming",
   "signup-steppers-step3": "Profiel aanmaken",
   "signup-steppers-step4": "Volledige registratie",
-  "signup-steppers-step-unknown": "Unknown step",
+  "signup-steppers-step-unknown": "Onbekende stap",
   "signup-steppers-ending-message": "Please follow the link in the email we just sent you at {{email}} to verify and activate your account",
   "signup-steppers-back-login": "back to login",
   "signup-success-validation": "Account successfully created",
