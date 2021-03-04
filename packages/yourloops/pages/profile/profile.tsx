@@ -136,7 +136,7 @@ export const ProfilePage: FunctionComponent = () => {
   const [unit, setUnit] = useState<Units>(Units.gram);
   const [role, setRole] = useState<UserRoles | null>(null);
   const [birthDate, setBirthDate] = useState<string>("");
-  const [hbA1c, setHbA1c] = useState<Settings["a1c"]>(undefined);
+  const [hbA1c, setHbA1c] = useState<Settings["a1c"] | null>(null);
   const [hasProfileChanged, setHasProfileChanged] = useState<boolean>(false);
   const [haveSettingsChanged, setHaveSettingsChanged] = useState<boolean>(false);
   const [havePreferencesChanged, setHavePreferencesChanged] = useState<boolean>(false);
