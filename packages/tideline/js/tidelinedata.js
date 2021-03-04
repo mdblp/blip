@@ -438,9 +438,23 @@ TidelineData.prototype.setTimezones = function setTimezones() {
   }
 
   if (timezoneChanges.length > 0) {
-    this.log.info('Guessed timezone changes', timezoneChanges);
+    this.log.info('Guessed timezone changes (some may be stripped away)', timezoneChanges);
     // Concat the timezone change events:
-    Array.prototype.push.apply(this.data, timezoneChanges);
+    const isChartType = (d) => DAILY_TYPES.includes(d.type);
+    const startDatum = _.find(this.data, isChartType) ?? false;
+    const lastDatum = _.findLast(this.data, isChartType) ?? false;
+    if (startDatum && lastDatum && startDatum.id !== lastDatum.id) {
+      const dailyPointStart = moment.utc(startDatum.epoch).valueOf();
+      const dailyPointEnd = moment.utc(lastDatum.epoch).valueOf();
+      for (const timezoneChange of timezoneChanges) {
+        if (timezoneChange.epoch >= dailyPointStart && timezoneChange.epoch < dailyPointEnd) {
+          this.data.push(timezoneChange);
+        }
+      }
+    } else {
+      Array.prototype.push.apply(this.data, timezoneChanges);
+    }
+
     // And re-sort it...
     this.data.sort((a, b) => a.epoch - b.epoch);
   }
@@ -493,6 +507,11 @@ TidelineData.prototype.getLastTimezone = function getLastTimezone(defaultTimezon
   return this.opts.timePrefs.timezoneName;
 };
 
+/**
+ * Set the endpoints, using only data we can see in the daily view
+ *
+ * *TODO: Use numbers (ms since epoch) instead of strings*
+ */
 TidelineData.prototype.setEndPoints = function setEndPoints() {
   const isChartType = (d) => DAILY_TYPES.includes(d.type);
   let chartData = _.filter(this.data, isChartType);
@@ -509,6 +528,9 @@ TidelineData.prototype.setEndPoints = function setEndPoints() {
     this.endpoints = [start, end];
     return;
   }
+  // Be sure to have something, we do not want to crash
+  // in some other code, and do not want to check this
+  // every times too.
   this.log.warn("No char type data found !");
   const now = new Date();
   const yesterfay = new Date(now.valueOf() - MS_IN_DAY);
@@ -629,7 +651,7 @@ TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysi
 TidelineData.prototype.setDiabetesData = function setDiabetesData() {
   const diabetesDataTypes = this.opts.diabetesDataTypes ?? DIABETES_DATA_TYPES;
   this.diabetesData = this.data.filter((d) => diabetesDataTypes.indexOf(d.type) > -1);
-  this.diabetesData = _.sortBy(this.diabetesData, "normalTime");
+  this.diabetesData = _.sortBy(this.diabetesData, "epoch");
 };
 
 /**
