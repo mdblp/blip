@@ -29,7 +29,7 @@ import { utils as vizUtils, components as vizComponents, createPrintPDFPackage }
 import config from '../config';
 import personUtils from '../core/personutils';
 import utils from '../core/utils';
-import { MGDL_UNITS, DIABETES_DATA_TYPES } from '../core/constants';
+import { MGDL_UNITS } from '../core/constants';
 import { Header, Basics, Daily, Trends, Settings } from './chart';
 import Messages from './messages';
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux';
@@ -40,8 +40,6 @@ const { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs } = vizUtils.
 const { isAutomatedBasalDevice: isAutomatedBasalDeviceCheck } = vizUtils.device;
 const { commonStats, getStatDefinition, statFetchMethods } = vizUtils.stat;
 const { Loader } = vizComponents;
-
-const DiabetesDataTypesForDatum = _.filter(DIABETES_DATA_TYPES, (t) => t !== 'food');
 
 /** @type {(s: string, p?: object) => string} */
 const t = i18next.t.bind(i18next);
@@ -84,8 +82,12 @@ class PatientDataPage extends React.Component {
       chartType: 'daily',
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
-      initialDatetimeLocation: new Date().toISOString(),
+      /** @type {string} Current date -> daily view */
+      datetimeLocation: null,
+      /** @type {string[]} Current display date range */
       endpoints: [],
+      /** @type {moment.Moment[]} Available data date range from the API */
+      dataRanges: null,
       timePrefs: {
         timezoneAware: true,
         timezoneName: browserTimezone,
@@ -143,15 +145,7 @@ class PatientDataPage extends React.Component {
           bgLog: 30,
         },
       },
-      createMessage: null,
-      datetimeLocation: null,
-      fetchEarlierDataCount: 0,
-      lastDatumProcessedIndex: -1,
-      lastDiabetesDatumProcessedIndex: -1,
-      processingData: false,
-      processEarlierDataCount: 0,
       tidelineData: null,
-      showUploadOverlay: false,
     };
 
     this.handleChartDateRangeUpdate = this.handleChartDateRangeUpdate.bind(this);
@@ -161,6 +155,7 @@ class PatientDataPage extends React.Component {
     this.handleSwitchToSettings = this.handleSwitchToSettings.bind(this);
     this.handleShowMessageCreation = this.handleShowMessageCreation.bind(this);
     this.handleClickRefresh = this.handleClickRefresh.bind(this);
+    this.handleClickNoDataRefresh = this.handleClickNoDataRefresh.bind(this);
 
     this.updateDatetimeLocation = this.updateDatetimeLocation.bind(this);
     this.updateChartPrefs = this.updateChartPrefs.bind(this);
@@ -240,7 +235,13 @@ class PatientDataPage extends React.Component {
   }
 
   renderEmptyHeader() {
-    return <Header chartType={'no-data'} inTransition={false} atMostRecent={false} title={t('Data')} canPrint={false} />;
+    return <Header
+      chartType={'no-data'}
+      inTransition={false}
+      atMostRecent={false}
+      title={t('Data')}
+      canPrint={false}
+      trackMetric={this.trackMetric} />;
   }
 
   renderInitialLoading() {
@@ -768,13 +769,13 @@ class PatientDataPage extends React.Component {
         openPDFWindow(this.state.pdf);
         resolve();
       } else {
-        const { processingData, tidelineData, loadingState } = this.state;
+        const { tidelineData, loadingState } = this.state;
         let hasDiabetesData = false;
         if (tidelineData !== null) {
           hasDiabetesData = _.get(tidelineData, 'diabetesData.length', 0) > 0;
         }
 
-        if (loadingState === LOADING_STATE_DONE && !processingData && hasDiabetesData) {
+        if (loadingState === LOADING_STATE_DONE && hasDiabetesData) {
           this.generatePDF()
             .then((pdf) => {
               openPDFWindow(pdf);
@@ -824,152 +825,11 @@ class PatientDataPage extends React.Component {
   }
 
   updateDatetimeLocation(datetime, cb) {
-    this.setState(
-      {
-        datetimeLocation: datetime,
-      },
-      cb
-    );
+    this.setState({ datetimeLocation: datetime }, cb);
   }
 
   updateChartEndpoints(endpoints, cb) {
-    this.setState(
-      {
-        endpoints,
-      },
-      cb
-    );
-  }
-
-  deriveChartTypeFromLatestData(latestData, uploads) {
-    let chartType = 'basics'; // Default to 'basics'
-
-    if (latestData && uploads) {
-      // Ideally, we determine the default view based on the device type
-      // so that, for instance, if the latest data type is cgm, but comes from
-      // an insulin-pump, we still direct them to the basics view
-      const deviceMap = _.keyBy(uploads, 'deviceId');
-      const latestDataDevice = deviceMap[latestData.deviceId];
-
-      if (latestDataDevice) {
-        const tags = deviceMap[latestData.deviceId].deviceTags;
-
-        switch (true) {
-          case _.includes(tags, 'insulin-pump'):
-            chartType = 'basics';
-            break;
-
-          case _.includes(tags, 'cgm'):
-            chartType = 'trends';
-            break;
-
-          case _.includes(tags, 'bgm'):
-            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
-            break;
-        }
-      } else {
-        // If we were unable, for some reason, to get the device tags for the
-        // latest upload, we can fall back to setting the default view by the data type
-        const type = latestData.type;
-
-        switch (type) {
-          case 'bolus':
-          case 'basal':
-          case 'wizard':
-            chartType = 'basics';
-            break;
-
-          case 'cbg':
-            chartType = 'trends';
-            break;
-
-          case 'smbg':
-            chartType = config.BRANDING === 'diabeloop' ? 'daily' : 'bgLog';
-            break;
-        }
-      }
-    }
-
-    return chartType;
-  }
-
-  fetchEarlierData(options = {}, cb) {
-    const { patient } = this.props;
-    const patientID = patient.userid;
-    // Return if we've already fetched all data, or are currently fetching
-    if (_.get(this.props, 'fetchedPatientDataRange.fetchedUntil') === 'start') {
-      if (cb) {
-        cb();
-      }
-      return;
-    }
-
-    this.log('fetching');
-
-    const earliestRequestedData = _.get(this.props, 'fetchedPatientDataRange.fetchedUntil');
-
-    const requestedPatientDataRange = {
-      start: moment.utc(earliestRequestedData).subtract(16, 'weeks').toISOString(),
-      end: moment.utc(earliestRequestedData).subtract(1, 'milliseconds').toISOString(),
-    };
-
-    const count = this.state.fetchEarlierDataCount + 1;
-
-    this.setState(
-      {
-        // requestedPatientDataRange,
-        // fetchEarlierDataCount: count,
-        canPrint: false,
-      },
-      () => {
-        const fetchOpts = _.defaults(options, {
-          startDate: requestedPatientDataRange.start,
-          endDate: requestedPatientDataRange.end,
-          // carelink: this.props.carelink,
-          // dexcom: this.props.dexcom,
-          // medtronic: this.props.medtronic,
-          useCache: false,
-          initial: false,
-        });
-
-        this.props.onFetchEarlierData(fetchOpts, patientID);
-
-        this.trackMetric('Fetched earlier patient data', { patientID, count });
-        if (cb) {
-          cb();
-        }
-      }
-    );
-  }
-
-  getLastDatumToProcessIndex(unprocessedData, targetDatetime) {
-    let diabetesDataCount = 0;
-
-    // First, we get the index of the first diabetes datum that falls outside of our processing window.
-    let targetIndex = _.findIndex(unprocessedData, (datum) => {
-      const isDiabetesDatum = _.includes(DiabetesDataTypesForDatum, datum.type);
-
-      if (isDiabetesDatum) {
-        diabetesDataCount++;
-      }
-
-      return targetDatetime > datum.time && isDiabetesDatum;
-    });
-
-    if (targetIndex === -1) {
-      // If we didn't find a cutoff point (i.e. no diabetes datums beyond the cutoff time),
-      // we process all the remaining fetched, unprocessed data.
-      targetIndex = unprocessedData.length;
-      this.log('No diabetes data found beyond current processing slice.  Processing all remaining unprocessed data');
-    } else if (diabetesDataCount === 1) {
-      // If the first diabetes datum found was outside of our processing window, we need to include it.
-      targetIndex++;
-      this.log('First diabetes datum found was outside current processing slice.  Adding it to slice');
-    }
-
-    // Because targetIndex was set to the first one outside of our processing window, and we're
-    // looking for the last datum to process, we decrement by one and return
-    return --targetIndex;
+    this.setState({ endpoints }, cb);
   }
 
   handleRefresh() {
@@ -979,25 +839,50 @@ class PatientDataPage extends React.Component {
     this.setState({
       loadingState: LOADING_STATE_INITIAL_FETCH,
       endpoints: [],
-      initialDatetimeLocation: new Date().toISOString(),
-      fetchEarlierDataCount: 0,
-      lastDatumProcessedIndex: -1,
-      lastProcessedDateTarget: null,
-      processEarlierDataCount: 0,
+      dataRanges: null,
+      datetimeLocation: null,
       tidelineData: null,
       pdf: null,
       canPrint: false,
-    }, () => {
-      Promise.all([
-        api.loadPatientData(patient),
-        api.getMessages(patient.userid),
-      ]).then(([ patientData, messagesNotes ]) => {
+    }, async () => {
+      try {
+        const range = await api.getPatientDataRange(patient);
+
+        this.log.info('Data range:', range);
+
+        // Assume browser locale, will adjust after
+        const timezone = this.state.timePrefs.timezoneName;
+        const dataRange = [
+          moment.tz(range[0], timezone),
+          moment.tz(range[1], timezone),
+        ];
+
+        this.setState({ dataRange });
+
+        // Get the initial range of data to load:
+        const loadingOptions = {
+          startDate: moment.utc(dataRange[1]).startOf('day').subtract(14, 'days').toISOString(),
+          endDate: moment.utc(dataRange[1]).endOf('day').toISOString(),
+          withPumpSettings: true,
+        };
+
+        this.log.info('Initial loading options:', loadingOptions);
+
+        // Get the data from the API
+        const [patientData, messagesNotes] = await Promise.all([
+          api.getPatientData(patient, loadingOptions),
+          api.getMessages(patient.userid),
+        ]);
+
         const combinedData = patientData.concat(messagesNotes);
         this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS });
-        return this.processData(combinedData);
-      }).catch((reason) => {
+
+        // Process the data to be usable by us
+        await this.processData(combinedData);
+
+      } catch (reason) {
         this.onLoadingFailure(reason);
-      });
+      }
     });
   }
 
@@ -1033,6 +918,12 @@ class PatientDataPage extends React.Component {
       { bgPrefs, timePrefs }
     );
 
+    const dateTimeLocation = moment.tz(tidelineData.endpoints[1], tidelineData.opts.timePrefs.timezoneName);
+    dateTimeLocation.set('hours', 12);
+    dateTimeLocation.set('minutes', 0);
+    dateTimeLocation.set('seconds', 0);
+    dateTimeLocation.set('milliseconds', 0);
+
     this.setState({
       bgPrefs: {
         bgUnits: tidelineData.opts.bgUnits,
@@ -1042,6 +933,7 @@ class PatientDataPage extends React.Component {
       tidelineData,
       loadingState: LOADING_STATE_DONE,
       endpoints: tidelineData.endpoints,
+      dateTimeLocation,
       canPrint: true,
     }, () => {
       store.dispatch({

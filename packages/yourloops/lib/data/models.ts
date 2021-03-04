@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Blip typescript definitions
+ * Data API Models
  *
  * All rights reserved.
  *
@@ -26,23 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AppConfig } from "../../yourloops/models/config";
-import { User } from "../../yourloops/models/shoreline";
-import BlipApi from "../../yourloops/lib/data/blip-api";
-import ProfileDialog from "../../yourloops/components/profile-dialog";
-
-
-interface BlipProperties {
-  config: AppConfig;
-  api: BlipApi;
-  patient: User;
-  profileDialog: typeof ProfileDialog;
+/**
+ * Options to pass to the fetch data API
+ */
+export interface GetPatientDataOptions {
+  /** Start of the wanted period (ISO 8601 datetime) */
+  startDate?: string;
+  /** End of the wanted period (ISO 8601 datetime) */
+  endDate?: string;
+  /** Does the result should include the latest pumpSettings ? */
+  withPumpSettings?: boolean;
 }
-
-// FIXME: For some reason, the yourloops auth hook
-// don't like this export.
-declare function cleanStore(): void;
-export { BlipProperties, BlipApi, cleanStore };
-
-declare function Blip(props: BlipProperties): JSX.Element;
-export default Blip;
