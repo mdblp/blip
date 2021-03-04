@@ -40,16 +40,56 @@ import appConfig from "../config";
 import { t } from "../language";
 import { errorFromHttpStatus } from "../utils";
 import { Session } from "../auth";
+import { GetPatientDataOptions } from "./models";
 
 const log = bows("data-api");
 
-export async function loadPatientData(session: Session, patient: User): Promise<PatientData> {
+export async function getPatientDataRange(session: Session, patient: User): Promise<string[]> {
   const { sessionToken, traceToken } = session;
   if (!patient.roles?.includes(UserRoles.patient)) {
     return Promise.reject(new Error(t("not-a-patient")));
   }
 
-  const dataURL = new URL(`/data/${patient.userid}`, appConfig.API_HOST);
+  const dataURL = new URL(`/data/v1/range/${patient.userid}`, appConfig.API_HOST);
+  const response = await fetch(dataURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+  });
+
+  if (response.ok) {
+    const dataRange = (await response.json()) as string[];
+    if (!Array.isArray(dataRange) || dataRange.length !== 2) {
+      return Promise.reject(new Error('Invalid response'));
+    }
+    return dataRange;
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+export async function getPatientData(session: Session, patient: User, options?: GetPatientDataOptions): Promise<PatientData> {
+  const { sessionToken, traceToken } = session;
+  if (!patient.roles?.includes(UserRoles.patient)) {
+    return Promise.reject(new Error(t("not-a-patient")));
+  }
+
+  const dataURL = new URL(`/data/v1/data/${patient.userid}`, appConfig.API_HOST);
+
+  if (typeof options === "object") {
+    if (options.withPumpSettings) {
+      dataURL.searchParams.set("withPumpSettings", "true");
+    }
+    if (options.startDate) {
+      dataURL.searchParams.set("startDate", options.startDate);
+    }
+    if (options.endDate) {
+      dataURL.searchParams.set("endDate", options.endDate);
+    }
+  }
+
   const response = await fetch(dataURL.toString(), {
     method: "GET",
     headers: {
