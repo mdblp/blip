@@ -254,7 +254,6 @@ class Daily extends React.Component {
       title: '',
       debouncedDateRangeUpdate: null,
     };
-    this.throttledMetric = _.throttle(this.props.trackMetric, 5000);
   }
 
   componentDidUpdate(prevProps) {
@@ -567,7 +566,6 @@ class Daily extends React.Component {
   };
 
   handleCBGHover = (cbg) => {
-    this.throttledMetric('hovered over daily cgm tooltip');
     var rect = cbg.rect;
     // range here is -12 to 12
     var hoursOffset = sundial.dateDifference(cbg.data.normalTime, this.state.datetimeLocation, 'h');
