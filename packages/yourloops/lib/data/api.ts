@@ -78,7 +78,7 @@ export async function getPatientData(session: Session, patient: User, options?: 
 
   const dataURL = new URL(`/data/v1/data/${patient.userid}`, appConfig.API_HOST);
 
-  if (typeof options === "object") {
+  if (options) {
     if (options.withPumpSettings) {
       dataURL.searchParams.set("withPumpSettings", "true");
     }
@@ -110,9 +110,19 @@ export async function getPatientData(session: Session, patient: User, options?: 
  * Get notes of a given patient
  * @param userId ID of the patient
  */
-export async function getMessages(session: Session, userId: string): Promise<MessageNote[]> {
+export async function getMessages(session: Session, userId: string, options?: GetPatientDataOptions): Promise<MessageNote[]> {
   const { sessionToken, traceToken } = session;
   const messagesURL = new URL(`/message/notes/${userId}`, appConfig.API_HOST);
+
+  if (options) {
+    if (options.startDate) {
+      messagesURL.searchParams.set("starttime", options.startDate);
+    }
+    if (options.endDate) {
+      messagesURL.searchParams.set("endtime", options.endDate);
+    }
+  }
+
   const response = await fetch(messagesURL.toString(), {
     method: "GET",
     headers: {

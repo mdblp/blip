@@ -237,9 +237,13 @@ function genRandomId() {
 }
 
 function getTimerFuncs() {
-  const startTimer = _.get(window, "config.DEV", false) ? (name) => console.time(name) : _.noop;
-  const endTimer = _.get(window, "config.DEV", false) ? (name) => console.timeEnd(name) : _.noop;
-  return { startTimer, endTimer };
+  // To be able to enable it when needed:
+  if (false) { // eslint-disable-line no-constant-condition
+    const startTimer = _.get(window, "config.DEV", false) ? (name) => console.time(name) : _.noop;
+    const endTimer = _.get(window, "config.DEV", false) ? (name) => console.timeEnd(name) : _.noop;
+    return { startTimer, endTimer };
+  }
+  return { startTimer: _.noop, endTimer: _.noop };
 }
 
 /**

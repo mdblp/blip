@@ -40,7 +40,7 @@ class Basics extends React.Component {
     if (dateRange) {
       const endpoints = [dateRange[0], getLocalizedCeiling(dateRange[1], this.props.timePrefs).toISOString()];
       this.setState({ endpoints });
-      this.log.debug(dateRange, '=>', endpoints);
+      // this.log.debug(dateRange, '=>', endpoints);
     }
   }
 

@@ -86,12 +86,12 @@ class BlipApi {
     return Promise.reject(new Error(translate("not-logged-in")));
   }
 
-  public getMessages(userId: string): Promise<MessageNote[]> {
+  public getMessages(userId: string, options?: GetPatientDataOptions): Promise<MessageNote[]> {
     this.log.debug("getMessages", { userId });
     const session = this.authHook.session();
     const patient = this.teamHook.getUser(userId);
     if (session !== null && patient !== null) {
-      return apiGetMessages(session, userId);
+      return apiGetMessages(session, userId, options);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
