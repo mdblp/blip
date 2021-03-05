@@ -211,7 +211,7 @@
   "modal-delete-patient-info-2": "Usted y los miembros de su equipo dejarán de tener acceso a sus datos.",
   "modal-delete-patient-success": "Su equipo ya no supervisa al paciente",
   "modal-delete-patient-failure": "Imposible eliminar un paciente. Vuelva a intentarlo más tarde.",
-  "modal-patient-share-team-action": "Unirse a un equipo",
+  "modal-patient-share-team-action": "Aceptar invitación",
   "modal-patient-share-team-title": "Compartir sus datos con un equipo de atención médica",
   "modal-patient-share-team-info": "El personal sanitario le invita a compartir sus datos con",
   "modal-patient-team-warning": "Compruebe que los detalles anteriores coinciden con la información que ha suministrado el personal sanitario antes de aceptar la invitación.",
