@@ -278,7 +278,12 @@ const datetime = {
   },
 
   toISODateString: function(d) {
-    var date = new Date(d);
+    let date;
+    if (!(moment.isMoment(d) || d instanceof Date)) {
+      date = moment.utc(d);
+    } else {
+      date = d;
+    }
     return date.toISOString().slice(0,10);
   },
 

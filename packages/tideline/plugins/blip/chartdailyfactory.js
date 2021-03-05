@@ -60,7 +60,7 @@ function chartDailyFactory(el, options) {
   };
   _.defaults(options, defaults);
 
-  log.debug('Initializing...', el, options);
+  log.debug('Initializing...', { options });
 
   const scales = scalesutil(options);
   const emitter = new EventEmitter();
@@ -453,25 +453,27 @@ function chartDailyFactory(el, options) {
     return chart;
   };
 
-  // locate the chart around a certain datetime
-  // if called without an argument, locates the chart at the most recent 24 hours of data
-  chart.locate = function(datetime) {
+  /**
+   * locate the chart around a certain datetime
+   * if called without an argument, locates the chart at the most recent 24 hours of data
+   * @param {moment.Moment} datetime
+   * @returns {oneDay}
+   */
+  chart.locate = function locate(datetime = null) {
+    let start = chart.initialEndpoints[0];
+    let end = chart.initialEndpoints[1];
+    let atMostRecent = false;
 
-    var start, end, atMostRecent = false;
-
-    var mostRecent = function() {
+    const mostRecent = () => {
       start = chart.initialEndpoints[0];
       end = chart.initialEndpoints[1];
     };
 
-    if (!arguments.length) {
+    if (datetime === null) {
       atMostRecent = true;
-      mostRecent();
-    }
-    else {
+    } else {
       // translate the desired center-of-view datetime into an edgepoint for tideline
-      start = new Date(datetime);
-      chart.currentCenter(start);
+      start = datetime.toDate();
       var plusHalf = new Date(start);
       plusHalf.setUTCHours(plusHalf.getUTCHours() + 12);
       var minusHalf = new Date(start);
@@ -489,8 +491,7 @@ function chartDailyFactory(el, options) {
         var firstEnd = new Date(start);
         firstEnd.setUTCDate(firstEnd.getUTCDate() + 1);
         end = firstEnd;
-      }
-      else {
+      } else {
         end = new Date(start);
         start.setUTCHours(start.getUTCHours() - 12);
         end.setUTCHours(end.getUTCHours() + 12);

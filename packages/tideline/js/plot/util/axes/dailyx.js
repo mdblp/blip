@@ -28,8 +28,7 @@ function axesDaily(pool, opts = {}) {
     tickLength: 15,
     longTickMultiplier: 2.5,
     timePrefs: {
-      timezoneAware: false,
-      timezoneName: dt.getBrowserTimezone(),
+      timezoneName: 'UTC',
     }
   };
 
@@ -49,30 +48,23 @@ function axesDaily(pool, opts = {}) {
       y: pool.height() - opts.tickLength * opts.longTickMultiplier
     });
 
-  opts.emitter.on('zoomstart', function() {
+  opts.emitter.on('zoomstart', () => {
     stickyLabel.attr('opacity', '0.2');
   });
 
-  opts.emitter.on('zoomend', function() {
+  opts.emitter.on('zoomend', () => {
     stickyLabel.attr('opacity', '1.0');
   });
 
-  opts.emitter.on('navigated', function(a) {
-    var offset = 0, d;
-    if (opts.timePrefs.timezoneAware) {
-      offset = -dt.getOffset(a[0].start, opts.timePrefs.timezoneName);
-      d = moment.utc(a[0].start).tz(opts.timePrefs.timezoneName);
-    }
-    else {
-      d = moment.utc(a[0].start);
-    }
+  opts.emitter.on('navigated', (domain) => {
+    let startDate = moment.utc(domain.start).tz(opts.timePrefs.timezoneName);
     // when we're close to midnight (where close = five hours on either side)
     // remove the sticky label so it doesn't overlap with the midnight-anchored day label
-    if ((d.hours() >= 19) || (d.hours() <= 4)) {
+    if ((startDate.hours() >= 19) || (startDate.hours() <= 4)) {
       stickyLabel.text('');
-      return;
+    } else {
+      stickyLabel.text(format.xAxisDayText(startDate));
     }
-    stickyLabel.text(format.xAxisDayText(d.toISOString(), offset));
   });
 
   function dailyx(selection) {
@@ -105,7 +97,7 @@ function axesDaily(pool, opts = {}) {
           y: pool.height() - opts.textShiftY
         })
         .text(function(d) {
-          return format.xAxisTickText(d.normalTime, d.displayOffset);
+          return format.xAxisTickText(moment.tz(d.epoch, d.timezone));
         });
 
       tickGroups.filter(function(d) {
@@ -121,9 +113,7 @@ function axesDaily(pool, opts = {}) {
           x: dailyx.textXPosition,
           y: dailyx.dayYPosition
         })
-        .text(function(d) {
-          return format.xAxisDayText(d.normalTime, d.displayOffset);
-        });
+        .text((d) => format.xAxisDayText(moment.tz(d.epoch, d.timezone)));
 
       ticks.exit().remove();
     });

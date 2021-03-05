@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 import bows from 'bows';
-import sundial from 'sundial';
 import moment from 'moment-timezone';
 import WindowSizeListener from 'react-window-size-listener';
 import i18next from 'i18next';
@@ -31,6 +30,8 @@ import Stats from './stats';
 import BgSourceToggle from './bgSourceToggle';
 import Header from './header';
 import Footer from './footer';
+
+/** @typedef {import('tideline').TidelineData} TidelineData */
 
 const Loader = vizComponents.Loader;
 const BolusTooltip = vizComponents.BolusTooltip;
@@ -48,9 +49,9 @@ class DailyChart extends React.Component {
   static propTypes = {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
-    initialDatetimeLocation: PropTypes.string,
+    datetimeLocation: PropTypes.object.isRequired,
     patient: PropTypes.object,
-    patientData: PropTypes.object.isRequired,
+    tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     // message handlers
     onCreateMessage: PropTypes.func.isRequired,
@@ -104,57 +105,79 @@ class DailyChart extends React.Component {
 
     this.log = bows('Daily Chart');
     this.state = {
-      datetimeLocation: null
+      chart: null
     };
-    this.chart = null;
     /** @type {React.RefObject} */
     this.refNode = React.createRef();
   }
 
   componentDidMount() {
     this.mountChart();
-    this.initializeChart(this.props.initialDatetimeLocation);
   }
 
   componentWillUnmount() {
     this.unmountChart();
   }
 
-  mountChart() {
-    this.log.debug('Mounting...');
-    this.chart = chartDailyFactory(this.refNode.current, _.pick(this.props, this.chartOpts))
-      .setupPools();
-    this.bindEvents();
+  mountChart(cb = _.noop) {
+    if (this.state.chart === null) {
+      const { datetimeLocation } = this.props;
+      this.log.debug('Mounting...', { datetimeLocation });
+      const chart = chartDailyFactory(this.refNode.current, _.pick(this.props, this.chartOpts));
+      chart.setupPools();
+      this.setState({ chart }, () => {
+        this.bindEvents();
+        this.initializeChart(datetimeLocation);
+        cb();
+      });
+    } else {
+      cb();
+    }
   }
 
-  unmountChart() {
-    this.log('Unmounting...');
-    this.chart.destroy();
-    this.chart = null;
+  unmountChart(cb = _.noop) {
+    const { chart } = this.state;
+    if (chart !== null) {
+      this.log('Unmounting...');
+      this.unbindEvents();
+      chart.destroy();
+      this.setState({ chart: null }, cb);
+    } else {
+      cb();
+    }
   }
 
   bindEvents() {
-    this.chart.emitter.on('createMessage', this.props.onCreateMessage);
-    this.chart.emitter.on('inTransition', this.props.onTransition);
-    this.chart.emitter.on('messageThread', this.props.onShowMessageThread);
-    this.chart.emitter.on('mostRecent', this.props.onMostRecent);
-    this.chart.emitter.on('navigated', this.handleDatetimeLocationChange);
+    const { chart } = this.state;
+    chart.emitter.on('createMessage', this.props.onCreateMessage);
+    chart.emitter.on('inTransition', this.props.onTransition);
+    chart.emitter.on('messageThread', this.props.onShowMessageThread);
+    chart.emitter.on('mostRecent', this.props.onMostRecent);
+    chart.emitter.on('navigated', this.props.onDatetimeLocationChange);
   }
 
-  initializeChart(datetime) {
+  unbindEvents() {
+    const { chart } = this.state;
+    chart.emitter.off('createMessage', this.props.onCreateMessage);
+    chart.emitter.off('inTransition', this.props.onTransition);
+    chart.emitter.off('messageThread', this.props.onShowMessageThread);
+    chart.emitter.off('mostRecent', this.props.onMostRecent);
+    chart.emitter.off('navigated', this.props.onDatetimeLocationChange);
+  }
+
+  /**
+   * @param {moment.Moment | null} datetime The datetime for the daily chart
+   */
+  initializeChart(datetime = null) {
+    const { tidelineData } = this.props;
+    const { chart } = this.state;
     this.log('Initializing...');
-    if (_.isEmpty(this.props.patientData)) {
+    if (_.isEmpty(tidelineData.data)) {
       throw new Error(t('Cannot create new chart with no data'));
     }
 
-    this.chart.load(this.props.patientData);
-    if (datetime) {
-      this.chart.locate(datetime);
-    } else if (this.state.datetimeLocation !== null) {
-      this.chart.locate(this.state.datetimeLocation);
-    } else {
-      this.chart.locate();
-    }
+    chart.load(tidelineData);
+    chart.locate(datetime);
   }
 
   render() {
@@ -163,49 +186,38 @@ class DailyChart extends React.Component {
     );
   }
 
-  // handlers
-  handleDatetimeLocationChange = (datetimeLocationEndpoints) => {
-    this.setState({
-      datetimeLocation: datetimeLocationEndpoints[1],
-    });
-    this.props.onDatetimeLocationChange(datetimeLocationEndpoints);
-  };
-
   rerenderChart() {
     this.log('Rerendering...');
-    this.unmountChart();
-    this.mountChart();
-    this.initializeChart();
-    this.chart.emitter.emit('inTransition', false);
+    this.unmountChart(this.mountChart.bind(this));
   }
 
   getCurrentDay = () => {
-    return this.chart.getCurrentDay().toISOString();
+    return this.state.chart.getCurrentDay().toISOString();
   };
 
   goToMostRecent = () => {
-    this.chart.setAtDate(null, true);
+    this.state.chart.setAtDate(null, true);
   };
 
   panBack = () => {
-    this.chart.panBack();
+    this.state.chart.panBack();
   };
 
   panForward = () => {
-    this.chart.panForward();
+    this.state.chart.panForward();
   };
 
   // methods for messages
   closeMessage = () => {
-    return this.chart.closeMessage();
+    return this.state.chart.closeMessage();
   };
 
   createMessage = (message) => {
-    return this.chart.createMessage(message);
+    return this.state.chart.createMessage(message);
   };
 
   editMessage = (message) => {
-    return this.chart.editMessage(message);
+    return this.state.chart.editMessage(message);
   };
 }
 
@@ -218,8 +230,8 @@ class Daily extends React.Component {
     chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
-    initialDatetimeLocation: PropTypes.string,
-    patientData: PropTypes.object.isRequired,
+    datetimeLocation: PropTypes.object.isRequired,
+    tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     canPrint: PropTypes.bool.isRequired,
     // refresh handler
@@ -249,10 +261,10 @@ class Daily extends React.Component {
     this.log = bows('Daily View');
     this.state = {
       atMostRecent: false,
-      endpoints: [],
       inTransition: false,
+      endpoints: [],
       title: '',
-      debouncedDateRangeUpdate: null,
+      tooltip: null,
     };
   }
 
@@ -263,14 +275,10 @@ class Daily extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
-    }
-  }
-
   render() {
-    const { timePrefs } = this.props.patientData.opts;
+    const { tidelineData } = this.props;
+    const { inTransition, tooltip } = this.state;
+    const { timePrefs } = tidelineData.opts;
 
     return (
       <div id="tidelineMain" className="daily">
@@ -278,7 +286,7 @@ class Daily extends React.Component {
           profileDialog={this.props.profileDialog}
           chartType={this.chartType}
           patient={this.props.patient}
-          inTransition={this.state.inTransition}
+          inTransition={inTransition}
           atMostRecent={this.state.atMostRecent}
           title={this.state.title}
           iconBack={'icon-back'}
@@ -302,8 +310,8 @@ class Daily extends React.Component {
               <DailyChart
                 bgClasses={this.props.bgPrefs.bgClasses}
                 bgUnits={this.props.bgPrefs.bgUnits}
-                initialDatetimeLocation={this.props.initialDatetimeLocation}
-                patientData={this.props.patientData}
+                datetimeLocation={this.props.datetimeLocation}
+                tidelineData={tidelineData}
                 timePrefs={timePrefs}
                 // message handlers
                 onCreateMessage={this.props.onCreateMessage}
@@ -315,21 +323,21 @@ class Daily extends React.Component {
                 onShowBasalSettings={this.handleShowBasalSettings}
                 onTransition={this.handleInTransition}
                 onBolusHover={this.handleBolusHover}
-                onBolusOut={this.handleBolusOut}
+                onBolusOut={this.handleTooltipOut}
                 onSMBGHover={this.handleSMBGHover}
-                onSMBGOut={this.handleSMBGOut}
+                onSMBGOut={this.handleTooltipOut}
                 onCBGHover={this.handleCBGHover}
-                onCBGOut={this.handleCBGOut}
+                onCBGOut={this.handleTooltipOut}
                 onCarbHover={this.handleCarbHover}
-                onCarbOut={this.handleCarbOut}
+                onCarbOut={this.handleTooltipOut}
                 onReservoirHover={this.handleReservoirHover}
-                onReservoirOut={this.handleReservoirOut}
+                onReservoirOut={this.handleTooltipOut}
                 onPhysicalHover={this.handlePhysicalHover}
-                onPhysicalOut={this.handlePhysicalOut}
+                onPhysicalOut={this.handleTooltipOut}
                 onParameterHover={this.handleParameterHover}
-                onParameterOut={this.handleParameterOut}
+                onParameterOut={this.handleTooltipOut}
                 onConfidentialHover={this.handleConfidentialHover}
-                onConfidentialOut={this.handleConfidentialOut}
+                onConfidentialOut={this.handleTooltipOut}
                 ref={this.chartRef}
               />
             </div>
@@ -357,95 +365,20 @@ class Daily extends React.Component {
         <Footer
           chartType={this.chartType}
           onClickRefresh={this.props.onClickRefresh} />
-        {this.state.hoveredBolus && <BolusTooltip
-          position={{
-            top: this.state.hoveredBolus.top,
-            left: this.state.hoveredBolus.left
-          }}
-          side={this.state.hoveredBolus.side}
-          bolus={this.state.hoveredBolus.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
-        {this.state.hoveredSMBG && <SMBGTooltip
-          position={{
-            top: this.state.hoveredSMBG.top,
-            left: this.state.hoveredSMBG.left
-          }}
-          side={this.state.hoveredSMBG.side}
-          smbg={this.state.hoveredSMBG.data}
-          timePrefs={timePrefs}
-          bgPrefs={this.props.bgPrefs}
-        />}
-        {this.state.hoveredCBG && <CBGTooltip
-          position={{
-            top: this.state.hoveredCBG.top,
-            left: this.state.hoveredCBG.left
-          }}
-          side={this.state.hoveredCBG.side}
-          cbg={this.state.hoveredCBG.data}
-          timePrefs={timePrefs}
-          bgPrefs={this.props.bgPrefs}
-        />}
-        {this.state.hoveredCarb && <FoodTooltip
-          position={{
-            top: this.state.hoveredCarb.top,
-            left: this.state.hoveredCarb.left
-          }}
-          side={this.state.hoveredCarb.side}
-          food={this.state.hoveredCarb.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
-        {this.state.hoveredReservoir && <ReservoirTooltip
-          position={{
-            top: this.state.hoveredReservoir.top,
-            left: this.state.hoveredReservoir.left
-          }}
-          side={this.state.hoveredReservoir.side}
-          reservoir={this.state.hoveredReservoir.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
-        {this.state.hoveredPhysical && <PhysicalTooltip
-          position={{
-            top: this.state.hoveredPhysical.top,
-            left: this.state.hoveredPhysical.left
-          }}
-          side={this.state.hoveredPhysical.side}
-          physicalActivity={this.state.hoveredPhysical.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
-        {this.state.hoveredParameter && <ParameterTooltip
-          position={{
-            top: this.state.hoveredParameter.top,
-            left: this.state.hoveredParameter.left
-          }}
-          side={this.state.hoveredParameter.side}
-          parameter={this.state.hoveredParameter.data}
-          bgPrefs={this.props.bgPrefs}
-          timePrefs={timePrefs}
-        />}
-        {this.state.hoveredConfidential && <ConfidentialTooltip
-          position={{
-            top: this.state.hoveredConfidential.top,
-            left: this.state.hoveredConfidential.left
-          }}
-          side={this.state.hoveredConfidential.side}
-          confidential={this.state.hoveredConfidential.data}
-          timePrefs={timePrefs}
-        />}
-
+        {tooltip}
         <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
     );
   }
 
+  /**
+   * @param {moment.Moment} datetime A date to display
+   * @returns {string}
+   */
   getTitle(datetime) {
-    const { timePrefs } = this.props;
-    const timezone = timePrefs.timezoneName;
-    return moment.tz(datetime, timezone).format(t('ddd, MMM D, YYYY'));
+    /** @type {{tidelineData: TidelineData}} */
+    const { tidelineData } = this.props;
+    return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(t('ddd, MMM D, YYYY'));
   }
 
   // handlers
@@ -489,224 +422,180 @@ class Daily extends React.Component {
   };
 
   handleDatetimeLocationChange = (datetimeLocationEndpoints) => {
+    const start = moment.utc(datetimeLocationEndpoints.start);
+    const end = moment.utc(datetimeLocationEndpoints.end);
+    const center = moment.utc(datetimeLocationEndpoints.center);
     const endpoints = [
-      moment.utc(datetimeLocationEndpoints[0].start).toISOString(),
-      moment.utc(datetimeLocationEndpoints[0].end).toISOString(),
+      start.toISOString(),
+      end.toISOString(),
     ];
 
     this.setState({
-      datetimeLocation: datetimeLocationEndpoints[1],
-      title: this.getTitle(datetimeLocationEndpoints[1]),
+      title: this.getTitle(center),
       endpoints,
     });
 
-    this.props.updateDatetimeLocation(datetimeLocationEndpoints[1]);
+    this.props.updateDatetimeLocation(center);
 
     // Update the chart date range in the patientData component.
-    // We debounce this to avoid excessive updates while panning the view.
-    if (this.state.debouncedDateRangeUpdate) {
-      this.state.debouncedDateRangeUpdate.cancel();
-    }
-
-    const debouncedDateRangeUpdate = _.debounce(this.props.onUpdateChartDateRange, 250);
-    this.setState({ debouncedDateRangeUpdate });
-    debouncedDateRangeUpdate(endpoints, () => {
-      this.setState({ debouncedDateRangeUpdate: null });
-    });
+    this.props.onUpdateChartDateRange(endpoints);
   };
 
   handleInTransition = inTransition => {
     this.setState({ inTransition });
   };
 
-  handleBolusHover = (bolus) => {
-    const rect = bolus.rect;
+  updateDatumHoverForTooltip(datum) {
+    const { datetimeLocation, bgPrefs, tidelineData } = this.props;
+    const rect = datum.rect;
     // range here is -12 to 12
-    const hoursOffset = sundial.dateDifference(bolus.data.normalTime, this.state.datetimeLocation, 'h');
-    bolus.top = rect.top + rect.height / 2;
+    const hoursOffset = moment.utc(datum.data.epoch).diff(datetimeLocation, 'hours');
+    datum.top = rect.top + rect.height / 2;
     if (hoursOffset > 5) {
-      bolus.side = 'left';
-      bolus.left = rect.left;
+      datum.side = 'left';
+      datum.left = rect.left;
     } else {
-      bolus.side = 'right';
-      bolus.left = rect.left + rect.width;
+      datum.side = 'right';
+      datum.left = rect.left + rect.width;
     }
-    this.setState({
-      hoveredBolus: bolus,
-    });
+    datum.bgPrefs = bgPrefs;
+    datum.timePrefs = tidelineData.opts.timePrefs;
+    return datum;
+  }
+
+  handleTooltipOut = () => this.setState({ tooltip: null });
+
+  handleBolusHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <BolusTooltip
+        bolus={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleBolusOut = () => {
-    this.setState({
-      hoveredBolus: false,
-    });
+
+  handleSMBGHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <SMBGTooltip
+        smbg={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleSMBGHover = (smbg) => {
-    const rect = smbg.rect;
-    // range here is -12 to 12
-    const hoursOffset = sundial.dateDifference(smbg.data.normalTime, this.state.datetimeLocation, 'h');
-    smbg.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      smbg.side = 'left';
-      smbg.left = rect.left;
-    } else {
-      smbg.side = 'right';
-      smbg.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredSMBG: smbg,
-    });
+  handleCBGHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <CBGTooltip
+        cbg={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleSMBGOut = () => {
-    this.setState({
-      hoveredSMBG: false,
-    });
+  handleCarbHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <FoodTooltip
+        food={datum}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleCBGHover = (cbg) => {
-    var rect = cbg.rect;
-    // range here is -12 to 12
-    var hoursOffset = sundial.dateDifference(cbg.data.normalTime, this.state.datetimeLocation, 'h');
-    cbg.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      cbg.side = 'left';
-      cbg.left = rect.left;
-    } else {
-      cbg.side = 'right';
-      cbg.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredCBG: cbg,
-    });
+  handleReservoirHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <ReservoirTooltip
+        reservoir={datum}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleCBGOut = () => {
-    this.setState({
-      hoveredCBG: false,
-    });
+  handlePhysicalHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <PhysicalTooltip
+        physicalActivity={datum}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleCarbHover = (carb) => {
-    var rect = carb.rect;
-    // range here is -12 to 12
-    var hoursOffset = sundial.dateDifference(carb.data.normalTime, this.state.datetimeLocation, 'h');
-    carb.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      carb.side = 'left';
-      carb.left = rect.left;
-    } else {
-      carb.side = 'right';
-      carb.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredCarb: carb,
-    });
+  handleParameterHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <ParameterTooltip
+        parameter={datum}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
-  handleCarbOut = () => {
-    this.setState({
-      hoveredCarb: false,
-    });
-  };
-
-  handleReservoirHover = (reservoir) => {
-    var rect = reservoir.rect;
-    // range here is -12 to 12
-    var hoursOffset = sundial.dateDifference(reservoir.data.normalTime, this.state.datetimeLocation, 'h');
-    reservoir.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      reservoir.side = 'left';
-      reservoir.left = rect.left;
-    } else {
-      reservoir.side = 'right';
-      reservoir.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredReservoir: reservoir,
-    });
-  };
-
-  handleReservoirOut = () => {
-    this.setState({
-      hoveredReservoir: false,
-    });
-  };
-
-  handlePhysicalHover = (physical) => {
-    var rect = physical.rect;
-    // range here is -12 to 12
-    var hoursOffset = sundial.dateDifference(physical.data.normalTime, this.state.datetimeLocation, 'h');
-    physical.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      physical.side = 'left';
-      physical.left = rect.left;
-    } else {
-      physical.side = 'right';
-      physical.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredPhysical: physical,
-    });
-  };
-
-  handlePhysicalOut = () => {
-    this.setState({
-      hoveredPhysical: false,
-    });
-  };
-
-  handleParameterHover = (parameter) => {
-    const { rect } = parameter;
-    // range here is -12 to 12
-    const hoursOffset = sundial.dateDifference(parameter.data.normalTime, this.state.datetimeLocation, 'h');
-    parameter.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      parameter.side = 'left';
-      parameter.left = rect.left;
-    } else {
-      parameter.side = 'right';
-      parameter.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredParameter: parameter,
-    });
-  };
-
-  handleParameterOut = () => {
-    this.setState({
-      hoveredParameter: false,
-    });
-  };
-
-  handleConfidentialHover = (confidential) => {
-    const { rect } = confidential;
-    // range here is -12 to 12
-    const hoursOffset = sundial.dateDifference(confidential.data.normalTime, this.state.datetimeLocation, 'h');
-    confidential.top = rect.top + rect.height / 2;
-    if (hoursOffset > 5) {
-      confidential.side = 'left';
-      confidential.left = rect.left;
-    } else {
-      confidential.side = 'right';
-      confidential.left = rect.left + rect.width;
-    }
-    this.setState({
-      hoveredConfidential: confidential,
-    });
-  };
-
-  handleConfidentialOut = () => {
-    this.setState({
-      hoveredConfidential: false,
-    });
+  handleConfidentialHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum);
+    const tooltip = (
+      <ConfidentialTooltip
+      confidential={datum}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />);
+    this.setState({ tooltip });
   };
 
   handleMostRecent = (atMostRecent) => {
-    this.setState({
-      atMostRecent: atMostRecent,
-    });
+    this.setState({ atMostRecent });
   };
 
   handlePanBack = (e) => {

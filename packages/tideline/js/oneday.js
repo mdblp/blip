@@ -15,10 +15,15 @@
  * == BSD2 LICENSE ==
  */
 
+/**
+ * @typedef {import('./tidelinedata').Datum} Datum
+ */
+
 import _ from 'lodash';
 import bows from 'bows';
 import moment from 'moment-timezone';
 
+import { MS_IN_DAY } from './data/util/constants';
 import Pool from './pool';
 import annotation from './plot/util/annotations/annotation';
 import Tooltips from './plot/util/tooltips/tooltip';
@@ -27,7 +32,8 @@ import TidelineData from './tidelinedata';
 
 function oneDay(emitter /*, opts = {} */) {
   const d3 = window.d3;
-  const log = bows('One Day');
+  /** @type {Console} */
+  const log = bows('OneDay');
 
   // basic attributes
   const nav = {
@@ -36,30 +42,53 @@ function oneDay(emitter /*, opts = {} */) {
     scrollGutterHeight: 20,
     scrollThumbRadius: 24,
     currentTranslation: 0,
+    latestTranslation: 0,
     pan: null,
   };
+  /** How much time a click on pan back/forward takes (in ms): For 1 day */
+  const transitionDelayFast = 500;
+  /** How much time a click on pan back/forward takes (in ms): For more than 1 day */
+  const transitionDelaySlow = 1000;
+  /** How much time we delay the update of the date title + viz widgets (in ms) */
+  const navigatedDelay = 200;
   const minHeight = 400;
   const minWidth = 300;
   const axisGutter = 40;
-  const minRenderDaysBuffer = 1;
+  const minRenderDaysBuffer = 2;
+  /** @type {function} */
   const xScale = d3.time.scale.utc();
 
-  /** @type {TidelineData.Datum[]} */
+  const pools = [];
+
+  /** @type {Datum[]} The currently rendered data */
   let renderedData = [];
+  /** True if we can't go forward more -> we display the most recent data */
+  let mostRecent = false;
+  /** true when click on pan back/forward a day, during the translation */
+  let inTransition = false;
+  let width = minWidth;
+  let height = minHeight;
   var id,
-    width = minWidth, height = minHeight,
     poolScaleHeight,
     gutter = 40,
-    pools = [], poolGroup,
-    currentCenter,
+    poolGroup,
     mainSVG, mainGroup,
-    scrollNav, scrollHandleTrigger = true, mostRecent = false, annotations, tooltips;
+    scrollNav, scrollHandleTrigger = true, annotations, tooltips;
 
   let renderDaysBuffer = minRenderDaysBuffer;
   /** @type {TidelineData} */
   let tidelineData = null;
 
+  // Throttle the navigated event, we do not need so much updates
+  // It also slow everything too much
+  const throttleEmitNavigated = _.debounce(() => {
+    const domain = container.getCurrentDomain();
+    // log.debug('emit navigated (debounce)', { inTransition, domain });
+    emitter.emit('navigated', domain);
+  }, navigatedDelay);
+
   emitter.on('clickInPool', function({ offsetX /*, datum */ }) {
+    // Event use when we want to add a message (note)
     // const timezone = _.get(opts, 'timePrefs.timezoneName', 'UTC');
     /** @type {Date} */
     const date = xScale.invert(offsetX - axisGutter);
@@ -108,52 +137,66 @@ function oneDay(emitter /*, opts = {} */) {
       });
   }
 
+  /** @type {Date[]} */
   container.endpoints = [];
+  /** @type {Date[]} */
   container.initialEndpoints = [];
   container.dataFill = {};
 
-  // non-chainable methods
-  container.panForward = function() {
-    log.info('Jumped forward a day.');
-    nav.currentTranslation -= width - axisGutter;
-    var n = 0;
-    emitter.emit('inTransition', true);
+  /**
+   * Use to disable the ← → buttons
+   * @param {boolean} value true if in transition
+   */
+  container.inTransition = (value) => {
+    inTransition = value;
+    emitter.emit('inTransition', value);
+  };
+
+  /**
+   * Scroll the daily view to a specific date
+   * @param {Date} date The date to translate
+   * @param {number} transitionDelay In ms the time to do the translation
+   */
+  container.pantoDate = function pantoDate(date, transitionDelay = transitionDelayFast) {
+    const domain = container.getCurrentDomain();
+    const nDays = Math.round(10 * (date.valueOf() - domain.center.valueOf()) / MS_IN_DAY) / 10.0;
+    log.info(`panDays: Jumped ${nDays > 0 ? 'forward': 'back'} ${Math.abs(nDays)} days to ${date.toISOString()}.`);
+
+    const currentPosition = xScale(domain.center);
+    const wantedPosition = xScale(date);
+    const amountInPixel = wantedPosition - currentPosition;
+
+    let nUgly = 0;
+    nav.currentTranslation -= amountInPixel;
+    container.inTransition(true);
     mainGroup.transition()
-      .duration(500).tween('zoom', function() {
-      var ix = d3.interpolate(nav.currentTranslation + width - axisGutter, nav.currentTranslation);
-      return function(t) {
-        nav.pan.translate([ix(t), 0]);
-        nav.pan.event(mainGroup);
-      };
-    })
-      .each(function() { ++n; })
-      .each('end', function() {
-        // this ugly solution courtesy of the man himself: https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
-        if (!--n) {
-          emitter.emit('inTransition', false);
+      .duration(transitionDelay)
+      .tween('zoom', () => {
+        const ix = d3.interpolate(nav.currentTranslation + amountInPixel, nav.currentTranslation);
+        return (t) => {
+          nav.pan.translate([ix(t), 0]);
+          nav.pan.event(mainGroup);
+        };
+      })
+      .each(() => ++nUgly)
+      .each('end', () => {
+        // this ugly solution courtesy of the man himself:
+        // https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
+        if (!--nUgly) {
+          container.navString(true);
+          container.inTransition(false);
         }
       });
   };
 
+  container.panForward = function() {
+    const domain = container.getCurrentDomain();
+    container.pantoDate(new Date(domain.center.valueOf() + MS_IN_DAY));
+  };
+
   container.panBack = function() {
-    log.info('Jumped back a day.');
-    nav.currentTranslation += width - axisGutter;
-    var n = 0;
-    emitter.emit('inTransition', true);
-    mainGroup.transition().duration(500).tween('zoom', function() {
-      var ix = d3.interpolate(nav.currentTranslation - width + axisGutter, nav.currentTranslation);
-      return function(t) {
-        nav.pan.translate([ix(t), 0]);
-        nav.pan.event(mainGroup);
-      };
-    })
-      .each(function() { ++n; })
-      .each('end', function() {
-        // this ugly solution courtesy of the man himself: https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
-        if (!--n) {
-          emitter.emit('inTransition', false);
-        }
-      });
+    const domain = container.getCurrentDomain();
+    container.pantoDate(new Date(domain.center.valueOf() - MS_IN_DAY));
   };
 
   container.newPool = function() {
@@ -197,26 +240,36 @@ function oneDay(emitter /*, opts = {} */) {
   };
 
   container.getCurrentDomain = function() {
-    var currentDomain = xScale.domain();
-    var d = new Date(xScale.domain()[0]);
-    return {
-      'start': new Date(currentDomain[0]),
-      'end': new Date(currentDomain[1]),
-      'center': new Date(d.setUTCHours(d.getUTCHours() + 12))
-    };
+    /** @type {Date[]} */
+    const currentDomain = xScale.domain();
+    const start = currentDomain[0];
+    const end = currentDomain[1];
+    const center = new Date(start);
+    center.setUTCHours(start.getUTCHours() + 12);
+    return { start, end, center };
   };
 
-  container.navString = function(a) {
-    var currentDomain = container.getCurrentDomain();
-    emitter.emit('currentDomain', {
-      'domain': a
-    });
-    emitter.emit('navigated', [currentDomain, currentDomain.center.toISOString()]);
-    if (a[1].valueOf() === container.endpoints[1].valueOf()) {
-      emitter.emit('mostRecent', true);
+  /**
+   * Update the navigation datetime & button back/forth day
+   * in blip daily view
+   */
+  container.navString = function navString(direct = false) {
+    const prevMostRecent = mostRecent;
+    const domain = container.getCurrentDomain();
+
+    if (direct) {
+      // At the end of panBack / panForward a day only
+      // log.debug('emit navigated (direct)', { inTransition, domain });
+      emitter.emit('navigated', domain);
+    } else {
+      // Manual scrolling with the bar
+      throttleEmitNavigated();
     }
-    else {
-      emitter.emit('mostRecent', false);
+
+    mostRecent = domain.end.valueOf() === container.endpoints[1].valueOf();
+    if (prevMostRecent !== mostRecent) {
+      // log.debug('emit mostRecent', { mostRecent, prevMostRecent });
+      emitter.emit('mostRecent', mostRecent);
     }
   };
 
@@ -246,7 +299,25 @@ function oneDay(emitter /*, opts = {} */) {
   };
 
   container.dateAtCenter = function() {
-    return dt.toISODateString(new Date(container.currentCenter().toISOString()));
+    const domain = container.getCurrentDomain();
+    return dt.toISODateString(domain.center);
+  };
+
+  container.isUpdateRenderedDataRangeNeeded = function() {
+    if (renderedData.length > 0) {
+      /** @type {Date[]} */
+      const displayedDomain = xScale.domain();
+      const startDisplayDate = displayedDomain[0].valueOf();
+      const endDisplayDate = displayedDomain[1].valueOf();
+      const startDataDate = renderedData[0].epoch;
+      const endDataDate = renderedData[renderedData.length - 1].epoch;
+
+      const isNeeded = startDataDate > startDisplayDate || startDisplayDate > endDataDate || startDataDate > endDisplayDate || endDisplayDate > endDataDate;
+      // log.debug("isUpdateRenderedDataRangeNeeded", {startDisplayDate, endDisplayDate, startDataDate, endDataDate, isNeeded});
+      return isNeeded;
+    }
+    // log.debug("isUpdateRenderedDataRangeNeeded: No data!");
+    return true;
   };
 
   // chainable methods
@@ -254,8 +325,6 @@ function oneDay(emitter /*, opts = {} */) {
     // set the domain and range for the main tideline x-scale
     xScale.domain([container.initialEndpoints[0], container.initialEndpoints[1]])
       .range([axisGutter, width]);
-
-    container.currentCenter(container.getCurrentDomain().center);
 
     if (nav.scrollNav) {
       nav.scrollScale = d3.time.scale.utc()
@@ -272,7 +341,7 @@ function oneDay(emitter /*, opts = {} */) {
 
   container.setNav = function() {
     const maxTranslation = -xScale(container.endpoints[0]) + axisGutter;
-    const minTranslation = -(xScale(container.endpoints[1])) + width;
+    const minTranslation = -xScale(container.endpoints[1]) + width;
     nav.pan = d3.behavior.zoom()
       .scaleExtent([1, 1])
       .x(xScale)
@@ -280,20 +349,19 @@ function oneDay(emitter /*, opts = {} */) {
         emitter.emit('zoomstart');
       })
       .on('zoom', function() {
-        if (dt.toISODateString(container.getCurrentDomain().center) !== container.dateAtCenter()) {
+        if (container.isUpdateRenderedDataRangeNeeded()) {
+          // log.debug("redraw", { mostRecent });
           container.renderedData(xScale.domain());
-          if (!mostRecent) {
-            for (let j = 0; j < pools.length; j++) {
-              pools[j].render(poolGroup, container.renderedData());
+          if (renderedData.length > 0) {
+            for (let i = 0; i < pools.length; i++) {
+              pools[i].render(poolGroup, renderedData);
             }
           }
-          container.currentCenter(container.getCurrentDomain().center);
         }
         const e = d3.event;
         if (e.translate[0] < minTranslation) {
           e.translate[0] = minTranslation;
-        }
-        else if (e.translate[0] > maxTranslation) {
+        } else if (e.translate[0] > maxTranslation) {
           e.translate[0] = maxTranslation;
         }
         nav.pan.translate([e.translate[0], 0]);
@@ -303,13 +371,12 @@ function oneDay(emitter /*, opts = {} */) {
         mainGroup.select('#tidelineTooltips').attr('transform', 'translate(' + e.translate[0] + ',0)');
         mainGroup.select('#tidelineAnnotations').attr('transform', 'translate(' + e.translate[0] + ',0)');
         if (scrollHandleTrigger) {
-          mainGroup.select('.scrollThumb').transition().ease('linear').attr('x', function(d) {
+          mainGroup.select('.scrollThumb').transition().ease('linear').attr('x', (d) => {
             d.x = nav.scrollScale(xScale.domain()[0]);
             return d.x - nav.scrollThumbRadius;
           });
-        }
-        else {
-          mainGroup.select('.scrollThumb').attr('x', function(d) {
+        } else {
+          mainGroup.select('.scrollThumb').attr('x', (d) => {
             d.x = nav.scrollScale(xScale.domain()[0]);
             return d.x - nav.scrollThumbRadius;
           });
@@ -318,9 +385,12 @@ function oneDay(emitter /*, opts = {} */) {
       .on('zoomend', function() {
         emitter.emit('zoomend');
         container.currentTranslation(nav.latestTranslation);
-        // must only call navString *after* updating currentTranslation
-        // because of translation adjustment on stats widget no data annotations
-        container.navString(xScale.domain());
+        if (!inTransition) {
+          // Pan back/forward in progress.
+          // It will be done at the end (see panADay), we do not want
+          // to do it here, because is slow the scrolling too much
+          container.navString();
+        }
         if (!scrollHandleTrigger) {
           mainGroup.select('.scrollThumb').attr('x', function (/* d */) {
             return nav.scrollScale(xScale.domain()[0]) - nav.scrollThumbRadius;
@@ -416,18 +486,31 @@ function oneDay(emitter /*, opts = {} */) {
     return container;
   };
 
-  container.setAtDate = function (date, mostRecent) {
-    if (!mostRecent) {
-      scrollHandleTrigger = false;
+  /**
+   *
+   * @param {Date | null} date The date to display
+   * @param {boolean} toMostRecent true if we want to jump to the most recent date
+   * @returns {typeof container} this for chaining
+   */
+  container.setAtDate = function setAtDate(date, toMostRecent = false) {
+    log.debug('setAtDate', { date, toMostRecent });
+    scrollHandleTrigger = toMostRecent;
+    if (toMostRecent) {
+      if (date === null) {
+        // Click on the most recent button
+        // do a smooth
+        const domain = container.getCurrentDomain();
+        const newDateMS = container.initialEndpoints[1].valueOf() - MS_IN_DAY / 2;
+        const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast;
+        container.pantoDate(new Date(newDateMS), transitionDelay);
+      } else {
+        nav.pan.translate([0,0]);
+        nav.pan.event(mainGroup);
+      }
+    } else {
       container.currentTranslation(-xScale(date) + axisGutter);
       nav.pan.translate([nav.currentTranslation, 0]);
       nav.pan.event(mainGroup);
-    }
-    else {
-      scrollHandleTrigger = true;
-      nav.pan.translate([0,0]);
-      nav.pan.event(mainGroup);
-      mostRecent = false;
     }
 
     return container;
@@ -490,12 +573,6 @@ function oneDay(emitter /*, opts = {} */) {
     return container;
   };
 
-  container.currentCenter = function(x) {
-    if (!arguments.length) return currentCenter;
-    currentCenter = new Date(x.toISOString());
-    return container;
-  };
-
   // FIXME: Delete me: not use
   container.buffer = function(x) {
     if (!arguments.length) return renderDaysBuffer;
@@ -526,7 +603,7 @@ function oneDay(emitter /*, opts = {} */) {
     log.debug('renderDaysBuffer', renderDaysBuffer);
 
     const lastTimezone = tidelineData.getLastTimezone();
-    const first = moment.utc(tidelineData.endpoints[0]);
+    const first = moment.utc(tidelineData.opts.dataRange[0]);
     const last = moment.utc(tidelineData.endpoints[1]);
 
     if (last.valueOf() - first.valueOf() < dt.MS_IN_24) {
@@ -552,7 +629,7 @@ function oneDay(emitter /*, opts = {} */) {
     const filtered = tidelineData.dataByDate.filter([start, end]);
     renderedData = filtered.top(Infinity).reverse();
 
-    return container;
+    return renderedData;
   };
 
   return container;
