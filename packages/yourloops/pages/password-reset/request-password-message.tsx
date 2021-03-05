@@ -79,7 +79,7 @@ export default function RequestPassordMessage(props: RequestPassordMessageProps)
       </CardContent>
       <CardActions className={classes.CardActions}>
         <Button variant="contained" color="secondary" onClick={onBack}>
-          {t("common-cancel")}
+          {t("reset-end")}
         </Button>
       </CardActions>
     </React.Fragment>
