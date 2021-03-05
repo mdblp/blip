@@ -207,7 +207,6 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const resetPassword = async (key: string, username: string, password: string): Promise<boolean> => {
-    log.info("");
 
     if (traceToken === null) {
       throw new Error("not-yet-initialized");

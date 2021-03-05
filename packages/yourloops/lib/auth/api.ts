@@ -269,7 +269,6 @@ async function requestPasswordReset(
 }
 
 async function resetPassword(key: string, username: string, password: string, traceToken: string): Promise<boolean> {
-  log.info(username, password, key);
   const confirmURL = new URL(`/confirm/accept/forgot`, appConfig.API_HOST);
   const response = await fetch(confirmURL.toString(), {
     method: "PUT",
