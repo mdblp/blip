@@ -211,7 +211,7 @@
   "modal-delete-patient-info-2": "Jij en je teamleden zullen geen toegang meer hebben tot zijn/haar gegevens.",
   "modal-delete-patient-success": "De patiënt wordt niet langer gemonitord door je team",
   "modal-delete-patient-failure": "Patiënt kan niet worden verwijderd. Probeer het later opnieuw.",
-  "modal-patient-share-team-action": "Lid worden van team",
+  "modal-patient-share-team-action": "Uitnodiging accepteren",
   "modal-patient-share-team-title": "Je gegevens delen met een behandelteam",
   "modal-patient-share-team-info": "Je zorgverlener nodigt je uit om je gegevens te delen met",
   "modal-patient-team-warning": "Controleer of de bovenstaande gegevens overeenkomen met de informatie die door je zorgverlener is verstrekt voordat je de uitnodiging accepteert.",
