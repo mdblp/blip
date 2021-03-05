@@ -86,7 +86,7 @@ class PatientDataPage extends React.Component {
       chartType: 'daily',
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
-      /** @type {Moment.moment | null} Current date -> daily view */
+      /** @type {moment.Moment | null} Current date -> daily view */
       datetimeLocation: null,
       /** @type {string[]} Current display date range */
       endpoints: [],
@@ -336,6 +336,7 @@ class PatientDataPage extends React.Component {
       chartPrefs,
       chartStates,
       datetimeLocation,
+      endpoints,
       tidelineData
     } = this.state;
 
@@ -374,6 +375,7 @@ class PatientDataPage extends React.Component {
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
             datetimeLocation={datetimeLocation}
+            endpoints={endpoints}
             patient={patient}
             tidelineData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -402,7 +404,7 @@ class PatientDataPage extends React.Component {
             currentPatientInViewId={patient.userid}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
-            initialDatetimeLocation={datetimeLocation}
+            initialDatetimeLocation={datetimeLocation.toISOString() ?? ''}
             patient={patient}
             patientData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -419,7 +421,7 @@ class PatientDataPage extends React.Component {
             updateDatetimeLocation={this.updateDatetimeLocation}
             uploadUrl={config.UPLOAD_API}
             trendsState={chartStates.trends}
-            endpoints={this.state.endpoints}
+            endpoints={endpoints}
           />
         );
       case 'settings':

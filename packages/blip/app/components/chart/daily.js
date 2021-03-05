@@ -231,6 +231,7 @@ class Daily extends React.Component {
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     datetimeLocation: PropTypes.object.isRequired,
+    endpoints: PropTypes.arrayOf(PropTypes.string).isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     canPrint: PropTypes.bool.isRequired,
@@ -262,7 +263,6 @@ class Daily extends React.Component {
     this.state = {
       atMostRecent: false,
       inTransition: false,
-      endpoints: [],
       title: '',
       tooltip: null,
     };
@@ -276,7 +276,7 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData } = this.props;
+    const { tidelineData, endpoints } = this.props;
     const { inTransition, tooltip } = this.state;
     const { timePrefs } = tidelineData.opts;
 
@@ -357,7 +357,7 @@ class Daily extends React.Component {
                 chartPrefs={this.props.chartPrefs}
                 chartType={this.chartType}
                 dataUtil={this.props.dataUtil}
-                endpoints={this.state.endpoints}
+                endpoints={endpoints}
               />
             </div>
           </div>
@@ -481,7 +481,6 @@ class Daily extends React.Component {
     this.setState({ tooltip });
   };
 
-
   handleSMBGHover = (datum) => {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
@@ -518,7 +517,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
       <FoodTooltip
-        food={datum}
+        food={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -534,7 +533,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
       <ReservoirTooltip
-        reservoir={datum}
+        reservoir={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -550,7 +549,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
       <PhysicalTooltip
-        physicalActivity={datum}
+        physicalActivity={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -566,7 +565,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
       <ParameterTooltip
-        parameter={datum}
+        parameter={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -582,7 +581,7 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum);
     const tooltip = (
       <ConfidentialTooltip
-      confidential={datum}
+      confidential={datum.data}
         position={{
           top: datum.top,
           left: datum.left
