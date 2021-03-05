@@ -149,8 +149,8 @@ function RequestPasswordResetPage(): JSX.Element {
             </CardMedia>
             {success ? (
               <RequestPassordMessage
-                header="Email sent!"
-                body="Check your email and follow the instructions to reset your password."
+                header="password-request-reset-title"
+                body="password-request-reset-instructions"
               />
             ) : (
               <RequestPasswordForm

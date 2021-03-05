@@ -151,14 +151,14 @@ export default function ResetPasswordContent(): JSX.Element {
       <Snackbar params={snackbarParams} />
       {success ? (
         <RequestPassordMessage
-          header="Success!"
-          body="Your password was changed successfully. You can now log in with your new password."
+          header="password-reset-success-title"
+          body="password-reset-success"
         />
       ) : (
         <>
           <CardContent className={classes.CardContent}>
             <Typography variant="h6" gutterBottom>
-              {t("Change your password")}
+              {t("password-reset-title")}
             </Typography>
             <form
               style={{

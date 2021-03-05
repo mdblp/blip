@@ -123,7 +123,7 @@ export default function RequestPasswordForm(props: RequestPasswordFormProps): JS
           color="primary"
           onClick={props.onSendResetLink}
           disabled={emptyUsername || props.inProgress}>
-          {props.inProgress ? t("Sending email") : t("Send reset link")}
+          {props.inProgress ? t("Sending reset link") : t("Send reset link")}
         </Button>
       </CardActions>
     </React.Fragment>

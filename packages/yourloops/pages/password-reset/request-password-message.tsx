@@ -32,8 +32,8 @@ import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import Link from "@material-ui/core/Link";
 
 const requestStyle = makeStyles((theme: Theme) => {
   return {
@@ -63,7 +63,7 @@ export default function RequestPassordMessage(props: RequestPassordMessageProps)
   const classes = requestStyle();
   const history = useHistory();
 
-  const onBack = (): void => {
+  const onGoToLogin = (): void => {
     history.push("/");
   };
 
@@ -78,9 +78,9 @@ export default function RequestPassordMessage(props: RequestPassordMessageProps)
         </Typography>
       </CardContent>
       <CardActions className={classes.CardActions}>
-        <Button variant="contained" color="secondary" onClick={onBack}>
+        <Link href="/" onClick={onGoToLogin}>
           {t("reset-end")}
-        </Button>
+        </Link>
       </CardActions>
     </React.Fragment>
   );
