@@ -206,6 +206,18 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return response;
   };
 
+  const resetPassword = async (key: string, username: string, password: string): Promise<boolean> => {
+    log.info("");
+
+    if (traceToken === null) {
+      throw new Error("not-yet-initialized");
+    }
+
+    const response = await api.resetPassword(key, username, password, traceToken);
+
+    return response;
+  };
+
   const initHook = () => {
     // const onStorageChange = (ev: StorageEvent) => {
     //   log.debug("onStorageChange");
@@ -298,6 +310,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     signup,
     isLoggedIn,
     sendPasswordResetEmail,
+    resetPassword,
     flagPatient,
     setFlagPatients,
     getFlagPatients,
