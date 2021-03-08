@@ -82,6 +82,8 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       textAlign: "center",
       color: theme.palette.primary.main,
+      fontWeight: "bold",
+      fontSize: "16px",
       margin: "16px",
     },
     container: {
