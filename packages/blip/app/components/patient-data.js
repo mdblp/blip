@@ -22,21 +22,21 @@ import bows from 'bows';
 import moment from 'moment-timezone';
 import i18next from 'i18next';
 
-import sundial from 'sundial';
-import { TidelineData, nurseShark } from 'tideline';
+import { TidelineData, nurseShark, MS_IN_DAY } from 'tideline';
 import { utils as vizUtils, components as vizComponents, createPrintPDFPackage } from 'tidepool-viz';
 
 import config from '../config';
 import personUtils from '../core/personutils';
 import utils from '../core/utils';
 import { MGDL_UNITS } from '../core/constants';
+import PartialDataLoad from '../core/lib/partial-data-load';
 import { Header, Basics, Daily, Trends, Settings } from './chart';
 import Messages from './messages';
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux';
 
 const { waitTimeout } = utils;
 const { DataUtil } = vizUtils.data;
-const { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs } = vizUtils.datetime;
+const { addDuration, getLocalizedCeiling } = vizUtils.datetime;
 const { isAutomatedBasalDevice: isAutomatedBasalDeviceCheck } = vizUtils.device;
 const { commonStats, getStatDefinition, statFetchMethods } = vizUtils.stat;
 const { Loader } = vizComponents;
@@ -60,8 +60,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../../../yourloops/models/message").MessageNote } MessageNote
  *
  * @typedef {{ api: API, patient: User, store: Store }} PatientDataProps
- * @typedef {{loadingState: number, tidelineData: TidelineData, chartType: string, endpoints: string[], patient: User, canPrint: boolean, pdf: object, chartPrefs: object, createMessageDatetime: moment.Moment | null, messageThread: MessageNote[] | null}} PatientDataState
- *
+ * @typedef {{loadingState: number, tidelineData: TidelineData, epochLocation: number, epochRange: number, chartType: string, patient: User, canPrint: boolean, pdf: object, chartPrefs: object, createMessageDatetime: moment.Moment | null, messageThread: MessageNote[] | null}} PatientDataState
  */
 
 /**
@@ -86,12 +85,14 @@ class PatientDataPage extends React.Component {
       chartType: 'daily',
       loadingState: LOADING_STATE_NONE,
       errorMessage: null,
-      /** @type {moment.Moment | null} Current date -> daily view */
-      datetimeLocation: null,
-      /** @type {string[]} Current display date range */
-      endpoints: [],
-      /** @type {moment.Moment[]} Available data date range from the API */
-      dataRanges: null,
+      /** Current display date (date at center) */
+      epochLocation: 0,
+      /** Current display data range in ms around epochLocation */
+      msRange: 0,
+      /** @type {moment.Moment[]} Available data dates range returned by the API */
+      dataRange: null,
+      /** @type {PartialDataLoad} */
+      partialDataLoad: null,
       timePrefs: {
         timezoneAware: true,
         timezoneName: browserTimezone,
@@ -153,7 +154,6 @@ class PatientDataPage extends React.Component {
       tidelineData: null,
     };
 
-    this.handleChartDateRangeUpdate = this.handleChartDateRangeUpdate.bind(this);
     this.handleSwitchToBasics = this.handleSwitchToBasics.bind(this);
     this.handleSwitchToDaily = this.handleSwitchToDaily.bind(this);
     this.handleSwitchToTrends = this.handleSwitchToTrends.bind(this);
@@ -162,7 +162,7 @@ class PatientDataPage extends React.Component {
     this.handleClickRefresh = this.handleClickRefresh.bind(this);
     this.handleClickNoDataRefresh = this.handleClickNoDataRefresh.bind(this);
 
-    this.updateDatetimeLocation = this.updateDatetimeLocation.bind(this);
+    this.handleDatetimeLocationChange = this.handleDatetimeLocationChange.bind(this);
     this.updateChartPrefs = this.updateChartPrefs.bind(this);
 
     this.unsubscribeStore = null;
@@ -202,6 +202,8 @@ class PatientDataPage extends React.Component {
     let errorDisplay = null;
 
     switch (loadingState) {
+      case LOADING_STATE_EARLIER_FETCH:
+      case LOADING_STATE_EARLIER_PROCESS:
       case LOADING_STATE_DONE:
         if (chartType === 'daily') {
           messages = this.renderMessagesContainer();
@@ -211,8 +213,6 @@ class PatientDataPage extends React.Component {
       case LOADING_STATE_NONE:
         messages = <p>Please select a patient</p>;
         break;
-      case LOADING_STATE_EARLIER_FETCH:
-      case LOADING_STATE_EARLIER_PROCESS:
       case LOADING_STATE_INITIAL_FETCH:
       case LOADING_STATE_INITIAL_PROCESS:
         loader = <Loader />;
@@ -297,36 +297,6 @@ class PatientDataPage extends React.Component {
     return false;
   }
 
-  renderSettings() {
-    const { patient } = this.props;
-    const { canPrint, tidelineData } = this.state;
-    return (
-      <div>
-        <div className='app-no-print'>
-          <Settings
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={this.state.chartPrefs}
-            currentPatientInViewId={patient.userid}
-            timePrefs={this.state.timePrefs}
-            patient={patient}
-            patientData={tidelineData}
-            canPrint={canPrint}
-            permsOfLoggedInUser={this.state.permsOfLoggedInUser}
-            onClickRefresh={this.handleClickRefresh}
-            onClickNoDataRefresh={this.handleClickNoDataRefresh}
-            onSwitchToBasics={this.handleSwitchToBasics}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchToTrends={this.handleSwitchToTrends}
-            onSwitchToSettings={this.handleSwitchToSettings}
-            onClickPrint={this.handleClickPrint}
-            trackMetric={this.trackMetric}
-            uploadUrl={config.UPLOAD_API}
-          />
-        </div>
-      </div>
-    );
-  }
-
   renderChart() {
     const { patient, profileDialog } = this.props;
     const {
@@ -335,8 +305,8 @@ class PatientDataPage extends React.Component {
       loadingState,
       chartPrefs,
       chartStates,
-      datetimeLocation,
-      endpoints,
+      epochLocation,
+      msRange,
       tidelineData
     } = this.state;
 
@@ -374,10 +344,10 @@ class PatientDataPage extends React.Component {
             chartPrefs={chartPrefs}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
-            datetimeLocation={datetimeLocation}
-            endpoints={endpoints}
             patient={patient}
             tidelineData={tidelineData}
+            epochLocation={epochLocation}
+            msRange={msRange}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             permsOfLoggedInUser={permsOfLoggedInUser}
@@ -389,10 +359,9 @@ class PatientDataPage extends React.Component {
             onClickPrint={this.handleClickPrint}
             onSwitchToTrends={this.handleSwitchToTrends}
             onSwitchToSettings={this.handleSwitchToSettings}
-            onUpdateChartDateRange={this.handleChartDateRangeUpdate}
+            onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
             updateChartPrefs={this.updateChartPrefs}
-            updateDatetimeLocation={this.updateDatetimeLocation}
             ref={this.chartRef} />
           );
       case 'trends':
@@ -404,7 +373,8 @@ class PatientDataPage extends React.Component {
             currentPatientInViewId={patient.userid}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
-            initialDatetimeLocation={datetimeLocation.toISOString() ?? ''}
+            epochLocation={epochLocation}
+            msRange={msRange}
             patient={patient}
             patientData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -415,18 +385,40 @@ class PatientDataPage extends React.Component {
             onSwitchToDaily={this.handleSwitchToDaily}
             onSwitchToTrends={this.handleSwitchToTrends}
             onSwitchToSettings={this.handleSwitchToSettings}
-            onUpdateChartDateRange={this.handleChartDateRangeUpdate}
+            onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
             updateChartPrefs={this.updateChartPrefs}
-            updateDatetimeLocation={this.updateDatetimeLocation}
             uploadUrl={config.UPLOAD_API}
             trendsState={chartStates.trends}
-            endpoints={endpoints}
           />
         );
       case 'settings':
-        return this.renderSettings();
+        return (
+          <div className='app-no-print'>
+            <Settings
+              bgPrefs={this.state.bgPrefs}
+              chartPrefs={this.state.chartPrefs}
+              currentPatientInViewId={patient.userid}
+              timePrefs={this.state.timePrefs}
+              patient={patient}
+              patientData={tidelineData}
+              canPrint={canPrint}
+              permsOfLoggedInUser={this.state.permsOfLoggedInUser}
+              onClickRefresh={this.handleClickRefresh}
+              onClickNoDataRefresh={this.handleClickNoDataRefresh}
+              onSwitchToBasics={this.handleSwitchToBasics}
+              onSwitchToDaily={this.handleSwitchToDaily}
+              onSwitchToTrends={this.handleSwitchToTrends}
+              onSwitchToSettings={this.handleSwitchToSettings}
+              onClickPrint={this.handleClickPrint}
+              trackMetric={this.trackMetric}
+              uploadUrl={config.UPLOAD_API}
+            />
+          </div>
+        );
     }
+
+    return null;
   }
 
   renderMessagesContainer() {
@@ -460,6 +452,7 @@ class PatientDataPage extends React.Component {
           trackMetric={this.trackMetric} />
       );
     }
+    return null;
   }
 
   generatePDFStats(data) {
@@ -583,36 +576,6 @@ class PatientDataPage extends React.Component {
     return createPrintPDFPackage(pdfData, opts);
   }
 
-  subtractTimezoneOffset(datetime, timezoneSettings = this.state.timePrefs) {
-    const dateMoment = moment.utc(datetime);
-
-    if (dateMoment.isValid()) {
-      let timezoneOffset = 0;
-
-      if (_.get(timezoneSettings, 'timezoneAware')) {
-        timezoneOffset = sundial.getOffsetFromZone(dateMoment.toISOString(), timezoneSettings.timezoneName);
-      }
-      return dateMoment.subtract(timezoneOffset, 'minutes').toISOString();
-    }
-
-    return datetime;
-  }
-
-  /**
-   *
-   * @param {string[]} newEndpoints
-   * @param {() => void} cb callback
-   */
-  handleChartDateRangeUpdate(newEndpoints, cb = _.noop) {
-    const { endpoints } = this.state;
-    // this.log.debug('handleChartDateRangeUpdate', { endpoints, newEndpoints });
-    if (!_.isEqual(endpoints, newEndpoints)) {
-      this.setState({ endpoints: newEndpoints }, cb);
-    } else if (_.isFunction(cb)) {
-      cb();
-    }
-  }
-
   async handleMessageCreation(message) {
     this.log.debug('handleMessageCreation', message);
     const shapedMessage = nurseShark.reshapeMessage(message);
@@ -668,16 +631,14 @@ class PatientDataPage extends React.Component {
   }
 
   handleShowMessageCreation(/** @type {moment.Moment | Date} */ datetime) {
-    const { endpoints, timePrefs } = this.state;
-    this.log.debug('handleShowMessageCreation', { datetime, endpoints });
+    const { epochLocation, tidelineData } = this.state;
+    this.log.debug('handleShowMessageCreation', { datetime, epochLocation });
     let mDate = datetime;
     let action = 'Create a message from background';
     if (datetime === null) {
       action = 'Clicked create a message';
-      const begin = moment.utc(endpoints[0]).valueOf();
-      const end = moment.utc(endpoints[1]).valueOf();
-      const timestamp = begin + (end - begin) / 2;
-      mDate = moment.utc(timestamp).tz(timePrefs.timezoneName);
+      const timezone = tidelineData.getTimezoneAt(epochLocation);
+      mDate = moment.utc(epochLocation).tz(timezone);
     }
     this.setState({ createMessageDatetime : mDate.toISOString() });
 
@@ -703,48 +664,50 @@ class PatientDataPage extends React.Component {
     }
 
     this.dataUtil.chartPrefs = this.state.chartPrefs['basics'];
-    this.setState({
-      chartType: 'basics',
-    });
+    this.setState({ chartType: 'basics' });
   }
 
-  handleSwitchToDaily(datetime, title = 'n/a') {
+  /**
+   *
+   * @param {moment.Moment | Date | number} datetime The day to display
+   * @param {string} calendarName For trackmetrics: The calendar we came from
+   */
+  handleSwitchToDaily(datetime = null, calendarName = 'none') {
     this.trackMetric('switch blip tab', {
       fromChart: this.state.chartType,
-      fromCalendar: title,
+      fromCalendar: calendarName,
       toChart: 'daily',
     });
 
-    // We set the datetimeLocation to noon so that the view 'centers' properly, showing the entire day
-    const dateCeiling = getLocalizedCeiling(datetime || this.state.endpoints[1], this.state.timePrefs);
-    const timezone = getTimezoneFromTimePrefs(this.state.timePrefs);
+    let { epochLocation } = this.state;
 
-    const datetimeLocation = moment.utc(dateCeiling.valueOf()).tz(timezone).subtract(1, 'day').hours(12);
+    if (typeof datetime === 'number') {
+      epochLocation = datetime;
+    } else if (moment.isMoment(datetime) || datetime instanceof Date) {
+      epochLocation = datetime.valueOf();
+    }
+
+    this.log.info('Switch to daily', { date: moment.utc(epochLocation).toISOString(), epochLocation });
 
     this.dataUtil.chartPrefs = this.state.chartPrefs['daily'];
     this.setState({
       chartType: 'daily',
-      datetimeLocation,
+      epochLocation,
+      msRange: MS_IN_DAY,
     });
   }
 
-  handleSwitchToTrends(datetime) {
+  handleSwitchToTrends(e) {
     this.trackMetric('switch blip tab', {
       fromChart: this.state.chartType,
       toChart: 'trends',
     });
-
-    // We set the datetimeLocation to noon so that the view 'centers' properly, showing the entire day
-    const dateCeiling = getLocalizedCeiling(datetime || this.state.endpoints[1], this.state.timePrefs);
-    const timezone = getTimezoneFromTimePrefs(this.state.timePrefs);
-
-    const datetimeLocation = moment.utc(dateCeiling.valueOf()).tz(timezone);
+    if (e) {
+      e.preventDefault();
+    }
 
     this.dataUtil.chartPrefs = this.state.chartPrefs['trends'];
-    this.setState({
-      chartType: 'trends',
-      datetimeLocation,
-    });
+    this.setState({ chartType: 'trends' });
   }
 
   handleSwitchToSettings(e) {
@@ -754,9 +717,7 @@ class PatientDataPage extends React.Component {
     if (e) {
       e.preventDefault();
     }
-    this.setState({
-      chartType: 'settings',
-    });
+    this.setState({ chartType: 'settings' });
   }
 
   handleClickPrint = () => {
@@ -836,23 +797,89 @@ class PatientDataPage extends React.Component {
   }
 
   /**
-   *
-   * @param {moment.Moment | Date} datetime The new location for the daily view
-   * @param {function} cb setState() callback
+   * Chart display date / range change
+   * @param {number} epochLocation datetime epoch value in ms
+   * @param {number} msRange ms around epochLocation
+   * @returns {Promise<boolean>} true if new data are loaded
    */
-  updateDatetimeLocation(datetime, cb = null) {
-    const { tidelineData } = this.state;
-    let datetimeLocation = datetime;
-    if (!moment.isMoment(datetime)) {
-      this.log.warn('FIXME updateDatetimeLocation parameter is not a moment', { datetime });
-      datetimeLocation = moment.tz(datetime, tidelineData.getTimezoneAt(datetime));
-    }
-    this.setState({ datetimeLocation }, cb);
-  }
+  async handleDatetimeLocationChange(epochLocation, msRange) {
+    let dataLoaded = false;
+    const {
+      partialDataLoad,
+      epochLocation: currentLocation,
+      msRange: currentRange,
+      chartType,
+      loadingState,
+    } = this.state;
 
-  updateChartEndpoints(endpoints, cb) {
-    this.log.debug('updateChartEndpoints', endpoints),
-    this.setState({ endpoints }, cb);
+    // this.log.debug('handleDatetimeLocationChange()', {
+    //   currentLocation,
+    //   currentRange,
+    //   epochLocation,
+    //   msRange,
+    //   date: moment.utc(epochLocation).toISOString(),
+    //   rangeDays: msRange/MS_IN_DAY
+    // });
+
+    if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
+      throw new Error('handleDatetimeLocationChange: invalid parameters');
+    }
+
+    // Don't do anything if we are currently loading
+    // And try to do something only if there is something to do !
+    if (loadingState === LOADING_STATE_DONE && (currentLocation !== epochLocation || currentRange !== msRange)) {
+      // For daily check for +/- 1 day (and not 0.5 day), for others only the displayed range
+      let msRangeDataNeeded = chartType === 'daily' ? MS_IN_DAY : msRange / 2;
+      let rangeDisplay = {
+        start: epochLocation - msRangeDataNeeded,
+        end: epochLocation + msRangeDataNeeded,
+      };
+      let rangeToLoad = partialDataLoad.getRangeToLoad(rangeDisplay);
+      if (rangeToLoad) {
+        // We need more data!
+        const { api, patient } = this.props;
+
+        if (chartType === 'daily') {
+          // For daily we will load 1 week to avoid too many loading
+          msRangeDataNeeded = MS_IN_DAY * 3;
+          rangeDisplay = {
+            start: epochLocation - msRangeDataNeeded,
+            end: epochLocation + msRangeDataNeeded,
+          };
+          rangeToLoad = partialDataLoad.getRangeToLoad(rangeDisplay);
+        }
+
+        this.log.info('handleChartDateRangeUpdate getRangeToLoad', rangeToLoad);
+
+        const loadingOptions = {
+          startDate: moment.utc(rangeToLoad.start).toISOString(),
+          endDate: moment.utc(rangeToLoad.end).toISOString(),
+        };
+        this.log.info('Update loading range:', loadingOptions);
+
+        // Tell the user a loading is in progress
+        this.setState({ loadingState: LOADING_STATE_EARLIER_FETCH });
+
+        // Get the data from the API
+        const [patientData, messagesNotes] = await Promise.all([
+          api.getPatientData(patient, loadingOptions),
+          api.getMessages(patient.userid, loadingOptions),
+        ]);
+
+        this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
+        // Mark this range as loaded, so we won't ask the API again for them
+        partialDataLoad.setRangeLoaded(rangeToLoad);
+
+        // Process the data to be usable by us
+        const combinedData = patientData.concat(messagesNotes);
+        await this.processData(combinedData);
+        dataLoaded = true;
+      }
+
+      this.setState({ epochLocation, msRange });
+    }
+
+    return dataLoaded;
   }
 
   handleRefresh() {
@@ -861,16 +888,15 @@ class PatientDataPage extends React.Component {
     // TODO bgUnits from api.whoami
     this.setState({
       loadingState: LOADING_STATE_INITIAL_FETCH,
-      endpoints: [],
-      dataRanges: null,
-      datetimeLocation: null,
+      dataRange: null,
+      epochLocation: 0,
+      msRange: 0,
       tidelineData: null,
       pdf: null,
       canPrint: false,
     }, async () => {
       try {
         const range = await api.getPatientDataRange(patient);
-
         this.log.info('Data range:', range);
 
         // Assume browser locale, will adjust after
@@ -882,13 +908,18 @@ class PatientDataPage extends React.Component {
 
         this.setState({ dataRange });
 
+        const initialLoadingDates = [
+          moment.utc(dataRange[1]).startOf('week').subtract(2, 'weeks').subtract(1, 'day'),
+          moment.utc(dataRange[1]).endOf('day'),
+        ];
+
         // Get the initial range of data to load:
         // 3 weeks (for basics view) -> start/end of week
         // substract one day to be sure to have all the data we need
         // since the timezone is generally not UTC
         const loadingOptions = {
-          startDate: moment.utc(dataRange[1]).startOf('week').subtract(2, 'weeks').subtract(1, 'day').toISOString(),
-          endDate: moment.utc(dataRange[1]).endOf('week').toISOString(),
+          startDate: initialLoadingDates[0].toISOString(),
+          endDate: initialLoadingDates[1].toISOString(),
           withPumpSettings: true,
         };
 
@@ -900,8 +931,14 @@ class PatientDataPage extends React.Component {
           api.getMessages(patient.userid, loadingOptions),
         ]);
 
+        const partialDataLoad = new PartialDataLoad(
+          { start: dataRange[0].valueOf(), end: dataRange[1].valueOf() },
+          { start: initialLoadingDates[0].valueOf(), end: initialLoadingDates[1].valueOf() },
+        );
+        this.log('partialDataLoad:', partialDataLoad.toDebug());
+
         const combinedData = patientData.concat(messagesNotes);
-        this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS });
+        this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS, partialDataLoad });
 
         // Process the data to be usable by us
         await this.processData(combinedData);
@@ -918,19 +955,20 @@ class PatientDataPage extends React.Component {
    */
   async processData(data) {
     const { store, patient } = this.props;
-    const { timePrefs, bgPrefs, dataRange } = this.state;
+    const { timePrefs, bgPrefs, dataRange, epochLocation } = this.state;
     let { tidelineData } = this.state;
 
-    const opts = {
-      timePrefs,
-      ...bgPrefs,
-      dataRange,
-    };
-
     console.time('process data');
-    const res = nurseShark.processData(data, opts.bgUnits);
+    const res = nurseShark.processData(data, bgPrefs.bgUnits);
     await waitTimeout(1);
     if (tidelineData === null) {
+      const opts = {
+        timePrefs,
+        ...bgPrefs,
+        // Used by tideline oneDay to set-up the scroll range
+        // Send this information by tidelineData options
+        dataRange,
+      };
       tidelineData = new TidelineData(opts);
     }
     await tidelineData.addData(res.processedData);
@@ -940,18 +978,14 @@ class PatientDataPage extends React.Component {
       throw new Error(t('No data to display!'));
     }
 
-    this.log.info('Initial endpoints:', tidelineData.endpoints);
-    this.log.info('Time prefs', tidelineData.opts.timePrefs);
-
     this.dataUtil = new DataUtil(tidelineData.data, { bgPrefs, timePrefs, endpoints: tidelineData.endpoints });
 
-    const datetimeLocation = moment.tz(tidelineData.endpoints[1], tidelineData.getTimezoneAt(tidelineData.endpoints[1]));
-    datetimeLocation.set('hours', 12);
-    datetimeLocation.set('minutes', 0);
-    datetimeLocation.set('seconds', 0);
-    datetimeLocation.set('milliseconds', 0);
+    let newLocation = epochLocation;
+    if (epochLocation === 0) {
+      // First loading, display the last day in the daily chart
+      newLocation = moment.utc(tidelineData.endpoints[1]).valueOf() - MS_IN_DAY/2;
+    }
 
-    this.log('processData setState');
     this.setState({
       bgPrefs: {
         bgUnits: tidelineData.opts.bgUnits,
@@ -959,13 +993,12 @@ class PatientDataPage extends React.Component {
       },
       timePrefs: tidelineData.opts.timePrefs,
       tidelineData,
+      epochLocation: newLocation,
+      msRange: MS_IN_DAY,
       loadingState: LOADING_STATE_DONE,
-      endpoints: tidelineData.endpoints,
-      datetimeLocation,
       canPrint: true,
     }, () => {
-      this.log.info('Loading finished', this.state);
-      this.log('processData dispatch FETCH_PATIENT_DATA_SUCCESS');
+      this.log.info('Loading finished');
       store.dispatch({
         type: FETCH_PATIENT_DATA_SUCCESS,
         payload: {

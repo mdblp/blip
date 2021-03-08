@@ -8,12 +8,12 @@ import React from 'react';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
-import i18next from 'i18next';
 import moment from 'moment-timezone';
 
 import DataUtilStub from '../../../helpers/DataUtil';
 import Daily, { DailyChart } from '../../../../app/components/chart/daily';
 import { MGDL_UNITS } from '../../../../app/core/constants';
+import { MS_IN_DAY } from 'tideline';
 import { components as vizComponents } from 'tidepool-viz';
 
 const { Loader } = vizComponents;
@@ -55,8 +55,8 @@ describe('Daily', () => {
     },
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
-    datetimeLocation: moment.utc('2014-03-13T12:00:00.000Z'),
-    endpoints: ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
+    epochLocation: moment.utc('2014-03-13T12:00:00.000Z').valueOf(),
+    msRange: MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     loading: false,
     onClickRefresh: sinon.stub(),
     onClickPrint: sinon.stub(),
@@ -66,7 +66,9 @@ describe('Daily', () => {
     onSwitchToDaily: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
     onSwitchToTrends: sinon.stub(),
-    onUpdateChartDateRange: sinon.stub(),
+    onDatetimeLocationChange: sinon.stub().resolves(false),
+    trackMetric: sinon.stub(),
+    updateChartPrefs: sinon.stub(),
     patient: {
       profile: {
         fullName: 'Jane Doe'
@@ -86,28 +88,25 @@ describe('Daily', () => {
       },
       grouped: { foo: 'bar' },
       getTimezoneAt: sinon.stub().returns(timezone),
+      endpoints: ['2014-03-01T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     },
     canPrint: false,
     timePrefs: {
       timezoneAware: true,
       timezoneName: timezone,
     },
-    t: i18next.t.bind(i18next),
-    trackMetric: sinon.stub(),
-    updateChartPrefs: sinon.stub(),
-    updateDatetimeLocation: sinon.stub(),
   };
 
   /** @type {ShallowWrapper | ReactWrapper} */
-  let wrapper;
+  let wrapper = null;
   /** @type {Daily} */
-  let instance;
+  let instance = null;
 
   before(() => {
-    sinon.stub(DailyChart.prototype, 'rerenderChart');
+    sinon.stub(DailyChart.prototype, 'reCreateChart');
+    sinon.stub(DailyChart.prototype, 'rerenderChartData');
     sinon.stub(DailyChart.prototype, 'mountChart');
     sinon.stub(DailyChart.prototype, 'unmountChart');
-    sinon.stub(DailyChart.prototype, 'initializeChart');
     sinon.stub(DailyChart.prototype, 'render').returns(<div className='fake-daily-chart' />);
   });
 
@@ -119,12 +118,14 @@ describe('Daily', () => {
 
   afterEach(() => {
     baseProps.onClickPrint.reset();
-    baseProps.onUpdateChartDateRange.reset();
     baseProps.trackMetric.reset();
     baseProps.updateChartPrefs.reset();
-    baseProps.updateDatetimeLocation.reset();
+    baseProps.onDatetimeLocationChange.resetHistory();
     baseProps.tidelineData.getTimezoneAt.resetHistory();
-    wrapper.unmount();
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
   });
 
   after(() => {
@@ -200,24 +201,18 @@ describe('Daily', () => {
   });
 
   describe('handleDatetimeLocationChange', () => {
-    const endpoints = {
-      start: '2018-01-15T00:00:00.000Z',
-      center: '2018-01-15T12:00:00.000Z',
-      end: '2018-01-16T00:00:00.000Z',
-    };
+    const epoch = Date.parse('2018-01-15T12:00:00.000Z');
 
     it('should update the base props `datetimeLocation` & `dateRange` state', () => {
-      instance.handleDatetimeLocationChange(endpoints);
-      sinon.assert.calledOnce(baseProps.tidelineData.getTimezoneAt);
-      sinon.assert.calledOnce(baseProps.updateDatetimeLocation);
-      sinon.assert.calledWith(baseProps.updateDatetimeLocation, moment.utc('2018-01-15T12:00:00.000Z'));
-      sinon.assert.calledOnce(baseProps.onUpdateChartDateRange);
-      sinon.assert.calledWith(baseProps.onUpdateChartDateRange, ['2018-01-15T00:00:00.000Z', '2018-01-16T00:00:00.000Z']);
+      instance.handleDatetimeLocationChange(epoch);
+      sinon.assert.calledTwice(baseProps.tidelineData.getTimezoneAt);
+      sinon.assert.calledOnce(baseProps.onDatetimeLocationChange);
+      sinon.assert.calledWith(baseProps.onDatetimeLocationChange, moment.utc('2018-01-15T12:00:00.000Z').valueOf());
     });
 
     it('should set the `title` state', () => {
-      expect(wrapper.state().title).to.equal('');
-      instance.handleDatetimeLocationChange(endpoints);
+      expect(wrapper.state().title).to.equal(instance.getTitle(baseProps.epochLocation));
+      instance.handleDatetimeLocationChange(epoch);
       expect(wrapper.state().title).to.equal('Mon, Jan 15, 2018');
     });
   });

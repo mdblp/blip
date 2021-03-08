@@ -39,6 +39,7 @@ class TidelineHeader extends React.Component {
     chartType: PropTypes.string.isRequired,
     inTransition: PropTypes.bool,
     atMostRecent: PropTypes.bool,
+    loading: PropTypes.bool,
     iconBack: PropTypes.string,
     iconNext: PropTypes.string,
     iconMostRecent: PropTypes.string,
@@ -59,6 +60,7 @@ class TidelineHeader extends React.Component {
   static defaultProps = {
     inTransition: false,
     atMostRecent: false,
+    loading: false,
     canPrint: false,
     profileDialog: null,
   };
@@ -72,7 +74,7 @@ class TidelineHeader extends React.Component {
   }
 
   renderStandard() {
-    const { canPrint, chartType } = this.props;
+    const { canPrint, chartType, atMostRecent, inTransition, loading } = this.props;
 
     const printViews = ['basics', 'daily', 'bgLog', 'settings'];
     const showPrintLink = _.includes(printViews, chartType);
@@ -120,24 +122,24 @@ class TidelineHeader extends React.Component {
     const mostRecentClass = cx({
       'js-most-recent': true,
       'patient-data-icon': true,
-      'patient-data-subnav-active': !this.props.atMostRecent && !this.props.inTransition,
-      'patient-data-subnav-disabled': this.props.atMostRecent || this.props.inTransition,
+      'patient-data-subnav-active': !(atMostRecent || inTransition || loading),
+      'patient-data-subnav-disabled': atMostRecent || inTransition || loading,
       'patient-data-subnav-hidden': chartType === 'no-data',
     });
 
     const backClass = cx({
       'js-back': true,
       'patient-data-icon': true,
-      'patient-data-subnav-active': !this.props.inTransition,
-      'patient-data-subnav-disabled': this.props.inTransition,
+      'patient-data-subnav-active': !(inTransition || loading),
+      'patient-data-subnav-disabled': inTransition || loading,
       'patient-data-subnav-hidden': chartType === 'settings' || chartType === 'no-data',
     });
 
     const nextClass = cx({
       'js-next': true,
       'patient-data-icon': true,
-      'patient-data-subnav-active': !this.props.atMostRecent && !this.props.inTransition,
-      'patient-data-subnav-disabled': this.props.atMostRecent || this.props.inTransition,
+      'patient-data-subnav-active': !(atMostRecent || inTransition || loading),
+      'patient-data-subnav-disabled': atMostRecent || inTransition || loading,
       'patient-data-subnav-hidden': chartType === 'settings' || chartType === 'no-data',
     });
 

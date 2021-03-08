@@ -19,20 +19,40 @@ import _ from 'lodash';
 import bows from 'bows';
 import legend from './plot/util/legend';
 
+/** @typedef {{ type: string, plot: function, panBoolean: boolean }} PlotType */
+
 function Pool(container) {
   const d3 = window.d3;
   let log = null;
 
-  const mainSVG = d3.select('#' + container.id());
+  let mainSVG = d3.select('#' + container.id());
   var id, label, labelBaseline = 4, legends = [],
     index, heightRatio, gutterWeight, hidden = false, yPosition,
     height, minHeight = 20, maxHeight = 300,
     group,
     xScale,
-    yAxis = [],
-    plotTypes = [],
-    annotations,
-    tooltips;
+    yAxis = [];
+    /** @type {PlotType[]} */
+  let plotTypes = [];
+  let annotations = null;
+  let tooltips = null;
+
+  this.destroy = function() {
+    plotTypes.forEach((plotType) => {
+      if (typeof plotType.plot.destroy === 'function') {
+        plotType.plot.destroy();
+      }
+    });
+    mainSVG = null;
+    legends = null;
+    group = null;
+    xScale = null;
+    yAxis = null;
+    plotTypes = null;
+    annotations = null;
+    tooltips = null;
+    container = null;
+  };
 
   this.render = function(_selection, poolData) {
     plotTypes.forEach(function(plotType) {
@@ -69,19 +89,11 @@ function Pool(container) {
   };
 
   // non-chainable methods
-  this.pan = function(e) {
-    container.latestTranslation(e.translate[0]);
+  this.pan = function(translateX) {
     plotTypes.forEach(function(plotType) {
       if (plotType.panBoolean) {
-        mainSVG.select('#' + id + '_' + plotType.type).attr('transform', 'translate(' + e.translate[0] + ',0)');
+        mainSVG.select('#' + id + '_' + plotType.type).attr('transform', `translate(${translateX},0)`);
       }
-    });
-  };
-
-  this.scroll = function(e) {
-    container.latestTranslation(e.translate[1]);
-    plotTypes.forEach(function(plotType) {
-      mainSVG.select('#' + id + '_' + plotType.type).attr('transform', 'translate(0,' + e.translate[1] + ')');
     });
   };
 

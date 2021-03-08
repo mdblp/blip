@@ -22,7 +22,7 @@ import moment from 'moment-timezone';
 import WindowSizeListener from 'react-window-size-listener';
 import i18next from 'i18next';
 
-import { chartDailyFactory } from 'tideline';
+import { chartDailyFactory, MS_IN_DAY, MS_IN_HOUR } from 'tideline';
 import { components as vizComponents } from 'tidepool-viz';
 
 import { BG_DATA_TYPES } from '../../core/constants';
@@ -43,13 +43,13 @@ const PhysicalTooltip = vizComponents.PhysicalTooltip;
 const ParameterTooltip = vizComponents.ParameterTooltip;
 const ConfidentialTooltip = vizComponents.ConfidentialTooltip;
 
-const t = i18next.t.bind(i18next);
-
 class DailyChart extends React.Component {
   static propTypes = {
+    loading: PropTypes.bool.isRequired,
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
-    datetimeLocation: PropTypes.object.isRequired,
+    epochLocation: PropTypes.number.isRequired,
+    msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
     tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
@@ -58,7 +58,6 @@ class DailyChart extends React.Component {
     onShowMessageThread: PropTypes.func.isRequired,
     // other handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
-    onMostRecent: PropTypes.func.isRequired,
     onTransition: PropTypes.func.isRequired,
     onBolusHover: PropTypes.func.isRequired,
     onBolusOut: PropTypes.func.isRequired,
@@ -76,6 +75,7 @@ class DailyChart extends React.Component {
     onParameterOut: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onConfidentialOut: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -101,18 +101,27 @@ class DailyChart extends React.Component {
       'onParameterOut',
       'onConfidentialHover',
       'onConfidentialOut',
+      'trackMetric',
     ];
 
-    this.log = bows('Daily Chart');
+    this.log = bows('DailyChart');
     this.state = {
-      chart: null
+      /** @type {function | null} */
+      chart: null,
+      windowHeight: 0,
+      windowWidth: 0,
     };
     /** @type {React.RefObject} */
     this.refNode = React.createRef();
   }
 
-  componentDidMount() {
-    this.mountChart();
+  componentDidUpdate() {
+    // Prevent the scroll drag while loading
+    const { chart } = this.state;
+    if (chart !== null) {
+      const { loading } = this.props;
+      chart.loadingInProgress = loading;
+    }
   }
 
   componentWillUnmount() {
@@ -121,13 +130,12 @@ class DailyChart extends React.Component {
 
   mountChart(cb = _.noop) {
     if (this.state.chart === null) {
-      const { datetimeLocation } = this.props;
-      this.log.debug('Mounting...', { datetimeLocation });
-      const chart = chartDailyFactory(this.refNode.current, _.pick(this.props, this.chartOpts));
-      chart.setupPools();
+      const { tidelineData, epochLocation } = this.props;
+      this.log.debug('Mounting...');
+      const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts));
       this.setState({ chart }, () => {
+        chart.setAtDate(epochLocation);
         this.bindEvents();
-        this.initializeChart(datetimeLocation);
         cb();
       });
     } else {
@@ -152,7 +160,6 @@ class DailyChart extends React.Component {
     chart.emitter.on('createMessage', this.props.onCreateMessage);
     chart.emitter.on('inTransition', this.props.onTransition);
     chart.emitter.on('messageThread', this.props.onShowMessageThread);
-    chart.emitter.on('mostRecent', this.props.onMostRecent);
     chart.emitter.on('navigated', this.props.onDatetimeLocationChange);
   }
 
@@ -161,39 +168,41 @@ class DailyChart extends React.Component {
     chart.emitter.off('createMessage', this.props.onCreateMessage);
     chart.emitter.off('inTransition', this.props.onTransition);
     chart.emitter.off('messageThread', this.props.onShowMessageThread);
-    chart.emitter.off('mostRecent', this.props.onMostRecent);
     chart.emitter.off('navigated', this.props.onDatetimeLocationChange);
-  }
-
-  /**
-   * @param {moment.Moment | null} datetime The datetime for the daily chart
-   */
-  initializeChart(datetime = null) {
-    const { tidelineData } = this.props;
-    const { chart } = this.state;
-    this.log('Initializing...');
-    if (_.isEmpty(tidelineData.data)) {
-      throw new Error(t('Cannot create new chart with no data'));
-    }
-
-    chart.load(tidelineData);
-    chart.locate(datetime);
   }
 
   render() {
     return (
-      <div id="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
+      <React.Fragment>
+        <div id="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
+        <WindowSizeListener onResize={this.handleWindowResize} />
+      </React.Fragment>
     );
   }
 
-  rerenderChart() {
-    this.log('Rerendering...');
+  handleWindowResize = ({windowHeight: height, windowWidth: width}) => {
+    const { windowHeight, windowWidth } = this.state;
+    this.log.debug('handleWindowResize', { windowHeight, windowWidth }, '=>', { height, width });
+    if (windowHeight !== height || width !== windowWidth) {
+      this.setState({ windowHeight: height, windowWidth: width }, () => {
+        this.reCreateChart();
+      });
+    }
+  };
+
+  reCreateChart() {
+    const { chart } = this.state;
+    this.log.info(chart === null ? 'Creating chart...' : 'Recreating chart...');
     this.unmountChart(this.mountChart.bind(this));
   }
 
-  getCurrentDay = () => {
-    return this.state.chart.getCurrentDay().toISOString();
-  };
+  rerenderChartData() {
+    const { chart } = this.state;
+    if (chart !== null) {
+      this.log.info('Rerendering chart data...');
+      chart.renderPoolsData(true);
+    }
+  }
 
   goToMostRecent = () => {
     this.state.chart.setAtDate(null, true);
@@ -205,11 +214,6 @@ class DailyChart extends React.Component {
 
   panForward = () => {
     this.state.chart.panForward();
-  };
-
-  // methods for messages
-  closeMessage = () => {
-    return this.state.chart.closeMessage();
   };
 
   createMessage = (message) => {
@@ -230,8 +234,8 @@ class Daily extends React.Component {
     chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
-    datetimeLocation: PropTypes.object.isRequired,
-    endpoints: PropTypes.arrayOf(PropTypes.string).isRequired,
+    epochLocation: PropTypes.number.isRequired,
+    msRange: PropTypes.number.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     canPrint: PropTypes.bool.isRequired,
@@ -246,10 +250,8 @@ class Daily extends React.Component {
     onClickPrint: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
     onSwitchToTrends: PropTypes.func.isRequired,
-    // PatientData state updaters
-    onUpdateChartDateRange: PropTypes.func.isRequired,
+    onDatetimeLocationChange: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
-    updateDatetimeLocation: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     profileDialog: PropTypes.func.isRequired,
   };
@@ -259,26 +261,32 @@ class Daily extends React.Component {
 
     this.chartRef = React.createRef();
     this.chartType = 'daily';
-    this.log = bows('Daily View');
+    this.log = bows('DailyView');
     this.state = {
-      atMostRecent: false,
+      atMostRecent: this.isAtMostRecent(),
       inTransition: false,
-      title: '',
+      title: this.getTitle(props.epochLocation),
       tooltip: null,
     };
   }
 
   componentDidUpdate(prevProps) {
-    const { loading } = this.props;
-    if (prevProps.loading && !loading) {
-      this.chartRef.current.rerenderChart();
+    const { epochLocation } = this.props;
+    const { epochLocation: prevEpochLocation } = prevProps;
+    const { title } = this.state;
+    if (epochLocation !== prevEpochLocation) {
+      const nowTitle = this.getTitle(epochLocation);
+      if (title !== nowTitle) {
+        this.setState({ title: nowTitle, atMostRecent: this.isAtMostRecent() });
+      }
     }
   }
 
   render() {
-    const { tidelineData, endpoints } = this.props;
-    const { inTransition, tooltip } = this.state;
+    const { tidelineData, epochLocation, msRange, trackMetric, loading } = this.props;
+    const { inTransition, atMostRecent, tooltip, title } = this.state;
     const { timePrefs } = tidelineData.opts;
+    const endpoints = this.getEndpoints();
 
     return (
       <div id="tidelineMain" className="daily">
@@ -287,17 +295,18 @@ class Daily extends React.Component {
           chartType={this.chartType}
           patient={this.props.patient}
           inTransition={inTransition}
-          atMostRecent={this.state.atMostRecent}
-          title={this.state.title}
+          atMostRecent={atMostRecent}
+          loading={loading}
+          title={title}
           iconBack={'icon-back'}
           iconNext={'icon-next'}
           iconMostRecent={'icon-most-recent'}
           permsOfLoggedInUser={this.props.permsOfLoggedInUser}
           canPrint={this.props.canPrint}
-          trackMetric={this.props.trackMetric}
+          trackMetric={trackMetric}
           onClickBack={this.handlePanBack}
           onClickBasics={this.props.onSwitchToBasics}
-          onClickTrends={this.handleClickTrends}
+          onClickTrends={this.props.onSwitchToTrends}
           onClickMostRecent={this.handleClickMostRecent}
           onClickNext={this.handlePanForward}
           onClickOneDay={this.handleClickOneDay}
@@ -306,11 +315,13 @@ class Daily extends React.Component {
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
-              <Loader show={this.props.loading} overlay={true} />
+              <Loader show={loading} overlay={true} />
               <DailyChart
+                loading={loading}
                 bgClasses={this.props.bgPrefs.bgClasses}
                 bgUnits={this.props.bgPrefs.bgUnits}
-                datetimeLocation={this.props.datetimeLocation}
+                epochLocation={epochLocation}
+                msRange={msRange}
                 tidelineData={tidelineData}
                 timePrefs={timePrefs}
                 // message handlers
@@ -318,9 +329,6 @@ class Daily extends React.Component {
                 onShowMessageThread={this.props.onShowMessageThread}
                 // other handlers
                 onDatetimeLocationChange={this.handleDatetimeLocationChange}
-                onHideBasalSettings={this.handleHideBasalSettings}
-                onMostRecent={this.handleMostRecent}
-                onShowBasalSettings={this.handleShowBasalSettings}
                 onTransition={this.handleInTransition}
                 onBolusHover={this.handleBolusHover}
                 onBolusOut={this.handleTooltipOut}
@@ -338,6 +346,7 @@ class Daily extends React.Component {
                 onParameterOut={this.handleTooltipOut}
                 onConfidentialHover={this.handleConfidentialHover}
                 onConfidentialOut={this.handleTooltipOut}
+                trackMetric={trackMetric}
                 ref={this.chartRef}
               />
             </div>
@@ -366,19 +375,41 @@ class Daily extends React.Component {
           chartType={this.chartType}
           onClickRefresh={this.props.onClickRefresh} />
         {tooltip}
-        <WindowSizeListener onResize={this.handleWindowResize} />
       </div>
     );
   }
 
   /**
-   * @param {moment.Moment} datetime A date to display
+   * @param {number} epoch ms since epoch
+   * @returns true if we are at the most recent date
+   * @private
+   */
+  isAtMostRecent(epoch = -1) {
+    const { tidelineData, epochLocation, msRange } = this.props;
+    if (epoch < 0) {
+      epoch = epochLocation;
+    }
+    // Takes the last endpoint, substract half a day, because "epoch" is the center
+    // of the day, substract 1ms to be sure ">" work.
+    const endDate = moment.utc(tidelineData.endpoints[1]).valueOf() - 1 - msRange / 2;
+    return epoch > endDate;
+  }
+
+  getEndpoints() {
+    const { epochLocation, msRange } = this.props;
+    const start = moment.utc(epochLocation - msRange/2).toISOString();
+    const end = moment.utc(epochLocation + msRange/2).toISOString();
+    return [start, end];
+  }
+
+  /**
+   * @param {number} datetime A date to display
    * @returns {string}
    */
   getTitle(datetime) {
     /** @type {{tidelineData: TidelineData}} */
     const { tidelineData } = this.props;
-    return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(t('ddd, MMM D, YYYY'));
+    return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(i18next.t('ddd, MMM D, YYYY'));
   }
 
   // handlers
@@ -395,50 +426,59 @@ class Daily extends React.Component {
     this.props.updateChartPrefs(prefs);
   };
 
-  handleWindowResize = () => {
-    this.chartRef.current && this.chartRef.current.rerenderChart();
-  };
-
-  handleClickTrends = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    const datetime = this.chartRef.current.getCurrentDay();
-    this.props.onSwitchToTrends(datetime);
-  };
-
-  handleClickMostRecent = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    this.chartRef.current.goToMostRecent();
-  };
-
   handleClickOneDay = (e) => {
     if (e) {
       e.preventDefault();
     }
-    return;
+    return false;
   };
 
-  handleDatetimeLocationChange = (datetimeLocationEndpoints) => {
-    const start = moment.utc(datetimeLocationEndpoints.start);
-    const end = moment.utc(datetimeLocationEndpoints.end);
-    const center = moment.utc(datetimeLocationEndpoints.center);
-    const endpoints = [
-      start.toISOString(),
-      end.toISOString(),
-    ];
+  handlePanBack = (e) => {
+    const { loading } = this.props;
+    if (e) {
+      e.preventDefault();
+    }
+    if (!loading) {
+      this.chartRef.current.panBack();
+    }
+  };
 
-    this.setState({
-      title: this.getTitle(center),
-      endpoints,
-    });
+  handlePanForward = (e) => {
+    const { loading } = this.props;
+    if (e) {
+      e.preventDefault();
+    }
+    if (!loading) {
+      this.chartRef.current.panForward();
+    }
+  };
 
-    this.props.updateDatetimeLocation(center);
+  handleClickMostRecent = (e) => {
+    const { loading } = this.props;
+    if (e) {
+      e.preventDefault();
+    }
+    if (!loading) {
+      this.chartRef.current.goToMostRecent();
+    }
+  };
 
-    // Update the chart date range in the patientData component.
-    this.props.onUpdateChartDateRange(endpoints);
+  /**
+   * @param {number} epoch Date displayed -> center of the daily view. In ms since epoch.
+   */
+  handleDatetimeLocationChange = (epoch) => {
+    const { loading } = this.props;
+    if (!loading) {
+
+      this.setState({ title: this.getTitle(epoch), atMostRecent: this.isAtMostRecent(epoch) });
+      this.props.onDatetimeLocationChange(epoch, MS_IN_DAY).then((dataLoaded) => {
+        if (dataLoaded && this.chartRef.current !== null) {
+          // New data available, re-render the chart so they can be displayed
+          // to the user
+          this.chartRef.current.rerenderChartData();
+        }
+      });
+    }
   };
 
   handleInTransition = inTransition => {
@@ -446,10 +486,11 @@ class Daily extends React.Component {
   };
 
   updateDatumHoverForTooltip(datum) {
-    const { datetimeLocation, bgPrefs, tidelineData } = this.props;
+    /** @type {{ epochLocation: number, bgPrefs: {}, tidelineData: TidelineData }} */
+    const { epochLocation, bgPrefs, tidelineData } = this.props;
     const rect = datum.rect;
     // range here is -12 to 12
-    const hoursOffset = moment.utc(datum.data.epoch).diff(datetimeLocation, 'hours');
+    const hoursOffset = (datum.data.epoch - epochLocation) / MS_IN_HOUR;
     datum.top = rect.top + rect.height / 2;
     if (hoursOffset > 5) {
       datum.side = 'left';
@@ -591,24 +632,6 @@ class Daily extends React.Component {
         timePrefs={datum.timePrefs}
       />);
     this.setState({ tooltip });
-  };
-
-  handleMostRecent = (atMostRecent) => {
-    this.setState({ atMostRecent });
-  };
-
-  handlePanBack = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    this.chartRef.current.panBack();
-  };
-
-  handlePanForward = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    this.chartRef.current.panForward();
   };
 
   // Messages:

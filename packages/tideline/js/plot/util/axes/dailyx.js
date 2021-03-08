@@ -34,9 +34,8 @@ function axesDaily(pool, opts = {}) {
 
   _.defaults(opts, defaults);
 
-  var mainGroup = pool.parent();
-
-  var stickyLabel = mainGroup.select('#tidelineLabels')
+  let mainGroup = pool.parent();
+  let stickyLabel = mainGroup.select('#tidelineLabels')
     .append('g')
     .attr('class', 'd3-axis')
     .append('text')
@@ -48,24 +47,51 @@ function axesDaily(pool, opts = {}) {
       y: pool.height() - opts.tickLength * opts.longTickMultiplier
     });
 
-  opts.emitter.on('zoomstart', () => {
-    stickyLabel.attr('opacity', '0.2');
-  });
-
-  opts.emitter.on('zoomend', () => {
-    stickyLabel.attr('opacity', '1.0');
-  });
-
-  opts.emitter.on('navigated', (domain) => {
-    let startDate = moment.utc(domain.start).tz(opts.timePrefs.timezoneName);
-    // when we're close to midnight (where close = five hours on either side)
-    // remove the sticky label so it doesn't overlap with the midnight-anchored day label
-    if ((startDate.hours() >= 19) || (startDate.hours() <= 4)) {
-      stickyLabel.text('');
+  /**
+   * While 'inTransition' there is a lots of 'zoomstart' / 'zoomend' events
+   * Use an accumulator for that
+   */
+  let transitionAccumulator = 0;
+  /**
+   * @param {boolean} value true if in transition
+   */
+  function onTransition(value) {
+    transitionAccumulator += value ? 1 : -1;
+    if (transitionAccumulator > 0) {
+      stickyLabel.attr('opacity', '0.2');
     } else {
-      stickyLabel.text(format.xAxisDayText(startDate));
+      stickyLabel.attr('opacity', '1.0');
     }
-  });
+  }
+
+  /**
+   * Update the sticky label text
+   * @param {number} date MS since epoch
+   */
+  function updateStickyLabel(date) {
+    const startDate = moment.tz(date, opts.timePrefs.timezoneName);
+    if (startDate.isValid()) {
+      const dateHours = startDate.hours();
+
+      // When we're close to midnight (where close = five hours on either side)
+      // remove the sticky label so it doesn't overlap with the midnight-anchored day label
+      let text = '';
+      if (4 < dateHours && dateHours < 19) {
+        text = format.xAxisDayText(startDate);
+      }
+      stickyLabel.text(text);
+    } else {
+      // Don't bother create a bows() log for this one,
+      // should not happend outside buggy dev process anyway.
+      console.warn('axesDaily.updateStickyLabel: invalid date', date, opts.timePrefs.timezoneName);
+    }
+  }
+
+  // ** Events listeners **
+  opts.emitter.on('inTransition', onTransition);
+  opts.emitter.on('zoomstart', () => onTransition(true));
+  opts.emitter.on('zoomend', () => onTransition(false));
+  opts.emitter.on('dailyx-navigated', updateStickyLabel);
 
   function dailyx(selection) {
 
@@ -140,9 +166,11 @@ function axesDaily(pool, opts = {}) {
     else return pool.height() - opts.tickLength;
   };
 
-  dailyx.text = function(d) {
-    console.log('dailyx.text !!!', format(d.normalTime));
-    return format(d.normalTime);
+  dailyx.destroy = function() {
+    opts = null;
+    pool = null;
+    mainGroup = null;
+    stickyLabel = null;
   };
 
   return dailyx;

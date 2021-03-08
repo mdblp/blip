@@ -15,6 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
+import { MS_IN_DAY, MS_IN_HOUR, MGDL_UNITS, MMOLL_UNITS } from './data/util/constants';
 import TidelineData from './tidelinedata';
 import BasicsChart from '../plugins/blip/basics/chartbasicsfactory';
 import chartDailyFactory from '../plugins/blip/chartdailyfactory';
@@ -24,6 +25,10 @@ window.d3 = require('d3');
 window.d3.chart = require('d3.chart');
 
 export {
+  MS_IN_DAY,
+  MS_IN_HOUR,
+  MGDL_UNITS,
+  MMOLL_UNITS,
   TidelineData,
   BasicsChart,
   chartDailyFactory,

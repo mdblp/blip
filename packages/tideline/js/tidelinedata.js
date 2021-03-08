@@ -76,6 +76,8 @@ const defaults = {
     timezoneOffset: 0,
   },
   latestPumpManufacturer: "default",
+  /** @type {moment.Moment[]} */
+  dataRange: null,
 };
 
 /**
@@ -474,7 +476,7 @@ TidelineData.prototype.setTimezones = function setTimezones() {
 
 /**
  * Return the closest oldest timezone of this date
- * @param {string | Moment.moment | Date} date The date to test
+ * @param {string | number | moment.Moment | Date} date The date to test
  */
 TidelineData.prototype.getTimezoneAt = function getTimezoneAt(date) {
   if (this.timezonesList === null) {
@@ -523,22 +525,41 @@ TidelineData.prototype.setEndPoints = function setEndPoints() {
   const first = _.head(chartData);
   const last = _.last(chartData);
 
+  /** @type {moment.Moment} */
+  let start = null;
+  /** @type {moment.Moment} */
+  let end = null;
   if (_.isObject(first) && _.isObject(last)) {
     const lastTime = typeof last.epochEnd === "number" ? last.epochEnd : last.epoch;
-    const mFirst = moment.utc(first.epoch).tz(first.timezone);
-    const mLast = moment.utc(lastTime).tz(last.timezone);
-    const start = mFirst.startOf("day").toISOString();
-    const end = mLast.endOf("day").toISOString();
-    this.endpoints = [start, end];
-    return;
+    // FIXME moment startOf/endOf works only with current browser timezone -> it use the Date() object
+    start = moment.tz(first.epoch, first.timezone).startOf("day");
+    end = moment.tz(lastTime, last.timezone).endOf("day").add(1, 'millisecond');
+  } else {
+    // Be sure to have something, we do not want to crash
+    // in some other code, and do not want to check this
+    // every times too.
+    this.log.warn("No char type data found !");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    start = moment.tz(today.valueOf() - MS_IN_DAY, this.opts.timePrefs.timezoneName);
+    end = moment.tz(today.valueOf() + MS_IN_DAY, this.opts.timePrefs.timezoneName);
   }
-  // Be sure to have something, we do not want to crash
-  // in some other code, and do not want to check this
-  // every times too.
-  this.log.warn("No char type data found !");
-  const now = new Date();
-  const yesterfay = new Date(now.valueOf() - MS_IN_DAY);
-  this.endpoints = [yesterfay.toISOString(), now.toISOString()];
+  if (Array.isArray(this.opts.dataRange)) {
+    // Take the longest range if possible
+    if (this.opts.dataRange[0].isBefore(start)) {
+      const ms = this.opts.dataRange[0].valueOf();
+      start = moment.tz(ms, this.getTimezoneAt(ms)).startOf("day");
+    }
+    if (this.opts.dataRange[1].isAfter(end)) {
+      const ms = this.opts.dataRange[1].valueOf();
+      end = moment.tz(ms, this.getTimezoneAt(ms)).endOf('day').add(1, 'millisecond');
+    }
+
+  } else {
+    this.opts.dataRange = [moment.utc(start.valueOf()), moment.utc(end.valueOf())];
+  }
+
+  this.endpoints = [start.toISOString(), end.toISOString()];
 };
 
 TidelineData.prototype.setDeviceParameters = function setDeviceParameters() {
@@ -784,8 +805,7 @@ TidelineData.prototype.generateFillData = function generateFillData() {
       const currentFill = {
         type: "fill",
         fillColor: classes[hour],
-        fillDate: isoStr.slice(0, 10),
-        id: `fill_${isoStr.replace(/[^\w\s]|_/g, "")}`,
+        id: `fill-${isoStr.replace(/[^\w\s]|_/g, "")}`,
         epoch: fillDateTime.valueOf(),
         epochEnd: fillDateTime.valueOf(),
         normalEnd: isoStr,
@@ -793,7 +813,6 @@ TidelineData.prototype.generateFillData = function generateFillData() {
         normalTime: isoStr,
         timezone,
         displayOffset: fillDateTime.utcOffset(),
-        twoWeekX: (hour * MS_IN_DAY) / 24,
       };
       fillData.push(currentFill);
       prevFill = currentFill;
