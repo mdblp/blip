@@ -59,10 +59,16 @@ interface LeaveTeamDialogElementsProps {
 
 const leaveTeamDialogClasses = makeStyles((theme: Theme) => {
   return {
+    dialogContent: { color: "#00000" },
     buttonCancel: {
       marginRight: theme.spacing(2),
+      boxShadow: "none",
+    },
+    buttonOk: {
+      boxShadow: "0px 2px 2px #0000003D",
     },
     buttonLeaveAndDel: {
+      boxShadow: "0px 2px 2px #0000003D",
       backgroundColor: red[500], // eslint-disable-line no-magic-numbers
       "&:hover": {
         backgroundColor: red[700], // eslint-disable-line no-magic-numbers
@@ -110,7 +116,7 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
   if (onlyMember) {
     question = (
-      <DialogContentText id="team-leave-dialog-question">
+      <DialogContentText color="textPrimary" id="team-leave-dialog-question">
         <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} parent={React.Fragment}>
           Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently deleted</strong> if
           you leave it.
@@ -118,11 +124,13 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
       </DialogContentText>
     );
     consequences = (
-      <DialogContentText id="team-leave-dialog-consequences">{t("team-leave-dialog-and-del-consequences")}</DialogContentText>
+      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
+        {t("team-leave-dialog-and-del-consequences")}
+      </DialogContentText>
     );
   } else if (userIsTheOnlyAdministrator) {
     consequences = (
-      <DialogContentText id="team-leave-dialog-consequences">
+      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
         <Trans
           i18nKey="team-leave-dialog-only-admin-consequences"
           t={t}
@@ -134,9 +142,15 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
       </DialogContentText>
     );
   } else {
-    question = <DialogContentText id="team-leave-dialog-question">{t("team-leave-dialog-question")}</DialogContentText>;
+    question = (
+      <DialogContentText color="textPrimary" id="team-leave-dialog-question">
+        {t("team-leave-dialog-question")}
+      </DialogContentText>
+    );
     consequences = (
-      <DialogContentText id="team-leave-dialog-consequences">{t("team-leave-dialog-consequences")}</DialogContentText>
+      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
+        {t("team-leave-dialog-consequences")}
+      </DialogContentText>
     );
   }
 
@@ -186,6 +200,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   } else if (userIsTheOnlyAdministrator) {
     buttonOK = (
       <Button
+        className={classes.buttonOk}
         id="team-leave-dialog-button-ok"
         onClick={handleClose}
         disabled={buttonsDisabled}
@@ -197,6 +212,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   } else {
     buttonOK = (
       <Button
+        className={classes.buttonOk}
         id="team-leave-dialog-button-leave"
         onClick={handleLeaveTeam}
         disabled={buttonsDisabled}
@@ -219,7 +235,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   }
 
   return (
-    <DialogActions>
+    <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
       {buttonCancel}
       {buttonOK}
     </DialogActions>
@@ -238,7 +254,8 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
 
-  const userIsTheOnlyAdministrator = team === null ? false : teamHook.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
+  const userIsTheOnlyAdministrator =
+    team === null ? false : teamHook.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
 
   const ariaTitle = t("aria-team-leave-dialog-title");
   const ariaQuestion = t("aria-team-leave-dialog-question", { teamName });
