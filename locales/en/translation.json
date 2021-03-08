@@ -1,6 +1,5 @@
 {
   " reports the data.": " reports the data.",
-  "%-I %p": "%-I %p",
   "%-I:%M %p": "%-I:%M %p",
   "%a": "%a",
   "%b %-d": "%b %-d",
