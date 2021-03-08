@@ -31,7 +31,7 @@ import * as React from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
@@ -40,7 +40,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from "@material-ui/core/Toolbar";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../lib/auth";
@@ -50,7 +50,7 @@ interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
 }
 
-const toolbarStyles = makeStyles({
+const toolbarStyles = makeStyles((theme: Theme) => ({
   toolBar: {
     backgroundColor: "var(--mdc-theme-surface, white)",
     display: "grid",
@@ -58,6 +58,8 @@ const toolbarStyles = makeStyles({
     gridTemplateColumns: (props: HeaderProps) => (_.isEmpty(props.children) ? "auto auto" : "auto auto auto"),
     paddingLeft: "6em",
     paddingRight: "6em",
+    paddingBottom: "1em",
+    paddingTop: "0.5em",
   },
   toolbarRightSide: { display: "flex", justifyContent: "flex-end" },
   accountMenu: {
@@ -66,7 +68,9 @@ const toolbarStyles = makeStyles({
     color: "var(--mdc-theme-on-surface, black)",
   },
   accountInfos: {
-    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
   },
   accountName: {
     fontWeight: "bold",
@@ -79,7 +83,8 @@ const toolbarStyles = makeStyles({
     cursor: "pointer",
     outline: "none",
   },
-});
+  accountMenuIcon: { color: theme.palette.primary.main },
+}));
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const { t } = useTranslation("yourloops");
@@ -122,12 +127,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   let accountMenu = null;
   if (auth.isLoggedIn()) {
     const user = auth.user;
-    const role = user?.roles ? user.roles[0] : "unknown";
     accountMenu = (
       <div className={classes.accountMenu}>
         <div className={classes.accountInfos}>
           <div className={classes.accountName}>{`${user?.profile?.firstName} ${user?.profile?.lastName}`}</div>
-          <div className={classes.accountType}>{role}</div>
         </div>
         <IconButton
           aria-label={t("aria-current-user-account")}
@@ -135,7 +138,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           aria-haspopup="true"
           onClick={handleMenu}
           color="inherit">
-          <AccountCircle />
+          <ArrowDropDown className={classes.accountMenuIcon} />
         </IconButton>
         <Menu
           id="menu-appbar"
