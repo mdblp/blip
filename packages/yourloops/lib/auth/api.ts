@@ -268,7 +268,17 @@ async function requestPasswordReset(
   }
 }
 
-async function resetPassword(key: string, username: string, password: string, traceToken: string): Promise<boolean> {
+async function resetPassword(key: string | null, username: string, password: string, traceToken: string): Promise<boolean> {
+
+  if (
+    _.isEmpty(key) ||
+    _.isEmpty(username) ||
+    _.isEmpty(password)
+  ) {
+    log.error("forbidden call to reset password api, one of the required parameters is missing");
+    throw new Error("error-http-40x");
+  }
+
   const confirmURL = new URL(`/confirm/accept/forgot`, appConfig.API_HOST);
   const response = await fetch(confirmURL.toString(), {
     method: "PUT",

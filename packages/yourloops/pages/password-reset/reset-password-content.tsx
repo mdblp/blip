@@ -126,11 +126,6 @@ export default function ResetPasswordContent(): JSX.Element {
       try {
         setInProgress(true);
         const resetKey = new URLSearchParams(location.search).get("resetKey");
-
-        if (resetKey === null) {
-          throw new Error("test");
-        }
-
         const success = await auth.resetPassword(
           resetKey,
           username,
