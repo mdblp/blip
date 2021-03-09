@@ -30,7 +30,9 @@ import { AppConfig } from "../../yourloops/models/config";
 import { User } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
 import ProfileDialog from "../../yourloops/components/profile-dialog";
-
+import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
+import { MessageNote } from "../../yourloops/models/message";
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 
 interface BlipProperties {
   config: AppConfig;
@@ -42,7 +44,17 @@ interface BlipProperties {
 // FIXME: For some reason, the yourloops auth hook
 // don't like this export.
 declare function cleanStore(): void;
-export { BlipProperties, BlipApi, cleanStore };
+export {
+  BlipProperties,
+  BlipApi,
+  User,
+  PatientDatum,
+  PatientData,
+  MessageNote,
+  GetPatientDataOptions,
+  GetPatientDataOptionsV0,
+  cleanStore
+};
 
 declare function Blip(props: BlipProperties): JSX.Element;
 export default Blip;

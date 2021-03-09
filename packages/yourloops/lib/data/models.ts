@@ -37,3 +37,17 @@ export interface GetPatientDataOptions {
   /** Does the result should include the latest pumpSettings ? */
   withPumpSettings?: boolean;
 }
+
+/**
+ * Options for the API v0
+ */
+export interface GetPatientDataOptionsV0 {
+  /** Type of data to search for - can be a list of types separated by commas */
+  types?: string[];
+  /** Start of the wanted period (ISO 8601 datetime) */
+  startDate?: string;
+  /** End of the wanted period (ISO 8601 datetime) */
+  endDate?: string;
+  /** To return only the most recent results for each `type` matching the results filtered by the other query parameters */
+  latest?: boolean;
+}

@@ -33,12 +33,12 @@ import { PatientData } from "models/device-data";
 import { MessageNote } from "models/message";
 import { User } from "../../models/shoreline";
 import { AuthContext } from "../auth";
-import { TeamContext } from "../team";
 import { t as translate } from "../language";
 import sendMetrics from "../metrics";
 
-import { GetPatientDataOptions } from "./models";
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";
 import {
+  getPatientDataRouteV0 as apiGetPatientDataRouteV0,
   getPatientDataRange as apiGetPatientDataRange,
   getPatientData as apiGetPatientData,
   startMessageThread as apiStartMessageThread,
@@ -54,12 +54,10 @@ import {
 class BlipApi {
   private log: Console;
   private authHook: AuthContext;
-  private teamHook: TeamContext;
   public sendMetrics: (eventName: string, properties?: unknown) => void;
 
-  constructor(authHook: AuthContext, teamHook: TeamContext) {
+  constructor(authHook: AuthContext) {
     this.authHook = authHook;
-    this.teamHook = teamHook;
     this.sendMetrics = sendMetrics;
     this.log = bows("BlipAPI");
   }
@@ -86,12 +84,20 @@ class BlipApi {
     return Promise.reject(new Error(translate("not-logged-in")));
   }
 
-  public getMessages(userId: string, options?: GetPatientDataOptions): Promise<MessageNote[]> {
-    this.log.debug("getMessages", { userId });
+  public getPatientDataV0(patient: User, options?: GetPatientDataOptionsV0): Promise<PatientData> {
+    this.log.debug("getPatientDataV0", { userId: patient.userid, options });
     const session = this.authHook.session();
-    const patient = this.teamHook.getUser(userId);
-    if (session !== null && patient !== null) {
-      return apiGetMessages(session, userId, options);
+    if (session !== null) {
+      return apiGetPatientDataRouteV0(session, patient, options);
+    }
+    return Promise.reject(new Error(translate("not-logged-in")));
+  }
+
+  public getMessages(patient: User, options?: GetPatientDataOptions): Promise<MessageNote[]> {
+    this.log.debug("getMessages", { userId: patient.userid, options });
+    const session = this.authHook.session();
+    if (session !== null) {
+      return apiGetMessages(session, patient, options);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

@@ -28,11 +28,15 @@
 
 interface PatientDatum {
   id: string;
+  /** Parent upload object id (type="upload") */
+  uploadId: string;
   /** The user id */
   _userId: string;
   /** time ISO string */
   time: string;
   timezone?: string;
+  /** Data type */
+  type: string;
   /** others properties */
   [x: string]: unknown;
 }

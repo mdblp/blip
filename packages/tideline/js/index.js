@@ -16,7 +16,7 @@
  */
 
 import { MS_IN_DAY, MS_IN_HOUR, MGDL_UNITS, MMOLL_UNITS } from './data/util/constants';
-import TidelineData from './tidelinedata';
+import TidelineData, { DAILY_TYPES } from './tidelinedata';
 import BasicsChart from '../plugins/blip/basics/chartbasicsfactory';
 import chartDailyFactory from '../plugins/blip/chartdailyfactory';
 import nurseShark from '../plugins/nurseshark';
@@ -29,6 +29,7 @@ export {
   MS_IN_HOUR,
   MGDL_UNITS,
   MMOLL_UNITS,
+  DAILY_TYPES,
   TidelineData,
   BasicsChart,
   chartDailyFactory,

@@ -42,7 +42,8 @@ const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT'];
 const REQUIRED_TYPES = ["basal", "bolus", "wizard", "cbg", "message", "smbg", "pumpSettings", "physicalActivity", "deviceEvent", "upload"];
 const DIABETES_DATA_TYPES = ["basal", "bolus", "cbg", "smbg", "wizard"];
 const BASICS_TYPE = ["basal", "bolus", "cbg", "smbg", "deviceEvent", "wizard", "upload"];
-const DAILY_TYPES = ["basal", "bolus", "cbg", "message", "smbg", "physicalActivity", "deviceEvent", "wizard"];
+const DAILY_TYPES = ["basal", "bolus", "cbg", "food", "message", "smbg", "physicalActivity", "deviceEvent", "wizard"];
+
 const defaults = {
   CBG_PERCENT_FOR_ENOUGH: 0.75,
   CBG_MAX_DAILY: 288,
@@ -179,6 +180,8 @@ function TidelineData(opts = defaults) {
     this.bgClasses.target.boundary += roundingAllowance;
     this.bgClasses.high.boundary += roundingAllowance;
   }
+
+  this.log.info("Initialized", this);
 }
 
 
@@ -952,7 +955,7 @@ TidelineData.prototype.setBasicsData = function setBasicsData() {
  * @returns The number of added data
  */
 TidelineData.prototype.addData = async function addData(newData) {
-  this.log.debug("Init", this);
+  this.log.debug("addData", newData);
   if (!Array.isArray(newData)) {
     this.log.error("Invalid parameter", { newData });
     throw new Error("Invalid parameter: newData");
@@ -962,6 +965,26 @@ TidelineData.prototype.addData = async function addData(newData) {
   const { startTimer, endTimer } = getTimerFuncs();
 
   startTimer("addData");
+
+  startTimer("filterUnwanted");
+  // Remove all unwanted data
+  // From our new data
+  if (_.get(window, "config.DEV", false)) {
+    // Dev only: display unwanted data received to the console
+    const unwantedData = newData.filter(d => !isWanted(d));
+    if (unwantedData.length > 0) {
+      this.log.warn('Unwanted data:', unwantedData);
+    }
+  }
+  newData = newData.filter(isWanted);
+  if (newData.length < 1) {
+    this.log.info('Nothing interested in theses new data');
+    endTimer("filterUnwanted");
+    endTimer("addData");
+    return 0;
+  }
+
+  // Clean-up ourselve
   this.grouped = null;
   this.diabetesData = null;
   this.deviceParameters = null;
@@ -989,22 +1012,6 @@ TidelineData.prototype.addData = async function addData(newData) {
   this.maxDuration = 0;
   this.timezonesList = null;
 
-  startTimer("filterUnwanted");
-  // Remove all unwanted data
-  // From our new data
-  if (_.get(window, "config.DEV", false)) {
-    // Dev only: display unwanted data received to the console
-    const unwantedData = newData.filter(d => !isWanted(d));
-    if (unwantedData.length > 0) {
-      this.log.warn('Unwanted data:', unwantedData);
-    }
-  }
-  newData = newData.filter(isWanted);
-  if (newData.length < 1) {
-    this.log.info('Nothing interested in theses new data');
-    endTimer("filterUnwanted");
-    return 0;
-  }
   // And our current ones too
   this.data = this.data.filter(isWanted);
   endTimer("filterUnwanted");
@@ -1111,7 +1118,7 @@ TidelineData.prototype.addData = async function addData(newData) {
 
   endTimer("addData");
 
-  this.log.info(`${this.data.length - nDataBefore} data added`);
+  this.log.info(`${this.data.length - nDataBefore} data added, ${this.data.length} total`);
   return this.data.length - nDataBefore;
 };
 
@@ -1152,4 +1159,5 @@ TidelineData.prototype.editMessage = function editMessage(editedMessage) {
   return message;
 };
 
+export { DAILY_TYPES };
 export default TidelineData;

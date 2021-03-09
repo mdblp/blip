@@ -29,7 +29,7 @@ import config from '../config';
 import personUtils from '../core/personutils';
 import utils from '../core/utils';
 import { MGDL_UNITS } from '../core/constants';
-import PartialDataLoad from '../core/lib/partial-data-load';
+import ApiUtils from '../core/api-utils';
 import { Header, Basics, Daily, Trends, Settings } from './chart';
 import Messages from './messages';
 import { FETCH_PATIENT_DATA_SUCCESS } from '../redux';
@@ -55,9 +55,10 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
 /**
  * @typedef { import('redux').Store } Store
  * @typedef { import("../index").BlipApi } API
- * @typedef { import("../../../yourloops/models/shoreline").User } User
- * @typedef { import("../../../yourloops/models/device-data").PatientData } PatientData
- * @typedef { import("../../../yourloops/models/message").MessageNote } MessageNote
+ * @typedef { import("../index").User } User
+ * @typedef { import("../index").PatientData } PatientData
+ * @typedef { import("../index").MessageNote } MessageNote
+ * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
  * @typedef {{ api: API, patient: User, store: Store }} PatientDataProps
  * @typedef {{loadingState: number, tidelineData: TidelineData, epochLocation: number, epochRange: number, chartType: string, patient: User, canPrint: boolean, pdf: object, chartPrefs: object, createMessageDatetime: moment.Moment | null, messageThread: MessageNote[] | null}} PatientDataState
@@ -70,13 +71,13 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
 class PatientDataPage extends React.Component {
   constructor(/** @type{PatientDataProps} */ props) {
     super(props);
-    const { api } = this.props;
-    this.log = bows('PatientData');
+    const { api, patient } = this.props;
 
+    this.log = bows('PatientData');
     /** @type {(eventName: string, properties?: unknown) => void} */
     this.trackMetric = api.sendMetrics.bind(api);
-
     this.chartRef = React.createRef();
+    this.apiUtils = new ApiUtils(api, patient);
 
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -89,10 +90,6 @@ class PatientDataPage extends React.Component {
       epochLocation: 0,
       /** Current display data range in ms around epochLocation */
       msRange: 0,
-      /** @type {moment.Moment[]} Available data dates range returned by the API */
-      dataRange: null,
-      /** @type {PartialDataLoad} */
-      partialDataLoad: null,
       timePrefs: {
         timezoneAware: true,
         timezoneName: browserTimezone,
@@ -191,6 +188,8 @@ class PatientDataPage extends React.Component {
       this.unsubscribeStore();
       this.unsubscribeStore = null;
     }
+    this.chartRef = null;
+    this.apiUtils = null;
   }
 
   render() {
@@ -769,13 +768,11 @@ class PatientDataPage extends React.Component {
   }
 
   handleClickRefresh(/* e */) {
-    this.trackMetric('Clicked Refresh');
-    this.handleRefresh();
+    this.handleRefresh().finally(() => this.trackMetric('Clicked Refresh'));
   }
 
   handleClickNoDataRefresh(/* e */) {
-    this.trackMetric('Clicked No Data Refresh');
-    this.handleRefresh();
+    this.handleRefresh().finally(() => this.trackMetric('Clicked No Data Refresh'));
   }
 
   onLoadingFailure(err) {
@@ -803,14 +800,14 @@ class PatientDataPage extends React.Component {
    * @returns {Promise<boolean>} true if new data are loaded
    */
   async handleDatetimeLocationChange(epochLocation, msRange) {
-    let dataLoaded = false;
     const {
-      partialDataLoad,
       epochLocation: currentLocation,
       msRange: currentRange,
       chartType,
       loadingState,
     } = this.state;
+
+    let dataLoaded = false;
 
     // this.log.debug('handleDatetimeLocationChange()', {
     //   currentLocation,
@@ -830,14 +827,15 @@ class PatientDataPage extends React.Component {
     if (loadingState === LOADING_STATE_DONE && (currentLocation !== epochLocation || currentRange !== msRange)) {
       // For daily check for +/- 1 day (and not 0.5 day), for others only the displayed range
       let msRangeDataNeeded = chartType === 'daily' ? MS_IN_DAY : msRange / 2;
+
+      /** @type {DateRange} */
       let rangeDisplay = {
         start: epochLocation - msRangeDataNeeded,
         end: epochLocation + msRangeDataNeeded,
       };
-      let rangeToLoad = partialDataLoad.getRangeToLoad(rangeDisplay);
+      const rangeToLoad = this.apiUtils.partialDataLoad.getRangeToLoad(rangeDisplay);
       if (rangeToLoad) {
         // We need more data!
-        const { api, patient } = this.props;
 
         if (chartType === 'daily') {
           // For daily we will load 1 week to avoid too many loading
@@ -846,33 +844,14 @@ class PatientDataPage extends React.Component {
             start: epochLocation - msRangeDataNeeded,
             end: epochLocation + msRangeDataNeeded,
           };
-          rangeToLoad = partialDataLoad.getRangeToLoad(rangeDisplay);
         }
 
-        this.log.info('handleChartDateRangeUpdate getRangeToLoad', rangeToLoad);
-
-        const loadingOptions = {
-          startDate: moment.utc(rangeToLoad.start).toISOString(),
-          endDate: moment.utc(rangeToLoad.end).toISOString(),
-        };
-        this.log.info('Update loading range:', loadingOptions);
-
-        // Tell the user a loading is in progress
         this.setState({ loadingState: LOADING_STATE_EARLIER_FETCH });
-
-        // Get the data from the API
-        const [patientData, messagesNotes] = await Promise.all([
-          api.getPatientData(patient, loadingOptions),
-          api.getMessages(patient.userid, loadingOptions),
-        ]);
+        const data = await this.apiUtils.fetchDataRange(rangeDisplay);
 
         this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
-        // Mark this range as loaded, so we won't ask the API again for them
-        partialDataLoad.setRangeLoaded(rangeToLoad);
+        await this.processData(data);
 
-        // Process the data to be usable by us
-        const combinedData = patientData.concat(messagesNotes);
-        await this.processData(combinedData);
         dataLoaded = true;
       }
 
@@ -882,9 +861,7 @@ class PatientDataPage extends React.Component {
     return dataLoaded;
   }
 
-  handleRefresh() {
-    const { api, patient } = this.props;
-
+  async handleRefresh() {
     // TODO bgUnits from api.whoami
     this.setState({
       loadingState: LOADING_STATE_INITIAL_FETCH,
@@ -894,59 +871,19 @@ class PatientDataPage extends React.Component {
       tidelineData: null,
       pdf: null,
       canPrint: false,
-    }, async () => {
-      try {
-        const range = await api.getPatientDataRange(patient);
-        this.log.info('Data range:', range);
-
-        // Assume browser locale, will adjust after
-        const timezone = this.state.timePrefs.timezoneName;
-        const dataRange = [
-          moment.tz(range[0], timezone),
-          moment.tz(range[1], timezone),
-        ];
-
-        this.setState({ dataRange });
-
-        const initialLoadingDates = [
-          moment.utc(dataRange[1]).startOf('week').subtract(2, 'weeks').subtract(1, 'day'),
-          moment.utc(dataRange[1]).endOf('day'),
-        ];
-
-        // Get the initial range of data to load:
-        // 3 weeks (for basics view) -> start/end of week
-        // substract one day to be sure to have all the data we need
-        // since the timezone is generally not UTC
-        const loadingOptions = {
-          startDate: initialLoadingDates[0].toISOString(),
-          endDate: initialLoadingDates[1].toISOString(),
-          withPumpSettings: true,
-        };
-
-        this.log.info('Initial loading options:', loadingOptions);
-
-        // Get the data from the API
-        const [patientData, messagesNotes] = await Promise.all([
-          api.getPatientData(patient, loadingOptions),
-          api.getMessages(patient.userid, loadingOptions),
-        ]);
-
-        const partialDataLoad = new PartialDataLoad(
-          { start: dataRange[0].valueOf(), end: dataRange[1].valueOf() },
-          { start: initialLoadingDates[0].valueOf(), end: initialLoadingDates[1].valueOf() },
-        );
-        this.log('partialDataLoad:', partialDataLoad.toDebug());
-
-        const combinedData = patientData.concat(messagesNotes);
-        this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS, partialDataLoad });
-
-        // Process the data to be usable by us
-        await this.processData(combinedData);
-
-      } catch (reason) {
-        this.onLoadingFailure(reason);
-      }
     });
+
+    try {
+      const data = await this.apiUtils.refresh();
+      this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS });
+      await waitTimeout(1);
+
+      // Process the data to be usable by us
+      await this.processData(data);
+
+    } catch (reason) {
+      this.onLoadingFailure(reason);
+    }
   }
 
   /**
@@ -955,24 +892,24 @@ class PatientDataPage extends React.Component {
    */
   async processData(data) {
     const { store, patient } = this.props;
-    const { timePrefs, bgPrefs, dataRange, epochLocation } = this.state;
+    const { timePrefs, bgPrefs, epochLocation } = this.state;
     let { tidelineData } = this.state;
 
-    console.time('process data');
+    const firstLoadOrRefresh = tidelineData === null;
+
     const res = nurseShark.processData(data, bgPrefs.bgUnits);
     await waitTimeout(1);
-    if (tidelineData === null) {
+    if (firstLoadOrRefresh) {
       const opts = {
         timePrefs,
         ...bgPrefs,
         // Used by tideline oneDay to set-up the scroll range
         // Send this information by tidelineData options
-        dataRange,
+        dataRange: this.apiUtils.dataRange,
       };
       tidelineData = new TidelineData(opts);
     }
     await tidelineData.addData(res.processedData);
-    console.timeEnd('process data');
 
     if (_.isEmpty(tidelineData.data)) {
       throw new Error(t('No data to display!'));
@@ -997,15 +934,16 @@ class PatientDataPage extends React.Component {
       msRange: MS_IN_DAY,
       loadingState: LOADING_STATE_DONE,
       canPrint: true,
-    }, () => {
-      this.log.info('Loading finished');
+    }, () => this.log.info('Loading finished'));
+
+    if (firstLoadOrRefresh) {
       store.dispatch({
         type: FETCH_PATIENT_DATA_SUCCESS,
         payload: {
           patientId: patient.userid,
         },
       });
-    });
+    }
   }
 }
 
