@@ -158,7 +158,7 @@ class ApiUtils {
 
       const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
       this.dataRange = [
-        moment.tz(_.find(combinedData, (d) => DAILY_TYPES.includes(d.type)).timeProcessing, timezone),
+        moment.tz(combinedData[0].timeProcessing, timezone),
         moment.tz(_.findLast(combinedData, (d) => DAILY_TYPES.includes(d.type)).timeProcessing, timezone),
       ];
 
