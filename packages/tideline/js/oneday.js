@@ -150,14 +150,12 @@ function oneDay(emitter, options = {}) {
 
   container.emitter.on('clickInPool', ({ offsetX /*, datum */ }) => {
     // Event use when we want to add a message (note)
-    // const timezone = _.get(opts, 'timePrefs.timezoneName', 'UTC');
     /** @type {Date} */
     const date = container.xScale.invert(offsetX - axisGutter);
     // For some reason, d3 seems to apply the current locale date offset
     // to this date, so we need to substract it.
     const now = new Date();
     const m = moment.utc(date).subtract(now.getTimezoneOffset(), 'minutes');
-    // log.debug('clickInPool', { offsetX, axisGutter, date, m, datum, offset: date.getTimezoneOffset(), iso: date.toISOString() });
     container.emitter.emit('clickToDate', m);
   });
 
@@ -198,16 +196,12 @@ function oneDay(emitter, options = {}) {
 
     const currentPosition = container.xScale(domain.center);
     const wantedPosition = container.xScale(date);
-    let translationAmount = wantedPosition - currentPosition; // Math.min(nav.currentTranslation, wantedPosition - currentPosition);
+    let translationAmount = wantedPosition - currentPosition;
     if (nav.currentTranslation - translationAmount < 0) {
-      // log.info('Abording panToDate: ${}')
-      // return;
       translationAmount = nav.currentTranslation;
     } else if (nav.currentTranslation - translationAmount > nav.maxTranslation) {
       translationAmount = nav.currentTranslation - nav.maxTranslation;
     }
-
-    // log.debug('panToDate', { currentPosition, wantedPosition, amountInPixel: translationAmount, currentTranslation: nav.currentTranslation });
 
     let nUgly = 0;
     nav.currentTranslation -= translationAmount;
@@ -297,7 +291,6 @@ function oneDay(emitter, options = {}) {
    * @param {boolean} force Emit 'navigated' event without delay
    */
   container.navString = function navString(force = false) {
-    // const prevMostRecent = mostRecent;
     const domain = container.getCurrentDomain();
 
     if (force) {
@@ -326,11 +319,14 @@ function oneDay(emitter, options = {}) {
       const startDataDate = renderedData[0].epoch;
       const endDataDate = renderedData[renderedData.length - 1].epoch;
 
-      const isNeeded = startDataDate > startDisplayDate || startDisplayDate > endDataDate || startDataDate > endDisplayDate || endDisplayDate > endDataDate;
-      // log.debug("isUpdateRenderedDataRangeNeeded", {startDisplayDate, endDisplayDate, startDataDate, endDataDate, isNeeded});
+      const isNeeded =
+        startDataDate > startDisplayDate
+        || startDisplayDate > endDataDate
+        || startDataDate > endDisplayDate
+        || endDisplayDate > endDataDate;
       return isNeeded;
     }
-    // log.debug("isUpdateRenderedDataRangeNeeded: No data!");
+
     return true;
   };
 
@@ -342,8 +338,6 @@ function oneDay(emitter, options = {}) {
     xScale.range([axisGutter, width]);
 
     nav.maxTranslation = -xScale(container.endpoints[0]) + axisGutter;
-    // nav.minTranslation = xScale(container.endpoints[1]) - width;
-
     if (nav.scrollNav) {
       nav.scrollScale = d3.time.scale.utc()
         .domain([container.endpoints[0], container.initialEndpoints[0]])
@@ -482,6 +476,7 @@ function oneDay(emitter, options = {}) {
     nav.pan.translate([nav.currentTranslation, 0]);
     nav.pan.event(container.mainGroup);
   };
+
   container.onDragEnd = () => {
     container.navString(true);
     container.inTransition(false);
@@ -505,7 +500,6 @@ function oneDay(emitter, options = {}) {
       .on('dragstart', container.onDragStart)
       .on('drag', container.onDrag)
       .on('dragend', container.onDragEnd);
-      // .on('drag')
 
     container.scrollNav.selectAll('rect')
       .data([{'x': nav.scrollScale(container.initialEndpoints[0]), 'y': 0}])
@@ -551,7 +545,6 @@ function oneDay(emitter, options = {}) {
    * @param {boolean} toMostRecent true if we want to jump to the most recent date
    */
   container.setAtDate = function setAtDate(epochLocation, toMostRecent = false) {
-    // log.debug('setAtDate', { epochLocation, toMostRecent });
     scrollHandleTrigger = toMostRecent;
     if (toMostRecent) {
       if (epochLocation === null) {
@@ -646,18 +639,10 @@ function oneDay(emitter, options = {}) {
   };
 
   container.currentTranslation = function(x) {
-    // log.debug('currentTranslation', { x, currentTranslation: nav.currentTranslation });
     if (!arguments.length) return nav.currentTranslation;
     nav.currentTranslation = x;
     return container;
   };
-
-  // FIXME: Delete me: not use
-  // container.buffer = function(x) {
-  //   if (!arguments.length) return renderDaysBuffer;
-  //   renderDaysBuffer = x;
-  //   return container;
-  // };
 
   container.data = function(/** @type {TidelineData} */ td) {
     if (td instanceof TidelineData) {
