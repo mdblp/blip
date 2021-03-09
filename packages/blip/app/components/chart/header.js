@@ -84,7 +84,6 @@ class TidelineHeader extends React.Component {
 
     const home = cx({
       'js-home': true,
-      'patient-data-subnav-active': showHome,
       'patient-data-subnav-hidden': !showHome,
     });
 
@@ -113,6 +112,7 @@ class TidelineHeader extends React.Component {
         chartType === 'daily' ||
         chartType === 'bgLog' ||
         chartType === 'trends',
+      'patient-data-subnav-disabled': inTransition || loading,
       'patient-data-subnav-dates-basics': chartType === 'basics',
       'patient-data-subnav-dates-daily': chartType === 'daily',
       'patient-data-subnav-dates-bgLog': chartType === 'bgLog',
@@ -146,8 +146,6 @@ class TidelineHeader extends React.Component {
     const settingsLinkClass = cx({
       'patient-data-subnav-button': true,
       'js-settings': true,
-      'patient-data-subnav-right': true,
-      'patient-data-subnav-right-label': true,
       'patient-data-subnav-active': chartType === 'settings',
       'patient-data-subnav-hidden': chartType === 'no-data',
     });
@@ -157,7 +155,6 @@ class TidelineHeader extends React.Component {
       const printLinkClass = cx({
         'patient-data-subnav-button': true,
         'printview-print-icon': true,
-        'patient-data-subnav-active': true,
       });
 
       printLink = (
