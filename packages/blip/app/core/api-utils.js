@@ -107,7 +107,6 @@ class ApiUtils {
     /** @type {GetPatientDataOptions} */
     const loadingOptions = {
       startDate: initialLoadingDates[0].toISOString(),
-      endDate: initialLoadingDates[1].toISOString(),
       withPumpSettings: true,
     };
 
@@ -172,7 +171,6 @@ class ApiUtils {
       /** @type {GetPatientDataOptionsV0} */
       const loadingOptions = {
         startDate: initialLoadingDates[0].toISOString(),
-        endDate: initialLoadingDates[1].toISOString(),
       };
 
       this.log.info("Initial loading options:", loadingOptions);
