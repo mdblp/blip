@@ -23,15 +23,17 @@ import * as constants from '../data/util/constants';
 import format from '../data/util/format';
 import BasalUtil from '../data/basalutil';
 
-function plotBasal(pool, opts = {}) {
+const defaults = {
+  opacity: 0.6,
+  opacityDelta: 0.2,
+  pathStroke: 1.5,
+  timezoneOffset: 0,
+  tooltipPadding: 20,
+  defaultSource: 'default',
+};
+
+function plotBasal(pool, opts = defaults) {
   const d3 = window.d3;
-  const defaults = {
-    opacity: 0.6,
-    opacityDelta: 0.2,
-    pathStroke: 1.5,
-    timezoneOffset: 0,
-    tooltipPadding: 20,
-  };
 
   const t = i18next.t.bind(i18next);
   const basalUtil = new BasalUtil();
@@ -281,11 +283,10 @@ function plotBasal(pool, opts = {}) {
   };
 
   basal.tooltipHtml = function(group, datum, showSheduledLabel) {
-    const defaultSource = _.get(window, 'config.BRANDING', 'tidepool') === 'diabeloop' ? 'Diabeloop' : 'default';
     const { AUTOMATED_BASAL_LABELS, SCHEDULED_BASAL_LABELS } = constants;
     const H_MM_A_FORMAT = constants.dateTimeFormats.H_MM_A_FORMAT;
     /** @type {string} */
-    const source = _.get(datum, 'source', defaultSource);
+    const source = _.get(datum, 'source', opts.defaultSource);
     switch (datum.deliveryType) {
     case 'temp':
       group.append('p')

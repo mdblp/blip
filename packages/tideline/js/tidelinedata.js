@@ -76,7 +76,8 @@ const defaults = {
     timezoneName: "UTC",
     timezoneOffset: 0,
   },
-  latestPumpManufacturer: "default",
+  defaultSource: "Diabeloop",
+  defaultPumpManufacturer: "default",
   /** @type {moment.Moment[]} */
   dataRange: null,
 };
@@ -289,15 +290,10 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
  */
 TidelineData.prototype.cleanDatum = function cleanDatum(d) {
   // Remove unneeded fields:
-  if (["upload", "pumpSettings"].includes(d.type)) {
-    if (typeof d.source !== "string") {
-      d.source = "Diabeloop";
-    }
-  } else {
+  if (!["upload", "pumpSettings"].includes(d.type)) {
     delete d.deviceTime;
     delete d.deviceId;
     delete d.deviceSerialNumber;
-    delete d.source;
   }
 
   delete d.time;
@@ -319,6 +315,10 @@ TidelineData.prototype.cleanDatum = function cleanDatum(d) {
   // Be sure we have an id
   if (typeof d.id !== "string") {
     d.id = genRandomId();
+  }
+  // Be sure to have a source (use in lots of places)
+  if (typeof d.source !== "string") {
+    d.source = this.opts.defaultSource;
   }
 };
 
@@ -359,7 +359,7 @@ TidelineData.prototype.createTimezoneChange = function createTimezoneChange(prev
     displayOffset,
     type: "deviceEvent",
     subType: "timeChange",
-    source: "Diabeloop",
+    source: this.opts.defaultSource,
     from: {
       time: mFrom.toISOString(),
       timeZoneName: prevTimezone,
@@ -700,12 +700,11 @@ TidelineData.prototype.setEvents = function setEvents(filter = {}, order = ["inp
 
 TidelineData.prototype.getLastestManufacturer = function getLastestManufacturer() {
   const defaultPumpManufacturer = {
-    payload: { pump: { manufacturer: "default" } },
+    payload: { pump: { manufacturer: this.opts.defaultPumpManufacturer } },
   };
 
-  if (!Array.isArray(this.grouped.pumpSettings)) {
-    return defaultPumpManufacturer;
-  }
+  this.checkRequired(['pumpSettings']);
+
   // get latest pump manufacturer
   const lastPump = _.maxBy(this.grouped.pumpSettings, "epoch");
   const pump = _.get(_.merge({}, defaultPumpManufacturer, lastPump), "payload.pump");

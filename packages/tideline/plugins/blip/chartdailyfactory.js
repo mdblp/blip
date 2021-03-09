@@ -403,6 +403,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     emitter,
     data: tidelineData.grouped.basal,
     ...tidelineData.opts.timePrefs,
+    defaultSource: tidelineData.opts.defaultSource,
   }), true, true);
 
   // add device suspend data to basal pool
