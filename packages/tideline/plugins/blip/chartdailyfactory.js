@@ -201,7 +201,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     'class': 'd3-top',
     emitter,
     leftEdge: chart.axisGutter(),
-    timePrefs: chart.options.timePrefs
+    timePrefs: chart.options.timePrefs,
+    tidelineData,
   }), true, true);
 
   // BG pool

@@ -18,19 +18,20 @@
 import _ from 'lodash';
 import moment from 'moment-timezone';
 
-import dt from '../../../data/util/datetime';
 import format from '../../../data/util/format';
 
-function axesDaily(pool, opts = {}) {
-  const defaults = {
-    textShiftX: 5,
-    textShiftY: 5,
-    tickLength: 15,
-    longTickMultiplier: 2.5,
-    timePrefs: {
-      timezoneName: 'UTC',
-    }
-  };
+const defaults = {
+  textShiftX: 5,
+  textShiftY: 5,
+  tickLength: 15,
+  longTickMultiplier: 2.5,
+  /** @type {import("../../../tidelinedata").default} */
+  tidelineData: {
+    getTimezoneAt: _.constant('UTC'),
+  },
+};
+
+function axesDaily(pool, opts = defaults) {
 
   _.defaults(opts, defaults);
 
@@ -69,7 +70,8 @@ function axesDaily(pool, opts = {}) {
    * @param {number} date MS since epoch
    */
   function updateStickyLabel(date) {
-    const startDate = moment.tz(date, opts.timePrefs.timezoneName);
+    const timezone = opts.tidelineData.getTimezoneAt(date);
+    const startDate = moment.tz(date, timezone);
     if (startDate.isValid()) {
       const dateHours = startDate.hours();
 
@@ -83,7 +85,7 @@ function axesDaily(pool, opts = {}) {
     } else {
       // Don't bother create a bows() log for this one,
       // should not happend outside buggy dev process anyway.
-      console.warn('axesDaily.updateStickyLabel: invalid date', date, opts.timePrefs.timezoneName);
+      console.warn('axesDaily.updateStickyLabel: invalid date', date, timezone);
     }
   }
 
@@ -94,16 +96,13 @@ function axesDaily(pool, opts = {}) {
   opts.emitter.on('dailyx-navigated', updateStickyLabel);
 
   function dailyx(selection) {
-
     opts.xScale = pool.xScale().copy();
 
     selection.each(function(currentData) {
-      var ticks = selection.selectAll('g.d3-axis.' + opts['class'])
-        .data(currentData, function(d) {
-          return d.id;
-        });
+      const ticks = selection.selectAll('g.d3-axis.' + opts['class'])
+        .data(currentData, (d) => d.id);
 
-      var tickGroups = ticks.enter()
+        const tickGroups = ticks.enter()
         .append('g')
         .attr({
           'class': 'd3-axis ' + opts['class']
@@ -119,22 +118,26 @@ function axesDaily(pool, opts = {}) {
 
       tickGroups.append('text')
         .attr({
+          id: (d) => `x-axis-hour-${d.epoch}`,
           x: dailyx.textXPosition,
           y: pool.height() - opts.textShiftY
         })
-        .text(function(d) {
-          return format.xAxisTickText(moment.tz(d.epoch, d.timezone));
-        });
+        .text((d) => format.xAxisTickText(moment.tz(d.epoch, d.timezone)));
 
-      tickGroups.filter(function(d) {
-        var date = new Date(d.normalTime);
-        date = new Date(dt.applyOffset(date, d.displayOffset));
-        if (date.getUTCHours() === 0) {
-          return d;
-        }
-      })
+      let prevDay = -1;
+      tickGroups
+        .filter((d) => {
+          let display = false;
+          if (d.startsAtMidnight) {
+            const day = moment.tz(d.epoch, d.timezone).day();
+            display = day !== prevDay;
+            prevDay = day;
+          }
+          return display;
+        })
         .append('text')
         .attr({
+          id: (d) => `x-axis-day-${d.epoch}`,
           'class': 'd3-day-label',
           x: dailyx.textXPosition,
           y: dailyx.dayYPosition
@@ -145,26 +148,17 @@ function axesDaily(pool, opts = {}) {
     });
   }
 
-  dailyx.xPosition = function(d) {
-    return opts.xScale(Date.parse(d.normalTime));
-  };
-
-  dailyx.textXPosition = function(d) {
-    return dailyx.xPosition(d) + opts.textShiftX;
-  };
-
-  dailyx.dayYPosition = function(d) {
-    return dailyx.tickLength(d);
-  };
-
-  dailyx.tickLength = function(d) {
-    var date = new Date(d.normalTime);
-    date = new Date(dt.applyOffset(date, d.displayOffset));
-    if (date.getUTCHours() === 0) {
+  dailyx.tickLength = (d) => {
+    const m = moment.tz(d.epoch, d.timezone);
+    if (m.hours() === 0) {
       return pool.height() - opts.tickLength * opts.longTickMultiplier;
     }
-    else return pool.height() - opts.tickLength;
+    return pool.height() - opts.tickLength;
   };
+
+  dailyx.xPosition = (d) => opts.xScale(d.epoch);
+  dailyx.textXPosition = (d) => dailyx.xPosition(d) + opts.textShiftX;
+  dailyx.dayYPosition = dailyx.tickLength;
 
   dailyx.destroy = function() {
     opts = null;

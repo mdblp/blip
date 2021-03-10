@@ -453,10 +453,8 @@ TidelineData.prototype.setTimezones = function setTimezones() {
     const startDatum = _.find(this.data, isChartType) ?? false;
     const lastDatum = _.findLast(this.data, isChartType) ?? false;
     if (startDatum && lastDatum && startDatum.id !== lastDatum.id) {
-      const dailyPointStart = moment.utc(startDatum.epoch).valueOf();
-      const dailyPointEnd = moment.utc(lastDatum.epoch).valueOf();
       for (const timezoneChange of timezoneChanges) {
-        if (timezoneChange.epoch >= dailyPointStart && timezoneChange.epoch < dailyPointEnd) {
+        if (timezoneChange.epoch >= startDatum.epoch && timezoneChange.epoch < lastDatum.epoch) {
           this.data.push(timezoneChange);
         }
       }
@@ -788,28 +786,36 @@ TidelineData.prototype.generateFillData = function generateFillData() {
   }
 
   const { classes } = this.opts.fillOpts;
-  const { timezoneName: timezone } = this.opts.timePrefs;
-  const fillDateTime = moment.utc(this.endpoints[0]).tz(timezone).subtract(3, "hour");
-  const lastDateTime = moment.utc(this.endpoints[1]).tz(timezone);
+  const firstTimezone = this.getTimezoneAt(this.endpoints[0]);
+  const lastTimezone = this.getTimezoneAt(this.endpoints[1]);
+  const fillDateTime = moment.utc(this.endpoints[0]).tz(firstTimezone).subtract(3, "hour");
+  const lastDateTime = moment.utc(this.endpoints[1]).tz(lastTimezone);
 
   const fillData = [];
-
+  let timezone = firstTimezone;
   let prevFill = null;
   while (fillDateTime.isBefore(lastDateTime)) {
+    const epoch = fillDateTime.valueOf();
+    const timezoneAt = this.getTimezoneAt(epoch);
+    if (timezone !== timezoneAt) {
+      timezone = timezoneAt;
+      fillDateTime.tz(timezone);
+    }
+
     const hour = fillDateTime.hours();
     if (_.has(classes, hour)) {
       const isoStr = fillDateTime.toISOString();
       // Update the previous entry normalEnd value
       if (prevFill !== null) {
         prevFill.normalEnd = isoStr;
-        prevFill.epochEnd = fillDateTime.valueOf();
+        prevFill.epochEnd = epoch;
       }
       const currentFill = {
         type: "fill",
         fillColor: classes[hour],
         id: `fill-${isoStr.replace(/[^\w\s]|_/g, "")}`,
-        epoch: fillDateTime.valueOf(),
-        epochEnd: fillDateTime.valueOf(),
+        epoch,
+        epochEnd: epoch, // Updated in the next loop run
         normalEnd: isoStr,
         startsAtMidnight: hour === 0,
         normalTime: isoStr,
