@@ -248,11 +248,13 @@ function plotBasal(pool, opts = defaults) {
   };
 
   basal.yPosition = function(d) {
-    return opts.yScale(d.rate);
+    const yScale = pool.yScale();
+    return yScale(d.rate);
   };
 
   basal.pathYPosition = function(d) {
-    return opts.yScale(d.rate) - opts.pathStroke/2;
+    const yScale = pool.yScale();
+    return yScale(d.rate) - opts.pathStroke/2;
   };
 
   basal.invisibleRectYPosition = _.constant(0);
@@ -262,7 +264,8 @@ function plotBasal(pool, opts = defaults) {
   };
 
   basal.height = function(d) {
-    return pool.height() - opts.yScale(d.rate);
+    const yScale = pool.yScale();
+    return pool.height() - yScale(d.rate);
   };
 
   basal.invisibleRectHeight = function(/* d */) {
@@ -368,11 +371,12 @@ function plotBasal(pool, opts = defaults) {
   };
 
   basal.addAnnotations = function(data) {
-    for (var i = 0; i < data.length; ++i) {
-      var d = data[i];
-      var annotationOpts = {
+    const yScale = pool.yScale();
+    for (let i = 0; i < data.length; ++i) {
+      const d = data[i];
+      const annotationOpts = {
         x: basal.xPosition(d),
-        y: opts.yScale(0),
+        y: yScale(0),
         xMultiplier: 2,
         yMultiplier: 1,
         orientation: {

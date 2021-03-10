@@ -16,26 +16,46 @@
  */
 
 import _ from 'lodash';
-import bows from 'bows';
+
 import legend from './plot/util/legend';
 
-/** @typedef {{ type: string, plot: function, panBoolean: boolean }} PlotType */
+/**
+ * @typedef {import('./tidelinedata').default} TidelineData
+ * @typedef {{ type: string, plot: function, panBoolean: boolean }} PlotType
+ * @typedef { import('d3').Axis } Axis
+ * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
+ *
+ * @typedef {(tidelineData: TidelineData, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
+ */
 
+/**
+ * A pool: An horizontal graph for the daily view
+ * @param {function} container OneDay container
+ */
 function Pool(container) {
   const d3 = window.d3;
-  let log = null;
+
+  const minHeight = 20;
+  const maxHeight = 300;
 
   let mainSVG = d3.select('#' + container.id());
-  var id, label, labelBaseline = 4, legends = [],
+  var id, labelBaseline = 4, legends = [],
     index, heightRatio, gutterWeight, hidden = false, yPosition,
-    height, minHeight = 20, maxHeight = 300,
-    group,
-    xScale,
-    yAxis = [];
-    /** @type {PlotType[]} */
+    group;
+
+  let height = minHeight;
+  let label = null;
+  /** @type {ScaleContinuousNumeric} */
+  let xScale = null;
+  let yScale = null;
+  /** @type {Axis} */
+  let yAxis = null;
+  /** @type {PlotType[]} */
   let plotTypes = [];
   let annotations = null;
   let tooltips = null;
+  /** @type {AxisScaleFunc} */
+  let defaultAxisScaleFn = null;
 
   this.destroy = function() {
     plotTypes.forEach((plotType) => {
@@ -47,6 +67,7 @@ function Pool(container) {
     legends = null;
     group = null;
     xScale = null;
+    yScale = null;
     yAxis = null;
     plotTypes = null;
     annotations = null;
@@ -54,22 +75,23 @@ function Pool(container) {
     container = null;
   };
 
-  this.render = function(_selection, poolData) {
+  this.render = function(_selection, poolData, updateScale = false) {
+    if (updateScale && _.isFunction(defaultAxisScaleFn)) {
+      const axisScale = defaultAxisScaleFn(container.tidelineData, this);
+      yScale = axisScale.scale;
+      yAxis = axisScale.axis;
+    }
+
     plotTypes.forEach(function(plotType) {
-      if (container.dataFill[plotType.type]) {
+      if (plotType.type in container.dataFill) {
         plotType.data = _.filter(poolData, { type: plotType.type });
         var dataGroup = group.selectAll('#' + id + '_' + plotType.type).data([plotType.data]);
         dataGroup.enter().append('g').attr('id', id + '_' + plotType.type);
         if (plotType.data.length > 0) {
           dataGroup.call(plotType.plot);
         }
-      }
-      else if (plotType.type === 'stats') {
-        var statsGroup = group.selectAll('#' + id + '_stats').data([null]);
-        statsGroup.enter().append('g').attr('id', id + '_stats').call(plotType.plot);
-      }
-      else {
-        log.warn('I am confused: the only plot type not classified as dataFill should be stats.');
+      } else {
+        console.warn(`Pool: ${plotType.type} not in dataFill`, { plotType, dataFill: container.dataFill});
       }
     });
 
@@ -112,9 +134,7 @@ function Pool(container) {
 
   // only once methods
   this.drawLabel = _.once(function() {
-    label = label || [];
-
-    if (label.length > 0) {
+    if (Array.isArray(label) && label.length > 0) {
       var labelGroup = mainSVG.select('#tidelineLabels').append('text')
         .attr({
           id: id + '_label',
@@ -149,22 +169,20 @@ function Pool(container) {
   });
 
   this.drawAxes = _.once(function() {
-    var axisGroup = mainSVG.select('#tidelineYAxes');
-    yAxis.forEach(function(axis, i) {
+    if (yAxis) {
+      const axisGroup = mainSVG.select('#tidelineYAxes');
       axisGroup.append('g')
         .attr('class', 'd3-y d3-axis')
-        .attr('id', 'pool_' + id + '_yAxis_' + i)
+        .attr('id', `pool-${id}-yAxis`)
         .attr('transform', 'translate(' + (container.axisGutter() - 1) + ',' + yPosition + ')');
-    });
-    return this;
+    }
   });
 
   this.updateAxes = function() {
-    var axisGroup = mainSVG.select('#tidelineYAxes');
-    yAxis.forEach(function(axis, i) {
-      axisGroup.select('#pool_' + id + '_yAxis_' + i)
-        .call(axis);
-    });
+    if (yAxis) {
+      const axisGroup = mainSVG.select('#tidelineYAxes');
+      axisGroup.select(`#pool-${id}-yAxis`).call(yAxis);
+    }
     return this;
   };
 
@@ -173,9 +191,6 @@ function Pool(container) {
     if (!arguments.length) return id;
     id = x;
     group = selection.append('g').attr('id', id);
-    if (log === null) {
-      log = bows(id);
-    }
     return this;
   };
 
@@ -258,16 +273,41 @@ function Pool(container) {
     return this;
   };
 
-  this.xScale = function(f) {
-    if (!arguments.length) return xScale;
-    xScale = f;
-    return this;
+  /**
+   * @param {ScaleContinuousNumeric} scale
+   * @returns {ScaleContinuousNumeric}
+   */
+  this.xScale = (scale = null) => {
+    if (scale !== null) {
+      xScale = scale;
+    }
+    return xScale;
   };
 
-  this.yAxis = function(x) {
-    if (!arguments.length) return yAxis;
-    yAxis.push(x);
-    return this;
+  /**
+   * Default pool scaling. Most (all) of them have only
+   * one main scaling (outide fixed size, like pool height)
+   * @returns {ScaleContinuousNumeric}
+   */
+  this.yScale = () => {
+    if (yScale === null) {
+      throw new Error(`yScale === null (${id})`);
+    }
+    return yScale;
+  };
+
+  /**
+   * @param {AxisScaleFunc} fn
+   * @returns {AxisScaleFunc}
+   */
+  this.axisScaleFn = function(fn = null) {
+    if (fn !== null) {
+      defaultAxisScaleFn = fn;
+      const axisScale = fn(container.tidelineData, this);
+      yScale = axisScale.scale;
+      yAxis = axisScale.axis;
+    }
+    return defaultAxisScaleFn;
   };
 
   this.addPlotType = function (dataType, plotFunction, dataFillBoolean, panBoolean) {

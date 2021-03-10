@@ -82,8 +82,6 @@ function oneDay(emitter, options = {}) {
   let scrollHandleTrigger = true;
 
   let renderDaysBuffer = minRenderDaysBuffer;
-  /** @type {TidelineData} */
-  let tidelineData = null;
 
   function container(selection) {
     container.mainSVG = selection.append('svg');
@@ -141,6 +139,9 @@ function oneDay(emitter, options = {}) {
   container.annotations = null;
   /** @type {d3.AxisScale<Date>} */
   container.xScale = d3.time.scale.utc();
+  /** @type {TidelineData} */
+  container.tidelineData = null;
+
   /**
    * To be updated by the daily view.
    * If true, we won't perform the 'zoom' -> scroll the view
@@ -237,6 +238,9 @@ function oneDay(emitter, options = {}) {
     container.panToDate(new Date(domain.center.valueOf() - MS_IN_DAY));
   };
 
+  /**
+   * @returns {Pool}
+   */
   container.newPool = function() {
     const p = new Pool(container);
     container.pools.push(p);
@@ -357,7 +361,7 @@ function oneDay(emitter, options = {}) {
       if (renderedData.length > 0) {
         const pools = container.pools;
         for (let i = 0; i < pools.length; i++) {
-          pools[i].render(container.poolGroup, renderedData);
+          pools[i].render(container.poolGroup, renderedData, force);
         }
       }
     }
@@ -576,7 +580,6 @@ function oneDay(emitter, options = {}) {
     emitter = null;
     options = null;
     renderedData = null;
-    tidelineData = null;
     nav.pan = null;
     nav.scrollScale = null;
     nav.drag = null;
@@ -594,6 +597,7 @@ function oneDay(emitter, options = {}) {
     container.options = null;
     container.pools = null;
     container.throttleNavigated = null;
+    container.tidelineData = null;
   };
 
   // getters and setters
@@ -646,11 +650,11 @@ function oneDay(emitter, options = {}) {
 
   container.data = function(/** @type {TidelineData} */ td) {
     if (td instanceof TidelineData) {
-      tidelineData = td;
-    } else if (tidelineData === null) {
+      container.tidelineData = td;
+    } else if (container.tidelineData === null) {
       return [];
     } else {
-      return tidelineData.data;
+      return container.tidelineData.data;
     }
 
     if (_.isEmpty(td.data)) {
@@ -666,9 +670,9 @@ function oneDay(emitter, options = {}) {
 
     log.debug('renderDaysBuffer', renderDaysBuffer);
 
-    const lastTimezone = tidelineData.getLastTimezone();
-    const first = moment.utc(tidelineData.endpoints[0]);
-    const last = moment.utc(tidelineData.endpoints[1]);
+    const lastTimezone = td.getLastTimezone();
+    const first = moment.utc(td.endpoints[0]);
+    const last = moment.utc(td.endpoints[1]);
 
     if (last.valueOf() - first.valueOf() < MS_IN_DAY) {
       log.error("The endpoints of your data are less than 24 hours apart.");
@@ -679,7 +683,6 @@ function oneDay(emitter, options = {}) {
     // initialEndpoints ~= set the zoom (time axis) value of the displayed chart
     container.initialEndpoints = [minusOne.toDate(), last.toDate()];
     container.endpoints = [first.toDate(), last.toDate()];
-    container.tidelineData = tidelineData;
 
     return container;
   };
@@ -689,22 +692,22 @@ function oneDay(emitter, options = {}) {
     const start = moment.utc(domain[0]).subtract(renderDaysBuffer, 'day').toISOString();
     const end = moment.utc(domain[1]).add(renderDaysBuffer, 'day').toISOString();
 
-    if (tidelineData.dataByDate === null) {
+    if (container.tidelineData.dataByDate === null) {
       // FIXME: Some nasty callback here
       // We are currently fetching&processing data from the API
       log.debug('FIXME: updateRenderedData: tidelineData.dataByDate is null');
       renderedData = [];
     } else {
-      const filtered = tidelineData.dataByDate.filter([start, end]);
+      const filtered = container.tidelineData.dataByDate.filter([start, end]);
       renderedData = filtered.top(Infinity).reverse();
     }
   };
 
   container.createMessage = async (message) => {
-    const nAdded = await tidelineData.addData([message]);
+    const nAdded = await container.tidelineData.addData([message]);
     if (nAdded > 0) {
       // We can assume chart.tidelineData.grouped.message is an array
-      const tdMessage = tidelineData.grouped.message.find((d) => d.id === message.id);
+      const tdMessage = container.tidelineData.grouped.message.find((d) => d.id === message.id);
       if (typeof tdMessage === 'object') {
         container.emitter.emit('messageCreated', tdMessage);
         return true;
@@ -714,7 +717,7 @@ function oneDay(emitter, options = {}) {
   };
 
   container.editMessage = (message) => {
-    const updateMessage = tidelineData.editMessage(message);
+    const updateMessage = container.tidelineData.editMessage(message);
     if (updateMessage !== null) {
       container.emitter.emit('messageEdited', updateMessage);
       return true;

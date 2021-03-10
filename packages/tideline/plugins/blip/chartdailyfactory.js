@@ -14,7 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-// @ts-nocheck
 
 import i18next from 'i18next';
 import _ from 'lodash';
@@ -24,7 +23,7 @@ import { MGDL_UNITS } from '../../js/data/util/constants';
 
 import oneDay from '../../js/oneday';
 import fill from '../../js/plot/util/fill';
-import scalesutil from '../../js/plot/util/scales';
+import { createYAxisBG, createYAxisBolus, createYAxisBasal } from '../../js/plot/util/scales';
 import axesDailyx from '../../js/plot/util/axes/dailyx';
 import plotZenModeEvent from '../../js/plot/zenModeEvent';
 import plotPhysicalActivity from '../../js/plot/physicalActivity';
@@ -43,7 +42,9 @@ import plotTimeChange from '../../js/plot/timechange';
 
 /**
  * @typedef {import('../../js/tidelinedata').default } TidelineData
+ * @typedef {import('../../js/pool').default } Pool
  */
+
 
 /**
  * Create a 'One Day' chart object that is a wrapper around Tideline components
@@ -73,10 +74,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   const width = Math.max(640, parentElement.offsetWidth);
   const height = Math.max(480, parentElement.offsetHeight);
-  const scales = scalesutil(options);
   const emitter = new EventEmitter();
   const chart = oneDay(emitter, options);
-  const SMBG_SIZE = 16;
 
   // ***
   // Basic chart set up
@@ -84,12 +83,12 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   chart.id(parentElement.id).width(width).height(height);
   d3.select(parentElement).call(chart);
-
   // ***
   // Setup Pools
   // ***
 
   // top x-axis pool
+  /** @type {Pool} */
   const poolXAxis = chart.newPool()
     .id('poolXAxis', chart.poolGroup)
     .label('')
@@ -99,6 +98,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(0.0);
 
   // messages pool
+  /** @type {Pool} */
   const poolMessages = chart.newPool()
     .id('poolMessages', chart.poolGroup)
     .label('')
@@ -108,6 +108,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(0.0);
 
   // blood glucose data pool
+  /** @type {Pool} */
   const poolBG = chart.newPool()
     .id('poolBG', chart.poolGroup)
     .label([{
@@ -124,6 +125,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0);
 
   // carbs and boluses data pool
+  /** @type {Pool} */
   const poolBolus = chart.newPool()
     .id('poolBolus', chart.poolGroup)
     .label([{
@@ -141,6 +143,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0);
 
   // basal data pool
+  /** @type {Pool} */
   const poolBasal = chart.newPool()
     .id('poolBasal', chart.poolGroup)
     .label([{
@@ -205,22 +208,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData,
   }), true, true);
 
-  // BG pool
-  const allBG = _.filter(tidelineData.data, function(d) {
-    if ((d.type === 'cbg') || (d.type === 'smbg')) {
-      return d;
-    }
-  });
-  const scaleBG = scales.bg(allBG, poolBG, SMBG_SIZE/2);
-  const bgTickFormat = options.bgUnits === MGDL_UNITS ? 'd' : '.1f';
-
-  // set up y-axis
-  poolBG.yAxis(d3.svg.axis()
-    .scale(scaleBG)
-    .orient('left')
-    .outerTickSize(0)
-    .tickValues(scales.bgTicks(allBG))
-    .tickFormat(d3.format(bgTickFormat)));
+  // setup axis & main y scale
+  poolBG.axisScaleFn(createYAxisBG);
   // add background fill rectangles to BG pool
   poolBG.addPlotType('fill', fill(poolBG, {
     endpoints: chart.endpoints,
@@ -235,22 +224,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
         'height': chart.options.bgClasses.target.boundary
       }
     ],
-    yScale: scaleBG
-  }), true, true);
-
-  // add background fill rectangles to BG pool
-  const scaleHeightBG = d3.scale.linear()
-    .domain([0, poolBG.height()])
-    .range([0, poolBG.height()]);
-
-  poolBG.addPlotType('fill', fill(poolBG, {
-    endpoints: chart.endpoints,
-    isDaily: true,
-    yScale: scaleHeightBG
   }), true, true);
 
   poolBG.addPlotType('deviceEvent', plotZenModeEvent(poolBG, {
-    yScale: scaleBG,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     data: tidelineData.zenEvents,
   }), false, true);
@@ -258,7 +234,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolBG.addPlotType('physicalActivity', plotPhysicalActivity(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
-    yScale: scaleBG,
     emitter,
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
@@ -270,7 +245,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolBG.addPlotType('deviceEvent', plotReservoirChange(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
-    yScale: scaleBG,
     emitter,
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
@@ -281,7 +255,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolBG.addPlotType('deviceEvent', plotDeviceParameterChange(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
-    yScale: scaleBG,
     emitter,
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
@@ -292,7 +265,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add confidential mode to BG pool
   poolBG.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBG, {
-    yScale: scaleBG,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     data: tidelineData.confidentialEvents,
     onConfidentialHover: options.onConfidentialHover,
@@ -303,7 +275,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolBG.addPlotType('cbg', plotCbg(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
-    yScale: scaleBG,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onCBGHover: options.onCBGHover,
     onCBGOut: options.onCBGOut,
@@ -313,47 +284,21 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolBG.addPlotType('smbg', plotSmbg(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
-    yScale: scaleBG,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onSMBGHover: options.onSMBGHover,
     onSMBGOut: options.onSMBGOut,
   }), true, true);
 
-  // bolus & carbs pool (FIXME on new data loaded)
-  const scaleBolus = scales.bolus(tidelineData.grouped.bolus.concat(tidelineData.grouped.wizard), poolBolus);
-  // set up y-axis for bolus
-  const bolusTickValues = [0, 1, 5, 10];
-  const maxBolusValue = scaleBolus.domain()[1];
-  // Add additional legends
-  while (maxBolusValue > bolusTickValues[bolusTickValues.length - 1] && bolusTickValues.length < 7) {
-    const currentMax = bolusTickValues[bolusTickValues.length - 1];
-    const bolusTick = currentMax < 20 ? 5 : 10;
-    // [0, 5, 10, 15, 20, 30, 40]
-    bolusTickValues.push(currentMax + bolusTick);
-  }
-
-  poolBolus.yAxis(d3.svg.axis()
-    .scale(scaleBolus)
-    .orient('left')
-    .outerTickSize(0)
-    .ticks(2)
-    .tickValues(bolusTickValues));
-
+  // setup axis & main y scale
+  poolBolus.axisScaleFn(createYAxisBolus);
   // add background fill rectangles to bolus pool
-  const poolBolusHeight = [0, poolBolus.height()];
-  const scaleHeight = d3.scale.log()
-    .domain(poolBolusHeight)
-    .range(poolBolusHeight);
-
   poolBolus.addPlotType('fill', fill(poolBolus, {
     endpoints: chart.endpoints,
     isDaily: true,
-    yScale: scaleHeight
   }), true, true);
 
   // add wizard data to wizard pool
   poolBolus.addPlotType('wizard', plotWizard(poolBolus, {
-    yScale: scaleBolus,
     emitter,
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
@@ -370,7 +315,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // quick bolus data to wizard pool
   poolBolus.addPlotType('bolus', plotQuickbolus(poolBolus, {
-    yScale: scaleBolus,
     emitter,
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
@@ -380,27 +324,19 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add confidential mode to Bolus pool
   poolBolus.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBolus, {
-    yScale: scaleBolus,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     data: tidelineData.confidentialEvents,
     onConfidentialHover: options.onConfidentialHover,
     onConfidentialOut: options.onConfidentialOut,
   }), false, true);
 
-  // basal pool
-  const scaleBasal = scales.basal(tidelineData.grouped.basal, poolBasal);
-  // set up y-axis
-  poolBasal.yAxis(d3.svg.axis()
-    .scale(scaleBasal)
-    .orient('left')
-    .outerTickSize(0)
-    .ticks(2));
+  // setup axis & main y scale
+  poolBasal.axisScaleFn(createYAxisBasal);
   // add background fill rectangles to basal pool
   poolBasal.addPlotType('fill', fill(poolBasal, {endpoints: chart.endpoints, isDaily: true}), true, true);
 
   // add basal data to basal pool
   poolBasal.addPlotType('basal', plotBasal(poolBasal, {
-    yScale: scaleBasal,
     emitter,
     data: tidelineData.grouped.basal,
     ...tidelineData.opts.timePrefs,
@@ -409,7 +345,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add device suspend data to basal pool
   poolBasal.addPlotType('deviceEvent', plotSuspend(poolBasal, {
-    yScale: scaleBasal,
     emitter,
     data: tidelineData.grouped.deviceEvent,
     timezoneAware: chart.options.timePrefs.timezoneAware
@@ -417,7 +352,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add confidential mode to Basal pool
   poolBasal.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBasal, {
-    yScale: scaleBolus,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     data: tidelineData.confidentialEvents,
     onConfidentialHover: options.onConfidentialHover,
@@ -445,9 +379,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     emitter,
     timezone: chart.options.timePrefs.timezoneName,
   }), true, true);
-
-  // Initial chart render
-  chart.renderPoolsData();
 
   return chart;
 }
