@@ -39,9 +39,11 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 
 import { useSignUpFormState } from "./signup-formstate-context";
-import { REGEX_EMAIL } from "../../lib/utils";
+import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
 import SignUpFormProps from "./signup-form-props";
+import { useAuth } from "../../lib/auth";
+// import { AlertSeverity } from "../../lib/useSnackbar";
 
 interface Errors {
   userName: boolean;
@@ -72,7 +74,8 @@ const formStyle = makeStyles((theme: Theme) => {
  * SignUpAccount Form
  */
 function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t, i18n } = useTranslation("yourloops");
+  const auth = useAuth();
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
   const defaultErr = {
@@ -137,11 +140,25 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
 
   const isErrorSeen: boolean = React.useMemo(() => _.some(errors), [errors]);
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onNext = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (validateUserName() && validatePassword() && validateConfirmNewPassword()) {
       // submit to api
-      handleNext();
+      try {
+        //setInProgress(true);
+        console.log("enter call api signup");
+        state.formValues.preferencesLanguage = i18n.language;
+        const success = await auth.signup(state);
+        console.log("success", success);
+        //setSuccess(success);
+        handleNext();
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        const message = t(errorMessage);
+        console.log("r", message);
+        //penSnackbar({ message, severity: AlertSeverity.error });
+      }
+      // setInProgress(false);
     }
   };
 

@@ -38,6 +38,7 @@ import { User, Profile, Preferences, Settings } from "models/shoreline";
 import sendMetrics from "../metrics";
 import { Session, AuthAPI, AuthContext, AuthProvider } from "./models";
 import AuthAPIImpl from "./api";
+import { SignUpFormState } from "pages/signup/signup-formstate-context";
 
 const STORAGE_KEY_SESSION_TOKEN = "session-token";
 const STORAGE_KEY_TRACE_TOKEN = "trace-token";
@@ -131,8 +132,35 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return settings;
   };
 
-  const signup = (username: string, password: string): void => {
-    log.info("signup", username, password);
+  const signup = async (signup: SignUpFormState): Promise<void> => {
+    log.info("signup", signup.formValues.accountUsername);
+    if (traceToken === null) {
+      throw new Error("not-yet-initialized");
+    }
+    const auth = await api.signup(
+      signup.formValues.accountUsername,
+      signup.formValues.accountPassword,
+      signup.formValues.accountRole,
+      traceToken
+    );
+
+    auth.user.profile = {
+      fullName: `${signup.formValues.profileFirstname} ${signup.formValues.profileLastname}`,
+      firstName: signup.formValues.profileFirstname,
+      lastName: signup.formValues.profileLastname,
+      job: signup.formValues.profileJob,
+    };
+    auth.user.settings = { country: signup.formValues.profileCountry };
+    auth.user.preferences = { displayLanguageCode: signup.formValues.preferencesLanguage };
+
+    await api.updateProfile(auth);
+    await api.updateSettings(auth);
+    await api.updatePreferences(auth);
+    //update terms
+
+    // send confirmation signup mail
+
+    log.info("signup done", auth);
   };
 
   const flagPatient = async (userId: string): Promise<void> => {

@@ -126,6 +126,72 @@ async function authenticate(username: string, password: string, traceToken: stri
   return { sessionToken, traceToken, user };
 }
 
+
+/**
+ * Perform a signup.
+ * @param {string} username Generally an email
+ * @param {string} password The account password
+ * @param {string} traceToken A generated uuidv4 trace token
+ * @return {Promise<User>} Return the logged-in user or a promise rejection.
+ */
+async function signup(username: string, password: string, role: UserRoles, traceToken: string): Promise<Session> {
+  let reason: string | null = null;
+
+  if (!_.isString(username) || _.isEmpty(username)) {
+    reason = t("no-username") as string;
+    return Promise.reject(new Error(reason));
+  }
+
+  if (!_.isString(password) || _.isEmpty(password)) {
+    reason = t("no-password") as string;
+    return Promise.reject(new Error(reason));
+  }
+
+  log.debug("login: /auth/login", appConfig.API_HOST);
+  const authURL = new URL("/auth/user", appConfig.API_HOST);
+
+  const response = await fetch(authURL.toString(), {
+    method: "POST",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.traceToken]: traceToken,
+    },
+    body: JSON.stringify({
+      username: username,
+      emails: [username],
+      password: password,
+      roles: [role],
+    }),
+  });
+
+  if (response.ok) {
+    const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
+    if (sessionToken === null) {
+      reason = t("An error occurred while signup");
+      return Promise.reject(new Error(reason as string));
+    }
+
+    const user = (await response.json()) as User;
+
+    return Promise.resolve({
+      sessionToken: sessionToken,
+      traceToken,
+      user: user,
+    });
+  }
+
+  log.error(response?.status, response?.statusText);
+
+  switch (response?.status) {
+    case HttpStatus.StatusServiceUnavailable:
+    case HttpStatus.StatusInternalServerError:
+      throw new Error("error-http-500");
+    default:
+      throw new Error("error-http-40x");
+  }
+
+}
+
 async function getProfile(auth: Readonly<Session>): Promise<Profile | null> {
   const seagullURL = new URL(
     `/metadata/${auth.user.userid}/profile`,
@@ -371,6 +437,7 @@ export default {
   login,
   requestPasswordReset,
   resetPassword,
+  signup,
   updateProfile,
   updatePreferences,
   updateSettings,
