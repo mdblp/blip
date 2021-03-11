@@ -31,9 +31,10 @@ import * as React from "react";
 import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
 
 import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -62,19 +63,6 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
     paddingTop: "0.5em",
   },
   toolbarRightSide: { display: "flex", justifyContent: "flex-end" },
-  accountMenu: {
-    display: "flex",
-    flexDirection: "row",
-    color: "var(--mdc-theme-on-surface, black)",
-  },
-  accountInfos: {
-    justifyContent: "center",
-    alignItems: "center",
-    display: "flex",
-  },
-  accountName: {
-    fontWeight: "bold",
-  },
   accountType: {
     fontWeight: "lighter",
   },
@@ -86,6 +74,16 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
   accountMenuIcon: { color: theme.palette.primary.main },
 }));
 
+const AccountButton = withStyles((/* theme: Theme */) => ({
+  root: {
+    display: "flex",
+    flexDirection: "row",
+    color: "var(--mdc-theme-on-surface, black)",
+    textTransform: "none",
+    fontWeight: "bold",
+  },
+}))(Button);
+
 function HeaderBar(props: HeaderProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = toolbarStyles(props);
@@ -93,11 +91,11 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const history = useHistory();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const userMenuOpen = Boolean(anchorEl);
 
-  const userRole: UserRoles | undefined = React.useMemo(() => auth.user?.roles && auth.user.roles[0], [auth.user]);
+  const userRole = React.useMemo(() => auth.user?.roles && auth.user.roles[0], [auth.user]);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -105,7 +103,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     history.push("/");
   };
 
-  const handleClose = () => {
+  const handleCloseAccountMenu = () => {
     setAnchorEl(null);
   };
 
@@ -128,36 +126,34 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   if (auth.isLoggedIn()) {
     const user = auth.user;
     accountMenu = (
-      <div className={classes.accountMenu}>
-        <div className={classes.accountInfos}>
-          <div className={classes.accountName}>{`${user?.profile?.firstName} ${user?.profile?.lastName}`}</div>
-        </div>
-        <IconButton
+      <React.Fragment>
+        <AccountButton
           aria-label={t("aria-current-user-account")}
           aria-controls="menu-appbar"
           aria-haspopup="true"
-          onClick={handleMenu}
-          color="inherit">
-          <ArrowDropDown className={classes.accountMenuIcon} />
-        </IconButton>
+          endIcon={<ArrowDropDown className={classes.accountMenuIcon} />}
+          onClick={handleOpenAccountMenu}>
+          {`${user?.profile?.firstName} ${user?.profile?.lastName}`}
+        </AccountButton>
         <Menu
           id="menu-appbar"
           anchorEl={anchorEl}
+          getContentAnchorEl={null}
           anchorOrigin={{
-            vertical: "top",
+            vertical: "bottom",
             horizontal: "right",
           }}
-          keepMounted
           transformOrigin={{
             vertical: "top",
             horizontal: "right",
           }}
-          open={open}
-          onClose={handleClose}>
+          keepMounted={false}
+          open={userMenuOpen}
+          onClose={handleCloseAccountMenu}>
           <MenuItem onClick={handleOpenProfilePage}>{t("menu-account-preferences")}</MenuItem>
           <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
         </Menu>
-      </div>
+      </React.Fragment>
     );
   }
 
