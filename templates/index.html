@@ -31,15 +31,10 @@
       p.style.marginTop = "200px";
       span = document.createElement("span");
       span.style.fontWeight = "bold";
-      span.appendChild(document.createTextNode("Error while initializing the application."));
+      span.appendChild(document.createTextNode("It seems your browser is too old for YourLoops."));
       p.appendChild(span);
       p.appendChild(document.createElement("br"));
-      p.appendChild(document.createTextNode("You're browser may be too old or unsupported."));
-      divApp.appendChild(p);
-
-      p = document.createElement("p");
-      p.style.color = "red";
-      p.appendChild(document.createTextNode("Error: " + source + ":" + lineno + ":" + colno + ": " + error));
+      p.appendChild(document.createTextNode("Try out Google Chrome instead?"));
       divApp.appendChild(p);
     };
   </script>
