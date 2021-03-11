@@ -68,10 +68,21 @@ function oneDay(emitter, options = {}) {
   const minHeight = 400;
   const minWidth = 300;
   const axisGutter = 40;
-  const minRenderDaysBuffer = 2;
+  /** The number of days we pre-render the SVG */
+  const renderDaysBuffer = 2;
 
   /** @type {Datum[]} The currently rendered data */
   let renderedData = [];
+  /**
+   * The dates (in ms) we asked data for from TidelineData.
+   *
+   * Used to know if we need to re-fetch new data from it, and
+   * perform a new SVG render.
+   */
+  const renderedDataRange = {
+    start: Number.MAX_SAFE_INTEGER,
+    end: Number.MIN_SAFE_INTEGER,
+  };
   /** true when click on pan back/forward a day, during the translation */
   let inTransition = false;
   let width = minWidth;
@@ -80,8 +91,6 @@ function oneDay(emitter, options = {}) {
   let gutter = 40;
   let id = 'tidelineSVGOneDay';
   let scrollHandleTrigger = true;
-
-  let renderDaysBuffer = minRenderDaysBuffer;
 
   function container(selection) {
     container.mainSVG = selection.append('svg');
@@ -316,18 +325,17 @@ function oneDay(emitter, options = {}) {
 
   container.isUpdateRenderedDataRangeNeeded = function() {
     if (renderedData.length > 0) {
-      /** @type {Date[]} */
+      /** @type {[Date, Date]} */
       const displayedDomain = container.xScale.domain();
       const startDisplayDate = displayedDomain[0].valueOf();
       const endDisplayDate = displayedDomain[1].valueOf();
-      const startDataDate = renderedData[0].epoch;
-      const endDataDate = renderedData[renderedData.length - 1].epoch;
 
       const isNeeded =
-        startDataDate > startDisplayDate
-        || startDisplayDate > endDataDate
-        || startDataDate > endDisplayDate
-        || endDisplayDate > endDataDate;
+        renderedDataRange.start > startDisplayDate
+        || startDisplayDate > renderedDataRange.end
+        || renderedDataRange.start > endDisplayDate
+        || endDisplayDate > renderedDataRange.end;
+
       return isNeeded;
     }
 
@@ -355,6 +363,10 @@ function oneDay(emitter, options = {}) {
     return container;
   };
 
+  /**
+   * Render the data to the SVG.
+   * @param {boolean} force True to force a re-render after new data where loaded from the API
+   */
   container.renderPoolsData = function(force = false) {
     if (force || container.isUpdateRenderedDataRangeNeeded()) {
       container.updateRenderedData();
@@ -563,6 +575,17 @@ function oneDay(emitter, options = {}) {
         nav.pan.event(container.mainGroup);
       }
     } else {
+      // This may look counter intuitive at first
+      // But it is needed in the following case:
+      // We have scroll far enough in the past
+      // to require a renderPoolsData(), then we switch
+      // to another view (basics, trends whatever)
+      // and come back.
+      // Almost nothing is render.
+      // We need to perform a pre-rendering, to be sure
+      // everything is in place
+      container.renderPoolsData();
+
       const start = new Date(epochLocation - MS_IN_DAY/2);
       nav.currentTranslation = -container.xScale(start) + axisGutter;
       nav.pan.translate([nav.currentTranslation, 0]);
@@ -663,13 +686,6 @@ function oneDay(emitter, options = {}) {
       throw new Error("Sorry, I can't render anything with only *one* datapoint.");
     }
 
-    renderDaysBuffer = Math.max(minRenderDaysBuffer, Math.ceil(td.maxDuration / MS_IN_DAY));
-    if (!Number.isSafeInteger(renderDaysBuffer)) {
-      renderDaysBuffer = minRenderDaysBuffer; // Safe guard
-    }
-
-    log.debug('renderDaysBuffer', renderDaysBuffer);
-
     const lastTimezone = td.getLastTimezone();
     const first = moment.utc(td.endpoints[0]);
     const last = moment.utc(td.endpoints[1]);
@@ -688,18 +704,26 @@ function oneDay(emitter, options = {}) {
   };
 
   container.updateRenderedData = function rData() {
-    const domain = container.xScale.domain();
-    const start = moment.utc(domain[0]).subtract(renderDaysBuffer, 'day').toISOString();
-    const end = moment.utc(domain[1]).add(renderDaysBuffer, 'day').toISOString();
-
     if (container.tidelineData.dataByDate === null) {
-      // FIXME: Some nasty callback here
+      // FIXME: We may have some nasty callback here
       // We are currently fetching&processing data from the API
-      log.debug('FIXME: updateRenderedData: tidelineData.dataByDate is null');
+      log.warn('FIXME: updateRenderedData: tidelineData.dataByDate is null');
       renderedData = [];
+      renderedDataRange.start = Number.MAX_SAFE_INTEGER;
+      renderedDataRange.end = Number.MIN_SAFE_INTEGER;
     } else {
-      const filtered = container.tidelineData.dataByDate.filter([start, end]);
+      const domain = container.xScale.domain();
+      const start = moment.utc(domain[0]).subtract(renderDaysBuffer, 'day');
+      const end = moment.utc(domain[1]).add(renderDaysBuffer, 'day');
+      renderedDataRange.start = start.valueOf();
+      renderedDataRange.end = end.valueOf();
+      start.subtract(this.tidelineData.maxDuration + 1, 'milliseconds');
+      end.add(1, 'millisecond'); // +1ms to be sure we have them
+      const filtered = container.tidelineData.dataByDate.filter([start.toISOString(), end.toISOString()]);
       renderedData = filtered.top(Infinity).reverse();
+      const rangeStart = renderedDataRange.start - 1; // -1ms to be sure we have them
+      // Only keep data which ends after our range
+      renderedData = renderedData.filter((d) => d.epoch > rangeStart || (Number.isInteger(d.epochEnd) && d.epochEnd > rangeStart));
     }
   };
 

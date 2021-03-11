@@ -18,7 +18,7 @@
 /**
  * @typedef {'basal'|'bolus'|'cbg'|'smbg'|'deviceEvent'|'wizard'|'upload'|'pumpSettings'|'physicalActivity'|'message'|'fill'} DatumType
  * @typedef {{ type: string, time?: string, normalTime: string, normalEnd?: string, subType?: string, epoch: number, epochEnd?: number, guessedTimezone?: boolean, timezone: string, displayOffset: number }} Datum
- * @typedef {{ [x: string]: Datum[] }} Grouped
+ * @typedef {{ [x: DatumType]: Datum[] }} Grouped
  * @typedef {{ payload: { parameters: {name: string}[]} } | Datum} PumpSettings
  * @typedef {{ timezone: string, dateRange: string[], nData: number, days: {date:string,type:string}[], data:{[x:string]: {data: Datum[]}} }} BasicsData
  * @typedef {{ time: number, timezone: string}[]} TimezoneList
@@ -273,7 +273,8 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
     mEnd.add(duration, units);
     d.normalEnd = mEnd.toISOString();
     d.epochEnd = mEnd.valueOf();
-    this.maxDuration = Math.max(this.maxDuration, mEnd.diff(mTime, "milliseconds"));
+    this.maxDuration = Math.max(this.maxDuration, d.epochEnd - d.epoch);
+
   }
 
   // Do we have this data: "suppressed" ?
@@ -809,6 +810,7 @@ TidelineData.prototype.generateFillData = function generateFillData() {
       if (prevFill !== null) {
         prevFill.normalEnd = isoStr;
         prevFill.epochEnd = epoch;
+        this.maxDuration = Math.max(this.maxDuration, epoch - prevFill.epoch);
       }
       const currentFill = {
         type: "fill",
@@ -832,6 +834,7 @@ TidelineData.prototype.generateFillData = function generateFillData() {
   if (prevFill !== null) {
     prevFill.normalEnd = lastDateTime.toISOString();
     prevFill.epochEnd = lastDateTime.valueOf();
+    this.maxDuration = Math.max(this.maxDuration, prevFill.epochEnd - prevFill.epoch);
   }
 
   const haveFillData = Array.isArray(this.grouped.fill);
