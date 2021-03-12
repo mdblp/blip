@@ -29,7 +29,7 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, withStyles } from "@material-ui/core/styles";
 
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -69,6 +69,9 @@ const teamMembersStyles = makeStyles((theme: Theme) => {
       marginTop: theme.spacing(1),
     },
     listTitle: {
+      display: "inline-block",
+      verticalAlign: "text-top",
+      height: "100%",
       textTransform: "uppercase",
       fontWeight: "bold",
       color: theme.palette.primary.main,
@@ -88,6 +91,25 @@ const teamMembersTableStyles = makeStyles(() => ({
     color: "black",
   },
 }));
+
+const MembersAccordionSummary = withStyles((theme: Theme) => ({
+  root: {
+    justifyContent: "left",
+    transition: theme.transitions.create(["background-color", "min-height"]),
+    "&:hover": {
+      backgroundColor: theme.palette.primary.light,
+    },
+  },
+  content: {
+    flexGrow: 0,
+    margin: 0,
+    display: "inline",
+    transition: undefined,
+    '&$expanded': {
+      margin: 0,
+    },
+  },
+}))(AccordionSummary);
 
 function PersonRemoveIcon(props: SvgIconProps): JSX.Element {
   // For some reason this icon is not available with material-ui
@@ -251,13 +273,13 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   return (
     <div id={`team-members-list-${team.id}`} className={classes.root}>
       <Accordion elevation={0} TransitionProps={{ unmountOnExit: true }}>
-        <AccordionSummary
+        <MembersAccordionSummary
           id={`team-members-list-${team.id}-header`}
           expandIcon={<ExpandMoreIcon />}
           aria-label={t("aria-expand-team-members")}
           aria-controls={`team-members-list-${team.id}-content`}>
           <Typography className={classes.listTitle}>{t("team-members-list-header", { nMembers })}</Typography>
-        </AccordionSummary>
+        </MembersAccordionSummary>
 
         {/* prettier-ignore */}
         <AccordionDetails>
