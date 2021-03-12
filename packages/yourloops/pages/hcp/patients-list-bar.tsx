@@ -27,7 +27,6 @@
  */
 
 import * as React from "react";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { Theme, makeStyles } from "@material-ui/core/styles";
@@ -40,7 +39,6 @@ import Fade from "@material-ui/core/Fade";
 import FormControl from "@material-ui/core/FormControl";
 import InputBase from "@material-ui/core/InputBase";
 import InputLabel from "@material-ui/core/InputLabel";
-import Link from "@material-ui/core/Link";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from "@material-ui/core/MenuItem";
 import { MenuProps } from "@material-ui/core/Menu";
@@ -49,6 +47,7 @@ import NativeSelect from "@material-ui/core/NativeSelect";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import HomeIcon from "@material-ui/icons/Home";
@@ -96,8 +95,9 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     homeIcon: {
       marginRight: "0.5em",
     },
-    breadcrumbLink: {
+    breadcrumbText: {
       display: "flex",
+      cursor: "default",
     },
     search: {
       display: "flex",
@@ -218,7 +218,6 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   const { filter, filterType, onFilter, onFilterType, onInvitePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = pageBarStyles();
-  const history = useHistory();
   const teamHook = useTeam();
   const [modalAddPatientOpen, setModalAddPatientOpen] = React.useState(false);
   const [modalSelectedTeam, setModalSelectedTeam] = React.useState("");
@@ -238,10 +237,6 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
     },
   ];
 
-  const handleClickMyPatients = (e: React.MouseEvent): void => {
-    e.preventDefault();
-    history.push("/hcp/patients");
-  };
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     onFilter(e.target.value);
   };
@@ -306,10 +301,10 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
       <Toolbar className={classes.toolBar}>
         <div id="patients-list-toolbar-item-left">
           <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-            <Link color="textPrimary" className={classes.breadcrumbLink} href="/hcp/patients" onClick={handleClickMyPatients}>
+            <Typography color="textPrimary" className={classes.breadcrumbText}>
               <HomeIcon className={classes.homeIcon} />
               {t("my-patients-title")}
-            </Link>
+            </Typography>
           </Breadcrumbs>
         </div>
         <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
