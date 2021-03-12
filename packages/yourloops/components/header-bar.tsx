@@ -74,6 +74,11 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
   accountMenuIcon: { color: theme.palette.primary.main },
 }));
 
+/**
+ * Create a custom account button.
+ *
+ * With a CSS style named "ylp-button-account"
+ */
 const AccountButton = withStyles((/* theme: Theme */) => ({
   root: {
     display: "flex",
@@ -82,7 +87,7 @@ const AccountButton = withStyles((/* theme: Theme */) => ({
     textTransform: "none",
     fontWeight: "bold",
   },
-}))(Button);
+}), { name: "ylp-button-account" })(Button);
 
 function HeaderBar(props: HeaderProps): JSX.Element {
   const { t } = useTranslation("yourloops");
@@ -128,15 +133,16 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     accountMenu = (
       <React.Fragment>
         <AccountButton
+          id="button-user-account-menu-appbar"
           aria-label={t("aria-current-user-account")}
-          aria-controls="menu-appbar"
+          aria-controls="menu-user-account-appbar"
           aria-haspopup="true"
           endIcon={<ArrowDropDown className={classes.accountMenuIcon} />}
           onClick={handleOpenAccountMenu}>
           {`${user?.profile?.firstName} ${user?.profile?.lastName}`}
         </AccountButton>
         <Menu
-          id="menu-appbar"
+          id="menu-user-account-appbar"
           anchorEl={anchorEl}
           getContentAnchorEl={null}
           anchorOrigin={{
