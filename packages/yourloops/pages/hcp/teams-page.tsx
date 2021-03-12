@@ -113,14 +113,19 @@ function TeamsPage(): JSX.Element {
     try {
       if (team === null) {
         await teamHook.createTeam(editedTeam);
+        openSnackbar({ message: t("team-page-success-create"), severity: AlertSeverity.success });
       } else {
         await teamHook.editTeam(editedTeam as Team);
+        openSnackbar({ message: t("team-page-success-edit"), severity: AlertSeverity.success });
       }
-      openSnackbar({ message: t("team-page-success-edit"), severity: AlertSeverity.success });
     } catch (reason: unknown) {
-      log.error("onShowEditTeamDialog", reason);
-      const errorMessage = errorTextFromException(reason);
-      const message = t("team-page-failed-edit", { errorMessage });
+      log.error("onShowEditTeamDialog", reason, errorTextFromException(reason));
+      let message = '';
+      if (team === null) {
+        message = t("team-page-failed-create");
+      } else {
+        message = t("team-page-failed-edit");
+      }
       openSnackbar({ message, severity: AlertSeverity.error });
     }
   };
