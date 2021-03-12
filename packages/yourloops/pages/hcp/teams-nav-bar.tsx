@@ -59,8 +59,9 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     toolBarRight: {
       display: "flex",
     },
-    breadcrumbLink: {
+    breadcrumbText: {
       display: "flex",
+      cursor: "default",
     },
     homeIcon: {
       marginRight: "0.5em",
@@ -84,7 +85,7 @@ function TeamsNavBar(props: BarProps): JSX.Element {
       <Toolbar className={classes.toolBar}>
         <div id="teams-navbar-item-left">
           <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-            <Typography color="textPrimary" className={classes.breadcrumbLink}>
+            <Typography color="textPrimary" className={classes.breadcrumbText}>
               <HomeIcon className={classes.homeIcon} />
               {t("teams-navbar-breadcrumbs-title-my-teams")}
             </Typography>
