@@ -141,25 +141,28 @@ const pageBarStyles = makeStyles((theme: Theme) => {
       flex: "1",
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.secondary.light,
-      transition: theme.transitions.create("background-color"),
-      "&:active": {
-        backgroundColor: theme.palette.secondary.dark,
-      },
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.dark,
-      },
       [theme.breakpoints.up("sm")]: {
         width: "15em",
       },
     },
     selectFilterInnerDiv: {
-      display: "inline-flex",
+      display: "flex",
       alignItems: "center",
-      paddingLeft: ".5em",
+      padding: "0px 0px 0px .5em",
+      height: "100%",
+      transition: theme.transitions.create("background-color"),
+      "&:hover": {
+        backgroundColor: theme.palette.secondary.dark,
+      },
+      "&:focus": {
+        backgroundColor: theme.palette.secondary.light,
+        "&:hover": {
+          backgroundColor: theme.palette.secondary.dark,
+        },
+      },
     },
     selectFilterIcon: {
       margin: "0 .5em 0 0",
-      alignSelf: "flex-start",
     },
     buttonAddPatient: {
       marginLeft: "auto",

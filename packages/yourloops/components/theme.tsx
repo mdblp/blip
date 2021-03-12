@@ -36,7 +36,7 @@ const commonTheme = {
   secondary: {
     main: "#E5F0F0",
     light: "#F5F9F9",
-    dark: "#B8B9DD",
+    dark: "#D4E6E6",
   },
   error: {
     main: "#DE514B",
