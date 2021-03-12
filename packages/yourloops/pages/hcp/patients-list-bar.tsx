@@ -73,6 +73,10 @@ export interface PatientListBarProps {
 const modalBackdropTimeout = 300;
 const pageBarStyles = makeStyles((theme: Theme) => {
   return {
+    appBar: {
+      boxShadow: "0px 1px 2px #00000029",
+      borderWidth: "0px",
+    },
     toolBar: {
       display: "grid",
       gridTemplateRows: "auto",
@@ -298,7 +302,7 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
 
   return (
-    <AppBar position="static" color="secondary">
+    <AppBar position="static" color="secondary" variant="outlined" className={classes.appBar}>
       <Toolbar className={classes.toolBar}>
         <div id="patients-list-toolbar-item-left">
           <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
