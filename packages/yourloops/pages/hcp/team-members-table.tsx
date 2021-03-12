@@ -92,6 +92,11 @@ const teamMembersTableStyles = makeStyles(() => ({
   },
 }));
 
+/**
+ * Create a custom accordion summary.
+ *
+ * With a CSS style named "ylp-member-accordion-summary"
+ */
 const MembersAccordionSummary = withStyles((theme: Theme) => ({
   root: {
     justifyContent: "left",
@@ -109,7 +114,8 @@ const MembersAccordionSummary = withStyles((theme: Theme) => ({
       margin: 0,
     },
   },
-}))(AccordionSummary);
+  expanded: {},
+}), { name: "ylp-member-accordion-summary" })(AccordionSummary);
 
 function PersonRemoveIcon(props: SvgIconProps): JSX.Element {
   // For some reason this icon is not available with material-ui
