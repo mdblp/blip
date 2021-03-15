@@ -30,7 +30,6 @@ import * as React from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
 
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -41,6 +40,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { Team, useTeam } from "../../lib/team";
 import { useAuth } from "../../lib/auth";
+import { makeButtonsStyles } from "../../components/theme";
 import { TeamLeaveDialogContentProps } from "./types";
 
 interface LeaveTeamDialogProps {
@@ -56,26 +56,14 @@ interface LeaveTeamDialogElementsProps {
   handleClose: () => void;
   handleLeaveTeam: () => void;
 }
-
+const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "YlpLeaveTeamDialogButtons" });
 const leaveTeamDialogClasses = makeStyles((theme: Theme) => {
   return {
-    dialogContent: { color: "#00000" },
     buttonCancel: {
       marginRight: theme.spacing(2),
-      boxShadow: "none",
-    },
-    buttonOk: {
-      boxShadow: "0px 2px 2px #0000003D",
-    },
-    buttonLeaveAndDel: {
-      boxShadow: "0px 2px 2px #0000003D",
-      backgroundColor: red[500], // eslint-disable-line no-magic-numbers
-      "&:hover": {
-        backgroundColor: red[700], // eslint-disable-line no-magic-numbers
-      },
     },
   };
-});
+}, { name: "YlpLeaveTeamDialog" });
 
 function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element | null {
   const { team, teamName, onlyMember, userIsTheOnlyAdministrator } = props;
@@ -164,7 +152,9 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
 function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element | null {
   const { team, onlyMember, userIsTheOnlyAdministrator, buttonsDisabled, handleClose, handleLeaveTeam } = props;
-  const classes = leaveTeamDialogClasses();
+  const dialogClasses = leaveTeamDialogClasses();
+  const buttonClasses = makeButtonsClasses();
+
   const { t } = useTranslation("yourloops");
 
   if (team === null) {
@@ -180,8 +170,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         id="team-leave-dialog-button-leave"
         onClick={handleLeaveTeam}
         disabled={buttonsDisabled}
-        color="secondary"
-        className={classes.buttonLeaveAndDel}
+        className={buttonClasses.buttonRedAction}
         variant="contained">
         {t("team-leave-dialog-button-leave-and-del")}
       </Button>
@@ -191,7 +180,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         id="team-leave-dialog-button-cancel"
         onClick={handleClose}
         disabled={buttonsDisabled}
-        className={classes.buttonCancel}
+        className={`${dialogClasses.buttonCancel} ${buttonClasses.buttonCancel}`}
         color="secondary"
         variant="contained">
         {t("common-cancel")}
@@ -200,7 +189,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   } else if (userIsTheOnlyAdministrator) {
     buttonOK = (
       <Button
-        className={classes.buttonOk}
+        className={buttonClasses.buttonOk}
         id="team-leave-dialog-button-ok"
         onClick={handleClose}
         disabled={buttonsDisabled}
@@ -212,7 +201,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   } else {
     buttonOK = (
       <Button
-        className={classes.buttonOk}
+        className={buttonClasses.buttonOk}
         id="team-leave-dialog-button-leave"
         onClick={handleLeaveTeam}
         disabled={buttonsDisabled}
@@ -226,7 +215,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         id="team-leave-dialog-button-cancel"
         onClick={handleClose}
         disabled={buttonsDisabled}
-        className={classes.buttonCancel}
+        className={`${dialogClasses.buttonCancel} ${buttonClasses.buttonCancel}`}
         color="secondary"
         variant="contained">
         {t("common-cancel")}
@@ -247,15 +236,18 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const dialogIsOpen = teamToLeave !== null;
   const team = teamToLeave?.team ?? null;
 
-  const teamName = team?.name ?? "";
-  const onlyMember = !((team?.members.length ?? 0) > 1);
-
   const auth = useAuth();
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
 
-  const userIsTheOnlyAdministrator =
-    team === null ? false : teamHook.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
+  let teamName = "";
+  let onlyMember = false;
+  let userIsTheOnlyAdministrator = false;
+  if (team !== null) {
+    teamName = team.name;
+    onlyMember = teamHook.getNumMedicalMembers(team) < 2;
+    userIsTheOnlyAdministrator = teamHook.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
+  }
 
   const ariaTitle = t("aria-team-leave-dialog-title");
   const ariaQuestion = t("aria-team-leave-dialog-question", { teamName });
