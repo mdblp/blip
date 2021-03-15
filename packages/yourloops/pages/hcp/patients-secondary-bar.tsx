@@ -212,16 +212,16 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const [modalUsername, setModalUsername] = React.useState("");
   const selectFilterValues = [
     { value: "all", label: t("select-all-patients"), icon: null },
-    { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon className={classes.selectFilterIcon} /> },
+    { value: "flagged", label: t("select-flagged-patients"), icon: <FlagIcon color="primary" className={classes.selectFilterIcon} /> },
     {
       value: TeamType.private,
       label: t("private-practice"),
-      icon: <MedicalServiceIcon className={classes.selectFilterIcon} />,
+      icon: <MedicalServiceIcon color="primary" className={classes.selectFilterIcon} />,
     },
     {
       value: "pending",
       label: t("select-pending-invitation-patients"),
-      icon: <AccessTimeIcon className={classes.selectFilterIcon} />,
+      icon: <AccessTimeIcon color="primary" className={classes.selectFilterIcon} />,
     },
   ];
 
