@@ -130,6 +130,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           <div className={classes.accountType}>{role}</div>
         </div>
         <IconButton
+          id="menu-appbar-button"
           aria-label={t("aria-current-user-account")}
           aria-controls="menu-appbar"
           aria-haspopup="true"
@@ -151,8 +152,16 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           }}
           open={open}
           onClose={handleClose}>
-          <MenuItem onClick={handleOpenProfilePage}>{t("menu-account-preferences")}</MenuItem>
-          <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
+          <MenuItem
+            id="open-profile"
+            onClick={handleOpenProfilePage}
+            >{t("menu-account-preferences")}
+          </MenuItem>
+          <MenuItem
+            id="logout-yourloops"
+            onClick={handleLogout}
+            >{t("Logout")}
+          </MenuItem>
         </Menu>
       </div>
     );
@@ -161,7 +170,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
-        <input type="image" className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
+        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
         {props.children}
         <div className={classes.toolbarRightSide}>
           {userRole && userRole !== UserRoles.patient && (

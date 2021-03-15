@@ -82,7 +82,7 @@ function SignUpPage(): JSX.Element {
       >
         <Grid item xs={12}>
           <SignUpFormStateProvider>
-            <Card className={classes.Card}>
+            <Card id="signup" className={classes.Card}>
               <CardMedia
                 style={{
                   display: "flex",

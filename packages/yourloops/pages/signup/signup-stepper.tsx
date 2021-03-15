@@ -130,7 +130,7 @@ export default function SignUpStepper() : JSX.Element {
           {t(tittle)}
         </Typography>
       )}
-      <Stepper activeStep={activeStep} alternativeLabel>
+      <Stepper id="signup-stepper" activeStep={activeStep} alternativeLabel>
         {steps.map((label) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: { optional?: React.ReactNode } = {};
@@ -144,12 +144,16 @@ export default function SignUpStepper() : JSX.Element {
       <div>
         {activeStep === steps.length ? (
           <div>
-            <Typography className={classes.instructions}>
+            <Typography
+              id="signup-steppers-ending-text"
+              className={classes.instructions}
+            >
               {t("signup-steppers-ending-message", {
                 email: state.formValues.accountUsername,
               })}
             </Typography>
             <Button
+              id="signup-steppers-back"
               variant="contained"
               color="secondary"
               className={classes.button}
