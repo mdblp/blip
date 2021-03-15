@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Generic Header Bar
+ * Generic Primary Header Bar
  *
  * All rights reserved.
  *
