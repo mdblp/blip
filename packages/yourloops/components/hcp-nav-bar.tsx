@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 
-import HeaderBar from "./header-bar";
+import HeaderBar from "./primary-header-bar";
 
 const tabStyle: React.CSSProperties = { color: "black" };
 

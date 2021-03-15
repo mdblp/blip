@@ -51,7 +51,7 @@ import {
   TeamLeaveDialogContentProps,
 } from "./types";
 
-import TeamsNavBar from "./teams-nav-bar";
+import TeamsSecondaryBar from "./teams-secondary-bar";
 import TeamCard from "./team-card";
 import TeamMembers from "./team-members-table";
 
@@ -303,7 +303,7 @@ function TeamsPage(): JSX.Element {
   return (
     <React.Fragment>
       <Snackbar params={snackbarParams} />
-      <TeamsNavBar onShowEditTeamDialog={handleShowEditTeamDialog} />
+      <TeamsSecondaryBar onShowEditTeamDialog={handleShowEditTeamDialog} />
       <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
         <Grid id="team-page-grid-list" container spacing={3}>
           {teamsItems}

@@ -31,7 +31,6 @@ import { useTranslation } from "react-i18next";
 
 import { Theme, makeStyles } from "@material-ui/core/styles";
 
-import AppBar from "@material-ui/core/AppBar";
 import Backdrop from "@material-ui/core/Backdrop";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
@@ -46,7 +45,6 @@ import Modal from "@material-ui/core/Modal";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -60,6 +58,7 @@ import { defer, REGEX_EMAIL } from "../../lib/utils";
 import { Team, useTeam } from "../../lib/team";
 import { FilterType } from "./types";
 import { MedicalServiceIcon } from "../../components/icons/MedicalServiceIcon";
+import SecondaryHeaderBar from "../../components/secondary-header-bar";
 
 export interface PatientListBarProps {
   filter: string;
@@ -72,17 +71,6 @@ export interface PatientListBarProps {
 const modalBackdropTimeout = 300;
 const pageBarStyles = makeStyles((theme: Theme) => {
   return {
-    appBar: {
-      boxShadow: "0px 1px 2px #00000029",
-      borderWidth: "0px",
-    },
-    toolBar: {
-      display: "grid",
-      gridTemplateRows: "auto",
-      gridTemplateColumns: "auto auto auto",
-      paddingLeft: "6em",
-      paddingRight: "6em",
-    },
     toolBarMiddle: {
       display: "flex",
       flexDirection: "row",
@@ -202,7 +190,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
   };
 });
 
-function PatientsListBar(props: PatientListBarProps): JSX.Element {
+function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const selectMenuProps: Partial<MenuProps> = {
     anchorOrigin: {
       vertical: "bottom",
@@ -297,115 +285,113 @@ function PatientsListBar(props: PatientListBarProps): JSX.Element {
   const buttonCreateDisabled = !(REGEX_EMAIL.test(modalUsername) && modalSelectedTeam.length > 0);
 
   return (
-    <AppBar position="static" color="secondary" variant="outlined" className={classes.appBar}>
-      <Toolbar className={classes.toolBar}>
-        <div id="patients-list-toolbar-item-left">
-          <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-            <Typography color="textPrimary" className={classes.breadcrumbText}>
-              <HomeIcon className={classes.homeIcon} />
-              {t("my-patients-title")}
-            </Typography>
-          </Breadcrumbs>
-        </div>
-        <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
-          <FormControl color="primary" className={classes.formControl}>
-            <Select
-              id="select-patient-list-filtertype"
-              value={filterType}
-              onChange={handleFilterTeam}
-              classes={{ root: classes.selectFilterInnerDiv }}
-              className={classes.selectFilter}
-              disableUnderline
-              MenuProps={selectMenuProps}>
-              {optionsFilterCommonElements}
-              {optionsFilterTeamsElements}
-            </Select>
-          </FormControl>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder={t("placeholder-search")}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": t("aria-search") }}
-              value={filter}
-              onChange={handleFilterPatients}
-            />
+    <SecondaryHeaderBar>
+      <div id="patients-list-toolbar-item-left">
+        <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
+          <Typography color="textPrimary" className={classes.breadcrumbText}>
+            <HomeIcon className={classes.homeIcon} />
+            {t("my-patients-title")}
+          </Typography>
+        </Breadcrumbs>
+      </div>
+      <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
+        <FormControl color="primary" className={classes.formControl}>
+          <Select
+            id="select-patient-list-filtertype"
+            value={filterType}
+            onChange={handleFilterTeam}
+            classes={{ root: classes.selectFilterInnerDiv }}
+            className={classes.selectFilter}
+            disableUnderline
+            MenuProps={selectMenuProps}>
+            {optionsFilterCommonElements}
+            {optionsFilterTeamsElements}
+          </Select>
+        </FormControl>
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
           </div>
+          <InputBase
+            placeholder={t("placeholder-search")}
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ "aria-label": t("aria-search") }}
+            value={filter}
+            onChange={handleFilterPatients}
+          />
         </div>
-        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
-          <Button
-            id="patient-list-toolbar-add-patient"
-            color="primary"
-            variant="contained"
-            className={classes.buttonAddPatient}
-            onClick={handleOpenModalAddPatient}>
-            <PersonAddIcon />
-            &nbsp;{t("add-patient")}
-          </Button>
-          <Modal
-            id="patient-list-toolbar-modal-add-patient"
-            aria-labelledby={t("add-patient")}
-            className={classes.modalAddPatient}
-            open={modalAddPatientOpen}
-            onClose={handleCloseModalAddPatient}
-            closeAfterTransition
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: modalBackdropTimeout,
-            }}>
-            <Fade in={modalAddPatientOpen}>
-              <div className={classes.divModal}>
-                <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
-                <form noValidate autoComplete="off" className={classes.formModal}>
-                  <TextField
-                    required
-                    id="patient-list-toolbar-modal-add-patient-username"
-                    onChange={handleChangeUsername}
-                    value={modalUsername}
-                    label={t("required")}
-                  />
-                  <FormControl className={classes.formControlSelectTeam}>
-                    <InputLabel htmlFor="select-patient-list-modal-team">{t("team")}</InputLabel>
-                    <NativeSelect
-                      value={modalSelectedTeam}
-                      onChange={handleChangeAddPatientTeam}
-                      inputProps={{
-                        name: "teamid",
-                        id: "select-patient-list-modal-team",
-                      }}>
-                      {optionsTeamsElements}
-                    </NativeSelect>
-                  </FormControl>
-                  <div className={classes.divModalButtons}>
-                    <Button
-                      id="patients-list-modal-button-close"
-                      className={classes.divModalButtonCancel}
-                      variant="contained"
-                      onClick={handleCloseModalAddPatient}>
-                      {t("common-cancel")}
-                    </Button>
-                    <Button
-                      id="patients-list-modal-button-create"
-                      disabled={buttonCreateDisabled}
-                      onClick={handleModalAddPatient}
-                      color="primary"
-                      variant="contained">
-                      {t("create")}
-                    </Button>
-                  </div>
-                </form>
-              </div>
-            </Fade>
-          </Modal>
-        </div>
-      </Toolbar>
-    </AppBar>
+      </div>
+      <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
+        <Button
+          id="patient-list-toolbar-add-patient"
+          color="primary"
+          variant="contained"
+          className={classes.buttonAddPatient}
+          onClick={handleOpenModalAddPatient}>
+          <PersonAddIcon />
+          &nbsp;{t("add-patient")}
+        </Button>
+        <Modal
+          id="patient-list-toolbar-modal-add-patient"
+          aria-labelledby={t("add-patient")}
+          className={classes.modalAddPatient}
+          open={modalAddPatientOpen}
+          onClose={handleCloseModalAddPatient}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: modalBackdropTimeout,
+          }}>
+          <Fade in={modalAddPatientOpen}>
+            <div className={classes.divModal}>
+              <h2 id="patient-list-toolbar-modal-add-patient-title">{t("modal-add-patient")}</h2>
+              <form noValidate autoComplete="off" className={classes.formModal}>
+                <TextField
+                  required
+                  id="patient-list-toolbar-modal-add-patient-username"
+                  onChange={handleChangeUsername}
+                  value={modalUsername}
+                  label={t("required")}
+                />
+                <FormControl className={classes.formControlSelectTeam}>
+                  <InputLabel htmlFor="select-patient-list-modal-team">{t("team")}</InputLabel>
+                  <NativeSelect
+                    value={modalSelectedTeam}
+                    onChange={handleChangeAddPatientTeam}
+                    inputProps={{
+                      name: "teamid",
+                      id: "select-patient-list-modal-team",
+                    }}>
+                    {optionsTeamsElements}
+                  </NativeSelect>
+                </FormControl>
+                <div className={classes.divModalButtons}>
+                  <Button
+                    id="patients-list-modal-button-close"
+                    className={classes.divModalButtonCancel}
+                    variant="contained"
+                    onClick={handleCloseModalAddPatient}>
+                    {t("common-cancel")}
+                  </Button>
+                  <Button
+                    id="patients-list-modal-button-create"
+                    disabled={buttonCreateDisabled}
+                    onClick={handleModalAddPatient}
+                    color="primary"
+                    variant="contained">
+                    {t("create")}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </Fade>
+        </Modal>
+      </div>
+    </SecondaryHeaderBar>
   );
 }
 
-export default PatientsListBar;
+export default PatientsSecondaryBar;
