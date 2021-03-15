@@ -100,7 +100,7 @@ function TeamsNavBar(props: BarProps): JSX.Element {
             className={classes.buttonAddTeam}
             onClick={handleOpenModalAddTeam}>
             <AddIcon />
-            &nbsp;{t("button-add-team")}
+            &nbsp;{t("button-create-a-team")}
           </Button>
         </div>
       </Toolbar>
