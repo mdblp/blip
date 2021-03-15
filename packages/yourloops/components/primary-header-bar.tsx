@@ -156,8 +156,16 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           keepMounted={false}
           open={userMenuOpen}
           onClose={handleCloseAccountMenu}>
-          <MenuItem onClick={handleOpenProfilePage}>{t("menu-account-preferences")}</MenuItem>
-          <MenuItem onClick={handleLogout}>{t("Logout")}</MenuItem>
+          <MenuItem
+            id="open-profile"
+            onClick={handleOpenProfilePage}
+            >{t("menu-account-preferences")}
+          </MenuItem>
+          <MenuItem
+            id="logout-yourloops"
+            onClick={handleLogout}
+            >{t("Logout")}
+          </MenuItem>
         </Menu>
       </React.Fragment>
     );
@@ -166,7 +174,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
-        <input type="image" className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
+        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
         {props.children}
         <div className={classes.toolbarRightSide}>
           {userRole && userRole !== UserRoles.patient && (
