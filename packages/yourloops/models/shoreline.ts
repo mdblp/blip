@@ -27,6 +27,7 @@
  */
 
 import { Units } from "./generic";
+import { PatientData } from "./device-data";
 
 enum UserRoles {
   hcp = "hcp",
@@ -80,6 +81,42 @@ interface Preferences {
   displayLanguageCode?: "en" | "de" | "es" | "fr" | "it" | "nl";
   patientsStarred?: string[];
 }
+
+interface ComputedTIR {
+  count: {
+    high: number;
+    low: number;
+    target: number;
+    veryHigh: number;
+    veryLow: number;
+  },
+  lastCbgTime: string;
+  lastTime: {
+    high: string | null;
+    low: string | null;
+    target: string | null;
+    veryLow: string | null;
+    veryHigh: string | null;
+  },
+  totalTime: {
+    high: number;
+    low: number;
+    target: number;
+    veryHigh: number;
+    veryLow: number;
+  },
+  userId: string;
+}
+
+interface MedicalData {
+  data?: PatientData;
+  range?: {
+    startDate: string;
+    endDate: string;
+  };
+  computedTir?: ComputedTIR;
+}
+
 interface User {
   /** The user id */
   readonly userid: string;
@@ -97,6 +134,8 @@ interface User {
   settings?: Settings;
   /** User preferences */
   preferences?: Preferences;
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null;
 }
 
-export { User, Profile, Settings, Preferences, UserRoles, Jobs };
+export { User, Profile, Settings, Preferences, UserRoles, Jobs, ComputedTIR, MedicalData };
