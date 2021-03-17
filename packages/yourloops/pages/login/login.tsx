@@ -114,13 +114,7 @@ function Login(props: RouteComponentProps): JSX.Element {
   };
 
   const onClickShowPasswordVisibility = (): void => {
-    if (showPassword) {
-      setShowPassword(false);
-      //authApi.sendMetrics("Hide password");
-    } else {
-      setShowPassword(true);
-      // authApi.sendMetrics("Show password");
-    }
+    setShowPassword(!showPassword);
   };
 
   React.useEffect(() => {
@@ -142,6 +136,7 @@ function Login(props: RouteComponentProps): JSX.Element {
     try {
       const signupKey = new URLSearchParams(location.search).get("signupKey");
       const user = await auth.login(username, password, signupKey);
+      log.debug("user loggued,", user?.username);
       // for now, simply read the profile
       // we will refactor by creating a class obj with IsPatient method
       if (!_.isEmpty(user?.profile?.patient)) {
