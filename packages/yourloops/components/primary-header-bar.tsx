@@ -45,8 +45,8 @@ import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../lib/auth";
-import { UserRoles } from "../models/shoreline";
-
+import { UserRoles, User } from "../models/shoreline";
+import { getUserFirstName, getUserLastName } from "../lib/utils";
 interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
 }
@@ -129,7 +129,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   let accountMenu = null;
   if (auth.isLoggedIn()) {
-    const user = auth.user;
+    const user: User = auth.user as User;
+    const role = user?.roles ? user.roles[0] : "unknown";
+    const name = `${getUserFirstName(user)} ${getUserLastName(user)}`;
+
     accountMenu = (
       <React.Fragment>
         <AccountButton
@@ -139,7 +142,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           aria-haspopup="true"
           endIcon={<ArrowDropDown className={classes.accountMenuIcon} />}
           onClick={handleOpenAccountMenu}>
-          {`${user?.profile?.firstName} ${user?.profile?.lastName}`}
+          {name}
         </AccountButton>
         <Menu
           id="menu-user-account-appbar"
