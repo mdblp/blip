@@ -44,8 +44,8 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../lib/auth";
-import { UserRoles } from "../models/shoreline";
-
+import { UserRoles, User } from "../models/shoreline";
+import { getUserFirstName, getUserLastName } from "../lib/utils";
 interface HeaderProps extends RouteComponentProps {
   children?: JSX.Element | JSX.Element[];
 }
@@ -121,12 +121,15 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   let accountMenu = null;
   if (auth.isLoggedIn()) {
-    const user = auth.user;
+    const user: User = auth.user as User;
     const role = user?.roles ? user.roles[0] : "unknown";
+    const name = `${getUserFirstName(user)} ${getUserLastName(user)}`;
     accountMenu = (
       <div className={classes.accountMenu}>
         <div className={classes.accountInfos}>
-          <div className={classes.accountName}>{`${user?.profile?.firstName} ${user?.profile?.lastName}`}</div>
+          <div className={classes.accountName} id="appbar-account-name">
+            {name}
+          </div>
           <div className={classes.accountType}>{role}</div>
         </div>
         <IconButton
