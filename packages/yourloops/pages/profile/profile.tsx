@@ -306,7 +306,9 @@ export const ProfilePage: FunctionComponent = () => {
       <Snackbar params={snackbarParams} />
       <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
-          <div className={classes.title}>{t("hcp-account-preferences-title")}</div>
+          <div className={classes.title} id="account-preferences-title">
+            {t("hcp-account-preferences-title")}
+          </div>
           <TextField
             id="firstName"
             label={t("First name")}
@@ -399,10 +401,16 @@ export const ProfilePage: FunctionComponent = () => {
             </Select>
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" color="secondary" onClick={onCancel} className={classes.button}>
+            <Button
+              id="cancel-profile"
+              variant="contained"
+              color="secondary"
+              onClick={onCancel}
+              className={classes.button}>
               {t("common-cancel")}
             </Button>
             <Button
+              id="save-profile"
               variant="contained"
               disabled={(!hasProfileChanged && !haveSettingsChanged && !havePreferencesChanged) || isAnyError}
               color="primary"
