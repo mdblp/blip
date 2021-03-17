@@ -80,13 +80,7 @@ function PatientDataPage(): JSX.Element | null {
       return;
     }
 
-    let patientId: string | null = null;
-    if (paramPatientId === null) {
-      patientId = userId as string;
-    } else {
-      patientId = paramPatientId;
-    }
-
+    const patientId = paramPatientId ?? userId;
     if (patientId === null) {
       log.error("Invalid patient Id", patientId);
       setError("Invalid patient Id");
