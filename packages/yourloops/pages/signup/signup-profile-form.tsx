@@ -216,9 +216,9 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           onChange={(e) => onSelectChange(e, "profileCountry")}
         >
           <MenuItem key="" value="" />
-          {availableCountries.map((country) => (
-            <MenuItem key={country} value={country}>
-              {t(country)}
+          {availableCountries.map((item) => (
+            <MenuItem key={item.code} value={item.code}>
+              {t(item.name)}
             </MenuItem>
           ))}
         </Select>
