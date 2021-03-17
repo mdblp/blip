@@ -41,7 +41,7 @@ export interface AuthAPI {
   requestPasswordReset: (username: string, traceToken: string, language?: string, info?: boolean) => Promise<boolean>;
   resetPassword: (key: string | null, username: string, password: string, traceToken: string) => Promise<boolean>;
   signup: (username: string, password: string, role: UserRoles, traceToken: string) => Promise<Session>;
-  sendAccountValidation: (auth: Readonly<Session>, traceToken: string, language: string) => Promise<boolean>;
+  sendAccountValidation: (auth: Readonly<Session>, traceToken: string, language?: string) => Promise<boolean>;
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   updateProfile: (auth: Readonly<Session>) => Promise<Profile>;
   updatePreferences: (auth: Readonly<Session>) => Promise<Preferences>;

@@ -111,7 +111,8 @@ async function authenticate(username: string, password: string, traceToken: stri
     reason = t("An error occurred while logging in.");
     return Promise.reject(new Error(reason as string));
   }
-
+  //FIXME the user roles is assigned with the first value in UserRoles enum
+  // regardless of what the api sent, due to the json dezerialisation
   const user = (await response.json()) as User;
   // FIXME will be sent correctly by the API
   if (!Array.isArray(user.roles)) {
@@ -307,6 +308,12 @@ async function requestPasswordReset(
   language = "en",
   info = true
 ): Promise<boolean> {
+
+  if (_.isEmpty(username)) {
+    log.error("forbidden call to request password api, username is missing");
+    throw new Error("error-http-40x");
+  }
+
   const confirmURL = new URL(
     `/confirm/send/forgot/${username}${info ? "?info=ok" : ""}`,
     appConfig.API_HOST
@@ -336,12 +343,14 @@ async function requestPasswordReset(
   }
 }
 
-async function sendAccountValidation(
-  auth: Readonly<Session>,
-  traceToken: string,
-  language = "en"
-): Promise<boolean> {
-  const confirmURL = new URL(`/confirm/send/signup/${auth.user.userid}`, appConfig.API_HOST);
+async function sendAccountValidation(auth: Readonly<Session>, traceToken: string, language = "en"): Promise<boolean> {
+
+  if (_.isEmpty(auth?.user?.userid)) {
+    log.error("forbidden call to Account Validation api, user id is missing");
+    throw new Error("error-http-40x");
+  }
+
+  const confirmURL = new URL(`/confirm/send/signup/${auth?.user?.userid}`, appConfig.API_HOST);
 
   const response = await fetch(confirmURL.toString(), {
     method: "POST",
@@ -370,6 +379,12 @@ async function sendAccountValidation(
 }
 
 async function accountConfirmed(key: string, traceToken: string): Promise<boolean> {
+
+  if (_.isEmpty(key)) {
+    log.error("forbidden call to Account confirmation api, key is missing");
+    throw new Error("error-http-40x");
+  }
+
   const confirmURL = new URL(`/confirm/accept/signup/${key}`, appConfig.API_HOST);
   const response = await fetch(confirmURL.toString(), {
     method: "PUT",

@@ -164,7 +164,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     //update terms FIXME
 
     // send confirmation signup mail
-    api.sendAccountValidation(auth, traceToken, "en");
+    api.sendAccountValidation(auth, traceToken, signup.formValues.preferencesLanguage);
 
     log.info("signup done", auth);
   };
