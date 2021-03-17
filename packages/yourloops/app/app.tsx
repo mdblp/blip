@@ -49,6 +49,7 @@ const Yourloops: React.FunctionComponent = () => (
     <AuthContextProvider>
       <Switch>
         <PublicRoute exact path="/" component={LoginPage} />
+        <PublicRoute exact path="/login" component={LoginPage} />
         <PublicRoute exact path="/signup" component={SignUpPage} />
         <PublicRoute path="/request-password-reset" component={RequestPasswordResetPage} />
         <PublicRoute path="/confirm-password-reset" component={ConfirmPasswordResetPage} />

@@ -77,11 +77,16 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
   // Wrap any methods we want to use making sure
   // to save the user to state.
-  const login = async (username: string, password: string): Promise<User> => {
+  const login = async (username: string, password: string, key: string | null): Promise<User> => {
     log.info("login", username);
     if (traceToken === null) {
       throw new Error("not-yet-initialized");
     }
+
+    if (key !== null) {
+      await api.accountConfirmed(key, traceToken);
+    }
+
     const auth = await api.login(username, password, traceToken);
     sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, auth.sessionToken);
     sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, auth.traceToken);
@@ -156,9 +161,10 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     await api.updateProfile(auth);
     await api.updateSettings(auth);
     await api.updatePreferences(auth);
-    //update terms
+    //update terms FIXME
 
     // send confirmation signup mail
+    api.sendAccountValidation(auth, traceToken, "en");
 
     log.info("signup done", auth);
   };

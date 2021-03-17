@@ -41,6 +41,8 @@ export interface AuthAPI {
   requestPasswordReset: (username: string, traceToken: string, language?: string, info?: boolean) => Promise<boolean>;
   resetPassword: (key: string | null, username: string, password: string, traceToken: string) => Promise<boolean>;
   signup: (username: string, password: string, role: UserRoles, traceToken: string) => Promise<Session>;
+  sendAccountValidation: (auth: Readonly<Session>, traceToken: string, language: string) => Promise<boolean>;
+  accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   updateProfile: (auth: Readonly<Session>) => Promise<Profile>;
   updatePreferences: (auth: Readonly<Session>) => Promise<Preferences>;
   updateSettings: (auth: Readonly<Session>) => Promise<Settings>;
@@ -56,7 +58,7 @@ export interface AuthContext {
   initialized: () => boolean;
   session: () => Session | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  login: (username: string, password: string) => Promise<User>;
+  login: (username: string, password: string, key: string | null) => Promise<User>;
   logout: () => void;
   updateProfile: (user: Readonly<User>) => Promise<Profile>;
   updatePreferences: (user: Readonly<User>) => Promise<Preferences>;
