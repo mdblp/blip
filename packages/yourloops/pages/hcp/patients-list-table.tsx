@@ -247,7 +247,7 @@ function PatientRow(props: PatientTableRowProps): JSX.Element {
 
   const userId = patient.userid;
   const isFlagged = flagged.includes(userId);
-  const firstName = getUserFirstName(patient) + " " + patient.userid;
+  const firstName = getUserFirstName(patient);
   const lastName = getUserLastName(patient);
 
   const onClickFlag = (e: React.MouseEvent): void => {
