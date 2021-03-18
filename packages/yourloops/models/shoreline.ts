@@ -44,12 +44,19 @@ enum Jobs {
   studyNurse = "study-nurse",
 }
 
+interface Consent {
+  AcceptenceDate?: string,
+  IsAccepted?: boolean,
+}
+
 interface Profile {
   fullName: string;
   firstName?: string;
   lastName?: string;
   patient?: Patient;
   job?: Jobs;
+  termsOfUse?: Consent;
+  privacyPolicy?: Consent;
 }
 
 interface Patient {

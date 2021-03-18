@@ -139,6 +139,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const signup = async (signup: SignUpFormState): Promise<void> => {
     log.info("signup", signup.formValues.accountUsername);
+    const now = new Date().toISOString();
     if (traceToken === null) {
       throw new Error("not-yet-initialized");
     }
@@ -154,6 +155,8 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       firstName: signup.formValues.profileFirstname,
       lastName: signup.formValues.profileLastname,
       job: signup.formValues.profileJob,
+      termsOfUse: { AcceptenceDate: now, IsAccepted: signup.formValues.terms },
+      privacyPolicy: { AcceptenceDate: now, IsAccepted: signup.formValues.privacyPolicy },
     };
     auth.user.settings = { country: signup.formValues.profileCountry };
     auth.user.preferences = { displayLanguageCode: signup.formValues.preferencesLanguage };
@@ -161,7 +164,6 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     await api.updateProfile(auth);
     await api.updateSettings(auth);
     await api.updatePreferences(auth);
-    //update terms FIXME
 
     // send confirmation signup mail
     api.sendAccountValidation(auth, traceToken, signup.formValues.preferencesLanguage);
