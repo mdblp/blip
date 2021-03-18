@@ -228,6 +228,7 @@ export const ProfilePage: FunctionComponent = () => {
         fullName: firstName + " " + name,
         firstName,
         lastName: name,
+        patient: { birthday: birthDate }
       };
       setHasProfileChanged(!_.isEqual(user.profile, newProfile));
     } else {
@@ -235,7 +236,7 @@ export const ProfilePage: FunctionComponent = () => {
       setHavePreferencesChanged(false);
       setHasProfileChanged(false);
     }
-  }, [firstName, name, unit, locale, user]);
+  }, [firstName, name, birthDate, unit, locale, user]);
 
   const onSave = useCallback(() => {
     if (user) {
@@ -252,6 +253,7 @@ export const ProfilePage: FunctionComponent = () => {
               fullName: firstName + " " + name,
               firstName,
               lastName: name,
+              patient: { birthday: birthDate }
             }
           : user.profile,
       };
@@ -286,6 +288,7 @@ export const ProfilePage: FunctionComponent = () => {
     hasProfileChanged,
     firstName,
     name,
+    birthDate,
     locale,
     i18n,
     unit,
