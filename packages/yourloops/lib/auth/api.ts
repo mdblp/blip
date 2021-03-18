@@ -88,17 +88,19 @@ async function authenticate(username: string, password: string, traceToken: stri
         }
       }
       if (reason === null) {
-        reason = t("Wrong username or password");
+        reason = "Wrong username or password";
       }
       break;
-    // missing handling 403 status => email not verified
+    case HttpStatus.StatusForbidden:
+      reason = "email-not-verified";
+      break;
     default:
-      reason = t("An error occurred while logging in.");
+      reason = "An error occurred while logging in.";
       break;
     }
 
     if (reason === null) {
-      reason = t("Login Failed");
+      reason = "Login Failed";
     }
 
     // this.sendMetrics("Login failed", reason);
@@ -108,7 +110,7 @@ async function authenticate(username: string, password: string, traceToken: stri
   // this.wrongCredentialCount = 0;
   const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
   if (sessionToken === null) {
-    reason = t("An error occurred while logging in.");
+    reason = "An error occurred while logging in.";
     return Promise.reject(new Error(reason as string));
   }
   //FIXME the user roles is assigned with the first value in UserRoles enum
