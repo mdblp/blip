@@ -177,7 +177,12 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
-        <img className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
+        <input
+          type="image"
+          className={classes.toolbarLogo}
+          alt={t("alt-img-logo")}
+          src={brandingLogo}
+          onClick={onLogoClick} />
         {props.children}
         <div className={classes.toolbarRightSide}>
           {userRole && userRole !== UserRoles.patient && (
