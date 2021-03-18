@@ -45,8 +45,8 @@ enum Jobs {
 }
 
 interface Consent {
-  AcceptenceDate?: string,
-  IsAccepted?: boolean,
+  AcceptanceDate?: string;
+  IsAccepted?: boolean;
 }
 
 interface Profile {

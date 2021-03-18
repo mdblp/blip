@@ -155,8 +155,8 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       firstName: signup.formValues.profileFirstname,
       lastName: signup.formValues.profileLastname,
       job: signup.formValues.profileJob,
-      termsOfUse: { AcceptenceDate: now, IsAccepted: signup.formValues.terms },
-      privacyPolicy: { AcceptenceDate: now, IsAccepted: signup.formValues.privacyPolicy },
+      termsOfUse: { AcceptanceDate: now, IsAccepted: signup.formValues.terms },
+      privacyPolicy: { AcceptanceDate: now, IsAccepted: signup.formValues.privacyPolicy },
     };
     auth.user.settings = { country: signup.formValues.profileCountry };
     auth.user.preferences = { displayLanguageCode: signup.formValues.preferencesLanguage };
