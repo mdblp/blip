@@ -129,13 +129,7 @@ function Login(props: RouteComponentProps): JSX.Element {
 
     try {
       const user = await auth.login(username, password);
-      // for now, simply read the profile
-      // we will refactor by creating a class obj with IsPatient method
-      if (!_.isEmpty(user?.profile?.patient)) {
-        props.history.push("/patient");
-      } else {
-        props.history.push("/hcp");
-      }
+      props.history.push(`/${user.role}`);
     } catch (reason: unknown) {
       log.error(reason);
       setValidateError(true);

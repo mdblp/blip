@@ -30,7 +30,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { APIErrorResponse } from "models/error";
-import { User, UserRoles, Profile, Preferences, Settings } from "../../models/shoreline";
+import { User, Profile, Preferences, Settings } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
 import appConfig from "../config";
@@ -113,12 +113,6 @@ async function authenticate(username: string, password: string, traceToken: stri
   }
 
   const user = (await response.json()) as User;
-  // FIXME will be sent correctly by the API
-  if (!Array.isArray(user.roles)) {
-    user.roles = [UserRoles.patient];
-  } else {
-    user.roles = [UserRoles.hcp];
-  }
 
   // We may miss some case, but it's probably good enough:
   failedLoginCounter.clear();

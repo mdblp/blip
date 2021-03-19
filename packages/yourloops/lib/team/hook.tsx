@@ -29,10 +29,10 @@
 import * as React from "react";
 import bows from "bows";
 
-import { MedicalData } from "../../models/shoreline";
+import { MedicalData, UserRoles } from "../../models/shoreline";
 import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, TeamMemberStatus, ITeamMember } from "../../models/team";
 
-import { errorTextFromException, isUserAPatient } from "../utils";
+import { errorTextFromException } from "../utils";
 import { useAuth, Session } from "../auth";
 import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
 import TeamAPIImpl from "./api";
@@ -343,7 +343,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
 
   const setPatientMedicalData = (userId: string, medicalData: MedicalData | null): void => {
     const user = getUser(userId);
-    if (user !== null && isUserAPatient(user)) {
+    if (user !== null && user.role === UserRoles.patient) {
       user.medicalData = medicalData;
     }
   };

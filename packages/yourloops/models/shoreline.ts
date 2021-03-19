@@ -115,8 +115,8 @@ interface User {
   readonly userid: string;
   /** The username (login) */
   readonly username: string;
-  /** Roles of the users  */
-  /*readonly*/ roles?: UserRoles[];
+  /** Role of the user */
+  readonly role: UserRoles;
   /** Emails of the users */
   emails?: string[];
   /** Date of the last accepted terms */
