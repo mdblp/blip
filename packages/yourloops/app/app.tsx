@@ -40,8 +40,8 @@ import InvalidRoute from "../components/invalid-route";
 import LoginPage from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import HcpPage from "../pages/hcp";
-import CaregiverPage from "../pages/caregiver";
 import PatientPage from "../pages/patient";
+import CaregiverPage from "../pages/caregiver";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 
 function MetricsLocationListener() {
