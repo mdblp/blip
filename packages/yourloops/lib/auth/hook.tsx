@@ -161,13 +161,14 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     auth.user.settings = { country: signup.formValues.profileCountry };
     auth.user.preferences = { displayLanguageCode: signup.formValues.preferencesLanguage };
 
-    await Promise.all([
-      api.updateProfile(auth),
-      api.updateSettings(auth),
-      api.updatePreferences(auth),
-      // send confirmation signup mail
-      api.sendAccountValidation(auth, signup.formValues.preferencesLanguage),
-    ]);
+    // Cannot Use Promise.All as Backend do not handle parrellel call
+    // correctly
+    await api.updateProfile(auth);
+    await api.updateSettings(auth);
+    await api.updatePreferences(auth);
+
+    // send confirmation signup mail
+    await api.sendAccountValidation(auth, signup.formValues.preferencesLanguage);
 
     log.info("signup done", auth);
   };
