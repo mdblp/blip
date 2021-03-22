@@ -39,8 +39,8 @@ import LoginPage from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import NotificationsPage from "../pages/notifications";
 import HcpPage from "../pages/hcp";
+import { PatientPage, PatientRenewConsentPage } from "../pages/patient";
 import CaregiverPage from "../pages/caregiver";
-import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 import { AuthContextProvider } from "../lib/auth";
 import { ProfilePage } from "../pages/profile/profile";
@@ -58,6 +58,7 @@ const Yourloops: React.FunctionComponent = () => (
         <PrivateRoute path="/caregiver" component={CaregiverPage} />
         <PrivateRoute path="/hcp" component={HcpPage} />
         <PrivateRoute path="/patient" component={PatientPage} />
+        <PublicRoute path="/renew-consent" component={PatientRenewConsentPage} />
         <PrivateRoute path="/account-preferences" component={ProfilePage} />
         <PrivateRoute path="/notifications" component={NotificationsPage} />
         <Route component={InvalidRoute} />

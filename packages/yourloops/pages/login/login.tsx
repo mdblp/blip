@@ -54,6 +54,7 @@ import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import { Snackbar } from "../../components/utils/snackbar";
 import LanguageSelector from "../../components/language-select";
 import { errorTextFromException } from "../../lib/utils";
+import { User, UserRoles } from "../../models/shoreline";
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
@@ -133,6 +134,33 @@ function Login(props: RouteComponentProps): JSX.Element {
     document.title = t("brand-name");
   }, [t]);
 
+  const pushRoute = (user: User): void => {
+    log.debug("user loggued,", user);
+
+    if (user?.role !== undefined) {
+      if ( user.role === UserRoles.patient &&
+        (user?.profile?.termsOfUse === undefined || user?.profile?.privacyPolicy === null)) {
+        log.debug("toto, push to renew");
+        props.history.push("/patient/renew-consent");
+        log.debug("toto, ", props.history);
+        return;
+      }
+      log.debug("toto 1");
+      props.history.push("/" + user.role);
+      return;
+    }
+
+    // // for now, simply read the profile
+    // // we will refactor by creating a class obj with IsPatient method
+    // if (!_.isEmpty(user?.profile?.patient)) {
+    //   log.debug("toto 2");
+    //   props.history.push("/patient");
+    // } else {
+    //   log.debug("toto 3");
+    //   props.history.push("/hcp");
+    // }
+  };
+
   const onClickLoginButton = async (): Promise<void> => {
     if (_.isEmpty(username) || _.isEmpty(password)) {
       setValidateError(true);
@@ -144,8 +172,7 @@ function Login(props: RouteComponentProps): JSX.Element {
     try {
       const signupKey = new URLSearchParams(location.search).get("signupKey");
       const user = await auth.login(username, password, signupKey);
-      log.debug("user loggued,", user?.username);
-      props.history.push(`/${user.role}`);
+      pushRoute(user);
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       const message = t(errorMessage);
