@@ -345,7 +345,7 @@ async function requestPasswordReset(
   }
 }
 
-async function sendAccountValidation(auth: Readonly<Session>, traceToken: string, language = "en"): Promise<boolean> {
+async function sendAccountValidation(auth: Readonly<Session>, language = "en"): Promise<boolean> {
 
   if (_.isEmpty(auth?.user?.userid)) {
     log.error("forbidden call to Account Validation api, user id is missing");
@@ -359,7 +359,7 @@ async function sendAccountValidation(auth: Readonly<Session>, traceToken: string
     headers: {
       [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.sessionToken]: auth.sessionToken,
-      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
       [HttpHeaderKeys.language]: language,
     },
     cache: "no-cache",

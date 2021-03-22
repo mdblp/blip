@@ -117,13 +117,14 @@ function Login(props: RouteComponentProps): JSX.Element {
     setShowPassword(!showPassword);
   };
 
+  const signupEmail = new URLSearchParams(location.search).get("signupEmail");
   React.useEffect(() => {
-    const signupEmail = new URLSearchParams(location.search).get("signupEmail");
 
-    if (signupEmail !== null) {
+    if (signupEmail !== null && username !== signupEmail) {
       setUserName(signupEmail);
     }
-  }, []);
+
+  }, [signupEmail, username]);
 
   const onClickLoginButton = async (): Promise<void> => {
     if (_.isEmpty(username) || _.isEmpty(password)) {

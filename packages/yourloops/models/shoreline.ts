@@ -89,8 +89,6 @@ interface User {
   /*readonly*/ roles?: UserRoles[];
   /** Emails of the users */
   emails?: string[];
-  /** Date of the last accepted terms */
-  readonly termsAccepted?: string;
   /** true if the account has been verified */
   readonly emailVerified?: boolean;
   /** User profile */
