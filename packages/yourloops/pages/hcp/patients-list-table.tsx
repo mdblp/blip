@@ -73,6 +73,9 @@ const patientListStyle = makeStyles((theme: Theme) => {
     tableRowHeader: {
       textTransform: "uppercase",
     },
+    tableCellHeader: {
+      fontSize: "14px",
+    },
     flag: {
       color: theme.palette.primary.main,
     },
@@ -133,13 +136,13 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
       <Table className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
         <TableHead>
           <TableRow className={classes.tableRowHeader}>
-            <TableCell id="patients-list-header-flag" />
-            <TableCell id="patients-list-header-lastname">
+            <TableCell id="patients-list-header-flag" className={classes.tableCellHeader} />
+            <TableCell id="patients-list-header-lastname" className={classes.tableCellHeader}>
               <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler(SortFields.lastname)}>
                 {t("lastname")}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patients-list-header-firstname">
+            <TableCell id="patients-list-header-firstname" className={classes.tableCellHeader}>
               <TableSortLabel
                 active={orderBy === "firstname"}
                 direction={order}
@@ -147,9 +150,9 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
                 {t("firstname")}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patients-list-header-tir">{t("list-patient-tir")}</TableCell>
-            <TableCell id="patients-list-header-tbr">{t("list-patient-tbr")}</TableCell>
-            <TableCell id="patients-list-header-upload">{t("list-patient-upload")}</TableCell>
+            <TableCell id="patients-list-header-tir" className={classes.tableCellHeader}>{t("list-patient-tir")}</TableCell>
+            <TableCell id="patients-list-header-tbr" className={classes.tableCellHeader}>{t("list-patient-tbr")}</TableCell>
+            <TableCell id="patients-list-header-upload" className={classes.tableCellHeader}>{t("list-patient-upload")}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{patientsRows}</TableBody>

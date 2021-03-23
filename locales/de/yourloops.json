@@ -190,7 +190,7 @@
   "menu-medical-teams": "Behandlungsteams",
   "menu-caregivers": "Hilfspersonen",
   "menu-account-preferences": "Kontoeinstellungen",
-  "hcp-account-preferences-title": "Persönliche Informationen und Einstellungen aktualisieren",
+  "account-preferences-title": "Persönliche Informationen und Einstellungen aktualisieren",
   "hcp-account-preferences-success": "Ihre Einstellungen wurden erfolgreich gespeichert.",
   "hcp-account-preferences-error": "Ihre Einstellungen wurden nicht gespeichert. Bitte später erneut versuchen.",
   "hcp-patient-profile-title": "Patientenprofil",

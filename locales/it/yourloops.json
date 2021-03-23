@@ -190,7 +190,7 @@
   "menu-medical-teams": "Care Teams",
   "menu-caregivers": "Caregiver",
   "menu-account-preferences": "Preferenze account",
-  "hcp-account-preferences-title": "Aggiorni le sue informazioni e preferenze personali",
+  "account-preferences-title": "Aggiorni le sue informazioni e preferenze personali",
   "hcp-account-preferences-success": "Le sue preferenze sono state salvate.",
   "hcp-account-preferences-error": "Le sue preferenze non sono state salvate.",
   "hcp-patient-profile-title": "Profilo del paziente",

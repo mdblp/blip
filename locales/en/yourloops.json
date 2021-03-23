@@ -196,7 +196,7 @@
   "menu-medical-teams": "Care Teams",
   "menu-caregivers": "Caregivers",
   "menu-account-preferences": "Account preferences",
-  "hcp-account-preferences-title": "Update your personal info and preferences",
+  "account-preferences-title": "Update your personal info and preferences",
   "hcp-account-preferences-success": "Your preferences have been successfully saved.",
   "hcp-account-preferences-error": "Preferences not saved. Please retry later.",
   "hcp-patient-profile-title": "Patient Profile",

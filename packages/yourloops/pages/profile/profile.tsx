@@ -21,18 +21,18 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import {
-  AppBar,
-  Breadcrumbs,
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Toolbar,
-} from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
+import Toolbar from "@material-ui/core/Toolbar";
+
 import HomeIcon from "@material-ui/icons/Home";
 
 import { Units } from "../../models/generic";
@@ -80,11 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     title: {
-      textAlign: "center",
       color: theme.palette.primary.main,
-      fontWeight: "bold",
-      fontSize: "16px",
-      margin: "16px",
+      textAlign: "center",
+      width: "100%",
     },
     container: {
       backgroundColor: "white",
@@ -308,7 +306,7 @@ export const ProfilePage: FunctionComponent = () => {
       <Snackbar params={snackbarParams} />
       <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
-          <div className={classes.title}>{t("hcp-account-preferences-title")}</div>
+          <DialogTitle className={classes.title}>{t("account-preferences-title")}</DialogTitle>
           <TextField
             id="firstName"
             label={t("First name")}

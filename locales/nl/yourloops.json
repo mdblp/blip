@@ -190,7 +190,7 @@
   "menu-medical-teams": "Behandelteams",
   "menu-caregivers": "Verzorgers",
   "menu-account-preferences": "Accountvoorkeuren",
-  "hcp-account-preferences-title": "Update je persoonlijke gegevens en voorkeuren",
+  "account-preferences-title": "Update je persoonlijke gegevens en voorkeuren",
   "hcp-account-preferences-success": "Je voorkeuren zijn succesvol opgeslagen.",
   "hcp-account-preferences-error": "Je voorkeuren zijn niet opgeslagen. Probeer het later nog eens.",
   "hcp-patient-profile-title": "Patiënt profiel",

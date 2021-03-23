@@ -190,7 +190,7 @@
   "menu-medical-teams": "Equipes de Soin",
   "menu-caregivers": "Aidants",
   "menu-account-preferences": "Préférences du compte",
-  "hcp-account-preferences-title": "Mettre à jour vos informations personnelles et préférences",
+  "account-preferences-title": "Mettre à jour vos informations personnelles et préférences",
   "hcp-account-preferences-success": "Préférences bien enregistrées.",
   "hcp-account-preferences-error": "Préférences non enregistrées. Veuillez réessayer plus tard.",
   "hcp-patient-profile-title": "Profil patient",
