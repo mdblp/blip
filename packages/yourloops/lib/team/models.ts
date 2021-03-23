@@ -27,7 +27,8 @@
  */
 
 import { PostalAddress } from "../../models/generic";
-import { User, MedicalData } from "../../models/shoreline";
+import { MedicalData } from "../../models/device-data";
+import { User } from "../../models/shoreline";
 import {
   ITeam,
   ITeamMember,

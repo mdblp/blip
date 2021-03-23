@@ -46,7 +46,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
-import { MedicalData } from "../../models/shoreline";
+import { MedicalData } from "../../models/device-data";
 import sendMetrics from "../../lib/metrics";
 import { getUserFirstName, getUserLastName, isUserAPatient } from "../../lib/utils";
 import { Session, useAuth } from "../../lib/auth";

@@ -33,7 +33,8 @@ import _ from "lodash";
 import { PatientData } from "models/device-data";
 import { MessageNote, MessagesThread } from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
-import { User, UserRoles, ComputedTIR } from "../../models/shoreline";
+import { ComputedTIR } from "../../models/device-data";
+import { User, UserRoles } from "../../models/shoreline";
 
 import HttpStatus from "../http-status-codes";
 import appConfig from "../config";

@@ -29,7 +29,7 @@
 import * as React from "react";
 import bows from "bows";
 
-import { MedicalData } from "../../models/shoreline";
+import { MedicalData } from "../../models/device-data";
 import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, TeamMemberStatus, ITeamMember } from "../../models/team";
 
 import { errorTextFromException, isUserAPatient } from "../utils";

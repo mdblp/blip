@@ -27,7 +27,7 @@
  */
 
 import { Units } from "./generic";
-import { PatientData } from "./device-data";
+import { MedicalData } from "./device-data";
 
 enum UserRoles {
   hcp = "hcp",
@@ -82,41 +82,6 @@ interface Preferences {
   patientsStarred?: string[];
 }
 
-interface ComputedTIR {
-  count: {
-    high: number;
-    low: number;
-    target: number;
-    veryHigh: number;
-    veryLow: number;
-  },
-  lastCbgTime: string;
-  lastTime: {
-    high: string | null;
-    low: string | null;
-    target: string | null;
-    veryLow: string | null;
-    veryHigh: string | null;
-  },
-  totalTime: {
-    high: number;
-    low: number;
-    target: number;
-    veryHigh: number;
-    veryLow: number;
-  },
-  userId: string;
-}
-
-interface MedicalData {
-  data?: PatientData;
-  range?: {
-    startDate: string;
-    endDate: string;
-  };
-  computedTir?: ComputedTIR;
-}
-
 interface User {
   /** The user id */
   readonly userid: string;
@@ -138,4 +103,4 @@ interface User {
   medicalData?: MedicalData | null;
 }
 
-export { User, Profile, Settings, Preferences, UserRoles, Jobs, ComputedTIR, MedicalData };
+export { User, Profile, Settings, Preferences, UserRoles, Jobs };
