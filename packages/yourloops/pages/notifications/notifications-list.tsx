@@ -59,7 +59,7 @@ const NotificationHeader = () => {
       <HeaderBar />
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
-          <Breadcrumbs aria-label={t("breadcrumb")} separator={<NavigateNextIcon fontSize="small" />}>
+          <Breadcrumbs aria-label={t("aria-breadcrumbs")} separator={<NavigateNextIcon fontSize="small" />}>
             <Link className={classes.breadcrumbLink} color="textPrimary" href={homePage}>
               <HomeIcon className={classes.homeIcon} />
               {t("home")}

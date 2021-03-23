@@ -17,7 +17,7 @@
 import React, { Fragment, FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import _ from "lodash";
 import moment from "moment-timezone";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
@@ -32,6 +32,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 
 import HomeIcon from "@material-ui/icons/Home";
 
@@ -62,9 +63,9 @@ const useStyles = makeStyles((theme: Theme) =>
     homeIcon: {
       marginRight: "0.5em",
     },
-    breadcrumbLink: {
+    breadcrumbText: {
       display: "flex",
-      color: theme.palette.text.primary,
+      cursor: "default",
     },
     toolBar: {
       display: "grid",
@@ -106,11 +107,11 @@ const ProfileHeader = () => {
       <HeaderBar />
       <AppBar position="static" color="secondary">
         <Toolbar className={classes.toolBar}>
-          <Breadcrumbs aria-label={t("breadcrumb")}>
-            <Link className={classes.breadcrumbLink} to="/">
+          <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
+            <Typography color="textPrimary" className={classes.breadcrumbText}>
               <HomeIcon className={classes.homeIcon} />
               {t("menu-account-preferences")}
-            </Link>
+            </Typography>
           </Breadcrumbs>
         </Toolbar>
       </AppBar>
