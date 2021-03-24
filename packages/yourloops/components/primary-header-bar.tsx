@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { RouteComponentProps, useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
@@ -39,16 +39,32 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from "@material-ui/core/Toolbar";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 
+import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
 import { useAuth } from "../lib/auth";
 import { UserRoles } from "../models/shoreline";
 
-interface HeaderProps extends RouteComponentProps {
+type CloseMenuCallback = () => void;
+export interface HeaderActions {
+  closeMenu: CloseMenuCallback;
+}
+
+interface HeaderProps {
   children?: JSX.Element | JSX.Element[];
+  /** Additional menu items */
+  menuItems?: JSX.Element | JSX.Element[];
+  /**
+   * Custom actions callbacks (React.useRef())
+   *
+   * Not sure with this constructions, I was trying to do a ref like action
+   * we had with class components, but I wasn't able to use the "ref" props for it.
+   */
+  actions?: {
+    current: null | HeaderActions,
+  }
 }
 
 const toolbarStyles = makeStyles((theme: Theme) => ({
@@ -121,15 +137,22 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   };
 
   const handleLogout = () => {
-    const { history } = props;
     setAnchorEl(null);
     auth.logout();
     history.push("/");
   };
 
+  if (_.isObject(props.actions) && props.actions.current === null) {
+    props.actions.current = {
+      closeMenu: handleCloseAccountMenu,
+    };
+  }
+
   let accountMenu = null;
   if (auth.isLoggedIn()) {
     const user = auth.user;
+    const { menuItems } = props;
+
     accountMenu = (
       <React.Fragment>
         <AccountButton
@@ -156,6 +179,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           keepMounted={false}
           open={userMenuOpen}
           onClose={handleCloseAccountMenu}>
+          {menuItems}
+          {_.isObject(menuItems) ? <hr id="menu-user-account-separator" /> : null}
           <MenuItem onClick={handleOpenProfilePage}>{t("menu-account-preferences")}</MenuItem>
           <MenuItem onClick={handleLogout}>{t("menu-logout")}</MenuItem>
         </Menu>
@@ -181,4 +206,4 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   );
 }
 
-export default withRouter(HeaderBar);
+export default HeaderBar;
