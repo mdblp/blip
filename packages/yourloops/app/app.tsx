@@ -40,9 +40,10 @@ import NotificationsPage from "../pages/notifications";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
-import { AuthContextProvider } from "../lib/auth";
 import { ProfilePage } from "../pages/profile/profile";
 import CaregiverPage from "../pages/caregiver";
+import { AuthContextProvider } from "../lib/auth";
+import { NotificationContextProvider } from "../lib/notifications/hook";
 
 const Yourloops: React.FunctionComponent = () => (
   <Router>
@@ -58,7 +59,9 @@ const Yourloops: React.FunctionComponent = () => (
         <PrivateRoute path="/hcp" component={HcpPage} />
         <PrivateRoute path="/patient" component={PatientPage} />
         <PrivateRoute path="/account-preferences" component={ProfilePage} />
-        <PrivateRoute path="/notifications" component={NotificationsPage} />
+        <NotificationContextProvider>
+          <PrivateRoute path="/notifications" component={NotificationsPage} />
+        </NotificationContextProvider>
       </Switch>
     </AuthContextProvider>
   </Router>

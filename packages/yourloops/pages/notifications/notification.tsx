@@ -24,18 +24,9 @@ import { Button, createStyles, makeStyles } from "@material-ui/core";
 
 import { MedicalServiceIcon } from "../../components/icons/MedicalServiceIcon";
 import { UserRoles } from "../../models/shoreline";
-
-export enum NotificationType {
-  dataShare,
-  joinGroup,
-}
-
-export interface INotification {
-  type: NotificationType;
-  emitter: { role: UserRoles; firstName: string; lastName: string };
-  date: string;
-  target?: string;
-}
+import { INotification, NotificationType } from "../../lib/notifications/models";
+import { errorTextFromException } from "../../lib/utils";
+import { useNotification } from "../../lib/notifications/hook";
 
 type NotificationProps = INotification & {
   userRole: UserRoles | undefined;
@@ -51,7 +42,7 @@ const useStyles = makeStyles(() =>
 );
 
 const getNotification = (type: NotificationType, t: TFunction<"yourloops">, target: string | undefined) =>
-  type === NotificationType.dataShare ? (
+  type === NotificationType.directshare ? (
     <span> {t("datashare")}</span>
   ) : (
     <span>
@@ -81,26 +72,70 @@ const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
   return date.format("L");
 };
 
-export const Notification = ({ date, emitter, type, target, userRole }: NotificationProps): JSX.Element => {
+export const Notification = ({ created, creator, type, target, userRole }: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
+  const notifications = useNotification();
+  const [inProgress, setInProgress] = React.useState(false);
   const { container, notification, rightSide, button } = useStyles();
+
+  const onAccept = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    // submit to api
+    try {
+      setInProgress(true);
+      await notifications.accept(creator.userid, type);
+      setInProgress(false);
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason);
+      const message = t(errorMessage);
+      console.log(message);
+      //openSnackbar({ message, severity: AlertSeverity.error });
+    }
+  };
+
+  const onDecline = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    // submit to api
+    try {
+      setInProgress(true);
+      await notifications.decline(creator.userid, type);
+      setInProgress(false);
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason);
+      const message = t(errorMessage);
+      console.log(message);
+      //openSnackbar({ message, severity: AlertSeverity.error });
+    }
+  };
 
   return (
     <div className={container}>
-      <div>{getIcon(userRole, emitter.role)}</div>
+      <div>{getIcon(userRole, creator.role)}</div>
       <span className={notification}>
         <strong>
-          {emitter.firstName} {emitter.lastName}
+          {creator.profile.fullName}
         </strong>
         {getNotification(type, t, target)}
       </span>
       <div className={rightSide}>
-        <div>{getDate(date, t)}</div>
+        <div>{getDate(created, t)}</div>
         <div>
-          <Button className={button} variant="contained" color="primary">
+          <Button
+            color="primary"
+            variant="contained"
+            className={button}
+            disabled={inProgress}
+            onClick={onAccept}
+          >
             {t("accept")}
           </Button>
-          <Button className={button} variant="contained" color="secondary">
+          <Button
+            className={button}
+            variant="contained"
+            color="secondary"
+            disabled={inProgress}
+            onClick={onDecline}
+          >
             {t("decline")}
           </Button>
         </div>
