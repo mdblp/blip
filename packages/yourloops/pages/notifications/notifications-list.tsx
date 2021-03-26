@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2020, Diabeloop
  * Notifications page
@@ -20,51 +21,67 @@ import Container from "@material-ui/core/Container";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
-import { UserRoles } from "../../models/shoreline";
-import { MS_IN_DAY } from "../../models/generic";
-import { useAuth } from "../../lib/auth";
 import SecondaryHeaderBar from "./secondary-bar";
-import { INotification, Notification, NotificationType } from "./notification";
+import { Notification } from "./notification";
+import { INotification } from "../../lib/notifications/models";
+import { useAuth } from "../../lib/auth";
+import { useNotification } from "../../lib/notifications/hook";
+import { errorTextFromException } from "../../lib/utils";
 
 interface NotificationsPageProps {
   defaultURL: string;
 }
 
-const sortNotification = (notifA: INotification, notifB: INotification): number =>
-  Date.parse(notifB.date) - Date.parse(notifA.date);
+const sortNotification = (
+  notifA: INotification,
+  notifB: INotification
+): number => Date.parse(notifB.created) - Date.parse(notifA.created);
 
 export const NotificationsPage = (props: NotificationsPageProps): JSX.Element => {
   const { user } = useAuth();
+  const notifications = useNotification();
+  const [notifs, setNotifs] = React.useState<INotification[]>([]);
 
-  const fakeNotif1: INotification = {
-    date: new Date().toISOString(),
-    emitter: { firstName: "Jean", lastName: "Dujardin", role: UserRoles.hcp },
-    type: NotificationType.joinGroup,
-    target: "Service de Diabétologie CH Angers",
-  };
-  const fakeNotif2: INotification = {
-    date: "2021-02-18T10:00:00",
-    emitter: { firstName: "Jeanne", lastName: "Dubois", role: UserRoles.patient },
-    type: NotificationType.dataShare,
-  };
-  const fakeNotif3: INotification = {
-    date: new Date(Date.now() - MS_IN_DAY).toISOString(), // yesterday date
-    emitter: { firstName: "Bob", lastName: "L'Eponge", role: UserRoles.hcp },
-    type: NotificationType.joinGroup,
-    target: "Crabe croustillant",
-  };
-  const notifs: INotification[] = [fakeNotif1, fakeNotif2, fakeNotif3];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  React.useEffect(() => {
+    const loadNotifs = async () => {
+      console.log("enter in useEffect");
+      let results: INotification[];
+      try {
+        results = await notifications.getInvitations(user?.userid);
+        setNotifs(results);
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        const message = t(errorMessage);
+        console.log("toto", message);
+        //openSnackbar({ message, severity: AlertSeverity.error });
+      }
+    };
+
+    loadNotifs();
+  }, [notifications, user, t]);
 
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
-          {notifs.sort(sortNotification).map(({ date, emitter, type, target }, index) => (
-            <ListItem key={index} style={{ padding: "8px 0" }} divider={index !== notifs.length - 1}>
-              <Notification date={date} emitter={emitter} type={type} target={target} userRole={user?.role} />
-            </ListItem>
-          ))}
+          {notifs
+            .sort(sortNotification)
+            .map(({ created, creator, type, target }, index) => (
+              <ListItem
+                key={index}
+                style={{ padding: "8px 0" }}
+                divider={index !== notifs.length - 1}>
+                <Notification
+                  created={created}
+                  creator={creator}
+                  type={type}
+                  target={target}
+                  userRole={user?.role}
+                />
+              </ListItem>
+            ))}
         </List>
       </Container>
     </React.Fragment>
