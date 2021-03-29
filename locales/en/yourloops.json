@@ -119,7 +119,7 @@
   "email": "Email",
   "firstname": "First Name",
   "invalid-email": "Invalid email address.",
-  "email-not-verified": "you need to activate your account first",
+  "email-not-verified": "You need to activate your account first",
   "lastname": "Last Name",
   "language": "Language",
   "is-required": "Required",
