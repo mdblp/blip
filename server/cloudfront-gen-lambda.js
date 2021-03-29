@@ -148,6 +148,17 @@ function genContentSecurityPolicy() {
     contentSecurityPolicy.frameSrc.push(crowdinCDN, crowdinURL, 'https://accounts.crowdin.com');
   }
 
+  if (process.env.STONLY === 'enabled') {
+    console.log('Stonly enabled');
+    const stonlyURL = 'https://stonly.com/';
+    // TODO check what is needed here:
+    contentSecurityPolicy.scriptSrc.push(stonlyURL);
+    contentSecurityPolicy.imgSrc.push(stonlyURL);
+    contentSecurityPolicy.connectSrc.push(stonlyURL);
+    contentSecurityPolicy.fontSrc.push(stonlyURL);
+    contentSecurityPolicy.frameSrc.push(stonlyURL);
+  }
+
   let csp = '';
   for (const cspName in contentSecurityPolicy) {
     if (Object.prototype.hasOwnProperty.call(contentSecurityPolicy, cspName)) {
