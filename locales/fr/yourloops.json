@@ -234,7 +234,7 @@
   "modal-patient-add-team-info": "Vous êtes sur le point de partager vos données avec",
   "modal-patient-add-team-privacy": "En ajoutant cette équipe comme mon équipe de soin, je consens à partager mes données personnelles avec ses membres qui sont des professionnel·le·s de santé inscrit·e·s sur YourLoops. Je reconnais pouvoir retirer n'importe quand l'accès à mes données.",
   "modal-patient-add-team-accept": "Ajouter une équipe de soin",
-  "modal-patient-add-team-success": "Votre équipe de soin peut a désormais accès à vos données.",
+  "modal-patient-add-team-success": "Votre équipe de soin a désormais accès à vos données.",
   "modal-patient-add-team-failure": "Impossible d'ajouter l'équipe de soin. Veuillez réessayer plus tard.",
   "modal-patient-remove-caregiver-title": "Supprimer un aidant",
   "modal-remove-info": "Êtes-vous sûr·e de vouloir supprimer {{name}} de vos aidants ?",
