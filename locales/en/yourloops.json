@@ -106,7 +106,7 @@
   "create": "Create",
   "save": "Save",
   "saving": "Saving",
-  "reset-end": "Go to login",
+  "reset-end": "Login",
   "alert-patient-list-data-computed": "Data from the last 24h",
   "invalid-response": "Invalid response from server",
   "list-patient-avg-glucose": "Av. Glucose",
