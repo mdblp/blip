@@ -44,8 +44,8 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
-import { useAuth } from "../lib/auth";
-import { UserRoles } from "../models/shoreline";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
 
 type CloseMenuCallback = () => void;
 export interface HeaderActions {
@@ -65,6 +65,8 @@ interface HeaderProps {
   actions?: {
     current: null | HeaderActions,
   }
+  /** Redirect route when clicking on the logo */
+  headerLogoURL?: string;
 }
 
 const toolbarStyles = makeStyles((theme: Theme) => ({
@@ -121,7 +123,13 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   };
 
   const onLogoClick = (): void => {
-    history.push("/");
+    if (props.headerLogoURL) {
+      history.push(props.headerLogoURL);
+    } else if (userRole) {
+      history.push(`/${userRole}`);
+    } else {
+      history.push("/");
+    }
   };
 
   const handleCloseAccountMenu = () => {
