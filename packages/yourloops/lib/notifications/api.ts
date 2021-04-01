@@ -123,46 +123,46 @@ async function getPendingInvitations(
   userId: string
 ): Promise<INotification[]> {
   log.debug(userId);
-  const fakeNotif1: INotification = {
-    id: "10",
-    created: new Date().toISOString(),
-    creator: {
-      userid: "0",
-      profile: {
-        fullName: "Jean Dujardin",
-      },
-      role: UserRoles.hcp,
-    },
-    type: NotificationType.careteam,
-    target: { id: "110", name: "Service de Diabétologie CH Angers" },
-  };
-  const fakeNotif2: INotification = {
-    id: "11",
-    created: "2021-02-18T10:00:00",
-    creator: {
-      userid: "1",
-      profile: {
-        fullName: "Jeanne Dubois",
-      },
-      role: UserRoles.patient,
-    },
-    type: NotificationType.directshare,
-  };
-  const fakeNotif3: INotification = {
-    id: "12",
-    created: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // yesterday date
-    creator: {
-      // creator
-      userid: "2",
-      profile: {
-        fullName: "Bob l'eponge",
-      },
-      role: UserRoles.hcp,
-    },
-    type: NotificationType.careteam,
-    target: { id: "111", name:  "Crabe croustillant" }, // TeamID
-  };
-  const notifs: INotification[] = [fakeNotif1, fakeNotif2, fakeNotif3];
+  // const fakeNotif1: INotification = {
+  //   id: "10",
+  //   created: new Date().toISOString(),
+  //   creator: {
+  //     userid: "0",
+  //     profile: {
+  //       fullName: "Jean Dujardin",
+  //     },
+  //     role: UserRoles.hcp,
+  //   },
+  //   type: NotificationType.careteam,
+  //   target: { id: "110", name: "Service de Diabétologie CH Angers" },
+  // };
+  // const fakeNotif2: INotification = {
+  //   id: "11",
+  //   created: "2021-02-18T10:00:00",
+  //   creator: {
+  //     userid: "1",
+  //     profile: {
+  //       fullName: "Jeanne Dubois",
+  //     },
+  //     role: UserRoles.patient,
+  //   },
+  //   type: NotificationType.directshare,
+  // };
+  // const fakeNotif3: INotification = {
+  //   id: "12",
+  //   created: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // yesterday date
+  //   creator: {
+  //     // creator
+  //     userid: "2",
+  //     profile: {
+  //       fullName: "Bob l'eponge",
+  //     },
+  //     role: UserRoles.hcp,
+  //   },
+  //   type: NotificationType.careteam,
+  //   target: { id: "111", name:  "Crabe croustillant" }, // TeamID
+  // };
+  const notifs: INotification[] = [];
 
   if (_.isEmpty(auth?.user?.userid)) {
     log.error("forbidden call to api, user id is missing");
@@ -187,15 +187,14 @@ async function getPendingInvitations(
     return Promise.resolve(notifs);
   }
 
-  log.error(response?.status, response?.statusText);
-
   switch (response?.status) {
     case HttpStatus.StatusServiceUnavailable:
     case HttpStatus.StatusInternalServerError:
+        log.error(response?.status, response?.statusText);
       throw new Error("error-http-500");
     default:
-      // throw new Error("error-http-40x");
-      return Promise.resolve(notifs); // FIXME
+      log.debug(response?.status, response?.statusText);
+      return Promise.resolve(notifs);
   }
 }
 
