@@ -17,7 +17,8 @@
 
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+
 
 import {
   AppBar,
@@ -28,7 +29,9 @@ import {
   List,
   ListItem,
   makeStyles,
+  Theme,
   Toolbar,
+  Typography,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
@@ -42,7 +45,7 @@ import { useAuth } from "../../lib/auth";
 import { useNotification } from "../../lib/notifications/hook";
 import { errorTextFromException } from "../../lib/utils";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     homeIcon: {
       marginRight: "0.5em",
@@ -56,6 +59,10 @@ const useStyles = makeStyles(() =>
       gridTemplateColumns: "auto auto auto",
       paddingLeft: "6em",
       paddingRight: "6em",
+    },
+    typography: {
+      textAlign: "center",
+      margin: theme.spacing(4),
     },
   })
 );
@@ -82,7 +89,12 @@ const NotificationHeader = () => {
           <Breadcrumbs
             aria-label={t("aria-breadcrumbs")}
             separator={<NavigateNextIcon fontSize="small" />}>
-            <Link className={classes.breadcrumbLink} color="textPrimary" href={homePage}>
+            <Link
+              component={RouterLink}
+              to={homePage}
+              className={classes.breadcrumbLink}
+              color="textPrimary"
+            >
               <HomeIcon className={classes.homeIcon} />
               {t("home")}
             </Link>
@@ -99,6 +111,7 @@ const sortNotification = (notifA: INotification, notifB: INotification): number 
 
 export const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation("yourloops");
+  const classes = useStyles();
   const { user } = useAuth();
   const notifications = useNotification();
   const [notifs, setNotifs] = React.useState<INotification[]>([]);
@@ -114,7 +127,7 @@ export const NotificationsPage = (): JSX.Element => {
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
         const message = t(errorMessage);
-        console.log("toto", message);
+        console.log(message);
         //openSnackbar({ message, severity: AlertSeverity.error });
       }
     };
@@ -132,9 +145,8 @@ export const NotificationsPage = (): JSX.Element => {
       <NotificationHeader />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
-          {notifs
-            .sort(sortNotification)
-            .map(({ id, created, creator, type, target }, index) => (
+          {notifs.length > 0 ? (
+            notifs.sort(sortNotification).map(({ id, created, creator, type, target }, index) => (
               <ListItem
                 key={index}
                 style={{ padding: "8px 0" }}
@@ -148,7 +160,16 @@ export const NotificationsPage = (): JSX.Element => {
                   onRemove={handleRemove}
                 />
               </ListItem>
-            ))}
+            ))
+          ) : (
+            <Typography
+              className={classes.typography}
+              id="typography-no-pending-invitation-message"
+              variant="body2"
+              gutterBottom>
+              {t("no-pending-invitation-message")}
+            </Typography>
+          )}
         </List>
       </Container>
     </Fragment>
