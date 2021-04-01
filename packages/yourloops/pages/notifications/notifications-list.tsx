@@ -32,10 +32,8 @@ interface NotificationsPageProps {
   defaultURL: string;
 }
 
-const sortNotification = (
-  notifA: INotification,
-  notifB: INotification
-): number => Date.parse(notifB.created) - Date.parse(notifA.created);
+const sortNotification = (notifA: INotification, notifB: INotification): number =>
+  Date.parse(notifB.created) - Date.parse(notifA.created);
 
 export const NotificationsPage = (props: NotificationsPageProps): JSX.Element => {
   const { user } = useAuth();
@@ -48,7 +46,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
       console.log("enter in useEffect");
       let results: INotification[];
       try {
-        results = await notifications.getInvitations(user?.userid);
+        results = await notifications.getPendingInvitations(user?.userid);
         setNotifs(results);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
@@ -61,6 +59,11 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
     loadNotifs();
   }, [notifications, user, t]);
 
+  function handleRemove(id: string): void {
+    const newList = notifs.filter((item) => item.id !== id);
+    setNotifs(newList);
+  }
+
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
@@ -68,17 +71,18 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
         <List>
           {notifs
             .sort(sortNotification)
-            .map(({ created, creator, type, target }, index) => (
+            .map(({ id, created, creator, type, target }, index) => (
               <ListItem
                 key={index}
                 style={{ padding: "8px 0" }}
                 divider={index !== notifs.length - 1}>
                 <Notification
+                  id={id}
                   created={created}
                   creator={creator}
                   type={type}
                   target={target}
-                  userRole={user?.role}
+                  onRemove={handleRemove}
                 />
               </ListItem>
             ))}
