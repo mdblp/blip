@@ -67,10 +67,7 @@ const NotificationHeader = () => {
   const { user } = useAuth();
 
   const homePage = useMemo(
-    () =>
-      user?.roles?.length && user.roles[0] === UserRoles.caregiver
-        ? "/"
-        : "/hcp/patients",
+    () => (user?.roles?.length && user.roles[0] === UserRoles.caregiver ? "/" : "/hcp/patients"),
     [
       // FIXME: set the route for caregiver
       user,
@@ -85,10 +82,7 @@ const NotificationHeader = () => {
           <Breadcrumbs
             aria-label={t("aria-breadcrumbs")}
             separator={<NavigateNextIcon fontSize="small" />}>
-            <Link
-              className={classes.breadcrumbLink}
-              color="textPrimary"
-              href={homePage}>
+            <Link className={classes.breadcrumbLink} color="textPrimary" href={homePage}>
               <HomeIcon className={classes.homeIcon} />
               {t("home")}
             </Link>
@@ -100,10 +94,8 @@ const NotificationHeader = () => {
   );
 };
 
-const sortNotification = (
-  notifA: INotification,
-  notifB: INotification
-): number => Date.parse(notifB.created) - Date.parse(notifA.created);
+const sortNotification = (notifA: INotification, notifB: INotification): number =>
+  Date.parse(notifB.created) - Date.parse(notifA.created);
 
 export const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation("yourloops");
@@ -117,7 +109,7 @@ export const NotificationsPage = (): JSX.Element => {
       console.log("enter in useEffect");
       let results: INotification[];
       try {
-        results = await notifications.getInvitations(user?.userid);
+        results = await notifications.getPendingInvitations(user?.userid);
         setNotifs(results);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
@@ -130,6 +122,11 @@ export const NotificationsPage = (): JSX.Element => {
     loadNotifs();
   }, [notifications, user, t]);
 
+  function handleRemove(id: string): void {
+    const newList = notifs.filter((item) => item.id !== id);
+    setNotifs(newList);
+  }
+
   return (
     <Fragment>
       <NotificationHeader />
@@ -137,17 +134,18 @@ export const NotificationsPage = (): JSX.Element => {
         <List>
           {notifs
             .sort(sortNotification)
-            .map(({ created, creator, type, target }, index) => (
+            .map(({ id, created, creator, type, target }, index) => (
               <ListItem
                 key={index}
                 style={{ padding: "8px 0" }}
                 divider={index !== notifs.length - 1}>
                 <Notification
+                  id={id}
                   created={created}
                   creator={creator}
                   type={type}
                   target={target}
-                  userRole={user?.roles && user.roles[0]}
+                  onRemove={handleRemove}
                 />
               </ListItem>
             ))}

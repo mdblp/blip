@@ -36,43 +36,46 @@ import { Session } from "../auth/models";
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
 const log = bows("NotificationHook");
 
-
 function NotificationContextImpl(api: NotificationAPI): NotificationContext {
   const authHook = useAuth();
+  const [count, setCount] = React.useState(0);
 
-  const getInvitations = async (userId: string | undefined): Promise<INotification[]> => {
+  const getPendingInvitations = async (userId: string | undefined): Promise<INotification[]> => {
     log.debug("enter notificatin hook");
     if (userId === undefined) {
       throw new Error("http-error-40x");
     }
     const session = authHook.session() as Session;
-    return api.getInvitations(session, userId);
+    const results: INotification[] = await api.getPendingInvitations(session, userId);
+    setCount(results.length);
+    return Promise.resolve(results);
   };
 
-  const accept = async (userId: string | undefined, type: NotificationType): Promise<void> => {
-    log.debug("accept for user ", userId);
-    if (userId === undefined) {
+  const accept = async (id: string, creatorId: string | undefined, targetId: string | undefined, type: NotificationType): Promise<void> => {
+    log.debug("accept ", type, " invitation for user: ", creatorId);
+    if (creatorId === undefined) {
       throw new Error("http-error-40x");
     }
 
-    console.log("accepted type", type);
     const session = authHook.session() as Session;
-    await api.accept(session, userId, type);
+    await api.accept(session, id, creatorId, targetId, type);
+    setCount((count) => { return count > 0 ? count-1 : 0; });
   };
 
-  const decline = async (userId: string | undefined, type: NotificationType): Promise<void> => {
-    log.debug("decline for user", userId);
-    if (userId === undefined) {
+  const decline = async (id:string, creatorId: string | undefined, targetId: string | undefined, type: NotificationType): Promise<void> => {
+    log.debug("decline ", type, " invitation for user: ", creatorId);
+    if (creatorId === undefined) {
       throw new Error("http-error-40x");
     }
 
-    console.log("declined type", type);
     const session = authHook.session() as Session;
-    await api.decline(session, userId, type);
+    await api.decline(session, id, creatorId, targetId, type);
+    setCount((count) => { return count > 0 ? count-1 : 0; });
   };
 
   return {
-    getInvitations,
+    count,
+    getPendingInvitations,
     accept,
     decline,
   };
@@ -90,5 +93,9 @@ export function useNotification(): NotificationContext {
 export function NotificationContextProvider(props: NotificationProvider): JSX.Element {
   const { children, api, value } = props;
   const notifValue = value ?? NotificationContextImpl(api ?? NotifAPIImpl); // eslint-disable-line new-cap
-  return <ReactNotificationContext.Provider value={notifValue}>{children}</ReactNotificationContext.Provider>;
+  return (
+    <ReactNotificationContext.Provider value={notifValue}>
+      {children}
+    </ReactNotificationContext.Provider>
+  );
 }
