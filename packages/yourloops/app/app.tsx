@@ -55,11 +55,11 @@ const Yourloops: React.FunctionComponent = () => (
         <PublicRoute exact path="/signup" component={SignUpPage} />
         <PublicRoute path="/request-password-reset" component={RequestPasswordResetPage} />
         <PublicRoute path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
-        <PrivateRoute path="/caregiver" component={CaregiverPage} />
-        <PrivateRoute path="/hcp" component={HcpPage} />
-        <PrivateRoute path="/patient" component={PatientPage} />
-        <PrivateRoute path="/account-preferences" component={ProfilePage} />
         <NotificationContextProvider>
+          <PrivateRoute path="/caregiver" component={CaregiverPage} />
+          <PrivateRoute path="/hcp" component={HcpPage} />
+          <PrivateRoute path="/patient" component={PatientPage} />
+          <PrivateRoute path="/account-preferences" component={ProfilePage} />
           <PrivateRoute path="/notifications" component={NotificationsPage} />
         </NotificationContextProvider>
       </Switch>
