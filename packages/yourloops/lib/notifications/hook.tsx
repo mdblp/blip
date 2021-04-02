@@ -37,11 +37,12 @@ const ReactNotificationContext = React.createContext<NotificationContext>({} as 
 const log = bows("NotificationHook");
 
 function NotificationContextImpl(api: NotificationAPI): NotificationContext {
+  log.debug("enter notificatin hook");
   const authHook = useAuth();
   const [count, setCount] = React.useState(0);
 
   const getPendingInvitations = async (userId: string | undefined): Promise<INotification[]> => {
-    log.debug("enter notificatin hook");
+    log.debug("Get pending invitations for: ", userId);
     if (userId === undefined) {
       throw new Error("http-error-40x");
     }

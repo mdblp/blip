@@ -113,6 +113,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
       let results: INotification[];
       try {
         results = await notifications.getPendingInvitations(user?.userid);
+        results.sort(sortNotification);
         setNotifs(results);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
@@ -136,7 +137,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
           {notifs.length > 0 ? (
-            notifs.sort(sortNotification).map(({ id, created, creator, type, target }, index) => (
+            notifs.map(({ id, created, creator, type, target }, index) => (
               <ListItem
                 key={index}
                 style={{ padding: "8px 0" }}
