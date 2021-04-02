@@ -36,18 +36,27 @@ import PersonIcon from "@material-ui/icons/Person";
 
 import { MedicalServiceIcon } from "../../../components/icons/MedicalServiceIcon";
 
-import { INotification, Notification, NotificationType } from "../../../pages/notifications/notification";
+import { Notification } from "../../../pages/notifications/notification";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 import { UserRoles } from "../../../models/shoreline";
+import _ from "lodash";
 
 export const testNotification = (): void => {
   const notif: INotification = {
-    date: "2021-02-18T10:00:00",
-    emitter: { firstName: "Jeanne", lastName: "Dubois", role: UserRoles.patient },
-    type: NotificationType.dataShare,
+    id: "11",
+    created: "2021-02-18T10:00:00",
+    creator: {
+      userid: "1",
+      profile: {
+        fullName: "Jeanne Dubois",
+      },
+      role: UserRoles.patient,
+    },
+    type: NotificationType.directshare,
   };
 
-  const fakeNotification = (role: UserRoles, { date, emitter, type, target }: INotification = notif): JSX.Element => (
-    <Notification date={date} emitter={emitter} type={type} target={target} userRole={role} />
+  const fakeNotification = ({ id, created, creator, type, target }: INotification = notif, onRemove= () => _.noop): JSX.Element => (
+    <Notification id={id} created={created} creator={creator} type={type} target={target} onRemove={onRemove}/>
   );
 
   it("should be exported as a function", () => {
@@ -55,33 +64,40 @@ export const testNotification = (): void => {
   });
 
   it("should render", () => {
-    const wrapper = shallow(fakeNotification(UserRoles.caregiver));
+    const wrapper = shallow(fakeNotification());
 
     expect(wrapper.find("div").length).to.be.ok;
   });
 
   it("should display the user firstname and lastname", () => {
-    const wrapper = mount(fakeNotification(UserRoles.hcp));
-    const expected = notif.emitter.firstName + " " + notif.emitter.lastName;
+    const wrapper = mount(fakeNotification());
+    const expected = notif.creator.profile.fullName;
 
     expect(wrapper.text().includes(expected)).to.be.true;
   });
 
   it("should display datashare", () => {
-    const wrapper = mount(fakeNotification(UserRoles.hcp));
+    const wrapper = mount(fakeNotification());
 
     expect(wrapper.text().includes("datashare")).to.be.true;
   });
 
   it("should display join-group", () => {
-    const wrapper = mount(fakeNotification(UserRoles.hcp, { ...notif, type: NotificationType.joinGroup, target: "target" }));
+    const wrapper = mount(
+      fakeNotification({
+        ...notif,
+        type: NotificationType.careteam,
+        target: { id: "0", name: "target" },
+      })
+    );
 
     expect(wrapper.text().includes(" join-group target.")).to.be.true;
   });
 
   describe("getIconToDisplay", () => {
+
     it("should display a PersonIcon", () => {
-      const wrapper = mount(fakeNotification(UserRoles.caregiver));
+      const wrapper = mount(fakeNotification());
 
       expect(wrapper.find(PersonIcon).length).to.equal(1);
       expect(wrapper.find(GroupIcon).length).to.equal(0);
@@ -89,7 +105,7 @@ export const testNotification = (): void => {
     });
 
     it("should display a GroupIcon", () => {
-      const wrapper = mount(fakeNotification(UserRoles.hcp, { ...notif, emitter: { ...notif.emitter, role: UserRoles.hcp } }));
+      const wrapper = mount(fakeNotification({ ...notif, type: NotificationType.careteam }));
 
       expect(wrapper.find(PersonIcon).length).to.equal(0);
       expect(wrapper.find(GroupIcon).length).to.equal(1);
@@ -97,7 +113,7 @@ export const testNotification = (): void => {
     });
 
     it("should display a MedicalServiceIcon", () => {
-      const wrapper = mount(fakeNotification(UserRoles.hcp));
+      const wrapper = mount(fakeNotification({ ...notif, type: NotificationType.careteamPatient }));
 
       expect(wrapper.find(PersonIcon).length).to.equal(0);
       expect(wrapper.find(GroupIcon).length).to.equal(0);
@@ -106,22 +122,23 @@ export const testNotification = (): void => {
   });
 
   describe("getDateToDisplay", () => {
+
     it("should display the given date", () => {
-      const wrapper = mount(fakeNotification(UserRoles.hcp));
-      const expectedDate = moment(notif.date).utc().format("L");
+      const wrapper = mount(fakeNotification());
+      const expectedDate = moment(notif.created).utc().format("L");
 
       expect(wrapper.text().includes(expectedDate)).to.be.true;
     });
 
     it("should display today", () => {
-      const wrapper = mount(fakeNotification(UserRoles.hcp, { ...notif, date: new Date().toISOString() }));
+      const wrapper = mount(fakeNotification({ ...notif, created: new Date().toISOString() }));
 
       expect(wrapper.text().includes("today")).to.be.true;
     });
 
     it("should display yesterday", () => {
       const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      const wrapper = mount(fakeNotification(UserRoles.hcp, { ...notif, date: yesterday }));
+      const wrapper = mount(fakeNotification({ ...notif, created: yesterday }));
 
       expect(wrapper.text().includes("yesterday")).to.be.true;
     });
