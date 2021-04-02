@@ -43,6 +43,8 @@ import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/pas
 import { ProfilePage } from "../pages/profile/profile";
 import CaregiverPage from "../pages/caregiver";
 import { AuthContextProvider } from "../lib/auth";
+// ** PR review in comment: Notifications are not used in public routes
+// I would have put the NotificationContextProvider in PrivateRoute
 import { NotificationContextProvider } from "../lib/notifications/hook";
 
 const Yourloops: React.FunctionComponent = () => (
