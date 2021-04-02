@@ -7,6 +7,7 @@ export enum NotificationType {
   careteamPatient = "medicalteam_patient_invitation",
 }
 
+/** Some comments heres on the fields will be welcomed :-) */
 export interface INotification {
   id: string,
   type: NotificationType;

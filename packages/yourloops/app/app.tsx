@@ -43,6 +43,8 @@ import CaregiverPage from "../pages/caregiver";
 import PatientPage from "../pages/patient";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 import { AuthContextProvider } from "../lib/auth";
+// ** PR review in comment: Notifications are not used in public routes
+// I would have put the NotificationContextProvider in PrivateRoute
 import { NotificationContextProvider } from "../lib/notifications/hook";
 
 function MetricsLocationListener() {

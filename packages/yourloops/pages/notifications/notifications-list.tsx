@@ -159,7 +159,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
               id="typography-no-pending-invitation-message"
               variant="body2"
               gutterBottom>
-              {t("no-pending-invitation-message")}
+              {t("notification-no-pending-invitation")}
             </Typography>
           )}
         </List>

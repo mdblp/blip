@@ -15,15 +15,18 @@
  */
 
 import React from "react";
-import { TFunction, useTranslation } from "react-i18next";
+import { TFunction, useTranslation, Trans } from "react-i18next";
 import moment from "moment-timezone";
 
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
 import MedicalServiceIcon from "../../components/icons/MedicalServiceIcon";
 import { Button, createStyles, makeStyles } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import { User } from "../../models/shoreline";
 import { INotification, NotificationType } from "../../lib/notifications/models";
-import { errorTextFromException } from "../../lib/utils";
+import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
 import { useNotification } from "../../lib/notifications/hook";
 
 type NotificationProps = INotification & {
@@ -39,44 +42,87 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const getNotification = (type: NotificationType, t: TFunction<"yourloops">, target: any) =>
-  type === NotificationType.directshare ? (
-    <span> {t("datashare")}</span>
-  ) : (
-    <span>
-      {" "}
-      {t("join-group")} <strong>{target?.name}.</strong>
-    </span>
-  );
-
-const getIcon = (type: NotificationType): JSX.Element => {
+const NotificationSpan = ({ t, notification, className }: { t: TFunction<"yourloops">; notification: INotification; className: string; }): JSX.Element => {
+  const { id, type, creator, target } = notification;
+  // "notification-patient-invitation-by-team": "You're invited to share your diabetes data with <strong>{{careteam}}</strong>.",
+  // "notification-patient-invitation-by-caregiver": "You're invited to share your diabetes data with <strong>{{firstName}} {{lastName}}</strong>.",
+  // "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> invites you to join {{careteam}}.",
+  // "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
+  // "notification-team-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> now shares their diabetes data with <strong>{{careteam}}</strong>.",
+  const firstName = getUserFirstName(creator as User);
+  const lastName = getUserLastName(creator as User);
+  const careteam = target?.name ?? "";
+  const values = { firstName, lastName, careteam };
+  console.log("NotificationSpan", { notification, firstName, lastName, careteam });
+  let notificationText: JSX.Element;
   switch (type) {
-    case NotificationType.directshare:
-      return <PersonIcon />;
-    case NotificationType.careteam:
-      return <GroupIcon />;
-    case NotificationType.careteamPatient:
-      return <MedicalServiceIcon />;
-    default:
-      return <GroupIcon />;
+  case NotificationType.directshare:
+    notificationText = (
+      <Trans t={t} i18nKey="notification-caregiver-invitation-by-patient" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        <strong>{firstName} {lastName}</strong> wants to share their diabetes data with you.
+      </Trans>
+    );
+    break;
+  case NotificationType.careteam:
+    notificationText = (
+      <Trans t={t} i18nKey="notification-hcp-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        <strong>{firstName} {lastName}</strong> invites you to join <strong>{careteam}</strong>.
+      </Trans>
+    );
+    break;
+  case NotificationType.careteamPatient:
+    notificationText = (
+      <Trans t={t} i18nKey="notification-team-invitation-by-patient" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        <strong>{firstName} {lastName}</strong> now shares their diabetes data with <strong>{careteam}</strong>.
+      </Trans>
+    );
+    break;
+  default:
+    notificationText = <i>Invalid invitation type</i>;
+  }
+
+  return <span id={`notification-text-${id}`} className={className}>{notificationText}</span>;
+};
+
+const NotificationIcon = ({ type, id }: { type: NotificationType; id: string; }): JSX.Element => {
+  switch (type) {
+  case NotificationType.directshare:
+    return <PersonIcon id={id} />;
+  case NotificationType.careteam:
+    return <GroupIcon id={id} />;
+  case NotificationType.careteamPatient:
+    return <MedicalServiceIcon id={id} />;
+  default:
+    return <GroupIcon id={id} />;
   }
 };
 
-const getDate = (emittedDate: string, t: TFunction<"yourloops">): string => {
+const getDate = (emittedDate: string, id: string, t: TFunction<"yourloops">): JSX.Element => {
+  // FIXME display at localtime ?
   const date = moment.utc(emittedDate);
   const diff = moment.utc().diff(date, "days");
+  const tooltip = date.format("LT");
+  const ariaLabel = date.format("LLLL");
 
+  let display: string;
   if (diff === 0) {
-    return t("today");
+    display = t("today");
   } else if (diff === 1) {
-    return t("yesterday");
+    display = t("yesterday");
+  } else {
+    display = date.format("L");
   }
 
-  return date.format("L");
+  return (
+    <Tooltip title={tooltip} aria-label={ariaLabel} placement="bottom">
+      <div id={`notification-date-${id}`}>{display}</div>
+    </Tooltip>
+  );
 };
 
-export const Notification = ({ id, created, creator, type, target, onRemove }: NotificationProps): JSX.Element => {
+export const Notification = (props: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
+  const { id, created, creator, type, target, onRemove } = props;
   const notifications = useNotification();
   const [inProgress, setInProgress] = React.useState(false);
   const { container, notification, rightSide, button } = useStyles();
@@ -114,17 +160,14 @@ export const Notification = ({ id, created, creator, type, target, onRemove }: N
   };
 
   return (
-    <div className={container}>
-      <div>{getIcon(type)}</div>
-      <span className={notification}>
-        <strong>{creator.profile.fullName}</strong>
-        {getNotification(type, t, target)}
-      </span>
+    <div id={`notification-line-${id}`} className={container}>
+      <NotificationIcon id={`notification-icon-${id}`} type={type} />
+      <NotificationSpan t={t} notification={props} className={notification} />
       <div className={rightSide}>
-        <div>{getDate(created, t)}</div>
+        {getDate(created, id, t)}
         <div>
           <Button
-            id="button-decline-notification"
+            id={`notification-button-decline-${id}`}
             className={button}
             variant="contained"
             color="secondary"
@@ -133,7 +176,7 @@ export const Notification = ({ id, created, creator, type, target, onRemove }: N
             {t("decline")}
           </Button>
           <Button
-            id="button-accept-notification"
+            id={`notification-button-accept-${id}`}
             color="primary"
             variant="contained"
             className={button}
