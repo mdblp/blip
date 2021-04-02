@@ -15,32 +15,18 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
 
-import {
-  AppBar,
-  Breadcrumbs,
-  Container,
-  createStyles,
-  Link,
-  List,
-  ListItem,
-  makeStyles,
-  Theme,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Breadcrumbs, Container, createStyles, Link, List, ListItem, makeStyles, Theme, Toolbar, Typography } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import HeaderBar from "../../components/primary-header-bar";
 import { Notification } from "./notification";
 import { INotification } from "../../lib/notifications/models";
-import { UserRoles } from "../../models/shoreline";
-import { MS_IN_DAY } from "../../models/generic";
 import { useAuth } from "../../lib/auth";
 import { useNotification } from "../../lib/notifications/hook";
 import { errorTextFromException } from "../../lib/utils";
@@ -69,16 +55,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NotificationHeader = () => {
   const { t } = useTranslation("yourloops");
-  const historyHook = useHistory();
   const classes = useStyles();
   const { user } = useAuth();
 
-  const homePage = useMemo(
-    () => (user?.roles?.length && user.roles[0] === UserRoles.caregiver ? "/" : "/hcp/patients"),
-    [
-      // FIXME: set the route for caregiver
-      user,
-    ]
+  const homePage = useMemo(() => (`/${user?.role ?? ""}`),
+    [user]
   );
 
   return (
