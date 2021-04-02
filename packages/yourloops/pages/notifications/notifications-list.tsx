@@ -15,7 +15,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import * as React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -69,7 +69,8 @@ const NotificationHeader = () => {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
   const { user } = useAuth();
-  const homePage = `/${user?.role ?? ""}`;
+
+  const homePage = useMemo(() => (`/${user?.role ?? ""}`), [user]);
 
   return (
     <React.Fragment>
