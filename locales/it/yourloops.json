@@ -266,5 +266,9 @@
   "today": "Oggi",
   "yesterday": "Ieri",
   "datashare": "vuole condividere con lei i propri dati sul diabete.",
-  "join-group": "vi invita a unirvi"
+  "join-group": "vi invita a unirvi",
+  "footer-link-url-intended-use": "Regulatory Information",
+  "footer-link-url-privacy-policy": "Informativa sulla privacy",
+  "footer-link-url-support": "Diabeloop",
+  "footer-link-url-terms": "Diabeloop Applications Terms of Use"
 }
