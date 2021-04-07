@@ -72,8 +72,8 @@ const NotificationSpan = ({ t, notification, className }: { t: TFunction<"yourlo
     break;
   case NotificationType.careteamPatient:
     notificationText = (
-      <Trans t={t} i18nKey="notification-team-invitation-by-patient" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
-        <strong>{firstName} {lastName}</strong> now shares their diabetes data with <strong>{careteam}</strong>.
+      <Trans t={t} i18nKey="notification-patient-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        You’re invited to share your diabetes data with <strong>{careteam}</strong>.
       </Trans>
     );
     break;

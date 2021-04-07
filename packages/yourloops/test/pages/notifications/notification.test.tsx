@@ -76,13 +76,15 @@ export const testNotification = (): void => {
     expect(wrapper.text().includes(expected)).to.be.true;
   });
 
-  it("should display datashare", () => {
+  it("should display direct share", () => {
     const wrapper = mount(fakeNotification());
-
-    expect(wrapper.text().includes("datashare")).to.be.true;
+    console.log("wrapper", wrapper.text());
+    expect(
+      wrapper.text().includes("wants to share their diabetes data with you")
+    ).to.be.true;
   });
 
-  it("should display join-group", () => {
+  it("should display medical team join invitation for a member", () => {
     const wrapper = mount(
       fakeNotification({
         ...notif,
@@ -90,8 +92,26 @@ export const testNotification = (): void => {
         target: { id: "0", name: "target" },
       })
     );
+    console.log("wrapper", wrapper.text());
+    expect(wrapper.text().includes(" invites you to join")).to.be.true;
+  });
 
-    expect(wrapper.text().includes(" join-group target.")).to.be.true;
+  it("should display medical team join invitation for a patient", () => {
+    const wrapper = mount(
+      fakeNotification({
+        ...notif,
+        type: NotificationType.careteamPatient,
+        target: { id: "0", name: "grenoble DIAB service" },
+      })
+    );
+    console.log("wrapper patient", wrapper.text());
+    expect(
+      wrapper
+        .text()
+        .includes(
+          "You’re invited to share your diabetes data with grenoble DIAB service"
+        )
+    ).to.be.true;
   });
 
   describe("getIconToDisplay", () => {
