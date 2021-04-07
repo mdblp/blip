@@ -27,7 +27,6 @@
 
 import * as React from "react";
 import bows from "bows";
-// import _ from "lodash";
 import NotifAPIImpl from "./api";
 import { INotification, NotificationAPI, NotificationContext, NotificationProvider, NotificationType } from "./models";
 import { useAuth } from "../auth/hook";
@@ -35,11 +34,15 @@ import { Session } from "../auth/models";
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
 const log = bows("NotificationHook");
+/** hackish way to prevent 2 or more consecutive loading */
+let lock = false;
 
 function NotificationContextImpl(api: NotificationAPI): NotificationContext {
   log.debug("enter notificatin hook");
   const authHook = useAuth();
   const [count, setCount] = React.useState(0);
+
+  const isLoggedIn = authHook.isLoggedIn();
 
   const getPendingInvitations = async (userId: string | undefined): Promise<INotification[]> => {
     log.debug("Get pending invitations for: ", userId);
@@ -73,6 +76,27 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     await api.decline(session, id, creatorId, targetId, type);
     setCount((count) => { return count > 0 ? count-1 : 0; });
   };
+
+  const initHook = () => {
+    log.info("init", lock);
+    if (lock === false) {
+      lock = true;
+      if (isLoggedIn) {
+        const session = authHook.session() as Session;
+        api
+          .getPendingInvitations(session, session?.user?.userid)
+          .then((notifs: INotification[]) => {
+            setCount(notifs.length);
+          })
+          .catch((reason: unknown) => {
+            log.error("failed init", reason);
+          });
+      }
+      lock = false;
+    }
+  };
+
+  React.useEffect(initHook, [authHook, isLoggedIn, api]);
 
   return {
     count,
