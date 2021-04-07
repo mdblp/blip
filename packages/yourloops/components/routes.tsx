@@ -34,7 +34,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import { useAuth } from "../lib/auth";
 import { getURLPrefixFromUser } from "../lib/diabeloop-url";
-import { publicRoutesTheme, mainTheme } from "./theme";
+import { externalTheme, mainTheme } from "./theme";
 import FooterLinks from "./footer-links";
 import { SnackbarContextProvider, DefaultSnackbarContext } from "./utils/snackbar";
 
@@ -44,21 +44,23 @@ export const PublicRoute = (props: RouteProps): JSX.Element => {
   return isLoggedIn() ? (
     <Redirect to={{ pathname: getURLPrefixFromUser(user), state: { from: props.location } }} />
   ) : (
-    <ThemeProvider theme={publicRoutesTheme}>
+    <ThemeProvider theme={externalTheme}>
       <CssBaseline />
       <SnackbarContextProvider context={DefaultSnackbarContext}>
         <Route {...props} />
       </SnackbarContextProvider>
       <FooterLinks />
-    </ThemeProvider>
-  );
+    </ThemeProvider>)
+  ;
 };
 
 export const PrivateRoute = (props: RouteProps): JSX.Element => {
   const { isLoggedIn } = useAuth();
-
+  // FIXME
+  const theme = props.path === "/renew-consent" ? externalTheme : mainTheme;
+  console.log("props:", props);
   return isLoggedIn() ? (
-    <ThemeProvider theme={mainTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <SnackbarContextProvider context={DefaultSnackbarContext}>
         <Route {...props} />
