@@ -82,7 +82,7 @@ interface Preferences {
   patientsStarred?: string[];
 }
 
-interface User {
+interface IUser {
   /** The user id */
   readonly userid: string;
   /** The username (login) */
@@ -103,4 +103,50 @@ interface User {
   medicalData?: MedicalData | null;
 }
 
-export { User, Profile, Settings, Preferences, UserRoles, Jobs };
+class User implements IUser {
+  userid: string;
+  username: string;
+  role!: UserRoles;
+  emails?: string[];
+  emailVerified?: boolean;
+  profile?: Profile;
+  settings?: Settings;
+  preferences?: Preferences;
+  medicalData?: MedicalData | null;
+
+  constructor(id: string, name: string) {
+    this.userid = id;
+    this.username = name;
+  }
+
+  /**
+   * Return the user first name
+   */
+  getFirstName(): string {
+    return this.profile?.firstName ?? "";
+  }
+
+  /**
+   * Return the user last name
+   */
+  getLastName(): string {
+    return this.profile?.lastName ?? this.profile?.fullName ?? this.username;
+  }
+
+  shouldRenewConsent(): boolean {
+    console.log("enter in should renew consent", this?.profile);
+    console.log("enter in should renew consent", this?.profile?.termsOfUse);
+    console.log("enter in should renew consent", this?.profile?.privacyPolicy);
+    if (this?.profile?.termsOfUse === undefined || this?.profile?.termsOfUse === null) {
+      return true;
+    }
+
+    if (this?.profile?.privacyPolicy === undefined || this?.profile?.privacyPolicy === null) {
+      return true;
+    }
+
+    return false;
+  }
+}
+
+export { IUser, User, Profile, Settings, Preferences, UserRoles, Jobs };

@@ -58,7 +58,7 @@ const Yourloops: React.FunctionComponent = () => (
         <PrivateRoute path="/caregiver" component={CaregiverPage} />
         <PrivateRoute path="/hcp" component={HcpPage} />
         <PrivateRoute path="/patient" component={PatientPage} />
-        <PublicRoute path="/renew-consent" component={PatientRenewConsentPage} />
+        <PrivateRoute path="/renew-consent" component={PatientRenewConsentPage} />
         <PrivateRoute path="/account-preferences" component={ProfilePage} />
         <PrivateRoute path="/notifications" component={NotificationsPage} />
         <Route component={InvalidRoute} />

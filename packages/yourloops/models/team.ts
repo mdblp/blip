@@ -18,7 +18,7 @@
  * TODO: Review me when we have the team API
  */
 
-import { User } from "./shoreline";
+import { IUser } from "./shoreline";
 import { UserInvitationStatus, PostalAddress } from "./generic";
 
 export enum TeamType {
@@ -45,7 +45,7 @@ export interface ITeamMember {
   teamId: string;
   role: TeamMemberRole;
   invitationStatus: UserInvitationStatus;
-  user: User;
+  user: IUser;
 }
 
 /**

@@ -33,28 +33,27 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 
 import { useAuth } from "../lib/auth";
-import { publicRoutesTheme, mainTheme } from "./theme";
+import { externalTheme, mainTheme } from "./theme";
 import FooterLinks from "./footer-links";
 
 export const PublicRoute = (props: RouteProps): JSX.Element => {
-  const { isLoggedIn, user } = useAuth();
-
-  return isLoggedIn() ? (
-    <Redirect to={{ pathname: `/${user?.role}`, state: { from: props.location } }} />
-  ) : (
-    <ThemeProvider theme={publicRoutesTheme}>
+  console.log("props public", props);
+  return (
+    <ThemeProvider theme={externalTheme}>
       <CssBaseline />
       <Route {...props} />
       <FooterLinks />
-    </ThemeProvider>
-  );
+    </ThemeProvider>)
+  ;
 };
 
 export const PrivateRoute = (props: RouteProps): JSX.Element => {
   const { isLoggedIn } = useAuth();
-
+  // FIXME
+  const theme = props.path === "/renew-consent" ? externalTheme : mainTheme;
+  console.log("props:", props);
   return isLoggedIn() ? (
-    <ThemeProvider theme={mainTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Route {...props} />
       <FooterLinks atBottom />

@@ -28,7 +28,7 @@
 
 import { UserInvitationStatus, PostalAddress } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
-import { User } from "../../models/shoreline";
+import { IUser } from "../../models/shoreline";
 import {
   ITeam,
   ITeamMember,
@@ -38,7 +38,7 @@ import {
 } from "../../models/team";
 import { Session } from "../auth";
 
-export interface TeamUser extends User {
+export interface TeamUser extends IUser {
   members: TeamMember[];
 }
 

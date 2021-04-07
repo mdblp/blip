@@ -100,12 +100,11 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
     const auth = await api.login(username, password, traceToken);
     const tokenInfos = jwtDecode<JwtShorelinePayload>(auth.sessionToken);
-    let user: User;
     if (tokenInfos.role === "clinic") {
       // TODO After BDD migration this check will be useless
-      user = { ...auth.user, role: UserRoles.caregiver };
+      auth.user.role = UserRoles.caregiver;
     } else {
-      user = { ...auth.user, role: tokenInfos.role as UserRoles };
+      auth.user.role = tokenInfos.role as UserRoles;
     }
 
     const expirationDate = tokenInfos.exp;
@@ -115,12 +114,12 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
     sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, auth.sessionToken);
     sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, auth.traceToken);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
-    setUser(user);
+    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user));
+    setUser(auth.user);
     setSessionToken(auth.sessionToken);
     // FIXME: Test if the user as consent
     sendMetrics("setUserId", auth.user.userid);
-    return user;
+    return auth.user;
   };
 
   const updateProfile = async (roUser: Readonly<User>): Promise<Profile> => {
