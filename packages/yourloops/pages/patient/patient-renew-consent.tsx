@@ -27,6 +27,7 @@
 
 import * as React from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -36,14 +37,12 @@ import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 
 import brandingLogo from "branding/logo.png";
-import LoginFooterLink from "../login/login-footer-link";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Link from "@material-ui/core/Link";
 
 import DiabeloopUrl from "../../lib/diabeloop-url";
 
@@ -90,26 +89,17 @@ const style = makeStyles((theme: Theme) => {
  */
 function PatientRenewConsentPage(): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
+  const historyHook = useHistory();
   const classes = style();
   const [terms, setTerms] = React.useState(false);
   const [privacyPolicy, setPrivacyPolicy] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [helperText, setHelperText] = React.useState("");
-  const linkTerms = (
-    <Link
-      href={DiabeloopUrl.getTermsUrL(i18n.language)}
-      target="_blank" rel="noreferrer">
-    </Link>
-  );
-  const privacyPolicyText = "Privacy Policy";
-  const linkPrivacyPolicy = (
-    <Link
-      href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
-      target="_blank"
-      rel="noreferrer">
-      {privacyPolicyText}
-    </Link>
-  );
+
+  const linkTermsText = t("Terms of Use");
+  const linkTerms = DiabeloopUrl.getTermsLink(i18n.language);
+  const privacyPolicyText = t("Privacy Policy");
+  const linkPrivacyPolicy = DiabeloopUrl.getPrivacyPolicyLink(i18n.language);
 
   const resetFormState = (): void => {
     setError(false);
@@ -130,7 +120,7 @@ function PatientRenewConsentPage(): JSX.Element {
     }
 
     setError(true);
-    setHelperText("you must renew consent");
+    setHelperText("required");
     return false;
   };
 
@@ -140,7 +130,7 @@ function PatientRenewConsentPage(): JSX.Element {
     if (valideForm()) {
       // api call
       // handleNext();
-      console.log("api call");
+      historyHook.push("/patient");
     }
   };
 
@@ -207,7 +197,7 @@ function PatientRenewConsentPage(): JSX.Element {
                         t={t}
                         i18nKey="signup-consent-patient-privacy-policy"
                         components={{ linkPrivacyPolicy }}
-                        values={{ privacyPolicyText }}
+                        values={{ privacyPolicy: privacyPolicyText }}
                       />
                     }
                   />
@@ -228,7 +218,7 @@ function PatientRenewConsentPage(): JSX.Element {
                         t={t}
                         i18nKey="signup-consent-patient-terms-condition"
                         components={{ linkTerms }}
-                        values={{ terms: "Terms or Use" }}
+                        values={{ terms: linkTermsText }}
                       />
                     }
                   />
@@ -243,7 +233,6 @@ function PatientRenewConsentPage(): JSX.Element {
               </form>
             </CardContent>
           </Card>
-          <LoginFooterLink />
         </Grid>
       </Grid>
     </Container>

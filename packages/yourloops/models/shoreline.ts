@@ -72,7 +72,7 @@ interface Preferences {
   patientsStarred?: string[];
 }
 
-interface User {
+interface IUser {
   /** The user id */
   readonly userid: string;
   /** The username (login) */
@@ -95,4 +95,4 @@ interface User {
   medicalData?: MedicalData | null;
 }
 
-export { User, Profile, Settings, Preferences, UserRoles };
+export { IUser, Profile, Settings, Preferences, UserRoles };
