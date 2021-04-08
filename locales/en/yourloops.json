@@ -289,7 +289,7 @@
   "datashare": "wants to share their diabetes data with you.",
   "join-group": "invites you to join",
   "footer-link-url-intended-use": "Regulatory Information",
-  "footer-link-url-privacy-policy": "<linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>",
+  "footer-link-url-privacy-policy": "Privacy Policy",
   "footer-link-url-support": "Diabeloop",
   "footer-link-url-terms": "<linkTerms>{{terms}}</linkTerms>"
 }
