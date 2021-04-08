@@ -98,7 +98,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userMenuOpen = Boolean(anchorEl);
 
-  const userRole = React.useMemo(() => auth.user?.roles && auth.user.roles[0], [auth.user]);
+  const userRole = auth.user?.role ?? null;
 
   const handleOpenAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -166,7 +166,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           <MenuItem
             id="menu-logout-yourloops"
             onClick={handleLogout}
-            >{t("Logout")}
+            >{t("menu-logout")}
           </MenuItem>
         </Menu>
       </React.Fragment>
