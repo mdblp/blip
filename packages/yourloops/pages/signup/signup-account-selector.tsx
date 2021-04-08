@@ -112,7 +112,8 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
 
   return (
     <form
-      id="signup-form"
+      id="form-signup"
+
       style={{
         display: "flex",
         flexDirection: "column",
@@ -137,7 +138,8 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
             <FormControlLabel
               className={classes.FormControlLabel}
               value="hcp"
-              id="signup-account-hcp"
+              id="form-label-signup-account-hcp"
+
               control={<Radio />}
               label={
                 <RadioLabel
@@ -151,7 +153,8 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
             <FormControlLabel
               className={classes.FormControlLabel}
               value="caregiver"
-              id="signup-account-caregiver"
+              id="form-label-signup-account-caregiver"
+
               control={<Radio />}
               label={
                 <RadioLabel
@@ -165,7 +168,8 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
       </FormControl>
       <div id="signup-account-selector-button-group">
         <Button
-          id="signup-steppers-back"
+          id="button-signup-steppers-back"
+
           variant="contained"
           color="secondary"
           className={classes.Button}
@@ -174,7 +178,8 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           {t("signup-steppers-back")}
         </Button>
         <Button
-          id="signup-steppers-next"
+          id="button-signup-steppers-next"
+
           variant="contained"
           color="primary"
           className={classes.Button}

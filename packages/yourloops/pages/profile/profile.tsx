@@ -402,7 +402,7 @@ export const ProfilePage: FunctionComponent = () => {
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
-              id="cancel-profile"
+              id="button-cancel-profile"
               variant="contained"
               color="secondary"
               onClick={onCancel}
@@ -410,7 +410,7 @@ export const ProfilePage: FunctionComponent = () => {
               {t("common-cancel")}
             </Button>
             <Button
-              id="save-profile"
+              id="button-save-profile"
               variant="contained"
               disabled={(!hasProfileChanged && !haveSettingsChanged && !havePreferencesChanged) || isAnyError}
               color="primary"

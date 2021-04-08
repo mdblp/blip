@@ -133,7 +133,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           <div className={classes.accountType}>{role}</div>
         </div>
         <IconButton
-          id="menu-appbar-button"
+          id="appbar-menu-button-account"
           aria-label={t("aria-current-user-account")}
           aria-controls="menu-appbar"
           aria-haspopup="true"
@@ -156,7 +156,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           open={open}
           onClose={handleClose}>
           <MenuItem
-            id="open-profile"
+            id="menuitem-open-profile"
             onClick={handleOpenProfilePage}
             >{t("menu-account-preferences")}
           </MenuItem>
