@@ -217,7 +217,7 @@ class PatientDataPage extends React.Component {
         loader = <Loader />;
         break;
       default:
-        errorDisplay = <p id="display-message">{errorMessage ?? t('Failed somewhere')}</p>;
+        errorDisplay = <p id="loading-error-message">{errorMessage ?? t('Failed somewhere')}</p>;
         break;
     }
 

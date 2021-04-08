@@ -130,7 +130,6 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   let accountMenu = null;
   if (auth.isLoggedIn()) {
     const user: User = auth.user as User;
-    const role = user?.roles ? user.roles[0] : "unknown";
     const name = `${getUserFirstName(user)} ${getUserLastName(user)}`;
 
     accountMenu = (
@@ -160,12 +159,12 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           open={userMenuOpen}
           onClose={handleCloseAccountMenu}>
           <MenuItem
-            id="open-profile"
+            id="menu-open-profile"
             onClick={handleOpenProfilePage}
             >{t("menu-account-preferences")}
           </MenuItem>
           <MenuItem
-            id="logout-yourloops"
+            id="menu-logout-yourloops"
             onClick={handleLogout}
             >{t("Logout")}
           </MenuItem>

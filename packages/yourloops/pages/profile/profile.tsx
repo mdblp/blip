@@ -25,7 +25,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -307,7 +306,9 @@ export const ProfilePage: FunctionComponent = () => {
       <Snackbar params={snackbarParams} />
       <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
-          <DialogTitle id="account-preferences-title" className={classes.title}>{t("account-preferences-title")}</DialogTitle>
+          <div className={classes.title} id="account-preferences-title">
+            {t("hcp-account-preferences-title")}
+          </div>
           <TextField
             id="firstName"
             label={t("First name")}
@@ -401,7 +402,7 @@ export const ProfilePage: FunctionComponent = () => {
           </FormControl>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button
-              id="cancel-profile"
+              id="button-cancel-profile"
               variant="contained"
               color="secondary"
               onClick={onCancel}
@@ -409,7 +410,7 @@ export const ProfilePage: FunctionComponent = () => {
               {t("common-cancel")}
             </Button>
             <Button
-              id="save-profile"
+              id="button-save-profile"
               variant="contained"
               disabled={(!hasProfileChanged && !haveSettingsChanged && !havePreferencesChanged) || isAnyError}
               color="primary"

@@ -246,7 +246,8 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       />
       <div id="signup-accountform-button-group" className={classes.Buttons}>
         <Button
-          id="signup-steppers-back"
+          id="button-signup-steppers-back"
+
           variant="contained"
           color="secondary"
           className={classes.Button}
@@ -255,7 +256,8 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
           {t("signup-steppers-back")}
         </Button>
         <Button
-          id="signup-steppers-create"
+          id="button-signup-steppers-create"
+
           variant="contained"
           color="primary"
           disabled={isErrorSeen || inProgress}

@@ -144,7 +144,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           className={classes.FormControlLabel}
           control={
             <Checkbox
-            id="signup-consent-terms-check"
+            id="checkbox-signup-consent-terms"
             checked={state.formValues.terms}
               onChange={(e) => handleChange(e, "terms")}
               color="default"
@@ -155,13 +155,13 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           }
           label={t(
             `signup-consent-${state.formValues.accountRole}-terms-condition`,
-            { terms: "Terms of Use" }
+            { terms: t("Terms of Use") }
           )}
           labelPlacement="end"
         />
         <div id="signup-consent-button-group">
           <Button
-            id="signup-steppers-back"
+            id="button-signup-steppers-back"
             variant="contained"
             color="secondary"
             disabled={props.activeStep === 0}
@@ -171,7 +171,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
             {t("signup-steppers-back")}
           </Button>
           <Button
-            id="signup-steppers-next"
+            id="button-signup-steppers-next"
             variant="contained"
             color="primary"
             className={classes.Button}

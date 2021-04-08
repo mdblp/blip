@@ -153,7 +153,7 @@ export default function SignUpStepper() : JSX.Element {
               })}
             </Typography>
             <Link
-              id="signup-gotologin"
+              id="link-signup-gotologin"
               className={classes.button}
               component={RouterLink}
               to="/"
