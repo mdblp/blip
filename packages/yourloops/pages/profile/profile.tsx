@@ -45,7 +45,6 @@ import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import HeaderBar from "../../components/primary-header-bar";
 import { Password } from "../../components/utils/password";
 import { Snackbar } from "../../components/utils/snackbar";
-import { getUserFirstName, getUserLastName } from "../../lib/utils";
 interface Errors {
   firstName: boolean;
   name: boolean;
@@ -155,11 +154,14 @@ export const ProfilePage: FunctionComponent = () => {
   );
 
   useEffect(() => {
-    const u: User = user as User;
-    setFirstName(getUserFirstName(u));
-    setName(getUserLastName(u));
-    if (user?.roles && user.roles.length) {
-      setRole(user.roles[0]);
+    if (user?.profile?.firstName) {
+      setFirstName(user.profile.firstName);
+    }
+    if (user?.profile?.lastName) {
+      setName(user.profile.lastName);
+    }
+    if (user?.role) {
+      setRole(user.role);
     }
     if (user?.emails && user.emails.length) {
       setMail(user.emails[0]);
