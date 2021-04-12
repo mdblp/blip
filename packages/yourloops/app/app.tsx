@@ -37,7 +37,7 @@ import sendMetrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
 import { PrivateRoute, PublicRoute } from "../components/routes";
 import InvalidRoute from "../components/invalid-route";
-import LoginPage from "../pages/login";
+import { LoginPage, ConsentPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";

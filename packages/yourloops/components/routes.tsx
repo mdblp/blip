@@ -58,7 +58,7 @@ export const PublicRoute = (props: RouteProps): JSX.Element => {
 export const PrivateRoute = (props: RouteProps): JSX.Element => {
   const { isLoggedIn } = useAuth();
   // FIXME
-  const theme = props.path === "/renew-consent" ? externalTheme : mainTheme;
+  const theme = props.path === "/renew-consent" || props.path === "/new-consent" ? externalTheme : mainTheme;
   console.log("props:", props);
   return isLoggedIn() ? (
     <ThemeProvider theme={theme}>

@@ -44,7 +44,13 @@ import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-import DiabeloopUrl from "../../lib/diabeloop-url";
+import DiabeloopUrl from "../lib/diabeloop-url";
+import { useAuth } from "../lib/auth";
+
+interface ConsentProps {
+  messageKey: string;
+  destinationPath: string;
+}
 
 const style = makeStyles((theme: Theme) => {
   return {
@@ -85,10 +91,11 @@ const style = makeStyles((theme: Theme) => {
 });
 
 /**
- * Patient Renew ConsentPage
+ * Patient Consent Page
  */
-function PatientRenewConsentPage(): JSX.Element {
+function Consent(props: ConsentProps): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
+  const auth = useAuth();
   const historyHook = useHistory();
   const classes = style();
   const [terms, setTerms] = React.useState(false);
@@ -124,13 +131,24 @@ function PatientRenewConsentPage(): JSX.Element {
     return false;
   };
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onDecline = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    historyHook.push("/");
+  };
+
+  const onConfirm = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     resetFormState();
     if (valideForm()) {
       // api call
-      // handleNext();
-      historyHook.push("/patient");
+      const user = auth?.user;
+      if (user?.profile !== undefined) {
+        const now = new Date().toISOString();
+        user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: terms };
+        user.profile.privacyPolicy = { AcceptanceDate: now, IsAccepted: privacyPolicy };
+        auth.updateProfile(user);
+        historyHook.push(props.destinationPath);
+      }
     }
   };
 
@@ -162,7 +180,7 @@ function PatientRenewConsentPage(): JSX.Element {
             </CardMedia>
             <CardContent className={classes.CardContent}>
               <Typography variant="body1" gutterBottom>
-                {t("renew-constent-welcome-message")}
+                {t(props.messageKey)}
               </Typography>
               <form
                 style={{
@@ -184,6 +202,7 @@ function PatientRenewConsentPage(): JSX.Element {
                     className={classes.FormControlLabel}
                     control={
                       <Checkbox
+                        id="consent-checkbox-privacypolicy"
                         checked={privacyPolicy}
                         onChange={(e) => onChange(e, setPrivacyPolicy)}
                         color="default"
@@ -195,7 +214,7 @@ function PatientRenewConsentPage(): JSX.Element {
                     label={
                       <Trans
                         t={t}
-                        i18nKey="signup-consent-patient-privacy-policy"
+                        i18nKey={`signup-consent-${auth?.user?.role}-privacy-policy`}
                         components={{ linkPrivacyPolicy }}
                         values={{ privacyPolicy: privacyPolicyText }}
                       />
@@ -205,6 +224,7 @@ function PatientRenewConsentPage(): JSX.Element {
                     className={classes.FormControlLabel}
                     control={
                       <Checkbox
+                        id="consent-checkbox-terms"
                         checked={terms}
                         onChange={(e) => onChange(e, setTerms)}
                         color="default"
@@ -216,19 +236,30 @@ function PatientRenewConsentPage(): JSX.Element {
                     label={
                       <Trans
                         t={t}
-                        i18nKey="signup-consent-patient-terms-condition"
+                        i18nKey={`signup-consent-${auth?.user?.role}-terms-condition`}
                         components={{ linkTerms }}
                         values={{ terms: linkTermsText }}
                       />
                     }
                   />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.Button}
-                    onClick={onNext}>
-                    {t("confirm")}
-                  </Button>
+                  <div id="consent-button-group">
+                    <Button
+                      id="consent-button-decline"
+                      variant="contained"
+                      color="secondary"
+                      className={classes.Button}
+                      onClick={onDecline}>
+                      {t("decline")}
+                    </Button>
+                    <Button
+                      id="consent-button-confirm"
+                      variant="contained"
+                      color="primary"
+                      className={classes.Button}
+                      onClick={onConfirm}>
+                      {t("confirm")}
+                    </Button>
+                  </div>
                 </FormControl>
               </form>
             </CardContent>
@@ -239,4 +270,4 @@ function PatientRenewConsentPage(): JSX.Element {
   );
 }
 
-export default PatientRenewConsentPage;
+export default Consent;
