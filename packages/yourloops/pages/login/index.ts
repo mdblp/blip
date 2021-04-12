@@ -26,6 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientRenewConsentPage from "./patient-renew-consent";
-import PatientPage from "./patient";
-export { PatientRenewConsentPage, PatientPage };
+import Login from "./login";
+import ConsentPage from "./consent";
+export { Login as LoginPage, ConsentPage };

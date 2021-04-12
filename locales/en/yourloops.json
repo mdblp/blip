@@ -293,5 +293,6 @@
   "footer-link-url-privacy-policy": "Privacy Policy",
   "footer-link-url-support": "Diabeloop",
   "footer-link-url-terms": "<linkTerms>{{terms}}</linkTerms>",
-  "renew-constent-welcome-message": "Welcome to YourLoops! Please read and accept the terms of use and privacy policy before using the service."
+  "constent-welcome-message": "Welcome to YourLoops! Please read and accept the terms of use and privacy policy before using the service.",
+  "constent-renew-message": "The Terms of Use and/or Privacy Policy have changed since your last visit.\nPlease review them before proceeding."
 }

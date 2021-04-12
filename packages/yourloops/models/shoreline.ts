@@ -28,6 +28,7 @@
 
 import { Units } from "./generic";
 import { MedicalData } from "./device-data";
+import config from "../lib/config";
 
 enum UserRoles {
   hcp = "hcp",
@@ -113,10 +114,15 @@ class User implements IUser {
   settings?: Settings;
   preferences?: Preferences;
   medicalData?: MedicalData | null;
+  latestConsentChangeDate: Date;
 
   constructor(id: string, name: string) {
     this.userid = id;
     this.username = name;
+    this.latestConsentChangeDate = new Date(0);
+    if (config.LATEST_TERMS !== undefined) {
+      this.latestConsentChangeDate = new Date(config.LATEST_TERMS);
+    }
   }
 
   /**
@@ -133,16 +139,49 @@ class User implements IUser {
     return this.profile?.lastName ?? this.profile?.fullName ?? this.username;
   }
 
-  shouldRenewConsent(): boolean {
-    console.log("enter in should renew consent", this?.profile);
-    console.log("enter in should renew consent", this?.profile?.termsOfUse);
-    console.log("enter in should renew consent", this?.profile?.privacyPolicy);
+  shouldAcceptConsent(): boolean {
+
     if (this?.profile?.termsOfUse === undefined || this?.profile?.termsOfUse === null) {
       return true;
     }
 
     if (this?.profile?.privacyPolicy === undefined || this?.profile?.privacyPolicy === null) {
       return true;
+    }
+
+    return false;
+  }
+
+  shouldRenewConsent(): boolean {
+
+
+    if (this?.profile?.termsOfUse === undefined || this?.profile?.termsOfUse === null) {
+      return true;
+    }
+
+    if (this?.profile?.privacyPolicy === undefined || this?.profile?.privacyPolicy === null) {
+      return true;
+    }
+
+    return (
+      this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy)
+    );
+  }
+
+  /**
+   * Check the given consent
+   * @param consent
+   * @returns true if the lastest consent date is greater than the given consent
+   */
+  checkConsent(consent: Consent): boolean {
+    if (consent.AcceptanceDate !== undefined) {
+      // A `null` is fine here, because `new Date(null).valueOf() === 0`
+      let acceptDate = new Date(consent.AcceptanceDate);
+      if (isNaN(acceptDate.getTime())) {
+        // if acceptDate is not a valid formatted date string, get user to re-accept terms
+        acceptDate = new Date(0);
+      }
+      return acceptDate.valueOf() > 0 && this.latestConsentChangeDate >= acceptDate;
     }
 
     return false;

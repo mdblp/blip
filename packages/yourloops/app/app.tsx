@@ -35,11 +35,11 @@ import "branding/theme.css";
 
 import { PrivateRoute, PublicRoute } from "../components/routes";
 import InvalidRoute from "../components/invalid-route";
-import LoginPage from "../pages/login";
+import { LoginPage, ConsentPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import NotificationsPage from "../pages/notifications";
 import HcpPage from "../pages/hcp";
-import { PatientPage, PatientRenewConsentPage } from "../pages/patient";
+import { PatientPage, PatientConsentPage } from "../pages/patient";
 import CaregiverPage from "../pages/caregiver";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 import { AuthContextProvider } from "../lib/auth";
@@ -58,7 +58,8 @@ const Yourloops: React.FunctionComponent = () => (
         <PrivateRoute path="/caregiver" component={CaregiverPage} />
         <PrivateRoute path="/hcp" component={HcpPage} />
         <PrivateRoute path="/patient" component={PatientPage} />
-        <PrivateRoute path="/renew-consent" component={PatientRenewConsentPage} />
+        <PrivateRoute path="/new-consent" component={PatientConsentPage} />
+        <PrivateRoute path="/renew-consent" component={ConsentPage} />
         <PrivateRoute path="/account-preferences" component={ProfilePage} />
         <PrivateRoute path="/notifications" component={NotificationsPage} />
         <Route component={InvalidRoute} />
