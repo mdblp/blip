@@ -45,6 +45,7 @@ import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import HeaderBar from "../../components/primary-header-bar";
 import { Password } from "../../components/utils/password";
 import { Snackbar } from "../../components/utils/snackbar";
+import { DialogTitle } from "@material-ui/core";
 interface Errors {
   firstName: boolean;
   name: boolean;
@@ -308,9 +309,9 @@ export const ProfilePage: FunctionComponent = () => {
       <Snackbar params={snackbarParams} />
       <Container className={classes.container} maxWidth="sm">
         <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
-          <div className={classes.title} id="account-preferences-title">
+          <DialogTitle className={classes.title} id="account-preferences-title">
             {t("hcp-account-preferences-title")}
-          </div>
+          </DialogTitle>
           <TextField
             id="firstName"
             label={t("First name")}
