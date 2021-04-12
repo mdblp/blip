@@ -166,7 +166,6 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
       <div id="signup-account-selector-button-group">
         <Button
           id="button-signup-steppers-back"
-
           variant="contained"
           color="secondary"
           className={classes.Button}

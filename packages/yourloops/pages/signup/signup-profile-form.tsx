@@ -165,7 +165,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         id="firstname"
         className={classes.TextField}
         margin="normal"
-        label={t("firstName")}
+        label={t("firstname")}
         variant="outlined"
         value={state.formValues?.profileFirstname}
         required

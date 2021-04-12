@@ -247,7 +247,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       <div id="signup-accountform-button-group" className={classes.Buttons}>
         <Button
           id="button-signup-steppers-back"
-
           variant="contained"
           color="secondary"
           className={classes.Button}
@@ -257,7 +256,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         </Button>
         <Button
           id="button-signup-steppers-create"
-
           variant="contained"
           color="primary"
           disabled={isErrorSeen || inProgress}

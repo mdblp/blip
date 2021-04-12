@@ -155,7 +155,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           }
           label={t(
             `signup-consent-${state.formValues.accountRole}-terms-condition`,
-            { terms: t("Terms of Use") }
+            { terms: t("terms-and-conditions") }
           )}
           labelPlacement="end"
         />

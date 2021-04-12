@@ -55,7 +55,7 @@ function LanguageSelect(): JSX.Element {
   }
 
   return (
-    <FormControl >
+    <FormControl>
       <Select
         id="language-selector"
         disableUnderline

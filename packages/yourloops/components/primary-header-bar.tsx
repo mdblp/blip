@@ -130,7 +130,7 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   let accountMenu = null;
   if (auth.isLoggedIn()) {
     const user: User = auth.user as User;
-    const name = `${getUserFirstName(user)} ${getUserLastName(user)}`;
+    const name = t("user-name", { firstName: getUserFirstName(user), lastName: getUserLastName(user) });
 
     accountMenu = (
       <React.Fragment>
