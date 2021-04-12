@@ -29,6 +29,7 @@
 import { Units } from "./generic";
 import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
+import config from "../lib/config";
 
 enum UserRoles {
   hcp = "hcp",

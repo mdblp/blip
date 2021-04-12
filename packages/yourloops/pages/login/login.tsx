@@ -137,31 +137,30 @@ function Login(props: RouteComponentProps<{}, StaticContext, {from:{pathname: st
 
   const pushRoute = (user: User): void => {
     log.debug("user loggued,", user);
-    log.debug("user should renew consent value ,", user?.shouldRenewConsent());
+    log.debug("user should accept consent value ,", user?.shouldAcceptConsent());
 
     if (user?.role !== undefined) {
       if (user.role === UserRoles.patient &&
-        user?.shouldRenewConsent()) {
+        user?.shouldAcceptConsent()) {
+        log.debug("push to new");
+        props.history.push("/new-consent");
+        log.debug("login see history value:  ", props.history);
+        return;
+      }
+
+      if (user?.shouldRenewConsent()) {
         log.debug("push to renew");
         props.history.push("/renew-consent");
         log.debug("login see history value:  ", props.history);
         return;
       }
+
       const path = props.location?.state?.from?.pathname || `/${user?.role}`;
       log.debug("default path ", path);
       props.history.push(path);
       return;
     }
 
-    // // for now, simply read the profile
-    // // we will refactor by creating a class obj with IsPatient method
-    // if (!_.isEmpty(user?.profile?.patient)) {
-    //   log.debug("toto 2");
-    //   props.history.push("/patient");
-    // } else {
-    //   log.debug("toto 3");
-    //   props.history.push("/hcp");
-    // }
   };
 
   const onClickLoginButton = async (): Promise<void> => {
