@@ -25,6 +25,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -45,7 +46,6 @@ import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import HeaderBar from "../../components/primary-header-bar";
 import { Password } from "../../components/utils/password";
 import { Snackbar } from "../../components/utils/snackbar";
-import { DialogTitle } from "@material-ui/core";
 interface Errors {
   firstName: boolean;
   name: boolean;
