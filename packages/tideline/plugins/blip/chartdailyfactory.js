@@ -31,6 +31,7 @@ import plotPhysicalActivity from '../../js/plot/physicalActivity';
 import plotReservoirChange from '../../js/plot/reservoir';
 import plotDeviceParameterChange from '../../js/plot/deviceParameterChange';
 import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent';
+import plotWarmUp from '../../js/plot/warmup';
 import plotCbg from '../../js/plot/cbg';
 import plotSmbg from '../../js/plot/smbg';
 import plotWizard from '../../js/plot/wizard';
@@ -222,18 +223,18 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // x-axis pools
   // add ticks to top x-axis pool
-  poolXAxis.addPlotType('fill', axesDailyx(poolXAxis, {
+  poolXAxis.addPlotType({ type: 'fill' }, axesDailyx(poolXAxis, {
     'class': 'd3-top',
     emitter,
     leftEdge: chart.axisGutter(),
     timePrefs: chart.options.timePrefs,
     tidelineData,
-  }), true, true);
+  }));
 
   // setup axis & main y scale
   poolBG.axisScaleFn(createYAxisBG);
   // add background fill rectangles to BG pool
-  poolBG.addPlotType('fill', fill(poolBG, {
+  poolBG.addPlotType({ type: 'fill' }, fill(poolBG, {
     endpoints: chart.endpoints,
     isDaily: true,
     guidelines: [
@@ -246,161 +247,135 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
         'height': chart.options.bgClasses.target.boundary
       }
     ],
-  }), true, true);
+  }));
 
-  poolBG.addPlotType('deviceEvent', plotZenModeEvent(poolBG, {
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    data: tidelineData.zenEvents,
-  }), false, true);
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolBG, {
+    tidelineData,
+  }));
 
-  poolBG.addPlotType('physicalActivity', plotPhysicalActivity(poolBG, {
-    bgUnits: chart.options.bgUnits,
-    classes: chart.options.bgClasses,
-    emitter,
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
+  poolBG.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolBG, {
     onPhysicalHover: options.onPhysicalHover,
-    onPhysicalOut: options.onPhysicalOut,
-    data: tidelineData.physicalActivities,
-  }), true, true);
+    onPhysicalOut: options.onTooltipOut,
+    tidelineData,
+  }));
 
-  poolBG.addPlotType('deviceEvent', plotReservoirChange(poolBG, {
-    bgUnits: chart.options.bgUnits,
-    classes: chart.options.bgClasses,
-    emitter,
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolBG, {
     onReservoirHover: options.onReservoirHover,
-    onReservoirOut: options.onReservoirOut,
-  }), true, true);
+    onReservoirOut: options.onTooltipOut,
+  }));
 
-  poolBG.addPlotType('deviceEvent', plotDeviceParameterChange(poolBG, {
-    bgUnits: chart.options.bgUnits,
-    classes: chart.options.bgClasses,
-    emitter,
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolBG, {
+    tidelineData,
     onParameterHover: options.onParameterHover,
-    onParameterOut: options.onParameterOut,
-    data: tidelineData.deviceParameters,
-  }), true, true);
+    onParameterOut: options.onTooltipOut,
+  }));
 
-  // add confidential mode to BG pool
-  poolBG.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBG, {
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    data: tidelineData.confidentialEvents,
-    onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onConfidentialOut,
-  }), true, true);
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolBG, {
+    tidelineData,
+    onWarmUpHover: options.onWarmUpHover,
+    onWarmUpOut: options.onTooltipOut,
+  }));
 
   // add CBG data to BG pool
-  poolBG.addPlotType('cbg', plotCbg(poolBG, {
+  poolBG.addPlotType({ type: 'cbg' }, plotCbg(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onCBGHover: options.onCBGHover,
-    onCBGOut: options.onCBGOut,
-  }), true, true);
+    onCBGOut: options.onTooltipOut,
+  }));
 
   // add SMBG data to BG pool
-  poolBG.addPlotType('smbg', plotSmbg(poolBG, {
+  poolBG.addPlotType({ type: 'smbg' }, plotSmbg(poolBG, {
     bgUnits: chart.options.bgUnits,
     classes: chart.options.bgClasses,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onSMBGHover: options.onSMBGHover,
-    onSMBGOut: options.onSMBGOut,
-  }), true, true);
+    onSMBGOut: options.onTooltipOut,
+  }));
+
+  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  poolBG.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBG, {
+    tidelineData,
+    onConfidentialHover: options.onConfidentialHover,
+    onConfidentialOut: options.onTooltipOut,
+  }));
 
   // setup axis & main y scale
   poolBolus.axisScaleFn(createYAxisBolus);
   // add background fill rectangles to bolus pool
-  poolBolus.addPlotType('fill', fill(poolBolus, {
+  poolBolus.addPlotType({ type: 'fill' }, fill(poolBolus, {
     endpoints: chart.endpoints,
     isDaily: true,
-  }), true, true);
+  }));
 
   // add wizard data to wizard pool
-  poolBolus.addPlotType('wizard', plotWizard(poolBolus, {
-    emitter,
+  poolBolus.addPlotType({ type: 'wizard' }, plotWizard(poolBolus, {
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onBolusHover: options.onBolusHover,
-    onBolusOut: options.onBolusOut,
-  }), true, true);
+    onBolusOut: options.onTooltipOut,
+  }));
 
-  poolBolus.addPlotType('food', plotCarb(poolBolus, {
-    emitter,
+  poolBolus.addPlotType({ type: 'food' }, plotCarb(poolBolus, {
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onCarbHover: options.onCarbHover,
-    onCarbOut: options.onCarbOut,
-  }), true, true);
+    onCarbOut: options.onTooltipOut,
+  }));
 
   // quick bolus data to wizard pool
-  poolBolus.addPlotType('bolus', plotQuickbolus(poolBolus, {
-    emitter,
+  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
     subdueOpacity: 0.4,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onBolusHover: options.onBolusHover,
-    onBolusOut: options.onBolusOut,
-  }), true, true);
+    onBolusOut: options.onTooltipOut,
+  }));
 
-  // add confidential mode to Bolus pool
-  poolBolus.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBolus, {
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    data: tidelineData.confidentialEvents,
+  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBolus, {
+    tidelineData,
     onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onConfidentialOut,
-  }), false, true);
+    onConfidentialOut: options.onTooltipOut,
+  }));
 
   // setup axis & main y scale
   poolBasal.axisScaleFn(createYAxisBasal);
   // add background fill rectangles to basal pool
-  poolBasal.addPlotType('fill', fill(poolBasal, {endpoints: chart.endpoints, isDaily: true}), true, true);
+  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {endpoints: chart.endpoints, isDaily: true}));
 
   // add basal data to basal pool
-  poolBasal.addPlotType('basal', plotBasal(poolBasal, {
-    emitter,
-    data: tidelineData.grouped.basal,
-    ...tidelineData.opts.timePrefs,
+  poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
     defaultSource: tidelineData.opts.defaultSource,
-  }), true, true);
+  }));
 
   // add device suspend data to basal pool
-  poolBasal.addPlotType('deviceEvent', plotSuspend(poolBasal, {
-    emitter,
-    data: tidelineData.grouped.deviceEvent,
-    timezoneAware: chart.options.timePrefs.timezoneAware
-  }), true, true);
+  poolBasal.addPlotType({ type: 'deviceEvent' }, plotSuspend(poolBasal, {}), true, true);
 
-  // add confidential mode to Basal pool
-  poolBasal.addPlotType('deviceEvent', plotConfidentialModeEvent(poolBasal, {
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    data: tidelineData.confidentialEvents,
+  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  poolBasal.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBasal, {
+    tidelineData,
     onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onConfidentialOut,
-  }), false, true);
+    onConfidentialOut: options.onTooltipOut,
+  }));
 
   // messages pool
   // add background fill rectangles to messages pool
-  poolMessages.addPlotType('fill', fill(poolMessages, {
+  poolMessages.addPlotType({ type: 'fill' }, fill(poolMessages, {
     emitter,
     isDaily: true,
     cursor: 'cell'
-  }), true, true);
+  }));
 
   // add message images to messages pool
-  poolMessages.addPlotType('message', plotMessage(poolMessages, {
+  poolMessages.addPlotType({ type: 'message' }, plotMessage(poolMessages, {
     size: 30,
     emitter,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-  }), true, true);
+  }));
 
   // add timechange images to messages pool
-  poolMessages.addPlotType('deviceEvent', plotTimeChange(poolMessages, {
+  poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeChange(poolMessages, {
     size: 30,
-    emitter,
-    timezone: chart.options.timePrefs.timezoneName,
-  }), true, true);
+  }));
 
   return chart;
 }

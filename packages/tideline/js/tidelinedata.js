@@ -88,20 +88,22 @@ const defaults = {
  */
 function TidelineData(opts = defaults) {
   _.defaultsDeep(opts, defaults);
+
+  /** @type {Console} */
+  this.log = bows("TidelineData");
+  this.opts = _.cloneDeep(opts);
+
   if (opts.bgUnits !== defaults.bgUnits) {
     const { bgUnits } = opts;
-    opts.bgClasses = {
+    this.opts.bgClasses = {
       "very-low": { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
       low: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
       target: { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
       high: { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
       "very-high": { boundary: BG_CLAMP_THRESHOLD[bgUnits] },
     };
+    this.log.info(`Using units ${bgUnits}: Updating bgClasses`, { bgClasses: this.opts.bgClasses });
   }
-
-  /** @type {Console} */
-  this.log = bows("TidelineData");
-  this.opts = _.cloneDeep(opts);
 
   /** @type {Datum[]} */
   this.data = [];
@@ -117,6 +119,8 @@ function TidelineData(opts = defaults) {
   this.zenEvents = null;
   /** @type {Datum[]} */
   this.confidentialEvents = null;
+  /** @type {Datum[]} */
+  this.warmUpEvents = null;
   /** @type {string} */
   this.latestPumpManufacturer = null;
   /** @type {[string, string]} */
@@ -152,12 +156,6 @@ function TidelineData(opts = defaults) {
   /** @type {BGUtil} */
   this.smbgUtil = null;
 
-  // Other stuffs
-  /** @type {"mg/dL" | "mmol/L"} */
-  this.bgUnits = this.opts.bgUnits;
-  /** @type {typeof opts.bgClasses} */
-  this.bgClasses = _.cloneDeep(opts.bgClasses);
-
   /**
    * Maximum datum duration in milliseconds (normalEnd - normalTime)
    *
@@ -174,12 +172,12 @@ function TidelineData(opts = defaults) {
   // i.e. A 'target' value 180 gets stored as 9.99135, which gets converted back to 180.0000651465
   // which causes it to be classified as 'high'
   // Thus, we need to allow for our thresholds accordingly.
-  if (this.bgUnits === MGDL_UNITS) {
+  if (this.opts.bgUnits === MGDL_UNITS) {
     const roundingAllowance = 0.0001;
-    this.bgClasses["very-low"].boundary -= roundingAllowance;
-    this.bgClasses.low.boundary -= roundingAllowance;
-    this.bgClasses.target.boundary += roundingAllowance;
-    this.bgClasses.high.boundary += roundingAllowance;
+    this.opts.bgClasses["very-low"].boundary -= roundingAllowance;
+    this.opts.bgClasses.low.boundary -= roundingAllowance;
+    this.opts.bgClasses.target.boundary += roundingAllowance;
+    this.opts.bgClasses.high.boundary += roundingAllowance;
   }
 
   this.log.info("Initialized", this);
@@ -252,6 +250,21 @@ function getTimerFuncs() {
   return { startTimer: _.noop, endTimer: _.noop };
 }
 
+function isObjectWithStandardDuration(d) {
+  switch (d.type) {
+  case "physicalActivity":
+    return true;
+  case "deviceEvent":
+    switch (d.subType) {
+    case "confidential":
+    case "zen":
+    case "warmup":
+      return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Normalize the time: normalTime & normalEnd
  * @param {Datum} d The datum
@@ -266,7 +279,7 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
     d.normalEnd = moment.utc(mTime).add(duration, "milliseconds").toISOString();
     d.epochEnd = d.epoch + duration;
     this.maxDuration = Math.max(this.maxDuration, duration);
-  } else if (d.type === "deviceEvent" && (d.subType === "confidential" || d.subType === "zen")) {
+  } else if (isObjectWithStandardDuration(d)) {
     const mEnd = moment.utc(mTime);
     const duration = _.get(d, "duration.value", 0);
     const units = _.get(d, "duration.units", "hours");
@@ -274,7 +287,6 @@ TidelineData.prototype.normalizeTime = function normalizeTime(d) {
     d.normalEnd = mEnd.toISOString();
     d.epochEnd = mEnd.valueOf();
     this.maxDuration = Math.max(this.maxDuration, d.epochEnd - d.epoch);
-
   }
 
   // Do we have this data: "suppressed" ?
@@ -758,13 +770,13 @@ TidelineData.prototype.setUtilities = function setUtilities() {
   this.basalUtil = new BasalUtil(this.grouped.basal);
   this.bolusUtil = new BolusUtil(this.grouped.bolus);
   this.cbgUtil = new BGUtil(this.grouped.cbg, {
-    bgUnits: this.bgUnits,
-    bgClasses: this.bgClasses,
+    bgUnits: this.opts.bgUnits,
+    bgClasses: this.opts.bgClasses,
     DAILY_MIN: this.opts.CBG_PERCENT_FOR_ENOUGH * this.opts.CBG_MAX_DAILY,
   });
   this.smbgUtil = new BGUtil(this.grouped.smbg, {
-    bgUnits: this.bgUnits,
-    bgClasses: this.bgClasses,
+    bgUnits: this.opts.bgUnits,
+    bgClasses: this.opts.bgClasses,
     DAILY_MIN: this.opts.SMBG_DAILY_MIN,
   });
 };
@@ -999,6 +1011,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   this.physicalActivities = null;
   this.zenEvents = null;
   this.confidentialEvents = null;
+  this.warmUpEvents = null;
   this.latestPumpManufacturer = null;
   this.endpoints = null;
   this.basicsData = null;
@@ -1099,6 +1112,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   startTimer("setEvents");
   this.zenEvents = this.setEvents({ type: "deviceEvent", subType: "zen" }, ["inputTime"]);
   this.confidentialEvents = this.setEvents({ type: "deviceEvent", subType: "confidential" }, ["inputTime"]);
+  this.warmUpEvents = this.setEvents({ type: "deviceEvent", subType: "warmup" }, ["deviceTime"]); // TODO: Verify the order field
   endTimer("setEvents");
 
   startTimer("deduplicatePhysicalActivities");

@@ -47,28 +47,31 @@ interface BarProps {
   onShowAddCaregiverDialog: () => Promise<void>;
 }
 
-const pageBarStyles = makeStyles((theme: Theme ) => {
-  return {
-    toolBarRight: {
-      display: "flex",
-    },
-    breadcrumbText: {
-      display: "flex",
-      cursor: "default",
-      color: theme.palette.text.disabled,
-    },
-    breadcrumbLink: {
-      display: "flex",
-      color: theme.palette.text.primary,
-    },
-    homeIcon: {
-      marginRight: "0.5em",
-    },
-    buttonAddTeam: {
-      marginLeft: "auto",
-    },
-  };
-});
+const pageBarStyles = makeStyles(
+  (theme: Theme) => {
+    return {
+      toolBarRight: {
+        display: "flex",
+      },
+      breadcrumbText: {
+        display: "flex",
+        cursor: "default",
+        color: theme.palette.text.disabled,
+      },
+      breadcrumbLink: {
+        display: "flex",
+        color: theme.palette.text.primary,
+      },
+      homeIcon: {
+        marginRight: "0.5em",
+      },
+      buttonAddTeam: {
+        marginLeft: "auto",
+      },
+    };
+  },
+  { name: "ylp-patient-caregivers-secondary-bar" }
+);
 
 function SecondaryBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();
@@ -86,9 +89,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
             <HomeIcon className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>
-          <Typography className={classes.breadcrumbText}>
-            {t("caregivers-title")}
-          </Typography>
+          <Typography className={classes.breadcrumbText}>{t("caregivers-title")}</Typography>
         </Breadcrumbs>
       </div>
       <div id="patient-navbar-item-middle"></div>

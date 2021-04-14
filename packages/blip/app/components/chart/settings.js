@@ -107,20 +107,18 @@ class Settings extends React.Component {
     const { patientData } = this.props;
     const mostRecentSettings = _.last(patientData.grouped.pumpSettings);
     this.log.debug('Settings.renderChart()', mostRecentSettings);
-    const handleCopySettings = () => {
-      this.props.trackMetric('Clicked Copy Settings');
+    const handleCopySettings = (success, useClipboardAPI, error ) => {
+      this.props.trackMetric('setting-copy-as-text', { success, useClipboardAPI, error });
     };
 
     return (
       <PumpSettingsContainer
-        currentPatientInViewId={this.props.currentPatientInViewId}
         copySettingsClicked={handleCopySettings}
-        bgUnits={this.props.bgPrefs.bgUnits}
         manufacturerKey={_.get(mostRecentSettings, 'source', patientData.opts.defaultSource).toLowerCase()}
         pumpSettings={mostRecentSettings}
-        onSwitchToDaily={this.props.onSwitchToDaily}
         timePrefs={this.props.timePrefs}
-        view='display'
+        onSwitchToDaily={this.props.onSwitchToDaily}
+        bgUnits={this.props.bgPrefs.bgUnits}
       />
     );
   }

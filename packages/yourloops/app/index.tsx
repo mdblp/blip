@@ -34,6 +34,7 @@ import ReactDOM from "react-dom";
 import Yourloops from "./app";
 
 import { init as i18nInit } from "../lib/language";
+import initCookiesConcentListener from "../lib/cookies-manager";
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
@@ -60,5 +61,8 @@ i18nInit().then(() => {
     div.id = "app";
     document.body.appendChild(div);
   }
+
+  initCookiesConcentListener();
+
   ReactDOM.render(<Yourloops />, div);
 });

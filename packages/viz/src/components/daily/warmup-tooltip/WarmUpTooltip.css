@@ -14,7 +14,41 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+@import '../../../styles/colors.css';
 
-.secondaryLabel {
-  composes: secondaryText from '../settings.css';
+.container {
+  opacity: 1;
+  min-width: 80px;
+  margin: 2px 0;
+  composes: smallSize from '../../../styles/typography.css';
+  line-height: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: 480px;
+  overflow-y: hidden;
+}
+
+.date {
+  text-align: right;
+}
+
+.label {
+  font-weight: bold;
+}
+.labelEnd {
+  font-weight: normal;
+  display: flex;
+  flex-direction: row;
+}
+.labelEndText {
+  /* Add a margin right here to be sure we have a minimal gap with the time */
+  margin-right: 1em;
+}
+.labelEndTime {
+  margin-left: auto;
+}
+
+.title {
+  composes: smallSize from '../../../styles/typography.css';
+  text-align: right;
 }
