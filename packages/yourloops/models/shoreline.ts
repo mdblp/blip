@@ -139,6 +139,10 @@ class User implements IUser {
     return this.profile?.lastName ?? this.profile?.fullName ?? this.username;
   }
 
+  /**
+   * Check If the user should accept is consent at a first login.
+   * @description the first login is determined by null consents object
+   */
   shouldAcceptConsent(): boolean {
 
     if (this?.profile?.termsOfUse === undefined || this?.profile?.termsOfUse === null) {
@@ -152,6 +156,9 @@ class User implements IUser {
     return false;
   }
 
+  /**
+   * Check If the user should renew is consent.
+   */
   shouldRenewConsent(): boolean {
 
 
@@ -164,12 +171,13 @@ class User implements IUser {
     }
 
     return (
-      this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy)
+      this.checkConsent(this.profile.termsOfUse) ||
+      this.checkConsent(this.profile.privacyPolicy)
     );
   }
 
   /**
-   * Check the given consent
+   * Check the given consent against the lastest consent publication date
    * @param consent
    * @returns true if the lastest consent date is greater than the given consent
    */

@@ -84,8 +84,15 @@ const style = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    Buttons: {
+      display: "flex",
+      flexDirection: "row",
+      marginTop: theme.spacing(2),
+      marginRight: theme.spacing(5), // eslint-disable-line no-magic-numbers
+      marginLeft: theme.spacing(1), // eslint-disable-line no-magic-numbers
+    },
     Button: {
-      marginLeft: "auto !important",
+      marginLeft: "auto",
     },
   };
 });
@@ -242,7 +249,7 @@ function Consent(props: ConsentProps): JSX.Element {
                       />
                     }
                   />
-                  <div id="consent-button-group">
+                  <div id="consent-button-group" className={classes.Buttons}>
                     <Button
                       id="consent-button-decline"
                       variant="contained"
