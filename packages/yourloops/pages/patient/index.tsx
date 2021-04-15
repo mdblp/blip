@@ -34,10 +34,14 @@ import { TeamContextProvider } from "../../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../../lib/data";
 
 import PatientDataPage from "../../components/patient-data";
+import InvalidRoute from "../../components/invalid-route";
+import ProfilePage from "../profile";
+import NotificationsPage from "../notifications";
 import PrimaryNavBar from "./primary-nav-bar";
 import CaregiversPage from "./caregivers/page";
 import TeamsPage from "./teams/page";
 
+const defaultURL = "/patient/data";
 const log = bows("PatientPage");
 
 /**
@@ -51,7 +55,7 @@ function PatientPage(): JSX.Element {
   React.useEffect(() => {
     if (/^\/patient\/?$/.test(pathname)) {
       log.info("Redirecting to the patients data");
-      historyHook.push("/patient/data");
+      historyHook.push(defaultURL);
     }
   }, [pathname, historyHook]);
 
@@ -60,9 +64,17 @@ function PatientPage(): JSX.Element {
       <DataContextProvider context={DefaultDataContext}>
         <PrimaryNavBar />
         <Switch>
-          <Route exact={true} path="/patient/data" component={PatientDataPage} />
+          <Route path={defaultURL}>
+            <PatientDataPage prefixURL={defaultURL} />
+          </Route>
           <Route exact={true} path="/patient/caregivers" component={CaregiversPage} />
           <Route exact={true} path="/patient/teams" component={TeamsPage} />
+          <Route exact={true} path="/patient/preferences" component={() => <ProfilePage defaultURL={defaultURL} />} />
+          <Route exact={true} path="/patient/notifications" component={() => <NotificationsPage defaultURL={defaultURL} />} />
+          <Route path="/patient" exact={true} />
+          <Route>
+            <InvalidRoute defaultURL={defaultURL} />
+          </Route>
         </Switch>
       </DataContextProvider>
     </TeamContextProvider>

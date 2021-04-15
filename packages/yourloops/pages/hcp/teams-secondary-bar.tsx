@@ -45,23 +45,26 @@ interface BarProps {
   onShowEditTeamDialog: (team: Team | null) => Promise<void>;
 }
 
-const pageBarStyles = makeStyles(() => {
-  return {
-    toolBarRight: {
-      display: "flex",
-    },
-    breadcrumbText: {
-      display: "flex",
-      cursor: "default",
-    },
-    homeIcon: {
-      marginRight: "0.5em",
-    },
-    buttonAddTeam: {
-      marginLeft: "auto",
-    },
-  };
-});
+const pageBarStyles = makeStyles(
+  () => {
+    return {
+      toolBarRight: {
+        display: "flex",
+      },
+      breadcrumbText: {
+        display: "flex",
+        cursor: "default",
+      },
+      homeIcon: {
+        marginRight: "0.5em",
+      },
+      buttonAddTeam: {
+        marginLeft: "auto",
+      },
+    };
+  },
+  { name: "ylp-hcp-teams-secondary-bar" }
+);
 
 function TeamsSecondaryBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();

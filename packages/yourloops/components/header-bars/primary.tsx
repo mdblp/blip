@@ -49,6 +49,7 @@ import { UserRoles, User } from "../../models/shoreline";
 import config from "../../lib/config";
 import { useAuth } from "../../lib/auth";
 import { getUserFirstName, getUserLastName } from "../../lib/utils";
+import { getURLPrefixFromUser } from "../../lib/diabeloop-url";
 
 type CloseMenuCallback = () => void;
 export interface HeaderActions {
@@ -131,10 +132,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const onLogoClick = (): void => {
     if (props.headerLogoURL) {
       history.push(props.headerLogoURL);
-    } else if (userRole) {
-      history.push(`/${userRole}`);
     } else {
-      history.push("/");
+      history.push(getURLPrefixFromUser(auth.user));
     }
   };
 
@@ -143,11 +142,13 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   };
 
   const handleOpenProfilePage = () => {
-    history.push("/account-preferences");
+    setAnchorEl(null);
+    history.push(getURLPrefixFromUser(auth.user, "/preferences"));
   };
 
   const handleOpenNotifications = () => {
-    history.push("/notifications");
+    setAnchorEl(null);
+    history.push(getURLPrefixFromUser(auth.user, "/notifications"));
   };
 
   const handleOpenSupport = () => {

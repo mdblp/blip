@@ -48,28 +48,31 @@ interface BarProps {
   onShowAddTeamDialog: (team: Team | null) => Promise<void>;
 }
 
-const pageBarStyles = makeStyles((theme: Theme ) => {
-  return {
-    toolBarRight: {
-      display: "flex",
-    },
-    breadcrumbText: {
-      display: "flex",
-      cursor: "default",
-      color: theme.palette.text.disabled,
-    },
-    breadcrumbLink: {
-      display: "flex",
-      color: theme.palette.text.primary,
-    },
-    homeIcon: {
-      marginRight: "0.5em",
-    },
-    buttonAddTeam: {
-      marginLeft: "auto",
-    },
-  };
-});
+const pageBarStyles = makeStyles(
+  (theme: Theme) => {
+    return {
+      toolBarRight: {
+        display: "flex",
+      },
+      breadcrumbText: {
+        display: "flex",
+        cursor: "default",
+        color: theme.palette.text.disabled,
+      },
+      breadcrumbLink: {
+        display: "flex",
+        color: theme.palette.text.primary,
+      },
+      homeIcon: {
+        marginRight: "0.5em",
+      },
+      buttonAddTeam: {
+        marginLeft: "auto",
+      },
+    };
+  },
+  { name: "ylp-patient-teams-secondary-bar" }
+);
 
 function SecondaryBar(props: BarProps): JSX.Element {
   const classes = pageBarStyles();
@@ -87,9 +90,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
             <HomeIcon className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>
-          <Typography className={classes.breadcrumbText}>
-            {t("breadcrumb-patient-teams")}
-          </Typography>
+          <Typography className={classes.breadcrumbText}>{t("breadcrumb-patient-teams")}</Typography>
         </Breadcrumbs>
       </div>
       <div id="patient-navbar-item-middle"></div>

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Caregivers list for Patients - Second app bar
+ * Notifications - Second app bar
  *
  * All rights reserved.
  *
@@ -31,20 +31,16 @@ import { useTranslation } from "react-i18next";
 import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 
-import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 
-import SecondaryHeaderBar from "../../../components/header-bars/secondary";
+import SecondaryHeaderBar from "../../components/header-bars/secondary";
 
-interface BarProps {
-  /** Add a caregiver */
-  onShowAddCaregiverDialog: () => Promise<void>;
+interface SecondaryBarProps {
+  defaultURL: string;
 }
 
 const pageBarStyles = makeStyles(
@@ -70,40 +66,26 @@ const pageBarStyles = makeStyles(
       },
     };
   },
-  { name: "ylp-patient-caregivers-secondary-bar" }
+  { name: "ylp-notifications-secondary-bar" }
 );
 
-function SecondaryBar(props: BarProps): JSX.Element {
+function SecondaryBar(props: SecondaryBarProps): JSX.Element {
   const classes = pageBarStyles();
   const { t } = useTranslation("yourloops");
 
-  const handleOpenAddCaregiverDialog = (): Promise<void> => {
-    return props.onShowAddCaregiverDialog();
-  };
-
   return (
     <SecondaryHeaderBar>
-      <div id="patient-navbar-item-left">
+      <div id="notifications-navbar-item-left">
         <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-          <Link component={RouterLink} to="/patient/data" className={classes.breadcrumbLink}>
+          <Link component={RouterLink} to={props.defaultURL} className={classes.breadcrumbLink}>
             <HomeIcon className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>
-          <Typography className={classes.breadcrumbText}>{t("caregivers-title")}</Typography>
+          <Typography className={classes.breadcrumbText}>{t("breadcrumb-notifications")}</Typography>
         </Breadcrumbs>
       </div>
-      <div id="patient-navbar-item-middle"></div>
-      <div id="patient-navbar-item-right" className={classes.toolBarRight}>
-        <Button
-          id="patient-navbar-add-team"
-          color="primary"
-          variant="contained"
-          className={classes.buttonAddTeam}
-          onClick={handleOpenAddCaregiverDialog}>
-          <AddIcon />
-          &nbsp;{t("button-add-caregiver")}
-        </Button>
-      </div>
+      <div id="notifications-navbar-item-middle"></div>
+      <div id="notifications-navbar-item-right" className={classes.toolBarRight} />
     </SecondaryHeaderBar>
   );
 }
