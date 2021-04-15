@@ -50,12 +50,15 @@ function renderDiabeloopParameters(parametersByLevel) {
     {
       key: 'name',
       label: t('Parameter'),
+      className: 'secondaryLabelWithMainBold',
     }, {
       key: 'value',
       label: t('Value'),
+      className: 'secondaryLabelWithMainBold',
     }, {
       key: 'unit',
       label: t('Unit'),
+      className: 'secondaryLabelWithMainBold',
     },
   ];
 
@@ -63,10 +66,13 @@ function renderDiabeloopParameters(parametersByLevel) {
   parametersByLevel.forEach((parameters, level) => {
     const title = {
       label: {
-        main: `${t('level')} ${level}`,
+        main: `${t('Advanced')}`,
       },
       className: styles.bdlgSettingsHeader,
     };
+    if (level == "1" ) {
+      title.label.main = "";
+    }
     tables.push(
       <Table
         key={title.label.main}
