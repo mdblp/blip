@@ -25,6 +25,7 @@
   "common-ok": "Ok",
   "breadcrumb-home": "Home",
   "breadcrumb-patient-teams": "My Care Teams",
+  "breadcrumb-notifications": "Notifications",
   "button-refresh-page-on-error": "Aktualisieren",
   "button-team-edit": "Bearbeiten",
   "button-team-add-member": "Medizinische Fachkraft hinzufügen",
@@ -290,6 +291,5 @@
   "join-group": "lädt Sie ein, beizutreten",
   "footer-link-url-intended-use": "Regulatory Information",
   "footer-link-url-privacy-policy": "Datenschutzrichtlinie",
-  "footer-link-url-support": "Diabeloop",
-  "footer-link-url-terms": "<linkTerms>{{terms}}</linkTerms>"
+  "footer-link-url-support": "Diabeloop"
 }
