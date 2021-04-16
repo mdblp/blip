@@ -30,7 +30,7 @@ import bows from "bows";
 import { v4 as uuidv4 } from "uuid";
 
 import { UserInvitationStatus } from "../../models/generic";
-import { User, UserRoles } from "../../models/shoreline";
+import { IUser, UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys } from "../../models/api";
 import appConfig from "../config";
 import { errorFromHttpStatus } from "../utils";
@@ -91,7 +91,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
   });
 
   if (response.ok) {
-    const users = (await response.json()) as (User & { roles: string[] })[];
+    const users = (await response.json()) as (IUser & { roles: string[] })[];
     directShares.splice(0);
     Array.prototype.push.apply(directShares, directSharesDummy);
     for (const user of users) {

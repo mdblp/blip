@@ -38,7 +38,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
 import { FilterType, SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
-import { User, UserRoles } from "../../../models/shoreline";
+import { IUser, UserRoles } from "../../../models/shoreline";
 import { getUserFirstName, getUserLastName, errorTextFromException } from "../../../lib/utils";
 import sendMetrics from "../../../lib/metrics";
 import { AlertSeverity, useSnackbar } from "../../../lib/useSnackbar";
@@ -182,7 +182,7 @@ function PatientListPage(): JSX.Element {
     setOrder(order);
     setOrderBy(orderBy);
   };
-  const handleSelectPatient = (user: User, flagged: boolean): void => {
+  const handleSelectPatient = (user: IUser, flagged: boolean): void => {
     sendMetrics("caregiver-show-patient-data", { flagged });
     historyHook.push(`/caregiver/patient/${user.userid}`);
   };
@@ -233,7 +233,7 @@ function PatientListPage(): JSX.Element {
       sendMetrics("caregiver-add-patient", { added: false });
     }
   };
-  const handleRemovePatient = async (patient: User, flagged: boolean, isPendingInvitation: boolean): Promise<void> => {
+  const handleRemovePatient = async (patient: IUser, flagged: boolean, isPendingInvitation: boolean): Promise<void> => {
     const getConfirmation = (): Promise<boolean> => {
       return new Promise((resolve: (value: boolean) => void) => {
         setPatientToRemove({ onDialogResult: resolve, patient });

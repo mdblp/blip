@@ -51,7 +51,7 @@ import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 
 import { SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import { MedicalData } from "../../../models/device-data";
-import { User } from "../../../models/shoreline";
+import { IUser } from "../../../models/shoreline";
 import { getUserFirstName, getUserLastName } from "../../../lib/utils";
 import { useAuth } from "../../../lib/auth";
 import { ShareUser } from "../../../lib/share";
@@ -62,9 +62,9 @@ export interface PatientListTableProps {
   flagged: string[];
   order: SortDirection;
   orderBy: SortFields;
-  onClickPatient: (user: User, flagged: boolean) => void;
+  onClickPatient: (user: IUser, flagged: boolean) => void;
   onFlagPatient: (userId: string, flagged: boolean) => Promise<void>;
-  onRemovePatient: (user: User, flagged: boolean, isPendingInvitation: boolean) => Promise<void>;
+  onRemovePatient: (user: IUser, flagged: boolean, isPendingInvitation: boolean) => Promise<void>;
   onSortList: (field: SortFields, direction: SortDirection) => void;
 }
 
@@ -72,9 +72,9 @@ export interface PatientTableRowProps {
   na: string;
   shareUser: ShareUser;
   flagged: string[];
-  onClickPatient: (user: User, flagged: boolean) => void;
+  onClickPatient: (user: IUser, flagged: boolean) => void;
   onFlagPatient: (userId: string, flagged: boolean) => Promise<void>;
-  onRemovePatient: (user: User, flagged: boolean, isPendingInvitation: boolean) => Promise<void>;
+  onRemovePatient: (user: IUser, flagged: boolean, isPendingInvitation: boolean) => Promise<void>;
 }
 
 // const log = bows("PatientListTable");

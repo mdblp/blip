@@ -102,6 +102,6 @@ export function getUserLastName(user: IUser): string {
  * @param user The user to have firstName / lastName
  * @returns The object for "user-name" translation string
  */
-export function getUserFirstLastName(user: User): { firstName: string, lastName: string; } {
+export function getUserFirstLastName(user: IUser): { firstName: string, lastName: string; } {
   return { firstName: getUserFirstName(user), lastName: getUserLastName(user) };
 }

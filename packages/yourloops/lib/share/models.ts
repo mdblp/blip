@@ -27,9 +27,9 @@
  */
 
 import { UserInvitationStatus } from "../../models/generic";
-import { User } from "../../models/shoreline";
+import { IUser } from "../../models/shoreline";
 
 export interface ShareUser {
-  user: User;
+  user: IUser;
   status: UserInvitationStatus;
 }
