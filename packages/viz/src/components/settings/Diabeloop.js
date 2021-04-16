@@ -66,13 +66,10 @@ function renderDiabeloopParameters(parametersByLevel) {
   parametersByLevel.forEach((parameters, level) => {
     const title = {
       label: {
-        main: `${t('Advanced')}`,
+        main: level === 1 ? '' : `${t('Advanced')}`,
       },
       className: styles.bdlgSettingsHeader,
     };
-    if (level == "1" ) {
-      title.label.main = "";
-    }
     tables.push(
       <Table
         key={title.label.main}
