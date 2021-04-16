@@ -27,9 +27,22 @@
  */
 
 import { UserInvitationStatus } from "../../models/generic";
-import { User } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
+
+interface DirectShareUser {
+  userId: string;
+  preferences?: Preferences | null;
+  profile?: Profile | null;
+  settings?: Settings | null;
+  email: string;
+}
+
+export interface DirectShareAPI {
+  viewer?: DirectShareUser;
+  patient?: DirectShareUser;
+}
 
 export interface ShareUser {
-  user: User;
+  user: IUser;
   status: UserInvitationStatus;
 }

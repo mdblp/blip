@@ -30,7 +30,7 @@ import bows from "bows";
 import { v4 as uuidv4 } from "uuid";
 
 import { UserInvitationStatus } from "../../models/generic";
-import { User, UserRoles } from "../../models/shoreline";
+import { IUser, UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys } from "../../models/api";
 import appConfig from "../config";
 import { errorFromHttpStatus } from "../utils";
