@@ -41,6 +41,7 @@ import { LoginPage, ConsentPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import HcpPage from "../pages/hcp";
 import PatientPage from "../pages/patient";
+import PatientConsentPage from "../pages/patient/patient-consent";
 import CaregiverPage from "../pages/caregiver";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 
