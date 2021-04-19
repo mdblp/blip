@@ -33,7 +33,7 @@ import moment from "moment-timezone";
 
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
-
+import HelpIcon from "@material-ui/icons/Help";
 import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 
 import { Notification } from "../../../pages/notifications/notification";
@@ -55,8 +55,20 @@ export const testNotification = (): void => {
     type: NotificationType.directshare,
   };
 
-  const fakeNotification = ({ id, created, creator, type, target }: INotification = notif, onRemove= () => _.noop): JSX.Element => (
-    <Notification id={id} created={created} creator={creator} type={type} target={target} onRemove={onRemove}/>
+  const fakeNotification = (
+    { id, created, creator, type, target }: INotification = notif,
+    role: UserRoles = UserRoles.hcp,
+    onRemove = () => _.noop
+  ): JSX.Element => (
+    <Notification
+      id={id}
+      created={created}
+      creator={creator}
+      type={type}
+      target={target}
+      role={role}
+      onRemove={onRemove}
+    />
   );
 
   it("should be exported as a function", () => {
@@ -78,7 +90,7 @@ export const testNotification = (): void => {
 
   it("should display direct share", () => {
     const wrapper = mount(fakeNotification());
-    console.log("wrapper", wrapper.text());
+
     expect(
       wrapper.text().includes("wants to share their diabetes data with you")
     ).to.be.true;
@@ -92,8 +104,22 @@ export const testNotification = (): void => {
         target: { id: "0", name: "target" },
       })
     );
-    console.log("wrapper", wrapper.text());
     expect(wrapper.text().includes(" invites you to join")).to.be.true;
+  });
+
+  it("should display medical team join invitation with more info button for a member having a caregiver role", () => {
+    const wrapper = mount(
+      fakeNotification({
+        ...notif,
+        type: NotificationType.careteam,
+        target: { id: "0", name: "target" },
+      },
+      UserRoles.caregiver,
+      )
+    );
+
+    expect(wrapper.text().includes(" invites you to join")).to.be.true;
+    expect(wrapper.find(HelpIcon).length).to.equal(1);
   });
 
   it("should display medical team join invitation for a patient", () => {
@@ -102,9 +128,11 @@ export const testNotification = (): void => {
         ...notif,
         type: NotificationType.careteamPatient,
         target: { id: "0", name: "grenoble DIAB service" },
-      })
+      },
+      UserRoles.patient
+      )
     );
-    console.log("wrapper patient", wrapper.text());
+
     expect(
       wrapper
         .text()
@@ -112,6 +140,7 @@ export const testNotification = (): void => {
           "You’re invited to share your diabetes data with grenoble DIAB service"
         )
     ).to.be.true;
+    expect(wrapper.find(HelpIcon).length).to.equal(0);
   });
 
   describe("getIconToDisplay", () => {

@@ -149,6 +149,8 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
                   creator={creator}
                   type={type}
                   target={target}
+                  // eslint-disable-next-line jsx-a11y/aria-role
+                  role={user?.role}
                   onRemove={handleRemove}
                 />
               </ListItem>

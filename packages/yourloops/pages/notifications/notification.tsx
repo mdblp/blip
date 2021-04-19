@@ -20,23 +20,31 @@ import moment from "moment-timezone";
 
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
+import HelpIcon from "@material-ui/icons/Help";
 import MedicalServiceIcon from "../../components/icons/MedicalServiceIcon";
+import IconButton from "@material-ui/core/IconButton";
 import { Button, createStyles, makeStyles } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import { User } from "../../models/shoreline";
+import { User, UserRoles } from "../../models/shoreline";
 import { INotification, NotificationType } from "../../lib/notifications/models";
 import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
 import { useNotification } from "../../lib/notifications/hook";
 
 type NotificationProps = INotification & {
+  role: UserRoles | undefined;
   onRemove: (id: string) => void;
 };
 
 const useStyles = makeStyles(() =>
   createStyles({
     container: { display: "flex", alignItems: "center", width: "100%" },
-    rightSide: { width: "300px", display: "flex", justifyContent: "space-between", alignItems: "center" },
+    rightSide: {
+      width: "300px",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
     notification: { marginLeft: "1em", flex: "1" },
     button: { marginLeft: "1em" },
   })
@@ -53,7 +61,7 @@ const NotificationSpan = ({ t, notification, className }: { t: TFunction<"yourlo
   const lastName = getUserLastName(creator as User);
   const careteam = target?.name ?? "";
   const values = { firstName, lastName, careteam };
-  console.log("NotificationSpan", { notification, firstName, lastName, careteam });
+
   let notificationText: JSX.Element;
   switch (type) {
   case NotificationType.directshare:
@@ -165,26 +173,32 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       <NotificationSpan t={t} notification={props} className={notification} />
       <div className={rightSide}>
         {getDate(created, id, t)}
-        <div>
-          <Button
-            id={`notification-button-decline-${id}`}
-            className={button}
-            variant="contained"
-            color="secondary"
-            disabled={inProgress}
-            onClick={onDecline}>
-            {t("decline")}
-          </Button>
-          <Button
-            id={`notification-button-accept-${id}`}
-            color="primary"
-            variant="contained"
-            className={button}
-            disabled={inProgress}
-            onClick={onAccept}>
-            {t("accept")}
-          </Button>
-        </div>
+        {props.role === UserRoles.caregiver && type === NotificationType.careteam ? (
+          <IconButton size="medium" color="primary" aria-label="notification-help-button">
+            <HelpIcon id={`notification-help-${id}`} />
+          </IconButton>
+        ) : (
+          <div>
+            <Button
+              id={`notification-button-decline-${id}`}
+              className={button}
+              variant="contained"
+              color="secondary"
+              disabled={inProgress}
+              onClick={onDecline}>
+              {t("decline")}
+            </Button>
+            <Button
+              id={`notification-button-accept-${id}`}
+              color="primary"
+              variant="contained"
+              className={button}
+              disabled={inProgress}
+              onClick={onAccept}>
+              {t("accept")}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
