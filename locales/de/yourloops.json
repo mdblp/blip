@@ -77,7 +77,7 @@
   "team-page-failed-update-role": "Die Benutzer-Rolle kann nicht geändert werden. Versuchen Sie es zu einem späteren Zeitpunkt erneut.",
   "team-page-failed-leave": "Das Team kann nicht verlassen werden. Versuchen Sie es zu einem späteren Zeitpunkt erneut.",
   "team-page-failed-invite-hcp": "Die Einladung kann nicht gesendet werden. Versuchen Sie es zu einem späteren Zeitpunkt erneut.",
-  "team-page-success-remove-member": "Die Fachkraft ist nicht mehr Mitglied Ihres Behandlungsteams.",
+  "team-page-success-remove-member": "Die medizinische Fachkraft ist nicht mehr Mitglied Ihres Behandlungsteams.",
   "team-page-success-create": "Das Team wurde erfolgreich erstellt.",
   "team-page-success-edit": "Die Informationen zum Team wurden erfolgreich gespeichert.",
   "team-page-leave-success": "Sie sind nicht mehr Mitglied des Teams.",
