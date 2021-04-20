@@ -234,7 +234,7 @@
   "caregivers-pending": "Uitnodigingen in behandeling",
   "modal-add-patient-warning": "By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.\nRead our <linkTerms>{{terms}}</linkTerms> and <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
   "modal-hcp-add-patient-success": "Invitation sent!",
-  "modal-hcp-add-patient-failure": "Impossible to add a patient. Please try again later.",
+  "modal-hcp-add-patient-failure": "Onmogelijk om een patiënt toe te voegen. Probeer het later opnieuw.",
   "modal-hcp-add-patient-failure-already-in-team": "This patient already shared their data with the team.",
   "modal-hcp-add-patient-failure-already-invited": "This patient has already been invited and hasn't confirmed yet.",
   "modal-delete-member": "Een zorgverlener uit het team verwijderen",
