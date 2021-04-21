@@ -1,5 +1,5 @@
 # This part contains the deployment source code only
-FROM node:12.22.1-alpine as base
+FROM node:12-alpine3.12 as base
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     npm install -g npm@latest

@@ -100,7 +100,7 @@ pipeline {
         stage('Publish') {
             when {
                 expression {
-                    env.GIT_BRANCH == "dblp" || env.CHANGE_BRANCH == "fix/deploy-cloudfront"
+                    env.GIT_BRANCH == "dblp" || env.CHANGE_BRANCH == "engineering/team-managment-v1"
                 }
             }
             steps {
@@ -108,7 +108,7 @@ pipeline {
                     env.target = "preview"
                     if (env.version == "UNRELEASED") {
                         env.version = "master"
-                        if (env.CHANGE_BRANCH == "fix/deploy-cloudfront") {
+                        if (env.CHANGE_BRANCH == "engineering/team-managment-v1") {
                             env.target = "next"
                         }
                     }
