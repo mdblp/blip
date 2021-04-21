@@ -101,8 +101,8 @@ pipeline {
             when {
                 expression {
                     env.GIT_BRANCH == "dblp" || env.CHANGE_BRANCH == "fix/deploy-cloudfront"
-                    }
                 }
+            }
             steps {
                 script {
                     env.target = "preview"

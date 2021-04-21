@@ -51,6 +51,9 @@ ENV TARGET_ENVIRONMENT=
 ENV API_HOST=
 ENV DIST_DIR=/dist
 WORKDIR /dist
+RUN \
+  chown -v node:node /dist && \
+  chmod -v 750 /dist
 COPY --from=lambda --chown=node:node /server ./server
 COPY --from=deployment --chown=node:node /cloudfront-dist ./cloudfront-dist
 COPY --from=deployment --chown=node:node /cloudfront-dist/deploy.sh ./deploy.sh
