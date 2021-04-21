@@ -13,7 +13,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ dblp ]
+    branches: [ dblp, engineering/team-managment-v1 ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ dblp, engineering/team-managment-v1 ]
