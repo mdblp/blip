@@ -43,8 +43,8 @@ import { Password } from "../../components/utils/password";
 import { Snackbar } from "../../components/utils/snackbar";
 
 import SecondaryHeaderBar from "./secondary-bar";
-import SwitchRoleConsequencesDialog from "./switch-role-consequences-dialog";
-import SwitchRoleConsentDialog from "./switch-role-consent-dialog";
+import SwitchRoleConsequencesDialog from "../../components/switch-role/switch-role-consequences-dialog";
+import SwitchRoleConsentDialog from "../../components/switch-role/switch-role-consent-dialog";
 
 interface ProfilePageProps {
   defaultURL: string;

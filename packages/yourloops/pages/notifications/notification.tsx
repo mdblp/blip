@@ -34,6 +34,7 @@ import { useNotification } from "../../lib/notifications/hook";
 type NotificationProps = INotification & {
   role: UserRoles | undefined;
   onRemove: (id: string) => void;
+  onHelp: () => void;
 };
 
 const useStyles = makeStyles(() =>
@@ -174,7 +175,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       <div className={rightSide}>
         {getDate(created, id, t)}
         {props.role === UserRoles.caregiver && type === NotificationType.careteam ? (
-          <IconButton size="medium" color="primary" aria-label="notification-help-button">
+          <IconButton size="medium" color="primary" aria-label="notification-help-button" onClick={props.onHelp}>
             <HelpIcon id={`notification-help-${id}`} />
           </IconButton>
         ) : (

@@ -15,29 +15,27 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import React, { useMemo } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Link from "@material-ui/core/Link";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import SecondaryHeaderBar from "./secondary-bar";
-import HomeIcon from "@material-ui/icons/Home";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import HeaderBar from "../../components/header-bars/primary";
+import SwitchRoleConsequencesDialog from "../../components/switch-role/switch-role-consequences-dialog";
+import SwitchRoleConsentDialog from "../../components/switch-role/switch-role-consent-dialog";
+import SwitchRoleToHcpSteps from "../../components/switch-role/switch-role-to-hcp-steps";
 import { Notification } from "./notification";
+import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
+import sendMetrics from "../../lib/metrics";
 import { INotification } from "../../lib/notifications/models";
 import { useAuth } from "../../lib/auth";
 import { useNotification } from "../../lib/notifications/hook";
 import { errorTextFromException } from "../../lib/utils";
+import { Snackbar } from "../../components/utils/snackbar";
 
 interface NotificationsPageProps {
   defaultURL: string;
@@ -65,47 +63,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const NotificationHeader = () => {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyles();
-  const { user } = useAuth();
-
-  const homePage = useMemo(() => (`/${user?.role ?? ""}`), [user]);
-
-  return (
-    <React.Fragment>
-      <HeaderBar />
-      <AppBar position="static" color="secondary">
-        <Toolbar className={classes.toolBar}>
-          <Breadcrumbs
-            aria-label={t("aria-breadcrumbs")}
-            separator={<NavigateNextIcon fontSize="small" />}>
-            <Link
-              component={RouterLink}
-              to={homePage}
-              className={classes.breadcrumbLink}
-              color="textPrimary"
-            >
-              <HomeIcon className={classes.homeIcon} />
-              {t("home")}
-            </Link>
-            <div>{t("notifications")}</div>
-          </Breadcrumbs>
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
-  );
-};
-
 const sortNotification = (notifA: INotification, notifB: INotification): number =>
   Date.parse(notifB.created) - Date.parse(notifA.created);
 
 export const NotificationsPage = (props: NotificationsPageProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
-  const { user } = useAuth();
+  const { user, switchRoleToHCP } = useAuth();
   const notifications = useNotification();
+  const { openSnackbar, snackbarParams } = useSnackbar();
   const [notifs, setNotifs] = React.useState<INotification[]>([]);
+  const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(
+    SwitchRoleToHcpSteps.none
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   React.useEffect(() => {
@@ -132,9 +102,67 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
     setNotifs(newList);
   }
 
+  const handleSwitchRoleToConsequences = (): void => {
+    sendMetrics("user-switch-role", {
+      from: user?.role,
+      to: "hcp",
+      step: SwitchRoleToHcpSteps.consequences,
+    });
+    setSwitchRoleStep(SwitchRoleToHcpSteps.consequences);
+  };
+
+  const handleSwitchRoleToConditions = (accept: boolean): void => {
+    sendMetrics("user-switch-role", {
+      from: user?.role,
+      to: "hcp",
+      step: SwitchRoleToHcpSteps.consent,
+      cancel: !accept,
+    });
+    if (accept) {
+      setSwitchRoleStep(SwitchRoleToHcpSteps.consent);
+    } else {
+      setSwitchRoleStep(SwitchRoleToHcpSteps.none);
+    }
+  };
+
+  const handleSwitchRoleToUpdate = (accept: boolean): void => {
+    sendMetrics("user-switch-role", {
+      from: user?.role,
+      to: "hcp",
+      step: SwitchRoleToHcpSteps.update,
+      cancel: !accept,
+    });
+    if (accept) {
+      setSwitchRoleStep(SwitchRoleToHcpSteps.update);
+
+      switchRoleToHCP()
+        .then(() => {
+          sendMetrics("user-switch-role", {
+            from: user?.role,
+            to: "hcp",
+            step: SwitchRoleToHcpSteps.update,
+            success: true,
+          });
+        })
+        .catch((reason: unknown) => {
+          openSnackbar({ message: t("modal-switch-hcp-failure"), severity: AlertSeverity.error });
+          sendMetrics("user-switch-role", {
+            from: user?.role,
+            to: "hcp",
+            step: SwitchRoleToHcpSteps.update,
+            success: false,
+            error: errorTextFromException(reason),
+          });
+        });
+    } else {
+      setSwitchRoleStep(SwitchRoleToHcpSteps.none);
+    }
+  };
+
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
+      <Snackbar params={snackbarParams} />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
           {notifs.length > 0 ? (
@@ -152,6 +180,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
                   // eslint-disable-next-line jsx-a11y/aria-role
                   role={user?.role}
                   onRemove={handleRemove}
+                  onHelp={handleSwitchRoleToConsequences}
                 />
               </ListItem>
             ))
@@ -165,6 +194,14 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
             </Typography>
           )}
         </List>
+        <SwitchRoleConsequencesDialog
+          open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
+          onResult={handleSwitchRoleToConditions}
+        />
+        <SwitchRoleConsentDialog
+          open={switchRoleStep === SwitchRoleToHcpSteps.consent}
+          onResult={handleSwitchRoleToUpdate}
+        />
       </Container>
     </React.Fragment>
   );

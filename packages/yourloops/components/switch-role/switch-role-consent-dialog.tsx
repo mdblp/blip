@@ -29,7 +29,7 @@ import FormGroup from "@material-ui/core/FormGroup";
 import Link from "@material-ui/core/Link";
 
 import diabeloopUrl from "../../lib/diabeloop-url";
-import { makeButtonsStyles } from "../../components/theme";
+import { makeButtonsStyles } from "../theme";
 import { SwitchRoleDialogProps } from "./models";
 
 const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-switch-role-consent-buttons" });
@@ -51,6 +51,16 @@ const dialogStyles = makeStyles(
       },
       buttonCancel: {
         marginRight: theme.spacing(2),
+      },
+      buttons: {
+        display: "flex",
+        flexDirection: "row",
+        marginTop: theme.spacing(2),
+        marginRight: theme.spacing(5), // eslint-disable-line no-magic-numbers
+        marginLeft: theme.spacing(1), // eslint-disable-line no-magic-numbers
+      },
+      button: {
+        marginLeft: "auto",
       },
     };
   },
