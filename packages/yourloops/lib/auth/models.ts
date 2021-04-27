@@ -37,6 +37,10 @@ export interface Session {
 }
 
 export interface AuthAPI {
+  getProfile: (session: Readonly<Session>, userId?: string) => Promise<Profile | null>;
+  getPreferences: (session: Readonly<Session>, userId?: string) => Promise<Preferences | null>;
+  getSettings: (session: Readonly<Session>, userId?: string) => Promise<Settings | null>;
+  getUser: (session: Readonly<Session>, userId: string) => Promise<User | null>;
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
   requestPasswordReset: (username: string, traceToken: string, language?: string, info?: boolean) => Promise<boolean>;
   resetPassword: (key: string | null, username: string, password: string, traceToken: string) => Promise<boolean>;

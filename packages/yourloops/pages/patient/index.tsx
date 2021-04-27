@@ -70,7 +70,7 @@ function PatientPage(): JSX.Element {
           <Route exact={true} path="/patient/caregivers" component={CaregiversPage} />
           <Route exact={true} path="/patient/teams" component={TeamsPage} />
           <Route exact={true} path="/patient/preferences" component={() => <ProfilePage defaultURL={defaultURL} />} />
-          <Route exact={true} path="/patient/notifications" component={() => <NotificationsPage defaultURL={defaultURL} />} />
+          <Route exact={true} path="/patient/notifications" component={() => <NotificationsPage withTeam defaultURL={defaultURL} />} />
           <Route path="/patient" exact={true} />
           <Route>
             <InvalidRoute defaultURL={defaultURL} />

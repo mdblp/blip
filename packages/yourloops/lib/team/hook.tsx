@@ -50,7 +50,13 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
   let teamUser = users.get(userId);
   if (typeof teamUser === "undefined") {
     teamUser = {
-      ...iTeamMember.user,
+      role: iTeamMember.role === TeamMemberRole.patient ? UserRoles.patient : UserRoles.hcp,
+      userid: userId,
+      username: iTeamMember.email,
+      emails: [ iTeamMember.email ],
+      preferences: iTeamMember.preferences,
+      profile: iTeamMember.profile,
+      settings: iTeamMember.settings,
       members: [],
     };
     users.set(userId, teamUser);
@@ -106,7 +112,7 @@ export async function loadTeams(
     id: TeamType.private,
     members: [],
     name: TeamType.private,
-    ownerId: session.user.userid,
+    owner: session.user.userid,
     type: TeamType.private,
   };
 
@@ -134,22 +140,7 @@ export async function loadTeams(
       team = privateTeam;
     }
 
-    let user = users.get(userId);
-    if (typeof user === "undefined") {
-      user = {
-        ...apiPatient.user,
-        members: [],
-      };
-      users.set(userId, user);
-    }
-    const member: TeamMember = {
-      role: apiPatient.role,
-      status: apiPatient.invitationStatus,
-      team,
-      user,
-    };
-    user.members.push(member);
-    team.members.push(member);
+    iMemberToMember(apiPatient, team, users);
   }
 
   // End, cleanup to help the garbage collector

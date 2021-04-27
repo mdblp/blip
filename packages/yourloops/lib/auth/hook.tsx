@@ -211,7 +211,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("flagPatient", userId);
     const authInfo = await getAuthInfos();
     const updatedUser = _.cloneDeep(authInfo.user);
-    if (typeof updatedUser.preferences === "undefined") {
+    if (_.isNil(updatedUser.preferences)) {
       updatedUser.preferences = {};
     }
     if (!Array.isArray(updatedUser.preferences.patientsStarred)) {
@@ -232,7 +232,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("setFlagPatients", userIds);
     const authInfo = await getAuthInfos();
     const updatedUser = _.cloneDeep(authInfo.user);
-    if (typeof updatedUser.preferences === "undefined") {
+    if (_.isNil(updatedUser.preferences)) {
       updatedUser.preferences = {};
     }
     updatedUser.preferences.patientsStarred = userIds;
@@ -296,21 +296,24 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       throw new Error("invalid-user-role");
     }
 
-    await api.updateUser(authInfo, { role: UserRoles.hcp });
+    await api.updateUser(authInfo, { roles: [ UserRoles.hcp ] });
 
-    // Ask for a new token with the updated role
-    const newToken = await api.refreshToken(authInfo);
-    const tokenInfos = jwtDecode<JwtShorelinePayload>(newToken);
-    // Check we have the new role
-    if (tokenInfos.role !== UserRoles.hcp) {
-      throw new Error("Role change is not effective");
-    }
-    // Refresh our data:
-    const updatedUser: User = { ...authInfo.user, role: UserRoles.hcp };
-    sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, newToken);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setSessionToken(newToken);
+    // FIXME: When shoreline bug is fixed
+    logout();
+
+    // // Ask for a new token with the updated role
+    // const newToken = await api.refreshToken(authInfo);
+    // const tokenInfos = jwtDecode<JwtShorelinePayload>(newToken);
+    // // Check we have the new role
+    // if (tokenInfos.role !== UserRoles.hcp) {
+    //   throw new Error("Role change is not effective");
+    // }
+    // // Refresh our data:
+    // const updatedUser: User = { ...authInfo.user, role: UserRoles.hcp };
+    // sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, newToken);
+    // sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(updatedUser));
+    // setUser(updatedUser);
+    // setSessionToken(newToken);
   };
 
   const initHook = () => {

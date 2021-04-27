@@ -45,7 +45,7 @@ import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
 
-import { UserRoles, User } from "../../models/shoreline";
+import { User } from "../../models/shoreline";
 import config from "../../lib/config";
 import { useAuth } from "../../lib/auth";
 import { getUserFirstName, getUserLastName } from "../../lib/utils";
@@ -119,11 +119,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   const classes = toolbarStyles(props);
   const auth = useAuth();
   const history = useHistory();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userMenuOpen = Boolean(anchorEl);
-
-  const userRole = auth.user?.role ?? null;
 
   const handleOpenAccountMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -222,11 +219,9 @@ function HeaderBar(props: HeaderProps): JSX.Element {
         <input type="image" className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
         {props.children}
         <div className={classes.toolbarRightSide}>
-          {userRole && userRole !== UserRoles.patient && (
-            <IconButton onClick={handleOpenNotifications}>
-              <NotificationsIcon />
-            </IconButton>
-          )}
+          <IconButton onClick={handleOpenNotifications}>
+            <NotificationsIcon />
+          </IconButton>
           {accountMenu}
         </div>
       </Toolbar>

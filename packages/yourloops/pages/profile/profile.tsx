@@ -262,8 +262,10 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
         fullName: firstName + " " + name,
         firstName,
         lastName: name,
-        patient: { birthday: birthDate }
       };
+      if (user.role === UserRoles.patient) {
+        newProfile.patient = { birthday: birthDate };
+      }
       setHasProfileChanged(!_.isEqual(user.profile, newProfile));
     } else {
       setHaveSettingsChanged(false);

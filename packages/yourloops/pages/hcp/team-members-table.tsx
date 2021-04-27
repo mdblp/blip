@@ -185,7 +185,7 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
             const userId = event.target.name;
             const isAdmin = event.target.checked;
             setUpdatingUser(userId);
-            await onSwitchAdminRole(member, isAdmin ? TeamMemberRole.admin : TeamMemberRole.viewer);
+            await onSwitchAdminRole(member, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member);
             setUpdatingUser("");
           };
           checkboxElement = (

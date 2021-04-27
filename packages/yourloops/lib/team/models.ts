@@ -58,7 +58,7 @@ export interface Team {
   name: string;
   readonly code: string;
   readonly type: TeamType;
-  readonly ownerId: string;
+  readonly owner: string;
   phone?: string;
   email?: string;
   address?: PostalAddress;

@@ -80,7 +80,7 @@ export const teams: ITeam[] = [
       {
         teamId: "team-0",
         userId: "a0a1a2a3",
-        role: TeamMemberRole.viewer,
+        role: TeamMemberRole.member,
         invitationStatus: UserInvitationStatus.accepted,
         user: {
           userid: "a0a1a2a3",
@@ -108,7 +108,7 @@ export const teams: ITeam[] = [
       {
         teamId: "team-1",
         userId: loggedInUsers.hcp.userid,
-        role: TeamMemberRole.viewer,
+        role: TeamMemberRole.member,
         invitationStatus: UserInvitationStatus.accepted,
         user: loggedInUsers.hcp,
       },

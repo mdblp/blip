@@ -66,7 +66,7 @@ function HcpPage(): JSX.Element {
         <Route path={defaultURL} component={PatientListPage} />
         <Route path="/professional/teams" component={TeamsPage} />
         <Route path="/professional/preferences" exact={true} component={() => <ProfilePage defaultURL={defaultURL} />} />
-        <Route path="/professional/notifications" exact={true} component={() => <NotificationsPage defaultURL={defaultURL} />} />
+        <Route path="/professional/notifications" exact={true} component={() => <NotificationsPage withTeam defaultURL={defaultURL} />} />
         <DataContextProvider context={DefaultDataContext}>
           <Route path="/professional/patient/:patientId">
             <PatientDataPage prefixURL="/professional/patient" />

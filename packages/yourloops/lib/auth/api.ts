@@ -192,17 +192,17 @@ async function signup(username: string, password: string, role: UserRoles, trace
 
 }
 
-async function getProfile(auth: Readonly<Session>): Promise<Profile | null> {
+async function getProfile(session: Readonly<Session>, userId?: string): Promise<Profile | null> {
   const seagullURL = new URL(
-    `/metadata/${auth.user.userid}/profile`,
+    `/metadata/${userId ?? session.user.userid}/profile`,
     appConfig.API_HOST
   );
 
   const response = await fetch(seagullURL.toString(), {
     method: "GET",
     headers: {
-      [HttpHeaderKeys.traceToken]: auth.traceToken,
-      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
     },
   });
 
@@ -214,22 +214,21 @@ async function getProfile(auth: Readonly<Session>): Promise<Profile | null> {
       log.debug(e);
     }
   } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug("Error : 404 not found");
+    log.debug(`No profile for ${userId ?? session.user.userid}`);
   } else {
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
+    return Promise.reject(errorFromHttpStatus(response, log));
   }
 
   return profile;
 }
 
-async function getPreferences(auth: Readonly<Session>): Promise<Preferences | null> {
-  const seagullURL = new URL(`/metadata/${auth.user.userid}/preferences`, appConfig.API_HOST);
+async function getPreferences(session: Readonly<Session>, userId?: string): Promise<Preferences | null> {
+  const seagullURL = new URL(`/metadata/${userId ?? session.user.userid}/preferences`, appConfig.API_HOST);
   const response = await fetch(seagullURL.toString(), {
     method: "GET",
     headers: {
-      [HttpHeaderKeys.traceToken]: auth.traceToken,
-      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
     },
   });
 
@@ -241,22 +240,21 @@ async function getPreferences(auth: Readonly<Session>): Promise<Preferences | nu
       log.debug(e);
     }
   } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug("Error : 404 not found");
+    log.debug(`No preferences for ${userId ?? session.user.userid}`);
   } else {
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
+    return Promise.reject(errorFromHttpStatus(response, log));
   }
 
   return preferences;
 }
 
-async function getSettings(auth: Readonly<Session>): Promise<Settings | null> {
-  const seagullURL = new URL(`/metadata/${auth.user.userid}/settings`, appConfig.API_HOST);
+async function getSettings(session: Readonly<Session>, userId?: string): Promise<Settings | null> {
+  const seagullURL = new URL(`/metadata/${userId ?? session.user.userid}/settings`, appConfig.API_HOST);
   const response = await fetch(seagullURL.toString(), {
     method: "GET",
     headers: {
-      [HttpHeaderKeys.traceToken]: auth.traceToken,
-      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
     },
   });
 
@@ -268,13 +266,38 @@ async function getSettings(auth: Readonly<Session>): Promise<Settings | null> {
       log.debug(e);
     }
   } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug("Error : 404 not found");
+    log.debug(`No settings for ${userId ?? session.user.userid}`);
   } else {
-    const responseBody = (await response.json()) as APIErrorResponse;
-    throw new Error(t(responseBody.reason));
+    return Promise.reject(errorFromHttpStatus(response, log));
   }
 
   return settings;
+}
+
+async function getUser(session: Readonly<Session>, userId: string): Promise<User | null> {
+  const shorelineURL = new URL(`/auth/user/${userId}`, appConfig.API_HOST);
+  const response = await fetch(shorelineURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+    },
+  });
+
+  let user: User | null = null;
+  if (response.ok) {
+    try {
+      user = (await response.json()) as User;
+    } catch (e) {
+      log.debug(e);
+    }
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    log.debug(`No user for ${userId ?? session.user.userid}`);
+  } else {
+    return Promise.reject(errorFromHttpStatus(response, log));
+  }
+
+  return user;
 }
 
 /**
@@ -551,6 +574,10 @@ async function refreshToken(auth: Readonly<Session>): Promise<string> {
 }
 
 export default {
+  getProfile,
+  getPreferences,
+  getSettings,
+  getUser,
   login,
   requestPasswordReset,
   resetPassword,
