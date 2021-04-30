@@ -195,6 +195,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
           )}
         </List>
         <SwitchRoleConsequencesDialog
+          title="modal-switch-hcp-team-title"
           open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
           onResult={handleSwitchRoleToConditions}
         />

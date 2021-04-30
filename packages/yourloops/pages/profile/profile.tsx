@@ -461,6 +461,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
         </div>
       </Container>
       <SwitchRoleConsequencesDialog
+        title="modal-switch-hcp-title"
         open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
         onResult={handleSwitchRoleToConditions}
       />
