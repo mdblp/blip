@@ -38,13 +38,13 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 
-import { useSignUpFormState } from "./signup-formstate-context";
 import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
 import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
-import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
-import { Snackbar } from "../../components/utils/snackbar";
+import { getCurrentLang } from "../../lib/language";
+import { useAlert } from "../../components/utils/snackbar";
+import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 
 interface Errors {
   userName: boolean;
@@ -80,11 +80,11 @@ const formStyle = makeStyles((theme: Theme) => {
  * SignUpAccount Form
  */
 function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
+  const { t } = useTranslation("yourloops");
   const classes = formStyle();
   const auth = useAuth();
   const { state, dispatch } = useSignUpFormState();
-  const { openSnackbar, snackbarParams } = useSnackbar();
+  const alert = useAlert();
   const { handleBack, handleNext } = props;
   const defaultErr = {
     userName: false,
@@ -97,20 +97,12 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [inProgress, setInProgress] = React.useState(false);
 
-  const onChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    keyField: string,
-    setState?: React.Dispatch<React.SetStateAction<string>>
-  ): void => {
-    if (!setState) {
-      dispatch({
-        type: "EDIT_FORMVALUE",
-        key: keyField,
-        value: event.target.value,
-      });
-    } else {
-      setState(event.target.value);
-    }
+  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, keyField: FormValuesType): void => {
+    dispatch({
+      type: "EDIT_FORMVALUE",
+      key: keyField,
+      value: event.target.value,
+    });
   };
 
   const onClick = (
@@ -154,14 +146,13 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       // submit to api
       try {
         setInProgress(true);
-        state.formValues.preferencesLanguage = i18n.language;
+        state.formValues.preferencesLanguage = getCurrentLang();
         await auth.signup(state);
         setInProgress(false);
         handleNext();
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
-        const message = t(errorMessage);
-        openSnackbar({ message, severity: AlertSeverity.error });
+        alert.error(t(errorMessage));
       }
     }
   };
@@ -176,7 +167,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       noValidate
       autoComplete="off"
     >
-      <Snackbar params={snackbarParams} />
       <TextField
         id="username"
         className={classes.TextField}
@@ -201,7 +191,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         required
         error={errors.newPassword}
         onBlur={() => validatePassword()}
-        onChange={(e) => onChange(e, "", setNewPassword)}
+        onChange={(e) => setNewPassword(e.target.value)}
         helperText={
           errors.newPassword &&
           t("password-too-weak", {

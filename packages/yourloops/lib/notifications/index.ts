@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
+ * Notification: Invitations & co
  *
  * All rights reserved.
  *
@@ -25,7 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Country {
-  code: string;
-  name: string;
-}
+import { INotification, NotificationType, NotificationAPI } from "./models";
+import { useNotification } from "./hook";
+
+export {
+  INotification,
+  NotificationAPI,
+  NotificationType,
+  useNotification,
+};

@@ -15,13 +15,11 @@
  * == BSD2 LICENSE ==
  */
 
-/* eslint-disable max-len */
-
 import React from 'react';
+import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
 import { detail } from '../../../helpers/scales';
-const { detailXScale, detailBasalScale } = detail;
 
 import Basal from '../../../../src/components/common/data/Basal';
 import { getBasalSequencePaths } from '../../../../src/modules/render/basal';
@@ -30,6 +28,8 @@ import { getBasalSequences, getBasalPathGroups } from '../../../../src/utils/bas
 import { scheduledFlat, automatedAndScheduled, automated } from '../../../../data/basal/fixtures';
 
 describe('Basal', () => {
+  const { detailXScale, detailBasalScale } = detail;
+
   it('should return `null` if input `basals` prop is empty', () => {
     const wrapper = shallow(
       <Basal basals={[]} xScale={detailXScale} yScale={detailBasalScale} />

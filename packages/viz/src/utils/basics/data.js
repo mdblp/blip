@@ -551,8 +551,8 @@ export function reduceByDay(data, bgPrefs) {
     };
 
     _.reduce(basalPathGroups, (acc, group) => {
-      const subType = _.get(group[0], 'subType', group[0].deliveryType);
-      const event = subType === 'automated' ? 'automatedStart' : 'automatedStop';
+      const deliveryType = _.get(group[0], 'deliveryType', 'scheduled');
+      const event = ['automated', 'temp'].includes(deliveryType) ? 'automatedStart' : 'automatedStop';
       // For now, we're only tracking `automatedStop` events
       if (event === 'automatedStop') {
         acc[event]++;

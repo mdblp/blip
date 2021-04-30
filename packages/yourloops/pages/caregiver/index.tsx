@@ -46,9 +46,7 @@ import {
   sharedUserReducer,
 } from "../../lib/share";
 import { DataContextProvider, DefaultDataContext } from "../../lib/data";
-import { useSnackbar } from "../../lib/useSnackbar";
 import InvalidRoute from "../../components/invalid-route";
-import { Snackbar } from "../../components/utils/snackbar";
 import PrimaryNavBar from "../../components/header-bars/primary";
 import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
@@ -93,7 +91,6 @@ const CaregiverPage = (): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const historyHook = useHistory();
   const authHook = useAuth();
-  const { snackbarParams } = useSnackbar();
   const classes = pageStyles();
   const [loading, setLoading] = React.useState(false);
   const [sharedUsersState, sharedUsersDispatch] = React.useReducer(sharedUserReducer, sharedUserInitialState);
@@ -132,7 +129,7 @@ const CaregiverPage = (): JSX.Element => {
           setLoading(false);
         });
     }
-  }, [pathname, historyHook, userRole, session, t, errorMessage, sharedUsers, sharedUsersState, loading]);
+  }, [pathname, historyHook, userRole, session, t, errorMessage, sharedUsers, loading]);
 
   let content: JSX.Element;
   if (errorMessage !== null) {
@@ -155,7 +152,6 @@ const CaregiverPage = (): JSX.Element => {
   return (
     <SharedUserContextProvider value={[sharedUsersState, sharedUsersDispatch]}>
       <DataContextProvider context={DefaultDataContext}>
-        <Snackbar params={snackbarParams} />
         <PrimaryNavBar headerLogoURL={defaultURL} />
         {content}
       </DataContextProvider>

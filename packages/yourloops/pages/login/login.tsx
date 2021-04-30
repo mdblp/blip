@@ -50,10 +50,9 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import brandingLogo from "branding/logo.png";
 
 import { useAuth } from "../../lib/auth";
-import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import { errorTextFromException } from "../../lib/utils";
 import { getURLPrefixFromUser } from "../../lib/diabeloop-url";
-import { Snackbar } from "../../components/utils/snackbar";
+import { useAlert } from "../../components/utils/snackbar";
 import LanguageSelector from "../../components/language-select";
 
 const loginStyle = makeStyles((theme: Theme) => {
@@ -96,7 +95,7 @@ const loginStyle = makeStyles((theme: Theme) => {
 function Login(props: RouteComponentProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const auth = useAuth();
-  const { openSnackbar, snackbarParams } = useSnackbar();
+  const alert = useAlert();
   const classes = loginStyle();
 
   const [username, setUserName] = React.useState("");
@@ -149,8 +148,15 @@ function Login(props: RouteComponentProps): JSX.Element {
       props.history.push(getURLPrefixFromUser(user));
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
-      const message = t(errorMessage);
-      openSnackbar({ message, severity: AlertSeverity.error });
+      alert.error(t(errorMessage));
+    }
+  };
+
+  const onValidateLogin = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+      onClickLoginButton();
     }
   };
 
@@ -176,7 +182,6 @@ function Login(props: RouteComponentProps): JSX.Element {
               />
             </CardMedia>
             <CardContent className={classes.CardContent}>
-              <Snackbar params={snackbarParams} />
               <form
                 id="form-login"
                 style={{
@@ -196,6 +201,7 @@ function Login(props: RouteComponentProps): JSX.Element {
                   required
                   error={validateError && emptyUsername}
                   onChange={onUsernameChange}
+                  onKeyPress={onValidateLogin}
                 />
                 <TextField
                   id="login-password"
@@ -208,6 +214,7 @@ function Login(props: RouteComponentProps): JSX.Element {
                   required
                   error={validateError && (emptyPassword || helperTextValue.length > 0)}
                   onChange={onPasswordChange}
+                  onKeyPress={onValidateLogin}
                   helperText={helperTextValue}
                   InputProps={{
                     endAdornment: (

@@ -36,6 +36,8 @@ import { useAuth } from "../lib/auth";
 import { getURLPrefixFromUser } from "../lib/diabeloop-url";
 import { publicRoutesTheme, mainTheme } from "./theme";
 import FooterLinks from "./footer-links";
+import { SnackbarContextProvider, DefaultSnackbarContext } from "./utils/snackbar";
+import { NotificationContextProvider } from "../lib/notifications/hook";
 
 export const PublicRoute = (props: RouteProps): JSX.Element => {
   const { isLoggedIn, user } = useAuth();
@@ -45,7 +47,9 @@ export const PublicRoute = (props: RouteProps): JSX.Element => {
   ) : (
     <ThemeProvider theme={publicRoutesTheme}>
       <CssBaseline />
-      <Route {...props} />
+      <SnackbarContextProvider context={DefaultSnackbarContext}>
+        <Route {...props} />
+      </SnackbarContextProvider>
       <FooterLinks />
     </ThemeProvider>
   );
@@ -57,7 +61,11 @@ export const PrivateRoute = (props: RouteProps): JSX.Element => {
   return isLoggedIn() ? (
     <ThemeProvider theme={mainTheme}>
       <CssBaseline />
-      <Route {...props} />
+      <SnackbarContextProvider context={DefaultSnackbarContext}>
+        <NotificationContextProvider>
+          <Route {...props} />
+        </NotificationContextProvider>
+      </SnackbarContextProvider>
       <FooterLinks atBottom />
     </ThemeProvider>
   ) : (

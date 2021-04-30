@@ -16,9 +16,8 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
-import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
 import { useAuth } from "../../lib/auth";
-import { Snackbar } from "../../components/utils/snackbar";
+import { useAlert } from "../../components/utils/snackbar";
 import RequestPassordMessage from "./request-password-message";
 
 const formStyle = makeStyles((theme: Theme) => {
@@ -51,7 +50,7 @@ export default function ResetPasswordContent(): JSX.Element {
   const classes = formStyle();
   const auth = useAuth();
   const history = useHistory();
-  const { openSnackbar, snackbarParams } = useSnackbar();
+  const alert = useAlert();
   const [username, setUserName] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
@@ -63,6 +62,7 @@ export default function ResetPasswordContent(): JSX.Element {
   const [success, setSuccess] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
   const emptyUsername = _.isEmpty(username);
+  const resetKey = React.useMemo(() => new URLSearchParams(location.search).get("resetKey"), []);
 
   const onBack = (): void => {
     history.push("/");
@@ -109,23 +109,13 @@ export default function ResetPasswordContent(): JSX.Element {
     return !err;
   };
 
-  const validateForm = (): boolean => {
-    if (
-      validateUserName() &&
-      validatePassword() &&
-      validateConfirmNewPassword()
-    ) {
-      return true;
-    }
-    return false;
-  };
+  const validateForm = () => validateUserName() && validatePassword() && validateConfirmNewPassword();
 
   const onSendResetPassword = async (): Promise<void> => {
     resetFormState();
-    if (validateForm()) {
+    if (validateForm() && resetKey !== null) {
       try {
         setInProgress(true);
-        const resetKey = new URLSearchParams(location.search).get("resetKey");
         const success = await auth.resetPassword(
           resetKey,
           username,
@@ -135,15 +125,13 @@ export default function ResetPasswordContent(): JSX.Element {
         setInProgress(false);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
-        const message = t(errorMessage);
-        openSnackbar({ message, severity: AlertSeverity.error });
+        alert.error(t(errorMessage));
       }
     }
   };
 
   return (
     <React.Fragment>
-      <Snackbar params={snackbarParams} />
       {success ? (
         <RequestPassordMessage
           header="password-reset-success-title"
@@ -163,6 +151,7 @@ export default function ResetPasswordContent(): JSX.Element {
               }}
               noValidate
               autoComplete="off">
+              {_.isEmpty(resetKey) ? <Typography>{t("reset-key-is-missing")}</Typography> : null}
               <TextField
                 id="username"
                 className={classes.TextField}

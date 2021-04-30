@@ -554,6 +554,7 @@ describe('basics datamunger', function() {
         var bd = {
           data: {
             basal: { data: [
+              { type: 'basal', deliveryType: 'scheduled', normalTime: then, displayOffset: 0 },
               { type: 'basal', deliveryType: 'temp', normalTime: then, displayOffset: 0 },
               { type: 'basal', deliveryType: 'automated', normalTime: then, displayOffset: 0 },
             ] },

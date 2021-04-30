@@ -32,18 +32,15 @@ import bows from "bows";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-import Alert from "@material-ui/lab/Alert";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
 
 import { FilterType, SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import { User, UserRoles } from "../../../models/shoreline";
 import { getUserFirstName, getUserLastName, getUserEmail, errorTextFromException } from "../../../lib/utils";
 import sendMetrics from "../../../lib/metrics";
-import { AlertSeverity, useSnackbar } from "../../../lib/useSnackbar";
 import { useAuth } from "../../../lib/auth";
 import { useSharedUser, ShareUser, addDirectShare, removeDirectShare } from "../../../lib/share";
+import { useAlert } from "../../../components/utils/snackbar";
 import RemovePatientDialog, { RemovePatientDialogContentProps } from "../../../components/remove-patient-dialog";
 import { AddPatientDialogContentProps, AddPatientDialogResult } from "./types";
 import PatientsSecondaryBar from "./secondary-bar";
@@ -54,18 +51,6 @@ const log = bows("PatientListPage");
 
 // eslint-disable-next-line no-magic-numbers
 const throttledMetrics = _.throttle(sendMetrics, 60000); // No more than one per minute
-
-const pageStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      gridAlertComputed: {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-      },
-    };
-  },
-  { name: "ylp-caregiver-patients-page" }
-);
 
 /**
  * Compare two patient for sorting the patient table
@@ -164,9 +149,8 @@ function updatePatientList(
 function PatientListPage(): JSX.Element {
   const historyHook = useHistory();
   const { t } = useTranslation("yourloops");
-  const { openSnackbar } = useSnackbar();
+  const alert = useAlert();
   const authHook = useAuth();
-  const classes = pageStyles();
   const [sharedUsersContext, sharedUsersDispatch] = useSharedUser();
   const [sortFlaggedFirst, setSortFlaggedFirst] = React.useState<boolean>(true);
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
@@ -225,12 +209,12 @@ function PatientListPage(): JSX.Element {
         await addDirectShare(session, email);
         setTimeout(() => sharedUsersDispatch({ type: "reset" }), 10);
         // TODO: rename translation key to "modal-add-patient-success"
-        openSnackbar({ message: t("modal-hcp-add-patient-success"), severity: AlertSeverity.success });
+        alert.success(t("modal-hcp-add-patient-success"));
         sendMetrics("caregiver-add-patient", { added: true });
       } catch (reason) {
         log.error(reason);
         // TODO: rename translation key to "modal-add-patient-failure"
-        openSnackbar({ message: t("modal-hcp-add-patient-failure"), severity: AlertSeverity.error });
+        alert.error(t("modal-hcp-add-patient-failure"));
         sendMetrics("caregiver-add-patient", { added: true, failed: errorTextFromException(reason) });
       }
     } else {
@@ -252,10 +236,10 @@ function PatientListPage(): JSX.Element {
         await removeDirectShare(session, patient.userid);
         setTimeout(() => sharedUsersDispatch({ type: "reset" }), 10);
         sendMetrics("caregiver-remove-patient", { removed: true, flagged, isPendingInvitation });
-        openSnackbar({ message: t("modal-remove-patient-success"), severity: AlertSeverity.success });
+        alert.success(t("modal-remove-patient-success"));
       } catch (reason) {
         log.error(reason);
-        openSnackbar({ message: t("modal-delete-patient-failure"), severity: AlertSeverity.error });
+        alert.error(t("modal-delete-patient-failure"));
         sendMetrics("caregiver-remove-patient", { removed: true, flagged, isPendingInvitation, failed: errorTextFromException(reason) });
       }
     } else {
@@ -293,10 +277,7 @@ function PatientListPage(): JSX.Element {
         onFilterType={handleFilterType}
         onInvitePatient={handleInvitePatient}
       />
-      <Grid id="patient-list-alert-data-computed" container direction="row" justify="center" alignItems="center" className={classes.gridAlertComputed}>
-        <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
-      </Grid>
-      <Container id="patient-list-container" maxWidth="lg">
+      <Container id="patient-list-container" maxWidth="lg" style={{ paddingTop: "2em" }}>
         <PatientListTable
           patients={patients}
           flagged={flagged}
