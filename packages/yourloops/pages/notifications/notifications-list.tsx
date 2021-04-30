@@ -89,13 +89,12 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
         const message = t(errorMessage);
-        console.log(message);
-        //openSnackbar({ message, severity: AlertSeverity.error });
+        openSnackbar({ message, severity: AlertSeverity.error });
       }
     };
 
     loadNotifs();
-  }, [notifications, user, t]);
+  }, [notifications, user, t, openSnackbar]);
 
   function handleRemove(id: string): void {
     const newList = notifs.filter((item) => item.id !== id);

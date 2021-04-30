@@ -30,6 +30,8 @@ import { User, UserRoles } from "../../models/shoreline";
 import { INotification, NotificationType } from "../../lib/notifications/models";
 import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
 import { useNotification } from "../../lib/notifications/hook";
+import { AlertSeverity, useSnackbar } from "../../lib/useSnackbar";
+import { Snackbar } from "../../components/utils/snackbar";
 
 type NotificationProps = INotification & {
   role: UserRoles | undefined;
@@ -133,11 +135,11 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const { id, created, creator, type, target, onRemove } = props;
   const notifications = useNotification();
+  const { openSnackbar, snackbarParams } = useSnackbar();
   const [inProgress, setInProgress] = React.useState(false);
   const { container, notification, rightSide, button } = useStyles();
 
-  const onAccept = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+  const onAccept = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     // submit to api
     try {
       setInProgress(true);
@@ -146,14 +148,12 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       const message = t(errorMessage);
-      console.log(message);
-      //openSnackbar({ message, severity: AlertSeverity.error });
+      openSnackbar({ message, severity: AlertSeverity.error });
     }
     setInProgress(false);
   };
 
-  const onDecline = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+  const onDecline = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     // submit to api
     try {
       setInProgress(true);
@@ -162,20 +162,24 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       const message = t(errorMessage);
-      console.log(message);
-      //openSnackbar({ message, severity: AlertSeverity.error });
+      openSnackbar({ message, severity: AlertSeverity.error });
     }
     setInProgress(false);
   };
 
   return (
     <div id={`notification-line-${id}`} className={container}>
+      <Snackbar params={snackbarParams} />
       <NotificationIcon id={`notification-icon-${id}`} type={type} />
       <NotificationSpan t={t} notification={props} className={notification} />
       <div className={rightSide}>
         {getDate(created, id, t)}
         {props.role === UserRoles.caregiver && type === NotificationType.careteam ? (
-          <IconButton size="medium" color="primary" aria-label="notification-help-button" onClick={props.onHelp}>
+          <IconButton
+            size="medium"
+            color="primary"
+            aria-label="notification-help-button"
+            onClick={props.onHelp}>
             <HelpIcon id={`notification-help-${id}`} />
           </IconButton>
         ) : (
