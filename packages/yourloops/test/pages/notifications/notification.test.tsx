@@ -58,7 +58,8 @@ export const testNotification = (): void => {
   const fakeNotification = (
     { id, created, creator, type, target }: INotification = notif,
     role: UserRoles = UserRoles.hcp,
-    onRemove = () => _.noop
+    onRemove = () => _.noop,
+    onHelp = () => _.noop
   ): JSX.Element => (
     <Notification
       id={id}
@@ -68,6 +69,7 @@ export const testNotification = (): void => {
       target={target}
       role={role}
       onRemove={onRemove}
+      onHelp={onHelp}
     />
   );
 
