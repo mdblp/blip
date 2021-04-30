@@ -135,7 +135,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
     if (accept) {
       setSwitchRoleStep(SwitchRoleToHcpSteps.update);
 
-      switchRoleToHCP()
+      switchRoleToHCP(accept)
         .then(() => {
           sendMetrics("user-switch-role", {
             from: user?.role,

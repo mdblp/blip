@@ -126,7 +126,6 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
     setUser(user);
     setSessionToken(auth.sessionToken);
-
     zendeskLogin();
     sendMetrics("setUserId", auth.user.userid);
     return user;
@@ -290,14 +289,20 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return api.resetPassword(key, username, password, traceToken);
   };
 
-  const switchRoleToHCP = async (): Promise<void> => {
+  const switchRoleToHCP = async (accept: boolean): Promise<void> => {
     const authInfo = await getAuthInfos();
     if (authInfo.user.role !== UserRoles.caregiver) {
       throw new Error("invalid-user-role");
     }
 
-    await api.updateUser(authInfo, { role: UserRoles.hcp });
+    if (authInfo.user?.profile !== undefined) {
+      const now = new Date().toISOString();
+      authInfo.user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: accept };
+      authInfo.user.profile.privacyPolicy = { AcceptanceDate: now, IsAccepted: accept };
+      await api.updateProfile(authInfo);
+    }
 
+    await api.updateUser(authInfo, { role: UserRoles.hcp });
     // Ask for a new token with the updated role
     const newToken = await api.refreshToken(authInfo);
     const tokenInfos = jwtDecode<JwtShorelinePayload>(newToken);

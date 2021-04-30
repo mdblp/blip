@@ -212,9 +212,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     if (accept) {
       setSwitchRoleStep(SwitchRoleToHcpSteps.update);
 
-      switchRoleToHCP()
+      switchRoleToHCP(accept)
         .then(() => {
-          sendMetrics("user-switch-role", { from: role, to: "hcp", step: SwitchRoleToHcpSteps.update, success: true });
+          sendMetrics("user-switch-role", {
+            from: role,
+            to: "hcp",
+            step: SwitchRoleToHcpSteps.update,
+            success: true,
+          });
         })
         .catch((reason: unknown) => {
           openSnackbar({ message: t("modal-switch-hcp-failure"), severity: AlertSeverity.error });
