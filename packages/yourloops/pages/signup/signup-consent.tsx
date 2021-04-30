@@ -89,7 +89,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
     }
 
     setError(true);
-    setHelperText("you must accept consent");
+    setHelperText("required-field");
     return false;
   };
 
