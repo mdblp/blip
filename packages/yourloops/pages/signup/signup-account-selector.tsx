@@ -41,6 +41,7 @@ import RadioLabel from "./signup-radio-label";
 import { useSignUpFormState } from "./signup-formstate-context";
 import Button from "@material-ui/core/Button";
 import SignUpFormProps from "./signup-form-props";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
@@ -117,22 +118,14 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-      }}
-    >
-      <FormControl
-        component="fieldset"
-        error={error}
-        className={classes.FormControl}
-      >
-        <FormHelperText className={classes.FormHelperText}>
-          {t(helperText)}
-        </FormHelperText>
+      }}>
+      <FormControl component="fieldset" error={error} className={classes.FormControl}>
+        <FormHelperText className={classes.FormHelperText}>{t(helperText)}</FormHelperText>
         <RadioGroup
           aria-label="account-selector"
           name="account-selector"
           value={state.formValues.accountRole}
-          onChange={(e) => handleRadioChange(e, "accountRole")}
-        >
+          onChange={(e) => handleRadioChange(e, "accountRole")}>
           <Paper elevation={3} className={classes.Paper}>
             <FormControlLabel
               className={classes.FormControlLabel}
@@ -162,6 +155,9 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
             />
           </Paper>
         </RadioGroup>
+        <Typography variant="body2" gutterBottom>
+          <strong>{t("signup-account-selection-msg")}</strong>
+        </Typography>
       </FormControl>
       <div id="signup-account-selector-button-group">
         <Button
@@ -169,8 +165,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           variant="contained"
           color="secondary"
           className={classes.Button}
-          onClick={handleBack}
-        >
+          onClick={handleBack}>
           {t("signup-steppers-back")}
         </Button>
         <Button
@@ -178,8 +173,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           variant="contained"
           color="primary"
           className={classes.Button}
-          onClick={onNext}
-        >
+          onClick={onNext}>
           {t("signup-steppers-next")}
         </Button>
       </div>
