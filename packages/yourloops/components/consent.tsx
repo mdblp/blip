@@ -138,13 +138,11 @@ function Consent(props: ConsentProps): JSX.Element {
     return false;
   };
 
-  const onDecline = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
-    historyHook.push("/");
+  const onDecline = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
+    auth.logout();
   };
 
-  const onConfirm = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+  const onConfirm = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     resetFormState();
     if (valideForm()) {
       // api call
