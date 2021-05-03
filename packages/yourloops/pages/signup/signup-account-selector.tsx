@@ -50,9 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   FormHelperText: {
     textAlign: "center",
   },
-  Button: {
-    marginRight: theme.spacing(1),
-  },
+
   Paper: {
     textAlign: "start",
     marginTop: theme.spacing(2),
@@ -62,6 +60,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+  },
+  Buttons: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: theme.spacing(2),
+    marginLeft: "100px",
+    marginRight: "100px",
+    marginBottom: theme.spacing(2),
+  },
+  Button: {
     marginRight: theme.spacing(1),
   },
 }));
@@ -159,7 +168,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           {t("signup-account-selection-msg")}
         </Typography>
       </FormControl>
-      <div id="signup-account-selector-button-group">
+      <div id="signup-account-selector-button-group" className={classes.Buttons}>
         <Button
           id="button-signup-steppers-back"
           variant="contained"

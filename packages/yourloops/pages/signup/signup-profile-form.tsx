@@ -51,9 +51,6 @@ interface Errors {
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
-    Button: {
-      marginRight: theme.spacing(1),
-    },
     TextField: {
       textAlign: "start",
       marginLeft: theme.spacing(0),
@@ -64,7 +61,15 @@ const formStyle = makeStyles((theme: Theme) => {
       marginRight: theme.spacing(1),
     },
     Buttons: {
-      margin: theme.spacing(3),
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: theme.spacing(4),
+      marginLeft: "100px",
+      marginRight: "100px",
+      marginBottom: theme.spacing(2),
+    },
+    Button: {
+      marginRight: theme.spacing(1),
     },
   };
 });
@@ -203,7 +208,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      <div id="signup-profileform-button-group">
+      <div id="signup-profileform-button-group" className={classes.Buttons}>
         <Button
           id="button-signup-steppers-back"
           variant="contained"
