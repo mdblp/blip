@@ -140,7 +140,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
               className={classes.FormControlLabel}
               value="hcp"
               id="form-label-signup-account-hcp"
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={
                 <RadioLabel
                   header={t("signup-radiolabel-hcp-header")}
@@ -154,7 +154,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
               className={classes.FormControlLabel}
               value="caregiver"
               id="form-label-signup-account-caregiver"
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={
                 <RadioLabel
                   header={t("signup-radiolabel-caregiver-header")}

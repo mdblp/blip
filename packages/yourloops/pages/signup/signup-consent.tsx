@@ -136,7 +136,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
               id="signup-consent-privacy-check"
               checked={state.formValues.privacyPolicy}
               onChange={(e) => handleChange(e, "privacyPolicy")}
-              color="default"
+              color="primary"
               inputProps={{
                 "aria-label": "checkbox with default color",
               }}
@@ -155,7 +155,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
               id="checkbox-signup-consent-terms"
               checked={state.formValues.terms}
               onChange={(e) => handleChange(e, "terms")}
-              color="default"
+              color="primary"
               inputProps={{
                 "aria-label": "checkbox with default color",
               }}
