@@ -156,7 +156,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           </Paper>
         </RadioGroup>
         <Typography variant="body2" gutterBottom>
-          <strong>{t("signup-account-selection-msg")}</strong>
+          {t("signup-account-selection-msg")}
         </Typography>
       </FormControl>
       <div id="signup-account-selector-button-group">
