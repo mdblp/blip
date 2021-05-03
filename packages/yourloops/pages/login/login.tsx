@@ -138,9 +138,9 @@ function Login(props: RouteComponentProps<{}, StaticContext, {from:{pathname: st
   const pushRoute = (user: User): void => {
     log.debug("user loggued,", user);
 
-    if (user?.role !== undefined) {
+    if (user.role !== undefined) {
       if (user.role === UserRoles.patient &&
-        user?.shouldAcceptConsent()) {
+        user.shouldAcceptConsent()) {
         //FIXME
         log.debug("push to new");
         props.history.push("/new-consent");
@@ -148,14 +148,14 @@ function Login(props: RouteComponentProps<{}, StaticContext, {from:{pathname: st
         return;
       }
 
-      if (user?.shouldRenewConsent()) {
+      if (user.shouldRenewConsent()) {
         log.debug("push to renew");
         props.history.push("/renew-consent");
         log.debug("login see history value:  ", props.history);
         return;
       }
 
-      const path = props.location?.state?.from?.pathname || `/${user?.role}`;
+      const path = props.location?.state?.from?.pathname || `/${user.role}`;
       log.debug("default path ", path);
       props.history.push(path);
       return;
