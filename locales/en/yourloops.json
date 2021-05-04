@@ -113,7 +113,7 @@
   "save": "Save",
   "saving": "Saving",
   "reset-end": "Go to login",
-  "alert-patient-list-data-computed": "Data from the last 24h",
+  "alert-patient-list-data-computed": "Data pulled from the last 24h",
   "invalid-response": "Invalid response from server",
   "list-patient-avg-glucose": "Av. Glucose",
   "list-patient-tbr": "% below range",
