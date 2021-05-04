@@ -136,6 +136,7 @@ describe('PumpSettingsContainer', () => {
   afterEach(() => {
     defaultProps.copySettingsClicked.resetHistory();
     console.error.resetHistory();
+
     if (component !== null) {
       component.unmount();
       component.detach();
