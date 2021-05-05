@@ -673,6 +673,11 @@ TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysi
   });
   // For each eventID take the most recent item
   this.physicalActivities = _.map(physicalActivities, _.head);
+  this.physicalActivities = _.remove(this.physicalActivities, (pa) => {
+    if (pa.duration.value !== 0){
+      return pa;
+    }
+  })
 };
 
 TidelineData.prototype.setDiabetesData = function setDiabetesData() {
