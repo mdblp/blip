@@ -1,6 +1,6 @@
-/* eslint-disable indent */
 /**
  * Copyright (c) 2021, Diabeloop
+ * API calls to hydrophone
  *
  * All rights reserved.
  *
@@ -27,203 +27,105 @@
  */
 
 import bows from "bows";
-import _ from "lodash";
 
-// import { APIErrorResponse } from "models/error";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import HttpStatus from "../http-status-codes";
-import { Session } from "../auth/models";
-import { INotification, NotificationType } from "./models";
 import appConfig from "../config";
+import { Session } from "../auth/models";
+import { errorFromHttpStatus } from "../utils";
+
+import { INotification, NotificationAPI } from "./models";
 
 const log = bows("Notifcation API");
 
-enum ActionType {
-  accept = "accept",
-  decline = "dismiss",
-}
-
-function format(notif: any): INotification {
-  return {
-    id: notif.key,
-    type: notif.type,
-    creator: {
-      userid: notif.creator.userid,
-      profile: {
-        fullName: notif.creator.profile.fullName,
-      },
-    },
-    created: notif.created,
-    target: { id: notif.target?.teamId, name: notif.target?.teamName },
-  };
-}
-
-function buildUrl(baseUrl: string, userid: string | undefined, targetId: string | undefined): URL {
-  if (_.isEmpty(userid)) {
-    log.error("forbidden call to api, user id is missing");
-    throw new Error("error-http-40x");
-  }
-
-  if (targetId === undefined || _.isEmpty(targetId)) {
-    log.error("forbidden call to api, targetId is missing");
-    throw new Error("error-http-40x");
-  }
-
-  return new URL(
-    `/confirm/${baseUrl}/invite/${userid}/${targetId}`,
-    appConfig.API_HOST
-  );
-}
-
-async function updateInvitation(
-  url: URL,
-  id: string | undefined,
-  auth: Readonly<Session>
-): Promise<void> {
-  if (id === undefined || _.isEmpty(id)) {
-    log.error("forbidden call to api, id is missing");
-    throw new Error("error-http-40x");
-  }
-
+async function getInvitations(session: Readonly<Session>, url: URL): Promise<INotification[]> {
   const response = await fetch(url.toString(), {
-    method: "PUT",
-    headers: {
-      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
-      [HttpHeaderKeys.traceToken]: auth.traceToken,
-    },
-    cache: "no-cache",
-    body: JSON.stringify({ key: id }),
-  });
-
-  if (response.ok) {
-    return Promise.resolve();
-  }
-
-  log.error(response?.status, response?.statusText);
-
-  switch (response?.status) {
-    case HttpStatus.StatusServiceUnavailable:
-    case HttpStatus.StatusInternalServerError:
-      throw new Error("error-http-500");
-    default:
-      throw new Error("error-http-40x");
-  }
-}
-
-/**
- * Get a notifications for a userId.
- * @param {Readonly<Session>} auth Generally an email
- * @param {string} userId The account password
- * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
- */
-async function getPendingInvitations(
-  auth: Readonly<Session>,
-  userId: string
-): Promise<INotification[]> {
-  log.debug(userId);
-
-  let notifs: INotification[] = [];
-
-  if (_.isEmpty(auth?.user?.userid)) {
-    log.error("forbidden call to api, user id is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL(`/confirm/invitations/${auth?.user?.userid}`, appConfig.API_HOST);
-
-  const response = await fetch(confirmURL.toString(), {
     method: "GET",
     headers: {
       [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
-      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
     },
     cache: "no-cache",
   });
 
   if (response.ok) {
-    notifs = await response.json().then((results) =>
-      results.reduce((acc: any, notif: any) => {
-        // For now skip these notifications types because the workflow is not finalized
-        if (
-          notif.type !== NotificationType.careteamRemoveMember &&
-          notif.type !== NotificationType.careteamDoAdmin
-        ) {
-          acc.push(format(notif));
-        }
-        return acc;
-      }, [])
-    );
-    log.debug("return object", notifs);
-    return Promise.resolve(notifs);
+    return response.json() as Promise<INotification[]>;
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    log.info("No new notification for the current user");
+    return Promise.resolve([]);
   }
 
-  switch (response?.status) {
-    case HttpStatus.StatusServiceUnavailable:
-    case HttpStatus.StatusInternalServerError:
-        log.error(response?.status, response?.statusText);
-      throw new Error("error-http-500");
-    default:
-      log.debug(response?.status, response?.statusText);
-      return Promise.resolve(notifs);
-  }
+  return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function accept(
-  auth: Readonly<Session>,
-  id: string,
-  creatorId: string | undefined,
-  targetId: string | undefined,
-  type: NotificationType
-): Promise<void> {
-  log.debug(auth.traceToken, creatorId, type);
-
-  let url;
-
-  switch (type) {
-    case NotificationType.careteam:
-      url = buildUrl(`${ActionType.accept}/team`, auth?.user?.userid, targetId);
-      await updateInvitation(url, id, auth);
-      break;
-    case NotificationType.directshare:
-      url = buildUrl(`${ActionType.accept}`, auth?.user?.userid, creatorId);
-      await updateInvitation(url, id, auth);
-      break;
-    default:
-      log.error("invalid notification type use to call notification api");
-      throw new Error("error-http-40x");
-  }
+/**
+ * Get a notifications for the current user.
+ * @param {Readonly<Session>} auth Generally an email
+ * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
+ */
+function getReceivedInvitations(session: Readonly<Session>): Promise<INotification[]> {
+  const confirmURL = new URL(`/confirm/invitations/${session.user.userid}`, appConfig.API_HOST);
+  return getInvitations(session, confirmURL);
 }
 
-async function decline(
-  auth: Readonly<Session>,
-  id: string,
-  creatorId: string | undefined,
-  targetId: string | undefined,
-  type: NotificationType
-): Promise<void> {
-
-  log.debug(auth.traceToken, auth?.user?.userid, creatorId, type, targetId);
-
-  let url;
-
-  switch (type) {
-    case NotificationType.careteam:
-      url = buildUrl(`${ActionType.decline}/team`, auth?.user?.userid, targetId);
-      await updateInvitation(url, id, auth);
-      break;
-    case NotificationType.directshare:
-      url = buildUrl(`${ActionType.decline}`, auth?.user?.userid, creatorId);
-      await updateInvitation(url, id, auth);
-      break;
-    default:
-      log.error("invalid notification type use to call notification api");
-      throw new Error("error-http-40x");
-  }
+/**
+ * Get a notifications for the current user.
+ * @param {Readonly<Session>} auth Generally an email
+ * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
+ */
+function getSentInvitations(session: Readonly<Session>): Promise<INotification[]> {
+  const confirmURL = new URL(`/confirm/invite/${session.user.userid}`, appConfig.API_HOST);
+  return getInvitations(session, confirmURL);
 }
 
-export default {
-  getPendingInvitations,
-  accept,
-  decline,
+async function updateInvitation(session: Readonly<Session>, url: URL, key: string): Promise<void> {
+  const response = await fetch(url.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+    },
+    cache: "no-cache",
+    body: JSON.stringify({ key }),
+  });
+
+  if (response.ok) {
+    console.info("updateInvitation response:", await response.text());
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+function acceptTeamInvitation(session: Readonly<Session>, key: string): Promise<void> {
+  const confirmURL = new URL(`/confirm/accept/team/invite`, appConfig.API_HOST);
+  return updateInvitation(session, confirmURL, key);
+}
+
+function declineTeamInvitation(session: Readonly<Session>, key: string, teamID: string): Promise<void> {
+  const confirmURL = new URL(`/confirm/dismiss/team/invite/${teamID}`, appConfig.API_HOST);
+  return updateInvitation(session, confirmURL, key);
+}
+
+function acceptDirectShareInvitation(session: Readonly<Session>, key: string, invitedBy: string): Promise<void> {
+  // /accept/invite/{userid}/{invitedby} [put]
+  const confirmURL = new URL(`/confirm/accept/invite/${session.user.userid}/${invitedBy}`, appConfig.API_HOST);
+  return updateInvitation(session, confirmURL, key);
+}
+
+function declineDirectShareInvitation(session: Readonly<Session>, key: string, invitedBy: string): Promise<void> {
+  // /dismiss/invite/{userid}/{invitedby} [put]
+  const confirmURL = new URL(`/confirm/dismiss/invite/${session.user.userid}/${invitedBy}`, appConfig.API_HOST);
+  return updateInvitation(session, confirmURL, key);
+}
+
+const notificationAPI: NotificationAPI = {
+  getReceivedInvitations,
+  getSentInvitations,
+  acceptTeamInvitation,
+  declineTeamInvitation,
+  acceptDirectShareInvitation,
+  declineDirectShareInvitation,
 };
+export default notificationAPI;

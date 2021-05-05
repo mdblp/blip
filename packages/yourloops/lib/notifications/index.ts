@@ -1,6 +1,6 @@
-/* eslint-disable indent */
 /**
  * Copyright (c) 2021, Diabeloop
+ * Notification: Invitations & co
  *
  * All rights reserved.
  *
@@ -26,39 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import { SignUpFormState } from "./signup-formstate-context";
+import { INotification, NotificationType, NotificationAPI } from "./models";
+import { useNotification } from "./hook";
 
-export const initialState: SignUpFormState = {
-  formValues: {
-    accountUsername: "",
-    accountPassword: "",
-    accountRole: "",
-    profileFirstname: "",
-    profileLastname: "",
-    profileCountry: "", // how to do better ?
-    profilePhone: "",
-    profileJob: "",
-    preferencesLanguage: "",
-    terms: false,
-    privacyPolicy: false,
-  },
+export {
+  INotification,
+  NotificationAPI,
+  NotificationType,
+  useNotification,
 };
-
-export function SignupReducer(
-  state: SignUpFormState,
-  action: any
-): SignUpFormState {
-  switch (action.type) {
-    case "EDIT_FORMVALUE": {
-      // clone input state in order to avoid initialstate mutation
-      const clone = _.cloneDeep(state);
-      clone.formValues[action.key] = action.value;
-      return clone;
-    }
-    case "RESET_FORMVALUES":
-      return initialState;
-    default:
-  }
-  return state;
-}

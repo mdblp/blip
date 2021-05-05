@@ -30,79 +30,132 @@ import bows from "bows";
 import NotifAPIImpl from "./api";
 import { INotification, NotificationAPI, NotificationContext, NotificationProvider, NotificationType } from "./models";
 import { useAuth } from "../auth/hook";
-import { Session } from "../auth/models";
+// import { Session } from "../auth/models";
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
 const log = bows("NotificationHook");
+
 /** hackish way to prevent 2 or more consecutive loading */
 let lock = false;
 
 function NotificationContextImpl(api: NotificationAPI): NotificationContext {
-  log.debug("enter notificatin hook");
   const authHook = useAuth();
-  const [count, setCount] = React.useState(0);
+  const [receivedInvitations, setReceivedInvitations] = React.useState<INotification[]>([]);
+  const [sentInvitations, setSentInvitations] = React.useState<INotification[]>([]);
+  const [initialized, setInitialized] = React.useState(false);
+  const session = authHook.session();
 
-  const isLoggedIn = authHook.isLoggedIn();
+  if (session === null) {
+    throw new Error("User must be logged-in to use the Notification hook");
+  }
 
-  const getPendingInvitations = async (userId: string | undefined): Promise<INotification[]> => {
-    log.debug("Get pending invitations for: ", userId);
-    if (userId === undefined) {
-      throw new Error("http-error-40x");
+  const update = async (): Promise<void> => {
+    if (lock) {
+      return;
     }
-    const session = authHook.session() as Session;
-    const results: INotification[] = await api.getPendingInvitations(session, userId);
-    setCount(results.length);
-    return Promise.resolve(results);
+    lock = true;
+
+    log.debug("Notification hook updating");
+
+    try {
+      const r = await api.getReceivedInvitations(session);
+      setReceivedInvitations(r);
+      const s = await api.getSentInvitations(session);
+      setSentInvitations(s);
+    } catch (err) {
+      log.error(err);
+    } finally {
+      lock = false;
+    }
+
+    // const results = await api.getPendingInvitations(session);
+    // results.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
+    // setNotifications(results);
   };
 
-  const accept = async (id: string, creatorId: string | undefined, targetId: string | undefined, type: NotificationType): Promise<void> => {
-    log.debug("accept ", type, " invitation for user: ", creatorId);
-    if (creatorId === undefined) {
-      throw new Error("http-error-40x");
+  const accept = async (notification: INotification): Promise<void> => {
+    log.info("Accept invitation", notification);
+    switch (notification.type) {
+    case NotificationType.careTeamInvitation:
+      {
+        await api.acceptDirectShareInvitation(session, notification.key, notification.creatorId);
+        const r = await api.getReceivedInvitations(session);
+        setReceivedInvitations(r);
+      }
+      break;
+    case NotificationType.medicalTeamProInvitation:
+    case NotificationType.medicalTeamPatientInvitation:
+      {
+        await api.acceptTeamInvitation(session, notification.key);
+        const r = await api.getReceivedInvitations(session);
+        setReceivedInvitations(r);
+      }
+      break;
+    default:
+      log.info("TODO accept", notification);
     }
-
-    const session = authHook.session() as Session;
-    await api.accept(session, id, creatorId, targetId, type);
-    setCount((count) => { return count > 0 ? count-1 : 0; });
   };
 
-  const decline = async (id:string, creatorId: string | undefined, targetId: string | undefined, type: NotificationType): Promise<void> => {
-    log.debug("decline ", type, " invitation for user: ", creatorId);
-    if (creatorId === undefined) {
-      throw new Error("http-error-40x");
+  const decline = async (notification: INotification): Promise<void> => {
+    log.info("Decline invitation", notification);
+    switch (notification.type) {
+    case NotificationType.careTeamInvitation:
+      {
+        await api.declineDirectShareInvitation(session, notification.key, notification.creatorId);
+        const r = await api.getReceivedInvitations(session);
+        setReceivedInvitations(r);
+      }
+      break;
+    case NotificationType.medicalTeamProInvitation:
+    case NotificationType.medicalTeamPatientInvitation:
+      {
+        await api.declineTeamInvitation(session, notification.key, notification.target?.id ?? "");
+        const r = await api.getReceivedInvitations(session);
+        setReceivedInvitations(r);
+      }
+      break;
+    default:
+      log.info("TODO decline", notification);
     }
+  };
 
-    const session = authHook.session() as Session;
-    await api.decline(session, id, creatorId, targetId, type);
-    setCount((count) => { return count > 0 ? count-1 : 0; });
+  const cancel = (notification: INotification): Promise<void> => {
+    log.debug("TODO cancel", notification);
+    return Promise.resolve();
   };
 
   const initHook = () => {
-    log.info("init", lock);
-    if (lock === false) {
-      lock = true;
-      if (isLoggedIn) {
-        const session = authHook.session() as Session;
-        api
-          .getPendingInvitations(session, session?.user?.userid)
-          .then((notifs: INotification[]) => {
-            setCount(notifs.length);
-          })
-          .catch((reason: unknown) => {
-            log.error("failed init", reason);
-          });
-      }
-      lock = false;
+    if (initialized || lock) {
+      return;
     }
+
+    log.info("init");
+    lock = true;
+
+    Promise.all([
+      api.getReceivedInvitations(session),
+      api.getSentInvitations(session),
+    ]).then((result: [INotification[], INotification[]]) => {
+      setReceivedInvitations(result[0]);
+      setSentInvitations(result[1]);
+    }).catch((reason: unknown) => {
+      log.error(reason);
+    }).finally(() => {
+      setInitialized(true);
+      lock = false;
+    });
   };
 
-  React.useEffect(initHook, [authHook, isLoggedIn, api]);
+  React.useEffect(initHook, [session, initialized, api]);
 
   return {
-    count,
-    getPendingInvitations,
+    initialized,
+    receivedInvitations,
+    sentInvitations,
+    update,
     accept,
     decline,
+    cancel,
   };
 }
 
