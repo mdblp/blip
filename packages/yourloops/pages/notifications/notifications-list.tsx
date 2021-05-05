@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Copyright (c) 2020, Diabeloop
  * Notifications page
@@ -77,7 +76,6 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
     SwitchRoleToHcpSteps.none
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   React.useEffect(() => {
     const loadNotifs = async () => {
       console.log("enter in useEffect");
@@ -134,7 +132,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
     if (accept) {
       setSwitchRoleStep(SwitchRoleToHcpSteps.update);
 
-      switchRoleToHCP(accept)
+      switchRoleToHCP()
         .then(() => {
           sendMetrics("user-switch-role", {
             from: user?.role,
@@ -194,7 +192,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
           )}
         </List>
         <SwitchRoleConsequencesDialog
-          title="modal-switch-hcp-team-title"
+          title="modal-switch-hcp-team-title-from-notification"
           open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
           onResult={handleSwitchRoleToConditions}
         />

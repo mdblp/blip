@@ -45,7 +45,7 @@ import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
 import brandingLogo from "branding/logo.png";
 
-import { UserRoles, User } from "../../models/shoreline";
+import { User } from "../../models/shoreline";
 import { useNotification } from "../../lib/notifications/hook";
 import config from "../../lib/config";
 import { useAuth } from "../../lib/auth";

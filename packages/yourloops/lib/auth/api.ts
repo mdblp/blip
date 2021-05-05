@@ -506,7 +506,7 @@ async function updateSettings(auth: Readonly<Session>): Promise<Settings> {
 }
 
 async function updateUser(auth: Readonly<Session>, updates: Partial<User>): Promise<void> {
-  const updateURL = new URL(`/auth/user/${auth.user.userid}`, appConfig.API_HOST);
+  const updateURL = new URL("/auth/user", appConfig.API_HOST);
 
   log.debug("updateUser:", updateURL.toString());
   const response = await fetch(updateURL.toString(), {
@@ -516,7 +516,7 @@ async function updateUser(auth: Readonly<Session>, updates: Partial<User>): Prom
       [HttpHeaderKeys.traceToken]: auth.traceToken,
       [HttpHeaderKeys.sessionToken]: auth.sessionToken,
     },
-    body: JSON.stringify({ "updates": { roles: [updates.role] } }),
+    body: JSON.stringify({ updates }),
   });
 
   if (response.ok) {

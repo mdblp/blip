@@ -212,7 +212,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     if (accept) {
       setSwitchRoleStep(SwitchRoleToHcpSteps.update);
 
-      switchRoleToHCP(accept)
+      switchRoleToHCP()
         .then(() => {
           sendMetrics("user-switch-role", {
             from: role,

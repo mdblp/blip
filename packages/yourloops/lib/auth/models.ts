@@ -75,7 +75,7 @@ export interface AuthContext {
   setFlagPatients: (userIds: string[]) => Promise<void>;
   getFlagPatients: () => string[];
   /** Switch user role from caregiver to hcp */
-  switchRoleToHCP: (accept: boolean) => Promise<void>;
+  switchRoleToHCP: () => Promise<void>;
 }
 
 export interface AuthProvider {

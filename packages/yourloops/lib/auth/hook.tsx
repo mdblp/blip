@@ -289,16 +289,16 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return api.resetPassword(key, username, password, traceToken);
   };
 
-  const switchRoleToHCP = async (accept: boolean): Promise<void> => {
+  const switchRoleToHCP = async (): Promise<void> => {
     const authInfo = await getAuthInfos();
     if (authInfo.user.role !== UserRoles.caregiver) {
       throw new Error("invalid-user-role");
     }
-
+    // FIXME:
     if (authInfo.user?.profile !== undefined) {
       const now = new Date().toISOString();
-      authInfo.user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: accept };
-      authInfo.user.profile.privacyPolicy = { AcceptanceDate: now, IsAccepted: accept };
+      authInfo.user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: true };
+      authInfo.user.profile.privacyPolicy = { AcceptanceDate: now, IsAccepted: true };
       await api.updateProfile(authInfo);
     }
 
