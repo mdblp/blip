@@ -25,7 +25,7 @@ import { ONE_HR } from './datetime';
 * @param {Array} basals - Array of preprocessed Tidepool basal objects
 *
 * @return {Array} Array of Arrays where each component Array is a sequence of basals
-*                 of the same subType to be rendered as a unit
+*                 of the same deliveryType to be rendered as a unit
 */
 export function getBasalSequences(basals) {
   const basalSequences = [];
@@ -35,7 +35,7 @@ export function getBasalSequences(basals) {
   let idx = 1;
   while (idx <= basals.length - 1) {
     const nextBasal = basals[idx];
-    const basalTypeChange = nextBasal.subType !== currentBasal.subType;
+    const basalTypeChange = nextBasal.deliveryType !== currentBasal.deliveryType;
 
     if (basalTypeChange || currentBasal.discontinuousEnd || nextBasal.rate === 0) {
       basalSequences.push(seq);
@@ -53,17 +53,14 @@ export function getBasalSequences(basals) {
 
 /**
  * getBasalPathGroupType
- * @param {Object} basal - single basal datum
- * @return {String} the path group type
+ *
+ * FIXME: Duplicate in packages/tideline/js/data/basalutil.js
+ * @param {{ deliveryType: string }} datum - single basal datum
+ * @return {"manual" | "automated"} the path group type
  */
-export function getBasalPathGroupType(datum = {}) {
-  const deliveryType = _.get(datum, 'subType', datum.deliveryType);
-  const suppressedDeliveryType = _.get(
-    datum.suppressed,
-    'subType',
-    _.get(datum.suppressed, 'deliveryType')
-  );
-  return _.includes([deliveryType, suppressedDeliveryType], 'automated') ? 'automated' : 'manual';
+export function getBasalPathGroupType(datum) {
+  const deliveryType = _.get(datum, 'deliveryType', 'scheduled');
+  return ['automated', 'temp'].includes(deliveryType) ? 'automated' : 'manual';
 }
 
 /**
@@ -74,7 +71,7 @@ export function getBasalPathGroupType(datum = {}) {
 export function getBasalPathGroups(basals) {
   const basalPathGroups = [];
   let currentPathType;
-  _.each(basals, datum => {
+  _.forEach(basals, datum => {
     const pathType = getBasalPathGroupType(datum);
     if (pathType !== currentPathType) {
       currentPathType = pathType;
@@ -186,7 +183,7 @@ export function getTotalBasalFromEndpoints(data, endpoints) {
   const end = new Date(endpoints[1]);
   let dose = 0;
 
-  _.each(data, (datum, index) => {
+  _.forEach(data, (datum, index) => {
     let duration = datum.duration;
     if (index === 0) {
       // handle first segment, which may have started before the start endpoint
@@ -216,7 +213,7 @@ export function getBasalGroupDurationsFromEndpoints(data, endpoints) {
     manual: 0,
   };
 
-  _.each(data, (datum, index) => {
+  _.forEach(data, (datum, index) => {
     let duration = datum.duration;
     if (index === 0) {
       // handle first segment, which may have started before the start endpoint

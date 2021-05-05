@@ -269,7 +269,8 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
         };
 
         _.reduce(basalPathGroups, (acc, group) => {
-          const event = group[0].deliveryType === 'automated' ? 'automatedStart' : 'automatedStop';
+          const deliveryType = _.get(group[0], 'deliveryType', 'scheduled');
+          const event = ['automated', 'temp'].includes(deliveryType) ? 'automatedStart' : 'automatedStop';
           acc[event]++;
           return acc;
         }, events);

@@ -211,10 +211,6 @@ const isWanted = (d) => {
     }
   } else {
     // Assume new data
-    if (d.type === "basal" && d.deliveryType === "temp") {
-      d.unwanted = 'temp basal';
-      return false; // temp basal
-    }
     if (d.type === "message" && !_.isEmpty(d.parentMessage)) {
       return false; // We display only the parent message, we do not care for the others
     }
