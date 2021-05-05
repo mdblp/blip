@@ -294,7 +294,12 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     if (authInfo.user.role !== UserRoles.caregiver) {
       throw new Error("invalid-user-role");
     }
-    // FIXME:
+
+    // Call first Update user as it is the most importat call
+    // if it failed, for now we dont have compensation transaction that revert db change
+    await api.updateUser(authInfo, { role: UserRoles.hcp });
+
+    // FIXME
     if (authInfo.user?.profile !== undefined) {
       const now = new Date().toISOString();
       authInfo.user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: true };
@@ -302,7 +307,6 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       await api.updateProfile(authInfo);
     }
 
-    await api.updateUser(authInfo, { role: UserRoles.hcp });
     // Ask for a new token with the updated role
     const newToken = await api.refreshToken(authInfo);
     const tokenInfos = jwtDecode<JwtShorelinePayload>(newToken);
