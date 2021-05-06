@@ -43,7 +43,7 @@ enum ActionType {
   decline = "dismiss",
 }
 
-function format(notif: any, index:number): INotification {
+function format(notif: any): INotification {
   return {
     id: notif.key,
     type: notif.type,
@@ -52,10 +52,9 @@ function format(notif: any, index:number): INotification {
       profile: {
         fullName: notif.creator.profile.fullName,
       },
-      role: notif.creator.profile.role,
     },
     created: notif.created,
-    target: { id: index.toString(), name: notif.target.name },
+    target: { id: notif.target.teamId, name: notif.target.teamName },
   };
 }
 
@@ -143,7 +142,7 @@ async function getPendingInvitations(
   });
 
   if (response.ok) {
-    await response.json().then((res) => res.map((notif: any, index: number) => notifs.push(format(notif, index))));
+    await response.json().then((res) => res.map((notif: any) => notifs.push(format(notif))));
     log.debug("return object", notifs);
     return Promise.resolve(notifs);
   }

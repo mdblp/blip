@@ -50,7 +50,6 @@ export const testNotification = (): void => {
       profile: {
         fullName: "Jeanne Dubois",
       },
-      role: UserRoles.patient,
     },
     type: NotificationType.directshare,
   };

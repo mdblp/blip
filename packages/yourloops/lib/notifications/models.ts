@@ -1,5 +1,5 @@
 import { Session } from "../../lib/auth/models";
-import { Profile, UserRoles } from "../../models/shoreline";
+import { Profile } from "../../models/shoreline";
 
 export enum NotificationType {
   directshare = "careteam_invitation",
@@ -14,7 +14,6 @@ export interface INotification {
   creator: {
     userid: string;
     profile: Profile;
-    role: UserRoles;
   };
   created: string;
   target?: {
