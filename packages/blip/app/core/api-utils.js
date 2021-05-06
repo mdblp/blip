@@ -89,6 +89,9 @@ class ApiUtils {
    */
   async refreshV1() {
     const range = await this.api.getPatientDataRange(this.patient);
+    if (range === null) {
+      return [];
+    }
     this.log.info("Available data range:", range[0], range[1]);
 
     // Assume browser locale, will adjust after
