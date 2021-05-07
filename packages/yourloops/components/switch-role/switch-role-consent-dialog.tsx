@@ -44,7 +44,7 @@ const dialogStyles = makeStyles(
       },
       formControlPolicy: {
         marginBottom: theme.spacing(2),
-        color: theme.palette.text.secondary,
+        color: theme.palette.text.primary,
       },
       checkbox: {
         marginBottom: "auto",

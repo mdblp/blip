@@ -5,6 +5,8 @@ export enum NotificationType {
   directshare = "careteam_invitation",
   careteam = "medicalteam_invitation",
   careteamPatient = "medicalteam_patient_invitation",
+  careteamDoAdmin = "medicalteam_do_admin",
+  careteamRemoveMember = "medicalteam_remove",
 }
 
 /** Some comments heres on the fields will be welcomed :-) */

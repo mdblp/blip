@@ -54,7 +54,7 @@ function format(notif: any): INotification {
       },
     },
     created: notif.created,
-    target: { id: notif.target.teamId, name: notif.target.teamName },
+    target: { id: notif.target?.teamId, name: notif.target?.teamName },
   };
 }
 
@@ -122,7 +122,7 @@ async function getPendingInvitations(
 ): Promise<INotification[]> {
   log.debug(userId);
 
-  const notifs: INotification[] = [];
+  let notifs: INotification[] = [];
 
   if (_.isEmpty(auth?.user?.userid)) {
     log.error("forbidden call to api, user id is missing");
@@ -142,7 +142,18 @@ async function getPendingInvitations(
   });
 
   if (response.ok) {
-    await response.json().then((res) => res.map((notif: any) => notifs.push(format(notif))));
+    notifs = await response.json().then((results) =>
+      results.reduce((acc: any, notif: any) => {
+        // For now skip these notifications types because the workflow is not finalized
+        if (
+          notif.type !== NotificationType.careteamRemoveMember &&
+          notif.type !== NotificationType.careteamDoAdmin
+        ) {
+          acc.push(format(notif));
+        }
+        return acc;
+      }, [])
+    );
     log.debug("return object", notifs);
     return Promise.resolve(notifs);
   }

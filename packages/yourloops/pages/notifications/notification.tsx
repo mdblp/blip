@@ -185,15 +185,6 @@ export const Notification = (props: NotificationProps): JSX.Element => {
         ) : (
           <div>
             <Button
-              id={`notification-button-decline-${id}`}
-              className={button}
-              variant="contained"
-              color="secondary"
-              disabled={inProgress}
-              onClick={onDecline}>
-              {t("decline")}
-            </Button>
-            <Button
               id={`notification-button-accept-${id}`}
               color="primary"
               variant="contained"
@@ -204,6 +195,15 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             </Button>
           </div>
         )}
+        <Button
+          id={`notification-button-decline-${id}`}
+          className={button}
+          variant="contained"
+          color="secondary"
+          disabled={inProgress}
+          onClick={onDecline}>
+          {t("decline")}
+        </Button>
       </div>
     </div>
   );

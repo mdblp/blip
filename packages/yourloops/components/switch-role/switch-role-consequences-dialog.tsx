@@ -88,10 +88,10 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
       </DialogTitle>
 
       <DialogContent id="switch-role-consequences-dialog-content" className={classes.dialogContent}>
-        <DialogContentText id="modal-switch-hcp-info-1">
+        <DialogContentText id="modal-switch-hcp-info-1" color="textPrimary">
           {t("modal-switch-hcp-info")}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-list-3" component={"div"}>
+        <DialogContentText id="modal-switch-hcp-info-list-3" component={"div"} color="textPrimary">
           <span id="modal-switch-hcp-info-3">{t("modal-switch-hcp-info-3")}</span>
           <ul className={classes.switchList}>
             <li id="modal-switch-hcp-list-1">{t("modal-switch-hcp-list-1")}</li>
@@ -99,13 +99,13 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
             <li id="modal-switch-hcp-list-3">{t("modal-switch-hcp-list-3")}</li>
           </ul>
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-4">
+        <DialogContentText id="modal-switch-hcp-info-4" color="textPrimary">
           {t("modal-switch-hcp-info-4")}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-5">
+        <DialogContentText id="modal-switch-hcp-info-5" color="textPrimary">
           {t("modal-switch-hcp-info-5")}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-2">
+        <DialogContentText id="modal-switch-hcp-info-2" color="textPrimary">
           <strong>{t("modal-switch-hcp-info-2")}</strong>
         </DialogContentText>
       </DialogContent>
