@@ -17,6 +17,7 @@
   "aria-team-add-member-dialog-title": "Neues Mitglied im Team {{teamName}}",
   "error-failed-display-teams": "Teams konnten nicht angezeigt werden: {{errorMessage}}",
   "error-failed-display-patients": "Es ist nicht möglich, Ihre Patientenliste anzuzeigen. Bitte versuchen Sie es später noch einmal.",
+  "Belgium": "Belgium",
   "button-accept": "Akzeptieren",
   "add-patient": "Patienten hinzufügen",
   "button-create-team": "Team erstellen",
