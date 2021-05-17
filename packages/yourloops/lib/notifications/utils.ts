@@ -33,14 +33,11 @@ import { INotification, NotificationType } from "./models";
  * Convert an API notification to our model
  * @param apin API Notification
  */
-export function notificationConversion(apin: INotificationAPI): INotification {
+export function notificationConversion(apin: INotificationAPI): INotification | null {
   let type: NotificationType;
   switch (apin.type) {
   case APINotificationType.careTeamInvitation:
     type = NotificationType.directInvitation;
-    break;
-  case APINotificationType.medicalTeamDoAdmin:
-    type = NotificationType.careTeamDoAdmin;
     break;
   case APINotificationType.medicalTeamPatientInvitation:
     type = NotificationType.careTeamPatientInvitation;
@@ -48,9 +45,14 @@ export function notificationConversion(apin: INotificationAPI): INotification {
   case APINotificationType.medicalTeamProInvitation:
     type = NotificationType.careTeamProInvitation;
     break;
+  case APINotificationType.medicalTeamDoAdmin:
+    type = NotificationType.careTeamDoAdmin;
+    // break; // TODO medicalTeamDoAdmin
+    return null;
   case APINotificationType.medicalTeamRemoveMember:
     type = NotificationType.careTeamRemoveMember;
-    break;
+    // break; // TODO medicalTeamRemoveMember
+    return null;
   default:
     throw new Error("Invalid notification type");
   }

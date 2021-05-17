@@ -54,7 +54,17 @@ async function getInvitations(session: Readonly<Session>, url: URL): Promise<INo
   if (response.ok) {
     const notificationsFromAPI = await response.json() as INotificationAPI[];
     if (Array.isArray(notificationsFromAPI)) {
-      return notificationsFromAPI.map(notificationConversion);
+      // TODO remove me when all notifications types are supported
+      const notifications: INotification[] = [];
+      for (const nfa of notificationsFromAPI) {
+        const notification = notificationConversion(nfa);
+        if (notification) {
+          notifications.push(notification);
+        }
+      }
+      return notifications;
+      // END TODO
+      // return notificationsFromAPI.map(notificationConversion);
     }
     return Promise.reject(new Error("Invalid response from API"));
   } else if (response.status === HttpStatus.StatusNotFound) {
