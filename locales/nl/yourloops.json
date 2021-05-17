@@ -261,7 +261,7 @@
   "modal-patient-share-team-info": "Je zorgverlener nodigt je uit om je gegevens te delen met",
   "modal-patient-team-warning": "Controleer of de bovenstaande gegevens overeenkomen met de informatie die door je zorgverlener is verstrekt voordat je de uitnodiging accepteert.",
   "modal-patient-share-team-privacy": "Door deze uitnodiging te accepteren, erken ik dit team als mijn behandelteam en geef ik toestemming om mijn persoonlijke gegevens te delen met alle leden ervan, die geautoriseerde zorgverleners zijn die zijn geregistreerd op YourLoops. Ik bevestig dat ik deze toegang op elk moment kan intrekken. ",
-  "modal-patient-team-privacy-2": "Lees ons <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy> voor meer informatie.",
+  "modal-patient-team-privacy-2": "Read our <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>for more information.",
   "modal-patient-share-team-accept": "Uitnodiging accepteren",
   "modal-patient-share-team-failure": "Uitnodiging kan niet worden geaccepteerd. Probeer het later opnieuw.",
   "modal-patient-add-team-info": "Je staat op het punt je gegevens te delen met",
