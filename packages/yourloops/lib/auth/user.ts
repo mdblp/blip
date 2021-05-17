@@ -109,12 +109,13 @@ class User implements IUser {
    * @returns true if the lastest consent date is greater than the given consent
    */
   checkConsent(consent: Consent): boolean {
-    if (consent.acceptanceTimestamp !== undefined) {
+
+    if (typeof consent.acceptanceTimestamp === "string") {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
-      let acceptDate = new Date(consent.acceptanceTimestamp);
-      if (isNaN(acceptDate.getTime())) {
+      const acceptDate = new Date(consent.acceptanceTimestamp);
+      if (!Number.isFinite(acceptDate)) {
         // if acceptDate is not a valid formatted date string, get user to re-accept terms
-        acceptDate = new Date(0);
+        return false;
       }
       return acceptDate.valueOf() > 0 && this.latestConsentChangeDate >= acceptDate;
     }
