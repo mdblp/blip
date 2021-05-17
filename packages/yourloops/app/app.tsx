@@ -65,6 +65,8 @@ const Yourloops = (): JSX.Element => {
           <PublicRoute exact path="/signup" component={SignUpPage} />
           <PublicRoute path="/request-password-reset" component={RequestPasswordResetPage} />
           <PublicRoute path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
+          <PrivateRoute path="/new-consent" component={PatientConsentPage} />
+          <PrivateRoute path="/renew-consent" component={ConsentPage} />
           <PrivateRoute path="/caregiver" component={CaregiverPage} />
           <PrivateRoute path="/professional" component={HcpPage} />
           <PrivateRoute path="/patient" component={PatientPage} />

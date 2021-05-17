@@ -50,11 +50,11 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import brandingLogo from "branding/logo.png";
 
-import { useAuth } from "../../lib/auth";
+import { User, useAuth } from "../../lib/auth";
 import { errorTextFromException } from "../../lib/utils";
 import { useAlert } from "../../components/utils/snackbar";
 import LanguageSelector from "../../components/language-select";
-import { User, UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/shoreline";
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
@@ -155,7 +155,7 @@ function Login(props: RouteComponentProps<{}, StaticContext, {from:{pathname: st
         return;
       }
 
-      const path = props.location?.state?.from?.pathname || `/${user.role}`;
+      const path = props.location?.state?.from?.pathname || user.getHomePage();
       log.debug("default path ", path);
       props.history.push(path);
       return;

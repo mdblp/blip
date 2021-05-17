@@ -37,7 +37,7 @@ enum UserRoles {
 }
 
 interface Consent {
-  acceptanceDate?: string;
+  acceptanceTimestamp?: string;
   isAccepted?: boolean;
 }
 
@@ -95,4 +95,4 @@ interface IUser {
   medicalData?: MedicalData | null;
 }
 
-export { IUser, Profile, Settings, Preferences, UserRoles };
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

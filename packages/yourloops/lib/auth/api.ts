@@ -30,7 +30,8 @@ import bows from "bows";
 import _ from "lodash";
 
 import { APIErrorResponse } from "models/error";
-import { User, Profile, Preferences, Settings, UserRoles } from "../../models/shoreline";
+import User from "./user";
+import { Profile, Preferences, Settings, UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
 import { errorFromHttpStatus } from "../utils";

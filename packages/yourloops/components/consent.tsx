@@ -149,9 +149,9 @@ function Consent(props: ConsentProps): JSX.Element {
       const user = auth?.user;
       if (user?.profile !== undefined) {
         const now = new Date().toISOString();
-        user.profile.termsOfUse = { AcceptanceDate: now, IsAccepted: terms };
-        user.profile.privacyPolicy = { AcceptanceDate: now, IsAccepted: privacyPolicy };
-        auth.updateProfile(user);
+        user.profile.termsOfUse = { acceptanceTimestamp: now, isAccepted: terms };
+        user.profile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: privacyPolicy };
+        auth.updateProfile(user.profile);
         historyHook.push(props.destinationPath);
       }
     }
