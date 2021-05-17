@@ -261,7 +261,7 @@
   "modal-patient-share-team-info": "Il suo operatore sanitario la invita a condividere i suoi dati con",
   "modal-patient-team-warning": "Prima di accettare l’invito, verifichi che i dettagli precedenti corrispondano alle informazioni fornite dall’operatore sanitario.",
   "modal-patient-share-team-privacy": "Accettando questo invito, riconosco questo team come il mio team di cura e acconsento a condividere i miei dati personali con tutti i suoi membri, che sono operatori sanitari autorizzati registrati su YourLoops. So di poter revocare questo accesso in qualsiasi momento. ",
-  "modal-patient-team-privacy-2": "Per ulteriori informazioni, legga la nostra <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
+  "modal-patient-team-privacy-2": "Read our <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>for more information.",
   "modal-patient-share-team-accept": "Accetta invito",
   "modal-patient-share-team-failure": "Impossibile accettare l’invito. Riprovare più tardi.",
   "modal-patient-add-team-info": "Sta per condividere i suoi dati con",
