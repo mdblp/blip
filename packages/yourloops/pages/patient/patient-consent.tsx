@@ -26,14 +26,18 @@
  */
 
 import * as React from "react";
+import { useAuth } from "../../lib/auth";
 import Consent from "../../components/consent";
 
 /**
  * Patient Consent Page
  */
 function PatientConsentPage(): JSX.Element {
+  const { user } = useAuth();
 
-  return <Consent messageKey="constent-welcome-message" destinationPath={`/patient`} />;
+  return (
+    <Consent messageKey="constent-welcome-message" destinationPath={`${user?.getHomePage()}`} />
+  );
 }
 
 export default PatientConsentPage;

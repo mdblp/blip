@@ -210,10 +210,7 @@ function Consent(props: ConsentProps): JSX.Element {
                         id="consent-checkbox-privacypolicy"
                         checked={privacyPolicy}
                         onChange={(e) => onChange(e, setPrivacyPolicy)}
-                        color="default"
-                        inputProps={{
-                          "aria-label": "checkbox with default color",
-                        }}
+                        color="primary"
                       />
                     }
                     label={
@@ -232,10 +229,7 @@ function Consent(props: ConsentProps): JSX.Element {
                         id="consent-checkbox-terms"
                         checked={terms}
                         onChange={(e) => onChange(e, setTerms)}
-                        color="default"
-                        inputProps={{
-                          "aria-label": "checkbox with default color",
-                        }}
+                        color="primary"
                       />
                     }
                     label={
@@ -254,7 +248,7 @@ function Consent(props: ConsentProps): JSX.Element {
                       color="secondary"
                       className={classes.Button}
                       onClick={onDecline}>
-                      {t("decline")}
+                      {t("button-decline")}
                     </Button>
                     <Button
                       id="consent-button-confirm"
@@ -262,7 +256,7 @@ function Consent(props: ConsentProps): JSX.Element {
                       color="primary"
                       className={classes.Button}
                       onClick={onConfirm}>
-                      {t("confirm")}
+                      {t("button-accept")}
                     </Button>
                   </div>
                 </FormControl>

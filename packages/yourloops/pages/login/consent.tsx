@@ -35,7 +35,7 @@ import { useAuth } from "../../lib/auth";
 function ConsentPage(): JSX.Element {
   const { user } = useAuth();
 
-  return (<Consent messageKey="constent-renew-message" destinationPath={`/${user?.role}`} />);
+  return (<Consent messageKey="constent-renew-message" destinationPath={`${user?.getHomePage()}`} />);
 }
 
 export default ConsentPage;
