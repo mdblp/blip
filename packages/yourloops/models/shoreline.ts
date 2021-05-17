@@ -47,8 +47,8 @@ enum Jobs {
 }
 
 interface Consent {
-  AcceptanceDate?: string;
-  IsAccepted?: boolean;
+  acceptanceTimestamp?: string;
+  isAccepted?: boolean;
 }
 
 interface Patient {
@@ -95,13 +95,13 @@ interface IUser {
   /** true if the account has been verified */
   readonly emailVerified?: boolean;
   /** User profile */
-  profile?: Profile;
+  profile?: Profile | null;
   /** User settings (read-only for patient only?) */
-  settings?: Settings;
+  settings?: Settings | null;
   /** User preferences */
-  preferences?: Preferences;
+  preferences?: Preferences | null;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
 }
 
-export { IUser, Profile, Settings, Preferences, UserRoles, Jobs };
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

@@ -33,10 +33,10 @@ import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 
-import { UserRoles } from "../models/shoreline";
+import { UserRoles, IUser } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { useTeam, TeamUser } from "../lib/team";
+import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 
 import ProfileDialog from "./profile-dialog";
@@ -69,7 +69,7 @@ function PatientDataPage(props: PatientDataPageProps): JSX.Element | null {
   const teamHook = useTeam();
   const dataHook = useData();
 
-  const [patient, setPatient] = React.useState<Readonly<TeamUser> | null>(null);
+  const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
   const { blipApi } = dataHook;

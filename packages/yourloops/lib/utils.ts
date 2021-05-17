@@ -106,6 +106,6 @@ export function getUserFirstLastName(user: IUser): { firstName: string, lastName
   return { firstName: getUserFirstName(user), lastName: getUserLastName(user) };
 }
 
-export function getUserEmail(user: User): string {
+export function getUserEmail(user: IUser): string {
   return Array.isArray(user.emails) ? user.emails[0] : user.username;
 }

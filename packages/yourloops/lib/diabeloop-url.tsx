@@ -27,7 +27,7 @@
  */
 import Link from "@material-ui/core/Link";
 import React from "react";
-import { User, UserRoles } from "../models/shoreline";
+import { IUser, UserRoles } from "../models/shoreline";
 import config from "./config";
 
 export const urlPrefixFromUserRole = {
@@ -36,7 +36,7 @@ export const urlPrefixFromUserRole = {
   caregiver: "/caregiver",
 };
 
-export function getURLPrefixFromUser(user: Readonly<User> | null, suffix?: string): string {
+export function getURLPrefixFromUser(user: Readonly<IUser> | null, suffix?: string): string {
   let path = "/";
   if (user) {
     switch (user.role) {

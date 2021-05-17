@@ -26,7 +26,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { Button, createStyles, makeStyles } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import { User, UserRoles } from "../../models/shoreline";
+import { IUser, UserRoles } from "../../models/shoreline";
 import { INotification, NotificationType } from "../../lib/notifications/models";
 import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
 import { useNotification } from "../../lib/notifications/hook";
@@ -59,8 +59,8 @@ const NotificationSpan = ({ t, notification, className }: { t: TFunction<"yourlo
   // "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> invites you to join {{careteam}}.",
   // "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
   // "notification-team-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> now shares their diabetes data with <strong>{{careteam}}</strong>.",
-  const firstName = getUserFirstName(creator as User);
-  const lastName = getUserLastName(creator as User);
+  const firstName = getUserFirstName(creator as IUser);
+  const lastName = getUserLastName(creator as IUser);
   const careteam = target?.name ?? "";
   const values = { firstName, lastName, careteam };
 
