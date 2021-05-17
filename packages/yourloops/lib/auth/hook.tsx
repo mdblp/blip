@@ -99,21 +99,21 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
 
   /**
    * Update hook users infos, perform zendesk & matomo login
-   * @param st sessionToken
-   * @param tt traceToken
-   * @param u user
+   * @param session sessionToken
+   * @param trace traceToken
+   * @param usr user
    */
-  const setAuthInfos = React.useCallback((st: string, tt: string, u: User): void => {
-    updateLanguageForUser(u);
-    setUserPrivate(u);
-    if (st !== sessionToken) {
-      setSessionToken(st);
+  const setAuthInfos = React.useCallback((session: string, trace: string, usr: User): void => {
+    updateLanguageForUser(usr);
+    setUserPrivate(usr);
+    if (session !== sessionToken) {
+      setSessionToken(session);
     }
-    if (tt !== traceToken) {
-      setTraceToken(tt);
+    if (trace !== traceToken) {
+      setTraceToken(trace);
     }
     zendeskLogin();
-    sendMetrics("setUserId", u.userid);
+    sendMetrics("setUserId", usr.userid);
   }, [sessionToken, traceToken]);
 
   /**
