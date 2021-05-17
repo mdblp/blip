@@ -77,11 +77,6 @@ const useStyles = makeStyles(() =>
 
 const NotificationSpan = ({ t, notification, className, id }: NotificationSpanProps): JSX.Element => {
   const { creator, type } = notification;
-  // "notification-patient-invitation-by-team": "You're invited to share your diabetes data with <strong>{{careteam}}</strong>.",
-  // "notification-patient-invitation-by-caregiver": "You're invited to share your diabetes data with <strong>{{firstName}} {{lastName}}</strong>.",
-  // "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> invites you to join {{careteam}}.",
-  // "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
-  // "notification-team-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> now shares their diabetes data with <strong>{{careteam}}</strong>.",
   const firstName = getUserFirstName(creator as User);
   const lastName = getUserLastName(creator as User);
   const careteam = notification.target?.name ?? "";
@@ -89,21 +84,21 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
 
   let notificationText: JSX.Element;
   switch (type) {
-  case NotificationType.careTeamInvitation:
+  case NotificationType.directInvitation:
     notificationText = (
       <Trans t={t} i18nKey="notification-caregiver-invitation-by-patient" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
         <strong>{firstName} {lastName}</strong> wants to share their diabetes data with you.
       </Trans>
     );
     break;
-  case NotificationType.medicalTeamProInvitation:
+  case NotificationType.careTeamProInvitation:
     notificationText = (
       <Trans t={t} i18nKey="notification-hcp-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
         <strong>{firstName} {lastName}</strong> invites you to join <strong>{careteam}</strong>.
       </Trans>
     );
     break;
-  case NotificationType.medicalTeamPatientInvitation:
+  case NotificationType.careTeamPatientInvitation:
     notificationText = (
       <Trans t={t} i18nKey="notification-patient-invitation-by-team" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
         You&apos;re invited to share your diabetes data with <strong>{careteam}</strong>.
@@ -119,11 +114,11 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
 
 const NotificationIcon = ({ id, type }: { id: string; type: NotificationType; }): JSX.Element => {
   switch (type) {
-  case NotificationType.careTeamInvitation:
+  case NotificationType.directInvitation:
     return <PersonIcon id={id} />;
-  case NotificationType.medicalTeamProInvitation:
+  case NotificationType.careTeamProInvitation:
     return <GroupIcon id={id} />;
-  case NotificationType.medicalTeamPatientInvitation:
+  case NotificationType.careTeamPatientInvitation:
     return <MedicalServiceIcon id={id} />;
   default:
     return <GroupIcon id={id} />;
@@ -163,7 +158,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const [inProgress, setInProgress] = React.useState(false);
   const classes = useStyles();
   const { notification } = props;
-  const id = notification.key;
+  const { id } = notification;
 
   const onAccept = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     setInProgress(true);
@@ -198,8 +193,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       <NotificationIcon id={`notification-icon-${id}`} type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} t={t} notification={notification} className={classes.notificationSpan} />
       <div className={classes.rightSide}>
-        <NotificationDate createdDate={notification.created} id={id} />
-        {props.userRole === UserRoles.caregiver && notification.type === NotificationType.medicalTeamProInvitation ? (
+        <NotificationDate createdDate={notification.date} id={id} />
+        {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton
             size="medium"
             color="primary"

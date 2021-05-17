@@ -28,9 +28,8 @@
 import * as React from "react";
 import bows from "bows";
 import NotifAPIImpl from "./api";
-import { INotification, NotificationAPI, NotificationContext, NotificationProvider, NotificationType } from "./models";
+import { INotification, NotificationAPI, NotificationContext, NotificationProvider } from "./models";
 import { useAuth } from "../auth/hook";
-// import { Session } from "../auth/models";
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
 const log = bows("NotificationHook");
@@ -67,56 +66,20 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     } finally {
       lock = false;
     }
-
-    // const results = await api.getPendingInvitations(session);
-    // results.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
-    // setNotifications(results);
   };
 
   const accept = async (notification: INotification): Promise<void> => {
     log.info("Accept invitation", notification);
-    switch (notification.type) {
-    case NotificationType.careTeamInvitation:
-      {
-        await api.acceptDirectShareInvitation(session, notification.key, notification.creatorId);
-        const r = await api.getReceivedInvitations(session);
-        setReceivedInvitations(r);
-      }
-      break;
-    case NotificationType.medicalTeamProInvitation:
-    case NotificationType.medicalTeamPatientInvitation:
-      {
-        await api.acceptTeamInvitation(session, notification.key);
-        const r = await api.getReceivedInvitations(session);
-        setReceivedInvitations(r);
-      }
-      break;
-    default:
-      log.info("TODO accept", notification);
-    }
+    await api.acceptInvitation(session, notification);
+    const r = await api.getReceivedInvitations(session);
+    setReceivedInvitations(r);
   };
 
   const decline = async (notification: INotification): Promise<void> => {
     log.info("Decline invitation", notification);
-    switch (notification.type) {
-    case NotificationType.careTeamInvitation:
-      {
-        await api.declineDirectShareInvitation(session, notification.key, notification.creatorId);
-        const r = await api.getReceivedInvitations(session);
-        setReceivedInvitations(r);
-      }
-      break;
-    case NotificationType.medicalTeamProInvitation:
-    case NotificationType.medicalTeamPatientInvitation:
-      {
-        await api.declineTeamInvitation(session, notification.key, notification.target?.id ?? "");
-        const r = await api.getReceivedInvitations(session);
-        setReceivedInvitations(r);
-      }
-      break;
-    default:
-      log.info("TODO decline", notification);
-    }
+    await api.declineInvitation(session, notification);
+    const r = await api.getReceivedInvitations(session);
+    setReceivedInvitations(r);
   };
 
   const cancel = (notification: INotification): Promise<void> => {
