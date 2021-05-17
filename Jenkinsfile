@@ -100,7 +100,7 @@ pipeline {
         stage('Publish') {
             when {
                 expression {
-                    env.GIT_BRANCH == "dblp" || env.CHANGE_BRANCH == "engineering/team-managment-v1"
+                    env.GIT_BRANCH == "dblp"
                 }
             }
             steps {
@@ -108,9 +108,6 @@ pipeline {
                     env.target = "preview"
                     if (env.version == "UNRELEASED") {
                         env.version = "master"
-                        if (env.CHANGE_BRANCH == "engineering/team-managment-v1") {
-                            env.target = "next"
-                        }
                     }
                 }
                 lock('blip-cloudfront-publish') {
