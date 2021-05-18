@@ -79,7 +79,7 @@ export interface NotificationAPI {
   getSentInvitations: (session: Readonly<Session>) => Promise<INotification[]>;
   acceptInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
   declineInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
-  // cancelInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
+  cancelInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
 }
 
 export interface NotificationProvider {

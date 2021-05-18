@@ -82,9 +82,11 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     setReceivedInvitations(r);
   };
 
-  const cancel = (notification: INotification): Promise<void> => {
-    log.debug("TODO cancel", notification);
-    return Promise.resolve();
+  const cancel = async (notification: INotification): Promise<void> => {
+    log.info("Cancel invitation", notification);
+    await api.cancelInvitation(session, notification);
+    const r = await api.getSentInvitations(session);
+    setSentInvitations(r);
   };
 
   const initHook = () => {
