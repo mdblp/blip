@@ -78,7 +78,7 @@ async function getInvitations(session: Readonly<Session>, url: URL): Promise<INo
 /**
  * Get a notifications for the current user.
  * @param {Readonly<Session>} auth Generally an email
- * @return {Promise<INotificationAPI[]>} Return the logged-in user or a promise rejection.
+ * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
  */
 function getReceivedInvitations(session: Readonly<Session>): Promise<INotification[]> {
   const confirmURL = new URL(`/confirm/invitations/${session.user.userid}`, appConfig.API_HOST);
@@ -88,7 +88,7 @@ function getReceivedInvitations(session: Readonly<Session>): Promise<INotificati
 /**
  * Get a notifications for the current user.
  * @param {Readonly<Session>} auth Generally an email
- * @return {Promise<INotificationAPI[]>} Return the logged-in user or a promise rejection.
+ * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
  */
 function getSentInvitations(session: Readonly<Session>): Promise<INotification[]> {
   const confirmURL = new URL(`/confirm/invite/${session.user.userid}`, appConfig.API_HOST);
