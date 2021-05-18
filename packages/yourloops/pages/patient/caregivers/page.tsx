@@ -75,7 +75,7 @@ function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
     if (email !== null && session !== null) {
       try {
         await addDirectShare(session, email);
-        alert.success(t("modal-patient-add-caregiver-success"));
+        alert.success(t("modal-hcp-add-patient-success"));
         sendMetrics("patient-add-caregiver", { added: true });
         setCaregivers(null); // Refresh the list
       } catch (reason) {
