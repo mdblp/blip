@@ -3,14 +3,60 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Added
+* YLP-507 Screen to renew consent when terms of use and/or policy have changed
+* YLP-487 Rework patient Account preferences Page
+* YLP-486 HCP account preferences page
+* YLP-491 Switch from caregiver to professional account
+* YLP-488 Patient profile page for HCP users
+* YLP-352 Add tabs for patients and teams in the main nav
+* YLP-377 Create a care team
+* YLP-380 Care teams list
+* YLP-394 In-app invitations / notifications
+* YLP-358 Invite a patient to share data with a team
+* YLP-757 Discard a patient invitation to a care team
+* YLP-743 A HCP cannot invite a patient that does not have yet an account
+* YLP-708 A HCP user must not be able to invite a patient to join a team
+* YLP-357 Breadcrumb “My Patients” on HCP view
+* YLP-366 List patients in table (HCP view)
+* YLP-367 Add columns with indicators \(TBR, TIR\)
+* YLP-355 Search box on the patient dashboard
+* YLP-372 Possibility to flag patients
+* YLP-373 Force sorting on flagged patients
+* YLP-397 Manage data sharing with care teams
+* YLP-552 Display Caregiver's patients list
+* YLP-554 Display caregiver/teams list for Patients
+* YLP-711 Update password: hcp/caregivers must give current password
+* YLP-544 Create footer on logged-in pages
+* YLP-499 Add cookie banner
+* YLP-464 Implement success and error snackbars
+* YLP-423 Add Dexcom branding to the glucose graph
+* YLP-581 Rescue carbs indicator
+* YLP-558 Display sensor warm up session on daily view
+* YLP-547 Bolus name in tooltip
+* YLP-610 Stonly widget
+
 ### Changed
-- YLP-441 Change glucose level colors
-- YLP-423 Add Dexcom branding to the glucose graph
-- YLP-443 Update DBL settings table
+* YLP-13 Signup workflow for caregivers and hcps
+* YLP-432 New login page
+* YLP-351 Main Navigation header
+* YLP-741 Temp basal: Consider them as loop mode
+* YLP-715 Do not display Physical Activity when duration is set to 0
+* YLP-693 Hide Glucose and events graph when in confidential mode
+* YLP-586 Remove mailchimp integration
+* YLP-515 Update note \(message\) code for Blip
+* YLP-482 Remove the possibility to customize thresholds for patient in YourLoops
+* YLP-443 Update DBL settings table
+* YLP-326 Get HbA1c result from DBL and display on patient profile
+* YLP-270 Choose preferred units \(HCP\)
+* YLP-441 Change glucose level colors
+
 ### Fixed
+- YLP-707 fix glucose level colors in generated PDF
 - YLP-266 Hour format isn't updated on daily view when language is changed
 - YLP-511 Wrong string used for "serial number"
 - YLP-454 The Number of Login validation does not make the count for a single account
+
 ### Engineering Use
 - YLP-699 Add CodeQL Analysis
 - Add jenkins lock on CloudFront publication
