@@ -394,7 +394,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       } else {
         try {
           // FIXME check storage items validity
-          const jsonUser = JSON.parse(userStored)as IUser;
+          const jsonUser = JSON.parse(userStored) as IUser;
           const currentUser = new User(jsonUser.userid, jsonUser.username);
           currentUser.emails = jsonUser.emails;
           currentUser.emailVerified = jsonUser.emailVerified;

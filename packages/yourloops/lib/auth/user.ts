@@ -105,11 +105,12 @@ class User implements IUser {
     if (typeof consent.acceptanceTimestamp === "string") {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
       const acceptDate = new Date(consent.acceptanceTimestamp);
-      if (!Number.isFinite(acceptDate)) {
+      if (!Number.isFinite(acceptDate.getTime())) {
         // if acceptDate is not a valid formatted date string, get user to re-accept terms
-        return false;
+        return true;
       }
-      return acceptDate.valueOf() > 0 && this.latestConsentChangeDate >= acceptDate;
+
+      return this.latestConsentChangeDate >= acceptDate;
     }
 
     return false;
