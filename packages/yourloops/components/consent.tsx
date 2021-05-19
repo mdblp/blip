@@ -147,7 +147,7 @@ function Consent(props: ConsentProps): JSX.Element {
     if (valideForm()) {
       // api call
       const user = auth?.user;
-      if (user?.profile !== undefined) {
+      if (user?.profile !== undefined && user?.profile !== null) {
         const now = new Date().toISOString();
         user.profile.termsOfUse = { acceptanceTimestamp: now, isAccepted: terms };
         user.profile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: privacyPolicy };

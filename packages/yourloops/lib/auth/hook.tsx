@@ -35,7 +35,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import User from "./user";
-import { Profile, Preferences, Settings, UserRoles } from "../../models/shoreline";
+import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/shoreline";
 import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../language";
 import sendMetrics from "../metrics";
 import { zendeskLogin, zendeskLogout } from "../zendesk";
@@ -394,7 +394,16 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       } else {
         try {
           // FIXME check storage items validity
-          const currentUser = JSON.parse(userStored) as User;
+          const jsonUser = JSON.parse(userStored)as IUser;
+          const currentUser = new User(jsonUser.userid, jsonUser.username);
+          currentUser.emails = jsonUser.emails;
+          currentUser.emailVerified = jsonUser.emailVerified;
+          currentUser.role = jsonUser.role;
+          currentUser.settings = jsonUser.settings;
+          currentUser.profile = jsonUser.profile;
+          currentUser.preferences = jsonUser.preferences;
+          currentUser.medicalData = jsonUser.medicalData;
+
           if (!validateUuid(traceTokenStored)) {
             throw new Error("Invalid trace token uuid");
           }

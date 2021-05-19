@@ -41,9 +41,9 @@ class User implements IUser {
   role!: UserRoles;
   emails?: string[];
   emailVerified?: boolean;
-  profile?: Profile;
-  settings?: Settings;
-  preferences?: Preferences;
+  profile?: Profile | null;
+  settings?: Settings | null;
+  preferences?: Preferences | null;
   medicalData?: MedicalData | null;
   latestConsentChangeDate: Date;
 
