@@ -155,7 +155,7 @@ function Login(props: RouteComponentProps<{}, StaticContext, {from:{pathname: st
         return;
       }
 
-      const path = props.location?.state?.from?.pathname || user.getHomePage();
+      const path = props.location?.state?.from?.pathname ?? user.getHomePage();
       log.debug("default path ", path);
       props.history.push(path);
       return;
