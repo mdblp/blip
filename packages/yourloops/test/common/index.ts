@@ -26,8 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { User } from "../../lib/auth";
 import { Units, UserInvitationStatus } from "../../models/generic";
-import { User, UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 
 const userHCP: User = new User("a0000000", "john.doe@example.com");
