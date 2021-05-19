@@ -26,6 +26,8 @@
  */
 
 import * as React from "react";
+import _ from "lodash";
+import bows from "bows";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -46,6 +48,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 
 import DiabeloopUrl from "../lib/diabeloop-url";
 import { useAuth } from "../lib/auth";
+import { Profile } from "../models/shoreline";
 
 interface ConsentProps {
   messageKey: string;
@@ -63,7 +66,6 @@ const style = makeStyles((theme: Theme) => {
       flexDirection: "column",
       justifyContent: "center",
       textAlign: "center",
-      // eslint-disable-next-line no-magic-numbers
       padding: theme.spacing(4),
     },
     CardContent: {
@@ -89,7 +91,7 @@ const style = makeStyles((theme: Theme) => {
       flexDirection: "row",
       marginTop: theme.spacing(2),
       marginRight: theme.spacing(5), // eslint-disable-line no-magic-numbers
-      marginLeft: theme.spacing(1), // eslint-disable-line no-magic-numbers
+      marginLeft: theme.spacing(1),
     },
     Button: {
       marginLeft: "auto",
@@ -110,10 +112,11 @@ function Consent(props: ConsentProps): JSX.Element {
   const [error, setError] = React.useState(false);
   const [helperText, setHelperText] = React.useState("");
 
-  const linkTermsText = t("Terms of Use");
+  const linkTermsText = t("terms-and-conditions");
   const linkTerms = DiabeloopUrl.getTermsLink(i18n.language);
-  const privacyPolicyText = t("Privacy Policy");
+  const privacyPolicyText = t("footer-link-url-privacy-policy");
   const linkPrivacyPolicy = DiabeloopUrl.getPrivacyPolicyLink(i18n.language);
+  const log = bows("consent");
 
   const resetFormState = (): void => {
     setError(false);
@@ -146,14 +149,19 @@ function Consent(props: ConsentProps): JSX.Element {
     resetFormState();
     if (valideForm()) {
       // api call
-      const user = auth?.user;
-      if (user?.profile !== undefined && user?.profile !== null) {
-        const now = new Date().toISOString();
-        user.profile.termsOfUse = { acceptanceTimestamp: now, isAccepted: terms };
-        user.profile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: privacyPolicy };
-        auth.updateProfile(user.profile);
-        historyHook.push(props.destinationPath);
+      const user = auth.user;
+      if (user === null) {
+        throw new Error("User must be logged-in");
       }
+      const now = new Date().toISOString();
+      const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
+      updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: terms };
+      updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: privacyPolicy };
+      auth.updateProfile(updatedProfile).catch((reason: unknown) => {
+        log.error(reason);
+      }).finally(() => {
+        historyHook.push(props.destinationPath);
+      });
     }
   };
 
@@ -180,7 +188,7 @@ function Consent(props: ConsentProps): JSX.Element {
                   marginLeft: "auto",
                   marginRight: "auto",
                 }}
-                alt={t("Login Branding Logo")}
+                alt={t("alt-img-logo")}
               />
             </CardMedia>
             <CardContent className={classes.CardContent}>
