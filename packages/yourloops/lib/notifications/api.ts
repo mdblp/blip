@@ -154,7 +154,8 @@ function declineInvitation(session: Readonly<Session>, notification: INotificati
 }
 
 async function cancelInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
-  const confirmURL = new URL(`/confirm/${session.user.userid}/invited/${encodeURIComponent(notification.email).replace(/\./g, "%2e")}`, appConfig.API_HOST);
+  // FIXME Invalid URL
+  const confirmURL = new URL(`/confirm/cancel`, appConfig.API_HOST);
   const response = await fetch(confirmURL.toString(), {
     method: "PUT",
     headers: {
@@ -163,7 +164,7 @@ async function cancelInvitation(session: Readonly<Session>, notification: INotif
       [HttpHeaderKeys.traceToken]: session.traceToken,
     },
     cache: "no-cache",
-    body: "{}",
+    body: JSON.stringify({ key: notification.id }),
   });
 
   if (response.ok) {

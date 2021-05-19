@@ -37,6 +37,7 @@ import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, ITeamMember } from
 
 import { errorTextFromException } from "../utils";
 import { useAuth, Session } from "../auth";
+import { useNotification } from "../notifications";
 import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
 import TeamAPIImpl from "./api";
 
@@ -166,10 +167,22 @@ export async function loadTeams(
   return { teams, flaggedNotInResult };
 }
 
+function getUserByEmail(teams: Team[], email: string): TeamUser | null {
+  for (const team of teams) {
+    for (const member of team.members) {
+      if (member.user.username === email) {
+        return member.user;
+      }
+    }
+  }
+  return null;
+}
+
 function TeamContextImpl(api: TeamAPI): TeamContext {
   // hooks (private or public variables)
   // TODO: Transform the React.useState with React.useReducer
   const authHook = useAuth();
+  const notificationHook = useNotification();
   const [teams, setTeams] = React.useState<Team[]>([]);
   const [initialized, setInitialized] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
@@ -359,7 +372,14 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   };
 
   const removeMember = async (member: TeamMember): Promise<void> => {
-    await api.removeMember(session, member.team.id, member.user.userid);
+    if (member.status === UserInvitationStatus.pending) {
+      if (_.isNil(member.invitation)) {
+        throw new Error("Missing invitation!");
+      }
+      await notificationHook.cancel(member.invitation);
+    } else {
+      await api.removeMember(session, member.team.id, member.user.userid);
+    }
     const { team } = member;
     const idx = team.members.findIndex((m: TeamMember) => m.user.userid === member.user.userid);
     if (idx > -1) {
@@ -397,7 +417,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   };
 
   const initHook = () => {
-    if (initialized || lock) {
+    if (initialized || lock || !notificationHook.initialized) {
       return;
     }
     log.info("init");
@@ -405,6 +425,17 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
 
     loadTeams(session, api.fetchTeams, api.fetchPatients).then(({ teams, flaggedNotInResult }: LoadTeams) => {
       log.debug("Loaded teams: ", teams);
+      for (const invitation of notificationHook.sentInvitations) {
+        const user = getUserByEmail(teams, invitation.email);
+        if (user) {
+          for (const member of user.members) {
+            if (member.status === UserInvitationStatus.pending) {
+              member.invitation = invitation;
+            }
+          }
+        }
+      }
+
       setTeams(teams);
       if (errorMessage !== null) {
         setErrorMessage(null);
@@ -431,7 +462,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
 
   };
 
-  React.useEffect(initHook, [initialized, errorMessage, teams, session, authHook, api]);
+  React.useEffect(initHook, [initialized, errorMessage, teams, session, authHook, notificationHook, api]);
 
   return {
     teams,

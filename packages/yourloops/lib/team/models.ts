@@ -30,6 +30,7 @@ import { UserInvitationStatus, PostalAddress } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { User } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
+import { INotification } from "../notifications";
 import {
   ITeam,
   ITeamMember,
@@ -52,6 +53,8 @@ export interface TeamMember {
   role: TeamMemberRole;
   status: UserInvitationStatus;
   user: TeamUser;
+  /** Invitations for roles = pending */
+  invitation?: INotification;
 }
 
 export interface Team {
