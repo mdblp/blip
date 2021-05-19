@@ -280,9 +280,21 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   };
 
   const inviteMember = async (team: Team, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
-    const iTeamMember = await api.inviteMember(session, team.id, username, role);
-    const users = getMapUsers();
-    iMemberToMember(iTeamMember, team, users);
+    const invitation = await api.inviteMember(session, team.id, username, role);
+    const member: TeamMember = {
+      role: role as TeamMemberRole,
+      status: UserInvitationStatus.pending,
+      team,
+      user: {
+        userid: invitation.key,
+        role: UserRoles.hcp,
+        username,
+        emails: [username],
+        members: [],
+      },
+    };
+    member.user.members.push(member);
+    team.members.push(member);
     setTeams(teams);
   };
 
