@@ -75,15 +75,7 @@ class User implements IUser {
    * @description the first login is determined by null consents object
    */
   shouldAcceptConsent(): boolean {
-    if (this?.profile?.termsOfUse === undefined || this?.profile?.termsOfUse === null) {
-      return true;
-    }
-
-    if (this?.profile?.privacyPolicy === undefined || this?.profile?.privacyPolicy === null) {
-      return true;
-    }
-
-    return false;
+    return !(this.profile?.termsOfUse?.isAccepted === true && this.profile?.privacyPolicy?.isAccepted === true);
   }
 
   /**
