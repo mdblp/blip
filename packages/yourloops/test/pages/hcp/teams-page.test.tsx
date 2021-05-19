@@ -50,7 +50,6 @@ function testTeamPage(): void {
   let component: ReactWrapper | null = null;
 
   function TestTeamsPageComponent(): JSX.Element {
-
     return (
       <AuthContextProvider value={authHookHcp}>
         <NotificationContextProvider value={stubNotficationContextValue}>

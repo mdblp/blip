@@ -83,7 +83,10 @@ function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
         await addDirectShare(session, email);
         alert.success(t("modal-hcp-add-patient-success"));
         sendMetrics("patient-add-caregiver", { added: true });
-        setCaregivers(null); // Refresh the list
+        // Refresh the notifications list
+        notificationHook.update();
+        // And refresh the list
+        setCaregivers(null);
       } catch (reason) {
         log.error(reason);
         alert.error(t("modal-patient-add-caregiver-failure"));
@@ -131,6 +134,7 @@ function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
         for (const invitation of sentInvitations) {
           if (invitation.type === NotificationType.directInvitation) {
             // Create a fake share user
+            log.debug("Found pending direct-share invitation: ", invitation);
             const shareUser: ShareUser = {
               invitation,
               status: UserInvitationStatus.pending,

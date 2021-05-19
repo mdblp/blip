@@ -34,7 +34,7 @@ const stubNotficationContextValueInternal = {
   accept: sinon.stub().resolves(),
   cancel: sinon.stub().resolves(),
   decline: sinon.stub().resolves(),
-  update: sinon.stub().resolves(),
+  update: sinon.stub(),
   initialized: true,
   receivedInvitations: [],
   sentInvitations: [],

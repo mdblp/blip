@@ -66,7 +66,7 @@ export interface NotificationContext {
   initialized: boolean;
   receivedInvitations: INotification[];
   sentInvitations: INotification[];
-  update: () => Promise<void>;
+  update: () => void;
   accept: (notification: INotification) => Promise<void>;
   decline: (notification: INotification) => Promise<void>;
   cancel: (notification: INotification) => Promise<void>;
