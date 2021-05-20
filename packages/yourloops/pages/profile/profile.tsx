@@ -34,10 +34,10 @@ import TextField from "@material-ui/core/TextField";
 
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, UserRoles, Settings, User } from "../../models/shoreline";
+import { Preferences, Profile, UserRoles, Settings } from "../../models/shoreline";
 import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/language";
 import { REGEX_BIRTHDATE, errorTextFromException, getUserFirstName, getUserLastName, getUserEmail } from "../../lib/utils";
-import { useAuth } from "../../lib/auth";
+import { User, useAuth } from "../../lib/auth";
 import appConfig from "../../lib/config";
 import sendMetrics from "../../lib/metrics";
 import { Password } from "../../components/utils/password";
@@ -265,6 +265,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     let updateFailed = false;
     /** Set to true if we need to update the user only (no change needed for the password) */
     let updated = false;
+
+    sendMetrics("save-preferences", { preferencesChanged, profileChanged, settingsChanged, passwordChanged });
 
     try {
       if (preferencesChanged) {
