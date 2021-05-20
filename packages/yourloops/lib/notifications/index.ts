@@ -27,11 +27,14 @@
  */
 
 import { INotification, NotificationType, NotificationAPI } from "./models";
-import { useNotification } from "./hook";
+import { NotificationContextProvider, useNotification } from "./hook";
+import { notificationConversion } from "./utils";
 
 export {
   INotification,
   NotificationAPI,
   NotificationType,
+  NotificationContextProvider,
+  notificationConversion,
   useNotification,
 };

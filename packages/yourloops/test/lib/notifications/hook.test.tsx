@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Direct patient / caregivers share data models
+ * Auth hook tests
  *
  * All rights reserved.
  *
@@ -26,25 +26,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from "../../models/generic";
-import { User, Preferences, Profile, Settings } from "../../models/shoreline";
-import { INotification } from "../notifications";
+import sinon from "sinon";
 
-interface DirectShareUser {
-  userId: string;
-  preferences?: Preferences | null;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  email: string;
-}
+import { NotificationContext } from "../../../lib/notifications/models";
 
-export interface DirectShareAPI {
-  viewer?: DirectShareUser;
-  patient?: DirectShareUser;
-}
+const stubNotficationContextValueInternal = {
+  accept: sinon.stub().resolves(),
+  cancel: sinon.stub().resolves(),
+  decline: sinon.stub().resolves(),
+  update: sinon.stub(),
+  initialized: true,
+  receivedInvitations: [],
+  sentInvitations: [],
+};
 
-export interface ShareUser {
-  user: User;
-  invitation?: INotification;
-  status: UserInvitationStatus;
+export const stubNotficationContextValue = stubNotficationContextValueInternal as NotificationContext;
+
+export function resetNotficationContextValueStubs(): void {
+  stubNotficationContextValueInternal.accept.resetHistory();
+  stubNotficationContextValueInternal.cancel.resetHistory();
+  stubNotficationContextValueInternal.decline.resetHistory();
+  stubNotficationContextValueInternal.update.resetHistory();
+  stubNotficationContextValueInternal.initialized = true;
+  stubNotficationContextValueInternal.receivedInvitations = [];
+  stubNotficationContextValueInternal.sentInvitations = [];
 }
