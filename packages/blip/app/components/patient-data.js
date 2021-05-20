@@ -402,7 +402,7 @@ class PatientDataPage extends React.Component {
             epochLocation={epochLocation}
             msRange={msRange}
             patient={patient}
-            patientData={tidelineData}
+            tidelineData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             prefixURL={prefixURL}
