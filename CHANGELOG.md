@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 2.0.0 2021-05-21
 ### Added
 * YLP-507 Screen to renew consent when terms of use and/or policy have changed
 * YLP-487 Rework patient Account preferences Page
@@ -35,7 +35,6 @@ It is based on Tidepool Blip 1.27.
 * YLP-558 Display sensor warm up session on daily view
 * YLP-547 Bolus name in tooltip
 * YLP-610 Stonly widget
-
 ### Changed
 * YLP-13 Signup workflow for caregivers and hcps
 * YLP-432 New login page
@@ -50,13 +49,11 @@ It is based on Tidepool Blip 1.27.
 * YLP-326 Get HbA1c result from DBL and display on patient profile
 * YLP-270 Choose preferred units \(HCP\)
 * YLP-441 Change glucose level colors
-
 ### Fixed
 - YLP-707 fix glucose level colors in generated PDF
 - YLP-266 Hour format isn't updated on daily view when language is changed
 - YLP-511 Wrong string used for "serial number"
 - YLP-454 The Number of Login validation does not make the count for a single account
-
 ### Engineering Use
 - YLP-699 Add CodeQL Analysis
 - Add jenkins lock on CloudFront publication
