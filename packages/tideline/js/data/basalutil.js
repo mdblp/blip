@@ -106,14 +106,13 @@ function BasalUtil(data) {
 
   /**
    * getBasalPathGroupType
-   *
-   * FIXME duplicate in packages/viz/src/utils/basal.js
-   * @param {{ deliveryType: string }} datum - single basal datum
-   * @return {"manual" | "automated"} the path group type
+   * @param {Object} basal - single basal datum
+   * @return {String} the path group type
    */
   this.getBasalPathGroupType = function(datum) {
-    const deliveryType = _.get(datum, 'deliveryType', 'scheduled');
-    return ['automated', 'temp'].includes(deliveryType) ? 'automated' : 'manual';
+    var deliveryType = _.get(datum, 'deliveryType');
+    var suppressedDeliveryType = _.get(datum, 'suppressed.deliveryType');
+    return _.includes([deliveryType, suppressedDeliveryType], 'automated') ? 'automated' : 'manual';
   };
 
   /**
