@@ -14,9 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-
-/* eslint-disable no-undef */
-
 import _ from 'lodash';
 
 import * as basals from '../../../data/basal/fixtures';
@@ -55,7 +52,7 @@ describe('basal path generators', () => {
       );
       const flushWithBottomOfScale = detailBasalScale.range()[0] + offset;
       let count = 0;
-      _.forEach(
+      _.each(
         path.split('L'),
         (coords) => {
           if (parseFloat(coords.split(',')[1].trim()) === flushWithBottomOfScale) {
@@ -72,22 +69,22 @@ describe('basal path generators', () => {
       assert.isFunction(getBasalSequencePaths);
     });
 
-    it('should error if basalSequence provided without a consistent `deliveryType`', () => {
+    it('should error if basalSequence provided without a consistent `subType`', () => {
       const seq1 = [{
         type: 'basal',
-        subType: 'temp',
+        deliveryType: 'temp',
       }];
       const fn1 = () => { getBasalSequencePaths(seq1, detailXScale, detailBasalScale); };
-      expect(fn1).to.throw('Cannot determine `deliveryType` of basal sequence!');
+      expect(fn1).to.throw('Cannot determine `subType` of basal sequence!');
       const seq2 = [{
         type: 'basal',
-        deliveryType: 'temp',
+        subType: 'temp',
       }, {
         type: 'basal',
-        deliveryType: 'scheduled',
+        subType: 'scheduled',
       }];
       const fn2 = () => { getBasalSequencePaths(seq2, detailXScale, detailBasalScale); };
-      expect(fn2).to.throw('A basal sequence may contain only *one* `deliveryType` of basal event.');
+      expect(fn2).to.throw('A basal sequence may contain only *one* `subType` of basal event.');
     });
 
     it(`should produce a path with type \`fill--scheduled\` for

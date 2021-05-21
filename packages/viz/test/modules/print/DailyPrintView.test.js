@@ -17,6 +17,7 @@
 
 import _ from 'lodash';
 import moment from 'moment-timezone';
+// import sinon from 'sinon'; // Activate it, makes 1 test crash...
 import { expect } from 'chai';
 
 import DailyPrintView from '../../../src/modules/print/DailyPrintView';
@@ -38,8 +39,6 @@ import { formatDecimalNumber, formatBgValue } from '../../../src/utils/format';
 
 import Doc from '../../helpers/pdfDoc';
 import { MS_IN_HOUR } from '../../../src/utils/constants';
-
-/* eslint-disable no-undef */
 
 describe('DailyPrintView', () => {
   let Renderer;

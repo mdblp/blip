@@ -63,7 +63,7 @@ export function calculateBasalPath(basalSequence, xScale, yScale, {
     handleDiscontinuousEnd(first);
   }
 
-  _.forEach(basalSequence.slice(1), (basal) => {
+  _.each(basalSequence.slice(1), (basal) => {
     const thisBasalY = (basal.rate > 0) ? yScale(basal.rate) : flushWithBottomOfScale;
     if (!isFilled && basal.discontinuousStart) {
       handleDiscontinuousStart(basal);
@@ -111,15 +111,15 @@ export function getBasalSequencePaths(basalSequence, xScale, yScale) {
   const types = _.uniq(
     _.reject(
       _.map(
-        basalSequence, 'deliveryType'
+        basalSequence, 'subType'
       ),
       (d) => (!_.isString(d))
     )
   );
   if (types.length === 0) {
-    throw new Error('Cannot determine `deliveryType` of basal sequence!');
+    throw new Error('Cannot determine `subType` of basal sequence!');
   } else if (types.length > 1) {
-    throw new Error('A basal sequence may contain only *one* `deliveryType` of basal event.');
+    throw new Error('A basal sequence may contain only *one* `subType` of basal event.');
   } else {
     type = types[0];
   }
@@ -142,10 +142,10 @@ export function getBasalSequencePaths(basalSequence, xScale, yScale) {
 
   const suppresseds = [];
   let undeliveredType = 'border--undelivered';
-  _.forEach(basalSequence, (basal) => {
+  _.each(basalSequence, (basal) => {
     if (basal.suppressed) {
       const suppressed = _.clone(basal.suppressed);
-      if (_.get(suppressed, 'deliveryType', suppressed.deliveryType) === 'automated') {
+      if (_.get(suppressed, 'subType', suppressed.deliveryType) === 'automated') {
         undeliveredType = 'border--undelivered--automated';
         // For automated suppressed delivery, we always render at the baseline
         suppressed.rate = 0;

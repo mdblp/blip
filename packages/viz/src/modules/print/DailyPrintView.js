@@ -891,7 +891,7 @@ class DailyPrintView extends PrintView {
 
     const labeledSchedules = [];
     _.forEach(basal, datum => {
-      if (datum.deliveryType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * MS_IN_MIN) {
+      if (datum.subType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * MS_IN_MIN) {
         const newRate = currentSchedule.rate !== datum.rate;
 
         if (newRate) {
@@ -964,7 +964,7 @@ class DailyPrintView extends PrintView {
     if (!_.isEmpty(basal)) {
       const basalPathGroups = getBasalPathGroups(basal);
 
-      // Split delivered path into individual segments based on deliveryType
+      // Split delivered path into individual segments based on subType
       _.forEach(basalPathGroups, (group, index) => {
         const firstDatum = group[0];
         const isAutomated = getBasalPathGroupType(firstDatum) === 'automated';
@@ -1265,13 +1265,13 @@ class DailyPrintView extends PrintView {
     const dynamicBasalType = this.isAutomatedBasalDevice ? 'automated' : 'scheduled';
 
     const scheduled1 = {
-      deliveryType: dynamicBasalType,
+      subType: dynamicBasalType,
       rate: 1.5,
       duration: 2,
       utc: 0,
     };
     const negTemp = {
-      deliveryType: 'temp',
+      subType: 'temp',
       rate: 0.5,
       duration: 2.5,
       utc: 2,
@@ -1280,13 +1280,13 @@ class DailyPrintView extends PrintView {
       },
     };
     const scheduled2 = {
-      deliveryType: 'scheduled',
+      subType: 'scheduled',
       rate: 1.75,
       duration: 1.5,
       utc: 4.5,
     };
     const posTemp = {
-      deliveryType: 'temp',
+      subType: 'temp',
       rate: 2,
       duration: 2,
       utc: 6,
@@ -1295,12 +1295,12 @@ class DailyPrintView extends PrintView {
       },
     };
     const suspend = {
-      deliveryType: 'suspend',
+      subType: 'suspend',
       rate: 0,
       duration: 2,
       utc: 8,
       suppressed: {
-        deliveryType: dynamicBasalType,
+        subType: dynamicBasalType,
         rate: dynamicBasalType === 'automated' ? 0 : 1.75,
       },
     };

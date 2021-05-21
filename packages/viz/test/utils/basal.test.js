@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-/* eslint-disable no-undef */
+/* eslint-disable max-len */
 
 import _ from 'lodash';
 import * as basals from '../../data/basal/fixtures';
@@ -70,13 +70,32 @@ describe('basal utilties', () => {
     });
 
     it('should return the path group type `automated` for an automated basal', () => {
-      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'automated' })).to.equal('automated');
-      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'temp' })).to.equal('automated');
+      expect(basalUtils.getBasalPathGroupType({ subType: 'automated' })).to.equal('automated');
     });
 
     it('should return the path group type `manual` for a non-automated basal', () => {
+      expect(basalUtils.getBasalPathGroupType({ subType: 'scheduled' })).to.equal('manual');
+      expect(basalUtils.getBasalPathGroupType({ subType: 'temp' })).to.equal('manual');
+      expect(basalUtils.getBasalPathGroupType({ subType: 'suspend' })).to.equal('manual');
+    });
+
+    it('should work with old `deliveryType` basal prop if `subType` is not set', () => {
       expect(basalUtils.getBasalPathGroupType({ deliveryType: 'scheduled' })).to.equal('manual');
-      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'suspend' })).to.equal('manual');
+      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'automated' })).to.equal('automated');
+      expect(basalUtils.getBasalPathGroupType({
+        subType: 'automated',
+        deliveryType: 'scheduled',
+      })).to.equal('automated');
+    });
+
+    it('should return the path group type `regular` for a suspend suppressing non-automated delivery', () => {
+      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'suspend', suppressed: { subType: 'scheduled' } })).to.equal('manual');
+      expect(basalUtils.getBasalPathGroupType({ subType: 'suspend', suppressed: { deliveryType: 'temp' } })).to.equal('manual');
+    });
+
+    it('should return the path group type `automated` for a suspend suppressing automated delivery', () => {
+      expect(basalUtils.getBasalPathGroupType({ deliveryType: 'suspend', suppressed: { subType: 'automated' } })).to.equal('automated');
+      expect(basalUtils.getBasalPathGroupType({ subType: 'suspend', suppressed: { deliveryType: 'automated' } })).to.equal('automated');
     });
   });
 
@@ -91,12 +110,12 @@ describe('basal utilties', () => {
       expect(result).to.be.an('array');
       expect(result.length).to.equal(3);
 
-      _.forEach(result, (group, groupIndex) => {
+      _.each(result, (group, groupIndex) => {
         expect(group).to.be.an('array');
 
         const expectedSubType = groupIndex === 1 ? 'scheduled' : 'automated';
-        _.forEach(group, datum => {
-          expect(datum.deliveryType).to.equal(expectedSubType);
+        _.each(group, datum => {
+          expect(datum.subType).to.equal(expectedSubType);
         });
       });
     });
@@ -435,28 +454,28 @@ describe('basal utilties', () => {
           rate: 0.25,
           normalTime: '2018-01-01T00:00:00.000Z',
           normalEnd: '2018-01-01T03:00:00.000Z',
-          deliveryType: 'scheduled',
+          subType: 'scheduled',
         },
         {
           duration: MS_IN_HOUR * 2,
           rate: 0.75,
           normalTime: '2018-01-01T03:00:00.000Z',
           normalEnd: '2018-01-01T05:00:00.000Z',
-          deliveryType: 'automated',
+          subType: 'automated',
         },
         {
           duration: MS_IN_HOUR * 7,
           rate: 0.5,
           normalTime: '2018-01-01T05:00:00.000Z',
           normalEnd: '2018-01-02T00:00:00.000Z',
-          deliveryType: 'scheduled',
+          subType: 'scheduled',
         },
         {
           duration: MS_IN_HOUR * 3,
           rate: 0.25,
           normalTime: '2018-01-02T00:00:00.000Z',
           normalEnd: '2018-01-02T03:00:00.000Z',
-          deliveryType: 'scheduled',
+          subType: 'scheduled',
         },
       ];
 

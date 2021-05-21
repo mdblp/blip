@@ -17,7 +17,6 @@
 
 import _ from 'lodash';
 import i18next from 'i18next';
-// import sinon from 'sinon';
 
 import BasicsPrintView from '../../../src/modules/print/BasicsPrintView';
 import PrintView from '../../../src/modules/print/PrintView';
@@ -37,8 +36,6 @@ import {
 } from '../../../src/modules/print/utils/constants';
 
 import Doc from '../../helpers/pdfDoc';
-
-/* eslint-disable no-undef */
 
 describe('BasicsPrintView', () => {
   let Renderer;
