@@ -28,7 +28,9 @@
 
 import { UserInvitationStatus, PostalAddress } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
-import { User } from "../../models/shoreline";
+import { IUser } from "../../models/shoreline";
+import { INotificationAPI } from "../../models/notification";
+import { INotification } from "../notifications";
 import {
   ITeam,
   ITeamMember,
@@ -42,7 +44,7 @@ export const TEAM_CODE_LENGTH = 9;
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/;
 export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/;
 
-export interface TeamUser extends User {
+export interface TeamUser extends IUser {
   members: TeamMember[];
 }
 
@@ -51,6 +53,8 @@ export interface TeamMember {
   role: TeamMemberRole;
   status: UserInvitationStatus;
   user: TeamUser;
+  /** Invitations for roles = pending */
+  invitation?: INotification;
 }
 
 export interface Team {
@@ -69,12 +73,13 @@ export interface Team {
 export interface TeamAPI {
   fetchTeams: (session: Session) => Promise<ITeam[]>;
   fetchPatients: (session: Session) => Promise<ITeamMember[]>;
-  invitePatient: (session: Session, teamId: string, username: string) => Promise<ITeamMember>;
-  inviteMember: (session: Session, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<ITeamMember>;
+  invitePatient: (session: Session, teamId: string, username: string) => Promise<INotificationAPI>;
+  inviteMember: (session: Session, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<INotificationAPI>;
   createTeam: (session: Session, team: Partial<ITeam>) => Promise<ITeam>;
   editTeam: (session: Session, editedTeam: ITeam) => Promise<void>;
   deleteTeam: (session: Session, teamId: string) => Promise<void>;
-  removeMember: (session: Session, teamId: string, userId: string) => Promise<void>;
+  leaveTeam: (session: Session, teamId: string) => Promise<void>;
+  removeMember: (session: Session, teamId: string, userId: string, email: string) => Promise<void>;
   removePatient: (session: Session, teamId: string, userId: string) => Promise<void>;
   changeMemberRole: (session: Session, teamId: string, userId: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<void>;
   getTeamFromCode: (session: Session, code: string) => Promise<ITeam | null>;

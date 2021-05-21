@@ -56,7 +56,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import('history').History } History
  * @typedef { import('redux').Store } Store
  * @typedef { import("../index").BlipApi } API
- * @typedef { import("../index").User } User
+ * @typedef { import("../index").IUser } User
  * @typedef { import("../index").PatientData } PatientData
  * @typedef { import("../index").MessageNote } MessageNote
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
@@ -70,7 +70,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @augments {React.Component<PatientDataProps,PatientDataState>}
  */
 class PatientDataPage extends React.Component {
-  constructor(/** @type{PatientDataProps} */ props) {
+  constructor(/** @type {PatientDataProps} */ props) {
     super(props);
     const { api, patient } = this.props;
 
@@ -82,6 +82,8 @@ class PatientDataPage extends React.Component {
 
     const currentUser = api.whoami;
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    this.showProfileDialog = currentUser.userid !== patient.userid;
 
     this.state = {
       loadingState: LOADING_STATE_NONE,
@@ -337,7 +339,7 @@ class PatientDataPage extends React.Component {
       <Switch>
         <Route path={`${prefixURL}/overview`}>
           <Basics
-            profileDialog={profileDialog}
+            profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             dataUtil={this.dataUtil}
@@ -362,7 +364,7 @@ class PatientDataPage extends React.Component {
         </Route>
         <Route path={`${prefixURL}/daily`}>
           <Daily
-            profileDialog={profileDialog}
+            profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             dataUtil={this.dataUtil}
@@ -391,7 +393,7 @@ class PatientDataPage extends React.Component {
         </Route>
         <Route path={`${prefixURL}/trends`}>
           <Trends
-            profileDialog={profileDialog}
+            profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             currentPatientInViewId={patient.userid}
@@ -400,7 +402,7 @@ class PatientDataPage extends React.Component {
             epochLocation={epochLocation}
             msRange={msRange}
             patient={patient}
-            patientData={tidelineData}
+            tidelineData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             prefixURL={prefixURL}
@@ -863,7 +865,8 @@ class PatientDataPage extends React.Component {
     //   epochLocation,
     //   msRange,
     //   date: moment.utc(epochLocation).toISOString(),
-    //   rangeDays: msRange/MS_IN_DAY
+    //   rangeDays: msRange/MS_IN_DAY,
+    //   loadingState,
     // });
 
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
@@ -893,16 +896,16 @@ class PatientDataPage extends React.Component {
           };
         }
 
-        this.setState({ loadingState: LOADING_STATE_EARLIER_FETCH });
+        this.setState({ epochLocation, msRange, loadingState: LOADING_STATE_EARLIER_FETCH });
         const data = await this.apiUtils.fetchDataRange(rangeDisplay);
 
         this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
         await this.processData(data);
 
         dataLoaded = true;
+      } else {
+        this.setState({ epochLocation, msRange });
       }
-
-      this.setState({ epochLocation, msRange });
     }
 
     return dataLoaded;
@@ -938,7 +941,7 @@ class PatientDataPage extends React.Component {
    */
   async processData(data) {
     const { store, patient } = this.props;
-    const { timePrefs, bgPrefs, epochLocation } = this.state;
+    const { timePrefs, bgPrefs, epochLocation, msRange } = this.state;
     let { tidelineData } = this.state;
 
     const firstLoadOrRefresh = tidelineData === null;
@@ -972,13 +975,17 @@ class PatientDataPage extends React.Component {
       // First loading, display the last day in the daily chart
       newLocation = moment.utc(tidelineData.endpoints[1]).valueOf() - MS_IN_DAY/2;
     }
+    let newRange = msRange;
+    if (msRange === 0) {
+      newRange = MS_IN_DAY;
+    }
 
     this.setState({
       bgPrefs: bgPrefsUpdated,
       timePrefs: tidelineData.opts.timePrefs,
       tidelineData,
       epochLocation: newLocation,
-      msRange: MS_IN_DAY,
+      msRange: newRange,
       loadingState: LOADING_STATE_DONE,
       canPrint: true,
     }, () => this.log.info('Loading finished'));

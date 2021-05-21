@@ -329,6 +329,11 @@ TidelineData.prototype.cleanDatum = function cleanDatum(d) {
   if (typeof d.source !== "string") {
     d.source = this.opts.defaultSource;
   }
+
+  if (d.type === "basal" && d.deliveryType === "temp") {
+    // For some reason the transition to subType was partially done
+    d.subType = "temp";
+  }
 };
 
 /**
@@ -1109,7 +1114,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   startTimer("setEvents");
   this.zenEvents = this.setEvents({ type: "deviceEvent", subType: "zen" }, ["inputTime"]);
   this.confidentialEvents = this.setEvents({ type: "deviceEvent", subType: "confidential" }, ["inputTime"]);
-  this.warmUpEvents = this.setEvents({ type: "deviceEvent", subType: "warmup" }, ["inputTime"]); 
+  this.warmUpEvents = this.setEvents({ type: "deviceEvent", subType: "warmup" }, ["inputTime"]);
   endTimer("setEvents");
 
   startTimer("deduplicatePhysicalActivities");

@@ -37,6 +37,9 @@ enzyme.configure({
   disableLifecycleMethods: true,
 });
 
+// Enable bows logging display:
+window.localStorage.setItem('debug', 'true');
+
 i18nInit().then(() => {
   describe("Lib", testLib);
   describe("Components", testComponents);

@@ -29,27 +29,24 @@
 import { Session } from "../../lib/auth/models";
 import { Profile } from "../../models/shoreline";
 import { TeamMemberRole } from "../../models/team";
-// import { Team } from "../team";
 
 export enum NotificationType {
-  careTeamInvitation = "careteam_invitation",
-  medicalTeamProInvitation = "medicalteam_invitation",
-  medicalTeamPatientInvitation = "medicalteam_patient_invitation",
-  medicalTeamDoAdmin = "medicalteam_do_admin",
-  medicalTeamRemoveMember = "medicalteam_remove",
+  directInvitation,
+  careTeamProInvitation,
+  careTeamPatientInvitation,
+  careTeamDoAdmin,
+  careTeamRemoveMember,
 }
 
 export interface INotification {
-  key: string;
+  id: string;
   type: NotificationType;
-  /** Current user email */
+  /** Current user email for received invitation, target user email for sent invitations */
   email: string;
   /** User who create the invitation == creator.userid? */
   creatorId: string;
-  /** Undocumented value */
-  context?: null;
   /** Notification creation date */
-  created: string;
+  date: string;
   target?: {
     /** TeamID */
     id: string;
@@ -58,8 +55,6 @@ export interface INotification {
   };
   /** The role we will have in the team */
   role?: TeamMemberRole;
-  /** Undocumented value */
-  shortKey: string;
   /** Some information on the user who created this notification */
   creator: {
     userid: string;
@@ -67,13 +62,11 @@ export interface INotification {
   };
 }
 
-
 export interface NotificationContext {
   initialized: boolean;
   receivedInvitations: INotification[];
   sentInvitations: INotification[];
-  update: () => Promise<void>;
-  //   getPendingInvitations: () => Promise<INotification[]>;
+  update: () => void;
   accept: (notification: INotification) => Promise<void>;
   decline: (notification: INotification) => Promise<void>;
   cancel: (notification: INotification) => Promise<void>;
@@ -84,10 +77,9 @@ export interface NotificationAPI {
   getReceivedInvitations: (session: Readonly<Session>) => Promise<INotification[]>;
   /** Fetch the invitations we have sent */
   getSentInvitations: (session: Readonly<Session>) => Promise<INotification[]>;
-  acceptTeamInvitation: (session: Readonly<Session>, key: string) => Promise<void>;
-  declineTeamInvitation: (session: Readonly<Session>, key: string, teamID: string) => Promise<void>;
-  acceptDirectShareInvitation: (session: Readonly<Session>, key: string, invitedBy: string) => Promise<void>;
-  declineDirectShareInvitation: (session: Readonly<Session>, key: string, invitedBy: string) => Promise<void>;
+  acceptInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
+  declineInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
+  cancelInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
 }
 
 export interface NotificationProvider {

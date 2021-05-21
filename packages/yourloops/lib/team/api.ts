@@ -28,8 +28,9 @@
 
 import bows from "bows";
 
-import { HttpHeaderKeys } from "../../models/api";
+import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { UserRoles } from "../../models/shoreline";
+import { INotificationAPI } from "../../models/notification";
 import { TeamType, ITeam, ITeamMember, TypeTeamMemberRole } from "../../models/team";
 import { errorFromHttpStatus } from "../../lib/utils";
 import { Session } from "../auth";
@@ -77,7 +78,7 @@ async function fetchPatients(session: Session): Promise<ITeamMember[]> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function invitePatient(session: Session, teamId: string, username: string): Promise<ITeamMember> {
+async function invitePatient(session: Session, teamId: string, username: string): Promise<INotificationAPI> {
   const { sessionToken, traceToken } = session;
   log.info(`invitePatient(${username}, ${teamId})`);
 
@@ -85,6 +86,7 @@ async function invitePatient(session: Session, teamId: string, username: string)
   const response = await fetch(apiURL.toString(), {
     method: "POST",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
@@ -98,7 +100,7 @@ async function invitePatient(session: Session, teamId: string, username: string)
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function inviteMember(session: Session, teamId: string, email: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<ITeamMember> {
+async function inviteMember(session: Session, teamId: string, email: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<INotificationAPI> {
   const { sessionToken, traceToken } = session;
   log.info("inviteMember()", teamId, email, role);
 
@@ -106,6 +108,7 @@ async function inviteMember(session: Session, teamId: string, email: string, rol
   const response = await fetch(apiURL.toString(), {
     method: "POST",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
@@ -141,6 +144,7 @@ async function createTeam(session: Session, team: Partial<ITeam>): Promise<ITeam
   const response = await fetch(apiURL.toString(), {
     method: "POST",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
@@ -195,17 +199,39 @@ async function deleteTeam(session: Session, teamId: string): Promise<void> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function removeMember(session: Session, teamId: string, userId: string): Promise<void> {
+async function leaveTeam(session: Session, teamId: string): Promise<void> {
   const { sessionToken, traceToken } = session;
-  log.info("removeMember()", teamId, userId);
+  log.info("leaveTeam()", teamId);
 
-  const apiURL = new URL(`/crew/v0/teams/${teamId}/members/${userId}`, appConfig.API_HOST);
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/members/${session.user.userid}`, appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "DELETE",
     headers: {
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+async function removeMember(session: Session, teamId: string, userId: string, email: string): Promise<void> {
+  const { sessionToken, traceToken } = session;
+  log.info("removeMember()", teamId, userId);
+
+  const apiURL = new URL(`/confirm/send/team/leave/${userId}`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "DELETE",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify({ teamId, email }),
   });
 
   if (response.ok) {
@@ -248,6 +274,7 @@ async function changeMemberRole(session: Session, teamId: string, userId: string
     const response = await fetch(apiURL.toString(), {
       method: "PUT",
       headers: {
+        [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
         [HttpHeaderKeys.traceToken]: traceToken,
         [HttpHeaderKeys.sessionToken]: sessionToken,
       },
@@ -272,6 +299,7 @@ async function changeMemberRole(session: Session, teamId: string, userId: string
   const response = await fetch(apiURL.toString(), {
     method: "PUT",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
@@ -319,6 +347,7 @@ async function joinTeam(session: Session, teamId: string): Promise<void> {
   const response = await fetch(apiURL.toString(), {
     method: "PUT",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.traceToken]: traceToken,
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
@@ -342,6 +371,7 @@ export default {
   createTeam,
   editTeam,
   deleteTeam,
+  leaveTeam,
   removeMember,
   removePatient,
   changeMemberRole,

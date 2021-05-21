@@ -34,7 +34,9 @@ import appConfig from "../config";
 import { Session } from "../auth/models";
 import { errorFromHttpStatus } from "../utils";
 
-import { INotification, NotificationAPI } from "./models";
+import { INotificationAPI } from "../../models/notification";
+import { INotification, NotificationAPI, NotificationType } from "./models";
+import { notificationConversion } from "./utils";
 
 const log = bows("Notifcation API");
 
@@ -50,7 +52,21 @@ async function getInvitations(session: Readonly<Session>, url: URL): Promise<INo
   });
 
   if (response.ok) {
-    return response.json() as Promise<INotification[]>;
+    const notificationsFromAPI = await response.json() as INotificationAPI[];
+    if (Array.isArray(notificationsFromAPI)) {
+      // TODO remove me when all notifications types are supported
+      const notifications: INotification[] = [];
+      for (const nfa of notificationsFromAPI) {
+        const notification = notificationConversion(nfa);
+        if (notification) {
+          notifications.push(notification);
+        }
+      }
+      return notifications;
+      // END TODO
+      // return notificationsFromAPI.map(notificationConversion);
+    }
+    return Promise.reject(new Error("Invalid response from API"));
   } else if (response.status === HttpStatus.StatusNotFound) {
     log.info("No new notification for the current user");
     return Promise.resolve([]);
@@ -83,6 +99,7 @@ async function updateInvitation(session: Readonly<Session>, url: URL, key: strin
   const response = await fetch(url.toString(), {
     method: "PUT",
     headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
       [HttpHeaderKeys.sessionToken]: session.sessionToken,
       [HttpHeaderKeys.traceToken]: session.traceToken,
     },
@@ -98,34 +115,90 @@ async function updateInvitation(session: Readonly<Session>, url: URL, key: strin
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-function acceptTeamInvitation(session: Readonly<Session>, key: string): Promise<void> {
-  const confirmURL = new URL(`/confirm/accept/team/invite`, appConfig.API_HOST);
-  return updateInvitation(session, confirmURL, key);
+function acceptInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
+  let confirmURL: URL;
+  switch (notification.type) {
+  case NotificationType.directInvitation:
+    confirmURL = new URL(`/confirm/accept/invite/${session.user.userid}/${notification.creatorId}`, appConfig.API_HOST);
+    return updateInvitation(session, confirmURL, notification.id);
+  case NotificationType.careTeamProInvitation:
+  case NotificationType.careTeamPatientInvitation:
+    confirmURL = new URL(`/confirm/accept/team/invite`, appConfig.API_HOST);
+    return updateInvitation(session, confirmURL, notification.id);
+  default:
+    log.info("TODO accept", notification);
+    return Promise.reject(new Error(`Unknown notification ${notification.type}`));
+  }
 }
 
-function declineTeamInvitation(session: Readonly<Session>, key: string, teamID: string): Promise<void> {
-  const confirmURL = new URL(`/confirm/dismiss/team/invite/${teamID}`, appConfig.API_HOST);
-  return updateInvitation(session, confirmURL, key);
+function declineInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
+  let confirmURL: URL;
+  switch (notification.type) {
+  case NotificationType.directInvitation:
+    confirmURL = new URL(`/confirm/dismiss/invite/${session.user.userid}/${notification.creatorId}`, appConfig.API_HOST);
+    return updateInvitation(session, confirmURL, notification.id);
+  case NotificationType.careTeamProInvitation:
+  case NotificationType.careTeamPatientInvitation:
+  {
+    const teamId = notification.target?.id;
+    if (typeof teamId !== "string") {
+      return Promise.reject(new Error("Invalid target team id"));
+    }
+    confirmURL = new URL(`/confirm/dismiss/team/invite/${teamId}`, appConfig.API_HOST);
+    return updateInvitation(session, confirmURL, notification.id);
+  }
+  default:
+    log.info("TODO accept", notification);
+    return Promise.reject(new Error(`Unknown notification ${notification.type}`));
+  }
 }
 
-function acceptDirectShareInvitation(session: Readonly<Session>, key: string, invitedBy: string): Promise<void> {
-  // /accept/invite/{userid}/{invitedby} [put]
-  const confirmURL = new URL(`/confirm/accept/invite/${session.user.userid}/${invitedBy}`, appConfig.API_HOST);
-  return updateInvitation(session, confirmURL, key);
-}
+async function cancelInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
+  const confirmURL = new URL(`/confirm/cancel/invite`, appConfig.API_HOST);
+  const body: Partial<INotificationAPI> = {
+    key: notification.id,
+  };
 
-function declineDirectShareInvitation(session: Readonly<Session>, key: string, invitedBy: string): Promise<void> {
-  // /dismiss/invite/{userid}/{invitedby} [put]
-  const confirmURL = new URL(`/confirm/dismiss/invite/${session.user.userid}/${invitedBy}`, appConfig.API_HOST);
-  return updateInvitation(session, confirmURL, key);
+  let id: string | undefined;
+  switch (notification.type) {
+  case NotificationType.careTeamProInvitation:
+    id = notification.target?.id;
+    if (typeof id !== "string") {
+      throw new Error("Missing or invalid team ID in notification");
+    }
+    body.target = notification.target;
+    break;
+  case NotificationType.directInvitation:
+    body.email = notification.email;
+    break;
+  default:
+    throw new Error("Invalid notification type");
+  }
+
+  const response = await fetch(confirmURL.toString(), {
+    method: "POST",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+    },
+    cache: "no-cache",
+    body: JSON.stringify(body),
+  });
+
+  if (response.ok) {
+    console.info("cancelInvitation response:", await response.text());
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
 }
 
 const notificationAPI: NotificationAPI = {
   getReceivedInvitations,
   getSentInvitations,
-  acceptTeamInvitation,
-  declineTeamInvitation,
-  acceptDirectShareInvitation,
-  declineDirectShareInvitation,
+  acceptInvitation,
+  declineInvitation,
+  cancelInvitation,
 };
 export default notificationAPI;

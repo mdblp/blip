@@ -17,15 +17,14 @@
 
 import _ from 'lodash';
 import Chance from 'chance';
-const chance = new Chance();
 import { range } from 'd3-array';
 import moment from 'moment-timezone';
 import React from 'react';
-
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
+import { assert, expect } from 'chai';
 
 import { MGDL_UNITS, MMOLL_UNITS } from '../../../../src/utils/constants';
-import { getLocalizedCeiling } from '../../../../src/utils/datetime';
 import DummyComponent from '../../../helpers/DummyComponent';
 
 import {
@@ -37,6 +36,8 @@ import {
   mapDispatchToProps,
 } from '../../../../src/components/trends/common/TrendsContainer';
 import TrendsSVGContainer from '../../../../src/components/trends/common/TrendsSVGContainer';
+
+const chance = new Chance();
 
 describe('TrendsContainer', () => {
   // stubbing console.warn gets rid of the annoying warnings from react-dimensions
@@ -216,7 +217,7 @@ describe('TrendsContainer', () => {
       };
     }
 
-    const onDatetimeLocationChange = sinon.spy();
+    const onDatetimeLocationChange = sinon.stub().resolves(true);
     const onSwitchBgDataSource = sinon.spy();
     const markTrendsViewed = sinon.spy();
     const unfocusCbgSlice = sinon.spy();
@@ -249,6 +250,12 @@ describe('TrendsContainer', () => {
       yScaleClampTop: {
         [MGDL_UNITS]: 300,
         [MMOLL_UNITS]: 25,
+      },
+      tidelineData: {
+        endpoints: [
+          moment.utc("2016-03-01T00:00:00.000Z").toISOString(),
+          moment.utc().endOf('day').add(1, 'millisecond').toISOString(),
+        ]
       },
       onDatetimeLocationChange,
       onSelectDate: sinon.stub(),
@@ -321,20 +328,20 @@ describe('TrendsContainer', () => {
         // minimalData.instance().mountData();
       });
 
-      it('should set dateDomain based on current datetime if no initialDatetimeLocation', () => {
-        const ceil = getLocalizedCeiling(new Date().valueOf(), 'UTC').toISOString();
+      it('should set dateDomain based on tidelinedata last date if no initialDatetimeLocation', () => {
+        const ceil = moment.utc(props.tidelineData.endpoints[1]).subtract(1, 'millisecond').toISOString();
         const { dateDomain } = minimalData.state();
         expect(dateDomain.end).to.equal(ceil);
       });
 
       it('should set dateDomain based on initialDatetimeLocation if provided', () => {
         const { dateDomain } = withInitialDatetimeLocation.state();
-        expect(dateDomain.end).to.equal('2016-03-16T00:00:00.000Z');
+        expect(dateDomain.end).to.equal('2016-03-19T23:59:59.999Z');
       });
 
       it('should set dateDomain.start based on initialDatetimeLocation and extentSize', () => {
         const { dateDomain } = withInitialDatetimeLocation.state();
-        expect(dateDomain.start).to.equal('2016-03-09T00:00:00.000Z');
+        expect(dateDomain.start).to.equal('2016-03-13T00:00:00.000Z');
       });
 
       it('should mark trends viewed as `touched` if not already touched', () => {
@@ -695,7 +702,7 @@ describe('TrendsContainer', () => {
         it('should return local noon prior to initialDatetimeLocation', () => {
           const instance = withInitialDatetimeLocation.instance();
           expect(instance.getCurrentDay())
-            .to.equal('2016-03-15T12:00:00.000Z');
+            .to.equal('2016-03-19T12:00:00.000Z');
         });
       });
 
@@ -709,6 +716,10 @@ describe('TrendsContainer', () => {
               timezoneName: timezone,
             },
           });
+        });
+
+        afterEach(() => {
+          sinon.restore();
         });
 
         describe('setExtent', () => {
@@ -731,8 +742,6 @@ describe('TrendsContainer', () => {
             const { dateDomain: newDomain } = minimalData.state();
             expect(newDomain.start).to.equal(domain[0]);
             expect(newDomain.end).to.equal(domain[1]);
-            instance.refilterByDate.restore();
-            instance.setState.restore();
           });
         });
 
@@ -758,9 +767,7 @@ describe('TrendsContainer', () => {
             const { dateDomain: newDomain } = minimalData.state();
 
             expect(newDomain.start).to.equal('2016-03-08T08:00:00.000Z');
-            expect(newDomain.end).to.equal('2016-03-15T07:00:00.000Z');
-
-            instance.setExtent.restore();
+            expect(newDomain.end).to.equal('2016-03-15T06:59:59.999Z');
           });
         });
 
@@ -775,7 +782,7 @@ describe('TrendsContainer', () => {
 
             const expectedDomain = [
               '2016-03-15T07:00:00.000Z',
-              '2016-03-22T07:00:00.000Z',
+              '2016-03-22T06:59:59.999Z',
             ];
 
             expect(setExtentSpy.callCount).to.equal(0);
@@ -785,7 +792,8 @@ describe('TrendsContainer', () => {
 
             expect(setExtentSpy.callCount).to.equal(1);
             expect(onDatetimeLocationChange.callCount).to.equal(1);
-            expect(onDatetimeLocationChange.args[0][0]).to.deep.equal(expectedDomain);
+            expect(onDatetimeLocationChange.args[0][0],
+              JSON.stringify({ expectedDomain, having: onDatetimeLocationChange.args[0][0] })).to.deep.equal(expectedDomain);
             // 2nd arg is Boolean indicating whether atMostRecent
             expect(onDatetimeLocationChange.args[0][1]).to.be.false;
 
@@ -793,8 +801,6 @@ describe('TrendsContainer', () => {
 
             expect(newDomain.start).to.equal(expectedDomain[0]);
             expect(newDomain.end).to.equal(expectedDomain[1]);
-
-            instance.setExtent.restore();
           });
 
           it('should call onDatetimeLocationChange w/2nd arg true when domain > mostRecent', () => {
@@ -832,8 +838,6 @@ describe('TrendsContainer', () => {
 
             const { dateDomain: newDomain, mostRecent } = minimalData.state();
             expect(newDomain.end).to.equal(mostRecent);
-
-            instance.setExtent.restore();
           });
         });
 

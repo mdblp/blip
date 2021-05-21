@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Login page
+ * Utilities for notifications hook
  *
  * All rights reserved.
  *
@@ -26,6 +26,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Login from "./login";
-import ConsentPage from "./consent";
-export { Login as LoginPage, ConsentPage };
+import { INotificationAPI, APINotificationType } from "../../models/notification";
+import { INotification, NotificationType } from "./models";
+
+/**
+ * Convert an API notification to our model
+ * @param apin API Notification
+ */
+export function notificationConversion(apin: INotificationAPI): INotification | null {
+  let type: NotificationType;
+  switch (apin.type) {
+  case APINotificationType.careTeamInvitation:
+    type = NotificationType.directInvitation;
+    break;
+  case APINotificationType.medicalTeamPatientInvitation:
+    type = NotificationType.careTeamPatientInvitation;
+    break;
+  case APINotificationType.medicalTeamProInvitation:
+    type = NotificationType.careTeamProInvitation;
+    break;
+  case APINotificationType.medicalTeamDoAdmin:
+    type = NotificationType.careTeamDoAdmin;
+    // break; // TODO medicalTeamDoAdmin
+    return null;
+  case APINotificationType.medicalTeamRemoveMember:
+    type = NotificationType.careTeamRemoveMember;
+    // break; // TODO medicalTeamRemoveMember
+    return null;
+  default:
+    throw new Error("Invalid notification type");
+  }
+  return {
+    id: apin.key,
+    creatorId: apin.creatorId,
+    date: apin.created,
+    email: apin.email,
+    type,
+    creator: apin.creator,
+    role: apin.role,
+    target: apin.target,
+  };
+}

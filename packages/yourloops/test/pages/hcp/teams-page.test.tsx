@@ -32,12 +32,14 @@ import { mount, ReactWrapper, MountRendererProps } from "enzyme";
 import sinon from "sinon";
 
 import { AuthContextProvider } from "../../../lib/auth";
+import { NotificationContextProvider } from "../../../lib/notifications";
 import { TeamContextProvider } from "../../../lib/team";
 import TeamsPage from "../../../pages/hcp/teams-page";
 
 import { waitTimeout } from "../../../lib/utils";
 import { teams } from "../../common";
 import { authHookHcp } from "../../lib/auth/hook.test";
+import { stubNotficationContextValue } from "../../lib/notifications/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamPage(): void {
@@ -50,9 +52,11 @@ function testTeamPage(): void {
   function TestTeamsPageComponent(): JSX.Element {
     return (
       <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider api={teamAPI}>
-          <TeamsPage />
-        </TeamContextProvider>
+        <NotificationContextProvider value={stubNotficationContextValue}>
+          <TeamContextProvider api={teamAPI}>
+            <TeamsPage />
+          </TeamContextProvider>
+        </NotificationContextProvider>
       </AuthContextProvider>
     );
   }
@@ -121,8 +125,10 @@ function testTeamPage(): void {
 
   describe("onShowLeaveTeamDialog", () => {
     const leaveTeamStub = teamAPI.leaveTeam as sinon.SinonStub;
+    // const removeMember = teamAPI.removeMember as sinon.SinonStub;
+    const deleteTeam = teamAPI.deleteTeam as sinon.SinonStub;
 
-    it("should display the leave dialog, and call the api on validate", async () => {
+    it("should display the leave dialog, and call deleteTeam api on validate if the member is the only member", async () => {
       component = await createComponent();
       expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
       expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
@@ -145,7 +151,7 @@ function testTeamPage(): void {
       component.update();
       await waitTimeout(apiTimeout);
 
-      expect(leaveTeamStub.calledOnce, "leaveTeam calledOnce").to.be.true;
+      expect(deleteTeam.calledOnce, "deleteTeam calledOnce").to.be.true;
       expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
     });
 
@@ -185,7 +191,7 @@ function testTeamPage(): void {
       expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
       expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
 
-      let buttonId = `team-card-${teams[2].id}-button-leave-team`;
+      let buttonId = `team-card-${teams[1].id}-button-leave-team`;
       const button = document.getElementById(buttonId) as HTMLButtonElement;
       expect(button, buttonId).to.be.not.null;
 

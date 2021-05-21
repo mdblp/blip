@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Login page
+ * Notifications API models (hydrophone interfaces)
  *
  * All rights reserved.
  *
@@ -26,6 +26,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Login from "./login";
-import ConsentPage from "./consent";
-export { Login as LoginPage, ConsentPage };
+import { Profile } from "./shoreline";
+import { TeamMemberRole } from "./team";
+
+export enum APINotificationType {
+careTeamInvitation = "careteam_invitation",
+medicalTeamProInvitation = "medicalteam_invitation",
+medicalTeamPatientInvitation = "medicalteam_patient_invitation",
+medicalTeamDoAdmin = "medicalteam_do_admin",
+medicalTeamRemoveMember = "medicalteam_remove",
+}
+
+export interface INotificationAPI {
+key: string;
+type: APINotificationType;
+/** Current user email */
+email: string;
+/** User who create the invitation == creator.userid? */
+creatorId: string;
+/** Undocumented value */
+context?: null;
+/** Notification creation date */
+created: string;
+target?: {
+  /** TeamID */
+  id: string;
+  /** Team name */
+  name: string;
+};
+/** The role we will have in the team */
+role?: TeamMemberRole;
+/** Undocumented value */
+shortKey: string;
+/** Some information on the user who created this notification */
+creator: {
+  userid: string;
+  profile?: Profile;
+};
+}

@@ -27,7 +27,8 @@
  */
 
 import { UserInvitationStatus } from "../../models/generic";
-import { User, Preferences, Profile, Settings } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
+import { INotification } from "../notifications";
 
 interface DirectShareUser {
   userId: string;
@@ -43,6 +44,7 @@ export interface DirectShareAPI {
 }
 
 export interface ShareUser {
-  user: User;
+  user: IUser;
+  invitation?: INotification;
   status: UserInvitationStatus;
 }

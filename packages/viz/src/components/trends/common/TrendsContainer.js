@@ -19,7 +19,6 @@ import _ from 'lodash';
 import bows from 'bows';
 import { extent } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
-import { utcDay } from 'd3-time';
 import moment from 'moment-timezone';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -143,6 +142,7 @@ export class TrendsContainer extends React.Component {
       [MMOLL_UNITS]: PropTypes.number.isRequired,
     }).isRequired,
     // data (crossfilter dimensions)
+    tidelineData: PropTypes.object.isRequired,
     cbgByDate: PropTypes.object.isRequired,
     cbgByDayOfWeek: PropTypes.object.isRequired,
     smbgByDate: PropTypes.object.isRequired,
@@ -246,6 +246,7 @@ export class TrendsContainer extends React.Component {
       [MGDL_UNITS]: MGDL_CLAMP_TOP,
       [MMOLL_UNITS]: MMOLL_CLAMP_TOP,
     },
+    initialDatetimeLocation: new Date().toISOString(),
   };
 
   constructor(props) {
@@ -261,6 +262,8 @@ export class TrendsContainer extends React.Component {
       yScale: null,
     };
 
+    /** Avoid infinite mount data loop */
+    this.mountingData = false;
     this.selectDate = this.selectDate.bind(this);
     this.determineDataToShow = this.determineDataToShow.bind(this);
   }
@@ -308,8 +311,13 @@ export class TrendsContainer extends React.Component {
   }
 
   mountData() {
+    const { extentSize, initialDatetimeLocation, timePrefs } = this.props;
+    if (this.mountingData) {
+      return;
+    }
+    this.mountingData = true;
     // find BG domain (for yScale construction)
-    const { cbgByDate, cbgByDayOfWeek, smbgByDate, smbgByDayOfWeek } = this.props;
+    const { cbgByDate, cbgByDayOfWeek, smbgByDate, smbgByDayOfWeek, tidelineData } = this.props;
     const allBg = cbgByDate.filterAll().top(Infinity).concat(smbgByDate.filterAll().top(Infinity));
     const bgDomain = extent(allBg, d => d.value);
 
@@ -322,14 +330,15 @@ export class TrendsContainer extends React.Component {
     const yScale = scaleLinear().domain(yScaleDomain).clamp(true);
 
     // find initial date domain (based on initialDatetimeLocation or current time)
-    const { extentSize, initialDatetimeLocation, timePrefs } = this.props;
     const timezone = datetime.getTimezoneFromTimePrefs(timePrefs);
-    const mostRecent = datetime.getLocalizedCeiling(new Date().valueOf(), timePrefs);
-    const end = initialDatetimeLocation
-      ? datetime.getLocalizedCeiling(initialDatetimeLocation, timePrefs)
-      : mostRecent;
-
-    const start = moment(end.toISOString()).tz(timezone).subtract(extentSize, 'days');
+    // Remove 1 miliseconds here, because there is 1 added in tidelinedata
+    const mostRecent = moment.tz(tidelineData.endpoints[1], timezone).subtract(1, 'millisecond');
+    let end = moment.tz(initialDatetimeLocation, timezone).endOf('day').add(Math.round(extentSize / 2), 'days');
+    if (end.valueOf() > mostRecent.valueOf()) {
+      this.log.info('End after most recent, update it', { end: end.toISOString(), mostRecent: mostRecent.toISOString() });
+      end = moment.tz(mostRecent.valueOf(), timezone);
+    }
+    let start = moment.tz(end.valueOf(), timezone).subtract(extentSize, 'days').add(1, 'millisecond');
     const dateDomain = [start.toISOString(), end.toISOString()];
 
     // filter data according to current activeDays and dateDomain
@@ -347,7 +356,13 @@ export class TrendsContainer extends React.Component {
     };
 
     this.setState(state, this.determineDataToShow);
-    this.props.onDatetimeLocationChange(dateDomain, end === mostRecent);
+    const atMostRecent = Math.abs(end.diff(mostRecent, 'hours', true).valueOf()) < 1;
+    this.props.onDatetimeLocationChange(dateDomain, atMostRecent).catch((reason) => {
+      this.log.error(reason);
+    }).finally(() => {
+      this.mountingData = false;
+      this.log.debug("Mouting done", { initialDatetimeLocation, dateDomain: state.dateDomain, mostRecent: state.mostRecent, timezone });
+    });
   }
 
   filterCurrentData() {
@@ -369,7 +384,13 @@ export class TrendsContainer extends React.Component {
     }
   }
 
-  setExtent(newDomain, oldDomain) {
+  setExtent(newDomain, oldDomain = null) {
+    if (!Array.isArray(newDomain) || newDomain.length !== 2) {
+      throw new Error("Invalid newDomain parameter");
+    }
+    if (oldDomain !== null && (!Array.isArray(oldDomain) || oldDomain.length !== 2)) {
+      throw new Error("Invalid oldDomain parameter");
+    }
     const { cbgByDate, smbgByDate } = this.props;
     const { mostRecent } = this.state;
     this.refilterByDate(cbgByDate, newDomain);
@@ -398,30 +419,49 @@ export class TrendsContainer extends React.Component {
   }
 
   goBack() {
-    const oldDomain = _.clone(this.state.dateDomain);
-    const { dateDomain: { start: newEnd } } = this.state;
-    const start = getLocalizedOffset(newEnd, {
-      // negative because we are moving backward in time
-      amount: -this.props.extentSize,
-      units: 'days',
-    }, this.props.timePrefs).toISOString();
-    const newDomain = [start, newEnd];
-    this.setExtent(newDomain, [oldDomain.start, oldDomain.end]);
+    const { timePrefs, extentSize, tidelineData } = this.props;
+    const { dateDomain } = this.state;
+    const timezone = datetime.getTimezoneFromTimePrefs(timePrefs);
+    const mMostAncient = moment.tz(tidelineData.endpoints[0], timezone);
+    let start = moment.tz(dateDomain.start, timezone).subtract(extentSize, 'days');
+    if (start.isBefore(mMostAncient)) {
+      this.log.warn(`Requesting start date before our first data`, { start: start.toISOString(), mMostAncient: mMostAncient.toISOString() });
+      start = mMostAncient;
+    }
+    const end = moment.tz(start, timezone).add(extentSize, 'days').subtract(1, 'millisecond');
+    const oldDomain = [dateDomain.start, dateDomain.end];
+    const newDomain = [start.toISOString(), end.toISOString()];
+    this.log.info('Go back', { newDomain, oldDomain, extentSize });
+    this.setExtent(newDomain, oldDomain);
   }
 
   goForward() {
-    const oldDomain = _.clone(this.state.dateDomain);
-    const { dateDomain: { end: newStart } } = this.state;
-    const end = utcDay.offset(new Date(newStart), this.props.extentSize).toISOString();
-    const newDomain = [newStart, end];
-    this.setExtent(newDomain, [oldDomain.start, oldDomain.end]);
+    const { timePrefs, extentSize } = this.props;
+    const { dateDomain, mostRecent } = this.state;
+    const timezone = datetime.getTimezoneFromTimePrefs(timePrefs);
+    const mMostRecent = moment.tz(mostRecent, timezone);
+    let end = moment.tz(dateDomain.end, timezone).add(extentSize, 'days');
+    if (end.isAfter(mMostRecent)) {
+      this.log.warn(`Requesting end date after our last data`, { end: end.toISOString(), mMostRecent: mMostRecent.toISOString() });
+      end = mMostRecent;
+    }
+    const start = moment.tz(end.valueOf(), timezone).subtract(extentSize, 'days').add(1, 'millisecond');
+    const oldDomain = [dateDomain.start, dateDomain.end];
+    const newDomain = [start.toISOString(), end.toISOString()];
+    this.log.info('Go forward', { newDomain, oldDomain, extentSize });
+    this.setExtent(newDomain, oldDomain);
   }
 
   goToMostRecent() {
-    const { mostRecent: end } = this.state;
-    const start = utcDay.offset(new Date(end), -this.props.extentSize).toISOString();
-    const newDomain = [start, end];
-    this.setExtent(newDomain);
+    const { timePrefs, extentSize } = this.props;
+    const { dateDomain, mostRecent } = this.state;
+    const timezone = datetime.getTimezoneFromTimePrefs(timePrefs);
+    const end = moment.tz(mostRecent, timezone);
+    const start = moment.tz(end.valueOf(), timezone).subtract(extentSize, 'days').add(1, 'millisecond');
+    const oldDomain = [dateDomain.start, dateDomain.end];
+    const newDomain = [start.toISOString(), end.toISOString()];
+    this.log.info('Go to most recent', { newDomain, oldDomain, extentSize });
+    this.setExtent(newDomain, oldDomain);
   }
 
   refilterByDate(dataByDate, dateDomain) {
@@ -477,8 +517,8 @@ export class TrendsContainer extends React.Component {
 
     const { start: currentStart, end: currentEnd } = dateDomain;
 
-    const prevStart = _.get(this.state, ['previousDateDomain', 'start']);
-    const prevEnd = _.get(this.state, ['previousDateDomain', 'end']);
+    const prevStart = _.get(this.state, 'previousDateDomain.start');
+    const prevEnd = _.get(this.state, 'previousDateDomain.end');
     let start = currentStart;
     let end = currentEnd;
     if (prevStart && prevEnd) {
@@ -498,15 +538,11 @@ export class TrendsContainer extends React.Component {
         dates={getAllDatesInRange(start, end, this.props.timePrefs)}
         focusedSlice={this.props.trendsState.focusedCbgSlice}
         focusedSliceKeys={this.props.trendsState.focusedCbgSliceKeys}
-        focusedSmbgRangeAvgKey={_.get(
-          this.props, ['trendsState', 'focusedSmbgRangeAvg', 'data', 'id'], null
-        )}
+        focusedSmbgRangeAvgKey={_.get(this.props, 'trendsState.focusedSmbgRangeAvg.data.id', null)}
         focusedSmbg={this.props.trendsState.focusedSmbg}
         displayFlags={this.props.trendsState.cbgFlags}
         showingCbg={this.props.showingCbg}
-        showingCbgDateTraces={_.get(
-          this.props, ['trendsState', 'showingCbgDateTraces'], false
-        )}
+        showingCbgDateTraces={_.get(this.props, 'trendsState.showingCbgDateTraces', false)}
         showingSmbg={this.props.showingSmbg}
         smbgGrouped={this.props.smbgGrouped}
         smbgLines={this.props.smbgLines}
@@ -522,7 +558,7 @@ export class TrendsContainer extends React.Component {
 export function mapStateToProps(state, ownProps) {
   const userId = _.get(ownProps, 'currentPatientInViewId');
   return {
-    trendsState: _.get(state, ['viz', 'trends', userId], {}),
+    trendsState: _.get(state, `viz.trends.${userId}`, {}),
   };
 }
 

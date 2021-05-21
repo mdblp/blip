@@ -26,19 +26,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { User } from "../../lib/auth";
 import { Units, UserInvitationStatus } from "../../models/generic";
-import { User, UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 
-const userHCP: User = {
-  userid: "a0000000",
-  username: "john.doe@example.com",
-  role: UserRoles.hcp,
-  emailVerified: true,
-  profile: { firstName: "John", lastName: "Doe", fullName: "John Doe" },
-  preferences: { displayLanguageCode: "en" },
-  settings: { units: { bg: Units.gram } },
-};
+const userHCP: User = new User("a0000000", "john.doe@example.com");
+userHCP.role = UserRoles.hcp;
+userHCP.emailVerified = true;
+userHCP.profile= { firstName: "John", lastName: "Doe", fullName: "John Doe" };
+userHCP.preferences= { displayLanguageCode: "en" };
+userHCP.settings = { units: { bg: Units.gram } };
+
 
 /**
  * Logged in users for test, choose one suitable
@@ -143,7 +142,7 @@ export const teams: ITeam[] = [
     type: TeamType.medical,
     members: [
       {
-        teamId: "team-1",
+        teamId: "team-2-empty",
         userId: loggedInUsers.hcp.userid,
         role: TeamMemberRole.admin,
         invitationStatus: UserInvitationStatus.accepted,
