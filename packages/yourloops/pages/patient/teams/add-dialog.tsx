@@ -114,12 +114,8 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
 
   return (
     <React.Fragment>
-      <DialogTitle id="team-add-dialog-error-title">
-        <strong>{t("modal-add-medical-team")}</strong>
-      </DialogTitle>
-
-      <DialogContent>
-        <strong>{props.message}</strong>
+      <DialogContent style={{ marginTop: "2.5em", marginBottom: "calc(2.5em - 16px)", marginRight: "1em", marginLeft: "1em", paddingTop: "8px" }}>
+        {props.message}
       </DialogContent>
 
       <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
