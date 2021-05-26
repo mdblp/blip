@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+### Fixed
+- YLP-796 Set header x-tidepool-language for all requests to /confirm/send/xx
+
 ## 2.0.0 2021-05-21
 ### Added
 * YLP-13 Signup workflow for caregivers and hcps
