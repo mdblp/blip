@@ -43,7 +43,8 @@ import Badge from "@material-ui/core/Badge";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 
-import brandingLogo from "branding/logo.png";
+import brandingLogoFull from "branding/logo-full.svg";
+import brandingLogoIcon from "branding/logo-icon.svg";
 
 import { useNotification } from "../../lib/notifications/hook";
 import config from "../../lib/config";
@@ -76,22 +77,38 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
   toolBar: {
     backgroundColor: "var(--mdc-theme-surface, white)",
     display: "grid",
-    gridTemplateRows: "auto",
-    gridTemplateColumns: (props: HeaderProps) =>
-      _.isEmpty(props.children) ? "auto auto" : "auto auto auto",
+    gridTemplateRows: "3.5em",
+    gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "1fr 1fr" : "1fr auto 1fr",
     paddingLeft: "6em",
     paddingRight: "6em",
-    paddingBottom: "1em",
-    paddingTop: "0.5em",
+    paddingBottom: "0.7em",
+    paddingTop: "0.7em",
+    justifyItems: "stretch",
+    alignItems: "center",
   },
   toolbarRightSide: { display: "flex", justifyContent: "flex-end" },
   accountType: {
     fontWeight: "lighter",
   },
   toolbarLogo: {
-    height: "45px",
+    height: "100%",
+  },
+  toolbarLogoFull: {
+    height: "100%",
     cursor: "pointer",
     outline: "none",
+    [theme.breakpoints.down('sm')]: {
+      display: "none",
+    },
+
+  },
+  toolbarLogoIcon: {
+    height: "100%",
+    cursor: "pointer",
+    outline: "none",
+    [theme.breakpoints.up('md')]: {
+      display: "none",
+    },
   },
   accountMenuIcon: { color: theme.palette.primary.main },
 }));
@@ -218,7 +235,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
-        <input type="image" className={classes.toolbarLogo} alt={t("alt-img-logo")} src={brandingLogo} onClick={onLogoClick} />
+        <div id="branding-logo" className={classes.toolbarLogo}>
+          <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={brandingLogoFull} onClick={onLogoClick} />
+          <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={brandingLogoIcon} onClick={onLogoClick} />
+        </div>
         {props.children}
         <div className={classes.toolbarRightSide}>
           <IconButton onClick={handleOpenNotifications}>
