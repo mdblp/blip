@@ -85,13 +85,41 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
     paddingTop: "0.7em",
     justifyItems: "stretch",
     alignItems: "center",
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "auto auto" : "auto auto auto",
+      paddingLeft: "2em",
+      paddingRight: "2em",
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: "1em",
+      paddingRight: "1em",
+      display: "flex",
+      flexWrap: "wrap",
+    },
   },
-  toolbarRightSide: { display: "flex", justifyContent: "flex-end" },
+  toolbarLeft: {
+    height: "100%",
+    [theme.breakpoints.down('xs')]: {
+      order: 1,
+      width: "3em",
+    },
+  },
+  toolbarMiddle: {
+    [theme.breakpoints.down('xs')]: {
+      order: 3,
+      width: "100%",
+    },
+  },
+  toolbarRight: {
+    display: "flex",
+    justifyContent: "flex-end",
+    [theme.breakpoints.down('xs')]: {
+      order: 2,
+      marginLeft: "auto",
+    },
+  },
   accountType: {
     fontWeight: "lighter",
-  },
-  toolbarLogo: {
-    height: "100%",
   },
   toolbarLogoFull: {
     height: "100%",
@@ -100,7 +128,6 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: "none",
     },
-
   },
   toolbarLogoIcon: {
     height: "100%",
@@ -235,12 +262,18 @@ function HeaderBar(props: HeaderProps): JSX.Element {
   return (
     <AppBar position="static">
       <Toolbar className={classes.toolBar}>
-        <div id="branding-logo" className={classes.toolbarLogo}>
+        <div id="primary-toolbar-left" className={classes.toolbarLeft}>
           <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={brandingLogoFull} onClick={onLogoClick} />
           <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={brandingLogoIcon} onClick={onLogoClick} />
         </div>
-        {props.children}
-        <div className={classes.toolbarRightSide}>
+        {
+          _.isNil(props.children) ? null : (
+            <div id="primary-toolbar-middle" className={classes.toolbarMiddle}>
+              {props.children}
+            </div>
+          )
+        }
+        <div id="primary-toolbar-right" className={classes.toolbarRight}>
           <IconButton onClick={handleOpenNotifications}>
             <Badge color="error" badgeContent={notificationHook.receivedInvitations.length}>
               <NotificationsIcon />
