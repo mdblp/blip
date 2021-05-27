@@ -66,6 +66,11 @@ const filtersStyles = makeStyles((theme: Theme) => {
     formControl: {
       marginRight: theme.spacing(1),
       minWidth: 120,
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(1),
+        marginLeft: 0,
+        width: "50%",
+      },
     },
     inputRoot: {
       color: "black",
@@ -94,6 +99,11 @@ const filtersStyles = makeStyles((theme: Theme) => {
       [theme.breakpoints.up("sm")]: {
         width: "15em",
       },
+      [theme.breakpoints.down('sm')]: {
+        width: "50%",
+        marginRight: 0,
+        marginLeft: theme.spacing(1),
+      },
     },
     searchIcon: {
       padding: theme.spacing(0, 2),
@@ -111,6 +121,9 @@ const filtersStyles = makeStyles((theme: Theme) => {
       backgroundColor: theme.palette.secondary.light,
       [theme.breakpoints.up("sm")]: {
         width: "15em",
+      },
+      [theme.breakpoints.down('sm')]: {
+        width: "initial",
       },
     },
     selectFilterInnerDiv: {

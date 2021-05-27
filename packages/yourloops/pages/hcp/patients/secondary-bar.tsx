@@ -61,14 +61,37 @@ export interface PatientListBarProps {
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
+      toolbarLeft: {
+        [theme.breakpoints.down('sm')]: {
+          order: 1,
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
+        },
+      },
       toolBarMiddle: {
         display: "flex",
         flexDirection: "row",
         marginRight: "auto",
         marginLeft: "auto",
+        [theme.breakpoints.down('sm')]: {
+          order: 3,
+          width: "100%",
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
+        },
       },
       toolBarRight: {
         display: "flex",
+        [theme.breakpoints.down('sm')]: {
+          order: 2,
+          marginLeft: "auto",
+          [theme.breakpoints.down('xs')]: {
+            order: 2,
+            marginLeft: "auto",
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(1),
+          },
+        },
       },
       homeIcon: {
         marginRight: "0.5em",
@@ -82,6 +105,11 @@ const pageBarStyles = makeStyles(
       },
       buttonAddPatient: {
         marginLeft: "auto",
+      },
+      buttonAddPatientText: {
+        [theme.breakpoints.down('xs')]: {
+          display: "none",
+        },
       },
       modalAddPatient: {
         display: "flex",
@@ -165,11 +193,11 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
 
   return (
     <SecondaryHeaderBar>
-      <div id="patients-list-toolbar-item-left">
+      <div id="patients-list-toolbar-item-left" className={classes.toolbarLeft}>
         <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
           <Typography color="textPrimary" className={classes.breadcrumbText}>
             <HomeIcon className={classes.homeIcon} />
-            {t("my-patients-title")}
+            <span>{t("my-patients-title")}</span>
           </Typography>
         </Breadcrumbs>
       </div>
@@ -190,7 +218,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
           className={classes.buttonAddPatient}
           onClick={handleOpenModalAddPatient}>
           <PersonAddIcon />
-          &nbsp;{t("add-patient")}
+          <span className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</span>
         </Button>
       </div>
     </SecondaryHeaderBar>

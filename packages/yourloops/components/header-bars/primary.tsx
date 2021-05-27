@@ -79,20 +79,24 @@ const toolbarStyles = makeStyles((theme: Theme) => ({
     display: "grid",
     gridTemplateRows: "3.5em",
     gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "1fr 1fr" : "1fr auto 1fr",
-    paddingLeft: "6em",
-    paddingRight: "6em",
+    paddingLeft: theme.spacing(12), // eslint-disable-line no-magic-numbers
+    paddingRight: theme.spacing(12), // eslint-disable-line no-magic-numbers
     paddingBottom: "0.7em",
     paddingTop: "0.7em",
     justifyItems: "stretch",
     alignItems: "center",
+    [theme.breakpoints.down('lg')]: {
+      paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
+    },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: (props: HeaderProps) => _.isEmpty(props.children) ? "auto auto" : "auto auto auto",
-      paddingLeft: "2em",
-      paddingRight: "2em",
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
     },
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: "1em",
-      paddingRight: "1em",
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
       display: "flex",
       flexWrap: "wrap",
     },
