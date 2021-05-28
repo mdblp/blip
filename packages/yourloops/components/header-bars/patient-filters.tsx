@@ -71,6 +71,12 @@ const filtersStyles = makeStyles((theme: Theme) => {
         marginLeft: 0,
         width: "50%",
       },
+      [theme.breakpoints.down('xs')]: {
+        width: "100%",
+        marginRight: 0,
+        marginBottom: theme.spacing(1),
+        height: "3em",
+      },
     },
     inputRoot: {
       color: "black",
@@ -103,6 +109,14 @@ const filtersStyles = makeStyles((theme: Theme) => {
         width: "50%",
         marginRight: 0,
         marginLeft: theme.spacing(1),
+        "&:first-child": {
+          width: "100%",
+        },
+      },
+      [theme.breakpoints.down('xs')]: {
+        width: "100%",
+        marginLeft: 0,
+        height: "3em",
       },
     },
     searchIcon: {

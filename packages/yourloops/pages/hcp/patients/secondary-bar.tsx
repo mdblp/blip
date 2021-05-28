@@ -61,7 +61,7 @@ export interface PatientListBarProps {
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
-      toolbarLeft: {
+      toolBarLeft: {
         [theme.breakpoints.down('sm')]: {
           order: 1,
           marginTop: theme.spacing(1),
@@ -79,18 +79,19 @@ const pageBarStyles = makeStyles(
           marginTop: theme.spacing(1),
           marginBottom: theme.spacing(1),
         },
+        [theme.breakpoints.down('xs')]: {
+          flexWrap: "wrap",
+        },
       },
       toolBarRight: {
         display: "flex",
         [theme.breakpoints.down('sm')]: {
           order: 2,
           marginLeft: "auto",
-          [theme.breakpoints.down('xs')]: {
-            order: 2,
-            marginLeft: "auto",
-            marginTop: theme.spacing(1),
-            marginBottom: theme.spacing(1),
-          },
+        },
+        [theme.breakpoints.down('xs')]: {
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
         },
       },
       homeIcon: {
@@ -193,7 +194,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
 
   return (
     <SecondaryHeaderBar>
-      <div id="patients-list-toolbar-item-left" className={classes.toolbarLeft}>
+      <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
         <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
           <Typography color="textPrimary" className={classes.breadcrumbText}>
             <HomeIcon className={classes.homeIcon} />
