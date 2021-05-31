@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Fixed
 - YLP-779 Caregiver switching to hcp is logged off at the end of the process
+- YLP-Y82 Overview calendar day hover are hard to read
 
 ## 2.0.0 2021-05-21
 ### Added
