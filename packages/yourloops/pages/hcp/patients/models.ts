@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Notifications API models (hydrophone interfaces)
+ * Models for patients list
  *
  * All rights reserved.
  *
@@ -26,41 +26,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Profile } from "./shoreline";
-import { TeamMemberRole } from "./team";
+import { SortDirection, SortFields } from "../../../models/generic";
+import { TeamUser } from "../../../lib/team";
 
-export enum APINotificationType {
-  careTeamInvitation = "careteam_invitation",
-  medicalTeamProInvitation = "medicalteam_invitation",
-  medicalTeamPatientInvitation = "medicalteam_patient_invitation",
-  medicalTeamDoAdmin = "medicalteam_do_admin",
-  medicalTeamRemoveMember = "medicalteam_remove",
+export interface PatientListProps {
+  patients: TeamUser[];
+  flagged: string[];
+  order: SortDirection;
+  orderBy: SortFields;
+  onClickPatient: (user: TeamUser) => void;
+  onFlagPatient: (userId: string) => Promise<void>;
+  onSortList: (field: SortFields, direction: SortDirection) => void;
 }
 
-export interface INotificationAPI {
-  key: string;
-  type: APINotificationType;
-  /** Current user email */
-  email: string;
-  /** User who create the invitation == creator.userid? */
-  creatorId: string;
-  /** Undocumented value */
-  context?: null;
-  /** Notification creation date */
-  created: string;
-  target?: {
-    /** TeamID */
-    id: string;
-    /** Team name */
-    name: string;
-  };
-  /** The role we will have in the team */
-  role?: TeamMemberRole;
-  /** Undocumented value */
-  shortKey: string;
-  /** Some information on the user who created this notification */
-  creator: {
-    userid: string;
-    profile?: Profile;
-  };
+export interface PatientElementProps {
+  trNA: string;
+  patient: TeamUser;
+  flagged: string[];
+  onClickPatient: (user: TeamUser) => void;
+  onFlagPatient: (userId: string) => Promise<void>;
+}
+
+export interface PatientElementCardProps extends PatientElementProps {
+  trTIR: string;
+  trTBR: string;
+  trUpload: string;
+}
+
+export interface MedicalTableValues {
+  /** Value as a string for easy display */
+  tir: string;
+  /** Value as a number for easy compare */
+  tirNumber: number;
+  /** Value as a string for easy display */
+  tbr: string;
+  /** Value as a number for easy compare */
+  tbrNumber: number;
+  /** Value as a string for easy display */
+  lastUpload: string;
+  /** Value as a number for easy compare */
+  lastUploadEpoch: number;
 }
