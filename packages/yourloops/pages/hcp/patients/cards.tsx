@@ -37,6 +37,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
@@ -50,40 +51,46 @@ import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientListProps, PatientElementCardProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
-const patientListStyle = makeStyles((theme: Theme) => {
-  return {
-    patientPaperCard: {
-      marginBottom: theme.spacing(1),
-      display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      alignItems: "center",
-      padding: theme.spacing(2),
-    },
-    patientDivPendingIcon: {
-      display: "flex",
-      height: "100%",
-      marginRight: theme.spacing(2),
-    },
-    patientDivIndicators: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-    },
-    patientDivIndicator: {
-      display: "flex",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
-    },
-    flag: {
-      color: theme.palette.primary.main,
-    },
-  };
-}, { name: "ylp-hcp-patients-cards" });
+const patientListStyle = makeStyles(
+  (theme: Theme) => {
+    return {
+      patientPaperCard: {
+        marginBottom: theme.spacing(1),
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "center",
+        padding: theme.spacing(2),
+      },
+      patientDivPendingIcon: {
+        display: "flex",
+        height: "100%",
+        marginRight: theme.spacing(2),
+      },
+      patientDivIndicators: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      },
+      patientDivIndicator: {
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+      },
+      flagButton: {
+        color: theme.palette.primary.main,
+      },
+      showPatientButton: {
+        marginLeft: "auto",
+      },
+    };
+  },
+  { name: "ylp-hcp-patients-cards" }
+);
 
 function PatientCard(props: PatientElementCardProps): JSX.Element {
-  const { trNA, trTIR, trTBR, trUpload, patient, flagged, onFlagPatient } = props;
+  const { trNA, trTIR, trTBR, trUpload, patient, flagged, onFlagPatient, onClickPatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const authHook = useAuth();
@@ -116,15 +123,17 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
       const cardDisplayed = entries[0];
       if (cardDisplayed.intersectionRatio > 0) {
         // Displayed: queue the fetch
-        addPendingFetch(session, patient).then((md) => {
-          if (typeof md !== "undefined") {
-            teamHook.setPatientMedicalData(patient.userid, md);
-            if (componentMounted) setMedicalData(md);
-          }
-        }).catch(() => {
-          teamHook.setPatientMedicalData(patient.userid, null);
-          if (componentMounted) setMedicalData(null);
-        });
+        addPendingFetch(session, patient)
+          .then((md) => {
+            if (typeof md !== "undefined") {
+              teamHook.setPatientMedicalData(patient.userid, md);
+              if (componentMounted) setMedicalData(md);
+            }
+          })
+          .catch(() => {
+            teamHook.setPatientMedicalData(patient.userid, null);
+            if (componentMounted) setMedicalData(null);
+          });
       } else {
         // No longer displayed, cancel the fetch
         removePendingFetch(patient);
@@ -143,10 +152,12 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   }, [paperRef, isPendingInvitation, authHook, medicalData, patient, teamHook]);
 
   if (isPendingInvitation) {
-    const email = _.get(patient, 'emails[0]', patient.username);
+    const email = _.get(patient, "emails[0]", patient.username);
     return (
       <Paper id={`patients-list-card-${email}`} className={classes.patientPaperCard}>
-        <div className={classes.patientDivPendingIcon}><AccessTimeIcon /></div>
+        <div className={classes.patientDivPendingIcon}>
+          <AccessTimeIcon />
+        </div>
         <Link
           color="textPrimary"
           id={`patients-list-card-${email}-email-link`}
@@ -164,31 +175,70 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
     sendMetrics("flag-patient", { flagged: !isFlagged });
     onFlagPatient(userId);
   };
+  const handleShowPatientData = (/* e: React.MouseEvent */): void => {
+    sendMetrics("show-patient-data", { flagged: isFlagged });
+    onClickPatient(patient);
+  };
 
   return (
     <Paper id={`patients-list-card-${userId}`} className={classes.patientPaperCard} ref={paperRef}>
-      <IconButton className={classes.flag} aria-label={t("aria-flag-patient")} size="small" onClick={onClickFlag}>
+      <IconButton
+        id={`patients-list-card-${userId}-flag-btn`}
+        className={classes.flagButton}
+        aria-label={t("aria-flag-patient")}
+        size="small"
+        onClick={onClickFlag}>
         {isFlagged ? <FlagIcon /> : <FlagOutlineIcon />}
       </IconButton>
-      <Typography id={`patients-list-card-${userId}-fullname`} component="span">{fullName}</Typography>
+      <Typography id={`patients-list-card-${userId}-fullname`} component="span">
+        {fullName}
+      </Typography>
+      <IconButton
+        id={`patients-list-card-${userId}-show-btn`}
+        className={classes.showPatientButton}
+        size="small"
+        onClick={handleShowPatientData}>
+        {<ArrowForwardIcon />}
+      </IconButton>
+
       <div id={`patients-list-card-${userId}-indicators`} className={classes.patientDivIndicators}>
         <div id={`patients-list-card-${userId}-indicator-tir`} className={classes.patientDivIndicator}>
-          <Typography id={`patients-list-card-${userId}-indicator-tir-title`} variant="overline" component="span" style={{ fontWeight: "bold" }}>
+          <Typography
+            id={`patients-list-card-${userId}-indicator-tir-title`}
+            variant="overline"
+            component="span"
+            style={{ fontWeight: "bold" }}>
             {trTIR}
           </Typography>
-          <Typography id={`patients-list-card-${userId}-indicator-tir-value`} variant="body2" component="span">{tir}</Typography>
+          <Typography id={`patients-list-card-${userId}-indicator-tir-value`} variant="body2" component="span">
+            {tir}
+          </Typography>
         </div>
         <div id={`patients-list-card-${userId}-indicator-tbr`} className={classes.patientDivIndicator}>
-          <Typography id={`patients-list-card-${userId}-indicator-tbr-title`} variant="overline" component="span" style={{ fontWeight: "bold" }}>
+          <Typography
+            id={`patients-list-card-${userId}-indicator-tbr-title`}
+            variant="overline"
+            component="span"
+            style={{ fontWeight: "bold" }}>
             {trTBR}
           </Typography>
-          <Typography id={`patients-list-card-${userId}-indicator-tbr-value`} variant="body2" component="span">{tbr}</Typography>
+          <Typography id={`patients-list-card-${userId}-indicator-tbr-value`} variant="body2" component="span">
+            {tbr}
+          </Typography>
         </div>
         <div id={`patients-list-card-${userId}-indicator-upload`} className={classes.patientDivIndicator}>
-          <Typography id={`patients-list-card-${userId}-indicator-upload-title`} variant="overline" component="span" style={{ fontWeight: "bold" }}>
+          <Typography
+            id={`patients-list-card-${userId}-indicator-upload-title`}
+            variant="overline"
+            component="span"
+            style={{ fontWeight: "bold" }}>
             {trUpload}
           </Typography>
-          <Typography id={`patients-list-card-${userId}-indicator-upload-value`} variant="body2" component="span" style={{ marginLeft: "auto" }}>
+          <Typography
+            id={`patients-list-card-${userId}-indicator-upload-value`}
+            variant="body2"
+            component="span"
+            style={{ marginLeft: "auto" }}>
             {lastUpload}
           </Typography>
         </div>
@@ -266,7 +316,7 @@ function PatientListCards(props: PatientListProps): JSX.Element {
   //   </div>
   // );
 
-  return (<React.Fragment>{cardsElements}</React.Fragment>);
+  return <React.Fragment>{cardsElements}</React.Fragment>;
 }
 
 export default PatientListCards;
