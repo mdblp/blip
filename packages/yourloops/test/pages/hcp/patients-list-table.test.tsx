@@ -32,10 +32,11 @@ import { shallow } from "enzyme";
 import sinon from "sinon";
 
 import { SortDirection, SortFields } from "../../../models/generic";
-import PatientListTable, { PatientListTableProps } from "../../../pages/hcp/patients/table";
+import { PatientListProps } from "../../../pages/hcp/patients/models";
+import PatientListTable from "../../../pages/hcp/patients/table";
 
 function testPatientListTable(): void {
-  const defaultProps: PatientListTableProps = {
+  const defaultProps: PatientListProps = {
     patients: [],
     flagged: [],
     order: SortDirection.asc,
