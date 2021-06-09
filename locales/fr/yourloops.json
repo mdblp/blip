@@ -269,6 +269,7 @@
   "modal-patient-add-team-accept": "Ajouter une équipe de soins",
   "modal-patient-add-team-success": "Votre équipe de soins a désormais accès à vos données.",
   "modal-patient-add-team-failure": "Impossible d'ajouter l'équipe de soins. Veuillez réessayer plus tard.",
+  "modal-patient-add-team-failure-exists": "You already share data with this team.",
   "modal-patient-add-caregiver-success": "L'aidant a désormais accès à vos données.",
   "modal-patient-add-caregiver-failure": "Impossible d'ajouter un aidant. Veuillez réessayer plus tard.",
   "modal-patient-remove-caregiver-title": "Supprimer un aidant",
