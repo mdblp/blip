@@ -339,37 +339,6 @@ function PatientListPage(): JSX.Element {
     );
   }
 
-  let patientListElement: JSX.Element;
-  if (matchesMediaSizeSmall) {
-    patientListElement = (
-      <Container id="patient-list-container">
-        <PatientListCards
-          patients={patients}
-          flagged={flagged}
-          order={order}
-          orderBy={orderBy}
-          onClickPatient={handleSelectPatient}
-          onFlagPatient={handleFlagPatient}
-          onSortList={handleSortList}
-        />
-      </Container>
-    );
-  } else {
-    patientListElement = (
-      <Container id="patient-list-container" maxWidth="lg">
-        <PatientListTable
-          patients={patients}
-          flagged={flagged}
-          order={order}
-          orderBy={orderBy}
-          onClickPatient={handleSelectPatient}
-          onFlagPatient={handleFlagPatient}
-          onSortList={handleSortList}
-        />
-      </Container>
-    );
-  }
-
   return (
     <React.Fragment>
       <PatientsSecondaryBar

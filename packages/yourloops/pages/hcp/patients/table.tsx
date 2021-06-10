@@ -56,7 +56,52 @@ import { TeamUser, useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientListProps, PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
+
 // const log = bows("PatientListTable");
+
+export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
+  let tir = "-";
+  let tbr = "-";
+  let lastUpload = "-";
+  let tirNumber = Number.NaN;
+  let tbrNumber = Number.NaN;
+  let lastUploadEpoch = Number.NaN;
+
+  if (medicalData === null) {
+    tir = na;
+    tbr = na;
+    lastUpload = na;
+  } else if (medicalData) {
+    if (medicalData.range?.endDate) {
+      const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone);
+      if (mLastUpload.isValid()) {
+        lastUploadEpoch = mLastUpload.valueOf();
+        lastUpload = mLastUpload.format("llll");
+      }
+    }
+    if (medicalData.computedTir?.count) {
+      const { high, low, target, veryHigh, veryLow } = medicalData.computedTir.count;
+      const total = high + low + target + veryHigh + veryLow;
+      tirNumber = Math.round((100 * target) / total);
+      tir = tirNumber.toString(10);
+      tbrNumber = Math.round((100 * (low + veryLow)) / total);
+      tbr = tbrNumber.toString(10);
+    } else {
+      tir = na;
+      tbr = na;
+    }
+  }
+
+  return {
+    tir,
+    tbr,
+    lastUpload,
+    tirNumber,
+    tbrNumber,
+    lastUploadEpoch,
+  };
+};
 
 const patientListStyle = makeStyles((theme: Theme) => {
   return {
