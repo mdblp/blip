@@ -28,7 +28,6 @@
 
 import * as React from "react";
 import _ from "lodash";
-import moment from "moment-timezone"; // TODO: Change moment-timezone lib with something else
 import { useTranslation } from "react-i18next";
 // import bows from "bows";
 
@@ -55,24 +54,8 @@ import { getUserFirstName, getUserLastName } from "../../../lib/utils";
 import { useAuth } from "../../../lib/auth";
 import { TeamUser, useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-
-export interface PatientListTableProps {
-  patients: TeamUser[];
-  flagged: string[];
-  order: SortDirection;
-  orderBy: SortFields;
-  onClickPatient: (user: TeamUser) => void;
-  onFlagPatient: (userId: string) => Promise<void>;
-  onSortList: (field: SortFields, direction: SortDirection) => void;
-}
-
-export interface PatientTableRowProps {
-  na: string;
-  patient: TeamUser;
-  flagged: string[];
-  onClickPatient: (user: TeamUser) => void;
-  onFlagPatient: (userId: string) => Promise<void>;
-}
+import { PatientListProps, PatientElementProps } from "./models";
+import { getMedicalValues } from "./utils";
 
 // const log = bows("PatientListTable");
 
@@ -100,8 +83,8 @@ const patientListStyle = makeStyles((theme: Theme) => {
   };
 }, { name: "ylp-hcp-patients-table" });
 
-function PatientRow(props: PatientTableRowProps): JSX.Element {
-  const { na, patient, flagged, onClickPatient, onFlagPatient } = props;
+function PatientRow(props: PatientElementProps): JSX.Element {
+  const { trNA, patient, flagged, onClickPatient, onFlagPatient } = props;
   const { t } = useTranslation("yourloops");
   const authHook = useAuth();
   const teamHook = useTeam();
@@ -124,35 +107,14 @@ function PatientRow(props: PatientTableRowProps): JSX.Element {
     onClickPatient(patient);
   };
 
-  let tir = "-";
-  let tbr = "-";
-  let lastUpload = "-";
-  if (medicalData === null) {
-    tir = na;
-    tbr = na;
-    lastUpload = na;
-  } else if (medicalData) {
-    if (medicalData.range?.endDate) {
-      lastUpload = moment.utc(medicalData.range.endDate).format("llll");
-    }
-    if (medicalData.computedTir?.count) {
-      const { high, low, target, veryHigh, veryLow } = medicalData.computedTir.count;
-      const total = high + low + target + veryHigh + veryLow;
-      tir = Math.round((100 * target) / total).toString(10);
-      tbr = Math.round((100 * (low + veryLow)) / total).toString(10);
-    } else {
-      tir = na;
-      tbr = na;
-    }
-  }
-
+  const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
   const rowId = `patients-list-row-${userId}`;
   const session = authHook.session();
   const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
   React.useEffect(() => {
     const observedElement = rowRef.current;
     if (session !== null && observedElement !== null && typeof medicalData === "undefined" && !isPendingInvitation) {
-      /** If unmounted, we want to discard the result, react don't like to udated an unmounted component */
+      /** If unmounted, we want to discard the result, react don't like to update an unmounted component */
       let componentMounted = true;
       const observer = new IntersectionObserver((entries) => {
         const rowDisplayed = entries[0];
@@ -219,18 +181,18 @@ function PatientRow(props: PatientTableRowProps): JSX.Element {
   );
 }
 
-function PatientListTable(props: PatientListTableProps): JSX.Element {
+function PatientListTable(props: PatientListProps): JSX.Element {
   const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
 
-  const na = t("N/A");
+  const trNA = t("N/A");
 
   const patientsRows = patients.map(
     (patient: TeamUser): JSX.Element => (
       <PatientRow
         key={patient.userid}
-        na={na}
+        trNA={trNA}
         patient={patient}
         flagged={flagged}
         onClickPatient={onClickPatient}
@@ -241,7 +203,11 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
 
   const createSortHandler = (property: SortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
-      onSortList(property, order === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
+      let newOrder = order;
+      if (property === orderBy) {
+        newOrder = order === SortDirection.asc ? SortDirection.desc : SortDirection.asc;
+      }
+      onSortList(property, newOrder);
     };
   };
 
@@ -252,21 +218,30 @@ function PatientListTable(props: PatientListTableProps): JSX.Element {
           <TableRow className={classes.tableRowHeader}>
             <TableCell id="patients-list-header-icon" className={classes.tableCellHeader} />
             <TableCell id="patients-list-header-lastname" className={classes.tableCellHeader}>
-              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler(SortFields.lastname)}>
+              <TableSortLabel active={orderBy === SortFields.lastname} direction={order} onClick={createSortHandler(SortFields.lastname)}>
                 {t("lastname")}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patients-list-header-firstname" className={classes.tableCellHeader}>
-              <TableSortLabel
-                active={orderBy === "firstname"}
-                direction={order}
-                onClick={createSortHandler(SortFields.firstname)}>
+              <TableSortLabel active={orderBy === SortFields.firstname} direction={order} onClick={createSortHandler(SortFields.firstname)}>
                 {t("firstname")}
               </TableSortLabel>
             </TableCell>
-            <TableCell id="patients-list-header-tir" className={classes.tableCellHeader}>{t("list-patient-tir")}</TableCell>
-            <TableCell id="patients-list-header-tbr" className={classes.tableCellHeader}>{t("list-patient-tbr")}</TableCell>
-            <TableCell id="patients-list-header-upload" className={classes.tableCellHeader}>{t("list-patient-upload")}</TableCell>
+            <TableCell id="patients-list-header-tir" className={classes.tableCellHeader}>
+              <TableSortLabel active={orderBy === SortFields.tir} direction={order} onClick={createSortHandler(SortFields.tir)}>
+                {t("list-patient-tir")}
+              </TableSortLabel>
+            </TableCell>
+            <TableCell id="patients-list-header-tbr" className={classes.tableCellHeader}>
+              <TableSortLabel active={orderBy === SortFields.tbr} direction={order} onClick={createSortHandler(SortFields.tbr)}>
+                {t("list-patient-tbr")}
+              </TableSortLabel>
+            </TableCell>
+            <TableCell id="patients-list-header-upload" className={classes.tableCellHeader}>
+              <TableSortLabel active={orderBy === SortFields.upload} direction={order} onClick={createSortHandler(SortFields.upload)}>
+                {t("list-patient-upload")}
+              </TableSortLabel>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{patientsRows}</TableBody>
