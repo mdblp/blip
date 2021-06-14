@@ -126,7 +126,7 @@ class PartialDataLoad {
     }
 
     const startDay = Math.floor(dStart / MS_IN_DAY);
-    const endDay = Math.ceil(dEnd / MS_IN_DAY) + 1;
+    const endDay = Math.ceil(dEnd / MS_IN_DAY);
 
     return { start: startDay, end: endDay };
   }
@@ -149,6 +149,5 @@ class PartialDataLoad {
     };
   }
 }
-
 
 export default PartialDataLoad;
