@@ -99,7 +99,8 @@ class PartialDataLoad {
     if (days.length > 0) {
       return {
         start: this.range.start + MS_IN_DAY * days[0],
-        end: this.range.start + MS_IN_DAY * (days[days.length - 1] + 1),
+        // End range: end of the last day (so add +1 day and substract 1ms)
+        end: this.range.start + MS_IN_DAY * (days[days.length - 1] + 1) - 1,
       };
     }
     return null;
