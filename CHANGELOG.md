@@ -12,9 +12,11 @@ It is based on Tidepool Blip 1.27.
 - YLP-796 Set header x-tidepool-language for all requests to /confirm/send/xx
 - YLP-799 CSS fixes for mobile display of patient data
 - YLP-820 Data loading loses some days when browsing daily view chronologically
+- YLP-828 Add button to display the cookies manager
 - YLP-831 Missing team name on modals delete team / remove team member
 
 ### Engineering Use
+- YLP-750 Support TideWhisper v1 routes
 - YLP-808 Regenerate package-lock.json files
 - YLP-833 Add matomo analytics for better perfs metrics
 
