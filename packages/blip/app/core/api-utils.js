@@ -34,6 +34,7 @@
  * @typedef { import("../index").User } User
  * @typedef { import("../index").GetPatientDataOptions } GetPatientDataOptions
  * @typedef { import("../index").GetPatientDataOptionsV0 } GetPatientDataOptionsV0
+ * @typedef { import("./lib/partial-data-load").DateRange } DateRange
  */
 
 import _ from "lodash";
@@ -89,6 +90,10 @@ class ApiUtils {
    */
   async refreshV1() {
     const range = await this.api.getPatientDataRange(this.patient);
+    if (range === null) {
+      this.log.info("Range is empty - no data available");
+      return [];
+    }
     this.log.info("Available data range:", range[0], range[1]);
 
     // Assume browser locale, will adjust after
@@ -199,9 +204,7 @@ class ApiUtils {
    * @returns {Promise<PatientData>} The patient data
    */
   fetchDataRange(dateRange) {
-    this.log.info("Fetching data using range", dateRange);
     const rangeToLoad = this.partialDataLoad.getRangeToLoad(dateRange);
-
     if (rangeToLoad === null) {
       this.log.warn("Empty range, we should not have ended in this situation");
       return [];
@@ -212,8 +215,21 @@ class ApiUtils {
       startDate: moment.utc(rangeToLoad.start).toISOString(),
       endDate: moment.utc(rangeToLoad.end).toISOString(),
     };
+
+    this.log.info("Fetching data using range", {
+      request: {
+        dateRange,
+        start: new Date(dateRange.start).toISOString(),
+        end: new Date(dateRange.end).toISOString()
+      },
+      loading: {
+        dateRange: rangeToLoad,
+        start: loadingOptions.startDate,
+        end: loadingOptions.endDate,
+      },
+    });
+
     this.partialDataLoad.setRangeLoaded(rangeToLoad);
-    this.log.info("Update loading range:", loadingOptions);
 
     return this.haveAPIv1 ? this.fetchDataRangeV1(loadingOptions) : this.fetchDataRangeV0(loadingOptions);
   }
