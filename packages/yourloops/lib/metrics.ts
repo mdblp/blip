@@ -31,6 +31,13 @@ import bows from "bows";
 
 import config from "./config";
 
+interface ITimerMetric {
+  name: string;
+  startTime: number;
+  duration: number;
+  result: string;
+}
+
 const log = bows("Metrics");
 let metricsEnabled = false;
 
@@ -89,6 +96,9 @@ function sendMetrics(eventName: string, properties?: unknown): void {
       matomoPaq.push(["setDocumentTitle", properties]);
     } else if (eventName === "trackPageView") {
       matomoPaq.push(["trackPageView"]);
+    } else if (eventName === "timer") {
+      const props = properties as ITimerMetric;
+      matomoPaq.push(["trackEvent", eventName, props.name, JSON.stringify(props)]);
     } else if (typeof properties === "undefined") {
       matomoPaq.push(["trackEvent", eventName, "n/a"]);
     } else {

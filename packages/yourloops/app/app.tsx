@@ -46,8 +46,8 @@ import CaregiverPage from "../pages/caregiver";
 import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
 
 const RE_PATIENT_URL = /^\/patient\/[0-9a-f]+\/(.*)/;
-const RE_CAREGIVER_URL = /^\/caregiver\/patient\/[0-9a-f]+$/;
-const RE_HCP_URL = /^\/professional\/patient\/[0-9a-f]+$/;
+const RE_CAREGIVER_URL = /^\/caregiver\/patient\/[0-9a-f]+\/?(.*)/;
+const RE_HCP_URL = /^\/professional\/patient\/[0-9a-f]+\/?(.*)/;
 function MetricsLocationListener() {
   const location = useLocation();
   const locPathname = location.pathname;
@@ -59,11 +59,11 @@ function MetricsLocationListener() {
     }
     match = pathname === null ? locPathname.match(RE_CAREGIVER_URL) : null;
     if (match !== null) {
-      pathname = "/caregiver/patient/userid";
+      pathname = `/caregiver/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
     match = pathname === null ? locPathname.match(RE_HCP_URL) : null;
     if (match !== null) {
-      pathname = "/professional/patient/userid";
+      pathname = `/professional/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
 
     if (pathname === null) {
