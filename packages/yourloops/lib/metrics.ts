@@ -87,6 +87,8 @@ function sendMetrics(eventName: string, properties?: unknown): void {
       matomoPaq.push(["resetUserId"]);
     } else if (eventName === "setDocumentTitle" && typeof properties === "string") {
       matomoPaq.push(["setDocumentTitle", properties]);
+    } else if (eventName === "trackPageView") {
+      matomoPaq.push(["trackPageView"]);
     } else if (typeof properties === "undefined") {
       matomoPaq.push(["trackEvent", eventName, "n/a"]);
     } else {
@@ -100,5 +102,20 @@ function sendMetrics(eventName: string, properties?: unknown): void {
     logUnknownMetricsConfiguration();
   }
 }
+
+// Quick & dirty metrics timer
+
+sendMetrics.timers = new Map<string, number>();
+sendMetrics.startTimer = (name: string) => {
+  sendMetrics.timers.set(name, Date.now());
+};
+sendMetrics.endTimer = (name: string, result: string) => {
+  const startTime = sendMetrics.timers.get(name);
+  if (_.isNumber(startTime)) {
+    sendMetrics.timers.delete(name);
+    const duration = Date.now() - startTime;
+    sendMetrics("timer", { name, startTime, duration, result });
+  }
+};
 
 export default sendMetrics;
