@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-860 Adjust the display of temporay basal to workaround handset issue #220
 - YLP-862 Translation error in Italian for My Care Teams
 ### Engineering Use
+- YLP-570 Ensure confidentiality in the Matomo reports
 - YLP-813 Add TU for cookies manager
 - YLP-855 Add more HTML selectors to ease system tests
 
