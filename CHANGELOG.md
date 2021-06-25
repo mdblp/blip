@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-842 Patient user click logo leads to a blank page
 - YLP-851 Translation error in Loop Mode widget (DE)
+- YLP-856 Viz metrics are not updated after loading new data
 ### Engineering Use
 - YLP-813 Add TU for cookies manager
 

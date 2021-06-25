@@ -355,6 +355,7 @@ class Daily extends React.Component {
                 chartType={this.chartType}
                 dataUtil={this.props.dataUtil}
                 endpoints={endpoints}
+                loading={loading}
               />
             </div>
           </div>
