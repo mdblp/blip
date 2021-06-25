@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Fixed
+- YLP-829 Language selector is missing on the renew consent screen
 - YLP-842 Patient user click logo leads to a blank page
 - YLP-851 Translation error in Loop Mode widget (DE)
 - YLP-856 Viz metrics are not updated after loading new data

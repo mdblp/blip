@@ -49,6 +49,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import DiabeloopUrl from "../lib/diabeloop-url";
 import { useAuth } from "../lib/auth";
 import { Profile } from "../models/shoreline";
+import LanguageSelector from "./language-select";
 
 interface ConsentProps {
   messageKey: string;
@@ -117,6 +118,11 @@ const style = makeStyles((theme: Theme) => {
         marginRight: theme.spacing(1), // eslint-disable-line no-magic-numbers
         marginLeft: theme.spacing(1),
       },
+    },
+    gridLangSelector: {
+      padding: theme.spacing(2),
+      textAlign: "center",
+      fontSize: "small",
     },
   };
 }, { name: "ylp-component-consent" });
@@ -198,8 +204,7 @@ function Consent(props: ConsentProps): JSX.Element {
         container
         spacing={0}
         alignItems="center"
-        justify="center"
-        style={{ minHeight: "100vh" }}>
+        justify="center">
         <Grid item xs={12}>
           <Card className={classes.card}>
             <CardMedia
@@ -298,6 +303,9 @@ function Consent(props: ConsentProps): JSX.Element {
               </form>
             </CardContent>
           </Card>
+        </Grid>
+        <Grid item xs={12} className={classes.gridLangSelector}>
+          <LanguageSelector />
         </Grid>
       </Grid>
     </Container>

@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import * as React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
 
@@ -45,7 +45,7 @@ import TextField from "@material-ui/core/TextField";
 
 import brandingLogo from "branding/logo.png";
 
-import { User, useAuth } from "../../lib/auth";
+import { useAuth } from "../../lib/auth";
 import { errorTextFromException } from "../../lib/utils";
 import { useAlert } from "../../components/utils/snackbar";
 import LanguageSelector from "../../components/language-select";
@@ -88,16 +88,13 @@ const loginStyle = makeStyles((theme: Theme) => {
 /**
  * Login page
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 function Login(): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const historyHook = useHistory<{ from?: { pathname?: string; }; }>();
   const auth = useAuth();
   const alert = useAlert();
   const classes = loginStyle();
 
   const log = React.useMemo(() => bows("Login"), []);
-  const fromPath = React.useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
   const signupEmail = React.useMemo(() => new URLSearchParams(location.search).get("signupEmail"), []);
 
   const [username, setUserName] = React.useState("");
@@ -122,13 +119,6 @@ function Login(): JSX.Element {
     document.title = t("brand-name");
   }, [t]);
 
-  const pushRoute = (user: User): void => {
-    log.debug("Logged user:", user);
-    const path = fromPath ?? user.getHomePage();
-    log.debug("Redirect to:", { path, fromPath });
-    historyHook.push(path);
-  };
-
   const onClickLoginButton = async (): Promise<void> => {
     if (_.isEmpty(username) || _.isEmpty(password)) {
       setValidateError(true);
@@ -140,7 +130,8 @@ function Login(): JSX.Element {
     try {
       const signupKey = new URLSearchParams(location.search).get("signupKey");
       const user = await auth.login(username, password, signupKey);
-      pushRoute(user);
+      log.debug("Logged user:", user);
+      // The redirect is done by packages/yourloops/components/routes.tsx#PublicRoute
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason);
       alert.error(t(errorMessage));
