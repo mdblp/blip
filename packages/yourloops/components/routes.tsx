@@ -71,9 +71,7 @@ export const PrivateRoute = (props: RouteProps): JSX.Element => {
   if (user !== null && !renewConsentPath) {
     if (user.role === UserRoles.patient && user.shouldAcceptConsent()) {
       component = <Redirect to={{ pathname: "/new-consent", state: { from: props.location } }} />;
-    }
-
-    if (user.shouldRenewConsent()) {
+    } else if (user.shouldRenewConsent()) {
       component = <Redirect to={{ pathname: "/renew-consent", state: { from: props.location } }} />;
     }
   }
@@ -90,7 +88,7 @@ export const PrivateRoute = (props: RouteProps): JSX.Element => {
           {component}
         </NotificationContextProvider>
       </SnackbarContextProvider>
-      <FooterLinks atBottom />
+      <FooterLinks atBottom={!renewConsentPath} />
     </ThemeProvider>
   );
 };
