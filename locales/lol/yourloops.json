@@ -40,6 +40,8 @@
   "cookie-content": "crwdns53742:0crwdne53742:0",
   "error-http-500": "crwdns53744:0crwdne53744:0",
   "error-http-40x": "crwdns53746:0crwdne53746:0",
+  "error-account-lock": "crwdns54316:0{{delayBeforeNextLoginAttempt}}crwdne54316:0",
+  "error-invalid-credentials": "crwdns54318:0crwdne54318:0",
   "confirm-password": "crwdns53748:0crwdne53748:0",
   "current-password": "crwdns53750:0crwdne53750:0",
   "initial-hbA1c": "crwdns53752:0crwdne53752:0",
