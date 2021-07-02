@@ -27,7 +27,7 @@
  */
 
 import * as React from "react";
-import { Redirect, Route, RouteProps } from "react-router-dom";
+import { Redirect, Route, RouteProps, useHistory } from "react-router-dom";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -40,9 +40,11 @@ import { SnackbarContextProvider, DefaultSnackbarContext } from "./utils/snackba
 import { NotificationContextProvider } from "../lib/notifications/hook";
 
 export const PublicRoute = (props: RouteProps): JSX.Element => {
+  const historyHook = useHistory<{ from?: { pathname?: string; }; }>();
   const { isLoggedIn, user } = useAuth();
   if (isLoggedIn()) {
-    return <Redirect to={{ pathname: user?.getHomePage() }} />;
+    const fromPath = historyHook.location.state?.from?.pathname;
+    return <Redirect to={{ pathname: fromPath ?? user?.getHomePage() }} />;
   }
   return (
     <ThemeProvider theme={externalTheme}>
