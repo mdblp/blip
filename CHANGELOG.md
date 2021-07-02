@@ -4,10 +4,12 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Fixed
+- YLP-839 Missing error string for translation
 - YLP-842 Patient user click logo leads to a blank page
 - YLP-851 Translation error in Loop Mode widget (DE)
 - YLP-852 App crash in the daily view on mobile - on resize display
 - YLP-856 Viz metrics are not updated after loading new data
+- YLP-860 Adjust the display of temporay basal to workaround handset issue #220
 - YLP-862 Translation error in Italian for My Care Teams
 ### Engineering Use
 - YLP-813 Add TU for cookies manager
