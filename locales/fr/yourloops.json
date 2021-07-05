@@ -41,7 +41,7 @@
   "error-http-500": "Un erreur est survenue. Veuillez réessayer dans quelques instants. Si le problème persiste, contactez le support.",
   "error-http-40x": "Une erreur est survenue. Veuillez contacter le support.",
   "error-account-lock": "Too many failed login attempts. Please try again in {{delayBeforeNextLoginAttempt}} minutes.",
-  "error-invalid-credentials": "Wrong username or password.",
+  "error-invalid-credentials": "Erreur d'identifiant ou de mot de passe.",
   "confirm-password": "Confirmer le mot de passe",
   "current-password": "Mot de passe actuel",
   "initial-hbA1c": "HbA1c initiale",
