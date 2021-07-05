@@ -41,7 +41,7 @@
   "error-http-500": "Etwas ist schiefgelaufen. Versuchen Sie es in Kürze erneut. Wenden Sie sich an den Kundendienst, falls das Problem weiterhin besteht.",
   "error-http-40x": "Es ist ein Fehler aufgetreten. Wenden Sie sich an den Kundendienst.",
   "error-account-lock": "Too many failed login attempts. Please try again in {{delayBeforeNextLoginAttempt}} minutes.",
-  "error-invalid-credentials": "Wrong username or password.",
+  "error-invalid-credentials": "Falscher Benutzername oder Passwort.",
   "confirm-password": "Passwort bestätigen",
   "current-password": "Aktuelles Passwort",
   "initial-hbA1c": "Ausgangs-HbA1c-Wert",
