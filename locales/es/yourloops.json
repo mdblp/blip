@@ -41,7 +41,7 @@
   "error-http-500": "Algo ha fallado. Vuelva a intentarlo más tarde. Si el problema persiste, póngase en contacto con la asistencia al cliente para recibir ayuda",
   "error-http-40x": "Se ha producido un error. Póngase en contacto con la asistencia al cliente para recibir ayuda",
   "error-account-lock": "Too many failed login attempts. Please try again in {{delayBeforeNextLoginAttempt}} minutes.",
-  "error-invalid-credentials": "Wrong username or password.",
+  "error-invalid-credentials": "Nombre de usuario o contraseña incorrectos.",
   "confirm-password": "Confirmar contraseña",
   "current-password": "Contraseña actual",
   "initial-hbA1c": "HbA1c inicial",
