@@ -236,7 +236,7 @@ describe('Trends', () => {
   });
 
   describe('toggleBgDataSource', () => {
-    it('should track metric when toggled', () => {
+    it.skip('should track metric when toggled', () => {
       const instance = wrapper.instance();
       instance.toggleBgDataSource(null, 'cbg');
       sinon.assert.callCount(baseProps.trackMetric, 1);
@@ -247,7 +247,7 @@ describe('Trends', () => {
       sinon.assert.calledWith(baseProps.trackMetric, 'Trends Click to BGM');
     });
 
-    it('should call the `updateChartPrefs` handler to update the bgSource', () => {
+    it.skip('should call the `updateChartPrefs` handler to update the bgSource', () => {
       const instance = wrapper.instance();
       instance.toggleBgDataSource(null, 'cbg');
 
