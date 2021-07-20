@@ -39,9 +39,8 @@ import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/s
 import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../language";
 import sendMetrics from "../metrics";
 import { zendeskLogin, zendeskLogout } from "../zendesk";
-import { Session, AuthAPI, AuthContext, AuthProvider } from "./models";
+import { Session, AuthAPI, AuthContext, AuthProvider, SignupUser } from "./models";
 import AuthAPIImpl from "./api";
-import { SignUpFormState } from "pages/signup/signup-formstate-context";
 
 interface JwtShorelinePayload extends JwtPayload {
   role: "hcp" | "patient" | "caregiver" | "clinic";
@@ -73,7 +72,7 @@ const updateLanguageForUser = (user: User) => {
 /**
  * Provider hook that creates auth object and handles state
  */
-function AuthContextImpl(api: AuthAPI): AuthContext {
+export function AuthContextImpl(api: AuthAPI): AuthContext {
   const historyHook = useHistory();
   const { t } = useTranslation("yourloops");
   // Trace token is used to trace the calls betweens different microservices API calls for debug purpose.
@@ -217,28 +216,28 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     return api.updateUser(authInfo, { currentPassword, password });
   };
 
-  const signup = async (signup: SignUpFormState): Promise<void> => {
-    log.info("signup", signup.formValues.accountUsername);
+  const signup = async (signup: SignupUser): Promise<void> => {
+    log.info("signup", signup.accountUsername);
     const now = new Date().toISOString();
     if (traceToken === null) {
       throw new Error("not-yet-initialized");
     }
     const auth = await api.signup(
-      signup.formValues.accountUsername,
-      signup.formValues.accountPassword,
-      signup.formValues.accountRole,
+      signup.accountUsername,
+      signup.accountPassword,
+      signup.accountRole,
       traceToken
     );
 
     auth.user.profile = {
-      fullName: `${signup.formValues.profileFirstname} ${signup.formValues.profileLastname}`,
-      firstName: signup.formValues.profileFirstname,
-      lastName: signup.formValues.profileLastname,
-      termsOfUse: { acceptanceTimestamp: now, isAccepted: signup.formValues.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signup.formValues.privacyPolicy },
+      fullName: `${signup.profileFirstname} ${signup.profileLastname}`,
+      firstName: signup.profileFirstname,
+      lastName: signup.profileLastname,
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: signup.terms },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signup.privacyPolicy },
     };
-    auth.user.settings = { country: signup.formValues.profileCountry };
-    auth.user.preferences = { displayLanguageCode: signup.formValues.preferencesLanguage };
+    auth.user.settings = { country: signup.profileCountry };
+    auth.user.preferences = { displayLanguageCode: signup.preferencesLanguage };
 
     // Cannot Use Promise.All as Backend do not handle parrellel call
     // correctly
@@ -247,7 +246,7 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     await api.updatePreferences(auth);
 
     // send confirmation signup mail
-    await api.sendAccountValidation(auth, signup.formValues.preferencesLanguage);
+    await api.sendAccountValidation(auth, signup.preferencesLanguage);
 
     log.info("signup done", auth);
   };
@@ -267,9 +266,8 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
     } else {
       updatedUser.preferences.patientsStarred.push(userId);
     }
-    log.debug("starred", updatedUser.preferences.patientsStarred);
-    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
-    setUser(updatedUser);
+    authInfo.user.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
+    setUser(authInfo.user);
   };
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
@@ -280,9 +278,8 @@ function AuthContextImpl(api: AuthAPI): AuthContext {
       updatedUser.preferences = {};
     }
     updatedUser.preferences.patientsStarred = userIds;
-    log.debug("starred", updatedUser.preferences.patientsStarred);
-    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
-    setUser(updatedUser);
+    authInfo.user.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
+    setUser(authInfo.user);
   };
 
   const getFlagPatients = (): string[] => {
