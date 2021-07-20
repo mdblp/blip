@@ -19,7 +19,8 @@
  * @typedef {'basal'|'bolus'|'cbg'|'smbg'|'deviceEvent'|'wizard'|'upload'|'pumpSettings'|'physicalActivity'|'message'|'fill'} DatumType
  * @typedef {{ type: string, time?: string, normalTime: string, normalEnd?: string, subType?: string, epoch: number, epochEnd?: number, guessedTimezone?: boolean, timezone: string, displayOffset: number }} Datum
  * @typedef {{ [x: DatumType]: Datum[] }} Grouped
- * @typedef {{ payload: { parameters: {name: string}[]} } | Datum} PumpSettings
+ * @typedef {{ name: string; unit: string; value: string; level: string | number }} DeviceParameter
+ * @typedef {{ payload: { parameters: DeviceParameter[] } } & Datum} PumpSettings
  * @typedef {{ timezone: string, dateRange: string[], nData: number, days: {date:string,type:string}[], data:{[x:string]: {data: Datum[]}} }} BasicsData
  * @typedef {{ time: number, timezone: string}[]} TimezoneList
  */
@@ -29,7 +30,7 @@ import crossfilter from "crossfilter2";
 import moment from "moment-timezone";
 import bows from "bows";
 
-import { MS_IN_DAY, MGDL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD, DEVICE_PARAMS_OFFSET } from "./data/util/constants";
+import { MS_IN_DAY, MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD, DEVICE_PARAMS_OFFSET, MGDL_PER_MMOLL } from "./data/util/constants";
 import { validateAll } from "./validation/validate";
 
 import BasalUtil from "./data/basalutil";
@@ -585,8 +586,9 @@ TidelineData.prototype.setDeviceParameters = function setDeviceParameters() {
     return;
   }
 
+  /** @type {Datum[]} */
   let parameters = _.filter(this.grouped.deviceEvent, { subType: "deviceParameter" });
-  parameters = _.orderBy(parameters, ["normaltime"], ["desc"]);
+  parameters = _.sortBy(parameters, ["epoch"]);
 
   if (parameters.length > 0) {
     const first = parameters[0];
@@ -600,7 +602,7 @@ TidelineData.prototype.setDeviceParameters = function setDeviceParameters() {
     if (parameters.length > 1) {
       for (let i = 1; i < parameters.length; ++i) {
         const item = parameters[i];
-        if (dt.difference(item.normalTime, group.normalTime) < DEVICE_PARAMS_OFFSET) {
+        if (Math.abs(item.epoch - group.epoch) < DEVICE_PARAMS_OFFSET) {
           // add to current group
           group.params.push(item);
         } else {
@@ -694,6 +696,69 @@ TidelineData.prototype.deduplicateBoluses = function deduplicateBoluses() {
     }
   });
   this.data = this.data.filter((d) => !toBeRemoved.includes(d.id));
+};
+
+/**
+ * Transform the bg value to the other unit measure.
+ *
+ * @param {number} value The BG value
+ * @param {"mg/dL"|"mmol/L"} unit The BG unit
+ * @returns {number} The translated value (in "mmol/L" if unit is "mg/dL" or vice-versa)
+ */
+TidelineData.prototype.translateBg = function translateBg(value, unit) {
+  if (!Number.isFinite(value)) {
+    throw new Error(`Invalid bg value ${value}`);
+  }
+  if (![MGDL_UNITS, MMOLL_UNITS].includes(unit)) {
+    throw new Error(`Invalid bg unit ${unit}`);
+  }
+  if (unit === MGDL_UNITS) {
+    return _.round(value / MGDL_PER_MMOLL, 1);
+  }
+  return _.round(value * MGDL_PER_MMOLL);
+};
+
+TidelineData.prototype.updateBgTresholds = function updateBgTresholds() {
+  /** @type {Datum[]} */
+  const pumpSettings = this.grouped.pumpSettings;
+  if (!Array.isArray(pumpSettings) || pumpSettings.length < 1) {
+    this.log.warn("updateBgTresholds: Missing pumpSettings");
+    return;
+  }
+  /** @type {PumpSettings} */
+  const currentSettings = _.last(_.sortBy(pumpSettings, ["epoch"]));
+  /** @type {DeviceParameter[]} */
+  const currentParameters = _.get(currentSettings, "payload.parameters", []);
+  const hypoLimit = _.find(currentParameters, { name: "PATIENT_GLY_HYPO_LIMIT" });
+  const hyperLimit = _.find(currentParameters, { name: "PATIENT_GLY_HYPER_LIMIT" });
+
+  if (_.isNil(hypoLimit) || _.isNil(hyperLimit)) {
+    this.log.warn("updateBgTresholds: Missing PATIENT_GLY_HYPO_LIMIT or PATIENT_GLY_HYPER_LIMIT");
+    return;
+  }
+
+  let hypoValue = Number.parseFloat(hypoLimit.value);
+  let hyperValue = Number.parseFloat(hyperLimit.value);
+  if (!(Number.isFinite(hypoValue) && Number.isFinite(hyperValue))) {
+    this.log.warn("updateBgTresholds: Invalid BG tresholds values in parameters", { hypoLimit, hyperLimit });
+    return;
+  }
+
+  try {
+    const { bgUnits } = this.opts;
+    if (bgUnits !== hypoLimit.unit) {
+      hypoValue = this.translateBg(hypoValue, hypoLimit.unit);
+    }
+    if (bgUnits !== hyperLimit.unit) {
+      hyperValue = this.translateBg(hyperValue, hyperLimit.unit);
+    }
+
+    this.opts.bgClasses.low.boundary = hypoValue;
+    this.opts.bgClasses.target.boundary = hyperValue;
+    this.log.info(`Using ${bgUnits} with limits`, { bgClasses: this.opts.bgClasses });
+  } catch (e) {
+    this.log.warn("updateBgTresholds:", e.message);
+  }
 };
 
 TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysicalActivities() {
@@ -1181,6 +1246,7 @@ TidelineData.prototype.addData = async function addData(newData) {
 
   startTimer("sortPumpSettingsParameters");
   this.sortPumpSettingsParameters();
+  this.updateBgTresholds();
   endTimer("sortPumpSettingsParameters");
 
   startTimer("latestPumpManufacturer");
