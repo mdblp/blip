@@ -68,9 +68,19 @@ interface ComputedTIR {
   },
   userId: string;
 }
+interface PatientDataSummary {
+  userId: string;
+  rangeStart: string;
+  rangeEnd: string;
+  computeDays: number;
+  percentTimeInRange: number;
+  percentTimeBelowRange: number;
+  numBgValues: number;
+}
 
 interface MedicalData {
   data?: PatientData;
+  summary?: PatientDataSummary;
   range?: {
     startDate: string;
     endDate: string;
@@ -79,4 +89,4 @@ interface MedicalData {
 }
 
 
-export { PatientDatum, PatientData, ComputedTIR, MedicalData };
+export { PatientDatum, PatientData, ComputedTIR, MedicalData, PatientDataSummary };

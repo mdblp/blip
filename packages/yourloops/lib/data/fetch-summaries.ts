@@ -30,12 +30,14 @@ import bows from "bows";
 import _ from "lodash";
 
 import { MS_IN_DAY } from "../../models/generic";
-import { MedicalData } from "../../models/device-data";
+import { MedicalData, PatientDataSummary } from "../../models/device-data";
 import { IUser, UserRoles } from "../../models/shoreline";
+import config from "../config";
 import sendMetrics from "../metrics";
 import { Session } from "../auth";
 
 import {
+  getPatientsDataSummaryV1,
   getPatientsDataSummary,
   getPatientDataRange,
 } from "./api";
@@ -44,7 +46,7 @@ const log = bows("FetchSummaries");
 
 interface ITimerAvgMetrics {
   duration: number;
-  result: "range-error" | "tir-error" | "OK";
+  result: "range-error" | "tir-error" | "summary-error" | "OK";
 }
 
 const avgMetrics: ITimerAvgMetrics[] = [];
@@ -54,6 +56,7 @@ const sendTimerMetrics = _.throttle(() => {
   let totalTime = 0;
   let nRangeErrors = 0;
   let nTirErrors = 0;
+  let nSummaryErrors = 0;
   let nOK = 0;
   for (let i=0; i<nMetrics; i++) {
     const m = avgMetrics[i];
@@ -68,9 +71,12 @@ const sendTimerMetrics = _.throttle(() => {
     case "tir-error":
       nTirErrors++;
       break;
+    case "summary-error":
+      nSummaryErrors++;
+      break;
     }
   }
-  sendMetrics("timer", { name: "fetch-summaries", avgTime: Math.round(totalTime / nMetrics), nOK, nRangeErrors, nTirErrors });
+  sendMetrics("timer", { name: "fetch-summaries", avgTime: Math.round(totalTime / nMetrics), nOK, nRangeErrors, nTirErrors, nSummaryErrors });
   avgMetrics.splice(0);
 }, 30000); // eslint-disable-line no-magic-numbers
 
@@ -79,9 +85,45 @@ function addMetric(metric: ITimerAvgMetrics): void {
   sendTimerMetrics();
 }
 
+function isValidSummary(summary: PatientDataSummary): boolean {
+  let valid = typeof summary === "object" && summary !== null;
+  valid = valid && typeof summary.computeDays === "number" && summary.computeDays > 0;
+  valid = valid && typeof summary.numBgValues === "number" && summary.numBgValues >= 0;
+  valid = valid && typeof summary.percentTimeBelowRange === "number" && summary.percentTimeBelowRange >= 0 && summary.percentTimeBelowRange <= 100;
+  valid = valid && typeof summary.percentTimeInRange === "number" && summary.percentTimeInRange >= 0 && summary.percentTimeInRange <= 100;
+  valid = valid && typeof summary.rangeEnd === "string";
+  valid = valid && typeof summary.rangeStart === "string";
+  valid = valid && typeof summary.userId === "string" && /^[a-f0-9]+$/.test(summary.userId);
+  return valid;
+}
+
 async function fetchSummary(session: Session, patient: IUser): Promise<MedicalData | null> {
   let range: string[] | null = null;
   const startTime = Date.now();
+
+  if (config.YLP854_SUMMARY_V1) {
+    try {
+      const summary = await getPatientsDataSummaryV1(session, patient.userid);
+      if (summary === null) {
+        return null;
+      }
+      if (!isValidSummary(summary)) {
+        log.error("fetchSummary:isValidSummary: false", summary);
+        throw new Error("Invalid summary received");
+      }
+      const medicalData: MedicalData = {
+        summary,
+        range: {
+          startDate: summary.rangeStart,
+          endDate: summary.rangeEnd,
+        },
+      };
+      return medicalData;
+    } catch (reason) {
+      log.info("fetchSummary:getPatientsDataSummaryV1", patient.userid, { reason });
+      addMetric({ result: "summary-error", duration: Date.now() - startTime });
+    }
+  }
 
   try {
     range = await getPatientDataRange(session, patient);

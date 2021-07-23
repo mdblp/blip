@@ -52,6 +52,7 @@ const defaultConfig: AppConfig = {
   STONLY_WID: "disabled",
   COOKIE_BANNER_CLIENT_ID: "disabled",
   YLP820_BASAL_TIME: 5000,
+  YLP854_SUMMARY_V1: true,
   DEV: true,
   TEST: false,
 };
