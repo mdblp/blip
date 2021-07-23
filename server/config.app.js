@@ -80,6 +80,7 @@ const config = {
   COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, "disabled"),
   YLP820_BASAL_TIME: integerFromText(process.env.YLP820_BASAL_TIME, 5000),
   SESSION_TIMEOUT: integerFromText(process.env.SESSION_TIMEOUT, 30 * 60 * 1000), // default: 30min
+  YLP854_SUMMARY_V1: booleanFromText(process.env.YLP854_SUMMARY_V1, true),
   DEV: isDev || isTest,
   TEST: isTest,
 };

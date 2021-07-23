@@ -55,6 +55,7 @@ const defaultConfig: AppConfig = {
   COOKIE_BANNER_CLIENT_ID: "disabled",
   YLP820_BASAL_TIME: 5000,
   SESSION_TIMEOUT: defaultSessionTimeout,
+  YLP854_SUMMARY_V1: true,
   DEV: true,
   TEST: false,
 };

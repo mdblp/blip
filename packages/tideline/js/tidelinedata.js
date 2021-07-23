@@ -718,6 +718,9 @@ TidelineData.prototype.translateBg = function translateBg(value, unit) {
   return _.round(value * MGDL_PER_MMOLL);
 };
 
+/**
+ * Get the hypo/hyper limits values from the device parameters (pumpSettings)
+ */
 TidelineData.prototype.updateBgTresholds = function updateBgTresholds() {
   /** @type {Datum[]} */
   const pumpSettings = this.grouped.pumpSettings;

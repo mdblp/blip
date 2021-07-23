@@ -47,4 +47,13 @@ export interface AppConfig {
   COOKIE_BANNER_CLIENT_ID: string;
   SESSION_TIMEOUT: number;
   YLP820_BASAL_TIME: number;
+  /**
+   * TODO remove me
+   *
+   * Used to disabled the usage of the new route if something goes wrong
+   * when deployed for the first time.
+   *
+   * It is not intend to be kept foreever
+   */
+  YLP854_SUMMARY_V1: boolean;
 }

@@ -33,7 +33,7 @@ import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { APITideWhispererErrorResponse } from "../../models/error";
-import { ComputedTIR } from "../../models/device-data";
+import { ComputedTIR, PatientDataSummary } from "../../models/device-data";
 import { IUser, UserRoles } from "../../models/shoreline";
 
 import HttpStatus from "../http-status-codes";
@@ -143,6 +143,37 @@ function getPatientDataRangeV1(session: Session, patient: IUser): Promise<Respon
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
   });
+}
+
+export async function getPatientsDataSummaryV1(session: Session, userId: string, nDays = 1): Promise<PatientDataSummary | null> {
+  const dataURL = new URL(`/data/v1/summary/${userId}` , appConfig.API_HOST);
+  if (nDays > 1) {
+    dataURL.searchParams.set("days", nDays.toString(10));
+  }
+  const { sessionToken, traceToken } = session;
+  const response = await fetch(dataURL.toString(), {
+    method: "GET",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+  });
+
+  if (response.ok) {
+    return response.json() as Promise<PatientDataSummary>;
+  }
+  if (response.status === HttpStatus.StatusNotFound) {
+    try {
+      const serverReason = await response.json() as APITideWhispererErrorResponse;
+      if (_.get(serverReason, "status", 0) === HttpStatus.StatusNotFound) {
+        return null;
+      }
+    } catch (_err) {
+      // Ignore
+    }
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
 }
 
 /**
