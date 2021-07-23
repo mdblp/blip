@@ -45,6 +45,22 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     tir = na;
     tbr = na;
     lastUpload = na;
+  } else if (medicalData?.summary) {
+    if (medicalData.summary.numBgValues > 0) {
+      tir = medicalData.summary.percentTimeInRange.toString(10);
+      tirNumber = medicalData.summary.percentTimeInRange;
+      tbr = medicalData.summary.percentTimeBelowRange.toString(10);
+      tbrNumber = medicalData.summary.percentTimeBelowRange;
+    } else {
+      tir = na;
+      tbr = na;
+    }
+    const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const mLastUpload = moment.tz(medicalData.summary.rangeEnd, browserTimezone);
+    if (mLastUpload.isValid()) {
+      lastUploadEpoch = mLastUpload.valueOf();
+      lastUpload = mLastUpload.format("llll");
+    }
   } else if (medicalData) {
     if (medicalData.range?.endDate) {
       const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;

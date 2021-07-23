@@ -78,6 +78,7 @@ const config = {
   DELAY_BEFORE_NEXT_LOGIN_ATTEMPT: integerFromText(process.env.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT, 10),
   COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, 'disabled'),
   YLP820_BASAL_TIME: integerFromText(process.env.YLP820_BASAL_TIME, 5000),
+  YLP854_SUMMARY_V1: booleanFromText(process.env.YLP854_SUMMARY_V1, true),
   DEV: isDev || isTest,
   TEST: isTest,
 };
