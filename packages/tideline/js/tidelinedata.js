@@ -740,28 +740,38 @@ TidelineData.prototype.updateBgTresholds = function updateBgTresholds() {
     return;
   }
 
-  let hypoValue = Number.parseFloat(hypoLimit.value);
-  let hyperValue = Number.parseFloat(hyperLimit.value);
-  if (!(Number.isFinite(hypoValue) && Number.isFinite(hyperValue))) {
-    this.log.warn("updateBgTresholds: Invalid BG tresholds values in parameters", { hypoLimit, hyperLimit });
+  let validUnits = [MGDL_UNITS, MMOLL_UNITS].includes(hypoLimit.unit);
+  validUnits = validUnits && [MGDL_UNITS, MMOLL_UNITS].includes(hyperLimit.unit);
+  if (!validUnits) {
+    this.log.warn("updateBgTresholds: Invalid unit found in parameters", { hypoLimit, hyperLimit });
     return;
   }
 
-  try {
-    const { bgUnits } = this.opts;
+  let hypoValue = Number.parseFloat(hypoLimit.value);
+  let hyperValue = Number.parseFloat(hyperLimit.value);
+  let validLimits = Number.isFinite(hypoValue) && Number.isFinite(hyperValue);
+
+  const { bgUnits } = this.opts;
+  if (validLimits) {
     if (bgUnits !== hypoLimit.unit) {
       hypoValue = this.translateBg(hypoValue, hypoLimit.unit);
     }
     if (bgUnits !== hyperLimit.unit) {
       hyperValue = this.translateBg(hyperValue, hyperLimit.unit);
     }
-
-    this.opts.bgClasses.low.boundary = hypoValue;
-    this.opts.bgClasses.target.boundary = hyperValue;
-    this.log.info(`Using ${bgUnits} with limits`, { bgClasses: this.opts.bgClasses });
-  } catch (e) {
-    this.log.warn("updateBgTresholds:", e.message);
   }
+  validLimits = validLimits && hypoValue >= DEFAULT_BG_BOUNDS[bgUnits].veryLow;
+  validLimits = validLimits && hyperValue <= DEFAULT_BG_BOUNDS[bgUnits].veryHigh;
+  validLimits = validLimits && hypoValue < hyperValue;
+
+  if (!validLimits) {
+    this.log.warn("updateBgTresholds: Invalid BG tresholds values in parameters", { hypoLimit, hyperLimit });
+    return;
+  }
+
+  this.opts.bgClasses.low.boundary = hypoValue;
+  this.opts.bgClasses.target.boundary = hyperValue;
+  this.log.info(`Using ${bgUnits} with limits`, { bgClasses: this.opts.bgClasses });
 };
 
 TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysicalActivities() {

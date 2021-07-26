@@ -21,7 +21,9 @@ import { assert, expect } from "chai";
 import { MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD } from "../js/data/util/constants";
 import TidelineData from "../js/tidelinedata";
 
-// import types from '../dev/testpage/types';
+/**
+ * @typedef {import('../js/tidelinedata').Datum} Datum
+ */
 
 describe("TidelineData", function() {
   const bgUnits = MGDL_UNITS;
@@ -71,14 +73,6 @@ describe("TidelineData", function() {
 
     before(() => {
       td = new TidelineData();
-      // const data = [new types.SMBG()];
-      // data[0].units = MMOLL_UNITS;
-      // await thisTd.addData(data);
-      // const data = [
-      //   new types.SMBG(),
-      //   new types.CBG(),
-      // ];
-      // await thisTd.addData(data);
     });
 
     it("should be a function", function() {
@@ -701,7 +695,96 @@ describe("TidelineData", function() {
       const uniqueByTime = boluses.filter((d) => d.normalTime === "2021-06-03T12:00:00.000Z");
       expect(uniqueByTime).to.be.lengthOf(1);
     });
+  });
 
+  describe("updateBgTresholds", () => {
+    const testPumpSettings = {
+      id: "1",
+      type: "pumpSettings",
+      time: "2021-01-02T20:00:00.000Z",
+      payload: {
+        parameters: [
+          {
+            level: 1,
+            name:  "PATIENT_GLY_HYPO_LIMIT",
+            value: "60",
+            unit:  "mg/dL",
+          }, {
+            level: 1,
+            name:  "PATIENT_GLY_HYPER_LIMIT",
+            value: "140",
+            unit:  "mg/dL",
+          }, {
+            level: 1,
+            name:  "WEIGHT",
+            value: "80",
+            unit:  "kg",
+          },
+        ],
+      },
+    };
+    const testCbg = {
+      id: "2",
+      type: "cbg",
+      time: "2021-01-02T20:00:05.000Z",
+      units: "mg/dL",
+      value: 90,
+    };
+
+    /** @type {TidelineData} */
+    let td = null;
+    /** @type {Datum} */
+    let cbg = null;
+    /** @type {Datum} */
+    let pumpSettings = null;
+
+    beforeEach(() => {
+      td = new TidelineData();
+      cbg = _.cloneDeep(testCbg);
+      pumpSettings = _.cloneDeep(testPumpSettings);
+      expect(td.opts.bgUnits).to.be.equal("mg/dL");
+    });
+    after(() => {
+      td = cbg = pumpSettings = null;
+    });
+
+    it("should set the default bg tresholds if no pumpSettings is found", async () => {
+      const defaultOpts = _.cloneDeep(td.opts);
+      await td.addData([cbg]);
+      expect(td.opts.bgClasses).to.be.deep.equal(defaultOpts.bgClasses);
+    });
+    it("should set the default bg tresholds if not found in pumpSettings", async () => {
+      const defaultOpts = _.cloneDeep(td.opts);
+      pumpSettings.payload.parameters[0].name = "PARAM1";
+      pumpSettings.payload.parameters[1].name = "PARAM2";
+      await td.addData([cbg, pumpSettings]);
+      expect(td.opts.bgClasses).to.be.deep.equal(defaultOpts.bgClasses);
+    });
+    it("should set the default bg tresholds if invalid tresholds", async () => {
+      const defaultOpts = _.cloneDeep(td.opts);
+      pumpSettings.payload.parameters[0].value = "-1";
+      pumpSettings.payload.parameters[1].value = "Not a number value";
+      await td.addData([cbg, pumpSettings]);
+      expect(td.opts.bgClasses).to.be.deep.equal(defaultOpts.bgClasses);
+    });
+    it("should set the default bg tresholds if invalid unit", async () => {
+      const defaultOpts = _.cloneDeep(td.opts);
+      pumpSettings.payload.parameters[0].unit = "something";
+      pumpSettings.payload.parameters[1].unit = "else";
+      await td.addData([cbg, pumpSettings]);
+      expect(td.opts.bgClasses).to.be.deep.equal(defaultOpts.bgClasses);
+    });
+    it("should set the bg tresholds if found (mg/dL)", async () => {
+      await td.addData([cbg, pumpSettings]);
+      expect(td.opts.bgClasses.low.boundary).to.be.equal(60);
+      expect(td.opts.bgClasses.target.boundary).to.be.equal(140);
+    });
+    it("should set the bg tresholds if found (mmol/L)", async () => {
+      td = new TidelineData({ bgUnits: "mmol/L" });
+      await td.addData([cbg, pumpSettings]);
+      expect(td.opts.bgClasses.low.boundary).to.be.equal(3.3);
+      expect(td.opts.bgClasses.target.boundary).to.be.equal(7.8);
+    });
   });
 
 /*
