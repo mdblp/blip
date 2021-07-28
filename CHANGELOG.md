@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-919 Yourloops do not encode correctly passwords with special characters
 ### Added
 - YLP-759 Add Austria
+- YLP-869 Display page title
 ### Engineering Use
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
