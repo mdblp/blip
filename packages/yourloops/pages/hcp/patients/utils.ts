@@ -61,26 +61,6 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
       lastUploadEpoch = mLastUpload.valueOf();
       lastUpload = mLastUpload.format("llll");
     }
-  } else if (medicalData) {
-    if (medicalData.range?.endDate) {
-      const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone);
-      if (mLastUpload.isValid()) {
-        lastUploadEpoch = mLastUpload.valueOf();
-        lastUpload = mLastUpload.format("llll");
-      }
-    }
-    if (medicalData.computedTir?.count) {
-      const { high, low, target, veryHigh, veryLow } = medicalData.computedTir.count;
-      const total = high + low + target + veryHigh + veryLow;
-      tirNumber = Math.round((100 * target) / total);
-      tir = tirNumber.toString(10);
-      tbrNumber = Math.round((100 * (low + veryLow)) / total);
-      tbr = tbrNumber.toString(10);
-    } else {
-      tir = na;
-      tbr = na;
-    }
   }
 
   return {

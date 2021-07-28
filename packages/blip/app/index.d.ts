@@ -29,10 +29,10 @@
 import { AppConfig } from "../../yourloops/models/config";
 import { IUser } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
-import ProfileDialog from "yourloops/components/dialogs/profile-dialog";
+import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
 import DatePicker from "../../yourloops/components/date-pickers/date-picker";
-import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
-import { MessageNote } from "../../yourloops/models/message";
+import { PatientDatum, PatientData, MedicalData } from "../../yourloops/models/device-data";
+import MessageNote from "../../yourloops/models/message";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 
 interface BlipProperties {
@@ -54,6 +54,7 @@ export {
   IUser,
   PatientDatum,
   PatientData,
+  MedicalData,
   MessageNote,
   GetPatientDataOptions,
   GetPatientDataOptionsV0,

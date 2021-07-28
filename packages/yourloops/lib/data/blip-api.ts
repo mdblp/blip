@@ -28,7 +28,7 @@
 
 import bows from "bows";
 
-import { PatientData } from "models/device-data";
+import { MedicalData, PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { IUser } from "../../models/shoreline";
 import { User, AuthContext } from "../auth";
@@ -38,7 +38,6 @@ import metrics from "../metrics";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";
 import {
   getPatientDataV0 as apiGetPatientDataV0,
-  getPatientDataRange as apiGetPatientDataRange,
   getPatientData as apiGetPatientData,
   startMessageThread as apiStartMessageThread,
   getMessageThread as apiGetMessageThread,
@@ -46,6 +45,7 @@ import {
   replyMessageThread as apiReplyMessageThread,
   editMessage as apiEditMessage,
 } from "./api";
+import { fetchSummary as apiFetchSummary } from "./fetch-summaries";
 
 /**
  * Wrapper for blip v1 to be able to call the API
@@ -69,11 +69,11 @@ class BlipApi {
     return this.authHook.user !== null ? new User(this.authHook.user) : null;
   }
 
-  public getPatientDataRange(patient: IUser): Promise<string[] | null> {
-    this.log.debug("getPatientDataRange", { userId: patient.userid });
+  public getPatientSummary(patient: IUser): Promise<MedicalData | null> {
+    this.log.debug("getPatientSummary", { userId: patient.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiGetPatientDataRange(session, patient);
+      return apiFetchSummary(session, patient);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

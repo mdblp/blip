@@ -96,11 +96,8 @@ async function fetchSummary(session: Session, patient: IUser): Promise<MedicalDa
         throw new Error("Invalid summary received");
       }
       const medicalData: MedicalData = {
+        lastFetchDate: Date.now(),
         summary,
-        range: {
-          startDate: summary.rangeStart,
-          endDate: summary.rangeEnd,
-        },
       };
       return medicalData;
     } catch (reason) {
@@ -120,18 +117,29 @@ async function fetchSummary(session: Session, patient: IUser): Promise<MedicalDa
     return null;
   }
 
+  const summary: PatientDataSummary = {
+    computeDays: 1,
+    numBgValues: 0,
+    percentTimeBelowRange: 0,
+    percentTimeInRange: 0,
+    rangeStart: range[0],
+    rangeEnd: range[1],
+    userId: patient.userid,
+  };
   const medicalData: MedicalData = {
-    range: {
-      startDate: range[0],
-      endDate: range[1],
-    },
+    lastFetchDate: Date.now(),
+    summary,
   };
   const endDate = range[1];
   const startDate = new Date(Date.parse(range[1]) - MS_IN_DAY).toISOString();
 
   try {
     const tir = await getPatientsDataSummary(session, patient.userid, { startDate, endDate });
-    medicalData.computedTir = tir;
+    const { high, low, target, veryHigh, veryLow } = tir.count;
+    const total = high + low + target + veryHigh + veryLow;
+    summary.numBgValues = total;
+    summary.percentTimeInRange = Math.round((100 * target) / total);
+    summary.percentTimeBelowRange = Math.round((100 * (low + veryLow)) / total);
     addMetric({ result: "OK", duration: Date.now() - startTime });
   } catch (reason) {
     log.info("fetchSummary:getPatientsDataSummary", patient.userid, { reason });
@@ -254,4 +262,4 @@ function removePendingFetch(patient: IUser): void {
   }
 }
 
-export { addPendingFetch, removePendingFetch };
+export { fetchSummary, addPendingFetch, removePendingFetch };

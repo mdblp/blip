@@ -181,7 +181,7 @@ class PatientDataPage extends React.Component {
     const { store } = this.props;
     this.log.debug("Mounting...");
     this.unsubscribeStore = store.subscribe(this.reduxListener.bind(this));
-    this.handleRefresh().then(() => {
+    this.handleRefresh(true).then(() => {
       const locationChart = this.getChartType();
       this.log.debug("Mouting", { locationChart });
       switch (locationChart) {
@@ -902,7 +902,7 @@ class PatientDataPage extends React.Component {
     return dataLoaded;
   }
 
-  async handleRefresh() {
+  async handleRefresh(firstLoad = false) {
     this.setState({
       loadingState: LOADING_STATE_INITIAL_FETCH,
       dataRange: null,
@@ -914,7 +914,7 @@ class PatientDataPage extends React.Component {
     });
 
     try {
-      const data = await this.apiUtils.refresh();
+      const data = await this.apiUtils.refresh(!firstLoad);
       this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS });
       await waitTimeout(1);
 

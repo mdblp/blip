@@ -31,7 +31,8 @@
 /**
  * @typedef { import("../index").PatientData } PatientData
  * @typedef { import("../index").BlipApi } BlipApi
- * @typedef { import("../index").User } User
+ * @typedef { import("../index").IUser } User
+ * @typedef { import("../index").MedicalData } MedicalData
  * @typedef { import("../index").GetPatientDataOptions } GetPatientDataOptions
  * @typedef { import("../index").GetPatientDataOptionsV0 } GetPatientDataOptionsV0
  * @typedef { import("./lib/partial-data-load").DateRange } DateRange
@@ -64,14 +65,25 @@ class ApiUtils {
 
     this.logWarnNoAPIv1 = _.once((err) => this.log.warn("Data API v1 not available", err.message));
     this.haveAPIv1 = true;
+
+    if (patient.medicalData?.summary) {
+      this.log.debug("Summary already present");
+      const { rangeStart, rangeEnd } = patient.medicalData.summary;
+      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+      this.dataRange = [moment.tz(rangeStart, timezone), moment.tz(rangeEnd, timezone)];
+    }
   }
 
   /**
    * Refresh the data -> discard the previous loading information
+   * @param {boolean} updateRange default to true, update the date range too
    * @returns {Promise<PatientData>} The patient data
    */
-  async refresh() {
-    this.dataRange = null;
+  async refresh(updateRange = true) {
+    this.log.info("refresh", { updateRange });
+    if (updateRange) {
+      this.dataRange = null;
+    }
     this.partialDataLoad = null;
 
     try {
@@ -89,16 +101,19 @@ class ApiUtils {
    * @private
    */
   async refreshV1() {
-    const range = await this.api.getPatientDataRange(this.patient);
-    if (range === null) {
-      this.log.info("Range is empty - no data available");
-      return [];
-    }
-    this.log.info("Available data range:", range[0], range[1]);
+    if (this.dataRange === null) {
+      const medicalData = await this.api.getPatientSummary(this.patient);
+      if (_.isNil(medicalData)) {
+        this.log.info("Range is empty - no data available");
+        return [];
+      }
+      this.patient.medicalData = medicalData;
+      this.log.info("Available data range:", medicalData.summary.rangeStart, medicalData.summary.rangeEnd);
 
-    // Assume browser locale, will adjust after
-    const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-    this.dataRange = [moment.tz(range[0], timezone), moment.tz(range[1], timezone)];
+      // Assume browser locale, will adjust after
+      const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+      this.dataRange = [moment.tz(medicalData.summary.rangeStart, timezone), moment.tz(medicalData.summary.rangeEnd, timezone)];
+    }
 
     // Get the initial range of data to load:
     // 3 weeks (for basics view) -> start/end of week

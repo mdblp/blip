@@ -79,13 +79,11 @@ interface PatientDataSummary {
 }
 
 interface MedicalData {
-  data?: PatientData;
+  // TODO data
+  // data?: PatientData;
   summary?: PatientDataSummary;
-  range?: {
-    startDate: string;
-    endDate: string;
-  };
-  computedTir?: ComputedTIR;
+  /** When do we fetch theses data (auto refresh) */
+  lastFetchDate: number;
 }
 
 
