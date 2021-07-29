@@ -4,13 +4,12 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Fixed
-- YLP-910 lastName / firstName / Language translations keys should be in lower-case
 - YLP-878 Wrong settings for glucose units uploaded by the handset
+- YLP-910 lastName / firstName / Language translations keys should be in lower-case
+- YLP-918 Caregivers bg unit change not taken without reload
 - YLP-919 Yourloops do not encode correctly passwords with special characters
 ### Added
 - YLP-759 Add Austria
-### Fixed
-- YLP-918 Caregivers bg unit change not taken without reload
 ### Engineering Use
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
