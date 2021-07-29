@@ -8,6 +8,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-878 Wrong settings for glucose units uploaded by the handset
 ### Added
 - YLP-759 Add Austria
+### Fixed
+- YLP-919 Yourloops do not encode correctly passwords with special characters
 ### Engineering Use
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
