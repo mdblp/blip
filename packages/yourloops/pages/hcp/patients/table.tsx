@@ -121,7 +121,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   //   onClickRemovePatient(patient);
   // };
 
-  const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
+  const { tir, tbr, glyRange, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
   // Replace the "@" if the userid is the email (status pending)
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
@@ -198,8 +198,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <TableCell id={`${rowId}-icon`}>{firstRowIcon}</TableCell>
       <TableCell id={`${rowId}-lastname`}>{lastName}</TableCell>
       <TableCell id={`${rowId}-firstname`}>{firstName}</TableCell>
-      <TableCell id={`${rowId}-tir`}>{tir}</TableCell>
-      <TableCell id={`${rowId}-tbr`}>{tbr}</TableCell>
+      <TableCell id={`${rowId}-tir`} title={glyRange}>{tir}</TableCell>
+      <TableCell id={`${rowId}-tbr`} title={glyRange}>{tbr}</TableCell>
       <TableCell id={`${rowId}-upload`}>{lastUpload}</TableCell>
       <TableCell id={`${rowId}-remove-icon`}>
         {/* TODO Can't add this feature for the moment */}

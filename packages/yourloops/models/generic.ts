@@ -14,9 +14,18 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+/**
+ * Strings constants for glycemia units used
+ */
 enum Units {
   mole = "mmol/L",
   gram = "mg/dL",
+}
+enum GlyLimits {
+  hypoMgdL = 70,
+  hyperMgdL = 180,
+  hypoMmolL = 3.9,
+  hyperMmolL = 10.0,
 }
 enum FilterType {
   all = "all",
@@ -66,6 +75,7 @@ export {
   HistoryState,
   PostalAddress,
   Units,
+  GlyLimits,
   FilterType,
   SortDirection,
   SortFields,

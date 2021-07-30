@@ -70,4 +70,6 @@ export interface MedicalTableValues {
   lastUpload: string;
   /** Value as a number for easy compare */
   lastUploadEpoch: number;
+  /** Glycemia range used for TIR & TBR */
+  glyRange?: string;
 }

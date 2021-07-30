@@ -29,7 +29,7 @@
 import bows from "bows";
 import _ from "lodash";
 
-import { MS_IN_DAY } from "../../models/generic";
+import { MS_IN_DAY, Units, GlyLimits } from "../../models/generic";
 import { MedicalData, PatientDataSummary } from "../../models/device-data";
 import { IUser, UserRoles } from "../../models/shoreline";
 import config from "../config";
@@ -77,6 +77,9 @@ function isValidSummary(summary: PatientDataSummary): boolean {
   valid = valid && typeof summary.percentTimeInRange === "number" && summary.percentTimeInRange >= 0 && summary.percentTimeInRange <= 100;
   valid = valid && typeof summary.rangeEnd === "string";
   valid = valid && typeof summary.rangeStart === "string";
+  valid = valid && typeof summary.glyHypoLimit === "number";
+  valid = valid && typeof summary.glyHyperLimit === "number";
+  valid = valid && [Units.gram, Units.mole].includes(summary.glyUnit);
   valid = valid && typeof summary.userId === "string" && /^[a-f0-9]+$/.test(summary.userId);
   return valid;
 }
@@ -125,6 +128,9 @@ async function fetchSummary(session: Session, patient: IUser): Promise<MedicalDa
     rangeStart: range[0],
     rangeEnd: range[1],
     userId: patient.userid,
+    glyHyperLimit: GlyLimits.hyperMgdL,
+    glyHypoLimit: GlyLimits.hypoMgdL,
+    glyUnit: Units.gram,
   };
   const medicalData: MedicalData = {
     lastFetchDate: Date.now(),

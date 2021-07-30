@@ -26,6 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { Units } from "./generic";
+
 interface PatientDatum {
   id: string;
   /** Parent upload object id (type="upload") */
@@ -76,6 +78,9 @@ interface PatientDataSummary {
   percentTimeInRange: number;
   percentTimeBelowRange: number;
   numBgValues: number;
+  glyHypoLimit: number;
+  glyHyperLimit: number;
+  glyUnit: Units;
 }
 
 interface MedicalData {

@@ -36,6 +36,7 @@ import { MedicalTableValues } from "./models";
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
   let tir = "-";
   let tbr = "-";
+  let glyRange: string | undefined;
   let lastUpload = "-";
   let tirNumber = Number.NaN;
   let tbrNumber = Number.NaN;
@@ -46,17 +47,19 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     tbr = na;
     lastUpload = na;
   } else if (medicalData?.summary) {
-    if (medicalData.summary.numBgValues > 0) {
-      tir = medicalData.summary.percentTimeInRange.toString(10);
-      tirNumber = medicalData.summary.percentTimeInRange;
-      tbr = medicalData.summary.percentTimeBelowRange.toString(10);
-      tbrNumber = medicalData.summary.percentTimeBelowRange;
+    const { summary } = medicalData;
+    if (summary.numBgValues > 0) {
+      tir = summary.percentTimeInRange.toString(10);
+      tirNumber = summary.percentTimeInRange;
+      tbr = summary.percentTimeBelowRange.toString(10);
+      tbrNumber = summary.percentTimeBelowRange;
+      glyRange = `${summary.glyHypoLimit} ${summary.glyUnit} - ${summary.glyHyperLimit} ${summary.glyUnit}`;
     } else {
       tir = na;
       tbr = na;
     }
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const mLastUpload = moment.tz(medicalData.summary.rangeEnd, browserTimezone);
+    const mLastUpload = moment.tz(summary.rangeEnd, browserTimezone);
     if (mLastUpload.isValid()) {
       lastUploadEpoch = mLastUpload.valueOf();
       lastUpload = mLastUpload.format("llll");
@@ -70,6 +73,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     tirNumber,
     tbrNumber,
     lastUploadEpoch,
+    glyRange,
   };
 };
 
