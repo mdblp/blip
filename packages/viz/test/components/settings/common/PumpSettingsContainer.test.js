@@ -21,8 +21,8 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { mount } from 'enzyme';
 
+import { MGDL_UNITS } from 'tideline';
 import PumpSettingsContainer from '../../../../src/components/settings/common/PumpSettingsContainer';
-import { MGDL_UNITS } from '../../../../src/utils/constants';
 
 describe('PumpSettingsContainer', () => {
   const defaultProps = {
