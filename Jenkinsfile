@@ -102,7 +102,7 @@ pipeline {
         stage('Publish') {
             when {
                 expression {
-                    env.GIT_BRANCH == "dblp"
+                    env.GIT_BRANCH == "dblp" || env.GIT_BRANCH == "release/2.0.3-rc1"
                 }
             }
             steps {
