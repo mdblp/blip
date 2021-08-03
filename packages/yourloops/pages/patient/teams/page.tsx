@@ -161,7 +161,7 @@ function PatientTeamsPage(props: PatientTeamsPageProps): JSX.Element | null {
   }, [teamHook.initialized, teamHook.errorMessage, loading, errorMessage, t]);
 
   React.useEffect(() => {
-    setPageTitle(t("menu-medical-teams"));
+    setPageTitle(t("breadcrumb-patient-teams"));
   }, [t]);
 
   if (loading) {

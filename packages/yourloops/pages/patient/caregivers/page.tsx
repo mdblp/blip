@@ -162,7 +162,7 @@ function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
   }, [caregivers, session, haveNotifications, sentInvitations]);
 
   React.useEffect(() => {
-    setPageTitle(t("menu-caregivers"));
+    setPageTitle(t("caregivers-title"));
   }, [t]);
 
   if (caregivers === null) {
