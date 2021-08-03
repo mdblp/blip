@@ -51,7 +51,7 @@ function InvalidRoute(props: InvalidRouteProps): JSX.Element {
     historyHook.push(defaultURL ?? "/");
   };
 
-  setPageTitle("");
+  setPageTitle();
 
   return (
     <Grid container direction="column" justify="center" alignItems="center" style={{ flexGrow: 1 }}>

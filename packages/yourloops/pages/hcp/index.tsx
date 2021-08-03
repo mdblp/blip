@@ -65,7 +65,7 @@ function HcpPage(): JSX.Element {
     const { pathname } = historyHook.location;
     if (user.role !== UserRoles.hcp) {
       // Only allow hcp for this route
-      setPageTitle("");
+      setPageTitle();
       log.info("Wrong page for current user");
       historyHook.replace(user.getHomePage());
     } else if (/^\/professional\/?$/.test(pathname)) {

@@ -159,7 +159,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
  * @param prefix The text prefix
  * @param metricsTitle The text for the metrics, to keeps this page title anonymous
  */
-export function setPageTitle(prefix: string, metricsTitle?: string): void {
+export function setPageTitle(prefix?: string, metricsTitle?: string): void {
   const title = prefix ? `${prefix} | ${t("brand-name")}` : t("brand-name");
   if (document.title !== title) {
     document.title = title;

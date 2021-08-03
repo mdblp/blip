@@ -115,7 +115,7 @@ function PatientDataPage(props: PatientDataPageProps): JSX.Element | null {
     if (patient !== null && patient.userid !== userId) {
       setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
     } else {
-      setPageTitle("");
+      setPageTitle();
     }
   }, [userId, patient, t]);
 

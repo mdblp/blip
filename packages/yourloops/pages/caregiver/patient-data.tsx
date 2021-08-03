@@ -89,7 +89,7 @@ function PatientDataPage(): JSX.Element | null {
     if (patient) {
       setPageTitle(t("user-name", getUserFirstLastName(patient.user)), "PatientName");
     } else {
-      setPageTitle("");
+      setPageTitle();
     }
   }, [patient, t]);
 

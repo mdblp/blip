@@ -50,7 +50,7 @@ export const PublicRoute = (props: RouteProps): JSX.Element => {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   React.useEffect(() => {
-    setPageTitle("");
+    setPageTitle();
   });
 
   return (

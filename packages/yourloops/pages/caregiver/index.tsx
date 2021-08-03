@@ -112,15 +112,15 @@ const CaregiverPage = (): JSX.Element => {
     log.info("useEffect", { pathname, userRole });
     if (userRole !== UserRoles.caregiver) {
       // Only allow caregivers for this route
-      setPageTitle("");
+      setPageTitle();
       log.info("Wrong page for current user");
       historyHook.replace(session.user.getHomePage());
     } else if (/^\/caregiver\/?$/.test(pathname)) {
       log.info("Redirecting to the patients list", { from: pathname, to: defaultURL });
-      setPageTitle("");
+      setPageTitle();
       historyHook.replace(defaultURL);
     } else if (sharedUsers === null && errorMessage === null && loading === false) {
-      setPageTitle("");
+      setPageTitle();
       setLoading(true);
       getDirectShares(session)
         .then((result: ShareUser[]): void => {

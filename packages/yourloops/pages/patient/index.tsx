@@ -65,7 +65,7 @@ function PatientPage(): JSX.Element {
   React.useEffect(() => {
     if (user.role !== UserRoles.patient) {
       // Only allow patient for this route
-      setPageTitle("");
+      setPageTitle();
       log.info("Wrong page for current user");
       historyHook.replace(prefixURL);
     } else if (new RegExp(`^${prefixURL}/?$`).test(pathname)) {
