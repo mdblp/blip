@@ -5,7 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - YLP-611: Hide "go to original article" option in ZD widget
-
+- YLP-930 Call shoreline's logout route in YourLoops
 ### Fixed
 - YLP-878 Wrong settings for glucose units uploaded by the handset
 - YLP-882 Wrong dates in the PDF report
