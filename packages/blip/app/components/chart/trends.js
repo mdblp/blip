@@ -372,15 +372,6 @@ class Trends extends React.Component {
     }
     // YLP-888 Disable SMBG data source
     this.log.debug("toggleBgDataSource", bgSource, "is disabled");
-    // const showingCbg = bgSource === 'cbg';
-    // const changedTo = showingCbg ? 'CGM' : 'BGM';
-    // this.props.trackMetric(`Trends Click to ${changedTo}`);
-
-    // const prefs = _.cloneDeep(this.props.chartPrefs);
-    // prefs.trends.showingCbg = showingCbg;
-    // prefs.trends.showingSmbg = !showingCbg;
-    // prefs.trends.bgSource = bgSource;
-    // this.props.updateChartPrefs(prefs);
   }
 
   toggleBoxOverlay() {
