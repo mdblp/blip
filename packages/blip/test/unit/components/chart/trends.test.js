@@ -176,7 +176,7 @@ describe('Trends', () => {
     });
 
     it('should set the title', () => {
-      const epochLocation = Date.parse('2018-01-15T00:00:00.000Z');
+      const epochLocation = Date.parse('2018-01-15T11:00:00.000Z');
       const msRange = MS_IN_DAY*10;
 
       wrapper.setProps({ epochLocation, msRange });
