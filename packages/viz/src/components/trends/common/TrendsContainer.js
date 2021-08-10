@@ -329,7 +329,7 @@ export class TrendsContainer extends React.Component {
 
       // find initial date domain (based on initialDatetimeLocation or current time)
       const timezone = datetime.getTimezoneFromTimePrefs(timePrefs);
-      // Remove 1 miliseconds here, because there is 1 added in tidelinedata
+      // Remove 1 milliseconds here, because there is 1 added in tidelinedata
       const mostRecent = moment.tz(tidelineData.endpoints[1], timezone).subtract(1, 'millisecond');
       let end = moment.tz(initialDatetimeLocation, timezone).endOf('day').add(Math.round(extentSize / 2), 'days');
       if (end.valueOf() > mostRecent.valueOf()) {
@@ -358,7 +358,7 @@ export class TrendsContainer extends React.Component {
         this.log.error(reason);
       }).finally(() => {
         this.mountingData = false;
-        this.log.debug("Mouting done", { initialDatetimeLocation, dateDomain: state.dateDomain, mostRecent: state.mostRecent, timezone });
+        this.log.debug("Mounting done", { initialDatetimeLocation, dateDomain: state.dateDomain, mostRecent: state.mostRecent, timezone });
       });
     } else {
       const { dateDomain } = this.state;

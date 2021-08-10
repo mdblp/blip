@@ -144,7 +144,7 @@ class Trends extends React.Component {
     const dateDomain = this.getChart()?.state?.dateDomain;
     const msRangeDiv2 = Math.round(msRange / 2);
     const start = dateDomain?.start ?? epochLocation - msRangeDiv2;
-    const end = dateDomain?.end ?? epochLocation + msRangeDiv2;
+    const end = dateDomain?.end ?? epochLocation + msRangeDiv2 - 1;
     const startDate = moment.tz(start, timezone);
     const endDate = moment.tz(end, timezone);
     if (returnMoment) {
@@ -435,6 +435,7 @@ class Trends extends React.Component {
       currentPatientInViewId,
       chartPrefs,
       trendsState,
+      loading,
     } = this.props;
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
@@ -482,7 +483,7 @@ class Trends extends React.Component {
           <div className='container-box-inner patient-data-content-inner'>
             {this.renderSubNav()}
             <div className='patient-data-content'>
-              <Loader show={this.props.loading} overlay={true} />
+              <Loader show={loading} overlay={true} />
               <div id='tidelineContainer' className='patient-data-chart-trends'>
                 {this.renderChart()}
               </div>
@@ -508,6 +509,7 @@ class Trends extends React.Component {
                 chartType={this.chartType}
                 dataUtil={this.props.dataUtil}
                 endpoints={endpoints}
+                loading={loading}
               />
             </div>
           </div>
