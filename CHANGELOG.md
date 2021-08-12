@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-759 Add Austria
 - YLP-869 Display page title
+- YLP-930 Call shoreline's logout route in YourLoops
 ### Engineering Use
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
