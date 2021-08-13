@@ -5,7 +5,6 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Changed
 - YLP-611: Hide "go to original article" option in ZD widget
-
 ### Fixed
 - YLP-878 Wrong settings for glucose units uploaded by the handset
 - YLP-882 Wrong dates in the PDF report
@@ -14,9 +13,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-918 Caregivers bg unit change not taken without reload
 - YLP-919 Yourloops do not encode correctly passwords with special characters
 - YLP-926 Sanitize HTML in message note
+- YLP-931 Cannot leave and delete a team that still contains a patient
+- YLP-935 Email in user account should not contain special characters
 ### Added
 - YLP-759 Add Austria
 - YLP-869 Display page title
+- YLP-930 Call shoreline's logout route in YourLoops
 ### Engineering Use
 - YLP-814 Add TU for i18next integration / localization
 - YLP-815 Add TU for metrics / Matomo
