@@ -28,7 +28,7 @@
 
 import enzyme from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { init as i18nInit } from "../lib/language";
+import { init as i18nInit } from "../lib/locales";
 import testLib from "./lib";
 import testComponents from "./components";
 import testPages from "./pages";

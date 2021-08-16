@@ -42,6 +42,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import VerifiedIcon from "./icons/VerifiedIcon";
 
 import locales from "../../../locales/languages.json";
+import { getIntlPhoneNumber } from "../lib/locales";
 import { Team, getDisplayTeamCode } from "../lib/team";
 
 export interface TeamCardProps {
@@ -53,6 +54,7 @@ export interface TeamInfoProps {
   id: string;
   label: string;
   value?: null | string | JSX.Element;
+  hrefValue?: string;
   icon: JSX.Element;
 }
 
@@ -157,7 +159,7 @@ const teamInfoStyles = makeStyles((theme: Theme) => {
 }, { name: "ylp-team-card-info" });
 
 export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
-  const { id, label, value, icon } = props;
+  const { id, label, value, hrefValue, icon } = props;
   const classes = teamInfoStyles();
   const { t } = useTranslation("yourloops");
 
@@ -179,7 +181,7 @@ export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
   case "phone":
     infoLabel = t("phone-number");
     elemValue = (
-      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${value}`} target="_blank" rel="noreferrer">
+      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${hrefValue ?? value}`} target="_blank" rel="noreferrer">
         {value}
       </Link>
     );
@@ -227,6 +229,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
   }
 
   const teamCode = getDisplayTeamCode(team.code);
+  const intlTeamPhone = getIntlPhoneNumber(team.phone, team.address?.country);
 
   return (
     <Paper id={`team-card-${id}`} elevation={0} className={`${classes.paper} team-card`} classes={{ root: classes.paperRoot }} data-teamid={id}>
@@ -240,7 +243,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       </div>
       <div id={`team-card-${id}-infos`} className={classes.secondRow}>
         <TeamInfo id={id} label="code" value={teamCode} icon={<VerifiedIcon className={classes.teamInfoIcon} />} />
-        <TeamInfo id={id} label="phone" value={team.phone} icon={<PhoneIcon className={classes.teamInfoIcon} />} />
+        <TeamInfo id={id} label="phone" value={team.phone} hrefValue={intlTeamPhone} icon={<PhoneIcon className={classes.teamInfoIcon} />} />
         <TeamInfo id={id} label="address" value={address} icon={<LocationOnIcon className={classes.teamInfoIcon} />} />
         <TeamInfo id={id} label="email" value={team.email} icon={<EmailIcon className={classes.teamInfoIcon} />} />
       </div>

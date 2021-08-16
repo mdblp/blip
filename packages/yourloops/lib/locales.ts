@@ -31,6 +31,7 @@ import bows from "bows";
 import i18n, { InitOptions, TOptions } from "i18next";
 import moment from "moment-timezone";
 import { initReactI18next } from "react-i18next";
+import { CountryCode, parsePhoneNumber } from "libphonenumber-js";
 
 import locales from "../../../locales/languages.json";
 import { Country, LanguageCodes } from "../models/locales";
@@ -129,12 +130,32 @@ const getLangName = (languageCode: LanguageCodes): string => {
   return _.get(locales, `resources.${languageCode}.name`, "en");
 };
 
+/** Return the international phone number based on a number and country */
+const getIntlPhoneNumber = (phoneNumber: string | undefined, countryCode: string | undefined): string => {
+  if (!_.isString(phoneNumber)) {
+    return "";
+  }
+  if (!_.isString(countryCode)) {
+    return phoneNumber;
+  }
+
+  try {
+    const pNumber = parsePhoneNumber(phoneNumber, countryCode as CountryCode);
+    const internationalNumber = pNumber.formatInternational();
+    return internationalNumber;
+  } catch (reason) {
+    console.error(reason);
+  }
+  return phoneNumber;
+};
+
 export {
   init,
   t,
   changeLanguage,
   getCurrentLang,
   getLangName,
+  getIntlPhoneNumber,
   availableLanguagesNames,
   availableLanguageCodes,
   availableCountries,

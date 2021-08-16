@@ -35,7 +35,7 @@ import { HttpHeaderKeys } from "../../models/api";
 import appConfig from "../config";
 import { errorFromHttpStatus, fixYLP878Settings } from "../utils";
 import { Session } from "../auth";
-import { getCurrentLang } from "../language";
+import { getCurrentLang } from "../locales";
 import { ShareUser, DirectShareAPI } from "./models";
 
 const log = bows("ShareApi");

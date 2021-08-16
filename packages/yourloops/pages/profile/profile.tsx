@@ -51,7 +51,7 @@ import TextField from "@material-ui/core/TextField";
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, UserRoles, Settings } from "../../models/shoreline";
-import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/language";
+import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/locales";
 import { REGEX_BIRTHDATE, getUserFirstName, getUserLastName, setPageTitle } from "../../lib/utils";
 import { User, useAuth } from "../../lib/auth";
 import appConfig from "../../lib/config";

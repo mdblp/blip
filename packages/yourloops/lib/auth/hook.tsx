@@ -37,7 +37,7 @@ import { useHistory } from "react-router-dom";
 import { HistoryState } from "../../models/generic";
 import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/shoreline";
 import { defer, fixYLP878Settings, numberPrecision } from "../utils";
-import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../language";
+import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../locales";
 import metrics from "../metrics";
 import { zendeskLogin, zendeskLogout } from "../zendesk";
 import User from "./user";

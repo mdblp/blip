@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-62 Implement session timeout
 ### Changed
+- YLP-523 Support phone number formatter
 - YLP-662 Rework events tagging for Matomo
 - YLP-996 Restructure account preferences page
 ### Fixed

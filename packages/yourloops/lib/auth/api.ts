@@ -35,7 +35,7 @@ import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
 import { errorFromHttpStatus } from "../utils";
 import appConfig from "../config";
-import { t } from "../language";
+import { t } from "../locales";
 import HttpStatus from "../http-status-codes";
 
 import { Session, UpdateUser } from "./models";

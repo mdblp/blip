@@ -39,7 +39,7 @@ import { IUser, UserRoles } from "../../models/shoreline";
 
 import HttpStatus from "../http-status-codes";
 import appConfig from "../config";
-import { t } from "../language";
+import { t } from "../locales";
 import { errorFromHttpStatus } from "../utils";
 import { Session } from "../auth";
 import { GetPatientDataOptionsV0, GetPatientDataOptions } from "./models";

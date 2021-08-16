@@ -32,7 +32,7 @@ import { PatientData } from "models/device-data";
 import { MessageNote } from "models/message";
 import { IUser } from "../../models/shoreline";
 import { User, AuthContext } from "../auth";
-import { t as translate } from "../language";
+import { t as translate } from "../locales";
 import metrics from "../metrics";
 
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";

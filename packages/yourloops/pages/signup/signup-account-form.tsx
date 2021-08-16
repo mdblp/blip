@@ -42,7 +42,7 @@ import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
-import { getCurrentLang } from "../../lib/language";
+import { getCurrentLang } from "../../lib/locales";
 import { useAlert } from "../../components/utils/snackbar";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 

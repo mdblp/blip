@@ -29,6 +29,7 @@
 import _ from "lodash";
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
+import { CountryCode, parsePhoneNumber, ParseError as PhoneNumberParseError } from "libphonenumber-js";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -40,18 +41,12 @@ import Modal from "@material-ui/core/Modal";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
-import locales from "../../../../locales/languages.json";
+import { availableCountries } from "../../lib/locales";
 import DiabeloopUrl from "../../lib/diabeloop-url";
 import { Team } from "../../lib/team";
 import { REGEX_EMAIL } from "../../lib/utils";
 import { useAuth } from "../../lib/auth";
 import { TeamEditModalContentProps } from "./types";
-
-interface LocalesCountries {
-  [code: string]: {
-    name: string;
-  };
-}
 
 interface TeamEditModalProps {
   teamToEdit: TeamEditModalContentProps | null;
@@ -143,25 +138,44 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const [addrCity, setAddrCity] = React.useState("");
   const [addrCountry, setAddrCountry] = React.useState(auth.user?.settings?.country ?? "FR");
 
-  const countries: LocalesCountries = locales.countries;
-  const optionsCountries: JSX.Element[] = [];
-  for (const entry in countries) {
-    if (Object.prototype.hasOwnProperty.call(countries, entry)) {
-      const { name } = countries[entry];
-      optionsCountries.push(
-        <option value={entry} key={name} aria-label={name}>
-          {name}
-        </option>
-      );
+  const setPhoneNumber = (phoneNumber: string): void => {
+    if (phoneNumber.length < 1) {
+      setTeamPhone("");
+      return;
     }
-  }
+    try {
+      const pNumber = parsePhoneNumber(phoneNumber, addrCountry as CountryCode);
+      const nationalNumber = pNumber.formatNational();
+      setTeamPhone(nationalNumber);
+    } catch (reason) {
+      console.error(reason);
+      if (reason instanceof PhoneNumberParseError && reason.message === "NOT_A_NUMBER") {
+        setTeamPhone(phoneNumber);
+      }
+    }
+  };
+
+  /** Change the country and update the phone format */
+  const setCountry = (countryCode: string): void => {
+    setAddrCountry(countryCode);
+    if (teamPhone.length > 0) {
+      // When the country is changed, update the phone format
+      setPhoneNumber(teamPhone);
+    }
+  };
+
+  const optionsCountries: JSX.Element[] = availableCountries.map((country) => (
+    <option value={country.code} key={country.code} aria-label={country.name}>
+      {country.name}
+    </option>
+  ));
   optionsCountries.sort((a: JSX.Element, b: JSX.Element) => {
     const aName = a.key as string;
     const bName = b.key as string;
     return aName.localeCompare(bName);
   });
 
-  const isFormIsIncomplete = (): boolean => {
+  const isFormIsIncomplete = React.useCallback((): boolean => {
     const inLimit = (value: string, limits: { min: number; max: number }): boolean => {
       const len = value.length;
       return len > limits.min && len < limits.max;
@@ -180,9 +194,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     }
 
     return !valid;
-  };
-
-  const formIsIncomplete = React.useMemo(isFormIsIncomplete, [
+  }, [
     teamName,
     teamEmail,
     teamPhone,
@@ -192,6 +204,8 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     addrLine2,
     addrZipCode,
   ]);
+
+  const formIsIncomplete = isFormIsIncomplete();
 
   const handleCloseModal = (): void => {
     onSaveTeam(null);
@@ -355,7 +369,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
                 native
                 label={t("team-edit-dialog-placeholder-addr-country")}
                 value={addrCountry}
-                onChange={(e) => setAddrCountry(e.target.value as string)}
+                onChange={(e) => setCountry(e.target.value as string)}
                 inputProps={{ name: "country", id: "team-edit-dialog-select-country" }}>
                 {optionsCountries}
               </Select>
@@ -365,7 +379,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
               id="team-edit-dialog-field-phone"
               className={classes.formChild}
               variant="outlined"
-              onChange={(e) => setTeamPhone(e.target.value)}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               name="phone"
               value={teamPhone}
               label={t("phone-number")}

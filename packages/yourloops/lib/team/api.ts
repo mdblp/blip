@@ -35,7 +35,7 @@ import { TeamType, ITeam, ITeamMember, TypeTeamMemberRole } from "../../models/t
 import { errorFromHttpStatus } from "../../lib/utils";
 import { Session } from "../auth";
 import appConfig from "../config";
-import { getCurrentLang } from "../language";
+import { getCurrentLang } from "../locales";
 
 const log = bows("TeamAPI");
 

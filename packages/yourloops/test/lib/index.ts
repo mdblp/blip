@@ -28,7 +28,7 @@
 
 import testsSoup from "./soup";
 import testCookiesManager from "./cookies-manager.test";
-import testLanguage from "./language.test";
+import testLanguage from "./locales.test";
 import testMetrics from "./metrics.test";
 import testZendesk from "./zendesk.test";
 import testAuth from "./auth";

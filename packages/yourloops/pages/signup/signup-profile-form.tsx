@@ -39,7 +39,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import metrics from "../../lib/metrics";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
-import { availableCountries } from "../../lib/language";
+import { availableCountries } from "../../lib/locales";
 import SignUpFormProps from "./signup-form-props";
 
 interface Errors {

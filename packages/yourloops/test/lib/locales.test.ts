@@ -32,7 +32,7 @@ import * as sinon from "sinon";
 import { expect } from "chai";
 
 import config from "../../lib/config";
-import { getCurrentLang, getLangName } from "../../lib/language";
+import { getCurrentLang, getLangName } from "../../lib/locales";
 
 function testLanguage(): void {
   const zeSpy = sinon.spy();

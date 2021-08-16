@@ -29,7 +29,7 @@ import React from "react";
 import _ from "lodash";
 
 import { UserRoles } from "../../models/shoreline";
-import { getCurrentLang } from "../../lib/language";
+import { getCurrentLang } from "../../lib/locales";
 import { SignupUser as IFormValues } from "../../lib/auth";
 
 export type FormValuesType = keyof IFormValues;

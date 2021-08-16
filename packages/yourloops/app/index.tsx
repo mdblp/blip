@@ -34,7 +34,7 @@ import ReactDOM from "react-dom";
 import Yourloops from "./app";
 import OnError from "./error";
 
-import { init as i18nInit } from "../lib/language";
+import { init as i18nInit } from "../lib/locales";
 import initCookiesConcentListener from "../lib/cookies-manager";
 
 i18nInit().then(() => {
