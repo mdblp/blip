@@ -229,7 +229,7 @@ function Login(): JSX.Element {
                 />
               </form>
               <Link id="link-password-reset" component={RouterLink} to="/request-password-reset" rel="nofollow">
-                {t("Forgot your password?")}
+                {t("forgot-password-question")}
               </Link>
             </CardContent>
             <CardActions className={classes.CardActions}>
@@ -243,7 +243,7 @@ function Login(): JSX.Element {
                 onClick={onClickLoginButton}
                 className={classes.loginButton}
                 disabled={emptyUsername || emptyPassword || resendActivationLinkInProgress}>
-                {t("Login")}
+                {t("login")}
               </Button>
             </CardActions>
           </Card>

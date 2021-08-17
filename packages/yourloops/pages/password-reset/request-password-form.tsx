@@ -86,7 +86,7 @@ export default function RequestPasswordForm(props: RequestPasswordFormProps): JS
     <React.Fragment>
       <CardContent className={classes.CardContent}>
         <Typography variant="h6" gutterBottom>
-          {t("forgot-password-page-title")}
+          {t("forgot-password-question")}
         </Typography>
         <Typography variant="body1" gutterBottom>
           {t("forgot-password-enter-your-email-address.")}
