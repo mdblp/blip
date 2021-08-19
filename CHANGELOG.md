@@ -3,6 +3,10 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Added
+- YLP-952 Add meta "description" to the index.html
+
+## Unreleased
 ### Changed
 - YLP-611: Hide "go to original article" option in ZD widget
 ### Fixed
