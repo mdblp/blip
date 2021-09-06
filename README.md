@@ -22,21 +22,23 @@ This README is focused on just the details of getting blip running locally. For 
 
 ## Before you start
 
-If this is the first time you're looking at Tidepool locally start with the [mdblp/dblp](https://github.com/mdblp/development) repository to setup before continuing here.
+If this is the first time you're looking at Yoorloops (blip) locally, start with the [mdblp/dblp](https://github.com/mdblp/yourloops/tree/next/k8s) repository to setup the backend before continuing here.
 
 ## Install
 
 Requirements:
-
-- [Node.js](http://nodejs.org/ 'Node.js') version 10.x or higher
+- [NVM](https://github.com/nvm-sh/nvm) for managing your nodejs
+- [Node.js](http://nodejs.org/ 'Node.js') version 12.x or higher
 - [npm](https://www.npmjs.com/ 'npm') version 6.x or higher
+- [Lerna](https://lerna.js.org/) version 2.x
+
 
 Clone this repo [from GitHub](https://github.com/mdblp/blip 'GitHub: blip'), then install the dependencies:
 
-After cloning this repository to your local machine, first make sure that you have node `10.x` and npm `6.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
+After cloning this repository to your local machine, first make sure that you have node `12.x` and npm `6.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
 You can install the latest npm version with: `npm install -g npm@latest`.
 
-Once your environment is setup with node and npm, install the dependencies:
+Once your environment is setup with node, lerna and npm, install the dependencies:
 
 ```bash
 $ npm install
@@ -49,16 +51,9 @@ $ npm install
 Simplest method, will do everything needed in one command.
 
 ```bash
-$ bash artifact.sh
+$ source artifact-lang.sh
+retrieveLanguageParameters
 ```
-
-Options (using env var):
-- `TRAVIS_NODE_VERSION` set to the same value as `ARTIFACT_NODE_VERSION` (see `version.sh`):
-  - Create the docker image (prod version)
-  - Create the archive use for production deployment.
-  - Build the SOUP list
-  - Publish the docker image (if possible)
-  - App will be available in the `server/dist` directory.
 
 This script is used by the continuous build system, but it can be use standalone.
 
@@ -130,6 +125,9 @@ We use [Mocha](https://mochajs.org/) with [Chai](http://chaijs.com/) for our tes
 To run the unit tests, use:
 
 ```bash
+// run all test
+$ npm run test
+// run a specific package, either sundiaal, viz, tideline, blip or yourloops
 $ npm run test-<the targeted package>
 ```
 
@@ -191,6 +189,8 @@ To publish blip to CloudFront the simplest solution is to build the docker image
 Et voila, the deployment starts. Of course you need credentials for the aws account you target ;)
 
 ## Documentation for developers
+
+:warning: this part below contains deprecated contents, inhereted from tidepool
 
 + [Blip developer guide](docs/StartHere.md)
     + [overview of features](docs/FeatureOverview.md)
