@@ -45,7 +45,7 @@ async function genFromTemplate(templateFilename, outputFilename, templateValues)
   const outputFileContent = templateCompiler(templateValues);
   const resolvedOutputFilename = `${getDistDir()}/${outputFilename}`;
   await fs.writeFile(resolvedOutputFilename, outputFileContent, { encoding: "utf-8", flag: "w", mode: 0o644 });
-  console.log(`Generating ${resolvedOutputFilename} OK`);
+  console.log(`${resolvedOutputFilename} generated successfully`);
 }
 
 module.exports = {
