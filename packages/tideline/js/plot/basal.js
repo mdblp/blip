@@ -272,16 +272,14 @@ function plotBasal(pool, opts = defaults) {
   };
 
   basal.rateString = function(d, cssClass) {
-    return format.tooltipValue(d.rate) + ' <span class="' + cssClass + '">U/hr</span>';
+    return format.tooltipValue(d.rate) + ` <span class="${cssClass}">${t('U/hr')}</span>`;
   };
 
   basal.tempPercentage = function(d) {
     if (typeof d.percent === 'number') {
       return format.percentage(d.percent);
     }
-    else {
-      return format.tooltipValue(d.rate) + ' <span class="plain">U/hr</span>';
-    }
+    return format.tooltipValue(d.rate) + ` <span class="plain">${t('U/hr')}</span>`;
   };
 
   basal.tooltipHtml = function(group, datum, showSheduledLabel) {
