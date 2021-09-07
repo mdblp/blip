@@ -46,11 +46,18 @@ import TextField from "@material-ui/core/TextField";
 import brandingLogo from "branding/logo.png";
 
 import appConfig from "../../lib/config";
+import sendMetrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
-import { errorTextFromException } from "../../lib/utils";
+import { errorTextFromException, waitTimeout } from "../../lib/utils";
 import { useAlert } from "../../components/utils/snackbar";
 import LanguageSelector from "../../components/language-select";
 import Password from "../../components/utils/password";
+
+interface ButtonResendActivationLinkProps {
+  username: string;
+  log: Console;
+  setResendActivationLinkInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
@@ -83,8 +90,58 @@ const loginStyle = makeStyles((theme: Theme) => {
       textAlign: "center",
       fontSize: "small",
     },
+    snackbarButton: {
+      color: "black",
+    },
   };
 }, { name: "login-page-styles" });
+
+function ButtonResendActivationLink(props: ButtonResendActivationLinkProps): JSX.Element {
+  const { username, log, setResendActivationLinkInProgress } = props;
+  const { t } = useTranslation("yourloops");
+  const alert = useAlert();
+  const auth = useAuth();
+  const classes = loginStyle();
+  const [workInProgress, setWorkInProgress] = React.useState(false);
+
+  const onClickResendActivationLink = () => {
+    setWorkInProgress(true);
+    setResendActivationLinkInProgress(true);
+    sendMetrics("resend-signup");
+
+    let resendResult = false;
+
+    // Add a small timeout here, so the actions are clear for the user
+    // If it is too fast, we do not have the time to understand what's going on.
+    Promise.all([waitTimeout(1000), auth.resendSignup(username)])
+      .then((result) => {
+        resendResult = result[1];
+      })
+      .catch((reason) => {
+        log.error(reason);
+      })
+      .finally(() => {
+        setResendActivationLinkInProgress(false);
+        if (resendResult) {
+          alert.success(t("success-resent-activation-link"), null, true);
+        } else {
+          alert.error(t("error-resent-activation-link"), null, true);
+        }
+      });
+  };
+
+  return (
+    <Button
+      id="button-resend-activation-link"
+      color="primary"
+      size="small"
+      className={classes.snackbarButton}
+      onClick={onClickResendActivationLink}
+      disabled={workInProgress}>
+      {t("button-resend-activation-link")}
+    </Button>
+  );
+}
 
 /**
  * Login page
@@ -102,6 +159,7 @@ function Login(): JSX.Element {
   const [password, setPassword] = React.useState("");
   const [validateError, setValidateError] = React.useState(false);
   const [helperTextValue, setHelperTextValue] = React.useState("");
+  const [resendActivationLinkInProgress, setResendActivationLinkInProgress] = React.useState(false);
 
   const emptyUsername = _.isEmpty(username);
   const emptyPassword = _.isEmpty(password);
@@ -130,13 +188,24 @@ function Login(): JSX.Element {
       log.debug("Logged user:", user);
       // The redirect is done by packages/yourloops/components/routes.tsx#PublicRoute
     } catch (reason: unknown) {
+      let action: JSX.Element | null = null;
       let errorMessage = errorTextFromException(reason);
       if (errorMessage === "error-account-lock") {
         errorMessage = t(errorMessage, { delayBeforeNextLoginAttempt: appConfig.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT });
+      } else if (errorMessage === "email-not-verified") {
+        action = (
+          <ButtonResendActivationLink
+            username={username}
+            log={log}
+            setResendActivationLinkInProgress={setResendActivationLinkInProgress}
+          />
+        );
+        errorMessage = t(errorMessage);
       } else {
         errorMessage = t(errorMessage);
       }
-      alert.error(errorMessage);
+
+      alert.error(errorMessage, action);
     }
   };
 
@@ -187,7 +256,7 @@ function Login(): JSX.Element {
                   label={t("email")}
                   variant="outlined"
                   value={username}
-                  disabled={signupEmail !== null}
+                  disabled={signupEmail !== null || resendActivationLinkInProgress}
                   required
                   error={validateError && emptyUsername}
                   onChange={onUsernameChange}
@@ -205,6 +274,7 @@ function Login(): JSX.Element {
                   value={password}
                   required={true}
                   error={validateError && (emptyPassword || helperTextValue.length > 0)}
+                  disabled={resendActivationLinkInProgress}
                   helperText={helperTextValue}
                 />
               </form>
@@ -222,7 +292,7 @@ function Login(): JSX.Element {
                 color="primary"
                 onClick={onClickLoginButton}
                 className={classes.loginButton}
-                disabled={emptyUsername || emptyPassword}>
+                disabled={emptyUsername || emptyPassword || resendActivationLinkInProgress}>
                 {t("Login")}
               </Button>
             </CardActions>
