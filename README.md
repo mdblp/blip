@@ -1,6 +1,6 @@
 # Blip
 
-[![Build Status](https://travis-ci.org/mdblp/blip.svg?branch=dblp)](https://travis-ci.org/mdblp/blip)
+[![Build Status](https://jenkins.ci.diabeloop.eu/job/mdblp/job/blip/job/dblp/badge/icon)](https://jenkins.ci.diabeloop.eu/job/mdblp/job/blip/job/dblp/)
 
 Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform. It allows patients and their "care team" (family, doctors) to visualize their diabetes device data (from insulin pumps, BGMs, and/or CGMs) and message each other.
 
@@ -29,13 +29,13 @@ If this is the first time you're looking at Yoorloops (blip) locally, start with
 Requirements:
 - [NVM](https://github.com/nvm-sh/nvm) for managing your nodejs
 - [Node.js](http://nodejs.org/ 'Node.js') version 12.x or higher
-- [npm](https://www.npmjs.com/ 'npm') version 6.x or higher
+- [npm](https://www.npmjs.com/ 'npm') version 7.x or higher
 - [Lerna](https://lerna.js.org/) version 2.x
 
 
 Clone this repo [from GitHub](https://github.com/mdblp/blip 'GitHub: blip'), then install the dependencies:
 
-After cloning this repository to your local machine, first make sure that you have node `12.x` and npm `6.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
+After cloning this repository to your local machine, first make sure that you have node `12.x` and npm `7.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
 You can install the latest npm version with: `npm install -g npm@latest`.
 
 Once your environment is setup with node, lerna and npm, install the dependencies:
@@ -49,6 +49,8 @@ $ npm install
 ### Artifact: Fetch branding images & translations
 
 Simplest method, will do everything needed in one command.
+To be able to retreive theses files, a github personal token is mandatory (env GIT_TOKEN)
+See https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
 
 ```bash
 $ source artifact-lang.sh
