@@ -1,7 +1,6 @@
 
 const crypto = require('crypto');
 const util = require('util');
-const zlib = require('zlib');
 const chai = require('chai');
 const lambda = require('../../dist/lambda/cloudfront-test-blip-request-viewer');
 
@@ -48,36 +47,25 @@ describe('CloudFront Lambda Generator', function () {
   };
 
   let indexHTML = '';
-  it('Should return the index.html in a gzip/base64 content', async () => {
-    const gunzip = util.promisify(zlib.gunzip);
+  it('Should return the index.html content', async () => {
     const response = await handler(testBase, null);
     expect(response).to.be.an('object');
     expect(response.status).to.be.equal(200);
     expect(response.statusDescription).to.be.equal('OK');
-    expect(response.bodyEncoding).to.be.equal('base64');
     expect(response.body).to.be.a('string');
-    let b = Buffer.from(response.body, 'base64');
-    b = await gunzip(b);
-    indexHTML = b.toString('utf8');
-    expect(indexHTML).to.be.a('string');
-    expect(indexHTML.startsWith('<!DOCTYPE html>')).to.be.true;
+    expect(response.body.startsWith('<!DOCTYPE html>')).to.be.true;
+    indexHTML = response.body;
   });
 
-  it('Should return the index.html in a gzip/base64 content for others requested URL', async () => {
+  it('Should return the index.html content for others requested URL', async () => {
     testBase.Records[0].cf.request.uri = '/patients/abcd/data';
-    const gunzip = util.promisify(zlib.gunzip);
     const response = await handler(testBase, null);
     expect(response).to.be.an('object');
     expect(response.status).to.be.equal(200);
     expect(response.statusDescription).to.be.equal('OK');
-    expect(response.bodyEncoding).to.be.equal('base64');
     expect(response.body).to.be.a('string');
-    let b = Buffer.from(response.body, 'base64');
-    b = await gunzip(b);
-    let html = b.toString('utf8');
-    expect(html).to.be.a('string');
-    expect(indexHTML.startsWith('<!DOCTYPE html>')).to.be.true;
-    expect(html).to.be.not.equal(indexHTML); // nonce are differents
+    expect(response.body.startsWith('<!DOCTYPE html>')).to.be.true;
+    expect(response.body).to.be.not.equal(indexHTML); // nonce are differents
   });
 
   it('Should return the config.js', async () => {

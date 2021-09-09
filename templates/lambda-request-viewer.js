@@ -6,7 +6,6 @@
  */
 
 const crypto = require('crypto');
-const zlib = require('zlib');
 const path = require('path');
 
 exports.handler = async (event, context, callback) => {
@@ -39,18 +38,14 @@ exports.handler = async (event, context, callback) => {
   }
 
   if (requestURI === basePath || requestURI === `${basePath}index.html`) {
+    // nonce used in the INDEX_HTML template
     const nonce = crypto.randomBytes(16).toString('base64');
-    const indexHTML = `{{ INDEX_HTML }}`;
-    const buffer = zlib.gzipSync(indexHTML);
-    const base64EncodedBody = buffer.toString('base64');
-
     const response = {
       status: 200,
       statusDescription: 'OK',
       headers: {
         'cache-control': [{ key: 'Cache-Control', value: 'no-store' }],
         'content-type': [{ key: 'Content-Type', value: 'text/html; charset=utf-8' }],
-        'content-encoding' : [{ key: 'Content-Encoding', value: 'gzip' }],
         'content-security-policy': [{ key: 'Content-Security-Policy', value: `{{ CSP }}` }],
         'content-language': [{ key: 'Content-Language', value: "{{ LANGUAGES }}" }],
         'referrer-policy': [{ key: 'Referrer-Policy', value: 'no-referrer' }],
@@ -60,8 +55,7 @@ exports.handler = async (event, context, callback) => {
         'x-frame-options': [{ key: 'X-Frame-Options', value: 'DENY' }],
         'x-xss-protection': [{ key: 'X-XSS-Protection', value: '1; mode=block' }],
       },
-      body: base64EncodedBody,
-      bodyEncoding: 'base64',
+      body: `{{ INDEX_HTML }}`,
     };
     return callback(null, response);
 

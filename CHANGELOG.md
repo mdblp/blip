@@ -9,6 +9,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-972 Add United Kingdom
 ### Changed
 - YLP-958 Review text justification in modal windows
+### Engineering Use
+- YLP-989 Disable gzip compression of index html
 
 ## 2.0.3 - 2021-08-20
 ### Changed
