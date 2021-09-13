@@ -6,7 +6,10 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-950 Generate robot.txt and sitemap.xml
 - YLP-952 Add meta "description" to the index.html
+- YLP-972 Add United Kingdom
+- YLP-977 Re-send account activation link
 ### Changed
+- YLP-955 Sign-up consent next button should be greyed when boxes are not checked
 - YLP-958 Review text justification in modal windows
 
 ## 2.0.3 - 2021-08-20
