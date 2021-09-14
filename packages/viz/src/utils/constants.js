@@ -30,8 +30,6 @@ export const springConfig = { stiffness: STIFFNESS, damping: DAMPING, precision:
 export const MGDL_CLAMP_TOP = 400;
 export const MMOLL_CLAMP_TOP = 22.5;
 
-// export const MGDL_UNITS = 'mg/dL';
-// export const MMOLL_UNITS = 'mmol/L';
 export const LBS_PER_KG = 2.2046226218;
 
 export const MS_IN_DAY = 864e5;

@@ -33,13 +33,14 @@ const format = {
     if (value < 0) {
       throw new Error("Invalid glycemia value");
     }
-    if (unit === MGDL_UNITS) {
+    switch (unit) {
+    case MGDL_UNITS:
       return Math.round(10.0 * value / MGDL_PER_MMOLL) / 10;
-    }
-    if (unit === MMOLL_UNITS) {
+    case MMOLL_UNITS:
       return Math.round(value * MGDL_PER_MMOLL);
+    default:
+      throw new Error("Invalid parameter unit");
     }
-    throw new Error("Invalid parameter unit");
   },
 
   tooltipBG: function(d, units) {

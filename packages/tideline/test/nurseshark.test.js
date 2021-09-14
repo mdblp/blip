@@ -246,9 +246,9 @@ describe('nurseshark', function() {
         timezoneOffset: 0
       }];
       var res = nurseshark.processData(bgs, MGDL_UNITS).processedData;
-      expect(res[0].value).to.equal(256);
-      expect(res[1].value).to.equal(45);
-      expect(res[2].value).to.equal(127);
+      expect(res[0].value).to.equal(256); // round(14.211645580300173 * MGDL_PER_MMOLL)
+      expect(res[1].value).to.equal(45); // round(2.487452256628842 * MGDL_PER_MMOLL)
+      expect(res[2].value).to.equal(127); // round(7.048584587016023 * MGDL_PER_MMOLL)
     });
 
     it('should translate wizard bg-related fields to mg/dL when such units specified', function() {
@@ -268,12 +268,12 @@ describe('nurseshark', function() {
         timezoneOffset: 0
       }];
       var res = nurseshark.processData(datum, MGDL_UNITS).processedData[0];
-      expect(res.bgInput).to.equal(273);
-      expect(res.bgTarget.low).to.equal(100);
+      expect(res.bgInput).to.equal(273); // round(15.1518112923307 * MGDL_PER_MMOLL)
+      expect(res.bgTarget.low).to.equal(100); // round(5.550747991045533 * MGDL_PER_MMOLL)
       expect(res.bgTarget.high).to.equal(100);
       expect(res.bgTarget.target).to.equal(100);
-      expect(res.bgTarget.range).to.equal(10);
-      expect(res.insulinSensitivity).to.equal(68);
+      expect(res.bgTarget.range).to.equal(10); // round(0.555074799 * MGDL_PER_MMOLL)
+      expect(res.insulinSensitivity).to.equal(68); // round(3.7753739955227665 * MGDL_PER_MMOLL)
     });
 
     it('should translate pumpSettings bg-related fields to mg/dL when such units specified', function() {

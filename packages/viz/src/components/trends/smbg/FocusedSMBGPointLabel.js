@@ -18,7 +18,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-
 import { MGDL_UNITS, MMOLL_UNITS } from 'tideline';
 
 import Tooltip from '../../common/tooltips/Tooltip';
