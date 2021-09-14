@@ -42,7 +42,7 @@ import Link from "@material-ui/core/Link";
 
 import diabeloopUrl from "../../lib/diabeloop-url";
 import { makeButtonsStyles } from "../theme";
-import { SwitchRoleDialogProps } from "./models";
+import { SwitchRoleConsentDialogProps } from "./models";
 
 const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-switch-role-consent-buttons" });
 const dialogStyles = makeStyles(
@@ -87,32 +87,42 @@ const dialogStyles = makeStyles(
   { name: "ylp-dialog-switch-role-consent" }
 );
 
-function SwitchRoleConsentDialog(props: SwitchRoleDialogProps): JSX.Element {
+function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Element {
   const { open, onResult } = props;
   const buttonsClasses = makeButtonsClasses();
   const classes = dialogStyles();
   const { t, i18n } = useTranslation("yourloops");
   const [policyAccepted, setPolicyAccepted] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(false);
 
   const resetForm = () => {
     setPolicyAccepted(false);
     setTermsAccepted(false);
+    setFeedbackAccepted(false);
   };
   const handleClose = () => {
-    onResult(false);
+    onResult(false, false);
     resetForm();
   };
   const handleAccept = () => {
-    onResult(true);
+    onResult(true, feedbackAccepted);
     resetForm();
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const what = event.target.name;
-    if (what === "policy") {
+    switch (what) {
+    case "policy":
       setPolicyAccepted(!policyAccepted);
-    } else if (what === "terms") {
+      break;
+    case "terms":
       setTermsAccepted(!termsAccepted);
+      break;
+    case "feedback":
+      setFeedbackAccepted(!feedbackAccepted);
+      break;
+    default:
+      throw new Error("Invalid change type");
     }
   };
 
@@ -133,6 +143,16 @@ function SwitchRoleConsentDialog(props: SwitchRoleDialogProps): JSX.Element {
       checked={termsAccepted}
       onChange={handleChange}
       name="terms"
+      color="primary"
+    />
+  );
+  const checkboxFeedback = (
+    <Checkbox
+      id="switch-role-consequences-dialog-checkbox-feedback"
+      className={classes.checkbox}
+      checked={feedbackAccepted}
+      onChange={handleChange}
+      name="feedback"
       color="primary"
     />
   );
@@ -173,6 +193,8 @@ function SwitchRoleConsentDialog(props: SwitchRoleDialogProps): JSX.Element {
     </Trans>
   );
 
+  const labelFeedback = t("consent-hcp-feedback");
+
   return (
     <Dialog id="switch-role-consent-dialog" open={open} onClose={handleClose}>
       <DialogContent id="switch-role-consequences-dialog-content" className={classes.dialogContent}>
@@ -188,6 +210,12 @@ function SwitchRoleConsentDialog(props: SwitchRoleDialogProps): JSX.Element {
               id="switch-role-consequences-dialog-label-terms"
               control={checkboxTerms}
               label={labelTerms}
+              className={classes.formControlPolicy}
+            />
+            <FormControlLabel
+              id="switch-role-consequences-dialog-label-feedback"
+              control={checkboxFeedback}
+              label={labelFeedback}
               className={classes.formControlPolicy}
             />
           </FormGroup>

@@ -35,6 +35,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Link from "@material-ui/core/Link";
 
+import { UserRoles } from "../../models/shoreline";
 import diabeloopUrl from "../../lib/diabeloop-url";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
@@ -126,6 +127,28 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
     </Trans>
   );
 
+  const checkboxFeedback = (
+    <Checkbox
+      id="checkbox-signup-consent-feedback"
+      checked={state.formValues.feedback}
+      onChange={(e) => handleChange(e, "feedback")}
+      name="feedback"
+      color="primary"
+    />
+  );
+  const labelFeedback = t("consent-hcp-feedback");
+  const formControlFeedback = state.formValues.accountRole === UserRoles.hcp ? (
+    <FormControlLabel
+      id="signup-consent-feedback-ctl"
+      className={classes.formControlLabel}
+      classes={{
+        label: "signup-consent-feedback-text",
+      }}
+      control={checkboxFeedback}
+      label={labelFeedback}
+    />
+  ) : null;
+
   return (
     <form
       style={{
@@ -174,6 +197,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           label={labelTerms}
           labelPlacement="end"
         />
+        {formControlFeedback}
       </FormControl>
       <div id="signup-consent-button-group" className={classes.buttons}>
         <Button
