@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
+ * Consents models
  *
  * All rights reserved.
  *
@@ -25,15 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
+import { UserRoles } from "../../models/shoreline";
 
-import { ConsentPage as Consent } from "../../components/consents";
-
-/**
- * Consent Page
- */
-function ConsentPage(): JSX.Element {
-  return <Consent messageKey="constent-renew-message" />;
+export interface ConsentFormProps {
+  userRole: UserRoles;
+  id: string;
+  className?: string;
+  policyAccepted: boolean;
+  setPolicyAccepted: React.Dispatch<boolean>;
+  termsAccepted: boolean;
+  setTermsAccepted: React.Dispatch<boolean>;
+  feedbackAccepted: boolean;
+  setFeedbackAccepted: React.Dispatch<boolean>;
 }
-
-export default ConsentPage;

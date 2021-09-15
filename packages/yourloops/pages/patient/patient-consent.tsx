@@ -27,7 +27,7 @@
 
 import * as React from "react";
 
-import Consent from "../../components/consent";
+import { ConsentPage as Consent } from "../../components/consents";
 
 /**
  * Patient Consent Page
