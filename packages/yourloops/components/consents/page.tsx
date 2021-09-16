@@ -43,7 +43,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { useAuth } from "../../lib/auth";
-import { Profile } from "../../models/shoreline";
+import { Profile, UserRoles } from "../../models/shoreline";
 import ConsentForm from "./form";
 
 interface ConsentProps {
@@ -106,6 +106,7 @@ function Page(props: ConsentProps): JSX.Element {
   const classes = style();
   const [policyAccepted, setPolicyAccepted] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(auth.user?.profile?.contactConsent?.isAccepted ?? false);
   const log = React.useMemo(() => bows("consent"), []);
   const fromPath = React.useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
 
@@ -116,6 +117,9 @@ function Page(props: ConsentProps): JSX.Element {
 
   const destinationPath = fromPath ?? user.getHomePage();
   const consentsChecked = policyAccepted && termsAccepted;
+  // Ask for feedback only if the user is an HCP, and didn't have previously
+  // see that option (e.g. Account created before it was implemented)
+  const showFeedback = user.role === UserRoles.hcp && _.isNil(user.profile?.contactConsent);
 
   const onDecline = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     auth.logout().catch((reason) => console.error("logout", reason));
@@ -127,6 +131,9 @@ function Page(props: ConsentProps): JSX.Element {
     const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
     updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted };
     updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted };
+    if (showFeedback) {
+      updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted };
+    }
     auth.updateProfile(updatedProfile).catch((reason: unknown) => {
       log.error(reason);
     }).finally(() => {
@@ -179,6 +186,8 @@ function Page(props: ConsentProps): JSX.Element {
                   setPolicyAccepted={setPolicyAccepted}
                   termsAccepted={termsAccepted}
                   setTermsAccepted={setTermsAccepted}
+                  feedbackAccepted={feedbackAccepted}
+                  setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
                 />
                 <div id="consent-button-group" className={classes.buttons}>
                   <Button

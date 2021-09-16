@@ -37,5 +37,6 @@ export interface ConsentFormProps {
   termsAccepted: boolean;
   setTermsAccepted: React.Dispatch<boolean>;
   feedbackAccepted?: boolean;
+  // Set to undefined to not display this option
   setFeedbackAccepted?: React.Dispatch<boolean>;
 }
