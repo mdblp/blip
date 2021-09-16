@@ -36,6 +36,6 @@ export interface ConsentFormProps {
   setPolicyAccepted: React.Dispatch<boolean>;
   termsAccepted: boolean;
   setTermsAccepted: React.Dispatch<boolean>;
-  feedbackAccepted: boolean;
-  setFeedbackAccepted: React.Dispatch<boolean>;
+  feedbackAccepted?: boolean;
+  setFeedbackAccepted?: React.Dispatch<boolean>;
 }

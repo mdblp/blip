@@ -43,7 +43,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { useAuth } from "../../lib/auth";
-import { Profile, UserRoles } from "../../models/shoreline";
+import { Profile } from "../../models/shoreline";
 import ConsentForm from "./form";
 
 interface ConsentProps {
@@ -74,27 +74,6 @@ const style = makeStyles((theme: Theme) => {
         marginRight: theme.spacing(0),
       },
     },
-    // formControl: {
-    //   margin: theme.spacing(3),
-    //   [theme.breakpoints.down('xs')]: {
-    //     margin: 0,
-    //   },
-    // },
-    // formHelperText: {
-    //   textAlign: "center",
-    // },
-    // formControlLabel: {
-    //   alignItems: "start",
-    //   textAlign: "start",
-    //   marginTop: theme.spacing(2),
-    //   marginBottom: theme.spacing(2),
-    //   marginLeft: theme.spacing(1),
-    //   marginRight: theme.spacing(1),
-    //   [theme.breakpoints.down('xs')]: {
-    //     marginLeft: 0,
-    //     marginRight: 0,
-    //   },
-    // },
     buttons: {
       display: "flex",
       flexDirection: "row",
@@ -127,7 +106,6 @@ function Page(props: ConsentProps): JSX.Element {
   const classes = style();
   const [policyAccepted, setPolicyAccepted] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(false);
   const log = React.useMemo(() => bows("consent"), []);
   const fromPath = React.useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
 
@@ -149,9 +127,6 @@ function Page(props: ConsentProps): JSX.Element {
     const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
     updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted };
     updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted };
-    if (user.role === UserRoles.hcp) {
-      updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted };
-    }
     auth.updateProfile(updatedProfile).catch((reason: unknown) => {
       log.error(reason);
     }).finally(() => {
@@ -204,8 +179,6 @@ function Page(props: ConsentProps): JSX.Element {
                   setPolicyAccepted={setPolicyAccepted}
                   termsAccepted={termsAccepted}
                   setTermsAccepted={setTermsAccepted}
-                  feedbackAccepted={feedbackAccepted}
-                  setFeedbackAccepted={setFeedbackAccepted}
                 />
                 <div id="consent-button-group" className={classes.buttons}>
                   <Button

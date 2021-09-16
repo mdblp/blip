@@ -74,6 +74,8 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const classes = formStyles();
 
+  const showFeedback = typeof setFeedbackAccepted === "function" && userRole === UserRoles.hcp;
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const what = event.target.name;
     switch (what) {
@@ -84,10 +86,9 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
       setTermsAccepted(!termsAccepted);
       break;
     case "feedback":
-      if (typeof setFeedbackAccepted !== "function") {
-        throw new Error("Missing property setFeedbackAccepted");
+      if (typeof setFeedbackAccepted === "function") {
+        setFeedbackAccepted(!feedbackAccepted);
       }
-      setFeedbackAccepted(!feedbackAccepted);
       break;
     default:
       throw new Error("Invalid change type");
@@ -149,7 +150,7 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
   );
 
   let formControlFeedback: JSX.Element | null = null;
-  if (userRole === UserRoles.hcp) {
+  if (showFeedback) {
     const checkboxFeedback = (
       <Checkbox
         id={`${id}-checkbox-feedback`}
