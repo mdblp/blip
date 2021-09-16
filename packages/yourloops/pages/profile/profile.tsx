@@ -137,7 +137,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [birthDate, setBirthDate] = React.useState<string>(user.profile?.patient?.birthday ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(user?.profile?.contactConsent?.isAccepted ?? false);
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(user?.profile?.contactConsent?.isAccepted));
 
   React.useEffect(() => {
     // To be sure we have the locale:
@@ -182,10 +182,10 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
       _.set(updatedProfile, "patient.birthday", birthDate);
     }
     if (showFeedback && Boolean(user?.profile?.contactConsent?.isAccepted) !== feedbackAccepted) {
-      _.set(updatedProfile, "contactConsent", {
+      updatedProfile.contactConsent = {
         isAccepted: feedbackAccepted,
         acceptanceTimestamp: new Date().toISOString(),
-      });
+      };
     }
 
     return updatedProfile;

@@ -106,7 +106,7 @@ function Page(props: ConsentProps): JSX.Element {
   const classes = style();
   const [policyAccepted, setPolicyAccepted] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(auth.user?.profile?.contactConsent?.isAccepted ?? false);
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(auth.user?.profile?.contactConsent?.isAccepted));
   const log = React.useMemo(() => bows("consent"), []);
   const fromPath = React.useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
 
