@@ -139,7 +139,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
   const [feedbackAccepted, setFeedbackAccepted] = React.useState(user?.profile?.contactConsent?.isAccepted ?? false);
 
-
   React.useEffect(() => {
     // To be sure we have the locale:
     if (!availableLanguageCodes.includes(lang)) {
@@ -181,8 +180,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
     if (user.role === UserRoles.patient) {
       _.set(updatedProfile, "patient.birthday", birthDate);
-    } else if (user.role === UserRoles.hcp && user?.profile?.contactConsent?.isAccepted !== feedbackAccepted) {
-      _.set(updatedProfile, "profile.contactConsent", {
+    }
+    if (showFeedback && Boolean(user?.profile?.contactConsent?.isAccepted) !== feedbackAccepted) {
+      _.set(updatedProfile, "contactConsent", {
         isAccepted: feedbackAccepted,
         acceptanceTimestamp: new Date().toISOString(),
       });
@@ -202,11 +202,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
-  const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) =>
-    setState(event.target.value);
-  const createHandleSelectChange =
-    <T extends Units | LanguageCodes>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) =>
-      setState(event.target.value as T);
+  const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
+  const createHandleSelectChange = <T extends Units | LanguageCodes>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
