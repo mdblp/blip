@@ -59,7 +59,7 @@ const formStyles = makeStyles(
   { name: "ylp-form-consents" }
 );
 
-export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const classes = formStyles();
 
@@ -95,12 +95,13 @@ export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: Consen
       id={`${id}-label-policy`}
       control={checkboxPolicy}
       label={labelPrivacyPolicy}
+      style={style}
       className={classes.formControlLabel}
     />
   );
 }
 
-export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentTerms({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const classes = formStyles();
 
@@ -136,12 +137,13 @@ export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck):
       id={`${id}-label-terms`}
       control={checkboxTerms}
       label={labelTerms}
+      style={style}
       className={classes.formControlLabel}
     />
   );
 }
 
-export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentFeedback({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = formStyles();
 
@@ -162,6 +164,7 @@ export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentChec
       id={`${id}-label-feedback`}
       control={checkboxFeedback}
       label={labelFeedback}
+      style={style}
       className={classes.formControlLabel}
     />
   );

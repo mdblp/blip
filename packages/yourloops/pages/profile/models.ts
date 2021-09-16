@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Consents models
+ * Profile page - interfaces
  *
  * All rights reserved.
  *
@@ -26,26 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
-import { UserRoles } from "../../models/shoreline";
-
-export interface ConsentCheck {
-  id: string;
-  userRole: UserRoles;
-  checked: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  style?: React.CSSProperties;
-}
-
-export interface ConsentFormProps {
-  userRole: UserRoles;
-  id: string;
-  className?: string;
-  policyAccepted: boolean;
-  setPolicyAccepted: React.Dispatch<boolean>;
-  termsAccepted: boolean;
-  setTermsAccepted: React.Dispatch<boolean>;
-  feedbackAccepted?: boolean;
-  // Set to undefined to not display this option
-  setFeedbackAccepted?: React.Dispatch<boolean>;
+export interface Errors {
+  firstName: boolean;
+  lastName: boolean;
+  currentPassword: boolean;
+  password: boolean;
+  passwordConfirmation: boolean;
+  birthDate: boolean;
 }
