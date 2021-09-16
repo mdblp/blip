@@ -28,6 +28,13 @@
 
 import { UserRoles } from "../../models/shoreline";
 
+export interface ConsentCheck {
+  id: string;
+  userRole: UserRoles;
+  checked: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
 export interface ConsentFormProps {
   userRole: UserRoles;
   id: string;

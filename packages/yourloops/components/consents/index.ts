@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ConsentForm from "./form";
+import ConsentForm, { ConsentFeedback } from "./form";
 import ConsentPage from "./page";
 
-export { ConsentForm, ConsentPage };
+export { ConsentFeedback, ConsentForm, ConsentPage };

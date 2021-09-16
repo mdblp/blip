@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /**
  * Copyright (c) 2021, Diabeloop
  * Profile page
@@ -54,13 +55,13 @@ import appConfig from "../../lib/config";
 import sendMetrics from "../../lib/metrics";
 import Password from "../../components/utils/password";
 import { useAlert } from "../../components/utils/snackbar";
-
+import { ConsentFeedback } from "../../components/consents";
 import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown; }>;
+type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
 type HandleChange<E> = (event: E) => void;
 type CreateHandleChange<T, E> = (setState: SetState<T>) => HandleChange<E>;
 
@@ -134,6 +135,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   }
 
   const role = user.role;
+  const showFeedback = role === UserRoles.hcp;
 
   const [firstName, setFirstName] = React.useState<string>(getUserFirstName(user));
   const [lastName, setLastName] = React.useState<string>(getUserLastName(user));
@@ -144,6 +146,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [birthDate, setBirthDate] = React.useState<string>(user.profile?.patient?.birthday ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(user?.profile?.contactConsent?.isAccepted ?? false);
 
   const browserTimezone = React.useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, []);
 
@@ -188,6 +191,11 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
     if (user.role === UserRoles.patient) {
       _.set(updatedProfile, "patient.birthday", birthDate);
+    } else if (user.role === UserRoles.hcp && user?.profile?.contactConsent?.isAccepted !== feedbackAccepted) {
+      _.set(updatedProfile, "profile.contactConsent", {
+        isAccepted: feedbackAccepted,
+        acceptanceTimestamp: new Date().toISOString(),
+      });
     }
 
     return updatedProfile;
@@ -204,8 +212,11 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
-  const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
-  const createHandleSelectChange = <T extends Units | LanguageCodes>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
+  const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) =>
+    setState(event.target.value);
+  const createHandleSelectChange =
+    <T extends Units | LanguageCodes>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) =>
+      setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
@@ -371,6 +382,18 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     );
   }
 
+  let formControlFeedback: JSX.Element | null = null;
+  if (showFeedback) {
+    formControlFeedback = (
+      <ConsentFeedback
+        id="profile"
+        userRole={role}
+        checked={feedbackAccepted}
+        onChange={() => setFeedbackAccepted(!feedbackAccepted)}
+      />
+    );
+  }
+
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
@@ -414,7 +437,11 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           </FormControl>
           <FormControl className={classes.formControl}>
             <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
-            <Select labelId="locale-selector" id="profile-locale-selector" value={lang} onChange={createHandleSelectChange(setLang)}>
+            <Select
+              labelId="locale-selector"
+              id="profile-locale-selector"
+              value={lang}
+              onChange={createHandleSelectChange(setLang)}>
               {availableLanguageCodes.map((languageCode) => (
                 <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
                   {getLangName(languageCode)}
@@ -422,6 +449,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               ))}
             </Select>
           </FormControl>
+
+          {formControlFeedback}
+
           <div style={{ display: "flex", justifyContent: "flex-end", margin: "2em 0em" }}>
             <Button
               id="profile-button-cancel"

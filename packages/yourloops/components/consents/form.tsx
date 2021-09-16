@@ -38,7 +38,7 @@ import Link from "@material-ui/core/Link";
 
 import { UserRoles } from "../../models/shoreline";
 import diabeloopUrl from "../../lib/diabeloop-url";
-import { ConsentFormProps } from "./models";
+import { ConsentCheck, ConsentFormProps } from "./models";
 
 const formStyles = makeStyles(
   (theme: Theme) => {
@@ -59,6 +59,114 @@ const formStyles = makeStyles(
   { name: "ylp-form-consents" }
 );
 
+export function ConsentPrivacyPolicy({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+  const { t, i18n } = useTranslation("yourloops");
+  const classes = formStyles();
+
+  const checkboxPolicy = (
+    <Checkbox
+      id={`${id}-checkbox-policy`}
+      className={classes.checkbox}
+      checked={checked}
+      onChange={onChange}
+      name="policy"
+      color="primary"
+    />
+  );
+  const privacyPolicy = t("privacy-policy");
+  const linkPrivacyPolicy = (
+    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer">
+      {privacyPolicy}
+    </Link>
+  );
+  const labelPrivacyPolicy = (
+    <Trans
+      i18nKey={`signup-consent-${userRole}-privacy-policy`}
+      t={t}
+      components={{ linkPrivacyPolicy }}
+      values={{ privacyPolicy }}
+      parent={React.Fragment}>
+      I have read and accepted YourLoops {privacyPolicy}.
+    </Trans>
+  );
+
+  return (
+    <FormControlLabel
+      id={`${id}-label-policy`}
+      control={checkboxPolicy}
+      label={labelPrivacyPolicy}
+      className={classes.formControlLabel}
+    />
+  );
+}
+
+export function ConsentTerms({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+  const { t, i18n } = useTranslation("yourloops");
+  const classes = formStyles();
+
+  const checkboxTerms = (
+    <Checkbox
+      id={`${id}-checkbox-terms`}
+      className={classes.checkbox}
+      checked={checked}
+      onChange={onChange}
+      name="terms"
+      color="primary"
+    />
+  );
+  const terms = t("terms-of-use");
+  const linkTerms = (
+    <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+      {terms}
+    </Link>
+  );
+  const labelTerms = (
+    <Trans
+      i18nKey={`signup-consent-${userRole}-terms-condition`}
+      t={t}
+      components={{ linkTerms }}
+      values={{ terms }}
+      parent={React.Fragment}>
+      I have read and accepted YourLoops {terms}.
+    </Trans>
+  );
+
+  return (
+    <FormControlLabel
+      id={`${id}-label-terms`}
+      control={checkboxTerms}
+      label={labelTerms}
+      className={classes.formControlLabel}
+    />
+  );
+}
+
+export function ConsentFeedback({ id, userRole, checked, onChange }: ConsentCheck): JSX.Element {
+  const { t } = useTranslation("yourloops");
+  const classes = formStyles();
+
+  const checkboxFeedback = (
+    <Checkbox
+      id={`${id}-checkbox-feedback`}
+      className={classes.checkbox}
+      checked={checked}
+      onChange={onChange}
+      name="feedback"
+      color="primary"
+    />
+  );
+  const labelFeedback = t(`consent-${userRole}-feedback`);
+
+  return (
+    <FormControlLabel
+      id={`${id}-label-feedback`}
+      control={checkboxFeedback}
+      label={labelFeedback}
+      className={classes.formControlLabel}
+    />
+  );
+}
+
 function ConsentForm(props: ConsentFormProps): JSX.Element {
   const {
     userRole,
@@ -71,8 +179,6 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     feedbackAccepted,
     setFeedbackAccepted,
   } = props;
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = formStyles();
 
   const showFeedback = typeof setFeedbackAccepted === "function" && userRole === UserRoles.hcp;
 
@@ -95,98 +201,16 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     }
   };
 
-  const checkboxPolicy = (
-    <Checkbox
-      id={`${id}-checkbox-policy`}
-      className={classes.checkbox}
-      checked={policyAccepted}
-      onChange={handleChange}
-      name="policy"
-      color="primary"
-    />
-  );
-  const privacyPolicy = t("privacy-policy");
-  const linkPrivacyPolicy = (
-    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer">
-      {privacyPolicy}
-    </Link>
-  );
-  const labelPrivacyPolicy = (
-    <Trans
-      i18nKey={`signup-consent-${userRole}-privacy-policy`}
-      t={t}
-      components={{ linkPrivacyPolicy }}
-      values={{ privacyPolicy }}
-      parent={React.Fragment}>
-      I have read and accepted YourLoops {privacyPolicy}.
-    </Trans>
-  );
-
-  const checkboxTerms = (
-    <Checkbox
-      id={`${id}-checkbox-terms`}
-      className={classes.checkbox}
-      checked={termsAccepted}
-      onChange={handleChange}
-      name="terms"
-      color="primary"
-    />
-  );
-  const terms = t("terms-of-use");
-  const linkTerms = (
-    <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
-      {terms}
-    </Link>
-  );
-  const labelTerms = (
-    <Trans
-      i18nKey={`signup-consent-${userRole}-terms-condition`}
-      t={t}
-      components={{ linkTerms }}
-      values={{ terms }}
-      parent={React.Fragment}>
-      I have read and accepted YourLoops {terms}.
-    </Trans>
-  );
-
   let formControlFeedback: JSX.Element | null = null;
   if (showFeedback) {
-    const checkboxFeedback = (
-      <Checkbox
-        id={`${id}-checkbox-feedback`}
-        className={classes.checkbox}
-        checked={feedbackAccepted}
-        onChange={handleChange}
-        name="feedback"
-        color="primary"
-      />
-    );
-    const labelFeedback = t(`consent-${userRole}-feedback`);
-    formControlFeedback = (
-      <FormControlLabel
-        id={`${id}-label-feedback`}
-        control={checkboxFeedback}
-        label={labelFeedback}
-        className={classes.formControlLabel}
-      />
-    );
+    formControlFeedback = <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />;
   }
 
   return (
     <FormControl id={`${id}-form`} className={className}>
       <FormGroup>
-        <FormControlLabel
-          id={`${id}-label-policy`}
-          control={checkboxPolicy}
-          label={labelPrivacyPolicy}
-          className={classes.formControlLabel}
-        />
-        <FormControlLabel
-          id={`${id}-label-terms`}
-          control={checkboxTerms}
-          label={labelTerms}
-          className={classes.formControlLabel}
-        />
+        <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
+        <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
         {formControlFeedback}
       </FormGroup>
     </FormControl>
