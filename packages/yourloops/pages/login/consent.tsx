@@ -33,7 +33,7 @@ import { ConsentPage as Consent } from "../../components/consents";
  * Consent Page
  */
 function ConsentPage(): JSX.Element {
-  return <Consent messageKey="constent-renew-message" />;
+  return <Consent messageKey="consent-renew-message" />;
 }
 
 export default ConsentPage;
