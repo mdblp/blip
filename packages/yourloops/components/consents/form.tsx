@@ -65,7 +65,7 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
 
   const checkboxPolicy = (
     <Checkbox
-      id={`${id}-checkbox-policy`}
+      id={`${id}-checkbox-privacy-policy`}
       className={classes.checkbox}
       checked={checked}
       onChange={onChange}
@@ -81,7 +81,7 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
   );
   const labelPrivacyPolicy = (
     <Trans
-      i18nKey={`signup-consent-${userRole}-privacy-policy`}
+      i18nKey={`consent-${userRole}-privacy-policy`}
       t={t}
       components={{ linkPrivacyPolicy }}
       values={{ privacyPolicy }}
@@ -92,7 +92,7 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
 
   return (
     <FormControlLabel
-      id={`${id}-label-policy`}
+      id={`${id}-label-privacy-policy`}
       control={checkboxPolicy}
       label={labelPrivacyPolicy}
       style={style}
@@ -123,7 +123,7 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
   );
   const labelTerms = (
     <Trans
-      i18nKey={`signup-consent-${userRole}-terms-condition`}
+      i18nKey={`consent-${userRole}-terms-of-use`}
       t={t}
       components={{ linkTerms }}
       values={{ terms }}
