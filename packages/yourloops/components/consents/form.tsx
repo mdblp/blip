@@ -35,6 +35,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Link from "@material-ui/core/Link";
+import Typography from "@material-ui/core/Typography";
 
 import { UserRoles } from "../../models/shoreline";
 import diabeloopUrl from "../../lib/diabeloop-url";
@@ -51,8 +52,14 @@ const formStyles = makeStyles(
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
       },
+      formGroup: {
+        textAlign: "left",
+      },
       checkbox: {
         marginBottom: "auto",
+      },
+      labelMandatory: {
+        marginLeft: theme.spacing(1) + 9, // eslint-disable-line no-magic-numbers
       },
     };
   },
@@ -175,6 +182,7 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     userRole,
     id,
     className,
+    group,
     policyAccepted,
     setPolicyAccepted,
     termsAccepted,
@@ -183,6 +191,8 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     setFeedbackAccepted,
   } = props;
 
+  const { t } = useTranslation("yourloops");
+  const classes = formStyles();
   const showFeedback = typeof setFeedbackAccepted === "function" && userRole === UserRoles.hcp;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -205,16 +215,19 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
   };
 
   let formControlFeedback: JSX.Element | null = null;
+  let mandatoryFields: JSX.Element | null = null;
   if (showFeedback) {
     formControlFeedback = <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />;
+    mandatoryFields = <Typography id={`${id}-label-mandatory`} variant="caption" className={classes.labelMandatory}>{t("consent-mandatory")}</Typography>;
   }
 
   return (
     <FormControl id={`${id}-form`} className={className}>
-      <FormGroup>
+      <FormGroup className={`${classes.formGroup} ${group ?? ""}`}>
         <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
         <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
         {formControlFeedback}
+        {mandatoryFields}
       </FormGroup>
     </FormControl>
   );

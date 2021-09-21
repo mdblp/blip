@@ -40,7 +40,10 @@ export interface ConsentCheck {
 export interface ConsentFormProps {
   userRole: UserRoles;
   id: string;
+  /** className for the FormControl */
   className?: string;
+  /** className for the FormGroup */
+  group?: string;
   policyAccepted: boolean;
   setPolicyAccepted: React.Dispatch<boolean>;
   termsAccepted: boolean;
