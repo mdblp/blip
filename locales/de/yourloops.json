@@ -155,7 +155,7 @@
   "consent-caregiver-terms-of-use": "I have read and accepted YourLoops <linkTerms>{{terms}}</linkTerms>. Hereby, I undertake to use YourLoops solely in accordance with these Terms of Use and what is allowed by the law.",
   "consent-hcp-privacy-policy": "I have read and accepted YourLoops <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>. Hereby, I consent to the processing of my personal data by Diabeloop so I can benefit from YourLoops services. *",
   "consent-hcp-terms-of-use": "I have read and accepted YourLoops <linkTerms>{{terms}}</linkTerms>. I confirm that I am an authorized healthcare practitioner according to local laws and regulation. I undertake to use YourLoops solely in accordance with these Terms of Use and what is allowed by the law. *",
-  "consent-hcp-feedback": "I agree to receive information and news from Diabeloop.",
+  "consent-hcp-feedback": "Ich bin damit einverstanden, Informationen und Neuigkeiten von Diabeloop zu erhalten.",
   "consent-mandatory": "* agreement mandatory to be able to use YourLoops",
   "signup-account-selection-error": "Sie müssen einen Kontotyp auswählen",
   "signup-account-selection-msg": "Wenn Sie ein DBL-System verwenden, müssen Sie Ihr Konto von Ihrem Handset aus erstellen. Sie können nicht mehrere Konten mit der gleichen E-Mail-Adresse erstellen.",
