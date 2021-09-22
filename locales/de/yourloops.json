@@ -155,7 +155,7 @@
   "consent-caregiver-terms-of-use": "Ich habe die <linkTerms>{{terms}}</linkTerms> für die Nutzung von YourLoops gelesen und akzeptiere diese. Hiermit verpflichte ich mich, YourLoops ausschließlich gemäß diesen Nutzungsbedingungen und den geltenden gesetzlichen Bestimmungen zu nutzen.",
   "consent-hcp-privacy-policy": "Ich habe die <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy> für die Nutzung von YourLoops gelesen und akzeptiere diese. Hiermit stimme ich für die Nutzung der YourLoops-Dienste der Verarbeitung meiner persönlichen Daten durch Diabeloop zu.",
   "consent-hcp-terms-of-use": "Ich habe die <linkTerms>{{terms}}</linkTerms> für die Nutzung von YourLoops gelesen und akzeptiere diese. Ich bestätige, dass ich eine gemäß den lokal geltenden Bestimmungen autorisierte medizinische Fachkraft bin. Ich verpflichte mich, YourLoops ausschließlich gemäß diesen Nutzungsbedingungen und den geltenden gesetzlichen Bestimmungen zu nutzen. ",
-  "consent-hcp-feedback": "Ich bin damit einverstanden, Informationen und Neuigkeiten von Diabeloop zu erhalten.",
+  "consent-hcp-feedback": "Ich bin damit einverstanden, Informationen und Neuigkeiten von Diabeloop zu erhalten. <i>(optional)</i>",
   "signup-account-selection-error": "Sie müssen einen Kontotyp auswählen",
   "signup-account-selection-msg": "Wenn Sie ein DBL-System verwenden, müssen Sie Ihr Konto von Ihrem Handset aus erstellen. Sie können nicht mehrere Konten mit der gleichen E-Mail-Adresse erstellen.",
   "signup-radiolabel-hcp-header": "Fachkraft",
