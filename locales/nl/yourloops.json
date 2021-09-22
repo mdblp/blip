@@ -155,7 +155,7 @@
   "consent-caregiver-terms-of-use": "Ik heb YourLoops <linkTerms>{{terms}}</linkTerms> gelezen en geaccepteerd. Hierbij verbind ik mij ertoe om YourLoops uitsluitend te gebruiken in overeenstemming met deze gebruiksvoorwaarden en wat wettelijk is toegestaan.",
   "consent-hcp-privacy-policy": "Ik heb de YourLoops <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy> gelezen en geaccepteerd. Hierbij geef ik toestemming voor het verwerken van mijn persoonlijke gegevens door Diabeloop zodat ik gebruik kan maken van de diensten van YourLoops.",
   "consent-hcp-terms-of-use": "Ik heb de YourLoops <linkTerms>{{terms}}</linkTerms> gelezen en geaccepteerd. Ik bevestig dat ik een bevoegde zorgverlener ben volgens de lokale wet- en regelgeving. Ik verbind mij ertoe YourLoops uitsluitend te gebruiken in overeenstemming met deze gebruiksvoorwaarden en met wat wettelijk is toegestaan. ",
-  "consent-hcp-feedback": "Ik ga akkoord met het ontvangen van informatie en nieuws van Diabeloop.",
+  "consent-hcp-feedback": "Ik ga akkoord met het ontvangen van informatie en nieuws van Diabeloop. <i>(optioneel)</i>",
   "signup-account-selection-error": "Je moet een accounttype kiezen",
   "signup-account-selection-msg": "Als je een DBL Systeem gebruikt, moet je je account aanmaken vanaf je handset. Je kunt niet meerdere accounts aanmaken met hetzelfde e-mail adres.",
   "signup-radiolabel-hcp-header": "Professioneel",
