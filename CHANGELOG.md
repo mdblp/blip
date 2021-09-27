@@ -7,13 +7,16 @@ It is based on Tidepool Blip 1.27.
 - YLP-950 Generate robot.txt and sitemap.xml
 - YLP-952 Add meta "description" to the index.html
 - YLP-972 Add United Kingdom
-- YLP-977 Re-send account activation link
 - YLP-987 HCP feedbacks consent
 ### Changed
 - YLP-925 Update glycemia unit conversion in blip
-- YLP-955 Sign-up consent next button should be greyed when boxes are not checked
 - YLP-958 Review text justification in modal windows
 - YLP-963 Updating urls of legal documents
+### Fixed
+- YLP-977 Re-send account activation link
+- YLP-982 Harmonize units in YourLoops
+- YLP-992 Modify email pronoun for a neutral form in German
+- YLP-955 Sign-up consent next button should be greyed when boxes are not checked
 ### Engineering Use
 - YLP-864 Add TU for lib notifications
 - YLP-688 Cleanup translation keys
