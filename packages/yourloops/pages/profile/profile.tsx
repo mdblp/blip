@@ -42,6 +42,10 @@ import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Assignment from "@material-ui/icons/Assignment";
+import Tune from "@material-ui/icons/Tune";
+import Box from "@material-ui/core/Box";
 
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
@@ -74,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginLeft: "1em",
     },
-    formControl: { marginTop: "1em", minWidth: 120 },
+    formControl: { marginTop: "1em" },
     homeIcon: {
       marginRight: "0.5em",
     },
@@ -109,6 +113,12 @@ const useStyles = makeStyles((theme: Theme) =>
       borderColor: theme.palette.grey[300],
       borderWidth: "1px",
       padding: "0 64px",
+    },
+    uppercase: {
+      textTransform: "uppercase",
+    },
+    halfWide: {
+      width: "calc(50% - 16px)",
     },
   })
 );
@@ -291,7 +301,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const onCancel = (): void => history.push(props.defaultURL);
 
-  let roleDependantPart: JSX.Element | null = null;
+  let roleDependantPart: JSX.Element | null;
   if (role === UserRoles.patient) {
     roleDependantPart = (
       <PatientProfileForm
@@ -339,53 +349,85 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           <DialogTitle className={classes.title} id="profile-title">
             {t("account-preferences")}
           </DialogTitle>
-          <TextField
-            id="profile-textfield-firstname"
-            label={t("firstname")}
-            value={firstName}
-            onChange={createHandleTextChange(setFirstName)}
-            error={errors.firstName}
-            helperText={errors.firstName && t("required-field")}
-            className={classes.textField}
-          />
-          <TextField
-            id="profile-textfield-lastname"
-            label={t("lastname")}
-            value={lastName}
-            onChange={createHandleTextChange(setLastName)}
-            error={errors.lastName}
-            helperText={errors.lastName && t("required-field")}
-            className={classes.textField}
-          />
+
+          <Box display="flex" justifyContent="flex-start" alignItems="end" mt={3}>
+            <AccountCircle color="primary" style={{ margin: "0" }} />
+            <Box ml={2}>
+              <strong className={classes.uppercase}>{t("personal-information")}</strong>
+            </Box>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between">
+            <TextField
+              id="profile-textfield-firstname"
+              label={t("firstname")}
+              value={firstName}
+              onChange={createHandleTextChange(setFirstName)}
+              error={errors.firstName}
+              helperText={errors.firstName && t("required-field")}
+              className={`${classes.textField} ${classes.halfWide}`}
+            />
+            <TextField
+              id="profile-textfield-lastname"
+              label={t("lastname")}
+              value={lastName}
+              onChange={createHandleTextChange(setLastName)}
+              error={errors.lastName}
+              helperText={errors.lastName && t("required-field")}
+              className={`${classes.textField} ${classes.halfWide}`}
+            />
+          </Box>
+
+          {role !== UserRoles.patient &&
+            <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
+              <Assignment color="primary" style={{ margin: "0" }} />
+              <Box ml={2}>
+                <strong className={classes.uppercase}>{t("my-credentials")}</strong>
+              </Box>
+            </Box>
+          }
 
           {roleDependantPart}
 
-          <FormControl className={classes.formControl}>
-            <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
-            <Select
-              disabled={role === UserRoles.patient}
-              labelId="unit-selector"
-              id="profile-units-selector"
-              value={unit}
-              onChange={createHandleSelectChange(setUnit)}>
-              <MenuItem id="profile-units-mmoll" value={Units.mole}>{Units.mole}</MenuItem>
-              <MenuItem id="profile-units-mgdl" value={Units.gram}>{Units.gram}</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
-            <Select
-              labelId="locale-selector"
-              id="profile-locale-selector"
-              value={lang}
-              onChange={createHandleSelectChange(setLang)}>
-              {availableLanguageCodes.map((languageCode) => (
-                <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
-                  {getLangName(languageCode)}
+          <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
+            <Tune color="primary" style={{ margin: "0" }} />
+            <Box ml={2}>
+              <strong className={classes.uppercase}>{t("preferences")}</strong>
+            </Box>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between">
+            <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+              <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
+              <Select
+                disabled={role === UserRoles.patient}
+                labelId="unit-selector"
+                id="profile-units-selector"
+                value={unit}
+                onChange={createHandleSelectChange(setUnit)}>
+                <MenuItem id="profile-units-mmoll" value={Units.mole}>
+                  {Units.mole}
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                <MenuItem id="profile-units-mgdl" value={Units.gram}>
+                  {Units.gram}
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+              <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
+              <Select
+                labelId="locale-selector"
+                id="profile-locale-selector"
+                value={lang}
+                onChange={createHandleSelectChange(setLang)}>
+                {availableLanguageCodes.map((languageCode) => (
+                  <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
+                    {getLangName(languageCode)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
 
           {formControlFeedback}
 

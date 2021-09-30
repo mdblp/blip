@@ -259,5 +259,8 @@
   "today": "Today",
   "units": "Units",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "personal-information": "Personnal Information",
+  "preferences": "Preferences",
+  "my-credentials": "My Credentials"
 }
