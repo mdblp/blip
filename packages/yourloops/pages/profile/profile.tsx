@@ -32,7 +32,12 @@ import bows from "bows";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Assignment from "@material-ui/icons/Assignment";
+import Tune from "@material-ui/icons/Tune";
+
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -42,10 +47,6 @@ import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import Assignment from "@material-ui/icons/Assignment";
-import Tune from "@material-ui/icons/Tune";
-import Box from "@material-ui/core/Box";
 
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
@@ -118,7 +119,17 @@ const useStyles = makeStyles((theme: Theme) =>
       textTransform: "uppercase",
     },
     halfWide: {
-      width: "calc(50% - 16px)",
+      [theme.breakpoints.up('sm')]: {
+        width: "calc(50% - 16px)",
+      },
+    },
+    inputContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      [theme.breakpoints.only('xs')]: {
+        flexDirection: "column",
+      },
     },
   })
 );
@@ -301,7 +312,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const onCancel = (): void => history.push(props.defaultURL);
 
-  let roleDependantPart: JSX.Element | null;
+  let roleDependantPart: JSX.Element | null = null;
   if (role === UserRoles.patient) {
     roleDependantPart = (
       <PatientProfileForm
@@ -314,17 +325,25 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     );
   } else {
     roleDependantPart = (
-      <AuthenticationForm
-        user={user}
-        classes={classes}
-        errors={errors}
-        currentPassword={currentPassword}
-        setCurrentPassword={setCurrentPassword}
-        password={password}
-        setPassword={setPassword}
-        passwordConfirmation={passwordConfirmation}
-        setPasswordConfirmation={setPasswordConfirmation}
-      />
+      <React.Fragment>
+        <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
+          <Assignment color="primary" style={{ margin: "0" }} />
+          <Box ml={2}>
+            <strong className={classes.uppercase}>{t("my-credentials")}</strong>
+          </Box>
+        </Box>
+        <AuthenticationForm
+          user={user}
+          classes={classes}
+          errors={errors}
+          currentPassword={currentPassword}
+          setCurrentPassword={setCurrentPassword}
+          password={password}
+          setPassword={setPassword}
+          passwordConfirmation={passwordConfirmation}
+          setPasswordConfirmation={setPasswordConfirmation}
+        />
+      </React.Fragment>
     );
   }
 
@@ -357,7 +376,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             </Box>
           </Box>
 
-          <Box display="flex" justifyContent="space-between">
+          <Box className={classes.inputContainer}>
             <TextField
               id="profile-textfield-firstname"
               label={t("firstname")}
@@ -378,15 +397,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             />
           </Box>
 
-          {role !== UserRoles.patient &&
-            <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
-              <Assignment color="primary" style={{ margin: "0" }} />
-              <Box ml={2}>
-                <strong className={classes.uppercase}>{t("my-credentials")}</strong>
-              </Box>
-            </Box>
-          }
-
           {roleDependantPart}
 
           <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
@@ -396,7 +406,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             </Box>
           </Box>
 
-          <Box display="flex" justifyContent="space-between">
+          <Box className={classes.inputContainer}>
             <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
               <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
               <Select
