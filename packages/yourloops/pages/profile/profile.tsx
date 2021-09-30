@@ -114,6 +114,9 @@ const useStyles = makeStyles((theme: Theme) =>
       borderColor: theme.palette.grey[300],
       borderWidth: "1px",
       padding: "0 64px",
+      [theme.breakpoints.only('xs')]: {
+        padding: 0,
+      },
     },
     uppercase: {
       textTransform: "uppercase",
