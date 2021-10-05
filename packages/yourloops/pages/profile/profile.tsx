@@ -417,7 +417,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                 labelId="unit-selector"
                 id="profile-units-selector"
                 value={unit}
-                onChange={createHandleSelectChange(setUnit)}>
+                onChange={createHandleSelectChange(setUnit)}
+              >
                 <MenuItem id="profile-units-mmoll" value={Units.mole}>
                   {Units.mole}
                 </MenuItem>

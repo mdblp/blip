@@ -29,28 +29,35 @@
 import * as React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { expect } from "chai";
-import { mount, ReactWrapper, ShallowWrapper } from "enzyme";
+import { mount, ReactWrapper } from "enzyme";
 
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
+import { authHookHcp, authHookPatient } from "../../lib/auth/hook.test";
 import { NotificationContextProvider } from "../../../lib/notifications";
-import ProfilePage from "../../../pages/profile";
-import { authHookHcp } from "../../lib/auth/hook.test";
 import { stubNotficationContextValue } from "../../lib/notifications/hook.test";
+import { Units } from "../../../models/generic";
+import { UserRoles } from "../../../models/shoreline";
+import PatientProfileForm from "../../../pages/profile/patient-form";
+import ProfilePage from "../../../pages/profile";
 
 function testProfile(): void {
-  let component: ReactWrapper | ShallowWrapper | null = null;
+  let component: ReactWrapper | null = null;
   const defaultUrl = "/professional/patients";
 
-  function ProfilePageTestComponent(): JSX.Element {
+  function ProfilePageTestComponent(props: AuthContext): JSX.Element {
     return (
       <BrowserRouter>
-        <AuthContextProvider value={authHookHcp}>
+        <AuthContextProvider value={props}>
           <NotificationContextProvider value={stubNotficationContextValue}>
             <ProfilePage defaultURL={defaultUrl} />
           </NotificationContextProvider>
         </AuthContextProvider>
       </BrowserRouter>
     );
+  }
+
+  function mountProfilePage(authHook: AuthContext): ReactWrapper {
+    return mount(<ProfilePageTestComponent {...authHook} />);
   }
 
   afterEach(() => {
@@ -61,9 +68,26 @@ function testProfile(): void {
   });
 
   it("should be able to render", () => {
-    component = mount(<ProfilePageTestComponent />);
+    component = mountProfilePage(authHookHcp);
     expect(component.exists("#profile-textfield-firstname")).to.be.true;
     expect(component.exists("#profile-button-save")).to.be.true;
+  });
+
+  it("should display mg/dL Units by default if not specified", () => {
+    const { user } = authHookHcp;
+    delete user?.settings?.units?.bg;
+    component = mountProfilePage(authHookHcp);
+    const selectValue = component.find("#profile-units-selector").first().prop("value");
+    expect(selectValue).to.be.equal(Units.gram);
+  });
+
+  it("should display birthdate if user is a patient", () => {
+    const { user } = authHookPatient;
+    if (user?.role === UserRoles.patient) {
+      component = mountProfilePage(authHookPatient);
+      expect(component.find(PatientProfileForm).prop("birthDate"))
+        .to.be.equal(user.profile?.patient?.birthday);
+    }
   });
 }
 

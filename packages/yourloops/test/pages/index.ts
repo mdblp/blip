@@ -29,11 +29,13 @@
 import testCaregiverPage from "./caregiver";
 import testHCPPage from "./hcp";
 import testNotificationsPage from "./notifications";
+import testProfilePage from "./profile";
 
 function testPages(): void {
   describe("HCP", testHCPPage);
   describe("Notifications Page", testNotificationsPage);
-  describe("HCP", testCaregiverPage);
+  describe("Caregiver", testCaregiverPage);
+  describe("Profile", testProfilePage);
 }
 
 export default testPages;

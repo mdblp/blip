@@ -29,9 +29,7 @@
 import testProfile from "./profile.test";
 
 function testProfilePage(): void {
-  describe("profile", () => {
-    describe("Profile page", testProfile);
-  });
+  describe("Profile page", testProfile);
 }
 
 export default testProfilePage;
