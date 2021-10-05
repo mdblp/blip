@@ -99,6 +99,22 @@ pipeline {
                 }
             }
         }
+        stage('Check for missing translations') {
+            when {
+                expression {
+                    env.GIT_BRANCH == "dblp"
+                }
+            }
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run check-locales'
+            }
+        }
         stage('Publish') {
             when {
                 expression {

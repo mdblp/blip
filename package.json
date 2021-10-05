@@ -11,6 +11,7 @@
     "mrproper": "npm run clean && lerna run mrproper",
     "postmrproper": "rm -rf node_modules cloudfront-dist/deployment/node_modules server/node_modules",
     "clean": "lerna exec -- rm -rf dist coverage deploy reports && lerna clean --yes",
+    "check-locales": "node ./verifylocales.js",
     "postclean": "rm -rf doc dist coverage",
     "info": "lerna info",
     "prebuild": "rm -rf dist",
