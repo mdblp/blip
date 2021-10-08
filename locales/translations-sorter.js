@@ -7,19 +7,29 @@
  */
 
 const fs = require('fs');
-const locales = ['de', 'en', 'es', 'fr', 'it', 'lol', 'nl'];
+const locales = ['de', 'en', 'es', 'fr', 'it', 'nl'];
+const files = ['yourloops.json', 'translation.json'];
 
-locales.forEach((locale) => {
-  const jsonFile = require(`./${locale}/yourloops.json`);
+/**
+ * @param {string} locale The language
+ * @param {string} filename The filename
+ */
+function sortKeysInFile(locale, filename) {
+  const jsonFilename = `./${locale}/${filename}`;
+  const jsonFile = require(jsonFilename);
   const sortedJson = Object.keys(jsonFile).sort().reduce((accumulator, currentValue) => {
     accumulator[currentValue] = jsonFile[currentValue];
     return accumulator;
   }, {});
 
   fs.writeFile(
-    `./locales/${locale}/yourloops.json`,
+    `./locales/${locale}/${filename}`,
     JSON.stringify(sortedJson, null, 2),
     (err) => {
-      console.log(err ? err : `Sort for -${locale}- done !`);
+      console.log(err ?? `Sort ${jsonFilename} done !`);
     });
+}
+
+locales.forEach((locale) => {
+  files.forEach((filename) => sortKeysInFile(locale, filename));
 });
