@@ -29,8 +29,8 @@
 import enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { init as i18nInit } from "../lib/language";
-// import testLib from "./lib";
-// import testComponents from "./components";
+import testLib from "./lib";
+import testComponents from "./components";
 import testPages from "./pages";
 
 enzyme.configure({
@@ -39,8 +39,8 @@ enzyme.configure({
 });
 
 i18nInit().then(() => {
-  // describe("Lib", testLib);
-  // describe("Components", testComponents);
+  describe("Lib", testLib);
+  describe("Components", testComponents);
   describe("Pages", testPages);
 }).catch((reason: unknown) => {
   console.error(reason);
