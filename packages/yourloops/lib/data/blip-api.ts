@@ -53,11 +53,11 @@ import {
 class BlipApi {
   private log: Console;
   private authHook: AuthContext;
-  public sendMetrics: typeof metrics.send;
+  public metrics: typeof metrics;
 
   constructor(authHook: AuthContext) {
     this.authHook = authHook;
-    this.sendMetrics = metrics.send;
+    this.metrics = metrics;
     this.log = bows("BlipAPI");
   }
 
