@@ -571,7 +571,7 @@ function testAPI(): void {
       expect(error).to.be.null;
       expect(fetchMock.callCount).to.be.equals(1);
       expect(fetchMock.getCall(0).args).to.be.deep.equals([
-        "http://localhost:8009/confirm/send/forgot/abcd?info=ok",
+        "http://localhost:8009/confirm/send/forgot/abcd",
         {
           method: "POST",
           cache: "no-store",
