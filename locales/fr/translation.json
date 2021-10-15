@@ -298,7 +298,7 @@
   "Within this basal segment, we are omitting a suspend event that didn't end. This may have resulted from changing the date & time settings on the device or switching to a new device. As a result, this basal segment may be inaccurate.": "Within this basal segment, we are omitting a suspend event that didn't end. This may have resulted from changing the date and time settings on the system or switching to a new system. As a result, this basal segment may be inaccurate.",
   "YYYY-MM-DD": "DD-MM-YYYY",
   "Year": "Année",
-  "abbrev_duration_day": "d",
+  "abbrev_duration_day": "j",
   "abbrev_duration_hour": "h",
   "abbrev_duration_minute": "min",
   "abbrev_duration_minute_m": "m",
