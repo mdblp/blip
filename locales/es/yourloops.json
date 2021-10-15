@@ -32,7 +32,7 @@
   "aria-none": "Ninguno",
   "aria-search": "buscar",
   "aria-table-list-caregivers": "Lista de cuidadores",
-  "aria-table-list-patient": "Patient's list",
+  "aria-table-list-patient": "Lista de pacientes",
   "aria-team-add-member-dialog-title": "Nuevo miembro de {{teamName}}",
   "aria-team-leave-dialog-question": "¿Seguro que desea abandonar el equipo de atención médica {{teamName}}?",
   "aria-team-leave-dialog-title": "Abandonar el equipo de atención médica",
