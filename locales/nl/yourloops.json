@@ -150,7 +150,7 @@
   "my-patients-title": "Mijn patiënten",
   "new-password": "Nieuw wachtwoord",
   "no-password": "Missing password",
-  "not-a-patient": "This person is not a patient",
+  "not-a-patient": "Deze persoon is geen patiënt",
   "not-logged-in": "Je bent niet aangemeld",
   "not-matching-password": "Wachtwoorden komen niet overeen",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wil zijn/haar diabetesgegevens met jou delen.",
