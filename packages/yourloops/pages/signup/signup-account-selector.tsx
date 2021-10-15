@@ -39,7 +39,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 
-import sendMetrics from "../../lib/metrics";
+import metrics from "../../lib/metrics";
 import RadioLabel from "./signup-radio-label";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
@@ -107,7 +107,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
   const valideForm = (): boolean => {
     if (_.isEmpty(state.formValues.accountRole)) {
       setError(true);
-      setHelperText("signup-account-selection-error");
+      setHelperText(t("signup-account-selection-error"));
       return false;
     }
     return true;
@@ -118,7 +118,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
     resetFormState();
     if (valideForm()) {
       handleNext();
-      sendMetrics("registration", "select_account_type", state.formValues.accountRole);
+      metrics.send("registration", "select_account_type", state.formValues.accountRole);
     }
   };
 
@@ -131,7 +131,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
         justifyContent: "center",
       }}>
       <FormControl id="signup-account-selector-form-control" component="fieldset" error={error} className={classes.FormControl}>
-        <FormHelperText className={classes.FormHelperText}>{t(helperText)}</FormHelperText>
+        <FormHelperText className={classes.FormHelperText}>{helperText}</FormHelperText>
         <RadioGroup
           id="signup-account-selector-radio-group"
           aria-label="account-selector"

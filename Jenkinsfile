@@ -5,7 +5,7 @@ pipeline {
         label 'blip'
     }
     environment {
-        node_version='12'
+        node_version='14'
     }
     stages {
         stage('Initialization') {
@@ -97,6 +97,17 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+        stage('Verify translations') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'npm run test-locales'
             }
         }
         stage('Publish') {

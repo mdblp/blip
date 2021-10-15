@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/* eslint-disable @typescript-eslint/no-var-requires */
+
 const path = require("path");
 const _ = require("lodash");
 
@@ -157,6 +157,7 @@ function updateDefaultConfig(projectName, karmaConfig, webpackConfig, typescript
   });
 
   updatedConfig = _.defaultsDeep(karmaConfig, defaultConfig);
+  updatedConfig.files.unshift('../../node-compat.js');
   updatedConfig.webpack = webpackConfig;
   updatedConfig.coverageIstanbulReporter.dir = path.join(__dirname, `coverage/${projectName}`);
   updatedConfig.junitReporter.name = projectName;

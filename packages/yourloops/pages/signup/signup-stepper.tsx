@@ -40,7 +40,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
 
-import sendMetrics from "../../lib/metrics";
+import metrics from "../../lib/metrics";
 import SignUpAccountForm from "./signup-account-form";
 import SignUpAccountSelector from "./signup-account-selector";
 import SignUpProfileForm from "./signup-profile-form";
@@ -69,7 +69,7 @@ export default function SignUpStepper() : JSX.Element {
   const { state, dispatch } = useSignUpFormState();
   const history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [tittle, setTitle] = React.useState("");
+  const [title, setTitle] = React.useState("");
   const steps = [
     "signup-steppers-step1",
     "signup-steppers-step2",
@@ -79,9 +79,9 @@ export default function SignUpStepper() : JSX.Element {
 
   React.useEffect(() => {
     if (!_.isEmpty(state.formValues?.accountRole)) {
-      setTitle(`signup-steppers-${state.formValues.accountRole}-title`);
+      setTitle(t(`signup-steppers-${state.formValues.accountRole}-title`));
     }
-  }, [state.formValues.accountRole]);
+  }, [state.formValues.accountRole, t]);
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -96,7 +96,7 @@ export default function SignUpStepper() : JSX.Element {
   };
 
   const handleLogin = () => {
-    sendMetrics("registration", "confirm_email", state.formValues.accountRole);
+    metrics.send("registration", "confirm_email", state.formValues.accountRole);
     dispatch({ type: "RESET_FORMVALUES" });
     history.push("/");
   };
@@ -132,7 +132,7 @@ export default function SignUpStepper() : JSX.Element {
     <div className={classes.root}>
       {activeStep > 0 && (
         <Typography color="primary" variant="h4" gutterBottom>
-          {t(tittle)}
+          {title}
         </Typography>
       )}
       <Stepper id="signup-stepper" activeStep={activeStep} alternativeLabel>
