@@ -33,8 +33,9 @@ import bows from "bows";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 
+import { HistoryState } from "../models/generic";
 import { UserRoles } from "../models/shoreline";
-import { useAuth } from "../lib/auth";
+import { useAuth, SessionTimeout } from "../lib/auth";
 import { setPageTitle } from "../lib/utils";
 import { NotificationContextProvider } from "../lib/notifications/hook";
 import { SnackbarContextProvider, DefaultSnackbarContext } from "./utils/snackbar";
@@ -43,19 +44,25 @@ import FooterLinks from "./footer-links";
 
 const log = bows("Routes");
 
-export const PublicRoute = (props: RouteProps): JSX.Element => {
-  const historyHook = useHistory<{ from?: { pathname?: string; }; }>();
-  const { isLoggedIn, user } = useAuth();
-  if (isLoggedIn() && user !== null) {
-    const pathname = historyHook.location.state?.from?.pathname ?? user.getHomePage();
-    log.info("User is logged-in, redirecting to", pathname);
-    return <Redirect to={{ pathname }} />;
-  }
+export const PublicRoute = (props: RouteProps): JSX.Element | null => {
+  const historyHook = useHistory<HistoryState>();
+  const { authInProgress, isLoggedIn, user } = useAuth();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   React.useEffect(() => {
     setPageTitle();
   });
+
+  if (authInProgress) {
+    log.info("PublicRoute: Auth in progress -> return null");
+    return null;
+  }
+
+  if (isLoggedIn && user !== null) {
+    const pathname = historyHook.location.state?.from?.pathname ?? user.getHomePage();
+    log.info("PublicRoute: User is logged-in, redirecting to", pathname);
+    return <Redirect to={{ pathname }} />;
+  }
 
   return (
     <ThemeProvider theme={externalTheme}>
@@ -68,14 +75,20 @@ export const PublicRoute = (props: RouteProps): JSX.Element => {
   );
 };
 
-export const PrivateRoute = (props: RouteProps): JSX.Element => {
-  const historyHook = useHistory<{ from?: { pathname?: string; }; }>();
-  const { isLoggedIn, user } = useAuth();
+export const PrivateRoute = (props: RouteProps): JSX.Element | null => {
+  const historyHook = useHistory<HistoryState>();
+  const { authInProgress, isLoggedIn, user } = useAuth();
 
   const renewConsentPath = props.path === "/renew-consent" || props.path === "/new-consent";
   const theme = renewConsentPath ? externalTheme : mainTheme;
 
-  if (!isLoggedIn()) {
+  if (authInProgress) {
+    log.info("PrivateRoute: Auth in progress -> return null");
+    return null;
+  }
+
+  if (!isLoggedIn) {
+    log.info("PrivateRoute: Not logged-in -> redirect to login page");
     return <Redirect to={{ pathname: "/", state: { from: props.location } }} />;
   }
 
@@ -101,6 +114,7 @@ export const PrivateRoute = (props: RouteProps): JSX.Element => {
 
   return (
     <ThemeProvider theme={theme}>
+      <SessionTimeout />
       <CssBaseline />
       <SnackbarContextProvider context={DefaultSnackbarContext}>
         <NotificationContextProvider>
