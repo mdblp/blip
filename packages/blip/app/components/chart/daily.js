@@ -176,7 +176,7 @@ class DailyChart extends React.Component {
     );
   }
 
-  handleWindowResize = ({windowHeight: height, windowWidth: width}) => {
+  handleWindowResize = ({ windowHeight: height, windowWidth: width }) => {
     const { loading } = this.props;
     const { windowHeight, windowWidth, chart } = this.state;
     this.log.debug("handleWindowResize", { windowHeight, windowWidth }, "=>", { height, width });
@@ -272,6 +272,7 @@ class Daily extends React.Component {
       atMostRecent: this.isAtMostRecent(),
       inTransition: false,
       title: this.getTitle(props.epochLocation),
+      date: props.epochLocation,
       tooltip: null,
     };
   }
@@ -290,7 +291,7 @@ class Daily extends React.Component {
 
   render() {
     const { tidelineData, epochLocation, msRange, trackMetric, loading } = this.props;
-    const { inTransition, atMostRecent, tooltip, title } = this.state;
+    const { inTransition, atMostRecent, tooltip, title, date } = this.state;
     const { timePrefs } = tidelineData.opts;
     const endpoints = this.getEndpoints();
 
@@ -304,6 +305,7 @@ class Daily extends React.Component {
           atMostRecent={atMostRecent}
           loading={loading}
           title={title}
+          date={date}
           prefixURL={this.props.prefixURL}
           iconBack="icon-back"
           iconNext="icon-next"
@@ -399,8 +401,8 @@ class Daily extends React.Component {
 
   getEndpoints() {
     const { epochLocation, msRange } = this.props;
-    const start = moment.utc(epochLocation - msRange/2).toISOString();
-    const end = moment.utc(epochLocation + msRange/2).toISOString();
+    const start = moment.utc(epochLocation - msRange / 2).toISOString();
+    const end = moment.utc(epochLocation + msRange / 2).toISOString();
     return [start, end];
   }
 
