@@ -3,6 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Added
+- YLP-967 Add a popup calendar on daily view
 ### Changed
 - YLP-662 Rework events tagging for Matomo
 - YLP-996 Restructure account preferences page
