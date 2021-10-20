@@ -34,7 +34,7 @@ class LocalizedUtils extends DayjsUtils {
   }
 }
 
-const MUIDatePicker = ({ date, title }: Props): JSX.Element => {
+const MUIDatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
   const { t } = useTranslation("yourloops");
   const [selectedDate, handleDateChange] = useState(date as MaterialUiPickersDate);
   const [isOpen, setIsOpen] = useState(false);

@@ -30,6 +30,7 @@ import { AppConfig } from "../../yourloops/models/config";
 import { IUser } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
 import ProfileDialog from "../../yourloops/components/profile-dialog";
+import MUIDatePicker from "../../yourloops/components/datepicker/mui-datepicker";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import { MessageNote } from "../../yourloops/models/message";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
@@ -40,6 +41,7 @@ interface BlipProperties {
   patient: IUser;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
+  muiDatePicker: typeof MUIDatePicker;
 }
 
 // FIXME: For some reason, the yourloops auth hook
