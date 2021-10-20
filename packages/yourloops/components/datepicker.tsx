@@ -9,10 +9,10 @@ import 'dayjs/locale/fr';
 import 'dayjs/locale/it';
 import 'dayjs/locale/nl';
 
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
-import { getCurrentLang } from "../../lib/language";
+import { getCurrentLang } from "../lib/language";
 
 interface Props {
   date: MaterialUiPickersDate;
@@ -34,7 +34,7 @@ class LocalizedUtils extends DayjsUtils {
   }
 }
 
-const MUIDatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
+const DatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
   const { t } = useTranslation("yourloops");
   const [selectedDate, handleDateChange] = useState(date as MaterialUiPickersDate);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +57,7 @@ const MUIDatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
 
   return (
     <MuiPickersUtilsProvider utils={LocalizedUtils}>
-      <DatePicker
+      <MuiDatePicker
         value={selectedDate}
         onChange={handleDateChange}
         open={isOpen}
@@ -72,4 +72,4 @@ const MUIDatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
   );
 };
 
-export default MUIDatePicker;
+export default DatePicker;

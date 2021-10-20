@@ -323,7 +323,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, muiDatePicker } = this.props;
+    const { patient, profileDialog, prefixURL, datePicker } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -365,7 +365,7 @@ class PatientDataPage extends React.Component {
         <Route path={`${prefixURL}/daily`}>
           <Daily
             profileDialog={this.showProfileDialog ? profileDialog : null}
-            muiDatePicker={muiDatePicker}
+            datePicker={datePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             dataUtil={this.dataUtil}
@@ -1001,7 +1001,7 @@ PatientDataPage.propTypes = {
   patient: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
-  muiDatePicker: PropTypes.func.isRequired,
+  datePicker: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
 };

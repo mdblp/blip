@@ -39,6 +39,8 @@ class TidelineHeader extends React.Component {
   static propTypes = {
     patient: PropTypes.object,
     title: PropTypes.node.isRequired,
+    date: PropTypes.number,
+    datePicker: PropTypes.func,
     chartType: PropTypes.string.isRequired,
     prefixURL: PropTypes.string,
     inTransition: PropTypes.bool,
@@ -72,7 +74,7 @@ class TidelineHeader extends React.Component {
 
   renderStandard() {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
-    const { profileDialog: ProfileDialog } = this.props;
+    const { profileDialog: ProfileDialog, datePicker: DatePicker } = this.props;
 
     const printViews = ["basics", "daily", "bgLog", "settings"];
     const showPrintLink = _.includes(printViews, chartType);
@@ -186,6 +188,11 @@ class TidelineHeader extends React.Component {
       );
     }
 
+    let datePicker = null;
+    if (_.isFunction(DatePicker)) {
+      datePicker = (<DatePicker date={this.props.date} title={this.props.title} />);
+    }
+
     return (
       <div className="grid patient-data-subnav">
         {profileDialog}
@@ -202,7 +209,7 @@ class TidelineHeader extends React.Component {
         </div>
         <div className="patient-data-subnav-center" id="tidelineLabel">
           {this.renderNavButton(backClass, this.props.onClickBack, this.props.iconBack, backDisabled)}
-          <div className={dateLinkClass}>{this.props.title}</div>
+          {datePicker}
           {this.renderNavButton(nextClass, this.props.onClickNext, this.props.iconNext, nextDisabled)}
           {this.renderNavButton(mostRecentClass, this.props.onClickMostRecent, this.props.iconMostRecent, mostRecentDisabled)}
         </div>

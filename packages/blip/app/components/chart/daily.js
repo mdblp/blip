@@ -256,7 +256,7 @@ class Daily extends React.Component {
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     profileDialog: PropTypes.func,
-    muiDatePicker: PropTypes.func,
+    datePicker: PropTypes.func,
     prefixURL: PropTypes.string,
   };
   static defaultProps = {
@@ -300,7 +300,7 @@ class Daily extends React.Component {
       <div id="tidelineMain" className="daily">
         <Header
           profileDialog={this.props.profileDialog}
-          muiDatePicker={this.props.muiDatePicker}
+          datePicker={this.props.datePicker}
           chartType={this.chartType}
           patient={this.props.patient}
           inTransition={inTransition}

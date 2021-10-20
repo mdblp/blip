@@ -62,7 +62,7 @@ function ReduxProvider(props) {
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
-        muiDatePicker={props.muiDatePicker}
+        datePicker={props.datePicker}
       />
     </Provider>
   );
@@ -73,7 +73,7 @@ ReduxProvider.propTypes = {
   patient: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
-  muiDatePicker: PropTypes.func.isRequired,
+  datePicker: PropTypes.func.isRequired,
 };
 
 /**
@@ -82,7 +82,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, profileDialog, prefixURL, muiDatePicker } = props;
+      const { config, api, patient, profileDialog, prefixURL, datePicker } = props;
       updateConfig(config);
 
       return (
@@ -91,7 +91,7 @@ function Blip(props) {
           patient={patient}
           profileDialog={profileDialog}
           prefixURL={prefixURL}
-          muiDatePicker={muiDatePicker}
+          datePicker={datePicker}
         />
       );
     } catch (err) {
@@ -109,7 +109,7 @@ Blip.propTypes = {
   patient: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
-  muiDatePicker: PropTypes.func.isRequired,
+  datePicker: PropTypes.func.isRequired,
 };
 
 export { cleanStore };

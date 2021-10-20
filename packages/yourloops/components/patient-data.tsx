@@ -44,7 +44,7 @@ import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
 
 import ProfileDialog from "./profile-dialog";
-import MUIDatePicker from "./datepicker/mui-datepicker";
+import DatePicker from "./datepicker";
 
 interface PatientDataPageProps {
   prefixURL: string;
@@ -138,7 +138,7 @@ function PatientDataPage(props: PatientDataPageProps): JSX.Element | null {
         patient={patient}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
-        muiDatePicker={MUIDatePicker}
+        datePicker={DatePicker}
       />
     </Container>
   );
