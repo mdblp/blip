@@ -104,6 +104,7 @@ class TidelineHeader extends React.Component {
       "patient-data-subnav-hidden": chartType === "no-data",
     });
 
+    /*
     const dateLinkClass = cx({
       "js-date": true,
       "patient-data-subnav-text":
@@ -118,6 +119,7 @@ class TidelineHeader extends React.Component {
       "patient-data-subnav-dates-trends": chartType === "trends",
       "patient-data-subnav-hidden": chartType === "no-data",
     });
+     */
 
     const mostRecentDisabled = atMostRecent || inTransition || loading;
     const mostRecentClass = cx({

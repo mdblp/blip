@@ -1,15 +1,15 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import i18next from 'i18next';
+import React, { FunctionComponent, useEffect, useState } from "react";
+import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import DayjsUtils from '@date-io/dayjs';
+import DayjsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
-import 'dayjs/locale/de';
-import 'dayjs/locale/es';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/it';
-import 'dayjs/locale/nl';
+import "dayjs/locale/de";
+import "dayjs/locale/es";
+import "dayjs/locale/fr";
+import "dayjs/locale/it";
+import "dayjs/locale/nl";
 
-import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 import { getCurrentLang } from "../lib/language";
@@ -30,7 +30,7 @@ class LocalizedUtils extends DayjsUtils {
   }
 
   getDatePickerHeaderText(date: MaterialUiPickersDate) {
-    return dayjs(date).format(i18next.t('MMM D, YYYY'));
+    return dayjs(date).format(i18next.t("MMM D, YYYY"));
   }
 }
 
@@ -62,7 +62,7 @@ const DatePicker: FunctionComponent<Props> = ({ date, title }: Props) => {
         onChange={handleDateChange}
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        format={i18next.t('ddd, MMM D, YYYY')}
+        format={i18next.t("ddd, MMM D, YYYY")}
         cancelLabel={t("button-cancel")}
         orientation={window.innerWidth > 600 ? "landscape" : "portrait"}
         disableFuture
