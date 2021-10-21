@@ -11,7 +11,7 @@ const eslintTSConfig = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: path.resolve(__dirname, "packages/yourloops", "tsconfig.test.json"),
+    project: path.resolve(__dirname, "packages/yourloops/test", "tsconfig.json"),
   },
   plugins: ["@typescript-eslint", "moment-utc", "react", "react-hooks"],
   extends: [
