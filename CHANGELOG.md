@@ -6,8 +6,11 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-662 Rework events tagging for Matomo
 - YLP-996 Restructure account preferences page
+
 ### Fixed
 - YLP-1041 Fix potential crash in YourLoops when rendering the PDF
+- YLP-1002 Allow patients to receive the email "forgot password" from yourloops
+
 ### Engineering Use
 - YLP-1042 Bump some dependencies
 - YLP-1049 Bump node to v14
