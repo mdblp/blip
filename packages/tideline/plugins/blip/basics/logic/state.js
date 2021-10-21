@@ -38,7 +38,7 @@ import togglableState from "../TogglableState";
 
 function basicsState(source, manufacturer) {
   const t = i18next.t.bind(i18next);
-  const automatedLabel = t(_.get(AUTOMATED_BASAL_LABELS, source, AUTOMATED_BASAL_LABELS.default));
+  const automatedLabel = _.get(AUTOMATED_BASAL_LABELS, source, AUTOMATED_BASAL_LABELS.default);
   const siteChangesTitle = _.get(
     _.get(SITE_CHANGE_BY_MANUFACTURER, manufacturer, SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
     "label"
@@ -62,19 +62,19 @@ function basicsState(source, manufacturer) {
           rows:
             source === "Diabeloop"
               ? [
-                  [
-                    // { key: 'temp', label: t('Temp Basals') },
-                    { key: "automatedStart", label: t("{{automatedLabel}}", { automatedLabel }) },
-                    { key: "automatedStop", label: t("{{automatedLabel}} Exited", { automatedLabel }) },
-                  ],
-                ]
-              : [
-                  [
-                    { key: "temp", label: t("Temp Basals") },
-                    { key: "suspend", label: t("Suspends") },
-                    { key: "automatedStop", label: t("{{automatedLabel}} Exited", { automatedLabel }) },
-                  ],
+                [
+                  // { key: 'temp', label: t('Temp Basals') },
+                  { key: "automatedStart", label: automatedLabel },
+                  { key: "automatedStop", label: t("{{automatedLabel}} Exited", { automatedLabel }) },
                 ],
+              ]
+              : [
+                [
+                  { key: "temp", label: t("Temp Basals") },
+                  { key: "suspend", label: t("Suspends") },
+                  { key: "automatedStop", label: t("{{automatedLabel}} Exited", { automatedLabel }) },
+                ],
+              ],
         },
         settingsTogglable: togglableState.off,
         title: t("Basals"),
@@ -95,24 +95,24 @@ function basicsState(source, manufacturer) {
           rows:
             source === "Diabeloop"
               ? [
-                  [
-                    { key: "wizard", label: t("Calculator"), percentage: true },
-                    { key: "manual", label: t("Micro-bolus"), percentage: true },
-                    { key: "interrupted", label: t("Interrupted"), percentage: true },
-                  ],
-                ]
-              : [
-                  [
-                    { key: "wizard", label: t("Calculator"), percentage: true },
-                    { key: "correction", label: t("Correction"), percentage: true },
-                    { key: "override", label: t("Override"), percentage: true },
-                  ],
-                  [
-                    { key: "extended", label: t("Extended"), percentage: true },
-                    { key: "interrupted", label: t("Interrupted"), percentage: true },
-                    { key: "underride", label: t("Underride"), percentage: true },
-                  ],
+                [
+                  { key: "wizard", label: t("Calculator"), percentage: true },
+                  { key: "manual", label: t("micro-bolus"), percentage: true },
+                  { key: "interrupted", label: t("Interrupted"), percentage: true },
                 ],
+              ]
+              : [
+                [
+                  { key: "wizard", label: t("Calculator"), percentage: true },
+                  { key: "correction", label: t("Correction"), percentage: true },
+                  { key: "override", label: t("Override"), percentage: true },
+                ],
+                [
+                  { key: "extended", label: t("Extended"), percentage: true },
+                  { key: "interrupted", label: t("Interrupted"), percentage: true },
+                  { key: "underride", label: t("Underride"), percentage: true },
+                ],
+              ],
         },
         settingsTogglable: togglableState.off,
         title: t("Bolusing"),
@@ -127,7 +127,7 @@ function basicsState(source, manufacturer) {
         hoverDisplay: React.createFactory(InfusionHoverDisplay),
         id: "siteChanges",
         index: 3,
-        noDataMessage: source === "Diabeloop" ? "" : t("Infusion site changes are not yet available for all pumps. Coming soon!"),
+        noDataMessage: "",
         togglable: togglableState.off,
         selector: React.createFactory(SiteChangeSelector),
         selectorOptions: {

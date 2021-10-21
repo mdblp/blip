@@ -27,7 +27,7 @@
  */
 
 import _ from "lodash";
-import * as React from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -135,7 +135,7 @@ function RequestPasswordResetPage(): JSX.Element {
           }}>
           <img
             src={brandingLogo}
-            alt={t("Login Branding Logo")}
+            alt={t("alt-img-logo")}
             style={{
               height: "60px",
               marginLeft: "auto",

@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -115,7 +115,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           onChange={handleChangeEMail}
           name="email"
           value={email}
-          label={t("Email")}
+          label={t("email")}
           required={true}
           aria-required="true"
           type="email"

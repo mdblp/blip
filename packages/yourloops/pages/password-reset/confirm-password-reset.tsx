@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -84,7 +84,7 @@ function ConfirmPasswordResetPage(): JSX.Element {
               }}>
               <img
                 src={brandingLogo}
-                alt={t("Login Branding Logo")}
+                alt={t("alt-img-logo")}
                 style={{
                   height: "60px",
                   marginLeft: "auto",

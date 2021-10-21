@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
+import React from "react";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
 
@@ -118,7 +118,7 @@ function TeamsPage(): JSX.Element | null {
       }
     } catch (reason: unknown) {
       log.error("onShowEditTeamDialog", reason, errorTextFromException(reason));
-      let message = '';
+      let message = "";
       if (team === null) {
         message = t("team-page-failed-create");
       } else {
@@ -144,12 +144,16 @@ function TeamsPage(): JSX.Element | null {
       const onlyMember = !((team.members.length ?? 0) > 1);
       try {
         await teamHook.leaveTeam(team);
-        const message = teamHook.teamHasOnlyOneMember(team) ? t("team-page-success-deleted") : t("team-page-leave-success");
+        const message = teamHook.teamHasOnlyOneMember(team)
+          ? t("team-page-success-deleted")
+          : t("team-page-leave-success");
         alert.success(message);
         return true;
       } catch (reason: unknown) {
         log.error("handleShowLeaveTeamDialog", reason);
-        const message = onlyMember ? t("team-page-failure-deleted"): t("team-page-failed-leave");
+        const message = onlyMember
+          ? t("team-page-failure-deleted")
+          : t("team-page-failed-leave");
         alert.error(message);
       }
     }

@@ -8,12 +8,17 @@ It is based on Tidepool Blip 1.27.
 - YLP-996 Restructure account preferences page
 
 ### Fixed
+- YLP-1012 Translation missing in Loop mode widget
 - YLP-1041 Fix potential crash in YourLoops when rendering the PDF
 - YLP-1002 Allow patients to receive the email "forgot password" from yourloops
 
 ### Engineering Use
+- YLP-1029 Add a build step to verify translations
 - YLP-1042 Bump some dependencies
 - YLP-1049 Bump node to v14
+- YLP-1051 Allow to verify with eslint js files outside main packages
+- YLP-1053 Remove lolcat language and Crowdin build
+- YLP-1054 Harmonize ESLint configuration (ts/js) and fix source files
 
 ## 2.0.4 - 2021-09-27
 ### Added

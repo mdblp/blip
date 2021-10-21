@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { ClassNameMap } from "@material-ui/styles/withStyles";
@@ -67,7 +67,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     <React.Fragment>
       <TextField
         id="profile-textfield-mail"
-        label={t("Email")}
+        label={t("email")}
         value={getUserEmail(user)}
         disabled
         className={classes.textField}
