@@ -32,15 +32,12 @@ const t = i18next.t.bind(i18next);
 class TidelineHeader extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = { isDialogOpen: false };
   }
 
   static propTypes = {
+    children: PropTypes.node,
     patient: PropTypes.object,
-    title: PropTypes.node.isRequired,
-    date: PropTypes.number,
-    datePicker: PropTypes.func,
     chartType: PropTypes.string.isRequired,
     prefixURL: PropTypes.string,
     inTransition: PropTypes.bool,
@@ -74,7 +71,7 @@ class TidelineHeader extends React.Component {
 
   renderStandard() {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
-    const { profileDialog: ProfileDialog, datePicker: DatePicker } = this.props;
+    const { profileDialog: ProfileDialog, children } = this.props;
 
     const printViews = ["basics", "daily", "bgLog", "settings"];
     const showPrintLink = _.includes(printViews, chartType);
@@ -104,22 +101,20 @@ class TidelineHeader extends React.Component {
       "patient-data-subnav-hidden": chartType === "no-data",
     });
 
-    /*
-    const dateLinkClass = cx({
-      "js-date": true,
-      "patient-data-subnav-text":
-        chartType === "basics" ||
-        chartType === "daily" ||
-        chartType === "bgLog" ||
-        chartType === "trends",
-      "patient-data-subnav-disabled": inTransition || loading,
-      "patient-data-subnav-dates-basics": chartType === "basics",
-      "patient-data-subnav-dates-daily": chartType === "daily",
-      "patient-data-subnav-dates-bgLog": chartType === "bgLog",
-      "patient-data-subnav-dates-trends": chartType === "trends",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-     */
+    // const dateLinkClass = cx({
+    //   "js-date": true,
+    //   "patient-data-subnav-text":
+    //     chartType === "basics" ||
+    //     chartType === "daily" ||
+    //     chartType === "bgLog" ||
+    //     chartType === "trends",
+    //   "patient-data-subnav-disabled": inTransition || loading,
+    //   "patient-data-subnav-dates-basics": chartType === "basics",
+    //   "patient-data-subnav-dates-daily": chartType === "daily",
+    //   "patient-data-subnav-dates-bgLog": chartType === "bgLog",
+    //   "patient-data-subnav-dates-trends": chartType === "trends",
+    //   "patient-data-subnav-hidden": chartType === "no-data",
+    // });
 
     const mostRecentDisabled = atMostRecent || inTransition || loading;
     const mostRecentClass = cx({
@@ -190,11 +185,6 @@ class TidelineHeader extends React.Component {
       );
     }
 
-    let datePicker = null;
-    if (_.isFunction(DatePicker)) {
-      datePicker = (<DatePicker date={this.props.date} title={this.props.title} />);
-    }
-
     return (
       <div className="grid patient-data-subnav">
         {profileDialog}
@@ -211,7 +201,7 @@ class TidelineHeader extends React.Component {
         </div>
         <div className="patient-data-subnav-center" id="tidelineLabel">
           {this.renderNavButton(backClass, this.props.onClickBack, this.props.iconBack, backDisabled)}
-          {datePicker}
+          {children}
           {this.renderNavButton(nextClass, this.props.onClickNext, this.props.iconNext, nextDisabled)}
           {this.renderNavButton(mostRecentClass, this.props.onClickMostRecent, this.props.iconMostRecent, mostRecentDisabled)}
         </div>

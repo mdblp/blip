@@ -530,7 +530,6 @@ class Trends extends React.Component {
         patient={this.props.patient}
         inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
-        title={title}
         prefixURL={this.props.prefixURL}
         canPrint={this.props.canPrint}
         trackMetric={this.props.trackMetric}
@@ -544,7 +543,10 @@ class Trends extends React.Component {
         onClickMostRecent={this.handleClickMostRecent}
         onClickNext={this.handleClickForward}
         onClickOneDay={this.handleClickDaily}
-        onClickSettings={this.handleClickSettings} />
+        onClickSettings={this.handleClickSettings}
+      >
+        {title}
+      </Header>
     );
   }
 

@@ -57,7 +57,6 @@ class Basics extends React.Component {
           patient={this.props.patient}
           atMostRecent={true}
           inTransition={inTransition}
-          title={title}
           prefixURL={this.props.prefixURL}
           canPrint={this.props.canPrint}
           trackMetric={this.props.trackMetric}
@@ -67,7 +66,10 @@ class Basics extends React.Component {
           onClickTrends={this.handleClickTrends}
           onClickRefresh={this.props.onClickRefresh}
           onClickSettings={this.props.onSwitchToSettings}
-          onClickPrint={this.props.onClickPrint} />
+          onClickPrint={this.props.onClickPrint}
+        >
+          {title}
+        </Header>
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">

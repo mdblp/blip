@@ -31,7 +31,7 @@ import BgSourceToggle from "./bgSourceToggle";
 import Header from "./header";
 import Footer from "./footer";
 
-/** @typedef {import('tideline').TidelineData} TidelineData */
+/** @typedef {import("tideline").TidelineData} TidelineData */
 
 const Loader = vizComponents.Loader;
 const BolusTooltip = vizComponents.BolusTooltip;
@@ -291,23 +291,25 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading } = this.props;
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, datePicker: DatePicker } = this.props;
     const { inTransition, atMostRecent, tooltip, title, date } = this.state;
     const { timePrefs } = tidelineData.opts;
     const endpoints = this.getEndpoints();
+
+    let datePicker = null;
+    if (_.isFunction(DatePicker)) {
+      datePicker = (<DatePicker date={date} title={title} />);
+    }
 
     return (
       <div id="tidelineMain" className="daily">
         <Header
           profileDialog={this.props.profileDialog}
-          datePicker={this.props.datePicker}
           chartType={this.chartType}
           patient={this.props.patient}
           inTransition={inTransition}
           atMostRecent={atMostRecent}
           loading={loading}
-          title={title}
-          date={date}
           prefixURL={this.props.prefixURL}
           iconBack="icon-back"
           iconNext="icon-next"
@@ -323,7 +325,9 @@ class Daily extends React.Component {
           onClickOneDay={this.handleClickOneDay}
           onClickSettings={this.props.onSwitchToSettings}
           onClickPrint={this.props.onClickPrint}
-        />
+        >
+          {datePicker}
+        </Header>
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
             <div className="patient-data-content">
