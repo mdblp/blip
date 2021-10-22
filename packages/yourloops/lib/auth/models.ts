@@ -82,8 +82,8 @@ export interface AuthContext {
   sessionToken: string | null;
   traceToken: string | null;
   isLoggedIn: boolean;
-  authInProgress: boolean;
-  initialized: () => boolean;
+  isAuthInProgress: boolean;
+  isAuthHookInitialized: boolean;
   session: () => Session | null;
   /** Change the hook user, and update the storage. No API change! */
   setUser: (user: User) => void;

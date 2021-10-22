@@ -82,13 +82,13 @@ function testSessionTimeout(): void {
     resetAuthHookStubs(authHookHcpStubs, loggedInUsers.hcpSession);
   });
 
-  it("should do nothing if authInProgress is true", async () => {
-    authHookHcpStubs.authInProgress = true;
+  it("should do nothing if isAuthInProgress is true", async () => {
+    authHookHcpStubs.isAuthInProgress = true;
     await mountSessionTimeoutComponent(authHookHcpStubs);
     expect(window.clearSessionTimeout).to.be.undefined;
   });
 
-  it("should setup the test interval if authInProgress is false", async () => {
+  it("should setup the test interval if isAuthInProgress is false", async () => {
     await mountSessionTimeoutComponent(authHookHcpStubs);
     expect(window.clearSessionTimeout).to.be.a("function");
 

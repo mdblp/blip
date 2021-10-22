@@ -52,8 +52,8 @@ export interface AuthContextStubs {
   sessionToken: string | null;
   traceToken: string | null;
   isLoggedIn: boolean;
-  authInProgress: boolean;
-  initialized: sinon.SinonStub<[], boolean>;
+  isAuthInProgress: boolean;
+  isAuthHookInitialized: boolean;
   session: sinon.SinonStub<[], Session|null>;
   setUser: sinon.SinonStub<[User], void>;
   login: sinon.SinonStub<[string, string, string|null], Promise<User>>;
@@ -80,9 +80,9 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   sessionToken: session.sessionToken,
   traceToken: session.traceToken,
   isLoggedIn: true,
-  authInProgress: false,
+  isAuthInProgress: false,
+  isAuthHookInitialized: true,
   session: sinon.stub<[], Session | null>().returns(session),
-  initialized: sinon.stub<[], boolean>().returns(true),
   setUser: sinon.stub<[User], void>(),
   login: sinon.stub<[string, string, string|null], Promise<User>>().resolves(session.user),
   logout: sinon.stub<[boolean|undefined], Promise<void>>().resolves(),
@@ -110,7 +110,8 @@ export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Sessio
   hookStubs.sessionToken = session.sessionToken;
   hookStubs.traceToken = session.traceToken;
   hookStubs.isLoggedIn = typeof session === "object";
-  hookStubs.authInProgress = false;
+  hookStubs.isAuthInProgress = false;
+  hookStubs.isAuthHookInitialized = true;
 
   hookStubs.logout.resetHistory();
   hookStubs.logout.resetBehavior();
@@ -173,7 +174,7 @@ function testHook(): void {
       });
     });
     expect(authContext, "authContext").to.be.not.null;
-    expect(authContext.initialized(), "initialized").to.be.true;
+    expect(authContext.isAuthHookInitialized, "initialized").to.be.true;
   };
 
   beforeEach(() => {

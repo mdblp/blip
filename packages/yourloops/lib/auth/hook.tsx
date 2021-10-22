@@ -96,16 +96,12 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const [sessionToken, setSessionToken] = React.useState<string | null>(null);
   // Current authenticated user
   const [user, setUserPrivate] = React.useState<User | null>(null);
-  const [authInProgress, setAuthInProgress] = React.useState<boolean>(false);
+  const [isAuthInProgress, setAuthInProgress] = React.useState<boolean>(false);
 
   // Get the current location path, needed to redirect on refresh the page
   const pathname = historyHook.location.pathname;
-
-  const initialized = React.useCallback((): boolean => traceToken !== null, [traceToken]);
-  const isLoggedIn = React.useMemo(
-    () => sessionToken !== null && traceToken !== null && user !== null,
-    [sessionToken, traceToken, user]
-  );
+  const isAuthHookInitialized = traceToken !== null;
+  const isLoggedIn = sessionToken !== null && traceToken !== null && user !== null;
   const session = React.useCallback(
     (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? { sessionToken, traceToken, user } : null,
     [sessionToken, traceToken, user]
@@ -148,15 +144,10 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(u.toJSON()));
   };
 
-  // Wrap any methods we want to use making sure
-  // to save the user to state.
-  const login = async (username: string, password: string, key: string | null): Promise<User> => {
-    log.info("login", username);
-    if (traceToken === null) {
+  const loginPrivate = async (username: string, password: string, key: string | null): Promise<User> => {
+    if (!isAuthHookInitialized) {
       throw new Error("not-yet-initialized");
     }
-
-    setAuthInProgress(true);
 
     if (key !== null) {
       await api.accountConfirmed(key, traceToken);
@@ -191,9 +182,16 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user.toJSON()));
 
     setAuthInfos(auth.sessionToken, auth.traceToken, auth.user);
-
-    setAuthInProgress(false);
     return auth.user;
+  };
+
+  const login = (username: string, password: string, key: string | null): Promise<User> => {
+    log.info("login", username);
+    setAuthInProgress(true);
+    return loginPrivate(username, password, key).finally(() => {
+      setAuthInProgress(false);
+      log.info("login done");
+    });
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
@@ -356,8 +354,8 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     } else {
       historyHook.push("/");
     }
-    log.info("logout done", { sessionExpired });
     setAuthInProgress(false);
+    log.info("logout done", { sessionExpired });
   };
 
   /**
@@ -412,7 +410,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const initHook = () => {
-    if (authInProgress) {
+    if (isAuthInProgress) {
       return;
     }
 
@@ -505,7 +503,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     // return unmount;
   };
 
-  React.useEffect(initHook, [historyHook, pathname, traceToken, authInProgress, setAuthInfos]);
+  React.useEffect(initHook, [historyHook, pathname, traceToken, isAuthInProgress, setAuthInfos]);
 
   // Return the user object and auth methods
   return {
@@ -513,8 +511,8 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     sessionToken,
     traceToken,
     isLoggedIn,
-    authInProgress,
-    initialized,
+    isAuthInProgress,
+    isAuthHookInitialized,
     session,
     setUser,
     login,

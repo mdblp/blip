@@ -41,11 +41,16 @@ const defaultSessionTimeoutDelay = 60000;
 const log = bows("SessionTimeout");
 
 function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
-  const { authInProgress, logout } = useAuth();
+  const { isAuthInProgress, isAuthHookInitialized, isLoggedIn, logout } = useAuth();
   const intervalTimeout = sessionTimeoutDelay ?? defaultSessionTimeoutDelay;
 
+  // Only setup the timeout session when
+  // - user if fully logged in
+  // - No authentication is in progress
+  // - The authHook is fully initialized
+  const setupSessionTimeout = isAuthHookInitialized && isLoggedIn && !isAuthInProgress;
+
   React.useEffect(() => {
-    const setupSessionTimeout = !authInProgress;
     let sessionTimeoutId = Number.NaN;
     let lastUpdate = Date.now();
 
@@ -90,7 +95,7 @@ function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
     }
 
     return setupSessionTimeout ? unmount : undefined;
-  }, [authInProgress, intervalTimeout, logout]);
+  }, [setupSessionTimeout, intervalTimeout, logout]);
 
   return null;
 }
