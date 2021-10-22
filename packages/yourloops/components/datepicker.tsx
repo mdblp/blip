@@ -27,7 +27,6 @@
  */
 
 import React, { FunctionComponent, useEffect, useState } from "react";
-import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import DayjsUtils from "@date-io/dayjs";
 import dayjs from "dayjs";
@@ -40,7 +39,7 @@ import "dayjs/locale/nl";
 import { DatePicker as MuiDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
-import { getCurrentLang } from "../lib/language";
+import { getCurrentLang, t } from "../lib/language";
 
 interface DatePickerProps {
   date: MaterialUiPickersDate;
@@ -58,7 +57,7 @@ class LocalizedUtils extends DayjsUtils {
   }
 
   getDatePickerHeaderText(date: MaterialUiPickersDate) {
-    return dayjs(date).format(i18next.t("MMM D, YYYY"));
+    return dayjs(date).format(t("MMM D, YYYY"));
   }
 }
 
@@ -90,7 +89,7 @@ function DatePicker({ date, title }: DatePickerProps): JSX.Element {
         onChange={handleDateChange}
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        format={i18next.t("ddd, MMM D, YYYY")}
+        format={t("ddd, MMM D, YYYY")}
         cancelLabel={t("button-cancel")}
         orientation={window.innerWidth > 600 ? "landscape" : "portrait"}
         disableFuture
