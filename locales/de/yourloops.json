@@ -100,6 +100,7 @@
   "list-patient-tir": "% innerhalb des Zielbereichs",
   "list-patient-upload": "Status Datenübertragung",
   "login": "Anmelden",
+  "login-message-session-timeout": "Your session has expired due to inactivity. Please login again",
   "menu-caregivers": "Hilfspersonen",
   "menu-contact-support": "Kundendienst",
   "menu-logout": "Abmeldung",
