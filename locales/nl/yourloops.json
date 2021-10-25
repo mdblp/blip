@@ -100,6 +100,7 @@
   "list-patient-tir": "% binnen bereik",
   "list-patient-upload": "Status van gegevensupload",
   "login": "Inloggen",
+  "login-message-session-timeout": "Your session has expired due to inactivity. Please login again",
   "menu-caregivers": "Verzorgers",
   "menu-contact-support": "Support",
   "menu-logout": "Uitloggen",
