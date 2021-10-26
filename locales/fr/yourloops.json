@@ -100,7 +100,7 @@
   "list-patient-tir": "% dans la cible",
   "list-patient-upload": "Statut du téléchargement des données",
   "login": "Se connecter",
-  "login-message-session-timeout": "Your session has expired due to inactivity. Please login again",
+  "login-message-session-timeout": "Votre session a expiré en raison de l'inactivité. Veuillez vous reconnecter",
   "menu-caregivers": "Aidants",
   "menu-contact-support": "Support client",
   "menu-logout": "Déconnexion",
