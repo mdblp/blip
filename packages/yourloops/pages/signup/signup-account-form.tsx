@@ -37,7 +37,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 
-import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
+import { checkPasswordStrength, errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import SignUpFormProps from "./signup-form-props";
@@ -93,6 +93,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   };
   const [errors, setErrors] = React.useState<Errors>(defaultErr);
   const [newPassword, setNewPassword] = React.useState("");
+  const [passwordErrorHelperText, setPasswordErrorHelperText] = React.useState("");
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
@@ -116,18 +117,17 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   const validateUserName = (): boolean => {
     const err =
       _.isEmpty(state.formValues?.accountUsername.trim()) ||
-        !REGEX_EMAIL.test(state.formValues?.accountUsername);
+      !REGEX_EMAIL.test(state.formValues?.accountUsername);
 
     setErrors({ ...errors, userName: err });
     return !err;
   };
 
   const validatePassword = (): boolean => {
-    const err =
-      _.isEmpty(newPassword?.trim()) ||
-      newPassword?.length < appConfig.PWD_MIN_LENGTH;
-    setErrors({ ...errors, newPassword: err });
-    return !err;
+    const { onError, helperText } = checkPasswordStrength(newPassword);
+    setErrors({ ...errors, newPassword: onError });
+    setPasswordErrorHelperText(helperText);
+    return onError;
   };
 
   const validateConfirmNewPassword = (): boolean => {
@@ -158,6 +158,12 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       }
     }
   };
+
+  React.useEffect(() => {
+    if (newPassword.length > 0) {
+      validatePassword();
+    }
+  }, [newPassword]);
 
   return (
     <form
@@ -196,12 +202,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         error={errors.newPassword}
         onBlur={() => validatePassword()}
         onChange={(e) => setNewPassword(e.target.value)}
-        helperText={
-          errors.newPassword &&
-          t("password-too-weak", {
-            minLength: appConfig.PWD_MIN_LENGTH,
-          })
-        }
+        helperText={errors.newPassword && t(passwordErrorHelperText, { minLength: appConfig.PWD_MIN_LENGTH })}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
