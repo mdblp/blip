@@ -284,5 +284,6 @@
   "today": "Today",
   "units": "Units",
   "user-name": "{{firstName}} {{lastName}}",
+  "very-strong-password": "Very strong password",
   "yesterday": "Yesterday"
 }

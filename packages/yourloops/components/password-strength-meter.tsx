@@ -41,7 +41,7 @@ interface PasswordStrengthOMeterProps {
 
 const styles = makeStyles((theme: Theme) => ({
   gauge: {
-    width: "calc(33.33% - 2px)",
+    width: "calc(25% - 3px)",
     height: "4px",
     borderRadius: "8px",
     backgroundColor: "#d5d5d59c",
@@ -86,9 +86,13 @@ export function PasswordStrengthMeter({ force, error, helperText }: PasswordStre
         <div className={`${gauge} ${force >= 0 ? gaugeColor : ""}`} />
         <div className={`${gauge} ${force > 1 ? gaugeColor : ""}`} />
         <div className={`${gauge} ${force > 2 && !error ? gaugeColor : ""}`} />
+        <div className={`${gauge} ${force > 3 && !error ? gaugeColor : ""}`} />
       </Box>
       <div className={textColor}>
-        {error && t(helperText, { minLength: appConfig.PWD_MIN_LENGTH }) || force > 2 && t("strong-password")}
+        {error
+        && t(helperText, { minLength: appConfig.PWD_MIN_LENGTH })
+        || force > 3 && t("very-strong-password")
+        || force > 2 && t("strong-password")}
       </div>
     </React.Fragment>
   );
