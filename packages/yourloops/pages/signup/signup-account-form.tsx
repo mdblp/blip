@@ -124,12 +124,12 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
-  const validatePassword = (): boolean => {
-    const { onError, helperText, score } = checkPasswordStrength(newPassword);
-    setErrors({ ...errors, newPassword: onError });
+  const updateNewPassword = (password: string): void => {
+    const { onError, helperText, score } = checkPasswordStrength(password);
+    setNewPassword(password);
     setPasswordErrorHelperText(helperText);
     setPasswordForceScore(score);
-    return onError;
+    setErrors({ ...errors, newPassword: onError });
   };
 
   const validateConfirmNewPassword = (): boolean => {
@@ -144,7 +144,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
 
   const onNext = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    if (validateUserName() && validatePassword() && validateConfirmNewPassword()) {
+    if (validateUserName() && !errors.newPassword && validateConfirmNewPassword()) {
       // submit to api
       try {
         setInProgress(true);
@@ -161,11 +161,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     }
   };
 
-  React.useEffect(() => {
-    if (newPassword.length > 0) {
-      validatePassword();
-    }
-  }, [newPassword]);
 
   return (
     <form
@@ -202,8 +197,8 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         value={newPassword}
         required
         error={errors.newPassword}
-        onBlur={() => validatePassword()}
-        onChange={(e) => setNewPassword(e.target.value)}
+        onBlur={(e) => updateNewPassword(e.target.value)}
+        onChange={(e) => updateNewPassword(e.target.value)}
         helperText={
           <PasswordStrengthOMeter
             force={passwordForceScore}

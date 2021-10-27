@@ -61,11 +61,11 @@ export function PasswordStrengthOMeter({ force, error, helperText }: PasswordStr
   const [textColor, setTextColor] = useState(weakColor);
 
   useEffect(() => {
-    if (force >= 0) {
+    if (force === 0 || force === 1) {
       setGaugeColor(weakBgColor);
       setTextColor(weakColor);
     }
-    if (force > 1) {
+    if (force >= 2 && error) {
       setGaugeColor(mediumBgColor);
       setTextColor(mediumColor);
     }
