@@ -27,14 +27,12 @@
  */
 
 import _ from "lodash";
-import zxcvbn from "zxcvbn";
 
 import { Units } from "../models/generic";
 import { IUser, Settings } from "../models/shoreline";
 import httpStatus from "./http-status-codes";
 import { t } from "./language";
 import metrics from "./metrics";
-import appConfig from "./config";
 
 // From https://emailregex.com/
 // eslint-disable-next-line no-control-regex
@@ -85,10 +83,10 @@ export function errorFromHttpStatus(response: Response, log?: Console): Error {
   }
 
   switch (response.status) {
-    case httpStatus.StatusInternalServerError:
-      return new Error(t("error-http-500"));
-    default:
-      return new Error(t("error-http-40x"));
+  case httpStatus.StatusInternalServerError:
+    return new Error(t("error-http-500"));
+  default:
+    return new Error(t("error-http-40x"));
   }
 }
 
@@ -174,19 +172,4 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
 export function numberPrecision(value: number, precision = 1): number {
   const v = 10 ** precision;
   return Math.round(value * v) / v;
-}
-
-export function checkPasswordStrength(password: string): { onError: boolean, helperText: string, score: number } {
-  let onError = false;
-  let helperText = "";
-  const { score, feedback } = zxcvbn(password);
-
-  if (_.isEmpty(password.trim()) || password.length < appConfig.PWD_MIN_LENGTH) {
-    onError = true;
-    helperText = "password-too-short";
-  } else if (score < 3) {
-    onError = true;
-    helperText = feedback.warning ?? "password-too-weak";
-  }
-  return { onError, helperText, score };
 }

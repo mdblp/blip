@@ -37,7 +37,8 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 
-import { checkPasswordStrength, errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
+import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
+import { checkPasswordStrength } from "../../lib/auth/helpers";
 import metrics from "../../lib/metrics";
 import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
