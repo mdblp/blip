@@ -44,7 +44,8 @@ import { useAuth } from "../../lib/auth";
 import { getCurrentLang } from "../../lib/language";
 import { useAlert } from "../../components/utils/snackbar";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
-import { PasswordStrengthOMeter } from "../../components/password-strength-o-meter";
+import { PasswordStrengthMeter } from "../../components/password-strength-meter";
+import Password from "../../components/utils/password";
 
 interface Errors {
   userName: boolean;
@@ -95,7 +96,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   const [newPassword, setNewPassword] = React.useState("");
   const [passwordErrorHelperText, setPasswordErrorHelperText] = React.useState("");
   const [passwordForceScore, setPasswordForceScore] = React.useState(-1);
-  const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
 
@@ -186,38 +186,24 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         onChange={(e) => onChange(e, "accountUsername")}
         helperText={errors.userName && t("invalid-email")}
       />
-      <TextField
+      <Password
         id="password"
-        autoComplete="new-password"
-        className={classes.TextField}
-        margin="normal"
         label={t("new-password")}
-        variant="outlined"
-        type={showNewPassword ? "text" : "password"}
         value={newPassword}
-        required
+        onChange={updateNewPassword}
         error={errors.newPassword}
-        onBlur={(e) => updateNewPassword(e.target.value)}
-        onChange={(e) => updateNewPassword(e.target.value)}
+        autoComplete="new-password"
+        variant="outlined"
+        margin="normal"
+        checkStrength
+        required
         helperText={
-          <PasswordStrengthOMeter
+          <PasswordStrengthMeter
             force={passwordForceScore}
             error={errors.newPassword}
             helperText={passwordErrorHelperText}
           />
         }
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label={t("aria-toggle-password-visibility")}
-                onClick={(e) => onClick(e, showNewPassword, setShowNewPassword)}
-              >
-                {showNewPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
       />
       <TextField
         id="confirm-password"

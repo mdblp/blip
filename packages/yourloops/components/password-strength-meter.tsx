@@ -46,15 +46,15 @@ const styles = makeStyles((theme: Theme) => ({
     borderRadius: "8px",
     backgroundColor: "#d5d5d59c",
   },
-  weakBgColor: { backgroundColor: theme.palette.error.light },
-  weakColor: { color: theme.palette.error.light },
-  mediumBgColor: { backgroundColor: theme.palette.warning.light },
-  mediumColor: { color: theme.palette.warning.light },
-  strongBgColor: { backgroundColor: theme.palette.success.light },
-  strongColor: { color: theme.palette.success.light },
+  weakBgColor: { backgroundColor: theme.palette.error.main },
+  weakColor: { color: theme.palette.error.main },
+  mediumBgColor: { backgroundColor: theme.palette.warning.dark },
+  mediumColor: { color: theme.palette.warning.dark },
+  strongBgColor: { backgroundColor: theme.palette.success.main },
+  strongColor: { color: theme.palette.success.main },
 }));
 
-export function PasswordStrengthOMeter({ force, error, helperText }: PasswordStrengthOMeterProps): JSX.Element | null {
+export function PasswordStrengthMeter({ force, error, helperText }: PasswordStrengthOMeterProps): JSX.Element | null {
   const { t } = useTranslation("yourloops");
   const { gauge, strongBgColor, mediumBgColor, weakBgColor, weakColor, mediumColor, strongColor } = styles();
   const [gaugeColor, setGaugeColor] = useState(weakBgColor);

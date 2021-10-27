@@ -80,7 +80,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         value={currentPassword}
         error={errors.currentPassword}
         helperText={t("no-password")}
-        setState={setCurrentPassword}
+        onChange={setCurrentPassword}
       />
       <Password
         id="profile-textfield-password"
@@ -90,7 +90,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         value={password}
         error={errors.password}
         helperText={t("password-too-weak")}
-        setState={setPassword}
+        onChange={setPassword}
       />
       <Password
         id="profile-textfield-password-confirmation"
@@ -100,7 +100,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         value={passwordConfirmation}
         error={errors.passwordConfirmation}
         helperText={t("not-matching-password")}
-        setState={setPasswordConfirmation}
+        onChange={setPasswordConfirmation}
       />
     </React.Fragment>
   );

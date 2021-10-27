@@ -46,10 +46,10 @@ export interface PasswordProps {
   id: string;
   label: string;
   value: string;
-  setState: React.Dispatch<string>;
+  onChange: (eventPayload: string) => void;
   onValidate?: () => void;
   error: boolean;
-  helperText: string;
+  helperText: React.ReactNode | string;
   required?: boolean;
   disabled?: boolean;
   autoComplete: "current-password" | "new-password";
@@ -57,6 +57,7 @@ export interface PasswordProps {
   margin?: "none" | "dense" | "normal";
   className?: string;
   style?: React.CSSProperties;
+  checkStrength?: boolean
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -89,7 +90,8 @@ const Password: React.FunctionComponent<PasswordProps> = ({
   margin,
   autoComplete,
   onValidate,
-  setState,
+  onChange,
+  checkStrength,
 }: PasswordProps) => {
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
@@ -100,7 +102,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    setState(event.target.value);
+    onChange(event.target.value);
   };
   const handleValidate = typeof onValidate !== "function" ? undefined : (event: React.KeyboardEvent<HTMLInputElement>): void => {
     if (event.key === "Enter") {
@@ -125,7 +127,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
       type={showPassword ? PasswordVisibility.text : PasswordVisibility.hidden}
       onChange={handleChange}
       onKeyPress={handleValidate}
-      helperText={error && helperText}
+      helperText={checkStrength ? helperText : (error && helperText)}
       style={style}
       margin={margin}
       className={className ?? classes.textField}
