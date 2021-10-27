@@ -38,13 +38,13 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 
 import { checkPasswordStrength, errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
-import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
 import { getCurrentLang } from "../../lib/language";
 import { useAlert } from "../../components/utils/snackbar";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
+import { PasswordStrengthOMeter } from "../../components/password-strength-o-meter";
 
 interface Errors {
   userName: boolean;
@@ -94,6 +94,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   const [errors, setErrors] = React.useState<Errors>(defaultErr);
   const [newPassword, setNewPassword] = React.useState("");
   const [passwordErrorHelperText, setPasswordErrorHelperText] = React.useState("");
+  const [passwordForceScore, setPasswordForceScore] = React.useState(-1);
   const [showNewPassword, setShowNewPassword] = React.useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
@@ -124,9 +125,10 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
   };
 
   const validatePassword = (): boolean => {
-    const { onError, helperText } = checkPasswordStrength(newPassword);
+    const { onError, helperText, score } = checkPasswordStrength(newPassword);
     setErrors({ ...errors, newPassword: onError });
     setPasswordErrorHelperText(helperText);
+    setPasswordForceScore(score);
     return onError;
   };
 
@@ -202,7 +204,13 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         error={errors.newPassword}
         onBlur={() => validatePassword()}
         onChange={(e) => setNewPassword(e.target.value)}
-        helperText={errors.newPassword && t(passwordErrorHelperText, { minLength: appConfig.PWD_MIN_LENGTH })}
+        helperText={
+          <PasswordStrengthOMeter
+            force={passwordForceScore}
+            error={errors.newPassword}
+            helperText={passwordErrorHelperText}
+          />
+        }
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
