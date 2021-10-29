@@ -2,7 +2,13 @@ import zxcvbn from "zxcvbn";
 import _ from "lodash";
 import appConfig from "../config";
 
-export function checkPasswordStrength(password: string): { onError: boolean, helperText: string, score: number } {
+export interface CheckPasswordStrengthResults {
+  onError: boolean;
+  helperText: string;
+  score: number;
+}
+
+export function checkPasswordStrength(password: string): CheckPasswordStrengthResults {
   let onError = false;
   let helperText = "";
   const { score, feedback } = zxcvbn(password);

@@ -36,6 +36,8 @@ import { getUserEmail } from "../../lib/utils";
 import { User } from "../../lib/auth";
 import Password from "../../components/utils/password";
 import { Errors } from "./models";
+import { PasswordStrengthMeter } from "../../components/password-strength-meter";
+import { CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 
 interface AuthenticationFormProps {
   user: User;
@@ -47,6 +49,7 @@ interface AuthenticationFormProps {
   setPassword: React.Dispatch<string>;
   passwordConfirmation: string;
   setPasswordConfirmation: React.Dispatch<string>;
+  passwordCheckResults: CheckPasswordStrengthResults;
 }
 
 function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
@@ -61,6 +64,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     setPassword,
     passwordConfirmation,
     setPasswordConfirmation,
+    passwordCheckResults,
   } = props;
 
   return (
@@ -88,8 +92,15 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         variant="standard"
         label={t("new-password")}
         value={password}
-        error={errors.password}
-        helperText={t("password-too-weak")}
+        error={errors.password && password.length > 0}
+        checkStrength
+        helperText={
+          <PasswordStrengthMeter
+            force={passwordCheckResults.score}
+            error={errors.password}
+            helperText={passwordCheckResults.helperText}
+          />
+        }
         onChange={setPassword}
       />
       <Password
