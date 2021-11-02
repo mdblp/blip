@@ -11,14 +11,14 @@ export interface CheckPasswordStrengthResults {
 export function checkPasswordStrength(password: string): CheckPasswordStrengthResults {
   let onError = false;
   let helperText = "";
-  const { score, feedback } = zxcvbn(password);
+  const { score } = zxcvbn(password);
 
   if (_.isEmpty(password.trim()) || password.length < appConfig.PWD_MIN_LENGTH) {
     onError = true;
     helperText = "password-too-short";
   } else if (score < 3) {
     onError = true;
-    helperText = feedback.warning ?? "password-too-weak";
+    helperText = "password-too-weak";
   }
   return { onError, helperText, score };
 }

@@ -48,8 +48,7 @@
     "sundial": "file:packages/sundial",
     "tideline": "file:packages/tideline",
     "tidepool-viz": "file:packages/viz",
-    "yourloops": "file:packages/yourloops",
-    "zxcvbn": "^4.4.2"
+    "yourloops": "file:packages/yourloops"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
