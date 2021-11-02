@@ -82,7 +82,7 @@ export function PasswordStrengthMeter({ force, error, helperText }: PasswordStre
 
   return (
     <React.Fragment>
-      <Box display="flex" justifyContent="space-between" my={1}>
+      <Box id="password-strength-meter" display="flex" justifyContent="space-between" my={1}>
         <div className={`${gauge} ${force >= 0 ? gaugeColor : ""}`} />
         <div className={`${gauge} ${force > 1 ? gaugeColor : ""}`} />
         <div className={`${gauge} ${force > 2 && !error ? gaugeColor : ""}`} />
