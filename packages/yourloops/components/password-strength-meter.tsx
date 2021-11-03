@@ -26,12 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 
 import { Theme, makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import appConfig from "../lib/config";
 
 interface PasswordStrengthOMeterProps {
   force: number;
@@ -55,29 +53,22 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 export function PasswordStrengthMeter({ force, error, helperText }: PasswordStrengthOMeterProps): JSX.Element | null {
-  const { t } = useTranslation("yourloops");
   const { gauge, strongBgColor, mediumBgColor, weakBgColor, weakColor, mediumColor, strongColor } = styles();
-  const [gaugeColor, setGaugeColor] = useState(weakBgColor);
-  const [textColor, setTextColor] = useState(weakColor);
-
-  useEffect(() => {
-    if (force === 0 || force === 1) {
-      setGaugeColor(weakBgColor);
-      setTextColor(weakColor);
-    }
-    if (force >= 2 && error) {
-      setGaugeColor(mediumBgColor);
-      setTextColor(mediumColor);
-    }
-    if (force > 2 && !error) {
-      setGaugeColor(strongBgColor);
-      setTextColor(strongColor);
-    }
-  }, [error, force, mediumBgColor, mediumColor, strongBgColor, strongColor, weakBgColor, weakColor]);
-
+  let gaugeColor = "";
+  let textColor = "";
 
   if (force === -1) {
     return null;
+  }
+  if (force === 0 || force === 1) {
+    gaugeColor = weakBgColor;
+    textColor = weakColor;
+  } else if (force >= 2 && error) {
+    gaugeColor = mediumBgColor;
+    textColor = mediumColor;
+  } else {
+    gaugeColor = strongBgColor;
+    textColor = strongColor;
   }
 
   return (
@@ -89,11 +80,9 @@ export function PasswordStrengthMeter({ force, error, helperText }: PasswordStre
         <div className={`${gauge} ${force > 3 && !error ? gaugeColor : ""}`} />
       </Box>
       <div className={textColor}>
-        {error
-        && t(helperText, { minLength: appConfig.PWD_MIN_LENGTH })
-        || force > 3 && t("very-strong-password")
-        || force > 2 && t("strong-password")}
+        {helperText}
       </div>
     </React.Fragment>
   );
 }
+

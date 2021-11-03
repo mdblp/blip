@@ -1,6 +1,7 @@
 import zxcvbn from "zxcvbn";
 import _ from "lodash";
 import appConfig from "../config";
+import { t } from "../language";
 
 export interface CheckPasswordStrengthResults {
   onError: boolean;
@@ -15,10 +16,14 @@ export function checkPasswordStrength(password: string): CheckPasswordStrengthRe
 
   if (_.isEmpty(password.trim()) || password.length < appConfig.PWD_MIN_LENGTH) {
     onError = true;
-    helperText = "password-too-short";
+    helperText = t("password-too-short", { minLength: appConfig.PWD_MIN_LENGTH });
   } else if (score < 3) {
     onError = true;
-    helperText = "password-too-weak";
+    helperText = t("password-too-weak");
+  } else if (score > 3) {
+    helperText = t("very-strong-password");
+  } else {
+    helperText = t("strong-password");
   }
   return { onError, helperText, score };
 }
