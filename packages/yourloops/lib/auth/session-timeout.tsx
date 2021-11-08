@@ -28,7 +28,11 @@
 
 import React from "react";
 import bows from "bows";
+import jwtDecode from "jwt-decode";
+
 import config from "../config";
+import { JwtShorelinePayload } from "../../models/shoreline";
+import { waitTimeout } from "../utils";
 import { useAuth } from "./hook";
 
 interface SessionTimeoutProps {
@@ -40,8 +44,16 @@ interface SessionTimeoutProps {
 const defaultSessionTimeoutDelay = 60000;
 const log = bows("SessionTimeout");
 
+
+const getTokenExpirationTimeout = (token: string): number => {
+  const decoded = jwtDecode<JwtShorelinePayload>(token);
+  const tokenExpirationDate = Number.isSafeInteger(decoded.exp) ? decoded.exp as number : 0;
+  const now = Date.now() / 1000;
+  return (tokenExpirationDate - now - config.renewToken.delayBeforeRenew) * 1000;
+};
+
 function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
-  const { isAuthInProgress, isAuthHookInitialized, isLoggedIn, logout } = useAuth();
+  const { sessionToken, isAuthInProgress, isAuthHookInitialized, isLoggedIn, logout, refreshToken } = useAuth();
   const intervalTimeout = sessionTimeoutDelay ?? defaultSessionTimeoutDelay;
 
   // Only setup the timeout session when
@@ -96,6 +108,51 @@ function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
 
     return setupSessionTimeout ? unmount : undefined;
   }, [setupSessionTimeout, intervalTimeout, logout]);
+
+  // Manage token expiration by asking a new token (renew)
+  // to the auth manager.
+  React.useEffect(() => {
+    let timeoutCheck: number | null = null;
+    const renewToken = async (): Promise<void> => {
+      timeoutCheck = null;
+      let renewSuccess = false;
+      for (let i=0; i<config.renewToken.renewMaxTry && !renewSuccess; i++) {
+        try {
+          await refreshToken();
+          renewSuccess = true;
+        } catch (reason) {
+          log.error(reason);
+          await waitTimeout(config.renewToken.renewFailedInternal); // Wait a little
+        }
+      }
+
+      if (!renewSuccess) {
+        logout(true);
+      }
+    };
+    const stopRenew = () => {
+      if (timeoutCheck !== null) {
+        log.debug(`Clearing renew timer: ${timeoutCheck}`);
+        window.clearTimeout(timeoutCheck);
+        timeoutCheck = null;
+      }
+    };
+
+    const setupSessionRefresh = setupSessionTimeout && sessionToken !== null;
+    if (setupSessionRefresh) {
+      const willExpireIn = getTokenExpirationTimeout(sessionToken);
+      if (willExpireIn < config.renewToken.delayBeforeRenew) {
+        log.info("Renewing token immediately");
+        timeoutCheck = window.setTimeout(renewToken, 1);
+      } else {
+        log.info(`Token will be renewed in ${Math.round(willExpireIn/1000)}s`);
+        timeoutCheck = window.setTimeout(renewToken, willExpireIn);
+      }
+      log.debug(`Token renew timer: ${timeoutCheck}`);
+    }
+
+    return timeoutCheck === null ? undefined : stopRenew;
+  }, [setupSessionTimeout, sessionToken, logout, refreshToken]);
 
   return null;
 }

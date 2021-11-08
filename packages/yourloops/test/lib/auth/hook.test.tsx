@@ -39,6 +39,7 @@ import { expect } from "chai";
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
 import { waitTimeout } from "../../../lib/utils";
+import { zendeskAllowCookies } from "../../../lib/zendesk";
 import { AuthAPI, User, Session, AuthContext, SignupUser } from "../../../lib/auth";
 import { AuthContextImpl, STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
@@ -58,6 +59,7 @@ export interface AuthContextStubs {
   session: sinon.SinonStub<[], Session|null>;
   setUser: sinon.SinonStub<[User], void>;
   login: sinon.SinonStub<[string, string, string|null], Promise<User>>;
+  refreshToken: sinon.SinonStub<[], Promise<void>>;
   logout: sinon.SinonStub<[boolean|undefined], Promise<void>>;
   updatePreferences: sinon.SinonStub<[Preferences,boolean|undefined], Promise<Preferences>>;
   updateProfile: sinon.SinonStub<[Profile,boolean|undefined], Promise<Profile>>;
@@ -78,14 +80,17 @@ export interface AuthContextStubs {
  */
 export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   user: session?.user ?? null,
-  sessionToken: session.sessionToken,
-  traceToken: session.traceToken,
+  sessionToken: session?.sessionToken ?? null,
+  traceToken: session?.traceToken ?? null,
   isLoggedIn: true,
   isAuthInProgress: false,
   isAuthHookInitialized: true,
-  session: sinon.stub<[], Session | null>().returns(session),
+  session: sinon.stub<[], Session | null>().returns(session?? null),
   setUser: sinon.stub<[User], void>(),
-  login: sinon.stub<[string, string, string|null], Promise<User>>().resolves(session.user),
+  login: session ?
+    sinon.stub<[string, string, string|null], Promise<User>>().resolves(session.user) :
+    sinon.stub<[string, string, string|null], Promise<User>>().rejects(),
+  refreshToken: sinon.stub<[], Promise<void>>().resolves(),
   logout: sinon.stub<[boolean|undefined], Promise<void>>().resolves(),
   updatePreferences: sinon.stub<[Preferences,boolean|undefined], Promise<Preferences>>().resolves(session.user.preferences),
   updateProfile: sinon.stub<[Profile,boolean|undefined], Promise<Profile>>().resolves(session.user.profile),
@@ -108,8 +113,8 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
  */
 export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Session): void => {
   hookStubs.user = session?.user ?? null;
-  hookStubs.sessionToken = session.sessionToken;
-  hookStubs.traceToken = session.traceToken;
+  hookStubs.sessionToken = session?.sessionToken ?? null;
+  hookStubs.traceToken = session?.traceToken ?? null;
   hookStubs.isLoggedIn = typeof session === "object";
   hookStubs.isAuthInProgress = false;
   hookStubs.isAuthHookInitialized = true;
@@ -120,7 +125,7 @@ export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Sessio
 
   hookStubs.session.resetHistory();
   hookStubs.session.resetBehavior();
-  hookStubs.session.returns(session);
+  hookStubs.session.returns(session ?? null);
 };
 
 // TODO Delete me: should be defined by in tests files
@@ -186,6 +191,7 @@ function testHook(): void {
     sessionStorage.removeItem(STORAGE_KEY_USER);
   });
   afterEach(() => {
+    ReactDOM.unmountComponentAtNode(container); // Clean-up cleanly
     document.body.removeChild(container);
     container = null;
     resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpSession);
@@ -352,6 +358,45 @@ function testHook(): void {
       expect(testLocation.search).to.be.equals("?login=caregiver%40example.com&sessionExpired=true");
       expect(testLocation.state).to.be.deep.equals({ from: { pathname: authCaregiver.user.getHomePage() } });
       expect(testHistory.length).to.be.equals(2);
+    });
+  });
+
+  describe("RefreshToken", () => {
+    const zeStub = sinon.stub();
+    before(() => {
+      window.zE = zeStub;
+      zendeskAllowCookies(true);
+    });
+    afterEach(() => {
+      zeStub.reset();
+    });
+    after(() => {
+      zendeskAllowCookies(false);
+      delete window.zE;
+    });
+    it("should do nothing if logout", async () => {
+      await initAuthContext(null, authApiHcpStubs);
+      expect(authContext.session()).to.be.null;
+      expect(authContext.isLoggedIn).to.be.false;
+
+      await authContext.refreshToken();
+
+      expect(authApiHcpStubs.refreshToken.called, "refreshToken").to.be.false;
+
+      const numZendeskLogin = zeStub.getCalls().reduce<number>((n, c) => { if (c.args[1] === "helpCenter:reauthenticate") n++; return n; }, 0);
+      expect(numZendeskLogin, "zendesk login").to.be.equals(0);
+    });
+    it("should call the refresh token API if logon", async () => {
+      await initAuthContext(authHcp, authApiHcpStubs);
+      expect(authContext.session()).to.be.not.null;
+      expect(authContext.isLoggedIn).to.be.true;
+
+      await authContext.refreshToken();
+
+      expect(authApiHcpStubs.refreshToken.calledOnce, "refreshToken").to.be.true;
+      expect(zeStub.called, "zeStub").to.be.true;
+      const numZendeskLogin = zeStub.getCalls().reduce<number>((n, c) => { if (c.args[1] === "helpCenter:reauthenticate") n++; return n; }, 0);
+      expect(numZendeskLogin, "zendesk login").to.be.equals(2);
     });
   });
 

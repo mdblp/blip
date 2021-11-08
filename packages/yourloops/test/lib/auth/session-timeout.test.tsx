@@ -35,34 +35,35 @@ import { expect } from "chai";
 import config from "../../../lib/config";
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContextProvider, SessionTimeout } from "../../../lib/auth";
-import { loggedInUsers } from "../../common";
+import { loggedInUsers, createSessionToken } from "../../common";
 import { AuthContextStubs, createAuthHookStubs, resetAuthHookStubs } from "./hook.test";
 
 function testSessionTimeout(): void {
-  const sessionTimeoutDelay = 100;
+  const shortSessionTimeoutDelay = 100;
+  const longSessionTimeoutDelay = 50000;
   const authHookHcpStubs = createAuthHookStubs(loggedInUsers.hcpSession);
   let container: HTMLDivElement | null = null;
 
-  function TestSessionTimeoutComponent(props: { hookStubs: AuthContextStubs }): JSX.Element {
+  function TestSessionTimeoutComponent(props: { hookStubs: AuthContextStubs, sessionTimeoutDelay: number }): JSX.Element {
     return (
       <MemoryRouter initialEntries={[props.hookStubs.user.getHomePage()]}>
         <AuthContextProvider value={props.hookStubs}>
-          <SessionTimeout sessionTimeoutDelay={sessionTimeoutDelay} />
+          <SessionTimeout sessionTimeoutDelay={props.sessionTimeoutDelay} />
         </AuthContextProvider>
       </MemoryRouter>
     );
   }
 
-  function mountSessionTimeoutComponent(hookStubs: AuthContextStubs): Promise<void> {
+  function mountSessionTimeoutComponent(hookStubs: AuthContextStubs, sessionTimeoutDelay = shortSessionTimeoutDelay): Promise<void> {
     return act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<TestSessionTimeoutComponent hookStubs={hookStubs} />, container, resolve);
+        ReactDOM.render(<TestSessionTimeoutComponent hookStubs={hookStubs} sessionTimeoutDelay={sessionTimeoutDelay} />, container, resolve);
       });
     });
   }
 
   before(() => {
-    config.SESSION_TIMEOUT = 10 * sessionTimeoutDelay;
+    config.SESSION_TIMEOUT = 10 * shortSessionTimeoutDelay;
   });
 
   after(() => {
@@ -106,7 +107,7 @@ function testSessionTimeout(): void {
       return waitTimeout(1);
     });
     await mountSessionTimeoutComponent(authHookHcpStubs);
-    await waitTimeout(config.SESSION_TIMEOUT + sessionTimeoutDelay);
+    await waitTimeout(config.SESSION_TIMEOUT + shortSessionTimeoutDelay);
     expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce").to.be.true;
     expect(authHookHcpStubs.logout.firstCall.args[0], "logout sessionExpired").to.be.true;
   });
@@ -118,13 +119,41 @@ function testSessionTimeout(): void {
       return waitTimeout(1);
     });
     await mountSessionTimeoutComponent(authHookHcpStubs);
-    await waitTimeout(6 * sessionTimeoutDelay); // eslint-disable-line no-magic-numbers
+    await waitTimeout(6 * shortSessionTimeoutDelay); // eslint-disable-line no-magic-numbers
     expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (1)").to.be.false;
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
-    await waitTimeout(5 * sessionTimeoutDelay);
+    await waitTimeout(5 * shortSessionTimeoutDelay);
     expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (2)").to.be.false;
     await waitTimeout(config.SESSION_TIMEOUT);
     expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (3)").to.be.true;
+  });
+
+  it("should automatically renew the token when it's close to expiration", async function testRefresh() {
+    this.timeout(2 * 5000);
+
+    const shortToken = createSessionToken(loggedInUsers.caregiver, 3);
+    const session = { ...loggedInUsers.caregiverSession, sessionToken: shortToken };
+    const hookStub = createAuthHookStubs(session);
+    await mountSessionTimeoutComponent(hookStub);
+    await waitTimeout(5000);
+    expect(hookStub.refreshToken.calledOnce, "calledOnce").to.be.true;
+  });
+
+  it("should logout the user if the refresh failed", async function testRefresh() {
+    this.timeout(2 * 5000);
+
+    config.renewToken.renewMaxTry = 2;
+    config.renewToken.renewFailedInternal = 100;
+    const shortToken = createSessionToken(loggedInUsers.patient, 3);
+    const session = { ...loggedInUsers.patientSession, sessionToken: shortToken };
+    const hookStub = createAuthHookStubs(session);
+    hookStub.refreshToken.reset();
+    hookStub.refreshToken.rejects(new Error("test failed refresh"));
+    await mountSessionTimeoutComponent(hookStub, longSessionTimeoutDelay);
+    await waitTimeout(5000);
+
+    expect(hookStub.refreshToken.callCount, "refreshToken callCount").to.be.equals(config.renewToken.renewMaxTry);
+    expect(hookStub.logout.calledOnce, "logout calledOnce").to.be.true;
   });
 }
 

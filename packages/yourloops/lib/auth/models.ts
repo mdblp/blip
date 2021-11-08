@@ -90,6 +90,8 @@ export interface AuthContext {
   /** Change the hook user, and update the storage. No API change! */
   setUser: (user: User) => void;
   login: (username: string, password: string, key: string | null) => Promise<User>;
+  /** Refresh the session token */
+  refreshToken: () => Promise<void>;
   /**
    * Logout the user
    * @param {boolean} sessionExpired True if the call is performed for a session expired mechanism

@@ -29,13 +29,13 @@
 import React from "react";
 import bows from "bows";
 import _ from "lodash";
-import jwtDecode, { JwtPayload } from "jwt-decode";
+import jwtDecode from "jwt-decode";
 import { v4 as uuidv4, validate as validateUuid } from "uuid";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import { HistoryState } from "../../models/generic";
-import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/shoreline";
+import { Profile, Preferences, Settings, UserRoles, IUser, JwtShorelinePayload } from "../../models/shoreline";
 import { defer, fixYLP878Settings, numberPrecision } from "../utils";
 import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../language";
 import metrics from "../metrics";
@@ -43,17 +43,6 @@ import { zendeskLogin, zendeskLogout } from "../zendesk";
 import User from "./user";
 import { Session, AuthAPI, AuthContext, AuthProvider, SignupUser } from "./models";
 import AuthAPIImpl from "./api";
-
-interface JwtShorelinePayload extends JwtPayload {
-  role: "hcp" | "patient" | "caregiver" | "clinic";
-  /** username: an e-mail */
-  name: string;
-  email: string;
-  /** userid */
-  usr: string;
-  /** yes for server token - we will never have that in Blip: always "no" */
-  srv: "yes" | "no";
-}
 
 export const STORAGE_KEY_SESSION_TOKEN = "session-token";
 export const STORAGE_KEY_TRACE_TOKEN = "trace-token";
@@ -134,6 +123,21 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     metrics.setUser(usr);
   }, [sessionToken, traceToken]);
 
+  const clearSession = (): void => {
+    if (typeof window.cleanBlipReduxStore === "function") {
+      window.cleanBlipReduxStore();
+    }
+    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
+    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
+    sessionStorage.removeItem(STORAGE_KEY_USER);
+    metrics.resetUser();
+    zendeskLogout();
+
+    setUserPrivate(null);
+    setSessionToken(null);
+    setTraceToken(null);
+  };
+
   /**
    * - Update the hook user (no API call is performed with this function)
    * - Update the storage
@@ -163,9 +167,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       }
       auth.user.role = role;
       log.warn("User as a clinic role");
-    } else if (tokenInfos.role === "clinic") {
-      // TODO After BDD migration this check will be useless
-      auth.user.role = UserRoles.caregiver;
     } else {
       auth.user.role = tokenInfos.role as UserRoles;
     }
@@ -192,6 +193,16 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       setAuthInProgress(false);
       log.info("login done");
     });
+  };
+
+  const refreshToken = async (): Promise<void> => {
+    const s = session();
+    if (s) {
+      const newToken = await api.refreshToken(s);
+      sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, newToken);
+      setSessionToken(newToken);
+      zendeskLogin();
+    }
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
@@ -335,18 +346,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       log.error("logout", reason);
     }
 
-    if (typeof window.cleanBlipReduxStore === "function") {
-      window.cleanBlipReduxStore();
-    }
-    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_USER);
-    metrics.resetUser();
-    zendeskLogout();
-
-    setUserPrivate(null);
-    setSessionToken(null);
-    setTraceToken(null);
+    clearSession();
 
     // Push the new location (this reset the state.from.pathname value)
     if (sessionExpired && user !== null) {
@@ -455,15 +455,15 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
           if (!validateUuidV4(traceTokenStored)) {
             throw new Error("Invalid trace token uuid");
           }
-          const decoded = jwtDecode<JwtPayload>(sessionTokenStored);
+          const decoded = jwtDecode<JwtShorelinePayload>(sessionTokenStored);
           if (typeof decoded.exp === "undefined") {
             throw new Error("Invalid session token");
           }
+
+          log.info("Token expiration date:", new Date(decoded.exp * 1000).toISOString());
           if (decoded.exp < (Date.now() / 1000)) {
             throw new Error("Session token as expired");
           }
-
-          log.info("Token expiration date:", new Date(decoded.exp * 1000).toISOString());
 
           initializedFromStorage = true;
           setAuthInfos(sessionTokenStored, traceTokenStored, currentUser);
@@ -475,9 +475,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
         } catch (e) {
           log.warn("Invalid auth in session storage", e);
-          sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-          sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-          sessionStorage.removeItem(STORAGE_KEY_USER);
+          clearSession();
         }
       }
       // window.addEventListener("storage", onStorageChange);
@@ -517,6 +515,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     session,
     setUser,
     login,
+    refreshToken,
     updateProfile,
     updatePreferences,
     updateSettings,

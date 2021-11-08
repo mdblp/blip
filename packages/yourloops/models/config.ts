@@ -46,5 +46,13 @@ export interface AppConfig {
   STONLY_WID: string;
   COOKIE_BANNER_CLIENT_ID: string;
   SESSION_TIMEOUT: number;
+  renewToken: {
+    /** Delay before token expiration we try to renew (in seconds) */
+    delayBeforeRenew: number;
+    /** Number of attempt to renew before given-up and logout the user */
+    renewMaxTry: number;
+    /** Wait time between two renew attempt when the previous one failed (in ms) */
+    renewFailedInternal: number;
+  };
   YLP820_BASAL_TIME: number;
 }

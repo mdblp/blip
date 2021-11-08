@@ -82,6 +82,11 @@ const config = {
   SESSION_TIMEOUT: integerFromText(process.env.SESSION_TIMEOUT, 30 * 60 * 1000), // default: 30min
   DEV: isDev || isTest,
   TEST: isTest,
+  renewToken: {
+    delayBeforeRenew: integerFromText(process.env.DELAY_BEFORE_RENEW_TOKEN, 30),
+    renewMaxTry: integerFromText(process.env.RENEW_TOKEN_MAX_TRY, 3),
+    renewFailedInternal: integerFromText(process.env.RENEW_FAILED_INTERVAL, 5000),
+  },
 };
 
 module.exports = config;

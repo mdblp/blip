@@ -38,6 +38,7 @@ import config from "../../../lib/config";
 import { Session, UpdateUser } from "../../../lib/auth/models";
 import api from "../../../lib/auth/api";
 import User from "../../../lib/auth/user";
+import { refreshToken } from "../../common";
 
 /**
  * API Stubs
@@ -70,7 +71,7 @@ export const createAuthAPIStubs = (session: Session): AuthAPIStubs => ({
   updateProfile: sinon.stub<[Session], Promise<Profile>>().resolves(session.user.profile),
   updateSettings: sinon.stub<[Session], Promise<Settings>>().resolves(session.user.settings),
   updateUser: sinon.stub<[Readonly<Session>, UpdateUser], Promise<void>>().resolves(),
-  refreshToken: sinon.stub<[Readonly<Session>], Promise<string>>().resolves(""),
+  refreshToken: sinon.stub<[Readonly<Session>], Promise<string>>().callsFake((s: Session) => Promise.resolve(refreshToken(s.sessionToken))),
   logout: sinon.stub<[Readonly<Session>], Promise<void>>().resolves(),
 });
 

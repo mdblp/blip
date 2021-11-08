@@ -57,6 +57,11 @@ const defaultConfig: AppConfig = {
   SESSION_TIMEOUT: defaultSessionTimeout,
   DEV: true,
   TEST: false,
+  renewToken: {
+    delayBeforeRenew: 30,
+    renewMaxTry: 3,
+    renewFailedInternal: 5000,
+  },
 };
 const appConfig = _.assign({}, defaultConfig);
 if (_.has(window, "config") && _.isObjectLike(_.get(window, "config", null))) {
