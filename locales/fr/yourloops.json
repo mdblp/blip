@@ -167,7 +167,7 @@
   "password-reset-success-title": "Succès !",
   "password-reset-title": "Changez votre mot de passe",
   "password-strong": "Mot de passe fort",
-  "password-too-short": "Minimum of {{minLength}} characters",
+  "password-too-short": "{{minLength}} caractères minimum",
   "password-too-weak": "10 caractères minimum",
   "password-very-strong": "Mot de passe très fort",
   "patient-not-found": "Patient introuvable",
