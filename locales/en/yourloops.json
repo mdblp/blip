@@ -166,8 +166,10 @@
   "password-reset-success": "Your password was changed successfully. You can now log in with your new password.",
   "password-reset-success-title": "Success!",
   "password-reset-title": "Change your password",
+  "password-strong": "Strong password",
   "password-too-short": "Minimum of {{minLength}} characters",
   "password-too-weak": "Password too weak, add uppercase, number or special character",
+  "password-very-strong": "Very strong password",
   "patient-not-found": "Patient not found",
   "patient-profile-birthdate": "Date of birth",
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
@@ -210,7 +212,6 @@
   "signup-steppers-step2": "Consent",
   "signup-steppers-step3": "Create profile",
   "signup-steppers-step4": "Complete Signup",
-  "strong-password": "Strong password",
   "success-resent-activation-link": "Activation link sent!",
   "team": "Team",
   "team-add-member-dialog-checkbox-admin": "Define as administrator",
@@ -269,6 +270,5 @@
   "today": "Today",
   "units": "Units",
   "user-name": "{{firstName}} {{lastName}}",
-  "very-strong-password": "Very strong password",
   "yesterday": "Yesterday"
 }
