@@ -34,7 +34,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { hexToRgb } from "@material-ui/core";
 
 import { mainTheme } from "../../components/theme";
-import { PasswordStrengthMeter } from "../../components/password-strength-meter";
+import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 
 function TestPasswordStrengthMeter(): void {
   let container: HTMLElement | null = null;

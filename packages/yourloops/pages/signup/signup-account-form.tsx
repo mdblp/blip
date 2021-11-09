@@ -41,7 +41,7 @@ import { useAuth } from "../../lib/auth";
 import { getCurrentLang } from "../../lib/language";
 import { useAlert } from "../../components/utils/snackbar";
 import { useSignUpFormState } from "./signup-formstate-context";
-import { PasswordStrengthMeter } from "../../components/password-strength-meter";
+import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 import Password from "../../components/utils/password";
 
 interface Errors {

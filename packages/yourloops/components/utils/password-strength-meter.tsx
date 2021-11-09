@@ -31,7 +31,7 @@ import React from "react";
 import { Theme, makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 
-interface PasswordStrengthOMeterProps {
+interface PasswordStrengthMeterProps {
   force: number;
   error: boolean;
   helperText: string;
@@ -52,7 +52,7 @@ const styles = makeStyles((theme: Theme) => ({
   strongColor: { color: theme.palette.success.main },
 }));
 
-export function PasswordStrengthMeter({ force, error, helperText }: PasswordStrengthOMeterProps): JSX.Element | null {
+export function PasswordStrengthMeter({ force, error, helperText }: PasswordStrengthMeterProps): JSX.Element | null {
   const { gauge, strongBgColor, mediumBgColor, weakBgColor, weakColor, mediumColor, strongColor } = styles();
   let gaugeColor = "";
   let textColor = "";
