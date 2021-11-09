@@ -21,9 +21,9 @@ export function checkPasswordStrength(password: string): CheckPasswordStrengthRe
     onError = true;
     helperText = t("password-too-weak");
   } else if (score > 3) {
-    helperText = t("very-strong-password");
+    helperText = t("password-very-strong");
   } else {
-    helperText = t("strong-password");
+    helperText = t("password-strong");
   }
   return { onError, helperText, score };
 }
