@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 2.0.5-rc1 - 2021-11-09
 ### Improvements
 - YLP-996 Restructure account preferences page
 - YLP-1002 Allow patients to receive the email "forgot password" from yourloops
