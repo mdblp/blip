@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -57,7 +57,7 @@ export interface PasswordProps {
   margin?: "none" | "dense" | "normal";
   className?: string;
   style?: React.CSSProperties;
-  checkStrength?: boolean
+  checkStrength?: boolean; // If true must be used with the password strength meter as helper text
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,6 +114,16 @@ const Password: React.FunctionComponent<PasswordProps> = ({
 
   const tip = t("aria-toggle-password-visibility");
 
+  const helperTextContent = useMemo(() => {
+    if (checkStrength) {
+      return (helperText) as React.ReactNode;
+    }
+    if (error) {
+      return helperText as string;
+    }
+    return null;
+  }, [checkStrength, error, helperText]);
+
   return (
     <TextField
       id={id}
@@ -127,7 +137,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
       type={showPassword ? PasswordVisibility.text : PasswordVisibility.hidden}
       onChange={handleChange}
       onKeyPress={handleValidate}
-      helperText={checkStrength ? helperText : (error && helperText)}
+      helperText={helperTextContent}
       style={style}
       margin={margin}
       className={className ?? classes.textField}
@@ -135,7 +145,12 @@ const Password: React.FunctionComponent<PasswordProps> = ({
         endAdornment: (
           <InputAdornment position="end">
             <Tooltip title={tip} aria-label={tip} placement="bottom">
-              <IconButton id={`${id}-btn-show-pwd`} className={classes.adornment} aria-label={tip} onClick={handleShowPasswordChange}>
+              <IconButton
+                id={`${id}-btn-show-pwd`}
+                className={classes.adornment}
+                aria-label={tip}
+                onClick={handleShowPasswordChange}
+              >
                 {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </Tooltip>
