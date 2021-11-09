@@ -30,6 +30,7 @@ import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { FormHelperTextProps } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
@@ -124,6 +125,16 @@ const Password: React.FunctionComponent<PasswordProps> = ({
     return null;
   }, [checkStrength, error, helperText]);
 
+  /**
+   * Here we have to force typing of helperText because it generates a render error on html
+   * "div cannot be a child of p". By default helperText is wrapped into <p>
+   * Needs to type it as a <div> component
+   */
+  let helperTextProps: Partial<FormHelperTextProps<"div">> | undefined;
+  if (typeof helperText !== "string") {
+    helperTextProps = { component: "div" } as Partial<FormHelperTextProps<"div">>;
+  }
+
   return (
     <TextField
       id={id}
@@ -138,6 +149,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
       onChange={handleChange}
       onKeyPress={handleValidate}
       helperText={helperTextContent}
+      FormHelperTextProps={helperTextProps}
       style={style}
       margin={margin}
       className={className ?? classes.textField}
