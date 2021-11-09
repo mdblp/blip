@@ -125,11 +125,10 @@ const Password: React.FunctionComponent<PasswordProps> = ({
     return null;
   }, [checkStrength, error, helperText]);
 
-  /**
-   * Here we have to force typing of helperText because it generates a render error on html
-   * "div cannot be a child of p". By default helperText is wrapped into <p>
-   * Needs to type it as a <div> component
-   */
+
+  // Here we have to force typing of helperText because it generates a render error on html
+  // "div cannot be a child of p". By default helperText is wrapped into <p>
+  // Needs to type it as a <div> component
   let helperTextProps: Partial<FormHelperTextProps<"div">> | undefined;
   if (typeof helperText !== "string") {
     helperTextProps = { component: "div" } as Partial<FormHelperTextProps<"div">>;
