@@ -72,9 +72,9 @@ function plotWizard(pool, opts = defaults) {
         });
 
       // sort by size so smaller boluses are drawn last
-      wizardGroups = wizardGroups.sort((/** @type {Datum} */ a, /** @type {Datum} */ b)=> {
-        const bolusA = a.bolus ? a.bolus : a;
-        const bolusB = b.bolus ? b.bolus : b;
+      wizardGroups = wizardGroups.sort((/** @type {Datum} */ a, /** @type {Datum} */ b) => {
+        const bolusA = a.bolus ?? a;
+        const bolusB = b.bolus ?? b;
         return d3.descending(commonbolus.getMaxValue(bolusA), commonbolus.getMaxValue(bolusB));
       });
 

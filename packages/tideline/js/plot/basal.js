@@ -188,9 +188,7 @@ function plotBasal(pool, opts = defaults) {
         },
         width: basal.width,
         height: heightFn,
-        class: (d) => {
-          return invisible ? "d3-basal d3-basal-invisible" : `d3-basal d3-rect-basal d3-basal-${d.deliveryType}`;
-        },
+        class: (d) => invisible ? "d3-basal d3-basal-invisible" : `d3-basal d3-rect-basal d3-basal-${d.deliveryType}`,
       });
   };
 
