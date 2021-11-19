@@ -319,7 +319,7 @@ class Daily extends React.Component {
     const endpoints = this.getEndpoints();
 
     /** @type {JSX.Element} */
-    let titleContent;
+    let headerTitleContent;
     if (!loading && !inTransition) {
       const onSelectedDateChange = (/** @type {string|undefined} */ date) => {
         if (typeof date === "string" && this.chartRef.current !== null) {
@@ -330,7 +330,7 @@ class Daily extends React.Component {
         }
       };
 
-      titleContent = (
+      headerTitleContent = (
         <DatePicker
           id="daily-chart-title-date"
           date={epochLocation}
@@ -344,7 +344,7 @@ class Daily extends React.Component {
         </DatePicker>
       );
     } else {
-      titleContent = (
+      headerTitleContent = (
         <span id="daily-chart-title-date" className="patient-data-subnav-text patient-data-subnav-dates-daily patient-data-subnav-disabled">
           {title}
         </span>
@@ -376,7 +376,7 @@ class Daily extends React.Component {
           onClickSettings={this.props.onSwitchToSettings}
           onClickPrint={this.props.onClickPrint}
         >
-          {titleContent}
+          {headerTitleContent}
         </Header>
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
