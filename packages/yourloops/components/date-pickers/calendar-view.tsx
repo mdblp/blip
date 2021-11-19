@@ -70,7 +70,7 @@ const calendarViewStyles = makeStyles((theme: Theme) => {
 function CalendarView(props: CalendarViewProps): JSX.Element {
   const { selectedDate, minDate, maxDate } = props;
   const classes = calendarViewStyles(props);
-  const [currentMonth, setCurrentMonthstate] = React.useState(selectedDate.startOf("month"));
+  const [currentMonth, setCurrentMonth] = React.useState(selectedDate.startOf("month"));
   const [changeMonth, setChangeMonth] = React.useState<CalendarChangeMonth | null>(null);
   const [changeYear, setChangeYear] = React.useState(false);
 
@@ -86,9 +86,9 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
     return { result: true, date: d };
   };
 
-  const setCurrentMonth = (d: Dayjs) => {
+  const setCurrentMonthSafe = (d: Dayjs) => {
     const { date } = canChangeToMonth(d);
-    setCurrentMonthstate(date);
+    setCurrentMonth(date);
   };
 
   const setNewMonth = (month: Dayjs) => {
@@ -96,20 +96,20 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
       return;
     }
     const startTime = Date.now();
-    const transitionTimeoutTreshold = 150;
+    const transitionTimeoutThreshold = 150;
     let timeoutTransition = window.setTimeout(() => {
       console.log("setNewMonth: Transition timeout", `${Date.now() - startTime}ms`);
       timeoutTransition = 0;
-      setCurrentMonth(month);
+      setCurrentMonthSafe(month);
       setChangeMonth(null);
-    }, TRANSITION_DURATION + transitionTimeoutTreshold);
+    }, TRANSITION_DURATION + transitionTimeoutThreshold);
     setChangeMonth({
       direction: month.isAfter(currentMonth) ? "right" : "left",
       newMonth: month,
       onAnimationEnd: () => {
         if (timeoutTransition > 0) {
           window.clearTimeout(timeoutTransition);
-          setCurrentMonth(month);
+          setCurrentMonthSafe(month);
           setChangeMonth(null);
         }
       },
@@ -134,7 +134,7 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
   if (changeYear) {
     const onSelectedYear = (year: number) => {
       setChangeYear(false);
-      setCurrentMonth(currentMonth.set("year", year));
+      setCurrentMonthSafe(currentMonth.set("year", year));
       setSelectedDate(selectedDate.set("year", year));
     };
     calendarBox = (
@@ -146,7 +146,14 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
     calendarBox = (
       <div id="calendar-box" className={classes.calendarBox}>
         <Header currentMonth={currentMonth} onMonthChange={setNewMonth} changeMonth={changeMonth} minDate={minDate} maxDate={maxDate} />
-        <Calendar currentMonth={currentMonth} selectedDate={selectedDate} onChange={setSelectedDate} changeMonth={changeMonth} minDate={minDate} maxDate={maxDate} />
+        <Calendar
+          currentMonth={currentMonth}
+          selectedDate={selectedDate}
+          onChange={setSelectedDate}
+          changeMonth={changeMonth}
+          minDate={minDate}
+          maxDate={maxDate}
+        />
       </div>
     );
   }

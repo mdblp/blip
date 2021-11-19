@@ -53,7 +53,10 @@ function testDatePicker(): void {
   it("should render the provided title", async () => {
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DatePicker><span id="the-date-title">Date</span></DatePicker>, container, resolve);
+        ReactDOM.render(
+          <DatePicker>
+            <span id="the-date-title">Date</span>
+          </DatePicker>, container, resolve);
       });
     });
     const titleElem = document.getElementById("the-date-title");
@@ -66,7 +69,10 @@ function testDatePicker(): void {
   it("should display the calender when clicking on the title", async () => {
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DatePicker activeClassName="active"><span id="the-date-title">Date</span></DatePicker>, container, resolve);
+        ReactDOM.render(
+          <DatePicker activeClassName="active">
+            <span id="the-date-title">Date</span>
+          </DatePicker>, container, resolve);
       });
     });
 
@@ -115,7 +121,14 @@ function testDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         // Note: wrong date value is intentional
-        ReactDOM.render(<DatePicker onResult={onResult} date="2021-10-02" maxDate="2021-11-26" minDate="2021-11-01">Text</DatePicker>, container, resolve);
+        ReactDOM.render(
+          <DatePicker
+            onResult={onResult}
+            date="2021-10-02"
+            maxDate="2021-11-26"
+            minDate="2021-11-01">
+              Text
+          </DatePicker>, container, resolve);
       });
     });
 

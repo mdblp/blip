@@ -111,7 +111,14 @@ function Calendar(props: CalendarProps): JSX.Element {
 
   const weekdaysValues = (
     <div id="calendar-weekdays-values-current" role="grid" className={classes.weekdays}>
-      <MonthDayElements currentMonth={currentMonthNumber} daysArray={daysArray} onChange={onChange} selectedDate={selectedDate} minDate={minDate} maxDate={maxDate} />
+      <MonthDayElements
+        currentMonth={currentMonthNumber}
+        daysArray={daysArray}
+        onChange={onChange}
+        selectedDate={selectedDate}
+        minDate={minDate}
+        maxDate={maxDate}
+      />
     </div>
   );
 
@@ -122,7 +129,14 @@ function Calendar(props: CalendarProps): JSX.Element {
     const newDaysArray = changeMonth.newMonth.getWeekArray();
     const changingWeekdaysValues = (
       <div id="calendar-weekdays-values-new" role="grid" className={classes.weekdays}>
-        <MonthDayElements currentMonth={newMonth} daysArray={newDaysArray} onChange={_.noop} selectedDate={selectedDate} minDate={minDate} maxDate={maxDate} />
+        <MonthDayElements
+          currentMonth={newMonth}
+          daysArray={newDaysArray}
+          onChange={_.noop}
+          selectedDate={selectedDate}
+          minDate={minDate}
+          maxDate={maxDate}
+        />
       </div>
     );
     const classChangeMonth = clsx(classes.divScroll, {

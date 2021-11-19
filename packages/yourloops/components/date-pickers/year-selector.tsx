@@ -111,10 +111,6 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
 
   const years: JSX.Element[] = [];
   for (let i=minYear; i < maxYear; i++) {
-    const onSelectYear = (year: number) => {
-      return () => props.onSelectedYear(year);
-    };
-
     const displayedYear = i.toString(10);
     const isSelectedYear = i === selectedYear;
     years.push(
@@ -124,7 +120,7 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
         variant={isSelectedYear ? "h6" : "subtitle1"}
         component="div"
         className={clsx(classes.year, { [classes.selectedYear]: isSelectedYear })}
-        onClick={onSelectYear(i)}
+        onClick={() => props.onSelectedYear(i)}
         role="option"
         aria-selected={isSelectedYear}
         ref={isSelectedYear ? refSelected : null}

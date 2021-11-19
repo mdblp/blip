@@ -85,6 +85,9 @@ function DatePicker(props: DatePickerProps): JSX.Element {
     const minDate = props.minDate ? dayjs(props.minDate).startOf("day") : undefined;
     const maxDate = props.maxDate ? dayjs(props.maxDate).endOf("day") : undefined;
     let date = props.date ? dayjs(props.date).startOf("day") : dayjs().startOf("day");
+    // When changing the date, for example by changing the current year,
+    // which can done in an upper element with YearSelector,
+    // be sure we respect the min/max date
     if (isDayjs(minDate) && date.isBefore(minDate)) {
       date = minDate;
     } else if (isDayjs(maxDate) && date.isAfter(maxDate)) {
@@ -102,13 +105,13 @@ function DatePicker(props: DatePickerProps): JSX.Element {
   const handleClose = () => setIsOpen(false);
   const handleCancel = () => {
     handleClose();
-    if (typeof props.onResult === "function") {
+    if (props.onResult) {
       props.onResult();
     }
   };
   const handleOK = () => {
     handleClose();
-    if (typeof props.onResult === "function") {
+    if (props.onResult) {
       props.onResult(selectedDate.format("YYYY-MM-DD"));
     }
   };

@@ -57,9 +57,9 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
   const monthDaysElements = daysArray.map((day) => {
     const dateOfMonth = day.date();
     const month = day.month();
-    let disabled = month !== currentMonth;
-    disabled = disabled || (isDayjs(minDate) && day.isBefore(minDate));
-    disabled = disabled || (isDayjs(maxDate) && day.isAfter(maxDate));
+    const disabled = month !== currentMonth
+      || (isDayjs(minDate) && day.isBefore(minDate))
+      || (isDayjs(maxDate) && day.isAfter(maxDate));
     const selected = isDayjs(selectedDate) && selectedDate.isSame(day, "day");
     return (
       <Day
