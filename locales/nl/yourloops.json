@@ -82,7 +82,7 @@
   "cookies": "Cookies",
   "current-password": "Huidig wachtwoord",
   "date-picker-header-date-format": "MMMM YYYY",
-  "date-picker-toolbar-date-format": "ddd, MMM D",
+  "date-picker-toolbar-date-format": "dddd D MMMM",
   "email": "E-mail",
   "email-not-verified": "Controleer eerst je e-mail",
   "error-account-lock": "Te veel mislukte inlogpogingen. Probeer het over {{delayBeforeNextLoginAttempt}} minuten opnieuw.",
