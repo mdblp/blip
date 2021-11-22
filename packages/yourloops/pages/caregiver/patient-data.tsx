@@ -42,7 +42,7 @@ import { useData } from "../../lib/data";
 import { useSharedUser, ShareUser } from "../../lib/share";
 
 import InvalidRoute from "../../components/invalid-route";
-import ProfileDialog from "../../components/profile-dialog";
+import ProfileDialog from "../../components/dialogs/profile-dialog";
 import DatePicker from "../../components/date-pickers/date-picker";
 
 interface PatientDataParam {

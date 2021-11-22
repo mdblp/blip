@@ -29,7 +29,7 @@
 import { AppConfig } from "../../yourloops/models/config";
 import { IUser } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
-import ProfileDialog from "../../yourloops/components/profile-dialog";
+import ProfileDialog from "yourloops/components/dialogs/profile-dialog";
 import DatePicker from "../../yourloops/components/date-pickers/date-picker";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import { MessageNote } from "../../yourloops/models/message";
