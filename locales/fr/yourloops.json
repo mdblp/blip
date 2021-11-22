@@ -82,7 +82,7 @@
   "cookies": "Cookies",
   "current-password": "Mot de passe actuel",
   "date-picker-header-date-format": "MMMM YYYY",
-  "date-picker-toolbar-date-format": "ddd D MMM",
+  "date-picker-toolbar-date-format": "dddd D MMMM",
   "email": "Email",
   "email-not-verified": "Veuillez d'abord vérifier votre email.",
   "error-account-lock": "Nombre maximum de tentatives de connexion atteint. Réessayez dans {{delayBeforeNextLoginAttempt}} minutes.",
