@@ -82,7 +82,7 @@
   "cookies": "Cookies",
   "current-password": "Aktuelles Passwort",
   "date-picker-header-date-format": "MMMM YYYY",
-  "date-picker-toolbar-date-format": "ddd D MMM",
+  "date-picker-toolbar-date-format": "dddd, D. MMMM",
   "email": "E-Mail",
   "email-not-verified": "Bitte bestätigen Sie zuerst Ihre E-Mail",
   "error-account-lock": "Zu viele fehlgeschlagene Anmeldeversuche. Bitte versuchen Sie es in {{delayBeforeNextLoginAttempt}} wenigen Minuten erneut.",
