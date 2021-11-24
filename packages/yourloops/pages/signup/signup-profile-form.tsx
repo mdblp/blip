@@ -41,6 +41,7 @@ import metrics from "../../lib/metrics";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
+import { JobList } from "../../models/job";
 
 interface Errors {
   firstName: boolean;
@@ -136,12 +137,19 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
+  const validateJob = (): boolean => {
+    const err = _.isEmpty(state.formValues?.profileJob);
+    setErrors({ ...errors, job: err });
+    return !err;
+  };
+
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (
       validateFirstName() &&
       validateLastName() &&
-      validateCountry()
+      validateCountry() &&
+      validateJob()
     ) {
       handleNext();
       metrics.send("registration", "create_profile", state.formValues.accountRole);
@@ -210,6 +218,35 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
+      {state.formValues?.accountRole === "hcp" &&
+        <FormControl
+          variant="outlined"
+          className={classes.TextField}
+          margin="normal"
+          required
+          error={errors.job}
+        >
+          <InputLabel id="job-selector-input-label">
+            {t("signup-job")}
+          </InputLabel>
+          <Select
+            labelId="job-selector-label"
+            label={t("signup-job")}
+            id="job-selector"
+            value={state.formValues?.profileJob}
+            onBlur={() => validateJob()}
+            onChange={(e) => onSelectChange(e, "profileJob")}
+          >
+            <MenuItem key="" value="" />
+            {JobList.map((item) => (
+              <MenuItem id={`signup-job-menuitem-${item}`} key={item} value={item}>
+                {t(item)}
+              </MenuItem>
+            ))}
+
+          </Select>
+        </FormControl>
+      }
       <div id="signup-profileform-button-group" className={classes.Buttons}>
         <Button
           id="button-signup-steppers-back"

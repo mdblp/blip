@@ -65,7 +65,7 @@ export const initialState: SignUpFormState = {
     profileLastname: "",
     profileCountry: "", // how to do better ?
     profilePhone: "",
-    // profileJob: "",
+    profileJob: "",
     preferencesLanguage: getCurrentLang(),
     terms: false,
     privacyPolicy: false,

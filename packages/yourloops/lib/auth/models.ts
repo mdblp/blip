@@ -51,6 +51,7 @@ export interface SignupUser {
   profileLastname: string;
   profileCountry: string;
   profilePhone: string;
+  profileJob: string;
   preferencesLanguage: LanguageCodes;
   terms: boolean;
   privacyPolicy: boolean;
