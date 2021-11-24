@@ -29,7 +29,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -43,6 +42,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
+import IconActionButton from "../../../components/buttons/icon-action-button";
 
 import { SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import { IUser } from "../../../models/shoreline";
@@ -124,17 +124,13 @@ function PatientRow(props: PatientTableRowProps): JSX.Element {
     onRemovePatient(patient, isFlagged, isPendingInvitation);
   };
 
-  const removeText = t("remove-patient");
   const removeMemberButton = (
-    <Tooltip title={removeText} aria-label={removeText} placement="bottom">
-      <IconButton
-        id={`${rowId}-button-remove`}
-        color="primary"
-        aria-label={removeText}
-        onClick={handleClickRemoveMember}>
-        <PersonRemoveIcon />
-      </IconButton>
-    </Tooltip>
+    <IconActionButton
+      icon={<PersonRemoveIcon />}
+      id={`${rowId}-button-remove`}
+      onClick={handleClickRemoveMember}
+      tooltip={t("remove-patient")}
+    />
   );
 
   if (isPendingInvitation) {
