@@ -680,6 +680,7 @@ function testHook(): void {
         profileFirstname: loggedInUsers.caregiver.profile.firstName,
         profileLastname: loggedInUsers.caregiver.profile.lastName,
         profilePhone: "+0000000",
+        profileJob: "",
         terms: true,
         feedback: false,
       };
@@ -712,6 +713,7 @@ function testHook(): void {
       expect(sentProfile).to.be.an("object").not.null;
       expect(sentProfile.contactConsent.isAccepted).to.be.false;
       expect(sentProfile.contactConsent.acceptanceTimestamp).to.be.a("string");
+      expect(sentProfile.job).to.be.equal("");
       expect(authApiHcpStubs.updateSettings.calledOnce, "updateSettings calledOnce").to.be.true;
       expect(authApiHcpStubs.updateSettings.calledAfter(authApiHcpStubs.updateProfile), "settings after profile").to.be.true;
       expect(authApiHcpStubs.updatePreferences.calledOnce, "updatePreferences calledOnce").to.be.true;

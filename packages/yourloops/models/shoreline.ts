@@ -70,6 +70,7 @@ interface Profile {
   termsOfUse?: Consent;
   privacyPolicy?: Consent;
   contactConsent?: Consent;
+  job?: string;
 }
 
 interface Settings {

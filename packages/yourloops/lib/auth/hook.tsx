@@ -262,6 +262,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signup.terms },
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signup.privacyPolicy },
       contactConsent: { acceptanceTimestamp: now, isAccepted: signup.feedback },
+      job: signup.profileJob,
     };
     auth.user.settings = { country: signup.profileCountry };
     auth.user.preferences = { displayLanguageCode: signup.preferencesLanguage };

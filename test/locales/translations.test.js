@@ -81,6 +81,11 @@ const ignoredTransKeyForYourLoops = [
   "Spain",
   "Switzerland",
   "United Kingdom",
+  // Jobs
+  "nurse",
+  "diabeto",
+  "other",
+  "dietitian",
   // <Trans /> keys
   "consent-renew-message",
   "consent-welcome-message",

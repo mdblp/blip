@@ -138,8 +138,11 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   };
 
   const validateJob = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profileJob);
-    setErrors({ ...errors, job: err });
+    let err = false;
+    if (state.formValues?.accountRole === "hcp") {
+      err = _.isEmpty(state.formValues?.profileJob);
+      setErrors({ ...errors, job: err });
+    }
     return !err;
   };
 
