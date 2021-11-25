@@ -25,4 +25,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const JobList = ["diabeto", "nurse", "dietitian", "other"];
+export const JobList = ["hcp-job-diabeto", "hcp-job-nurse", "hcp-job-dietitian", "hcp-job-other"];
