@@ -25,4 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const JobList = ["hcp-job-diabeto", "hcp-job-nurse", "hcp-job-dietitian", "hcp-job-other"];
+export enum Job {
+  empty = "",
+  diabeto = "hcp-job-diabeto",
+  nurse = "hcp-job-nurse",
+  dietetician = "hcp-job-dietitian",
+  other = "hcp-job-other"
+}
+
+export const JobList = Object.values(Job);

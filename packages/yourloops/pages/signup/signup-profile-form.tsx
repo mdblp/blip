@@ -230,7 +230,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           error={errors.job}
         >
           <InputLabel id="job-selector-input-label">
-            {t("signup-job")}
+            {t("job-input-label")}
           </InputLabel>
           <Select
             labelId="job-selector-label"
@@ -240,7 +240,6 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
             onBlur={() => validateJob()}
             onChange={(e) => onSelectChange(e, "profileJob")}
           >
-            <MenuItem key="" value="" />
             {JobList.map((item) => (
               <MenuItem id={`signup-job-menuitem-${item}`} key={item} value={item}>
                 {t(item)}

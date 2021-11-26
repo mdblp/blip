@@ -64,6 +64,7 @@ import SwitchRoleDialogs from "../../components/switch-role";
 import { Errors } from "./models";
 import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
+import { Job, JobList } from "../../models/job";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -162,6 +163,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [birthDate, setBirthDate] = React.useState<string>(user.profile?.patient?.birthday ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
+  const [job, setJob] = React.useState<Job>(user.profile?.job ?? Job.empty);
   const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(user?.profile?.contactConsent?.isAccepted));
 
   let passwordCheckResults: CheckPasswordStrengthResults;
@@ -235,7 +237,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
   const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
-  const createHandleSelectChange = <T extends Units | LanguageCodes>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
+  const createHandleSelectChange = <T extends Units | LanguageCodes | Job >(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
@@ -408,6 +410,24 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               className={`${classes.textField} ${classes.halfWide}`}
             />
           </Box>
+          { role === UserRoles.hcp &&
+            <Box className={classes.inputContainer}>
+              <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+                <InputLabel id="profile-job-input-label">{t("job-input-label")}</InputLabel>
+                <Select
+                  labelId="locale-selector"
+                  id="profile-job-selector"
+                  value={job}
+                  onChange={createHandleSelectChange(setJob)}>
+                  {JobList.map((item) => (
+                    <MenuItem id={`profile-job-menuitem-${item}`} key={item} value={item}>
+                      {t(item)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          }
 
           {roleDependantPart}
 
