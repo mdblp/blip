@@ -180,6 +180,8 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
     metrics.send("patient_selection", "select_patient", isFlagged ? "flagged" : "un-flagged");
   };
 
+  // TODO Add the remove icon on mobile view
+
   return (
     <Paper id={`patients-list-card-${userId}`} className={classes.patientPaperCard} ref={paperRef} data-userid={userId}>
       <IconButton
@@ -248,7 +250,7 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
 }
 
 function PatientListCards(props: PatientListProps): JSX.Element {
-  const { patients, flagged, onClickPatient, onFlagPatient } = props;
+  const { patients, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
   const { t } = useTranslation("yourloops");
   // const [anchorMenuEl, setAnchorMenuEl] = React.useState<null | HTMLElement>(null);
 
@@ -268,6 +270,7 @@ function PatientListCards(props: PatientListProps): JSX.Element {
         trTIR={trTIR}
         trTBR={trTBR}
         trUpload={trUpload}
+        onClickRemovePatient={onClickRemovePatient}
       />
     );
   });

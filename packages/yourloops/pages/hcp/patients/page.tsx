@@ -53,6 +53,7 @@ import { getMedicalValues } from "./utils";
 import PatientListTable from "./table";
 import PatientListCards from "./cards";
 import AddPatientDialog from "./add-dialog";
+import RemovePatientDialog from "./remove-dialog";
 import TeamCodeDialog from "./team-code-dialog";
 
 const log = bows("PatientListPage");
@@ -216,7 +217,8 @@ function PatientListPage(): JSX.Element {
   const [sortFlaggedFirst, setSortFlaggedFirst] = React.useState<boolean>(true);
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
-
+  const [removeDialogOpened, setRemoveDialogOpened] = React.useState<boolean>(false);
+  const [patientToRemove, setPatientToRemove] = React.useState<TeamUser | null>(null);
   const flagged = authHook.getFlagPatients();
 
   const handleRefresh = async (force = false) => {
@@ -299,6 +301,17 @@ function PatientListPage(): JSX.Element {
     setTeamCodeToDisplay(null);
   };
 
+  const handleOnClickRemovePatient = (patient: TeamUser): void => {
+    setPatientToRemove(patient);
+    setRemoveDialogOpened(true);
+  };
+
+  const handleCloseRemovePatientDialog = (confirmed: boolean): void => {
+    setRemoveDialogOpened(false);
+    setPatientToRemove(null);
+    console.log(confirmed);
+  };
+
   const patients = React.useMemo(() => {
     if (!teamHook.initialized || errorMessage !== null) {
       return [];
@@ -364,6 +377,7 @@ function PatientListPage(): JSX.Element {
           onClickPatient={handleSelectPatient}
           onFlagPatient={handleFlagPatient}
           onSortList={handleSortList}
+          onClickRemovePatient={handleOnClickRemovePatient}
         />
       </Container>
     );
@@ -378,6 +392,7 @@ function PatientListPage(): JSX.Element {
           onClickPatient={handleSelectPatient}
           onFlagPatient={handleFlagPatient}
           onSortList={handleSortList}
+          onClickRemovePatient={handleOnClickRemovePatient}
         />
       </Container>
     );
@@ -401,6 +416,11 @@ function PatientListPage(): JSX.Element {
         onClose={handleCloseTeamCodeDialog}
         code={teamCodeToDisplay?.code ?? ""}
         name={teamCodeToDisplay?.name ?? ""}
+      />
+      <RemovePatientDialog
+        isOpen={removeDialogOpened}
+        onClose={handleCloseRemovePatientDialog}
+        patient={patientToRemove}
       />
     </React.Fragment>
   );

@@ -86,7 +86,7 @@ const patientListStyle = makeStyles(
 );
 
 function PatientRow(props: PatientElementProps): JSX.Element {
-  const { trNA, patient, flagged, onClickPatient, onFlagPatient } = props;
+  const { trNA, patient, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
   const { t } = useTranslation("yourloops");
   const authHook = useAuth();
   const teamHook = useTeam();
@@ -113,8 +113,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
 
   const onClickRemoveIcon = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("click");
-    // TODO handle click
+    onClickRemovePatient(patient);
   };
 
   const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
@@ -207,7 +206,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
 }
 
 function PatientListTable(props: PatientListProps): JSX.Element {
-  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList } = props;
+  const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList, onClickRemovePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const patientsRows = patients.map(
@@ -219,6 +218,7 @@ function PatientListTable(props: PatientListProps): JSX.Element {
         flagged={flagged}
         onClickPatient={onClickPatient}
         onFlagPatient={onFlagPatient}
+        onClickRemovePatient={onClickRemovePatient}
       />
     )
   );
