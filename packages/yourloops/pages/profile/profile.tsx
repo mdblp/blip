@@ -215,6 +215,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     if (user.role === UserRoles.patient) {
       _.set(updatedProfile, "patient.birthday", birthDate);
     }
+    if (user.role === UserRoles.hcp) {
+      updatedProfile.job = job;
+    }
     if (showFeedback && Boolean(user?.profile?.contactConsent?.isAccepted) !== feedbackAccepted) {
       updatedProfile.contactConsent = {
         isAccepted: feedbackAccepted,
@@ -251,12 +254,13 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     () => ({
       firstName: _.isEmpty(firstName),
       lastName: _.isEmpty(lastName),
+      job: role === UserRoles.hcp && job === Job.empty,
       currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
       password: passwordCheckResults.onError,
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
     }),
-    [firstName, lastName, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
+    [firstName, lastName, job, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
   );
 
   const isAnyError = React.useMemo(() => _.some(errors), [errors]);
@@ -418,8 +422,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                   labelId="locale-selector"
                   id="profile-job-selector"
                   value={job}
+                  error={errors.job}
                   onChange={createHandleSelectChange(setJob)}>
-                  {JobList.map((item) => (
+                  {JobList.filter((item) => item !== Job.empty).map((item) => (
                     <MenuItem id={`profile-job-menuitem-${item}`} key={item} value={item}>
                       {t(item)}
                     </MenuItem>

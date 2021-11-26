@@ -43,6 +43,7 @@ import { AuthAPI, User, Session, AuthContext, SignupUser } from "../../../lib/au
 import { AuthContextImpl, STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
 import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./api.test";
+import { Job } from "../../../models/job";
 
 /**
  * Auth hook stubs definitions
@@ -680,7 +681,7 @@ function testHook(): void {
         profileFirstname: loggedInUsers.caregiver.profile.firstName,
         profileLastname: loggedInUsers.caregiver.profile.lastName,
         profilePhone: "+0000000",
-        profileJob: "",
+        profileJob: Job.empty,
         terms: true,
         feedback: false,
       };
