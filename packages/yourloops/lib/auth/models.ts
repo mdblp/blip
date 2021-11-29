@@ -29,7 +29,7 @@
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
-import { Job } from "../../models/job";
+import { HcpProfession } from "../../models/hcp-profession";
 
 /** Hook internal usage */
 export interface Session {
@@ -52,7 +52,7 @@ export interface SignupUser {
   profileLastname: string;
   profileCountry: string;
   profilePhone: string;
-  profileJob: Job;
+  hcpProfession: HcpProfession;
   preferencesLanguage: LanguageCodes;
   terms: boolean;
   privacyPolicy: boolean;

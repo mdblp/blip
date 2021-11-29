@@ -41,13 +41,13 @@ import metrics from "../../lib/metrics";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
-import { JobList } from "../../models/job";
+import { HcpProfessionList } from "../../models/hcp-profession";
 
 interface Errors {
   firstName: boolean;
   lastName: boolean;
   country: boolean;
-  job: boolean;
+  hcpProfession: boolean;
   phone: boolean;
 }
 
@@ -87,7 +87,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     firstName: false,
     lastName: false,
     country: false,
-    job: false,
+    hcpProfession: false,
     phone: false,
   };
   const [errors, setErrors] = React.useState<Errors>(defaultErr);
@@ -137,11 +137,11 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     return !err;
   };
 
-  const validateJob = (): boolean => {
+  const validateHcpProfession = (): boolean => {
     let err = false;
     if (state.formValues?.accountRole === "hcp") {
-      err = _.isEmpty(state.formValues?.profileJob);
-      setErrors({ ...errors, job: err });
+      err = _.isEmpty(state.formValues?.hcpProfession);
+      setErrors({ ...errors, hcpProfession: err });
     }
     return !err;
   };
@@ -152,7 +152,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       validateFirstName() &&
       validateLastName() &&
       validateCountry() &&
-      validateJob()
+      validateHcpProfession()
     ) {
       handleNext();
       metrics.send("registration", "create_profile", state.formValues.accountRole);
@@ -227,21 +227,21 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           className={classes.TextField}
           margin="normal"
           required
-          error={errors.job}
+          error={errors.hcpProfession}
         >
-          <InputLabel id="job-selector-input-label">
-            {t("job-input-label")}
+          <InputLabel id="hcp-profession-selector-input-label">
+            {t("hcp-profession-input-label")}
           </InputLabel>
           <Select
-            labelId="job-selector-label"
-            label={t("signup-job")}
-            id="job-selector"
-            value={state.formValues?.profileJob}
-            onBlur={() => validateJob()}
-            onChange={(e) => onSelectChange(e, "profileJob")}
+            labelId="hcp-profession-selector-label"
+            label={t("signup-hcp-profession")}
+            id="hcp-profession-selector"
+            value={state.formValues?.hcpProfession}
+            onBlur={() => validateHcpProfession()}
+            onChange={(e) => onSelectChange(e, "hcpProfession")}
           >
-            {JobList.map((item) => (
-              <MenuItem id={`signup-job-menuitem-${item}`} key={item} value={item}>
+            {HcpProfessionList.map((item) => (
+              <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>
                 {t(item)}
               </MenuItem>
             ))}

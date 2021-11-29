@@ -31,7 +31,7 @@ import { JwtPayload } from "jwt-decode";
 import { Units } from "./generic";
 import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
-import { Job } from "./job";
+import { HcpProfession } from "./hcp-profession";
 
 interface JwtShorelinePayload extends JwtPayload {
   role: "hcp" | "patient" | "caregiver";
@@ -71,7 +71,7 @@ interface Profile {
   termsOfUse?: Consent;
   privacyPolicy?: Consent;
   contactConsent?: Consent;
-  job?: Job;
+  hcpProfession?: HcpProfession;
 }
 
 interface Settings {

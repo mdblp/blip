@@ -64,7 +64,7 @@ import SwitchRoleDialogs from "../../components/switch-role";
 import { Errors } from "./models";
 import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
-import { Job, JobList } from "../../models/job";
+import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -163,7 +163,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [birthDate, setBirthDate] = React.useState<string>(user.profile?.patient?.birthday ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
-  const [job, setJob] = React.useState<Job>(user.profile?.job ?? Job.empty);
+  const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
   const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(user?.profile?.contactConsent?.isAccepted));
 
   let passwordCheckResults: CheckPasswordStrengthResults;
@@ -216,7 +216,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
       _.set(updatedProfile, "patient.birthday", birthDate);
     }
     if (user.role === UserRoles.hcp) {
-      updatedProfile.job = job;
+      updatedProfile.hcpProfession = hcpProfession;
     }
     if (showFeedback && Boolean(user?.profile?.contactConsent?.isAccepted) !== feedbackAccepted) {
       updatedProfile.contactConsent = {
@@ -240,7 +240,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
   const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
-  const createHandleSelectChange = <T extends Units | LanguageCodes | Job >(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
+  const createHandleSelectChange = <T extends Units | LanguageCodes | HcpProfession >(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
@@ -254,13 +254,13 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     () => ({
       firstName: _.isEmpty(firstName),
       lastName: _.isEmpty(lastName),
-      job: role === UserRoles.hcp && job === Job.empty,
+      hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
       currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
       password: passwordCheckResults.onError,
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
     }),
-    [firstName, lastName, job, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
+    [firstName, lastName, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
   );
 
   const isAnyError = React.useMemo(() => _.some(errors), [errors]);
@@ -417,15 +417,15 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           { role === UserRoles.hcp &&
             <Box className={classes.inputContainer}>
               <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
-                <InputLabel id="profile-job-input-label">{t("job-input-label")}</InputLabel>
+                <InputLabel id="profile-hcp-profession-input-label">{t("hcp-profession-input-label")}</InputLabel>
                 <Select
                   labelId="locale-selector"
-                  id="profile-job-selector"
-                  value={job}
-                  error={errors.job}
-                  onChange={createHandleSelectChange(setJob)}>
-                  {JobList.filter((item) => item !== Job.empty).map((item) => (
-                    <MenuItem id={`profile-job-menuitem-${item}`} key={item} value={item}>
+                  id="profile-hcp-profession-selector"
+                  value={hcpProfession}
+                  error={errors.hcpProfession}
+                  onChange={createHandleSelectChange(setHcpProfession)}>
+                  {HcpProfessionList.filter((item) => item !== HcpProfession.empty).map((item) => (
+                    <MenuItem id={`profile-hcp-profession-menuitem-${item}`} key={item} value={item}>
                       {t(item)}
                     </MenuItem>
                   ))}

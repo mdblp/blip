@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum Job {
+export enum HcpProfession {
   empty = "",
-  diabeto = "hcp-job-diabeto",
-  nurse = "hcp-job-nurse",
-  dietetician = "hcp-job-dietitian",
-  other = "hcp-job-other"
+  diabeto = "hcp-profession-diabeto",
+  nurse = "hcp-profession-nurse",
+  dietetician = "hcp-profession-dietitian",
+  other = "hcp-profession-other"
 }
 
-export const JobList = Object.values(Job);
+export const HcpProfessionList = Object.values(HcpProfession);

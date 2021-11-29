@@ -33,5 +33,5 @@ export interface Errors {
   password: boolean;
   passwordConfirmation: boolean;
   birthDate: boolean;
-  job: boolean;
+  hcpProfession: boolean;
 }

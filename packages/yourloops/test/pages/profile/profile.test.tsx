@@ -101,14 +101,14 @@ function testProfile(): void {
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const firstnameInput: HTMLInputElement = container.querySelector("#profile-textfield-firstname");
     const languageSelectInput = container.querySelector("#profile-locale-selector + input");
-    const jobSelectInput = container.querySelector("#profile-job-selector + input");
+    const hcpProfessionSelectInput = container.querySelector("#profile-hcp-profession-selector + input");
     const unitSelectInput = container?.querySelector("#profile-units-selector + input");
 
     expect(saveButton.disabled, "button is disabled").to.be.true;
 
     Simulate.change(firstnameInput, { target: { value: "Chandler" } } as unknown as SyntheticEventData);
     Simulate.change(languageSelectInput, { target: { value: "es" } } as unknown as SyntheticEventData);
-    Simulate.change(jobSelectInput, { target: { value: "hcp-job-nurse" } } as unknown as SyntheticEventData);
+    Simulate.change(hcpProfessionSelectInput, { target: { value: "hcp-profession-nurse" } } as unknown as SyntheticEventData);
     Simulate.change(unitSelectInput, { target: { value: Units.mole } } as unknown as SyntheticEventData);
 
     expect(saveButton.disabled, "button is enabled").to.be.false;

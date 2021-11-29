@@ -89,13 +89,13 @@ function TestSignupProfileForm(): void {
 
   it("should not render the drop down list when caregiver", async () => {
     await mountComponent(false);
-    const dropDownList = document.querySelector("#job-selector");
+    const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).to.be.null;
   });
 
   it("should render the drop down list when HCP", async () => {
     await mountComponent(true);
-    const dropDownList = document.querySelector("#job-selector");
+    const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).to.be.not.null;
   });
 }
