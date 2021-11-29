@@ -94,6 +94,13 @@ function testProfile(): void {
     expect(birthDateInput?.value).to.be.equal(session.user.profile?.patient?.birthday);
   });
 
+  it("should not display profession if user is a patient", () => {
+    const session = loggedInUsers.patientSession;
+    mountProfilePage(session);
+    const hcpProfessionSelectInput = container.querySelector("#profile-hcp-profession-selector + input");
+    expect(hcpProfessionSelectInput).to.be.null;
+  });
+
   it("should enable save button when changes are made", () => {
     const session = loggedInUsers.hcpSession;
     mountProfilePage(session);
