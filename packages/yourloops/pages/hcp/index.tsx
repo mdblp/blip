@@ -70,13 +70,10 @@ function HcpPage(): JSX.Element {
       log.info("Wrong page for current user");
       historyHook.replace(user.getHomePage());
     } else if (!/^\/professional\/preferences$/.test(pathname) && user.role === UserRoles.hcp && user.shouldUpdateHcpProfession()) {
-      console.log("REDIRECT BABY");
       historyHook.replace(preferencesUrl);
     } else if (/^\/professional\/?$/.test(pathname)) {
       // We are on the home page (getHomePage) -> redirect to the correct default route
       // for this user
-      console.log("REDIRECT homepage BABY");
-
       log.info("Redirecting to the patients list");
       historyHook.replace(defaultURL);
     }
