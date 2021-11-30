@@ -41,7 +41,7 @@ export interface PatientListProps {
 }
 
 export interface PatientElementProps {
-  trNA: string;
+  trNA?: string;
   patient: TeamUser;
   flagged: string[];
   onClickPatient: (user: TeamUser) => void;

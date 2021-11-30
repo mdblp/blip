@@ -197,7 +197,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <TableCell id={`${rowId}-remove-icon`}>
         <IconActionButton
           icon={<PersonRemoveIcon />}
-          id="coucou"
+          id="remove-patient-hcp-view-icon"
           onClick={onClickRemoveIcon}
         />
       </TableCell>
