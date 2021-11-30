@@ -33,14 +33,15 @@ import bows from "bows";
 import { UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
-import { ITeam, TeamType, TeamMemberRole, TypeTeamMemberRole, ITeamMember } from "../../models/team";
+import { ITeam, ITeamMember, TeamMemberRole, TeamType, TypeTeamMemberRole } from "../../models/team";
 
 import { errorTextFromException, fixYLP878Settings } from "../utils";
 import metrics from "../metrics";
-import { useAuth, Session } from "../auth";
-import { useNotification, notificationConversion } from "../notifications";
+import { Session, useAuth } from "../auth";
+import { notificationConversion, useNotification } from "../notifications";
 import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
 import TeamAPIImpl from "./api";
+import ShareApi from "../share";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -56,7 +57,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
       role: iTeamMember.role === TeamMemberRole.patient ? UserRoles.patient : UserRoles.hcp,
       userid: userId,
       username: iTeamMember.email,
-      emails: [ iTeamMember.email ],
+      emails: [iTeamMember.email],
       preferences: iTeamMember.preferences,
       profile: iTeamMember.profile,
       settings: fixYLP878Settings(iTeamMember.settings),
@@ -263,7 +264,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
   };
 
   const teamHasOnlyOneMember = (team: Team): boolean => {
-    const numMembers = team.members.reduce((p, t) => t.role === TeamMemberRole.patient ? p : p+1, 0);
+    const numMembers = team.members.reduce((p, t) => t.role === TeamMemberRole.patient ? p : p + 1, 0);
     return numMembers < 2;
   };
 
@@ -433,6 +434,29 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
     }
   };
 
+  const removePatient = async (patient: TeamUser, teamId: string): Promise<void> => {
+    const member = patient.members.find(member => member.team.id === teamId) as TeamMember;
+
+    if (member.status === UserInvitationStatus.pending) {
+      if (_.isNil(member.invitation)) {
+        throw new Error("Missing invitation!");
+      }
+      await notificationHook.cancel(member.invitation);
+    }
+
+    if (teamId === "private") {
+      await ShareApi.removeDirectShare(session, patient.userid);
+    } else {
+      await api.removePatient(session, teamId, patient.userid);
+    }
+
+    const { team } = member;
+    const memberIndex = team.members.findIndex(member => member.user.userid === patient.userid);
+    team.members.splice(memberIndex, 1);
+    patient.members = patient.members.filter(member => member.team.id !== teamId);
+    setTeams(teams);
+  };
+
   const changeMemberRole = async (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
     await api.changeMemberRole(session, member.team.id, member.user.userid, member.user.username, role);
     member.role = role as TeamMemberRole;
@@ -531,6 +555,7 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
     editTeam,
     leaveTeam,
     removeMember,
+    removePatient,
     changeMemberRole,
     setPatientMedicalData,
     getTeamFromCode,
@@ -539,9 +564,9 @@ function TeamContextImpl(api: TeamAPI): TeamContext {
 }
 
 /**
-* Provider component that wraps your app and makes auth object available to any child component that calls useTeam().
-* @param props for team provider & children
-*/
+ * Provider component that wraps your app and makes auth object available to any child component that calls useTeam().
+ * @param props for team provider & children
+ */
 export function TeamContextProvider(props: TeamProvider): JSX.Element {
   const { children, api } = props;
   const context = TeamContextImpl(api ?? TeamAPIImpl); // eslint-disable-line new-cap
@@ -549,10 +574,10 @@ export function TeamContextProvider(props: TeamProvider): JSX.Element {
 }
 
 /**
-* Hook for child components to get the teams functionalities
-*
-* Trigger a re-render when it change.
-*/
+ * Hook for child components to get the teams functionalities
+ *
+ * Trigger a re-render when it change.
+ */
 export function useTeam(): TeamContext {
   return React.useContext(ReactTeamContext);
 }

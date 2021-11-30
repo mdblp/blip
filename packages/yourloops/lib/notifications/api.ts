@@ -162,6 +162,7 @@ async function cancelInvitation(session: Readonly<Session>, notification: INotif
   let id: string | undefined;
   switch (notification.type) {
   case NotificationType.careTeamProInvitation:
+  case NotificationType.careTeamPatientInvitation:
     id = notification.target?.id;
     if (typeof id !== "string") {
       throw new Error("Missing or invalid team ID in notification");

@@ -306,10 +306,9 @@ function PatientListPage(): JSX.Element {
     setRemoveDialogOpened(true);
   };
 
-  const handleCloseRemovePatientDialog = (confirmed: boolean): void => {
+  const handleCloseRemovePatientDialog = (): void => {
     setRemoveDialogOpened(false);
     setPatientToRemove(null);
-    console.log(confirmed);
   };
 
   const patients = React.useMemo(() => {

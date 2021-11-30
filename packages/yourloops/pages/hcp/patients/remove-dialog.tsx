@@ -28,6 +28,9 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -38,38 +41,64 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
-import { TeamUser } from "../../../lib/team";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import { TeamUser, useTeam } from "../../../lib/team";
 import { makeButtonsStyles } from "../../../components/theme";
+import { useAlert } from "../../../components/utils/snackbar";
 
 interface RemoveDialogProps {
   isOpen: boolean;
   patient: TeamUser | null;
-  onClose: (confirmed: boolean) => void;
+  onClose: () => void;
 }
 
 const makeButtonClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-remove-patient-dialog-buttons" });
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    wrapper: {
+      margin: theme.spacing(1),
+      position: "relative",
+    },
+    progressButton: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  }),
+);
 
 function RemoveDialog(props: RemoveDialogProps): JSX.Element {
-  const buttonClasses = makeButtonClasses();
   const { isOpen, onClose, patient } = props;
   const { t } = useTranslation("yourloops");
+  const alert = useAlert();
+  const teamHook = useTeam();
+  const buttonClasses = makeButtonClasses();
+  const classes = useStyles();
   const teamMembers = patient?.members;
-  const [selectedTeam, setSelectedTeam] = useState<string>("");
+  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
+  const [processing, setProcessing] = useState<boolean>(false);
 
-  const handleOnClose = (confirmed: boolean): void => {
-    onClose(confirmed);
-    setSelectedTeam("");
+  const handleOnClose = (): void => {
+    onClose();
+    setSelectedTeamId("");
   };
 
-  const handleOnClickRemove = (): void => {
-    // TODO remove patient
-    onClose(true);
+  const handleOnClickRemove = async (): Promise<void> => {
+    try {
+      setProcessing(true);
+      alert.success(t("alert-remove-patient-success"));
+      await teamHook.removePatient(patient as TeamUser, selectedTeamId);
+      onClose();
+    } catch (err) {
+      alert.error(t("alert-remove-patient-failure"));
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
-    <Dialog open={isOpen} onClose={() => handleOnClose(false)} fullWidth>
+    <Dialog open={isOpen} onClose={handleOnClose}>
       <DialogTitle>
         <strong>{t("remove-patient")}</strong>
       </DialogTitle>
@@ -88,9 +117,9 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         >
           <InputLabel>{t("team")}</InputLabel>
           <Select
-            placeholder={t("team")}
-            value={selectedTeam}
-            onChange={(e) => setSelectedTeam(e.target.value as string)}
+            label={t("team")}
+            value={selectedTeamId}
+            onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {teamMembers?.map((teamMember, index) => (
               <MenuItem value={teamMember.team.id} key={index}>
@@ -110,20 +139,23 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
       <DialogActions>
         <Button
-          onClick={() => handleOnClose(false)}
+          onClick={handleOnClose}
           color="secondary"
           variant="contained"
         >
           {t("button-cancel")}
         </Button>
-        <Button
-          onClick={handleOnClickRemove}
-          className={buttonClasses.buttonRedAction}
-          disabled={!selectedTeam}
-          variant="contained"
-        >
-          {t("remove-patient")}
-        </Button>
+        <div className={classes.wrapper}>
+          <Button
+            onClick={handleOnClickRemove}
+            className={buttonClasses.buttonRedAction}
+            disabled={!selectedTeamId || processing}
+            variant="contained"
+          >
+            {t("remove-patient")}
+          </Button>
+          {processing && <CircularProgress size={24} className={classes.progressButton} />}
+        </div>
       </DialogActions>
     </Dialog>
   );
