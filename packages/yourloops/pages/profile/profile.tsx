@@ -42,6 +42,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -430,6 +431,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                     </MenuItem>
                   ))}
                 </Select>
+                { errors.hcpProfession &&
+                  <FormHelperText error={true}>{t("profile-hcp-profession-helper-text")}</FormHelperText>
+                }
               </FormControl>
             </Box>
           }
