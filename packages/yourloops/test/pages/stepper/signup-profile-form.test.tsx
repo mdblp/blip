@@ -33,6 +33,7 @@ import { act } from "@testing-library/react-hooks/dom";
 import { SignUpFormStateProvider, useSignUpFormState } from "../../../pages/signup/signup-formstate-context";
 
 import SignUpProfileForm from "../../../pages/signup/signup-profile-form";
+import _ from "lodash";
 
 
 function FakeHcpSelector(): JSX.Element {
@@ -54,11 +55,6 @@ function FakeHcpSelector(): JSX.Element {
 function TestSignupProfileForm(): void {
   let container: HTMLElement | null = null;
 
-  const mockHandleBack = () => {
-    return true;
-  };
-  const mockHandleNext = mockHandleBack;
-
   const mountComponent = async (hcp: boolean): Promise<void> => {
     await act(() => {
       return new Promise((resolve) => {
@@ -68,7 +64,7 @@ function TestSignupProfileForm(): void {
             { hcp &&
               <FakeHcpSelector />
             }
-            <SignUpProfileForm handleBack={mockHandleBack} handleNext={mockHandleNext} />
+            <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
           </SignUpFormStateProvider>, container, resolve);
       });
     });

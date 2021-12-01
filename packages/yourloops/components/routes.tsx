@@ -96,10 +96,6 @@ export const PrivateRoute = (props: RouteProps): JSX.Element | null => {
   } else if (!renewConsentPath && user.shouldRenewConsent()) {
     component = <Redirect to={{ pathname: "/renew-consent", state: { from: props.location } }} />;
 
-    // } else if (!renewConsentPath && !hcpPreferencesPath && user.role === UserRoles.hcp && user.shouldUpdateHcpProfession()) {
-    //   console.log("redirect baby " + props.path);
-    //   component = <Redirect to={{ pathname: "/professional/preferences" }} />;
-
   } else if (!renewConsentPath && !historyHook.location.pathname.startsWith(user.getHomePage())) {
     // We are on the wrong prefix, be sure the path prefix is good
     const homePage = user.getHomePage();
