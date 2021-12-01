@@ -425,14 +425,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                   value={hcpProfession}
                   error={errors.hcpProfession}
                   onChange={createHandleSelectChange(setHcpProfession)}>
-                  {HcpProfessionList.filter((item) => item !== HcpProfession.empty).map((item) => (
+                  {HcpProfessionList.filter(item => item !== HcpProfession.empty).map(item => (
                     <MenuItem id={`profile-hcp-profession-menuitem-${item}`} key={item} value={item}>
                       {t(item)}
                     </MenuItem>
                   ))}
                 </Select>
-                { errors.hcpProfession &&
-                  <FormHelperText error={true}>{t("profile-hcp-profession-helper-text")}</FormHelperText>
+                {errors.hcpProfession &&
+                  <FormHelperText error>{t("profile-hcp-profession-helper-text")}</FormHelperText>
                 }
               </FormControl>
             </Box>

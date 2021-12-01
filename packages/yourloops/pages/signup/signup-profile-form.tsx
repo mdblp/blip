@@ -237,7 +237,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
             label={t("signup-hcp-profession")}
             id="hcp-profession-selector"
             value={state.formValues?.hcpProfession}
-            onBlur={() => validateHcpProfession()}
+            onBlur={validateHcpProfession}
             onChange={(e) => onSelectChange(e, "hcpProfession")}
           >
             {HcpProfessionList.map((item) => (

@@ -48,7 +48,7 @@ function FakeHcpSelector(): JSX.Element {
     }
   }, [dispatch, state.formValues.accountRole]);
 
-  return (null);
+  return null;
 }
 
 function TestSignupProfileForm(): void {

@@ -29,7 +29,7 @@ export enum HcpProfession {
   empty = "",
   diabeto = "hcp-profession-diabeto",
   nurse = "hcp-profession-nurse",
-  dietetician = "hcp-profession-dietitian",
+  dietitian = "hcp-profession-dietitian",
   other = "hcp-profession-other"
 }
 
