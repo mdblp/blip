@@ -99,6 +99,7 @@
   "hcp-profession": "Profession",
   "hcp-profession-diabeto": "Diabetologist",
   "hcp-profession-dietitian": "Dietitian",
+  "hcp-profession-input-label": "Profession",
   "hcp-profession-nurse": "Nurse",
   "hcp-profession-other": "Other",
   "hcp-tab-patients": "Patients",
@@ -207,6 +208,7 @@
   "signup-account-selection-error": "You must select an account type",
   "signup-account-selection-msg": "If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.",
   "signup-country": "Country",
+  "signup-hcp-profession": "Profession",
   "signup-radiolabel-caregiver-body": "View patients diabetes data as an individual caregiver or family member.",
   "signup-radiolabel-caregiver-header": "Caregiver and family",
   "signup-radiolabel-hcp-body": "View all your patients diabetes data in one place. Join and create a care team for your clinic or practice.",
@@ -276,6 +278,7 @@
   "team-page-success-edit": "Team information successfully saved",
   "team-page-success-invite-hcp": "Invitation sent to {{email}}!",
   "team-page-success-remove-member": "Healthcare professional is no longer part of your care team.",
+  "team-remove-selection-info": "Please select a team to remove patient {{name}} from :",
   "teams": "Teams",
   "teams-navbar-breadcrumbs-title-my-teams": "My Teams",
   "terms-of-use": "Terms of use",
@@ -283,6 +286,5 @@
   "tooltip-release-notes": "Release notes",
   "units": "Units",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Yesterday",
-  "team-remove-selection-info": "Please select a team to remove patient {{name}} from :"
+  "yesterday": "Yesterday"
 }
