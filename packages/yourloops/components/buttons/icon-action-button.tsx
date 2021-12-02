@@ -36,7 +36,7 @@ export interface RemoveButtonProps {
   color?: PropTypes.Color;
   component?: React.ElementType;
   icon: JSX.Element;
-  id: string;
+  id?: string;
   onClick: (payload: any) => void;
   size?: "small" | "medium";
   tooltip?: string;

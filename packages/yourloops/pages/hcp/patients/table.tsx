@@ -174,7 +174,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
       id={`${rowId}-icon-button-flag`}
       onClick={onClickFlag}
-      className={classes.flag}
+      className={`${classes.flag} patient-flag-button`}
     />);
 
   return (
@@ -197,7 +197,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <TableCell id={`${rowId}-remove-icon`}>
         <IconActionButton
           icon={<PersonRemoveIcon />}
-          id="remove-patient-hcp-view-icon"
+          className="remove-patient-hcp-view-button"
           onClick={onClickRemoveIcon}
         />
       </TableCell>
