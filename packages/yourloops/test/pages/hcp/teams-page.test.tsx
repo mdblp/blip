@@ -40,7 +40,7 @@ import TeamsPage from "../../../pages/hcp/teams-page";
 
 import { teams } from "../../common";
 import { authHookHcp } from "../../lib/auth/hook.test";
-import { stubNotficationContextValue } from "../../lib/notifications/hook.test";
+import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 
 function testTeamPage(): void {
@@ -53,7 +53,7 @@ function testTeamPage(): void {
   function TestTeamsPageComponent(): JSX.Element {
     return (
       <AuthContextProvider value={authHookHcp}>
-        <NotificationContextProvider value={stubNotficationContextValue}>
+        <NotificationContextProvider value={stubNotificationContextValue}>
           <TeamContextProvider api={teamAPI}>
             <TeamsPage />
           </TeamContextProvider>
