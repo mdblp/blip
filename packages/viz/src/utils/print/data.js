@@ -95,7 +95,7 @@ export function filterPointInTimeFnMaker(dateStart, dateEnd) {
 
 /**
  * processDateBoundaries
- * @param {String} mostRecent - an ISO 8601-formatted timestamp of the most recent diabetes datum
+ * @param {string} mostRecent - an ISO 8601-formatted timestamp of the most recent diabetes datum
  * @param {Array} groupedData - Object of tideline-preprocessed Tidepool diabetes data & notes;
  *                              grouped by type
  * @param {Number} numDays - number of days of data to select
@@ -106,13 +106,10 @@ function processDateBoundaries(mostRecent, groupedData, numDays, timePrefs) {
   const timezone = getTimezoneFromTimePrefs(timePrefs);
   const end = getLocalizedCeiling(mostRecent, timePrefs);
 
-  const dateBoundaries = [end.toISOString()];
+  const dateBoundaries = [end];
   let last = end;
   for (let i = 0; i < numDays; ++i) {
-    const startOfDate = moment.utc(last)
-      .tz(timezone)
-      .subtract(1, "day")
-      .toDate();
+    const startOfDate = moment.tz(last, timezone).subtract(1, "day").toDate();
     dateBoundaries.push(
       startOfDate.toISOString()
     );

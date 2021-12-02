@@ -932,7 +932,12 @@ TidelineData.prototype.generateFillData = function generateFillData() {
   this.data.sort((a, b) => a.epoch - b.epoch);
 };
 
-TidelineData.prototype.setBasicsData = function setBasicsData() {
+/**
+ * Generate basics data
+ * @param {Date | string | number | moment.Moment | null} lastDate
+ * @returns {null|object}
+ */
+TidelineData.prototype.getBasicsData = function getBasicsData(lastDate = null) {
   const last = _.findLast(this.data, (d) => {
     switch (d.type) {
     case "basal":
@@ -977,8 +982,15 @@ TidelineData.prototype.setBasicsData = function setBasicsData() {
 
   // wrapping in an if-clause here because of the no-data
   // or CGM-only data cases
-  if (!_.isEmpty(last)) {
-    const dateRange = [dt.findBasicsStart(last.normalTime, this.opts.timePrefs.timezoneName), last.normalTime];
+  if (!_.isNil(last) && !_.isEmpty(last)) {
+    let endDate = last.normalTime;
+    let timezone = this.opts.timePrefs.timezoneName;
+    if (!_.isNil(lastDate)) {
+      timezone = this.getTimezoneAt(lastDate);
+      endDate = moment.tz(lastDate, timezone).toISOString();
+    }
+
+    const dateRange = [dt.findBasicsStart(endDate, this.opts.timePrefs.timezoneName), endDate];
     const basicsData = {
       timezone: this.opts.timePrefs.timezoneName ?? "UTC",
       dateRange,
@@ -1038,8 +1050,10 @@ TidelineData.prototype.setBasicsData = function setBasicsData() {
         basicsData.nData += basicsData.data[aType].data.length;
       }
     }
-    this.basicsData = basicsData;
+
+    return basicsData;
   }
+  return null;
 };
 
 /**
@@ -1214,7 +1228,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   endTimer("checkRequired");
 
   startTimer("setBasicsData");
-  this.setBasicsData();
+  this.basicsData = this.getBasicsData();
   endTimer("setBasicsData");
 
   endTimer("addData");

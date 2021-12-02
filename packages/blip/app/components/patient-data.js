@@ -577,36 +577,48 @@ class PatientDataPage extends React.Component {
     return data;
   }
 
-  generatePDF() {
+  async generatePDF() {
     const { patient } = this.props;
-    const { tidelineData, bgPrefs, printOpts, timePrefs } = this.state;
-    const diabetesData = tidelineData.diabetesData;
+    const { tidelineData, bgPrefs, printOpts, epochLocation } = this.state;
 
-    const mostRecent = diabetesData[diabetesData.length - 1].normalTime;
+    if (tidelineData === null) {
+      return null;
+    }
+
+    // May be more fine gran, but it's a quick & dirty change for a specific task
+    await this.handleDatetimeLocationChange(epochLocation, 30 * MS_IN_DAY, "pdf");
+
+    const timezone = tidelineData.getTimezoneAt(epochLocation);
+    const endPDFDate = moment.tz(epochLocation, timezone).endOf("day").toISOString();
+    const timePrefs = {
+      timezoneAware: true,
+      timezoneName: timezone,
+    };
+    // const currentDate =
     const opts = {
       bgPrefs,
       numDays: printOpts.numDays,
       patient,
       timePrefs,
-      mostRecent,
+      endPDFDate,
     };
 
     const dailyData = vizUtils.data.selectDailyViewData(
-      mostRecent,
+      endPDFDate,
       _.pick(tidelineData.grouped, ["basal", "bolus", "cbg", "food", "message", "smbg", "upload", "physicalActivity"]),
       printOpts.numDays.daily,
       timePrefs
     );
 
     const bgLogData = vizUtils.data.selectBgLogViewData(
-      mostRecent,
+      endPDFDate,
       _.pick(tidelineData.grouped, ["smbg"]),
       printOpts.numDays.bgLog,
       timePrefs
     );
 
     const pdfData = {
-      basics: tidelineData.basicsData,
+      basics: tidelineData.getBasicsData(endPDFDate),
       daily: dailyData,
       settings: _.last(tidelineData.grouped.pumpSettings),
       bgLog: bgLogData,
@@ -845,11 +857,12 @@ class PatientDataPage extends React.Component {
    * Chart display date / range change
    * @param {number} epochLocation datetime epoch value in ms
    * @param {number} msRange ms around epochLocation
+   * @param {"pdf" | null} forWhat
    * @returns {Promise<boolean>} true if new data are loaded
    */
-  async handleDatetimeLocationChange(epochLocation, msRange) {
+  async handleDatetimeLocationChange(epochLocation, msRange, forWhat = null) {
     const { loadingState } = this.state;
-    const chartType = this.getChartType();
+    const chartType = forWhat ?? this.getChartType();
     let dataLoaded = false;
 
     // this.log.debug('handleDatetimeLocationChange()', {
@@ -898,6 +911,8 @@ class PatientDataPage extends React.Component {
         this.setState({ epochLocation, msRange });
       }
     }
+
+    this.setState({ pdf: null });
 
     return dataLoaded;
   }

@@ -44,7 +44,6 @@ import _ from "lodash";
 // user’s browser time, not PwD’s configured timezone
 import { utcFormat, timeFormat } from "d3-time-format";
 import moment from "moment-timezone";
-import sundial from "sundial";
 import i18next from "i18next";
 
 const t = i18next.t.bind(i18next);
@@ -142,22 +141,15 @@ export function getBrowserTimezone() {
 
 /**
  * getTimezoneFromTimePrefs
- * @param {Object} timePrefs - object containing timezoneAware Boolean and timezoneName String
+ * @param {{timezoneAware: boolean; timezoneName: string; }} timePrefs - object containing timezoneAware Boolean and timezoneName String
  *
  * @return {String} timezoneName from timePrefs, browser, or fallback to 'UTC'
  */
 export function getTimezoneFromTimePrefs(timePrefs) {
-  const { timezoneAware, timezoneName } = timePrefs;
-  try {
-    let timezone = getBrowserTimezone() || "UTC";
-    if (timezoneAware && timezoneName) {
-      timezone = timezoneName;
-    }
-    sundial.checkTimezoneName(timezone);
-    return timezone;
-  } catch (err) {
-    return "UTC";
+  if (typeof timePrefs === "object" && !_.isEmpty(timePrefs)) {
+    return timePrefs.timezoneName ?? getBrowserTimezone() ?? "UTC";
   }
+  return "UTC";
 }
 
 /**
