@@ -4,11 +4,11 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Improvements
-- YLP-1011 Add profession details for HCPs
 - YLP-67 Popup calendar on daily view
 - YLP-941 Improve email validation with a better verification and error message
 - YLP-996 Restructure account preferences page
 - YLP-1002 Allow patients to receive the email "forgot password" from yourloops
+- YLP-1011 Add profession details for HCPs
 - YLP-1040 Give access to latest release notes from YourLoops
 ### Security Update
 - YLP-62 Implement session timeout
