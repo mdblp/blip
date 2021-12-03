@@ -54,7 +54,7 @@ function testTeamPage(): void {
     return (
       <AuthContextProvider value={authHookHcp}>
         <NotificationContextProvider value={stubNotificationContextValue}>
-          <TeamContextProvider api={teamAPI}>
+          <TeamContextProvider teamAPI={teamAPI}>
             <TeamsPage />
           </TeamContextProvider>
         </NotificationContextProvider>

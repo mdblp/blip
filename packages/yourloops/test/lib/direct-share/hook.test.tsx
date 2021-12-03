@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Direct patient / caregivers share data models
+ * Direct SHare hook tests
  *
  * All rights reserved.
  *
@@ -26,27 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from "../../models/generic";
-import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
-import { INotification } from "../notifications";
-import { Session } from "../auth";
+import * as sinon from "sinon";
+import { DirectShareAPI } from "../../../lib/share/models";
 
-interface DirectShareUser {
-  userId: string;
-  preferences?: Preferences | null;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  email: string;
-}
+export const directShareAPI: DirectShareAPI = {
+  removeDirectShare: sinon.stub().resolves(),
+};
 
-export interface DirectShareAPI {
-  viewer?: DirectShareUser;
-  patient?: DirectShareUser;
-  removeDirectShare: (session: Session, userId: string) => Promise<void>
-}
-
-export interface ShareUser {
-  user: IUser;
-  invitation?: INotification;
-  status: UserInvitationStatus;
+export function resetDirectShareAPIStubs(): void {
+  (directShareAPI.removeDirectShare as sinon.SinonStub).resetHistory();
 }

@@ -89,7 +89,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       setProcessing(true);
       alert.success(t("alert-remove-patient-success"));
       await teamHook.removePatient(patient as TeamUser, selectedTeamId);
-      onClose();
+      handleOnClose();
     } catch (err) {
       alert.error(t("alert-remove-patient-failure"));
     } finally {
@@ -98,7 +98,11 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleOnClose}>
+    <Dialog
+      id="remove-hcp-patient-dialog"
+      open={isOpen}
+      onClose={handleOnClose}
+    >
       <DialogTitle>
         <strong>{t("remove-patient")}</strong>
       </DialogTitle>
@@ -117,6 +121,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         >
           <InputLabel>{t("team")}</InputLabel>
           <Select
+            id="patient-team-selector"
             label={t("team")}
             value={selectedTeamId}
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
@@ -147,6 +152,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         </Button>
         <div className={classes.wrapper}>
           <Button
+            id="remove-patient-dialog-validate-button"
             onClick={handleOnClickRemove}
             className={buttonClasses.buttonRedAction}
             disabled={!selectedTeamId || processing}

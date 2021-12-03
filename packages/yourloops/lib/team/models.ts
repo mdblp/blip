@@ -39,6 +39,7 @@ import {
   TypeTeamMemberRole,
 } from "../../models/team";
 import { Session } from "../auth";
+import { DirectShareAPI } from "../share/models";
 
 export const TEAM_CODE_LENGTH = 9;
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/;
@@ -220,7 +221,8 @@ export interface TeamContext {
 
 export interface TeamProvider {
   children: React.ReactNode;
-  api?: TeamAPI;
+  teamAPI?: TeamAPI;
+  directShareAPI?: DirectShareAPI;
 }
 
 export interface LoadTeams {

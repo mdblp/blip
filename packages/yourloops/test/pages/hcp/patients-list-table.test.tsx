@@ -75,7 +75,7 @@ function testPatientListTable(): void {
         render(
           <AuthContextProvider value={authHookHcp}>
             <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider api={teamAPI}>
+              <TeamContextProvider teamAPI={teamAPI}>
                 <PatientListTableComponent />
               </TeamContextProvider>
             </NotificationContextProvider>
@@ -88,6 +88,8 @@ function testPatientListTable(): void {
     container = document.createElement("div");
     document.body.appendChild(container);
     clickPatientStub.reset();
+    clickFlagPatientStub.reset();
+    clickRemovePatientStub.reset();
   });
 
   afterEach(() => {
