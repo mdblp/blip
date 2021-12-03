@@ -106,7 +106,7 @@ function processDateBoundaries(mostRecent, groupedData, numDays, timePrefs) {
   const timezone = getTimezoneFromTimePrefs(timePrefs);
   const end = getLocalizedCeiling(mostRecent, timePrefs);
 
-  const dateBoundaries = [end];
+  const dateBoundaries = [end.toISOString()];
   let last = end;
   for (let i = 0; i < numDays; ++i) {
     const startOfDate = moment.tz(last, timezone).subtract(1, "day").toDate();
