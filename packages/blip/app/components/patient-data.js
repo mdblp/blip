@@ -146,8 +146,8 @@ class PatientDataPage extends React.Component {
       },
       printOpts: {
         numDays: {
-          daily: 6,
-          bgLog: 30,
+          daily: 21,
+          bgLog: 21,
         },
       },
       /** @type {TidelineData | null} */
@@ -586,7 +586,7 @@ class PatientDataPage extends React.Component {
     }
 
     // May be more fine gran, but it's a quick & dirty change for a specific task
-    await this.handleDatetimeLocationChange(epochLocation, 30 * MS_IN_DAY, "pdf");
+    await this.handleDatetimeLocationChange(epochLocation, (1 + printOpts.numDays.daily) * MS_IN_DAY, "pdf");
 
     const timezone = tidelineData.getTimezoneAt(epochLocation);
     const endPDFDate = moment.tz(epochLocation, timezone).endOf("day").toISOString();
@@ -880,7 +880,20 @@ class PatientDataPage extends React.Component {
     // Don't do anything if we are currently loading
     if (loadingState === LOADING_STATE_DONE) {
       // For daily check for +/- 1 day (and not 0.5 day), for others only the displayed range
-      let msRangeDataNeeded = chartType === "daily" ? MS_IN_DAY : msRange / 2;
+
+      // let msRangeDataNeeded = chartType === "daily" ? MS_IN_DAY : msRange / 2;
+      let msRangeDataNeeded = MS_IN_DAY;
+      switch (chartType) {
+      case "daily":
+        msRangeDataNeeded = MS_IN_DAY;
+        break;
+      case "pdf":
+        msRangeDataNeeded = msRange;
+        break;
+      default:
+        msRangeDataNeeded = msRange / 2;
+        break;
+      }
 
       /** @type {DateRange} */
       let rangeDisplay = {
