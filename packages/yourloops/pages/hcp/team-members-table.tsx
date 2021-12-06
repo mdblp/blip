@@ -45,6 +45,7 @@ import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -83,13 +84,14 @@ const teamMembersStyles = makeStyles((theme: Theme) => {
     },
     accordionMembersList: {
       flexDirection: "column",
+      padding: 0,
     },
     tableRowHeader: {
       textTransform: "uppercase",
       fontSize: "16px",
     },
     tableRowPending: {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.secondary.main,
     },
     paperMember: {
       display: "flex",
@@ -103,8 +105,8 @@ const teamMembersStyles = makeStyles((theme: Theme) => {
       height: 0,
     },
     paperMemberPending: {
-      width: 40,
-      height: 40,
+      width: 32,
+      height: 32,
       marginLeft: 0,
       marginRight: 0,
     },
@@ -147,7 +149,7 @@ const MembersAccordionSummary = withStyles(
       "justifyContent": "left",
       "transition": theme.transitions.create(["background-color", "min-height"]),
       "&:hover": {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.secondary.main,
       },
     },
     content: {
@@ -269,7 +271,8 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
             color="primary"
             aria-label={removeText}
             component="span"
-            onClick={handleClickRemoveMember}>
+            onClick={handleClickRemoveMember}
+          >
             <PersonRemoveIcon />
           </IconButton>
         </Tooltip>
@@ -277,7 +280,16 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     }
 
     return (
-      <TableRow id={`team-members-list-${team.id}-row-${userId}`} className={`${rowClassName} team-members-list-row`} key={email} data-email={email} data-userid={userId} data-teamid={team.id} data-role={member.role} data-status={member.status}>
+      <TableRow
+        id={`team-members-list-${team.id}-row-${userId}`}
+        className={`${rowClassName} team-members-list-row`}
+        key={email}
+        data-email={email}
+        data-userid={userId}
+        data-teamid={team.id}
+        data-role={member.role}
+        data-status={member.status}
+      >
         <TableCell id={`team-members-list-${team.id}-row-${userId}-icon`}>{icon}</TableCell>
         <TableCell style={{ fontWeight: "bold" }} id={`team-members-list-${team.id}-row-${userId}-lastname`}>
           {lastName}
@@ -313,30 +325,32 @@ function TeamMemberTable(props: TeamMembersProps): JSX.Element {
   const { t } = useTranslation("yourloops");
 
   return (
-    <Table id={`team-members-list-${team.id}-table`}>
-      {/* prettier-ignore */}
-      <TableHead className={classes.tableRowHeader}>
-        <TableRow>
-          <TableCell id={`team-members-list-${team.id}-cellheader-icon`} />
-          <TableCell id={`team-members-list-${team.id}-cellheader-lastname`}>
-            {t("lastname")}
-          </TableCell>
-          <TableCell id={`team-members-list-${team.id}-cellheader-firstname`}>
-            {t("firstname")}
-          </TableCell>
-          <TableCell id={`team-members-list-${team.id}-cellheader-email`}>
-            {t("email")}
-          </TableCell>
-          <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
-            {t("team-member-admin")}
-          </TableCell>
-          <TableCell id={`team-members-list-${team.id}-cellheader-actions`} />
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        <MembersTableBody {...props} classes={classes} />
-      </TableBody>
-    </Table>
+    <TableContainer component={Paper}>
+      <Table id={`team-members-list-${team.id}-table`}>
+        {/* prettier-ignore */}
+        <TableHead className={classes.tableRowHeader}>
+          <TableRow>
+            <TableCell id={`team-members-list-${team.id}-cellheader-icon`} />
+            <TableCell id={`team-members-list-${team.id}-cellheader-lastname`}>
+              {t("lastname")}
+            </TableCell>
+            <TableCell id={`team-members-list-${team.id}-cellheader-firstname`}>
+              {t("firstname")}
+            </TableCell>
+            <TableCell id={`team-members-list-${team.id}-cellheader-email`}>
+              {t("email")}
+            </TableCell>
+            <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
+              {t("team-member-admin")}
+            </TableCell>
+            <TableCell id={`team-members-list-${team.id}-cellheader-actions`} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <MembersTableBody {...props} classes={classes} />
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
@@ -399,7 +413,8 @@ function TeamMembersCards(props: TeamMembersProps): JSX.Element {
             </div>
           ) : null}
           <div className={classes.paperMemberChip}>
-            <Chip id={`team-members-list-${team.id}-badge-admin-${email}`} size="small" label={t("pending-invitation")} />
+            <Chip id={`team-members-list-${team.id}-badge-admin-${email}`} size="small"
+              label={t("pending-invitation")} />
           </div>
         </React.Fragment>
       );
@@ -420,7 +435,8 @@ function TeamMembersCards(props: TeamMembersProps): JSX.Element {
           <div className={classes.paperMemberBreak} />
           {member.role === TeamMemberRole.admin ? (
             <div className={classes.paperMemberChip}>
-              <Chip id={`team-members-list-${team.id}-badge-admin-${userId}`} size="small" label={t("team-member-admin")} />
+              <Chip id={`team-members-list-${team.id}-badge-admin-${userId}`} size="small"
+                label={t("team-member-admin")} />
             </div>
           ) : null}
         </React.Fragment>

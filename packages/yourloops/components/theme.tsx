@@ -32,11 +32,12 @@ import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 const commonTheme: PaletteOptions = {
   type: "light",
   primary: {
-    main: "#109182",
-    light: "#F7F7F8",
+    main: "#039be5",
+    light: "#4dabf5",
+    dark:"#1769aa",
   },
   secondary: {
-    main: "#E5F0F0",
+    main: "#EDFAFF",
     light: "#F5F9F9",
     dark: "#D4E6E6",
   },

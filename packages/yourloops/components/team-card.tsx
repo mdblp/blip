@@ -61,7 +61,6 @@ const teamCardStyles = makeStyles((theme: Theme) => {
     paper: {
       display: "flex",
       flexDirection: "column",
-      backgroundColor: theme.palette.primary.light,
     },
     paperRoot: {
       padding: "1em 3em",
@@ -229,7 +228,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
   const teamCode = getDisplayTeamCode(team.code);
 
   return (
-    <Paper id={`team-card-${id}`} elevation={0} className={`${classes.paper} team-card`} classes={{ root: classes.paperRoot }} data-teamid={id}>
+    <Paper id={`team-card-${id}`} elevation={3} className={`${classes.paper} team-card`} classes={{ root: classes.paperRoot }} data-teamid={id}>
       <div id={`team-card-${id}-actions`} className={classes.firstRow}>
         <h2 id={`team-card-${id}-name`} className={classes.teamName}>
           {team.name}

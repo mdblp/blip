@@ -82,7 +82,7 @@ const patientListStyle = makeStyles(
       },
       tableRowPending: {
         cursor: "default",
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.secondary.main,
       },
       tableRowHeader: {
         textTransform: "uppercase",
