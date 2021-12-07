@@ -31,9 +31,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch, useLocation } from "react-router-dom";
 
 import "@fontsource/roboto";
-import "branding/theme-base.css";
 import "branding/theme.css";
-
 import metrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
 import { PrivateRoute, PublicRoute } from "../components/routes";
