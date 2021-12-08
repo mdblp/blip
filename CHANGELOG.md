@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Fixed
 - YLP-1116 Missing password strength meter into reset password page
+### Engineering Use
+- YLP-1114 Review routes and data structure for message-api
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
