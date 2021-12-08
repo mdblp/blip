@@ -29,7 +29,8 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -39,7 +40,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
-import NativeSelect from "@material-ui/core/NativeSelect";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
 import { REGEX_EMAIL } from "../../../lib/utils";
@@ -52,33 +54,9 @@ export interface AddDialogProps {
 }
 
 const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-add-patient-buttons" });
-const dialogStyles = makeStyles(
-  (theme: Theme) => {
-    return {
-      dialog: {
-        display: "flex",
-        flexDirection: "column",
-        width: "25rem",
-      },
-      textFieldEmail: {
-        flexGrow: 1,
-        marginBottom: theme.spacing(2),
-      },
-      formControlSelectTeam: {
-        flexGrow: 1,
-        marginBottom: theme.spacing(2),
-      },
-      buttonCancel: {
-        marginRight: theme.spacing(2),
-      },
-    };
-  },
-  { name: "ylp-hcp-add-patient-dialog" }
-);
 
 function AddDialog(props: AddDialogProps): JSX.Element {
   const buttonsClasses = makeButtonsClasses();
-  const classes = dialogStyles();
   const { t, i18n } = useTranslation("yourloops");
   const [email, setEmail] = React.useState<string>("");
   const [teamId, setTeamId] = React.useState<string>("");
@@ -123,84 +101,112 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const dialogIsOpen = props.actions !== null;
   const buttonAddDisabled = errorMessage !== null || !isValidEmail() || teamId.length < 1;
   const optionsTeamsElements: JSX.Element[] = [
-    <option id="patient-list-dialog-add-team-option-none" aria-label={t("aria-none")} value="" key="none" />,
+    <MenuItem id="patient-list-dialog-add-team-option-none" aria-label={t("aria-none")} value="" key="none" />,
   ];
   const teams = props.actions?.teams ?? [];
   for (const team of teams) {
     optionsTeamsElements.push(
-      <option id={`patient-list-dialog-add-team-option-${team.id}`} value={team.id} key={team.id} aria-label={team.name}>
+      <MenuItem
+        id={`patient-list-dialog-add-team-option-${team.id}`}
+        value={team.id}
+        key={team.id}
+        aria-label={team.name}
+      >
         {team.name}
-      </option>
+      </MenuItem>
     );
   }
 
   const termsOfUse = t("terms-of-use");
   const linkTerms = (
-    <Link id="patient-list-dialog-add-warning-link-terms" aria-label={termsOfUse} href={DiabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+    <Link
+      id="patient-list-dialog-add-warning-link-terms"
+      aria-label={termsOfUse}
+      href={DiabeloopUrl.getTermsUrL(i18n.language)}
+      target="_blank"
+      rel="noreferrer"
+    >
       {termsOfUse}
     </Link>
   );
   const privacyPolicy = t("privacy-policy");
   const linkPrivacyPolicy = (
-    <Link id="patient-list-dialog-add-warning-link-privacy" aria-label={termsOfUse} href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer">
+    <Link
+      id="patient-list-dialog-add-warning-link-privacy"
+      aria-label={termsOfUse}
+      href={DiabeloopUrl.getPrivacyPolicyUrL(i18n.language)}
+      target="_blank"
+      rel="noreferrer"
+    >
       {privacyPolicy}
     </Link>
   );
   return (
-    <Dialog id="patient-list-dialog-add" aria-labelledby={t("add-patient")} open={dialogIsOpen} onClose={handleClose}>
+    <Dialog
+      id="patient-list-dialog-add"
+      aria-labelledby={t("add-patient")}
+      open={dialogIsOpen}
+      onClose={handleClose}
+    >
       <DialogTitle id="patient-list-dialog-add-title">
         <strong>{t("modal-add-patient")}</strong>
       </DialogTitle>
 
-      <DialogContent className={classes.dialog}>
-        <TextField
-          id="patient-list-dialog-add-email"
-          className={classes.textFieldEmail}
-          margin="normal"
-          label={t("email")}
-          variant="outlined"
-          value={email}
-          required
-          error={errorMessage !== null}
-          onBlur={handleVerifyEmail}
-          onChange={handleChangeEmail}
-          helperText={errorMessage}
-        />
-        <FormControl className={classes.formControlSelectTeam}>
-          <InputLabel id="patient-list-dialog-add-team-label" htmlFor="patient-list-dialog-add-team-input">
-            {t("team")}
-          </InputLabel>
-          <NativeSelect
-            value={teamId}
-            onChange={handleChangeTeam}
-            inputProps={{
-              name: "teamid",
-              id: "patient-list-dialog-add-team-input",
-            }}>
-            {optionsTeamsElements}
-          </NativeSelect>
-        </FormControl>
-        <DialogContentText id="patient-list-dialog-add-warning-line1">
-          {t("modal-add-patient-warning-line1")}
-        </DialogContentText>
-        <Trans
-          id="patient-list-dialog-add-warning-line2"
-          i18nKey="modal-add-patient-warning-line2"
-          t={t}
-          components={{ linkTerms, linkPrivacyPolicy }}
-          values={{ terms: termsOfUse, privacyPolicy }}
-          parent={DialogContentText}>
-          Read our {linkTerms} and {linkPrivacyPolicy}.
-        </Trans>
+      <DialogContent>
+        <Box display="flex" flexDirection="column">
+          <TextField
+            id="patient-list-dialog-add-email"
+            margin="normal"
+            label={t("email")}
+            variant="outlined"
+            value={email}
+            required
+            error={errorMessage !== null}
+            onBlur={handleVerifyEmail}
+            onChange={handleChangeEmail}
+            helperText={errorMessage}
+          />
+          <FormControl>
+            <InputLabel id="patient-list-dialog-add-team-label" htmlFor="patient-list-dialog-add-team-input">
+              {t("team")}
+            </InputLabel>
+            <Select
+              value={teamId}
+              onChange={handleChangeTeam}
+              inputProps={{
+                name: "teamid",
+                id: "patient-list-dialog-add-team-input",
+              }}
+            >
+              {optionsTeamsElements}
+            </Select>
+          </FormControl>
+          <Box mt={2}>
+            <DialogContentText id="patient-list-dialog-add-warning-line1">
+              {t("modal-add-patient-warning-line1")}
+            </DialogContentText>
+          </Box>
+          <Trans
+            id="patient-list-dialog-add-warning-line2"
+            i18nKey="modal-add-patient-warning-line2"
+            t={t}
+            components={{ linkTerms, linkPrivacyPolicy }}
+            values={{ terms: termsOfUse, privacyPolicy }}
+            parent={DialogContentText}
+          >
+            Read our {linkTerms} and {linkPrivacyPolicy}.
+          </Trans>
+        </Box>
       </DialogContent>
 
-      <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
+      <DialogActions>
         <Button
           id="patient-list-dialog-add-button-cancel"
           onClick={handleClose}
-          className={`${classes.buttonCancel} ${buttonsClasses.buttonCancel}`}
+          className={buttonsClasses.buttonCancel}
           color="secondary"
-          variant="contained">
+          variant="contained"
+        >
           {t("button-cancel")}
         </Button>
         <Button
@@ -209,7 +215,8 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           disabled={buttonAddDisabled}
           className={buttonsClasses.buttonOk}
           variant="contained"
-          color="primary">
+          color="primary"
+        >
           {t("button-invite")}
         </Button>
       </DialogActions>
