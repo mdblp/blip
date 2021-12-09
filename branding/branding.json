@@ -2,16 +2,19 @@
   "tidepool": {
     "branding/logo.png": "tidepool/logo.png",
     "branding/logo-icon.svg": "tidepool/logo.png",
-    "branding/logo-full.svg": "tidepool/logo.png"
+    "branding/logo-full.svg": "tidepool/logo.png",
+    "favicon": "tidepool/favicon.ico"
   },
   "diabeloop/green": {
     "branding/logo.png": "diabeloop/green/logo.png",
     "branding/logo-icon.svg": "diabeloop/green/logo-icon.svg",
-    "branding/logo-full.svg": "diabeloop/green/logo-full.svg"
+    "branding/logo-full.svg": "diabeloop/green/logo-full.svg",
+    "favicon": "diabeloop/green/favicon.ico"
   },
   "diabeloop/blue": {
     "branding/logo.png": "diabeloop/blue/logo.svg",
     "branding/logo-icon.svg": "diabeloop/blue/logo-icon.svg",
-    "branding/logo-full.svg": "diabeloop/blue/logo.svg"
+    "branding/logo-full.svg": "diabeloop/blue/logo.svg",
+    "favicon": "diabeloop/blue/favicon.ico"
   }
 }
