@@ -46,7 +46,7 @@ import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
 import { TeamUser, useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { PatientElementProps, PatientListProps } from "./models";
+import { PatientElementCardProps, PatientListProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
@@ -80,8 +80,8 @@ const patientListStyle = makeStyles(theme => ({
   },
 }), { name: "ylp-hcp-patients-cards" });
 
-function PatientCard(props: PatientElementProps): JSX.Element {
-  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient } = props;
+function PatientCard(props: PatientElementCardProps): JSX.Element {
+  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient, trNA, trTIR, trTBR, trUpload } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const authHook = useAuth();
@@ -89,10 +89,6 @@ function PatientCard(props: PatientElementProps): JSX.Element {
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
   const paperRef = React.createRef<HTMLDivElement>();
 
-  const trNA = t("N/A");
-  const trTIR = translateSortField(t, SortFields.tir);
-  const trTBR = translateSortField(t, SortFields.tbr);
-  const trUpload = translateSortField(t, SortFields.upload);
   const userId = patient.userid;
   const isFlagged = flagged.includes(userId);
   const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
@@ -161,10 +157,6 @@ function PatientCard(props: PatientElementProps): JSX.Element {
       componentMounted = false;
     };
   }, [paperRef, isPendingInvitation, authHook, medicalData, patient, teamHook]);
-
-  if (isPendingInvitation) {
-    return (<PendingPatientCard patient={patient} onClickRemoveIcon={onClickRemoveIcon} />);
-  }
 
   return (
     <Paper
@@ -251,6 +243,13 @@ function PatientCard(props: PatientElementProps): JSX.Element {
 
 function Cards(props: PatientListProps): JSX.Element {
   const { patients, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
+  const { t } = useTranslation("yourloops");
+  const teamHook = useTeam();
+
+  const trNA = t("N/A");
+  const trTIR = translateSortField(t, SortFields.tir);
+  const trTBR = translateSortField(t, SortFields.tbr);
+  const trUpload = translateSortField(t, SortFields.upload);
 
   // TODO: Sort is disabled for now, we will see how to do the UI later:
 
@@ -299,16 +298,24 @@ function Cards(props: PatientListProps): JSX.Element {
   return (
     <React.Fragment>
       {patients.map((teamUser: TeamUser, index): JSX.Element => (
-        <PatientCard
-          key={index}
-          patient={teamUser}
-          flagged={flagged}
-          onClickPatient={onClickPatient}
-          onFlagPatient={onFlagPatient}
-          onClickRemovePatient={onClickRemovePatient}
-        />
-      ))
-      }
+        <React.Fragment key={index}>
+          {teamHook.isOnlyPendingInvitation(teamUser) ?
+            <PendingPatientCard patient={teamUser} onClickRemovePatient={() => onClickRemovePatient} />
+            : <PatientCard
+              key={index}
+              trNA={trNA}
+              trTIR={trTIR}
+              trTBR={trTBR}
+              trUpload={trUpload}
+              patient={teamUser}
+              flagged={flagged}
+              onClickPatient={onClickPatient}
+              onFlagPatient={onFlagPatient}
+              onClickRemovePatient={onClickRemovePatient}
+            />
+          }
+        </React.Fragment>
+      ))}
     </React.Fragment>
   );
 }

@@ -209,11 +209,13 @@ function PatientListTable(props: PatientListProps): JSX.Element {
   const { patients, flagged, order, orderBy, onClickPatient, onFlagPatient, onSortList, onClickRemovePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
+  const trNA = t("N/A");
+
   const patientsRows = patients.map(
     (patient: TeamUser): JSX.Element => (
       <PatientRow
         key={patient.userid}
-        trNA={t("N/A")}
+        trNA={trNA}
         patient={patient}
         flagged={flagged}
         onClickPatient={onClickPatient}

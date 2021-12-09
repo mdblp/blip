@@ -276,7 +276,7 @@
   "team-page-success-edit": "Team information successfully saved",
   "team-page-success-invite-hcp": "Invitation sent to {{email}}!",
   "team-page-success-remove-member": "Healthcare professional is no longer part of your care team.",
-  "team-remove-selection-info": "Please select a team to remove patient {{name}} from :",
+  "team-modal-remove-patient-choice": "Please select a team to remove patient {{name}} from:",
   "teams": "Teams",
   "teams-navbar-breadcrumbs-title-my-teams": "My Teams",
   "terms-of-use": "Terms of use",

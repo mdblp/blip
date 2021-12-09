@@ -40,7 +40,7 @@ import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 
 interface PendingPatientCardProps {
   patient: TeamUser;
-  onClickRemoveIcon: (event: React.MouseEvent) => void;
+  onClickRemovePatient: (patient: TeamUser) => void;
 }
 
 const style = makeStyles(theme => ({
@@ -61,9 +61,14 @@ const style = makeStyles(theme => ({
 }));
 
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
-  const { patient, onClickRemoveIcon } = props;
+  const { patient, onClickRemovePatient } = props;
   const classes = style();
   const email = _.get(patient, "emails[0]", patient.username);
+
+  const handleOnClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClickRemovePatient(patient);
+  };
 
   return (
     <Paper
@@ -87,7 +92,7 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
       <IconActionButton
         icon={<PersonRemoveIcon />}
         id="remove-patient-hcp-view-icon"
-        onClick={onClickRemoveIcon}
+        onClick={handleOnClick}
       />
     </Paper>
   );

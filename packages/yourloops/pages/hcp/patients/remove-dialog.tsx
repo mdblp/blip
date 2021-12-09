@@ -42,6 +42,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
 import { TeamUser, useTeam } from "../../../lib/team";
+import { getUserFirstLastName } from "../../../lib/utils";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
 
@@ -79,6 +80,9 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const [selectedTeamId, setSelectedTeamId] = useState<string>("");
   const [processing, setProcessing] = useState<boolean>(false);
 
+  const userName = patient ? getUserFirstLastName(patient) : { firstName: "", lastName: "" };
+  const name = t("user-name", userName);
+
   const handleOnClose = (): void => {
     onClose();
     setSelectedTeamId("");
@@ -109,7 +113,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
       <DialogContent>
         <DialogContentText>
-          {t("team-remove-selection-info", { name: patient?.profile?.fullName })}
+          {t("team-modal-remove-patient-choice", { name })}
         </DialogContentText>
       </DialogContent>
 

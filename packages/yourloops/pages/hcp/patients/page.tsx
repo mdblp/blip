@@ -217,7 +217,6 @@ function PatientListPage(): JSX.Element {
   const [sortFlaggedFirst, setSortFlaggedFirst] = React.useState<boolean>(true);
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
-  const [removeDialogOpened, setRemoveDialogOpened] = React.useState<boolean>(false);
   const [patientToRemove, setPatientToRemove] = React.useState<TeamUser | null>(null);
   const flagged = authHook.getFlagPatients();
 
@@ -301,15 +300,9 @@ function PatientListPage(): JSX.Element {
     setTeamCodeToDisplay(null);
   };
 
-  const handleOnClickRemovePatient = (patient: TeamUser): void => {
-    setPatientToRemove(patient);
-    setRemoveDialogOpened(true);
-  };
+  const handleOnClickRemovePatient = (patient: TeamUser): void => setPatientToRemove(patient);
 
-  const handleCloseRemovePatientDialog = (): void => {
-    setRemoveDialogOpened(false);
-    setPatientToRemove(null);
-  };
+  const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null);
 
   const patients = React.useMemo(() => {
     if (!teamHook.initialized || errorMessage !== null) {
@@ -417,7 +410,7 @@ function PatientListPage(): JSX.Element {
         name={teamCodeToDisplay?.name ?? ""}
       />
       <RemovePatientDialog
-        isOpen={removeDialogOpened}
+        isOpen={!!patientToRemove}
         onClose={handleCloseRemovePatientDialog}
         patient={patientToRemove}
       />
