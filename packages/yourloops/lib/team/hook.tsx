@@ -455,6 +455,10 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     team.members.splice(memberIndex, 1);
     patient.members = patient.members.filter(member => member.team.id !== teamId);
     setTeams(teams);
+
+    if (patient.members.length < 1) {
+      await authHook.flagPatient(patient.userid);
+    }
   };
 
   const changeMemberRole = async (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
