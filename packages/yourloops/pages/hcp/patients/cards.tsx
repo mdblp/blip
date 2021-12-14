@@ -51,7 +51,7 @@ import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-import IconActionButton from "../../../components/buttons/icon-action-button";
+import IconActionButton from "../../../components/buttons/icon-action";
 
 const patientListStyle = makeStyles(theme => ({
   patientPaperCard: {

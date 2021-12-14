@@ -42,7 +42,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-import IconActionButton from "../../../components/buttons/icon-action-button";
+import IconActionButton from "../../../components/buttons/icon-action";
 
 import { SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import { IUser } from "../../../models/shoreline";

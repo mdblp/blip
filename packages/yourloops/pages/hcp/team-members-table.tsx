@@ -52,7 +52,7 @@ import Typography from "@material-ui/core/Typography";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import PersonRemoveIcon from "../../components/icons/PersonRemoveIcon";
-import IconActionButton from "../../components/buttons/icon-action-button";
+import IconActionButton from "../../components/buttons/icon-action";
 
 import { UserInvitationStatus } from "../../models/generic";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";

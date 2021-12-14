@@ -35,7 +35,7 @@ import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
 import { TeamUser } from "../../../lib/team";
-import IconActionButton from "../../../components/buttons/icon-action-button";
+import IconActionButton from "../../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 
 interface PendingPatientCardProps {

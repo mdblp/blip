@@ -45,7 +45,7 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
-import IconActionButton from "../../../components/buttons/icon-action-button";
+import IconActionButton from "../../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 
 import { SortDirection, SortFields } from "../../../models/generic";
