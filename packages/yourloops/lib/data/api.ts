@@ -328,7 +328,7 @@ export async function getMessageThread(session: Session, messageId: string): Pro
  */
 export async function startMessageThread(session: Session, message: MessageNote): Promise<string> {
   const { sessionToken, traceToken } = session;
-  const messageURL = new URL(`/message/v1/send/${message.groupid}`, appConfig.API_HOST);
+  const messageURL = new URL(`/message/v1/send`, appConfig.API_HOST);
   const response = await fetch(messageURL.toString(), {
     method: "POST",
     headers: {
@@ -353,24 +353,7 @@ export async function startMessageThread(session: Session, message: MessageNote)
  * @returns The id of the new message
  */
 export async function replyMessageThread(session: Session, message: MessageNote): Promise<string> {
-  const { sessionToken, traceToken } = session;
-  const messageURL = new URL(`/message/v1/reply/${message.parentmessage}`, appConfig.API_HOST);
-  const response = await fetch(messageURL.toString(), {
-    method: "POST",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.sessionToken]: sessionToken,
-    },
-    body: JSON.stringify(message),
-  });
-
-  if (response.ok) {
-    const result = (await response.json()) as { id: string };
-    return result.id;
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return startMessageThread(session, message)
 }
 
 /**
@@ -379,7 +362,7 @@ export async function replyMessageThread(session: Session, message: MessageNote)
  */
 export async function editMessage(session: Session, message: MessageNote): Promise<void> {
   const { sessionToken, traceToken } = session;
-  const messageURL = new URL(`/message/v1/edit/${message.id}`, appConfig.API_HOST);
+  const messageURL = new URL(`/message/v1/edit`, appConfig.API_HOST);
   const response = await fetch(messageURL.toString(), {
     method: "PUT",
     headers: {
