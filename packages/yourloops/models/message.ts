@@ -41,4 +41,4 @@ interface MessageNote {
   }
 }
 
-export { MessageNote };
+export default MessageNote;

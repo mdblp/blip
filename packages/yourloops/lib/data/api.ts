@@ -30,7 +30,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { PatientData } from "models/device-data";
-import { MessageNote } from "models/message";
+import MessageNote from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { APITideWhispererErrorResponse } from "../../models/error";
 import { ComputedTIR } from "../../models/device-data";
@@ -328,7 +328,7 @@ export async function getMessageThread(session: Session, messageId: string): Pro
  */
 export async function startMessageThread(session: Session, message: MessageNote): Promise<string> {
   const { sessionToken, traceToken } = session;
-  const messageURL = new URL(`/message/v1/send`, appConfig.API_HOST);
+  const messageURL = new URL("/message/v1/send", appConfig.API_HOST);
   const response = await fetch(messageURL.toString(), {
     method: "POST",
     headers: {
@@ -353,7 +353,7 @@ export async function startMessageThread(session: Session, message: MessageNote)
  * @returns The id of the new message
  */
 export async function replyMessageThread(session: Session, message: MessageNote): Promise<string> {
-  return startMessageThread(session, message)
+  return startMessageThread(session, message);
 }
 
 /**
@@ -362,7 +362,7 @@ export async function replyMessageThread(session: Session, message: MessageNote)
  */
 export async function editMessage(session: Session, message: MessageNote): Promise<void> {
   const { sessionToken, traceToken } = session;
-  const messageURL = new URL(`/message/v1/edit`, appConfig.API_HOST);
+  const messageURL = new URL("/message/v1/edit", appConfig.API_HOST);
   const response = await fetch(messageURL.toString(), {
     method: "PUT",
     headers: {
