@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -45,6 +45,8 @@ import { TeamUser, useTeam } from "../../../lib/team";
 import { getUserFirstLastName } from "../../../lib/utils";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
+import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
+import Box from "@material-ui/core/Box";
 
 interface RemoveDialogProps {
   isOpen: boolean;
@@ -101,6 +103,12 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     }
   };
 
+  useEffect(() => {
+    if (teamMembers?.length === 1) {
+      setSelectedTeamId(teamMembers[0].team.id);
+    }
+  }, [teamMembers]);
+
   return (
     <Dialog
       id="remove-hcp-patient-dialog"
@@ -132,7 +140,17 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
           >
             {teamMembers?.map((teamMember, index) => (
               <MenuItem value={teamMember.team.id} key={index}>
-                {teamMember.team.code === "private" ? t("private-practice") : teamMember.team.name}
+                {teamMember.team.code === "private" ?
+                  <Box display="flex" alignItems="center">
+                    <React.Fragment>
+                      <Box display="flex" ml={0} mr={1}>
+                        <MedicalServiceIcon color="primary" />
+                      </Box>
+                      {t("private-practice")}
+                    </React.Fragment>
+                  </Box>
+                  : teamMember.team.name
+                }
               </MenuItem>
             ))
             }
