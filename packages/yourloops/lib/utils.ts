@@ -172,3 +172,29 @@ export function numberPrecision(value: number, precision = 1): number {
   const v = 10 ** precision;
   return Math.round(value * v) / v;
 }
+
+/**
+ * This function is useful to sort arrays of objects.
+ * You must specify which object key you want to sort the array
+ * ex: myArray.sort(compareValues("name")
+ */
+export function compareValues(key: string, order = "asc") {
+  return (a: any, b: any) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+      return 0;
+    }
+
+    const varA = (typeof a[key] === "string") ? a[key].toUpperCase() : a[key];
+    const varB = (typeof b[key] === "string") ? b[key].toUpperCase() : b[key];
+
+    let comparison = 0;
+    if (varA > varB) {
+      comparison = 1;
+    } else if (varA < varB) {
+      comparison = -1;
+    }
+
+    return (order === "desc") ? (comparison * -1) : comparison;
+  };
+}
