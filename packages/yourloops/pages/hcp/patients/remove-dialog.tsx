@@ -29,6 +29,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -41,12 +42,12 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
+import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
+
 import { Team, TeamUser, useTeam } from "../../../lib/team";
 import { compareValues, getUserFirstLastName } from "../../../lib/utils";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
-import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
-import Box from "@material-ui/core/Box";
 
 interface RemoveDialogProps {
   isOpen: boolean;
@@ -84,7 +85,16 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const [sortedTeams, setSortedTeams] = useState<Team[]>([]);
 
   const userName = patient ? getUserFirstLastName(patient) : { firstName: "", lastName: "" };
-  const name = t("user-name", userName);
+  const patientName = t("user-name", userName);
+
+  const getSuccessAlertMessage = () => {
+    const team = sortedTeams.find(team => team.id === selectedTeamId) as Team;
+    if (team.code === "private") {
+      return alert.success(t("alert-remove-private-practice-success", { patientName }));
+    }
+    return alert.success(t("alert-remove-patient-from-team-success", { teamName: team.name, patientName }));
+  };
+
 
   const handleOnClose = (): void => {
     onClose();
@@ -95,7 +105,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     try {
       setProcessing(true);
       await teamHook.removePatient(patient as TeamUser, selectedTeamId);
-      alert.success(t("alert-remove-patient-success"));
+      getSuccessAlertMessage();
       handleOnClose();
     } catch (err) {
       alert.error(t("alert-remove-patient-failure"));
@@ -140,7 +150,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
       <DialogContent>
         <DialogContentText>
-          {t("team-modal-remove-patient-choice", { name })}
+          {t("team-modal-remove-patient-choice", { patientName })}
         </DialogContentText>
       </DialogContent>
 
@@ -177,11 +187,13 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         </FormControl>
       </DialogContent>
 
-      <DialogContent>
-        <DialogContentText>
-          {t("modal-remove-patient-info-2")}
-        </DialogContentText>
-      </DialogContent>
+      {sortedTeams.length === 1 &&
+        <DialogContent>
+          <DialogContentText>
+            {t("modal-remove-patient-info-2")}
+          </DialogContentText>
+        </DialogContent>
+      }
 
       <DialogActions>
         <Button
