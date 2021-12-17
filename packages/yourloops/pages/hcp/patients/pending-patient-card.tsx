@@ -64,6 +64,7 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
   const { patient, onClickRemovePatient } = props;
   const classes = style();
   const email = _.get(patient, "emails[0]", patient.username);
+  const patientId = patient.userid;
 
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -72,17 +73,17 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
 
   return (
     <Paper
-      id={`patients-list-card-${email}`}
+      id={`pending-patient-list-card-${patientId}`}
       className={classes.container}
       data-userid={email}
     >
       <div className={classes.pendingIconContainer}>
-        <AccessTimeIcon id={`patients-list-card-${email}-pendingicon`} />
+        <AccessTimeIcon id={`pending-patient-list-card-pending-icon-${patientId}`} />
       </div>
       <Link
         color="textPrimary"
         className={classes.fullWidth}
-        id={`patients-list-card-${email}-email-link`}
+        id={`pending-patient-list-card-email-link-${patientId}`}
         href={`mailto:${email}`}
         target="_blank"
         rel="noreferrer"
@@ -91,7 +92,7 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
       </Link>
       <IconActionButton
         icon={<PersonRemoveIcon />}
-        id="remove-patient-hcp-view-icon"
+        id={`pending-patient-list-card-remove-icon-${patientId}`}
         onClick={handleOnClick}
       />
     </Paper>
