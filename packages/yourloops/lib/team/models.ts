@@ -193,9 +193,10 @@ export interface TeamContext {
   /**
    * Remove a patient from HCP patient list
    * @param patient the patient to remove
+   * @param member
    * @param teamId id of the team ("private" if it's a private practice)
    */
-  removePatient(patient: TeamUser, teamId: string): Promise<void>;
+  removePatient(patient: TeamUser, member: TeamMember, teamId: string): Promise<void>;
   /**
    * Change a member role
    * @param member The concerned member

@@ -19,6 +19,7 @@
   "alert-patient-list-data-computed": "Data pulled from the last 24h",
   "alert-remove-patient-failure": "Impossible to remove patient. Please try again later.",
   "alert-remove-patient-from-team-success": "{{patientName}} is no longer a member of {{teamName}}",
+  "alert-remove-patient-pending-invitation-success": "The invitation has been canceled",
   "alert-remove-patient-success": "You no longer have access to this patient data.",
   "alert-remove-private-practice-success": "Direct data sharing with {{patientName}} has been removed",
   "alt-img-logo": "YourLoops Logo",

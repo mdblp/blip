@@ -435,9 +435,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     }
   };
 
-  const removePatient = async (patient: TeamUser, teamId: string): Promise<void> => {
-    const member = patient.members.find(member => member.team.id === teamId) as TeamMember;
-
+  const removePatient = async (patient: TeamUser, member: TeamMember, teamId: string): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
       if (_.isNil(member.invitation)) {
         throw new Error("Missing invitation!");

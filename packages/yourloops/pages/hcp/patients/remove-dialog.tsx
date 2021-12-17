@@ -44,10 +44,11 @@ import Select from "@material-ui/core/Select";
 
 import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 
-import { Team, TeamUser, useTeam } from "../../../lib/team";
+import { Team, TeamMember, TeamUser, useTeam } from "../../../lib/team";
 import { compareValues, getUserFirstLastName } from "../../../lib/utils";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
+import { UserInvitationStatus } from "../../../models/generic";
 
 interface RemoveDialogProps {
   isOpen: boolean;
@@ -79,15 +80,20 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const teamHook = useTeam();
   const buttonClasses = makeButtonClasses();
   const classes = useStyles();
-  const teamMembers = patient?.members;
+
   const [selectedTeamId, setSelectedTeamId] = useState<string>("");
   const [processing, setProcessing] = useState<boolean>(false);
   const [sortedTeams, setSortedTeams] = useState<Team[]>([]);
 
   const userName = patient ? getUserFirstLastName(patient) : { firstName: "", lastName: "" };
   const patientName = t("user-name", userName);
+  const teamMembers = patient?.members;
+  const member = teamMembers?.find(member => member.team.id === selectedTeamId) as TeamMember;
 
   const getSuccessAlertMessage = () => {
+    if (member.status === UserInvitationStatus.pending) {
+      return alert.success("The invitation has been canceled");
+    }
     const team = sortedTeams.find(team => team.id === selectedTeamId) as Team;
     if (team.code === "private") {
       return alert.success(t("alert-remove-private-practice-success", { patientName }));
@@ -104,7 +110,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true);
-      await teamHook.removePatient(patient as TeamUser, selectedTeamId);
+      await teamHook.removePatient(patient as TeamUser, member, selectedTeamId);
       getSuccessAlertMessage();
       handleOnClose();
     } catch (err) {
