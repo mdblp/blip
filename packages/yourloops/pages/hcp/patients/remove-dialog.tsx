@@ -92,7 +92,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
   const getSuccessAlertMessage = () => {
     if (member.status === UserInvitationStatus.pending) {
-      return alert.success("The invitation has been canceled");
+      return alert.success(t("alert-remove-patient-pending-invitation-success"));
     }
     const team = sortedTeams.find(team => team.id === selectedTeamId) as Team;
     if (team.code === "private") {
