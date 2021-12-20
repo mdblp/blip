@@ -7,18 +7,22 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
-import appConfig from "../../lib/config";
+import { checkPasswordStrength } from "../../lib/auth/helpers";
 import { useAuth } from "../../lib/auth";
 import { useAlert } from "../../components/utils/snackbar";
-import RequestPassordMessage from "./request-password-message";
+import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
+import Password from "../../components/utils/password";
+import RequestPasswordMessage from "./request-password-message";
+
+interface Errors {
+  username: boolean;
+  newPassword: boolean;
+  confirmNewPassword: boolean;
+}
 
 const formStyle = makeStyles((theme: Theme) => {
   return {
@@ -41,91 +45,45 @@ const formStyle = makeStyles((theme: Theme) => {
 });
 
 export default function ResetPasswordContent(): JSX.Element {
-  const defaultErr = {
-    username: false,
-    newPassword: false,
-    confirmNewPassword: false,
-  };
   const { t } = useTranslation("yourloops");
   const classes = formStyle();
   const auth = useAuth();
   const history = useHistory();
   const alert = useAlert();
-  const [username, setUserName] = React.useState("");
+
+  const [username, setUsername] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
-  const [errors, setErrors] = React.useState(defaultErr);
-  const [showNewPassword, setShowNewPassword] = React.useState(false);
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = React.useState(
-    false
-  );
   const [success, setSuccess] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
-  const emptyUsername = _.isEmpty(username);
+  const [usernameTextFieldFocused, setUsernameTextFieldFocused] = React.useState(false);
+
+  const passwordCheck = checkPasswordStrength(newPassword);
   const resetKey = React.useMemo(() => new URLSearchParams(location.search).get("resetKey"), []);
-
-  const onBack = (): void => {
-    history.push("/");
-  };
-
-  const onChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-    setState: React.Dispatch<React.SetStateAction<string>>
-  ): void => {
-    setState(event.target.value);
-  };
-
-  const onClick = (
-    _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    showPassword: boolean,
-    setState: React.Dispatch<React.SetStateAction<boolean>>
-  ): void => {
-    setState(!showPassword);
-  };
-
-  const resetFormState = (): void => {
-    setErrors(defaultErr);
-  };
-
-  const validateUserName = (): boolean => {
-    const err = _.isEmpty(username.trim()) || !REGEX_EMAIL.test(username);
-    setErrors({ ...errors, username: err });
-    return !err;
-  };
-
-  const validatePassword = (): boolean => {
-    const err =
-      _.isEmpty(newPassword?.trim()) ||
-      newPassword?.length < appConfig.PWD_MIN_LENGTH;
-    setErrors({ ...errors, newPassword: err });
-    return !err;
-  };
-
-  const validateConfirmNewPassword = (): boolean => {
-    const err =
-      _.isEmpty(confirmNewPassword.trim()) ||
-      confirmNewPassword !== newPassword;
-    setErrors({ ...errors, confirmNewPassword: err });
-    return !err;
-  };
-
-  const validateForm = () => validateUserName() && validatePassword() && validateConfirmNewPassword();
+  const errors: Errors = React.useMemo(
+    () => ({
+      username: _.isEmpty(username.trim()) || !REGEX_EMAIL.test(username),
+      newPassword: passwordCheck.onError,
+      confirmNewPassword: _.isEmpty(confirmNewPassword.trim()) || confirmNewPassword !== newPassword,
+      resetKey: !resetKey,
+    }), [confirmNewPassword, newPassword, passwordCheck.onError, resetKey, username]
+  );
 
   const onSendResetPassword = async (): Promise<void> => {
-    resetFormState();
-    if (validateForm() && resetKey !== null) {
+    if (!errors.username && !errors.newPassword && !errors.confirmNewPassword && resetKey) {
       try {
-        setInProgress(true);
+        await setInProgress(true);
         const success = await auth.resetPassword(
           resetKey,
           username,
           confirmNewPassword
         );
         setSuccess(success);
-        setInProgress(false);
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
         alert.error(t(errorMessage));
+      } finally {
+        setInProgress(false);
       }
     }
   };
@@ -133,7 +91,7 @@ export default function ResetPasswordContent(): JSX.Element {
   return (
     <React.Fragment>
       {success ? (
-        <RequestPassordMessage
+        <RequestPasswordMessage
           header="password-reset-success-title"
           body="password-reset-success"
         />
@@ -150,101 +108,69 @@ export default function ResetPasswordContent(): JSX.Element {
                 justifyContent: "center",
               }}
               noValidate
-              autoComplete="off">
+              autoComplete="off"
+            >
               {_.isEmpty(resetKey) ? <Typography>{t("reset-key-is-missing")}</Typography> : null}
               <TextField
                 id="username"
-                className={classes.TextField}
                 margin="normal"
                 label={t("email")}
                 variant="outlined"
                 value={username}
                 required
-                error={errors.username}
-                onBlur={() => validateUserName()}
-                onChange={(e) => onChange(e, setUserName)}
-                helperText={errors.username && t("invalid-email")}
+                error={errors.username && username.length > 0 && !usernameTextFieldFocused}
+                onBlur={() => setUsernameTextFieldFocused(false)}
+                onFocus={() => setUsernameTextFieldFocused(true)}
+                onChange={(e) => setUsername(e.target.value)}
+                helperText={errors.username && username.length > 0 && !usernameTextFieldFocused && t("invalid-email")}
               />
-              <TextField
+              <Password
                 id="password"
-                className={classes.TextField}
-                margin="normal"
                 label={t("new-password")}
+                autoComplete="new-password"
                 variant="outlined"
-                type={showNewPassword ? "text" : "password"}
                 value={newPassword}
+                error={errors.newPassword && newPassword.length > 0}
+                checkStrength
                 required
-                error={errors.newPassword}
-                onBlur={() => validatePassword()}
-                onChange={(e) => onChange(e, setNewPassword)}
                 helperText={
-                  errors.newPassword &&
-                  t("password-too-weak", {
-                    minLength: appConfig.PWD_MIN_LENGTH,
-                  })
+                  newPassword.length > 0 &&
+                  <PasswordStrengthMeter
+                    force={passwordCheck.score}
+                    error={errors.newPassword}
+                    helperText={passwordCheck.helperText}
+                  />
                 }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={t("aria-toggle-password-visibility")}
-                        onClick={(e) =>
-                          onClick(e, showNewPassword, setShowNewPassword)
-                        }>
-                        {showNewPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                onChange={(password) => setNewPassword(password)}
               />
-              <TextField
+              <Password
                 id="confirm-password"
-                className={classes.TextField}
-                margin="normal"
                 label={t("confirm-new-password")}
-                variant="outlined"
-                type={showConfirmNewPassword ? "text" : "password"}
                 value={confirmNewPassword}
+                error={errors.confirmNewPassword && confirmNewPassword.length > 0}
+                helperText={errors.confirmNewPassword && t("password-dont-match")}
+                autoComplete="new-password"
+                variant="outlined"
+                margin="normal"
                 required
-                error={errors.confirmNewPassword}
-                onBlur={() => validateConfirmNewPassword()}
-                onChange={(e) => onChange(e, setConfirmNewPassword)}
-                helperText={
-                  errors.confirmNewPassword && t("password-dont-match")
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label={t("aria-toggle-password-visibility")}
-                        onClick={(e) =>
-                          onClick(
-                            e,
-                            showConfirmNewPassword,
-                            setShowConfirmNewPassword
-                          )
-                        }>
-                        {showConfirmNewPassword ? (
-                          <Visibility />
-                        ) : (
-                          <VisibilityOff />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                onChange={(password) => setConfirmNewPassword(password)}
               />
             </form>
           </CardContent>
           <CardActions className={classes.CardActions}>
-            <Button variant="contained" color="secondary" onClick={onBack}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => history.push("/")}
+            >
               {t("button-cancel")}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={onSendResetPassword}
-              disabled={emptyUsername || inProgress}>
+              disabled={_.some(errors) || inProgress}
+            >
               {inProgress ? t("button-saving") : t("button-save")}
             </Button>
           </CardActions>
