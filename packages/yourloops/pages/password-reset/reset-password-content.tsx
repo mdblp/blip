@@ -100,7 +100,7 @@ export default function ResetPasswordContent(): JSX.Element {
   const onSendResetPassword = async (): Promise<void> => {
     if (!errors.username && !errors.newPassword && !errors.confirmNewPassword && resetKey) {
       try {
-        await setInProgress(true);
+        setInProgress(true);
         const success = await auth.resetPassword(
           resetKey,
           username,
