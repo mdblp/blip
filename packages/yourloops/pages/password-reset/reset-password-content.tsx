@@ -1,3 +1,30 @@
+/**
+ * Copyright (c) 2021, Diabeloop
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import _ from "lodash";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -17,6 +44,7 @@ import { useAlert } from "../../components/utils/snackbar";
 import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 import Password from "../../components/utils/password";
 import RequestPasswordMessage from "./request-password-message";
+import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
 
 interface Errors {
   username: boolean;
@@ -28,18 +56,18 @@ const formStyle = makeStyles((theme: Theme) => {
   return {
     CardContent: {
       textAlign: "start",
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
+      display: "flex",
+      flexDirection: "column",
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: theme.spacing(4),
+        marginRight: theme.spacing(4),
+      },
     },
     CardActions: {
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      padding: theme.spacing(2),
+      [theme.breakpoints.up("sm")]: {
+        marginRight: theme.spacing(4),
+      },
       justifyContent: "flex-end",
-    },
-    TextField: {
-      marginLeft: theme.spacing(0),
-      marginRight: theme.spacing(1),
     },
   };
 });
@@ -101,61 +129,54 @@ export default function ResetPasswordContent(): JSX.Element {
             <Typography variant="h6" gutterBottom>
               {t("password-reset-title")}
             </Typography>
-            <form
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              {_.isEmpty(resetKey) ? <Typography>{t("reset-key-is-missing")}</Typography> : null}
-              <TextField
-                id="username"
-                margin="normal"
-                label={t("email")}
-                variant="outlined"
-                value={username}
-                required
-                error={errors.username && username.length > 0 && !usernameTextFieldFocused}
-                onBlur={() => setUsernameTextFieldFocused(false)}
-                onFocus={() => setUsernameTextFieldFocused(true)}
-                onChange={(e) => setUsername(e.target.value)}
-                helperText={errors.username && username.length > 0 && !usernameTextFieldFocused && t("invalid-email")}
-              />
-              <Password
-                id="password"
-                label={t("new-password")}
-                autoComplete="new-password"
-                variant="outlined"
-                value={newPassword}
-                error={errors.newPassword && newPassword.length > 0}
-                checkStrength
-                required
-                helperText={
-                  newPassword.length > 0 &&
-                  <PasswordStrengthMeter
-                    force={passwordCheck.score}
-                    error={errors.newPassword}
-                    helperText={passwordCheck.helperText}
-                  />
-                }
-                onChange={(password) => setNewPassword(password)}
-              />
-              <Password
-                id="confirm-password"
-                label={t("confirm-new-password")}
-                value={confirmNewPassword}
-                error={errors.confirmNewPassword && confirmNewPassword.length > 0}
-                helperText={errors.confirmNewPassword && t("password-dont-match")}
-                autoComplete="new-password"
-                variant="outlined"
-                margin="normal"
-                required
-                onChange={(password) => setConfirmNewPassword(password)}
-              />
-            </form>
+
+            {_.isEmpty(resetKey) ? <Typography>{t("reset-key-is-missing")}</Typography> : null}
+
+            <TextField
+              id="username"
+              margin="normal"
+              label={t("email")}
+              variant="outlined"
+              value={username}
+              required
+              error={errors.username && username.length > 0 && !usernameTextFieldFocused}
+              onBlur={() => setUsernameTextFieldFocused(false)}
+              onFocus={() => setUsernameTextFieldFocused(true)}
+              onChange={(e) => setUsername(e.target.value)}
+              helperText={errors.username && username.length > 0 && !usernameTextFieldFocused && t("invalid-email")}
+            />
+            <Password
+              id="password"
+              label={t("new-password")}
+              autoComplete="new-password"
+              margin="normal"
+              variant="outlined"
+              value={newPassword}
+              error={errors.newPassword && newPassword.length > 0}
+              checkStrength
+              required
+              helperText={
+                newPassword.length > 0 &&
+                <PasswordStrengthMeter
+                  force={passwordCheck.score}
+                  error={errors.newPassword}
+                  helperText={passwordCheck.helperText}
+                />
+              }
+              onChange={(password) => setNewPassword(password)}
+            />
+            <Password
+              id="confirm-password"
+              label={t("confirm-new-password")}
+              value={confirmNewPassword}
+              error={errors.confirmNewPassword && confirmNewPassword.length > 0}
+              helperText={errors.confirmNewPassword && t("password-dont-match")}
+              autoComplete="new-password"
+              variant="outlined"
+              margin="normal"
+              required
+              onChange={(password) => setConfirmNewPassword(password)}
+            />
           </CardContent>
           <CardActions className={classes.CardActions}>
             <Button
@@ -165,14 +186,16 @@ export default function ResetPasswordContent(): JSX.Element {
             >
               {t("button-cancel")}
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onSendResetPassword}
-              disabled={_.some(errors) || inProgress}
-            >
-              {inProgress ? t("button-saving") : t("button-save")}
-            </Button>
+            <ProgressIconButtonWrapper inProgress={inProgress}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onSendResetPassword}
+                disabled={_.some(errors) || inProgress}
+              >
+                {t("button-save")}
+              </Button>
+            </ProgressIconButtonWrapper>
           </CardActions>
         </>
       )}
