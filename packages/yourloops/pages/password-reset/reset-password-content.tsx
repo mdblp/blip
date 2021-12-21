@@ -69,6 +69,9 @@ const formStyle = makeStyles((theme: Theme) => {
       },
       justifyContent: "flex-end",
     },
+    fontWeightBold: {
+      fontWeight: 600,
+    },
   };
 });
 
@@ -130,7 +133,11 @@ export default function ResetPasswordContent(): JSX.Element {
               {t("password-reset-title")}
             </Typography>
 
-            {_.isEmpty(resetKey) ? <Typography>{t("reset-key-is-missing")}</Typography> : null}
+            {_.isEmpty(resetKey) &&
+              <Typography color="error" className={classes.fontWeightBold}>
+                {t("reset-key-is-missing")}
+              </Typography>
+            }
 
             <TextField
               id="username"
