@@ -453,7 +453,7 @@ describe("BasicsPrintView", () => {
 
       Renderer.renderBgDistribution();
 
-      sinon.assert.calledWith(Renderer.renderSectionHeading, "BG Distribution");
+      sinon.assert.calledWith(Renderer.renderSectionHeading, "Time in Range");
     });
 
     it("should render the BG source", () => {
