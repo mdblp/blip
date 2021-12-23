@@ -160,14 +160,14 @@ class BasicsPrintView extends PrintView {
       width: this.chartArea.width,
       gutter: 15,
       type: "percentage",
-      widths: [25.5, 49, 25.5],
+      widths: [28, 72],
     });
   }
 
   render() {
     this.renderLeftColumn();
     this.renderCenterColumn();
-    this.renderRightColumn();
+    // this.renderRightColumn();
   }
 
   renderLeftColumn() {
@@ -182,21 +182,21 @@ class BasicsPrintView extends PrintView {
 
     this.initCalendar();
 
-    this.renderCalendarSection({
-      title: this.data.sections.fingersticks.title,
-      data: this.data.data.fingerstick.smbg.dataByDate,
-      type: "smbg",
-      disabled: this.data.sections.fingersticks.disabled,
-      emptyText: this.data.sections.fingersticks.emptyText,
-    });
-
-    this.renderCalendarSection({
-      title: this.data.sections.boluses.title,
-      data: this.data.data.bolus.dataByDate,
-      type: "bolus",
-      disabled: this.data.sections.boluses.disabled,
-      emptyText: this.data.sections.boluses.emptyText,
-    });
+    // this.renderCalendarSection({
+    //   title: this.data.sections.fingersticks.title,
+    //   data: this.data.data.fingerstick.smbg.dataByDate,
+    //   type: "smbg",
+    //   disabled: this.data.sections.fingersticks.disabled,
+    //   emptyText: this.data.sections.fingersticks.emptyText,
+    // });
+    //
+    // this.renderCalendarSection({
+    //   title: this.data.sections.boluses.title,
+    //   data: this.data.data.bolus.dataByDate,
+    //   type: "bolus",
+    //   disabled: this.data.sections.boluses.disabled,
+    //   emptyText: this.data.sections.boluses.emptyText,
+    // });
 
     const siteChangesSubTitle = this.data.sections.siteChanges.subTitle;
 
@@ -215,14 +215,14 @@ class BasicsPrintView extends PrintView {
       emptyText: this.data.sections.siteChanges.emptyText,
     });
 
-    this.renderCalendarSection({
-      title: this.data.sections.basals.title,
-      data: this.data.data.basal.dataByDate,
-      type: "basal",
-      disabled: this.data.sections.basals.disabled,
-      emptyText: this.data.sections.basals.emptyText,
-      bottomMargin: 0,
-    });
+    // this.renderCalendarSection({
+    //   title: this.data.sections.basals.title,
+    //   data: this.data.data.basal.dataByDate,
+    //   type: "basal",
+    //   disabled: this.data.sections.basals.disabled,
+    //   emptyText: this.data.sections.basals.emptyText,
+    //   bottomMargin: 0,
+    // });
   }
 
   renderRightColumn() {
@@ -368,6 +368,12 @@ class BasicsPrintView extends PrintView {
       " U",
       !totalDailyDose,
     );
+
+    const { averageGlucose } = _.get(this.data.stats, "averageGlucose.data.raw", {});
+    this.renderSimpleStat(t("Average BG"), formatDecimalNumber(averageGlucose), "\nmg/dL");
+
+    const { glucoseManagementIndicator } = _.get(this.data.stats, "glucoseManagementIndicator.data.raw", {});
+    this.renderSimpleStat(t("GMI ({{bgSourceLabel}})"), formatDecimalNumber(glucoseManagementIndicator, 1), "%");
   }
 
   renderRatio(sectionKey, sectionData) {
@@ -406,7 +412,7 @@ class BasicsPrintView extends PrintView {
             id: key1,
             align: "left",
             width: columnWidth * 0.35,
-            height: 50,
+            height: 55,
             cache: false,
             renderer: this.renderStackedStat,
             border: "LB",
@@ -416,7 +422,7 @@ class BasicsPrintView extends PrintView {
             id: "chart",
             align: "center",
             width: columnWidth * 0.3,
-            height: 50,
+            height: 55,
             cache: false,
             renderer: this.renderPieChart,
             padding: [0, 0, 0, 0],
@@ -427,7 +433,7 @@ class BasicsPrintView extends PrintView {
             id: key2,
             align: "right",
             width: columnWidth * 0.35,
-            height: 50,
+            height: 55,
             cache: false,
             renderer: this.renderStackedStat,
             border: "RB",
