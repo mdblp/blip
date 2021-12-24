@@ -226,7 +226,7 @@ export function createPrintPDFPackage(data, opts) {
 
       if (data.basics) createPrintView("basics", data.basics, pdfOpts, doc).render();
       if (data.daily) createPrintView("daily", data.daily, pdfOpts, doc).render();
-      if (data.bgLog) createPrintView("bgLog", data.bgLog, pdfOpts, doc).render();
+      // if (data.bgLog) createPrintView("bgLog", data.bgLog, pdfOpts, doc).render();
       if (data.settings) createPrintView("settings", data.settings, pdfOpts, doc).render();
 
       PrintView.renderPageNumbers(doc);
