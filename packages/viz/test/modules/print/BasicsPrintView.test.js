@@ -401,10 +401,20 @@ describe("BasicsPrintView", () => {
       sinon.assert.calledWith(Renderer.renderSimpleStat, "Avg daily carbs");
     });
 
+    it("should render the total daily dose stat", () => {
+      sinon.stub(Renderer, "renderSimpleStat");
+
+      Renderer.renderAggregatedStats();
+
+      sinon.assert.calledWith(Renderer.renderSimpleStat, "Avg total daily dose");
+    });
+  });
+
+  describe("renderRatio", () => {
     it("should render the basal to bolus ratio", () => {
       sinon.stub(Renderer, "renderRatio");
 
-      Renderer.renderAggregatedStats();
+      Renderer.renderCenterColumn();
 
       expect(Renderer.data.data.averageDailyDose.basal).to.be.a("number");
       expect(Renderer.data.data.averageDailyDose.bolus).to.be.a("number");
@@ -422,16 +432,6 @@ describe("BasicsPrintView", () => {
       );
     });
 
-    it("should render the total daily dose stat", () => {
-      sinon.stub(Renderer, "renderSimpleStat");
-
-      Renderer.renderAggregatedStats();
-
-      sinon.assert.calledWith(Renderer.renderSimpleStat, "Avg total daily dose");
-    });
-  });
-
-  describe("renderRatio", () => {
     it("should render a simple disabled stat when disabled", () => {
       sinon.stub(Renderer, "renderSimpleStat");
 

@@ -69,7 +69,6 @@ describe("print module", () => {
     sinon.stub(Module.utils.PrintView, "renderPageNumbers");
     sinon.stub(Module.utils, "BasicsPrintView").returns(new BasicsPrintView());
     sinon.stub(Module.utils, "DailyPrintView").returns(new DailyPrintView());
-    // sinon.stub(Module.utils, "BgLogPrintView").returns(new BgLogPrintView());
     sinon.stub(Module.utils, "SettingsPrintView").returns(new SettingsPrintView());
     sinon.stub(Module.utils, "blobStream").returns(new MemoryStream());
   });
@@ -90,7 +89,6 @@ describe("print module", () => {
     Module.utils.PrintView.renderPageNumbers.resetHistory();
     Module.utils.BasicsPrintView.resetHistory();
     Module.utils.DailyPrintView.resetHistory();
-    // Module.utils.BgLogPrintView.resetHistory();
     Module.utils.SettingsPrintView.resetHistory();
     Module.utils.blobStream.resetHistory();
   });

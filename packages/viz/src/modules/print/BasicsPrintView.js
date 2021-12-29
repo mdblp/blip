@@ -25,31 +25,31 @@ import PrintView from "./PrintView";
 
 import {
   cgmStatusMessage,
-  determineBgDistributionSource,
   defineBasicsSections,
+  determineBgDistributionSource,
+  disableEmptySections,
   generateCalendarDayLabels,
   processInfusionSiteHistory,
-  disableEmptySections,
   reduceByDay,
 } from "../../utils/basics/data";
 
 import { generateBgRangeLabels } from "../../utils/bloodglucose";
-import { formatPercentage, formatDecimalNumber } from "../../utils/format";
+import { formatDecimalNumber, formatPercentage } from "../../utils/format";
 import { getLatestPumpUpload } from "../../utils/device";
 
-import { pie, arc } from "d3-shape";
+import { arc, pie } from "d3-shape";
 import parse from "parse-svg-path";
 import translate from "translate-svg-path";
 import serialize from "serialize-svg-path";
 
 import {
   CGM_DATA_KEY,
+  DIABELOOP,
   NO_SITE_CHANGE,
   SITE_CHANGE,
   SITE_CHANGE_CANNULA,
   SITE_CHANGE_RESERVOIR,
   SITE_CHANGE_TUBING,
-  DIABELOOP,
 } from "../../utils/constants";
 
 import { Images } from "./utils/constants";
@@ -177,6 +177,8 @@ class BasicsPrintView extends PrintView {
   }
 
   renderCenterColumn() {
+    const { averageDailyDose, basalBolusRatio, timeInAutoRatio, } = this.data.data;
+
     this.goToLayoutColumnPosition(1);
 
     this.initCalendar();
@@ -193,6 +195,15 @@ class BasicsPrintView extends PrintView {
       type: "siteChange",
       disabled: this.data.sections.siteChanges.disabled,
       emptyText: this.data.sections.siteChanges.emptyText,
+    });
+
+    this.renderRatio("basalBolusRatio", {
+      primary: basalBolusRatio,
+      secondary: averageDailyDose,
+    });
+
+    this.renderRatio("timeInAutoRatio", {
+      primary: timeInAutoRatio,
     });
   }
 
@@ -282,13 +293,7 @@ class BasicsPrintView extends PrintView {
   }
 
   renderAggregatedStats() {
-    const {
-      averageDailyCarbs,
-      averageDailyDose,
-      basalBolusRatio,
-      timeInAutoRatio,
-      totalDailyDose,
-    } = this.data.data;
+    const { averageDailyCarbs, totalDailyDose, } = this.data.data;
 
     this.renderSimpleStat(
       this.data.sections.averageDailyCarbs.title,
@@ -296,15 +301,6 @@ class BasicsPrintView extends PrintView {
       " g",
       !averageDailyCarbs,
     );
-
-    this.renderRatio("basalBolusRatio", {
-      primary: basalBolusRatio,
-      secondary: averageDailyDose,
-    });
-
-    this.renderRatio("timeInAutoRatio", {
-      primary: timeInAutoRatio,
-    });
 
     this.renderSimpleStat(this.data.sections.totalDailyDose.title,
       totalDailyDose ? formatDecimalNumber(totalDailyDose, 1) : "--",
@@ -320,7 +316,7 @@ class BasicsPrintView extends PrintView {
   }
 
   renderRatio(sectionKey, sectionData) {
-    const columnWidth = this.getActiveColumnWidth();
+    const columnWidth = this.getActiveColumnWidth() / 2;
 
     const {
       [sectionKey]: section,
@@ -365,7 +361,7 @@ class BasicsPrintView extends PrintView {
             id: "chart",
             align: "center",
             width: columnWidth * 0.3,
-            height: 55,
+            height: 70,
             cache: false,
             renderer: this.renderPieChart,
             padding: [0, 0, 0, 0],
@@ -554,7 +550,7 @@ class BasicsPrintView extends PrintView {
       valueHeader = false,
     } = opts;
 
-    const columns = [
+    return [
       {
         id: "stat",
         cache: false,
@@ -586,8 +582,6 @@ class BasicsPrintView extends PrintView {
         header: valueHeader,
       },
     ];
-
-    return columns;
   }
 
   renderSimpleStat(stat, value, units, disabled) {
