@@ -742,7 +742,7 @@ class BasicsPrintView extends PrintView {
       const siteChangeTypes = [NO_SITE_CHANGE, SITE_CHANGE];
       const isSiteChange = _.includes(siteChangeTypes, type) ? type === SITE_CHANGE : null;
 
-      if (isSiteChange !== null) {
+      if (isSiteChange) {
         this.setStroke(this.colors.grey);
         this.doc.lineWidth(1);
 
@@ -767,8 +767,8 @@ class BasicsPrintView extends PrintView {
           const daysSinceLabel = daysSince === 1 ? t("day") : t("days");
 
           const siteChangeType = this.data.sections.siteChanges.type;
-          const imageWidth = width / 2.5;
-          const imagePadding = (width - imageWidth) / 2;
+          const imageWidth = width / 3;
+          const imagePadding = (width - imageWidth) / 1.3;
 
           this.setStroke("white");
           this.doc.lineWidth(2);
@@ -788,7 +788,7 @@ class BasicsPrintView extends PrintView {
 
           this.setFill();
 
-          this.doc.image(this.siteChangeImages[siteChangeType], xPos + imagePadding, this.doc.y, {
+          this.doc.image(this.siteChangeImages[siteChangeType], xPos + imagePadding, this.doc.y + imageWidth / 2, {
             width: imageWidth,
           });
 

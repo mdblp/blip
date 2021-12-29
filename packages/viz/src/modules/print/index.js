@@ -35,7 +35,7 @@ import logo from "./images/diabeloop/Logo-YourLoops-Blue.png";
 import siteChangeCannulaImage from "./images/sitechange-cannula.png";
 import siteChangeReservoirImage from "./images/sitechange-reservoir.png";
 import siteChangeTubingImage from "./images/sitechange-tubing.png";
-import siteChangeReservoirDiabeloopImage from "./images/diabeloop/sitechange-diabeloop.png";
+import siteChangeReservoirDiabeloopImage from "./images/diabeloop/sitechange-cartridge.png";
 
 const t = i18next.t.bind(i18next);
 
