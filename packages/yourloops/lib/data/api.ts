@@ -314,7 +314,11 @@ export async function getMessageThread(session: Session, messageId: string): Pro
   });
 
   if (response.ok) {
-    const messages = (await response.json()) as MessageNote[];
+    const messages = (await response.json()) as MessageNote[] | undefined;
+    if (!Array.isArray(messages)) {
+      log.error("Expected an array of messages", { messages });
+      Promise.reject(new Error("Invalid response"));
+    }
     // Sort messages, so they are displayed in the right order.
     return _.sortBy(messages, (message: MessageNote) => Date.parse(message.timestamp));
   }
