@@ -51,10 +51,6 @@ describe("print module", () => {
     render() {}
   }
 
-  // class BgLogPrintView {
-  //   render() {}
-  // }
-
   class BasicsPrintView {
     render() {}
   }
@@ -148,20 +144,6 @@ describe("print module", () => {
           title: "Daily Charts",
         },
       );
-
-      // sinon.assert.calledOnce(Module.utils.BgLogPrintView);
-      // sinon.assert.calledWithMatch(
-      //   Module.utils.BgLogPrintView,
-      //   doc,
-      //   data.bgLog,
-      //   {
-      //     numDays: opts.numDays.bgLog,
-      //     patient: opts.patient,
-      //     timePrefs: opts.timePrefs,
-      //     bgPrefs: opts.bgPrefs,
-      //     title: "BG Log",
-      //   },
-      // );
 
       sinon.assert.calledOnce(Module.utils.SettingsPrintView);
       sinon.assert.calledWithMatch(

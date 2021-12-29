@@ -15,8 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-/* eslint-disable lodash/prefer-lodash-method */
-
 import _ from "lodash";
 import i18next from "i18next";
 import moment from "moment-timezone";
@@ -167,7 +165,6 @@ class BasicsPrintView extends PrintView {
   render() {
     this.renderLeftColumn();
     this.renderCenterColumn();
-    // this.renderRightColumn();
   }
 
   renderLeftColumn() {
@@ -182,28 +179,9 @@ class BasicsPrintView extends PrintView {
 
     this.initCalendar();
 
-    // this.renderCalendarSection({
-    //   title: this.data.sections.fingersticks.title,
-    //   data: this.data.data.fingerstick.smbg.dataByDate,
-    //   type: "smbg",
-    //   disabled: this.data.sections.fingersticks.disabled,
-    //   emptyText: this.data.sections.fingersticks.emptyText,
-    // });
-    //
-    // this.renderCalendarSection({
-    //   title: this.data.sections.boluses.title,
-    //   data: this.data.data.bolus.dataByDate,
-    //   type: "bolus",
-    //   disabled: this.data.sections.boluses.disabled,
-    //   emptyText: this.data.sections.boluses.emptyText,
-    // });
-
-    const siteChangesSubTitle = this.data.sections.siteChanges.subTitle;
-
     this.renderCalendarSection({
       title: {
-        text: this.data.sections.siteChanges.title,
-        subText: siteChangesSubTitle ? `${t("from ")}${this.data.sections.siteChanges.subTitle}` : false,
+        text: this.data.sections.siteChanges.title
       },
       data: _.get(
         this.data.data,
@@ -214,15 +192,6 @@ class BasicsPrintView extends PrintView {
       disabled: this.data.sections.siteChanges.disabled,
       emptyText: this.data.sections.siteChanges.emptyText,
     });
-
-    // this.renderCalendarSection({
-    //   title: this.data.sections.basals.title,
-    //   data: this.data.data.basal.dataByDate,
-    //   type: "basal",
-    //   disabled: this.data.sections.basals.disabled,
-    //   emptyText: this.data.sections.basals.emptyText,
-    //   bottomMargin: 0,
-    // });
   }
 
   renderRightColumn() {
