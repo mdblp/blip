@@ -15,6 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
+/* eslint-disable lodash/prefer-lodash-method */
+
 import _ from "lodash";
 import i18next from "i18next";
 import moment from "moment-timezone";
@@ -191,34 +193,6 @@ class BasicsPrintView extends PrintView {
       type: "siteChange",
       disabled: this.data.sections.siteChanges.disabled,
       emptyText: this.data.sections.siteChanges.emptyText,
-    });
-  }
-
-  renderRightColumn() {
-    this.goToLayoutColumnPosition(2);
-
-    this.renderCalendarSummary({
-      dimensions: this.data.sections.fingersticks.dimensions,
-      header: this.data.sections.fingersticks.summaryTitle,
-      data: this.data.data.fingerstick.summary,
-      type: "smbg",
-      disabled: this.data.sections.fingersticks.disabled,
-    });
-
-    this.renderCalendarSummary({
-      dimensions: this.data.sections.boluses.dimensions,
-      header: this.data.sections.boluses.summaryTitle,
-      data: this.data.data.bolus.summary,
-      type: "bolus",
-      disabled: this.data.sections.boluses.disabled,
-    });
-
-    this.renderCalendarSummary({
-      dimensions: this.data.sections.basals.dimensions,
-      header: this.data.sections.basals.summaryTitle,
-      data: this.data.data.basal.summary,
-      type: "basal",
-      disabled: this.data.sections.basals.disabled,
     });
   }
 

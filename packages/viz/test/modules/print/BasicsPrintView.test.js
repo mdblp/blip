@@ -16,7 +16,6 @@
  */
 
 import _ from "lodash";
-import i18next from "i18next";
 import * as sinon from "sinon";
 import { expect, assert } from "chai";
 
