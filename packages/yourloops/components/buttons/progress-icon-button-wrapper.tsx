@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Yourloops API message-api definitions
  *
  * All rights reserved.
  *
@@ -25,20 +24,40 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React from "react";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import { CircularProgress } from "@material-ui/core";
 
-/**
- * A single message
- */
-interface MessageNote {
-  id?:string;
-  userid: string;
-  groupid: string;
-  messagetext: string;
-  timestamp: string;
-  parentmessage: string;
-  user: {
-    fullName: string;
-  }
+interface Props {
+  children: JSX.Element; // The button element
+  inProgress: boolean;
 }
 
-export default MessageNote;
+const useStyles = makeStyles((theme: Theme) =>
+  ({
+    wrapper: {
+      margin: theme.spacing(1),
+      position: "relative",
+    },
+    progressButton: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  })
+);
+
+function ProgressIconButtonWrapper({ children, inProgress }: Props): JSX.Element {
+  const { wrapper, progressButton } = useStyles();
+
+  return (
+    <div className={wrapper}>
+      {children}
+      {inProgress && <CircularProgress size={24} className={progressButton} />}
+    </div>
+  );
+}
+
+export default ProgressIconButtonWrapper;
