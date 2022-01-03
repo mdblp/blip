@@ -6,7 +6,10 @@ It is based on Tidepool Blip 1.27.
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
 ### Fixed
+- YLP-1109 YourLoops main menu sometimes do not disappear as it should
 - YLP-1116 Missing password strength meter into reset password page
+### Engineering Use
+- YLP-1114 Review routes and data structure for message-api
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
