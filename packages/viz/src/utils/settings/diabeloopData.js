@@ -148,7 +148,7 @@ export function getDeviceInfosData(device) {
 export function getDeviceParametersData(parameters, { level, width }) {
   const heading = {
     text: t("Parameters"),
-    subText: `- ${level === 1 ? t("Current") : t("Advanced")}`,
+    subText: level !== 1 ? `- ${t("Advanced")}` : "",
   };
 
   const columns = [{
@@ -212,7 +212,7 @@ export function getPumpParametersData(pump) {
     label: t("Pump version"),
     value: pump.swVersion,
   }, {
-    label: t("Cartridge expiration"),
+    label: t("Pump cartridge expiration date"),
     value: datetime.formatLocalizedFromUTC(pump.expirationDate, timePrefs, t("MMM D, YYYY"))
   }];
 

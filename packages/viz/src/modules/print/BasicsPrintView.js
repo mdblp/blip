@@ -210,7 +210,7 @@ class BasicsPrintView extends PrintView {
   renderBgDistribution() {
     const columnWidth = this.getActiveColumnWidth();
 
-    this.renderSectionHeading(t("Time in Range"), {
+    this.renderSectionHeading(t("Time In Range"), {
       width: columnWidth,
       fontSize: this.largeFontSize,
       moveDown: 0.435,

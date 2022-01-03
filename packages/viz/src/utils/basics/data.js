@@ -467,7 +467,7 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
       break;
 
     case "bgDistribution":
-      title = t("Time in Range");
+      title = t("Time In Range");
       break;
 
     case "totalDailyDose":
