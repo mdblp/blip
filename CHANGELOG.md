@@ -2,9 +2,13 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## Unrelease
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
+- YLP-1109 YourLoops main menu sometimes do not disappear as it should
+- YLP-1116 Missing password strength meter into reset password page
+### Engineering Use
+- YLP-1114 Review routes and data structure for message-api
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
