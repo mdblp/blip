@@ -455,7 +455,10 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     setTeams(teams);
 
     if (patient.members.length < 1) {
-      await authHook.flagPatient(patient.userid);
+      const isFlagged = authHook.getFlagPatients().includes(patient.userid);
+      if (isFlagged) {
+        await authHook.flagPatient(patient.userid);
+      }
     }
   };
 

@@ -178,15 +178,16 @@ export function numberPrecision(value: number, precision = 1): number {
  * You must specify which object key you want to sort the array
  * ex: myArray.sort(compareValues("name")
  */
-export function compareValues(key: string, order = "asc") {
-  return (a: any, b: any) => {
-    // eslint-disable-next-line no-prototype-builtins
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+export function compareValues<T extends object>(key: keyof T, order = "asc") {
+  return (a: T, b: T) => {
+    if (!(key in a && key in b)) {
       return 0;
     }
 
-    const varA = (typeof a[key] === "string") ? a[key].toUpperCase() : a[key];
-    const varB = (typeof b[key] === "string") ? b[key].toUpperCase() : b[key];
+    const aKey = a[key];
+    const bKey = b[key];
+    const varA = (typeof aKey === "string") ? aKey.toLocaleUpperCase() : aKey;
+    const varB = (typeof bKey === "string") ? bKey.toLocaleUpperCase() : bKey;
 
     let comparison = 0;
     if (varA > varB) {
