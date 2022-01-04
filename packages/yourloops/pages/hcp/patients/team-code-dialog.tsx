@@ -69,10 +69,6 @@ const dialogClasses = makeStyles(
         borderWidth: "1px",
         borderRadius: theme.shape.borderRadius,
       },
-      dialogActions: {
-        marginBottom: "0.5em",
-        marginRight: " 0.5em",
-      },
     };
   },
   { name: "ylp-dialog-team-code" }
@@ -83,15 +79,15 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
   const buttonsClasses = makeButtonsClasses();
   const classes = dialogClasses();
   const { code, name, onClose } = props;
-  const dialogIsOpen = code.match(reCode) !== null;
-
-  let displayCode = "";
-  if (dialogIsOpen) {
-    displayCode = code.replace(reCode, "$1 - $2 - $3");
-  }
+  const dialogIsOpen = !!code.match(reCode);
 
   return (
-    <Dialog id="patient-list-dialog-team-code" aria-labelledby={t("team-card-label-code")} open={dialogIsOpen} onClose={onClose}>
+    <Dialog
+      id="patient-list-dialog-team-code"
+      aria-labelledby={t("team-card-label-code")}
+      open={dialogIsOpen}
+      onClose={onClose}
+    >
       <DialogTitle id="patient-list-dialog-team-code-title">
         <strong>{name}</strong>
       </DialogTitle>
@@ -106,16 +102,21 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
       </DialogContent>
 
       <DialogContent id="patient-list-dialog-team-code-content-code" className={classes.contentCode}>
-        <div className={classes.divTeamCode}>{displayCode}</div>
+        {dialogIsOpen &&
+          <div className={classes.divTeamCode}>
+            {code.replace(reCode, "$1 - $2 - $3")}
+          </div>
+        }
       </DialogContent>
 
-      <DialogActions className={classes.dialogActions}>
+      <DialogActions>
         <Button
           id="patient-list-dialog-team-code-button-ok"
           onClick={onClose}
           className={buttonsClasses.buttonCancel}
           color="primary"
-          variant="contained">
+          variant="contained"
+        >
           {t("button-ok")}
         </Button>
       </DialogActions>

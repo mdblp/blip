@@ -28,7 +28,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -57,10 +57,9 @@ interface RemoveDialogProps {
 }
 
 const makeButtonClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-remove-patient-dialog-buttons" });
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     wrapper: {
-      margin: theme.spacing(1),
       position: "relative",
     },
     progressButton: {
