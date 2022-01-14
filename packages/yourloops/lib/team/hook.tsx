@@ -288,6 +288,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return typeof tm === "undefined";
   };
 
+  const isUserInvitationPending = (user: TeamUser, teamId: string): boolean => {
+    const tm = user.members.find((tm) => tm.team.id === teamId && tm.status === UserInvitationStatus.pending);
+    return !!tm;
+  };
+
   const isInTeam = (user: TeamUser, teamId: string): boolean => {
     const tm = user.members.find((tm) => tm.team.id === teamId);
     return typeof tm === "object";
@@ -553,6 +558,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     isUserTheOnlyAdministrator,
     isInvitationPending,
     isOnlyPendingInvitation,
+    isUserInvitationPending,
     isInTeam,
     invitePatient,
     inviteMember,
