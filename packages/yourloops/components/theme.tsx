@@ -29,29 +29,37 @@
 import { createTheme, Theme, darken, lighten } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
+const cssVar = (name: string): string => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
 const commonTheme: PaletteOptions = {
   type: "light",
   primary: {
-    main: "#039be5", // green theme : #109182
-    light: "#4dabf5", // green theme : #F7F7F8
-    dark:"#1769aa",
+    main: cssVar("--color-primary-main"),
+    light: cssVar("--color-primary-light"),
+    dark: cssVar("--color-primary-dark"),
   },
   secondary: {
-    main: "#EDFAFF", // green theme : #E5F0F0
-    light: "#F5F9F9",
-    dark: "#D4E6E6",
+    main: cssVar("--color-secondary-main"),
+    light: cssVar("--color-secondary-light"),
+    dark: cssVar("--color-secondary-dark"),
   },
   error: {
-    main: "#DE514B",
-    light: "#DA3A1B",
+    main: cssVar("--color-error-main"),
+    light: cssVar("--color-error-light"),
   },
   text: {
     primary: "#000",
   },
 };
 
-// Not using var(): https://github.com/mui-org/material-ui/issues/12827
 export const mainTheme = createTheme({
+  overrides: {
+    MuiDialogActions: {
+      spacing: {
+        padding: 16,
+      },
+    },
+  },
   palette: {
     ...commonTheme,
     background: { default: "#FFFFFF" },
@@ -70,8 +78,7 @@ export const externalTheme = createTheme({
  * @param theme Main theme
  * @returns The styles for buttons
  */
-export const makeButtonsStyles = (theme: Theme) => { // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
-  // I disabled the eslint warning here, because it's too annoying doing the type
+export const makeButtonsStyles = (theme: Theme) => {
   const getColor = theme.palette.type === "light" ? darken : lighten;
   const getBackgroundColor = theme.palette.type === "light" ? lighten : darken;
 
@@ -84,10 +91,10 @@ export const makeButtonsStyles = (theme: Theme) => { // eslint-disable-line @typ
     },
     buttonRedAction: {
       "boxShadow": "0px 2px 2px #0000003D",
-      "color": getColor("#FFFFFF", 0.0), // eslint-disable-line no-magic-numbers
+      "color": getColor("#FFFFFF", 0.0),
       "backgroundColor": getBackgroundColor(theme.palette.error[theme.palette.type], 0.0), // eslint-disable-line no-magic-numbers
       "&:hover": {
-        color: getColor("#FFFFFF", 0.1), // eslint-disable-line no-magic-numbers
+        color: getColor("#FFFFFF", 0.1),
         backgroundColor: getBackgroundColor(theme.palette.error[theme.palette.type], 0.1), // eslint-disable-line no-magic-numbers
       },
     },

@@ -42,6 +42,7 @@ const alias = {
   "branding/logo.png": path.resolve(__dirname, `../../branding/${branding["branding/logo.png"]}`),
   "branding/logo-icon.svg": path.resolve(__dirname, `../../branding/${branding["branding/logo-icon.svg"]}`),
   "branding/logo-full.svg": path.resolve(__dirname, `../../branding/${branding["branding/logo-full.svg"]}`),
+  "branding/palette.css": path.resolve(__dirname, `../../branding/${branding["branding/palette.css"]}`),
   "cartridge.png": path.resolve(__dirname, "../../branding/sitechange/cartridge.png"),
   "infusion.png": path.resolve(__dirname, "../../branding/sitechange/infusion.png"),
   "cartridge-vicentra.png": path.resolve(__dirname, "../../branding/sitechange/cartridge-vicentra.png"),

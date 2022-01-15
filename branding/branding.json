@@ -9,12 +9,14 @@
     "branding/logo.png": "diabeloop/green/logo.png",
     "branding/logo-icon.svg": "diabeloop/green/logo-icon.svg",
     "branding/logo-full.svg": "diabeloop/green/logo-full.svg",
+    "branding/palette.css": "diabeloop/green/palette.css",
     "favicon": "diabeloop/green/favicon.ico"
   },
   "diabeloop/blue": {
     "branding/logo.png": "diabeloop/blue/logo.svg",
-    "branding/logo-icon.svg": "diabeloop/blue/logo-icon.svg",
+    "branding/logo-icon.svg": "diabeloop/blue/logo-icon.png",
     "branding/logo-full.svg": "diabeloop/blue/logo.svg",
+    "branding/palette.css": "diabeloop/blue/palette.css",
     "favicon": "diabeloop/blue/favicon.ico"
   }
 }

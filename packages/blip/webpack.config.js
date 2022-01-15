@@ -145,7 +145,6 @@ const resolve = {
   alias: {
     "pdfkit": "pdfkit/js/pdfkit.standalone.js",
     "lock.svg": path.resolve(__dirname, "../../branding/lock.svg"),
-    "branding/logo.png": path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/logo.png`),
     "cartridge.png": path.resolve(__dirname, "../../branding/sitechange/cartridge.png"),
     "infusion.png": path.resolve(__dirname, "../../branding/sitechange/infusion.png"),
     "cartridge-vicentra.png": path.resolve(__dirname, "../../branding/sitechange/cartridge-vicentra.png"),

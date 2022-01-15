@@ -31,6 +31,7 @@ import React from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -49,7 +50,6 @@ import metrics from "../../../lib/metrics";
 import { useTeam, Team, getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY } from "../../../lib/team";
 import diabeloopUrl from "../../../lib/diabeloop-url";
 import { AddTeamDialogContentProps } from "./types";
-import Box from "@material-ui/core/Box";
 
 export interface AddTeamDialogProps {
   actions: null | AddTeamDialogContentProps;
