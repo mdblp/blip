@@ -9,4 +9,8 @@
 
   --color-error-main: #DE514B;
   --color-error-light: #DA3A1B;
+
+  --blip-color-primary-light: #6fc3bb;
+  --blip-color-primary-alt: #006c71;
+  --blip-color-secondary-alt: #eef5f9;
 }
