@@ -123,7 +123,7 @@ app.foo = {
 
 ## Linting
 
-The app is ruled by [eslint](https://eslint.org/) to keep code style consistent. It has an [editorconfig](https://editorconfig.org/) file which defines some common rules to correctly configure IDE formatting.  
+The app is ruled by [eslint](https://eslint.org/) to keep code style consistent. It has an [editorconfig](https://editorconfig.org/) file which defines some common rules to correctly configure IDE formatting.
 How to enable it :
 - VS code : download and install the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) plugin
 - Webstorm : enable the EditorConfig support into Settings / Code style
@@ -145,6 +145,20 @@ To run the unit tests in watch mode, use:
 
 ```bash
 $ npm run test-watch
+```
+
+To debug unit test, use:
+
+```bash
+$ npm run test-yourloops-debug
+```
+Once webpack has built, go to http://localhost:9876 to run the test. Click on the debug button, open devtools, go to "Sources" and open the file to debug. Breakpoints can be used (in devtools).
+
+To run specific test(s), use :
+```javascript
+describe.only('test name')
+//or
+it.only('test name')
 ```
 
 ## Independent server for production or docker
