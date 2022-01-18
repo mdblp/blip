@@ -148,10 +148,10 @@ function updateDefaultConfig(projectName, karmaConfig, webpackConfig, typescript
   }
   updatedConfig = _.defaultsDeep(karmaConfig, defaultConfig);
 
-  //special config for unit test debug
+  // special config for unit test debug
   if (process.env.DEBUG_UNIT_TEST === "true") {
-    //since we're in debug, we do not want to run tests in headless
-    //we wait for a manual chrome visit to localhost:9876 to start tests
+    // since we're in debug, we do not want to run tests in headless
+    // we wait for a manual chrome visit to localhost:9876 to start tests
     updatedConfig.browsers = [];
     updatedConfig.customLaunchers = {};
     updatedConfig.port = "9876";
