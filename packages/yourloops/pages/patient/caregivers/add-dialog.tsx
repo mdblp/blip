@@ -92,7 +92,10 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       id="patient-add-caregiver-dialog"
       open={dialogIsOpen}
       aria-labelledby={t("modal-add-caregiver")}
-      onClose={handleClose}>
+      onClose={handleClose}
+      maxWidth="xs"
+      fullWidth
+    >
       <DialogTitle id="patient-add-caregiver-dialog-title">
         <strong>{t("modal-add-caregiver")}</strong>
       </DialogTitle>
@@ -108,6 +111,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           onBlur={handleVerifyEmail}
           onChange={handleChangeEmail}
           helperText={errorMessage}
+          fullWidth
         />
       </DialogContent>
 
