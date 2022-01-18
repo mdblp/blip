@@ -301,11 +301,13 @@ function TeamsPage(): JSX.Element | null {
           onShowEditTeamDialog={handleShowEditTeamDialog}
           onShowLeaveTeamDialog={handleShowLeaveTeamDialog}
           onShowAddMemberDialog={handleShowAddMemberDialog}
-        />
-        <TeamMembers
-          team={team}
-          onSwitchAdminRole={handleSwitchAdminRole}
-          onShowRemoveTeamMemberDialog={handleShowRemoveTeamMemberDialog}
+          teamMembers={
+            <TeamMembers
+              team={team}
+              onSwitchAdminRole={handleSwitchAdminRole}
+              onShowRemoveTeamMemberDialog={handleShowRemoveTeamMemberDialog}
+            />
+          }
         />
       </Grid>
     );

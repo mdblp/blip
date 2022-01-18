@@ -44,7 +44,6 @@ import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -65,19 +64,14 @@ export interface TeamMembersProps {
   team: Team;
   onSwitchAdminRole: (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<void>;
   onShowRemoveTeamMemberDialog: (member: TeamMember) => Promise<void>;
-  classes?: Record<"tableRowPending", string>;
 }
 
 const teamMembersStyles = makeStyles((theme: Theme) => {
   return {
     root: {
       width: "100%",
-      marginTop: theme.spacing(1),
     },
     listTitle: {
-      display: "inline-block",
-      verticalAlign: "text-top",
-      height: "100%",
       textTransform: "uppercase",
       fontWeight: "bold",
       color: theme.palette.primary.main,
@@ -89,9 +83,6 @@ const teamMembersStyles = makeStyles((theme: Theme) => {
     tableRowHeader: {
       textTransform: "uppercase",
       fontSize: "16px",
-    },
-    tableRowPending: {
-      backgroundColor: theme.palette.secondary.main,
     },
     paperMember: {
       display: "flex",
@@ -146,11 +137,8 @@ const teamMembersTableStyles = makeStyles(() => ({
 const MembersAccordionSummary = withStyles(
   (theme: Theme) => ({
     root: {
-      "justifyContent": "left",
-      "transition": theme.transitions.create(["background-color", "min-height"]),
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.main,
-      },
+      justifyContent: "left",
+      transition: theme.transitions.create(["background-color", "min-height"]),
     },
     content: {
       "flexGrow": 0,
@@ -209,7 +197,6 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     const firstName = member.status === UserInvitationStatus.pending ? "—" : getUserFirstName(member.user);
     const lastName = member.status === UserInvitationStatus.pending ? "—" : getUserLastName(member.user);
     const isAdmin = member.role === TeamMemberRole.admin;
-    const rowClassName = props.classes?.tableRowPending ?? "";
 
     let checkboxElement: JSX.Element | null = null;
     let icon: JSX.Element | null = null;
@@ -266,7 +253,7 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
     return (
       <TableRow
         id={`team-members-list-${team.id}-row-${userId}`}
-        className={`${rowClassName} team-members-list-row`}
+        className={"team-members-list-row"}
         key={email}
         data-email={email}
         data-userid={userId}
@@ -317,32 +304,29 @@ function TeamMemberTable(props: TeamMembersProps): JSX.Element {
   const { t } = useTranslation("yourloops");
 
   return (
-    <TableContainer component={Paper}>
-      <Table id={`team-members-list-${team.id}-table`}>
-        {/* prettier-ignore */}
-        <TableHead className={classes.tableRowHeader}>
-          <TableRow>
-            <TableCell id={`team-members-list-${team.id}-cellheader-icon`} />
-            <TableCell id={`team-members-list-${team.id}-cellheader-lastname`}>
-              {t("lastname")}
-            </TableCell>
-            <TableCell id={`team-members-list-${team.id}-cellheader-firstname`}>
-              {t("firstname")}
-            </TableCell>
-            <TableCell id={`team-members-list-${team.id}-cellheader-email`}>
-              {t("email")}
-            </TableCell>
-            <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
-              {t("team-member-admin")}
-            </TableCell>
-            <TableCell id={`team-members-list-${team.id}-cellheader-actions`} />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <MembersTableBody {...props} classes={classes} />
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Table id={`team-members-list-${team.id}-table`}>
+      <TableHead className={classes.tableRowHeader}>
+        <TableRow>
+          <TableCell id={`team-members-list-${team.id}-cellheader-icon`} />
+          <TableCell id={`team-members-list-${team.id}-cellheader-lastname`}>
+            {t("lastname")}
+          </TableCell>
+          <TableCell id={`team-members-list-${team.id}-cellheader-firstname`}>
+            {t("firstname")}
+          </TableCell>
+          <TableCell id={`team-members-list-${team.id}-cellheader-email`}>
+            {t("email")}
+          </TableCell>
+          <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
+            {t("team-member-admin")}
+          </TableCell>
+          <TableCell id={`team-members-list-${team.id}-cellheader-actions`} />
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <MembersTableBody {...props} />
+      </TableBody>
+    </Table>
   );
 }
 
@@ -473,7 +457,8 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           id={`team-members-list-${team.id}-header`}
           expandIcon={<ExpandMoreIcon />}
           aria-label={t("aria-expand-team-members")}
-          aria-controls={`team-members-list-${team.id}-content`}>
+          aria-controls={`team-members-list-${team.id}-content`}
+        >
           <Typography className={classes.listTitle}>{t("team-members-list-header", { nMembers })}</Typography>
         </MembersAccordionSummary>
 
