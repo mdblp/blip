@@ -37,8 +37,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { makeButtonsStyles } from "../../../components/theme";
-
 export interface TeamCodeDialogProps {
   /** Team code */
   code: string;
@@ -49,7 +47,6 @@ export interface TeamCodeDialogProps {
 }
 
 const reCode = /^([0-9]{3})([0-9]{3})([0-9]{3})$/;
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-team-code-buttons" });
 const dialogClasses = makeStyles(
   (theme: Theme) => {
     return {
@@ -76,7 +73,6 @@ const dialogClasses = makeStyles(
 
 function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const buttonsClasses = makeButtonsClasses();
   const classes = dialogClasses();
   const { code, name, onClose } = props;
   const dialogIsOpen = !!code.match(reCode);
@@ -113,9 +109,6 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
         <Button
           id="patient-list-dialog-team-code-button-ok"
           onClick={onClose}
-          className={buttonsClasses.buttonCancel}
-          color="primary"
-          variant="contained"
         >
           {t("button-ok")}
         </Button>

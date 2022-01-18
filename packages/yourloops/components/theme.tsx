@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme, darken, lighten } from "@material-ui/core/styles";
+import { createTheme, Theme } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 
 const cssVar = (name: string): string => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -43,20 +43,21 @@ const commonTheme: PaletteOptions = {
     light: cssVar("--color-secondary-light"),
     dark: cssVar("--color-secondary-dark"),
   },
-  error: {
-    main: cssVar("--color-error-main"),
-    light: cssVar("--color-error-light"),
-  },
-  text: {
-    primary: "#000",
-  },
 };
 
 export const mainTheme = createTheme({
   overrides: {
+    MuiButton: {
+      root: {
+        fontWeight: 600,
+      },
+    },
     MuiDialogActions: {
       spacing: {
-        padding: 16,
+        "padding": 16,
+        "& > :last-child": {
+          marginLeft: 16,
+        },
       },
     },
   },
@@ -78,25 +79,12 @@ export const externalTheme = createTheme({
  * @param theme Main theme
  * @returns The styles for buttons
  */
-export const makeButtonsStyles = (theme: Theme) => {
-  const getColor = theme.palette.type === "light" ? darken : lighten;
-  const getBackgroundColor = theme.palette.type === "light" ? lighten : darken;
-
-  return {
-    buttonCancel: {
-      boxShadow: "none",
+export const makeButtonsStyles = (theme: Theme) => ({
+  alertActionButton: {
+    "color": theme.palette.common.white,
+    "backgroundColor": theme.palette.error.main,
+    "&:hover": {
+      backgroundColor: theme.palette.error.dark,
     },
-    buttonOk: {
-      boxShadow: "0px 2px 2px #0000003D",
-    },
-    buttonRedAction: {
-      "boxShadow": "0px 2px 2px #0000003D",
-      "color": getColor("#FFFFFF", 0.0),
-      "backgroundColor": getBackgroundColor(theme.palette.error[theme.palette.type], 0.0), // eslint-disable-line no-magic-numbers
-      "&:hover": {
-        color: getColor("#FFFFFF", 0.1),
-        backgroundColor: getBackgroundColor(theme.palette.error[theme.palette.type], 0.1), // eslint-disable-line no-magic-numbers
-      },
-    },
-  };
-};
+  },
+});

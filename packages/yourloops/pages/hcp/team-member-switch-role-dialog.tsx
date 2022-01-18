@@ -100,8 +100,6 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
         <Button
           id="team-members-dialog-switch-role-button-cancel"
           onClick={handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>

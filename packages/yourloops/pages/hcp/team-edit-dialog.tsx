@@ -369,7 +369,6 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
       <DialogActions>
         <Button
           id="team-edit-dialog-button-close"
-          variant="contained"
           onClick={handleCloseModal}
         >
           {t("button-cancel")}

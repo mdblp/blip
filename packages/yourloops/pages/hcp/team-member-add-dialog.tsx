@@ -127,8 +127,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
         <Button
           id="team-add-member-dialog-button-cancel"
           onClick={handleClickClose}
-          color="secondary"
-          variant="contained">
+        >
           {t("button-cancel")}
         </Button>
         <Button

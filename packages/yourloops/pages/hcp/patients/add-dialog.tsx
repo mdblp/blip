@@ -29,7 +29,6 @@
 import React from "react";
 import { useTranslation, Trans } from "react-i18next";
 
-import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -46,17 +45,13 @@ import TextField from "@material-ui/core/TextField";
 
 import { REGEX_EMAIL } from "../../../lib/utils";
 import DiabeloopUrl from "../../../lib/diabeloop-url";
-import { makeButtonsStyles } from "../../../components/theme";
 import { AddPatientDialogContentProps } from "../types";
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null;
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-add-patient-buttons" });
-
 function AddDialog(props: AddDialogProps): JSX.Element {
-  const buttonsClasses = makeButtonsClasses();
   const { t, i18n } = useTranslation("yourloops");
   const [email, setEmail] = React.useState<string>("");
   const [teamId, setTeamId] = React.useState<string>("");
@@ -203,9 +198,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
         <Button
           id="patient-list-dialog-add-button-cancel"
           onClick={handleClose}
-          className={buttonsClasses.buttonCancel}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>
@@ -213,7 +205,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           id="patient-list-dialog-add-button-add"
           onClick={handleClickAdd}
           disabled={buttonAddDisabled}
-          className={buttonsClasses.buttonOk}
           variant="contained"
           color="primary"
         >

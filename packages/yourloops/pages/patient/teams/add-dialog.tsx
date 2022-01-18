@@ -180,8 +180,6 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
         <Button
           id="team-add-dialog-button-cancel"
           onClick={props.handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>
@@ -286,8 +284,6 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
         <Button
           id="team-add-dialog-confirm-team-button-cancel"
           onClick={props.handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>

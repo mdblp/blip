@@ -87,15 +87,13 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
         <Button
           id="team-leave-dialog-button-cancel"
           onClick={handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>
         <Button
           id="team-leave-dialog-button-leave"
           onClick={handleLeaveTeam}
-          className={buttonsClasses.buttonRedAction}
+          className={buttonsClasses.alertActionButton}
           variant="contained"
         >
           {t("modal-patient-remove-team-remove")}

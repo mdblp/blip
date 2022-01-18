@@ -90,15 +90,13 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         <Button
           id="patient-remove-caregiver-dialog-button-cancel"
           onClick={handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>
         <Button
           id="patient-remove-caregiver-dialog-button-remove"
           onClick={handleRemoveCaregiver}
-          className={buttonsClasses.buttonRedAction}
+          className={buttonsClasses.alertActionButton}
           variant="contained"
         >
           {t("modal-patient-remove-caregiver-remove")}

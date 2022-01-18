@@ -158,8 +158,6 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       >
         <Button
           id="button-signup-steppers-back"
-          variant="contained"
-          color="secondary"
           onClick={handleBack}
           classes={{ label: "button-signup-steppers-back-label" }}
         >

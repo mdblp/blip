@@ -5,10 +5,10 @@
 
   --color-secondary-main: #EDFAFF;
   --color-secondary-light: #F5F9F9;
-  --color-secondary-dark: #D4E6E6;
+  --color-secondary-dark: #bbc7cc;
 
-  --color-error-main: #DE514B;
-  --color-error-light: #DA3A1B;
+  --color-error-main: #F44336;
+  --color-error-dark: #D32F2F;
 
   --blip-color-primary-light: #4dabf5;
   --blip-color-primary-alt: #039be5;

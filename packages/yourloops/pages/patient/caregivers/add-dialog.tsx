@@ -115,8 +115,6 @@ function AddDialog(props: AddDialogProps): JSX.Element {
         <Button
           id="patient-add-caregiver-dialog-button-cancel"
           onClick={handleClose}
-          color="secondary"
-          variant="contained"
         >
           {t("button-cancel")}
         </Button>

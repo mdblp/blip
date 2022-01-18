@@ -87,8 +87,6 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
       >
         <Button
           id="button-signup-steppers-back"
-          variant="contained"
-          color="secondary"
           disabled={props.activeStep === 0}
           classes={{ label: "button-signup-steppers-back-label" }}
           onClick={handleBack}>
