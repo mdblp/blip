@@ -157,6 +157,11 @@ export interface TeamContext {
    */
    isUserInvitationPending: (user: TeamUser, teamId: string) => boolean;
   /**
+   * @param user The user to test
+   * @returns {boolean} True if members status is accepted in at least a team
+   */
+   isInAtLeastATeam: (user: TeamUser) => boolean;
+  /**
    * Return true if this user is in a specific team
    * @param user The user to test
    * @param teamId A team id

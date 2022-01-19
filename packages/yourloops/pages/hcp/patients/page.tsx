@@ -382,6 +382,7 @@ function PatientListPage(): JSX.Element {
           flagged={flagged}
           order={order}
           orderBy={orderBy}
+          filter={filterType}
           onClickPatient={handleSelectPatient}
           onFlagPatient={handleFlagPatient}
           onSortList={handleSortList}

@@ -293,6 +293,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return !!tm;
   };
 
+  const isInAtLeastATeam = (user: TeamUser): boolean => {
+    const tm = user.members.find((tm) => tm.status === UserInvitationStatus.accepted);
+    return !!tm;
+  };
+
   const isInTeam = (user: TeamUser, teamId: string): boolean => {
     const tm = user.members.find((tm) => tm.team.id === teamId);
     return typeof tm === "object";
@@ -559,6 +564,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     isInvitationPending,
     isOnlyPendingInvitation,
     isUserInvitationPending,
+    isInAtLeastATeam,
     isInTeam,
     invitePatient,
     inviteMember,

@@ -140,6 +140,44 @@ export function testTeamHook(): void {
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).to.be.false;
     });
+
+    describe("isInAtLeastATeam", () => {
+      it("should return false when team user does not have an accepted status in any team", () => {
+        const teamUser: TeamUser = {
+          members: [
+            {
+              team: { id: "teamId1" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
+            {
+              team: { id: "teamId2" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
+          ],
+        } as TeamUser;
+
+        const res = teamHook.isInAtLeastATeam(teamUser);
+        expect(res).to.be.false;
+      });
+
+      it("should return true when team user does has an accepted status in a team", () => {
+        const teamUser: TeamUser = {
+          members: [
+            {
+              team: { id: "teamId1" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
+            {
+              team: { id: "teamId2" } as Team,
+              status: UserInvitationStatus.accepted,
+            } as TeamMember,
+          ],
+        } as TeamUser;
+
+        const res = teamHook.isInAtLeastATeam(teamUser);
+        expect(res).to.be.true;
+      });
+    });
   });
 }
 
