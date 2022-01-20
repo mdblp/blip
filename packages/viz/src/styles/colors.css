@@ -23,7 +23,7 @@
   --text-on-basal-automated: white;
   --text-basal: #a4a4a4;
   --text-basal-automated: #3a90a4;
-  --bolus: var(--blip-color-primary-light); /* original theme : #6FC3BB */
+  --bolus: var(--blip-color-primary-light);
   --bolus-ride: #7E7E7E;
   --bolus-override: #7E7E7E;
   --bolus-underride: #7E7E7E;
