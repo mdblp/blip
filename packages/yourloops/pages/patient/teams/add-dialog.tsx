@@ -26,11 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -43,19 +38,27 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-
-import metrics from "../../../lib/metrics";
-import { useTeam, Team, getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY } from "../../../lib/team";
-import diabeloopUrl from "../../../lib/diabeloop-url";
+import _ from "lodash";
+import React from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { makeButtonsStyles } from "../../../components/theme";
+import diabeloopUrl from "../../../lib/diabeloop-url";
+import metrics from "../../../lib/metrics";
+import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from "../../../lib/team";
 import { AddTeamDialogContentProps } from "./types";
 
+
+
 export interface AddTeamDialogProps {
+  teamName?: string
+  error?: string
   actions: null | AddTeamDialogContentProps;
 }
 
 export interface EnterIdentificationCodeProps {
+  teamName?: string,
   handleClose: () => void;
   handleSetIdCode: (code: string) => void;
 }
@@ -81,10 +84,7 @@ const addTeamDialogClasses = makeStyles(
         flexDirection: "column",
         marginBottom: theme.spacing(4),
         marginTop: theme.spacing(2),
-        width: "22rem",
-      },
-      dialogCodeTitle: {
-        textAlign: "center",
+        alignSelf: "center",
       },
       buttonCancel: {
         marginRight: theme.spacing(2),
@@ -96,6 +96,7 @@ const addTeamDialogClasses = makeStyles(
         marginBottom: theme.spacing(2),
         marginLeft: "auto",
         marginRight: "auto",
+        textAlign: "center",
       },
       divTeamCodeField: {
         marginLeft: "auto",
@@ -140,6 +141,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
   const buttonClasses = makeButtonsClasses();
   const inputRef = React.createRef<HTMLInputElement>();
   const [idCode, setIdCode] = React.useState("");
+  const { teamName } = props;
 
   const getNumericCode = (value: string): string => {
     let numericCode = "";
@@ -171,8 +173,8 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
   return (
     <React.Fragment>
-      <DialogTitle id="team-add-dialog-title" className={classes.dialogCodeTitle}>
-        <strong>{t("modal-add-medical-team")}</strong>
+      <DialogTitle id="team-add-dialog-title">
+        <strong>{teamName ? t("modal-add-medical-specific-team", { careteam: teamName }) : t("modal-add-medical-team")}</strong>
       </DialogTitle>
 
       <DialogContent id="team-add-dialog-content" className={classes.dialogCodeContent}>
@@ -180,7 +182,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
           {t("modal-add-medical-team-code")}
         </InputLabel>
         <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
-          <TextField id="team-add-dialog-field-code" value={idCode} onChange={handleChangeCode} fullWidth inputRef={inputRef}/>
+          <TextField id="team-add-dialog-field-code" value={idCode} onChange={handleChangeCode} fullWidth inputRef={inputRef} />
         </div>
       </DialogContent>
 
@@ -321,7 +323,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [team, setTeam] = React.useState<Team | null>(null);
 
-  const { actions } = props;
+  const { actions, teamName, error } = props;
   const dialogIsOpen = actions !== null;
 
   const resetDialog = () => {
@@ -353,7 +355,7 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
 
   let content: JSX.Element;
   if (idCode === "") {
-    content = <EnterIdentificationCode handleClose={handleClose} handleSetIdCode={handleSetTeamId} />;
+    content = <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />;
   } else if (errorMessage) {
     content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />;
   } else if (team === null) {
@@ -366,14 +368,14 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
       .getTeamFromCode(idCode)
       .then((team) => {
         if (team === null) {
-          setErrorMessage(t("modal-patient-add-team-failure"));
+          setErrorMessage(error ? error : t("modal-patient-add-team-failure"));
         } else {
           setTeam(team);
         }
       })
       .catch((reason: unknown) => {
         console.error(reason);
-        setErrorMessage(t("modal-patient-add-team-failure"));
+        setErrorMessage(error ? error : t("modal-patient-add-team-failure"));
       });
   } else {
     content = <ConfirmTeam team={team} handleClose={handleClose} handleAccept={handleAccept} />;

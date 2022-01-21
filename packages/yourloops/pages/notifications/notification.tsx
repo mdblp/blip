@@ -26,28 +26,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import _ from "lodash";
-import { TFunction, useTranslation, Trans } from "react-i18next";
-import moment from "moment-timezone";
-
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import GroupIcon from "@material-ui/icons/Group";
-import PersonIcon from "@material-ui/icons/Person";
-import HelpIcon from "@material-ui/icons/Help";
-import MedicalServiceIcon from "../../components/icons/MedicalServiceIcon";
-import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
-
-import { IUser, UserRoles } from "../../models/shoreline";
-import { INotification, NotificationType } from "../../lib/notifications/models";
-import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
-import { useNotification } from "../../lib/notifications/hook";
-import { useTeam } from "../../lib/team/hook";
-import { useSharedUser } from "../../lib/share";
-import metrics from "../../lib/metrics";
+import GroupIcon from "@material-ui/icons/Group";
+import HelpIcon from "@material-ui/icons/Help";
+import PersonIcon from "@material-ui/icons/Person";
+import _ from "lodash";
+import moment from "moment-timezone";
+import AddTeamDialog from "../../pages/patient/teams/add-dialog";
+import React from "react";
+import { TFunction, Trans, useTranslation } from "react-i18next";
+import MedicalServiceIcon from "../../components/icons/MedicalServiceIcon";
 import { useAlert } from "../../components/utils/snackbar";
+import metrics from "../../lib/metrics";
+import { useNotification } from "../../lib/notifications/hook";
+import { INotification, NotificationType } from "../../lib/notifications/models";
+import { useSharedUser } from "../../lib/share";
+import { useTeam } from "../../lib/team/hook";
+import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
+import { IUser, UserRoles } from "../../models/shoreline";
 
 interface NotificationSpanProps {
   id: string;
@@ -180,8 +179,14 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const classes = useStyles();
   const { notification } = props;
   const { id } = notification;
+  const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false);
+  const isTeamInvite = notification.type === NotificationType.careTeamProInvitation || notification.type === NotificationType.careTeamPatientInvitation;
 
-  const onAccept = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
+  if (isTeamInvite && !notification.target) {
+    throw Error("Cannot accept team invite because notification is missing the team id info");
+  }
+
+  const acceptInvitation = async () => {
     setInProgress(true);
     try {
       await notifications.accept(notification);
@@ -198,6 +203,14 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   };
 
+  const onOpenInvitationDialog = () => {
+    if (isTeamInvite) {
+      setAddTeamDialogVisible(true);
+    } else {
+      acceptInvitation();
+    }
+  };
+
   const onDecline = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     setInProgress(true);
     try {
@@ -211,12 +224,25 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   };
 
+  const closeTeamAcceptDialog = (teamId: string | null): void => {
+    setAddTeamDialogVisible(false);
+    if (notification.target && teamId && notification.target.id === teamId) {
+      acceptInvitation();
+    }
+  };
+
   return (
     <div id={`notification-line-${id}`} className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={`notification-icon-${id}`} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} t={t} notification={notification} className={`${classes.notificationSpan} notification-text`} />
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
+        {isTeamInvite && addTeamDialogVisible && notification.target
+          && <AddTeamDialog
+            error={t("notification-patient-invitation-wrong-code", { careteam : notification.target.name } )}
+            teamName={notification.target.name}
+            actions={{ onDialogResult : (teamId) => { closeTeamAcceptDialog(teamId);} }}
+          />}
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton
             id={`notification-help-${id}-button`}
@@ -234,7 +260,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             variant="contained"
             className={`${classes.buttonAccept} notification-button-accept`}
             disabled={inProgress}
-            onClick={onAccept}>
+            onClick={onOpenInvitationDialog}>
             {t("button-accept")}
           </Button>
         )}
