@@ -102,7 +102,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   for (const team of teams) {
     optionsTeamsElements.push(
       <MenuItem
-        id={`patient-list-dialog-add-team-option-${team.id}`}
+        id={`patient-list-dialog-add-team-option-${team.name}`}
         value={team.id}
         key={team.id}
         aria-label={team.name}
@@ -166,12 +166,10 @@ function AddDialog(props: AddDialogProps): JSX.Element {
               {t("team")}
             </InputLabel>
             <Select
+              id="patient-list-dialog-add-team-input"
+              name="teamid"
               value={teamId}
               onChange={handleChangeTeam}
-              inputProps={{
-                name: "teamid",
-                id: "patient-list-dialog-add-team-input",
-              }}
             >
               {optionsTeamsElements}
             </Select>

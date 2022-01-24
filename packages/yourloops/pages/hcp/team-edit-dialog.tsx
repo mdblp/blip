@@ -115,7 +115,12 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     if (Object.prototype.hasOwnProperty.call(countries, entry)) {
       const { name } = countries[entry];
       optionsCountries.push(
-        <MenuItem value={entry} key={name} aria-label={name}>
+        <MenuItem
+          id={`team-edit-dialog-select-country-item-${entry}`}
+          value={entry}
+          key={name}
+          aria-label={name}
+        >
           {name}
         </MenuItem>
       );
@@ -332,10 +337,11 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
             <InputLabel
               htmlFor="team-edit-dialog-select-country">{t("team-edit-dialog-placeholder-addr-country")}</InputLabel>
             <Select
+              id="team-edit-dialog-select-country"
+              name="country"
               label={t("team-edit-dialog-placeholder-addr-country")}
               value={addrCountry}
               onChange={(e) => setAddrCountry(e.target.value as string)}
-              inputProps={{ name: "country", id: "team-edit-dialog-select-country" }}
             >
               {optionsCountries}
             </Select>
