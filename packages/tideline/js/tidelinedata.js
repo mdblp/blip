@@ -665,6 +665,38 @@ TidelineData.prototype.sortPumpSettingsParameters = function sortPumpSettingsPar
   });
 };
 
+
+TidelineData.prototype.deduplicateBoluses = function deduplicateBoluses() {
+  if (!Array.isArray(this.data)) {
+    return;
+  }
+
+  // group by time
+  const grpByTime = _.groupBy(
+    _.filter(this.data, (x) => x.type === "bolus"),
+    (x) => x.normalTime);
+  const ToBeRemoved = {};
+  // isolate entries that have to be cleansed
+  _.forEach(grpByTime, (value, key) => {
+    // we should not have more than one entry at the same time
+    if (value.length > 1) {
+      // create the final entry that we ant to keep
+      const merged = _.mergeWith(value[0], ...value, (objValue, srcValue, key) => {
+        if (key === "normal") {
+          if (objValue > srcValue) return objValue;
+          return srcValue;
+        }
+      });
+      ToBeRemoved[key] = merged;
+    }
+  });
+  // remove all entries indexed in ToBeRemoved
+  _.remove(this.data, function(item) {
+    return item.normalTime in ToBeRemoved;
+  });
+  this.data = [...this.data, ...Object.values(ToBeRemoved)];
+};
+
 TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysicalActivities() {
   const physicalActivity = this.grouped.physicalActivity;
   if (!Array.isArray(physicalActivity)) {
@@ -1100,6 +1132,11 @@ TidelineData.prototype.addData = async function addData(newData) {
   if (this.data.length < nDateBeforeRemoveDuplicates) {
     this.log.info(`${nDateBeforeRemoveDuplicates - this.data.length} duplicates data removed`);
   }
+
+  startTimer("deduplicateBoluses");
+  this.deduplicateBoluses();
+  endTimer("deduplicateBoluses");
+
   // Initial sort
   this.data.sort((a, b) => a.epoch - b.epoch);
   endTimer("Concatenate & uniq & sort");
