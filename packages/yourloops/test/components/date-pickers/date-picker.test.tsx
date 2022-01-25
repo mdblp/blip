@@ -62,8 +62,32 @@ function testDatePicker(): void {
     const titleElem = document.getElementById("the-date-title");
     expect(titleElem).to.be.not.null;
 
-    const calendarElem = document.getElementById("calendar-view");
+    const calendarElem = document.getElementById("calendar-box");
     expect(calendarElem).to.be.null;
+  });
+
+  it("should call onSelectedDateChange() when the selected date changed", async () => {
+    const onSelectedDateChanged = sinon.stub();
+    await act(() => {
+      return new Promise((resolve) => {
+        ReactDOM.render(
+          <DatePicker id="selected-date-changed" date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}>
+            <span id="the-date-title">Date</span>
+          </DatePicker>, container, resolve);
+      });
+    });
+    const divTitleElem = document.getElementById("selected-date-changed");
+    expect(divTitleElem, "divTitleElem").to.be.not.null;
+    divTitleElem.click();
+    expect(onSelectedDateChanged.calledOnce, "calledOnce").to.be.true;
+    expect(onSelectedDateChanged.firstCall.args[0], "firstCall").to.be.eq("2022-01-26");
+
+    const buttonPrevDay = document.getElementById("button-calendar-day-2022-01-25");
+    expect(buttonPrevDay, "button-calendar-day-2022-01-25").to.be.not.null;
+    buttonPrevDay.click();
+
+    expect(onSelectedDateChanged.calledTwice, "calledOnce").to.be.true;
+    expect(onSelectedDateChanged.secondCall.args[0], "firstCall").to.be.eq("2022-01-25");
   });
 
   it("should display the calender when clicking on the title", async () => {
@@ -100,7 +124,6 @@ function testDatePicker(): void {
     const titleElem = document.getElementById("date-picker-button-show-calendar");
     expect(titleElem, "titleElem").to.be.not.null;
     titleElem.click();
-    await waitTimeout(1);
     let buttonCancel = document.getElementById("date-picker-button-cancel");
     expect(buttonCancel, "buttonCancel").to.be.not.null;
     buttonCancel.click();

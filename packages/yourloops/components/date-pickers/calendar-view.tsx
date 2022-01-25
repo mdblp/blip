@@ -27,143 +27,198 @@
  */
 
 import React from "react";
-import { Dayjs, isDayjs } from "dayjs";
+import dayjs, { Dayjs, isDayjs } from "dayjs";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-
-import { CalendarChangeMonth, TRANSITION_DURATION } from "./models";
+import {
+  CalendarOrientation,
+  ChangeMonthDirection,
+  CalendarChangeMonth,
+  CalendarDatesRange,
+  TRANSITION_DURATION,
+} from "./models";
 import PickerToolbar from "./picker-toolbar";
-import Header from "./calendar-header";
-import Calendar from "./calendar";
-import YearSelector from "./year-selector";
+import CalendarBox from "./calendar-box";
 
 interface CalendarViewProps {
-  selectedDate: Dayjs;
-  minDate?: Dayjs;
-  maxDate?: Dayjs;
-  direction?: "landscape" | "portrait";
-  disablePast?: boolean;
-  disableFuture?: boolean;
+  showToolbar?: boolean;
+  selectedDate?: Dayjs;
+  selectedDatesRange?: CalendarDatesRange;
+  selectableDatesRange?: CalendarDatesRange;
+  maxSelectableDays?: number;
+  minDate: Dayjs;
+  maxDate: Dayjs;
+  orientation: CalendarOrientation;
   onChange: (d: Dayjs) => void;
 }
 
-const calendarViewStyles = makeStyles((theme: Theme) => {
-  return {
-    root: {
-      display: "flex",
-      flexDirection: (props: CalendarViewProps) => props.direction === "landscape" ? "row" : "column",
-      backgroundColor: theme.palette.background.paper,
-      width: "fit-content",
-      margin: 0,
-      padding: 0,
-    },
-    calendarBox: {
-      display: "flex",
-      flexDirection: "column",
-      overflow: "hidden",
-      width: 300,
-      height: 325,
-    },
-  };
-}, { name: "date-pickers-calendar-view" });
+function toYearMonth(d: Dayjs): number {
+  return d.year() * 100 + d.month();
+}
 
 function CalendarView(props: CalendarViewProps): JSX.Element {
-  const { selectedDate, minDate, maxDate } = props;
-  const classes = calendarViewStyles(props);
-  const [currentMonth, setCurrentMonth] = React.useState(selectedDate.startOf("month"));
-  const [changeMonth, setChangeMonth] = React.useState<CalendarChangeMonth | null>(null);
-  const [changeYear, setChangeYear] = React.useState(false);
+  const { selectedDate, selectedDatesRange, minDate, maxDate, orientation, onChange } = props;
 
-  const canChangeToMonth = (d: Dayjs) => {
-    const minMonth = minDate?.startOf("month");
-    if (isDayjs(minMonth) && d.isBefore(minMonth)) {
-      return { result: false, date: minMonth };
+  const [selectingYear, setSelectingYear] = React.useState<boolean>(false);
+  const [changingMonth, setChangingMonth] = React.useState<CalendarChangeMonth | null>(null);
+
+  const [currentMonth, setCurrentMonth] = React.useState<Dayjs>(() => {
+    if (selectedDate) {
+      return selectedDate.startOf("month");
     }
-    const maxMonth = maxDate?.endOf("month").endOf("day");
-    if (isDayjs(maxMonth) && d.isAfter(maxMonth)) {
-      return { result: false, date: maxMonth };
+    if (selectedDatesRange) {
+      const lastMonth = selectedDatesRange.end.startOf("month");
+      if (isDayjs(minDate) && lastMonth.subtract(1, "day").isBefore(minDate)) {
+        // Don't display an unselectable month
+        return lastMonth.add(1, "month");
+      }
+      return lastMonth;
     }
-    return { result: true, date: d };
-  };
+    // Will crash after (see end of the function)
+    return dayjs();
+  });
 
-  const setCurrentMonthSafe = (d: Dayjs) => {
-    const { date } = canChangeToMonth(d);
-    setCurrentMonth(date);
-  };
+  const prevMonth = React.useMemo(() => {
+    return currentMonth.subtract(1, "month");
+  }, [currentMonth]);
 
-  const setNewMonth = (month: Dayjs) => {
-    if (!canChangeToMonth(month).result) {
+  const changingPrevMonth = React.useMemo<CalendarChangeMonth | null>(() => {
+    if (changingMonth && !selectedDate) {
+      return {
+        direction: changingMonth.direction,
+        onAnimationEnd: changingMonth.onAnimationEnd,
+        toMonth: changingMonth.toMonth.subtract(1, "month"),
+      };
+    }
+    return null;
+  }, [changingMonth, selectedDate]);
+
+  const minMonth = toYearMonth(minDate);
+  const maxMonth = toYearMonth(maxDate);
+
+  const changeCurrentMonth = (toMonth: Dayjs, direction: ChangeMonthDirection) => {
+    const ym = toYearMonth(toMonth);
+    if (ym < minMonth || ym > maxMonth) {
       return;
     }
-    const startTime = Date.now();
     const transitionTimeoutThreshold = 150;
-    let timeoutTransition = window.setTimeout(() => {
-      console.log("setNewMonth: Transition timeout", `${Date.now() - startTime}ms`);
-      timeoutTransition = 0;
-      setCurrentMonthSafe(month);
-      setChangeMonth(null);
-    }, TRANSITION_DURATION + transitionTimeoutThreshold);
-    setChangeMonth({
-      direction: month.isAfter(currentMonth) ? "right" : "left",
-      newMonth: month,
-      onAnimationEnd: () => {
-        if (timeoutTransition > 0) {
-          window.clearTimeout(timeoutTransition);
-          setCurrentMonthSafe(month);
-          setChangeMonth(null);
-        }
-      },
+    let timeoutTransition = 0;
+    const onAnimationEnd = () => {
+      if (timeoutTransition > 0) {
+        window.clearTimeout(timeoutTransition);
+        timeoutTransition = 0;
+        setCurrentMonth(toMonth);
+        setChangingMonth(null);
+      }
+    };
+    timeoutTransition = window.setTimeout(onAnimationEnd, TRANSITION_DURATION + transitionTimeoutThreshold);
+    setChangingMonth({
+      direction,
+      toMonth,
+      onAnimationEnd,
     });
   };
 
-  const setSelectedDate = (d: Dayjs, updateCurrentMonth?: boolean) => {
-    if (isDayjs(minDate) && d.isBefore(minDate)) {
-      props.onChange(minDate);
-    } else if (isDayjs(maxDate) && d.isAfter(maxDate)) {
-      props.onChange(maxDate);
-    } else {
-      props.onChange(d);
-    }
+  const canGoPrevMonth = minMonth < toYearMonth(selectedDate ? currentMonth : prevMonth);
+  const handlePrevMonth = canGoPrevMonth ? (): void => {
+    changeCurrentMonth(currentMonth.subtract(1, "month"), "left");
+  } : undefined;
+  const canGoNextMonth = maxMonth > toYearMonth(currentMonth);
+  const handleNextMonth = canGoNextMonth ? (): void => {
+    changeCurrentMonth(currentMonth.add(1, "month"), "right");
+  } : undefined;
 
-    if (updateCurrentMonth && d.month() !== currentMonth.month()) {
-      setNewMonth(d.startOf("month"));
-    }
-  };
-
-  let calendarBox;
-  if (changeYear) {
-    const onSelectedYear = (year: number) => {
-      setChangeYear(false);
-      setCurrentMonthSafe(currentMonth.set("year", year));
-      setSelectedDate(selectedDate.set("year", year));
-    };
-    calendarBox = (
-      <div id="calendar-box" className={classes.calendarBox}>
-        <YearSelector selectedYear={selectedDate.year()} onSelectedYear={onSelectedYear} minYear={minDate?.year()} maxYear={maxDate?.year()} />
-      </div>
-    );
-  } else {
-    calendarBox = (
-      <div id="calendar-box" className={classes.calendarBox}>
-        <Header currentMonth={currentMonth} onMonthChange={setNewMonth} changeMonth={changeMonth} minDate={minDate} maxDate={maxDate} />
-        <Calendar
-          currentMonth={currentMonth}
-          selectedDate={selectedDate}
-          onChange={setSelectedDate}
-          changeMonth={changeMonth}
+  if (selectedDatesRange) {
+    return (
+      <React.Fragment>
+        <PickerToolbar
+          showToolbar={props.showToolbar}
+          maxSelectableDays={props.maxSelectableDays}
+          selectedDatesRange={selectedDatesRange}
+          orientation={orientation}
+        />
+        <CalendarBox
+          position="first"
+          orientation={orientation}
+          currentMonth={prevMonth}
+          selectedDatesRange={selectedDatesRange}
+          selectableDatesRange={props.selectableDatesRange}
           minDate={minDate}
           maxDate={maxDate}
+          changingMonth={changingPrevMonth}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+          onChange={onChange}
         />
-      </div>
+        <CalendarBox
+          position="last"
+          orientation={orientation}
+          currentMonth={currentMonth}
+          selectedDatesRange={selectedDatesRange}
+          selectableDatesRange={props.selectableDatesRange}
+          minDate={minDate}
+          maxDate={maxDate}
+          changingMonth={changingMonth}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+          onChange={onChange}
+        />
+      </React.Fragment>
     );
   }
 
-  return (
-    <div id="calendar-view" className={classes.root}>
-      <PickerToolbar selectedDate={selectedDate} direction={props.direction} onClickYear={() => setChangeYear(true)} />
-      {calendarBox}
-    </div>
-  );
+  if (selectedDate) {
+    const handleSelectedYear = selectingYear ? (year: number) => {
+      setSelectingYear(false);
+      let date = selectedDate.set("year", year);
+      if (date.isBefore(minDate)) {
+        date = minDate;
+      } else if (date.isAfter(maxDate)) {
+        date = maxDate;
+      }
+      props.onChange(date);
+      setCurrentMonth(date.startOf("month"));
+    } : undefined;
+
+    const onChangeSelectedDate = (date: Dayjs, updateCurrentMonth?: boolean): void => {
+      if (date.isBefore(minDate) || date.isAfter(maxDate)) {
+        return;
+      }
+      if (updateCurrentMonth) {
+        const dMonth = toYearMonth(date) - toYearMonth(currentMonth);
+        if (dMonth > 0 && handleNextMonth) {
+          handleNextMonth();
+        } else if (dMonth < 0 && handlePrevMonth) {
+          handlePrevMonth();
+        }
+      }
+      onChange(date);
+    };
+
+    return (
+      <React.Fragment>
+        <PickerToolbar
+          showToolbar={props.showToolbar}
+          selectedDate={selectedDate}
+          orientation={orientation}
+          onClickYear={() => setSelectingYear(true)}
+        />
+        <CalendarBox
+          orientation={orientation}
+          currentMonth={currentMonth}
+          selectedDate={selectedDate}
+          minDate={minDate}
+          maxDate={maxDate}
+          changingMonth={changingMonth}
+          onPrevMonth={handlePrevMonth}
+          onNextMonth={handleNextMonth}
+          onChange={onChangeSelectedDate}
+          onSelectYear={handleSelectedYear}
+        />
+      </React.Fragment>
+    );
+  }
+
+  throw new Error("[CalendarView] Missing selectedDate or selectedDatesRange");
 }
 
 export default CalendarView;

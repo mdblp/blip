@@ -44,6 +44,7 @@ import { useSharedUser, ShareUser } from "../../lib/share";
 import InvalidRoute from "../../components/invalid-route";
 import ProfileDialog from "../../components/dialogs/patient-profile";
 import DatePicker from "../../components/date-pickers/date-picker";
+import RangeDatePicker from "../../components/date-pickers/range-date-picker";
 
 interface PatientDataParam {
   patientId?: string;
@@ -122,6 +123,7 @@ function PatientDataPage(): JSX.Element | null {
         profileDialog={ProfileDialog}
         prefixURL={`/caregiver/patient/${paramPatientId}`}
         datePicker={DatePicker}
+        rangeDatePicker={RangeDatePicker}
       />
     </Container>
   );

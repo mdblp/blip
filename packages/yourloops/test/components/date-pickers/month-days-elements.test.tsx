@@ -60,6 +60,7 @@ function testMonthDayElements(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <MonthDayElements
+            mode="single"
             daysArray={days}
             currentMonth={today.month()}
             onChange={onChange}

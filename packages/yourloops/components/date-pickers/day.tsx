@@ -34,12 +34,12 @@ import ButtonBase, { ButtonBaseProps } from "@material-ui/core/ButtonBase";
 interface DayProps extends ButtonBaseProps {
   day: string;
   selected?: boolean;
+  // hoverRange?: DaySelectionMode;
 }
 
 const dayStyles = makeStyles((theme: Theme) => ({
   root: {
     ...theme.typography.caption,
-    "borderRadius": "50%",
     "padding": 0,
     "backgroundColor": theme.palette.background.paper,
     "color": theme.palette.text.primary,

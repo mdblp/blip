@@ -33,23 +33,20 @@ import clsx from "clsx";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { CalendarChangeMonth, animationStyle } from "./models";
+import { CalendarPosition, CalendarChangeMonth, CalendarDatesRange, animationStyle } from "./models";
 import MonthDayElements, { dayStyles } from "./month-days-elements";
 
 interface CalendarProps {
+  position?: CalendarPosition,
   /** Set the displayed month, current month if not set, and the currently selected day */
   currentMonth: Dayjs;
   selectedDate?: Dayjs;
-  minDate?: Dayjs;
-  maxDate?: Dayjs;
-  disablePast?: boolean;
-  disableFuture?: boolean;
+  selectedDatesRange?: CalendarDatesRange;
+  selectableDatesRange?: CalendarDatesRange;
+  minDate: Dayjs;
+  maxDate: Dayjs;
   changeMonth?: CalendarChangeMonth | null;
   onChange: (date: Dayjs, updateCurrentMonth?: boolean) => void;
-}
-
-interface CalendarStylesParams {
-  direction?: "left" | "right";
 }
 
 const calendarStyles = makeStyles((theme: Theme) => {
@@ -57,27 +54,38 @@ const calendarStyles = makeStyles((theme: Theme) => {
     calendar: {
       display: "flex",
       flexDirection: "column",
-      backgroundColor: theme.palette.background.paper,
-      overflow: "hidden",
-      width: 300,
     },
-    weekdays: {
+    daysGrid: {
       display: "grid",
       gridTemplateColumns: "repeat(7, auto)",
       gridTemplateRows: "auto",
       justifyContent: "center",
-      rowGap: 5,
-      columnGap: 5,
-      width: 300,
-      minWidth: 300,
+      rowGap: 3,
+      minWidth: "100%",
+      [theme.breakpoints.down("sm")]: {
+        rowGap: 1,
+      },
+    },
+    oneMonthHeight: {
+      // Fix the height to be sure days buttons stay aligned during transition (animation)
+      height: "255px", // 6 * 40px + 5*3px (weekdays + 6 lines for days in a month + 5 * rowGap)
+      [theme.breakpoints.down("sm")]: {
+        height: "233px", // 6 * 38px + 5*1px
+      },
     },
     dayLabel: {
       textAlign: "center",
+      [theme.breakpoints.down("sm")]: {
+        height: "20px",
+      },
     },
-    divScroll: {
-      width: 300,
+    divScrollLeft: {
       display: "flex",
-      flexDirection: (props: CalendarStylesParams) => props.direction === "left" ? "row-reverse" : "row",
+      flexDirection: "row-reverse",
+    },
+    divScrollRight: {
+      display: "flex",
+      flexDirection: "row",
     },
   };
 }, { name: "date-pickers-calendar" });
@@ -85,20 +93,21 @@ const calendarStyles = makeStyles((theme: Theme) => {
 function Calendar(props: CalendarProps): JSX.Element {
   // use startOf() here to clone the date, and to be sure we use the same timezone offset
   // dayjs don't handle properly the clone of the timezone
-  const { currentMonth, selectedDate, onChange, changeMonth, minDate, maxDate } = props;
+  const { currentMonth, selectedDate, selectedDatesRange, changeMonth, position } = props;
   const dayClasses = dayStyles();
   const animClasses = animationStyle();
-  const classes = calendarStyles({ direction: changeMonth?.direction });
-
+  const classes = calendarStyles();
   const { daysArray, weekDays, currentMonthNumber } = React.useMemo(() => ({
     daysArray: currentMonth.getWeekArray(),
     weekDays: currentMonth.getWeekdays(),
     currentMonthNumber: currentMonth.month(),
   }), [currentMonth]);
 
+  const mode = selectedDatesRange ? "double" : "single";
+  const id = position ? `calendar-month-${position}` : "calendar-month";
   const weekDaysElements = React.useMemo(() => weekDays.map((day: string, index: number) => (
     <Typography
-      id={`calendar-weekday-${index}`}
+      id={`${id}-weekday-${index}`}
       aria-hidden="true"
       key={day}
       variant="caption"
@@ -107,15 +116,38 @@ function Calendar(props: CalendarProps): JSX.Element {
     >
       {_.capitalize(day)}
     </Typography>
-  )), [weekDays, dayClasses.dayElement, classes.dayLabel]);
+  )), [weekDays, dayClasses.dayElement, classes.dayLabel, id]);
 
+  const { minDate, maxDate } = React.useMemo(() => {
+    const minDate = props.minDate;
+    const maxDate= props.maxDate;
+    const selectableDatesRange = props.selectableDatesRange;
+    if (selectableDatesRange) {
+      let start = selectableDatesRange.start;
+      if (start.isBefore(minDate)) {
+        start = minDate;
+      }
+      let end = selectableDatesRange.end;
+      if (end.isAfter(maxDate)) {
+        end = maxDate;
+      }
+      return { minDate: start, maxDate: end };
+    }
+    return { minDate, maxDate };
+  }, [ props.minDate, props.maxDate, props.selectableDatesRange ]);
+
+  // Disable callback during change month animation:
+  const onChange = changeMonth ? _.noop : props.onChange;
+  const oneMonthClasses = clsx(classes.daysGrid, classes.oneMonthHeight);
   const weekdaysValues = (
-    <div id="calendar-weekdays-values-current" role="grid" className={classes.weekdays}>
+    <div id={`${id}-weekdays-values-current`} role="grid" className={oneMonthClasses}>
       <MonthDayElements
+        mode={mode}
         currentMonth={currentMonthNumber}
         daysArray={daysArray}
         onChange={onChange}
         selectedDate={selectedDate}
+        selectedDatesRange={selectedDatesRange}
         minDate={minDate}
         maxDate={maxDate}
       />
@@ -125,26 +157,30 @@ function Calendar(props: CalendarProps): JSX.Element {
   let weekdaysDiv = weekdaysValues;
   if (changeMonth) {
     const isBefore = changeMonth.direction === "left";
-    const newMonth = changeMonth.newMonth.month();
-    const newDaysArray = changeMonth.newMonth.getWeekArray();
+    const newMonth = changeMonth.toMonth.month();
+    const newDaysArray = changeMonth.toMonth.getWeekArray();
     const changingWeekdaysValues = (
-      <div id="calendar-weekdays-values-new" role="grid" className={classes.weekdays}>
+      <div id={`${id}-weekdays-values-new`} role="grid" className={oneMonthClasses}>
         <MonthDayElements
+          mode={mode}
           currentMonth={newMonth}
           daysArray={newDaysArray}
-          onChange={_.noop}
+          onChange={onChange}
           selectedDate={selectedDate}
+          selectedDatesRange={selectedDatesRange}
           minDate={minDate}
           maxDate={maxDate}
         />
       </div>
     );
-    const classChangeMonth = clsx(classes.divScroll, {
+    const classChangeMonth = clsx({
+      [classes.divScrollLeft]: changeMonth?.direction === "left",
+      [classes.divScrollRight]: changeMonth?.direction === "right",
       [animClasses.animatedMonthLTR]: isBefore,
       [animClasses.animatedMonthRTL]: !isBefore,
     });
     weekdaysDiv = (
-      <div className={classChangeMonth} onAnimationEnd={changeMonth.onAnimationEnd} aria-busy="true">
+      <div id={`${id}-change-month-anim`} className={classChangeMonth} onAnimationEnd={changeMonth.onAnimationEnd} aria-busy="true">
         {weekdaysValues}
         {changingWeekdaysValues}
       </div>
@@ -152,7 +188,8 @@ function Calendar(props: CalendarProps): JSX.Element {
   }
 
   const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (changeMonth) {
+    if (changeMonth || mode === "double") {
+      // TODO Dealing key with range calendar
       return;
     }
     if (!selectedDate) {
@@ -176,8 +213,8 @@ function Calendar(props: CalendarProps): JSX.Element {
   };
 
   return (
-    <div id="calendar-month" className={classes.calendar} tabIndex={0} onKeyUp={onKeyUp} role="grid">
-      <div id="calendar-weekdays-names" className={classes.weekdays}>
+    <div id={id} className={classes.calendar} tabIndex={0} onKeyUp={onKeyUp} role="grid">
+      <div id={`${id}-weekdays-names`} className={classes.daysGrid}>
         {weekDaysElements}
       </div>
       {weekdaysDiv}

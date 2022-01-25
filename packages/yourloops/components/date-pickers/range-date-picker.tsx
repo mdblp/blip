@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2021, Diabeloop
- * Simple DatePicker to select a single day
+ * Simple DatePicker to select a range of days
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import dayjs, { Dayjs, isDayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 
@@ -38,24 +38,27 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
-import { CalendarOrientation, MIN_YEAR, MAX_YEAR } from "./models";
+import { CalendarOrientation, CalendarDatesRange, MIN_YEAR, MAX_YEAR } from "./models";
 import CalendarView from "./calendar-view";
-
-interface CalendarStylesProps {
-  orientation: CalendarOrientation;
-}
 
 interface DatePickerProps {
   id?: string;
-  date?: string | number | Dayjs | Date;
+  /** Please use string format `YYYY-MM-DD` if possible */
+  start?: string | number | Dayjs | Date;
+  /** Please use string format `YYYY-MM-DD` if possible */
+  end?: string | number | Dayjs | Date;
+  /** Please use string format `YYYY-MM-DD` if possible */
   minDate?: Dayjs | number | string | Date;
+  /** Please use string format `YYYY-MM-DD` if possible */
   maxDate?: Dayjs | number | string | Date;
+  /** Maximum possible of selected days */
+  maxSelectableDays?: number;
   children: React.ReactNode;
   className?: string;
   activeClassName?: string;
   showToolbar?: boolean;
-  onResult?: (date?: string) => void;
-  onSelectedDateChange?: (date?: string) => void;
+  onResult?: (start?: string, end?: string) => void;
+  onSelectedDateChange?: (start?: string, end?: string) => void;
 }
 
 const datePickerStyle = makeStyles((theme: Theme) => {
@@ -63,20 +66,23 @@ const datePickerStyle = makeStyles((theme: Theme) => {
     dialogPaper: {
       margin: 0,
       backgroundColor: "transparent",
+      maxWidth: "initial",
       [theme.breakpoints.down("sm")]: {
-        maxWidth: "initial",
         maxHeight: "100%",
-        marginLeft: 16,
-        marginRight: 16,
       },
     },
     content: {
       display: "flex",
-      flexDirection: (props: CalendarStylesProps) => props.orientation === "landscape" ? "row" : "column",
       backgroundColor: "transparent",
       width: "fit-content",
       margin: 0,
       padding: "0px !important",
+    },
+    contentLandscape: {
+      flexDirection: "row",
+    },
+    contentPortrait: {
+      flexDirection: "column",
     },
     actions: {
       backgroundColor: theme.palette.background.paper,
@@ -85,45 +91,99 @@ const datePickerStyle = makeStyles((theme: Theme) => {
       cursor: "pointer",
     },
   };
-}, { name: "date-picker-single-day" });
+}, { name: "date-picker-days-range" });
 
-function DatePicker(props: DatePickerProps): JSX.Element {
+function RangeDatePicker(props: DatePickerProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const orientation: CalendarOrientation = matches ? "landscape" : "portrait";
-  const classes = datePickerStyle({ orientation });
+  const classes = datePickerStyle();
   const [isOpen, setIsOpen] = React.useState(false);
+  const { maxSelectableDays } = props;
 
-  const { date, minDate, maxDate } = React.useMemo(() => {
+  const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
     // It's safe to use the UTC in the calendar
     // - dayjs don't support well the timezone (lost of copy)
     // - We return a day without any timezone, it's up to the caller to do
     //   what it want with it
-    const minDate = props.minDate ? dayjs(props.minDate, { utc: true }).startOf("day") : dayjs(`${MIN_YEAR}-01-01`, { utc: true });
-    const maxDate = props.maxDate ? dayjs(props.maxDate, { utc: true }).endOf("day") : dayjs(`${MAX_YEAR-1}-12-31`, { utc: true });
-    let date = props.date ? dayjs(props.date, { utc: true }).startOf("day") : dayjs(new Date(), { utc: true }).startOf("day");
-    // When changing the date, for example by changing the current year,
-    // which can done in an upper element with YearSelector,
-    // be sure we respect the min/max date
-    if (isDayjs(minDate) && date.isBefore(minDate)) {
-      date = minDate;
-    } else if (isDayjs(maxDate) && date.isAfter(maxDate)) {
-      date = maxDate;
-    }
-    return { date, minDate, maxDate };
-  }, [props.date, props.maxDate, props.minDate]);
+    let minDate = props.minDate ? dayjs(props.minDate, { utc: true }).startOf("day") : dayjs(`${MIN_YEAR}-01-01`, { utc: true });
+    let maxDate = props.maxDate ? dayjs(props.maxDate, { utc: true }).endOf("day") : dayjs(`${MAX_YEAR-1}-12-31`, { utc: true });
+    let startDate = props.start ? dayjs(props.start, { utc: true }).startOf("day") : dayjs(new Date(), { utc: true }).startOf("day");
+    let endDate = props.end ? dayjs(props.end, { utc: true }).startOf("day") : dayjs(new Date(), { utc: true }).startOf("day");
 
-  const [selectedDate, setSelectedDate] = React.useState(date);
-  const updateSelectedDate = (date: dayjs.Dayjs): void => {
-    setSelectedDate(date);
-    if (props.onSelectedDateChange) {
-      props.onSelectedDateChange(date.format("YYYY-MM-DD"));
+    // Ensure we are coherent, or the rest of the code may not like it
+    if (endDate.isBefore(startDate)) {
+      // Swap start/end
+      const tmp = startDate;
+      startDate = endDate;
+      endDate = tmp;
+    }
+    if (maxDate.isBefore(minDate)) {
+      // Swap min/max
+      const tmp = minDate;
+      minDate = maxDate;
+      maxDate = tmp;
+    }
+    if (startDate.isBefore(minDate)) {
+      startDate = minDate;
+    }
+    if (endDate.isAfter(maxDate)) {
+      endDate = maxDate;
+    }
+    return { startDate, endDate, minDate, maxDate };
+  }, [props.start, props.end, props.maxDate, props.minDate]);
+
+  const [nextSelection, setNextSelection] = React.useState<"first" | "last">("first");
+  const [selectedDatesRange, setSelectedDatesRange] = React.useState<CalendarDatesRange>({ start: startDate, end: endDate });
+  const [selectableDatesRange, setSelectableDatesRange] = React.useState<CalendarDatesRange | undefined>(undefined);
+
+  const onSelectedDateChange = (range: CalendarDatesRange) => {
+    const { onSelectedDateChange } = props;
+    if (onSelectedDateChange) {
+      onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
     }
   };
 
+  const updateSelectedDate = (date: dayjs.Dayjs): void => {
+    let range: CalendarDatesRange;
+    if (nextSelection === "first") {
+      setNextSelection("last");
+      range = { start: date, end: date };
+
+      if (typeof maxSelectableDays === "number" && maxSelectableDays > 0) {
+        // Substract 1 day to the value, or we will be able to select
+        // maxSelectableDays+1 days total
+        setSelectableDatesRange({
+          start: date.subtract(maxSelectableDays - 1, "days"),
+          end: date.add(maxSelectableDays - 1, "days"),
+        });
+      }
+    } else {
+      setNextSelection("first");
+      if (typeof maxSelectableDays === "number") {
+        // Use minDate/maxDate to do the limits
+        setSelectableDatesRange(undefined);
+      }
+
+      if (date.isAfter(selectedDatesRange.start)) {
+        range = { start: selectedDatesRange.start, end: date };
+      } else {
+        range = { start: date, end: selectedDatesRange.end };
+      }
+    }
+
+    setSelectedDatesRange(range);
+    onSelectedDateChange(range);
+  };
+
   const handleOpen = () => {
-    updateSelectedDate(date); // Refresh our selected date
+    // Refresh our states
+    const range = { start: startDate, end: endDate };
+    setNextSelection("first");
+    setSelectedDatesRange(range);
+    setSelectableDatesRange(undefined);
+    onSelectedDateChange(range);
     setIsOpen(true);
   };
   const handleClose = () => setIsOpen(false);
@@ -136,7 +196,7 @@ function DatePicker(props: DatePickerProps): JSX.Element {
   const handleOK = () => {
     handleClose();
     if (props.onResult) {
-      props.onResult(selectedDate.format("YYYY-MM-DD"));
+      props.onResult(selectedDatesRange.start.format("YYYY-MM-DD"), selectedDatesRange.end.format("YYYY-MM-DD"));
     }
   };
 
@@ -166,7 +226,9 @@ function DatePicker(props: DatePickerProps): JSX.Element {
     // only needed when the dialog is displayed
     calendarView = (
       <CalendarView
-        selectedDate={selectedDate}
+        selectedDatesRange={selectedDatesRange}
+        selectableDatesRange={selectableDatesRange}
+        maxSelectableDays={maxSelectableDays}
         minDate={minDate}
         maxDate={maxDate}
         orientation={orientation}
@@ -175,6 +237,11 @@ function DatePicker(props: DatePickerProps): JSX.Element {
       />
     );
   }
+
+  const contentClasses = clsx(classes.content, {
+    [classes.contentLandscape]: orientation === "landscape",
+    [classes.contentPortrait]: orientation === "portrait",
+  });
 
   return (
     <React.Fragment>
@@ -188,8 +255,8 @@ function DatePicker(props: DatePickerProps): JSX.Element {
       >
         {props.children}
       </div>
-      <Dialog onClose={handleCancel} aria-labelledby="date-picker-selected-date" open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
-        <DialogContent id="calendar-view" className={classes.content}>
+      <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
+        <DialogContent id="calendar-view" className={contentClasses}>
           {calendarView}
         </DialogContent>
         <DialogActions className={classes.actions}>
@@ -205,4 +272,4 @@ function DatePicker(props: DatePickerProps): JSX.Element {
   );
 }
 
-export default DatePicker;
+export default RangeDatePicker;

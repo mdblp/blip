@@ -29,15 +29,27 @@
 import { Dayjs } from "dayjs";
 import { makeStyles } from "@material-ui/core/styles";
 
+export type CalendarOrientation = "landscape" | "portrait";
+export type CalendarPosition = "first" | "last";
+export type CalendarMode = "single" | "double";
+export type ChangeMonthDirection = "left" | "right";
+export type DaySelectionMode = "no" | "yes" | "left" | "middle" | "right";
+
 export interface CalendarChangeMonth {
-  newMonth: Dayjs;
-  direction: "left" | "right";
+  toMonth: Dayjs;
+  direction: ChangeMonthDirection;
   onAnimationEnd: () => void;
 }
 
-export const DAY_SIZE = 36;
+export interface CalendarDatesRange {
+  start: Dayjs;
+  end: Dayjs;
+}
+
 export const TRANSITION_DURATION = 300;
+/** Inclusive */
 export const MIN_YEAR = 1900;
+/** Exclusive */
 export const MAX_YEAR = 2100;
 
 export const animationStyle = makeStyles(() => {
