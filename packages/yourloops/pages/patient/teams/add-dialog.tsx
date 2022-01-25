@@ -77,13 +77,6 @@ export interface DisplayErrorMessageProps {
 const addTeamDialogClasses = makeStyles(
   (theme: Theme) => {
     return {
-      dialogCodeContent: {
-        display: "flex",
-        flexDirection: "column",
-        marginBottom: theme.spacing(4),
-        marginTop: theme.spacing(2),
-        alignSelf: "center",
-      },
       formControl: {
         marginBottom: theme.spacing(2),
       },
@@ -164,7 +157,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
           <strong>{teamName ? t("modal-add-medical-specific-team", { careteam: teamName }) : t("modal-add-medical-team")}</strong>
         </DialogTitle>
 
-        <DialogContent id="team-add-dialog-content" className={classes.dialogCodeContent}>
+        <DialogContent id="team-add-dialog-content">
           <Box display="flex" flexDirection="column" alignItems="center">
             <InputLabel
               color="primary"
