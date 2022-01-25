@@ -26,6 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import _ from "lodash";
+import React from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -38,18 +44,11 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import _ from "lodash";
-import React from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { makeButtonsStyles } from "../../../components/theme";
-import diabeloopUrl from "../../../lib/diabeloop-url";
 import metrics from "../../../lib/metrics";
 import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from "../../../lib/team";
+import diabeloopUrl from "../../../lib/diabeloop-url";
 import { AddTeamDialogContentProps } from "./types";
-
-
 
 export interface AddTeamDialogProps {
   teamName?: string
@@ -75,7 +74,6 @@ export interface DisplayErrorMessageProps {
   handleClose: () => void;
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-buttons" });
 const addTeamDialogClasses = makeStyles(
   (theme: Theme) => {
     return {
@@ -86,21 +84,11 @@ const addTeamDialogClasses = makeStyles(
         marginTop: theme.spacing(2),
         alignSelf: "center",
       },
-      buttonCancel: {
-        marginRight: theme.spacing(2),
-      },
       formControl: {
         marginBottom: theme.spacing(2),
       },
-      labelTeamCode: {
-        marginBottom: theme.spacing(2),
-        marginLeft: "auto",
-        marginRight: "auto",
-        textAlign: "center",
-      },
       divTeamCodeField: {
-        marginLeft: "auto",
-        marginRight: "auto",
+        marginTop: theme.spacing(2),
         width: "8em",
       },
       checkboxPrivacy: {
@@ -113,21 +101,20 @@ const addTeamDialogClasses = makeStyles(
 
 function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const buttonClasses = makeButtonsClasses();
 
   return (
     <React.Fragment>
-      <DialogContent id={`${props.id}-error-message`} style={{ marginTop: "2.5em", marginBottom: "calc(2.5em - 16px)", marginRight: "1em", marginLeft: "1em", paddingTop: "8px" }}>
+      <DialogContent id={`${props.id}-error-message`}>
         {props.message}
       </DialogContent>
 
-      <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
+      <DialogActions>
         <Button
-          className={buttonClasses.buttonOk}
           id={`${props.id}-error-button-ok`}
           onClick={props.handleClose}
           color="primary"
-          variant="contained">
+          variant="contained"
+        >
           {t("button-ok")}
         </Button>
       </DialogActions>
@@ -138,7 +125,6 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
 export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = addTeamDialogClasses();
-  const buttonClasses = makeButtonsClasses();
   const inputRef = React.createRef<HTMLInputElement>();
   const [idCode, setIdCode] = React.useState("");
   const { teamName } = props;
@@ -173,35 +159,47 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 
   return (
     <React.Fragment>
-      <DialogTitle id="team-add-dialog-title">
-        <strong>{teamName ? t("modal-add-medical-specific-team", { careteam: teamName }) : t("modal-add-medical-team")}</strong>
-      </DialogTitle>
+      <Box textAlign="center" p={3}>
+        <DialogTitle id="team-add-dialog-title">
+          <strong>{teamName ? t("modal-add-medical-specific-team", { careteam: teamName }) : t("modal-add-medical-team")}</strong>
+        </DialogTitle>
 
-      <DialogContent id="team-add-dialog-content" className={classes.dialogCodeContent}>
-        <InputLabel color="primary" id="team-add-dialog-label-code" htmlFor="team-add-dialog-field-code" className={classes.labelTeamCode}>
-          {t("modal-add-medical-team-code")}
-        </InputLabel>
-        <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
-          <TextField id="team-add-dialog-field-code" value={idCode} onChange={handleChangeCode} fullWidth inputRef={inputRef} />
-        </div>
-      </DialogContent>
+        <DialogContent id="team-add-dialog-content" className={classes.dialogCodeContent}>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <InputLabel
+              color="primary"
+              id="team-add-dialog-label-code"
+              htmlFor="team-add-dialog-field-code"
+            >
+              {t("modal-add-medical-team-code")}
+            </InputLabel>
+            <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
+              <TextField
+                id="team-add-dialog-field-code"
+                value={idCode}
+                onChange={handleChangeCode}
+                fullWidth
+                inputRef={inputRef}
+              />
+            </div>
+          </Box>
+        </DialogContent>
+      </Box>
 
-      <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
+      <DialogActions>
         <Button
           id="team-add-dialog-button-cancel"
           onClick={props.handleClose}
-          className={`${classes.buttonCancel} ${buttonClasses.buttonCancel}`}
-          color="secondary"
-          variant="contained">
+        >
           {t("button-cancel")}
         </Button>
         <Button
           id="team-add-dialog-button-add-team"
           onClick={handleClickJoinTeam}
           disabled={buttonJoinDisabled}
-          className={buttonClasses.buttonOk}
           variant="contained"
-          color="primary">
+          color="primary"
+        >
           {t("button-add-team")}
         </Button>
       </DialogActions>
@@ -212,7 +210,6 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
 export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const classes = addTeamDialogClasses();
-  const buttonClasses = makeButtonsClasses();
   const [privacyAccepted, setPrivacyAccepted] = React.useState(false);
 
   const { address } = props.team;
@@ -293,22 +290,20 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
         </DialogContentText>
       </DialogContent>
 
-      <DialogActions style={{ marginBottom: "0.5em", marginRight: " 0.5em" }}>
+      <DialogActions>
         <Button
           id="team-add-dialog-confirm-team-button-cancel"
           onClick={props.handleClose}
-          className={`${classes.buttonCancel} ${buttonClasses.buttonCancel}`}
-          color="secondary"
-          variant="contained">
+        >
           {t("button-cancel")}
         </Button>
         <Button
           id="team-add-dialog-confirm-team-button-add-team"
           disabled={!privacyAccepted}
           onClick={props.handleAccept}
-          className={buttonClasses.buttonOk}
           variant="contained"
-          color="primary">
+          color="primary"
+        >
           {t("button-add-medical-team")}
         </Button>
       </DialogActions>
