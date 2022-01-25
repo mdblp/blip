@@ -289,15 +289,13 @@ class Daily extends React.Component {
       tooltip: null,
     };
 
-    // Start / End date for the calendar
+    /** @type {{tidelineData: TidelineData}} */
     const { tidelineData } = props;
-    let timezone = tidelineData.getTimezoneAt(tidelineData.endpoints[0]);
-    this.startDate = moment.tz(tidelineData.endpoints[0], timezone).toDate();
-
-    timezone = tidelineData.getTimezoneAt(tidelineData.endpoints[1]);
-    // endpoints end date is exclusive, but the DatePicker is inclusive
-    // remove 1ms to the endDate
-    this.endDate = moment.tz(tidelineData.endpoints[1], timezone).subtract(1, "millisecond").toDate();
+    const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints();
+    /** @type {Date} */
+    this.startDate = startDate;
+    /** @type {Date} */
+    this.endDate = endDate;
   }
 
   componentDidUpdate(prevProps) {
@@ -337,6 +335,7 @@ class Daily extends React.Component {
           minDate={this.startDate}
           maxDate={this.endDate}
           onResult={onSelectedDateChange}
+          showToolbar
           className="patient-data-subnav-text patient-data-subnav-dates-daily chart-title-clickable"
           activeClassName="active"
         >

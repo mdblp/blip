@@ -185,10 +185,10 @@ class TidelineHeader extends React.Component {
           </a>
         </div>
         <div className="patient-data-subnav-center" id="tidelineLabel">
-          {this.renderNavButton(backClass, this.props.onClickBack, this.props.iconBack, backDisabled)}
+          {this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, this.props.iconBack, backDisabled)}
           {children}
-          {this.renderNavButton(nextClass, this.props.onClickNext, this.props.iconNext, nextDisabled)}
-          {this.renderNavButton(mostRecentClass, this.props.onClickMostRecent, this.props.iconMostRecent, mostRecentDisabled)}
+          {this.renderNavButton("button-nav-forward", nextClass, this.props.onClickNext, this.props.iconNext, nextDisabled)}
+          {this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, this.props.iconMostRecent, mostRecentDisabled)}
         </div>
         <div className="app-no-print patient-data-subnav-right">
           {printLink}
@@ -213,6 +213,7 @@ class TidelineHeader extends React.Component {
    * Helper function for rendering the various navigation buttons in the header.
    * It accounts for the transition state and disables the button if it is currently processing.
    *
+   * @param {string} id The button id
    * @param {string} buttonClass
    * @param {(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void} clickAction
    * @param {string} icon
@@ -220,7 +221,7 @@ class TidelineHeader extends React.Component {
    *
    * @return {JSX.Element}
    */
-  renderNavButton(buttonClass, clickAction, icon, disabled) {
+  renderNavButton(id, buttonClass, clickAction, icon, disabled) {
     const nullAction = function (e) {
       if (e) {
         e.preventDefault();
@@ -228,13 +229,13 @@ class TidelineHeader extends React.Component {
     };
     if (this.props.inTransition) {
       return (
-        <button type="button" className={buttonClass} onClick={nullAction} disabled={disabled}>
+        <button id={id} type="button" className={buttonClass} onClick={nullAction} disabled={disabled}>
           <i className={icon} />
         </button>
       );
     }
     return (
-      <button type="button" className={buttonClass} onClick={clickAction} disabled={disabled}>
+      <button id={id} type="button" className={buttonClass} onClick={clickAction} disabled={disabled}>
         <i className={icon} />
       </button>
     );

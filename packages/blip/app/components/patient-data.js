@@ -59,9 +59,12 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../index").IUser } User
  * @typedef { import("../index").PatientData } PatientData
  * @typedef { import("../index").MessageNote } MessageNote
+ * @typedef { import("../index").DatePicker } DatePicker
+ * @typedef { import("../index").RangeDatePicker } RangeDatePicker
+ * @typedef { import("../index").ProfileDialog } ProfileDialog
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;datePicker: DatePicker; rangeDatePicker:RangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; pdf: object; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -128,13 +131,6 @@ class PatientDataPage extends React.Component {
           },
           /** To keep the wanted extentSize (num days between endpoints) between charts switch. */
           extentSize: 14,
-          // we track both showingCbg & showingSmbg as separate Booleans for now
-          // in case we decide to layer BGM & CGM data, as has been discussed/prototyped
-          showingCbg: true,
-          showingSmbg: false,
-          smbgGrouped: false,
-          smbgLines: false,
-          smbgRangeOverlay: true,
         },
         bgLog: {
           bgSource: "smbg",
@@ -323,7 +319,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, datePicker } = this.props;
+    const { patient, profileDialog, prefixURL, datePicker, rangeDatePicker } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -395,6 +391,7 @@ class PatientDataPage extends React.Component {
         <Route path={`${prefixURL}/trends`}>
           <Trends
             profileDialog={this.showProfileDialog ? profileDialog : null}
+            rangeDatePicker={rangeDatePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             currentPatientInViewId={patient.userid}
@@ -828,7 +825,7 @@ class PatientDataPage extends React.Component {
   }
 
   updateChartPrefs(updates, cb = _.noop) {
-    this.log.debug("updateChartPrefs", { updates, cb});
+    // this.log.debug("updateChartPrefs", { updates, cb});
     const newPrefs = {
       ...this.state.chartPrefs,
       ...updates,
@@ -852,7 +849,7 @@ class PatientDataPage extends React.Component {
     const chartType = this.getChartType();
     let dataLoaded = false;
 
-    // this.log.debug('handleDatetimeLocationChange()', {
+    // this.log.debug("handleDatetimeLocationChange()", {
     //   epochLocation,
     //   msRange,
     //   date: moment.utc(epochLocation).toISOString(),
@@ -871,8 +868,8 @@ class PatientDataPage extends React.Component {
 
       /** @type {DateRange} */
       let rangeDisplay = {
-        start: epochLocation - msRangeDataNeeded,
-        end: epochLocation + msRangeDataNeeded,
+        start: moment.utc(epochLocation - msRangeDataNeeded).startOf("day").valueOf(),
+        end: moment.utc(epochLocation + msRangeDataNeeded).endOf("day").valueOf() + 1,
       };
       const rangeToLoad = this.apiUtils.partialDataLoad.getRangeToLoad(rangeDisplay);
       if (rangeToLoad) {
@@ -882,8 +879,8 @@ class PatientDataPage extends React.Component {
           // For daily we will load 1 week to avoid too many loading
           msRangeDataNeeded = MS_IN_DAY * 3;
           rangeDisplay = {
-            start: epochLocation - msRangeDataNeeded,
-            end: epochLocation + msRangeDataNeeded,
+            start: moment.utc(epochLocation - msRangeDataNeeded).startOf("day").valueOf(),
+            end: moment.utc(epochLocation + msRangeDataNeeded).endOf("day").valueOf() + 1,
           };
         }
 
@@ -1004,6 +1001,7 @@ PatientDataPage.propTypes = {
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   datePicker: PropTypes.func.isRequired,
+  rangeDatePicker: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
 };

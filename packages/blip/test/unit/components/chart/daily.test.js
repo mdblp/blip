@@ -90,6 +90,10 @@ describe("Daily", () => {
       grouped: { foo: "bar" },
       getTimezoneAt: sinon.stub().returns(timezone),
       endpoints: ["2014-03-01T00:00:00.000Z", "2014-03-13T23:59:59.999Z"],
+      getLocaleTimeEndpoints: sinon.stub().returns({
+        startDate: new Date("2014-03-01T00:00:00.000Z"),
+        endDate: new Date("2014-03-13T23:59:59.999Z"),
+      }),
     },
     canPrint: false,
     timePrefs: {

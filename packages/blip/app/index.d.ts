@@ -29,10 +29,11 @@
 import { AppConfig } from "../../yourloops/models/config";
 import { IUser } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
-import ProfileDialog from "yourloops/components/dialogs/profile-dialog";
+import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
 import DatePicker from "../../yourloops/components/date-pickers/date-picker";
+import RangeDatePicker from "../../yourloops/components/date-pickers/range-date-picker";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
-import { MessageNote } from "../../yourloops/models/message";
+import MessageNote from "../../yourloops/models/message";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 
 interface BlipProperties {
@@ -42,6 +43,7 @@ interface BlipProperties {
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   datePicker: typeof DatePicker;
+  rangeDatePicker: typeof RangeDatePicker;
 }
 
 // FIXME: For some reason, the yourloops auth hook
@@ -51,9 +53,11 @@ export {
   BlipProperties,
   BlipApi,
   DatePicker,
+  RangeDatePicker,
   IUser,
   PatientDatum,
   PatientData,
+  ProfileDialog,
   MessageNote,
   GetPatientDataOptions,
   GetPatientDataOptionsV0,
