@@ -26,27 +26,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
-import GroupIcon from "@material-ui/icons/Group";
-import HelpIcon from "@material-ui/icons/Help";
-import PersonIcon from "@material-ui/icons/Person";
-import _ from "lodash";
-import moment from "moment-timezone";
-import AddTeamDialog from "../../pages/patient/teams/add-dialog";
 import React from "react";
-import { TFunction, Trans, useTranslation } from "react-i18next";
+import _ from "lodash";
+import { TFunction, useTranslation, Trans } from "react-i18next";
+import moment from "moment-timezone";
+
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import GroupIcon from "@material-ui/icons/Group";
+import PersonIcon from "@material-ui/icons/Person";
+import HelpIcon from "@material-ui/icons/Help";
 import MedicalServiceIcon from "../../components/icons/MedicalServiceIcon";
-import { useAlert } from "../../components/utils/snackbar";
-import metrics from "../../lib/metrics";
-import { useNotification } from "../../lib/notifications/hook";
-import { INotification, NotificationType } from "../../lib/notifications/models";
-import { useSharedUser } from "../../lib/share";
-import { useTeam } from "../../lib/team/hook";
-import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
+
 import { IUser, UserRoles } from "../../models/shoreline";
+import { INotification, NotificationType } from "../../lib/notifications/models";
+import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
+import { useNotification } from "../../lib/notifications/hook";
+import { useTeam } from "../../lib/team/hook";
+import { useSharedUser } from "../../lib/share";
+import metrics from "../../lib/metrics";
+import { useAlert } from "../../components/utils/snackbar";
+import AddTeamDialog from "../../pages/patient/teams/add-dialog";
 
 interface NotificationSpanProps {
   id: string;
@@ -180,9 +182,9 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const { notification } = props;
   const { id } = notification;
   const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false);
-  const isTeamInvite = notification.type === NotificationType.careTeamProInvitation || notification.type === NotificationType.careTeamPatientInvitation;
+  const isACareTeamInvitation = notification.type === NotificationType.careTeamProInvitation || notification.type === NotificationType.careTeamPatientInvitation;
 
-  if (isTeamInvite && !notification.target) {
+  if (isACareTeamInvitation && !notification.target) {
     throw Error("Cannot accept team invite because notification is missing the team id info");
   }
 
@@ -204,7 +206,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   };
 
   const onOpenInvitationDialog = () => {
-    if (isTeamInvite) {
+    if (isACareTeamInvitation) {
       setAddTeamDialogVisible(true);
     } else {
       acceptInvitation();
@@ -237,7 +239,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
       <NotificationSpan id={`notification-text-${id}`} t={t} notification={notification} className={`${classes.notificationSpan} notification-text`} />
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
-        {isTeamInvite && addTeamDialogVisible && notification.target
+        {isACareTeamInvitation && addTeamDialogVisible && notification.target
           && <AddTeamDialog
             error={t("notification-patient-invitation-wrong-code", { careteam : notification.target.name } )}
             teamName={notification.target.name}
