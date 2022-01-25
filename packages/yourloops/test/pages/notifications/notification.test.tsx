@@ -26,20 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import GroupIcon from "@material-ui/icons/Group";
-import HelpIcon from "@material-ui/icons/Help";
-import PersonIcon from "@material-ui/icons/Person";
+import React from "react";
 import { expect } from "chai";
 import { mount, shallow } from "enzyme";
-import _ from "lodash";
 import moment from "moment-timezone";
-import React from "react";
+import _ from "lodash";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-test-renderer";
-import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
-import { INotification, NotificationType } from "../../../lib/notifications/models";
+
+import GroupIcon from "@material-ui/icons/Group";
+import PersonIcon from "@material-ui/icons/Person";
+import HelpIcon from "@material-ui/icons/Help";
+
 import { UserRoles } from "../../../models/shoreline";
+import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 import { Notification } from "../../../pages/notifications/notification";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 
 export const testNotification = (): void => {
   const notif: INotification = {
