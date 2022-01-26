@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Profile page tests
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,12 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import TestSignupProfileForm from "./signup-profile-form.test";
-import TestSignupAccountForm from "./signup-account-form.test";
+import React from "react";
+import { render, unmountComponentAtNode } from "react-dom";
+import { expect } from "chai";
+import { act } from "@testing-library/react-hooks/dom";
+import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 
-function testSignupProfilePage(): void {
-  describe("Profile form", TestSignupProfileForm);
-  describe("Account form", TestSignupAccountForm);
+import SignupAccountForm from "../../../pages/signup/signup-account-form";
+import _ from "lodash";
+
+
+function TestSignupAccountForm(): void {
+  let container: HTMLElement | null = null;
+
+  const mountComponent = async (): Promise<void> => {
+    await act(() => {
+      return new Promise((resolve) => {
+        render(
+          <SignUpFormStateProvider>
+            <SignupAccountForm handleBack={_.noop} handleNext={_.noop} />
+          </SignUpFormStateProvider>, container, resolve);
+      });
+    });
+  };
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
+    }
+  });
+
+  it("should render the warning message for account deletion", async () => {
+    await mountComponent();
+    const dropDownList = document.querySelector("#signup-account-deletion-warning");
+    expect(dropDownList).to.be.null;
+  });
 }
 
-export default testSignupProfilePage;
+export default TestSignupAccountForm;

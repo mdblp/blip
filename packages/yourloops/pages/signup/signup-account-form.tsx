@@ -32,6 +32,7 @@ import { useTranslation } from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import { checkPasswordStrength } from "../../lib/auth/helpers";
@@ -149,6 +150,9 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         margin="normal"
         required
       />
+      <Typography id="signup-account-deletion-warning" variant="body2" gutterBottom>
+        {t("signup-account-deletion-warning")}
+      </Typography>
       <Box
         id="signup-accountform-button-group"
         display="flex"
