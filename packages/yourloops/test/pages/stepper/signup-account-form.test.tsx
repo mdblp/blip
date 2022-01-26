@@ -29,11 +29,10 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
-import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
-
-import SignupAccountForm from "../../../pages/signup/signup-account-form";
 import _ from "lodash";
 
+import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
+import SignupAccountForm from "../../../pages/signup/signup-account-form";
 
 function TestSignupAccountForm(): void {
   let container: HTMLElement | null = null;
