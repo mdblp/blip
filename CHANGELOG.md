@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 2.0.6-beta1 - 2022-01-10
+## 2.0.6-beta2 - 2022-01-26
 ### Added
 - YLP-370 Remove a patient from the HCP patient list
 - YLP-1105 Yourloops new blue theme
