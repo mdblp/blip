@@ -121,7 +121,7 @@
   "modal-add-caregiver": "Hilfsperson hinzufügen",
   "modal-add-medical-specific-team": "Add the care team {{careteam}}",
   "modal-add-medical-team": "Behandlungsteam hinzufügen",
-  "modal-add-medical-team-code": "Please enter the team code (9 digits, provided by the care team who sent this invite)",
+  "modal-add-medical-team-code": "Identifizierungscode eingeben",
   "modal-add-patient": "Neuer Patient",
   "modal-add-patient-warning-line1": "Indem ich diesen Patienten einlade, seine Daten mit mir und dem Behandlungsteam zu teilen, erkläre ich unter meiner beruflichen Verantwortung, dass ich dem Behandlungsteam dieses Patienten angehöre und somit das Recht habe, gemäß den geltenden Vorschriften auf die persönlichen Daten des Patienten zuzugreifen.",
   "modal-add-patient-warning-line2": "Lesen Sie unsere <linkTerms>{{terms}}</linkTerms> und die <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
