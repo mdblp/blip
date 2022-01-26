@@ -34,6 +34,7 @@ import testZendesk from "./zendesk.test";
 import testAuth from "./auth";
 import testNotifications from "./notifications";
 import testRegex from "./regex.test";
+import testTeam from "./team";
 
 function testLib(): void {
   describe("SOUP", testsSoup);
@@ -42,6 +43,7 @@ function testLib(): void {
   describe("Metrics", testMetrics);
   describe("Zendesk", testZendesk);
   describe("Auth", testAuth);
+  describe("Team", testTeam);
   describe("Notifications", testNotifications);
   describe("Regex", testRegex);
 }
