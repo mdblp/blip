@@ -130,6 +130,7 @@ function testPatientListTable(): void {
   /*
   * TODO Can't add this feature for the moment
   *  we need to wait until yourloops will be certified to level 2 of medical device
+  *  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
    */
   // it("should call onRemovePatient method when clicking on a remove icon", async () => {
   //   await mountComponent();

@@ -114,6 +114,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   /*
   * TODO Can't add this feature for the moment
   *  we need to wait until yourloops will be certified to level 2 of medical device
+  *  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
    */
   // const onClickRemoveIcon = (e: React.MouseEvent) => {
   //   e.stopPropagation();
@@ -203,6 +204,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <TableCell id={`${rowId}-remove-icon`}>
         {/* TODO Can't add this feature for the moment */}
         {/*  we need to wait until yourloops will be certified to level 2 of medical device */}
+        {/*  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370) */}
         {/*<IconActionButton*/}
         {/*  icon={<PersonRemoveIcon />}*/}
         {/*  className="remove-patient-hcp-view-button"*/}
