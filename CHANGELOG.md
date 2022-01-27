@@ -6,6 +6,8 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-370 Remove a patient from the HCP patient list
 - YLP-1105 Yourloops new blue theme
+- YLP-1122 Patient should enter the team unique ID to accept a team invitation
+- YLP-1188 Pink theme for clinical environment
 - YLP-1190 Advertise user about account deletion
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
@@ -21,6 +23,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1082 Improve daily view rendering
 - YLP-1114 Review routes and data structure for message-api
 - YLP-1172 Cannot debug unit test of blip (front)
+- YLP-1174 Removing add patient functionality for a caregiver (not used)
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
