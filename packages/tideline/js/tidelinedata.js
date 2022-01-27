@@ -673,27 +673,28 @@ TidelineData.prototype.deduplicateBoluses = function deduplicateBoluses() {
 
   // group by time
   const grpByTime = _.groupBy(
-    _.filter(this.data, (x) => x.type === "bolus"),
-    (x) => x.normalTime);
-    const toBeRemoved = [];
-    _.forEach(grpByTime, (value) => {
-      if (value.length > 1) {
-        let goodBolus = null;
-        // Search the bolus we want to keep
-        for (const bolus of value) {
-          if (goodBolus === null) goodBolus = bolus;
-          else if (goodBolus.normal < bolus.normal) goodBolus = bolus;
-        }
-        // Add the ids we no longer want
-        for (const bolus of value) {
-          if (bolus.id !== goodBolus.id) {
-            toBeRemoved.push(bolus.id);
-          }
+    _.filter(this.data, { type: "bolus" }),
+    "normalTime"
+  );
+  const toBeRemoved = [];
+  _.forEach(grpByTime, (value) => {
+    if (value.length > 1) {
+      let goodBolus = null;
+      // Search the bolus we want to keep
+      for (const bolus of value) {
+        if (goodBolus === null) goodBolus = bolus;
+        else if (goodBolus.normal < bolus.normal) goodBolus = bolus;
+      }
+      // Add the ids we no longer want
+      for (const bolus of value) {
+        if (bolus.id !== goodBolus.id) {
+          toBeRemoved.push(bolus.id);
         }
       }
-    });
-    this.data = this.data.filter((d) => !toBeRemoved.includes(d.id));
-  };
+    }
+  });
+  this.data = this.data.filter((d) => !toBeRemoved.includes(d.id));
+};
 
 TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysicalActivities() {
   const physicalActivity = this.grouped.physicalActivity;
