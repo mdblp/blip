@@ -119,7 +119,7 @@
   "menu-logout": "Déconnexion",
   "menu-medical-teams": "Equipes de Soin",
   "modal-add-caregiver": "Ajouter un aidant",
-  "modal-add-medical-specific-team": "Ajouter l’équipe de soins {{careteam}}",
+  "modal-add-medical-specific-team": "Ajouter l'équipe de soins {{careteam}}",
   "modal-add-medical-team": "Ajouter une équipe de soins",
   "modal-add-medical-team-code": "Merci d'entrer le code d'identification (9 chiffres, fournis pas l'équipe de soins ayant envoyé l'invitation)",
   "modal-add-patient": "Nouveau patient",
