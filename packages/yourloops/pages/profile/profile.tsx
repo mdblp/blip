@@ -42,7 +42,6 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -66,6 +65,7 @@ import { Errors } from "./models";
 import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
+import BasicDropdown from "../../components/dropdown/basic-dropdown";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -240,7 +240,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
   const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
-  const createHandleSelectChange = <T extends Units | LanguageCodes | HcpProfession >(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
+  const createHandleSelectChange = <T extends Units | LanguageCodes | HcpProfession>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
@@ -414,26 +414,17 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               className={`${classes.textField} ${classes.halfWide}`}
             />
           </Box>
-          { role === UserRoles.hcp &&
+          {role === UserRoles.hcp &&
             <Box className={classes.inputContainer}>
-              <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
-                <InputLabel id="profile-hcp-profession-input-label">{t("hcp-profession")}</InputLabel>
-                <Select
-                  labelId="locale-selector"
-                  id="profile-hcp-profession-selector"
-                  value={hcpProfession}
-                  error={errors.hcpProfession}
-                  onChange={createHandleSelectChange(setHcpProfession)}>
-                  {HcpProfessionList.filter(item => item !== HcpProfession.empty).map(item => (
-                    <MenuItem id={`profile-hcp-profession-menuitem-${item}`} key={item} value={item}>
-                      {t(item)}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.hcpProfession &&
-                  <FormHelperText error>{t("profile-hcp-profession-helper-text")}</FormHelperText>
-                }
-              </FormControl>
+              <Box className={`${classes.formControl} ${classes.halfWide}`}>
+                <BasicDropdown
+                  onSelect={setHcpProfession}
+                  defaultValue={hcpProfession}
+                  disabledValues={[HcpProfession.empty]}
+                  values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
+                  translationKey = {"profession"}
+                />
+              </Box>
             </Box>
           }
 

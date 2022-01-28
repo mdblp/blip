@@ -55,22 +55,15 @@ const dialogStyles = makeStyles(
         marginBottom: 0,
         display: "inline-block",
       },
-      dialogButtons: {
-        display: "flex",
-        justifyContent: "space-around",
-      },
     };
   },
   { name: "ylp-dialog-switch-role-consequences" }
 );
 
 function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps): JSX.Element {
-  const { title, open, onResult } = props;
+  const { title, open, onAccept, onCancel } = props;
   const classes = dialogStyles();
   const { t } = useTranslation("yourloops");
-
-  const handleClose = () => onResult(false);
-  const handleAccept = () => onResult(true);
 
   return (
     <Dialog
@@ -83,7 +76,7 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
       }}
       maxWidth="md"
       open={open}
-      onClose={handleClose}>
+      onClose={onCancel}>
       <DialogTitle id="switch-role-consequences-dialog-title">
         <strong>{t(title)}</strong>
       </DialogTitle>
@@ -113,17 +106,16 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
 
       <DialogActions
         id="switch-role-consequences-dialog-actions"
-        className={classes.dialogButtons}
       >
         <Button
           id="switch-role-consequences-dialog-button-cancel"
-          onClick={handleClose}
+          onClick={onCancel}
         >
           {t("button-cancel")}
         </Button>
         <Button
           id="switch-role-consequences-dialog-button-ok"
-          onClick={handleAccept}
+          onClick={onAccept}
           variant="contained"
           color="primary"
         >

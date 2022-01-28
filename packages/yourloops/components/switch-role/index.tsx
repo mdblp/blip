@@ -29,6 +29,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import bows from "bows";
+import _ from "lodash";
 
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
@@ -36,43 +37,49 @@ import { useAlert } from "../utils/snackbar";
 import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from "./models";
 import SwitchRoleConsequencesDialog from "./consequences-dialog";
 import SwitchRoleConsentDialog from "./consent-dialog";
+import { Profile } from "models/shoreline";
+import { HcpProfession } from "models/hcp-profession";
+import SwitchRoleProfessionDialog from "./profession-dialog";
 
 const log = bows("SwitchRoleDialogs");
 
 function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const { switchRoleToHCP, user } = useAuth();
+  const { switchRoleToHCP, updateProfile, user } = useAuth();
   const alert = useAlert();
   const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none);
+  const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false);
 
   if (user === null) {
     throw new Error("User must be looged-in");
   }
 
   const role = user.role;
-  const handleSwitchRoleToConditions = (accept: boolean): void => {
-    const nextStep = accept ? SwitchRoleToHcpSteps.consent : SwitchRoleToHcpSteps.none;
-    setSwitchRoleStep(nextStep);
-    if (!accept) {
-      props.onCancel();
-    }
+  const handleSwitchRoleToConditions = (): void => {
+    setSwitchRoleStep(SwitchRoleToHcpSteps.consent);
   };
-  const handleSwitchRoleToUpdate = (accept: boolean, feedbackConsent: boolean): void => {
-    const nextStep = accept ? SwitchRoleToHcpSteps.update : SwitchRoleToHcpSteps.none;
-    setSwitchRoleStep(nextStep);
 
-    if (accept) {
-      switchRoleToHCP(feedbackConsent)
-        .then(() => {
-          metrics.send("switch_account", "accept_terms");
-        })
-        .catch((reason: unknown) => {
-          alert.error(t("modal-switch-hcp-failure"));
-          log.error("switchRoleToHCP", reason);
-        });
-    } else {
-      props.onCancel();
-    }
+  const getUpdatedProfile = (hcpProfession: HcpProfession): Profile => {
+    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
+    updatedProfile.hcpProfession = hcpProfession;
+    return updatedProfile;
+  };
+
+  const handleSwitchRoleToUpdate = async (hcpProfession: HcpProfession): Promise<void> => {
+    await updateProfile(getUpdatedProfile(hcpProfession), false);
+    switchRoleToHCP(feedbackConsent)
+      .then(() => {
+        metrics.send("switch_account", "accept_terms");
+      })
+      .catch((reason: unknown) => {
+        alert.error(t("modal-switch-hcp-failure"));
+        log.error("switchRoleToHCP", reason);
+      });
+  };
+
+  const handleSwitchRoleToProfession = (feedback: boolean): void => {
+    setFeedbackConsent(feedback);
+    setSwitchRoleStep(SwitchRoleToHcpSteps.profession);
   };
 
   React.useEffect(() => {
@@ -88,9 +95,19 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
       <SwitchRoleConsequencesDialog
         title="modal-switch-hcp-title"
         open={switchRoleStep === SwitchRoleToHcpSteps.consequences}
-        onResult={handleSwitchRoleToConditions}
+        onAccept={handleSwitchRoleToConditions}
+        onCancel={props.onCancel}
       />
-      <SwitchRoleConsentDialog open={switchRoleStep === SwitchRoleToHcpSteps.consent} onResult={handleSwitchRoleToUpdate} />
+      <SwitchRoleConsentDialog
+        open={switchRoleStep === SwitchRoleToHcpSteps.consent}
+        onAccept={handleSwitchRoleToProfession}
+        onCancel={props.onCancel}
+      />
+      <SwitchRoleProfessionDialog
+        open={switchRoleStep === SwitchRoleToHcpSteps.profession}
+        onAccept={handleSwitchRoleToUpdate}
+        onCancel={props.onCancel}
+      />
     </React.Fragment>
   );
 }

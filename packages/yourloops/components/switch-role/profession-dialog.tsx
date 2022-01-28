@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  * Switch role from caregiver to HCP dialog - Accept terms
  *
  * All rights reserved.
@@ -29,113 +29,98 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import { DialogTitle } from "@material-ui/core";
+import { Box, DialogTitle, makeStyles, Theme } from "@material-ui/core";
 
-import { UserRoles } from "../../models/shoreline";
-import { ConsentForm } from "../consents";
-import { SwitchRoleConsentDialogProps } from "./models";
+import { SwitchRoleProfessionDialogProps } from "./models";
+import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
+import BasicDropdown from "../dropdown/basic-dropdown";
+
+export interface Errors {
+  hcpProfession: boolean;
+}
 
 const dialogStyles = makeStyles(
   (theme: Theme) => {
     return {
-      dialog: {
-        textAlign: "left",
-        padding: theme.spacing(4),
-      },
       dialogContent: {
         display: "flex",
         flexDirection: "column",
         width: theme.breakpoints.values["sm"],
+        paddingLeft: theme.spacing(5),
       },
-      formControlPolicy: {
-        marginBottom: theme.spacing(2),
-        color: theme.palette.text.primary,
-      },
-      checkbox: {
-        marginBottom: "auto",
+      dialogContentBox: {
+        maxWidth: "300px",
       },
     };
   },
-  { name: "ylp-dialog-switch-role-consent" },
+  { name: "ylp-dialog-switch-role-consequences" }
 );
 
-function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Element {
+function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
   const { open, onAccept, onCancel } = props;
   const classes = dialogStyles();
   const { t } = useTranslation("yourloops");
-  const [policyAccepted, setPolicyAccepted] = React.useState(false);
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(false);
 
-  const resetForm = () => {
-    setPolicyAccepted(false);
-    setTermsAccepted(false);
-    setFeedbackAccepted(false);
-  };
+  const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(HcpProfession.empty);
 
   const handleAccept = () => {
-    onAccept(feedbackAccepted);
-    resetForm();
+    onAccept(hcpProfession);
   };
 
   const onClose = () => {
     onCancel();
-    resetForm();
+    setHcpProfession(HcpProfession.empty);
   };
 
   return (
     <Dialog
-      id="switch-role-consent-dialog"
-      className={classes.dialog}
-      open={open}
-      onClose={onClose}
+      id="switch-role-profession-dialog"
       PaperProps={{
         style: {
           padding: "20px",
         },
       }}
       maxWidth="md"
-    >
-      <DialogTitle id="switch-role-consent-dialog-title">
-        <strong>{t("modal-switch-hcp-consent-title")}</strong>
+      open={open}
+      onClose={onClose}>
+      <DialogTitle id="patient-add-caregiver-dialog-title">
+        <strong>{t("profession-dialog-tilte")}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content" className={classes.dialogContent}>
-        <ConsentForm
-          id="switch-role-consequences-dialog"
-          userRole={UserRoles.hcp}
-          policyAccepted={policyAccepted}
-          setPolicyAccepted={setPolicyAccepted}
-          termsAccepted={termsAccepted}
-          setTermsAccepted={setTermsAccepted}
-          feedbackAccepted={feedbackAccepted}
-          setFeedbackAccepted={setFeedbackAccepted}
-        />
+        <Box className={classes.dialogContentBox}>
+          <BasicDropdown
+            onSelect={setHcpProfession}
+            defaultValue={HcpProfession.empty}
+            disabledValues={[HcpProfession.empty]}
+            values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
+            translationKey={"profession"}
+          />
+        </Box>
       </DialogContent>
 
-      <DialogActions id="switch-role-consent-dialog-actions">
+      <DialogActions id="switch-role-profession-dialog-actions">
         <Button
-          id="switch-role-consent-dialog-button-decline"
+          id="switch-role-profession-dialog-button-decline"
           onClick={onClose}
         >
           {t("button-decline")}
         </Button>
         <Button
-          id="switch-role-consent-dialog-button-accept"
+          id="switch-role-profession-dialog-button-validate"
           onClick={handleAccept}
           variant="contained"
           color="primary"
-          disabled={!(policyAccepted && termsAccepted)}
+          disabled={hcpProfession === HcpProfession.empty}
         >
-          {t("button-accept")}
+          {t("button-validate")}
         </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-export default SwitchRoleConsentDialog;
+export default SwitchRoleProfessionDialog;
