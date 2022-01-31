@@ -66,14 +66,12 @@ pipeline {
                         pack()
                     }
                 }
-            }
-            //publish latest tag when git branch is dblp
-            when {
-                expression {
-                    env.GIT_BRANCH == "dblp"
+                //publish latest tag when git branch is dblp
+                when {
+                    expression {
+                        env.GIT_BRANCH == "dblp"
+                    }
                 }
-            }
-            steps {
                 script {
                   withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
                       echo "Push latest tag"
