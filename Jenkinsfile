@@ -64,7 +64,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                         pack()
-                        if (env.GIT_BRANCH == 'dblp') {
+                        if (env.GIT_BRANCH == 'dblp' || 'engineering/latest-tag') {
                             //publish latest tag when git branch is dblp
                             echo "Push latest tag"
                             pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}:${GIT_COMMIT}", "latest")
