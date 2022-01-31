@@ -80,22 +80,10 @@ interface ProfilePageProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
-      marginLeft: "1em",
+      marginLeft: theme.spacing(2),
     },
-    formControl: { marginTop: "1em" },
-    homeIcon: {
-      marginRight: "0.5em",
-    },
-    breadcrumbText: {
-      display: "flex",
-      cursor: "default",
-    },
-    toolBar: {
-      display: "grid",
-      gridTemplateRows: "auto",
-      gridTemplateColumns: "auto auto auto",
-      paddingLeft: "6em",
-      paddingRight: "6em",
+    formControl: {
+      marginTop: theme.spacing(2),
     },
     textField: {
       "marginTop": "1em",
@@ -136,10 +124,19 @@ const useStyles = makeStyles((theme: Theme) =>
         flexDirection: "column",
       },
     },
+    categoryLabel: {
+      "display": "flex",
+      "alignItems": "end",
+      "marginTop": theme.spacing(5),
+      "& > :last-child": {
+        marginLeft: theme.spacing(2),
+      },
+    },
   })
 );
 
 const log = bows("ProfilePage");
+
 const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
@@ -182,10 +179,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   }, [lang, t]);
 
   React.useEffect(() => {
-    // ISO date format is required from the user: It's not a very user friendly format
-    // in all countries
-    // We should change it
-    if (role === UserRoles.patient && birthDate !== "") {
+    // ISO date format is required from the user: It's not a very user-friendly format in all countries, We should change it
+    if (role === UserRoles.patient && !!birthDate) {
       let birthday = birthDate;
       if (birthday.length > 0 && birthday.indexOf("T") > 0) {
         birthday = birthday.split("T")[0];
@@ -197,7 +192,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
       }
     }
     // No deps here, because we want the effect only when the component is mounting
-    // If we set the deps, the patient won't be able to change it's birthday.
+    // If we set the deps, the patient won't be able to change its birthday.
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getUpdatedPreferences = (): Preferences => {
@@ -246,9 +241,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     setSwitchRoleOpen(true);
     metrics.send("switch_account", "display_switch_preferences");
   };
-  const handleSwitchRoleCancel = () => {
-    setSwitchRoleOpen(false);
-  };
+  const handleSwitchRoleCancel = () => setSwitchRoleOpen(false);
 
   const errors: Errors = React.useMemo(
     () => ({
@@ -329,69 +322,18 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const onCancel = (): void => history.push(props.defaultURL);
 
-  let roleDependantPart: JSX.Element | null = null;
-  if (role === UserRoles.patient) {
-    roleDependantPart = (
-      <PatientProfileForm
-        user={user}
-        classes={classes}
-        errors={errors}
-        birthDate={birthDate}
-        setBirthDate={setBirthDate}
-      />
-    );
-  } else {
-    roleDependantPart = (
-      <React.Fragment>
-        <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
-          <Assignment color="primary" style={{ margin: "0" }} />
-          <Box ml={2}>
-            <strong className={classes.uppercase}>{t("my-credentials")}</strong>
-          </Box>
-        </Box>
-        <AuthenticationForm
-          user={user}
-          classes={classes}
-          errors={errors}
-          currentPassword={currentPassword}
-          setCurrentPassword={setCurrentPassword}
-          password={password}
-          setPassword={setPassword}
-          passwordConfirmation={passwordConfirmation}
-          setPasswordConfirmation={setPasswordConfirmation}
-          passwordCheckResults={passwordCheckResults}
-        />
-      </React.Fragment>
-    );
-  }
-
-  let formControlFeedback: JSX.Element | null = null;
-  if (showFeedback) {
-    formControlFeedback = (
-      <ConsentFeedback
-        id="profile"
-        userRole={role}
-        checked={feedbackAccepted}
-        style={{ marginLeft: -9, marginRight: 0, marginTop: "1em", marginBottom: 0 }}
-        onChange={() => setFeedbackAccepted(!feedbackAccepted)}
-      />
-    );
-  }
-
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
       <Container className={classes.container} maxWidth="sm">
-        <div style={{ display: "flex", flexDirection: "column", margin: "16px" }}>
+        <Box display="flex" flexDirection="column" margin={2}>
           <DialogTitle className={classes.title} id="profile-title">
             {t("account-preferences")}
           </DialogTitle>
 
-          <Box display="flex" justifyContent="flex-start" alignItems="end" mt={3}>
+          <Box className={classes.categoryLabel}>
             <AccountCircle color="primary" style={{ margin: "0" }} />
-            <Box ml={2}>
-              <strong className={classes.uppercase}>{t("personal-information")}</strong>
-            </Box>
+            <strong className={classes.uppercase}>{t("personal-information")}</strong>
           </Box>
 
           <Box className={classes.inputContainer}>
@@ -414,6 +356,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               className={`${classes.textField} ${classes.halfWide}`}
             />
           </Box>
+
           {role === UserRoles.hcp &&
             <Box className={classes.inputContainer}>
               <Box className={`${classes.formControl} ${classes.halfWide}`}>
@@ -430,13 +373,38 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             </Box>
           }
 
-          {roleDependantPart}
+          {role === UserRoles.patient ?
+            <PatientProfileForm
+              user={user}
+              classes={classes}
+              errors={errors}
+              birthDate={birthDate}
+              setBirthDate={setBirthDate}
+            />
+            :
+            <React.Fragment>
+              <div className={classes.categoryLabel}>
+                <Assignment color="primary" style={{ margin: "0" }} />
+                <strong className={classes.uppercase}>{t("my-credentials")}</strong>
+              </div>
+              <AuthenticationForm
+                user={user}
+                classes={classes}
+                errors={errors}
+                currentPassword={currentPassword}
+                setCurrentPassword={setCurrentPassword}
+                password={password}
+                setPassword={setPassword}
+                passwordConfirmation={passwordConfirmation}
+                setPasswordConfirmation={setPasswordConfirmation}
+                passwordCheckResults={passwordCheckResults}
+              />
+            </React.Fragment>
+          }
 
-          <Box display="flex" justifyContent="flex-start" alignItems="end" mt={5}>
+          <Box className={classes.categoryLabel}>
             <Tune color="primary" style={{ margin: "0" }} />
-            <Box ml={2}>
-              <strong className={classes.uppercase}>{t("preferences")}</strong>
-            </Box>
+            <strong className={classes.uppercase}>{t("preferences")}</strong>
           </Box>
 
           <Box className={classes.inputContainer}>
@@ -473,13 +441,20 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             </FormControl>
           </Box>
 
-          {formControlFeedback}
+          {showFeedback &&
+            <ConsentFeedback
+              id="profile"
+              userRole={role}
+              checked={feedbackAccepted}
+              style={{ marginLeft: -9, marginRight: 0, marginTop: "1em", marginBottom: 0 }}
+              onChange={() => setFeedbackAccepted(!feedbackAccepted)}
+            />
+          }
 
-          <div style={{ display: "flex", justifyContent: "flex-end", margin: "2em 0em" }}>
+          <Box display="flex" justifyContent="flex-end" my={3}>
             <Button
               id="profile-button-cancel"
               onClick={onCancel}
-              className={classes.button}
             >
               {t("button-cancel")}
             </Button>
@@ -493,13 +468,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             >
               {t("button-save")}
             </Button>
-          </div>
-          {UserRoles.caregiver === role ? (
+          </Box>
+
+          {UserRoles.caregiver === role &&
             <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
               {t("modal-switch-hcp-title")}
             </Link>
-          ) : null}
-        </div>
+          }
+        </Box>
       </Container>
       <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
     </React.Fragment>
