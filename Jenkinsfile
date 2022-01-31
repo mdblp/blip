@@ -67,6 +67,20 @@ pipeline {
                     }
                 }
             }
+            //publish latest tag when git branch is dblp
+            when {
+                expression {
+                    env.GIT_BRANCH == "dblp"
+                }
+            }
+            steps {
+                script {
+                  withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
+                      echo "Push latest tag"
+                      pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}:${GIT_COMMIT}", "latest")
+                  }
+                }
+            }
         }
         stage('Documentation') {
             steps {
