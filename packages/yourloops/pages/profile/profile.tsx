@@ -42,6 +42,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -66,6 +67,7 @@ import { Errors } from "./models";
 import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
+import ProSanteConnectButton from "../../components/buttons/pro-sante-connect-button";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -370,6 +372,12 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                   errorTranslationKey="profession-dialog-title"
                 />
               </Box>
+
+              {user.settings?.country === "FR" &&
+                <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+                  <ProSanteConnectButton />
+                </FormControl>
+              }
             </Box>
           }
 
