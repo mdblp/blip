@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1190 Advertise user about account deletion
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
+- YLP-1120 Overview tab cleanup
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
 - YLP-1109 YourLoops main menu sometimes do not disappear as it should
