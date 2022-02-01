@@ -30,9 +30,10 @@ import bows from "bows";
 import _ from "lodash";
 
 import { APIErrorResponse } from "../../models/error";
-import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
+import HttpService from "../../services/http";
 import { errorFromHttpStatus } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
@@ -552,18 +553,24 @@ async function logout(session: Readonly<Session>): Promise<void> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
+async function redirectToProfessionalAccountLogin(): Promise<string> {
+  const { request } = await HttpService.post("/auth/oauth/logins");
+  return request.responseURL;
+}
+
 export default {
-  login,
-  requestPasswordReset,
-  resetPassword,
-  signup,
-  resendSignup,
-  sendAccountValidation,
   accountConfirmed,
-  updateProfile,
+  redirectToProfessionalAccountLogin,
+  login,
+  logout,
+  signup,
+  refreshToken,
+  requestPasswordReset,
+  resendSignup,
+  resetPassword,
+  sendAccountValidation,
   updatePreferences,
+  updateProfile,
   updateSettings,
   updateUser,
-  refreshToken,
-  logout,
 };

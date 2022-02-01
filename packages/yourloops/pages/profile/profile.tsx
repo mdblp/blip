@@ -144,7 +144,15 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
   const alert = useAlert();
-  const { user, setUser, updatePreferences, updateProfile, updateSettings, updatePassword } = useAuth();
+  const {
+    user,
+    setUser,
+    updatePreferences,
+    updateProfile,
+    updateSettings,
+    updatePassword,
+    certifyProfessionalAccount,
+  } = useAuth();
 
   if (user === null) {
     throw new Error("User must be looged-in");
@@ -324,6 +332,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const onCancel = (): void => history.push(props.defaultURL);
 
+  const onClickCertifyButton = async (): Promise<void> => {
+    try {
+      await certifyProfessionalAccount();
+    } catch (err) {
+      alert.error(t("service-temporary-unavailable"));
+    }
+  };
+
   return (
     <React.Fragment>
       <SecondaryHeaderBar defaultURL={props.defaultURL} />
@@ -375,7 +391,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
               {user.settings?.country === "FR" &&
                 <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
-                  <ProSanteConnectButton />
+                  <ProSanteConnectButton onClick={onClickCertifyButton} />
                 </FormControl>
               }
             </Box>

@@ -506,6 +506,14 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     // return unmount;
   };
 
+  const certifyProfessionalAccount = async (): Promise<void> => {
+    console.log(historyHook.location.pathname);
+    if (historyHook.location.pathname === "/professional/certify") {
+      return;
+    }
+    window.location.href = await api.redirectToProfessionalAccountLogin();
+  };
+
   React.useEffect(initHook, [historyHook, pathname, traceToken, isAuthInProgress, setAuthInfos]);
 
   // Return the user object and auth methods
@@ -519,6 +527,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     session,
     setUser,
     login,
+    certifyProfessionalAccount,
     updateProfile,
     updatePreferences,
     updateSettings,

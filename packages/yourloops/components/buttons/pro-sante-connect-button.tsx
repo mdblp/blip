@@ -33,6 +33,9 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 
+interface Props {
+  onClick: () => Promise<void>;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -64,17 +67,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function ProSanteConnectButton(): JSX.Element {
+function ProSanteConnectButton({ onClick }: Props): JSX.Element {
   const { button, label, container } = useStyles();
 
   return (
     <Box className={container}>
       <Button
-        href="#"
+        href=""
         disableRipple
         disableElevation
         disableFocusRipple
         className={button}
+        onClick={onClick}
       >
         <img src={proSanteLogo} alt="pro-sante-connect" />
       </Button>

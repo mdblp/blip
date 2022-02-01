@@ -61,6 +61,7 @@ export interface SignupUser {
 }
 
 export interface AuthAPI {
+  redirectToProfessionalAccountLogin: () => Promise<string>;
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
   requestPasswordReset: (username: string, traceToken: string, language?: string) => Promise<void>;
   resetPassword: (key: string, username: string, password: string, traceToken: string) => Promise<boolean>;
@@ -89,6 +90,7 @@ export interface AuthContext {
   session: () => Session | null;
   /** Change the hook user, and update the storage. No API change! */
   setUser: (user: User) => void;
+  certifyProfessionalAccount: () => Promise<void>;
   login: (username: string, password: string, key: string | null) => Promise<User>;
   /**
    * Logout the user
