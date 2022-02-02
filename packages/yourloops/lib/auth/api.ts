@@ -554,7 +554,7 @@ async function logout(session: Readonly<Session>): Promise<void> {
 }
 
 async function redirectToProfessionalAccountLogin(): Promise<string> {
-  const { request } = await HttpService.post("/auth/oauth/logins");
+  const { request } = await HttpService.post("/auth/oauth/login");
   return request.responseURL;
 }
 

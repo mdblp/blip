@@ -7,7 +7,7 @@ export default class HttpService {
     try {
       return axios.get<T>(url, { ...config });
     } catch (error: any) {
-      throw this.handleError(error);
+      throw HttpService.handleError(error);
     }
   }
 
@@ -15,7 +15,7 @@ export default class HttpService {
     try {
       return await axios.post<T>(url, payload, { ...config });
     } catch (error: any) {
-      throw this.handleError(error);
+      throw HttpService.handleError(error);
     }
   }
 
@@ -23,7 +23,7 @@ export default class HttpService {
     try {
       return await axios.put<T>(url, payload, { ...config });
     } catch (error: any) {
-      throw this.handleError(error);
+      throw HttpService.handleError(error);
     }
   }
 
@@ -31,7 +31,7 @@ export default class HttpService {
     try {
       return await axios.delete(url, { ...config });
     } catch (error: any) {
-      throw this.handleError(error);
+      throw HttpService.handleError(error);
     }
   }
 

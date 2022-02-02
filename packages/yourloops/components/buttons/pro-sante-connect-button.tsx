@@ -27,6 +27,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import proSanteLogo from "pro-sante-connect.svg";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -69,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function ProSanteConnectButton({ onClick }: Props): JSX.Element {
   const { button, label, container } = useStyles();
+  const { t } = useTranslation("yourloops");
 
   return (
     <Box className={container}>
@@ -80,9 +82,9 @@ function ProSanteConnectButton({ onClick }: Props): JSX.Element {
         className={button}
         onClick={onClick}
       >
-        <img src={proSanteLogo} alt="pro-sante-connect" />
+        <img src={proSanteLogo} alt={t("alt-img-pro-sante-logo")} />
       </Button>
-      <span className={label}>Certifiez votre compte eCPS</span>
+      <span className={label}>{t("certify-professional-account")}</span>
     </Box>
   );
 }
