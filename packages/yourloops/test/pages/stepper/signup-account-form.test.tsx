@@ -63,8 +63,8 @@ function TestSignupAccountForm(): void {
 
   it("should render the warning message for account deletion", async () => {
     await mountComponent();
-    const dropDownList = document.querySelector("#signup-account-deletion-warning");
-    expect(dropDownList).to.be.not.null;
+    const warningMessage = document.querySelector("#signup-account-deletion-warning");
+    expect(warningMessage).to.be.not.null;
   });
 }
 
