@@ -4,11 +4,13 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Added
-- YLP-370 Remove a patient from the HCP patient list
 - YLP-1105 Yourloops new blue theme
+- YLP-1122 Patient should enter the team unique ID to accept a team invitation
+- YLP-1188 Pink theme for clinical environment
 - YLP-1190 Advertise user about account deletion
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
+- YLP-1120 Overview tab cleanup
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
 - YLP-1109 YourLoops main menu sometimes do not disappear as it should
@@ -17,10 +19,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-1148 Average daily carbs is null in PDF report
 - YLP-1164 Daily view device parameters tooltips display wrong hours
 - YLP-1169 Fix German translation of Dietitian
+- YLP-1170 Bolus sent multiple times by the handset are duplicated in Yourloops/Backloops
 ### Engineering Use
 - YLP-1082 Improve daily view rendering
 - YLP-1114 Review routes and data structure for message-api
 - YLP-1172 Cannot debug unit test of blip (front)
+- YLP-1174 Removing add patient functionality for a caregiver (not used)
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
