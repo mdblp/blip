@@ -26,9 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import _ from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
-import { act, Simulate } from "react-dom/test-utils";
+import { act } from "react-dom/test-utils";
 import * as sinon from "sinon";
 import { expect } from "chai";
 
@@ -50,17 +51,13 @@ function testDatePicker(): void {
     }
   });
 
-  it("should render the provided title", async () => {
+  it("should render nothing if not open", async () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DatePicker>
-            <span id="the-date-title">Date</span>
-          </DatePicker>, container, resolve);
+          <DatePicker isOpen={false} onResult={_.noop} />, container, resolve);
       });
     });
-    const titleElem = document.getElementById("the-date-title");
-    expect(titleElem).to.be.not.null;
 
     const calendarElem = document.getElementById("calendar-box");
     expect(calendarElem).to.be.null;
@@ -71,72 +68,35 @@ function testDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DatePicker id="selected-date-changed" date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}>
-            <span id="the-date-title">Date</span>
-          </DatePicker>, container, resolve);
+          <DatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged} onResult={_.noop} />, container, resolve);
       });
     });
-    const divTitleElem = document.getElementById("selected-date-changed");
-    expect(divTitleElem, "divTitleElem").to.be.not.null;
-    divTitleElem.click();
+
     expect(onSelectedDateChanged.calledOnce, "calledOnce").to.be.true;
     expect(onSelectedDateChanged.firstCall.args[0], "firstCall").to.be.eq("2022-01-26");
 
     const buttonPrevDay = document.getElementById("button-calendar-day-2022-01-25");
     expect(buttonPrevDay, "button-calendar-day-2022-01-25").to.be.not.null;
     buttonPrevDay.click();
+    await waitTimeout(2);
 
-    expect(onSelectedDateChanged.calledTwice, "calledOnce").to.be.true;
-    expect(onSelectedDateChanged.secondCall.args[0], "firstCall").to.be.eq("2022-01-25");
-  });
-
-  it("should display the calender when clicking on the title", async () => {
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <DatePicker activeClassName="active">
-            <span id="the-date-title">Date</span>
-          </DatePicker>, container, resolve);
-      });
-    });
-
-    const divTitleElem = document.getElementById("date-picker-button-show-calendar");
-    expect(divTitleElem).to.be.not.null;
-    expect(divTitleElem.classList.contains("active")).to.be.false;
-    const titleElem = document.getElementById("the-date-title");
-    expect(titleElem).to.be.not.null;
-    titleElem.click();
-
-    const calendarElem = document.getElementById("calendar-view");
-    expect(calendarElem).to.be.not.null;
-    expect(divTitleElem.classList.contains("active")).to.be.true;
+    expect(onSelectedDateChanged.calledTwice, "calledTwice").to.be.true;
+    expect(onSelectedDateChanged.secondCall.args[0], "secondCall").to.be.eq("2022-01-25");
   });
 
   it("should call the callback function on cancel", async () => {
     const onResult = sinon.stub<[string|undefined], void>();
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DatePicker onResult={onResult}>Text</DatePicker>, container, resolve);
+        ReactDOM.render(<DatePicker isOpen onResult={onResult} />, container, resolve);
       });
     });
 
-    // Click version
-    const titleElem = document.getElementById("date-picker-button-show-calendar");
-    expect(titleElem, "titleElem").to.be.not.null;
-    titleElem.click();
-    let buttonCancel = document.getElementById("date-picker-button-cancel");
+    const buttonCancel = document.getElementById("date-picker-button-cancel");
     expect(buttonCancel, "buttonCancel").to.be.not.null;
     buttonCancel.click();
     expect(onResult.calledOnce).to.be.true;
     expect(onResult.firstCall.args.length).to.be.lt(1);
-
-    // Key version
-    Simulate.keyUp(titleElem, { key: " " });
-    buttonCancel = document.getElementById("date-picker-button-cancel");
-    expect(buttonCancel, "buttonCancel").to.be.not.null;
-    Simulate.keyUp(buttonCancel, { key: " " });
-    expect(onResult.calledTwice).to.be.true;
-    expect(onResult.secondCall.args.length).to.be.lt(1);
   });
 
   it("should return the selected date", async () => {
@@ -146,17 +106,14 @@ function testDatePicker(): void {
         // Note: wrong date value is intentional
         ReactDOM.render(
           <DatePicker
+            isOpen
             onResult={onResult}
             date="2021-10-02"
             maxDate="2021-11-26"
-            minDate="2021-11-01">
-              Text
-          </DatePicker>, container, resolve);
+            minDate="2021-11-01"
+          />, container, resolve);
       });
     });
-
-    const titleElem = document.getElementById("date-picker-button-show-calendar");
-    titleElem.click();
 
     let buttonChangeMonth = document.getElementById("calendar-header-button-prev-month");
     expect(buttonChangeMonth).to.be.not.null;
@@ -175,15 +132,10 @@ function testDatePicker(): void {
     buttonDay.click();
 
     const buttonOk = document.getElementById("date-picker-button-ok");
-    Simulate.keyUp(buttonOk, { key: " " });
+    buttonOk.click();
 
-    expect(onResult.calledOnce).to.be.true;
+    expect(onResult.calledOnce, "onResult.calledOnce").to.be.true;
     expect(onResult.firstCall.args[0]).to.be.eq("2021-11-10");
-
-    // Wait the modal disapear, will crash in timeout if it takes too long
-    while (document.getElementById("date-picker-button-ok") !== null) {
-      await waitTimeout(100);
-    }
   });
 }
 

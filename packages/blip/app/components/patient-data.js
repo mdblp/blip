@@ -373,7 +373,6 @@ class PatientDataPage extends React.Component {
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             prefixURL={prefixURL}
-            permsOfLoggedInUser={permsOfLoggedInUser}
             onClickRefresh={this.handleClickRefresh}
             onCreateMessage={this.handleShowMessageCreation}
             onShowMessageThread={this.handleShowMessageThread.bind(this)}
@@ -394,7 +393,6 @@ class PatientDataPage extends React.Component {
             rangeDatePicker={rangeDatePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
-            currentPatientInViewId={patient.userid}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
             epochLocation={epochLocation}
@@ -404,11 +402,9 @@ class PatientDataPage extends React.Component {
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             prefixURL={prefixURL}
-            permsOfLoggedInUser={permsOfLoggedInUser}
             onClickRefresh={this.handleClickRefresh}
             onSwitchToBasics={this.handleSwitchToBasics}
             onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchToTrends={this.handleSwitchToTrends}
             onSwitchToSettings={this.handleSwitchToSettings}
             onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
@@ -427,7 +423,6 @@ class PatientDataPage extends React.Component {
               patientData={tidelineData}
               canPrint={canPrint}
               prefixURL={prefixURL}
-              permsOfLoggedInUser={this.state.permsOfLoggedInUser}
               onClickRefresh={this.handleClickRefresh}
               onClickNoDataRefresh={this.handleClickNoDataRefresh}
               onSwitchToBasics={this.handleSwitchToBasics}

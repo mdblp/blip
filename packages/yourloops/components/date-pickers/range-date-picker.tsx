@@ -42,7 +42,7 @@ import { CalendarOrientation, CalendarDatesRange, MIN_YEAR, MAX_YEAR } from "./m
 import CalendarView from "./calendar-view";
 
 interface DatePickerProps {
-  id?: string;
+  isOpen: boolean;
   /** Please use string format `YYYY-MM-DD` if possible */
   start?: string | number | Dayjs | Date;
   /** Please use string format `YYYY-MM-DD` if possible */
@@ -53,11 +53,8 @@ interface DatePickerProps {
   maxDate?: Dayjs | number | string | Date;
   /** Maximum possible of selected days */
   maxSelectableDays?: number;
-  children: React.ReactNode;
-  className?: string;
-  activeClassName?: string;
   showToolbar?: boolean;
-  onResult?: (start?: string, end?: string) => void;
+  onResult: (start?: string, end?: string) => void;
   onSelectedDateChange?: (start?: string, end?: string) => void;
 }
 
@@ -93,16 +90,20 @@ const datePickerStyle = makeStyles((theme: Theme) => {
   };
 }, { name: "date-picker-days-range" });
 
+const dummyDate = dayjs();
+
 function RangeDatePicker(props: DatePickerProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const orientation: CalendarOrientation = matches ? "landscape" : "portrait";
   const classes = datePickerStyle();
-  const [isOpen, setIsOpen] = React.useState(false);
-  const { maxSelectableDays } = props;
+  const { maxSelectableDays, isOpen, onSelectedDateChange } = props;
 
   const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
+    if (!isOpen) {
+      return { startDate: dummyDate, endDate: dummyDate, minDate: dummyDate, maxDate: dummyDate };
+    }
     // It's safe to use the UTC in the calendar
     // - dayjs don't support well the timezone (lost of copy)
     // - We return a day without any timezone, it's up to the caller to do
@@ -132,17 +133,30 @@ function RangeDatePicker(props: DatePickerProps): JSX.Element {
       endDate = maxDate;
     }
     return { startDate, endDate, minDate, maxDate };
-  }, [props.start, props.end, props.maxDate, props.minDate]);
+  }, [isOpen, props.start, props.end, props.maxDate, props.minDate]);
 
   const [nextSelection, setNextSelection] = React.useState<"first" | "last">("first");
   const [selectedDatesRange, setSelectedDatesRange] = React.useState<CalendarDatesRange>({ start: startDate, end: endDate });
   const [selectableDatesRange, setSelectableDatesRange] = React.useState<CalendarDatesRange | undefined>(undefined);
 
-  const onSelectedDateChange = (range: CalendarDatesRange) => {
-    const { onSelectedDateChange } = props;
-    if (onSelectedDateChange) {
-      onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
+  React.useEffect(() => {
+    if (isOpen) {
+      // Refresh our states
+      const range = { start: startDate, end: endDate };
+      setNextSelection("first");
+      setSelectedDatesRange(range);
+      setSelectableDatesRange(undefined);
+      if (onSelectedDateChange) {
+        onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
+      }
     }
+  }, [isOpen, startDate, endDate, onSelectedDateChange]);
+
+  const handleCancel = () => {
+    props.onResult();
+  };
+  const handleOK = () => {
+    props.onResult(selectedDatesRange.start.format("YYYY-MM-DD"), selectedDatesRange.end.format("YYYY-MM-DD"));
   };
 
   const updateSelectedDate = (date: dayjs.Dayjs): void => {
@@ -174,69 +188,10 @@ function RangeDatePicker(props: DatePickerProps): JSX.Element {
     }
 
     setSelectedDatesRange(range);
-    onSelectedDateChange(range);
-  };
-
-  const handleOpen = () => {
-    // Refresh our states
-    const range = { start: startDate, end: endDate };
-    setNextSelection("first");
-    setSelectedDatesRange(range);
-    setSelectableDatesRange(undefined);
-    onSelectedDateChange(range);
-    setIsOpen(true);
-  };
-  const handleClose = () => setIsOpen(false);
-  const handleCancel = () => {
-    handleClose();
-    if (props.onResult) {
-      props.onResult();
+    if (onSelectedDateChange) {
+      onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
     }
   };
-  const handleOK = () => {
-    handleClose();
-    if (props.onResult) {
-      props.onResult(selectedDatesRange.start.format("YYYY-MM-DD"), selectedDatesRange.end.format("YYYY-MM-DD"));
-    }
-  };
-
-  const onKeyUpOpen = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      e.stopPropagation();
-      handleOpen();
-    }
-  };
-
-  const onKeyUpClose = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      handleCancel();
-    }
-  };
-
-  const onKeyUpValidate = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      handleOK();
-    }
-  };
-
-  let calendarView: JSX.Element | null = null;
-  if (isOpen) {
-    // Don't render the whole calendar everytime
-    // only needed when the dialog is displayed
-    calendarView = (
-      <CalendarView
-        selectedDatesRange={selectedDatesRange}
-        selectableDatesRange={selectableDatesRange}
-        maxSelectableDays={maxSelectableDays}
-        minDate={minDate}
-        maxDate={maxDate}
-        orientation={orientation}
-        onChange={updateSelectedDate}
-        showToolbar={props.showToolbar}
-      />
-    );
-  }
 
   const contentClasses = clsx(classes.content, {
     [classes.contentLandscape]: orientation === "landscape",
@@ -244,31 +199,28 @@ function RangeDatePicker(props: DatePickerProps): JSX.Element {
   });
 
   return (
-    <React.Fragment>
-      <div
-        id={props.id ?? "date-picker-button-show-calendar"}
-        className={clsx(classes.divChildren, props.className, isOpen ? props.activeClassName : null)}
-        onClick={handleOpen}
-        onKeyUp={onKeyUpOpen}
-        role="button"
-        tabIndex={0}
-      >
-        {props.children}
-      </div>
-      <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
-        <DialogContent id="calendar-view" className={contentClasses}>
-          {calendarView}
-        </DialogContent>
-        <DialogActions className={classes.actions}>
-          <Button id="date-picker-button-cancel" onClick={handleCancel} onKeyUp={onKeyUpClose} color="primary">
-            {t("button-cancel")}
-          </Button>
-          <Button id="date-picker-button-ok" onClick={handleOK} onKeyUp={onKeyUpValidate} color="primary" variant="contained">
-            {t("button-ok")}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+    <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
+      <DialogContent id="calendar-view" className={contentClasses}>
+        <CalendarView
+          selectedDatesRange={selectedDatesRange}
+          selectableDatesRange={selectableDatesRange}
+          maxSelectableDays={maxSelectableDays}
+          minDate={minDate}
+          maxDate={maxDate}
+          orientation={orientation}
+          onChange={updateSelectedDate}
+          showToolbar={props.showToolbar}
+        />
+      </DialogContent>
+      <DialogActions className={classes.actions}>
+        <Button id="date-picker-button-cancel" onClick={handleCancel} color="primary">
+          {t("button-cancel")}
+        </Button>
+        <Button id="date-picker-button-ok" onClick={handleOK} color="primary" variant="contained">
+          {t("button-ok")}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

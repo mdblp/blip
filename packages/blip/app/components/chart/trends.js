@@ -21,30 +21,31 @@ import i18next from "i18next";
 import React from "react";
 import PropTypes from "prop-types";
 import WindowSizeListener from "react-window-size-listener";
+
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
+
 import {
   components as vizComponents,
   containers as vizContainers,
   utils as vizUtils
 } from "tidepool-viz";
 import { MS_IN_DAY } from "tideline";
+
 import Header from "./header";
 import SubNav, { weekDays } from "./trendssubnav";
 import Stats from "./stats";
 import Footer from "./footer";
-import { BG_DATA_TYPES } from "../../core/constants";
 
 /**
  * @typedef { import("tideline").TidelineData } TidelineData
  * @typedef { import("tideline/js/tidelinedata").Datum } Datum
- * @typedef { import("../../index").DatePicker } DatePicker
+ * @typedef { import("../../index").RangeDatePicker } RangeDatePicker
  *
- * @typedef {{monday:boolean;tuesday:boolean;wednesday:boolean;thursday:boolean;friday:boolean;saturday:boolean;sunday:boolean;}} ActiveDays
- * @typedef {{trends:{extentSize:number;activeDays:ActiveDays}}} ChartPrefs
- * @typedef {{atMostRecent:boolean;inTransition:boolean;days:string[],currentCbgData:Datum[]}} TrendsState
- * @typedef {(epoch:number, range: number)=>Promise<void>} LocationChange
- * @typedef {() => void} VoidCallback
- * @typedef {(v:object, cb?: VoidCallback) => void} UpdateChartPrefs
- * @typedef {{epochLocation:number;msRange:number;tidelineData:TidelineData;chartPrefs:ChartPrefs;bgPrefs:object;timePrefs:object;dataUtil:object;datePicker:DatePicker;loading:boolean;trackMetric:Function;onDatetimeLocationChange:LocationChange;updateChartPrefs:UpdateChartPrefs}} TrendsProps
+ * @typedef { import("./index").TrendsDatePickerProps } TrendsDatePickerProps
+ * @typedef { import("./index").TrendsProps } TrendsProps
+ * @typedef { import("./index").TrendsState } TrendsState
 */
 
 const t = i18next.t.bind(i18next);
@@ -95,28 +96,82 @@ function getMomentDayAt(date, tidelineData) {
 }
 
 /**
+ *
+ * @param {TrendsDatePickerProps} props
+ * @returns {JSX.Element}
+ */
+function TrendsDatePicker(props) {
+  const { RangeDatePicker, displayedDate, start, end, minDate, maxDate, disabled, onResult } = props;
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleResult = (start, end) => {
+    setIsOpen(false);
+    onResult(start, end);
+  };
+
+  return (
+    <React.Fragment>
+      <TextField
+        id="trends-chart-title-dates"
+        onClick={() => setIsOpen(true)}
+        onKeyPress={() => setIsOpen(true)}
+        variant="standard"
+        value={displayedDate}
+        disabled={disabled || isOpen}
+        InputProps={disabled ? undefined : {
+          readOnly: true,
+          startAdornment: (
+            <InputAdornment position="start">
+              <DateRangeIcon className="calendar-nav-icon" />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <RangeDatePicker
+        start={start}
+        end={end}
+        minDate={minDate}
+        maxDate={maxDate}
+        maxSelectableDays={90}
+        onResult={handleResult}
+        isOpen={isOpen}
+        showToolbar
+      />
+    </React.Fragment>
+  );
+}
+
+TrendsDatePicker.propTypes = {
+  RangeDatePicker: PropTypes.func.isRequired,
+  displayedDate: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  minDate: PropTypes.string.isRequired,
+  maxDate: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+  onResult: PropTypes.func.isRequired,
+};
+
+/**
  * @augments {React.Component<TrendsProps,TrendsState>}
  */
 class Trends extends React.Component {
   static propTypes = {
     canPrint: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
-    currentPatientInViewId: PropTypes.string.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
     tidelineData: PropTypes.object.isRequired,
-    permsOfLoggedInUser: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
     onSwitchToBasics: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
-    onSwitchToTrends: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
@@ -144,7 +199,6 @@ class Trends extends React.Component {
        */
       updatingDates: false,
       atMostRecent: true,
-      inTransition: false,
       /**
        * Days to display, used in conjunction with datum.localDate
        * to choose the good data
@@ -201,9 +255,7 @@ class Trends extends React.Component {
     if (this.state.updatingDates) {
       return;
     }
-    /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize;
-    /** @type {number} */
     const epochLocation = this.props.epochLocation;
 
     const locationChanged = epochLocation !== prevProps.epochLocation
@@ -238,9 +290,7 @@ class Trends extends React.Component {
   }
 
   updateAtMostRecent() {
-    /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize;
-    /** @type {number} */
     const epochLocation = this.props.epochLocation;
     const atMostRecent = epochLocation + Math.floor(extentSize * MS_IN_DAY / 2) + 1 > this.endDate.valueOf();
     if (this.state.atMostRecent !== atMostRecent) {
@@ -304,9 +354,7 @@ class Trends extends React.Component {
    * @returns {Promise<boolean>}
    */
   clampEndpoints() {
-    /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize;
-    /** @type {number} */
     const epochLocation = this.props.epochLocation;
 
     // If we have less available days than the current extendSize
@@ -353,7 +401,6 @@ class Trends extends React.Component {
    * @returns {[moment.Moment, moment.Moment]}
    */
   getMomentEndpoints() {
-    /** @type {{ epochLocation: number, tidelineData: TidelineData }} */
     const { epochLocation, tidelineData } = this.props;
     /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize;
@@ -388,18 +435,11 @@ class Trends extends React.Component {
   }
 
   getTitle() {
-    const { loading, tidelineData, rangeDatePicker: RangeDatePicker } = this.props;
+    const { loading, tidelineData, rangeDatePicker } = this.props;
 
-    if (loading) {
-      return (
-        <span id="trends-chart-title-dates">{t("Loading...")}</span>
-      );
-    }
-
-    /** @type {[moment.Moment, moment.Moment]} */
     const [startDate, endDate] = this.getMomentEndpoints();
     const mFormat = t("MMM D, YYYY");
-    this.log.debug("Title dates", [startDate.toISOString(), endDate.toISOString()], [startDate.format(mFormat), endDate.format(mFormat)]);
+    // this.log.debug("Title dates", [startDate.toISOString(), endDate.toISOString()], [startDate.format(mFormat), endDate.format(mFormat)]);
 
     const onResult = (/** @type {string|undefined} */ start, /** @type {string|undefined} */ end) => {
       if (start && end) {
@@ -407,9 +447,10 @@ class Trends extends React.Component {
         const mStartDate = moment.tz(start, startTimezone);
         const endTimezone = tidelineData.getTimezoneAt(end);
         const mEndDate = moment.tz(end, endTimezone).add(1, "day");
-        const newDomain = [mStartDate.toISOString(), mEndDate.toISOString()];
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / MS_IN_DAY;
-        this.log.debug("RangeDatePicker", { start, end }, "=>", newDomain, mStartDate.format(mFormat), mEndDate.format(mFormat));
+
+        // const newDomain = [mStartDate.toISOString(), mEndDate.toISOString()];
+        // this.log.debug("RangeDatePicker", { start, end }, "=>", newDomain, mStartDate.format(mFormat), mEndDate.format(mFormat));
 
         this.setState({ updatingDates: true }, () => {
           this.updateExtendsSize(extendSize, () => {
@@ -428,24 +469,16 @@ class Trends extends React.Component {
     // it's what the user expect
     const displayEndDate = endDate.clone().subtract(1, "day");
     return (
-      <RangeDatePicker
-        id="trends-chart-title-dates"
-        className="patient-data-subnav-dates-trends chart-title-clickable"
+      <TrendsDatePicker
+        RangeDatePicker={rangeDatePicker}
+        displayedDate={loading ? t("Loading...") : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
         start={startDate.format(ISO_DAY_FORMAT)}
         end={displayEndDate.format(ISO_DAY_FORMAT)}
         minDate={getDayAt(startMinDate, tidelineData)}
         maxDate={getDayAt(endMaxDate, tidelineData)}
-        maxSelectableDays={90}
-        showToolbar
+        disabled={loading}
         onResult={onResult}
-      >
-        <React.Fragment>
-          <span id="trends-chart-title-start-date">{startDate.format(mFormat)}</span>
-          <span id="trends-chart-title-dates-separator">&nbsp;-&nbsp;</span>
-          <span id="trends-chart-title-end-date">{displayEndDate.format(mFormat)}</span>
-        </React.Fragment>
-
-      </RangeDatePicker>
+      />
     );
   }
 
@@ -458,9 +491,7 @@ class Trends extends React.Component {
       e.preventDefault();
     }
 
-    /** @type {{ epochLocation: number, tidelineData: TidelineData }} */
     const { epochLocation, tidelineData } = this.props;
-    /** @type {number} */
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize);
     // Multiply by 1.5 => 1 = the extends + 0.5 since the current location is the
     // middle of the range.
@@ -622,11 +653,13 @@ class Trends extends React.Component {
 
   render() {
     const {
-      currentPatientInViewId,
       chartPrefs,
       trendsState,
       loading,
+      patient,
     } = this.props;
+
+    const currentPatientInViewId = patient.userid;
 
     if (_.isEmpty(_.get(trendsState, currentPatientInViewId))) {
       return <Loader />;
@@ -686,15 +719,14 @@ class Trends extends React.Component {
         profileDialog={this.props.profileDialog}
         chartType={this.chartType}
         patient={this.props.patient}
-        inTransition={this.state.inTransition}
         atMostRecent={this.state.atMostRecent}
         prefixURL={this.props.prefixURL}
         canPrint={this.props.canPrint}
         trackMetric={this.props.trackMetric}
-        iconBack={"icon-back"}
-        iconNext={"icon-next"}
-        iconMostRecent={"icon-most-recent"}
-        permsOfLoggedInUser={this.props.permsOfLoggedInUser}
+        loading={this.props.loading}
+        iconBack
+        iconNext
+        iconMostRecent
         onClickBack={this.handleClickBack}
         onClickBasics={this.props.onSwitchToBasics}
         onClickTrends={this.handleClickTrends}
@@ -738,7 +770,7 @@ class Trends extends React.Component {
           bgBounds: this.bgBounds,
           bgUnits: this.props.bgPrefs.bgUnits,
         }}
-        currentPatientInViewId={this.props.currentPatientInViewId}
+        currentPatientInViewId={this.props.patient.userid}
         extentSize={this.props.chartPrefs.trends.extentSize}
         loading={this.props.loading}
         // data
@@ -751,8 +783,8 @@ class Trends extends React.Component {
   }
 
   renderFocusedCbgDateTraceLabel() {
-    const { currentPatientInViewId, trendsState } = this.props;
-    const focusedCbgDateTrace = _.get(trendsState, `${currentPatientInViewId}.focusedCbgDateTrace`);
+    const { patient, trendsState } = this.props;
+    const focusedCbgDateTrace = _.get(trendsState, `${patient.userid}.focusedCbgDateTrace`);
     if (focusedCbgDateTrace) {
       return <CBGDateTraceLabel focusedDateTrace={focusedCbgDateTrace} />;
     }
@@ -760,8 +792,8 @@ class Trends extends React.Component {
   }
 
   renderFocusedRangeLabels() {
-    const { currentPatientInViewId, trendsState } = this.props;
-    const userTrendsState = _.get(trendsState, currentPatientInViewId);
+    const { patient, trendsState } = this.props;
+    const userTrendsState = _.get(trendsState, patient.userid);
 
     if (_.isEmpty(userTrendsState)) {
       return null;

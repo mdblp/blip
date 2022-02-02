@@ -22,6 +22,10 @@ import moment from "moment-timezone";
 import WindowSizeListener from "react-window-size-listener";
 import i18next from "i18next";
 
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
+
 import { chartDailyFactory, MS_IN_DAY, MS_IN_HOUR } from "tideline";
 import { components as vizComponents } from "tidepool-viz";
 
@@ -34,6 +38,7 @@ import Footer from "./footer";
 /**
  * @typedef { import("tideline").TidelineData } TidelineData
  * @typedef { import("../../index").DatePicker } DatePicker
+ * @typedef { import("./index").DailyDatePickerProps } DailyDatePickerProps
 */
 
 const Loader = vizComponents.Loader;
@@ -46,6 +51,80 @@ const PhysicalTooltip = vizComponents.PhysicalTooltip;
 const ParameterTooltip = vizComponents.ParameterTooltip;
 const ConfidentialTooltip = vizComponents.ConfidentialTooltip;
 const WarmUpTooltip = vizComponents.WarmUpTooltip;
+
+/**
+ * @param {DailyDatePickerProps} props
+ */
+function DailyDatePicker(props) {
+  const {
+    DatePicker,
+    date,
+    displayedDate,
+    inTransition,
+    loading,
+    startDate,
+    endDate,
+    onSelectedDateChange,
+  } = props;
+
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleResult = (date) => {
+    setIsOpen(false);
+    onSelectedDateChange(date);
+  };
+
+  return (
+    <React.Fragment>
+      <TextField
+        id="daily-chart-title-date"
+        onClick={() => setIsOpen(true)}
+        onKeyPress={() => setIsOpen(true)}
+        variant="standard"
+        value={displayedDate}
+        disabled={inTransition || loading || isOpen}
+        InputProps={loading ? undefined : {
+          readOnly: true,
+          startAdornment: (
+            <InputAdornment position="start">
+              <CalendarTodayIcon className="calendar-nav-icon" />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <DatePicker
+        date={date}
+        minDate={startDate}
+        maxDate={endDate}
+        onResult={handleResult}
+        showToolbar
+        isOpen={isOpen}
+      />
+    </React.Fragment>
+  );
+}
+DailyDatePicker.propTypes = {
+  DatePicker: PropTypes.func.isRequired,
+  date: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]).isRequired,
+  displayedDate: PropTypes.string.isRequired,
+  startDate: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]).isRequired,
+  endDate: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.instanceOf(Date)
+  ]).isRequired,
+  inTransition: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
+  onSelectedDateChange: PropTypes.func.isRequired,
+};
 
 class DailyChart extends React.Component {
   static propTypes = {
@@ -242,7 +321,6 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
-    permsOfLoggedInUser: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
@@ -299,10 +377,13 @@ class Daily extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { epochLocation } = this.props;
+    const { epochLocation, loading } = this.props;
     const { epochLocation: prevEpochLocation } = prevProps;
     const { title } = this.state;
-    if (epochLocation !== prevEpochLocation) {
+
+    if (loading && !prevProps.loading) {
+      this.setState({ title: i18next.t("Loading...") });
+    } else if (epochLocation !== prevEpochLocation || (!loading && prevProps.loading)) {
       const nowTitle = this.getTitle(epochLocation);
       if (title !== nowTitle) {
         this.setState({ title: nowTitle, atMostRecent: this.isAtMostRecent() });
@@ -316,39 +397,14 @@ class Daily extends React.Component {
     const { timePrefs } = tidelineData.opts;
     const endpoints = this.getEndpoints();
 
-    /** @type {JSX.Element} */
-    let headerTitleContent;
-    if (!loading && !inTransition) {
-      const onSelectedDateChange = (/** @type {string|undefined} */ date) => {
-        if (typeof date === "string" && this.chartRef.current !== null) {
-          const timezone = tidelineData.getTimezoneAt(date);
-          const mDate = moment.tz(date, timezone).add(MS_IN_DAY / 2, "milliseconds");
-          this.log.debug("DatePicker", date, timezone, mDate.toISOString());
-          this.chartRef.current.goToDate(mDate.toDate());
-        }
-      };
-
-      headerTitleContent = (
-        <DatePicker
-          id="daily-chart-title-date"
-          date={epochLocation}
-          minDate={this.startDate}
-          maxDate={this.endDate}
-          onResult={onSelectedDateChange}
-          showToolbar
-          className="patient-data-subnav-text patient-data-subnav-dates-daily chart-title-clickable"
-          activeClassName="active"
-        >
-          {title}
-        </DatePicker>
-      );
-    } else {
-      headerTitleContent = (
-        <span id="daily-chart-title-date" className="patient-data-subnav-text patient-data-subnav-dates-daily patient-data-subnav-disabled">
-          {title}
-        </span>
-      );
-    }
+    const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
+      if (typeof date === "string" && this.chartRef.current !== null) {
+        const timezone = tidelineData.getTimezoneAt(date);
+        const mDate = moment.tz(date, timezone).add(MS_IN_DAY / 2, "milliseconds");
+        this.log.debug("DatePicker", date, timezone, mDate.toISOString());
+        this.chartRef.current.goToDate(mDate.toDate());
+      }
+    };
 
     return (
       <div id="tidelineMain" className="daily">
@@ -360,10 +416,9 @@ class Daily extends React.Component {
           atMostRecent={atMostRecent}
           loading={loading}
           prefixURL={this.props.prefixURL}
-          iconBack="icon-back"
-          iconNext="icon-next"
-          iconMostRecent="icon-most-recent"
-          permsOfLoggedInUser={this.props.permsOfLoggedInUser}
+          iconBack
+          iconNext
+          iconMostRecent
           canPrint={this.props.canPrint}
           trackMetric={trackMetric}
           onClickBack={this.handlePanBack}
@@ -375,7 +430,16 @@ class Daily extends React.Component {
           onClickSettings={this.props.onSwitchToSettings}
           onClickPrint={this.props.onClickPrint}
         >
-          {headerTitleContent}
+          <DailyDatePicker
+            DatePicker={DatePicker}
+            displayedDate={title}
+            date={epochLocation}
+            startDate={this.startDate}
+            endDate={this.endDate}
+            inTransition={inTransition}
+            loading={loading}
+            onSelectedDateChange={onSelectedDateChange}
+          />
         </Header>
         <div className="container-box-outer patient-data-content-outer">
           <div className="container-box-inner patient-data-content-inner">
@@ -533,6 +597,8 @@ class Daily extends React.Component {
           // to the user
           this.chartRef.current.rerenderChartData();
         }
+      }).catch((reason) => {
+        this.log.error("handleDatetimeLocationChange", reason);
       });
     }
   };

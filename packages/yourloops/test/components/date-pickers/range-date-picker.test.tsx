@@ -28,7 +28,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { act, Simulate } from "react-dom/test-utils";
+import { act } from "react-dom/test-utils";
 import * as sinon from "sinon";
 import { expect } from "chai";
 import dayjs from "dayjs";
@@ -54,17 +54,13 @@ function testRangeDatePicker(): void {
     }
   });
 
-  it("should render the provided title", async () => {
+  it("should render nothing when isOpen is false", async () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange}>
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          <RangeDatePicker isOpen={false} onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange} />, container, resolve);
       });
     });
-    const titleElem = document.getElementById("the-range-title");
-    expect(titleElem).to.be.not.null;
 
     const calendarElem = document.getElementById("calendar-box-first");
     expect(calendarElem).to.be.null;
@@ -72,24 +68,18 @@ function testRangeDatePicker(): void {
     expect(handleSelectedDateChange.called, "handleSelectedDateChange").to.be.false;
   });
 
-  it("should render the calendar when clicking on the button", async () => {
+  it("should render the calendar when isOpen is true", async () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <RangeDatePicker
-            id="range-date-picker-show"
+            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
             showToolbar
-          >
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("range-date-picker-show");
-    expect(elem, "range-date-picker-show").to.be.not.null;
-    elem.click();
 
     const calendarElem = document.getElementById("calendar-box-first");
     expect(calendarElem, "calendar-box-first").to.be.not.null;
@@ -101,15 +91,9 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker id="range-date-picker-show" onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange}>
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          <RangeDatePicker isOpen onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange} />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("range-date-picker-show");
-    expect(elem, "range-date-picker-show").to.be.not.null;
-    Simulate.keyUp(elem, { key: "Enter" });
 
     const calendarElem = document.getElementById("calendar-box-first");
     expect(calendarElem, "calendar-box-first").to.be.not.null;
@@ -121,15 +105,13 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker id="range-date-picker-show" onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange}>
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          <RangeDatePicker
+            isOpen
+            onResult={handleResultStub}
+            onSelectedDateChange={handleSelectedDateChange}
+          />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("range-date-picker-show");
-    expect(elem, "range-date-picker-show").to.be.not.null;
-    Simulate.keyUp(elem, { key: " " });
 
     const calendarElem = document.getElementById("calendar-box-first");
     expect(calendarElem, "calendar-box-first").to.be.not.null;
@@ -141,22 +123,14 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker id="range-date-picker-show" onResult={handleResultStub}>
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          <RangeDatePicker isOpen onResult={handleResultStub} />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("range-date-picker-show");
-    expect(elem, "range-date-picker-show").to.be.not.null;
-    elem.click();
 
     const buttonCancel = document.getElementById("date-picker-button-cancel");
     expect(buttonCancel, "date-picker-button-cancel").to.be.not.null;
     buttonCancel.click();
 
-    const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem, "calendar-box-first").to.be.null;
     expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
     expect(handleResultStub.firstCall.args).to.be.empty;
   });
@@ -166,33 +140,24 @@ function testRangeDatePicker(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <RangeDatePicker
+            isOpen
+            onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
             start="2021-01-01"
             end="2022-12-01"
             minDate="2022-01-01"
             maxDate="2022-01-30"
-          >
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("date-picker-button-show-calendar");
-    expect(elem, "date-picker-button-show-calendar").to.be.not.null;
-    elem.click();
 
     expect(handleSelectedDateChange.calledOnce, "handleSelectedDateChange").to.be.true;
     expect(handleSelectedDateChange.firstCall.args).to.be.deep.eq(["2022-01-01", "2022-01-30"]);
 
-    // no onResultStub set, should not crash
     const buttonCancel = document.getElementById("date-picker-button-cancel");
     expect(buttonCancel, "date-picker-button-cancel").to.be.not.null;
-    Simulate.keyUp(buttonCancel, { key: " " });
-    expect(handleResultStub.calledOnce, "handleResultStub").to.be.false;
-
-    // The calendar should have vanished
-    const calendarElem = document.getElementById("calendar-box-last");
-    expect(calendarElem, "calendar-box-last").to.be.null;
+    buttonCancel.click();
+    expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
   });
 
   it("should handle wrong dates inputs", async () => {
@@ -200,20 +165,15 @@ function testRangeDatePicker(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <RangeDatePicker
+            isOpen
             onResult={handleResultStub}
             start="2022-12-01"
             end="2021-01-01"
             minDate="2022-01-30"
             maxDate="2022-01-01"
-          >
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("date-picker-button-show-calendar");
-    expect(elem, "date-picker-button-show-calendar").to.be.not.null;
-    elem.click();
 
     const buttonOk = document.getElementById("date-picker-button-ok");
     expect(buttonOk, "date-picker-button-ok").to.be.not.null;
@@ -227,18 +187,13 @@ function testRangeDatePicker(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <RangeDatePicker
+            isOpen
             onResult={handleResultStub}
             start="2022-01-01"
             end="2022-01-05"
-          >
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          />, container, resolve);
       });
     });
-
-    const elem = document.getElementById("date-picker-button-show-calendar");
-    expect(elem, "date-picker-button-show-calendar").to.be.not.null;
-    elem.click();
 
     const buttonStart = document.getElementById("button-calendar-day-2021-12-15");
     expect(buttonStart).to.be.not.null;
@@ -249,14 +204,10 @@ function testRangeDatePicker(): void {
 
     const buttonOk = document.getElementById("date-picker-button-ok");
     expect(buttonOk, "date-picker-button-ok").to.be.not.null;
-    Simulate.keyUp(buttonOk, { key: " " });
+    buttonOk.click();
 
     expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
     expect(handleResultStub.firstCall.args).to.be.deep.eq(["2021-12-15", "2022-01-15"]);
-
-    // The calendar should have vanished
-    const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem, "calendar-box-first").to.be.null;
   });
 
   it("should respect the max selectable days parameter", async () => {
@@ -264,20 +215,16 @@ function testRangeDatePicker(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <RangeDatePicker
+            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
             start="2022-01-01"
             end="2022-01-05"
             maxSelectableDays={10}
-          >
-            <span id="the-range-title">Date range</span>
-          </RangeDatePicker>, container, resolve);
+          />, container, resolve);
       });
     });
 
-    const elem = document.getElementById("date-picker-button-show-calendar");
-    expect(elem, "date-picker-button-show-calendar").to.be.not.null;
-    elem.click();
     expect(handleSelectedDateChange.calledOnce, "calledOnce").to.be.true;
     expect(handleSelectedDateChange.firstCall.args).to.be.deep.eq(["2022-01-01", "2022-01-05"]);
 
