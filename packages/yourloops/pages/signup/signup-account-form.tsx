@@ -38,13 +38,13 @@ import InfoIcon from "@material-ui/icons/Info";
 import { errorTextFromException, REGEX_EMAIL } from "../../lib/utils";
 import { checkPasswordStrength } from "../../lib/auth/helpers";
 import metrics from "../../lib/metrics";
-import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
 import { getCurrentLang } from "../../lib/language";
 import { useAlert } from "../../components/utils/snackbar";
-import { useSignUpFormState } from "./signup-formstate-context";
 import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 import Password from "../../components/utils/password";
+import { useSignUpFormState } from "./signup-formstate-context";
+import SignUpFormProps from "./signup-form-props";
 
 
 interface Errors {
@@ -151,13 +151,16 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         margin="normal"
         required
       />
-      <div className="MuiFormControl-marginNormal" style={{ display: "flex" }}>
+      <Box display="flex" m={0}>
         <InfoIcon color="primary" />
-        <Typography id="signup-account-deletion-warning" variant="body2" gutterBottom
-          style={{ textAlign: "left", marginLeft: "10px" }}>
+        <Typography
+          id="signup-account-deletion-warning"
+          variant="body2"
+          style={{ textAlign: "left", marginLeft: "10px" }}
+        >
           {t("signup-account-deletion-warning")}
         </Typography>
-      </div>
+      </Box>
 
       <Box
         id="signup-accountform-button-group"
