@@ -63,7 +63,7 @@ function testCalendar(): void {
         ReactDOM.render(
           <Calendar
             currentMonth={today}
-            selectedDate={today}
+            selection={{ mode: "single", selected: today }}
             onChange={onChange}
             minDate={minDate}
             maxDate={maxDate}
@@ -108,7 +108,7 @@ function testCalendar(): void {
         ReactDOM.render(
           <Calendar
             currentMonth={today}
-            selectedDate={today}
+            selection={{ mode: "single", selected: today }}
             onChange={onChange}
             changeMonth={changeMonth}
             minDate={minDate}
@@ -134,7 +134,7 @@ function testCalendar(): void {
         ReactDOM.render(
           <Calendar
             currentMonth={today}
-            selectedDate={today}
+            selection={{ mode: "single", selected: today }}
             onChange={onChange}
             minDate={minDate}
             maxDate={maxDate}

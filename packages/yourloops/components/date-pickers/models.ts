@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Date picker common definitions
  *
  * All rights reserved.
@@ -31,7 +31,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export type CalendarOrientation = "landscape" | "portrait";
 export type CalendarPosition = "first" | "last";
-export type CalendarMode = "single" | "double";
+export type CalendarMode = "single" | "range";
 export type ChangeMonthDirection = "left" | "right";
 
 export interface CalendarChangeMonth {
@@ -39,11 +39,30 @@ export interface CalendarChangeMonth {
   direction: ChangeMonthDirection;
   onAnimationEnd: () => void;
 }
-
-export interface CalendarDatesRange {
+export interface DatesRange {
   start: Dayjs;
   end: Dayjs;
 }
+export interface CalendarSelection {
+  mode: CalendarMode;
+  selected: Dayjs | DatesRange;
+}
+export interface CalendarSelectionSingle extends CalendarSelection {
+  mode: "single";
+  selected: Dayjs;
+}
+export interface CalendarSelectionRange extends CalendarSelection {
+  mode: "range";
+  selected: DatesRange;
+  selectable?: DatesRange,
+  maxSelectableDays?: number;
+}
+// CalendarSelection could be extends to a more random mode, for example:
+// Could be used to compare a few days for example
+// export interface CalendarSelectionMany extends CalendarSelection {
+//   mode: "many";
+//   selected: Dayjs[];
+// }
 
 export const TRANSITION_DURATION = 300;
 /** Inclusive */

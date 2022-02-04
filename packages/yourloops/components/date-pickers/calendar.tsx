@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Allow to select a date (day/month/year) by displaying each days in a specific month
  *
  * All rights reserved.
@@ -33,16 +33,21 @@ import clsx from "clsx";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import { CalendarPosition, CalendarChangeMonth, CalendarDatesRange, animationStyle } from "./models";
+import {
+  CalendarPosition,
+  CalendarChangeMonth,
+  CalendarSelection,
+  CalendarSelectionRange,
+  CalendarSelectionSingle,
+  animationStyle,
+} from "./models";
 import MonthDayElements, { dayStyles } from "./month-days-elements";
 
 interface CalendarProps {
   position?: CalendarPosition,
   /** Set the displayed month, current month if not set, and the currently selected day */
   currentMonth: Dayjs;
-  selectedDate?: Dayjs;
-  selectedDatesRange?: CalendarDatesRange;
-  selectableDatesRange?: CalendarDatesRange;
+  selection: CalendarSelection;
   minDate: Dayjs;
   maxDate: Dayjs;
   changeMonth?: CalendarChangeMonth | null;
@@ -93,7 +98,7 @@ const calendarStyles = makeStyles((theme: Theme) => {
 function Calendar(props: CalendarProps): JSX.Element {
   // use startOf() here to clone the date, and to be sure we use the same timezone offset
   // dayjs don't handle properly the clone of the timezone
-  const { currentMonth, selectedDate, selectedDatesRange, changeMonth, position } = props;
+  const { selection, currentMonth, changeMonth, position } = props;
   const dayClasses = dayStyles();
   const animClasses = animationStyle();
   const classes = calendarStyles();
@@ -103,39 +108,37 @@ function Calendar(props: CalendarProps): JSX.Element {
     currentMonthNumber: currentMonth.month(),
   }), [currentMonth]);
 
-  const mode = selectedDatesRange ? "double" : "single";
+  const eventsDisabled = !_.isNil(changeMonth);
   const id = position ? `calendar-month-${position}` : "calendar-month";
 
   const { minDate, maxDate } = React.useMemo(() => {
     const minDate = props.minDate;
-    const maxDate= props.maxDate;
-    const selectableDatesRange = props.selectableDatesRange;
-    if (selectableDatesRange) {
-      let start = selectableDatesRange.start;
+    const maxDate = props.maxDate;
+    const selectable = (selection as CalendarSelectionRange).selectable;
+    if (selectable) {
+      let start = selectable.start;
       if (start.isBefore(minDate)) {
         start = minDate;
       }
-      let end = selectableDatesRange.end;
+      let end = selectable.end;
       if (end.isAfter(maxDate)) {
         end = maxDate;
       }
       return { minDate: start, maxDate: end };
     }
     return { minDate, maxDate };
-  }, [ props.minDate, props.maxDate, props.selectableDatesRange ]);
+  }, [ selection, props.minDate, props.maxDate ]);
 
   // Disable callback during change month animation:
-  const onChange = changeMonth ? _.noop : props.onChange;
+  const onChange = eventsDisabled ? _.noop : props.onChange;
   const oneMonthClasses = clsx(classes.daysGrid, classes.oneMonthHeight);
   const weekdaysValues = (
     <div id={`${id}-weekdays-values-current`} role="grid" className={oneMonthClasses}>
       <MonthDayElements
-        mode={mode}
+        selection={selection}
         currentMonth={currentMonthNumber}
         daysArray={daysArray}
         onChange={onChange}
-        selectedDate={selectedDate}
-        selectedDatesRange={selectedDatesRange}
         minDate={minDate}
         maxDate={maxDate}
       />
@@ -150,12 +153,10 @@ function Calendar(props: CalendarProps): JSX.Element {
     const changingWeekdaysValues = (
       <div id={`${id}-weekdays-values-new`} role="grid" className={oneMonthClasses}>
         <MonthDayElements
-          mode={mode}
+          selection={selection}
           currentMonth={newMonth}
           daysArray={newDaysArray}
           onChange={onChange}
-          selectedDate={selectedDate}
-          selectedDatesRange={selectedDatesRange}
           minDate={minDate}
           maxDate={maxDate}
         />
@@ -175,26 +176,20 @@ function Calendar(props: CalendarProps): JSX.Element {
     );
   }
 
-  const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (changeMonth || mode === "double") {
-      return;
-    }
-    if (!selectedDate) {
-      onChange(currentMonth);
-      return;
-    }
+  const onKeyUp = eventsDisabled || selection.mode === "range" ? _.noop : (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const selected = (selection as CalendarSelectionSingle).selected;
     switch (e.key) {
     case "ArrowUp":
-      onChange(selectedDate.subtract(1, "week"), true);
+      onChange(selected.subtract(1, "week"), true);
       break;
     case "ArrowDown":
-      onChange(selectedDate.add(1, "week"), true);
+      onChange(selected.add(1, "week"), true);
       break;
     case "ArrowLeft":
-      onChange(selectedDate.subtract(1, "day"), true);
+      onChange(selected.subtract(1, "day"), true);
       break;
     case "ArrowRight":
-      onChange(selectedDate.add(1, "day"), true);
+      onChange(selected.add(1, "day"), true);
       break;
     }
   };

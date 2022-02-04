@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Simple DatePicker to select a single day
+ * Copyright (c) 2021-2022, Diabeloop
+ * Display a dialog with a date-picker to select a single day
  *
  * All rights reserved.
  *
@@ -37,8 +37,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
-import { CalendarOrientation, MIN_YEAR, MAX_YEAR } from "./models";
-import CalendarView from "./calendar-view";
+import { CalendarOrientation, CalendarSelectionSingle, MIN_YEAR, MAX_YEAR } from "./models";
+import DatePicker from "./date-picker";
 
 interface CalendarStylesProps {
   orientation: CalendarOrientation;
@@ -109,36 +109,36 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
     return { date, minDate, maxDate };
   }, [props.date, props.maxDate, props.minDate, isOpen]);
 
-  const [selectedDate, setSelectedDate] = React.useState(date);
+  const [selected, setSelected] = React.useState(date);
 
   React.useEffect(() => {
     if (isOpen) {
-      setSelectedDate(date);
+      setSelected(date);
     }
   }, [isOpen, date]);
 
   React.useEffect(() => {
     if (isOpen && onSelectedDateChange) {
-      onSelectedDateChange(selectedDate.format("YYYY-MM-DD"));
+      onSelectedDateChange(selected.format("YYYY-MM-DD"));
     }
-  }, [isOpen, selectedDate, onSelectedDateChange]);
+  }, [isOpen, selected, onSelectedDateChange]);
 
   const handleCancel = () => {
     props.onResult();
   };
   const handleOK = () => {
-    props.onResult(selectedDate.format("YYYY-MM-DD"));
+    props.onResult(selected.format("YYYY-MM-DD"));
   };
 
   return (
     <Dialog onClose={handleCancel} aria-labelledby="date-picker-selected-date" open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
       <DialogContent id="calendar-view" className={classes.content}>
-        <CalendarView
-          selectedDate={selectedDate}
+        <DatePicker
+          selection={{ mode: "single", selected } as CalendarSelectionSingle}
           minDate={minDate}
           maxDate={maxDate}
           orientation={orientation}
-          onChange={setSelectedDate}
+          onChange={setSelected}
           showToolbar={props.showToolbar}
         />
       </DialogContent>

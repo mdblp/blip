@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Simple DatePicker to select a range of days
+ * Display a dialog with a date-picker to select a range of days
  *
  * All rights reserved.
  *
@@ -38,8 +38,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
-import { CalendarOrientation, CalendarDatesRange, MIN_YEAR, MAX_YEAR } from "./models";
-import CalendarView from "./calendar-view";
+import { CalendarOrientation, DatesRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from "./models";
+import RangeDatePicker from "./range-date-picker";
 
 interface DatePickerProps {
   isOpen: boolean;
@@ -57,6 +57,7 @@ interface DatePickerProps {
   onResult: (start?: string, end?: string) => void;
   onSelectedDateChange?: (start?: string, end?: string) => void;
 }
+
 
 const datePickerStyle = makeStyles((theme: Theme) => {
   return {
@@ -131,16 +132,15 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   }, [isOpen, props.start, props.end, props.maxDate, props.minDate]);
 
   const [nextSelection, setNextSelection] = React.useState<"first" | "last">("first");
-  const [selectedDatesRange, setSelectedDatesRange] = React.useState<CalendarDatesRange>({ start: startDate, end: endDate });
-  const [selectableDatesRange, setSelectableDatesRange] = React.useState<CalendarDatesRange | undefined>(undefined);
+  const [selected, setSelected] = React.useState<DatesRange>({ start: startDate, end: endDate });
+  const [selectable, setSelectable] = React.useState<DatesRange | undefined>(undefined);
 
   React.useEffect(() => {
     if (isOpen) {
       // Refresh our states
-      const range = { start: startDate, end: endDate };
+      const range: DatesRange = { start: startDate, end: endDate };
       setNextSelection("first");
-      setSelectedDatesRange(range);
-      setSelectableDatesRange(undefined);
+      setSelected(range);
       if (onSelectedDateChange) {
         onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
       }
@@ -151,11 +151,11 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
     props.onResult();
   };
   const handleOK = () => {
-    props.onResult(selectedDatesRange.start.format("YYYY-MM-DD"), selectedDatesRange.end.format("YYYY-MM-DD"));
+    props.onResult(selected.start.format("YYYY-MM-DD"), selected.end.format("YYYY-MM-DD"));
   };
 
   const updateSelectedDate = (date: dayjs.Dayjs): void => {
-    let range: CalendarDatesRange;
+    let range: DatesRange;
     if (nextSelection === "first") {
       setNextSelection("last");
       range = { start: date, end: date };
@@ -163,7 +163,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
       if (typeof maxSelectableDays === "number" && maxSelectableDays > 0) {
         // Substract 1 day to the value, or we will be able to select
         // maxSelectableDays+1 days total
-        setSelectableDatesRange({
+        setSelectable({
           start: date.subtract(maxSelectableDays - 1, "days"),
           end: date.add(maxSelectableDays - 1, "days"),
         });
@@ -172,17 +172,17 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
       setNextSelection("first");
       if (typeof maxSelectableDays === "number") {
         // Use minDate/maxDate to do the limits
-        setSelectableDatesRange(undefined);
+        setSelectable(undefined);
       }
 
-      if (date.isAfter(selectedDatesRange.start)) {
-        range = { start: selectedDatesRange.start, end: date };
+      if (date.isAfter(selected.start)) {
+        range = { start: selected.start, end: date };
       } else {
-        range = { start: date, end: selectedDatesRange.end };
+        range = { start: date, end: selected.end };
       }
     }
 
-    setSelectedDatesRange(range);
+    setSelected(range);
     if (onSelectedDateChange) {
       onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
     }
@@ -196,10 +196,8 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   return (
     <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
       <DialogContent id="calendar-view" className={contentClasses}>
-        <CalendarView
-          selectedDatesRange={selectedDatesRange}
-          selectableDatesRange={selectableDatesRange}
-          maxSelectableDays={maxSelectableDays}
+        <RangeDatePicker
+          selection={{ mode: "range", selected, selectable, maxSelectableDays } as CalendarSelectionRange}
           minDate={minDate}
           maxDate={maxDate}
           orientation={orientation}

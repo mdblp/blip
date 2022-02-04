@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Display the days off a month
  *
  * All rights reserved.
@@ -31,16 +31,12 @@ import clsx from "clsx";
 import { Dayjs, isDayjs } from "dayjs";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import { CalendarMode, CalendarDatesRange } from "./models";
+import { CalendarSelection, CalendarSelectionRange } from "./models";
 import Day from "./day";
 
 interface MonthDayElementsProps {
-  mode: CalendarMode;
+  selection: CalendarSelection;
   daysArray: Dayjs[];
-  /** For single day calendar */
-  selectedDate?: Dayjs;
-  /** For range days calendar */
-  selectedDatesRange?: CalendarDatesRange;
   currentMonth: number;
   minDate: Dayjs;
   maxDate: Dayjs;
@@ -77,18 +73,20 @@ const WEEK_DAY_LAST_IDX = 6;
 
 function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
   const classes = dayStyles();
-  const { selectedDate, selectedDatesRange, currentMonth, daysArray, onChange, onHoverDay, minDate, maxDate } = props;
+  const { selection, currentMonth, daysArray, onChange, onHoverDay, minDate, maxDate } = props;
 
   const getADay = (index: number, day: Dayjs, dateOfMonth: number, month: number, dayISO: string): JSX.Element => {
     // Split this code to getADay(), because the function complexity (eslint) is above 20, if not doing so
     const dayClasses = [classes.dayElement];
-    let selected = isDayjs(selectedDate) && selectedDate.isSame(day, "day");
-    if (selectedDatesRange) {
+
+    let selected = isDayjs(selection.selected) && selection.selected.isSame(day, "day");
+    if (selection.mode === "range") {
+      const range = (selection as CalendarSelectionRange).selected;
       const daysInMonth = day.daysInMonth();
-      const firstDay = selectedDatesRange.start.isSame(day, "day");
-      const lastDay = selectedDatesRange.end.isSame(day, "day");
-      const after = selectedDatesRange.start.isBefore(day);
-      const before = selectedDatesRange.end.isAfter(day);
+      const firstDay = range.start.isSame(day, "day");
+      const lastDay = range.end.isSame(day, "day");
+      const after = range.start.isBefore(day);
+      const before = range.end.isAfter(day);
 
       if (firstDay || lastDay || (after && before)) {
         selected = true;
@@ -131,19 +129,17 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
     );
   };
 
-  const monthDaysElements = daysArray.map((day, index) => {
-    const dateOfMonth = day.date();
-    const month = day.month();
-    const dayISO = day.format("YYYY-MM-DD");
-    if (month !== currentMonth && props.mode === "double") {
-      return <span id={`hidden-calendar-day-${dayISO}`} key={`day-${dayISO}`} style={{ visibility: "hidden" }}>{dateOfMonth}</span>;
-    }
-    return getADay(index, day, dateOfMonth, month, dayISO);
-  });
-
   return (
     <React.Fragment>
-      {monthDaysElements}
+      {daysArray.map((day, index) => {
+        const dateOfMonth = day.date();
+        const month = day.month();
+        const dayISO = day.format("YYYY-MM-DD");
+        if (month !== currentMonth && selection.mode === "range") {
+          return <span id={`hidden-calendar-day-${dayISO}`} key={`day-${dayISO}`} style={{ visibility: "hidden" }}>{dateOfMonth}</span>;
+        }
+        return getADay(index, day, dateOfMonth, month, dayISO);
+      })}
     </React.Fragment>
   );
 }

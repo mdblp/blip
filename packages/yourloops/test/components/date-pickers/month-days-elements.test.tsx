@@ -60,11 +60,10 @@ function testMonthDayElements(): void {
       return new Promise((resolve) => {
         ReactDOM.render(
           <MonthDayElements
-            mode="single"
             daysArray={days}
             currentMonth={today.month()}
             onChange={onChange}
-            selectedDate={today}
+            selection={{ mode: "single", selected: today }}
             minDate={yesterday}
             maxDate={tomorrow}
           />, container, resolve);

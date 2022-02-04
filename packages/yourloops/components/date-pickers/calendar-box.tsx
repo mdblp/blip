@@ -33,18 +33,22 @@ import { Dayjs } from "dayjs";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import { CalendarOrientation, CalendarPosition, CalendarChangeMonth, CalendarDatesRange } from "./models";
+import {
+  CalendarOrientation,
+  CalendarPosition,
+  CalendarChangeMonth,
+  CalendarSelection,
+  CalendarSelectionSingle,
+} from "./models";
 import Header from "./calendar-header";
 import Calendar from "./calendar";
 import YearSelector from "./year-selector";
 
 interface CalendarBoxProps {
+  selection: CalendarSelection;
   orientation: CalendarOrientation;
   position?: CalendarPosition;
   currentMonth: Dayjs;
-  selectedDate?: Dayjs;
-  selectedDatesRange?: CalendarDatesRange;
-  selectableDatesRange?: CalendarDatesRange;
   minDate: Dayjs;
   maxDate: Dayjs;
   changingMonth?: CalendarChangeMonth | null;
@@ -54,6 +58,7 @@ interface CalendarBoxProps {
   onNextMonth?: () => void;
   /** Setting the first or the last date */
   onChange: (d: Dayjs) => void;
+  /** Only with CalendarSelectionSingle */
   onSelectYear?: (year: number) => void;
 }
 
@@ -68,6 +73,8 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
       width: 300,
       [theme.breakpoints.down("sm")]: {
         width: 250,
+        marginLeft: "auto",
+        marginRight: "auto",
       },
     },
   };
@@ -81,8 +88,7 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
 function CalendarBox(props: CalendarBoxProps): JSX.Element {
   const classes = calendarBoxStyles(props);
   const {
-    selectedDate,
-    selectedDatesRange,
+    selection,
     currentMonth,
     minDate,
     maxDate,
@@ -95,9 +101,9 @@ function CalendarBox(props: CalendarBoxProps): JSX.Element {
   return (
     <div id={id} className={classes.calendarBox}>
       {
-        (onSelectYear && selectedDate) ?
+        (onSelectYear && selection.mode === "single") ?
           <YearSelector
-            selectedYear={selectedDate.year()}
+            selectedYear={(selection as CalendarSelectionSingle).selected.year()}
             onSelectYear={onSelectYear}
             minYear={minDate.year()}
             maxYear={maxDate.year()}
@@ -113,9 +119,7 @@ function CalendarBox(props: CalendarBoxProps): JSX.Element {
             />
             <Calendar
               position={position}
-              selectedDate={selectedDate}
-              selectedDatesRange={selectedDatesRange}
-              selectableDatesRange={props.selectableDatesRange}
+              selection={selection}
               currentMonth={currentMonth}
               onChange={onChange}
               changeMonth={changingMonth}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Date picker toolbar (display current year) + selected date
  *
  * All rights reserved.
@@ -27,7 +27,6 @@
  */
 
 import React from "react";
-import { Dayjs } from "dayjs";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 
@@ -35,22 +34,17 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-import { CalendarOrientation, CalendarDatesRange } from "./models";
+import {
+  CalendarOrientation,
+  CalendarSelection,
+  CalendarSelectionRange,
+  CalendarSelectionSingle,
+} from "./models";
 
-interface PickerToolbarCommonProps {
-  selectedDate?: Dayjs;
-  selectedDatesRange?: CalendarDatesRange;
-  maxSelectableDays?: number;
+interface PickerToolbarProps {
+  selection: CalendarSelection;
   orientation: CalendarOrientation;
   onClickYear?: () => void;
-}
-
-interface PickerToolbarProps extends PickerToolbarCommonProps {
-  selectedDate: Dayjs;
-}
-
-interface RangePickerToolbarProps extends PickerToolbarCommonProps {
-  selectedDatesRange: CalendarDatesRange;
 }
 
 const toolbarStyles = makeStyles((theme: Theme) => {
@@ -76,7 +70,7 @@ const toolbarStyles = makeStyles((theme: Theme) => {
   };
 }, { name: "date-pickers-toolbar" });
 
-function PickerToolbarSingle(props: PickerToolbarProps): JSX.Element {
+function ModeSinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
 
@@ -93,10 +87,10 @@ function PickerToolbarSingle(props: PickerToolbarProps): JSX.Element {
     }
   };
 
-  const toolbarClasses = clsx(classes.root, { [classes.landscape]: props.orientation === "landscape" });
+  const selectedDate = (props.selection as CalendarSelectionSingle).selected;
 
   return (
-    <div id="date-picker-toolbar" className={toolbarClasses}>
+    <React.Fragment>
       <Button
         id="date-picker-button-change-year"
         className={classes.btnChangeYear}
@@ -108,33 +102,32 @@ function PickerToolbarSingle(props: PickerToolbarProps): JSX.Element {
         aria-label={t("aria-calendar-select-year")}
         disableElevation
       >
-        {props.selectedDate.year()}
+        {selectedDate.year()}
       </Button>
       <Typography id="date-picker-selected-date" variant="h4" className={classes.text}>
-        {props.selectedDate.format(t("date-picker-toolbar-date-format"))}
+        {selectedDate.format(t("date-picker-toolbar-date-format"))}
       </Typography>
 
-    </div>
+    </React.Fragment>
   );
 }
 
-function RangePickerToolbar(props: RangePickerToolbarProps): JSX.Element {
-  const { selectedDatesRange } = props;
+function ModeRangePickerToolbar(props: PickerToolbarProps): JSX.Element {
+  const { selected, maxSelectableDays } = (props.selection as CalendarSelectionRange);
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
   const dateFormat = t("date-picker-toolbar-date-format");
 
-  const toolbarClasses = clsx(classes.root, { [classes.landscape]: props.orientation === "landscape" });
-  const numDays = selectedDatesRange.end.diff(selectedDatesRange.start, "days") + 1;
+  const numDays = selected.end.diff(selected.start, "days") + 1;
   return (
-    <div id="date-picker-toolbar" className={toolbarClasses}>
+    <React.Fragment>
       <Typography variant="body2" className={classes.text}>{t("date-picker-toolbar-from")}</Typography>
       <Typography id="date-picker-selected-date-from" variant="h5" className={classes.text}>
-        {selectedDatesRange.start.format(dateFormat)}
+        {selected.start.format(dateFormat)}
       </Typography>
       <Typography variant="body2" className={classes.text}>{t("date-picker-toolbar-to")}</Typography>
       <Typography id="date-picker-selected-date-to" variant="h5" className={classes.text}>
-        {selectedDatesRange.end.format(dateFormat)}
+        {selected.end.format(dateFormat)}
       </Typography>
 
       <Typography id="date-picker-toolbar-days-range" variant="body2" className={classes.text} style={{ marginTop: "auto" }}>
@@ -142,40 +135,27 @@ function RangePickerToolbar(props: RangePickerToolbarProps): JSX.Element {
       </Typography>
 
       {
-        typeof props.maxSelectableDays === "number" ? (
+        typeof maxSelectableDays === "number" ? (
           <Typography id="date-picker-toolbar-max-days-range" variant="body2" className={classes.text}>
-            {t("date-picker-max-range", { numDays: props.maxSelectableDays })}
+            {t("date-picker-max-range", { numDays: maxSelectableDays })}
           </Typography>
         ) : null
       }
-    </div>
+    </React.Fragment>
   );
 }
 
-function PickerToolbar(props: PickerToolbarCommonProps): JSX.Element | null {
-  const { selectedDate, selectedDatesRange } = props;
+function PickerToolbar(props: PickerToolbarProps): JSX.Element {
+  const { selection } = props;
+  const classes = toolbarStyles();
 
-  if (selectedDate) {
-    return (
-      <PickerToolbarSingle
-        selectedDate={selectedDate}
-        orientation={props.orientation}
-        onClickYear={props.onClickYear}
-      />
-    );
-  }
-
-  if (selectedDatesRange) {
-    return (
-      <RangePickerToolbar
-        selectedDatesRange={selectedDatesRange}
-        maxSelectableDays={props.maxSelectableDays}
-        orientation={props.orientation}
-      />
-    );
-  }
-
-  return null;
+  const toolbarClasses = clsx(classes.root, { [classes.landscape]: props.orientation === "landscape" });
+  return (
+    <div id="date-picker-toolbar" className={toolbarClasses}>
+      {selection.mode === "single" && <ModeSinglePickerToolbar {...props} />}
+      {selection.mode === "range" && <ModeRangePickerToolbar {...props} />}
+    </div>
+  );
 }
 
 export default PickerToolbar;

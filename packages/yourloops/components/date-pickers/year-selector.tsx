@@ -51,6 +51,8 @@ const yearSelectorStyles = makeStyles((theme: Theme) => {
       justifyContent: "center",
       [theme.breakpoints.down("sm")]: {
         height: 303,
+        marginLeft: "auto",
+        marginRight: "auto",
       },
     },
     year: {
