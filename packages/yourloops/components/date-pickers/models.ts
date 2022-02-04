@@ -33,7 +33,6 @@ export type CalendarOrientation = "landscape" | "portrait";
 export type CalendarPosition = "first" | "last";
 export type CalendarMode = "single" | "double";
 export type ChangeMonthDirection = "left" | "right";
-export type DaySelectionMode = "no" | "yes" | "left" | "middle" | "right";
 
 export interface CalendarChangeMonth {
   toMonth: Dayjs;

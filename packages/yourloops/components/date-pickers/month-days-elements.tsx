@@ -72,8 +72,8 @@ export const dayStyles = makeStyles((theme: Theme) => ({
   },
 }), { name: "date-pickers-day" });
 
-const weekDaysCount = 7;
-const weekDayLastIdx = 6;
+const WEEK_DAYS_COUNT = 7;
+const WEEK_DAY_LAST_IDX = 6;
 
 function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
   const classes = dayStyles();
@@ -95,11 +95,11 @@ function MonthDayElements(props: MonthDayElementsProps): JSX.Element {
         // The class selection for the radius is a little bit more complicated here
         // We want the first and last element of a row to be rounded (left or right)
         // and the first/last day of a month to be also rounded
-        const rowPos = index % weekDaysCount;
+        const rowPos = index % WEEK_DAYS_COUNT;
         const firstDayInMonth = dateOfMonth === 1;
         const lastDayInMonth = dateOfMonth === daysInMonth;
         const firstWeekday = rowPos === 0;
-        const lastWeekday = rowPos === weekDayLastIdx;
+        const lastWeekday = rowPos === WEEK_DAY_LAST_IDX;
         if (!(firstDay || firstDayInMonth || firstWeekday)) {
           dayClasses.push(classes.squareLeftRadius);
         }

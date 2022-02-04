@@ -37,20 +37,19 @@ import Typography from "@material-ui/core/Typography";
 
 import { CalendarOrientation, CalendarDatesRange } from "./models";
 
-interface PickerToolbarProps {
+interface PickerToolbarCommonProps {
   selectedDate?: Dayjs;
   selectedDatesRange?: CalendarDatesRange;
   maxSelectableDays?: number;
   orientation: CalendarOrientation;
-  showToolbar?: boolean;
   onClickYear?: () => void;
 }
 
-interface PickerToolbarPropsSingle extends PickerToolbarProps {
+interface PickerToolbarProps extends PickerToolbarCommonProps {
   selectedDate: Dayjs;
 }
 
-interface PickerToolbarPropsDouble extends PickerToolbarProps {
+interface RangePickerToolbarProps extends PickerToolbarCommonProps {
   selectedDatesRange: CalendarDatesRange;
 }
 
@@ -77,7 +76,7 @@ const toolbarStyles = makeStyles((theme: Theme) => {
   };
 }, { name: "date-pickers-toolbar" });
 
-function PickerToolbarSingle(props: PickerToolbarPropsSingle): JSX.Element {
+function PickerToolbarSingle(props: PickerToolbarProps): JSX.Element {
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
 
@@ -119,7 +118,7 @@ function PickerToolbarSingle(props: PickerToolbarPropsSingle): JSX.Element {
   );
 }
 
-function PickerToolbarDouble(props: PickerToolbarPropsDouble): JSX.Element {
+function RangePickerToolbar(props: RangePickerToolbarProps): JSX.Element {
   const { selectedDatesRange } = props;
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
@@ -153,12 +152,8 @@ function PickerToolbarDouble(props: PickerToolbarPropsDouble): JSX.Element {
   );
 }
 
-function PickerToolbar(props: PickerToolbarProps): JSX.Element | null {
-  const { selectedDate, selectedDatesRange, showToolbar } = props;
-
-  if (!showToolbar) {
-    return null;
-  }
+function PickerToolbar(props: PickerToolbarCommonProps): JSX.Element | null {
+  const { selectedDate, selectedDatesRange } = props;
 
   if (selectedDate) {
     return (
@@ -172,7 +167,7 @@ function PickerToolbar(props: PickerToolbarProps): JSX.Element | null {
 
   if (selectedDatesRange) {
     return (
-      <PickerToolbarDouble
+      <RangePickerToolbar
         selectedDatesRange={selectedDatesRange}
         maxSelectableDays={props.maxSelectableDays}
         orientation={props.orientation}
@@ -180,7 +175,7 @@ function PickerToolbar(props: PickerToolbarProps): JSX.Element | null {
     );
   }
 
-  throw new Error("[PickerToolbar] Missing selectedDate or selectedDatesRange");
+  return null;
 }
 
 export default PickerToolbar;

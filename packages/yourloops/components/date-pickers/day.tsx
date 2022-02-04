@@ -34,7 +34,6 @@ import ButtonBase, { ButtonBaseProps } from "@material-ui/core/ButtonBase";
 interface DayProps extends ButtonBaseProps {
   day: string;
   selected?: boolean;
-  // hoverRange?: DaySelectionMode;
 }
 
 const dayStyles = makeStyles((theme: Theme) => ({

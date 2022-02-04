@@ -51,6 +51,11 @@ interface CalendarViewProps {
   onChange: (d: Dayjs) => void;
 }
 
+/**
+ * Used to compare if month are before/after
+ * @param d The date
+ * @returns a number representing only year & month
+ */
 function toYearMonth(d: Dayjs): number {
   return d.year() * 100 + d.month();
 }
@@ -130,12 +135,11 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
   if (selectedDatesRange) {
     return (
       <React.Fragment>
-        <PickerToolbar
-          showToolbar={props.showToolbar}
+        {props.showToolbar && <PickerToolbar
           maxSelectableDays={props.maxSelectableDays}
           selectedDatesRange={selectedDatesRange}
           orientation={orientation}
-        />
+        />}
         <CalendarBox
           position="first"
           orientation={orientation}
@@ -196,12 +200,11 @@ function CalendarView(props: CalendarViewProps): JSX.Element {
 
     return (
       <React.Fragment>
-        <PickerToolbar
-          showToolbar={props.showToolbar}
+        {props.showToolbar && <PickerToolbar
           selectedDate={selectedDate}
           orientation={orientation}
           onClickYear={() => setSelectingYear(true)}
-        />
+        />}
         <CalendarBox
           orientation={orientation}
           currentMonth={currentMonth}

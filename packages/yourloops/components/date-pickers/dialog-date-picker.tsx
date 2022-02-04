@@ -59,7 +59,6 @@ const datePickerStyle = makeStyles((theme: Theme) => {
   return {
     dialogPaper: {
       margin: 0,
-      backgroundColor: "transparent",
       [theme.breakpoints.down("sm")]: {
         maxWidth: "initial",
         maxHeight: "100%",
@@ -74,9 +73,6 @@ const datePickerStyle = makeStyles((theme: Theme) => {
       width: "fit-content",
       margin: 0,
       padding: "0px !important",
-    },
-    actions: {
-      backgroundColor: theme.palette.background.paper,
     },
   };
 }, { name: "date-picker-single-day" });
@@ -146,8 +142,8 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
           showToolbar={props.showToolbar}
         />
       </DialogContent>
-      <DialogActions className={classes.actions}>
-        <Button id="date-picker-button-cancel" onClick={handleCancel} color="primary">
+      <DialogActions>
+        <Button id="date-picker-button-cancel" onClick={handleCancel}>
           {t("button-cancel")}
         </Button>
         <Button id="date-picker-button-ok" onClick={handleOK} color="primary" variant="contained">

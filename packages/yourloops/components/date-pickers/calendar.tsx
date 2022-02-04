@@ -105,18 +105,6 @@ function Calendar(props: CalendarProps): JSX.Element {
 
   const mode = selectedDatesRange ? "double" : "single";
   const id = position ? `calendar-month-${position}` : "calendar-month";
-  const weekDaysElements = React.useMemo(() => weekDays.map((day: string, index: number) => (
-    <Typography
-      id={`${id}-weekday-${index}`}
-      aria-hidden="true"
-      key={day}
-      variant="caption"
-      color="textSecondary"
-      className={`${dayClasses.dayElement} ${classes.dayLabel}`}
-    >
-      {_.capitalize(day)}
-    </Typography>
-  )), [weekDays, dayClasses.dayElement, classes.dayLabel, id]);
 
   const { minDate, maxDate } = React.useMemo(() => {
     const minDate = props.minDate;
@@ -189,7 +177,6 @@ function Calendar(props: CalendarProps): JSX.Element {
 
   const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (changeMonth || mode === "double") {
-      // TODO Dealing key with range calendar
       return;
     }
     if (!selectedDate) {
@@ -212,10 +199,22 @@ function Calendar(props: CalendarProps): JSX.Element {
     }
   };
 
+  const weekDayClassName = `${dayClasses.dayElement} ${classes.dayLabel}`;
   return (
     <div id={id} className={classes.calendar} tabIndex={0} onKeyUp={onKeyUp} role="grid">
       <div id={`${id}-weekdays-names`} className={classes.daysGrid}>
-        {weekDaysElements}
+        {weekDays.map((day: string, index: number) => (
+          <Typography
+            id={`${id}-weekday-${index}`}
+            aria-hidden="true"
+            key={day}
+            variant="caption"
+            color="textSecondary"
+            className={weekDayClassName}
+          >
+            {_.capitalize(day)}
+          </Typography>
+        ))}
       </div>
       {weekdaysDiv}
     </div>

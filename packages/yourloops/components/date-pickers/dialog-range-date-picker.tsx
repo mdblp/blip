@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  * Simple DatePicker to select a range of days
  *
  * All rights reserved.
@@ -62,7 +62,6 @@ const datePickerStyle = makeStyles((theme: Theme) => {
   return {
     dialogPaper: {
       margin: 0,
-      backgroundColor: "transparent",
       maxWidth: "initial",
       [theme.breakpoints.down("sm")]: {
         maxHeight: "100%",
@@ -70,7 +69,6 @@ const datePickerStyle = makeStyles((theme: Theme) => {
     },
     content: {
       display: "flex",
-      backgroundColor: "transparent",
       width: "fit-content",
       margin: 0,
       padding: "0px !important",
@@ -80,9 +78,6 @@ const datePickerStyle = makeStyles((theme: Theme) => {
     },
     contentPortrait: {
       flexDirection: "column",
-    },
-    actions: {
-      backgroundColor: theme.palette.background.paper,
     },
     divChildren: {
       cursor: "pointer",
@@ -212,8 +207,8 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
           showToolbar={props.showToolbar}
         />
       </DialogContent>
-      <DialogActions className={classes.actions}>
-        <Button id="date-picker-button-cancel" onClick={handleCancel} color="primary">
+      <DialogActions>
+        <Button id="date-picker-button-cancel" onClick={handleCancel}>
           {t("button-cancel")}
         </Button>
         <Button id="date-picker-button-ok" onClick={handleOK} color="primary" variant="contained">
