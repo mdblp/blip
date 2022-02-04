@@ -33,9 +33,9 @@ import * as sinon from "sinon";
 import { expect } from "chai";
 import dayjs from "dayjs";
 
-import RangeDatePicker from "../../../components/date-pickers/range-date-picker";
+import DialogRangeDatePicker from "../../../components/date-pickers/dialog-range-date-picker";
 
-function testRangeDatePicker(): void {
+function testDialogRangeDatePicker(): void {
   const handleResultStub = sinon.stub<[string|undefined, string|undefined], void>();
   const handleSelectedDateChange = sinon.stub<[string|undefined, string|undefined], void>();
   let container: HTMLDivElement | null = null;
@@ -58,7 +58,11 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker isOpen={false} onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange} />, container, resolve);
+          <DialogRangeDatePicker
+            isOpen={false}
+            onResult={handleResultStub}
+            onSelectedDateChange={handleSelectedDateChange}
+          />, container, resolve);
       });
     });
 
@@ -72,7 +76,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
@@ -91,7 +95,11 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker isOpen onResult={handleResultStub} onSelectedDateChange={handleSelectedDateChange} />, container, resolve);
+          <DialogRangeDatePicker
+            isOpen
+            onResult={handleResultStub}
+            onSelectedDateChange={handleSelectedDateChange}
+          />, container, resolve);
       });
     });
 
@@ -105,7 +113,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
@@ -123,7 +131,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker isOpen onResult={handleResultStub} />, container, resolve);
+          <DialogRangeDatePicker isOpen onResult={handleResultStub} />, container, resolve);
       });
     });
 
@@ -139,7 +147,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
@@ -164,7 +172,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             start="2022-12-01"
@@ -186,7 +194,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             start="2022-01-01"
@@ -214,7 +222,7 @@ function testRangeDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <RangeDatePicker
+          <DialogRangeDatePicker
             isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
@@ -283,4 +291,4 @@ function testRangeDatePicker(): void {
   });
 }
 
-export default testRangeDatePicker;
+export default testDialogRangeDatePicker;

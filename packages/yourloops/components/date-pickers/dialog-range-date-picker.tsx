@@ -92,7 +92,7 @@ const datePickerStyle = makeStyles((theme: Theme) => {
 
 const dummyDate = dayjs();
 
-function RangeDatePicker(props: DatePickerProps): JSX.Element {
+function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
@@ -224,4 +224,4 @@ function RangeDatePicker(props: DatePickerProps): JSX.Element {
   );
 }
 
-export default RangeDatePicker;
+export default DialogRangeDatePicker;

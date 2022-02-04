@@ -60,11 +60,11 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../index").PatientData } PatientData
  * @typedef { import("../index").MessageNote } MessageNote
  * @typedef { import("../index").DialogDatePicker } DialogDatePicker
- * @typedef { import("../index").RangeDatePicker } RangeDatePicker
+ * @typedef { import("../index").DialogRangeDatePicker } DialogRangeDatePicker
  * @typedef { import("../index").ProfileDialog } ProfileDialog
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; rangeDatePicker:RangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; pdf: object; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -319,7 +319,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, rangeDatePicker } = this.props;
+    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -390,7 +390,7 @@ class PatientDataPage extends React.Component {
         <Route path={`${prefixURL}/trends`}>
           <Trends
             profileDialog={this.showProfileDialog ? profileDialog : null}
-            rangeDatePicker={rangeDatePicker}
+            dialogRangeDatePicker={dialogRangeDatePicker}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             dataUtil={this.dataUtil}
@@ -996,7 +996,7 @@ PatientDataPage.propTypes = {
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
-  rangeDatePicker: PropTypes.func.isRequired,
+  dialogRangeDatePicker: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
 };

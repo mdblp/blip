@@ -41,7 +41,7 @@ import Footer from "./footer";
 /**
  * @typedef { import("tideline").TidelineData } TidelineData
  * @typedef { import("tideline/js/tidelinedata").Datum } Datum
- * @typedef { import("../../index").RangeDatePicker } RangeDatePicker
+ * @typedef { import("../../index").DialogRangeDatePicker } DialogRangeDatePicker
  *
  * @typedef { import("./index").TrendsDatePickerProps } TrendsDatePickerProps
  * @typedef { import("./index").TrendsProps } TrendsProps
@@ -101,7 +101,16 @@ function getMomentDayAt(date, tidelineData) {
  * @returns {JSX.Element}
  */
 function TrendsDatePicker(props) {
-  const { RangeDatePicker, displayedDate, start, end, minDate, maxDate, disabled, onResult } = props;
+  const {
+    dialogRangeDatePicker: DialogRangeDatePicker,
+    displayedDate,
+    start,
+    end,
+    minDate,
+    maxDate,
+    disabled,
+    onResult
+  } = props;
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -128,7 +137,7 @@ function TrendsDatePicker(props) {
           ),
         }}
       />
-      <RangeDatePicker
+      <DialogRangeDatePicker
         start={start}
         end={end}
         minDate={minDate}
@@ -143,7 +152,7 @@ function TrendsDatePicker(props) {
 }
 
 TrendsDatePicker.propTypes = {
-  RangeDatePicker: PropTypes.func.isRequired,
+  dialogRangeDatePicker: PropTypes.func.isRequired,
   displayedDate: PropTypes.string.isRequired,
   start: PropTypes.string.isRequired,
   end: PropTypes.string.isRequired,
@@ -178,7 +187,7 @@ class Trends extends React.Component {
     updateChartPrefs: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
     profileDialog: PropTypes.func,
-    rangeDatePicker: PropTypes.func.isRequired,
+    dialogRangeDatePicker: PropTypes.func.isRequired,
   };
   static defaultProps = {
     profileDialog: null,
@@ -435,11 +444,10 @@ class Trends extends React.Component {
   }
 
   getTitle() {
-    const { loading, tidelineData, rangeDatePicker } = this.props;
+    const { loading, tidelineData, dialogRangeDatePicker } = this.props;
 
     const [startDate, endDate] = this.getMomentEndpoints();
     const mFormat = t("MMM D, YYYY");
-    // this.log.debug("Title dates", [startDate.toISOString(), endDate.toISOString()], [startDate.format(mFormat), endDate.format(mFormat)]);
 
     const onResult = (/** @type {string|undefined} */ start, /** @type {string|undefined} */ end) => {
       if (start && end) {
@@ -448,9 +456,6 @@ class Trends extends React.Component {
         const endTimezone = tidelineData.getTimezoneAt(end);
         const mEndDate = moment.tz(end, endTimezone).add(1, "day");
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / MS_IN_DAY;
-
-        // const newDomain = [mStartDate.toISOString(), mEndDate.toISOString()];
-        // this.log.debug("RangeDatePicker", { start, end }, "=>", newDomain, mStartDate.format(mFormat), mEndDate.format(mFormat));
 
         this.setState({ updatingDates: true }, () => {
           this.updateExtendsSize(extendSize, () => {
@@ -470,7 +475,7 @@ class Trends extends React.Component {
     const displayEndDate = endDate.clone().subtract(1, "day");
     return (
       <TrendsDatePicker
-        RangeDatePicker={rangeDatePicker}
+        dialogRangeDatePicker={dialogRangeDatePicker}
         displayedDate={loading ? t("Loading...") : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
         start={startDate.format(ISO_DAY_FORMAT)}
         end={displayEndDate.format(ISO_DAY_FORMAT)}

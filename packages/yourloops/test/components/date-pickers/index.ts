@@ -34,7 +34,7 @@ import testCalendar from "./calendar.test";
 import testYearSelector from "./year-selector.test";
 import testCalendarView from "./calendar-view.test";
 import testDialogDatePicker from "./dialog-date-picker.test";
-import testRangeDatePicker from "./range-date-picker.test";
+import testDialogRangeDatePicker from "./dialog-range-date-picker.test";
 
 function testDatePickers() {
   before(() => {
@@ -50,7 +50,7 @@ function testDatePickers() {
   describe("YearSelector", testYearSelector);
   describe("CalendarView", testCalendarView);
   describe("DialogDatePicker", testDialogDatePicker);
-  describe("RangeDatePicker", testRangeDatePicker);
+  describe("DialogRangeDatePicker", testDialogRangeDatePicker);
 }
 
 export default testDatePickers;

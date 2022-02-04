@@ -96,7 +96,7 @@ describe("Trends", () => {
     onDatetimeLocationChange: sinon.stub().resolves(false),
     updateChartPrefs: sinon.stub().callsFake((_p,cb) => { if (cb) cb(); }),
     trackMetric: sinon.stub(),
-    rangeDatePicker: (props) => <div id="range-date-picker">{`${props.start} - ${props.end}`}</div>,
+    dialogRangeDatePicker: (props) => <div id="range-date-picker">{`${props.start} - ${props.end}`}</div>,
     tidelineData,
     timePrefs: {
       timezoneAware: true,

@@ -34,7 +34,7 @@ import { utils as vizUtils } from "tidepool-viz";
 import { IUser } from "../../../../yourloops/models/shoreline";
 import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../../../yourloops/components/date-pickers/dialog-date-picker";
-import RangeDatePicker from "../../../../yourloops/components/date-pickers/range-date-picker";
+import DialogRangeDatePicker from "../../../../yourloops/components/date-pickers/dialog-range-date-picker";
 
 export type DataUtil = typeof vizUtils.data.DataUtil;
 export type TrackMetrics = (category: string, action: string, name?: string | undefined, value?: number | undefined) => void;
@@ -91,7 +91,7 @@ export interface DailyDatePickerProps {
 }
 
 export interface TrendsDatePickerProps {
-  RangeDatePicker: typeof RangeDatePicker;
+  dialogRangeDatePicker: typeof DialogRangeDatePicker;
   /** Displayed date for the user */
   displayedDate: string;
   /** Start selected date for the calendar */
@@ -123,7 +123,7 @@ export interface TrendsProps {
     [userId: string]: unknown;
   };
   dataUtil: DataUtil;
-  rangeDatePicker: typeof RangeDatePicker;
+  dialogRangeDatePicker: typeof DialogRangeDatePicker;
   profileDialog?: typeof ProfileDialog | null;
   trackMetric: TrackMetrics;
   onDatetimeLocationChange: OnLocationChange;
