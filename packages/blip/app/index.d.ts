@@ -30,7 +30,7 @@ import { AppConfig } from "../../yourloops/models/config";
 import { IUser } from "../../yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
 import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
-import DatePicker from "../../yourloops/components/date-pickers/date-picker";
+import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-date-picker";
 import RangeDatePicker from "../../yourloops/components/date-pickers/range-date-picker";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
@@ -42,7 +42,7 @@ interface BlipProperties {
   patient: IUser;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
-  datePicker: typeof DatePicker;
+  dialogDatePicker: typeof DialogDatePicker;
   rangeDatePicker: typeof RangeDatePicker;
 }
 
@@ -52,7 +52,7 @@ declare function cleanStore(): void;
 export {
   BlipProperties,
   BlipApi,
-  DatePicker,
+  DialogDatePicker,
   RangeDatePicker,
   IUser,
   PatientDatum,

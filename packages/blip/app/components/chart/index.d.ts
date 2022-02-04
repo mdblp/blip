@@ -33,7 +33,7 @@ import { Datum } from "tideline/js/tidelinedata";
 import { utils as vizUtils } from "tidepool-viz";
 import { IUser } from "../../../../yourloops/models/shoreline";
 import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
-import DatePicker from "../../../../yourloops/components/date-pickers/date-picker";
+import DialogDatePicker from "../../../../yourloops/components/date-pickers/dialog-date-picker";
 import RangeDatePicker from "../../../../yourloops/components/date-pickers/range-date-picker";
 
 export type DataUtil = typeof vizUtils.data.DataUtil;
@@ -76,7 +76,7 @@ export interface TimePrefs {
 }
 
 export interface DailyDatePickerProps {
-  DatePicker: typeof DatePicker;
+  DialogDatePicker: typeof DialogDatePicker;
   /** Date sent to the date picker */
   date: number | string;
   /** Displayed date for the user */

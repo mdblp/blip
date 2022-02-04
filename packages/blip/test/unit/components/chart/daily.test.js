@@ -53,7 +53,7 @@ describe("Daily", () => {
     permsOfLoggedInUser: {
       root: true,
     },
-    datePicker: (props) => props.isOpen ? <div id="date-picker" className={props?.className}>{props.children}</div> : null,
+    dialogDatePicker: (props) => props.isOpen ? <div id="date-picker">{props.date}</div> : null,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -239,7 +239,7 @@ describe("Daily", () => {
       DatePicker.propTypes = {
         onResult: PropTypes.func.isRequired,
       };
-      const props = {...baseProps, datePicker: DatePicker };
+      const props = {...baseProps, dialogDatePicker: DatePicker };
       wrapper?.setProps(props);
       expect(onResult).to.be.a("function");
       onResult("2021-11-01");

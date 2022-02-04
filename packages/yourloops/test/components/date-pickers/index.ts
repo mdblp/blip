@@ -33,7 +33,7 @@ import testMonthDayElements from "./month-days-elements.test";
 import testCalendar from "./calendar.test";
 import testYearSelector from "./year-selector.test";
 import testCalendarView from "./calendar-view.test";
-import testDatePicker from "./date-picker.test";
+import testDialogDatePicker from "./dialog-date-picker.test";
 import testRangeDatePicker from "./range-date-picker.test";
 
 function testDatePickers() {
@@ -49,7 +49,7 @@ function testDatePickers() {
   describe("Calendar", testCalendar);
   describe("YearSelector", testYearSelector);
   describe("CalendarView", testCalendarView);
-  describe("DatePicker", testDatePicker);
+  describe("DialogDatePicker", testDialogDatePicker);
   describe("RangeDatePicker", testRangeDatePicker);
 }
 

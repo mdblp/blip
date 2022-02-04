@@ -34,9 +34,9 @@ import * as sinon from "sinon";
 import { expect } from "chai";
 
 import { waitTimeout } from "../../../lib/utils";
-import DatePicker from "../../../components/date-pickers/date-picker";
+import DialogDatePicker from "../../../components/date-pickers/dialog-date-picker";
 
-function testDatePicker(): void {
+function testDialogDatePicker(): void {
   let container: HTMLDivElement | null = null;
 
   beforeEach(() => {
@@ -55,7 +55,7 @@ function testDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DatePicker isOpen={false} onResult={_.noop} />, container, resolve);
+          <DialogDatePicker isOpen={false} onResult={_.noop} />, container, resolve);
       });
     });
 
@@ -68,7 +68,7 @@ function testDatePicker(): void {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged} onResult={_.noop} />, container, resolve);
+          <DialogDatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged} onResult={_.noop} />, container, resolve);
       });
     });
 
@@ -88,7 +88,7 @@ function testDatePicker(): void {
     const onResult = sinon.stub<[string|undefined], void>();
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DatePicker isOpen onResult={onResult} />, container, resolve);
+        ReactDOM.render(<DialogDatePicker isOpen onResult={onResult} />, container, resolve);
       });
     });
 
@@ -105,7 +105,7 @@ function testDatePicker(): void {
       return new Promise((resolve) => {
         // Note: wrong date value is intentional
         ReactDOM.render(
-          <DatePicker
+          <DialogDatePicker
             isOpen
             onResult={onResult}
             date="2021-10-02"
@@ -139,4 +139,4 @@ function testDatePicker(): void {
   });
 }
 
-export default testDatePicker;
+export default testDialogDatePicker;

@@ -57,7 +57,7 @@ const WarmUpTooltip = vizComponents.WarmUpTooltip;
  */
 function DailyDatePicker(props) {
   const {
-    DatePicker,
+    dialogDatePicker: DialogDatePicker,
     date,
     displayedDate,
     inTransition,
@@ -92,7 +92,7 @@ function DailyDatePicker(props) {
           ),
         }}
       />
-      <DatePicker
+      <DialogDatePicker
         date={date}
         minDate={startDate}
         maxDate={endDate}
@@ -104,7 +104,7 @@ function DailyDatePicker(props) {
   );
 }
 DailyDatePicker.propTypes = {
-  DatePicker: PropTypes.func.isRequired,
+  dialogDatePicker: PropTypes.func.isRequired,
   date: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
@@ -346,7 +346,7 @@ class Daily extends React.Component {
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     profileDialog: PropTypes.func,
-    datePicker: PropTypes.func.isRequired,
+    dialogDatePicker: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
   };
   static defaultProps = {
@@ -392,7 +392,7 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, datePicker: DatePicker } = this.props;
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker } = this.props;
     const { inTransition, atMostRecent, tooltip, title } = this.state;
     const { timePrefs } = tidelineData.opts;
     const endpoints = this.getEndpoints();
@@ -431,7 +431,7 @@ class Daily extends React.Component {
           onClickPrint={this.props.onClickPrint}
         >
           <DailyDatePicker
-            DatePicker={DatePicker}
+            dialogDatePicker={dialogDatePicker}
             displayedDate={title}
             date={epochLocation}
             startDate={this.startDate}

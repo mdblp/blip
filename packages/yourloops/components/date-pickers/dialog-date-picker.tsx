@@ -83,7 +83,7 @@ const datePickerStyle = makeStyles((theme: Theme) => {
 
 const dummyDate = dayjs();
 
-function DatePicker(props: DatePickerProps): JSX.Element {
+function DialogDatePicker(props: DatePickerProps): JSX.Element {
   const { isOpen, onSelectedDateChange } = props;
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
@@ -158,4 +158,4 @@ function DatePicker(props: DatePickerProps): JSX.Element {
   );
 }
 
-export default DatePicker;
+export default DialogDatePicker;
