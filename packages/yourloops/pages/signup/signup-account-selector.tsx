@@ -43,6 +43,7 @@ import metrics from "../../lib/metrics";
 import RadioLabel from "./signup-radio-label";
 import { FormValuesType, useSignUpFormState } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
+import { UserRoles } from "../../models/shoreline";
 
 const useStyles = makeStyles((theme: Theme) => ({
   FormControl: {
@@ -63,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+  },
+  BackButton: {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -136,22 +140,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           <Paper elevation={3} className={classes.Paper}>
             <FormControlLabel
               className={classes.FormControlLabel}
-              value="hcp"
-              id="form-label-signup-account-hcp"
-              control={<Radio id="signup-account-selector-radio-hcp" color="primary" />}
-              label={
-                <RadioLabel
-                  id="signup-account-selector-radio-label-hcp"
-                  header={t("signup-radiolabel-hcp-header")}
-                  body={t("signup-radiolabel-hcp-body")}
-                />
-              }
-            />
-          </Paper>
-          <Paper elevation={3} className={classes.Paper}>
-            <FormControlLabel
-              className={classes.FormControlLabel}
-              value="caregiver"
+              value={UserRoles.caregiver}
               id="form-label-signup-account-caregiver"
               control={<Radio id="signup-account-selector-radio-caregiver" color="primary" />}
               label={
@@ -166,7 +155,22 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           <Paper elevation={3} className={classes.Paper}>
             <FormControlLabel
               className={classes.FormControlLabel}
-              value="patient"
+              value={UserRoles.hcp}
+              id="form-label-signup-account-hcp"
+              control={<Radio id="signup-account-selector-radio-hcp" color="primary" />}
+              label={
+                <RadioLabel
+                  id="signup-account-selector-radio-label-hcp"
+                  header={t("signup-radiolabel-hcp-header")}
+                  body={t("signup-radiolabel-hcp-body")}
+                />
+              }
+            />
+          </Paper>
+          <Paper elevation={3} className={classes.Paper}>
+            <FormControlLabel
+              className={classes.FormControlLabel}
+              value={UserRoles.patient}
               id="form-label-signup-account-patient"
               control={<Radio id="signup-account-selector-radio-patient" color="primary" />}
               label={
@@ -183,13 +187,13 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
       <Box
         id="signup-account-selector-button-group"
         display="flex"
-        justifyContent="space-evenly"
-        mx={2}
+        justifyContent="end"
+        mx={3}
         mt={4}
       >
         <Button
+          className={classes.BackButton}
           id="button-signup-steppers-back"
-          classes={{ label: "button-signup-steppers-back-label" }}
           onClick={handleBack}>
           {t("signup-steppers-back")}
         </Button>
@@ -197,8 +201,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
-          disabled={state.formValues.accountRole === "patient"}
-          classes={{ label: "button-signup-steppers-next-label" }}
+          disabled={state.formValues.accountRole === UserRoles.empty || state.formValues.accountRole === UserRoles.patient}
           onClick={onNext}>
           {t("signup-steppers-next")}
         </Button>

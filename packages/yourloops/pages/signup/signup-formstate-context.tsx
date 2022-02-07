@@ -61,7 +61,7 @@ export const initialState: SignUpFormState = {
   formValues: {
     accountUsername: "",
     accountPassword: "",
-    accountRole: UserRoles.caregiver,
+    accountRole: UserRoles.empty,
     profileFirstname: "",
     profileLastname: "",
     profileCountry: "", // how to do better ?
