@@ -29,7 +29,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { FormControl, FormGroup, FormHelperText, InputLabel, MenuItem, Select } from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -41,59 +46,49 @@ export interface Errors {
 }
 
 export interface BasicDropdownProps<T> {
-  onSelect: (value: T) => void;
+  id: string;
   defaultValue: string;
   disabledValues: string[];
   values: string[];
-  translationKey: string;
+  inputTranslationKey: string;
+  errorTranslationKey: string;
+  onSelect: (value: T) => void;
 }
 
-const dialogStyles = makeStyles(
-  () => {
-    return {
-      formControl: {
-        display: "flex",
-      },
-    };
-  },
-);
+const dialogStyles = makeStyles(() => ({
+  formControl: { display: "flex" },
+}), { name: "component-basic-dropdown" });
 
 function BasicDropdown<T>(props: BasicDropdownProps<T>): JSX.Element {
-  const { onSelect, defaultValue, disabledValues, values, translationKey } = props;
+  const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props;
   const classes = dialogStyles();
   const { t } = useTranslation("yourloops");
 
-  const [selectedValue, setSelectedValue] = React.useState<string>(defaultValue);
+  const [selectedValue, setSelectedValue] = React.useState(defaultValue);
   const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent> => (event) => {
     setState(event.target.value as K);
     onSelect(event.target.value as T);
   };
-  const errors: Errors = React.useMemo(
-    () => ({
-      notAllowedValue: disabledValues.includes(selectedValue),
-    }),
-    [selectedValue, disabledValues]
-  );
 
   return (
-    <FormControl id={"dropdown-form"} className={classes.formControl}>
+    <FormControl id={`dropdown-form-${id}`} className={classes.formControl}>
       <FormGroup>
-        <InputLabel id={`dropdown-${translationKey}-input-label`}>{t(`dropdown-input-${translationKey}`)}</InputLabel>
+        <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
         <Select
-          name={`dropdown-${translationKey}`}
+          name={`dropdown-${id}`}
           labelId="locale-selector"
-          id={`dropdown-${translationKey}-selector`}
+          id={`dropdown-${id}-selector`}
           value={selectedValue}
-          error={errors.notAllowedValue}
+          error={disabledValues.includes(selectedValue)}
           onChange={createHandleSelectChange(setSelectedValue)}>
           {values.map(item => (
-            <MenuItem id={`dropdown-${translationKey}-menuitem-${item}`} key={item} value={item}>
+            <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
               {t(item)}
             </MenuItem>
           ))}
         </Select>
-        {errors.notAllowedValue &&
-          <FormHelperText error>{t(`dropdown-error-${translationKey}`)}</FormHelperText>
+        {disabledValues.includes(selectedValue) &&
+          <FormHelperText id={`dropdown-error-${id}`} error>{t(errorTranslationKey)}</FormHelperText>
         }
       </FormGroup>
     </FormControl>

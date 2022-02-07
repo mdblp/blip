@@ -31,14 +31,14 @@ import { useTranslation } from "react-i18next";
 import bows from "bows";
 import _ from "lodash";
 
+import { Profile } from "../../models/shoreline";
+import { HcpProfession } from "../../models/hcp-profession";
+import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from "./models";
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
 import { useAlert } from "../utils/snackbar";
-import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from "./models";
 import SwitchRoleConsequencesDialog from "./consequences-dialog";
 import SwitchRoleConsentDialog from "./consent-dialog";
-import { Profile } from "models/shoreline";
-import { HcpProfession } from "models/hcp-profession";
 import SwitchRoleProfessionDialog from "./profession-dialog";
 
 const log = bows("SwitchRoleDialogs");

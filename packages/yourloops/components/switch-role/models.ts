@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import { HcpProfession } from "models/hcp-profession";
+import { HcpProfession } from "../../models/hcp-profession";
 
 interface SwitchRoleDialogProps {
   open: boolean;

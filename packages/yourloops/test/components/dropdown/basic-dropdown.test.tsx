@@ -43,11 +43,13 @@ function testBasicDropdown(): void {
   const Dropdown = (props: { content: BasicDropdownProps<string> }): JSX.Element => {
     return (
       <BasicDropdown
+        id={props.content.id}
         onSelect={props.content.onSelect}
         defaultValue={props.content.defaultValue}
         disabledValues={props.content.disabledValues}
         values={props.content.values}
-        translationKey={props.content.translationKey}
+        inputTranslationKey={props.content.inputTranslationKey}
+        errorTranslationKey={props.content.errorTranslationKey}
       />
     );
   };
@@ -77,17 +79,21 @@ function testBasicDropdown(): void {
       const defaultValue = "defaultValue";
       const disabledValue = "disabledValue";
       const valueToSelect = "valueToSelect";
-      const translationKey = "translationKey";
+      const id = "id";
+      const errorTranslationKey = "errorTranslationKey";
+      const inputTranslationKey = "inputTranslationKey";
       const values = [defaultValue, disabledValue, valueToSelect];
       const props: BasicDropdownProps<string> = {
         onSelect: spyOnSelect,
         defaultValue: defaultValue,
         disabledValues: [disabledValue],
         values,
-        translationKey,
+        id,
+        errorTranslationKey,
+        inputTranslationKey,
       };
       const wrapper = mount(fakeDropdown(props));
-      wrapper.find("input.MuiSelect-nativeInput").simulate("change", { target: { name: `dropdown-${translationKey}`, value: valueToSelect } });
+      wrapper.find("input.MuiSelect-nativeInput").simulate("change", { target: { name: `dropdown-${id}`, value: valueToSelect } });
       expect(spyOnSelect.calledOnce).to.be.true;
     });
   });

@@ -33,10 +33,12 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import { Box, DialogTitle, makeStyles, Theme } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import { SwitchRoleProfessionDialogProps } from "./models";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
+import { SwitchRoleProfessionDialogProps } from "./models";
 import BasicDropdown from "../dropdown/basic-dropdown";
 
 export interface Errors {
@@ -88,7 +90,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
       open={open}
       onClose={onClose}>
       <DialogTitle id="patient-add-caregiver-dialog-title">
-        <strong>{t("profession-dialog-tilte")}</strong>
+        <strong>{t("profession-dialog-title")}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content" className={classes.dialogContent}>
         <Box className={classes.dialogContentBox}>
@@ -97,7 +99,9 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
             defaultValue={HcpProfession.empty}
             disabledValues={[HcpProfession.empty]}
             values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
-            translationKey={"profession"}
+            id="profession"
+            inputTranslationKey="hcp-profession"
+            errorTranslationKey="profession-dialog-title"
           />
         </Box>
       </DialogContent>

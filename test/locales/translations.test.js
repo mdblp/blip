@@ -81,8 +81,6 @@ const ignoredTransKeyForYourLoops = [
   "Spain",
   "Switzerland",
   "United Kingdom",
-  "dropdown-error-profession",
-  "dropdown-input-profession",
   // HcpProfessions
   "hcp-profession-nurse",
   "hcp-profession-diabeto",
@@ -133,8 +131,6 @@ const ignoredTransKeyForYourLoops = [
 const ignoredTransKeyInYourLoopsFiles = [
   "yourloops|${s}",
   "team-card-label-${label}",
-  "dropdown-error-${translationKey}",
-  "dropdown-input-${translationKey}",
   "signup-steppers-${state.formValues.accountRole}-title",
   // Documentation!
   "translate-me",

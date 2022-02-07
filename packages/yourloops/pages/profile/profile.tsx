@@ -51,6 +51,7 @@ import TextField from "@material-ui/core/TextField";
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, UserRoles, Settings } from "../../models/shoreline";
+import BasicDropdown from "../../components/dropdown/basic-dropdown";
 import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/language";
 import { REGEX_BIRTHDATE, getUserFirstName, getUserLastName, setPageTitle } from "../../lib/utils";
 import { User, useAuth } from "../../lib/auth";
@@ -65,7 +66,6 @@ import { Errors } from "./models";
 import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
-import BasicDropdown from "../../components/dropdown/basic-dropdown";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -422,7 +422,9 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                   defaultValue={hcpProfession}
                   disabledValues={[HcpProfession.empty]}
                   values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
-                  translationKey = {"profession"}
+                  id="profession"
+                  inputTranslationKey="hcp-profession"
+                  errorTranslationKey="profession-dialog-title"
                 />
               </Box>
             </Box>

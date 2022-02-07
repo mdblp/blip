@@ -29,12 +29,12 @@
 import { expect } from "chai";
 import { mount } from "enzyme";
 import _ from "lodash";
-import { HcpProfession } from "../../../models/hcp-profession";
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import * as sinon from "sinon";
 
+import { HcpProfession } from "../../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "../../../components/switch-role/models";
 import SwitchRoleProfessionDialog from "../../../components/switch-role/profession-dialog";
 
