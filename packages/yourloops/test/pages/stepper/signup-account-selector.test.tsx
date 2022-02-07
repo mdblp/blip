@@ -32,6 +32,7 @@ import _ from "lodash";
 
 import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 import SignupAccountSelector from "../../../pages/signup/signup-account-selector";
+import { UserRoles } from "../../../models/shoreline";
 
 function TestSignupAccountForm(): void {
 
@@ -58,16 +59,16 @@ function TestSignupAccountForm(): void {
 
   it("should disable next button when patient is selected", async () => {
     const wrapper = await mount(signupForm());
-    wrapper.find("label#form-label-signup-account-patient").simulate("click");
+    wrapper.find("input#signup-account-selector-radio-patient").simulate("change", { target: { value: UserRoles.patient } });
     nextButtonDisabled(wrapper);
     wrapper.unmount();
   });
 
-  it.only("should enable next button when hcp or caregiver is selected", async () => {
+  it("should enable next button when hcp or caregiver is selected", async () => {
     const wrapper = await mount(signupForm());
-    wrapper.find("label#form-label-signup-account-hcp").simulate("click");
+    wrapper.find("input#signup-account-selector-radio-hcp").simulate("change", { target: { value: UserRoles.hcp } });
     nextButtonEnabled(wrapper);
-    wrapper.find("label#form-label-signup-account-caregiver").simulate("click");
+    wrapper.find("input#signup-account-selector-radio-caregiver").simulate("change", { target: { value: UserRoles.caregiver } });
     nextButtonEnabled(wrapper);
     wrapper.unmount();
   });
