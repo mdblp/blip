@@ -35,7 +35,7 @@ import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 
 interface Props {
-  onClick: () => Promise<void>;
+  onClick: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up("sm")]: {
       position: "absolute",
       bottom: "-18px",
-      left: "14px",
+      left: "20px",
     },
   },
 }));

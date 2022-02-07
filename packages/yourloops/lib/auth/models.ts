@@ -62,7 +62,7 @@ export interface SignupUser {
 
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
-  certifyProfessionalAccount: () => Promise<string>;
+  certifyProfessionalAccount: () => Promise<void>;
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
   logout: (session: Readonly<Session>) => Promise<void>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
@@ -81,7 +81,7 @@ export interface AuthAPI {
  * The auth provider hook return values.
  */
 export interface AuthContext {
-  certifyProfessionalAccount: () => Promise<string | null>;
+  certifyProfessionalAccount: () => Promise<void>;
   flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
   getFlagPatients: () => string[];
   isAuthHookInitialized: boolean;

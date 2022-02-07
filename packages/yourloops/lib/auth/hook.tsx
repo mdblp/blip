@@ -44,6 +44,7 @@ import { zendeskLogin, zendeskLogout } from "../zendesk";
 import User from "./user";
 import { Session, AuthAPI, AuthContext, AuthProvider, SignupUser } from "./models";
 import AuthAPIImpl from "./api";
+import appConfig from "../config";
 
 interface JwtShorelinePayload extends JwtPayload {
   role: "hcp" | "patient" | "caregiver" | "clinic";
@@ -104,7 +105,11 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const isAuthHookInitialized = traceToken !== null;
   const isLoggedIn = sessionToken !== null && traceToken !== null && user !== null;
   const session = React.useCallback(
-    (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? { sessionToken, traceToken, user } : null,
+    (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? {
+      sessionToken,
+      traceToken,
+      user
+    } : null,
     [sessionToken, traceToken, user]
   );
 
@@ -507,12 +512,11 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const certifyProfessionalAccount = async (): Promise<void> => {
-    console.log(historyHook.location.pathname);
-    if (historyHook.location.pathname === "/professional/certify") {
-      return;
-    }
-    window.location.href = await api.redirectToProfessionalAccountLogin();
+    await api.certifyProfessionalAccount();
+    // TODO if success update the user
   };
+
+  const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
 
   React.useEffect(initHook, [historyHook, pathname, traceToken, isAuthInProgress, setAuthInfos]);
 
@@ -528,6 +532,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     setUser,
     login,
     certifyProfessionalAccount,
+    redirectToProfessionalAccountLogin,
     updateProfile,
     updatePreferences,
     updateSettings,

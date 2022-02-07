@@ -33,7 +33,6 @@ import { APIErrorResponse } from "../../models/error";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
-import HttpService from "../../services/http";
 import { errorFromHttpStatus } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
@@ -41,6 +40,7 @@ import HttpStatus from "../http-status-codes";
 
 import { Session, UpdateUser } from "./models";
 import User from "./user";
+import HttpService from "../../services/http";
 
 const log = bows("Auth API");
 const failedLoginCounter = new Map<string, number>();
@@ -553,14 +553,13 @@ async function logout(session: Readonly<Session>): Promise<void> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function redirectToProfessionalAccountLogin(): Promise<string> {
-  const { request } = await HttpService.post("/auth/oauth/login");
-  return request.responseURL;
+async function certifyProfessionalAccount(): Promise<void> {
+  await HttpService.post("/auth/oauth/merge", _, { withCredentials: true });
 }
 
 export default {
   accountConfirmed,
-  redirectToProfessionalAccountLogin,
+  certifyProfessionalAccount,
   login,
   logout,
   signup,
