@@ -38,11 +38,10 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
 import metrics from "../../lib/metrics";
 import RadioLabel from "./signup-radio-label";
-import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
+import { FormValuesType, useSignUpFormState } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -164,10 +163,22 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
               }
             />
           </Paper>
+          <Paper elevation={3} className={classes.Paper}>
+            <FormControlLabel
+              className={classes.FormControlLabel}
+              value="patient"
+              id="form-label-signup-account-patient"
+              control={<Radio id="signup-account-selector-radio-patient" color="primary" />}
+              label={
+                <RadioLabel
+                  id="signup-account-selector-radio-label-patient"
+                  header={t("signup-radiolabel-patient-header")}
+                  body={t("signup-account-selection-msg")}
+                />
+              }
+            />
+          </Paper>
         </RadioGroup>
-        <Typography variant="body2" gutterBottom>
-          {t("signup-account-selection-msg")}
-        </Typography>
       </FormControl>
       <Box
         id="signup-account-selector-button-group"
@@ -186,6 +197,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
+          disabled={state.formValues.accountRole === "patient"}
           classes={{ label: "button-signup-steppers-next-label" }}
           onClick={onNext}>
           {t("signup-steppers-next")}
