@@ -43,6 +43,16 @@ function TestSignupAccountForm(): void {
       </SignUpFormStateProvider>);
   };
 
+  let wrapper: ReactWrapper;
+
+  beforeEach(async () => {
+    wrapper = await mount(signupForm());
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+  });
+
   const nextButtonDisabled = (wrapper: ReactWrapper) => {
     expect(wrapper.find("button#button-signup-steppers-next").prop("disabled")).to.be.true;
   };
@@ -52,25 +62,19 @@ function TestSignupAccountForm(): void {
   };
 
   it("should disable next button when nothing is selected", async () => {
-    const wrapper = await mount(signupForm());
     nextButtonDisabled(wrapper);
-    wrapper.unmount();
   });
 
   it("should disable next button when patient is selected", async () => {
-    const wrapper = await mount(signupForm());
     wrapper.find("input#signup-account-selector-radio-patient").simulate("change", { target: { value: UserRoles.patient } });
     nextButtonDisabled(wrapper);
-    wrapper.unmount();
   });
 
   it("should enable next button when hcp or caregiver is selected", async () => {
-    const wrapper = await mount(signupForm());
     wrapper.find("input#signup-account-selector-radio-hcp").simulate("change", { target: { value: UserRoles.hcp } });
     nextButtonEnabled(wrapper);
     wrapper.find("input#signup-account-selector-radio-caregiver").simulate("change", { target: { value: UserRoles.caregiver } });
     nextButtonEnabled(wrapper);
-    wrapper.unmount();
   });
 }
 
