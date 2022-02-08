@@ -48,6 +48,7 @@ enum UserRoles {
   hcp = "hcp",
   caregiver = "caregiver",
   patient = "patient",
+  unset = "unset",
   /** When the account is created but not yet confirm */
   unverified = "unverified"
 }
