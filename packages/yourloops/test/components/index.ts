@@ -29,9 +29,11 @@
 import testDatePickers from "./date-pickers";
 import testSnackbar from "./utils/snackbar.test";
 import TestPasswordStrengthMeter from "./password-strength-meter.test";
+import testFooterLink from "./footer-links.test";
 
 function testComponents(): void {
   describe("DatePickers", testDatePickers);
+  describe("Footer", testFooterLink);
   describe("Snackbar", testSnackbar);
   describe("Password strength meter", TestPasswordStrengthMeter);
 }
