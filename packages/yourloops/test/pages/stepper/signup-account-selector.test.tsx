@@ -61,7 +61,7 @@ function TestSignupAccountForm(): void {
     expect(wrapper.find("button#button-signup-steppers-next").prop("disabled")).to.be.false;
   };
 
-  it.only("should disable next button when nothing is selected", () => {
+  it("should disable next button when nothing is selected", () => {
     nextButtonDisabled(wrapper);
   });
 
