@@ -47,7 +47,7 @@ export interface UpdateUser {
 export interface SignupUser {
   accountUsername: string;
   accountPassword: string;
-  accountRole: UserRoles;
+  accountRole: UserRoles|undefined;
   profileFirstname: string;
   profileLastname: string;
   profileCountry: string;

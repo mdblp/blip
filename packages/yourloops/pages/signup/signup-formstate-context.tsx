@@ -28,7 +28,6 @@
 import React from "react";
 import _ from "lodash";
 
-import { UserRoles } from "../../models/shoreline";
 import { getCurrentLang } from "../../lib/language";
 import { SignupUser as IFormValues } from "../../lib/auth";
 import { HcpProfession } from "../../models/hcp-profession";
@@ -61,7 +60,7 @@ export const initialState: SignUpFormState = {
   formValues: {
     accountUsername: "",
     accountPassword: "",
-    accountRole: UserRoles.empty,
+    accountRole: undefined,
     profileFirstname: "",
     profileLastname: "",
     profileCountry: "", // how to do better ?

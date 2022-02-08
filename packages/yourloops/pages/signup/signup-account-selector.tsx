@@ -201,7 +201,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
-          disabled={state.formValues.accountRole === UserRoles.empty || state.formValues.accountRole === UserRoles.patient}
+          disabled={state.formValues.accountRole === undefined || state.formValues.accountRole === UserRoles.patient}
           onClick={onNext}>
           {t("signup-steppers-next")}
         </Button>
