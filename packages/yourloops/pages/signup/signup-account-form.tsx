@@ -55,7 +55,7 @@ interface Errors {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  BackButton: {
+  backButton: {
     marginRight: theme.spacing(2),
   },
 }));
@@ -178,7 +178,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
         mt={4}
       >
         <Button
-          className={classes.BackButton}
+          className={classes.backButton}
           id="button-signup-steppers-back"
           onClick={handleBack}
         >

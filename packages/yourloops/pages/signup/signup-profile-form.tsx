@@ -61,7 +61,7 @@ const formStyle = makeStyles((theme: Theme) => {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
-    BackButton: {
+    backButton: {
       marginRight: theme.spacing(2),
     },
   };
@@ -244,7 +244,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         mt={4}
       >
         <Button
-          className={classes.BackButton}
+          className={classes.backButton}
           id="button-signup-steppers-back"
           onClick={handleBack}
         >

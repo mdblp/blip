@@ -38,7 +38,7 @@ import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  BackButton: {
+  backButton: {
     marginRight: theme.spacing(2),
   },
 }));
@@ -94,7 +94,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
         mt={4}
       >
         <Button
-          className={classes.BackButton}
+          className={classes.backButton}
           id="button-signup-steppers-back"
           disabled={props.activeStep === 0}
           onClick={handleBack}>

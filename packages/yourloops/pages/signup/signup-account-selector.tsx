@@ -26,7 +26,6 @@
  */
 
 import React from "react";
-import _ from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -65,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
-  BackButton: {
+  backButton: {
     marginRight: theme.spacing(2),
   },
 }));
@@ -80,6 +79,9 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
   const [error, setError] = React.useState(false);
   const { handleBack, handleNext } = props;
   const [helperText, setHelperText] = React.useState("");
+
+  const isInvalidRole = state.formValues.accountRole === UserRoles.unset
+    || state.formValues.accountRole === UserRoles.patient;
 
   const resetFormState = (): void => {
     setError(false);
@@ -99,7 +101,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
   };
 
   const validForm = (): boolean => {
-    if (_.isEmpty(state.formValues.accountRole)) {
+    if (isInvalidRole) {
       setError(true);
       setHelperText(t("signup-account-selection-error"));
       return false;
@@ -192,7 +194,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
         mt={4}
       >
         <Button
-          className={classes.BackButton}
+          className={classes.backButton}
           id="button-signup-steppers-back"
           onClick={handleBack}>
           {t("signup-steppers-back")}
@@ -201,7 +203,7 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
-          disabled={state.formValues.accountRole === undefined || state.formValues.accountRole === UserRoles.patient}
+          disabled={isInvalidRole}
           onClick={onNext}>
           {t("signup-steppers-next")}
         </Button>
