@@ -10,6 +10,7 @@ axios.defaults.baseURL = appConfig.API_HOST;
  */
 axios.interceptors.request.use((config): AxiosRequestConfig => {
   // TODO create util functions to get tokens from local storage
+  // TODO set trace token here ! (ex: blip-timestamp-userId)
   const token = sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN);
   config = {
     ...config,

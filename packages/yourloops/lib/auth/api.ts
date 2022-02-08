@@ -66,7 +66,7 @@ async function authenticate(username: string, password: string, traceToken: stri
 
   try {
     // Allow username / password with non ASCII characters
-    // Endode the string to UTF-8 first
+    // Encode the string to UTF-8 first
     const encoder = new TextEncoder();
     const utf8 = encoder.encode(`${username}:${password}`);
     const basicAuth = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
@@ -553,8 +553,9 @@ async function logout(session: Readonly<Session>): Promise<void> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function certifyProfessionalAccount(): Promise<void> {
-  await HttpService.post("/auth/oauth/merge", _, { withCredentials: true });
+async function certifyProfessionalAccount(): Promise<IUser> {
+  const { data } = await HttpService.post<IUser>("/auth/oauth/merge", _, { withCredentials: true });
+  return data;
 }
 
 export default {

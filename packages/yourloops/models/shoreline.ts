@@ -93,26 +93,17 @@ interface Preferences {
 }
 
 interface IUser {
-  /** The user id */
-  readonly userid: string;
-  /** The username (login) */
-  readonly username: string;
-  /** Role of the user */
-  readonly role: UserRoles;
-  /** Shoreline (database) role value */
-  roles?: UserRoles[];
-  /** Emails of the users */
   emails?: string[];
-  /** true if the account has been verified */
   readonly emailVerified?: boolean;
-  /** User profile */
+  readonly frProId?: string;
+  readonly role: UserRoles; // Main role of the user
+  roles?: UserRoles[];
+  readonly userid: string;
+  readonly username: string;
   profile?: Profile | null;
-  /** User settings (read-only for patient only?) */
   settings?: Settings | null;
-  /** User preferences */
   preferences?: Preferences | null;
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
+  medicalData?: MedicalData | null; // Patient medical data. undefined means not fetched, null if the fetch failed
 }
 
 export { JwtShorelinePayload, IUser, Profile, Settings, Preferences, Consent, UserRoles };

@@ -382,9 +382,20 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               </Box>
 
               {user.settings?.country === "FR" &&
-                <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
-                  <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
-                </FormControl>
+                <React.Fragment>
+                  {user.frProId ?
+                    <TextField
+                      value={user.frProId}
+                      label={t("professional-account-number")}
+                      disabled
+                      className={classes.formControl}
+                    />
+                    :
+                    <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+                      <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
+                    </FormControl>
+                  }
+                </React.Fragment>
               }
             </Box>
           }

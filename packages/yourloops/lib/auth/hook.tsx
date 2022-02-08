@@ -147,7 +147,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
    */
   const setUser = (u: User): void => {
     setUserPrivate(u);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(u.toJSON()));
+    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(u));
   };
 
   const loginPrivate = async (username: string, password: string, key: string | null): Promise<User> => {
@@ -185,7 +185,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
     sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, auth.sessionToken);
     sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, auth.traceToken);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user.toJSON()));
+    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user));
 
     setAuthInfos(auth.sessionToken, auth.traceToken, auth.user);
     return auth.user;
@@ -512,8 +512,11 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const certifyProfessionalAccount = async (): Promise<void> => {
-    await api.certifyProfessionalAccount();
-    // TODO if success update the user
+    const { frProId } = await api.certifyProfessionalAccount();
+    if (user) {
+      user.frProId = frProId;
+      setUser(user);
+    }
   };
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);

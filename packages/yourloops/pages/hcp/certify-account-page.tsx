@@ -28,6 +28,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useLocation, useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "../../lib/auth";
 import { useAlert } from "../../components/utils/snackbar";
@@ -36,6 +37,7 @@ import LoadingBackdrop from "../../components/utils/loading-backdrop";
 function CertifyAccountPage(): JSX.Element {
   const { search } = useLocation();
   const { certifyProfessionalAccount } = useAuth();
+  const { t } = useTranslation("yourloops");
   const alert = useAlert();
   const history = useHistory();
 
@@ -47,8 +49,8 @@ function CertifyAccountPage(): JSX.Element {
     try {
       setProcessing(true);
       if (sourceUrl === "psc" && frProId) {
-        const res = await certifyProfessionalAccount();
-        console.log(res);
+        await certifyProfessionalAccount();
+        alert.success(t("certify-professional-account-done"));
       }
     } catch (err: any) {
       alert.error(err.message);
@@ -56,11 +58,12 @@ function CertifyAccountPage(): JSX.Element {
       setProcessing(false);
       history.push("/professional/preferences");
     }
-
   };
 
   useEffect(() => {
     certify();
+    // We just need to call this async function once when the component is mounted, after that there's a redirection
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -29,7 +29,7 @@
 import { ReactNode } from "react";
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
 
 /** Hook internal usage */
@@ -62,7 +62,7 @@ export interface SignupUser {
 
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
-  certifyProfessionalAccount: () => Promise<void>;
+  certifyProfessionalAccount: () => Promise<IUser>;
   login: (username: string, password: string, traceToken: string) => Promise<Session>;
   logout: (session: Readonly<Session>) => Promise<void>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
