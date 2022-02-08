@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Added
+- YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1105 Yourloops new blue theme
 - YLP-1106 Switch account from caregiver to hcp should ask for the profession
 - YLP-1122 Patient should enter the team unique ID to accept a team invitation
