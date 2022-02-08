@@ -30,7 +30,6 @@ import _ from "lodash";
 
 import { HcpProfession } from "../../models/hcp-profession";
 import { UserRoles } from "../../models/shoreline";
-
 import { getCurrentLang } from "../../lib/language";
 import { SignupUser as IFormValues } from "../../lib/auth";
 
