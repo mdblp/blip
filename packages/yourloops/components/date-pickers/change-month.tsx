@@ -37,7 +37,6 @@ import {
 } from "./models";
 
 interface ChangeMonthProps {
-  // selection: CalendarSelection
   mode: CalendarMode;
   currentMonth: Dayjs;
   setCurrentMonth: (month: Dayjs) => void;
@@ -95,7 +94,6 @@ export function useChangeMonthState(props: ChangeMonthProps): ChangeMonthState {
   const handleNextMonth = canGoNextMonth ? (): void => {
     changeCurrentMonth(currentMonth.add(1, "month"), "right");
   } : undefined;
-
 
   return [changingMonth, handlePrevMonth, handleNextMonth];
 }

@@ -820,7 +820,6 @@ class PatientDataPage extends React.Component {
   }
 
   updateChartPrefs(updates, cb = _.noop) {
-    // this.log.debug("updateChartPrefs", { updates, cb});
     const newPrefs = {
       ...this.state.chartPrefs,
       ...updates,

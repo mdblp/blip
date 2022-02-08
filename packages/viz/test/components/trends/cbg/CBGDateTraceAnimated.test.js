@@ -109,7 +109,7 @@ describe("CBGDateTraceAnimated", () => {
           expect(props.onSelectDate.callCount).to.equal(0);
           circle.simulate("click");
           expect(props.onSelectDate.callCount).to.equal(1);
-          expect(props.onSelectDate.args[0][0]).to.equal(1482624000000);
+          expect(props.onSelectDate.args[0][0]).to.equal(props.data[0].epoch);
         });
       });
 

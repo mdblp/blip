@@ -39,13 +39,13 @@ export interface CalendarChangeMonth {
   direction: ChangeMonthDirection;
   onAnimationEnd: () => void;
 }
-export interface DatesRange {
+export interface DateRange {
   start: Dayjs;
   end: Dayjs;
 }
 export interface CalendarSelection {
   mode: CalendarMode;
-  selected: Dayjs | DatesRange;
+  selected: Dayjs | DateRange;
 }
 export interface CalendarSelectionSingle extends CalendarSelection {
   mode: "single";
@@ -53,8 +53,8 @@ export interface CalendarSelectionSingle extends CalendarSelection {
 }
 export interface CalendarSelectionRange extends CalendarSelection {
   mode: "range";
-  selected: DatesRange;
-  selectable?: DatesRange,
+  selected: DateRange;
+  selectable?: DateRange,
   maxSelectableDays?: number;
 }
 // CalendarSelection could be extends to a more random mode, for example:

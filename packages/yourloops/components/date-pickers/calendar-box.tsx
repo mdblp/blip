@@ -97,7 +97,9 @@ function CalendarBox(props: CalendarBoxProps): JSX.Element {
     onChange,
     onSelectYear,
   } = props;
+
   const id = position ? `calendar-box-${position}` : "calendar-box";
+
   return (
     <div id={id} className={classes.calendarBox}>
       {

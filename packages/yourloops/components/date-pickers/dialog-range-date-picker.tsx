@@ -38,7 +38,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 
-import { CalendarOrientation, DatesRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from "./models";
+import { CalendarOrientation, DateRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from "./models";
 import RangeDatePicker from "./range-date-picker";
 
 interface DatePickerProps {
@@ -57,7 +57,6 @@ interface DatePickerProps {
   onResult: (start?: string, end?: string) => void;
   onSelectedDateChange?: (start?: string, end?: string) => void;
 }
-
 
 const datePickerStyle = makeStyles((theme: Theme) => {
   return {
@@ -132,13 +131,13 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   }, [isOpen, props.start, props.end, props.maxDate, props.minDate]);
 
   const [nextSelection, setNextSelection] = React.useState<"first" | "last">("first");
-  const [selected, setSelected] = React.useState<DatesRange>({ start: startDate, end: endDate });
-  const [selectable, setSelectable] = React.useState<DatesRange | undefined>(undefined);
+  const [selected, setSelected] = React.useState<DateRange>({ start: startDate, end: endDate });
+  const [selectable, setSelectable] = React.useState<DateRange | undefined>(undefined);
 
   React.useEffect(() => {
     if (isOpen) {
       // Refresh our states
-      const range: DatesRange = { start: startDate, end: endDate };
+      const range: DateRange = { start: startDate, end: endDate };
       setNextSelection("first");
       setSelected(range);
       if (onSelectedDateChange) {
@@ -155,7 +154,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   };
 
   const updateSelectedDate = (date: dayjs.Dayjs): void => {
-    let range: DatesRange;
+    let range: DateRange;
     if (nextSelection === "first") {
       setNextSelection("last");
       range = { start: date, end: date };

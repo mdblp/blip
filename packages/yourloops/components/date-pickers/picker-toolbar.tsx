@@ -70,7 +70,7 @@ const toolbarStyles = makeStyles((theme: Theme) => {
   };
 }, { name: "date-pickers-toolbar" });
 
-function ModeSinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
+function SinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
 
@@ -112,7 +112,7 @@ function ModeSinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
   );
 }
 
-function ModeRangePickerToolbar(props: PickerToolbarProps): JSX.Element {
+function RangePickerToolbar(props: PickerToolbarProps): JSX.Element {
   const { selected, maxSelectableDays } = (props.selection as CalendarSelectionRange);
   const classes = toolbarStyles();
   const { t } = useTranslation("yourloops");
@@ -152,8 +152,8 @@ function PickerToolbar(props: PickerToolbarProps): JSX.Element {
   const toolbarClasses = clsx(classes.root, { [classes.landscape]: props.orientation === "landscape" });
   return (
     <div id="date-picker-toolbar" className={toolbarClasses}>
-      {selection.mode === "single" && <ModeSinglePickerToolbar {...props} />}
-      {selection.mode === "range" && <ModeRangePickerToolbar {...props} />}
+      {selection.mode === "single" && <SinglePickerToolbar {...props} />}
+      {selection.mode === "range" && <RangePickerToolbar {...props} />}
     </div>
   );
 }

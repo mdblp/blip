@@ -84,6 +84,7 @@ function Day(props: DayProps): JSX.Element {
       [classes.disabled]: Boolean(props.disabled),
     }
   );
+
   return (
     <ButtonBase
       {...props}
