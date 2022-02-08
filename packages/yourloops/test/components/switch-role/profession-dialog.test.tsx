@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * HCP patient list bar tests
+ * Switch role from caregiver to HCP dialog - Request profession tests
  *
  * All rights reserved.
  *
@@ -27,97 +27,97 @@
  */
 
 import { expect } from "chai";
-import { mount } from "enzyme";
-import _ from "lodash";
 import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 import * as sinon from "sinon";
 
-import { HcpProfession } from "../../../models/hcp-profession";
+import { HcpProfession, HcpProfessionList } from "../../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "../../../components/switch-role/models";
 import SwitchRoleProfessionDialog from "../../../components/switch-role/profession-dialog";
 
-
 function testRoleProfessionDialog(): void {
-
-  const spyCancel = sinon.spy();
-  const spyAccept = sinon.spy();
-
-  const Dialog = (props: { content: SwitchRoleProfessionDialogProps }): JSX.Element => {
-    return (
-      <SwitchRoleProfessionDialog
-        open={props.content.open}
-        onAccept={props.content.onAccept}
-        onCancel={props.content.onCancel}
-      />
-    );
+  const onAccept = sinon.stub();
+  const onCancel = sinon.stub();
+  const defaultProps: SwitchRoleProfessionDialogProps = {
+    open: true,
+    onAccept,
+    onCancel,
   };
 
-  describe("SwitchRoleProfessionDialog act", () => {
-    let container: HTMLElement | null = null;
+  let container: HTMLDivElement | null = null;
 
-    async function mountComponent(onAccept = _.noop, onCancel = _.noop, open = true): Promise<void> {
-      const props: SwitchRoleProfessionDialogProps = { onAccept, onCancel, open };
-      await act(() => {
-        return new Promise((resolve) => {
-          render(
-            <Dialog content={props} />, container, resolve);
-        });
-      });
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+  });
+  afterEach(() => {
+    onAccept.resetHistory();
+    onCancel.resetHistory();
+    if (container) {
+      ReactDOM.unmountComponentAtNode(container);
+      document.body.removeChild(container);
+      container = null;
     }
-
-    before(() => {
-      container = document.createElement("div");
-      document.body.appendChild(container);
-    });
-
-    after(() => {
-      if (container) {
-        unmountComponentAtNode(container);
-        container.remove();
-        container = null;
-      }
-    });
-
-    it("should not render when not opened", async () => {
-      await mountComponent(spyAccept, spyCancel, false);
-      const component = document.getElementById("switch-role-profession-dialog");
-      expect(component).to.be.null;
-    });
-
-    it("should be able to render", async () => {
-      await mountComponent(spyAccept, spyCancel, true);
-      const component = document.getElementById("switch-role-profession-dialog");
-      expect(component).to.be.not.null;
-    });
-
-    it("should call spyCancel on cancel button click", async () => {
-      await mountComponent(spyAccept, spyCancel, true);
-      const cancelButton: HTMLButtonElement = document.getElementById("switch-role-profession-dialog-button-decline") as HTMLButtonElement;
-      cancelButton.click();
-      expect(spyCancel.calledOnce).to.be.true;
-    });
   });
 
-  describe("SwitchRoleProfessionDialog mount", () => {
-
-    const fakeDialog = (props: SwitchRoleProfessionDialogProps): JSX.Element => {
-      return (
-        <Dialog content={props} />
-      );
-    };
-
-    it("should enable accept button when an option is selected", () => {
-      const props: SwitchRoleProfessionDialogProps = { onAccept: spyAccept, onCancel: spyCancel, open: true };
-      const wrapper = mount(fakeDialog(props));
-      expect(wrapper.find("button#switch-role-profession-dialog-button-validate").prop("disabled")).to.be.true;
-      wrapper.find("input.MuiSelect-nativeInput").simulate("change", { target: { name: "profile-hcp-profession", value: HcpProfession.diabeto } });
-      expect(wrapper.find("button#switch-role-profession-dialog-button-validate").prop("disabled")).to.be.false;
-      wrapper.find("button#switch-role-profession-dialog-button-validate").simulate("click");
-      expect(spyAccept.calledOnce).to.be.true;
-      wrapper.unmount();
+  function render(props: SwitchRoleProfessionDialogProps) {
+    return act(() => {
+      return new Promise((resolve) => {
+        ReactDOM.render(
+          <SwitchRoleProfessionDialog
+            {...props}
+          />, container, resolve);
+      });
     });
+  }
+
+  it("should not render when not opened", async () => {
+    await render({ ...defaultProps, open: false });
+    const component = document.getElementById("switch-role-profession-dialog");
+    expect(component).to.be.null;
+  });
+
+  it("should be able to render", async () => {
+    await render(defaultProps);
+    const component = document.getElementById("switch-role-profession-dialog");
+    expect(component).to.be.not.null;
+  });
+
+  it("should call onCancel", async () => {
+    await render(defaultProps);
+    const cancelButton = document.getElementById("switch-role-profession-dialog-button-decline");
+    expect(cancelButton).to.be.not.null;
+    cancelButton.click();
+    expect(onCancel.calledOnce).to.be.true;
+  });
+
+  it("should not allowed to validate when no profession is selected", async () => {
+    await render(defaultProps);
+    const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
+    expect(okButton).to.be.not.null;
+    expect(okButton.getAttribute("disabled")).to.be.not.null;
+  });
+
+  it("should enable accept button when an option is selected", async () => {
+    await render(defaultProps);
+    const validProfessions = HcpProfessionList.filter(item => item !== HcpProfession.empty);
+    const clickEvent = new MouseEvent("mousedown", { button: 0, buttons: 1, bubbles: true });
+    document.getElementById("dropdown-profession-selector").dispatchEvent(clickEvent);
+    for (const profession of validProfessions) {
+      const opt = document.getElementById(`dropdown-profession-menuitem-${profession}`);
+      expect(opt, profession).to.be.not.null;
+    }
+    const selectedProfession = validProfessions[0];
+    const oneOption = document.getElementById(`dropdown-profession-menuitem-${selectedProfession}`);
+    oneOption.click();
+
+    const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
+    expect(okButton.getAttribute("disabled")).to.be.null;
+    okButton.click();
+
+    expect(onAccept.calledOnce).to.be.true;
+    expect(onAccept.firstCall.args[0]).to.be.eq(selectedProfession);
   });
 }
 

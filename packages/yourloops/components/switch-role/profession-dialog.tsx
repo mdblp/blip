@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Switch role from caregiver to HCP dialog - Accept terms
+ * Switch role from caregiver to HCP dialog - Request profession
  *
  * All rights reserved.
  *
@@ -40,10 +40,6 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "./models";
 import BasicDropdown from "../dropdown/basic-dropdown";
-
-export interface Errors {
-  hcpProfession: boolean;
-}
 
 const dialogStyles = makeStyles(
   (theme: Theme) => {
