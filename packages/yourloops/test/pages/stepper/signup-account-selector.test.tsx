@@ -61,16 +61,16 @@ function TestSignupAccountForm(): void {
     expect(wrapper.find("button#button-signup-steppers-next").prop("disabled")).to.be.false;
   };
 
-  it("should disable next button when nothing is selected", async () => {
+  it.only("should disable next button when nothing is selected", () => {
     nextButtonDisabled(wrapper);
   });
 
-  it("should disable next button when patient is selected", async () => {
+  it("should disable next button when patient is selected", () => {
     wrapper.find("input#signup-account-selector-radio-patient").simulate("change", { target: { value: UserRoles.patient } });
     nextButtonDisabled(wrapper);
   });
 
-  it("should enable next button when hcp or caregiver is selected", async () => {
+  it("should enable next button when hcp or caregiver is selected", () => {
     wrapper.find("input#signup-account-selector-radio-hcp").simulate("change", { target: { value: UserRoles.hcp } });
     nextButtonEnabled(wrapper);
     wrapper.find("input#signup-account-selector-radio-caregiver").simulate("change", { target: { value: UserRoles.caregiver } });
