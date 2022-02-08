@@ -4,13 +4,13 @@ It is based on Tidepool Blip 1.27.
 
 ## Unreleased
 ### Added
-- YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1105 Yourloops new blue theme
 - YLP-1122 Patient should enter the team unique ID to accept a team invitation
 - YLP-1188 Pink theme for clinical environment
 - YLP-1190 Advertise user about account deletion
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
+- YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1120 Overview tab cleanup
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
