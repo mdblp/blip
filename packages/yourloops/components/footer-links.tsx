@@ -90,9 +90,11 @@ const footerStyle = makeStyles((theme: Theme) => {
       },
     },
     containerAbsolute: {
-      bottom: "0",
+      ["@media (min-height:630px)"]: {
+        bottom: "0",
+        position: "absolute",
+      },
       height: "68px",
-      position: "absolute",
       [theme.breakpoints.down("sm")]: {
         height: "149px",
       },
