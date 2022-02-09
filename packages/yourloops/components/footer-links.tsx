@@ -140,6 +140,9 @@ const footerStyle = makeStyles((theme: Theme) => {
       width: "20px",
       marginRight: "18px",
       alignSelf: "center",
+      [theme.breakpoints.down("sm")]: {
+        marginTop: "3px",
+      },
     },
     languageSeparator: {
       alignSelf: "center",
