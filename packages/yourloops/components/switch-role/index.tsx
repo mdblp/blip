@@ -29,9 +29,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import bows from "bows";
-import _ from "lodash";
 
-import { Profile } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
 import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from "./models";
 import metrics from "../../lib/metrics";
@@ -45,7 +43,7 @@ const log = bows("SwitchRoleDialogs");
 
 function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const { switchRoleToHCP, updateProfile, user } = useAuth();
+  const { switchRoleToHCP, user } = useAuth();
   const alert = useAlert();
   const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none);
   const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false);
@@ -59,22 +57,14 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
     setSwitchRoleStep(SwitchRoleToHcpSteps.consent);
   };
 
-  const getUpdatedProfile = (hcpProfession: HcpProfession): Profile => {
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
-    updatedProfile.hcpProfession = hcpProfession;
-    return updatedProfile;
-  };
-
   const handleSwitchRoleToUpdate = async (hcpProfession: HcpProfession): Promise<void> => {
-    await updateProfile(getUpdatedProfile(hcpProfession), false);
-    switchRoleToHCP(feedbackConsent)
-      .then(() => {
-        metrics.send("switch_account", "accept_terms");
-      })
-      .catch((reason: unknown) => {
-        alert.error(t("modal-switch-hcp-failure"));
-        log.error("switchRoleToHCP", reason);
-      });
+    try {
+      await switchRoleToHCP(feedbackConsent, hcpProfession);
+      metrics.send("switch_account", "accept_terms");
+    } catch (reason: unknown) {
+      alert.error(t("modal-switch-hcp-failure"));
+      log.error("switchRoleToHCP", reason);
+    }
   };
 
   const handleSwitchRoleToProfession = (feedback: boolean): void => {

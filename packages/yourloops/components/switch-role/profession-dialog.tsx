@@ -41,10 +41,6 @@ import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "./models";
 import BasicDropdown from "../dropdown/basic-dropdown";
 
-export interface Errors {
-  hcpProfession: boolean;
-}
-
 const dialogStyles = makeStyles(
   (theme: Theme) => {
     return {
