@@ -40,10 +40,11 @@ import { Preferences, Profile, Settings, UserRoles } from "../../../models/shore
 import config from "../../../lib/config";
 import { waitTimeout } from "../../../lib/utils";
 import { AuthAPI, User, Session, AuthContext, SignupUser } from "../../../lib/auth";
-import { AuthContextImpl, STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/hook";
+import { AuthContextImpl } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
 import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./api.test";
 import { HcpProfession } from "../../../models/hcp-profession";
+import { STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/models";
 
 /**
  * Auth hook stubs definitions
@@ -57,6 +58,7 @@ export interface AuthContextStubs {
   isLoggedIn: boolean;
   login: sinon.SinonStub<[string, string, string|null], Promise<User>>;
   logout: sinon.SinonStub<[boolean|undefined], Promise<void>>;
+  redirectToProfessionalAccountLogin: sinon.SinonStub<[], void>;
   resendSignup: sinon.SinonStub<[string], Promise<boolean>>;
   resetPassword: sinon.SinonStub<[string,string,string], Promise<boolean>>;
   sendPasswordResetEmail: sinon.SinonStub<[string,string], Promise<void>>;
@@ -86,6 +88,7 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   isLoggedIn: true,
   login: sinon.stub<[string, string, string|null], Promise<User>>().resolves(session.user),
   logout: sinon.stub<[boolean|undefined], Promise<void>>().resolves(),
+  redirectToProfessionalAccountLogin: sinon.stub<[], void>().resolves(),
   resendSignup: sinon.stub<[string], Promise<boolean>>().resolves(true),
   resetPassword: sinon.stub<[string,string,string], Promise<boolean>>().resolves(true),
   sendPasswordResetEmail: sinon.stub<[string,string], Promise<void>>().resolves(),
