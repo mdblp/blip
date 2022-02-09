@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 2.0.6-beta3 - 2022-02-01
+## 2.0.6-beta4 - 2022-02-09
 ### Added
 - YLP-1105 Yourloops new blue theme
 - YLP-1122 Patient should enter the team unique ID to accept a team invitation
