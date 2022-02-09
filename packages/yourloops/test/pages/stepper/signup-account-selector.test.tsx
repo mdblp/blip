@@ -81,7 +81,7 @@ function TestSignupAccountForm(): void {
     nextButtonDisabled(true);
   });
 
-  it.only("should enable next button when hcp or caregiver is selected", () => {
+  it("should enable next button when hcp or caregiver is selected", () => {
     document.getElementById("signup-account-selector-radio-hcp").click();
     nextButtonDisabled(false);
     document.getElementById("signup-account-selector-radio-caregiver").click();
