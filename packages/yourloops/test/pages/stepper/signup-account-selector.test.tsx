@@ -27,54 +27,65 @@
 
 import React from "react";
 import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
 import _ from "lodash";
 
 import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 import SignupAccountSelector from "../../../pages/signup/signup-account-selector";
-import { UserRoles } from "../../../models/shoreline";
+import { act } from "react-test-renderer";
+import ReactDOM from "react-dom";
 
 function TestSignupAccountForm(): void {
 
-  const signupForm = (): JSX.Element => {
-    return (
-      <SignUpFormStateProvider>
-        <SignupAccountSelector handleBack={_.noop} handleNext={_.noop} />
-      </SignUpFormStateProvider>);
-  };
+  let container: HTMLDivElement | null = null;
 
-  let wrapper: ReactWrapper;
+  function render() {
+    return act(() => {
+      return new Promise((resolve) => {
+        ReactDOM.render(
+          <SignUpFormStateProvider>
+            <SignupAccountSelector handleBack={_.noop} handleNext={_.noop} />
+          </SignUpFormStateProvider>, container, resolve);
+      });
+    });
+  }
 
   beforeEach(async () => {
-    wrapper = await mount(signupForm());
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    await render();
   });
 
   afterEach(() => {
-    wrapper.unmount();
+    if (container) {
+      ReactDOM.unmountComponentAtNode(container);
+      document.body.removeChild(container);
+      container = null;
+    }
   });
 
-  const nextButtonDisabled = (wrapper: ReactWrapper) => {
-    expect(wrapper.find("button#button-signup-steppers-next").prop("disabled")).to.be.true;
-  };
-
-  const nextButtonEnabled = (wrapper: ReactWrapper) => {
-    expect(wrapper.find("button#button-signup-steppers-next").prop("disabled")).to.be.false;
+  const nextButtonDisabled = (disabled: boolean) => {
+    const nextButton = document.getElementById("button-signup-steppers-next");
+    if (disabled) {
+      expect(nextButton.getAttribute("disabled")).to.be.not.null;
+    } else {
+      expect(nextButton.getAttribute("disabled")).to.be.null;
+    }
   };
 
   it("should disable next button when nothing is selected", () => {
-    nextButtonDisabled(wrapper);
+    nextButtonDisabled(true);
   });
 
   it("should disable next button when patient is selected", () => {
-    wrapper.find("input#signup-account-selector-radio-patient").simulate("change", { target: { value: UserRoles.patient } });
-    nextButtonDisabled(wrapper);
+    document.getElementById("signup-account-selector-radio-patient").click();
+    nextButtonDisabled(true);
   });
 
-  it("should enable next button when hcp or caregiver is selected", () => {
-    wrapper.find("input#signup-account-selector-radio-hcp").simulate("change", { target: { value: UserRoles.hcp } });
-    nextButtonEnabled(wrapper);
-    wrapper.find("input#signup-account-selector-radio-caregiver").simulate("change", { target: { value: UserRoles.caregiver } });
-    nextButtonEnabled(wrapper);
+  it.only("should enable next button when hcp or caregiver is selected", () => {
+    document.getElementById("signup-account-selector-radio-hcp").click();
+    nextButtonDisabled(false);
+    document.getElementById("signup-account-selector-radio-caregiver").click();
+    nextButtonDisabled(false);
   });
 }
 
