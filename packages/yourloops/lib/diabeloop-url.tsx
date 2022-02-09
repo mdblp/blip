@@ -37,6 +37,7 @@ class DiabeloopUrl {
   private rootPathName: string;
   private termsUrl: string;
   private privacyPolicyUrl: string;
+  private intendedUseUrL: string;
   private cookiesPolicyUrL: string;
   private supportUrL: string;
 
@@ -44,7 +45,8 @@ class DiabeloopUrl {
     this.rootPathName = `${config.ASSETS_URL}`;
     this.termsUrl = `${this.rootPathName}terms.pdf`;
     this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`;
-    this.cookiesPolicyUrL = `${this.rootPathName}intended-use.pdf`;
+    this.intendedUseUrL = `${this.rootPathName}intended-use.pdf`;
+    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.pdf`;
     this.supportUrL = "https://www.diabeloop.com";
   }
 
@@ -82,8 +84,8 @@ class DiabeloopUrl {
   }
 
   getIntendedUseUrL(currentLangue: string): string {
-    this.cookiesPolicyUrL = `${this.rootPathName}intended-use.${currentLangue}.pdf`;
-    return this.cookiesPolicyUrL;
+    this.intendedUseUrL = `${this.rootPathName}intended-use.${currentLangue}.pdf`;
+    return this.intendedUseUrL;
   }
 
   getCookiesPolicyUrl(currentLangue: string): string {
