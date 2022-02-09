@@ -385,7 +385,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                 <React.Fragment>
                   {user.frProId ?
                     <TextField
-                      value={user.frProId}
+                      value={user.getParsedFrProId()}
                       label={t("professional-account-number")}
                       disabled
                       className={classes.formControl}

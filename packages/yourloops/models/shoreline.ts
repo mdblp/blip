@@ -26,23 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { JwtPayload } from "jwt-decode";
-
 import { Units } from "./generic";
 import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
 import { HcpProfession } from "./hcp-profession";
-
-interface JwtShorelinePayload extends JwtPayload {
-  role: "hcp" | "patient" | "caregiver";
-  /** username: an e-mail */
-  name: string;
-  email: string;
-  /** userid */
-  usr: string;
-  /** yes for server token - we will never have that in Blip: always "no" */
-  srv: "yes" | "no";
-}
 
 enum UserRoles {
   hcp = "hcp",
@@ -95,7 +82,7 @@ interface Preferences {
 interface IUser {
   emails?: string[];
   readonly emailVerified?: boolean;
-  readonly frProId?: string;
+  frProId?: string;
   readonly role: UserRoles; // Main role of the user
   roles?: UserRoles[];
   readonly userid: string;
@@ -106,4 +93,4 @@ interface IUser {
   medicalData?: MedicalData | null; // Patient medical data. undefined means not fetched, null if the fetch failed
 }
 
-export { JwtShorelinePayload, IUser, Profile, Settings, Preferences, Consent, UserRoles };
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

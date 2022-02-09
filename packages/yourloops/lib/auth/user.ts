@@ -172,6 +172,14 @@ class User implements IUser {
     }
     return path;
   }
+
+  getParsedFrProId(): string | null {
+    if (this.frProId) {
+      const parsedId = this.frProId.split(":");
+      return parsedId[2];
+    }
+    return null;
+  }
 }
 
 export default User;

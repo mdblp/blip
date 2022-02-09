@@ -31,6 +31,7 @@ import User from "./user";
 import { LanguageCodes } from "../../models/locales";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
+import { JwtPayload } from "jwt-decode";
 
 /** Hook internal usage */
 export interface Session {
@@ -38,6 +39,21 @@ export interface Session {
   sessionToken: string;
   traceToken: string;
 }
+
+export interface JwtShorelinePayload extends JwtPayload {
+  role: "hcp" | "patient" | "caregiver" | "clinic";
+  /** username: an e-mail */
+  name: string;
+  email: string;
+  /** userid */
+  usr: string;
+  /** yes for server token - we will never have that in Blip: always "no" */
+  srv: "yes" | "no";
+}
+
+export const STORAGE_KEY_SESSION_TOKEN = "session-token";
+export const STORAGE_KEY_TRACE_TOKEN = "trace-token";
+export const STORAGE_KEY_USER = "logged-in-user";
 
 export interface UpdateUser {
   roles?: UserRoles[];

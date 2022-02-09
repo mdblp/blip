@@ -35,31 +35,27 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import { HistoryState } from "../../models/generic";
-import { Profile, Preferences, Settings, UserRoles, IUser } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
 import { defer, fixYLP878Settings, numberPrecision } from "../utils";
-import { availableLanguageCodes, getCurrentLang, changeLanguage } from "../language";
+import { availableLanguageCodes, changeLanguage, getCurrentLang } from "../language";
 import metrics from "../metrics";
 import { zendeskLogin, zendeskLogout } from "../zendesk";
 import User from "./user";
-import { Session, AuthAPI, AuthContext, AuthProvider, SignupUser } from "./models";
+import {
+  AuthAPI,
+  AuthContext,
+  AuthProvider,
+  JwtShorelinePayload,
+  Session,
+  SignupUser,
+  STORAGE_KEY_USER,
+  STORAGE_KEY_SESSION_TOKEN,
+  STORAGE_KEY_TRACE_TOKEN,
+} from "./models";
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
 
-interface JwtShorelinePayload extends JwtPayload {
-  role: "hcp" | "patient" | "caregiver" | "clinic";
-  /** username: an e-mail */
-  name: string;
-  email: string;
-  /** userid */
-  usr: string;
-  /** yes for server token - we will never have that in Blip: always "no" */
-  srv: "yes" | "no";
-}
-
-export const STORAGE_KEY_SESSION_TOKEN = "session-token";
-export const STORAGE_KEY_TRACE_TOKEN = "trace-token";
-export const STORAGE_KEY_USER = "logged-in-user";
 
 const ReactAuthContext = React.createContext({} as AuthContext);
 const log = bows("AuthHook");
@@ -108,7 +104,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? {
       sessionToken,
       traceToken,
-      user
+      user,
     } : null,
     [sessionToken, traceToken, user]
   );

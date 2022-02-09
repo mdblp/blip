@@ -44,10 +44,15 @@ function CertifyAccountPage(): JSX.Element {
   const [processing, setProcessing] = useState(false);
   const sourceUrl = new URLSearchParams(search).get("source");
   const frProId = new URLSearchParams(search).get("frproid");
+  const error = new URLSearchParams(search).get("error");
 
   const certify = async () => {
     try {
       setProcessing(true);
+      if (error) {
+        alert.error(t("error-http-500"));
+        return;
+      }
       if (sourceUrl === "psc" && frProId) {
         await certifyProfessionalAccount();
         alert.success(t("certify-professional-account-done"));

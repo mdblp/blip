@@ -1,7 +1,37 @@
+/**
+ * Copyright (c) 2022, Diabeloop
+ * Hook for auth API - Interface declaration
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import axios, { AxiosRequestConfig } from "axios";
 import appConfig from "./config";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/hook";
+import { v4 as uuidv4 } from "uuid";
 import { HttpHeaderKeys } from "../models/api";
+import { getFromLocalStorage } from "./utils";
+import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
 
 axios.defaults.baseURL = appConfig.API_HOST;
 
@@ -9,13 +39,11 @@ axios.defaults.baseURL = appConfig.API_HOST;
  * We use axios request interceptor to set the access token into headers each request the app send
  */
 axios.interceptors.request.use((config): AxiosRequestConfig => {
-  // TODO create util functions to get tokens from local storage
-  // TODO set trace token here ! (ex: blip-timestamp-userId)
-  const token = sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN);
   config = {
     ...config,
     headers: {
-      [HttpHeaderKeys.sessionToken]: token as string,
+      [HttpHeaderKeys.sessionToken]: getFromLocalStorage(STORAGE_KEY_SESSION_TOKEN),
+      [HttpHeaderKeys.traceToken]: uuidv4(),
     },
   };
   return config;
