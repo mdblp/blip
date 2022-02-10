@@ -31,6 +31,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
 import { expect } from "chai";
+import * as sinon from "sinon";
 
 import { Units } from "../../../models/generic";
 import { AuthContextProvider, Session } from "../../../lib/auth";
@@ -39,13 +40,21 @@ import { createAuthHookStubs } from "../../lib/auth/hook.test";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import ProfilePage from "../../../pages/profile";
+import { Preferences, Profile, Settings } from "../../../models/shoreline";
 
 function testProfile(): void {
   let container: HTMLElement | null = null;
+  let updatePreferences: sinon.SinonStub<[Preferences,boolean|undefined], Promise<Preferences>>;
+  let updateProfile: sinon.SinonStub<[Profile, boolean | undefined], Promise<Profile>>;
+  let updateSettings: sinon.SinonStub<[Settings,boolean|undefined], Promise<Settings>>;
   const defaultUrl = "/professional/patients";
 
   async function mountProfilePage(session: Session): Promise<void> {
     const context = createAuthHookStubs(session);
+    updatePreferences = context.updatePreferences;
+    updateProfile = context.updateProfile;
+    updateSettings = context.updateSettings;
+
     await act(() => {
       return new Promise((resolve) => {
         render(
@@ -124,25 +133,46 @@ function testProfile(): void {
     expect(textField).to.be.not.null;
   });
 
-  it.only("should enable save button when changes are made", async () => {
+  it("should update profile when saving after changing firstname", async () => {
     const session = loggedInUsers.hcpSession;
     await mountProfilePage(session);
 
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const firstnameInput: HTMLInputElement = container.querySelector("#profile-textfield-firstname");
-    const languageSelectInput = container.querySelector("#profile-locale-selector + input");
-    const hcpProfessionSelectInput = container.querySelector("#dropdown-profession-selector + input");
+
+    expect(saveButton.disabled, "button is disabled").to.be.true;
+    Simulate.change(firstnameInput, { target: { value: "Chandler" } } as unknown as SyntheticEventData);
+    expect(saveButton.disabled, "button is enabled").to.be.false;
+    Simulate.click(saveButton);
+    expect(updateProfile.calledOnce, "call to method").to.be.true;
+  });
+
+  it("should update settings when saving after changing units", async () => {
+    const session = loggedInUsers.hcpSession;
+    await mountProfilePage(session);
+
+    const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const unitSelectInput = container?.querySelector("#profile-units-selector + input");
 
     expect(saveButton.disabled, "button is disabled").to.be.true;
-
-    Simulate.change(firstnameInput, { target: { value: "Chandler" } } as unknown as SyntheticEventData);
-    Simulate.change(languageSelectInput, { target: { value: "es" } } as unknown as SyntheticEventData);
-    Simulate.change(hcpProfessionSelectInput, { target: { value: "hcp-profession-nurse" } } as unknown as SyntheticEventData);
     Simulate.change(unitSelectInput, { target: { value: Units.mole } } as unknown as SyntheticEventData);
-
     expect(saveButton.disabled, "button is enabled").to.be.false;
     Simulate.click(saveButton);
+    expect(updateSettings.calledOnce, "call to method").to.be.true;
+  });
+
+  it("should update preferences when saving after changing language", async () => {
+    const session = loggedInUsers.hcpSession;
+    await mountProfilePage(session);
+
+    const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
+    const languageSelectInput = container.querySelector("#profile-locale-selector + input");
+
+    expect(saveButton.disabled, "button is disabled").to.be.true;
+    Simulate.change(languageSelectInput, { target: { value: "es" } } as unknown as SyntheticEventData);
+    expect(saveButton.disabled, "button is enabled").to.be.false;
+    Simulate.click(saveButton);
+    expect(updatePreferences.calledOnce, "call to method").to.be.true;
   });
 }
 
