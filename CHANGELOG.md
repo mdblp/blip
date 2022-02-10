@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1217 Patient should be better informed that he should not create an account through web UI
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
+- YLP-288 Improve date selection on Trends view
 - YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1120 Overview tab cleanup
 ### Fixed
