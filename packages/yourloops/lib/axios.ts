@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Hook for auth API - Interface declaration
+ * Axios Instance configuration
  *
  * All rights reserved.
  *

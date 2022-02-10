@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Hook for auth API - Interface declaration
+ * Http service to make requests
  *
  * All rights reserved.
  *

@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Components tests
+ * Copyright (c) 2022, Diabeloop
+ * Buttons tests
  *
  * All rights reserved.
  *
@@ -25,21 +25,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import testProSanteConnectButton from "./pro-sante-connect-button-test";
 
-import testDatePickers from "./date-pickers";
-import testSnackbar from "./utils/snackbar.test";
-import TestPasswordStrengthMeter from "./password-strength-meter.test";
-import testSwitchRole from "./switch-role";
-import testDropdowns from "./dropdown";
-import testButtons from "./buttons";
-
-function testComponents(): void {
-  describe("Buttons", testButtons);
-  describe("DatePickers", testDatePickers);
-  describe("Snackbar", testSnackbar);
-  describe("Dropdowns", testDropdowns);
-  describe("SwitchRole", testSwitchRole);
-  describe("Password strength meter", TestPasswordStrengthMeter);
+export default function testButtons() {
+  describe("Pro Sante Connect Button", testProSanteConnectButton);
 }
-
-export default testComponents;

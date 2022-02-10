@@ -75,6 +75,7 @@ function ProSanteConnectButton({ onClick }: Props): JSX.Element {
   return (
     <Box className={container}>
       <Button
+        id="pro-sante-connect-button"
         href=""
         disableRipple
         disableElevation

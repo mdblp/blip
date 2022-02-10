@@ -53,7 +53,7 @@ const userHCP: User = new User({
   emailVerified: true,
   profile: { firstName: "John", lastName: "Doe", fullName: "John Doe" },
   preferences: { displayLanguageCode: "en" },
-  settings: { units: { bg: Units.gram } },
+  settings: { units: { bg: Units.gram }, country: "FR" },
 });
 
 const userPatient = new User({
