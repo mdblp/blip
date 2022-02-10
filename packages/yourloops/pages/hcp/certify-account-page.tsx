@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * HCPs main page
  *
  * All rights reserved.
  *

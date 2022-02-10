@@ -508,11 +508,12 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const certifyProfessionalAccount = async (): Promise<void> => {
-    const { frProId } = await api.certifyProfessionalAccount();
-    if (user) {
-      user.frProId = frProId;
-      setUser(user);
+    if (!user) {
+      throw Error("User not logged in");
     }
+    const { frProId } = await api.certifyProfessionalAccount();
+    user.frProId = frProId;
+    setUser(user);
   };
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);

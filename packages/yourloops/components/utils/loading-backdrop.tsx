@@ -1,8 +1,5 @@
-import React from "react";
-
 /**
  * Copyright (c) 2022, Diabeloop
- * Generic password component file
  *
  * All rights reserved.
  *
@@ -28,6 +25,7 @@ import React from "react";
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";

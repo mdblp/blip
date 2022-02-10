@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Profile page
  *
  * All rights reserved.
  *
