@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Simple DatePicker to select a single day
+ * Copyright (c) 2022, Diabeloop
+ * Calendar view: Bring the calendar, the header and the toolbar together
  *
  * All rights reserved.
  *
@@ -27,154 +27,88 @@
  */
 
 import React from "react";
-import dayjs, { Dayjs, isDayjs } from "dayjs";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
+import { Dayjs } from "dayjs";
 
-import { useTheme, makeStyles, Theme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-
-import CalendarView from "./calendar-view";
+import {
+  CalendarOrientation,
+  CalendarSelectionSingle,
+} from "./models";
+import { useChangeMonthState, toYearMonth } from "./change-month";
+import PickerToolbar from "./picker-toolbar";
+import CalendarBox from "./calendar-box";
 
 interface DatePickerProps {
-  id?: string;
-  date?: string | number | Dayjs | Date;
-  minDate?: Dayjs | number | string | Date;
-  maxDate?: Dayjs | number | string | Date;
-  children: React.ReactNode;
-  className?: string;
-  activeClassName?: string;
-  onResult?: (date?: string) => void;
+  showToolbar?: boolean;
+  selection: CalendarSelectionSingle;
+  minDate: Dayjs;
+  maxDate: Dayjs;
+  orientation: CalendarOrientation;
+  onChange: (d: Dayjs) => void;
 }
 
-const datePickerStyle = makeStyles((theme: Theme) => {
-  return {
-    dialogPaper: {
-      margin: 0,
-      borderRadius: 0,
-      [theme.breakpoints.down("sm")]: {
-        maxWidth: "initial",
-      },
-    },
-    content: {
-      "&:first-child": {
-        padding: 0,
-        margin: 0,
-      },
-    },
-    divChildren: {
-      cursor: "pointer",
-    },
-  };
-}, { name: "date-picker-single-day" });
-
+/**
+ * A single month calendar
+ */
 function DatePicker(props: DatePickerProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = datePickerStyle();
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const [isOpen, setIsOpen] = React.useState(false);
+  const { selection, minDate, maxDate, orientation, onChange } = props;
 
-  const { date, minDate, maxDate } = React.useMemo(() => {
-    // use startOf() here to clone the date, and to be sure we use the same timezone offset
-    // dayjs don't handle properly the clone of the timezone
-    const minDate = props.minDate ? dayjs(props.minDate).startOf("day") : undefined;
-    const maxDate = props.maxDate ? dayjs(props.maxDate).endOf("day") : undefined;
-    let date = props.date ? dayjs(props.date).startOf("day") : dayjs().startOf("day");
-    // When changing the date, for example by changing the current year,
-    // which can done in an upper element with YearSelector,
-    // be sure we respect the min/max date
-    if (isDayjs(minDate) && date.isBefore(minDate)) {
+  const [selectingYear, setSelectingYear] = React.useState<boolean>(false);
+
+  const [currentMonth, setCurrentMonth] = React.useState<Dayjs>(selection.selected.startOf("month"));
+  const [changingMonth, handlePrevMonth, handleNextMonth] = useChangeMonthState({
+    currentMonth,
+    setCurrentMonth,
+    minDate,
+    maxDate,
+    mode: selection.mode,
+  });
+
+  const handleSelectedYear = selectingYear ? (year: number) => {
+    setSelectingYear(false);
+    let date = selection.selected.set("year", year);
+    if (date.isBefore(minDate)) {
       date = minDate;
-    } else if (isDayjs(maxDate) && date.isAfter(maxDate)) {
+    } else if (date.isAfter(maxDate)) {
       date = maxDate;
     }
-    return { date, minDate, maxDate };
-  }, [props.date, props.maxDate, props.minDate]);
+    props.onChange(date);
+    setCurrentMonth(date.startOf("month"));
+  } : undefined;
 
-  const [selectedDate, setSelectedDate] = React.useState(date);
-
-  const handleOpen = () => {
-    setSelectedDate(date); // Refresh our selected date
-    setIsOpen(true);
-  };
-  const handleClose = () => setIsOpen(false);
-  const handleCancel = () => {
-    handleClose();
-    if (props.onResult) {
-      props.onResult();
+  const onChangeSelectedDate = (date: Dayjs, updateCurrentMonth?: boolean): void => {
+    if (date.isBefore(minDate) || date.isAfter(maxDate)) {
+      return;
     }
-  };
-  const handleOK = () => {
-    handleClose();
-    if (props.onResult) {
-      props.onResult(selectedDate.format("YYYY-MM-DD"));
+    if (updateCurrentMonth) {
+      const dMonth = toYearMonth(date) - toYearMonth(currentMonth);
+      if (dMonth > 0 && handleNextMonth) {
+        handleNextMonth();
+      } else if (dMonth < 0 && handlePrevMonth) {
+        handlePrevMonth();
+      }
     }
+    onChange(date);
   };
-
-  const onKeyUpOpen = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      e.stopPropagation();
-      handleOpen();
-    }
-  };
-
-  const onKeyUpClose = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      handleCancel();
-    }
-  };
-
-  const onKeyUpValidate = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      handleOK();
-    }
-  };
-
-  let calendarView: JSX.Element | null = null;
-  if (isOpen) {
-    // Don't render the whole calendar everytime
-    // only needed when the dialog is displayed
-    calendarView = (
-      <CalendarView
-        selectedDate={selectedDate}
-        minDate={minDate}
-        maxDate={maxDate}
-        direction={matches ? "landscape" : "portrait"}
-        onChange={setSelectedDate} />
-    );
-  }
 
   return (
     <React.Fragment>
-      <div
-        id={props.id ?? "date-picker-button-show-calendar"}
-        className={clsx(classes.divChildren, props.className, isOpen ? props.activeClassName : null)}
-        onClick={handleOpen}
-        onKeyUp={onKeyUpOpen}
-        role="button"
-        tabIndex={0}
-      >
-        {props.children}
-      </div>
-      <Dialog onClose={handleCancel} aria-labelledby="date-picker-selected-date" open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
-        <DialogContent className={classes.content}>
-          {calendarView}
-        </DialogContent>
-        <DialogActions>
-          <Button id="date-picker-button-cancel" onClick={handleCancel} onKeyUp={onKeyUpClose} color="primary">
-            {t("button-cancel")}
-          </Button>
-          <Button id="date-picker-button-ok" onClick={handleOK} onKeyUp={onKeyUpValidate} color="primary" variant="contained">
-            {t("button-ok")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {props.showToolbar && <PickerToolbar
+        selection={selection}
+        orientation={orientation}
+        onClickYear={() => setSelectingYear(true)}
+      />}
+      <CalendarBox
+        orientation={orientation}
+        currentMonth={currentMonth}
+        selection={selection}
+        minDate={minDate}
+        maxDate={maxDate}
+        changingMonth={changingMonth}
+        onPrevMonth={handlePrevMonth}
+        onNextMonth={handleNextMonth}
+        onChange={onChangeSelectedDate}
+        onSelectYear={handleSelectedYear}
+      />
     </React.Fragment>
   );
 }
