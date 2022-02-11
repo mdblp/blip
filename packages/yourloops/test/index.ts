@@ -33,6 +33,7 @@ import initDayJS from "../lib/dayjs";
 import testLib from "./lib";
 import testComponents from "./components";
 import testPages from "./pages";
+import testServices from "./services";
 
 enzyme.configure({
   adapter: new Adapter(),
@@ -43,6 +44,7 @@ i18nInit().then(() => {
   initDayJS();
   describe("Lib", testLib);
   describe("Components", testComponents);
+  describe("Services", testServices);
   describe("Pages", testPages);
 }).catch((reason: unknown) => {
   console.error(reason);

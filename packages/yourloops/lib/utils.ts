@@ -200,6 +200,6 @@ export function compareValues<T extends object>(key: keyof T, order = "asc") {
   };
 }
 
-export function getFromLocalStorage(key: string): string {
-  return sessionStorage.getItem(key) as string;
+export function getFromSessionStorage(key: string): string {
+  return sessionStorage.getItem(key) ?? "";
 }

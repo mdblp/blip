@@ -44,6 +44,7 @@ import HttpService from "../../services/http";
 
 const log = bows("Auth API");
 const failedLoginCounter = new Map<string, number>();
+const httpService = new HttpService();
 
 /**
  * Perform a login.
@@ -554,7 +555,7 @@ async function logout(session: Readonly<Session>): Promise<void> {
 }
 
 async function certifyProfessionalAccount(): Promise<IUser> {
-  const { data } = await HttpService.post<IUser>("/auth/oauth/merge", _, { withCredentials: true });
+  const { data } = await httpService.post<IUser>("/auth/oauth/merge", _, { withCredentials: true });
   return data;
 }
 
