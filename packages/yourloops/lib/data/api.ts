@@ -129,6 +129,7 @@ export async function getPatientDataV0(session: Session, patient: IUser, options
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
+/*todo use tide v2 range route*/
 function getPatientDataRangeV1(session: Session, patient: IUser): Promise<Response> {
   const { sessionToken, traceToken } = session;
   if (patient.role !== UserRoles.patient) {
@@ -218,7 +219,7 @@ export async function getPatientDataRange(session: Session, patient: IUser): Pro
 }
 
 /**
- * Fetch data using tide-whisperer v1 route
+ * Fetch data using tide-whisperer v2 route
  * @param session Session information
  * @param patient The patient (user) to fetch data
  * @param options Options to pas to the API
@@ -230,7 +231,11 @@ export async function getPatientData(session: Session, patient: IUser, options?:
     return Promise.reject(new Error(t("not-a-patient")));
   }
 
-  const dataURL = new URL(`/data/v1/data/${patient.userid}`, appConfig.API_HOST);
+  let endpoint = `/data/v1/data/${patient.userid}`;
+  if (appConfig.CBG_BUCKETS) {
+    endpoint = `/data/v1/dataV2/${patient.userid}`;
+  }
+  const dataURL = new URL(endpoint, appConfig.API_HOST);
 
   if (options) {
     if (options.withPumpSettings) {
