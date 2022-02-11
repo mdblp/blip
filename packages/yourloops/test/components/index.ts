@@ -28,7 +28,8 @@
 
 import testDatePickers from "./date-pickers";
 import testSnackbar from "./utils/snackbar.test";
-import TestPasswordStrengthMeter from "./password-strength-meter.test";
+import testFooterLink from "./footer-links.test";
+import testPasswordStrengthMeter from "./password-strength-meter.test";
 import testSwitchRole from "./switch-role";
 import testDropdowns from "./dropdown";
 import testButtons from "./buttons";
@@ -36,10 +37,12 @@ import testButtons from "./buttons";
 function testComponents(): void {
   describe("Buttons", testButtons);
   describe("DatePickers", testDatePickers);
+  describe("Footer", testFooterLink);
   describe("Snackbar", testSnackbar);
-  describe("Dropdowns", testDropdowns);
+  describe("Footer", testFooterLink);
+  describe("Password strength meter", testPasswordStrengthMeter);
   describe("SwitchRole", testSwitchRole);
-  describe("Password strength meter", TestPasswordStrengthMeter);
+  describe("Dropdowns", testDropdowns);
 }
 
 export default testComponents;

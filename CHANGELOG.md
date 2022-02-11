@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
 - YLP-288 Improve date selection on Trends view
+- YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1120 Overview tab cleanup
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
@@ -590,7 +591,7 @@ It is based on Tidepool Blip 1.27.
 - Change e-mail & password can be disabled for patients. They cannot be disabled for clinical accounts.
 - Disable the create patient account page
 
-## 0.1.8 -
+## 0.1.8 - 2019-03-13
 ### Added
 - Based on [Tidepool 1.12.5](https://github.com/tidepool-org/blip/releases/tag/v1.12.5)
 - MVP for Branding
