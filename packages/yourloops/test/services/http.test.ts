@@ -32,7 +32,6 @@ import * as sinon from "sinon";
 import HttpService from "../../services/http";
 
 function testHttp(): void {
-  const httpService = new HttpService();
   const url = "myFakeUrl";
   const payload = "myFakePayload";
   const config = { withCredentials: true };
@@ -49,21 +48,21 @@ function testHttp(): void {
       axiosStub = sinon.stub(axios, "get").resolves(Promise.resolve(expectedResponse));
 
       //when
-      const response = await httpService.get(url, config);
+      const response = await HttpService.get(url, config);
 
       //then
       expect(response).to.equal(expectedResponse);
       expect(axiosStub.calledWith(url, config)).to.be.true;
     });
 
-    it("shouldthrow error when failing", async () => {
+    it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
       axiosStub = sinon.stub(axios, "get").throws(expectedError);
 
       //when
       try {
-        await httpService.get(url, config);
+        await HttpService.get(url, config);
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
@@ -80,21 +79,21 @@ function testHttp(): void {
       axiosStub = sinon.stub(axios, "post").resolves(Promise.resolve(expectedResponse));
 
       //when
-      const response = await httpService.post(url, payload, config);
+      const response = await HttpService.post(url, payload, config);
 
       //then
       expect(response).to.equal(expectedResponse);
       expect(axiosStub.calledWith(url, payload, config)).to.be.true;
     });
 
-    it("shouldthrow error when failing", async () => {
+    it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
       axiosStub = sinon.stub(axios, "post").throws(expectedError);
 
       //when
       try {
-        await httpService.post(url, payload, config);
+        await HttpService.post(url, payload, config);
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
@@ -111,21 +110,21 @@ function testHttp(): void {
       axiosStub = sinon.stub(axios, "put").resolves(Promise.resolve(expectedResponse));
 
       //when
-      const response = await httpService.put(url, payload, config);
+      const response = await HttpService.put(url, payload, config);
 
       //then
       expect(response).to.equal(expectedResponse);
       expect(axiosStub.calledWith(url, payload, config)).to.be.true;
     });
 
-    it("shouldthrow error when failing", async () => {
+    it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
       axiosStub = sinon.stub(axios, "put").throws(expectedError);
 
       //when
       try {
-        await httpService.put(url, payload, config);
+        await HttpService.put(url, payload, config);
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
@@ -142,21 +141,21 @@ function testHttp(): void {
       axiosStub = sinon.stub(axios, "delete").resolves(Promise.resolve(expectedResponse));
 
       //when
-      const response = await httpService.delete(url, config);
+      const response = await HttpService.delete(url, config);
 
       //then
       expect(response).to.equal(expectedResponse);
       expect(axiosStub.calledWith(url, config)).to.be.true;
     });
 
-    it("shouldthrow error when failing", async () => {
+    it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
       axiosStub = sinon.stub(axios, "delete").throws(expectedError);
 
       //when
       try {
-        await httpService.delete(url, config);
+        await HttpService.delete(url, config);
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
