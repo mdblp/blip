@@ -37,7 +37,7 @@ const defaultConfig = {
   YLP820_BASAL_TIME: 5000,
   DEV: true,
   TEST: false,
-  CBG_BUCKETS: true,
+  CBG_BUCKETS_ENABLED: true,
 };
 
 /** @typedef {typeof defaultConfig} AppConfig */

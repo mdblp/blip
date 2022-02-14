@@ -129,14 +129,18 @@ export async function getPatientDataV0(session: Session, patient: IUser, options
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-/*todo use tide v2 range route*/
-function getPatientDataRangeV1(session: Session, patient: IUser): Promise<Response> {
+function getRange(session: Session, patient: IUser): Promise<Response> {
   const { sessionToken, traceToken } = session;
   if (patient.role !== UserRoles.patient) {
     return Promise.reject(new Error(t("not-a-patient")));
   }
 
-  const dataURL = new URL(`/data/v1/range/${patient.userid}`, appConfig.API_HOST);
+  let endpoint = `/data/v1/range/${patient.userid}`;
+  if (appConfig.CBG_BUCKETS_ENABLED) {
+    endpoint = `/data/v2/range/${patient.userid}`;
+  }
+
+  const dataURL = new URL(endpoint, appConfig.API_HOST);
   return fetch(dataURL.toString(), {
     method: "GET",
     headers: {
@@ -147,7 +151,7 @@ function getPatientDataRangeV1(session: Session, patient: IUser): Promise<Respon
 }
 
 /**
- * Fetch data range using tide-whisperer v1 route
+ * Fetch data range using tide-whisperer v1 route or tide-whisperer v2 route
  * @param session Session information
  * @param patient The patient (user) to fetch data
  * @returns Array [string, string] of ISO 8601 dates time
@@ -155,7 +159,7 @@ function getPatientDataRangeV1(session: Session, patient: IUser): Promise<Respon
 export async function getPatientDataRange(session: Session, patient: IUser): Promise<string[] | null> {
   let response: Response | null = null;
   if (routeV1Available) {
-    response = await getPatientDataRangeV1(session, patient);
+    response = await getRange(session, patient);
     if (response.ok) {
       const dataRange = (await response.json()) as string[];
       if (!Array.isArray(dataRange) || dataRange.length !== 2) {
@@ -232,7 +236,7 @@ export async function getPatientData(session: Session, patient: IUser, options?:
   }
 
   let endpoint = `/data/v1/data/${patient.userid}`;
-  if (appConfig.CBG_BUCKETS) {
+  if (appConfig.CBG_BUCKETS_ENABLED) {
     endpoint = `/data/v1/dataV2/${patient.userid}`;
   }
   const dataURL = new URL(endpoint, appConfig.API_HOST);
