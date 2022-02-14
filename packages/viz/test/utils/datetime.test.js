@@ -109,28 +109,6 @@ describe("datetime", () => {
         expect(datetime.getTimezoneFromTimePrefs(timePrefs2)).to.equal("Europe/Budapest");
         expect(datetime.getTimezoneFromTimePrefs(timePrefs3)).to.equal("Europe/Budapest");
       });
-
-      it("should return browser timezone when timezoneAware is falsey", () => {
-        const timePrefs1 = {
-          timezoneAware: false,
-          timezoneName: "Europe/London",
-        };
-        const timePrefs2 = {
-          timezoneName: "Europe/London",
-        };
-        const timePrefs3 = {
-          timezoneAware: null,
-          timezoneName: "Europe/London",
-        };
-        const timePrefs4 = {
-          timezoneAware: undefined,
-          timezoneName: "Europe/London",
-        };
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs1)).to.equal("Europe/Budapest");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs2)).to.equal("Europe/Budapest");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs3)).to.equal("Europe/Budapest");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs4)).to.equal("Europe/Budapest");
-      });
     });
 
     context("timezone cannot be determined by browser", () => {
@@ -161,28 +139,6 @@ describe("datetime", () => {
         expect(datetime.getTimezoneFromTimePrefs(timePrefs1)).to.equal("UTC");
         expect(datetime.getTimezoneFromTimePrefs(timePrefs2)).to.equal("UTC");
         expect(datetime.getTimezoneFromTimePrefs(timePrefs3)).to.equal("UTC");
-      });
-
-      it("should return `UTC` when timezoneAware is falsey", () => {
-        const timePrefs1 = {
-          timezoneAware: false,
-          timezoneName: "Europe/London",
-        };
-        const timePrefs2 = {
-          timezoneName: "Europe/London",
-        };
-        const timePrefs3 = {
-          timezoneAware: null,
-          timezoneName: "Europe/London",
-        };
-        const timePrefs4 = {
-          timezoneAware: undefined,
-          timezoneName: "Europe/London",
-        };
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs1)).to.equal("UTC");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs2)).to.equal("UTC");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs3)).to.equal("UTC");
-        expect(datetime.getTimezoneFromTimePrefs(timePrefs4)).to.equal("UTC");
       });
     });
   });

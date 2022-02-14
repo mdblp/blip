@@ -97,31 +97,28 @@ const datetime = {
     return new Date(d2) - new Date(d1);
   },
 
-  findBasicsDays: function(/** @type {string[]} */ range, timezone = "UTC") {
-    const currentDate = moment.utc(range[0]).tz(timezone);
-    const dateOfUpload = moment.utc(range[1]).tz(timezone);
-    const endOfWeek = moment.utc(dateOfUpload).tz(timezone).endOf("isoWeek");
-
+  /**
+   *
+   * @param {moment.Moment} first
+   * @param {moment.Moment} last
+   */
+  findBasicsDays: function(first, last) {
+    const current = first.clone();
+    const mostRecent = last.format("YYYY-MM-DD");
+    const end = last.clone().endOf("week").add(1, "day").format("YYYY-MM-DD");
+    let date;
     const days = [];
-    while (currentDate.isBefore(endOfWeek)) {
-      const date = currentDate.format("YYYY-MM-DD");
-      const dateObj = { date, type: "past" };
-      if (currentDate.isSame(dateOfUpload, "day")) {
-        dateObj.type = "mostRecent";
-      } else if (currentDate.isAfter(dateOfUpload, "day")) {
+    while ((date = current.format("YYYY-MM-DD")) !== end) {
+      const dateObj = { date, type: "mostRecent" };
+      if (date < mostRecent) {
+        dateObj.type = "past";
+      } else if (date > mostRecent) {
         dateObj.type = "future";
       }
       days.push(dateObj);
-      currentDate.add(1, "day");
+      current.add(1, "day");
     }
     return days;
-  },
-
-  findBasicsStart: function(/** @type {string} */ timestamp, timezone = "UTC") {
-    return moment.utc(timestamp).tz(timezone)
-      .startOf("isoWeek")
-      .subtract(14, "days")
-      .toDate().toISOString();
   },
 
   getBrowserTimezone: function() {

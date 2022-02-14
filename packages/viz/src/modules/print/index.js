@@ -22,7 +22,6 @@ import blobStream from "blob-stream";
 import PrintView from "./PrintView";
 import BasicsPrintView from "./BasicsPrintView";
 import DailyPrintView from "./DailyPrintView";
-import BgLogPrintView from "./BgLogPrintView";
 import SettingsPrintView from "./SettingsPrintView";
 import { reshapeBgClassesToBgBounds } from "../../utils/bloodglucose";
 
@@ -47,7 +46,6 @@ export const utils = {
   PrintView,
   BasicsPrintView,
   DailyPrintView,
-  BgLogPrintView,
   SettingsPrintView,
 };
 
@@ -126,7 +124,6 @@ export function createPrintView(type, data, opts, doc) {
     bgPrefs,
     patient,
     timePrefs,
-    numDays,
   } = opts;
 
   let Renderer;
@@ -152,7 +149,6 @@ export function createPrintView(type, data, opts, doc) {
 
     renderOpts = _.assign(renderOpts, {
       chartsPerPage: 3,
-      numDays: numDays.daily,
       summaryHeaderFontSize: 10,
       summaryWidthAsPercentage: 0.18,
       title: t("Daily Charts"),
@@ -164,15 +160,6 @@ export function createPrintView(type, data, opts, doc) {
 
     renderOpts = _.assign(renderOpts, {
       title: t("The Basics"),
-    });
-    break;
-
-  case "bgLog":
-    Renderer = utils.BgLogPrintView;
-
-    renderOpts = _.assign(renderOpts, {
-      numDays: numDays.bgLog,
-      title: t("BG Log"),
     });
     break;
 

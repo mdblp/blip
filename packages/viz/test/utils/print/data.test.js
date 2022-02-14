@@ -23,7 +23,6 @@ import * as dataUtils from "../../../src/utils/print/data";
 
 describe("print data utils", () => {
   const start = "2017-01-02T00:00:00.000Z";
-  const end = "2017-01-03T00:00:00.000Z";
 
   const datums = {
     cbg1: {
@@ -121,7 +120,7 @@ describe("print data utils", () => {
     });
 
     it("should return the most recent data available", () => {
-      const outOfRangeDate = moment(latestDataDate).subtract(numDays, "d").format("Y-M-D");
+      const outOfRangeDate = moment.utc(latestDataDate).subtract(numDays, "d").format("Y-M-D");
 
       expect(latestFilteredDate <= latestDataDate).to.be.true;
       expect(filtered.dataByDate[outOfRangeDate]).to.be.undefined;
@@ -182,93 +181,6 @@ describe("print data utils", () => {
     it("should return the latest pump upload", () => {
       expect(filtered.latestPumpUpload).to.be.an("object");
       expect(filtered.latestPumpUpload).to.equal(datums.upload2);
-    });
-  });
-
-  describe("stripDatum", () => {
-    it("should export a stripDatum function", () => {
-      expect(dataUtils.stripDatum).to.be.a("function");
-    });
-
-    it("should strip all unneeded fields from Tidepool datum", () => {
-      const originalDatum = {
-        annotations: "",
-        clockDriftOffset: "",
-        conversionOffset: "",
-        createdUserId: "",
-        deviceId: "",
-        deviceSerialNumber: "",
-        deviceTime: "",
-        displayOffset: "",
-        guid: "",
-        localDate: "",
-        modifiedUserId: "",
-        normalEnd: "",
-        normalTime: "",
-        payload: "",
-        scheduleName: "",
-        source: "",
-        time: "",
-        timezoneOffset: "",
-        type: "cbg",
-        units: "",
-        uploadId: "",
-        value: 75,
-      };
-
-      const stripped = dataUtils.stripDatum(originalDatum);
-      expect(stripped).to.eql({
-        annotations: "",
-        normalEnd: "",
-        normalTime: "",
-        type: "cbg",
-        value: 75,
-      });
-    });
-  });
-
-  describe("filterWithDurationFnMaker", () => {
-    it("should export a filterWithDurationFnMaker function", () => {
-      expect(dataUtils.filterWithDurationFnMaker).to.be.a("function");
-    });
-
-    describe("returned filter function", () => {
-      const filter = dataUtils.filterWithDurationFnMaker(start, end);
-
-      it("should exist", () => {
-        expect(filter).to.be.a("function");
-      });
-
-      it("returns whether or not a point-in-time datum falls within a range", () => {
-        expect(filter(datums.cbg1)).to.be.true;
-        expect(filter(datums.cbg2)).to.be.false;
-      });
-
-      it("returns whether or not a datum with duration falls within a range", () => {
-        expect(filter(datums.bolus1)).to.be.true;
-        expect(filter(datums.bolus2)).to.be.true;
-        expect(filter(datums.bolus3)).to.be.true;
-        expect(filter(datums.bolus4)).to.be.false;
-      });
-    });
-  });
-
-  describe("filterPointInTimeFnMaker", () => {
-    it("should export a filterPointInTimeFnMaker function", () => {
-      expect(dataUtils.filterPointInTimeFnMaker).to.be.a("function");
-    });
-
-    describe("returned filter function", () => {
-      const filter = dataUtils.filterPointInTimeFnMaker(start, end);
-
-      it("should exist", () => {
-        expect(filter).to.be.a("function");
-      });
-
-      it("returns whether or not a point-in-time datum falls within a range", () => {
-        expect(filter(datums.cbg1)).to.be.true;
-        expect(filter(datums.cbg2)).to.be.false;
-      });
     });
   });
 });

@@ -284,8 +284,8 @@ class PrintView {
     return this.layoutColumns.columns[this.layoutColumns.activeIndex].width;
   }
 
-  getDateRange(startDate, endDate, format) {
-    return t("Date range: ") + formatDateRange(startDate, endDate, format);
+  getDateRange(startDate, endDate, format, timezone) {
+    return t("Date range: ") + formatDateRange(startDate, endDate, format, timezone);
   }
 
   setFill(color = "black", opacity = 1) {

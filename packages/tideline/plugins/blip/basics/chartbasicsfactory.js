@@ -60,8 +60,12 @@ class BasicsChartNoSize extends React.Component {
     this.log.debug("Mounting...");
 
     const { tidelineData, bgClasses, bgUnits, patient, permsOfLoggedInUser } = this.props;
-    const basicsData = _.cloneDeep(tidelineData.basicsData);
 
+    if (!tidelineData.basicsData) {
+      return;
+    }
+
+    const basicsData = _.cloneDeep(tidelineData.basicsData);
     const dataMunger = dataMungerMkr(bgClasses, bgUnits);
     const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData);
     basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections;
@@ -116,11 +120,7 @@ class BasicsChartNoSize extends React.Component {
 
   render() {
     const { basicsData } = this.state;
-    if (basicsData === null) {
-      return null;
-    }
-
-    return <div id="chart-basics-factory">{this.renderColumn("right")}</div>;
+    return <div id="chart-basics-factory">{basicsData && this.renderColumn("right")}</div>;
   }
 
   renderColumn(columnSide) {

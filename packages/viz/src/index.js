@@ -54,7 +54,7 @@ import {
 } from "./utils/stat";
 import DataUtil from "./utils/data";
 import createPrintPDFPackage from "./modules/print";
-import { selectDailyViewData, selectBgLogViewData } from "./utils/print/data";
+import { selectDailyViewData, generatePDFStats } from "./utils/print/data";
 
 const components = {
   CBGDateTraceLabel,
@@ -91,7 +91,7 @@ const utils = {
   },
   data: {
     selectDailyViewData,
-    selectBgLogViewData,
+    generatePDFStats,
     DataUtil,
   },
   datetime: {

@@ -125,7 +125,7 @@ class BasicsPrintView extends PrintView {
   }
 
   newPage() {
-    super.newPage(this.getDateRange(this.data.dateRange[0], this.data.dateRange[1]));
+    super.newPage(this.getDateRange(this.data.dateRange[0], this.data.dateRange[1], undefined, this.data.timezone));
   }
 
   initCalendar() {
@@ -311,8 +311,12 @@ class BasicsPrintView extends PrintView {
     const { averageGlucose } = _.get(this.data.stats, "averageGlucose.data.raw", {});
     this.renderSimpleStat(t("Average BG"), formatDecimalNumber(averageGlucose), "\nmg/dL");
 
-    const { glucoseManagementIndicator } = _.get(this.data.stats, "glucoseManagementIndicator.data.raw", {});
-    this.renderSimpleStat(t("GMI ({{bgSourceLabel}})"), formatDecimalNumber(glucoseManagementIndicator, 1), "%");
+    const { glucoseManagementIndicator, insufficientData } = _.get(this.data.stats, "glucoseManagementIndicator.data.raw", {});
+    if (!insufficientData && !Number.isNaN(glucoseManagementIndicator)) {
+      // HbA1c is an estimation, which only have meaning with enough data
+      // If we don't have enough data to print it, don't display it
+      this.renderSimpleStat(t("GMI ({{bgSourceLabel}})"), formatDecimalNumber(glucoseManagementIndicator, 1), "%");
+    }
   }
 
   renderRatio(sectionKey, sectionData) {
