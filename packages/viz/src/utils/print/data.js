@@ -193,6 +193,55 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
 }
 
 /**
+ * Hackish way to have a fake pumpSettings at a date.
+ *
+ * This is not complete, only valid for the device parameters.
+ * Actually we can't get the pumpSettings at a specified date
+ * from the API. This need to be addressed later.
+ * @param {object} latestPumpSettings
+ * @param {moment.Moment} date
+ */
+export function generatePumpSettings(latestPumpSettings, date) {
+  const ps = _.cloneDeep(latestPumpSettings);
+  /** @type {{changeDate:string;parameters:{changeType:string;name:string;level:number;unit:string;value:string;}[]}[]} */
+  const history = ps?.payload?.history?.filter((h) => (moment.utc(h.changeDate).isBefore(date)));
+  if (!Array.isArray(history) || history.length < 1) {
+    // Invalid result? return the current obj at is
+    // Safe guard to avoid a crash
+    return ps;
+  }
+  history.sort((a, b) => a.changeDate.localeCompare(b.changeDate));
+
+  // Rebuild parameters
+  /** @type {{[x:string]: {name:string;}}} */
+  const parameters = {};
+  for (const h of history) {
+    for (const p of h.parameters) {
+      if (p.changeType === "deleted" && p.name in parameters) {
+        delete parameters[p.name];
+      } else {
+        parameters[p.name] = { name: p.name, level: p.level, unit: p.unit, value: p.value };
+      }
+    }
+  }
+
+  // Update returned object:
+  // originalDate: hackish way to tell the information displayed do not match the print date
+  ps.originalDate = ps.normalTime;
+  ps.payload.history = history;
+  ps.payload.parameters = [];
+  _.forOwn(parameters, (p) => {
+    ps.payload.parameters.push(p);
+  });
+  ps.normalTime = date.toISOString();
+  ps.epoch = date.valueOf();
+  // FIXME: deviceSerialNumber is not available right now
+  delete ps.deviceSerialNumber;
+
+  return ps;
+}
+
+/**
  * @param {object} data
  * @param {TidelineData} tidelineData
  * @param {DataUtil} dataUtil

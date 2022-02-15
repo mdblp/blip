@@ -14,6 +14,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+
+import _ from "lodash";
 import textTable from "text-table";
 import i18next from "i18next";
 
@@ -21,8 +23,15 @@ import { formatParameterValue } from "../format";
 import * as datetime from "../datetime";
 
 const t = i18next.t.bind(i18next);
-const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-const timePrefs = { timezoneAware: true, timezoneName: browserTimezone };
+
+function getTimeprefs(timezone = "UTC") {
+  let timezoneName = timezone;
+  if (_.isNil(timezone) || timezone === "UTC") {
+    timezoneName = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+  return { timezoneAware: true, timezoneName };
+}
+
 /**
  *
  * @param {Array} parameters Diabeloop patient device parameters
@@ -97,11 +106,15 @@ export function diabeloopText(device, parametersByLevel, displayDeviceDate) {
 /**
  * Datas for PDF
  * @param {Object} device Diabeloop device infos
+ * @param {string|undefined} timezone
+ * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
-export function getDeviceInfosData(device) {
+export function getDeviceInfosData(device, timezone, date) {
+  const timePrefs = getTimeprefs(timezone);
   const heading = {
     text: t("Device"),
     subText: `- ${device.name}`,
+    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{
@@ -180,12 +193,16 @@ export function getDeviceParametersData(parameters, { level, width }) {
 
 /**
  * Returns Pump information for PDF
- * @param pump
+ * @param {object} pump
+ * @param {string|undefined} timezone
+ * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
-export function getPumpParametersData(pump) {
+export function getPumpParametersData(pump, timezone, date) {
+  const timePrefs = getTimeprefs(timezone);
   const heading = {
     text: t("Pump"),
     subText: `- ${pump.name}`,
+    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{
@@ -225,11 +242,15 @@ export function getPumpParametersData(pump) {
 
 /**
  * Returns CGM information for PDF
- * @param cgm {Object}
+ * @param {object} cgm CGM data from the pumpSettings
+ * @param {string|undefined} timezone
+ * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
-export function getCGMParametersData(cgm) {
+export function getCGMParametersData(cgm, timezone, date) {
+  const timePrefs = getTimeprefs(timezone);
   const heading = {
-    text: t("CGM")
+    text: t("CGM"),
+    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{

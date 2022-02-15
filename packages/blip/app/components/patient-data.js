@@ -498,7 +498,7 @@ class PatientDataPage extends React.Component {
 
   /**
    *
-   * @param {{ start: string; end: string; }} printOptions
+   * @param {{ start: string; end: string; preset?: string; }} printOptions
    * @returns {Promise<void>}
    */
   async generatePDF(printOptions) {
@@ -533,10 +533,13 @@ class PatientDataPage extends React.Component {
       endPDFDate,
     };
 
+    const lastPumpSettings = _.last(tidelineData.grouped.pumpSettings);
     const pdfData = {
       basics: tidelineData.getBasicsData(start, end),
       daily: vizUtils.data.selectDailyViewData(tidelineData, start, end),
-      settings: _.last(tidelineData.grouped.pumpSettings),// FIXME
+      settings: _.isNil(printOptions.preset)
+        ? vizUtils.data.generatePumpSettings(_.last(tidelineData.grouped.pumpSettings), end)
+        : lastPumpSettings,
     };
 
     vizUtils.data.generatePDFStats(pdfData, tidelineData, this.dataUtil);

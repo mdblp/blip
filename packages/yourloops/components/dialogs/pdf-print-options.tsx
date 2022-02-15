@@ -43,11 +43,13 @@ import Typography from "@material-ui/core/Typography";
 import { CalendarOrientation } from "../date-pickers/models";
 import RangeDatePicker from "../date-pickers/range-date-picker";
 
+type Presets = "1week" | "2weeks" | "3weeks" | "3months";
 interface PrintPDFOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
   start: string;
   /** Print end date (ISO day ex: 2022-02-10) */
   end: string;
+  preset?: Presets | null;
 }
 interface DialogPDFOptionsProps {
   open: boolean;
@@ -57,7 +59,6 @@ interface DialogPDFOptionsProps {
   maxDate: string;
   onResult: (options?: PrintPDFOptions) => void;
 }
-type Presets = "1week" | "2weeks" | "3weeks" | "3months";
 const DEFAULT_PRESET: Presets = "3weeks";
 const maxSelectableDays = 90;
 
@@ -68,21 +69,25 @@ function getDatesFromPreset(preset: Presets, maxDate: Dayjs) {
     return {
       start: maxDate.subtract(6, "days").format("YYYY-MM-DD"),
       end,
+      preset,
     };
   case "2weeks":
     return {
       start: maxDate.subtract(13, "days").format("YYYY-MM-DD"),
       end,
+      preset,
     };
   case "3weeks":
     return {
       start: maxDate.subtract(20, "days").format("YYYY-MM-DD"),
       end,
+      preset,
     };
   case "3months":
     return {
       start: maxDate.subtract(89, "days").format("YYYY-MM-DD"),
       end,
+      preset,
     };
   }
   // Make eslint happy
@@ -141,7 +146,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
 
   const displayedDates = `${displayStart} → ${displayEnd}`;
   return (
-    <Dialog id="dialog-pdf-options" open={open} onClose={() => onResult()} data-start={pdfOptions.start} data-end={pdfOptions.end} maxWidth={false}>
+    <Dialog id="dialog-pdf-options" fullScreen={!matches} open={open} onClose={() => onResult()} data-start={pdfOptions.start} data-end={pdfOptions.end} maxWidth={false}>
       <DialogContent style={{ width: "fit-content" }}>
         <Typography variant="h4">{t("dialog-pdf-options-title")}</Typography>
 
