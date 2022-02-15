@@ -35,7 +35,7 @@ enum UserRoles {
   hcp = "hcp",
   caregiver = "caregiver",
   patient = "patient",
-  /*Used only for signup-account-selector*/
+  /** Used only for signup-account-selector */
   unset = "unset",
   /** When the account is created but not yet confirm */
   unverified = "unverified"
@@ -83,14 +83,16 @@ interface IUser {
   emails?: string[];
   readonly emailVerified?: boolean;
   frProId?: string;
-  readonly role: UserRoles; // Main role of the user
+  /** Main role of the user */
+  readonly role: UserRoles;
   roles?: UserRoles[];
   readonly userid: string;
   readonly username: string;
   profile?: Profile | null;
   settings?: Settings | null;
   preferences?: Preferences | null;
-  medicalData?: MedicalData | null; // Patient medical data. undefined means not fetched, null if the fetch failed
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null;
 }
 
 export { IUser, Profile, Settings, Preferences, Consent, UserRoles };
