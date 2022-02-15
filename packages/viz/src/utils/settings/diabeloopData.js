@@ -157,11 +157,15 @@ export function getDeviceInfosData(device, timezone, date) {
  * @param {Array} parameters Array of parameters (object: name, value, unit, level)
  * @param {number} level Level of the parameter
  * @param {number} width Width of the table
+ * @param {string|undefined} timezone
+ * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
-export function getDeviceParametersData(parameters, { level, width }) {
+export function getDeviceParametersData(parameters, { level, width }, timezone, date) {
+  const timePrefs = getTimeprefs(timezone);
   const heading = {
     text: t("Parameters"),
     subText: level !== 1 ? `- ${t("Advanced")}` : "",
+    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{

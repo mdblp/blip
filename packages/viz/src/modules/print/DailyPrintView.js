@@ -1047,8 +1047,8 @@ class DailyPrintView extends PrintView {
 
     const legendVerticalMiddle = legendTop + lineHeight * 2;
     const legendTextMiddle = legendVerticalMiddle - this.doc.currentLineHeight() / 2;
-    const legendItemLeftOffset = 9;
-    const legendItemLabelOffset = 6;
+    const legendItemLeftOffset = 8;
+    const legendItemLabelOffset = 4;
 
     let cursor = this.margins.left + legendItemLeftOffset;
 

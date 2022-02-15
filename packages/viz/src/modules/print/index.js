@@ -126,6 +126,10 @@ export function createPrintView(type, data, opts, doc) {
     bgPrefs,
     patient,
     timePrefs,
+    dpi,
+    width,
+    height,
+    margins,
   } = opts;
 
   let Renderer;
@@ -134,15 +138,15 @@ export function createPrintView(type, data, opts, doc) {
     // TODO: set this up as a Webpack Define plugin to pull from env variable
     debug: false,
     defaultFontSize: constants.DEFAULT_FONT_SIZE,
-    dpi: constants.DPI,
+    dpi: dpi ?? constants.DPI,
     footerFontSize: constants.FOOTER_FONT_SIZE,
     headerFontSize: constants.HEADER_FONT_SIZE,
-    height: constants.HEIGHT,
-    margins: constants.MARGINS,
+    height: height ?? constants.HEIGHT,
+    margins: margins ?? constants.MARGINS,
     patient,
     smallFontSize: constants.SMALL_FONT_SIZE,
     timePrefs,
-    width: constants.WIDTH,
+    width: width ?? constants.WIDTH,
   };
 
   switch (type) {
@@ -194,6 +198,21 @@ export function createPrintPDFPackage(data, opts) {
       const pdfOpts = _.cloneDeep(opts);
       pdfOpts.bgPrefs.bgBounds = utils.reshapeBgClassesToBgBounds(opts.bgPrefs);
 
+      // Paper size A4 -> [595.28, 841.89]
+      // see node_modules/pdfkit/js/pdfkit.js:300
+      // For USA, it should be set to the default US letter format
+      // see packages/viz/src/modules/print/utils/constants.js
+      pdfOpts.dpi = constants.DPI;
+      const margin = constants.DPI / 2;
+      pdfOpts.width = 595.28 - 2 * margin;
+      pdfOpts.height = 841.89 - 2 * margin;
+      pdfOpts.margins = {
+        left: margin,
+        top: margin,
+        right: margin,
+        bottom: margin,
+      };
+
       const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName);
       const reportDate = mReportDate.format("YYYY-MM-DD");
       const patientName = getPatientFullName(opts.patient);
@@ -208,6 +227,7 @@ export function createPrintPDFPackage(data, opts) {
         displayTitle: `${reportDate} - ${patientName}`,
         lang: i18next.language,
         compress: true,
+        size: "A4",
         info: {
           Title: `${reportDate} - ${patientName}`,
           Author: "Diabeloop",
@@ -220,7 +240,7 @@ export function createPrintPDFPackage(data, opts) {
       if (data.daily) createPrintView("daily", data.daily, pdfOpts, doc).render();
       if (data.settings) createPrintView("settings", data.settings, pdfOpts, doc).render();
 
-      PrintView.renderPageNumbers(doc);
+      PrintView.renderPageNumbers(doc, pdfOpts);
 
       doc.end();
 

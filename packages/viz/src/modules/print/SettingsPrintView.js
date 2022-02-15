@@ -105,9 +105,10 @@ class SettingsPrintView extends PrintView {
     const parameters = _.get(this.data, "payload.parameters", null);
     if (parameters) {
       const parametersByLevel = dblData.getParametersByLevel(parameters);
-
+      // Display the parameters date only when originalDate is set, like the others table. But the date is the good one this time
+      const originalDate = _.isNil(this.data.originalDate) ? undefined : this.data.normalTime;
       parametersByLevel.forEach((params, level) => {
-        const tableData = dblData.getDeviceParametersData(params, { level, width: this.chartArea.width });
+        const tableData = dblData.getDeviceParametersData(params, { level, width: this.chartArea.width }, this.data.timezone, originalDate);
         this.renderSettingsSection(tableData, this.chartArea.width, { zebra: true, showHeaders: true });
       });
     } else {

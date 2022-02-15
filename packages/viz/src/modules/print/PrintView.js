@@ -857,17 +857,20 @@ class PrintView {
     return this;
   }
 
-  static renderPageNumbers(doc) {
+  static renderPageNumbers(doc, opts = {}) {
+    const footerFontSize = opts.footerFontSize ?? FOOTER_FONT_SIZE;
+    const margins = opts.margins ?? MARGINS;
+    const height = opts.height ?? HEIGHT;
     const pageCount = doc.bufferedPageRange().count;
     let page = 0;
     while (page < pageCount) {
       page++;
       doc.switchToPage(page - 1);
-      doc.fontSize(FOOTER_FONT_SIZE).fillColor("#979797").fillOpacity(1);
+      doc.fontSize(footerFontSize).fillColor("#979797").fillOpacity(1);
       doc.text(
         t("Page {{page}} of {{pageCount}}", { page, pageCount }),
-        MARGINS.left,
-        (HEIGHT + MARGINS.top) - doc.currentLineHeight() * 1.5,
+        margins.left,
+        (height + margins.top) - doc.currentLineHeight() * 1.5,
         { align: "right" }
       );
     }

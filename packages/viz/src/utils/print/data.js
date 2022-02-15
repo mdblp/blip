@@ -205,6 +205,10 @@ export function generatePumpSettings(latestPumpSettings, date) {
   const ps = _.cloneDeep(latestPumpSettings);
   /** @type {{changeDate:string;parameters:{changeType:string;name:string;level:number;unit:string;value:string;}[]}[]} */
   const history = ps?.payload?.history?.filter((h) => (moment.utc(h.changeDate).isBefore(date)));
+
+  // originalDate: hackish way to tell the information displayed do not match the print date
+  ps.originalDate = ps.normalTime;
+
   if (!Array.isArray(history) || history.length < 1) {
     // Invalid result? return the current obj at is
     // Safe guard to avoid a crash
@@ -226,8 +230,6 @@ export function generatePumpSettings(latestPumpSettings, date) {
   }
 
   // Update returned object:
-  // originalDate: hackish way to tell the information displayed do not match the print date
-  ps.originalDate = ps.normalTime;
   ps.payload.history = history;
   ps.payload.parameters = [];
   _.forOwn(parameters, (p) => {

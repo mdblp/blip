@@ -706,7 +706,7 @@ class PatientDataPage extends React.Component {
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
-    function openPDFWindow(pdf) {
+    const openPDFWindow = (pdf) => {
       const printWindow = window.open(pdf.url);
       if (printWindow !== null) {
         printWindow.focus();
@@ -714,7 +714,7 @@ class PatientDataPage extends React.Component {
           printWindow.print();
         }
       }
-    }
+    };
 
     this.log.debug("handlePrint", printOptions);
 
