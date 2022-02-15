@@ -180,7 +180,7 @@ export async function getPatientDataRange(session: Session, patient: IUser): Pro
 }
 
 /**
- * Fetch data using tide-whisperer v2 route
+ * Fetch data using tide-whisperer v1 or v2 route
  * @param session Session information
  * @param patient The patient (user) to fetch data
  * @param options Options to pas to the API
