@@ -44,8 +44,6 @@ import { Session } from "../auth";
 import { GetPatientDataOptionsV0, GetPatientDataOptions } from "./models";
 
 const log = bows("data-api");
-/** true if the v1 routes of tide-whisperer are available, default to true */
-let routeV1Available = true;
 
 export async function getPatientsDataSummary(session: Session, userId: string, options?: GetPatientDataOptionsV0): Promise<ComputedTIR> {
   const dataURL = new URL("/compute/tir" , appConfig.API_HOST);
@@ -151,75 +149,34 @@ function getRange(session: Session, patient: IUser): Promise<Response> {
 }
 
 /**
- * Fetch data range using tide-whisperer v1 route or tide-whisperer v2 route
+ * Fetch data range using tide-whisperer v1 or v2 route
  * @param session Session information
  * @param patient The patient (user) to fetch data
  * @returns Array [string, string] of ISO 8601 dates time
  */
 export async function getPatientDataRange(session: Session, patient: IUser): Promise<string[] | null> {
-  let response: Response | null = null;
-  if (routeV1Available) {
-    response = await getRange(session, patient);
-    if (response.ok) {
-      const dataRange = (await response.json()) as string[];
-      if (!Array.isArray(dataRange) || dataRange.length !== 2) {
-        return Promise.reject(new Error("Invalid response"));
-      }
-      return dataRange;
-    } else if (response.status === HttpStatus.StatusNotFound) {
-      try {
-        const text = await response.text();
-        if (text.length > 0) {
-          const errorResponse = JSON.parse(text) as APITideWhispererErrorResponse;
-          if (_.get(errorResponse, "status", 0) === HttpStatus.StatusNotFound) {
-            // This is a /v1 route response, no patient data
-            return null;
-          }
+  const response = await getRange(session, patient);
+  if (response.ok) {
+    const dataRange = (await response.json()) as string[];
+    if (!Array.isArray(dataRange) || dataRange.length !== 2) {
+      return Promise.reject(new Error("Invalid response"));
+    }
+    return dataRange;
+  } else if (response.status === HttpStatus.StatusNotFound) {
+    try {
+      const text = await response.text();
+      if (text.length > 0) {
+        const errorResponse = JSON.parse(text) as APITideWhispererErrorResponse;
+        if (_.get(errorResponse, "status", 0) === HttpStatus.StatusNotFound) {
+          // This is a valid route response, no patient data
+          return null;
         }
-      } catch (_err) {
-        // Ignore
       }
-      routeV1Available = false;
+    } catch (_err) {
+      // Ignore
     }
   }
-
-  if (!routeV1Available) {
-    // Fetch the latest data of all types & uploads (we must have the oldest data in the uploads)
-    const [ responseUpload, responseLatest ] = await Promise.all([
-      getPatientDataRouteV0(session, patient, { latest: true }),
-      getPatientDataRouteV0(session, patient, { types: ["upload"] }),
-    ]);
-
-    if (responseUpload.ok && responseLatest.ok) {
-      const latests = (await responseLatest.json()) as { time: string; type: string; timeProcessing: number; }[];
-      const uploads = (await responseUpload.json()) as { time: string; type: string; timeProcessing: number; }[];
-      if (Array.isArray(latests) && Array.isArray(uploads) && latests.length > 0 && uploads.length > 0) {
-        const data = latests.concat(uploads);
-        data.forEach((d) => {
-          d.timeProcessing = Date.parse(d.time);
-        });
-        data.sort((a, b) => a.timeProcessing - b.timeProcessing);
-        const startDate = new Date(data[0].timeProcessing).toISOString();
-
-        // For the last datum, use only the cbg if present
-        let lastDatum = data.find((d) => d.type === "cbg");
-        if (lastDatum === undefined) {
-          lastDatum = data[data.length - 1];
-        }
-        const endDate = new Date(lastDatum.timeProcessing).toISOString();
-        return [startDate, endDate];
-      }
-      return null;
-    }
-
-    response = responseUpload;
-  }
-
-  if (response) {
-    return Promise.reject(errorFromHttpStatus(response, log));
-  }
-
-  return Promise.reject(new Error("Logic error"));
+  return Promise.reject(errorFromHttpStatus(response, log));
 }
 
 /**
