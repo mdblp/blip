@@ -726,6 +726,7 @@ class PatientDataPage extends React.Component {
 
     // Return a promise for the tests
     return new Promise((resolve, reject) => {
+      this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
       this.generatePDF(printOptions)
         .then((pdf) => {
           this.trackMetric("export_data", "save_report", this.getChartType() ?? "");
@@ -739,6 +740,8 @@ class PatientDataPage extends React.Component {
             window.onerror("print", "patient-data", 0, 0, err);
           }
           reject(err);
+        }).finally(() => {
+          this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
         });
     });
   }
@@ -842,6 +845,12 @@ class PatientDataPage extends React.Component {
         this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
         await this.processData(data);
 
+        if (forWhat !== "pdf") {
+          // The loading state will be changed after the PDF is generated,
+          // for other cases, we have finished
+          this.setState({ loadingState: LOADING_STATE_DONE });
+        }
+
         dataLoaded = true;
       } else {
         updateLocation();
@@ -868,6 +877,8 @@ class PatientDataPage extends React.Component {
 
       // Process the data to be usable by us
       await this.processData(data);
+
+      this.setState({ loadingState: LOADING_STATE_DONE });
 
     } catch (reason) {
       this.onLoadingFailure(reason);
@@ -931,7 +942,6 @@ class PatientDataPage extends React.Component {
       tidelineData,
       epochLocation: newLocation,
       msRange: newRange,
-      loadingState: LOADING_STATE_DONE,
       canPrint: hasDiabetesData,
     }, () => this.log.info("Loading finished"));
 
