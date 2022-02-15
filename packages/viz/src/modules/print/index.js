@@ -17,6 +17,7 @@
 
 import _ from "lodash";
 import i18next from "i18next";
+import moment from "moment-timezone";
 import PDFDocument from "pdfkit";
 import blobStream from "blob-stream";
 import PrintView from "./PrintView";
@@ -25,6 +26,7 @@ import DailyPrintView from "./DailyPrintView";
 import SettingsPrintView from "./SettingsPrintView";
 import { reshapeBgClassesToBgBounds } from "../../utils/bloodglucose";
 
+import { getPatientFullName } from "../../utils/misc";
 import * as constants from "./utils/constants";
 import { arrayBufferToBase64 } from "./utils/functions";
 
@@ -189,31 +191,33 @@ export function createPrintView(type, data, opts, doc) {
 export function createPrintPDFPackage(data, opts) {
   return new Promise((resolve, reject) => {
     try {
-      const {
-        bgPrefs,
-        // patient,
-      } = opts;
-
-      // if (_.get(patient, 'preferences.displayLanguageCode')) {
-      //   i18next.changeLanguage(patient.preferences.displayLanguageCode);
-      // }
-
       const pdfOpts = _.cloneDeep(opts);
-      pdfOpts.bgPrefs.bgBounds = utils.reshapeBgClassesToBgBounds(bgPrefs);
-      /* NB: if you don't set the `margin` (or `margins` if not all are the same)
-      then when you are using the .text() command a new page will be added if you specify
-      coordinates outside of the default margin (or outside of the margins you've specified)
-      */
+      pdfOpts.bgPrefs.bgBounds = utils.reshapeBgClassesToBgBounds(opts.bgPrefs);
+
+      const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName);
+      const reportDate = mReportDate.format("YYYY-MM-DD");
+      const patientName = getPatientFullName(opts.patient);
+
+      // NB: if you don't set the `margin` (or `margins` if not all are the same)
+      // then when you are using the .text() command a new page will be added if you specify
+      // coordinates outside of the default margin (or outside of the margins you've specified)
       const doc = new utils.PDFDocument({
         autoFirstPage: false,
         bufferPages: true,
         margin: constants.MARGIN,
+        displayTitle: `${reportDate} - ${patientName}`,
+        lang: i18next.language,
+        compress: true,
+        info: {
+          Title: `${reportDate} - ${patientName}`,
+          Author: "Diabeloop",
+          ModDate: mReportDate.toDate(),
+        },
       });
       const stream = doc.pipe(utils.blobStream());
 
       if (data.basics) createPrintView("basics", data.basics, pdfOpts, doc).render();
       if (data.daily) createPrintView("daily", data.daily, pdfOpts, doc).render();
-      // if (data.bgLog) createPrintView("bgLog", data.bgLog, pdfOpts, doc).render();
       if (data.settings) createPrintView("settings", data.settings, pdfOpts, doc).render();
 
       PrintView.renderPageNumbers(doc);
