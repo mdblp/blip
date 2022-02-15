@@ -49,13 +49,11 @@ export async function getPatientsDataSummary(session: Session, userId: string, o
 
   let endpoint = "/compute/tir";
   if (appConfig.CBG_BUCKETS_ENABLED) {
-    endpoint = "/data/v2/summary";
+    endpoint = `/data/v2/summary/${userId}`;
   }
   const dataURL = new URL(endpoint , appConfig.API_HOST);
 
-  if (appConfig.CBG_BUCKETS_ENABLED) {
-    dataURL.searchParams.set("userId", userId);
-  } else {
+  if (!appConfig.CBG_BUCKETS_ENABLED) {
     dataURL.searchParams.set("userIds", userId);
   }
 
