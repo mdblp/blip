@@ -46,8 +46,18 @@ import { GetPatientDataOptionsV0, GetPatientDataOptions } from "./models";
 const log = bows("data-api");
 
 export async function getPatientsDataSummary(session: Session, userId: string, options?: GetPatientDataOptionsV0): Promise<ComputedTIR> {
-  const dataURL = new URL("/compute/tir" , appConfig.API_HOST);
-  dataURL.searchParams.set("userIds", userId);
+
+  let endpoint = "/compute/tir";
+  if (appConfig.CBG_BUCKETS_ENABLED) {
+    endpoint = "/data/v2/summary";
+  }
+  const dataURL = new URL(endpoint , appConfig.API_HOST);
+
+  if (appConfig.CBG_BUCKETS_ENABLED) {
+    dataURL.searchParams.set("userId", userId);
+  } else {
+    dataURL.searchParams.set("userIds", userId);
+  }
 
   if (options) {
     if (options.startDate) {
