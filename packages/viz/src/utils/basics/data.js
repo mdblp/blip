@@ -39,15 +39,9 @@ import {
   NO_SITE_CHANGE,
   SITE_CHANGE,
   SITE_CHANGE_RESERVOIR,
-  SITE_CHANGE_TUBING,
-  SITE_CHANGE_CANNULA,
   SECTION_TYPE_UNDECLARED,
   AUTOMATED_DELIVERY,
   SCHEDULED_DELIVERY,
-  INSULET,
-  TANDEM,
-  ANIMAS,
-  MEDTRONIC,
   DIABELOOP,
   getPumpVocabularies,
 } from "../constants";
@@ -176,48 +170,20 @@ export function getInfusionSiteHistory(basicsData, type) {
  * @param {Object} patient
  * @returns {Object} basicsData - the revised data object
  */
-export function processInfusionSiteHistory(data, patient) {
-  const basicsData = _.cloneDeep(data);
+export function processInfusionSiteHistory(data) {
+  const basicsData = data;
   const latestPump = getLatestPumpUploaded(basicsData);
 
   if (!latestPump) {
     return basicsData;
   }
 
-  const {
-    settings,
-  } = patient;
-
-  if (latestPump === ANIMAS || latestPump === MEDTRONIC || latestPump === TANDEM) {
-    basicsData.data.cannulaPrime.infusionSiteHistory = getInfusionSiteHistory(
-      basicsData,
-      SITE_CHANGE_CANNULA
-    );
-
-    basicsData.data.tubingPrime.infusionSiteHistory = getInfusionSiteHistory(
-      basicsData,
-      SITE_CHANGE_TUBING
-    );
-
-    const siteChangeSource = _.get(settings, "siteChangeSource");
-    const allowedSources = [SITE_CHANGE_CANNULA, SITE_CHANGE_TUBING];
-
-    if (siteChangeSource && _.includes(allowedSources, siteChangeSource)) {
-      basicsData.sections.siteChanges.type = settings.siteChangeSource;
-    } else {
-      basicsData.sections.siteChanges.type = SECTION_TYPE_UNDECLARED;
-    }
-  } else if (latestPump === INSULET || latestPump === DIABELOOP) {
+  if (latestPump === DIABELOOP) {
     basicsData.data.reservoirChange.infusionSiteHistory = getInfusionSiteHistory(
       basicsData,
       SITE_CHANGE_RESERVOIR
     );
 
-    basicsData.sections.siteChanges.type = SITE_CHANGE_RESERVOIR;
-    basicsData.sections.siteChanges.selector = null;
-  } else {
-    // CareLink (Medtronic) or other unsupported pump
-    basicsData.data.reservoirChange = {};
     basicsData.sections.siteChanges.type = SITE_CHANGE_RESERVOIR;
     basicsData.sections.siteChanges.selector = null;
   }
@@ -506,6 +472,7 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
       emptyText,
       type,
       dimensions,
+      disabled: false,
     };
   });
 
@@ -641,7 +608,7 @@ export function disableEmptySections(data) {
 
       disabled = !hasSMBG && !hasCalibrations;
     } else if (key === "siteChanges") {
-      disabled = (!type || type === SECTION_TYPE_UNDECLARED);
+      disabled = (!type || type === SECTION_TYPE_UNDECLARED) || _.isEmpty(_.get(typeData, "reservoirChange.data"));
     }
 
     if (disabled) {

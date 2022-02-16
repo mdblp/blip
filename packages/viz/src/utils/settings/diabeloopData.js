@@ -164,7 +164,7 @@ export function getDeviceParametersData(parameters, { level, width }, timezone, 
   const timePrefs = getTimeprefs(timezone);
   const heading = {
     text: t("Parameters"),
-    subText: level !== 1 ? `- ${t("Advanced")}` : "",
+    subText: level !== 1 ? `- ${t("Advanced")}` : undefined,
     note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 

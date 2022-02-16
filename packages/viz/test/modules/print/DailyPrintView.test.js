@@ -22,7 +22,7 @@ import { expect } from "chai";
 
 import DailyPrintView from "../../../src/modules/print/DailyPrintView";
 import PrintView from "../../../src/modules/print/PrintView";
-import * as patients from "../../../data/patient/profiles";
+import { patient } from "../../../data/patient/profiles";
 import { dailyData as data } from "../../../data/print/fixtures";
 
 import {
@@ -75,7 +75,7 @@ describe("DailyPrintView", () => {
       right: MARGIN,
       bottom: MARGIN,
     },
-    patient: patients.standard,
+    patient,
     summaryHeaderFontSize: 10,
     summaryWidthAsPercentage: 0.18,
     timePrefs: {

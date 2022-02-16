@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import _, { result } from "lodash";
+import _ from "lodash";
 import * as sinon from "sinon";
 import moment from "moment-timezone";
 import { assert, expect } from "chai";

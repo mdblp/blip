@@ -16,8 +16,8 @@
  */
 
 import _ from "lodash";
-import { extent } from "d3-array";
 import moment from "moment-timezone";
+import { extent } from "d3-array";
 
 import { getBasalSequences, getGroupDurations } from "../../utils/basal";
 import { getLatestPumpUpload, isAutomatedBasalDevice } from "../../utils/device";
@@ -148,6 +148,7 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
         o.utc = o.epoch;
         o.threeHrBin = Math.floor(moment.tz(o.epoch, o.timezone).hours() / 3) * 3;
         if (type === "bolus" && o.wizard) {
+          // For some very strange reason, we have to inverse bolus and wizard link...
           const reversed = { ...o.wizard };
           delete o.wizard;
           reversed.bolus = o;

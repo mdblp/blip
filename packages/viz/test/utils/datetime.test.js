@@ -20,14 +20,10 @@ import { timeParse } from "d3-time-format";
 import { assert, expect } from "chai";
 import * as sinon from "sinon";
 
-import * as patients from "../../data/patient/profiles";
+import { patient } from "../../data/patient/profiles";
 import * as datetime from "../../src/utils/datetime";
 
 describe("datetime", () => {
-  const {
-    standard,
-    fakeChildAcct,
-  } = patients;
 
   describe("THIRTY_MINS", () => {
     assert.isNumber(datetime.THIRTY_MINS);
@@ -149,11 +145,7 @@ describe("datetime", () => {
     });
 
     it("should format birthdate extracted from normal patient object", () => {
-      expect(datetime.formatBirthdate(standard)).to.equal("Jan 31, 1983");
-    });
-
-    it("should format birthdate extracted from fake child account patient object", () => {
-      expect(datetime.formatBirthdate(fakeChildAcct)).to.equal("Jan 31, 1983");
+      expect(datetime.formatBirthdate(patient)).to.equal("Jan 31, 1983");
     });
   });
 
@@ -204,11 +196,7 @@ describe("datetime", () => {
     });
 
     it("should format diagnosisDate extracted from patient object", () => {
-      expect(datetime.formatDiagnosisDate(standard)).to.equal("Jan 31, 1990");
-    });
-
-    it("should format diagnosisDate extracted from fake child account patient object", () => {
-      expect(datetime.formatDiagnosisDate(fakeChildAcct)).to.equal("Jan 31, 1990");
+      expect(datetime.formatDiagnosisDate(patient)).to.equal("Jan 31, 1990");
     });
   });
 

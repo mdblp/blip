@@ -19,98 +19,45 @@ import _ from "lodash";
 import moment from "moment-timezone";
 import { expect } from "chai";
 
+import { TidelineData } from "tideline";
+
+import { types } from "../../../data/types";
 import * as dataUtils from "../../../src/utils/print/data";
 
 describe("print data utils", () => {
-  const start = "2017-01-02T00:00:00.000Z";
 
-  const datums = {
-    cbg1: {
-      type: "cbg",
-      normalTime: "2017-01-02T10:30:00.0000Z",
-    },
-    cbg2: {
-      type: "cbg",
-      normalTime: "2017-01-03T10:30:00.0000Z",
-    },
-    smbg: {
-      type: "smbg",
-      normalTime: "2017-01-02T10:30:00.0000Z",
-    },
-    basal: {
-      type: "basal",
-      normalTime: "2017-01-02T8:30:00.0000Z",
-    },
-    bolus1: {
-      type: "bolus",
-      normalTime: start,
-      normalEnd: "2017-01-02T23:45:00.0000Z",
-    },
-    bolus2: {
-      type: "bolus",
-      normalTime: "2017-01-01T23:30:00.0000Z",
-      normalEnd: "2017-01-02T0:45:00.0000Z",
-    },
-    bolus3: {
-      type: "bolus",
-      normalTime: "2017-01-02T8:30:00.0000Z",
-      normalEnd: "2017-01-03T0:30:00.0000Z",
-    },
-    bolus4: {
-      type: "bolus",
-      normalTime: "2017-01-01T23:30:00.0000Z",
-      normalEnd: "2017-01-03T0:45:00.0000Z",
-    },
-    upload1: {
-      normalTime: "2017-01-02T8:30:00.0000Z",
-      type: "upload",
-      deviceTags: ["insulin-pump"],
-    },
-    upload2: {
-      normalTime: "2017-01-02T10:30:00.0000Z",
-      type: "upload",
-      deviceTags: ["insulin-pump"],
-    },
-  };
+  /** @type {TidelineData} */
+  let tidelineData;
+  beforeEach(async () => {
+    const bolus = new types.Bolus({ deviceTime: "2019-05-26T11:00:01", timezone: "Europe/Paris" });
+    bolus.wizard = new types.Wizard({ deviceTime: "2019-05-26T11:00:01", timezone: "Europe/Paris" });
+    const data = [
+      new types.Upload({ deviceTime: "2019-05-20T08:59:37", timezone: "Europe/Paris" }),
+      new types.CBG({ deviceTime: "2019-05-20T08:59:38", timezone: "Europe/Paris" }),
+      new types.Wizard({ deviceTime: "2019-05-22T14:33:15", timezone: "Europe/Paris" }),
+      bolus,
+      new types.SMBG({ deviceTime: "2019-05-26T11:20:27", timezone: "Europe/Paris" }),
+      new types.Basal({ deviceTime: "2019-05-26T10:20:27", timezone: "Europe/Paris" }),
+      new types.Basal({ deviceTime: "2019-05-26T11:20:27", timezone: "Europe/Paris", deliveryType: "automated" }),
+      new types.Food({ deviceTime: "2019-05-26T10:00:01", timezone: "Europe/Paris" }),
+      new types.PumpSettings({ deviceTime: "2019-05-26T08:59:38", timezone: "Europe/Paris" }),
+      new types.CBG({ deviceTime: "2019-05-26T08:59:38", timezone: "Europe/Paris" }),
+      new types.CBG({ deviceTime: "2019-05-27T08:59:38", timezone: "Europe/Paris" }), // Should be left over
+    ];
 
-  const mostRecent = "2017-01-02T09:19:05.000Z";
-  const groupedData = {
-    basal: [
-      datums.basal,
-    ],
-    bolus: [
-      datums.bolus1,
-      datums.bolus2,
-      datums.bolus3,
-      datums.bolus4,
-    ],
-    cbg: [
-      datums.cbg1,
-      datums.cbg2,
-    ],
-    smbg: [
-      datums.smbg,
-    ],
-    upload: [
-      datums.upload1,
-      datums.upload2,
-    ],
-  };
-  const numDays = 6;
-  const timePrefs = {
-    timezoneAware: false,
-    timezoneName: null,
-  };
+    tidelineData = new TidelineData({ timePrefs: { timezoneAware: true, timezoneName: "Europe/Paris" } });
+    await tidelineData.addData(data);
+  });
 
   describe("selectDailyViewData", () => {
     let filtered;
     let latestFilteredData;
     let latestFilteredDate;
 
-    const latestDataDate = mostRecent.split("T")[0];
-
     beforeEach(() => {
-      filtered = dataUtils.selectDailyViewData(mostRecent, groupedData, numDays, timePrefs);
+      const startDate = moment.tz("2019-05-20", "Europe/Paris").locale("fr").startOf("week");
+      const endDate = moment.tz("2019-05-20", "Europe/Paris").locale("fr").endOf("week");
+      filtered = dataUtils.selectDailyViewData(tidelineData, startDate, endDate);
       latestFilteredDate = _.last(_.keys(filtered.dataByDate));
       latestFilteredData = filtered.dataByDate[latestFilteredDate];
     });
@@ -120,17 +67,11 @@ describe("print data utils", () => {
     });
 
     it("should return the most recent data available", () => {
-      const outOfRangeDate = moment.utc(latestDataDate).subtract(numDays, "d").format("Y-M-D");
-
-      expect(latestFilteredDate <= latestDataDate).to.be.true;
-      expect(filtered.dataByDate[outOfRangeDate]).to.be.undefined;
-    });
-
-    it("should return data for the number of days specified", () => {
-      expect(_.keys(filtered.dataByDate).length).to.equal(6);
-
-      filtered = dataUtils.selectDailyViewData(mostRecent, groupedData, 3, timePrefs);
-      expect(_.keys(filtered.dataByDate).length).to.equal(3);
+      const expectDates = ["2019-05-20", "2019-05-21", "2019-05-22", "2019-05-23", "2019-05-24", "2019-05-25", "2019-05-26"];
+      expect(latestFilteredDate).to.be.equal("2019-05-26");
+      const dataByDate = _.keys(filtered.dataByDate);
+      expect(dataByDate, JSON.stringify(dataByDate)).to.be.deep.equal(expectDates);
+      expect(latestFilteredData.bounds).to.be.deep.equal([1558821600000, 1558907999999]);
     });
 
     it("should return basal data by date", () => {
@@ -143,7 +84,7 @@ describe("print data utils", () => {
       expect(latestFilteredData.data.basalSequences.length > 0).to.be.true;
     });
 
-    it("should return time in automode data by date", () => {
+    it("should return time in loop mode data by date", () => {
       expect(latestFilteredData.data.timeInAutoRatio).to.be.an("object");
       expect(latestFilteredData.data.timeInAutoRatio).to.have.all.keys(["automated", "manual"]);
     });
@@ -180,7 +121,7 @@ describe("print data utils", () => {
 
     it("should return the latest pump upload", () => {
       expect(filtered.latestPumpUpload).to.be.an("object");
-      expect(filtered.latestPumpUpload).to.equal(datums.upload2);
+      expect(filtered.latestPumpUpload).to.equal(tidelineData.grouped.upload[0]);
     });
   });
 });

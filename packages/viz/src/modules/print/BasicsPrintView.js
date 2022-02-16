@@ -44,7 +44,6 @@ import serialize from "serialize-svg-path";
 
 import {
   CGM_DATA_KEY,
-  DIABELOOP,
   NO_SITE_CHANGE,
   SITE_CHANGE,
   SITE_CHANGE_CANNULA,
@@ -60,20 +59,16 @@ class BasicsPrintView extends PrintView {
   constructor(doc, data, opts) {
     super(doc, data, opts);
 
-
     this.siteChangeImages = {
       [SITE_CHANGE_CANNULA]: Images.siteChangeCannulaImage,
-      [SITE_CHANGE_RESERVOIR]: Images.siteChangeReservoirImage,
+      [SITE_CHANGE_RESERVOIR]: Images.siteChangeReservoirDiabeloopImage,
       [SITE_CHANGE_TUBING]: Images.siteChangeTubingImage,
     };
 
     const latestPumpUpload = getLatestPumpUpload(_.get(data, "data.upload.data", []));
     this.source = _.get(latestPumpUpload, "source", "").toLowerCase();
-    this.manufacturer = this.source === "carelink" ? "medtronic" : this.source;
+    this.manufacturer = this.source;
 
-    if (this.source === DIABELOOP.toLowerCase()) {
-      this.siteChangeImages[SITE_CHANGE_RESERVOIR] = Images.siteChangeReservoirDiabeloopImage;
-    }
     // Process basics data
     const { source: bgSource, cgmStatus } = determineBgDistributionSource(this.data);
     _.assign(this, { bgSource, cgmStatus });
@@ -111,7 +106,7 @@ class BasicsPrintView extends PrintView {
       totalDailyDose,
     });
 
-    this.data = processInfusionSiteHistory(this.data, this.patient);
+    this.data = processInfusionSiteHistory(this.data);
 
     this.data = disableEmptySections(this.data);
 
