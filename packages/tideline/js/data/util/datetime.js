@@ -103,7 +103,7 @@ const datetime = {
    * @param {moment.Moment} last
    */
   findBasicsDays: function(first, last) {
-    const current = first.clone();
+    const current = first.clone().startOf("week");
     const mostRecent = last.format("YYYY-MM-DD");
     const end = last.clone().endOf("week").add(1, "day").format("YYYY-MM-DD");
     let date;

@@ -252,7 +252,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
         if (_.isEmpty(typeObj)) {
           continue;
         }
-        if (_.includes([constants.SITE_CHANGE_RESERVOIR], type)) {
+        if (_.includes([constants.SITE_CHANGE_RESERVOIR, constants.SITE_CHANGE_CANNULA, constants.SITE_CHANGE_TUBING], type)) {
           typeObj.cf = crossfilter(typeObj.data);
           this._buildCrossfilterUtils(typeObj, type);
         }
