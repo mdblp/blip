@@ -60,7 +60,7 @@ interface DialogPDFOptionsProps {
   onResult: (options?: PrintPDFOptions) => void;
 }
 const DEFAULT_PRESET: Presets = "3weeks";
-const maxSelectableDays = 90;
+const MAX_SELECTABLE_DAYS = 90;
 
 const printOptionsStyle = makeStyles((theme: Theme) => {
   return {
@@ -119,14 +119,25 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   const classes = printOptionsStyle();
   const orientation: CalendarOrientation = matchLandscape ? "landscape" : "portrait";
 
-  const { minDate, maxDate } = React.useMemo(() => {
-    const minDate = dayjs(props.minDate, { utc: true });
-    const maxDate = dayjs(props.maxDate, { utc: true });
-    return { minDate, maxDate };
-  }, [props.minDate, props.maxDate]);
-
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
   const [customStartDate, setCustomStartDate] = React.useState<Dayjs|null>(null);
+  const { minDate, maxDate } = React.useMemo(() => {
+    let minDate = dayjs(props.minDate, { utc: true });
+    let maxDate = dayjs(props.maxDate, { utc: true });
+    if (customStartDate) {
+      const newMinDate = customStartDate.subtract(MAX_SELECTABLE_DAYS, "day");
+      const newMaxDate = customStartDate.add(MAX_SELECTABLE_DAYS, "day");
+      if (newMinDate.isAfter(minDate)) {
+        minDate = newMinDate;
+      }
+      if (newMaxDate.isBefore(maxDate)) {
+        maxDate = newMaxDate;
+      }
+    }
+    return { minDate, maxDate };
+  }, [props.minDate, props.maxDate, customStartDate]);
+
+  const [openState, setOpenState] = React.useState(false);
+  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
 
   const { start, end, displayStart, displayEnd } = React.useMemo(() => {
     const start = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
@@ -137,11 +148,17 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   }, [pdfOptions, customStartDate]);
 
   React.useEffect(() => {
-    console.info("DialogPDFOptions useEffect", { open });
-    if (open) {
+    // The openState is used to prevent to reset the selected dates, after a custom date selection
+    // Side effect of the useMemo for min/max dates.
+    // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
+    if (open && !openState) {
+      setOpenState(true);
       setPDFOptions(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
     }
-  }, [open, minDate, maxDate]);
+    if (!open && openState) {
+      setOpenState(false);
+    }
+  }, [open, openState, minDate, maxDate]);
 
   const handleClickPreset = (preset: Presets) => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate));
@@ -233,7 +250,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             maxDate={maxDate}
             orientation={orientation}
             onChange={handleChangeCustomDate}
-            selection={{ mode: "range", selected: { start, end }, maxSelectableDays }}
+            selection={{ mode: "range", selected: { start, end } }}
           />
         </Box>
       </DialogContent>
