@@ -44,32 +44,15 @@ import FooterLinks from "./footer-links";
 
 const log = bows("Routes");
 
-const publicRouteStyle = makeStyles(() => {
+const routeStyle = makeStyles(() => {
   return {
-    component: {
+    public: {
       flex: "1 0 auto",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
     },
-    MuiCssBaseline: {
-      "@global": {
-        body: {
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-        },
-        html: {
-          height: "100%",
-        },
-      },
-    },
-  };
-});
-
-const privateRouteStyle = makeStyles(() => {
-  return {
-    component: {
+    private: {
       flex: "1 0 auto",
     },
   };
@@ -78,7 +61,7 @@ const privateRouteStyle = makeStyles(() => {
 export const PublicRoute = (props: RouteProps): JSX.Element | null => {
   const historyHook = useHistory<HistoryState>();
   const { isAuthInProgress, isLoggedIn, user } = useAuth();
-  const classes = publicRouteStyle();
+  const classes = routeStyle();
   React.useEffect(() => {
     setPageTitle();
   });
@@ -96,7 +79,7 @@ export const PublicRoute = (props: RouteProps): JSX.Element | null => {
     <ThemeProvider theme={externalTheme}>
       <CssBaseline />
       <SnackbarContextProvider context={DefaultSnackbarContext}>
-        <div className={classes.component}>
+        <div className={classes.public}>
           {component}
         </div>
       </SnackbarContextProvider>
@@ -108,7 +91,7 @@ export const PublicRoute = (props: RouteProps): JSX.Element | null => {
 export const PrivateRoute = (props: RouteProps): JSX.Element | null => {
   const historyHook = useHistory<HistoryState>();
   const { isAuthInProgress, isLoggedIn, user, isAuthHookInitialized } = useAuth();
-  const classes = privateRouteStyle();
+  const classes = routeStyle();
 
   const renewConsentPath = props.path === "/renew-consent" || props.path === "/new-consent";
   // const hcpPreferencesPath = props.path === "/professional/preferences";
@@ -148,7 +131,7 @@ export const PrivateRoute = (props: RouteProps): JSX.Element | null => {
       <SessionTimeout />
       <CssBaseline />
       <SnackbarContextProvider context={DefaultSnackbarContext}>
-        <div className={classes.component}>
+        <div className={classes.private}>
           {component}
         </div>
       </SnackbarContextProvider>

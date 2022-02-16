@@ -51,7 +51,7 @@ function testFooterLink(): void {
       );
     };
 
-    const mountComponent = async (user: User): Promise<void> => {
+    const mountComponent = async (user: User = null): Promise<void> => {
       await act(() => {
         return new Promise((resolve) => {
           render(
@@ -79,13 +79,13 @@ function testFooterLink(): void {
     }
 
     it("should render", async () => {
-      await mountComponent(null);
+      await mountComponent();
       const component = document.getElementById("footer-links-container");
       expect(component).to.not.be.null;
     });
 
     it("should render language selector when user is not logged in", async () => {
-      await mountComponent(null);
+      await mountComponent();
       const languageSelector = document.getElementById("footer-language-box");
       expect(languageSelector).to.not.be.null;
     });
@@ -97,27 +97,27 @@ function testFooterLink(): void {
     });
 
     it("should privacy policy link redirect to correct url", async () => {
-      await mountComponent(null);
+      await mountComponent();
       checkLinkHref("footer-link-url-privacy-policy", diabeloopUrls.getPrivacyPolicyUrL(i18n.language));
     });
 
     it("should terms of use link redirect to correct url", async () => {
-      await mountComponent(null);
+      await mountComponent();
       checkLinkHref("footer-link-url-terms", diabeloopUrls.getTermsUrL(i18n.language));
     });
 
     it("should intended use link redirect to correct url", async () => {
-      await mountComponent(null);
+      await mountComponent();
       checkLinkHref("footer-link-url-intended-use", diabeloopUrls.getIntendedUseUrL(i18n.language));
     });
 
     it("should cookies policy link redirect to correct url", async () => {
-      await mountComponent(null);
+      await mountComponent();
       checkLinkHref("footer-link-url-cookies-policy", diabeloopUrls.getCookiesPolicyUrl(i18n.language));
     });
 
     it("should release notes link redirect to correct url", async () => {
-      await mountComponent(null);
+      await mountComponent();
       checkLinkHref("footer-link-url-release-notes", diabeloopUrls.getReleaseNotesURL());
     });
   });
