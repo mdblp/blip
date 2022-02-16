@@ -76,6 +76,9 @@ export async function getPatientsDataSummary(session: Session, userId: string, o
   });
 
   if (response.ok) {
+    if (appConfig.CBG_BUCKETS_ENABLED) {
+      return await response.json() as ComputedTIR;
+    }
     const result = await response.json() as ComputedTIR[];
     if (Array.isArray(result) && result.length > 0) {
       return result[0];
