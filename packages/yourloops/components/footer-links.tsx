@@ -81,7 +81,6 @@ const footerStyle = makeStyles((theme: Theme) => {
       display: "flex",
       flexShrink: 0,
       fontSize: "12px",
-      height: "68px",
       marginTop: theme.spacing(3),
       padding: "11px",
       paddingBottom: "11px",
