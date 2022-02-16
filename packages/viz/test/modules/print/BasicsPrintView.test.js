@@ -972,59 +972,6 @@ describe("BasicsPrintView", () => {
     });
   });
 
-  describe("renderCalendarSummary", () => {
-    beforeEach(() => {
-      Renderer.setLayoutColumns({
-        width: 100,
-        count: 1,
-      });
-
-      Renderer.initCalendar();
-
-      sinon.spy(Renderer, "defineStatColumns");
-      sinon.stub(Renderer, "renderTable");
-    });
-
-    it("should not render a table if section is disabled", () => {
-      Renderer.renderCalendarSummary({
-        disabled: true,
-      });
-
-      sinon.assert.notCalled(Renderer.renderTable);
-    });
-
-    it("should call defineStatColumns with custom opts", () => {
-      Renderer.renderCalendarSummary({
-        dimensions: Renderer.data.sections.basals.dimensions,
-        header: Renderer.data.sections.basals.summaryTitle,
-        data: Renderer.data.data.basal.summary,
-        type: "basal",
-        disabled: false,
-      });
-
-      sinon.assert.calledOnce(Renderer.defineStatColumns);
-      sinon.assert.calledWith(Renderer.defineStatColumns, {
-        statWidth: 75,
-        valueWidth: 25,
-        height: 20,
-        statHeader: "Total basal events",
-        valueHeader: "1",
-      });
-    });
-
-    it("should render a table if section is enabled", () => {
-      Renderer.renderCalendarSummary({
-        dimensions: Renderer.data.sections.basals.dimensions,
-        header: Renderer.data.sections.basals.summaryTitle,
-        data: Renderer.data.data.basal.summary,
-        type: "basal",
-        disabled: false,
-      });
-
-      sinon.assert.calledOnce(Renderer.renderTable);
-    });
-  });
-
   describe("renderEmptyText", () => {
     beforeEach(() => {
       Renderer.setLayoutColumns({

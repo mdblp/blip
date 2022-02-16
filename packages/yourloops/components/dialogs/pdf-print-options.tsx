@@ -30,7 +30,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import dayjs, { Dayjs } from "dayjs";
 
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme, makeStyles, Theme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import Button from "@material-ui/core/Button";
@@ -49,7 +49,7 @@ interface PrintPDFOptions {
   start: string;
   /** Print end date (ISO day ex: 2022-02-10) */
   end: string;
-  preset?: Presets | null;
+  preset?: Presets;
 }
 interface DialogPDFOptionsProps {
   open: boolean;
@@ -62,44 +62,62 @@ interface DialogPDFOptionsProps {
 const DEFAULT_PRESET: Presets = "3weeks";
 const maxSelectableDays = 90;
 
-function getDatesFromPreset(preset: Presets, maxDate: Dayjs) {
+const printOptionsStyle = makeStyles((theme: Theme) => {
+  return {
+    marginTop: {
+      marginTop: theme.spacing(2),
+    },
+    presetButtons: {
+      width: "20%",
+      [theme.breakpoints.down("sm")]: {
+        width: "40%",
+        marginTop: theme.spacing(1),
+      },
+    },
+    calendarBox: {
+      flexDirection: "column",
+      width: "fit-content",
+      marginLeft: "auto",
+      marginRight: "auto",
+      [theme.breakpoints.up("sm")]: {
+        flexDirection: "row",
+      },
+    },
+  };
+}, { name: "dialog-pdf-options" });
+
+function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
   const end = maxDate.format("YYYY-MM-DD");
+  let start: Dayjs;
   switch (preset) {
   case "1week":
-    return {
-      start: maxDate.subtract(6, "days").format("YYYY-MM-DD"),
-      end,
-      preset,
-    };
+    start = maxDate.subtract(6, "days");
+    break;
   case "2weeks":
-    return {
-      start: maxDate.subtract(13, "days").format("YYYY-MM-DD"),
-      end,
-      preset,
-    };
+    start = maxDate.subtract(13, "days");
+    break;
   case "3weeks":
-    return {
-      start: maxDate.subtract(20, "days").format("YYYY-MM-DD"),
-      end,
-      preset,
-    };
+    start = maxDate.subtract(20, "days");
+    break;
   case "3months":
-    return {
-      start: maxDate.subtract(89, "days").format("YYYY-MM-DD"),
-      end,
-      preset,
-    };
+  default:
+    start = maxDate.subtract(89, "days");
+    break;
   }
-  // Make eslint happy
-  throw new Error("Invalid preset, bug here");
+  if (start.isBefore(minDate)) {
+    start = minDate;
+  }
+  return { start: start.format("YYYY-MM-DD"), end, preset };
 }
 
 function DialogPDFOptions(props: DialogPDFOptionsProps) {
   const { open, onResult } = props;
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const orientation: CalendarOrientation = matches ? "landscape" : "portrait";
+  const matchLandscape = useMediaQuery(theme.breakpoints.up("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const classes = printOptionsStyle();
+  const orientation: CalendarOrientation = matchLandscape ? "landscape" : "portrait";
 
   const { minDate, maxDate } = React.useMemo(() => {
     const minDate = dayjs(props.minDate, { utc: true });
@@ -107,8 +125,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     return { minDate, maxDate };
   }, [props.minDate, props.maxDate]);
 
-  const [presetSelected, setPresetSelected] = React.useState<Presets | null>(DEFAULT_PRESET);
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, maxDate));
+  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
   const [customStartDate, setCustomStartDate] = React.useState<Dayjs|null>(null);
 
   const { start, end, displayStart, displayEnd } = React.useMemo(() => {
@@ -120,22 +137,19 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   }, [pdfOptions, customStartDate]);
 
   React.useEffect(() => {
+    console.info("DialogPDFOptions useEffect", { open });
     if (open) {
-      setPDFOptions(getDatesFromPreset(DEFAULT_PRESET, maxDate));
+      setPDFOptions(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
     }
-  }, [open, maxDate]);
+  }, [open, minDate, maxDate]);
 
-  const handleClickPreset = (preset: Presets | null) => {
-    setPresetSelected(preset);
-    if (preset) {
-      setPDFOptions(getDatesFromPreset(preset, maxDate));
-    }
+  const handleClickPreset = (preset: Presets) => {
+    setPDFOptions(getDatesFromPreset(preset, minDate, maxDate));
   };
 
   const handleChangeCustomDate = (d: Dayjs) => {
     if (customStartDate === null) {
       setCustomStartDate(d);
-      setPresetSelected(null);
     } else {
       const start = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
       const end = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
@@ -144,13 +158,22 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     }
   };
 
+  const presetSelected = pdfOptions.preset;
   const displayedDates = `${displayStart} → ${displayEnd}`;
   return (
-    <Dialog id="dialog-pdf-options" fullScreen={!matches} open={open} onClose={() => onResult()} data-start={pdfOptions.start} data-end={pdfOptions.end} maxWidth={false}>
-      <DialogContent style={{ width: "fit-content" }}>
+    <Dialog
+      id="dialog-pdf-options"
+      fullScreen={fullScreen}
+      open={open}
+      onClose={() => onResult()}
+      data-start={pdfOptions.start}
+      data-end={pdfOptions.end}
+      maxWidth={false}
+    >
+      <DialogContent>
         <Typography variant="h4">{t("dialog-pdf-options-title")}</Typography>
 
-        <Typography variant="body2" style={{ marginTop: theme.spacing(2) }}>{t("dialog-pdf-options-presets")}</Typography>
+        <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-presets")}</Typography>
         <Box display="flex" flexDirection="row" justifyContent="space-around" flexWrap="wrap">
           <Button
             id="pdf-options-button-one-week"
@@ -158,6 +181,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             color={presetSelected === "1week" ? "primary" : "default"}
             onClick={() => handleClickPreset("1week")}
             data-selected={presetSelected === "1week"}
+            className={classes.presetButtons}
           >
             {t("preset-dates-range-1week")}
           </Button>
@@ -167,6 +191,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             color={presetSelected === "2weeks" ? "primary" : "default"}
             onClick={() => handleClickPreset("2weeks")}
             data-selected={presetSelected === "2weeks"}
+            className={classes.presetButtons}
           >
             {t("preset-dates-range-2weeks")}
           </Button>
@@ -176,6 +201,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             color={presetSelected === "3weeks" ? "primary" : "default"}
             onClick={() => handleClickPreset("3weeks")}
             data-selected={presetSelected === "3weeks"}
+            className={classes.presetButtons}
           >
             {t("preset-dates-range-3weeks")}
           </Button>
@@ -185,22 +211,23 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             color={presetSelected === "3months" ? "primary" : "default"}
             onClick={() => handleClickPreset("3months")}
             data-selected={presetSelected === "3months"}
+            className={classes.presetButtons}
           >
             {t("preset-dates-range-3months")}
           </Button>
         </Box>
 
-        <Typography variant="body2" style={{ marginTop: theme.spacing(2) }}>{t("dialog-pdf-options-custom-range")}</Typography>
+        <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-custom-range")}</Typography>
         <Button
           id="pdf-options-button-custom-range"
-          variant={presetSelected === null ? "contained" : "outlined"}
-          color={presetSelected === null ? "primary" : "default"}
-          data-selected={presetSelected === null}
+          variant={!presetSelected ? "contained" : "outlined"}
+          color={!presetSelected ? "primary" : "default"}
+          data-selected={!presetSelected}
           data-displayed={displayedDates}
         >
           {displayedDates}
         </Button>
-        <Box display="flex" flexDirection={matches ? "row" : "column"} mt={2} width="fit-content">
+        <Box display="flex" className={`${classes.calendarBox} ${classes.marginTop}`}>
           <RangeDatePicker
             minDate={minDate}
             maxDate={maxDate}
@@ -210,11 +237,18 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
           />
         </Box>
       </DialogContent>
+
       <DialogActions>
         <Button id="pdf-options-button-cancel" onClick={() => onResult()}>
           {t("button-cancel")}
         </Button>
-        <Button id="pdf-options-button-print" onClick={() => onResult(pdfOptions)} color="primary" variant="contained">
+        <Button
+          id="pdf-options-button-print"
+          onClick={() => onResult(pdfOptions)}
+          disabled={customStartDate !== null}
+          color="primary"
+          variant="contained"
+        >
           {t("button-print")}
         </Button>
       </DialogActions>

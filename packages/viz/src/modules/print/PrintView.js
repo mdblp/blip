@@ -543,7 +543,11 @@ class PrintView {
 
     table.onPageAdd(this.onPageAdd.bind(this));
 
-    table.onPageAdded(this.onPageAdded.bind(this));
+    table.onPageAdded((tb /*, row */) => {
+      if (opts.showHeaders) {
+        tb.addHeader();
+      }
+    });
 
     table.onCellBackgroundAdd(this.onCellBackgroundAdd.bind(this));
 
@@ -578,10 +582,6 @@ class PrintView {
 
     // cancel event so the automatic page add is not triggered
     ev.cancel = true; // eslint-disable-line no-param-reassign
-  }
-
-  onPageAdded(tb) {
-    tb.addHeader();
   }
 
   onBodyAdded(tb) {

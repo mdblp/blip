@@ -114,7 +114,6 @@ class SettingsPrintView extends PrintView {
     } else {
       this.renderSectionHeading(t("No diabeloop device parameters available"));
     }
-
   }
 
   /** @private */
@@ -138,7 +137,6 @@ class SettingsPrintView extends PrintView {
       showHeaders : showHeaders ?? false,
     });
   }
-
 }
 
 export default SettingsPrintView;

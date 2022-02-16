@@ -21,6 +21,7 @@ import _ from "lodash";
 import bows from "bows";
 import moment from "moment-timezone";
 import i18next from "i18next";
+import clsx from "clsx";
 import { Switch, Route /*, Redirect */ } from "react-router-dom";
 
 import { TidelineData, nurseShark, MS_IN_DAY, MGDL_UNITS } from "tideline";
@@ -240,12 +241,18 @@ class PatientDataPage extends React.Component {
     let end = "1970-01-02";
     if (canPrint && showPDFPrintOptions) {
       const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints();
-      start = startDate.toISOString();
-      end = endDate.toISOString();
+      start = startDate.format("YYYY-MM-DD");
+      end = endDate.format("YYYY-MM-DD");
     }
 
+    const classes = clsx(
+      "patient-data",
+      "patient-data-yourloops",
+      { ["patient-data-with-dialog"]: showPDFPrintOptions }
+    );
+
     return (
-      <div className="patient-data patient-data-yourloops">
+      <div className={classes}>
         {messages}
         {patientData}
         {loader}
@@ -542,7 +549,7 @@ class PatientDataPage extends React.Component {
         : lastPumpSettings,
     };
 
-    vizUtils.data.generatePDFStats(pdfData, tidelineData, this.dataUtil);
+    vizUtils.data.generatePDFStats(pdfData, this.dataUtil);
 
     this.log("Generating PDF with", pdfData, opts);
 

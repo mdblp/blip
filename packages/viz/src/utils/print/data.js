@@ -22,7 +22,6 @@ import moment from "moment-timezone";
 import { getBasalSequences, getGroupDurations } from "../../utils/basal";
 import { getLatestPumpUpload, isAutomatedBasalDevice } from "../../utils/device";
 import { commonStats, statFetchMethods, getStatDefinition } from "../../utils/stat";
-import { getLocalizedCeiling } from "../../utils/datetime";
 
 /**
  * @typedef { import("tideline").TidelineData } TidelineData
@@ -245,11 +244,10 @@ export function generatePumpSettings(latestPumpSettings, date) {
 
 /**
  * @param {object} data
- * @param {TidelineData} tidelineData
  * @param {DataUtil} dataUtil
  * @returns data param
  */
-export function generatePDFStats(data, tidelineData, dataUtil) {
+export function generatePDFStats(data, dataUtil) {
   const {
     bgBounds,
     bgUnits,
@@ -272,14 +270,8 @@ export function generatePDFStats(data, tidelineData, dataUtil) {
     });
   };
 
-  const basicsDateRange = _.get(data, "basics.dateRange");
-  if (basicsDateRange) {
-    const timePrefs = {
-      timezoneName: tidelineData.getTimezoneAt(basicsDateRange[1]),
-    };
-    data.basics.endpoints = [basicsDateRange[0], getLocalizedCeiling(basicsDateRange[1], timePrefs).toISOString()];
-
-    dataUtil.endpoints = data.basics.endpoints;
+  if (data.basics) {
+    dataUtil.endpoints = data.basics.dateRange;
 
     data.basics.stats = {
       [commonStats.timeInRange]: getStat(commonStats.timeInRange),
@@ -293,13 +285,8 @@ export function generatePDFStats(data, tidelineData, dataUtil) {
     };
   }
 
-  const dailyDateRanges = _.get(data, "daily.dataByDate");
-  if (dailyDateRanges) {
-    _.forOwn(dailyDateRanges, (_value, key) => {
-      // data.daily.dataByDate[key].endpoints = [
-      //   getLocalizedCeiling(dailyDateRanges[key].bounds[0], timePrefs).toISOString(),
-      //   getLocalizedCeiling(dailyDateRanges[key].bounds[1], timePrefs).toISOString(),
-      // ];
+  if (data.daily) {
+    _.forOwn(data.daily.dataByDate, (_value, key) => {
       dataUtil.endpoints = data.daily.dataByDate[key].endpoints;
 
       data.daily.dataByDate[key].stats = {

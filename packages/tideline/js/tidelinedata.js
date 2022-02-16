@@ -573,7 +573,7 @@ TidelineData.prototype.setEndPoints = function setEndPoints() {
  */
 TidelineData.prototype.getLocaleTimeEndpoints = function getLocaleTimeEndpoints(endInclusive = true) {
   let timezone = this.getTimezoneAt(this.endpoints[0]);
-  const startDate = moment.tz(this.endpoints[0], timezone).toDate();
+  const startDate = moment.tz(this.endpoints[0], timezone);
 
   timezone = this.getTimezoneAt(this.endpoints[1]);
   let endDate = moment.tz(this.endpoints[1], timezone);
@@ -583,7 +583,7 @@ TidelineData.prototype.getLocaleTimeEndpoints = function getLocaleTimeEndpoints(
     endDate.subtract(1, "millisecond");
   }
 
-  return { startDate, endDate: endDate.toDate() };
+  return { startDate, endDate };
 };
 
 TidelineData.prototype.setDeviceParameters = function setDeviceParameters() {
