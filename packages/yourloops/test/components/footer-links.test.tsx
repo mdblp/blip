@@ -51,7 +51,7 @@ function testFooterLink(): void {
       );
     };
 
-    const mountComponent = async (user: User = null): Promise<void> => {
+    const mountComponent = async (user?: User): Promise<void> => {
       await act(() => {
         return new Promise((resolve) => {
           render(

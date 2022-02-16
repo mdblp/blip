@@ -84,7 +84,7 @@ export const PublicRoute = (props: RouteProps): JSX.Element | null => {
         </div>
       </SnackbarContextProvider>
       <FooterLinks />
-    </ThemeProvider >
+    </ThemeProvider>
   );
 };
 
