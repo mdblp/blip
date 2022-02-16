@@ -21,11 +21,17 @@ html {
 }
 
 :global(div.api-error-message) {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  margin-top: auto;
-  margin-bottom: auto;
-  justify-content: center;
-  align-self: center;
-  min-width: 25em;
+  width: 40%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (max-width: 600px) {
+  :global(div.api-error-message) {
+    width: 80%;
+  }
 }
