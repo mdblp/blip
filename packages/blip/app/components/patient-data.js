@@ -709,7 +709,7 @@ class PatientDataPage extends React.Component {
   }
 
   /**
-   * @param {{ start: string; end: string; }|undefined} printOptions
+   * @param {{ start: string; end: string; preset?: string; }|undefined} printOptions
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
@@ -736,7 +736,7 @@ class PatientDataPage extends React.Component {
       this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
       this.generatePDF(printOptions)
         .then((pdf) => {
-          this.trackMetric("export_data", "save_report", this.getChartType() ?? "");
+          this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
           openPDFWindow(pdf);
           resolve();
         })
@@ -793,13 +793,13 @@ class PatientDataPage extends React.Component {
     const chartType = forWhat ?? this.getChartType();
     let dataLoaded = false;
 
-    this.log.debug("handleDatetimeLocationChange()", {
-      epochLocation,
-      msRange,
-      date: moment.utc(epochLocation).toISOString(),
-      rangeDays: msRange/MS_IN_DAY,
-      loadingState,
-    });
+    // this.log.debug("handleDatetimeLocationChange()", {
+    //   epochLocation,
+    //   msRange,
+    //   date: moment.utc(epochLocation).toISOString(),
+    //   rangeDays: msRange/MS_IN_DAY,
+    //   loadingState,
+    // });
 
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
       throw new Error("handleDatetimeLocationChange: invalid parameters");
