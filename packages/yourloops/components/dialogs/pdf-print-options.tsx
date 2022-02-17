@@ -33,11 +33,16 @@ import dayjs, { Dayjs } from "dayjs";
 import { useTheme, makeStyles, Theme } from "@material-ui/core/styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
+import DateRangeIcon from "@material-ui/icons/DateRange";
+
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 
 import { CalendarOrientation } from "../date-pickers/models";
@@ -67,8 +72,12 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
     marginTop: {
       marginTop: theme.spacing(2),
     },
+    customRangeText: {
+      marginBottom: theme.spacing(1),
+    },
     presetButtons: {
       width: "20%",
+      marginLeft: theme.spacing(1),
       [theme.breakpoints.down("sm")]: {
         width: "40%",
         marginTop: theme.spacing(1),
@@ -79,6 +88,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
       width: "fit-content",
       marginLeft: "auto",
       marginRight: "auto",
+      marginTop: theme.spacing(2),
       [theme.breakpoints.up("sm")]: {
         flexDirection: "row",
       },
@@ -191,60 +201,64 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         <Typography variant="h4">{t("dialog-pdf-options-title")}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-presets")}</Typography>
-        <Box display="flex" flexDirection="row" justifyContent="space-around" flexWrap="wrap">
-          <Button
+        <Box display="flex" flexDirection="row" justifyContent="flex-start" flexWrap="wrap" mt={1}>
+          <Chip
             id="pdf-options-button-one-week"
-            variant={presetSelected === "1week" ? "contained" : "outlined"}
+            variant={presetSelected === "1week" ? "default" : "outlined"}
             color={presetSelected === "1week" ? "primary" : "default"}
             onClick={() => handleClickPreset("1week")}
             data-selected={presetSelected === "1week"}
             className={classes.presetButtons}
-          >
-            {t("preset-dates-range-1week")}
-          </Button>
-          <Button
+            label={t("preset-dates-range-1week")}
+          />
+          <Chip
             id="pdf-options-button-two-weeks"
-            variant={presetSelected === "2weeks" ? "contained" : "outlined"}
+            variant={presetSelected === "2weeks" ? "default" : "outlined"}
             color={presetSelected === "2weeks" ? "primary" : "default"}
             onClick={() => handleClickPreset("2weeks")}
             data-selected={presetSelected === "2weeks"}
             className={classes.presetButtons}
-          >
-            {t("preset-dates-range-2weeks")}
-          </Button>
-          <Button
+            label={t("preset-dates-range-2weeks")}
+          />
+          <Chip
             id="pdf-options-button-three-weeks"
-            variant={presetSelected === "3weeks" ? "contained" : "outlined"}
+            variant={presetSelected === "3weeks" ? "default" : "outlined"}
             color={presetSelected === "3weeks" ? "primary" : "default"}
             onClick={() => handleClickPreset("3weeks")}
             data-selected={presetSelected === "3weeks"}
             className={classes.presetButtons}
-          >
-            {t("preset-dates-range-3weeks")}
-          </Button>
-          <Button
+            label={t("preset-dates-range-3weeks")}
+          />
+          <Chip
             id="pdf-options-button-three-months"
-            variant={presetSelected === "3months" ? "contained" : "outlined"}
+            variant={presetSelected === "3months" ? "default" : "outlined"}
             color={presetSelected === "3months" ? "primary" : "default"}
             onClick={() => handleClickPreset("3months")}
             data-selected={presetSelected === "3months"}
             className={classes.presetButtons}
-          >
-            {t("preset-dates-range-3months")}
-          </Button>
+            label={t("preset-dates-range-3months")}
+          />
         </Box>
 
-        <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-custom-range")}</Typography>
-        <Button
-          id="pdf-options-button-custom-range"
-          variant={!presetSelected ? "contained" : "outlined"}
-          color={!presetSelected ? "primary" : "default"}
-          data-selected={!presetSelected}
-          data-displayed={displayedDates}
-        >
-          {displayedDates}
-        </Button>
-        <Box display="flex" className={`${classes.calendarBox} ${classes.marginTop}`}>
+        <Box display="flex" mt={2} flexDirection="column">
+          <Typography variant="body2" className={classes.customRangeText}>{t("dialog-pdf-options-custom-range")}</Typography>
+          <TextField
+            id="pdf-options-button-custom-range"
+            variant="standard"
+            data-selected={!presetSelected}
+            data-displayed={displayedDates}
+            value={displayedDates}
+            InputProps={{
+              readOnly: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <DateRangeIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+        <Box display="flex" className={classes.calendarBox}>
           <RangeDatePicker
             minDate={minDate}
             maxDate={maxDate}
@@ -260,13 +274,13 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
           {t("button-cancel")}
         </Button>
         <Button
-          id="pdf-options-button-print"
+          id="pdf-options-button-generate"
           onClick={() => onResult(pdfOptions)}
           disabled={customStartDate !== null}
           color="primary"
           variant="contained"
         >
-          {t("button-print")}
+          {t("button-generate")}
         </Button>
       </DialogActions>
     </Dialog>
