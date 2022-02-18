@@ -69,8 +69,6 @@ const ignoredTransKeyInBlipFiles = [
   "${pa.reportedIntensity}-pa",
   "bolus_${bolusType}",
   "params|${parameter.name}",
-  // Migrated to yourloops.json (TODO check i18next namespace):
-  "pdf-generate-report",
 ];
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -237,7 +235,8 @@ describe("Locales tests", () => {
       }
     }
     for (const key of trKeys) {
-      if (!blipEnglish.includes(key) && !ignoredTransKeyInBlipFiles.includes(key)) {
+      // Use yourloops.json as a fallback
+      if (!blipEnglish.includes(key) && !ylpEnglish.includes(key) && !ignoredTransKeyInBlipFiles.includes(key)) {
         missingTranslations.push(key);
       }
     }

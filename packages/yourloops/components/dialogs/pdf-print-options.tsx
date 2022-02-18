@@ -48,7 +48,7 @@ import Typography from "@material-ui/core/Typography";
 import { CalendarOrientation } from "../date-pickers/models";
 import RangeDatePicker from "../date-pickers/range-date-picker";
 
-type Presets = "1week" | "2weeks" | "3weeks" | "3months";
+type Presets = "1week" | "2weeks" | "4weeks" | "3months";
 interface PrintPDFOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
   start: string;
@@ -64,7 +64,7 @@ interface DialogPDFOptionsProps {
   maxDate: string;
   onResult: (options?: PrintPDFOptions) => void;
 }
-const DEFAULT_PRESET: Presets = "3weeks";
+const DEFAULT_PRESET: Presets = "4weeks";
 const MAX_SELECTABLE_DAYS = 90;
 
 const printOptionsStyle = makeStyles((theme: Theme) => {
@@ -106,8 +106,8 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
   case "2weeks":
     start = maxDate.subtract(13, "days");
     break;
-  case "3weeks":
-    start = maxDate.subtract(20, "days");
+  case "4weeks":
+    start = maxDate.subtract(27, "days");
     break;
   case "3months":
   default:
@@ -221,13 +221,13 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             label={t("preset-dates-range-2weeks")}
           />
           <Chip
-            id="pdf-options-button-three-weeks"
-            variant={presetSelected === "3weeks" ? "default" : "outlined"}
-            color={presetSelected === "3weeks" ? "primary" : "default"}
-            onClick={() => handleClickPreset("3weeks")}
-            data-selected={presetSelected === "3weeks"}
+            id="pdf-options-button-four-weeks"
+            variant={presetSelected === "4weeks" ? "default" : "outlined"}
+            color={presetSelected === "4weeks" ? "primary" : "default"}
+            onClick={() => handleClickPreset("4weeks")}
+            data-selected={presetSelected === "4weeks"}
             className={classes.presetButtons}
-            label={t("preset-dates-range-3weeks")}
+            label={t("preset-dates-range-4weeks")}
           />
           <Chip
             id="pdf-options-button-three-months"
