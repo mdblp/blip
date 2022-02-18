@@ -69,6 +69,8 @@ const ignoredTransKeyInBlipFiles = [
   "${pa.reportedIntensity}-pa",
   "bolus_${bolusType}",
   "params|${parameter.name}",
+  // Migrated to yourloops.json (TODO check i18next namespace):
+  "pdf-generate-report",
 ];
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)

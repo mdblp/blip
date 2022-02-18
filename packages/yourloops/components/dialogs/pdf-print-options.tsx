@@ -198,7 +198,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
       maxWidth={false}
     >
       <DialogContent>
-        <Typography variant="h4">{t("dialog-pdf-options-title")}</Typography>
+        <Typography variant="h4">{t("pdf-generate-report")}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-presets")}</Typography>
         <Box display="flex" flexDirection="row" justifyContent="flex-start" flexWrap="wrap" mt={1}>
