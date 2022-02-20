@@ -1,6 +1,6 @@
 {
   " reports the data.": " reports the data.",
-  "%-I:%M %p": "%-I:%M %p",
+  "%-I:%M %p": "%-Hh%M",
   "%b %-d, %Y": "%b %-d, %Y",
   "* Animas pumps don't capture the details of how combo boluses are split between the normal and extended amounts.": "* Animas pumps don't capture the details of how combo boluses are split between the normal and extended amounts.",
   "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "* Questo valore glicemico è stato superiore a quello registrabile dal dispositivo. Il suo valore glicemico effettivo è superiore a quello visualizzato qui.",
