@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 2.0.6-beta8 - 2022-02-17
+## 2.0.6-beta9 - 2022-02-17
 ### Added
 - YLP-1105 Yourloops new blue theme
 - YLP-1106 Switch account from caregiver to hcp should ask for the profession
