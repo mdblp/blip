@@ -31,10 +31,10 @@ import { useTranslation } from "react-i18next";
 import dayjs, { Dayjs } from "dayjs";
 
 import { useTheme, makeStyles, Theme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import DateRangeIcon from "@material-ui/icons/DateRange";
 
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import Chip from "@material-ui/core/Chip";
@@ -131,30 +131,30 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
 
   const [customStartDate, setCustomStartDate] = React.useState<Dayjs|null>(null);
   const { minDate, maxDate } = React.useMemo(() => {
-    let minDate = dayjs(props.minDate, { utc: true });
-    let maxDate = dayjs(props.maxDate, { utc: true });
+    let mi = dayjs(props.minDate, { utc: true });
+    let ma = dayjs(props.maxDate, { utc: true });
     if (customStartDate) {
       const newMinDate = customStartDate.subtract(MAX_SELECTABLE_DAYS, "day");
       const newMaxDate = customStartDate.add(MAX_SELECTABLE_DAYS, "day");
-      if (newMinDate.isAfter(minDate)) {
-        minDate = newMinDate;
+      if (newMinDate.isAfter(mi)) {
+        mi = newMinDate;
       }
-      if (newMaxDate.isBefore(maxDate)) {
-        maxDate = newMaxDate;
+      if (newMaxDate.isBefore(ma)) {
+        ma = newMaxDate;
       }
     }
-    return { minDate, maxDate };
+    return { minDate: mi, maxDate: ma };
   }, [props.minDate, props.maxDate, customStartDate]);
 
   const [openState, setOpenState] = React.useState(false);
   const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
 
   const { start, end, displayStart, displayEnd } = React.useMemo(() => {
-    const start = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
-    const end = customStartDate ?? dayjs(pdfOptions.end, { utc: true });
-    const displayStart = start.format("ll");
-    const displayEnd = end.format("ll");
-    return { start, end, displayStart, displayEnd };
+    const s = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
+    const e = customStartDate ?? dayjs(pdfOptions.end, { utc: true });
+    const ds = s.format("ll");
+    const de = e.format("ll");
+    return { start: s, end: e, displayStart: ds, displayEnd: de };
   }, [pdfOptions, customStartDate]);
 
   React.useEffect(() => {
@@ -178,9 +178,9 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     if (customStartDate === null) {
       setCustomStartDate(d);
     } else {
-      const start = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
-      const end = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
-      setPDFOptions({ start, end });
+      const s = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
+      const e = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
+      setPDFOptions({ start: s, end: e });
       setCustomStartDate(null);
     }
   };

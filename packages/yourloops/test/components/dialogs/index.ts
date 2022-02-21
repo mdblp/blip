@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Components tests
+ * Dialogs tests
  *
  * All rights reserved.
  *

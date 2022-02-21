@@ -935,9 +935,9 @@ TidelineData.prototype.getBasicsData = function getBasicsData(startDate = null, 
     startTimezone = this.getTimezoneAt(startDate);
     mStart = moment.tz(startDate, startTimezone);
   } else {
-    mStart = mEnd.clone().startOf("week").subtract(2, "weeks");
-    startTimezone = this.getTimezoneAt(mStart.valueOf());
-    mStart = moment.tz(mStart.valueOf(), startTimezone);
+    const twoWeeksAgo = mEnd.clone().startOf("week").subtract(2, "weeks").valueOf();
+    startTimezone = this.getTimezoneAt(twoWeeksAgo);
+    mStart = moment.tz(twoWeeksAgo, startTimezone);
   }
 
   if (mStart.isAfter(mEnd)) {
@@ -945,6 +945,7 @@ TidelineData.prototype.getBasicsData = function getBasicsData(startDate = null, 
     return null;
   }
 
+  // Get the UTC values with exclusive range:
   startEpoch = mStart.valueOf() - 1;
   endEpoch = mEnd.valueOf() + 1;
   const days = dt.findBasicsDays(mStart, mEnd, startDate === null);

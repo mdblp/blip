@@ -249,7 +249,8 @@ describe("datetime utility", function() {
       ];
       const result = dt.findBasicsDays(
         moment.tz("2015-09-07T00:00:00.000Z", "Pacific/Auckland"),
-        moment.tz("2015-09-10T12:00:00.000Z", "Pacific/Auckland")
+        moment.tz("2015-09-10T12:00:00.000Z", "Pacific/Auckland"),
+        true,
       );
       expect(result, JSON.stringify({ expected, result }, null, 2)).to.deep.equal(expected);
     });

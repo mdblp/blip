@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Components tests
+ * Tests on DialogPDFOptions
  *
  * All rights reserved.
  *

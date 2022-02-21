@@ -167,11 +167,9 @@ class PatientDataPage extends React.Component {
 
   componentDidMount() {
     const { store } = this.props;
-    this.log.debug("Mounting...");
     this.unsubscribeStore = store.subscribe(this.reduxListener.bind(this));
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType();
-      this.log.debug("Mouting", { locationChart });
       switch (locationChart) {
       case "overview":
         this.handleSwitchToBasics();
@@ -193,9 +191,7 @@ class PatientDataPage extends React.Component {
   }
 
   componentWillUnmount() {
-    this.log.debug("Unmounting...");
     if (typeof this.unsubscribeStore === "function") {
-      this.log("componentWillUnmount => unsubscribeStore()");
       this.unsubscribeStore();
       this.unsubscribeStore = null;
     }
@@ -523,8 +519,6 @@ class PatientDataPage extends React.Component {
     const epochLocation = start.valueOf() + (end.valueOf() - start.valueOf()) / 2;
     const endPDFDate = end.toISOString();
 
-    this.log.debug({ start: start.toISOString(), end: endPDFDate, timezone, numDays });
-
     // Load a 2 days more than needed, around the wanted location, to be sure
     // we have data with duration too within this range
     await this.handleDatetimeLocationChange(epochLocation, (2 + numDays) * MS_IN_DAY, "pdf");
@@ -550,17 +544,10 @@ class PatientDataPage extends React.Component {
     };
 
     vizUtils.data.generatePDFStats(pdfData, this.dataUtil);
-
-    this.log("Generating PDF with", pdfData, opts);
-
     return createPrintPDFPackage(pdfData, opts);
   }
 
   async handleMessageCreation(message) {
-    this.log.debug("handleMessageCreation", message);
-    const shapedMessage = nurseShark.reshapeMessage(message);
-
-    this.log.debug({ message, shapedMessage });
     await this.chartRef.current.createMessage(nurseShark.reshapeMessage(message));
     this.trackMetric("note", "create_note");
   }
@@ -588,7 +575,6 @@ class PatientDataPage extends React.Component {
    * @returns {Promise<void>}
    */
   async handleEditMessage(message) {
-    this.log.debug("handleEditMessage", { message });
     const { api } = this.props;
 
     await api.editMessage(message);
@@ -602,7 +588,6 @@ class PatientDataPage extends React.Component {
   }
 
   async handleShowMessageThread(messageThread) {
-    this.log.debug("handleShowMessageThread", messageThread);
     const { api } = this.props;
 
     const messages = await api.getMessageThread(messageThread);
@@ -611,7 +596,6 @@ class PatientDataPage extends React.Component {
 
   handleShowMessageCreation(/** @type {moment.Moment | Date | null} */ datetime) {
     const { epochLocation, tidelineData } = this.state;
-    this.log.debug("handleShowMessageCreation", { datetime, epochLocation });
     let mDate = datetime;
     if (datetime === null) {
       const timezone = tidelineData.getTimezoneAt(epochLocation);
@@ -659,8 +643,6 @@ class PatientDataPage extends React.Component {
     } else if (moment.isMoment(datetime) || datetime instanceof Date) {
       epochLocation = datetime.valueOf();
     }
-
-    this.log.info("Switch to daily", { date: moment.utc(epochLocation).toISOString(), epochLocation });
 
     this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
     this.setState({
@@ -723,8 +705,6 @@ class PatientDataPage extends React.Component {
       }
     };
 
-    this.log.debug("handlePrint", printOptions);
-
     this.setState({ showPDFPrintOptions: false });
 
     if (_.isNil(printOptions)) {
@@ -785,27 +765,19 @@ class PatientDataPage extends React.Component {
    * Chart display date / range change
    * @param {number} epochLocation datetime epoch value in ms
    * @param {number} msRange ms around epochLocation
-   * @param {"pdf" | null} forWhat
+   * @param {"pdf" | null} target
    * @returns {Promise<boolean>} true if new data are loaded
    */
-  async handleDatetimeLocationChange(epochLocation, msRange, forWhat = null) {
+  async handleDatetimeLocationChange(epochLocation, msRange, target = null) {
     const { loadingState } = this.state;
-    const chartType = forWhat ?? this.getChartType();
+    const chartType = target ?? this.getChartType();
     let dataLoaded = false;
-
-    // this.log.debug("handleDatetimeLocationChange()", {
-    //   epochLocation,
-    //   msRange,
-    //   date: moment.utc(epochLocation).toISOString(),
-    //   rangeDays: msRange/MS_IN_DAY,
-    //   loadingState,
-    // });
 
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
       throw new Error("handleDatetimeLocationChange: invalid parameters");
     }
 
-    const updateLocation = forWhat === "pdf" ? _.noop : () => {
+    const updateLocation = target === "pdf" ? _.noop : () => {
       this.setState({ epochLocation, msRange });
     };
 
@@ -813,8 +785,7 @@ class PatientDataPage extends React.Component {
     if (loadingState === LOADING_STATE_DONE) {
       // For daily check for +/- 1 day (and not 0.5 day), for others only the displayed range
 
-      // let msRangeDataNeeded = chartType === "daily" ? MS_IN_DAY : msRange / 2;
-      let msRangeDataNeeded = MS_IN_DAY;
+      let msRangeDataNeeded;
       switch (chartType) {
       case "daily":
         msRangeDataNeeded = MS_IN_DAY;
@@ -837,7 +808,7 @@ class PatientDataPage extends React.Component {
         // We need more data!
 
         if (chartType === "daily") {
-          // For daily we will load 1 week to avoid too many loading
+          // For daily we will load 3 days to avoid too many loading
           msRangeDataNeeded = MS_IN_DAY * 3;
           rangeDisplay = {
             start: moment.utc(epochLocation - msRangeDataNeeded).startOf("day").valueOf(),
@@ -852,7 +823,7 @@ class PatientDataPage extends React.Component {
         this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
         await this.processData(data);
 
-        if (forWhat !== "pdf") {
+        if (target !== "pdf") {
           // The loading state will be changed after the PDF is generated,
           // for other cases, we have finished
           this.setState({ loadingState: LOADING_STATE_DONE });
@@ -950,7 +921,7 @@ class PatientDataPage extends React.Component {
       epochLocation: newLocation,
       msRange: newRange,
       canPrint: hasDiabetesData,
-    }, () => this.log.info("Loading finished"));
+    });
 
     if (firstLoadOrRefresh) {
       store.dispatch({

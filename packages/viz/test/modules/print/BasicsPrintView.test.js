@@ -822,7 +822,7 @@ describe("BasicsPrintView", () => {
         }
       );
 
-      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.grey);
+      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.lightGrey);
       sinon.assert.calledWith(Renderer.doc.lineWidth, 1);
 
       sinon.assert.callCount(Renderer.doc.moveTo, 2);
@@ -860,7 +860,7 @@ describe("BasicsPrintView", () => {
         }
       );
 
-      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.grey);
+      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.lightGrey);
       sinon.assert.calledWith(Renderer.doc.lineWidth, 1);
 
       sinon.assert.callCount(Renderer.doc.moveTo, 2);

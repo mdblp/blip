@@ -16,7 +16,6 @@
  */
 
 import _ from "lodash";
-import bows from "bows";
 import i18next from "i18next";
 import PropTypes from "prop-types";
 import React from "react";
@@ -47,8 +46,6 @@ class BasicsChartNoSize extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.log = bows("BasicsChart");
     this.state = {
       basicsData: null,
       data: null,
@@ -57,8 +54,6 @@ class BasicsChartNoSize extends React.Component {
   }
 
   componentDidMount() {
-    this.log.debug("Mounting...");
-
     const { tidelineData, bgClasses, bgUnits, patient, permsOfLoggedInUser } = this.props;
 
     if (!tidelineData.basicsData) {
@@ -80,7 +75,6 @@ class BasicsChartNoSize extends React.Component {
   }
 
   componentWillUnmount() {
-    this.log.debug("Unmounting...");
     basicsActions.bindApp(null);
   }
 

@@ -113,6 +113,27 @@ function updateBasalDiscontinuous(basals, bounds) {
 }
 
 /**
+ * @param {string} type Data type
+ * @param {{epoch:number;type:string;wizard?:object;}[]} data Array of data to transform for the PDF daily view
+ */
+function transformData(type, data) {
+  return data.map((v) => {
+    const o = { ...v };
+    o.utc = o.epoch;
+    o.threeHrBin = Math.floor(moment.tz(o.epoch, o.timezone).hours() / 3) * 3;
+    if (type === "bolus" && o.wizard) {
+      // For some very strange reason, we have to inverse bolus and wizard link...
+      const reversed = { ...o.wizard };
+      delete o.wizard;
+      reversed.bolus = o;
+      reversed.utc = reversed.epoch;
+      return reversed;
+    }
+    return o;
+  });
+}
+
+/**
  *
  * @param {import("tideline").TidelineData} tidelineData
  * @param {moment.Moment} startDate
@@ -143,20 +164,7 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
         return minEpoch < d.epoch && d.epoch < maxEpoch;
       });
 
-      data[type] = filteredData.map((v) => {
-        const o = { ...v };
-        o.utc = o.epoch;
-        o.threeHrBin = Math.floor(moment.tz(o.epoch, o.timezone).hours() / 3) * 3;
-        if (type === "bolus" && o.wizard) {
-          // For some very strange reason, we have to inverse bolus and wizard link...
-          const reversed = { ...o.wizard };
-          delete o.wizard;
-          reversed.bolus = o;
-          reversed.utc = reversed.epoch;
-          return reversed;
-        }
-        return o;
-      });
+      data[type] = transformData(type, filteredData);
 
       if (type === "basal") {
         updateBasalDiscontinuous(data.basal, bounds);
@@ -175,15 +183,11 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
     current.add(1, "day");
   }
 
-  const bgRange = processBgRange(dataByDate);
-  const bolusRange = processBolusRange(dataByDate);
-  const basalRange = processBasalRange(dataByDate);
-
   const dailyData = {
-    basalRange,
-    bgRange,
-    bolusRange,
     dataByDate,
+    basalRange: processBasalRange(dataByDate),
+    bgRange: processBgRange(dataByDate),
+    bolusRange: processBolusRange(dataByDate),
     dateRange: [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")],
     latestPumpUpload: getLatestPumpUpload(tidelineData.grouped.upload),
     timezone: tidelineData.getLastTimezone(),
