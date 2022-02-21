@@ -536,7 +536,7 @@ class PatientDataPage extends React.Component {
 
     const lastPumpSettings = _.last(tidelineData.grouped.pumpSettings);
     const pdfData = {
-      basics: tidelineData.getBasicsData(start, end),
+      basics: tidelineData.generateBasicsData(start, end),
       daily: vizUtils.data.selectDailyViewData(tidelineData, start, end),
       settings: _.isNil(printOptions.preset)
         ? vizUtils.data.generatePumpSettings(_.last(tidelineData.grouped.pumpSettings), end)

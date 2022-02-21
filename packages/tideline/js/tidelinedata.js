@@ -915,7 +915,7 @@ TidelineData.prototype.generateFillData = function generateFillData() {
  * @param {string | null | undefined} endDate
  * @returns {null|object}
  */
-TidelineData.prototype.getBasicsData = function getBasicsData(startDate = null, endDate = null) {
+TidelineData.prototype.generateBasicsData = function generateBasicsData(startDate = null, endDate = null) {
   const start = startDate ?? this.endpoints[0];
   const end = endDate ?? this.endpoints[1];
   let startEpoch = new Date(start).valueOf();
@@ -1164,7 +1164,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   endTimer("checkRequired");
 
   startTimer("setBasicsData");
-  this.basicsData = this.getBasicsData();
+  this.basicsData = this.generateBasicsData();
   endTimer("setBasicsData");
 
   endTimer("addData");
