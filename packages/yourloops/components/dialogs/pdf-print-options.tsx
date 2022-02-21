@@ -125,7 +125,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matchLandscape = useMediaQuery(theme.breakpoints.up("sm"));
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = printOptionsStyle();
   const orientation: CalendarOrientation = matchLandscape ? "landscape" : "portrait";
 

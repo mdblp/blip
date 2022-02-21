@@ -710,7 +710,7 @@ class BasicsPrintView extends PrintView {
       const isSiteChange = _.includes(siteChangeTypes, type) ? type === SITE_CHANGE : null;
 
       if (isSiteChange) {
-        this.setStroke(this.colors.grey);
+        this.setStroke(this.colors.lightGrey);
         this.doc.lineWidth(1);
 
         const isFirst = _.isNaN(daysSince);
@@ -746,7 +746,7 @@ class BasicsPrintView extends PrintView {
             .stroke();
 
           this.setFill(color);
-          this.setStroke(this.colors.grey);
+          this.setStroke(this.colors.lightGrey);
 
           this.doc
             .lineWidth(0.5)

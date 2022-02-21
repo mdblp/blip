@@ -933,7 +933,7 @@ TidelineData.prototype.getBasicsData = function getBasicsData(startDate = null, 
   let startTimezone;
   if (startDate) {
     startTimezone = this.getTimezoneAt(startDate);
-    mStart = moment.tz(startDate, startTimezone).startOf("week");
+    mStart = moment.tz(startDate, startTimezone);
   } else {
     mStart = mEnd.clone().startOf("week").subtract(2, "weeks");
     startTimezone = this.getTimezoneAt(mStart.valueOf());
@@ -947,7 +947,7 @@ TidelineData.prototype.getBasicsData = function getBasicsData(startDate = null, 
 
   startEpoch = mStart.valueOf() - 1;
   endEpoch = mEnd.valueOf() + 1;
-  const days = dt.findBasicsDays(mStart, mEnd);
+  const days = dt.findBasicsDays(mStart, mEnd, startDate === null);
   const dateRange = [mStart.toISOString(), mEnd.toISOString()];
 
   const selectData = (/** @type {Datum[]} */group, /** @type {string|null} */ subType) => group.filter((d) => {

@@ -101,8 +101,10 @@ const datetime = {
    *
    * @param {moment.Moment} first
    * @param {moment.Moment} last
+   * @param {boolean} fullWeeks true to not restrict the days to the specified range
    */
-  findBasicsDays: function(first, last) {
+  findBasicsDays: function(first, last, fullWeeks) {
+    const start = first.format("YYYY-MM-DD");
     const current = first.clone().startOf("week");
     const mostRecent = last.format("YYYY-MM-DD");
     const end = last.clone().endOf("week").add(1, "day").format("YYYY-MM-DD");
@@ -110,7 +112,11 @@ const datetime = {
     const days = [];
     while ((date = current.format("YYYY-MM-DD")) !== end) {
       const dateObj = { date, type: "mostRecent" };
-      if (date < mostRecent) {
+      if (!fullWeeks && date < start) {
+        // Use future here, even if it is not
+        // true, so the calendar days are greyed.
+        dateObj.type = "future";
+      } else if (date < mostRecent) {
         dateObj.type = "past";
       } else if (date > mostRecent) {
         dateObj.type = "future";
