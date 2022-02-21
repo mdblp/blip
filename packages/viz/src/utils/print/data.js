@@ -76,11 +76,11 @@ function processBasalRange(dataByDate) {
 }
 
 /**
- *
+ * @private Exported for unit tests.
  * @param {{duration:number;epoch:number;epochEnd:number;subType:string;discontinuousEnd:boolean;discontinuousStart:boolean;}[]} basals
  * @param {[number,number]} bounds
  */
-function updateBasalDiscontinuous(basals, bounds) {
+export function updateBasalDiscontinuous(basals, bounds) {
   if (basals.length < 1) {
     return;
   }
@@ -103,7 +103,7 @@ function updateBasalDiscontinuous(basals, bounds) {
     basal.discontinuousEnd = false;
     basal.discontinuousStart = false;
 
-    if (prevBasal && (prevBasal.utc + prevBasal.duration) !== basal.utc) {
+    if (prevBasal && (prevBasal.epoch + prevBasal.duration) !== basal.epoch) {
       prevBasal.discontinuousEnd = true;
       basal.discontinuousStart = true;
     }
@@ -263,7 +263,6 @@ export function generatePDFStats(data, dataUtil) {
 
   const getStat = (statType) => {
     const { bgSource, days } = dataUtil;
-
     return getStatDefinition(dataUtil[statFetchMethods[statType]](), statType, {
       bgSource,
       days,
