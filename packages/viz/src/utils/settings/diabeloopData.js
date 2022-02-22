@@ -15,7 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
 import textTable from "text-table";
 import i18next from "i18next";
 
@@ -24,9 +23,9 @@ import * as datetime from "../datetime";
 
 const t = i18next.t.bind(i18next);
 
-function getTimeprefs(timezone = "UTC") {
+function getTimePrefs(timezone = "UTC") {
   let timezoneName = timezone;
-  if (_.isNil(timezone) || timezone === "UTC") {
+  if (!timezone || timezone === "UTC") {
     timezoneName = new Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
   return { timezoneAware: true, timezoneName };
@@ -110,11 +109,11 @@ export function diabeloopText(device, parametersByLevel, displayDeviceDate) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getDeviceInfosData(device, timezone, date) {
-  const timePrefs = getTimeprefs(timezone);
+  const timePrefs = getTimePrefs(timezone);
   const heading = {
     text: t("Device"),
     subText: `- ${device.name}`,
-    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{
@@ -161,11 +160,11 @@ export function getDeviceInfosData(device, timezone, date) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getDeviceParametersData(parameters, { level, width }, timezone, date) {
-  const timePrefs = getTimeprefs(timezone);
+  const timePrefs = getTimePrefs(timezone);
   const heading = {
     text: t("Parameters"),
     subText: level !== 1 ? `- ${t("Advanced")}` : undefined,
-    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{
@@ -202,11 +201,11 @@ export function getDeviceParametersData(parameters, { level, width }, timezone, 
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getPumpParametersData(pump, timezone, date) {
-  const timePrefs = getTimeprefs(timezone);
+  const timePrefs = getTimePrefs(timezone);
   const heading = {
     text: t("Pump"),
     subText: `- ${pump.name}`,
-    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{
@@ -251,10 +250,10 @@ export function getPumpParametersData(pump, timezone, date) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getCGMParametersData(cgm, timezone, date) {
-  const timePrefs = getTimeprefs(timezone);
+  const timePrefs = getTimePrefs(timezone);
   const heading = {
     text: t("CGM"),
-    note: _.isString(date) ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
   };
 
   const columns = [{

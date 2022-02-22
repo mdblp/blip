@@ -149,12 +149,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   const [openState, setOpenState] = React.useState(false);
   const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
 
-  const { start, end, displayStart, displayEnd } = React.useMemo(() => {
-    const s = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
-    const e = customStartDate ?? dayjs(pdfOptions.end, { utc: true });
-    const ds = s.format("ll");
-    const de = e.format("ll");
-    return { start: s, end: e, displayStart: ds, displayEnd: de };
+  const { start, end, displayedDates } = React.useMemo(() => {
+    const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
+    const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true });
+    const displayed = `${startDate.format("ll")} → ${endDate.format("ll")}`;
+    return { start: startDate, end: endDate, displayedDates: displayed };
   }, [pdfOptions, customStartDate]);
 
   React.useEffect(() => {
@@ -175,18 +174,17 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   };
 
   const handleChangeCustomDate = (d: Dayjs) => {
-    if (customStartDate === null) {
-      setCustomStartDate(d);
-    } else {
-      const s = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
-      const e = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
-      setPDFOptions({ start: s, end: e });
+    if (customStartDate) {
+      const startDate = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
+      const endDate = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
+      setPDFOptions({ start: startDate, end: endDate });
       setCustomStartDate(null);
+    } else {
+      setCustomStartDate(d);
     }
   };
 
   const presetSelected = pdfOptions.preset;
-  const displayedDates = `${displayStart} → ${displayEnd}`;
   return (
     <Dialog
       id="dialog-pdf-options"
@@ -276,7 +274,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         <Button
           id="pdf-options-button-generate"
           onClick={() => onResult(pdfOptions)}
-          disabled={customStartDate !== null}
+          disabled={!!customStartDate}
           color="primary"
           variant="contained"
         >

@@ -63,46 +63,46 @@ function testDialogPDFOptions() {
   };
 
   const expectSelectedPreset = (preset: Presets | null) => {
-    const button1w = document.getElementById("pdf-options-button-one-week");
-    const button2w = document.getElementById("pdf-options-button-two-weeks");
-    const button4w = document.getElementById("pdf-options-button-four-weeks");
-    const button3m = document.getElementById("pdf-options-button-three-months");
+    const oneWeekButton = document.getElementById("pdf-options-button-one-week");
+    const twoWeeksButton = document.getElementById("pdf-options-button-two-weeks");
+    const fourWeeksButton = document.getElementById("pdf-options-button-four-weeks");
+    const threeMonthsButton = document.getElementById("pdf-options-button-three-months");
 
-    const button1wSelected = button1w.getAttribute("aria-selected") === "true";
-    const button2wSelected = button2w.getAttribute("aria-selected") === "true";
-    const button4wSelected = button4w.getAttribute("aria-selected") === "true";
-    const button3mSelected = button3m.getAttribute("aria-selected") === "true";
+    const oneWeekSelected = oneWeekButton.getAttribute("aria-selected") === "true";
+    const twoWeeksSelected = twoWeeksButton.getAttribute("aria-selected") === "true";
+    const fourWeeksSelected = fourWeeksButton.getAttribute("aria-selected") === "true";
+    const threeMonthsSelected = threeMonthsButton.getAttribute("aria-selected") === "true";
 
     switch (preset) {
     case "1week":
-      expect(button1wSelected, "button1wSelected").to.be.true;
-      expect(button2wSelected, "button2wSelected").to.be.false;
-      expect(button4wSelected, "button4wSelected").to.be.false;
-      expect(button3mSelected, "button3mSelected").to.be.false;
+      expect(oneWeekSelected, "oneWeekSelected").to.be.true;
+      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
+      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
+      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
       break;
     case "2weeks":
-      expect(button1wSelected, "button1wSelected").to.be.false;
-      expect(button2wSelected, "button2wSelected").to.be.true;
-      expect(button4wSelected, "button4wSelected").to.be.false;
-      expect(button3mSelected, "button3mSelected").to.be.false;
+      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
+      expect(twoWeeksSelected, "twoWeeksSelected").to.be.true;
+      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
+      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
       break;
     case "4weeks":
-      expect(button1wSelected, "button1wSelected").to.be.false;
-      expect(button2wSelected, "button2wSelected").to.be.false;
-      expect(button4wSelected, "button4wSelected").to.be.true;
-      expect(button3mSelected, "button3mSelected").to.be.false;
+      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
+      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
+      expect(fourWeeksSelected, "fourWeeksSelected").to.be.true;
+      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
       break;
     case "3months":
-      expect(button1wSelected, "button1wSelected").to.be.false;
-      expect(button2wSelected, "button2wSelected").to.be.false;
-      expect(button4wSelected, "button4wSelected").to.be.false;
-      expect(button3mSelected, "button3mSelected").to.be.true;
+      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
+      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
+      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
+      expect(threeMonthsSelected, "threeMonthsSelected").to.be.true;
       break;
     default:
-      expect(button1wSelected, "button1wSelected").to.be.false;
-      expect(button2wSelected, "button2wSelected").to.be.false;
-      expect(button4wSelected, "button4wSelected").to.be.false;
-      expect(button3mSelected, "button3mSelected").to.be.false;
+      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
+      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
+      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
+      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
       break;
     }
   };

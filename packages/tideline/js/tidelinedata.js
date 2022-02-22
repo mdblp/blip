@@ -920,7 +920,7 @@ TidelineData.prototype.generateBasicsData = function generateBasicsData(startDat
   const end = endDate ?? this.endpoints[1];
   let startEpoch = new Date(start).valueOf();
   let endEpoch = new Date(end).valueOf();
-  if (_.isNil(endDate)) {
+  if (!endDate) {
     endEpoch = endEpoch - 1;
   }
 

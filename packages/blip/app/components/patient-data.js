@@ -538,7 +538,7 @@ class PatientDataPage extends React.Component {
     const pdfData = {
       basics: tidelineData.generateBasicsData(start, end),
       daily: vizUtils.data.selectDailyViewData(tidelineData, start, end),
-      settings: _.isNil(printOptions.preset)
+      settings: !printOptions.preset
         ? vizUtils.data.generatePumpSettings(_.last(tidelineData.grouped.pumpSettings), end)
         : lastPumpSettings,
     };
@@ -707,7 +707,7 @@ class PatientDataPage extends React.Component {
 
     this.setState({ showPDFPrintOptions: false });
 
-    if (_.isNil(printOptions)) {
+    if (!printOptions) {
       return Promise.resolve();
     }
 

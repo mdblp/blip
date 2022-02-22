@@ -847,7 +847,7 @@ class DailyPrintView extends PrintView {
           { align: "right" }
         );
 
-        if (!_.isNil(bolus.extended)) {
+        if (bolus.extended) {
           const normalPercentage = getNormalPercentage(bolus);
           const extendedPercentage = getExtendedPercentage(bolus);
           const durationText = `${formatDuration(getMaxDuration(bolus))}`;
