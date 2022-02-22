@@ -24,6 +24,7 @@ import dt from "../../js/data/util/datetime";
 import format from "../../js/data/util/format";
 
 const log = bows("Nurseshark");
+const defaultSource = "Diabeloop";
 
 function isBadStatus(d) {
   if (_.isNil(d.annotations)) {
@@ -182,7 +183,6 @@ var nurseshark = {
     var typeGroups = {}, overlappingUploads = {}, mostRecentFromOverlapping = null;
 
     function createUploadIDsMap() {
-      const defaultSource = "Diabeloop"; // FIXME same as in TidelineData
       var uploads = _.filter(data, {type: "upload"});
       _.forEach(uploads, function(upload) {
         let source = defaultSource;
@@ -220,13 +220,7 @@ var nurseshark = {
           d.deviceSerialNumber = uploadIDSerials[d.uploadId];
         }
         if (!d.source) {
-          if (d.uploadId) {
-            d.source = uploadIDSources[d.uploadId];
-          }
-          // probably doesn't exist: for data too old to have uploadId but also without `source`
-          else {
-            d.source = "Unspecified Data Source";
-          }
+          d.source = defaultSource;
         }
       }
 
