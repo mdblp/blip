@@ -220,7 +220,11 @@ var nurseshark = {
           d.deviceSerialNumber = uploadIDSerials[d.uploadId];
         }
         if (!d.source) {
-          d.source = defaultSource;
+          if (d.uploadId) {
+            d.source = uploadIDSources[d.uploadId];
+          } else {
+            d.source = defaultSource;
+          }
         }
       }
 

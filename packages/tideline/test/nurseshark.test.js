@@ -375,7 +375,7 @@ describe("nurseshark", function() {
       expect(res[1].source).to.equal("Demo");
     });
 
-    it("should add `Unknown` as source if no upload metadata", function() {
+    it("should add `Diabeloop` as source if no upload metadata", function() {
       var now = new Date().toISOString();
       var bolus = {
         time: now,
@@ -385,7 +385,7 @@ describe("nurseshark", function() {
         normal: 2.0
       };
       var res = nurseshark.processData([bolus]).processedData;
-      expect(res[0].source).to.equal("Unspecified Data Source");
+      expect(res[0].source).to.equal("Diabeloop");
     });
 
     it("should return sorted data", function() {
