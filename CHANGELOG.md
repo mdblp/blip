@@ -3,6 +3,10 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## Unreleased
+### Fixed
+- YLP-1289 Wrong units displayed in the PDF for avg glucose
+
+## Unreleased
 ### Added
 - YLP-1105 Yourloops new blue theme
 - YLP-1106 Switch account from caregiver to hcp should ask for the profession

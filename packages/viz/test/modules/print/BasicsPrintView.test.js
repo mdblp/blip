@@ -19,6 +19,7 @@ import _ from "lodash";
 import * as sinon from "sinon";
 import { expect, assert } from "chai";
 
+import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
 import BasicsPrintView from "../../../src/modules/print/BasicsPrintView";
 import PrintView from "../../../src/modules/print/PrintView";
 import * as patients from "../../../data/patient/profiles";
@@ -407,6 +408,46 @@ describe("BasicsPrintView", () => {
       Renderer.renderAggregatedStats();
 
       sinon.assert.calledWith(Renderer.renderSimpleStat, "Avg total daily dose");
+    });
+
+    it("should render the avg glucose stat (mg/dL)", () => {
+      sinon.stub(Renderer, "renderSimpleStat");
+      Renderer.data.stats = {
+        averageGlucose: {
+          data: {
+            raw: {
+              averageGlucose: 162,
+            }
+          }
+        },
+      };
+      Renderer.bgUnits = MGDL_UNITS;
+      Renderer.renderAggregatedStats();
+      expect(Renderer.renderSimpleStat.callCount).to.be.eq(4);
+      const args = Renderer.renderSimpleStat.getCall(2).args;
+      expect(args[0]).to.be.eq("Average BG");
+      expect(args[1]).to.be.eq("162");
+      expect(args[2]).to.be.eq(`\n${MGDL_UNITS}`);
+    });
+
+    it("should render the avg glucose stat (mmol/L)", () => {
+      sinon.stub(Renderer, "renderSimpleStat");
+      Renderer.data.stats = {
+        averageGlucose: {
+          data: {
+            raw: {
+              averageGlucose: 9,
+            },
+          }
+        },
+      };
+      Renderer.bgUnits = MMOLL_UNITS;
+      Renderer.renderAggregatedStats();
+      expect(Renderer.renderSimpleStat.callCount).to.be.eq(4);
+      const args = Renderer.renderSimpleStat.getCall(2).args;
+      expect(args[0]).to.be.eq("Average BG");
+      expect(args[1]).to.be.eq("9");
+      expect(args[2]).to.be.eq(`\n${MMOLL_UNITS}`);
     });
   });
 
