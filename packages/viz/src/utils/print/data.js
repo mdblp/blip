@@ -183,7 +183,7 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
     current.add(1, "day");
   }
 
-  const dailyData = {
+  return {
     dataByDate,
     basalRange: processBasalRange(dataByDate),
     bgRange: processBgRange(dataByDate),
@@ -192,8 +192,6 @@ export function selectDailyViewData(tidelineData, startDate, endDate) {
     latestPumpUpload: getLatestPumpUpload(tidelineData.grouped.upload),
     timezone: tidelineData.getLastTimezone(),
   };
-
-  return dailyData;
 }
 
 /**
