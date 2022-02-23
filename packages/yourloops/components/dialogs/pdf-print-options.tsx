@@ -76,11 +76,11 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
       marginBottom: theme.spacing(1),
     },
     presetButtons: {
-      width: "20%",
-      marginLeft: theme.spacing(1),
-      [theme.breakpoints.down("sm")]: {
-        width: "40%",
-        marginTop: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      [theme.breakpoints.down("xs")]: {
+        marginRight: 0,
+        width: "calc(50% - 5px)",
       },
     },
     calendarBox: {
@@ -199,7 +199,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         <Typography variant="h4">{t("pdf-generate-report")}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t("dialog-pdf-options-presets")}</Typography>
-        <Box display="flex" flexDirection="row" justifyContent="flex-start" flexWrap="wrap" mt={1}>
+        <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent={matchLandscape ? "start" : "space-between"}>
           <Chip
             id="pdf-options-button-one-week"
             variant={presetSelected === "1week" ? "default" : "outlined"}
