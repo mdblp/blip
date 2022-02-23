@@ -34,32 +34,32 @@ export default class HttpService {
   static async get<T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
     try {
       return await axios.get<T>(url, { ...config });
-    } catch (error: any) {
-      throw HttpService.handleError(error);
+    } catch (error) {
+      throw HttpService.handleError(error as AxiosError);
     }
   }
 
-  static async post<T>(url: string, payload?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  static async post<R, P=undefined>(url: string, payload?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
     try {
-      return await axios.post<T>(url, payload, { ...config });
-    } catch (error: any) {
-      throw HttpService.handleError(error);
+      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config });
+    } catch (error) {
+      throw HttpService.handleError(error as AxiosError);
     }
   }
 
-  static async put<T>(url: string, payload?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> {
+  static async put<R, P=undefined>(url: string, payload?: P, config?: AxiosRequestConfig): Promise<AxiosResponse<R>> {
     try {
-      return await axios.put<T>(url, payload, { ...config });
-    } catch (error: any) {
-      throw HttpService.handleError(error);
+      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config });
+    } catch (error) {
+      throw HttpService.handleError(error as AxiosError);
     }
   }
 
   static async delete(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> {
     try {
       return await axios.delete(url, { ...config });
-    } catch (error: any) {
-      throw HttpService.handleError(error);
+    } catch (error) {
+      throw HttpService.handleError(error as AxiosError);
     }
   }
 
