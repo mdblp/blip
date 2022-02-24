@@ -36,6 +36,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Avatar from "@material-ui/core/Avatar";
+import Box from "@material-ui/core/Box";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -58,6 +59,7 @@ import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { getUserFirstName, getUserLastName, getUserFirstLastName, getUserInitials } from "../../lib/utils";
 import { useAuth } from "../../lib/auth";
 import { Team, TeamMember, useTeam } from "../../lib/team";
+import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
 
 export interface TeamMembersProps {
   team: Team;
@@ -260,13 +262,16 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
           {firstName}
         </TableCell>
         <TableCell id={`team-members-list-${team.id}-row-${userId}-email`}>
-          <Typography
-            id={`team-members-list-${team.id}-row-${userId}-email-link`}
-            className="team-members-list-email-link"
-            variant="body2"
-          >
-            {email}
-          </Typography>
+          <Box display="flex">
+            <Typography
+              id={`team-members-list-${team.id}-row-${userId}-email-link`}
+              className="team-members-list-email-link"
+              variant="body2"
+            >
+              {email}
+            </Typography>
+            {member.user.idVerified && <CertifiedProfessionalIcon />}
+          </Box>
         </TableCell>
         <TableCell id={`team-members-list-${team.id}-row-${userId}-role`}>{checkboxElement}</TableCell>
         <TableCell id={`team-members-list-${team.id}-row-${userId}-actions`} align="right">
@@ -358,7 +363,10 @@ function TeamMembersCards(props: TeamMembersProps): JSX.Element {
             className={classes.paperMemberName}
             variant="body2"
           >
-            {member.status === UserInvitationStatus.pending ? email : t("user-name", getUserFirstLastName(member.user))}
+            <Box display="flex">
+              {member.status === UserInvitationStatus.pending ? email : t("user-name", getUserFirstLastName(member.user))}
+              {member.user.idVerified && <CertifiedProfessionalIcon />}
+            </Box>
           </Typography>
           {userIsAdmin && userId !== currentUserId &&
             <IconActionButton

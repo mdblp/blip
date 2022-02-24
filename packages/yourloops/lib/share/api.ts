@@ -57,7 +57,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
     const directShares = (await response.json()) as DirectShareAPI[];
     const shareUsers: ShareUser[] = [];
     if (Array.isArray(directShares)) {
-      for (let i=0; i<directShares.length; i++) {
+      for (let i = 0; i < directShares.length; i++) {
         const directShare = directShares[i];
         const directShareWith = directShare.patient ?? directShare.viewer;
         if (_.isNil(directShareWith)) {
@@ -74,6 +74,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
             username: directShareWith.email,
             emails: [directShareWith.email],
             role: user.role === UserRoles.patient ? UserRoles.caregiver : UserRoles.patient,
+            idVerified: directShareWith.idVerified,
           },
         };
         shareUsers.push(shareUser);
