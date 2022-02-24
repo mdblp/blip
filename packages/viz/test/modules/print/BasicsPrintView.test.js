@@ -17,11 +17,12 @@
 
 import _ from "lodash";
 import * as sinon from "sinon";
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
+import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
 import BasicsPrintView from "../../../src/modules/print/BasicsPrintView";
 import PrintView from "../../../src/modules/print/PrintView";
-import * as patients from "../../../data/patient/profiles";
+import { patient } from "../../../data/patient/profiles";
 import * as settings from "../../../data/patient/settings";
 
 import { basicsData as data } from "../../../data/print/fixtures";
@@ -72,7 +73,7 @@ describe("BasicsPrintView", () => {
       bottom: MARGIN,
     },
     patient: {
-      ...patients.standard,
+      ...patient,
       ...settings.cannulaPrimeSelected,
     },
     timePrefs: {
@@ -121,7 +122,7 @@ describe("BasicsPrintView", () => {
   };
 
   const createRenderer = (renderData = data, renderOpts = opts) => (
-    new BasicsPrintView(doc, renderData, renderOpts)
+    new BasicsPrintView(doc, _.cloneDeep(renderData), _.cloneDeep(renderOpts))
   );
 
   beforeEach(() => {
@@ -131,16 +132,7 @@ describe("BasicsPrintView", () => {
 
   describe("class constructor", () => {
     const filteredTypes = [
-      "basal",
-      "bolus",
       "reservoirChange",
-      "tubingPrime",
-      "cannulaPrime",
-    ];
-
-    const fingerstickTypes = [
-      "smbg",
-      "calibration",
     ];
 
     it("should instantiate without errors", () => {
@@ -175,12 +167,6 @@ describe("BasicsPrintView", () => {
       });
     });
 
-    _.forEach(fingerstickTypes, type => {
-      it(`should reduce data by day for ${type} data`, () => {
-        expect(Renderer.data.data.fingerstick[type].dataByDate).to.be.an("object");
-      });
-    });
-
     it("should add the provided averageDailyCarbs stat data", () => {
       expect(Renderer.data.data.averageDailyCarbs).to.equal(10.2);
     });
@@ -210,19 +196,14 @@ describe("BasicsPrintView", () => {
       expect(Renderer.data.data.totalDailyDose).to.equal(30);
     });
 
-    it("should process infusion site history", () => {
-      expect(Renderer.data.data.cannulaPrime.infusionSiteHistory).to.be.an("object");
-      expect(Renderer.data.data.tubingPrime.infusionSiteHistory).to.be.an("object");
-    });
-
     it("should process the section availability", () => {
-      assert(!Renderer.data.sections.basals.disabled);
+      expect(Renderer.data.sections.siteChanges.disabled).to.be.false;
 
-      const noBasalData = _.cloneDeep(data);
-      noBasalData.data.basal.data = [];
-      Renderer = createRenderer(noBasalData);
+      const noSiteChangeData = _.cloneDeep(data);
+      noSiteChangeData.data.reservoirChange.data = [];
+      Renderer = createRenderer(noSiteChangeData);
 
-      assert(Renderer.data.sections.basals.disabled);
+      expect(Renderer.data.sections.siteChanges.disabled).to.be.true;
     });
 
     it("should add the first pdf page", () => {
@@ -340,7 +321,7 @@ describe("BasicsPrintView", () => {
         title: {
           text: Renderer.data.sections.siteChanges.title
         },
-        data: Renderer.data.data.cannulaPrime.infusionSiteHistory,
+        data: Renderer.data.data.reservoirChange.infusionSiteHistory,
         type: "siteChange",
         disabled: Renderer.data.sections.siteChanges.disabled,
         emptyText: Renderer.data.sections.siteChanges.emptyText,
@@ -379,7 +360,7 @@ describe("BasicsPrintView", () => {
       sinon.assert.calledWith(Renderer.doc.text, "Showing BGM data (not enough CGM)");
     });
 
-    it("should render the BG distrubution empty text when BG source is unavailable", () => {
+    it("should render the BG distribution empty text when BG source is unavailable", () => {
       const noBGData = _.cloneDeep(data);
       noBGData.data.cbg.data = [];
       noBGData.data.smbg.data = [];
@@ -408,13 +389,53 @@ describe("BasicsPrintView", () => {
 
       sinon.assert.calledWith(Renderer.renderSimpleStat, "Avg total daily dose");
     });
+
+    it("should render the avg glucose stat (mg/dL)", () => {
+      sinon.stub(Renderer, "renderSimpleStat");
+      Renderer.data.stats = {
+        averageGlucose: {
+          data: {
+            raw: {
+              averageGlucose: 162,
+            }
+          }
+        },
+      };
+      Renderer.bgUnits = MGDL_UNITS;
+      Renderer.renderAggregatedStats();
+      expect(Renderer.renderSimpleStat.callCount).to.be.eq(4);
+      const args = Renderer.renderSimpleStat.getCall(2).args;
+      expect(args[0]).to.be.eq("Average BG");
+      expect(args[1]).to.be.eq("162");
+      expect(args[2]).to.be.eq(`\n${MGDL_UNITS}`);
+    });
+
+    it("should render the avg glucose stat (mmol/L)", () => {
+      sinon.stub(Renderer, "renderSimpleStat");
+      Renderer.data.stats = {
+        averageGlucose: {
+          data: {
+            raw: {
+              averageGlucose: 9,
+            },
+          }
+        },
+      };
+      Renderer.bgUnits = MMOLL_UNITS;
+      Renderer.renderAggregatedStats();
+      expect(Renderer.renderSimpleStat.callCount).to.be.eq(4);
+      const args = Renderer.renderSimpleStat.getCall(2).args;
+      expect(args[0]).to.be.eq("Average BG");
+      expect(args[1]).to.be.eq("9");
+      expect(args[2]).to.be.eq(`\n${MMOLL_UNITS}`);
+    });
   });
 
   describe("renderRatio", () => {
     it("should render the basal to bolus ratio", () => {
       sinon.stub(Renderer, "renderRatio");
 
-      Renderer.renderCenterColumn();
+      Renderer.renderLeftColumn();
 
       expect(Renderer.data.data.averageDailyDose.basal).to.be.a("number");
       expect(Renderer.data.data.averageDailyDose.bolus).to.be.a("number");
@@ -475,8 +496,8 @@ describe("BasicsPrintView", () => {
     });
 
     it("should render a time in auto stat when not disabled", () => {
-      sinon.stub(Renderer, "renderTableHeading");
-      sinon.stub(Renderer, "renderTable");
+      const renderTableHeading = sinon.stub(Renderer, "renderTableHeading");
+      const renderTable = sinon.stub(Renderer, "renderTable");
 
       Renderer.data.sections.timeInAutoRatio.active = true;
       Renderer.data.sections.timeInAutoRatio.disabled = false;
@@ -490,9 +511,9 @@ describe("BasicsPrintView", () => {
           },
         }
       );
-
-      sinon.assert.calledWith(Renderer.renderTableHeading, { text: "Time in Automated ratio" });
-      sinon.assert.calledOnce(Renderer.renderTable);
+      expect(renderTableHeading.calledOnce, "renderTableHeading").to.be.true;
+      expect(renderTable.calledOnce, "renderTable").to.be.true;
+      sinon.assert.calledWith(Renderer.renderTableHeading, { text: "Time in Loop mode ratio" });
     });
   });
 
@@ -842,7 +863,7 @@ describe("BasicsPrintView", () => {
         }
       );
 
-      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.grey);
+      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.lightGrey);
       sinon.assert.calledWith(Renderer.doc.lineWidth, 1);
 
       sinon.assert.callCount(Renderer.doc.moveTo, 2);
@@ -880,7 +901,7 @@ describe("BasicsPrintView", () => {
         }
       );
 
-      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.grey);
+      sinon.assert.calledWith(Renderer.setStroke, Renderer.colors.lightGrey);
       sinon.assert.calledWith(Renderer.doc.lineWidth, 1);
 
       sinon.assert.callCount(Renderer.doc.moveTo, 2);
@@ -969,59 +990,6 @@ describe("BasicsPrintView", () => {
 
       sinon.assert.callCount(Renderer.doc.circle, 17);
       sinon.assert.callCount(Renderer.doc.fill, 17);
-    });
-  });
-
-  describe("renderCalendarSummary", () => {
-    beforeEach(() => {
-      Renderer.setLayoutColumns({
-        width: 100,
-        count: 1,
-      });
-
-      Renderer.initCalendar();
-
-      sinon.spy(Renderer, "defineStatColumns");
-      sinon.stub(Renderer, "renderTable");
-    });
-
-    it("should not render a table if section is disabled", () => {
-      Renderer.renderCalendarSummary({
-        disabled: true,
-      });
-
-      sinon.assert.notCalled(Renderer.renderTable);
-    });
-
-    it("should call defineStatColumns with custom opts", () => {
-      Renderer.renderCalendarSummary({
-        dimensions: Renderer.data.sections.basals.dimensions,
-        header: Renderer.data.sections.basals.summaryTitle,
-        data: Renderer.data.data.basal.summary,
-        type: "basal",
-        disabled: false,
-      });
-
-      sinon.assert.calledOnce(Renderer.defineStatColumns);
-      sinon.assert.calledWith(Renderer.defineStatColumns, {
-        statWidth: 75,
-        valueWidth: 25,
-        height: 20,
-        statHeader: "Total basal events",
-        valueHeader: "1",
-      });
-    });
-
-    it("should render a table if section is enabled", () => {
-      Renderer.renderCalendarSummary({
-        dimensions: Renderer.data.sections.basals.dimensions,
-        header: Renderer.data.sections.basals.summaryTitle,
-        data: Renderer.data.data.basal.summary,
-        type: "basal",
-        disabled: false,
-      });
-
-      sinon.assert.calledOnce(Renderer.renderTable);
     });
   });
 
