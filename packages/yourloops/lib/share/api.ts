@@ -27,7 +27,6 @@
  */
 
 import bows from "bows";
-import _ from "lodash";
 
 import { UserInvitationStatus } from "../../models/generic";
 import { UserRoles } from "../../models/shoreline";
@@ -60,7 +59,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
       for (let i = 0; i < directShares.length; i++) {
         const directShare = directShares[i];
         const directShareWith = directShare.patient ?? directShare.viewer;
-        if (_.isNil(directShareWith)) {
+        if (!directShareWith) {
           continue;
         }
 

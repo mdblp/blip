@@ -67,6 +67,7 @@ import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 import ProSanteConnectButton from "../../components/buttons/pro-sante-connect-button";
+import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
@@ -127,17 +128,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     categoryLabel: {
       "display": "flex",
-      "alignItems": "end",
+      "alignItems": "center",
       "marginTop": theme.spacing(5),
-      "& > :last-child": {
-        marginLeft: theme.spacing(2),
+      "& > :nth-child(2)": {
+        marginLeft: theme.spacing(1),
       },
     },
   })
 );
 
 const log = bows("ProfilePage");
-
+// TODO Need to split this too big component, see YLP-1256 (https://diabeloop.atlassian.net/browse/YLP-1256)
+// eslint-disable-next-line complexity
 const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
@@ -343,6 +345,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           <Box className={classes.categoryLabel}>
             <AccountCircle color="primary" style={{ margin: "0" }} />
             <strong className={classes.uppercase}>{t("personal-information")}</strong>
+            {user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${user.userid}`} />}
           </Box>
 
           <Box className={classes.inputContainer}>
