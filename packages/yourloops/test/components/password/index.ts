@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -26,31 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
-import { v4 as uuidv4 } from "uuid";
-import { HttpHeaderKeys } from "../models/api";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import testPasswordConfirm from "./password-confirm.test";
+import testPasswordStrengthMeter from "./password-strength-meter.test";
 
-axios.defaults.baseURL = appConfig.API_HOST;
+function testPasswordComponents(): void {
+  describe("Password confirm", testPasswordConfirm);
+  describe("Password strength meter", testPasswordStrengthMeter);
+}
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
-    delete config.params.noHeader;
-  } else {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
-  }
-  return config;
-};
-
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+export default testPasswordComponents;

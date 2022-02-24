@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -26,31 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
-import { v4 as uuidv4 } from "uuid";
-import { HttpHeaderKeys } from "../models/api";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+export default class EncoderService {
 
-axios.defaults.baseURL = appConfig.API_HOST;
-
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
-    delete config.params.noHeader;
-  } else {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
+  static async encodeSHA1(value: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(value);
+    const hashedValueBuffer = await crypto.subtle.digest("SHA-1", data);
+    const hashedValueByteArray = Array.from(new Uint8Array(hashedValueBuffer));
+    return hashedValueByteArray.map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
   }
-  return config;
-};
-
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+}

@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -26,31 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
-import { v4 as uuidv4 } from "uuid";
-import { HttpHeaderKeys } from "../models/api";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import { expect } from "chai";
 
-axios.defaults.baseURL = appConfig.API_HOST;
+import { onFulfilled } from "../../lib/axios";
+import { HttpHeaderKeys } from "../../models/api";
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
-    delete config.params.noHeader;
-  } else {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
-  }
-  return config;
-};
+function testAxios(): void {
 
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+  describe("onFulfilled", () => {
+    it("should return config without added headers", () => {
+      //given
+      const expected = { params: {} };
+      const config = { params: { noHeader: true } };
+
+      //when
+      const actual = onFulfilled(config);
+
+      //then
+      expect(actual).to.deep.equal(expected);
+    });
+
+    it("should return config with added headers", () => {
+      //given
+      const config = { params: { fakeParam: true } };
+
+      //when
+      const actual = onFulfilled(config);
+
+      //then
+      expect(actual).to.deep.include(config);
+      expect(actual.headers).to.include.keys(HttpHeaderKeys.sessionToken);
+      expect(actual.headers).to.include.keys(HttpHeaderKeys.traceToken);
+    });
+  });
+}
+
+export default testAxios;

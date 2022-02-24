@@ -35,6 +35,7 @@ import testAuth from "./auth";
 import testNotifications from "./notifications";
 import testRegex from "./regex.test";
 import testTeam from "./team";
+import testAxios from "./axios.test";
 
 function testLib(): void {
   describe("SOUP", testsSoup);
@@ -46,6 +47,7 @@ function testLib(): void {
   describe("Team", testTeam);
   describe("Notifications", testNotifications);
   describe("Regex", testRegex);
+  describe("Axios", testAxios);
 }
 
 export default testLib;

@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -26,31 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
-import { v4 as uuidv4 } from "uuid";
-import { HttpHeaderKeys } from "../models/api";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import { expect } from "chai";
 
-axios.defaults.baseURL = appConfig.API_HOST;
+import EncoderService from "../../services/encoder";
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
-    delete config.params.noHeader;
-  } else {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
-  }
-  return config;
-};
+function testEncoderService(): void {
 
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+  describe("encodeSHA1", () => {
+    it("should return correct SHA1 hash", async () => {
+      //given
+      const expected = "8EF80F372246EBBB93B988437EB9B43E7B93DE62";
+      const valueToEncode = "Bienveillant";
+
+      //when
+      const actual = await EncoderService.encodeSHA1(valueToEncode);
+
+      //then
+      expect(actual).to.equal(expected);
+    });
+  });
+}
+
+export default testEncoderService;

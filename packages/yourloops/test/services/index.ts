@@ -26,10 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import testEncoderService from "./encoder.test";
 import testHttp from "./http.test";
+import testPasswordLeakService from "./password-leak.test";
 
 function testServices(): void {
   describe("HTTP", testHttp);
+  describe("Encoder", testEncoderService);
+  describe("Password", testPasswordLeakService);
 }
 
 export default testServices;
