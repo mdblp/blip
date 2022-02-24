@@ -34,11 +34,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
 
-function CertifiedProfessionalIcon(): JSX.Element {
+function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
   const { t } = useTranslation("yourloops");
 
   return (
-    <Box marginLeft={1}>
+    <Box id={id} marginLeft={1}>
       <Tooltip title={t("certified-professional-account") as string} placement="bottom">
         <VerifiedUserOutlinedIcon color="primary" fontSize="small" />
       </Tooltip>

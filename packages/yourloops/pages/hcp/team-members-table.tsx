@@ -270,7 +270,7 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
             >
               {email}
             </Typography>
-            {member.user.idVerified && <CertifiedProfessionalIcon />}
+            {member.user.idVerified && <CertifiedProfessionalIcon id={`certified-professional-icon-${member.user.userid}`} />}
           </Box>
         </TableCell>
         <TableCell id={`team-members-list-${team.id}-row-${userId}-role`}>{checkboxElement}</TableCell>
@@ -365,7 +365,7 @@ function TeamMembersCards(props: TeamMembersProps): JSX.Element {
           >
             <Box display="flex">
               {member.status === UserInvitationStatus.pending ? email : t("user-name", getUserFirstLastName(member.user))}
-              {member.user.idVerified && <CertifiedProfessionalIcon />}
+              {member.user.idVerified && <CertifiedProfessionalIcon id={`certified-professional-icon-${member.user.userid}`} />}
             </Box>
           </Typography>
           {userIsAdmin && userId !== currentUserId &&
