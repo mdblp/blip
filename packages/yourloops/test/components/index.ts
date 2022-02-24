@@ -29,11 +29,11 @@
 import testDatePickers from "./date-pickers";
 import testSnackbar from "./utils/snackbar.test";
 import testFooterLink from "./footer-links.test";
-import testPasswordStrengthMeter from "./password-strength-meter.test";
 import testSwitchRole from "./switch-role";
 import testDialogs from "./dialogs";
 import testDropdowns from "./dropdown";
 import testButtons from "./buttons";
+import testPasswordComponents from "./password";
 
 function testComponents(): void {
   describe("Buttons", testButtons);
@@ -41,7 +41,7 @@ function testComponents(): void {
   describe("Footer", testFooterLink);
   describe("Snackbar", testSnackbar);
   describe("Footer", testFooterLink);
-  describe("Password strength meter", testPasswordStrengthMeter);
+  describe("Password", testPasswordComponents);
   describe("SwitchRole", testSwitchRole);
   describe("Dropdowns", testDropdowns);
   describe("Dialogs", testDialogs);

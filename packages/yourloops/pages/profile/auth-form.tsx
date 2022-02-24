@@ -34,10 +34,10 @@ import TextField from "@material-ui/core/TextField";
 
 import { getUserEmail } from "../../lib/utils";
 import { User } from "../../lib/auth";
-import Password from "../../components/utils/password";
-import { Errors } from "./models";
-import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
+import Password from "../../components/password/password";
+import { PasswordStrengthMeter } from "../../components/password/password-strength-meter";
 import { CheckPasswordStrengthResults } from "../../lib/auth/helpers";
+import { Errors } from "./models";
 
 interface AuthenticationFormProps {
   user: User;

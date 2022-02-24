@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
  *
  * All rights reserved.
  *
@@ -26,31 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
-import { v4 as uuidv4 } from "uuid";
-import { HttpHeaderKeys } from "../models/api";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import metrics from "../lib/metrics";
+import EncoderService from "./encoder";
+import HttpService from "./http";
 
-axios.defaults.baseURL = appConfig.API_HOST;
+export interface PasswordLeakResponse {
+  serviceAvailable: boolean
+  hasLeaked?: boolean
+}
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
-    delete config.params.noHeader;
-  } else {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
+export default class PasswordLeakService {
+
+  static async verifyPassword(password: string): Promise<PasswordLeakResponse> {
+    const hashedPassword = await EncoderService.encodeSHA1(password);
+    const hashedPasswordPrefix = hashedPassword.substring(0, 5);
+    const hashedPasswordSuffix = hashedPassword.substring(5);
+    const config = { params: { noHeader: true } };
+    try {
+      const response = await HttpService.get<string>("https://api.pwnedpasswords.com/range/" + hashedPasswordPrefix, config);
+      const hasLeaked = response.data.includes(hashedPasswordSuffix);
+      return {
+        serviceAvailable: true,
+        hasLeaked,
+      };
+    } catch (error) {
+      //if the service is unavailable, we do not want to block the user from creating an account
+      metrics.send("error", "password_leak", "The password leak API is unavailable");
+      console.error("Could not check wether entered password has been leaked");
+      return {
+        serviceAvailable: false,
+      };
+    }
   }
-  return config;
-};
-
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+}
