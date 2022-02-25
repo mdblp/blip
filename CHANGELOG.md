@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1114 Review routes and data structure for message-api
 - YLP-1172 Cannot debug unit test of blip (front)
 - YLP-1174 Removing add patient functionality for a caregiver (not used)
+- YLP-1304 Various minor eng changes
 
 ## 2.0.5 - 2021-12-06
 ### Improvements
