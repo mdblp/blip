@@ -383,7 +383,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                 />
               </Box>
 
-              {user.settings?.country === "FR" &&
+              {appConfig.ECPS_ENABLED && user.settings?.country === "FR" &&
                 <React.Fragment>
                   {user.frProId ?
                     <TextField
