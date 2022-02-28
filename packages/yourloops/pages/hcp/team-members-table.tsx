@@ -51,6 +51,7 @@ import Typography from "@material-ui/core/Typography";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
 import IconActionButton from "../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../components/icons/PersonRemoveIcon";
 
@@ -59,7 +60,6 @@ import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { getUserFirstName, getUserLastName, getUserFirstLastName, getUserInitials } from "../../lib/utils";
 import { useAuth } from "../../lib/auth";
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
 
 export interface TeamMembersProps {
   team: Team;
