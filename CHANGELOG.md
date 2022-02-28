@@ -20,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-590 Date picker for PDF reports
 - YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1120 Overview tab cleanup
+- YLP-1285 Avg daily carbs in PDF to use rescue carbs and meal
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
 - YLP-1109 YourLoops main menu sometimes do not disappear as it should
