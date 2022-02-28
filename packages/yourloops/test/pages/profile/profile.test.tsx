@@ -42,11 +42,11 @@ import { stubNotificationContextValue } from "../../lib/notifications/hook.test"
 import ProfilePage from "../../../pages/profile";
 import { Preferences, Profile, Settings } from "../../../models/shoreline";
 
-function testProfile(): void {
+describe("Profile", () => {
   let container: HTMLElement | null = null;
-  let updatePreferences: sinon.SinonStub<[Preferences,boolean|undefined], Promise<Preferences>>;
+  let updatePreferences: sinon.SinonStub<[Preferences, boolean | undefined], Promise<Preferences>>;
   let updateProfile: sinon.SinonStub<[Profile, boolean | undefined], Promise<Profile>>;
-  let updateSettings: sinon.SinonStub<[Settings,boolean|undefined], Promise<Settings>>;
+  let updateSettings: sinon.SinonStub<[Settings, boolean | undefined], Promise<Settings>>;
   const defaultUrl = "/professional/patients";
 
   async function mountProfilePage(session: Session): Promise<void> {
@@ -174,6 +174,5 @@ function testProfile(): void {
     Simulate.click(saveButton);
     expect(updatePreferences.calledOnce, "call to method").to.be.true;
   });
-}
+});
 
-export default testProfile;
