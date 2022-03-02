@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Yourloops configuration
+ * Copyright (c) 2022, Diabeloop
+ * Medical Service Icon
  *
  * All rights reserved.
  *
@@ -26,27 +26,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AppConfig {
-  VERSION: string;
-  API_HOST: string;
-  BRANDING: string;
-  DOMAIN_NAME?: string;
-  DEV: boolean;
-  TEST: boolean;
-  LATEST_TERMS?: string;
-  PWD_MIN_LENGTH: number;
-  PWD_MAX_LENGTH?: number;
-  ABOUT_MAX_LENGTH?: number;
-  SUPPORT_WEB_ADDRESS?: string;
-  ASSETS_URL?: string | null;
-  METRICS_SERVICE?: string | null;
-  MAX_FAILED_LOGIN_ATTEMPTS?: number;
-  DELAY_BEFORE_NEXT_LOGIN_ATTEMPT?: number;
-  TERMS_PRIVACY_DATE?: string;
-  STONLY_WID: string;
-  COOKIE_BANNER_CLIENT_ID: string;
-  SESSION_TIMEOUT: number;
-  YLP820_BASAL_TIME: number;
-  CBG_BUCKETS_ENABLED: boolean;
-  ECPS_ENABLED: boolean;
+import React from "react";
+import { useTranslation } from "react-i18next";
+
+import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
+
+import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
+
+function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
+  const { t } = useTranslation("yourloops");
+
+  return (
+    <Box id={id} marginLeft={1}>
+      <Tooltip title={t("certified-professional-account") as string} placement="bottom">
+        <VerifiedUserOutlinedIcon color="primary" fontSize="small" />
+      </Tooltip>
+    </Box>
+  );
 }
+
+export default CertifiedProfessionalIcon;

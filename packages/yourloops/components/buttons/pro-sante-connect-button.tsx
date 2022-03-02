@@ -55,14 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   label: {
+    fontSize: 12,
     [theme.breakpoints.only("xs")]: {
       fontWeight: 600,
       padding: 5,
-    },
-    [theme.breakpoints.up("sm")]: {
-      position: "absolute",
-      bottom: "-18px",
-      left: "20px",
     },
   },
 }));
