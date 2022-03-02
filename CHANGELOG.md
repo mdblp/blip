@@ -20,7 +20,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-590 Date picker for PDF reports
 - YLP-1088 Rework UX/UI of the YLP footer
 - YLP-1120 Overview tab cleanup
-- YLP-1285 Avg daily carbs in PDF to use rescue carbs and meal
 ### Fixed
 - YLP-1101 Yourloops logo redirect not working for HCPs
 - YLP-1109 YourLoops main menu sometimes do not disappear as it should
@@ -32,7 +31,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1170 Bolus sent multiple times by the handset are duplicated in Yourloops/Backloops
 - YLP-1194 Time of reservoir change event in Overview page is not correct - GMT time is displayed
 - YLP-1289 Wrong units displayed in the PDF for avg glucose
-- YLP-1252 Settings History values are changing over the time 
+- YLP-1252 Settings History values are changing over the time
 ### Engineering Use
 - YLP-1082 Improve daily view rendering
 - YLP-1114 Review routes and data structure for message-api
