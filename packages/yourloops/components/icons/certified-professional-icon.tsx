@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Axios Instance configuration
+ * Medical Service Icon
  *
  * All rights reserved.
  *
@@ -26,30 +26,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import { v4 as uuidv4 } from "uuid";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-import { HttpHeaderKeys } from "../models/api";
-import appConfig from "./config";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import Box from "@material-ui/core/Box";
+import Tooltip from "@material-ui/core/Tooltip";
 
-function initAxios() {
-  axios.defaults.baseURL = appConfig.API_HOST;
+import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
 
-  /**
-   * We use axios request interceptor to set the access token into headers each request the app send
-   */
-  axios.interceptors.request.use((config): AxiosRequestConfig => {
-    config = {
-      ...config,
-      headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
-    return config;
-  });
+function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
+  const { t } = useTranslation("yourloops");
+
+  return (
+    <Box id={id} marginLeft={1}>
+      <Tooltip title={t("certified-professional-account") as string} placement="bottom">
+        <VerifiedUserOutlinedIcon color="primary" fontSize="small" />
+      </Tooltip>
+    </Box>
+  );
 }
 
-export default initAxios;
+export default CertifiedProfessionalIcon;
