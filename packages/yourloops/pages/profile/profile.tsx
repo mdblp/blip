@@ -32,11 +32,10 @@ import bows from "bows";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import AccountCircle from "@material-ui/icons/AccountCircle";
 import Assignment from "@material-ui/icons/Assignment";
 import Tune from "@material-ui/icons/Tune";
 
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -46,15 +45,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
 
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, UserRoles, Settings } from "../../models/shoreline";
-import BasicDropdown from "../../components/dropdown/basic-dropdown";
-import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/language";
+import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { availableLanguageCodes, getCurrentLang, getLangName } from "../../lib/language";
 import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
-import { User, useAuth } from "../../lib/auth";
+import { useAuth, User } from "../../lib/auth";
 import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import { checkPasswordStrength, CheckPasswordStrengthResults } from "../../lib/auth/helpers";
@@ -63,17 +60,13 @@ import { ConsentFeedback } from "../../components/consents";
 import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 import { Errors } from "./models";
-import PatientProfileForm from "./patient-form";
 import AuthenticationForm from "./auth-form";
-import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
-import ProSanteConnectButton from "../../components/buttons/pro-sante-connect-button";
-import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
+import { HcpProfession } from "../../models/hcp-profession";
+import PersonalInfo from "./personal-info";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-type TextChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
 type HandleChange<E> = (event: E) => void;
-type CreateHandleChange<T, E> = (setState: SetState<T>) => HandleChange<E>;
 
 interface ProfilePageProps {
   defaultURL: string;
@@ -84,14 +77,8 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginLeft: theme.spacing(2),
     },
-    formControl: {
+    formInput: {
       marginTop: theme.spacing(2),
-    },
-    textField: {
-      "marginTop": "1em",
-      "& input:disabled": {
-        backgroundColor: "white",
-      },
     },
     title: {
       color: theme.palette.primary.main,
@@ -152,7 +139,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     updateProfile,
     updateSettings,
     updatePassword,
-    redirectToProfessionalAccountLogin,
   } = useAuth();
 
   if (!user) {
@@ -181,13 +167,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     passwordCheckResults = { onError: false, helperText: "", score: -1 };
   }
 
-  React.useEffect(() => {
-    // To be sure we have the locale:
-    if (!availableLanguageCodes.includes(lang)) {
-      setLang(getCurrentLang());
-    }
-    setPageTitle(t("account-preferences"));
-  }, [lang, t]);
+  React.useEffect(() => setPageTitle(t("account-preferences")), [lang, t]);
 
   React.useEffect(() => {
     // ISO date format is required from the user: It's not a very user-friendly format in all countries, We should change it
@@ -196,11 +176,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
       if (birthday.length > 0 && birthday.indexOf("T") > 0) {
         birthday = birthday.split("T")[0];
       }
-      if (REGEX_BIRTHDATE.test(birthday)) {
-        setBirthDate(birthday);
-      } else {
-        setBirthDate("");
-      }
+      REGEX_BIRTHDATE.test(birthday) ? setBirthDate(birthday) : setBirthDate("");
     }
     // No deps here, because we want the effect only when the component is mounting
     // If we set the deps, the patient won't be able to change its birthday.
@@ -245,7 +221,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
-  const createHandleTextChange: CreateHandleChange<string, TextChangeEvent> = (setState) => (event) => setState(event.target.value);
   const createHandleSelectChange = <T extends Units | LanguageCodes | HcpProfession>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
 
   const handleSwitchRoleOpen = () => {
@@ -342,76 +317,26 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             {t("account-preferences")}
           </DialogTitle>
 
-          <Box className={classes.categoryLabel}>
-            <AccountCircle color="primary" style={{ margin: "0" }} />
-            <strong className={classes.uppercase}>{t("personal-information")}</strong>
-            {user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${user.userid}`} />}
-          </Box>
+          {/* personal info */}
 
-          <Box className={classes.inputContainer}>
-            <TextField
-              id="profile-textfield-firstname"
-              label={t("firstname")}
-              value={firstName}
-              onChange={createHandleTextChange(setFirstName)}
-              error={errors.firstName}
-              helperText={errors.firstName && t("required-field")}
-              className={`${classes.textField} ${classes.halfWide}`}
-            />
-            <TextField
-              id="profile-textfield-lastname"
-              label={t("lastname")}
-              value={lastName}
-              onChange={createHandleTextChange(setLastName)}
-              error={errors.lastName}
-              helperText={errors.lastName && t("required-field")}
-              className={`${classes.textField} ${classes.halfWide}`}
-            />
-          </Box>
+          <PersonalInfo
+            birthDate={birthDate}
+            classes={classes}
+            errors={errors}
+            firstName={firstName}
+            hcpProfession={hcpProfession}
+            lastName={lastName}
+            role={role}
+            user={user}
+            setBirthDate={setBirthDate}
+            setFirstName={setFirstName}
+            setLastName={setLastName}
+            setHcpProfession={setHcpProfession}
+          />
 
-          {role === UserRoles.hcp &&
-            <Box className={classes.inputContainer}>
-              <Box className={`${classes.formControl} ${classes.halfWide}`}>
-                <BasicDropdown
-                  onSelect={setHcpProfession}
-                  defaultValue={hcpProfession}
-                  disabledValues={[HcpProfession.empty]}
-                  values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
-                  id="profession"
-                  inputTranslationKey="hcp-profession"
-                  errorTranslationKey="profession-dialog-title"
-                />
-              </Box>
+          {/* credentials */}
 
-              {appConfig.ECPS_ENABLED && user.settings?.country === "FR" &&
-                <React.Fragment>
-                  {user.frProId ?
-                    <TextField
-                      id="professional-account-number-text-field"
-                      value={user.getParsedFrProId()}
-                      label={t("professional-account-number")}
-                      disabled
-                      className={classes.formControl}
-                    />
-                    :
-                    <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
-                      <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
-                    </FormControl>
-                  }
-                </React.Fragment>
-              }
-            </Box>
-          }
-
-          {role === UserRoles.patient ?
-            <PatientProfileForm
-              user={user}
-              classes={classes}
-              errors={errors}
-              birthDate={birthDate}
-              setBirthDate={setBirthDate}
-            />
-            :
+          {role !== UserRoles.patient &&
             <React.Fragment>
               <div className={classes.categoryLabel}>
                 <Assignment color="primary" style={{ margin: "0" }} />
@@ -432,13 +357,15 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             </React.Fragment>
           }
 
+          {/* preferences */}
+
           <Box className={classes.categoryLabel}>
             <Tune color="primary" style={{ margin: "0" }} />
             <strong className={classes.uppercase}>{t("preferences")}</strong>
           </Box>
 
           <Box className={classes.inputContainer}>
-            <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+            <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
               <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
               <Select
                 disabled={role === UserRoles.patient}
@@ -455,7 +382,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                 </MenuItem>
               </Select>
             </FormControl>
-            <FormControl className={`${classes.formControl} ${classes.halfWide}`}>
+            <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
               <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
               <Select
                 labelId="locale-selector"
@@ -507,9 +434,10 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           }
         </Box>
       </Container>
-      <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
+      <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />;
     </React.Fragment>
   );
 };
 
 export default ProfilePage;
+
