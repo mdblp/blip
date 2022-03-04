@@ -53,7 +53,7 @@ import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, UserRoles, Settings } from "../../models/shoreline";
 import BasicDropdown from "../../components/dropdown/basic-dropdown";
 import { getLangName, getCurrentLang, availableLanguageCodes } from "../../lib/language";
-import { REGEX_BIRTHDATE, getUserFirstName, getUserLastName, setPageTitle } from "../../lib/utils";
+import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
 import { User, useAuth } from "../../lib/auth";
 import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
@@ -162,8 +162,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const role = user.role;
   const showFeedback = role === UserRoles.hcp;
 
-  const [firstName, setFirstName] = React.useState<string>(getUserFirstName(user));
-  const [lastName, setLastName] = React.useState<string>(getUserLastName(user));
+  const [firstName, setFirstName] = React.useState<string>(user.firstName);
+  const [lastName, setLastName] = React.useState<string>(user.lastName);
   const [currentPassword, setCurrentPassword] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState<string>("");
