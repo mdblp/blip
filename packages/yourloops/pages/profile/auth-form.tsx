@@ -41,7 +41,7 @@ import { CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 
 interface AuthenticationFormProps {
   user: User;
-  classes: ClassNameMap<"textField">;
+  classes: ClassNameMap<"formInput">;
   errors: Errors;
   currentPassword: string;
   setCurrentPassword: React.Dispatch<string>;
@@ -74,7 +74,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         label={t("email")}
         value={getUserEmail(user)}
         disabled
-        className={classes.textField}
+        className={classes.formInput}
       />
       <Password
         id="profile-textfield-password-current"
