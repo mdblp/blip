@@ -60,58 +60,45 @@ export interface PersonalInfoFormProps {
   setHcpProfession: (hcpProfession: HcpProfession) => void;
 }
 
-export function PersonalInfoForm({
-  birthDate,
-  classes,
-  errors,
-  firstName,
-  hcpProfession,
-  lastName,
-  role,
-  user,
-  setBirthDate,
-  setFirstName,
-  setLastName,
-  setHcpProfession,
-}: PersonalInfoFormProps): JSX.Element {
+export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { redirectToProfessionalAccountLogin } = useAuth();
 
   return (
     <React.Fragment>
-      <Box className={classes.categoryLabel}>
+      <Box className={props.classes.categoryLabel}>
         <AccountCircle color="primary" style={{ margin: "0" }} />
-        <strong className={classes.uppercase}>{t("personal-information")}</strong>
-        {user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${user.userid}`} />}
+        <strong className={props.classes.uppercase}>{t("personal-information")}</strong>
+        {props.user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${props.user.userid}`} />}
       </Box>
 
-      <Box className={classes.inputContainer}>
+      <Box className={props.classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
           label={t("firstname")}
-          value={firstName}
-          onChange={event => setFirstName(event.target.value)}
-          error={errors.firstName}
-          helperText={errors.firstName && t("required-field")}
-          className={`${classes.formInput} ${classes.halfWide}`}
+          value={props.firstName}
+          onChange={event => props.setFirstName(event.target.value)}
+          error={props.errors.firstName}
+          helperText={props.errors.firstName && t("required-field")}
+          className={`${props.classes.formInput} ${props.classes.halfWide}`}
         />
         <TextField
           id="profile-textfield-lastname"
           label={t("lastname")}
-          value={lastName}
-          onChange={event => setLastName(event.target.value)}
-          error={errors.lastName}
-          helperText={errors.lastName && t("required-field")}
-          className={`${classes.formInput} ${classes.halfWide}`}
+          value={props.lastName}
+          onChange={event => props.setLastName(event.target.value)}
+          error={props.errors.lastName}
+          helperText={props.errors.lastName && t("required-field")}
+          className={`${props.classes.formInput} ${props.classes.halfWide}`}
         />
       </Box>
 
-      {role === UserRoles.hcp &&
-        <Box className={classes.inputContainer}>
-          <Box className={`${classes.formInput} ${classes.halfWide}`}>
+      {props.role === UserRoles.hcp &&
+        <Box className={props.classes.inputContainer}>
+          <Box className={`${props.classes.formInput} ${props.classes.halfWide}`}>
             <BasicDropdown
-              onSelect={setHcpProfession}
-              defaultValue={hcpProfession}
+              onSelect={props.setHcpProfession}
+              defaultValue={props.hcpProfession}
               disabledValues={[HcpProfession.empty]}
               values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
               id="profession"
@@ -120,18 +107,18 @@ export function PersonalInfoForm({
             />
           </Box>
 
-          {appConfig.ECPS_ENABLED && user.settings?.country === "FR" &&
+          {appConfig.ECPS_ENABLED && props.user.settings?.country === "FR" &&
             <React.Fragment>
-              {user.frProId ?
+              {props.user.frProId ?
                 <TextField
                   id="professional-account-number-text-field"
-                  value={user.getParsedFrProId()}
+                  value={props.user.getParsedFrProId()}
                   label={t("professional-account-number")}
                   disabled
-                  className={classes.formInput}
+                  className={props.classes.formInput}
                 />
                 :
-                <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
+                <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
                   <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
                 </FormControl>
               }
@@ -140,13 +127,13 @@ export function PersonalInfoForm({
         </Box>
       }
 
-      {role === UserRoles.patient &&
+      {props.role === UserRoles.patient &&
         <PatientProfileForm
-          user={user}
-          classes={classes}
-          errors={errors}
-          birthDate={birthDate}
-          setBirthDate={setBirthDate}
+          user={props.user}
+          classes={props.classes}
+          errors={props.errors}
+          birthDate={props.birthDate}
+          setBirthDate={props.setBirthDate}
         />
       }
     </React.Fragment>
