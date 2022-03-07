@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useMemo, useEffect } from "react";
 import _ from "lodash";
 import bows from "bows";
 import { useHistory } from "react-router-dom";
@@ -134,7 +134,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const role = user.role;
   const showFeedback = role === UserRoles.hcp;
-
   const [firstName, setFirstName] = React.useState<string>(user.firstName);
   const [lastName, setLastName] = React.useState<string>(user.lastName);
   const [currentPassword, setCurrentPassword] = React.useState<string>("");
@@ -147,27 +146,19 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
   const [feedbackAccepted, setFeedbackAccepted] = React.useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
 
-  let passwordCheckResults: CheckPasswordStrengthResults;
-  if (password.length > 0) {
-    passwordCheckResults = checkPasswordStrength(password);
-  } else {
-    passwordCheckResults = { onError: false, helperText: "", score: -1 };
-  }
+  const passwordCheckResults = useMemo<CheckPasswordStrengthResults>(() => {
+    return password.length > 0 ? checkPasswordStrength(password) : { onError: false, helperText: "", score: -1 };
+  }, [password]);
 
-  React.useEffect(() => setPageTitle(t("account-preferences")), [lang, t]);
-
-  React.useEffect(() => {
-    // ISO date format is required from the user: It's not a very user-friendly format in all countries, We should change it
-    if (role === UserRoles.patient && !!birthDate) {
-      let birthday = birthDate;
-      if (birthday.length > 0 && birthday.indexOf("T") > 0) {
-        birthday = birthday.split("T")[0];
-      }
-      REGEX_BIRTHDATE.test(birthday) ? setBirthDate(birthday) : setBirthDate("");
-    }
-    // No deps here, because we want the effect only when the component is mounting
-    // If we set the deps, the patient won't be able to change its birthday.
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const errors: Errors = useMemo(() => ({
+    firstName: _.isEmpty(firstName),
+    lastName: _.isEmpty(lastName),
+    hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
+    currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
+    password: passwordCheckResults.onError,
+    passwordConfirmation: passwordConfirmation !== password,
+    birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
+  }), [firstName, lastName, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]);
 
   const getUpdatedPreferences = (): Preferences => {
     const updatedPreferences = _.cloneDeep(user.preferences ?? {}) as Preferences;
@@ -214,19 +205,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   };
 
   const handleSwitchRoleCancel = () => setSwitchRoleOpen(false);
-
-  const errors: Errors = React.useMemo(
-    () => ({
-      firstName: _.isEmpty(firstName),
-      lastName: _.isEmpty(lastName),
-      hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
-      currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
-      password: passwordCheckResults.onError,
-      passwordConfirmation: passwordConfirmation !== password,
-      birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
-    }),
-    [firstName, lastName, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
-  );
 
   const isAnyError = React.useMemo(() => _.some(errors), [errors]);
   const canSave = (preferencesChanged || profileChanged || settingsChanged || passwordChanged) && !isAnyError;
@@ -292,7 +270,20 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     }
   };
 
-  const onCancel = (): void => history.push(props.defaultURL);
+  useEffect(() => setPageTitle(t("account-preferences")), [lang, t]);
+
+  useEffect(() => {
+    // ISO date format is required from the user: It's not a very user-friendly format in all countries, We should change it
+    if (role === UserRoles.patient && !!birthDate) {
+      let birthday = birthDate;
+      if (birthday.length > 0 && birthday.indexOf("T") > 0) {
+        birthday = birthday.split("T")[0];
+      }
+      REGEX_BIRTHDATE.test(birthday) ? setBirthDate(birthday) : setBirthDate("");
+    }
+    // No deps here, because we want the effect only when the component is mounting
+    // If we set the deps, the patient won't be able to change its birthday.
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>
@@ -347,7 +338,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           <Box display="flex" justifyContent="flex-end" my={3}>
             <Button
               id="profile-button-cancel"
-              onClick={onCancel}
+              onClick={() => history.push(props.defaultURL)}
             >
               {t("button-cancel")}
             </Button>
