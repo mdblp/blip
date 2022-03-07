@@ -32,40 +32,29 @@ import bows from "bows";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Tune from "@material-ui/icons/Tune";
-
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
 import Link from "@material-ui/core/Link";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
-import { availableLanguageCodes, getCurrentLang, getLangName } from "../../lib/language";
+import { getCurrentLang } from "../../lib/language";
 import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
 import { useAuth, User } from "../../lib/auth";
 import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import { checkPasswordStrength, CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 import { useAlert } from "../../components/utils/snackbar";
-import { ConsentFeedback } from "../../components/consents";
 import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 import { Errors } from "./models";
 import CredentialsForm from "./credentials-form";
 import { HcpProfession } from "../../models/hcp-profession";
 import PersonalInfoForm from "./personal-info-form";
-
-type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
-type HandleChange<E> = (event: E) => void;
+import PreferencesForm from "./preferences-form";
 
 interface ProfilePageProps {
   defaultURL: string;
@@ -156,7 +145,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
   const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
   const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(user?.profile?.contactConsent?.isAccepted));
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
 
   let passwordCheckResults: CheckPasswordStrengthResults;
   if (password.length > 0) {
@@ -219,12 +208,11 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
   const passwordChanged = password !== "" || passwordConfirmation !== "";
 
-  const createHandleSelectChange = <T extends Units | LanguageCodes | HcpProfession>(setState: SetState<T>): HandleChange<SelectChangeEvent> => (event) => setState(event.target.value as T);
-
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
     metrics.send("switch_account", "display_switch_preferences");
   };
+
   const handleSwitchRoleCancel = () => setSwitchRoleOpen(false);
 
   const errors: Errors = React.useMemo(
@@ -315,8 +303,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             {t("account-preferences")}
           </DialogTitle>
 
-          {/* personal info */}
-
           <PersonalInfoForm
             birthDate={birthDate}
             classes={classes}
@@ -331,8 +317,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             setLastName={setLastName}
             setHcpProfession={setHcpProfession}
           />
-
-          {/* credentials */}
 
           {role !== UserRoles.patient &&
             <CredentialsForm
@@ -349,56 +333,16 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             />
           }
 
-          {/* preferences */}
-
-          <Box className={classes.categoryLabel}>
-            <Tune color="primary" style={{ margin: "0" }} />
-            <strong className={classes.uppercase}>{t("preferences")}</strong>
-          </Box>
-
-          <Box className={classes.inputContainer}>
-            <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
-              <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
-              <Select
-                disabled={role === UserRoles.patient}
-                labelId="unit-selector"
-                id="profile-units-selector"
-                value={unit}
-                onChange={createHandleSelectChange(setUnit)}
-              >
-                <MenuItem id="profile-units-mmoll" value={Units.mole}>
-                  {Units.mole}
-                </MenuItem>
-                <MenuItem id="profile-units-mgdl" value={Units.gram}>
-                  {Units.gram}
-                </MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl className={`${classes.formInput} ${classes.halfWide}`}>
-              <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
-              <Select
-                labelId="locale-selector"
-                id="profile-locale-selector"
-                value={lang}
-                onChange={createHandleSelectChange(setLang)}>
-                {availableLanguageCodes.map((languageCode) => (
-                  <MenuItem id={`profile-locale-item-${languageCode}`} key={languageCode} value={languageCode}>
-                    {getLangName(languageCode)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-
-          {showFeedback &&
-            <ConsentFeedback
-              id="profile"
-              userRole={role}
-              checked={feedbackAccepted}
-              style={{ marginLeft: -9, marginRight: 0, marginTop: "1em", marginBottom: 0 }}
-              onChange={() => setFeedbackAccepted(!feedbackAccepted)}
-            />
-          }
+          <PreferencesForm
+            classes={classes}
+            feedbackAccepted={feedbackAccepted}
+            lang={lang}
+            role={role}
+            unit={unit}
+            setFeedbackAccepted={setFeedbackAccepted}
+            setLang={setLang}
+            setUnit={setUnit}
+          />
 
           <Box display="flex" justifyContent="flex-end" my={3}>
             <Button
@@ -432,4 +376,3 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 };
 
 export default ProfilePage;
-
