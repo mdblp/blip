@@ -32,7 +32,6 @@ import bows from "bows";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Assignment from "@material-ui/icons/Assignment";
 import Tune from "@material-ui/icons/Tune";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -60,9 +59,9 @@ import { ConsentFeedback } from "../../components/consents";
 import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 import { Errors } from "./models";
-import AuthenticationForm from "./auth-form";
+import CredentialsForm from "./credentials-form";
 import { HcpProfession } from "../../models/hcp-profession";
-import PersonalInfo from "./personal-info";
+import PersonalInfoForm from "./personal-info-form";
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
@@ -125,8 +124,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const log = bows("ProfilePage");
-// TODO Need to split this too big component, see YLP-1256 (https://diabeloop.atlassian.net/browse/YLP-1256)
-// eslint-disable-next-line complexity
+
 const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
@@ -319,7 +317,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
           {/* personal info */}
 
-          <PersonalInfo
+          <PersonalInfoForm
             birthDate={birthDate}
             classes={classes}
             errors={errors}
@@ -337,24 +335,18 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           {/* credentials */}
 
           {role !== UserRoles.patient &&
-            <React.Fragment>
-              <div className={classes.categoryLabel}>
-                <Assignment color="primary" style={{ margin: "0" }} />
-                <strong className={classes.uppercase}>{t("my-credentials")}</strong>
-              </div>
-              <AuthenticationForm
-                user={user}
-                classes={classes}
-                errors={errors}
-                currentPassword={currentPassword}
-                setCurrentPassword={setCurrentPassword}
-                password={password}
-                setPassword={setPassword}
-                passwordConfirmation={passwordConfirmation}
-                setPasswordConfirmation={setPasswordConfirmation}
-                passwordCheckResults={passwordCheckResults}
-              />
-            </React.Fragment>
+            <CredentialsForm
+              user={user}
+              classes={classes}
+              errors={errors}
+              currentPassword={currentPassword}
+              setCurrentPassword={setCurrentPassword}
+              password={password}
+              setPassword={setPassword}
+              passwordConfirmation={passwordConfirmation}
+              setPasswordConfirmation={setPasswordConfirmation}
+              passwordCheckResults={passwordCheckResults}
+            />
           }
 
           {/* preferences */}

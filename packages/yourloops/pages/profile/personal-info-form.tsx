@@ -45,7 +45,7 @@ import CertifiedProfessionalIcon from "../../components/icons/certified-professi
 import ProSanteConnectButton from "../../components/buttons/pro-sante-connect-button";
 import PatientProfileForm from "./patient-form";
 
-export interface PersonalInfoProps {
+export interface PersonalInfoFormProps {
   birthDate?: string;
   classes: ClassNameMap;
   errors: Errors;
@@ -60,7 +60,7 @@ export interface PersonalInfoProps {
   setHcpProfession: (hcpProfession: HcpProfession) => void;
 }
 
-export function PersonalInfo({
+export function PersonalInfoForm({
   birthDate,
   classes,
   errors,
@@ -73,7 +73,7 @@ export function PersonalInfo({
   setFirstName,
   setLastName,
   setHcpProfession,
-}: PersonalInfoProps): JSX.Element {
+}: PersonalInfoFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { redirectToProfessionalAccountLogin } = useAuth();
 
@@ -153,4 +153,4 @@ export function PersonalInfo({
   );
 }
 
-export default PersonalInfo;
+export default PersonalInfoForm;
