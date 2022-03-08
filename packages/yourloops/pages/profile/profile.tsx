@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import _ from "lodash";
 import bows from "bows";
 import { useHistory } from "react-router-dom";
@@ -38,7 +38,10 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Link from "@material-ui/core/Link";
+
+import { Errors } from "./models";
 import { Units } from "../../models/generic";
+import { HcpProfession } from "../../models/hcp-profession";
 import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { getCurrentLang } from "../../lib/language";
@@ -48,13 +51,12 @@ import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
 import { checkPasswordStrength, CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 import { useAlert } from "../../components/utils/snackbar";
-import SecondaryHeaderBar from "./secondary-bar";
-import SwitchRoleDialogs from "../../components/switch-role";
-import { Errors } from "./models";
 import CredentialsForm from "./credentials-form";
-import { HcpProfession } from "../../models/hcp-profession";
 import PersonalInfoForm from "./personal-info-form";
 import PreferencesForm from "./preferences-form";
+import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
+import SecondaryHeaderBar from "./secondary-bar";
+import SwitchRoleDialogs from "../../components/switch-role";
 
 interface ProfilePageProps {
   defaultURL: string;
@@ -134,17 +136,18 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const role = user.role;
   const showFeedback = role === UserRoles.hcp;
-  const [firstName, setFirstName] = React.useState<string>(user.firstName);
-  const [lastName, setLastName] = React.useState<string>(user.lastName);
-  const [currentPassword, setCurrentPassword] = React.useState<string>("");
-  const [password, setPassword] = React.useState<string>("");
-  const [passwordConfirmation, setPasswordConfirmation] = React.useState<string>("");
-  const [unit, setUnit] = React.useState<Units>(user.settings?.units?.bg ?? Units.gram);
-  const [birthDate, setBirthDate] = React.useState<string>(user.profile?.patient?.birthday ?? "");
-  const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
-  const [lang, setLang] = React.useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
-  const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
+  const [firstName, setFirstName] = useState<string>(user.firstName);
+  const [lastName, setLastName] = useState<string>(user.lastName);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
+  const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram);
+  const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? "");
+  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false);
+  const [lang, setLang] = useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
+  const [hcpProfession, setHcpProfession] = useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
+  const [feedbackAccepted, setFeedbackAccepted] = useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
+  const [saving, setSaving] = useState<boolean>(false);
 
   const passwordCheckResults = useMemo<CheckPasswordStrengthResults>(() => {
     return password.length > 0 ? checkPasswordStrength(password) : { onError: false, helperText: "", score: -1 };
@@ -178,7 +181,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     if (user.role === UserRoles.hcp) {
       updatedProfile.hcpProfession = hcpProfession;
     }
-    if (showFeedback && Boolean(user?.profile?.contactConsent?.isAccepted) !== feedbackAccepted) {
+    if (showFeedback && !!user?.profile?.contactConsent?.isAccepted !== feedbackAccepted) {
       updatedProfile.contactConsent = {
         isAccepted: feedbackAccepted,
         acceptanceTimestamp: new Date().toISOString(),
@@ -194,11 +197,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     return updatedSettings;
   };
 
-  const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences());
-  const profileChanged = !_.isEqual(user.profile, getUpdatedProfile());
-  const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
-  const passwordChanged = password !== "" || passwordConfirmation !== "";
-
   const handleSwitchRoleOpen = () => {
     setSwitchRoleOpen(true);
     metrics.send("switch_account", "display_switch_preferences");
@@ -206,67 +204,55 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   const handleSwitchRoleCancel = () => setSwitchRoleOpen(false);
 
-  const isAnyError = React.useMemo(() => _.some(errors), [errors]);
-  const canSave = (preferencesChanged || profileChanged || settingsChanged || passwordChanged) && !isAnyError;
+  const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences());
+  const profileChanged = !_.isEqual(user.profile, getUpdatedProfile());
+  const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
+  const passwordChanged = password !== "" || passwordConfirmation !== "";
+  const isAnyError = useMemo(() => _.some(errors), [errors]);
+  const canSave = (preferencesChanged || profileChanged || settingsChanged || passwordChanged) && !isAnyError && !saving;
 
   const onSave = async (): Promise<void> => {
     let preferences: Preferences | null = null;
     let profile: Profile | null = null;
     let settings: Settings | null = null;
-    let updateFailed = false;
-    /** Set to true if we need to update the user only (no change needed for the password) */
-    let updated = false;
+
+    const updatedUser = new User(user);
 
     try {
-      if (preferencesChanged) {
-        preferences = await updatePreferences(getUpdatedPreferences(), false);
-        updated = true;
-      }
+      setSaving(true);
+
       if (profileChanged) {
         profile = await updateProfile(getUpdatedProfile(), false);
-        updated = true;
-      }
-      if (settingsChanged) {
-        settings = await updateSettings(getUpdatedSettings(), false);
-        updated = true;
-      }
-      if (role !== UserRoles.patient && passwordChanged) {
-        await updatePassword(currentPassword, password);
-      }
-    } catch (err) {
-      log.error("Updating:", err);
-      updateFailed = true;
-    }
-
-    if (updated) {
-      const updatedUser = new User(user);
-      if (preferences) {
-        updatedUser.preferences = preferences;
-      }
-      if (profile) {
         updatedUser.profile = profile;
       }
-      if (settings) {
+
+      if (settingsChanged) {
+        settings = await updateSettings(getUpdatedSettings(), false);
         updatedUser.settings = settings;
       }
 
-      setUser(updatedUser);
-    }
+      if (role !== UserRoles.patient && passwordChanged) {
+        await updatePassword(currentPassword, password);
+        setCurrentPassword("");
+        setPassword("");
+        setPasswordConfirmation("");
+      }
 
-    if (passwordChanged) {
-      setCurrentPassword("");
-      setPassword("");
-      setPasswordConfirmation("");
-    }
+      if (preferencesChanged) {
+        preferences = await updatePreferences(getUpdatedPreferences(), false);
+        updatedUser.preferences = preferences;
+        if (lang !== getCurrentLang()) {
+          i18n.changeLanguage(lang);
+        }
+      }
 
-    if (lang !== getCurrentLang()) {
-      i18n.changeLanguage(lang);
-    }
-
-    if (updateFailed) {
-      alert.error(t("profile-update-failed"));
-    } else {
       alert.success(t("profile-updated"));
+    } catch (err) {
+      log.error("Updating:", err);
+      alert.error(t("profile-update-failed"));
+    } finally {
+      setUser(updatedUser);
+      setSaving(false);
     }
   };
 
@@ -342,16 +328,18 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
             >
               {t("button-cancel")}
             </Button>
-            <Button
-              id="profile-button-save"
-              variant="contained"
-              disabled={!canSave}
-              color="primary"
-              onClick={onSave}
-              className={classes.button}
-            >
-              {t("button-save")}
-            </Button>
+            <ProgressIconButtonWrapper inProgress={saving}>
+              <Button
+                id="profile-button-save"
+                variant="contained"
+                disabled={!canSave}
+                color="primary"
+                onClick={onSave}
+                className={classes.button}
+              >
+                {t("button-save")}
+              </Button>
+            </ProgressIconButtonWrapper>
           </Box>
 
           {UserRoles.caregiver === role &&
