@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+### Engineering Use
+- YLP-1256 Split Profile component into smaller subcomponents
+
 ## 2.0.6 - 2022-03-03
 ### Added
 - YLP-1105 Yourloops new blue theme
