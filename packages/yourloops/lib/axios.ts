@@ -50,7 +50,12 @@ export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
 };
 
-/**
- * We use axios request interceptor to set the access token into headers each request the app send
- */
-axios.interceptors.request.use(onFulfilled);
+function initAxios() {
+  axios.defaults.baseURL = appConfig.API_HOST;
+  /**
+   * We use axios request interceptor to set the access token into headers each request the app send
+   */
+  axios.interceptors.request.use(onFulfilled);
+}
+
+export default initAxios;
