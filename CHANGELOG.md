@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+### Added
+- YLP-1260 Verify password leak on signup or password change
+
 ## 2.0.6 - 2022-03-03
 ### Added
 - YLP-1105 Yourloops new blue theme
@@ -11,7 +15,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1190 Advertise user about account deletion
 - YLP-1191 Add feature flag to retrieve cbg data with or without bucket optimization
 - YLP-1217 Patient should be better informed that he should not create an account through web UI
-- YLP-1260 Verify password leak on signup or password change
 ### Security Update
 - YLP-1182 Add an eCPS connection link into user preferences (HCP certification)
 - YLP-1183 Add certified professional icon
