@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 2.0.6 - 2022-03-03
 ### Added
 - YLP-1105 Yourloops new blue theme
 - YLP-1106 Switch account from caregiver to hcp should ask for the profession
@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1260 Verify password leak on signup or password change
 ### Security Update
 - YLP-1182 Add an eCPS connection link into user preferences (HCP certification)
+- YLP-1183 Add certified professional icon
 ### Improvements
 - YLP-22 Print PDF content cleaned and improved (removing useless data)
 - YLP-288 Improve date selection on Trends view
@@ -30,12 +31,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-1169 Fix German translation of Dietitian
 - YLP-1170 Bolus sent multiple times by the handset are duplicated in Yourloops/Backloops
 - YLP-1194 Time of reservoir change event in Overview page is not correct - GMT time is displayed
+- YLP-1252 Settings History values are changing over the time
 - YLP-1289 Wrong units displayed in the PDF for avg glucose
 ### Engineering Use
 - YLP-1082 Improve daily view rendering
 - YLP-1114 Review routes and data structure for message-api
 - YLP-1172 Cannot debug unit test of blip (front)
 - YLP-1174 Removing add patient functionality for a caregiver (not used)
+- YLP-1304 Various minor eng changes
 
 ## 2.0.5 - 2021-12-06
 ### Improvements

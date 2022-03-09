@@ -27,13 +27,12 @@
  */
 
 import axios, { AxiosRequestConfig } from "axios";
-import appConfig from "./config";
 import { v4 as uuidv4 } from "uuid";
+
 import { HttpHeaderKeys } from "../models/api";
+import appConfig from "./config";
 import { getFromSessionStorage } from "./utils";
 import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
-
-axios.defaults.baseURL = appConfig.API_HOST;
 
 export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.params.noHeader) {
