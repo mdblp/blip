@@ -3,7 +3,6 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const buildConfig = require("../../server/config.app");
-const brandings = require("../../branding/branding.json");
 
 // Enzyme as of v2.4.1 has trouble with classes
 // that do not start and *end* with an alpha character
@@ -137,8 +136,6 @@ const plugins = [
   }),
 ];
 
-const branding = brandings[buildConfig.BRANDING];
-
 const resolve = {
   symlinks: false,
   modules: [
@@ -146,7 +143,6 @@ const resolve = {
     "node_modules",
   ],
   alias: {
-    "branding/pdf-logo.png": path.resolve(__dirname, `../../branding/${branding["branding/pdf-logo.png"]}`),
     "pdfkit": "pdfkit/js/pdfkit.standalone.js",
     "lock.svg": path.resolve(__dirname, "../../branding/lock.svg"),
     "cartridge.png": path.resolve(__dirname, "../../branding/sitechange/cartridge.png"),

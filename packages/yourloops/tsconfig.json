@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "module": "ES2015",
+    "module": "esnext",
     "charset": "UTF-8",
     "sourceMap": true,
     "outDir": "./dist",
