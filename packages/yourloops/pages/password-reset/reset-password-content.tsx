@@ -148,7 +148,7 @@ export default function ResetPasswordContent(): JSX.Element {
             />
             <PasswordConfirm
               onError={() => setHasPasswordError(true)}
-              onSucces={(passwordToUse) => {
+              onSuccess={(passwordToUse) => {
                 setHasPasswordError(false);
                 setPassword(passwordToUse);
               }}

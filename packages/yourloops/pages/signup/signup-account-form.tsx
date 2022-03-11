@@ -122,7 +122,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       />
       <PasswordConfirm
         onError={() => setHasPasswordError(true)}
-        onSucces={(passwordToUse) => {
+        onSuccess={(passwordToUse) => {
           setHasPasswordError(false);
           setPassword(passwordToUse);
         }}

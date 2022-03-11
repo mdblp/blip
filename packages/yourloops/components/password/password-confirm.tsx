@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import _ from "lodash";
 
 import { makeStyles, Theme } from "@material-ui/core";
@@ -45,7 +45,7 @@ interface Errors {
 
 interface PasswordConfirmProps {
   onError: () => void;
-  onSucces: (password: string) => void;
+  onSuccess: (password: string) => void;
 }
 
 const styles = makeStyles((theme: Theme) => ({
@@ -53,9 +53,9 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 
-export function PasswordConfirm({ onError, onSucces }: PasswordConfirmProps): JSX.Element {
-  const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
-  const [passwordState, setPasswordState] = React.useState({
+export function PasswordConfirm({ onError, onSuccess }: PasswordConfirmProps): JSX.Element {
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
+  const [passwordState, setPasswordState] = useState({
     newPassword: "",
     hasLeaked: false,
     hasBeenCheckedForLeak: false,
@@ -87,11 +87,17 @@ export function PasswordConfirm({ onError, onSucces }: PasswordConfirmProps): JS
       } else if (!passwordState.hasBeenCheckedForLeak) {
         checkPasswordLeak();
       } else {
-        onSucces(passwordState.newPassword);
+        onSuccess(passwordState.newPassword);
       }
       return err;
-    }, [confirmNewPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSucces]
+    }, [confirmNewPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSuccess]
   );
+
+  const onBlur= () => {
+    if (!errors.newPassword && !errors.passwordLeaked) {
+      checkPasswordLeak();
+    }
+  };
 
   return (
     <React.Fragment>
@@ -110,13 +116,9 @@ export function PasswordConfirm({ onError, onSucces }: PasswordConfirmProps): JS
         margin="normal"
         checkStrength
         required
-        onBlur={() => {
-          if (!errors.newPassword && !errors.passwordLeaked) {
-            checkPasswordLeak();
-          }
-        }}
+        onBlur={onBlur}
         helperText={
-          <div>
+          <React.Fragment>
             {passwordState.newPassword.length > 0 && !errors.passwordLeaked &&
               <PasswordStrengthMeter
                 force={passwordCheck.score}
@@ -129,7 +131,7 @@ export function PasswordConfirm({ onError, onSucces }: PasswordConfirmProps): JS
                 {t("password-leaked")}
               </div>
             }
-          </div>
+          </React.Fragment>
         }
       />
       <Password

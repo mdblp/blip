@@ -51,7 +51,7 @@ function testPasswordLeakService(): void {
   describe("verifyPassword", () => {
     it("should return that the password has leaked", async () => {
       //given
-      const expected = { serviceAvailable: true, hasLeaked: true };
+      const expected = { hasLeaked: true };
       httpGetStub = sinon.stub(HttpService, "get").resolves({ data: "F372246EBBB93B988437EB9B43E7B93DE62" } as AxiosResponse);
 
       //when
@@ -63,7 +63,7 @@ function testPasswordLeakService(): void {
 
     it("should return that the password has not leaked", async () => {
       //given
-      const expected = { serviceAvailable: true, hasLeaked: false };
+      const expected = { hasLeaked: false };
       httpGetStub = sinon.stub(HttpService, "get").resolves({ data: "fakeHash" } as AxiosResponse);
 
       //when
@@ -75,7 +75,7 @@ function testPasswordLeakService(): void {
 
     it("should return that the service is unavailable when http get fails", async () => {
       //given
-      const expected = { serviceAvailable: false };
+      const expected: { hasLeaked?: string } = { hasLeaked: undefined };
       httpGetStub = sinon.stub(HttpService, "get").throws(new Error());
 
       //when

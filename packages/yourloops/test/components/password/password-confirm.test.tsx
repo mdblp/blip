@@ -36,6 +36,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { mainTheme } from "../../../components/theme";
 import { PasswordConfirm } from "../../../components/password/password-confirm";
 import PasswordLeakService from "../../../services/password-leak";
+import { Simulate, SyntheticEventData } from "react-dom/test-utils";
 
 function TestPasswordConfirm(): void {
 
@@ -54,7 +55,7 @@ function TestPasswordConfirm(): void {
             <ThemeProvider theme={mainTheme}>
               <PasswordConfirm
                 onError={() => onErrorStub()}
-                onSucces={(passwordToUse) => onSuccessStub(passwordToUse)}
+                onSuccess={(passwordToUse) => onSuccessStub(passwordToUse)}
               />
             </ThemeProvider>, container, resolve);
         });
@@ -75,15 +76,10 @@ function TestPasswordConfirm(): void {
     });
 
     function setPasswords(password: string, confirmPassword: string) {
-      const event = new Event("input", { bubbles: true });
-      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
       const passwordInput = document.getElementById("password") as HTMLInputElement;
-      nativeInputValueSetter.call(passwordInput, password);
-      passwordInput.dispatchEvent(event);
-
       const confirmPasswordInput = document.getElementById("confirm-password") as HTMLInputElement;
-      nativeInputValueSetter.call(confirmPasswordInput, confirmPassword);
-      confirmPasswordInput.dispatchEvent(event);
+      Simulate.change(passwordInput, { target: { value: password } } as unknown as SyntheticEventData);
+      Simulate.change(confirmPasswordInput, { target: { value: confirmPassword } } as unknown as SyntheticEventData);
     }
 
     it("should call onErrorStub when password is too weak", async () => {
@@ -96,14 +92,16 @@ function TestPasswordConfirm(): void {
 
     it("should call onErrorStub when passwords don't match", async () => {
       await mountComponent();
-      setPasswords(securedPassword, securedPassword + "?");
+      setPasswords(securedPassword, `${securedPassword}?`);
       expect(onErrorStub.called).to.be.true;
       expect(onSuccessStub.called).to.be.false;
     });
 
     it("should call onErrorStub when password has leaked", async () => {
       await mountComponent();
-      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({ hasLeaked: true, serviceAvailable: true });
+      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({
+        hasLeaked: true,
+      });
       setPasswords(securedPassword, securedPassword);
       await Promise.resolve();
       expect(onErrorStub.called).to.be.true;
@@ -114,7 +112,7 @@ function TestPasswordConfirm(): void {
 
     it("should call onSuccess when passwords are the same and secured but cannot make sure that is has been leaked", async () => {
       await mountComponent();
-      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({ serviceAvailable: false });
+      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({ hasLeaked: undefined });
       setPasswords(securedPassword, securedPassword);
       await Promise.resolve();
       expect(onSuccessStub.called).to.be.true;
@@ -124,7 +122,9 @@ function TestPasswordConfirm(): void {
 
     it("should call onSuccess when passwords are the same and secured", async () => {
       await mountComponent();
-      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({ hasLeaked: false, serviceAvailable: true });
+      passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({
+        hasLeaked: false,
+      });
       setPasswords(securedPassword, securedPassword);
       await Promise.resolve();
       expect(onSuccessStub.called).to.be.true;

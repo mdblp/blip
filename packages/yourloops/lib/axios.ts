@@ -35,7 +35,7 @@ import { getFromSessionStorage } from "./utils";
 import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
 
 export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (config.params.noHeader) {
+  if (config.params?.noHeader) {
     delete config.params.noHeader;
   } else {
     config = {
