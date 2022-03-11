@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
+### Fixed
+- YLP-1312 Data loading may be missing some ranges
 
 ## 2.0.6 - 2022-03-03
 ### Added
