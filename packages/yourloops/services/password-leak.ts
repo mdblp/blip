@@ -43,7 +43,7 @@ export default class PasswordLeakService {
     const config = { params: { noHeader: true } };
     try {
       const response = await HttpService.get<string>({
-        url: "https://api.pwnedpasswords.com/range/" + hashedPasswordPrefix,
+        url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
         config,
       });
       const hasLeaked = response.data.includes(hashedPasswordSuffix);
