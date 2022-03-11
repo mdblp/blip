@@ -189,7 +189,7 @@
   "page-not-found": "Page not found",
   "password": "Password",
   "password-dont-match": "Passwords don't match.",
-  "password-leaked": "This password has been leaked, choose another password.",
+  "password-leaked": "This password has been leaked, please choose another one.",
   "password-request-reset-instructions": "Check your email and follow the instructions to reset your password.",
   "password-request-reset-title": "Email sent!",
   "password-reset-success": "Your password was changed successfully. You can now log in with your new password.",
