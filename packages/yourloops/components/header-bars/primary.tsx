@@ -267,8 +267,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     <AppBar id="primary-appbar" position="relative">
       <Toolbar id="primary-toolbar" className={classes.toolBar}>
         <div id="primary-toolbar-left" className={classes.toolbarLeft}>
-          <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={`/branding/${config.BRANDING}/logo.svg`} onClick={onLogoClick} />
-          <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={`/branding/${config.BRANDING}/logo-icon.svg`} onClick={onLogoClick} />
+          <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo.svg`} onClick={onLogoClick} />
+          <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo-icon.svg`} onClick={onLogoClick} />
         </div>
         {
           _.isNil(props.children) ? null : (

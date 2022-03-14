@@ -95,7 +95,7 @@ function SignUpPage(): JSX.Element {
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.Card}>
               <CardMedia className={classes.logoHeader}>
-                <img src={`/branding/${appConfig.BRANDING}/logo.svg`} height={isXSBreakpoint ? 50 : 60} alt={t("alt-img-logo")} />
+                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={isXSBreakpoint ? 50 : 60} alt={t("alt-img-logo")} />
               </CardMedia>
               <CardContent className={classes.CardContent}>
                 <SignUpStepper />

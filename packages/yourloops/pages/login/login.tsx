@@ -215,7 +215,7 @@ function Login(): JSX.Element {
           <Card className={classes.Card}>
             <Box py="1em">
               <CardMedia>
-                <img src={`/branding/${appConfig.BRANDING}/logo.svg`} height={isXSBreakpoint ? 50 : 60} alt={t("alt-img-logo")} />
+                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={isXSBreakpoint ? 50 : 60} alt={t("alt-img-logo")} />
               </CardMedia>
             </Box>
             <CardContent className={classes.CardContent}>

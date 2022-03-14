@@ -79,7 +79,7 @@ function ConfirmPasswordResetPage(): JSX.Element {
                 paddingBottom: "1em",
               }}>
               <img
-                src={`/branding/${appConfig.BRANDING}/logo.svg`}
+                src={`/branding_${appConfig.BRANDING}_logo.svg`}
                 alt={t("alt-img-logo")}
                 style={{
                   height: "60px",

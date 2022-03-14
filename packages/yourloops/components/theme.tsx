@@ -34,10 +34,10 @@ import config from "../lib/config";
 export function initTheme() {
   const classList = document.getElementById("app")?.classList;
   classList?.remove(...BRANDING_LIST);
-  document.getElementById("app")?.classList.add(config.BRANDING.replace("/","-"));
+  classList?.add(config.BRANDING.replace("_","-"));
 
   const favIcon = document.getElementById("favicon") as HTMLAnchorElement;
-  favIcon.href = `./branding/${config.BRANDING}/favicon.ico`;
+  favIcon.href = `./branding_${config.BRANDING}_favicon.ico`;
 }
 
 function getCommonTheme(): PaletteOptions {
