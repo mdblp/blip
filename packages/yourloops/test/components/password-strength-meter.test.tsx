@@ -35,7 +35,8 @@ import { createTheme, hexToRgb } from "@material-ui/core/styles";
 
 import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 
-function TestPasswordStrengthMeter(): void {
+describe("Password strength meter", () => {
+
   let container: HTMLElement | null = null;
   const mainTheme = createTheme({
     palette: {
@@ -100,6 +101,4 @@ function TestPasswordStrengthMeter(): void {
     expect(gauges.length).to.be.equal(3);
     expect(getComputedStyle(gauges[0]).backgroundColor).to.be.equal(hexToRgb(mainTheme.palette.success.main));
   });
-}
-
-export default TestPasswordStrengthMeter;
+});
