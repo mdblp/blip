@@ -97,7 +97,7 @@ describe("CloudFront Lambda Generator", function () {
   });
 
   it("Should proceed the request to CloudFront for others requests", async () => {
-    testBase.Records[0].cf.request.uri = "/favicon.ico";
+    testBase.Records[0].cf.request.uri = "/branding/diabeloop/blue/favicon.ico";
     const response = await handler(testBase, null);
     expect(response).to.be.equal(testBase.Records[0].cf.request);
   });
