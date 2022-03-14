@@ -77,7 +77,6 @@ const plugins = [
     scriptLoading: "defer",
     inject: "body",
     hash: false,
-    favicon: path.resolve(__dirname, `../../branding/${buildConfig.BRANDING}/favicon.ico`),
     minify: false,
   }),
 ];

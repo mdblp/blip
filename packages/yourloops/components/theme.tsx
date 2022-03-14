@@ -35,6 +35,9 @@ export function initTheme() {
   const classList = document.getElementById("app")?.classList;
   classList?.remove(...BRANDING_LIST);
   document.getElementById("app")?.classList.add(config.BRANDING.replace("/","-"));
+
+  const favIcon = document.getElementById("favicon") as HTMLAnchorElement;
+  favIcon.href = `./branding/${config.BRANDING}/favicon.ico`;
 }
 
 function getCommonTheme(): PaletteOptions {
