@@ -45,6 +45,16 @@ function testAxios(): void {
       expect(actual).to.deep.equal(expected);
     });
 
+    it("should return config with header when no param is given", () => {
+      //given
+      //when
+      const actual = onFulfilled({});
+
+      //then
+      expect(actual.headers).to.include.keys(HttpHeaderKeys.sessionToken);
+      expect(actual.headers).to.include.keys(HttpHeaderKeys.traceToken);
+    });
+
     it("should return config with added headers", () => {
       //given
       const config = { params: { fakeParam: true } };

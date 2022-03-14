@@ -165,6 +165,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [firstName, setFirstName] = React.useState<string>(getUserFirstName(user));
   const [lastName, setLastName] = React.useState<string>(getUserLastName(user));
   const [currentPassword, setCurrentPassword] = React.useState<string>("");
+  const [refreshKey, setRefreshKey] = React.useState<number>(0);
   const [password, setPassword] = React.useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = React.useState<string>("");
   const [unit, setUnit] = React.useState<Units>(user.settings?.units?.bg ?? Units.gram);
@@ -259,12 +260,12 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
       firstName: _.isEmpty(firstName),
       lastName: _.isEmpty(lastName),
       hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
-      currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
+      currentPassword: password.length > 0 && currentPassword.length === 0,
       password: passwordCheckResults.onError,
       passwordConfirmation: passwordConfirmation !== password,
       birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
     }),
-    [firstName, lastName, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]
+    [firstName, lastName, role, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, birthDate]
   );
 
   const isAnyError = React.useMemo(() => _.some(errors), [errors]);
@@ -315,6 +316,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
     }
 
     if (passwordChanged) {
+      setRefreshKey(refreshKey + 1);
       setCurrentPassword("");
       setPassword("");
       setPasswordConfirmation("");
@@ -418,16 +420,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
                 <strong className={classes.uppercase}>{t("my-credentials")}</strong>
               </div>
               <AuthenticationForm
+                key={`authenticationForm-${refreshKey}`}
                 user={user}
                 classes={classes}
                 errors={errors}
                 currentPassword={currentPassword}
                 setCurrentPassword={setCurrentPassword}
-                password={password}
                 setPassword={setPassword}
-                passwordConfirmation={passwordConfirmation}
                 setPasswordConfirmation={setPasswordConfirmation}
-                passwordCheckResults={passwordCheckResults}
               />
             </React.Fragment>
           }

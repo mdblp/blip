@@ -35,9 +35,8 @@ import TextField from "@material-ui/core/TextField";
 import { getUserEmail } from "../../lib/utils";
 import { User } from "../../lib/auth";
 import Password from "../../components/password/password";
-import { PasswordStrengthMeter } from "../../components/password/password-strength-meter";
-import { CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 import { Errors } from "./models";
+import { PasswordConfirm } from "../../components/password/password-confirm";
 
 interface AuthenticationFormProps {
   user: User;
@@ -45,11 +44,8 @@ interface AuthenticationFormProps {
   errors: Errors;
   currentPassword: string;
   setCurrentPassword: React.Dispatch<string>;
-  password: string;
   setPassword: React.Dispatch<string>;
-  passwordConfirmation: string;
   setPasswordConfirmation: React.Dispatch<string>;
-  passwordCheckResults: CheckPasswordStrengthResults;
 }
 
 function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
@@ -60,11 +56,8 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     errors,
     currentPassword,
     setCurrentPassword,
-    password,
     setPassword,
-    passwordConfirmation,
     setPasswordConfirmation,
-    passwordCheckResults,
   } = props;
 
   return (
@@ -86,32 +79,13 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         helperText={t("no-password")}
         onChange={setCurrentPassword}
       />
-      <Password
-        id="profile-textfield-password"
-        autoComplete="new-password"
-        variant="standard"
-        label={t("new-password")}
-        value={password}
-        error={errors.password && password.length > 0}
-        checkStrength
-        helperText={
-          <PasswordStrengthMeter
-            force={passwordCheckResults.score}
-            error={errors.password}
-            helperText={passwordCheckResults.helperText}
-          />
-        }
-        onChange={setPassword}
-      />
-      <Password
-        id="profile-textfield-password-confirmation"
-        autoComplete="new-password"
-        variant="standard"
-        label={t("confirm-password")}
-        value={passwordConfirmation}
-        error={errors.passwordConfirmation}
-        helperText={t("not-matching-password")}
-        onChange={setPasswordConfirmation}
+      <PasswordConfirm
+        variant={"standard"}
+        onError={() => setPasswordConfirmation("")}
+        onSuccess={(password) => {
+          setPasswordConfirmation(password);
+          setPassword(password);
+        }}
       />
     </React.Fragment>
   );

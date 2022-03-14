@@ -44,6 +44,7 @@ interface Errors {
 }
 
 interface PasswordConfirmProps {
+  variant?: "standard" | "filled" | "outlined",
   onError: () => void;
   onSuccess: (password: string) => void;
 }
@@ -53,7 +54,11 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 
-export function PasswordConfirm({ onError, onSuccess }: PasswordConfirmProps): JSX.Element {
+export function PasswordConfirm({
+  onError,
+  onSuccess,
+  variant = "outlined",
+}: PasswordConfirmProps): JSX.Element {
   const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
   const [passwordState, setPasswordState] = useState({
     newPassword: "",
@@ -93,7 +98,7 @@ export function PasswordConfirm({ onError, onSuccess }: PasswordConfirmProps): J
     }, [confirmNewPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSuccess]
   );
 
-  const onBlur= () => {
+  const onBlur = () => {
     if (!errors.newPassword && !errors.passwordLeaked) {
       checkPasswordLeak();
     }
@@ -112,7 +117,7 @@ export function PasswordConfirm({ onError, onSuccess }: PasswordConfirmProps): J
         })}
         error={errors.newPassword && passwordState.newPassword.length > 0 || errors.passwordLeaked}
         autoComplete="new-password"
-        variant="outlined"
+        variant={variant}
         margin="normal"
         checkStrength
         required
@@ -142,7 +147,7 @@ export function PasswordConfirm({ onError, onSuccess }: PasswordConfirmProps): J
         error={errors.confirmNewPassword && confirmNewPassword.length > 0}
         helperText={errors.confirmNewPassword && t("password-dont-match")}
         autoComplete="new-password"
-        variant="outlined"
+        variant={variant}
         margin="normal"
         required
       />
