@@ -90,15 +90,20 @@ if (isTest) {
   );
 }
 
-/*copy branding assets for dynamic use*/
-/*Since we're not importing statically assets (with import), webpack does not know he needs to bundle it,
- so we're doing it here*/
+/* Copy branding assets for dynamic use in the app
+Since we're not importing statically assets (with import), webpack does not know he needs to bundle it,
+so we're doing it here. Moreover, we're flatting files because of the lambda serving only assets with flat hierarchy ...
+will copy /branding/diabeloop/blue/favicon.ico in /branding_diabeloop_blue_favicon.ico */
+
+const patterns = [];
+for (let branding of brandings) {
+  patterns.push({
+    from: `../../branding/${branding.replace("_","/")}`,
+    to: `branding_${branding}_[name][ext]`,
+  });
+}
 plugins.push(
-  new CopyWebpackPlugin({
-    patterns: [
-      { from: "../../branding/diabeloop", to: "branding/diabeloop" }
-    ]}
-  )
+  new CopyWebpackPlugin({patterns: [...patterns, {from: "../../branding/palette.css", to: "palette.css"}]})
 );
 
 /** @type {webpack.Configuration & { devServer: { [index: string]: any; }}} */

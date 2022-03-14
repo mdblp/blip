@@ -55,7 +55,7 @@ async function loadImages() {
   let imageStr = "";
 
   if (constants.Images.logo === null) {
-    const response = await fetch(`/branding/${window.config.BRANDING}/pdf-logo.png`);
+    const response = await fetch(`/branding_${window.config.BRANDING}_pdf-logo.png`);
     const buffer = await response.arrayBuffer();
     imageStr = base64Flag + arrayBufferToBase64(buffer);
     constants.Images.logo = imageStr;
