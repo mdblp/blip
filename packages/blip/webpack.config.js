@@ -127,7 +127,6 @@ const plugins = [
   }),
   new HtmlWebpackPlugin({
     template: "../../templates/index.html",
-    favicon:  `../../branding/${buildConfig.BRANDING}/favicon.ico`,
     minify: false,
     scriptLoading: "defer",
     inject: "body",
