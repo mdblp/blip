@@ -120,6 +120,7 @@ describe("Profile", () => {
 
   it("should display pro sante connect button if user is a french hcp and his account is not certified", async () => {
     const session = loggedInUsers.hcpSession;
+    session.user.frProId = undefined;
     await mountProfilePage(session);
     const proSanteConnectButton = container.querySelector("#pro-sante-connect-button");
     expect(proSanteConnectButton).to.be.not.null;
@@ -127,10 +128,24 @@ describe("Profile", () => {
 
   it("should display eCPS number if user is a french hcp and his account is certified", async () => {
     const session = loggedInUsers.hcpSession;
-    session.user.frProId = "ANS12345789";
     await mountProfilePage(session);
     const textField = container.querySelector("#professional-account-number-text-field");
     expect(textField).to.be.not.null;
+  });
+
+  it("should display certified icon if user is a french hcp and his account is certified", async () => {
+    const session = loggedInUsers.hcpSession;
+    await mountProfilePage(session);
+    const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
+    expect(certifiedIcon).to.be.not.null;
+  });
+
+  it("should not display certified icon if user is a french hcp and his account is not certified", async () => {
+    const session = loggedInUsers.hcpSession;
+    session.user.frProId = undefined;
+    await mountProfilePage(session);
+    const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
+    expect(certifiedIcon).to.be.null;
   });
 
   it("should update profile when saving after changing firstname", async () => {

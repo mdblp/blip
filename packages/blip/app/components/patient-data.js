@@ -22,7 +22,7 @@ import bows from "bows";
 import moment from "moment-timezone";
 import i18next from "i18next";
 import clsx from "clsx";
-import { Switch, Route /*, Redirect */ } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import { TidelineData, nurseShark, MS_IN_DAY, MGDL_UNITS } from "tideline";
 import { utils as vizUtils, components as vizComponents, createPrintPDFPackage } from "tidepool-viz";
@@ -151,6 +151,7 @@ class PatientDataPage extends React.Component {
     this.handleClickNoDataRefresh = this.handleClickNoDataRefresh.bind(this);
 
     this.handleDatetimeLocationChange = this.handleDatetimeLocationChange.bind(this);
+    this.handleLoadDataRange = this.handleLoadDataRange.bind(this);
     this.updateChartPrefs = this.updateChartPrefs.bind(this);
 
     this.unsubscribeStore = null;
@@ -424,26 +425,24 @@ class PatientDataPage extends React.Component {
           />
         </Route>
         <Route path={`${prefixURL}/settings`}>
-          <div className="app-no-print">
-            <Settings
-              bgPrefs={this.state.bgPrefs}
-              chartPrefs={this.state.chartPrefs}
-              currentPatientInViewId={patient.userid}
-              timePrefs={this.state.timePrefs}
-              patient={patient}
-              patientData={tidelineData}
-              canPrint={canPrint}
-              prefixURL={prefixURL}
-              onClickRefresh={this.handleClickRefresh}
-              onClickNoDataRefresh={this.handleClickNoDataRefresh}
-              onSwitchToBasics={this.handleSwitchToBasics}
-              onSwitchToDaily={this.handleSwitchToDaily}
-              onSwitchToTrends={this.handleSwitchToTrends}
-              onSwitchToSettings={this.handleSwitchToSettings}
-              onClickPrint={this.handleClickPrint}
-              trackMetric={this.trackMetric}
-            />
-          </div>
+          <Settings
+            bgPrefs={this.state.bgPrefs}
+            chartPrefs={this.state.chartPrefs}
+            currentPatientInViewId={patient.userid}
+            timePrefs={this.state.timePrefs}
+            patient={patient}
+            patientData={tidelineData}
+            canPrint={canPrint}
+            prefixURL={prefixURL}
+            onClickRefresh={this.handleClickRefresh}
+            onClickNoDataRefresh={this.handleClickNoDataRefresh}
+            onSwitchToBasics={this.handleSwitchToBasics}
+            onSwitchToDaily={this.handleSwitchToDaily}
+            onSwitchToTrends={this.handleSwitchToTrends}
+            onSwitchToSettings={this.handleSwitchToSettings}
+            onClickPrint={this.handleClickPrint}
+            trackMetric={this.trackMetric}
+          />
         </Route>
       </Switch>
     );
@@ -515,13 +514,11 @@ class PatientDataPage extends React.Component {
     const start = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf("day");
     const timezone = tidelineData.getTimezoneAt(printOptions.end);
     const end = moment.tz(printOptions.end, timezone).endOf("day");
-    const numDays = end.diff(start, "days") + 1;
-    const epochLocation = start.valueOf() + (end.valueOf() - start.valueOf()) / 2;
     const endPDFDate = end.toISOString();
 
     // Load a 2 days more than needed, around the wanted location, to be sure
     // we have data with duration too within this range
-    await this.handleDatetimeLocationChange(epochLocation, (2 + numDays) * MS_IN_DAY, "pdf");
+    await this.handleLoadDataRange(start, end, "pdf");
 
     const timePrefs = {
       timezoneAware: true,
@@ -765,74 +762,97 @@ class PatientDataPage extends React.Component {
    * Chart display date / range change
    * @param {number} epochLocation datetime epoch value in ms
    * @param {number} msRange ms around epochLocation
-   * @param {"pdf" | null} target
    * @returns {Promise<boolean>} true if new data are loaded
    */
-  async handleDatetimeLocationChange(epochLocation, msRange, target = null) {
-    const { loadingState } = this.state;
-    const chartType = target ?? this.getChartType();
-    let dataLoaded = false;
+  handleDatetimeLocationChange(epochLocation, msRange) {
+    const chartType = this.getChartType();
 
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
       throw new Error("handleDatetimeLocationChange: invalid parameters");
     }
 
-    const updateLocation = target === "pdf" ? _.noop : () => {
+    // this.log.debug("handleDatetimeLocationChange()", {
+    //   chartType,
+    //   epochLocation,
+    //   msRange,
+    //   date: moment.utc(epochLocation).toISOString(),
+    //   rangeDays: msRange/MS_IN_DAY,
+    // });
+
+    const msDiff = chartType === "daily" ? msRange : Math.round(msRange / 2);
+    let start = moment.utc(epochLocation - msDiff).startOf("day");
+    let end = moment.utc(epochLocation + msDiff).startOf("day").add(1, "day");
+
+    if (chartType === "daily") {
+      const rangeToLoad = this.apiUtils.partialDataLoad.getMissingRanges({ start, end }, true);
+      if (rangeToLoad.length > 0) {
+        // For daily we will load 4 days to avoid too many loading
+        start = moment.utc(epochLocation - MS_IN_DAY * 4).startOf("day");
+        end = moment.utc(epochLocation + MS_IN_DAY * 4).startOf("day").add(1, "day");
+      }
+    }
+
+    return this.handleLoadDataRange(start, end, chartType).then((result) => {
       this.setState({ epochLocation, msRange });
-    };
+      return result;
+    });
+  }
+
+  /**
+   * Fetch new medical data if needed
+   * @param {moment.Moment} start
+   * @param {moment.Moment} end
+   * @param {"pdf" | null | undefined} target
+   * @returns {Promise<boolean>} true if new data are loaded
+   */
+  async handleLoadDataRange(start, end, target = null) {
+    const { loadingState } = this.state;
+    const chartType = target ?? this.getChartType();
+    let dataLoaded = false;
+
+    if (!(moment.isMoment(start) && moment.isMoment(end))) {
+      this.log.error("Invalid start or end parameter", { start, end });
+      return false;
+    }
+    if (start.isAfter(end)) {
+      this.log.error("Invalid wanted range", { start, end });
+      return false;
+    }
+
+    this.log.info("handleLoadDataRange", chartType, start.toISOString(), "→", end.toISOString());
 
     // Don't do anything if we are currently loading
     if (loadingState === LOADING_STATE_DONE) {
-      // For daily check for +/- 1 day (and not 0.5 day), for others only the displayed range
+      const msRange = end.valueOf() - start.valueOf();
+      const epochLocation = Math.round(start.valueOf() + msRange / 2);
 
-      let msRangeDataNeeded;
-      switch (chartType) {
-      case "daily":
-        msRangeDataNeeded = MS_IN_DAY;
-        break;
-      case "pdf":
-        msRangeDataNeeded = msRange;
-        break;
-      default:
-        msRangeDataNeeded = msRange / 2;
-        break;
-      }
+      const updateLocation = chartType === "pdf" ? _.noop : () => {
+        this.setState({ epochLocation, msRange });
+      };
 
       /** @type {DateRange} */
       let rangeDisplay = {
-        start: moment.utc(epochLocation - msRangeDataNeeded).startOf("day").valueOf(),
-        end: moment.utc(epochLocation + msRangeDataNeeded).endOf("day").valueOf() + 1,
+        start: moment.utc(start.valueOf()).startOf("day"),
+        end: moment.utc(end.valueOf()).startOf("day").add(1, "day"),
       };
-      const rangeToLoad = this.apiUtils.partialDataLoad.getRangeToLoad(rangeDisplay);
-      if (rangeToLoad) {
-        // We need more data!
-
-        if (chartType === "daily") {
-          // For daily we will load 3 days to avoid too many loading
-          msRangeDataNeeded = MS_IN_DAY * 3;
-          rangeDisplay = {
-            start: moment.utc(epochLocation - msRangeDataNeeded).startOf("day").valueOf(),
-            end: moment.utc(epochLocation + msRangeDataNeeded).endOf("day").valueOf() + 1,
-          };
-        }
-
-        updateLocation();
+      const rangeToLoad = this.apiUtils.partialDataLoad.getMissingRanges(rangeDisplay, true);
+      if (rangeToLoad.length > 0) {
         this.setState({ loadingState: LOADING_STATE_EARLIER_FETCH });
         const data = await this.apiUtils.fetchDataRange(rangeDisplay);
 
         this.setState({ loadingState: LOADING_STATE_EARLIER_PROCESS });
         await this.processData(data);
 
-        if (target !== "pdf") {
+        if (chartType !== "pdf") {
           // The loading state will be changed after the PDF is generated,
           // for other cases, we have finished
           this.setState({ loadingState: LOADING_STATE_DONE });
         }
 
         dataLoaded = true;
-      } else {
-        updateLocation();
       }
+
+      updateLocation();
     }
 
     return dataLoaded;
@@ -841,7 +861,6 @@ class PatientDataPage extends React.Component {
   async handleRefresh() {
     this.setState({
       loadingState: LOADING_STATE_INITIAL_FETCH,
-      dataRange: null,
       epochLocation: 0,
       msRange: 0,
       tidelineData: null,
@@ -884,7 +903,7 @@ class PatientDataPage extends React.Component {
         ...bgPrefs,
         // Used by tideline oneDay to set-up the scroll range
         // Send this information by tidelineData options
-        dataRange: this.apiUtils.dataRange,
+        dateRange: this.apiUtils.dateRange,
         YLP820_BASAL_TIME: config.YLP820_BASAL_TIME,
       };
       tidelineData = new TidelineData(opts);

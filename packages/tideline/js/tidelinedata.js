@@ -17,7 +17,7 @@
 /* eslint-disable lodash/prefer-matches */
 /**
  * @typedef {'basal'|'bolus'|'cbg'|'smbg'|'deviceEvent'|'wizard'|'upload'|'pumpSettings'|'physicalActivity'|'message'|'fill'} DatumType
- * @typedef {{ type: string, time?: string, normalTime: string, normalEnd?: string, subType?: string, epoch: number, epochEnd?: number, guessedTimezone?: boolean, timezone: string, displayOffset: number;localDate?:string;isoWeekday?:string;}} Datum
+ * @typedef {{ type: string, id: string; time?: string, normalTime: string, normalEnd?: string, subType?: string, epoch: number, epochEnd?: number, guessedTimezone?: boolean, timezone: string, displayOffset: number;localDate?:string;isoWeekday?:string;}} Datum
  * @typedef {{ cbg:Datum[]; basal:Datum[]; bolus:Datum[]; deviceEvent: Datum[] }} Grouped
  * @typedef {{ payload: { parameters: {name: string}[]} } | Datum} PumpSettings
  * @typedef {{ timezone: string, dateRange: string[], nData: number, days: {date:string,type:string}[], data:{[x:string]: {data: Datum[]}} }} BasicsData
@@ -78,8 +78,8 @@ const defaults = {
   },
   defaultSource: "Diabeloop",
   defaultPumpManufacturer: "default",
-  /** @type {moment.Moment[]} */
-  dataRange: null,
+  /** @type {{start: moment.Moment, end: moment.Moment}} */
+  dateRange: null,
 };
 
 /**
@@ -323,6 +323,21 @@ TidelineData.prototype.cleanDatum = function cleanDatum(d) {
   }
 };
 
+TidelineData.prototype.joinWizardsAndBoluses = function joinWizardsAndBoluses() {
+  const wizards = this.data.filter((v) => v.type === "wizard" && typeof v.bolus === "string");
+  const boluses = this.data.filter((v) => v.type === "bolus");
+  const nWizards = wizards.length;
+  for (let i = 0; i < nWizards; i++) {
+    const wizard = wizards[i];
+    delete wizard.errorMessage;
+    const bolus = boluses.find((v) => v.id === wizard.bolus);
+    if (bolus) {
+      wizard.bolus = bolus;
+      bolus.wizard = wizard;
+    }
+  }
+};
+
 /**
  * Timezone change events (for daily timeline view -> poolMessages)
  * @param {string} prevTimezone The previous timezone name
@@ -548,19 +563,13 @@ TidelineData.prototype.setEndPoints = function setEndPoints() {
     start = moment.tz(today.valueOf() - MS_IN_DAY, this.opts.timePrefs.timezoneName);
     end = moment.tz(today.valueOf() + MS_IN_DAY, this.opts.timePrefs.timezoneName);
   }
-  if (Array.isArray(this.opts.dataRange)) {
+
+  if (this.opts.dateRange) {
     // Take the longest range if possible
-    if (this.opts.dataRange[0].isBefore(start)) {
-      const ms = this.opts.dataRange[0].valueOf();
+    if (this.opts.dateRange.start.isBefore(start)) {
+      const ms = this.opts.dateRange.start.valueOf();
       start = moment.tz(ms, this.getTimezoneAt(ms)).startOf("day");
     }
-    if (this.opts.dataRange[1].isAfter(end)) {
-      const ms = this.opts.dataRange[1].valueOf();
-      end = moment.tz(ms, this.getTimezoneAt(ms)).endOf("day").add(1, "millisecond");
-    }
-
-  } else {
-    this.opts.dataRange = [moment.utc(start.valueOf()), moment.utc(end.valueOf())];
   }
 
   this.endpoints = [start.toISOString(), end.toISOString()];
@@ -672,7 +681,6 @@ TidelineData.prototype.sortPumpSettingsParameters = function sortPumpSettingsPar
   });
 };
 
-
 TidelineData.prototype.deduplicateBoluses = function deduplicateBoluses() {
   if (!Array.isArray(this.data)) {
     return;
@@ -731,7 +739,7 @@ TidelineData.prototype.deduplicatePhysicalActivities = function deduplicatePhysi
 };
 
 /**
- * YLP-820 Adjust the display of temporay basal to workaround handset issue #220
+ * YLP-820 Adjust the display of temporary basal to workaround handset issue #220
  *
  * - A temp basal and an automated basal occurs at the same time (+ or - 2/3 seconds),
  *   the 2/3 seconds offset has to be adjusted according to existing database data, or maybe set as a variable
@@ -789,7 +797,7 @@ TidelineData.prototype.setEvents = function setEvents(filter = {}, order = ["inp
   return _.map(events, (v) => v[0]);
 };
 
-TidelineData.prototype.getLastestManufacturer = function getLastestManufacturer() {
+TidelineData.prototype.getLatestManufacturer = function getLatestManufacturer() {
   const defaultPumpManufacturer = {
     payload: { pump: { manufacturer: this.opts.defaultPumpManufacturer } },
   };
@@ -1090,6 +1098,10 @@ TidelineData.prototype.addData = async function addData(newData) {
   this.data.sort((a, b) => a.epoch - b.epoch);
   endTimer("Concatenate & uniq & sort");
 
+  startTimer("joinWizardsAndBoluses");
+  this.joinWizardsAndBoluses();
+  endTimer("joinWizardsAndBoluses");
+
   startTimer("setTimezones");
   this.setTimezones(this.data);
   endTimer("setTimezones");
@@ -1134,7 +1146,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   endTimer("sortPumpSettingsParameters");
 
   startTimer("latestPumpManufacturer");
-  this.latestPumpManufacturer = this.getLastestManufacturer();
+  this.latestPumpManufacturer = this.getLatestManufacturer();
   endTimer("latestPumpManufacturer");
 
   startTimer("setEvents");
