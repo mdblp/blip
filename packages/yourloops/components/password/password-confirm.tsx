@@ -59,7 +59,7 @@ export function PasswordConfirm({
   onSuccess,
   variant = "outlined",
 }: PasswordConfirmProps): JSX.Element {
-  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [passwordState, setPasswordState] = useState({
     newPassword: "",
     hasLeaked: false,
@@ -84,7 +84,7 @@ export function PasswordConfirm({
     () => {
       const err = {
         newPassword: passwordCheck.onError,
-        confirmNewPassword: _.isEmpty(confirmNewPassword.trim()) || confirmNewPassword !== passwordState.newPassword,
+        confirmNewPassword: _.isEmpty(confirmPassword.trim()) || confirmPassword !== passwordState.newPassword,
         passwordLeaked: passwordState.hasLeaked,
       };
       if (_.some(err)) {
@@ -95,7 +95,7 @@ export function PasswordConfirm({
         onSuccess(passwordState.newPassword);
       }
       return err;
-    }, [confirmNewPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSuccess]
+    }, [confirmPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSuccess]
   );
 
   const onBlur = () => {
@@ -142,9 +142,9 @@ export function PasswordConfirm({
       <Password
         id="confirm-password"
         label={t("confirm-new-password")}
-        value={confirmNewPassword}
-        onChange={(password) => setConfirmNewPassword(password)}
-        error={errors.confirmNewPassword && confirmNewPassword.length > 0}
+        value={confirmPassword}
+        onChange={(password) => setConfirmPassword(password)}
+        error={errors.confirmNewPassword && confirmPassword.length > 0}
         helperText={errors.confirmNewPassword && t("password-dont-match")}
         autoComplete="new-password"
         variant={variant}
