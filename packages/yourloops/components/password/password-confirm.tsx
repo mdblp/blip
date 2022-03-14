@@ -45,7 +45,7 @@ interface Errors {
 
 interface PasswordConfirmProps {
   variant?: "standard" | "filled" | "outlined",
-  onError: () => void;
+  onError: (password: string, passwordConfirmation: string) => void;
   onSuccess: (password: string) => void;
 }
 
@@ -88,7 +88,7 @@ export function PasswordConfirm({
         passwordLeaked: passwordState.hasLeaked,
       };
       if (_.some(err)) {
-        onError();
+        onError(passwordState.newPassword, confirmPassword);
       } else if (!passwordState.hasBeenCheckedForLeak) {
         checkPasswordLeak();
       } else {

@@ -46,6 +46,7 @@ interface AuthenticationFormProps {
   setCurrentPassword: React.Dispatch<string>;
   setPassword: React.Dispatch<string>;
   setPasswordConfirmation: React.Dispatch<string>;
+  setPasswordConfirmationError: React.Dispatch<boolean>;
 }
 
 function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
@@ -58,6 +59,7 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     setCurrentPassword,
     setPassword,
     setPasswordConfirmation,
+    setPasswordConfirmationError,
   } = props;
 
   return (
@@ -81,10 +83,15 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
       />
       <PasswordConfirm
         variant={"standard"}
-        onError={() => setPasswordConfirmation("")}
+        onError={(password, passwordConfirmation) => {
+          setPassword(password);
+          setPasswordConfirmation(passwordConfirmation);
+          setPasswordConfirmationError(true);
+        }}
         onSuccess={(password) => {
           setPasswordConfirmation(password);
           setPassword(password);
+          setPasswordConfirmationError(false);
         }}
       />
     </React.Fragment>
