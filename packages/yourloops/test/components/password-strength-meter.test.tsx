@@ -31,14 +31,27 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
 import { ThemeProvider } from "@material-ui/styles";
-import { hexToRgb } from "@material-ui/core/styles";
+import { createTheme, hexToRgb } from "@material-ui/core/styles";
 
-import { getMainTheme } from "../../components/theme";
 import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
 
 function TestPasswordStrengthMeter(): void {
   let container: HTMLElement | null = null;
-  const mainTheme = getMainTheme();
+  const mainTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#000000",
+        light: "#555555",
+        dark: "#ffffff",
+      },
+      secondary: {
+        main: "#000000",
+        light: "#555555",
+        dark: "#ffffff",
+      },
+      background: { default: "#FFFFFF" },
+    },
+  });
 
   const mountComponent = async (force: number, error: boolean): Promise<void> => {
     await act(() => {
