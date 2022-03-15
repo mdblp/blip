@@ -233,9 +233,6 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
       if (role !== UserRoles.patient && passwordChanged) {
         await updatePassword(currentPassword, password);
-        setCurrentPassword("");
-        setPassword("");
-        setPasswordConfirmation("");
       }
 
       if (preferencesChanged) {
