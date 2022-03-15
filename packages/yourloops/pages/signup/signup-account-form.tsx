@@ -104,6 +104,11 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
     }
   };
 
+  const onSuccess = (password: string) => {
+    setHasPasswordError(false);
+    setPassword(password);
+  };
+
   return (
     <Box display="flex" flexDirection="column" justifyContent="center">
       <TextField
@@ -122,10 +127,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
       />
       <PasswordConfirm
         onError={() => setHasPasswordError(true)}
-        onSuccess={(passwordToUse) => {
-          setHasPasswordError(false);
-          setPassword(passwordToUse);
-        }}
+        onSuccess={onSuccess}
       />
       <Box display="flex" m={0}>
         <InfoIcon color="primary" />

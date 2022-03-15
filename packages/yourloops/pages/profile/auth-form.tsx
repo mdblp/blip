@@ -62,6 +62,18 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     setPasswordConfirmationError,
   } = props;
 
+  const onError = (password: string, passwordConfirmation: string) => {
+    setPassword(password);
+    setPasswordConfirmation(passwordConfirmation);
+    setPasswordConfirmationError(true);
+  };
+
+  const onSuccess = (password: string) => {
+    setPasswordConfirmation(password);
+    setPassword(password);
+    setPasswordConfirmationError(false);
+  };
+
   return (
     <React.Fragment>
       <TextField
@@ -83,16 +95,8 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
       />
       <PasswordConfirm
         variant={"standard"}
-        onError={(password, passwordConfirmation) => {
-          setPassword(password);
-          setPasswordConfirmation(passwordConfirmation);
-          setPasswordConfirmationError(true);
-        }}
-        onSuccess={(password) => {
-          setPasswordConfirmation(password);
-          setPassword(password);
-          setPasswordConfirmationError(false);
-        }}
+        onError={onError}
+        onSuccess={onSuccess}
       />
     </React.Fragment>
   );

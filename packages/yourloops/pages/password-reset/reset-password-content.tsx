@@ -113,6 +113,11 @@ export default function ResetPasswordContent(): JSX.Element {
     }
   };
 
+  const onSuccess = (password: string) => {
+    setHasPasswordError(false);
+    setPassword(password);
+  };
+
   return (
     <React.Fragment>
       {success ? (
@@ -148,10 +153,7 @@ export default function ResetPasswordContent(): JSX.Element {
             />
             <PasswordConfirm
               onError={() => setHasPasswordError(true)}
-              onSuccess={(passwordToUse) => {
-                setHasPasswordError(false);
-                setPassword(passwordToUse);
-              }}
+              onSuccess={onSuccess}
             />
           </CardContent>
           <CardActions className={classes.CardActions}>
