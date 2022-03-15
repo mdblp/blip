@@ -47,9 +47,7 @@ import { Preferences, Profile, Settings, UserRoles } from "../../models/shorelin
 import { getCurrentLang } from "../../lib/language";
 import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
 import { useAuth, User } from "../../lib/auth";
-import appConfig from "../../lib/config";
 import metrics from "../../lib/metrics";
-import { checkPasswordStrength, CheckPasswordStrengthResults } from "../../lib/auth/helpers";
 import { useAlert } from "../../components/utils/snackbar";
 import CredentialsForm from "./credentials-form";
 import PersonalInfoForm from "./personal-info-form";
@@ -131,16 +129,19 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   } = useAuth();
 
   if (!user) {
-    throw new Error("User must be looged-in");
+    throw new Error("User must be logged-in");
   }
 
   const role = user.role;
   const showFeedback = role === UserRoles.hcp;
+
   const [firstName, setFirstName] = useState<string>(user.firstName);
   const [lastName, setLastName] = useState<string>(user.lastName);
   const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [refreshKey, setRefreshKey] = React.useState<number>(0);
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
+  const [passwordConfirmationError, setPasswordConfirmationError] = React.useState<boolean>(false);
   const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram);
   const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false);
@@ -149,19 +150,14 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [feedbackAccepted, setFeedbackAccepted] = useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
   const [saving, setSaving] = useState<boolean>(false);
 
-  const passwordCheckResults = useMemo<CheckPasswordStrengthResults>(() => {
-    return password.length > 0 ? checkPasswordStrength(password) : { onError: false, helperText: "", score: -1 };
-  }, [password]);
-
   const errors: Errors = useMemo(() => ({
     firstName: _.isEmpty(firstName),
     lastName: _.isEmpty(lastName),
     hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
-    currentPassword: password.length > 0 && currentPassword.length < appConfig.PWD_MIN_LENGTH,
-    password: passwordCheckResults.onError,
-    passwordConfirmation: passwordConfirmation !== password,
+    currentPassword: password.length > 0 && currentPassword.length === 0,
+    password: passwordConfirmationError && (password.length > 0 || passwordConfirmation.length > 0),
     birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
-  }), [firstName, lastName, hcpProfession, password, currentPassword.length, passwordCheckResults.onError, passwordConfirmation, role, birthDate]);
+  }), [firstName, lastName, role, hcpProfession, password.length, passwordConfirmationError, passwordConfirmation.length, currentPassword.length, birthDate]);
 
   const getUpdatedPreferences = (): Preferences => {
     const updatedPreferences = _.cloneDeep(user.preferences ?? {}) as Preferences;
@@ -233,6 +229,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
       if (role !== UserRoles.patient && passwordChanged) {
         await updatePassword(currentPassword, password);
+        setRefreshKey(refreshKey + 1);
+        setPasswordConfirmationError(false);
       }
 
       if (preferencesChanged) {
@@ -294,6 +292,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
           {role !== UserRoles.patient &&
             <CredentialsForm
+              key={`authenticationForm-${refreshKey}`}
               user={user}
               classes={classes}
               errors={errors}
@@ -304,6 +303,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               passwordConfirmation={passwordConfirmation}
               setPasswordConfirmation={setPasswordConfirmation}
               passwordCheckResults={passwordCheckResults}
+              setPasswordConfirmationError={setPasswordConfirmationError}
             />
           }
 
@@ -346,7 +346,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           }
         </Box>
       </Container>
-      <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />;
+      <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
     </React.Fragment>
   );
 };
