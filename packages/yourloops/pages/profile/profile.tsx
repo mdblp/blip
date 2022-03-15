@@ -151,8 +151,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
   const [saving, setSaving] = useState<boolean>(false);
 
   const errors: Errors = useMemo(() => ({
-    firstName: _.isEmpty(firstName),
-    lastName: _.isEmpty(lastName),
+    firstName: !firstName,
+    lastName: !lastName,
     hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
     currentPassword: password.length > 0 && currentPassword.length === 0,
     password: passwordConfirmationError && (password.length > 0 || passwordConfirmation.length > 0),
@@ -298,11 +298,8 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
               errors={errors}
               currentPassword={currentPassword}
               setCurrentPassword={setCurrentPassword}
-              password={password}
               setPassword={setPassword}
-              passwordConfirmation={passwordConfirmation}
               setPasswordConfirmation={setPasswordConfirmation}
-              passwordCheckResults={passwordCheckResults}
               setPasswordConfirmationError={setPasswordConfirmationError}
             />
           }
