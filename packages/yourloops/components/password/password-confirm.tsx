@@ -84,7 +84,7 @@ export function PasswordConfirm({
     () => {
       const err = {
         newPassword: passwordCheck.onError,
-        confirmNewPassword: _.isEmpty(confirmPassword.trim()) || confirmPassword !== passwordState.newPassword,
+        confirmNewPassword: !confirmPassword.trim() || confirmPassword !== passwordState.newPassword,
         passwordLeaked: passwordState.hasLeaked,
       };
       if (_.some(err)) {
