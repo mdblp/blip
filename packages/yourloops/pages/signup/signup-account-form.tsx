@@ -75,7 +75,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
 
   const errors: Errors = React.useMemo(
     () => ({
-      username: _.isEmpty(username.trim()) || !REGEX_EMAIL.test(username),
+      username: !username.trim() || !REGEX_EMAIL.test(username),
       password: hasPasswordError,
     }), [username, hasPasswordError]
   );
