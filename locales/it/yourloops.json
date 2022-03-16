@@ -187,7 +187,7 @@
   "page-not-found": "Pagina non trovata",
   "password": "Password",
   "password-dont-match": "Le password non corrispondono.",
-  "password-leaked": "This password has been leaked, please choose another one.",
+  "password-leaked": "Questa password è divulgata/trapelata, scegliere un'altra.",
   "password-request-reset-instructions": "Controlla l’email e segue le istruzioni per reimpostare la password.",
   "password-request-reset-title": "E-mail inviata!",
   "password-reset-success": "La password è stata modificata. Ora è possibile eseguire l’accesso con la nuova password.",
