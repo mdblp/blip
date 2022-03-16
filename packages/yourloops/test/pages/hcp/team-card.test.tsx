@@ -27,39 +27,43 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
-import * as sinon from "sinon";
+import Adapter from "enzyme-adapter-react-16";
 
+import enzyme, { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import { UserInvitationStatus } from "../../../models/generic";
 import { TeamMemberRole } from "../../../models/team";
 import { Team, loadTeams } from "../../../lib/team";
 import { TeamInfo } from "../../../components/team-card"; // TODO move theses tests
 import TeamCard, { TeamCardProps } from "../../../pages/hcp/team-card";
-import { authHcp } from "../../lib/auth/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { loggedInUsers } from "../../common";
 
 describe("Team card", () => {
+  const authHcp = loggedInUsers.hcpSession;
   let teams: Team[] = [];
   const defaultProps: TeamCardProps = {
     team: {} as Team,
     memberRole: TeamMemberRole.admin,
     memberStatus: UserInvitationStatus.accepted,
-    onShowAddMemberDialog: sinon.spy(),
-    onShowEditTeamDialog: sinon.spy(),
-    onShowLeaveTeamDialog: sinon.spy(),
+    onShowAddMemberDialog: jest.fn(),
+    onShowEditTeamDialog: jest.fn(),
+    onShowLeaveTeamDialog: jest.fn(),
   };
 
   let component: ReactWrapper | ShallowWrapper | null = null;
 
   const resetSpys = () => {
     resetTeamAPIStubs();
-    (defaultProps.onShowEditTeamDialog as sinon.SinonSpy).resetHistory();
-    (defaultProps.onShowLeaveTeamDialog as sinon.SinonSpy).resetHistory();
-    (defaultProps.onShowAddMemberDialog as sinon.SinonSpy).resetHistory();
+    (defaultProps.onShowEditTeamDialog as jest.Mock).mockReset();
+    (defaultProps.onShowLeaveTeamDialog as jest.Mock).mockReset();
+    (defaultProps.onShowAddMemberDialog as jest.Mock).mockReset();
   };
 
-  before(async () => {
+  beforeAll(async () => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     resetSpys();
     const result = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
     teams = result.teams;
@@ -76,14 +80,14 @@ describe("Team card", () => {
 
   it("should be able to render", () => {
     component = mount(<TeamCard {...defaultProps} />);
-    expect(component.find(`#team-card-${defaultProps.team.id}-actions`).length).to.be.equal(1);
-    expect(component.find(`#team-card-${defaultProps.team.id}-name`).length).to.be.equal(1);
-    expect(component.find(`#team-card-${defaultProps.team.id}-infos`).length).to.be.equal(1);
+    expect(component.find(`#team-card-${defaultProps.team.id}-actions`).length).toBe(1);
+    expect(component.find(`#team-card-${defaultProps.team.id}-name`).length).toBe(1);
+    expect(component.find(`#team-card-${defaultProps.team.id}-infos`).length).toBe(1);
   });
 
   it("should render the 2nd addr line if present", () => {
     component = mount(<TeamCard {...defaultProps} />);
-    expect(component.find(`#team-card-info-${defaultProps.team.id}-address-value`).find("br").length).to.be.equal(2);
+    expect(component.find(`#team-card-info-${defaultProps.team.id}-address-value`).find("br").length).toBe(2);
   });
 
   it("should not render the 2nd addr line if not present", () => {
@@ -92,45 +96,45 @@ describe("Team card", () => {
       team: teams[2],
     };
     component = mount(<TeamCard {...props} />);
-    expect(component.find(`#team-card-info-${props.team.id}-address-value`).find("br").length).to.be.equal(1);
+    expect(component.find(`#team-card-info-${props.team.id}-address-value`).find("br").length).toBe(1);
   });
 
   it("should call onShowAddMemberDialog prop function when clicking on the button", () => {
     component = shallow(<TeamCard {...defaultProps} />);
     const btn = component.find(`#team-card-${defaultProps.team.id}-button-add-member`);
-    expect(btn.length).to.be.equal(1);
+    expect(btn.length).toBe(1);
     btn.at(0).simulate("click");
-    expect((defaultProps.onShowAddMemberDialog as sinon.SinonSpy).calledOnce).to.be.true;
+    expect(defaultProps.onShowAddMemberDialog).toHaveBeenCalledTimes(1);
   });
 
   it("should call onShowEditTeamDialog prop function when clicking on the button", () => {
     component = shallow(<TeamCard {...defaultProps} />);
     const btn = component.find(`#team-card-${defaultProps.team.id}-button-edit`);
-    expect(btn.length).to.be.equal(1);
+    expect(btn.length).toBe(1);
     btn.at(0).simulate("click");
-    expect((defaultProps.onShowEditTeamDialog as sinon.SinonSpy).calledOnce).to.be.true;
+    expect(defaultProps.onShowEditTeamDialog).toHaveBeenCalledTimes(1);
   });
 
   it("should call onShowLeaveTeamDialog prop function when clicking on the button", () => {
     component = shallow(<TeamCard {...defaultProps} />);
     const btn = component.find(`#team-card-${defaultProps.team.id}-button-leave-team`);
-    expect(btn.length).to.be.equal(1);
+    expect(btn.length).toBe(1);
     btn.at(0).simulate("click");
-    expect((defaultProps.onShowLeaveTeamDialog as sinon.SinonSpy).calledOnce).to.be.true;
+    expect(defaultProps.onShowLeaveTeamDialog).toHaveBeenCalledTimes(1);
   });
 
   describe("Info", () => {
     it("should be able to render", () => {
       component = shallow(<TeamInfo id="test" label="label" value="value" icon={<div id="icon" />} />);
-      expect(component.find("#team-card-info-test-label").length).to.be.equal(1);
-      expect(component.find("#icon").length).to.be.equal(1);
+      expect(component.find("#team-card-info-test-label").length).toBe(1);
+      expect(component.find("#icon").length).toBe(1);
     });
 
     it("should not render if value is not net", () => {
       component = shallow(<TeamInfo id="test" label="label" value={null} icon={<div id="icon" />} />);
-      expect(component.find("#team-card-info-test-label").length).to.be.equal(0);
-      expect(component.find("#icon").length).to.be.equal(0);
-      expect(component.html()).to.be.null;
+      expect(component.find("#team-card-info-test-label").length).toBe(0);
+      expect(component.find("#icon").length).toBe(0);
+      expect(component.html()).toBeNull();
     });
   });
 });

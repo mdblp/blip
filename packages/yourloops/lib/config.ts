@@ -29,7 +29,7 @@
 import _ from "lodash";
 import { AppConfig } from "../models/config";
 
-declare const BUILD_CONFIG: string;
+declare const BUILD_CONFIG: AppConfig | string;
 
 const DUMMY_DOMAIN = "example.com";
 const DUMMY_URL = `https://${DUMMY_DOMAIN}/`;
@@ -64,11 +64,13 @@ const appConfig = _.assign({}, defaultConfig);
 if (_.has(window, "config") && _.isObjectLike(_.get(window, "config", null))) {
   const runConfig = _.get(window, "config", null);
   _.assign(appConfig, runConfig);
-} else {
+} else if (typeof BUILD_CONFIG === "string") {
   console.warn("Config not found, using build configuration");
-
   const buildConfig = JSON.parse(BUILD_CONFIG) as AppConfig;
   _.assign(appConfig, buildConfig);
+} else {
+  //This branch is used when testing
+  _.assign(appConfig, BUILD_CONFIG);
 }
 
 _.defaults(appConfig, defaultConfig);

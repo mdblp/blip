@@ -26,8 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-
 import { UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
 import User from "../../../lib/auth/user";
@@ -35,111 +33,111 @@ import User from "../../../lib/auth/user";
 
 describe("User", () => {
 
-  before(() => {
+  beforeAll(() => {
     config.LATEST_TERMS = "2021-01-01";
   });
 
   it("should create the user", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.userid).to.be.equals("abcd");
-    expect(user.username).to.be.equals("text@example.com");
-    expect(user.latestConsentChangeDate).to.be.instanceOf(Date);
-    expect(user.latestConsentChangeDate.toISOString()).to.be.equals("2021-01-01T00:00:00.000Z");
+    expect(user.userid).toBe("abcd");
+    expect(user.username).toBe("text@example.com");
+    expect(user.latestConsentChangeDate).toBeInstanceOf(Date);
+    expect(user.latestConsentChangeDate.toISOString()).toBe("2021-01-01T00:00:00.000Z");
   });
 
   it("getFirstName", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.firstName).to.be.equals("");
+    expect(user.firstName).toBe("");
     user.profile = {
       fullName: "Hello",
       firstName: "Test",
       lastName: "Example",
     };
-    expect(user.firstName).to.be.equals("Test");
+    expect(user.firstName).toBe("Test");
   });
 
 
   it("getLastName", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.lastName).to.be.equals("text@example.com");
+    expect(user.lastName).toBe("text@example.com");
     user.profile = {
       fullName: "Hello World",
       firstName: "Test",
     };
-    expect(user.lastName).to.be.equals("Hello World");
+    expect(user.lastName).toBe("Hello World");
     user.profile = {
       fullName: "Hello World",
       firstName: "Test",
       lastName: "Example",
     };
-    expect(user.lastName).to.be.equals("Example");
+    expect(user.lastName).toBe("Example");
   });
 
   it("shouldAcceptConsent", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.shouldAcceptConsent(), "no profile").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile = {
       fullName: "Test Example",
       termsOfUse: {},
     };
-    expect(user.shouldAcceptConsent(), "termsOfUse empty").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile.termsOfUse.isAccepted = false;
-    expect(user.shouldAcceptConsent(), "termsOfUse false").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile.termsOfUse.isAccepted = true;
-    expect(user.shouldAcceptConsent(), "privacyPolicy missing").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile.privacyPolicy = {};
-    expect(user.shouldAcceptConsent(), "privacyPolicy empty").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile.privacyPolicy.isAccepted = false;
-    expect(user.shouldAcceptConsent(), "privacyPolicy false").to.be.true;
+    expect(user.shouldAcceptConsent()).toBe(true);
     user.profile.privacyPolicy.isAccepted = true;
-    expect(user.shouldAcceptConsent(), "termsOfUse true, isAccepted true").to.be.false;
+    expect(user.shouldAcceptConsent()).toBe(false);
   });
 
   it("shouldRenewConsent", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.shouldRenewConsent(), "no profile").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile = {
       fullName: "Test Example",
     };
-    expect(user.shouldRenewConsent(), "no consent").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.termsOfUse = null;
-    expect(user.shouldRenewConsent(), "termsOfUse null").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.termsOfUse = {};
-    expect(user.shouldRenewConsent(), "no privacyPolicy").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.privacyPolicy = null;
-    expect(user.shouldRenewConsent(), "privacyPolicy null").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.privacyPolicy = {};
-    expect(user.shouldRenewConsent(), "termsOfUse empty / privacyPolicy empty").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.termsOfUse.acceptanceTimestamp = "an invalid string date";
-    expect(user.shouldRenewConsent(), "termsOfUse invalid / privacyPolicy empty").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.termsOfUse.acceptanceTimestamp = "2020-12-01";
-    expect(user.shouldRenewConsent(), "termsOfUse before / privacyPolicy empty").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.termsOfUse.acceptanceTimestamp = "2021-01-02";
     user.profile.privacyPolicy.acceptanceTimestamp = "2020-12-01";
-    expect(user.shouldRenewConsent(), "termsOfUse after / privacyPolicy before").to.be.true;
+    expect(user.shouldRenewConsent()).toBe(true);
     user.profile.privacyPolicy.acceptanceTimestamp = "2021-01-02";
-    expect(user.shouldRenewConsent(), "termsOfUse after / privacyPolicy after").to.be.false;
+    expect(user.shouldRenewConsent()).toBe(false);
   });
 
   it("getHomePage", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.getHomePage(), "/").to.be.equals("/");
-    expect(user.getHomePage("/suffix"), "/suffix").to.be.equals("/suffix");
+    expect(user.getHomePage()).toBe("/");
+    expect(user.getHomePage("/suffix")).toBe("/suffix");
     user.role = UserRoles.caregiver;
-    expect(user.getHomePage(), "/caregiver").to.be.equals("/caregiver");
-    expect(user.getHomePage("/suffix"), "/caregiver/suffix").to.be.equals("/caregiver/suffix");
+    expect(user.getHomePage()).toBe("/caregiver");
+    expect(user.getHomePage("/suffix")).toBe("/caregiver/suffix");
     user.role = UserRoles.hcp;
-    expect(user.getHomePage(), "/professional").to.be.equals("/professional");
-    expect(user.getHomePage("suffix"), "/professional/suffix").to.be.equals("/professional/suffix");
+    expect(user.getHomePage()).toBe("/professional");
+    expect(user.getHomePage("suffix")).toBe("/professional/suffix");
     user.role = UserRoles.patient;
-    expect(user.getHomePage(), "/patient/abcd").to.be.equals("/patient/abcd");
-    expect(user.getHomePage("//suffix"), "/patient/abcd/suffix").to.be.equals("/patient/abcd/suffix");
+    expect(user.getHomePage()).toBe("/patient/abcd");
+    expect(user.getHomePage("//suffix")).toBe("/patient/abcd/suffix");
   });
 
   it("getParsedFrProId should return null when user frProId is null", () => {
     const user = new User({ frProId: null } as User);
     const res = user.getParsedFrProId();
-    expect(res).to.be.null;
+    expect(res).toBeNull();
   });
 
   it("getParsedFrProId should return correct result when user frProId is not null", () => {
@@ -147,7 +145,7 @@ describe("User", () => {
     const frProId = `key:uid:${expectedRes}`;
     const user = new User({ frProId } as User);
     const actualRes = user.getParsedFrProId();
-    expect(actualRes).to.be.equal(expectedRes);
+    expect(actualRes).toBe(expectedRes);
   });
 });
 

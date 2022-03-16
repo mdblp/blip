@@ -28,16 +28,16 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
 import i18n from "i18next";
 
 import FooterLinks from "../../components/footer-links";
 import { AuthContext, useAuth, User } from "../../lib/auth";
 import diabeloopUrls from "../../lib/diabeloop-url";
+import { init as i18nInit } from "../../lib/language";
 
 describe("Footer", () => {
-  let auth: AuthContext;
+  let auth: AuthContext = null;
   let container: HTMLElement | null = null;
 
   const FooterLinksComponent = (data: { user: User }): JSX.Element => {
@@ -58,6 +58,10 @@ describe("Footer", () => {
     });
   };
 
+  beforeAll(() => {
+    i18nInit();
+  });
+
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -73,25 +77,25 @@ describe("Footer", () => {
 
   function checkLinkHref(linkId: string, expectedUrl: string) {
     const link = document.getElementById(linkId) as HTMLLinkElement;
-    expect(link.href).equals(expectedUrl);
+    expect(link.href).toBe(expectedUrl);
   }
 
   it("should render", async () => {
     await mountComponent();
     const component = document.getElementById("footer-links-container");
-    expect(component).to.not.be.null;
+    expect(component).not.toBeNull();
   });
 
   it("should render language selector when user is not logged in", async () => {
     await mountComponent();
     const languageSelector = document.getElementById("footer-language-box");
-    expect(languageSelector).to.not.be.null;
+    expect(languageSelector).not.toBeNull();
   });
 
   it("should not render language selector when user is logged in", async () => {
     await mountComponent({} as User);
     const languageSelector = document.getElementById("footer-language-box");
-    expect(languageSelector).to.be.null;
+    expect(languageSelector).toBeNull();
   });
 
   it("should privacy policy link redirect to correct url", async () => {

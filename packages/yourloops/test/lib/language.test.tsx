@@ -28,21 +28,20 @@
 
 import i18n from "i18next";
 import moment from "moment-timezone";
-import * as sinon from "sinon";
-import { expect } from "chai";
 
 import config from "../../lib/config";
-import { getCurrentLang, getLangName } from "../../lib/language";
+import { getCurrentLang, getLangName, init as i18nInit } from "../../lib/language";
 
 describe("Language", () => {
-  const zeSpy = sinon.spy();
+  const zeSpy = jest.fn();
 
-  before(() => {
+  beforeAll(() => {
+    i18nInit();
     window.zE = zeSpy;
     config.METRICS_SERVICE = "matomo";
   });
 
-  after(async () => {
+  afterAll(async () => {
     delete window.zE;
     await i18n.changeLanguage("en");
     delete window._paq;
@@ -50,26 +49,26 @@ describe("Language", () => {
   });
 
   beforeEach(() => {
-    zeSpy.resetHistory();
+    zeSpy.mockReset();
     window._paq = [];
   });
 
   it("should update zendesk & moment locale on change", async () => {
     await i18n.changeLanguage("fr");
-    expect(zeSpy.calledOnce, "zendesk").to.be.true;
-    expect(moment.locale(), "moment").to.be.equals("fr");
-    expect(localStorage.getItem("lang"), "localStorage").to.be.equals("fr");
-    expect(getCurrentLang(), "getCurrentLang").to.be.equals("fr");
-    expect(window._paq, "_paq").to.be.deep.equals([["setCustomVariable", 1, "UserLang", "fr", "visit"]]);
+    expect(zeSpy).toHaveBeenCalledTimes(1);
+    expect(moment.locale()).toBe("fr");
+    expect(localStorage.getItem("lang")).toBe("fr");
+    expect(getCurrentLang()).toBe("fr");
+    expect(window._paq).toEqual([["setCustomVariable", 1, "UserLang", "fr", "visit"]]);
   });
 
   it("getLangName should return the language name", () => {
-    expect(getLangName("en"), "en").to.be.equals("English");
-    expect(getLangName("fr"), "fr").to.be.equals("Français");
-    expect(getLangName("de"), "de").to.be.equals("Deutsch");
-    expect(getLangName("es"), "es").to.be.equals("Español");
-    expect(getLangName("it"), "it").to.be.equals("Italiano");
-    expect(getLangName("nl"), "nl").to.be.equals("Nederlands");
+    expect(getLangName("en")).toBe("English");
+    expect(getLangName("fr")).toBe("Français");
+    expect(getLangName("de")).toBe("Deutsch");
+    expect(getLangName("es")).toBe("Español");
+    expect(getLangName("it")).toBe("Italiano");
+    expect(getLangName("nl")).toBe("Nederlands");
   });
 });
 

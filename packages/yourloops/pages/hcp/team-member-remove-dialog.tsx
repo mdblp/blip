@@ -87,9 +87,9 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
           i18nKey="team-members-dialog-rmmember-title"
           t={t}
           components={{ strong: <strong /> }}
-          values={{ teamName }} parent={React.Fragment}
+          values={teamName} parent={React.Fragment}
         >
-          Remove a healthcare professional from the team <strong>{{ teamName }}</strong>
+          Remove a healthcare professional from the team <strong>{teamName}</strong>
         </Trans>
       </DialogTitle>
 

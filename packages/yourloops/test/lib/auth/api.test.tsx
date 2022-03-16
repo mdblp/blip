@@ -28,161 +28,66 @@
 
 /* eslint-disable max-lines */
 
-import * as sinon from "sinon";
-import { expect } from "chai";
-
 import HttpStatus from "../../../lib/http-status-codes";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../../models/api";
-import { IUser, UserRoles, Profile, Settings, Preferences } from "../../../models/shoreline";
+import { IUser, Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
-import { Session, UpdateUser } from "../../../lib/auth/models";
+import { Session } from "../../../lib/auth/models";
 import api from "../../../lib/auth/api";
 import User from "../../../lib/auth/user";
-
-/**
- * API Stubs
- */
-export interface AuthAPIStubs {
-  login: sinon.SinonStub<[string, string, string], Promise<Session>>;
-  requestPasswordReset: sinon.SinonStub<[string, string, string | undefined, boolean | undefined], Promise<void>>;
-  resetPassword: sinon.SinonStub<[string, string, string, string], Promise<boolean>>;
-  signup: sinon.SinonStub<[string, string, UserRoles, string], Promise<Session>>;
-  resendSignup: sinon.SinonStub<[string, string, string | undefined], Promise<boolean>>;
-  sendAccountValidation: sinon.SinonStub<[Readonly<Session>, string | undefined], Promise<boolean>>;
-  accountConfirmed: sinon.SinonStub<string[], Promise<boolean>>;
-  updatePreferences: sinon.SinonStub<[Readonly<Session>], Promise<Preferences>>;
-  updateProfile: sinon.SinonStub<[Readonly<Session>], Promise<Profile>>;
-  updateSettings: sinon.SinonStub<[Readonly<Session>], Promise<Settings>>;
-  updateUser: sinon.SinonStub<[Readonly<Session>, UpdateUser], Promise<void>>;
-  refreshToken: sinon.SinonStub<[Readonly<Session>], Promise<string>>;
-  logout: sinon.SinonStub<[Readonly<Session>], Promise<void>>;
-}
-
-export const createAuthAPIStubs = (session: Session): AuthAPIStubs => ({
-  login: sinon.stub<[string, string, string], Promise<Session>>().resolves(session),
-  requestPasswordReset: sinon.stub<[string, string, string | undefined, boolean | undefined], Promise<void>>().resolves(),
-  resetPassword: sinon.stub<[string, string, string, string], Promise<boolean>>().resolves(true),
-  signup: sinon.stub<[string, string, UserRoles, string], Promise<Session>>().resolves(session),
-  resendSignup: sinon.stub<[string, string, string | undefined], Promise<boolean>>().resolves(true),
-  sendAccountValidation: sinon.stub<[Readonly<Session>, string | undefined], Promise<boolean>>().resolves(true),
-  accountConfirmed: sinon.stub().resolves(true),
-  updatePreferences: sinon.stub<[Session], Promise<Preferences>>().resolves(session.user.preferences),
-  updateProfile: sinon.stub<[Session], Promise<Profile>>().resolves(session.user.profile),
-  updateSettings: sinon.stub<[Session], Promise<Settings>>().resolves(session.user.settings),
-  updateUser: sinon.stub<[Readonly<Session>, UpdateUser], Promise<void>>().resolves(),
-  refreshToken: sinon.stub<[Readonly<Session>], Promise<string>>().resolves(""),
-  logout: sinon.stub<[Readonly<Session>], Promise<void>>().resolves(),
-});
-
-export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, session: Session): void => {
-  apiStubs.accountConfirmed.resetHistory();
-  apiStubs.accountConfirmed.resetBehavior();
-  apiStubs.accountConfirmed.resolves(true);
-
-  apiStubs.login.resetHistory();
-  apiStubs.login.resetBehavior();
-  apiStubs.login.resolves(session);
-
-  apiStubs.logout.resetHistory();
-  apiStubs.logout.resetBehavior();
-  apiStubs.logout.resolves();
-
-  apiStubs.refreshToken.resetHistory();
-  apiStubs.refreshToken.resetBehavior();
-  apiStubs.refreshToken.resolves("");
-
-  apiStubs.requestPasswordReset.resetHistory();
-  apiStubs.requestPasswordReset.resetBehavior();
-  apiStubs.requestPasswordReset.resolves();
-
-  apiStubs.resendSignup.resetHistory();
-  apiStubs.resendSignup.resetBehavior();
-  apiStubs.resendSignup.resolves(true);
-
-  apiStubs.resetPassword.resetHistory();
-  apiStubs.resetPassword.resetBehavior();
-  apiStubs.resetPassword.resolves(true);
-
-  apiStubs.sendAccountValidation.resetHistory();
-  apiStubs.sendAccountValidation.resetBehavior();
-  apiStubs.sendAccountValidation.resolves(true);
-
-  apiStubs.signup.resetHistory();
-  apiStubs.signup.resetBehavior();
-  apiStubs.signup.resolves(session);
-
-  apiStubs.signup.resetHistory();
-  apiStubs.signup.resetBehavior();
-  apiStubs.signup.resolves(session);
-
-  apiStubs.updatePreferences.resetHistory();
-  apiStubs.updatePreferences.resetBehavior();
-  apiStubs.updatePreferences.resolves(session.user.preferences);
-
-  apiStubs.updateProfile.resetHistory();
-  apiStubs.updateProfile.resetBehavior();
-  apiStubs.updateProfile.resolves(session.user.profile);
-
-  apiStubs.updateUser.resetHistory();
-  apiStubs.updateUser.resetBehavior();
-  apiStubs.updateUser.resolves();
-
-  apiStubs.updateSettings.resetHistory();
-  apiStubs.updateSettings.resetBehavior();
-  apiStubs.updateSettings.resolves(session.user.settings);
-};
+import { init as i18nInit } from "../../../lib/language";
 
 describe("Auth API", () => {
+  const fetchMock = jest.fn();
 
-  let fetchMock: sinon.SinonStub<[input: RequestInfo, init?: RequestInit], Promise<Response>>;
-  before(() => {
-    fetchMock = sinon.stub(window, "fetch");
+  afterEach(() => {
+    fetchMock.mockReset();
+    delete global.fetch;
   });
 
-  after(() => {
-    fetchMock.restore();
-  });
-
-  beforeEach(() => {
-    fetchMock.reset();
+  beforeAll(() => {
+    i18nInit().then(() => {
+      //nothing to do
+    });
   });
 
   describe("Login", () => {
     it("should throw if username is empty", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.login("", "abcd", "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(error.message).to.be.equals("no-username");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("no-username");
     });
 
     it("should throw if password is empty", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.login("abcd", "", "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(error.message).to.be.equals("no-password");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("no-password");
     });
 
     it("should call fetch to /auth/login with login & password", async () => {
-      fetchMock.rejects(new Error("test-reject-message"));
-      let error: Error | null = null;
+      const fetchMock = jest.fn().mockRejectedValueOnce(new Error("test-reject-message"));
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.login("abcd", "abcd", "abcd");
       } catch (err) {
         error = err;
       }
-      expect(fetchMock.calledOnce, "calledOnce").to.be.true;
-      const fetchArg = fetchMock.getCall(0).args;
-      expect(fetchArg, "fetch args length").to.be.lengthOf(2);
-      expect(fetchArg[0]).to.be.equals("http://localhost:8009/auth/login");
-      expect(fetchArg[1]).to.be.deep.equals({
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const fetchArg = fetchMock.mock.calls[0];
+      expect(fetchArg).toHaveLength(2);
+      expect(fetchArg[0]).toBe("http://localhost:8009/auth/login");
+      expect(fetchArg[1]).toEqual({
         method: "POST",
         cache: "no-store",
         headers: {
@@ -190,13 +95,14 @@ describe("Auth API", () => {
           "Authorization": `Basic ${btoa("abcd:abcd")}`,
         },
       });
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should allow special username and password characters", async () => {
-      fetchMock.rejects(new Error("test-reject-message"));
-      let error: Error | null = null;
+      const fetchMock = jest.fn().mockRejectedValueOnce(new Error("test-reject-message"));
+      global.fetch = fetchMock;
+      let error = null;
       const userName = "アキラ@test.co.jp";
       const password = "黒澤";
       try {
@@ -204,11 +110,11 @@ describe("Auth API", () => {
       } catch (err) {
         error = err;
       }
-      expect(fetchMock.calledOnce, "calledOnce").to.be.true;
-      const fetchArg = fetchMock.getCall(0).args;
-      expect(fetchArg, "fetch args length").to.be.lengthOf(2);
-      expect(fetchArg[0]).to.be.equals("http://localhost:8009/auth/login");
-      expect(fetchArg[1]).to.be.deep.equals({
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const fetchArg = fetchMock.mock.calls[0];
+      expect(fetchArg).toHaveLength(2);
+      expect(fetchArg[0]).toBe("http://localhost:8009/auth/login");
+      expect(fetchArg[1]).toEqual({
         method: "POST",
         cache: "no-store",
         headers: {
@@ -216,8 +122,8 @@ describe("Auth API", () => {
           "Authorization": "Basic 44Ki44Kt44OpQHRlc3QuY28uanA66buS5r6k",
         },
       });
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should reject the login if the return code is forbidden", async () => {
@@ -228,17 +134,18 @@ describe("Auth API", () => {
         type: "error",
         redirected: false,
       } as Response;
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.login("abcd", "abcd", "abcd");
       } catch (err) {
         error = err;
       }
 
-      expect(fetchMock.calledOnce, "calledOnce").to.be.true;
-      const fetchArg = fetchMock.getCall(0).args;
-      expect(fetchArg[1]).to.be.deep.equals({
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const fetchArg = fetchMock.mock.calls[0];
+      expect(fetchArg[1]).toEqual({
         method: "POST",
         cache: "no-store",
         headers: {
@@ -246,8 +153,8 @@ describe("Auth API", () => {
           "Authorization": `Basic ${btoa("abcd:abcd")}`,
         },
       });
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("email-not-verified");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("email-not-verified");
     });
 
     it("should reject the login if the return code is not 200", async () => {
@@ -258,17 +165,18 @@ describe("Auth API", () => {
         type: "error",
         redirected: false,
       } as Response;
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.login("abcd", "abcd", "abcd");
       } catch (err) {
         error = err;
       }
 
-      expect(fetchMock.calledOnce, "calledOnce").to.be.true;
-      const fetchArg = fetchMock.getCall(0).args;
-      expect(fetchArg[1]).to.be.deep.equals({
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const fetchArg = fetchMock.mock.calls[0];
+      expect(fetchArg[1]).toEqual({
         method: "POST",
         cache: "no-store",
         headers: {
@@ -276,8 +184,8 @@ describe("Auth API", () => {
           "Authorization": `Basic ${btoa("abcd:abcd")}`,
         },
       });
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should count the number of failed login and return a message if the account may be locked", async () => {
@@ -288,8 +196,9 @@ describe("Auth API", () => {
         type: "error",
         redirected: false,
       } as Response;
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
 
       for (let i = 0; i < config.MAX_FAILED_LOGIN_ATTEMPTS - 1; i++) {
         try {
@@ -297,11 +206,11 @@ describe("Auth API", () => {
         } catch (err) {
           error = err;
         }
-        expect(error).to.be.instanceOf(Error);
-        expect(error.message).to.be.equals("error-invalid-credentials");
-        expect(fetchMock.callCount, "callCount").to.be.equals(i + 1);
-        const fetchArg = fetchMock.getCall(i).args;
-        expect(fetchArg[1]).to.be.deep.equals({
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe("error-invalid-credentials");
+        expect(fetchMock).toHaveBeenCalledTimes(i + 1);
+        const fetchArg = fetchMock.mock.calls[i];
+        expect(fetchArg[1]).toEqual({
           method: "POST",
           cache: "no-store",
           headers: {
@@ -316,10 +225,11 @@ describe("Auth API", () => {
       } catch (err) {
         error = err;
       }
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("error-account-lock");
-      expect(fetchMock.callCount, "callCount").to.be.equals(config.MAX_FAILED_LOGIN_ATTEMPTS);
-    });
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("error-account-lock");
+      expect(fetchMock).toHaveBeenCalledTimes(config.MAX_FAILED_LOGIN_ATTEMPTS);
+    }
+    );
 
     it("should resolve if there is no profile/settings/preferences", async () => {
       const user: IUser = {
@@ -339,7 +249,7 @@ describe("Auth API", () => {
           [HttpHeaderKeys.sessionToken]: "the-token",
           [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
         }),
-        json: sinon.stub().resolves(user),
+        json: jest.fn().mockResolvedValue(user),
       } as unknown as Response;
       const resolveError: Response = {
         status: HttpStatus.StatusNotFound,
@@ -348,10 +258,11 @@ describe("Auth API", () => {
         type: "error",
         redirected: false,
       } as Response;
-      fetchMock.resolves(resolveError);
-      fetchMock.onFirstCall().resolves(resolveUser);
+      fetchMock.mockResolvedValue(resolveError);
+      fetchMock.mockResolvedValueOnce(resolveUser);
+      global.fetch = fetchMock;
 
-      let error: Error | null = null;
+      let error = null;
       let session: Session | null = null;
       try {
         session = await api.login("abcd", "abcd", "abcd");
@@ -359,19 +270,20 @@ describe("Auth API", () => {
         error = err;
       }
 
-      expect(error).to.be.null;
-      expect((resolveUser.json as sinon.SinonStub).calledOnce).to.be.true;
-      expect(session).to.be.not.null;
-      expect(session.sessionToken).to.be.equals("the-token");
-      expect(session.traceToken).to.be.equals("abcd");
-      expect(session.user).to.be.an("object");
-      expect(session.user).to.deep.include({
+      expect(error).toBeNull();
+      expect((resolveUser.json as jest.Mock)).toHaveBeenCalledTimes(1);
+      expect(session).not.toBeNull();
+      expect(session.sessionToken).toBe("the-token");
+      expect(session.traceToken).toBe("abcd");
+      expect(session.user).toBeInstanceOf(Object);
+      expect(session.user).toMatchObject({
         userid: "abcd",
         username: "abcd@example.com",
         emails: ["abcd@example.com"],
         emailVerified: true,
       });
-    });
+    }
+    );
 
     it("should resolve with profile/settings/preferences is available", async () => {
       const user: IUser = {
@@ -399,7 +311,7 @@ describe("Auth API", () => {
           [HttpHeaderKeys.sessionToken]: "the-token",
           [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
         }),
-        json: sinon.stub().resolves(user),
+        json: jest.fn().mockResolvedValue(user),
       } as unknown as Response;
 
       const resolveSeagull = (r: Profile | Settings | Preferences): Response => ({
@@ -411,15 +323,16 @@ describe("Auth API", () => {
         headers: new Headers({
           [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
         }),
-        json: sinon.stub().resolves(r),
+        json: jest.fn().mockResolvedValue(r),
       } as unknown as Response);
 
-      fetchMock.onFirstCall().resolves(resolveUser);
-      fetchMock.onCall(1).resolves(resolveSeagull(profile));
-      fetchMock.onCall(2).resolves(resolveSeagull(preferences));
-      fetchMock.onCall(3).resolves(resolveSeagull(settings));
+      fetchMock.mockResolvedValueOnce(resolveUser);
+      fetchMock.mockResolvedValueOnce(resolveSeagull(profile));
+      fetchMock.mockResolvedValueOnce(resolveSeagull(preferences));
+      fetchMock.mockResolvedValueOnce(resolveSeagull(settings));
+      global.fetch = fetchMock;
 
-      let error: Error | null = null;
+      let error = null;
       let session: Session | null = null;
       try {
         session = await api.login("abcd", "abcd", "abcd");
@@ -427,13 +340,13 @@ describe("Auth API", () => {
         error = err;
       }
 
-      expect(error).to.be.null;
-      expect((resolveUser.json as sinon.SinonStub).calledOnce).to.be.true;
-      expect(session).to.be.not.null;
-      expect(session.sessionToken).to.be.equals("the-token");
-      expect(session.traceToken).to.be.equals("abcd");
-      expect(session.user).to.be.an("object");
-      expect(session.user).to.deep.include({
+      expect(error).toBeNull();
+      expect((resolveUser.json as jest.Mock)).toHaveBeenCalledTimes(1);
+      expect(session).not.toBeNull();
+      expect(session.sessionToken).toBe("the-token");
+      expect(session.traceToken).toBe("abcd");
+      expect(session.user).toBeInstanceOf(Object);
+      expect(session.user).toMatchObject({
         userid: "abcd",
         username: "abcd@example.com",
         emails: ["abcd@example.com"],
@@ -442,30 +355,31 @@ describe("Auth API", () => {
         settings,
         preferences,
       });
-    });
+    }
+    );
   });
 
   describe("signup", () => {
     it("should throw if username is empty", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.signup("", "abcd", UserRoles.caregiver, "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(error.message).to.be.equals("no-username");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("no-username");
     });
 
     it("should throw if password is empty", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.signup("abcd", "", UserRoles.hcp, "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(error.message).to.be.equals("no-password");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("no-password");
     });
 
     it("should throw if the API response is not ok", async () => {
@@ -477,14 +391,15 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.signup("abcd", "abcd", UserRoles.hcp, "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceof(Error);
+      expect(error).toBeInstanceOf(Error);
     });
 
     it("should return the created user if ok", async () => {
@@ -505,39 +420,40 @@ describe("Auth API", () => {
           [HttpHeaderKeys.sessionToken]: "the-token",
           [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
         }),
-        json: sinon.stub().resolves(user),
+        json: jest.fn().mockResolvedValue(user),
       } as unknown as Response;
 
-      fetchMock.resolves(resolveSignup);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveSignup);
+      global.fetch = fetchMock;
+      let error = null;
       let session: Session | null = null;
       try {
         session = await api.signup(user.username, "abcd", user.roles[0], "abcd");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(session).to.be.not.null;
-      expect(session.sessionToken).to.be.equals("the-token");
-      expect(session.traceToken).to.be.equals("abcd");
-      expect(session.user).to.be.an("object");
+      expect(error).toBeNull();
+      expect(session).not.toBeNull();
+      expect(session.sessionToken).toBe("the-token");
+      expect(session.traceToken).toBe("abcd");
+      expect(typeof session.user).toBe("object");
       const expected = {
         ...user,
       };
       delete expected.roles;
-      expect(session.user, JSON.stringify({ expected, having: session.user })).to.deep.includes(expected);
+      expect(session.user).toMatchObject(expected);
     });
   });
 
   describe("resendSignup", () => {
     it("should throw an error if no username", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.resendSignup("", "trace-token");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceOf(Error);
+      expect(error).toBeInstanceOf(Error);
     });
 
     it("should return false if the reply is not OK", async () => {
@@ -548,17 +464,18 @@ describe("Auth API", () => {
         type: "error",
         redirected: false,
       } as Response;
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         const result = await api.resendSignup("abcd", "trace-token");
-        expect(result).to.be.false;
+        expect(result).toBe(false);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/resend/signup/abcd",
         {
           method: "POST",
@@ -579,18 +496,18 @@ describe("Auth API", () => {
         type: "basic",
         redirected: false,
       } as Response;
-
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         const result = await api.resendSignup("abcd", "trace-token", "fr");
-        expect(result).to.be.true;
+        expect(result).toBe(true);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/resend/signup/abcd",
         {
           method: "POST",
@@ -604,15 +521,15 @@ describe("Auth API", () => {
     });
   });
 
-  describe("requestPasswordReset", () => {
+  describe("requestPasswormockReset()", () => {
     it("should throw an error if no username", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.requestPasswordReset("", "abcd", "fr");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.instanceOf(Error);
+      expect(error).toBeInstanceOf(Error);
     });
 
     it("should throw an error if the API reply is not OK", async () => {
@@ -624,16 +541,17 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.requestPasswordReset("abcd", "trace-token", "fr");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/send/forgot/abcd",
         {
           method: "POST",
@@ -655,16 +573,17 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.requestPasswordReset("abcd", "trace-token");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/send/forgot/abcd",
         {
           method: "POST",
@@ -680,7 +599,7 @@ describe("Auth API", () => {
 
   describe("sendAccountValidation", () => {
     let unvalidatedUser: User;
-    before(() => {
+    beforeAll(() => {
       unvalidatedUser = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -702,16 +621,17 @@ describe("Auth API", () => {
         traceToken: "trace-token",
         user: new User(unvalidatedUser),
       };
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.sendAccountValidation(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/send/signup/abcd",
         {
           method: "POST",
@@ -723,7 +643,7 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should resolve with no error when the API reply OK", async () => {
@@ -740,16 +660,17 @@ describe("Auth API", () => {
         user: new User(unvalidatedUser),
       };
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.sendAccountValidation(session, "fr");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/send/signup/abcd",
         {
           method: "POST",
@@ -766,14 +687,14 @@ describe("Auth API", () => {
 
   describe("confirmAccount", () => {
     it("should throw an error if the key is missing", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.accountConfirmed("", "abcd");
       } catch (err) {
         error = err;
       }
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("error-http-40x");
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("error-http-40x");
     });
 
     it("should throw an error if the API reply is not OK", async () => {
@@ -785,16 +706,17 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.accountConfirmed("abcd", "trace-token");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/accept/signup/abcd",
         {
           method: "PUT",
@@ -804,7 +726,7 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should resolve with no error when the API reply OK", async () => {
@@ -816,8 +738,9 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let result: boolean | null = null;
       try {
         result = await api.accountConfirmed("abcd", "trace-token");
@@ -825,10 +748,10 @@ describe("Auth API", () => {
         error = e;
       }
 
-      expect(error).to.be.null;
-      expect(result).to.be.true;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(result).toBe(true);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/accept/signup/abcd",
         {
           method: "PUT",
@@ -843,36 +766,36 @@ describe("Auth API", () => {
 
   describe("resetPassword", () => {
     it("should throw an error if the key is missing", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.resetPassword("", "abcd", "abcd", "");
       } catch (err) {
         error = err;
       }
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("error-http-40x");
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("error-http-40x");
     });
 
     it("should throw an error if the username is missing", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.resetPassword("abcd", "", "abcd", "");
       } catch (err) {
         error = err;
       }
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("error-http-40x");
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("error-http-40x");
     });
 
     it("should throw an error if the password is missing", async () => {
-      let error: Error | null = null;
+      let error = null;
       try {
         await api.resetPassword("abcd", "abcd", "", "");
       } catch (err) {
         error = err;
       }
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("error-http-40x");
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("error-http-40x");
     });
 
     it("should throw an error if the API reply is not OK", async () => {
@@ -884,16 +807,17 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.resetPassword("the-key", "the-username", "the-password", "trace-token");
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/accept/forgot",
         {
           method: "PUT",
@@ -905,7 +829,7 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should resolve with no error when the API reply OK", async () => {
@@ -917,8 +841,9 @@ describe("Auth API", () => {
         redirected: false,
       } as Response;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let result: boolean | null = null;
       try {
         result = await api.resetPassword("the-key", "the-username", "the-password", "trace-token");
@@ -926,10 +851,10 @@ describe("Auth API", () => {
         error = e;
       }
 
-      expect(error).to.be.null;
-      expect(result).to.be.true;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(result).toBe(true);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/confirm/accept/forgot",
         {
           method: "PUT",
@@ -946,7 +871,7 @@ describe("Auth API", () => {
 
   describe("updateProfile", () => {
     let userToUpdate: User;
-    before(() => {
+    beforeAll(() => {
       userToUpdate = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -955,7 +880,7 @@ describe("Auth API", () => {
     });
 
     it("should throw an error if the API reply is not OK", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("Not a JSON"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -971,16 +896,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateProfile(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/profile",
         {
           method: "PUT",
@@ -993,12 +919,12 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("error-http-500");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should throw the reason if the update from seagull failed", async () => {
-      const jsonResponse = sinon.stub().resolves({ code: 1, reason: "Invalid input JSON" });
+      const jsonResponse = jest.fn().mockResolvedValue({ code: 1, reason: "Invalid input JSON" });
       const resolveError: Response = {
         status: HttpStatus.StatusBadRequest,
         ok: false,
@@ -1014,16 +940,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateProfile(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/profile",
         {
           method: "PUT",
@@ -1036,8 +963,8 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("Invalid input JSON");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("Invalid input JSON");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should return the updated profile on success", async () => {
@@ -1046,7 +973,7 @@ describe("Auth API", () => {
         firstName: "Text",
         lastName: "Example",
       };
-      const jsonResponse = sinon.stub().resolves(profile);
+      const jsonResponse = jest.fn().mockResolvedValue(profile);
       const resolveOK: Response = {
         status: HttpStatus.StatusOK,
         ok: true,
@@ -1064,17 +991,18 @@ describe("Auth API", () => {
 
       session.user.profile = profile;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let updatedProfile: Profile | null = null;
       try {
         updatedProfile = await api.updateProfile(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(updatedProfile).to.be.deep.equals(profile);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(updatedProfile).toEqual(profile);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/profile",
         {
           method: "PUT",
@@ -1092,7 +1020,7 @@ describe("Auth API", () => {
 
   describe("updatePreferences", () => {
     let userToUpdate: User;
-    before(() => {
+    beforeAll(() => {
       userToUpdate = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -1101,7 +1029,7 @@ describe("Auth API", () => {
     });
 
     it("should throw an error if the API reply is not OK", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("Not a JSON"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1117,16 +1045,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updatePreferences(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/preferences",
         {
           method: "PUT",
@@ -1139,12 +1068,12 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("error-http-500");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should throw the reason if the update from seagull failed", async () => {
-      const jsonResponse = sinon.stub().resolves({ code: 1, reason: "Invalid input JSON" });
+      const jsonResponse = jest.fn().mockResolvedValue({ code: 1, reason: "Invalid input JSON" });
       const resolveError: Response = {
         status: HttpStatus.StatusBadRequest,
         ok: false,
@@ -1160,16 +1089,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updatePreferences(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/preferences",
         {
           method: "PUT",
@@ -1182,15 +1112,15 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("Invalid input JSON");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("Invalid input JSON");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should return the updated preferences on success", async () => {
       const preferences: Preferences = {
         displayLanguageCode: "de",
       };
-      const jsonResponse = sinon.stub().resolves(preferences);
+      const jsonResponse = jest.fn().mockResolvedValue(preferences);
       const resolveOK: Response = {
         status: HttpStatus.StatusOK,
         ok: true,
@@ -1208,17 +1138,18 @@ describe("Auth API", () => {
 
       session.user.preferences = preferences;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let updatedPreferences: Preferences | null = null;
       try {
         updatedPreferences = await api.updatePreferences(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(updatedPreferences).to.be.deep.equals(preferences);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(updatedPreferences).toEqual(preferences);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/preferences",
         {
           method: "PUT",
@@ -1236,7 +1167,7 @@ describe("Auth API", () => {
 
   describe("updateSettings", () => {
     let userToUpdate: User;
-    before(() => {
+    beforeAll(() => {
       userToUpdate = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -1245,7 +1176,7 @@ describe("Auth API", () => {
     });
 
     it("should throw an error if the API reply is not OK", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("Not a JSON"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1261,16 +1192,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateSettings(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/settings",
         {
           method: "PUT",
@@ -1283,12 +1215,12 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("error-http-500");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should throw the reason if the update from seagull failed", async () => {
-      const jsonResponse = sinon.stub().resolves({ code: 1, reason: "Invalid input JSON" });
+      const jsonResponse = jest.fn().mockResolvedValue({ code: 1, reason: "Invalid input JSON" });
       const resolveError: Response = {
         status: HttpStatus.StatusBadRequest,
         ok: false,
@@ -1304,16 +1236,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateSettings(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/settings",
         {
           method: "PUT",
@@ -1326,15 +1259,15 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("Invalid input JSON");
-      expect(jsonResponse.callCount).to.be.equals(1);
+      expect(error.message).toBe("Invalid input JSON");
+      expect(jsonResponse).toHaveBeenCalledTimes(1);
     });
 
     it("should return the updated settings on success", async () => {
       const settings: Settings = {
         country: "FR",
       };
-      const jsonResponse = sinon.stub().resolves(settings);
+      const jsonResponse = jest.fn().mockResolvedValue(settings);
       const resolveOK: Response = {
         status: HttpStatus.StatusOK,
         ok: true,
@@ -1352,17 +1285,18 @@ describe("Auth API", () => {
 
       session.user.settings = settings;
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let updatedSettings: Settings | null = null;
       try {
         updatedSettings = await api.updateSettings(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.null;
-      expect(updatedSettings).to.be.deep.equals(settings);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(updatedSettings).toEqual(settings);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/metadata/abcd/settings",
         {
           method: "PUT",
@@ -1380,7 +1314,7 @@ describe("Auth API", () => {
 
   describe("updateUser", () => {
     let userToUpdate: User;
-    before(() => {
+    beforeAll(() => {
       userToUpdate = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -1403,16 +1337,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateUser(session, {});
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/auth/user",
         {
           method: "PUT",
@@ -1425,7 +1360,7 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should resolve with no error when the API reply OK", async () => {
@@ -1443,17 +1378,18 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.updateUser(session, { roles: [UserRoles.hcp] });
       } catch (e) {
         error = e;
       }
 
-      expect(error).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/auth/user",
         {
           method: "PUT",
@@ -1471,7 +1407,7 @@ describe("Auth API", () => {
 
   describe("refreshToken", () => {
     let userToUpdate: User;
-    before(() => {
+    beforeAll(() => {
       userToUpdate = new User({
         userid: "abcd",
         username: "abcd@example.com",
@@ -1494,16 +1430,17 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveError);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
+      let error = null;
       try {
         await api.refreshToken(session);
       } catch (e) {
         error = e;
       }
-      expect(error).to.be.not.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/auth/login",
         {
           method: "GET",
@@ -1514,7 +1451,8 @@ describe("Auth API", () => {
           },
         },
       ]);
-      expect(error.message).to.be.equals("error-http-500");
+      console.log(error);
+      expect(error.message).toBe("error-http-500");
     });
 
     it("should throw an error if the reply do not have a token", async () => {
@@ -1533,8 +1471,9 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let newToken: string | null = null;
       try {
         newToken = await api.refreshToken(session);
@@ -1542,11 +1481,11 @@ describe("Auth API", () => {
         error = e;
       }
 
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("missing-token");
-      expect(newToken).to.be.null;
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("missing-token");
+      expect(newToken).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/auth/login",
         {
           method: "GET",
@@ -1577,8 +1516,9 @@ describe("Auth API", () => {
         user: new User(userToUpdate),
       };
 
-      fetchMock.resolves(resolveOK);
-      let error: Error | null = null;
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
+      let error = null;
       let newToken: string | null = null;
       try {
         newToken = await api.refreshToken(session);
@@ -1586,10 +1526,10 @@ describe("Auth API", () => {
         error = e;
       }
 
-      expect(error).to.be.null;
-      expect(newToken).to.be.equals("updated-token");
-      expect(fetchMock.callCount).to.be.equals(1);
-      expect(fetchMock.getCall(0).args).to.be.deep.equals([
+      expect(error).toBeNull();
+      expect(newToken).toBe("updated-token");
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual([
         "http://localhost:8009/auth/login",
         {
           method: "GET",

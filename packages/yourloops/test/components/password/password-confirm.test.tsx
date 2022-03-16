@@ -27,39 +27,20 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
-import * as sinon from "sinon";
 
 import { act } from "@testing-library/react-hooks/dom";
 
 import { PasswordConfirm } from "../../../components/password/password-confirm";
 import PasswordLeakService from "../../../services/password-leak";
 import { Simulate, SyntheticEventData } from "react-dom/test-utils";
-import { createTheme } from "@material-ui/core/styles";
 
 describe("Confirm password", () => {
 
   let container: HTMLElement | null = null;
-  const onErrorStub = sinon.stub();
-  const onSuccessStub = sinon.stub();
-  let passwordLeakService: sinon.SinonStub;
+  const onErrorStub = jest.fn();
+  const onSuccessStub = jest.fn();
+  let passwordLeakService: jest.SpyInstance;
   const securedPassword = "ThisPasswordIsSecured:)";
-
-  const mainTheme = createTheme({
-    palette: {
-      primary: {
-        main: "#000000",
-        light: "#555555",
-        dark: "#ffffff",
-      },
-      secondary: {
-        main: "#000000",
-        light: "#555555",
-        dark: "#ffffff",
-      },
-      background: { default: "#FFFFFF" },
-    },
-  });
 
   const mountComponent = async (): Promise<void> => {
     await act(() => {
@@ -68,8 +49,7 @@ describe("Confirm password", () => {
           <PasswordConfirm
             onError={() => onErrorStub()}
             onSuccess={(passwordToUse) => onSuccessStub(passwordToUse)}
-          />
-          , container, resolve);
+          />, container, resolve);
       });
     });
   };
@@ -96,51 +76,51 @@ describe("Confirm password", () => {
 
   it("should call onErrorStub when password is too weak", async () => {
     await mountComponent();
-    const weakPassword = "IAMWEEK";
+    const weakPassword = "IAMWEAK";
     setPasswords(weakPassword, weakPassword);
-    expect(onErrorStub.called).to.be.true;
-    expect(onSuccessStub.called).to.be.false;
+    expect(onErrorStub).toHaveBeenCalled();
+    expect(onSuccessStub).toHaveBeenCalledTimes(0);
   });
 
   it("should call onErrorStub when passwords don't match", async () => {
     await mountComponent();
     setPasswords(securedPassword, `${securedPassword}?`);
-    expect(onErrorStub.called).to.be.true;
-    expect(onSuccessStub.called).to.be.false;
+    expect(onErrorStub).toHaveBeenCalled();
+    expect(onSuccessStub).toHaveBeenCalledTimes(0);
   });
 
   it("should call onErrorStub when password has leaked", async () => {
     await mountComponent();
-    passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({
+    passwordLeakService = jest.spyOn(PasswordLeakService, "verifyPassword").mockResolvedValue({
       hasLeaked: true,
     });
     setPasswords(securedPassword, securedPassword);
     await Promise.resolve();
-    expect(onErrorStub.called).to.be.true;
-    expect(onSuccessStub.called).to.be.false;
-    expect(passwordLeakService.called).to.be.true;
-    passwordLeakService.restore();
+    expect(onErrorStub).toHaveBeenCalled();
+    expect(onSuccessStub).not.toHaveBeenCalled();
+    expect(passwordLeakService).toHaveBeenCalled();
+    passwordLeakService.mockRestore();
   });
 
   it("should call onSuccess when passwords are the same and secured but cannot make sure that is has been leaked", async () => {
     await mountComponent();
-    passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({ hasLeaked: undefined });
+    passwordLeakService = jest.spyOn(PasswordLeakService, "verifyPassword").mockResolvedValue({ hasLeaked: undefined });
     setPasswords(securedPassword, securedPassword);
     await Promise.resolve();
-    expect(onSuccessStub.called).to.be.true;
-    expect(passwordLeakService.calledWith(securedPassword)).to.be.true;
-    passwordLeakService.restore();
+    expect(onSuccessStub).toHaveBeenCalled();
+    expect(passwordLeakService).toHaveBeenCalledWith(securedPassword);
+    passwordLeakService.mockRestore();
   });
 
   it("should call onSuccess when passwords are the same and secured", async () => {
     await mountComponent();
-    passwordLeakService = sinon.stub(PasswordLeakService, "verifyPassword").resolves({
+    passwordLeakService = jest.spyOn(PasswordLeakService, "verifyPassword").mockResolvedValue({
       hasLeaked: false,
     });
     setPasswords(securedPassword, securedPassword);
     await Promise.resolve();
-    expect(onSuccessStub.called).to.be.true;
-    expect(passwordLeakService.calledWith(securedPassword)).to.be.true;
-    passwordLeakService.restore();
+    expect(onSuccessStub).toHaveBeenCalled();
+    expect(passwordLeakService).toHaveBeenCalledWith(securedPassword);
+    passwordLeakService.mockRestore();
   });
 });

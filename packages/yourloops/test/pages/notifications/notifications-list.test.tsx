@@ -26,13 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-
 import { NotificationsPage } from "../../../pages/notifications/notifications-list";
 
 describe("Notification list", () => {
   it("should be exported as a function", () => {
-    expect(NotificationsPage).to.be.a("function");
+    expect(NotificationsPage).toBeInstanceOf(Function);
   });
 });
 

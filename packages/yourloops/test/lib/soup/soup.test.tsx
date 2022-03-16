@@ -27,10 +27,9 @@
  */
 
 import { validate as validateUuid } from "uuid";
-import { expect } from "chai";
 
 describe("SOUP", () => {
   it("UUID soup should be >= v8 with the validate function available", () => {
-    expect(validateUuid).to.be.a("function");
+    expect(validateUuid).toBeInstanceOf(Function);
   });
 });

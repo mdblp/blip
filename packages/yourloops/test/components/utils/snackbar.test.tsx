@@ -27,58 +27,64 @@
  */
 
 import React from "react";
-import * as sinon from "sinon";
-import { expect } from "chai";
-import { shallow } from "enzyme";
+import enzyme, { shallow } from "enzyme";
 
 import { renderHook, act } from "@testing-library/react-hooks/dom";
 
 import { SnackbarContext, Snackbar, DefaultSnackbarContext } from "../../../components/utils/snackbar";
+import Adapter from "enzyme-adapter-react-16";
 
 describe("Snackbar", () => {
 
   const spies = {
-    error: sinon.stub(),
-    warning: sinon.stub(),
-    info: sinon.stub(),
-    success: sinon.stub(),
-    clear: sinon.stub(),
-    remove: sinon.stub(),
-    has: sinon.stub().returns(false),
+    error: jest.fn(),
+    warning: jest.fn(),
+    info: jest.fn(),
+    success: jest.fn(),
+    clear: jest.fn(),
+    remove: jest.fn(),
+    has: jest.fn().mockReturnValue(false),
   };
   const context: SnackbarContext = {
     ...spies,
     alerts: [],
   };
 
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
+  });
+
   beforeEach(() => {
-    spies.error.resetHistory();
-    spies.warning.resetHistory();
-    spies.info.resetHistory();
-    spies.success.resetHistory();
-    spies.clear.resetHistory();
-    spies.remove.resetHistory();
-    spies.has.resetHistory();
+    spies.error.mockReset();
+    spies.warning.mockReset();
+    spies.info.mockReset();
+    spies.success.mockReset();
+    spies.clear.mockReset();
+    spies.remove.mockReset();
+    spies.has.mockReset();
     context.alerts = [];
   });
 
   it("should renders without crashing", () => {
     const { result } = renderHook(() => <Snackbar {...context} />);
-    expect(result).to.exist;
+    expect(result).toBeDefined();
   });
 
   it("hook should return the needed functions", () => {
     // eslint-disable-next-line new-cap
     const hook = renderHook(DefaultSnackbarContext);
 
-    expect(hook.result.current.error).to.be.a("function");
-    expect(hook.result.current.warning).to.be.a("function");
-    expect(hook.result.current.info).to.be.a("function");
-    expect(hook.result.current.success).to.be.a("function");
-    expect(hook.result.current.clear).to.be.a("function");
-    expect(hook.result.current.remove).to.be.a("function");
-    expect(hook.result.current.has).to.be.a("function");
-    expect(hook.result.current.alerts).to.be.an("array");
+    expect(hook.result.current.error).toBeInstanceOf(Function);
+    expect(hook.result.current.warning).toBeInstanceOf(Function);
+    expect(hook.result.current.info).toBeInstanceOf(Function);
+    expect(hook.result.current.success).toBeInstanceOf(Function);
+    expect(hook.result.current.clear).toBeInstanceOf(Function);
+    expect(hook.result.current.remove).toBeInstanceOf(Function);
+    expect(hook.result.current.has).toBeInstanceOf(Function);
+    expect(hook.result.current.alerts).toBeInstanceOf(Array);
   });
 
   it("should render the alert if any", () => {
@@ -89,7 +95,7 @@ describe("Snackbar", () => {
     });
     const wrapper = shallow(<Snackbar {...hook.result.current} />);
     wrapper.update();
-    expect(wrapper.exists("#alert-message")).to.be.true;
+    expect(wrapper.exists("#alert-message")).toBe(true);
   });
 });
 

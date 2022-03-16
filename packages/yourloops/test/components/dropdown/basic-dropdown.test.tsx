@@ -26,18 +26,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-import { mount } from "enzyme";
+import enzyme, { mount } from "enzyme";
 import React from "react";
 import { unmountComponentAtNode } from "react-dom";
-import * as sinon from "sinon";
 
 import BasicDropdown, { BasicDropdownProps } from "../../../components/dropdown/basic-dropdown";
+import Adapter from "enzyme-adapter-react-16";
 
 describe("BasicDropdown", () => {
 
   let container: HTMLElement | null = null;
-  const spyOnSelect = sinon.spy();
+  const spyOnSelect = jest.fn();
 
   const Dropdown = (props: { content: BasicDropdownProps<string> }): JSX.Element => {
     return (
@@ -59,12 +58,16 @@ describe("BasicDropdown", () => {
     );
   };
 
-  before(() => {
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     container = document.createElement("div");
     document.body.appendChild(container);
   });
 
-  after(() => {
+  afterAll(() => {
     if (container) {
       unmountComponentAtNode(container);
       container.remove();
@@ -90,8 +93,13 @@ describe("BasicDropdown", () => {
       inputTranslationKey,
     };
     const wrapper = mount(fakeDropdown(props));
-    wrapper.find("input.MuiSelect-nativeInput").simulate("change", { target: { name: `dropdown-${id}`, value: valueToSelect } });
-    expect(spyOnSelect.calledOnce).to.be.true;
+    wrapper.find("input.MuiSelect-nativeInput").simulate("change", {
+      target: {
+        name: `dropdown-${id}`,
+        value: valueToSelect,
+      },
+    });
+    expect(spyOnSelect).toHaveBeenCalledTimes(1);
   });
 });
 

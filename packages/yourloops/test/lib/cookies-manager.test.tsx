@@ -28,9 +28,6 @@
 
 /* eslint-disable no-underscore-dangle */
 
-import * as sinon from "sinon";
-import { expect } from "chai";
-
 import config from "../../lib/config";
 import metrics from "../../lib/metrics";
 import { isZendeskAllowCookies } from "../../lib/zendesk";
@@ -39,52 +36,53 @@ import initCookiesConcentListener from "../../lib/cookies-manager";
 type AxceptIOCallback = (a: AxeptIO) => void;
 
 describe("Cookie manager", () => {
-  let sendMetrics: sinon.SinonSpy;
-  let loadStonlyWidget: sinon.SinonSpy;
-  before(() => {
-    sendMetrics = sinon.spy(metrics, "send");
-    // For some reason, it do not work:
-    // zendeskAllowCookies = sinon.spy(zendesk, "zendeskAllowCookies");
-    loadStonlyWidget = sinon.spy();
-    window.loadStonlyWidget = loadStonlyWidget;
+  let sendMetrics: jest.SpyInstance;
+  let loadStonlyWidgetMock: jest.Mock;
+
+  beforeAll(() => {
+    sendMetrics = jest.spyOn(metrics, "send");
+    loadStonlyWidgetMock = jest.fn();
+    window.loadStonlyWidget = loadStonlyWidgetMock;
   });
-  after(() => {
-    sinon.restore();
+  afterAll(() => {
+    sendMetrics.mockRestore();
+    loadStonlyWidgetMock.mockRestore();
     delete window.loadStonlyWidget;
   });
   afterEach(() => {
-    sinon.resetHistory();
+    sendMetrics.mockReset();
+    loadStonlyWidgetMock.mockReset();
   });
 
   it("should do nothing if axeptio is not available", () => {
     window._axcb = undefined;
     config.COOKIE_BANNER_CLIENT_ID = "ok";
     initCookiesConcentListener();
-    expect(sendMetrics.called, "sendMetrics").to.be.false;
+    expect(sendMetrics).toHaveBeenCalledTimes(0);
   });
 
   it("should accept all if axeptio is disabled", () => {
     config.COOKIE_BANNER_CLIENT_ID = "disabled";
     initCookiesConcentListener();
-    expect((window.loadStonlyWidget as sinon.SinonSpy).calledOnce, "loadStonlyWidget").to.be.true;
-    expect(sendMetrics.calledOnce, "sendMetrics.calledOnce").to.be.true;
-    expect(sendMetrics.calledWith("metrics", "enabled"), "sendMetrics.calledWith").to.be.true;
-    expect(isZendeskAllowCookies(), "zendeskAllowCookies").to.be.true;
+    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect(sendMetrics).toHaveBeenCalledTimes(1);
+    expect(sendMetrics).toHaveBeenCalledWith("metrics", "enabled");
+    expect(isZendeskAllowCookies()).toBe(true);
   });
 
   it("should add the axeptio callback when configuration is set", () => {
-    const pushSpy = sinon.spy();
+    const pushSpy = jest.fn();
     window._axcb = { push: pushSpy };
     config.COOKIE_BANNER_CLIENT_ID = "abcdef";
     initCookiesConcentListener();
-    expect(pushSpy.calledOnce).to.be.true;
+    expect(pushSpy).toHaveBeenCalledTimes(1);
   });
 
   it("should perform the change on axeptio callback", () => {
     let callbackFn: AxceptIOCallback | null = null;
     const axeptIO: AxeptIO = {
       on: (event: string, callback: (c: CookiesComplete) => void) => {
-        expect(event).to.be.equals("cookies:complete");
+        expect(event).toBe("cookies:complete");
         callback({ matomo: false, stonly: false, zendesk: false });
       },
     };
@@ -96,13 +94,13 @@ describe("Cookie manager", () => {
 
     config.COOKIE_BANNER_CLIENT_ID = "abcdef";
     initCookiesConcentListener();
-    expect(callbackFn).to.be.a("function");
+    expect(callbackFn).toBeInstanceOf(Function);
     (callbackFn as unknown as AxceptIOCallback)(axeptIO);
 
-    expect(sendMetrics.calledOnce, "sendMetrics.calledOnce").to.be.true;
-    expect(sendMetrics.calledWith("metrics", "disabled"), "sendMetrics.calledWith").to.be.true;
-    expect((window.loadStonlyWidget as sinon.SinonSpy).calledOnce, "loadStonlyWidget").to.be.false;
-    expect(isZendeskAllowCookies(), "zendeskAllowCookies").to.be.false;
+    expect(sendMetrics).toHaveBeenCalledTimes(1);
+    expect(sendMetrics).toHaveBeenCalledWith("metrics", "disabled");
+    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(0);
+    expect(isZendeskAllowCookies()).toBe(false);
   });
 });
 

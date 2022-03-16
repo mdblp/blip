@@ -27,7 +27,6 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
 import _ from "lodash";
 
@@ -64,7 +63,7 @@ describe("Signup account form", () => {
   it("should render the warning message for account deletion (YLP-1147)", async () => {
     await mountComponent();
     const warningMessage = document.querySelector("#signup-account-deletion-warning");
-    expect(warningMessage).to.be.not.null;
+    expect(warningMessage).not.toBeNull();
   });
 });
 

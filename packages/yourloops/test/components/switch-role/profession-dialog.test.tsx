@@ -26,11 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
 
 import { HcpProfession, HcpProfessionList } from "../../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "../../../components/switch-role/models";
@@ -38,8 +36,8 @@ import SwitchRoleProfessionDialog from "../../../components/switch-role/professi
 
 describe("Profession dialog", () => {
 
-  const onAccept = sinon.stub();
-  const onCancel = sinon.stub();
+  const onAccept = jest.fn();
+  const onCancel = jest.fn();
   const defaultProps: SwitchRoleProfessionDialogProps = {
     open: true,
     onAccept,
@@ -53,8 +51,8 @@ describe("Profession dialog", () => {
     document.body.appendChild(container);
   });
   afterEach(() => {
-    onAccept.resetHistory();
-    onCancel.resetHistory();
+    onAccept.mockReset();
+    onCancel.mockReset();
     if (container) {
       ReactDOM.unmountComponentAtNode(container);
       document.body.removeChild(container);
@@ -76,28 +74,28 @@ describe("Profession dialog", () => {
   it("should not render when not opened", async () => {
     await render({ ...defaultProps, open: false });
     const component = document.getElementById("switch-role-profession-dialog");
-    expect(component).to.be.null;
+    expect(component).toBeNull();
   });
 
   it("should be able to render", async () => {
     await render(defaultProps);
     const component = document.getElementById("switch-role-profession-dialog");
-    expect(component).to.be.not.null;
+    expect(component).not.toBeNull();
   });
 
   it("should call onCancel", async () => {
     await render(defaultProps);
     const cancelButton = document.getElementById("switch-role-profession-dialog-button-decline");
-    expect(cancelButton).to.be.not.null;
+    expect(cancelButton).not.toBeNull();
     cancelButton.click();
-    expect(onCancel.calledOnce).to.be.true;
+    expect(onCancel).toHaveBeenCalledTimes(1);
   });
 
   it("should not allowed to validate when no profession is selected", async () => {
     await render(defaultProps);
     const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
-    expect(okButton).to.be.not.null;
-    expect(okButton.getAttribute("disabled")).to.be.not.null;
+    expect(okButton).not.toBeNull();
+    expect(okButton.getAttribute("disabled")).not.toBeNull();
   });
 
   it("should enable accept button when an option is selected", async () => {
@@ -107,17 +105,17 @@ describe("Profession dialog", () => {
     document.getElementById("dropdown-profession-selector").dispatchEvent(clickEvent);
     for (const profession of validProfessions) {
       const opt = document.getElementById(`dropdown-profession-menuitem-${profession}`);
-      expect(opt, profession).to.be.not.null;
+      expect(opt).not.toBeNull();
     }
     const selectedProfession = validProfessions[0];
     const oneOption = document.getElementById(`dropdown-profession-menuitem-${selectedProfession}`);
     oneOption.click();
 
     const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
-    expect(okButton.getAttribute("disabled")).to.be.null;
+    expect(okButton.getAttribute("disabled")).toBeNull();
     okButton.click();
 
-    expect(onAccept.calledOnce).to.be.true;
-    expect(onAccept.firstCall.args[0]).to.be.eq(selectedProfession);
+    expect(onAccept).toHaveBeenCalledTimes(1);
+    expect(onAccept.mock.calls[0][0]).toBe(selectedProfession);
   });
 });

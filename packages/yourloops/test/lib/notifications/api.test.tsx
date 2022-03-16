@@ -28,59 +28,20 @@
 
 /* eslint-disable max-lines */
 
-import * as sinon from "sinon";
-import { expect } from "chai";
 import { v4 as uuidv4 } from "uuid";
 
 import HttpStatus from "../../../lib/http-status-codes";
 import { APINotificationType, INotificationAPI } from "../../../models/notification";
-import { Session } from "../../../lib/auth";
 import { NotificationType, INotification } from "../../../lib/notifications";
 import api from "../../../lib/notifications/api";
 import { loggedInUsers } from "../../common";
 
-export interface NotificationAPIStub {
-  getReceivedInvitations: sinon.SinonStub<[Readonly<Session>], Promise<INotification[]>>;
-  getSentInvitations: sinon.SinonStub<[Readonly<Session>], Promise<INotification[]>>;
-  acceptInvitation: sinon.SinonStub<[Readonly<Session>, INotification], Promise<void>>;
-  declineInvitation: sinon.SinonStub<[Readonly<Session>, INotification], Promise<void>>;
-  cancelInvitation: sinon.SinonStub<[Readonly<Session>, INotification], Promise<void>>;
-}
-
-export const notificationAPIStub: NotificationAPIStub = {
-  getReceivedInvitations: sinon.stub<[Readonly<Session>], Promise<INotification[]>>().resolves([]),
-  getSentInvitations: sinon.stub<[Readonly<Session>], Promise<INotification[]>>().resolves([]),
-  acceptInvitation: sinon.stub<[Readonly<Session>, INotification], Promise<void>>().resolves(),
-  declineInvitation: sinon.stub<[Readonly<Session>, INotification], Promise<void>>().resolves(),
-  cancelInvitation: sinon.stub<[Readonly<Session>, INotification], Promise<void>>().resolves(),
-};
-
-export const resetNotificationAPIStub = (): void => {
-  notificationAPIStub.getReceivedInvitations.reset();
-  notificationAPIStub.getReceivedInvitations.resolves([]);
-  notificationAPIStub.getSentInvitations.reset();
-  notificationAPIStub.getSentInvitations.resolves([]);
-  notificationAPIStub.acceptInvitation.reset();
-  notificationAPIStub.acceptInvitation.resolves();
-  notificationAPIStub.declineInvitation.reset();
-  notificationAPIStub.declineInvitation.resolves();
-  notificationAPIStub.cancelInvitation.reset();
-  notificationAPIStub.cancelInvitation.resolves();
-};
-
 describe("Notification API", () => {
+  const fetchMock = jest.fn();
 
-  let fetchMock: sinon.SinonStub<[input: RequestInfo, init?: RequestInit], Promise<Response>>;
-  before(() => {
-    fetchMock = sinon.stub(window, "fetch");
-  });
-
-  after(() => {
-    fetchMock.restore();
-  });
-
-  beforeEach(() => {
-    fetchMock.reset();
+  afterEach(() => {
+    fetchMock.mockReset();
+    delete global.fetch;
   });
 
   describe("getReceivedInvitations", () => {
@@ -99,7 +60,7 @@ describe("Notification API", () => {
     ];
 
     it("should throw an error if the response is not ok", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("Not a JSON"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -108,7 +69,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       let error: Error | null = null;
       try {
@@ -116,13 +78,13 @@ describe("Notification API", () => {
       } catch (reason) {
         error = reason as Error;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(error).toBeInstanceOf(Error);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
 
     it("should return an empty array, if there is no invitation", async () => {
-      const jsonResponse = sinon.stub().resolves([]);
+      const jsonResponse = jest.fn().mockResolvedValue([]);
       const resolveOK: Response = {
         status: HttpStatus.StatusNotFound,
         ok: false,
@@ -131,12 +93,13 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const result = await api.getReceivedInvitations(session);
-      expect(result).to.be.deep.equals([]);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(result).toEqual([]);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
 
     it("should return the converted notifications", async () => {
@@ -158,7 +121,7 @@ describe("Notification API", () => {
           email: loggedInUsers.patient.username,
         },
       ];
-      const jsonResponse = sinon.stub().resolves(apiNotifications);
+      const jsonResponse = jest.fn().mockResolvedValue(apiNotifications);
       const resolveOK: Response = {
         status: HttpStatus.StatusOK,
         ok: true,
@@ -167,7 +130,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const result = await api.getReceivedInvitations(session);
       const expectedResult: INotification[] = [
@@ -184,10 +148,11 @@ describe("Notification API", () => {
         },
       ];
 
-      expect(result).to.be.an("array").lengthOf(1);
-      expect(result, JSON.stringify({ result, expectedResult })).to.be.deep.equals(expectedResult);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(result).toBeInstanceOf(Array);
+      expect(result).toHaveLength(1);
+      expect(result).toEqual(expectedResult);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
   });
 
@@ -207,7 +172,7 @@ describe("Notification API", () => {
     ];
 
     it("should throw an error if the response is not ok", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("Not a JSON"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -216,7 +181,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       let error: Error | null = null;
       try {
@@ -224,13 +190,13 @@ describe("Notification API", () => {
       } catch (reason) {
         error = reason as Error;
       }
-      expect(error).to.be.instanceof(Error);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(error).toBeInstanceOf(Error);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
 
     it("should return an empty array, if there is no invitation", async () => {
-      const jsonResponse = sinon.stub().resolves([]);
+      const jsonResponse = jest.fn().mockResolvedValue([]);
       const resolveOK: Response = {
         status: HttpStatus.StatusNotFound,
         ok: false,
@@ -239,12 +205,13 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const result = await api.getSentInvitations(session);
-      expect(result).to.be.deep.equals([]);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(result).toEqual([]);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
 
     it("should return the converted notifications", async () => {
@@ -266,7 +233,7 @@ describe("Notification API", () => {
           email: "patient@yourloops.com",
         },
       ];
-      const jsonResponse = sinon.stub().resolves(apiNotifications);
+      const jsonResponse = jest.fn().mockResolvedValue(apiNotifications);
       const resolveOK: Response = {
         status: HttpStatus.StatusOK,
         ok: true,
@@ -275,7 +242,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const result = await api.getSentInvitations(session);
       const expectedResult: INotification[] = [
@@ -292,16 +260,17 @@ describe("Notification API", () => {
         },
       ];
 
-      expect(result).to.be.an("array").lengthOf(1);
-      expect(result, JSON.stringify({ result, expectedResult })).to.be.deep.equals(expectedResult);
-      expect(fetchMock.calledOnce).to.be.true;
-      expect(fetchMock.firstCall.args).to.be.deep.equals(fetchCallArgs);
+      expect(result).toBeInstanceOf(Array);
+      expect(result.length).toBe(1);
+      expect(result).toEqual(expectedResult);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toEqual(fetchCallArgs);
     });
   });
 
   describe("acceptInvitation", () => {
     it("should throw an error if the invitation type is invalid", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("test"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("test"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -310,7 +279,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
       const session = loggedInUsers.hcpSession;
@@ -330,13 +300,13 @@ describe("Notification API", () => {
         } catch (reason) {
           err = reason as Error;
         }
-        expect(err).to.be.not.null;
+        expect(err).not.toBeNull();
       }
-      expect(fetchMock.called).to.be.false;
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("directInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("directInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -345,7 +315,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -365,8 +336,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/accept/invite/${session.user.userid}/${patient.userid}`,
         {
@@ -380,7 +351,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (directInvitation)", async () => {
@@ -390,9 +361,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -412,8 +384,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/accept/invite/${session.user.userid}/${patient.userid}`,
         {
@@ -427,11 +399,11 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamProInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -440,7 +412,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -464,8 +437,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/accept/team/invite",
         {
@@ -479,7 +452,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (careTeamProInvitation)", async () => {
@@ -489,9 +462,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -515,8 +489,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/accept/team/invite",
         {
@@ -530,11 +504,11 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should throw an error if the reply is not ok (careTeamPatientInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamPatientInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamPatientInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -543,7 +517,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -567,8 +542,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/accept/team/invite",
         {
@@ -582,7 +557,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (careTeamPatientInvitation)", async () => {
@@ -592,9 +567,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -618,8 +594,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/accept/team/invite",
         {
@@ -633,13 +609,14 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
-    });
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
+    }
+    );
   });
 
   describe("declineInvitation", () => {
     it("should throw an error if the invitation type is invalid", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("test"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("test"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -648,7 +625,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
       const session = loggedInUsers.hcpSession;
@@ -668,13 +646,13 @@ describe("Notification API", () => {
         } catch (reason) {
           err = reason as Error;
         }
-        expect(err).to.be.not.null;
+        expect(err).not.toBeNull();
       }
-      expect(fetchMock.called).to.be.false;
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("directInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("directInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -683,7 +661,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -703,8 +682,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/invite/${session.user.userid}/${patient.userid}`,
         {
@@ -718,7 +697,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (directInvitation)", async () => {
@@ -728,9 +707,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -750,8 +730,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/invite/${session.user.userid}/${patient.userid}`,
         {
@@ -765,11 +745,11 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should throw an error if the teamId is not set (careTeamProInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamProInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -778,7 +758,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -798,12 +779,12 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.called).to.be.false;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamProInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -812,7 +793,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -836,8 +818,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/team/invite/${notification.target.id}`,
         {
@@ -851,7 +833,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (careTeamProInvitation)", async () => {
@@ -861,9 +843,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -887,8 +870,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/team/invite/${notification.target.id}`,
         {
@@ -902,11 +885,11 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should throw an error if the teamId is not set (careTeamPatientInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamPatientInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamPatientInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -915,7 +898,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -935,12 +919,12 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.called).to.be.false;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (careTeamPatientInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamPatientInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamPatientInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -949,7 +933,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -973,8 +958,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/team/invite/${notification.target.id}`,
         {
@@ -988,7 +973,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (careTeamPatientInvitation)", async () => {
@@ -998,9 +983,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -1024,8 +1010,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         `http://localhost:8009/confirm/dismiss/team/invite/${notification.target.id}`,
         {
@@ -1039,13 +1025,14 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
-    });
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
+    }
+    );
   });
 
   describe("cancelInvitation", () => {
     it("should throw an error if the invitation type is invalid", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("test"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("test"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1054,7 +1041,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const notificationTypes = [
         NotificationType.careTeamDoAdmin,
@@ -1078,13 +1066,13 @@ describe("Notification API", () => {
         } catch (reason) {
           err = reason as Error;
         }
-        expect(err).to.be.not.null;
+        expect(err).not.toBeNull();
       }
-      expect(fetchMock.called).to.be.false;
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("directInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("directInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1093,7 +1081,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -1113,8 +1102,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/cancel/invite",
         {
@@ -1128,7 +1117,7 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}","email":"${session.user.username}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (directInvitation)", async () => {
@@ -1138,9 +1127,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -1160,8 +1150,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/cancel/invite",
         {
@@ -1175,11 +1165,11 @@ describe("Notification API", () => {
           body: `{"key":"${notification.id}","email":"${session.user.username}"}`,
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should throw an error if the teamId is missing (careTeamProInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamProInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1188,7 +1178,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -1208,12 +1199,13 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.called).to.be.false;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(0);
+      expect(fetchMock).toHaveBeenCalledTimes(0);
     });
 
     it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const jsonResponse = sinon.stub().rejects(new Error("careTeamProInvitation"));
+      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
       const resolveError: Response = {
         status: HttpStatus.StatusInternalServerError,
         ok: false,
@@ -1222,7 +1214,8 @@ describe("Notification API", () => {
         redirected: false,
         json: jsonResponse,
       } as unknown as Response;
-      fetchMock.resolves(resolveError);
+      fetchMock.mockResolvedValue(resolveError);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -1246,8 +1239,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.not.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).not.toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/cancel/invite",
         {
@@ -1264,7 +1257,7 @@ describe("Notification API", () => {
           }),
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
 
     it("should resolve when the reply is ok (careTeamProInvitation)", async () => {
@@ -1274,9 +1267,10 @@ describe("Notification API", () => {
         statusText: "OK",
         type: "basic",
         redirected: false,
-        text: sinon.stub().resolves("OK"),
+        text: jest.fn().mockResolvedValue("OK"),
       } as unknown as Response;
-      fetchMock.resolves(resolveOK);
+      fetchMock.mockResolvedValue(resolveOK);
+      global.fetch = fetchMock;
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -1300,8 +1294,8 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      expect(err).to.be.null;
-      expect(fetchMock.calledOnce).to.be.true;
+      expect(err).toBeNull();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
       const expectedArgs = [
         "http://localhost:8009/confirm/cancel/invite",
         {
@@ -1318,7 +1312,7 @@ describe("Notification API", () => {
           }),
         },
       ];
-      expect(fetchMock.firstCall.args).to.be.deep.equals(expectedArgs);
+      expect(fetchMock.mock.calls[0]).toEqual(expectedArgs);
     });
   });
 });

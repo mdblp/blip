@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import * as sinon from "sinon";
 
 import HttpService from "../../services/http";
 
@@ -35,30 +33,33 @@ describe("HTTP", () => {
   const url = "myFakeUrl";
   const payload = "myFakePayload";
   const config = { withCredentials: true };
-  let axiosStub: sinon.SinonStub;
+  let axiosStub: jest.SpyInstance;
 
   afterEach(() => {
-    axiosStub.restore();
+    axiosStub.mockRestore();
   });
 
   describe("get", () => {
     it("should get make correct request", async () => {
       //given
       const expectedResponse = {} as AxiosResponse;
-      axiosStub = sinon.stub(axios, "get").resolves(Promise.resolve(expectedResponse));
+      axiosStub = jest.spyOn(axios, "get").mockResolvedValue(Promise.resolve(expectedResponse));
 
       //when
       const response = await HttpService.get({ url, config });
 
       //then
-      expect(response).to.equal(expectedResponse);
-      expect(axiosStub.calledWith(url, config)).to.be.true;
+      expect(response).toBe(expectedResponse);
+      expect(axiosStub).toHaveBeenCalledWith(url, config);
     });
 
     it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
-      axiosStub = sinon.stub(axios, "get").throws(expectedError);
+      axiosStub = jest.spyOn(axios, "get");
+      axiosStub.mockImplementation(() => {
+        throw expectedError;
+      });
 
       //when
       try {
@@ -66,8 +67,8 @@ describe("HTTP", () => {
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
-        expect(axiosStub.calledWith(url, config)).to.be.true;
-        expect(errorReceived).to.equal(expectedError);
+        expect(axiosStub).toHaveBeenCalledWith(url, config);
+        expect(errorReceived).toBe(expectedError);
       }
     });
   });
@@ -76,29 +77,31 @@ describe("HTTP", () => {
     it("should make correct request", async () => {
       //given
       const expectedResponse = {} as AxiosResponse;
-      axiosStub = sinon.stub(axios, "post").resolves(Promise.resolve(expectedResponse));
+      axiosStub = jest.spyOn(axios, "post").mockResolvedValue(Promise.resolve(expectedResponse));
 
       //when
       const response = await HttpService.post({ url, payload, config });
 
       //then
-      expect(response).to.equal(expectedResponse);
-      expect(axiosStub.calledWith(url, payload, config)).to.be.true;
+      expect(response).toBe(expectedResponse);
+      expect(axiosStub).toHaveBeenCalledWith(url, payload, config);
     });
 
     it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
-      axiosStub = sinon.stub(axios, "post").throws(expectedError);
-
+      axiosStub = jest.spyOn(axios, "post");
+      axiosStub.mockImplementation(() => {
+        throw expectedError;
+      });
       //when
       try {
         await HttpService.post({ url, payload, config });
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
-        expect(axiosStub.calledWith(url, payload, config)).to.be.true;
-        expect(errorReceived).to.equal(expectedError);
+        expect(axiosStub).toHaveBeenCalledWith(url, payload, config);
+        expect(errorReceived).toBe(expectedError);
       }
     });
   });
@@ -107,20 +110,23 @@ describe("HTTP", () => {
     it("should make correct request", async () => {
       //given
       const expectedResponse = {} as AxiosResponse;
-      axiosStub = sinon.stub(axios, "put").resolves(Promise.resolve(expectedResponse));
+      axiosStub = jest.spyOn(axios, "put").mockResolvedValue(Promise.resolve(expectedResponse));
 
       //when
       const response = await HttpService.put({ url, payload, config });
 
       //then
-      expect(response).to.equal(expectedResponse);
-      expect(axiosStub.calledWith(url, payload, config)).to.be.true;
+      expect(response).toBe(expectedResponse);
+      expect(axiosStub).toHaveBeenCalledWith(url, payload, config);
     });
 
     it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
-      axiosStub = sinon.stub(axios, "put").throws(expectedError);
+      axiosStub = jest.spyOn(axios, "put");
+      axiosStub.mockImplementation(() => {
+        throw expectedError;
+      });
 
       //when
       try {
@@ -128,8 +134,8 @@ describe("HTTP", () => {
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
-        expect(axiosStub.calledWith(url, payload, config)).to.be.true;
-        expect(errorReceived).to.equal(expectedError);
+        expect(axiosStub).toHaveBeenCalledWith(url, payload, config);
+        expect(errorReceived).toBe(expectedError);
       }
     });
   });
@@ -138,29 +144,31 @@ describe("HTTP", () => {
     it("should make correct request", async () => {
       //given
       const expectedResponse = {} as AxiosResponse;
-      axiosStub = sinon.stub(axios, "delete").resolves(Promise.resolve(expectedResponse));
+      axiosStub = jest.spyOn(axios, "delete").mockResolvedValue(Promise.resolve(expectedResponse));
 
       //when
       const response = await HttpService.delete({ url, config });
 
       //then
-      expect(response).to.equal(expectedResponse);
-      expect(axiosStub.calledWith(url, config)).to.be.true;
+      expect(response).toBe(expectedResponse);
+      expect(axiosStub).toHaveBeenCalledWith(url, config);
     });
 
     it("should throw error when failing", async () => {
       //given
       const expectedError = {} as AxiosError;
-      axiosStub = sinon.stub(axios, "delete").throws(expectedError);
-
+      axiosStub = jest.spyOn(axios, "delete");
+      axiosStub.mockImplementation(() => {
+        throw expectedError;
+      });
       //when
       try {
         await HttpService.delete({ url, config });
         throw Error("This test should have gone into the catch");
       } catch (errorReceived) {
         //then
-        expect(axiosStub.calledWith(url, config)).to.be.true;
-        expect(errorReceived).to.equal(expectedError);
+        expect(axiosStub).toHaveBeenCalledWith(url, config);
+        expect(errorReceived).toBe(expectedError);
       }
     });
   });

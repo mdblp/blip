@@ -26,65 +26,62 @@
  */
 
 import { AxiosResponse } from "axios";
-import { expect } from "chai";
-import * as sinon from "sinon";
 
 import EncoderService from "../../services/encoder";
 import HttpService from "../../services/http";
 import PasswordLeakService from "../../services/password-leak";
 
-function testPasswordLeakService(): void {
-  let httpGetStub = sinon.stub();
-  let encodeSHA1Stub = sinon.stub();
+describe("Password leak service", () => {
+
+  let httpGetStub : jest.SpyInstance;
+  let encodeSHA1Stub : jest.SpyInstance;
   const hashToReturn = "8EF80F372246EBBB93B988437EB9B43E7B93DE62";
   const password = "Bienveillant";
 
   beforeEach(() => {
-    encodeSHA1Stub = sinon.stub(EncoderService, "encodeSHA1").resolves(hashToReturn);
+    encodeSHA1Stub = jest.spyOn(EncoderService, "encodeSHA1").mockResolvedValue(hashToReturn);
   });
 
   afterEach(() => {
-    encodeSHA1Stub.restore();
-    httpGetStub.restore();
+    encodeSHA1Stub.mockRestore();
+    httpGetStub.mockRestore();
   });
 
   describe("verifyPassword", () => {
     it("should return that the password has leaked", async () => {
       //given
       const expected = { hasLeaked: true };
-      httpGetStub = sinon.stub(HttpService, "get").resolves({ data: "F372246EBBB93B988437EB9B43E7B93DE62" } as AxiosResponse);
+      httpGetStub = jest.spyOn(HttpService, "get").mockResolvedValue({ data: "F372246EBBB93B988437EB9B43E7B93DE62" } as AxiosResponse);
 
       //when
       const actual = await PasswordLeakService.verifyPassword(password);
 
       //then
-      expect(actual).to.deep.equal(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it("should return that the password has not leaked", async () => {
       //given
       const expected = { hasLeaked: false };
-      httpGetStub = sinon.stub(HttpService, "get").resolves({ data: "fakeHash" } as AxiosResponse);
+      httpGetStub = jest.spyOn(HttpService, "get").mockResolvedValue({ data: "fakeHash" } as AxiosResponse);
 
       //when
       const actual = await PasswordLeakService.verifyPassword(password);
 
       //then
-      expect(actual).to.deep.equal(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it("should return that the service is unavailable when http get fails", async () => {
       //given
       const expected: { hasLeaked?: string } = { hasLeaked: undefined };
-      httpGetStub = sinon.stub(HttpService, "get").throws(new Error());
+      httpGetStub = jest.spyOn(HttpService, "get").mockRejectedValue(new Error());
 
       //when
       const actual = await PasswordLeakService.verifyPassword(password);
 
       //then
-      expect(actual).to.deep.equal(expected);
+      expect(actual).toStrictEqual(expected);
     });
   });
-}
-
-export default testPasswordLeakService;
+});

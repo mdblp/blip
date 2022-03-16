@@ -1,11 +1,13 @@
 {
   "presets": [
     "@babel/preset-react",
+    "@babel/preset-typescript",
+    "@babel/preset-flow",
     [
       "@babel/preset-env",
       {
         "targets": "> 1%, not dead, Chrome 86, ChromeAndroid 86, Edge 86, Firefox 84, FirefoxAndroid 84, Firefox ESR, iOS 13, Safari 13",
-        "modules": false,
+        "modules": "auto",
         "useBuiltIns": false,
         "debug": true
       }

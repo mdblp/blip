@@ -29,17 +29,30 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 import dayjs from "dayjs";
 
 import RangeDatePicker from "../../../components/date-pickers/range-date-picker";
+import initDayJS from "../../../lib/dayjs";
+import i18n, { init as i18nInit } from "../../../lib/language";
 
 describe("Range date picker", () => {
 
   const minDate = dayjs("2000-01-01", { utc: true });
   const maxDate = dayjs("2100-01-01", { utc: true });
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    initDayJS();
+    i18nInit().then(() => {
+      i18n.addResourceBundle("en", "yourloops", {
+        "date-picker-header-date-format": "MMMM YYYY",
+        "date-picker-toolbar-date-format": "ddd, MMM D",
+      })
+        .init({ react: { useSuspense: true } });
+    }).catch((reason: unknown) => {
+      console.error(reason);
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -57,7 +70,7 @@ describe("Range date picker", () => {
   it("should correctly render a month", async () => {
     const range = { start: dayjs("2021-11-09"), end: dayjs("2021-11-20") };
     const rangeSelectable = { start: dayjs("2021-11-01"), end: dayjs("2021-12-02") };
-    const onChange = sinon.stub<[dayjs.Dayjs], void>();
+    const onChange = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -74,26 +87,26 @@ describe("Range date picker", () => {
     });
 
     let elem = document.getElementById("calendar-box-first");
-    expect(elem, "calendar-box-first").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "calendar-box-first").to.be.eq("div");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("div");
     elem = document.getElementById("calendar-box-last");
-    expect(elem, "calendar-box-last").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "calendar-box-last").to.be.eq("div");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("div");
 
     elem = document.getElementById("calendar-month-first");
-    expect(elem, "calendar-month-first").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "calendar-month-first").to.be.eq("div");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("div");
     elem = document.getElementById("calendar-month-last");
-    expect(elem, "calendar-month-last").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "calendar-month-last").to.be.eq("div");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("div");
 
     elem = document.getElementById("date-picker-toolbar");
-    expect(elem, "date-picker-toolbar").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "date-picker-toolbar").to.be.eq("div");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("div");
 
     elem = document.getElementById("date-picker-toolbar-max-days-range");
-    expect(elem, "date-picker-toolbar-max-days-range").to.be.not.null;
-    expect(elem.nodeName.toLowerCase(), "date-picker-toolbar-max-days-range").to.be.eq("p");
+    expect(elem).not.toBeNull();
+    expect(elem.nodeName.toLowerCase()).toBe("p");
   });
 });
 

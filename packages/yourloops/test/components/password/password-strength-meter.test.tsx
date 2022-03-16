@@ -28,7 +28,6 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
 import { ThemeProvider } from "@material-ui/styles";
 import { createTheme, hexToRgb } from "@material-ui/core/styles";
@@ -81,23 +80,23 @@ describe("Password strength meter", () => {
     await mountComponent(1, true);
     const gauges = document.querySelectorAll("#password-strength-meter div[class*=\"makeStyles-weakBgColor-\"]");
 
-    expect(gauges.length).to.be.equal(1);
-    expect(getComputedStyle(gauges[0]).backgroundColor).to.be.equal(hexToRgb(mainTheme.palette.error.main));
+    expect(gauges.length).toBe(1);
+    expect(getComputedStyle(gauges[0]).backgroundColor).toBe(hexToRgb(mainTheme.palette.error.main));
   });
 
   it("should render two gauges with warning color when force is equal to 2", async () => {
     await mountComponent(2, true);
     const gauges = document.querySelectorAll("#password-strength-meter div[class*=\"makeStyles-mediumBgColor-\"]");
 
-    expect(gauges.length).to.be.equal(2);
-    expect(getComputedStyle(gauges[0]).backgroundColor).to.be.equal(hexToRgb(mainTheme.palette.warning.dark));
+    expect(gauges.length).toBe(2);
+    expect(getComputedStyle(gauges[0]).backgroundColor).toBe(hexToRgb(mainTheme.palette.warning.dark));
   });
 
   it("should render three gauges with success color when force is equal to 3", async () => {
     await mountComponent(3, false);
     const gauges = document.querySelectorAll("#password-strength-meter div[class*=\"makeStyles-strongBgColor-\"]");
 
-    expect(gauges.length).to.be.equal(3);
-    expect(getComputedStyle(gauges[0]).backgroundColor).to.be.equal(hexToRgb(mainTheme.palette.success.main));
+    expect(gauges.length).toBe(3);
+    expect(getComputedStyle(gauges[0]).backgroundColor).toBe(hexToRgb(mainTheme.palette.success.main));
   });
 });

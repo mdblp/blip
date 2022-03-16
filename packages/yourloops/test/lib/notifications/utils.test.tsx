@@ -26,8 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-
 import { TeamMemberRole } from "../../../models/team";
 import { INotificationAPI, APINotificationType } from "../../../models/notification";
 import { INotification, NotificationType } from "../../../lib/notifications";
@@ -81,8 +79,8 @@ describe("Notification utils", () => {
       } catch (reason) {
         error = reason as Error;
       }
-      expect(error).to.be.not.null;
-      expect(error.message).to.be.equals("Invalid notification type");
+      expect(error).not.toBeNull();
+      expect(error.message).toBe("Invalid notification type");
     });
 
     it("should transform 'careteam_invitation' to 'directInvitation'", () => {
@@ -90,31 +88,37 @@ describe("Notification utils", () => {
       baseNotification.type = NotificationType.directInvitation;
       baseNotification.metricsType = "share_data";
       const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).to.be.deep.equals(baseNotification);
+      expect(convertedNotification).toEqual(baseNotification);
     });
 
-    it("should transform 'medicalteam_patient_invitation' to 'careTeamPatientInvitation'", () => {
-      baseAPINotification.type = "medicalteam_patient_invitation" as APINotificationType.medicalTeamPatientInvitation;
-      baseNotification.type = NotificationType.careTeamPatientInvitation;
-      baseNotification.metricsType = "join_team";
-      const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).to.be.deep.equals(baseNotification);
-    });
+    it(
+      "should transform 'medicalteam_patient_invitation' to 'careTeamPatientInvitation'",
+      () => {
+        baseAPINotification.type = "medicalteam_patient_invitation" as APINotificationType.medicalTeamPatientInvitation;
+        baseNotification.type = NotificationType.careTeamPatientInvitation;
+        baseNotification.metricsType = "join_team";
+        const convertedNotification = notificationConversion(baseAPINotification);
+        expect(convertedNotification).toEqual(baseNotification);
+      }
+    );
 
-    it("should transform 'medicalteam_invitation' to 'careTeamProInvitation'", () => {
-      baseAPINotification.type = "medicalteam_invitation" as APINotificationType.medicalTeamProInvitation;
-      baseNotification.type = NotificationType.careTeamProInvitation;
-      baseNotification.metricsType = "join_team";
-      const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).to.be.deep.equals(baseNotification);
-    });
+    it(
+      "should transform 'medicalteam_invitation' to 'careTeamProInvitation'",
+      () => {
+        baseAPINotification.type = "medicalteam_invitation" as APINotificationType.medicalTeamProInvitation;
+        baseNotification.type = NotificationType.careTeamProInvitation;
+        baseNotification.metricsType = "join_team";
+        const convertedNotification = notificationConversion(baseAPINotification);
+        expect(convertedNotification).toEqual(baseNotification);
+      }
+    );
 
     it.skip("should transform 'medicalteam_do_admin' to 'careTeamDoAdmin'", () => {
       baseAPINotification.type = "medicalteam_do_admin" as APINotificationType.medicalTeamDoAdmin;
       baseNotification.type = NotificationType.careTeamDoAdmin;
       baseNotification.metricsType = "join_team";
       const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).to.be.deep.equals(baseNotification);
+      expect(convertedNotification).toEqual(baseNotification);
     });
 
     it.skip("should transform 'medicalteam_remove' to 'careTeamRemoveMember'", () => {
@@ -122,7 +126,7 @@ describe("Notification utils", () => {
       baseNotification.type = NotificationType.careTeamRemoveMember;
       baseNotification.metricsType = "join_team";
       const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).to.be.deep.equals(baseNotification);
+      expect(convertedNotification).toEqual(baseNotification);
     });
   });
 });

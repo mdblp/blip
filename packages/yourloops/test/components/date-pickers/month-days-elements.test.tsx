@@ -30,14 +30,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 import dayjs from "dayjs";
-import * as sinon from "sinon";
-import { expect } from "chai";
 
 import MonthDayElements from "../../../components/date-pickers/month-days-elements";
+import initDayJS from "../../../lib/dayjs";
 
 describe("Month day element", () => {
 
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    initDayJS();
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -56,7 +59,7 @@ describe("Month day element", () => {
     const yesterday = today.subtract(1, "day");
     const tomorrow = today.add(1, "day");
     const days = today.getWeekArray();
-    const onChange = sinon.stub<[dayjs.Dayjs], void>();
+    const onChange = jest.fn();
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
@@ -76,29 +79,29 @@ describe("Month day element", () => {
     const tomorrowElem = document.getElementById("button-calendar-day-2021-11-02");
     const afterTomorrowElem = document.getElementById("button-calendar-day-2021-11-03");
 
-    expect(todayElem, "todayElem").to.be.not.null;
-    expect(todayElem.getAttribute("disabled"), "todayElem disabled").to.be.null;
-    expect(todayElem.getAttribute("aria-selected")).to.be.eq("true");
-    expect(todayElem.className).to.contain("date-pickers-day-selected");
-    expect(todayElem.innerText).to.be.eq("1");
+    expect(todayElem).not.toBeNull();
+    expect(todayElem.getAttribute("disabled")).toBeNull();
+    expect(todayElem.getAttribute("aria-selected")).toBe("true");
+    expect(todayElem.className).toContain("date-pickers-day-selected");
+    expect(todayElem.textContent).toBe("1");
     todayElem.click();
-    expect(onChange.calledOnce, "calledOnce").to.be.true;
-    expect(today.isSame(onChange.firstCall.args[0], "day"), "today.isSame").to.be.true;
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(today.isSame(onChange.mock.calls[0][0], "day")).toBe(true);
 
-    expect(yesterdayElem, "yesterdayElem").to.be.not.null;
-    expect(yesterdayElem.getAttribute("disabled"), "yesterdayElem disabled").to.be.a("string");
-    expect(yesterdayElem.innerText).to.be.eq("31");
+    expect(yesterdayElem).not.toBeNull();
+    expect(typeof yesterdayElem.getAttribute("disabled")).toBe("string");
+    expect(yesterdayElem.innerHTML).toBe("31");
 
-    expect(tomorrowElem, "tomorrowElem").to.be.not.null;
-    expect(tomorrowElem.getAttribute("disabled"), "tomorrowElem disabled").to.be.null;
-    expect(tomorrowElem.innerText).to.be.eq("2");
+    expect(tomorrowElem).not.toBeNull();
+    expect(tomorrowElem.getAttribute("disabled")).toBeNull();
+    expect(tomorrowElem.textContent).toBe("2");
     tomorrowElem.click();
-    expect(onChange.calledTwice, "calledTwice").to.be.true;
-    expect(tomorrow.isSame(onChange.secondCall.args[0], "day"), "tomorrow.isSame").to.be.true;
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(tomorrow.isSame(onChange.mock.calls[1][0], "day")).toBe(true);
 
-    expect(afterTomorrowElem, "afterTomorrowElem").to.be.not.null;
-    expect(afterTomorrowElem.getAttribute("disabled"), "afterTomorrowElem disabled").to.be.a("string");
-    expect(afterTomorrowElem.innerText).to.be.eq("3");
+    expect(afterTomorrowElem).not.toBeNull();
+    expect(typeof afterTomorrowElem.getAttribute("disabled")).toBe("string");
+    expect(afterTomorrowElem.innerHTML).toBe("3");
   });
 });
 

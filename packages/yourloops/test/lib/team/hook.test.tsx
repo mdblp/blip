@@ -26,53 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { AuthContextProvider } from "../../../lib/auth";
-import { Team, TeamAPI, TeamContext, TeamContextProvider, TeamMember, TeamUser, useTeam } from "../../../lib/team";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
+import { Team, TeamContext, TeamContextProvider, TeamMember, TeamUser, useTeam } from "../../../lib/team";
 import { UserInvitationStatus } from "../../../models/generic";
-import { emptyTeam3, members, patients, teams } from "../../common";
-import { authHookHcp } from "../auth/hook.test";
-import { directShareAPI } from "../direct-share/hook.test";
-
-export const teamAPI: TeamAPI = {
-  fetchTeams: sinon.stub().resolves(teams),
-  fetchPatients: sinon.stub().resolves(patients),
-  changeMemberRole: sinon.stub().resolves(),
-  createTeam: sinon.stub().resolves(teams[1]),
-  editTeam: sinon.stub().resolves(),
-  inviteMember: sinon.stub().resolves(members[0]),
-  invitePatient: sinon.stub().resolves(patients[4]),
-  deleteTeam: sinon.stub().resolves(),
-  leaveTeam: sinon.stub().resolves(),
-  removeMember: sinon.stub().resolves(),
-  removePatient: sinon.stub().resolves(),
-  getTeamFromCode: sinon.stub().resolves(emptyTeam3),
-  joinTeam: sinon.stub().resolves(),
-};
-
-export function resetTeamAPIStubs(): void {
-  (teamAPI.fetchTeams as sinon.SinonStub).resetHistory();
-  (teamAPI.fetchPatients as sinon.SinonStub).resetHistory();
-  (teamAPI.changeMemberRole as sinon.SinonStub).resetHistory();
-  (teamAPI.createTeam as sinon.SinonStub).resetHistory();
-  (teamAPI.editTeam as sinon.SinonStub).resetHistory();
-  (teamAPI.inviteMember as sinon.SinonStub).resetHistory();
-  (teamAPI.invitePatient as sinon.SinonStub).resetHistory();
-  (teamAPI.deleteTeam as sinon.SinonStub).resetHistory();
-  (teamAPI.leaveTeam as sinon.SinonStub).resetHistory();
-  (teamAPI.removeMember as sinon.SinonStub).resetHistory();
-  (teamAPI.removePatient as sinon.SinonStub).resetHistory();
-
-  (teamAPI.fetchTeams as sinon.SinonStub).resolves(teams);
-  (teamAPI.fetchPatients as sinon.SinonStub).resolves(patients);
-}
+import { loggedInUsers } from "../../common";
+import { directShareAPI } from "../direct-share/hook";
+import { teamAPI } from "./utils";
+import { createAuthHookStubs } from "../auth/utils";
 
 describe("Team hook", () => {
 
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   let container: HTMLElement | null = null;
 
   let teamHook: TeamContext;
@@ -113,67 +81,67 @@ describe("Team hook", () => {
       const teamId = "fakeTeamId";
       const teamUser: TeamUser = {
         members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.pending,
-          } as TeamMember,
+            {
+              team: { id: teamId } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
         ],
       } as TeamUser;
 
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
-      expect(res).to.be.true;
+      expect(res).toBe(true);
     });
 
     it("should return false when team user does not have a pending status in given team", () => {
       const teamId = "fakeTeamId";
       const teamUser: TeamUser = {
         members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.accepted,
-          } as TeamMember,
+            {
+              team: { id: teamId } as Team,
+              status: UserInvitationStatus.accepted,
+            } as TeamMember,
         ],
       } as TeamUser;
 
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
-      expect(res).to.be.false;
+      expect(res).toBe(false);
     });
 
     describe("isInAtLeastATeam", () => {
       it("should return false when team user does not have an accepted status in any team", () => {
         const teamUser: TeamUser = {
           members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
+              {
+                team: { id: "teamId1" } as Team,
+                status: UserInvitationStatus.pending,
+              } as TeamMember,
+              {
+                team: { id: "teamId2" } as Team,
+                status: UserInvitationStatus.pending,
+              } as TeamMember,
           ],
         } as TeamUser;
 
         const res = teamHook.isInAtLeastATeam(teamUser);
-        expect(res).to.be.false;
+        expect(res).toBe(false);
       });
 
       it("should return true when team user does has an accepted status in a team", () => {
         const teamUser: TeamUser = {
           members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.accepted,
-            } as TeamMember,
+              {
+                team: { id: "teamId1" } as Team,
+                status: UserInvitationStatus.pending,
+              } as TeamMember,
+              {
+                team: { id: "teamId2" } as Team,
+                status: UserInvitationStatus.accepted,
+              } as TeamMember,
           ],
         } as TeamUser;
 
         const res = teamHook.isInAtLeastATeam(teamUser);
-        expect(res).to.be.true;
+        expect(res).toBe(true);
       });
     });
   });

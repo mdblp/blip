@@ -26,13 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as sinon from "sinon";
 import { DirectShareAPI } from "../../../lib/share/models";
 
 export const directShareAPI: DirectShareAPI = {
-  removeDirectShare: sinon.stub().resolves(),
+  removeDirectShare: jest.fn().mockReturnValue(() => Promise.resolve()),
 };
 
 export function resetDirectShareAPIStubs(): void {
-  (directShareAPI.removeDirectShare as sinon.SinonStub).resetHistory();
+  (directShareAPI.removeDirectShare as jest.Mock).mockReset();
 }

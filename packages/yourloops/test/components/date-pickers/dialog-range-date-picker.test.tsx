@@ -29,23 +29,35 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 import dayjs from "dayjs";
 
 import DialogRangeDatePicker from "../../../components/date-pickers/dialog-range-date-picker";
+import i18n, { init as i18nInit } from "../../../lib/language";
+import initDayJS from "../../../lib/dayjs";
 
 describe("Dialog range date picker", () => {
 
-  const handleResultStub = sinon.stub<[string | undefined, string | undefined], void>();
-  const handleSelectedDateChange = sinon.stub<[string | undefined, string | undefined], void>();
+  const handleResultStub = jest.fn();
+  const handleSelectedDateChange = jest.fn();
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    i18nInit().then(() => {
+      initDayJS();
+      i18n.addResourceBundle("en", "yourloops", {
+        "date-picker-header-date-format": "MMMM YYYY",
+        "date-picker-toolbar-date-format": "ddd, MMM D",
+      });
+    }).catch((reason: unknown) => {
+      console.error(reason);
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    handleResultStub.reset();
-    handleSelectedDateChange.reset();
+    handleResultStub.mockReset();
+    handleSelectedDateChange.mockReset();
   });
 
   afterEach(() => {
@@ -69,9 +81,9 @@ describe("Dialog range date picker", () => {
     });
 
     const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem).to.be.null;
-    expect(handleResultStub.called, "handleResultStub").to.be.false;
-    expect(handleSelectedDateChange.called, "handleSelectedDateChange").to.be.false;
+    expect(calendarElem).toBeNull();
+    expect(handleResultStub).toHaveBeenCalledTimes(0);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(0);
   });
 
   it("should render the calendar when isOpen is true", async () => {
@@ -88,9 +100,9 @@ describe("Dialog range date picker", () => {
     });
 
     const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem, "calendar-box-first").to.be.not.null;
-    expect(handleResultStub.called, "handleResultStub").to.be.false;
-    expect(handleSelectedDateChange.calledOnce, "handleSelectedDateChange").to.be.true;
+    expect(calendarElem).not.toBeNull();
+    expect(handleResultStub).toHaveBeenCalledTimes(0);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1);
   });
 
   it("should render the calendar when using the enter key on the button", async () => {
@@ -106,10 +118,11 @@ describe("Dialog range date picker", () => {
     });
 
     const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem, "calendar-box-first").to.be.not.null;
-    expect(handleResultStub.called, "handleResultStub").to.be.false;
-    expect(handleSelectedDateChange.calledOnce, "handleSelectedDateChange").to.be.true;
-  });
+    expect(calendarElem).not.toBeNull();
+    expect(handleResultStub).toHaveBeenCalledTimes(0);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1);
+  }
+  );
 
   it("should render the calendar when using the space key on the button", async () => {
     await act(() => {
@@ -124,10 +137,11 @@ describe("Dialog range date picker", () => {
     });
 
     const calendarElem = document.getElementById("calendar-box-first");
-    expect(calendarElem, "calendar-box-first").to.be.not.null;
-    expect(handleResultStub.called, "handleResultStub").to.be.false;
-    expect(handleSelectedDateChange.calledOnce, "handleSelectedDateChange").to.be.true;
-  });
+    expect(calendarElem).not.toBeNull();
+    expect(handleResultStub).toHaveBeenCalledTimes(0);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1);
+  }
+  );
 
   it("should tell when the calendar is closed using the cancel button", async () => {
     await act(() => {
@@ -138,12 +152,15 @@ describe("Dialog range date picker", () => {
     });
 
     const buttonCancel = document.getElementById("date-picker-button-cancel");
-    expect(buttonCancel, "date-picker-button-cancel").to.be.not.null;
+    expect(buttonCancel).not.toBeNull();
     buttonCancel.click();
 
-    expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
-    expect(handleResultStub.firstCall.args).to.be.empty;
-  });
+    expect(handleResultStub).toHaveBeenCalledTimes(1);
+    expect(handleResultStub.mock.calls[0]).toHaveLength(0);
+
+    expect(handleResultStub.mock.calls[0]).toHaveLength(0);
+  }
+  );
 
   it("should restrict selected date to min/max dates", async () => {
     await act(() => {
@@ -161,13 +178,13 @@ describe("Dialog range date picker", () => {
       });
     });
 
-    expect(handleSelectedDateChange.calledOnce, "handleSelectedDateChange").to.be.true;
-    expect(handleSelectedDateChange.firstCall.args).to.be.deep.eq(["2022-01-01", "2022-01-30"]);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1);
+    expect(handleSelectedDateChange.mock.calls[0]).toEqual(["2022-01-01", "2022-01-30"]);
 
     const buttonCancel = document.getElementById("date-picker-button-cancel");
-    expect(buttonCancel, "date-picker-button-cancel").to.be.not.null;
+    expect(buttonCancel).not.toBeNull();
     buttonCancel.click();
-    expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
+    expect(handleResultStub).toHaveBeenCalledTimes(1);
   });
 
   it("should handle wrong dates inputs", async () => {
@@ -186,10 +203,10 @@ describe("Dialog range date picker", () => {
     });
 
     const buttonOk = document.getElementById("date-picker-button-ok");
-    expect(buttonOk, "date-picker-button-ok").to.be.not.null;
+    expect(buttonOk).not.toBeNull();
     buttonOk.click();
-    expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
-    expect(handleResultStub.firstCall.args).to.be.deep.eq(["2022-01-01", "2022-01-30"]);
+    expect(handleResultStub).toHaveBeenCalledTimes(1);
+    expect(handleResultStub.mock.calls[0]).toEqual(["2022-01-01", "2022-01-30"]);
   });
 
   it("should return the selected date", async () => {
@@ -206,18 +223,18 @@ describe("Dialog range date picker", () => {
     });
 
     const buttonStart = document.getElementById("button-calendar-day-2021-12-15");
-    expect(buttonStart).to.be.not.null;
+    expect(buttonStart).not.toBeNull();
     buttonStart.click();
     const buttonEnd = document.getElementById("button-calendar-day-2022-01-15");
-    expect(buttonEnd).to.be.not.null;
+    expect(buttonEnd).not.toBeNull();
     buttonEnd.click();
 
     const buttonOk = document.getElementById("date-picker-button-ok");
-    expect(buttonOk, "date-picker-button-ok").to.be.not.null;
+    expect(buttonOk).not.toBeNull();
     buttonOk.click();
 
-    expect(handleResultStub.calledOnce, "handleResultStub").to.be.true;
-    expect(handleResultStub.firstCall.args).to.be.deep.eq(["2021-12-15", "2022-01-15"]);
+    expect(handleResultStub).toHaveBeenCalledTimes(1);
+    expect(handleResultStub.mock.calls[0]).toEqual(["2021-12-15", "2022-01-15"]);
   });
 
   it("should respect the max selectable days parameter", async () => {
@@ -235,14 +252,14 @@ describe("Dialog range date picker", () => {
       });
     });
 
-    expect(handleSelectedDateChange.calledOnce, "calledOnce").to.be.true;
-    expect(handleSelectedDateChange.firstCall.args).to.be.deep.eq(["2022-01-01", "2022-01-05"]);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1);
+    expect(handleSelectedDateChange.mock.calls[0]).toEqual(["2022-01-01", "2022-01-05"]);
 
     const buttonStart = document.getElementById("button-calendar-day-2021-12-31");
-    expect(buttonStart).to.be.not.null;
+    expect(buttonStart).not.toBeNull();
     buttonStart.click();
-    expect(handleSelectedDateChange.calledTwice, "calledTwice").to.be.true;
-    expect(handleSelectedDateChange.secondCall.args).to.be.deep.eq(["2021-12-31", "2021-12-31"]);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(2);
+    expect(handleSelectedDateChange.mock.calls[1]).toEqual(["2021-12-31", "2021-12-31"]);
 
     const rangesAfterFirst = [{
       start: "2021-12-01",
@@ -270,10 +287,12 @@ describe("Dialog range date picker", () => {
         let formatedDay = day.format("YYYY-MM-DD");
         while (formatedDay !== end) {
           const dayButton = document.getElementById(`button-calendar-day-${formatedDay}`);
-          expect(dayButton).to.be.not.null;
-          range.disabled ?
-            expect(dayButton.getAttribute("disabled"), formatedDay).to.be.not.null
-            : expect(dayButton.getAttribute("disabled"), formatedDay).to.be.null;
+          expect(dayButton).not.toBeNull();
+          if (range.disabled) {
+            expect(dayButton.getAttribute("disabled")).toBeDefined();
+          } else {
+            expect(dayButton.getAttribute("disabled")).toBeNull();
+          }
           day = day.add(1, "day");
           formatedDay = day.format("YYYY-MM-DD");
         }
@@ -284,12 +303,12 @@ describe("Dialog range date picker", () => {
 
     // Select the end date, all must be selectabled:
     const buttonEnd = document.getElementById("button-calendar-day-2021-12-24");
-    expect(buttonEnd).to.be.not.null;
+    expect(buttonEnd).not.toBeNull();
     buttonEnd.click();
     testRange(rangesAfterLast);
 
-    expect(handleSelectedDateChange.calledThrice, "calledThrice").to.be.true;
-    expect(handleSelectedDateChange.thirdCall.args).to.be.deep.eq(["2021-12-24", "2021-12-31"]);
+    expect(handleSelectedDateChange).toHaveBeenCalledTimes(3);
+    expect(handleSelectedDateChange.mock.calls[2]).toEqual(["2021-12-24", "2021-12-31"]);
   });
 });
 

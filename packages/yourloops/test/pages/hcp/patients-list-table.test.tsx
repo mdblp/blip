@@ -27,28 +27,46 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import * as sinon from "sinon";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act, Simulate } from "react-dom/test-utils";
 
 import { SortDirection, SortFields } from "../../../models/generic";
-import { useTeam, TeamUser, TeamContextProvider } from "../../../lib/team";
+import { useTeam, TeamContextProvider } from "../../../lib/team";
 import { NotificationContextProvider } from "../../../lib/notifications";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 
 import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
-import { authHookHcp } from "../../lib/auth/hook.test";
-import { teamAPI } from "../../lib/team/hook.test";
+import "../../intersectionObserverMock";
 
 import PatientListTable from "../../../pages/hcp/patients/table";
+import { teamAPI } from "../../lib/team/utils";
+import { loggedInUsers } from "../../common";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Patient list table", () => {
-  const clickPatientStub = sinon.stub<[user: TeamUser], void>();
-  const clickFlagPatientStub = sinon.stub<[userId: string], Promise<void>>();
-  const clickRemovePatientStub = sinon.stub<[patient: TeamUser], Promise<void>>();
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+  const clickPatientStub = jest.fn();
+  const clickFlagPatientStub = jest.fn();
+  const clickRemovePatientStub = jest.fn();
 
   let container: HTMLElement | null = null;
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    clickPatientStub.mockReset();
+    clickFlagPatientStub.mockReset();
+    clickRemovePatientStub.mockReset();
+  });
+
+  afterEach(() => {
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
+    }
+  });
 
   const PatientListTableComponent = (): JSX.Element => {
     const team = useTeam();
@@ -62,7 +80,7 @@ describe("Patient list table", () => {
         orderBy={SortFields.lastname}
         onClickPatient={clickPatientStub}
         onFlagPatient={clickFlagPatientStub}
-        onSortList={sinon.spy()}
+        onSortList={jest.fn()}
         onClickRemovePatient={clickRemovePatientStub}
       />
     );
@@ -84,39 +102,23 @@ describe("Patient list table", () => {
     });
   }
 
-  beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-    clickPatientStub.reset();
-    clickFlagPatientStub.reset();
-    clickRemovePatientStub.reset();
-  });
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
-    }
-  });
-
   it("should be able to render", async () => {
     await mountComponent();
     const table = document.getElementById("patients-list-table");
-    expect(table).to.be.not.null;
+    expect(table).not.toBeNull();
   });
 
   it("should fetch and display patients", async () => {
     await mountComponent();
     const rows = document.querySelectorAll(".patients-list-row");
-    expect(rows.length).to.be.not.null;
+    expect(rows.length).not.toBeNull();
   });
 
   it("should call onClickPatient method when clicking on a row", async () => {
     await mountComponent();
     const firstRow = document.querySelector(".patients-list-row");
     Simulate.click(firstRow);
-    expect(clickPatientStub.calledOnce).to.be.true;
+    expect(clickPatientStub).toHaveBeenCalledTimes(1);
   });
 
   it("should call onFlagPatient method when clicking on a flag", async () => {
@@ -124,7 +126,7 @@ describe("Patient list table", () => {
     const firstRow = document.querySelector(".patients-list-row");
     const flagButton = firstRow.querySelector(".patient-flag-button");
     Simulate.click(flagButton);
-    expect(clickFlagPatientStub.calledOnce).to.be.true;
+    expect(clickFlagPatientStub).toHaveBeenCalledTimes(1);
   });
 
   /*
@@ -137,7 +139,7 @@ describe("Patient list table", () => {
   //   const firstRow = document.querySelector(".patients-list-row");
   //   const removeButton = firstRow.querySelector(".remove-patient-hcp-view-button");
   //   Simulate.click(removeButton);
-  //   expect(clickRemovePatientStub.calledOnce).to.be.true;
+  //   expect(clickRemovePatientStub.calledOnce).toBeTruthy();
   // });
 });
 

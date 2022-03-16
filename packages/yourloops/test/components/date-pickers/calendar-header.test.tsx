@@ -29,17 +29,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 import dayjs from "dayjs";
 
 import { CalendarChangeMonth } from "../../../components/date-pickers/models";
 import CalendarHeader from "../../../components/date-pickers/calendar-header";
+import i18n, { init as i18nInit } from "../../../lib/language";
 
 
 describe("Calendar header", () => {
 
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    i18nInit().then(() => {
+      i18n.addResourceBundle("en", "yourloops", {
+        "date-picker-header-date-format": "MMMM YYYY",
+        "date-picker-toolbar-date-format": "ddd, MMM D",
+      })
+        .init({ react: { useSuspense: true } });
+    }).catch((reason: unknown) => {
+      console.error(reason);
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -56,8 +67,8 @@ describe("Calendar header", () => {
 
   it("should correctly render a month", async () => {
     const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = sinon.stub();
-    const onNextMonth = sinon.stub();
+    const onPrevMonth = jest.fn();
+    const onNextMonth = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -71,25 +82,25 @@ describe("Calendar header", () => {
       });
     });
 
-    expect(document.getElementById("calendar-header")).to.be.not.null;
+    expect(document.getElementById("calendar-header")).not.toBeNull();
 
     const buttonPrevMonth = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonPrevMonth, "buttonPrevMonth").to.be.not.null;
-    expect(buttonPrevMonth.nodeName.toLowerCase(), "buttonPrevMonth node").to.be.eq("button");
-    expect(buttonPrevMonth.getAttribute("disabled"), "buttonPrevMonth disabled").to.be.null;
+    expect(buttonPrevMonth).not.toBeNull();
+    expect(buttonPrevMonth.nodeName.toLowerCase()).toBe("button");
+    expect(buttonPrevMonth.getAttribute("disabled")).toBeNull();
     buttonPrevMonth.click();
-    expect(onPrevMonth.calledOnce).to.be.true;
+    expect(onPrevMonth).toHaveBeenCalledTimes(1);
 
     const buttonNextMonth = document.getElementById("calendar-header-button-next-month");
-    expect(buttonNextMonth, "buttonNextMonth").to.be.not.null;
-    expect(buttonNextMonth.nodeName.toLowerCase(), "buttonNextMonth node").to.be.eq("button");
-    expect(buttonNextMonth.getAttribute("disabled"), "buttonNextMonth disabled").to.be.null;
+    expect(buttonNextMonth).not.toBeNull();
+    expect(buttonNextMonth.nodeName.toLowerCase()).toBe("button");
+    expect(buttonNextMonth.getAttribute("disabled")).toBeNull();
     buttonNextMonth.click();
-    expect(onNextMonth.calledOnce).to.be.true;
+    expect(onNextMonth).toHaveBeenCalledTimes(1);
 
     const displayedMonth = document.getElementById("calendar-header-current-month");
-    expect(displayedMonth).to.be.not.null;
-    expect(displayedMonth.innerText).to.be.eq("November 2021");
+    expect(displayedMonth).not.toBeNull();
+    expect(displayedMonth.innerHTML).toBe("November 2021");
   });
 
   it("should correctly restrict prev/next month when disabled", async () => {
@@ -106,22 +117,22 @@ describe("Calendar header", () => {
     });
 
     const buttonPrevMonth = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonPrevMonth, "buttonPrevMonth").to.be.not.null;
-    expect(buttonPrevMonth.getAttribute("disabled"), "buttonPrevMonth disabled").to.be.not.null;
+    expect(buttonPrevMonth).not.toBeNull();
+    expect(buttonPrevMonth.getAttribute("disabled")).not.toBeNull();
 
     const buttonNextMonth = document.getElementById("calendar-header-button-next-month");
-    expect(buttonNextMonth, "buttonNextMonth").to.be.not.null;
-    expect(buttonNextMonth.getAttribute("disabled"), "buttonNextMonth disabled").to.be.not.null;
+    expect(buttonNextMonth).not.toBeNull();
+    expect(buttonNextMonth.getAttribute("disabled")).not.toBeNull();
   });
 
   it("should render the transition when requested", async () => {
     const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = sinon.stub();
-    const onNextMonth = sinon.stub();
+    const onPrevMonth = jest.fn();
+    const onNextMonth = jest.fn();
     const changingMonth: CalendarChangeMonth = {
       direction: "right",
       toMonth: today.add(1, "month"),
-      onAnimationEnd: sinon.stub(),
+      onAnimationEnd: jest.fn(),
     };
 
     await act(() => {
@@ -138,18 +149,18 @@ describe("Calendar header", () => {
     });
 
     const prevMonth = document.getElementById("calendar-header-prev-month");
-    expect(prevMonth, "prevMonth").to.be.not.null;
-    expect(prevMonth.innerText, "prevMonth text").to.be.eq("December 2021");
+    expect(prevMonth).not.toBeNull();
+    expect(prevMonth.innerHTML).toBe("December 2021");
 
     const nextMonth = document.getElementById("calendar-header-next-month");
-    expect(nextMonth, "nextMonth").to.be.not.null;
-    expect(nextMonth.innerText, "nextMonth text").to.be.eq("December 2021");
+    expect(nextMonth).not.toBeNull();
+    expect(nextMonth.innerHTML).toBe("December 2021");
   });
 
   it("should hide the prev-month button when position is last and orientation islandscape", async () => {
     const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = sinon.stub();
-    const onNextMonth = sinon.stub();
+    const onPrevMonth = jest.fn();
+    const onNextMonth = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -165,14 +176,15 @@ describe("Calendar header", () => {
     });
 
     const buttonPrevMonth = document.getElementById("calendar-header-last-button-prev-month");
-    expect(buttonPrevMonth, "calendar-header-last-button-prev-month").to.be.not.null;
-    expect(buttonPrevMonth.getAttribute("aria-disabled"), "aria-disabled").to.be.eq("true");
-  });
+    expect(buttonPrevMonth).not.toBeNull();
+    expect(buttonPrevMonth.getAttribute("aria-disabled")).toBe("true");
+  }
+  );
 
   it("should hide the next-month button when position is first and orientation islandscape", async () => {
     const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = sinon.stub();
-    const onNextMonth = sinon.stub();
+    const onPrevMonth = jest.fn();
+    const onNextMonth = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -188,7 +200,7 @@ describe("Calendar header", () => {
     });
 
     const buttonNextMonth = document.getElementById("calendar-header-first-button-next-month");
-    expect(buttonNextMonth, "calendar-header-first-button-next-month").to.be.not.null;
-    expect(buttonNextMonth.getAttribute("aria-disabled"), "aria-disabled").to.be.eq("true");
+    expect(buttonNextMonth).not.toBeNull();
+    expect(buttonNextMonth.getAttribute("aria-disabled")).toBe("true");
   });
 });

@@ -25,11 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-
 import EncoderService from "../../services/encoder";
+import { Crypto } from "@peculiar/webcrypto";
 
-function testEncoderService(): void {
+describe("Encoder service", () => {
+
+  beforeAll(() => {
+    Object.defineProperty(global.self, "crypto", {
+      value: {
+        subtle: new Crypto().subtle,
+      },
+    });
+  });
 
   describe("encodeSHA1", () => {
     it("should return correct SHA1 hash", async () => {
@@ -41,9 +48,7 @@ function testEncoderService(): void {
       const actual = await EncoderService.encodeSHA1(valueToEncode);
 
       //then
-      expect(actual).to.equal(expected);
+      expect(actual).toEqual(expected);
     });
   });
-}
-
-export default testEncoderService;
+});

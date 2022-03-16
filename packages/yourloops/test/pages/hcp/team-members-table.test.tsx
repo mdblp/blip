@@ -27,26 +27,27 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper, MountRendererProps } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper, MountRendererProps } from "enzyme";
 
 import { waitTimeout } from "../../../lib/utils";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { Team, TeamContextProvider, loadTeams } from "../../../lib/team";
 import TeamMembers, { TeamMembersProps } from "../../../pages/hcp/team-members-table";
 
 import { loggedInUsers } from "../../common";
-import { authHookHcp, authHcp } from "../../lib/auth/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
 import { TeamMemberRole } from "../../../models/team";
+import Adapter from "enzyme-adapter-react-16";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Team member table", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const apiTimeout = 50;
   const defaultProps: TeamMembersProps = {
     team: {} as Team,
-    onShowRemoveTeamMemberDialog: sinon.stub().returns(waitTimeout(apiTimeout)),
-    onSwitchAdminRole: sinon.stub().returns(waitTimeout(apiTimeout)),
+    onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
+    onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
   };
   let teams: Team[] = [];
   let component: ReactWrapper | null = null;
@@ -64,7 +65,11 @@ describe("Team member table", () => {
     );
   }
 
-  before(async () => {
+  beforeAll(async () => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     mountOptions.attachTo = document.getElementById("app");
     if (mountOptions.attachTo === null) {
       mountOptions.attachTo = document.createElement("div");
@@ -76,7 +81,7 @@ describe("Team member table", () => {
     defaultProps.team = teams[1];
   });
 
-  after(() => {
+  afterAll(() => {
     const { attachTo } = mountOptions;
     if (attachTo instanceof HTMLElement) {
       document.body.removeChild(attachTo);
@@ -89,8 +94,8 @@ describe("Team member table", () => {
       component.detach();
       component = null;
     }
-    (defaultProps.onShowRemoveTeamMemberDialog as sinon.SinonSpy).resetHistory();
-    (defaultProps.onSwitchAdminRole as sinon.SinonSpy).resetHistory();
+    (defaultProps.onShowRemoveTeamMemberDialog as jest.Mock).mockReset();
+    (defaultProps.onSwitchAdminRole as jest.Mock).mockReset();
     resetTeamAPIStubs();
   });
 
@@ -105,23 +110,23 @@ describe("Team member table", () => {
   it("should display a collapse accordion by default", async () => {
     component = mount(<TestTeamMembersComponent {...defaultProps} />, mountOptions);
     await waitTimeout(apiTimeout);
-    expect(component.exists(`#team-members-list-${defaultProps.team.id}`)).to.be.true;
-    expect(component.exists(`team-members-list-${defaultProps.team.id}-table`)).to.be.false;
+    expect(component.exists(`#team-members-list-${defaultProps.team.id}`)).toBe(true);
+    expect(component.exists(`team-members-list-${defaultProps.team.id}-table`)).toBe(false);
   });
 
   it("should display the member table when clicking on the accordion", async () => {
     component = await displayDefaultTable();
-    expect(component.exists(`#team-members-list-${defaultProps.team.id}-table`)).to.be.true;
+    expect(component.exists(`#team-members-list-${defaultProps.team.id}-table`)).toBe(true);
   });
 
   it("should display all the team members", async () => {
     component = await displayDefaultTable();
     const teamId = defaultProps.team.id;
     const { members } = defaultProps.team;
-    expect(members.length, `expect nMembers ${members.length} > 0`).to.be.above(0);
+    expect(members.length).toBeGreaterThan(0);
     for (const member of members) {
       const rowId = `#team-members-list-${teamId}-row-${member.user.userid}`;
-      expect(component.exists(rowId), rowId).to.be.equal(member.role !== TeamMemberRole.patient);
+      expect(component.exists(rowId)).toBe(member.role !== TeamMemberRole.patient);
     }
   });
 
@@ -131,15 +136,15 @@ describe("Team member table", () => {
 
       const teamId = defaultProps.team.id;
       const { members } = defaultProps.team;
-      expect(members.length, `expect nMembers ${members.length} > 0`).to.be.above(0);
+      expect(members.length).toBeGreaterThan(0);
       for (const member of members) {
         const rowId = `#team-members-list-${teamId}-row-${member.user.userid}-action-remove`;
         if (member.role === TeamMemberRole.patient) {
-          expect(component.exists(rowId), member.user.userid).to.be.false;
+          expect(component.exists(rowId)).toBe(false);
         } else if (member.user.userid === loggedInUsers.hcp.userid) {
-          expect(component.exists(rowId), member.user.userid).to.be.false;
+          expect(component.exists(rowId)).toBe(false);
         } else {
-          expect(component.exists(rowId), member.user.userid).to.be.true;
+          expect(component.exists(rowId)).toBe(true);
         }
       }
     });
@@ -156,9 +161,9 @@ describe("Team member table", () => {
       component.update();
       await waitTimeout(apiTimeout);
 
-      const spy = defaultProps.onSwitchAdminRole as sinon.SinonSpy;
-      expect(spy.calledOnce, "calledOnce").to.be.true;
-      expect(spy.calledWith(member, TeamMemberRole.admin), `calledWith(${spy.getCall(0).args})`).to.be.true;
+      const spy = defaultProps.onSwitchAdminRole as jest.Mock;
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(member, TeamMemberRole.admin);
     });
 
     it("should call onShowRemoveTeamMemberDialog when clicking on the button", async () => {
@@ -169,9 +174,9 @@ describe("Team member table", () => {
       component.find(`#team-members-list-${teamId}-row-${memberId}-action-remove`).last().simulate("click");
       component.update();
 
-      const spy = defaultProps.onShowRemoveTeamMemberDialog as sinon.SinonSpy;
-      expect(spy.calledOnce, "calledOnce").to.be.true;
-      expect(spy.calledWith(member), `calledWith(${spy.getCall(0).args})`).to.be.true;
+      const spy = defaultProps.onShowRemoveTeamMemberDialog as jest.Mock;
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(member);
     });
   });
 
@@ -184,7 +189,7 @@ describe("Team member table", () => {
       component.find(`#team-members-list-${team.id}-header`).last().simulate("click");
       component.update();
 
-      expect(component.exists(`#certified-professional-icon-${certifiedHcp.userid}`)).to.be.true;
+      expect(component.exists(`#certified-professional-icon-${certifiedHcp.userid}`)).toBeTruthy();
     });
 
     it("should not display certified icon if the member is not a certified professional", () => {
@@ -195,7 +200,19 @@ describe("Team member table", () => {
       component.find(`#team-members-list-${team.id}-header`).last().simulate("click");
       component.update();
 
-      expect(component.exists(`#certified-professional-icon-${patient.userid}`)).to.be.false;
+      expect(component.exists(`#certified-professional-icon-${patient.userid}`)).toBeFalsy();
+    });
+
+    it("should not display the remove team member button and switch role checkbox must be disabled", async () => {
+      const props: TeamMembersProps = {
+        ...defaultProps,
+        team: teams[2],
+      };
+      component = mount(<TestTeamMembersComponent {...props} />, mountOptions);
+      const teamId = props.team.id;
+      component.find(`#team-members-list-${teamId}-header`).last().simulate("click");
+      component.update();
+      await waitTimeout(apiTimeout);
     });
 
     it("should not display the remove team member button and switch role checkbox must be disabled", async () => {
@@ -210,16 +227,16 @@ describe("Team member table", () => {
       await waitTimeout(apiTimeout);
 
       const { members } = props.team;
-      expect(members.length).to.be.above(0);
+      expect(members.length).toBeGreaterThan(0);
       for (const member of members) {
         if (member.role === TeamMemberRole.patient) {
           continue;
         }
         const memberId = member.user.userid;
-        expect(component.exists(`#team-members-list-${teamId}-row-${memberId}-action-remove`), "button exists").to.be.false;
-        expect(component.exists(`#team-members-list-${teamId}-row-${memberId}-role-checkbox`), "checkbox exists").to.be.true;
+        expect(component.exists(`#team-members-list-${teamId}-row-${memberId}-action-remove`)).toBe(false);
+        expect(component.exists(`#team-members-list-${teamId}-row-${memberId}-role-checkbox`)).toBe(true);
         const checkBox = component.find(`#team-members-list-${teamId}-row-${memberId}-role-checkbox`).last();
-        expect(checkBox.prop("disabled"), "checkbox disabled").to.be.true;
+        expect(checkBox.prop("disabled")).toBe(true);
       }
     });
   });

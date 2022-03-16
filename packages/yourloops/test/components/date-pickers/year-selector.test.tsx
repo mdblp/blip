@@ -29,15 +29,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act, Simulate } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 
-import { MIN_YEAR, MAX_YEAR } from "../../../components/date-pickers/models";
+import { MAX_YEAR, MIN_YEAR } from "../../../components/date-pickers/models";
 import YearSelector from "../../../components/date-pickers/year-selector";
 
 describe("Year selector", () => {
 
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    window.HTMLElement.prototype.scrollIntoView = () => {
+      //This is a stub
+    };
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -52,7 +56,7 @@ describe("Year selector", () => {
   });
 
   it("should correctly render the default list of years", async () => {
-    const onSelectYear = sinon.stub<[number], void>();
+    const onSelectYear = jest.fn();
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
@@ -66,12 +70,12 @@ describe("Year selector", () => {
     });
 
     const yearSelector = document.getElementById("year-selector");
-    expect(yearSelector).to.be.not.null;
-    expect(yearSelector.children.length).to.be.eq(MAX_YEAR - MIN_YEAR + 1);
+    expect(yearSelector).not.toBeNull();
+    expect(yearSelector.children.length).toBe(MAX_YEAR - MIN_YEAR + 1);
   });
 
   it("should select the previous year with the arrow up key", async () => {
-    const onSelectYear = sinon.stub<[number], void>();
+    const onSelectYear = jest.fn();
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
@@ -88,22 +92,22 @@ describe("Year selector", () => {
     const year2020 = document.getElementById("year-2020");
     const year2021 = document.getElementById("year-2021");
 
-    expect(year2020.getAttribute("aria-selected")).to.be.eq("false");
-    expect(year2021.getAttribute("aria-selected")).to.be.eq("true");
+    expect(year2020.getAttribute("aria-selected")).toBe("false");
+    expect(year2021.getAttribute("aria-selected")).toBe("true");
 
     Simulate.keyUp(yearSelector, { key: "ArrowUp" });
 
-    expect(year2020.getAttribute("aria-selected")).to.be.eq("true");
-    expect(year2021.getAttribute("aria-selected")).to.be.eq("false");
+    expect(year2020.getAttribute("aria-selected")).toBe("true");
+    expect(year2021.getAttribute("aria-selected")).toBe("false");
 
     Simulate.keyUp(yearSelector, { key: "Enter" });
-    expect(onSelectYear.calledOnce).to.be.true;
+    expect(onSelectYear).toHaveBeenCalledTimes(1);
     // eslint-disable-next-line no-magic-numbers
-    expect(onSelectYear.firstCall.args[0]).to.be.eq(2020);
+    expect(onSelectYear.mock.calls[0][0]).toBe(2020);
   });
 
   it("should select the next year with the arrow down key", async () => {
-    const onSelectYear = sinon.stub<[number], void>();
+    const onSelectYear = jest.fn();
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
@@ -120,18 +124,18 @@ describe("Year selector", () => {
     const year2021 = document.getElementById("year-2021");
     const year2022 = document.getElementById("year-2022");
 
-    expect(year2021.getAttribute("aria-selected")).to.be.eq("true");
-    expect(year2022.getAttribute("aria-selected")).to.be.eq("false");
+    expect(year2021.getAttribute("aria-selected")).toBe("true");
+    expect(year2022.getAttribute("aria-selected")).toBe("false");
 
     Simulate.keyUp(yearSelector, { key: "ArrowDown" });
 
-    expect(year2021.getAttribute("aria-selected")).to.be.eq("false");
-    expect(year2022.getAttribute("aria-selected")).to.be.eq("true");
+    expect(year2021.getAttribute("aria-selected")).toBe("false");
+    expect(year2022.getAttribute("aria-selected")).toBe("true");
 
     Simulate.keyUp(yearSelector, { key: " " });
-    expect(onSelectYear.calledOnce).to.be.true;
+    expect(onSelectYear).toHaveBeenCalledTimes(1);
     // eslint-disable-next-line no-magic-numbers
-    expect(onSelectYear.firstCall.args[0]).to.be.eq(2022);
+    expect(onSelectYear.mock.calls[0][0]).toBe(2022);
   });
 });
 

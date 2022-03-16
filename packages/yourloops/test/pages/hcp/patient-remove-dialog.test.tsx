@@ -29,27 +29,28 @@
 import React from "react";
 import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
-import * as sinon from "sinon";
 
 import { TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 
-import { authHookHcp } from "../../lib/auth/hook.test";
 import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
-import { teamAPI } from "../../lib/team/hook.test";
-import { directShareAPI } from "../../lib/direct-share/hook.test";
+import { directShareAPI } from "../../lib/direct-share/hook";
 
 import RemoveDialog from "../../../pages/hcp/patients/remove-dialog";
 import { waitTimeout } from "../../../lib/utils";
+import { loggedInUsers } from "../../common";
+import { teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 
 describe("Patient remove dialog", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   let container: HTMLElement | null = null;
   let patient: TeamUser | undefined;
 
-  const onCloseStub = sinon.stub();
+  const onCloseStub = jest.fn();
 
   const RemoveDialogComponent = (props: { dialogOpened: boolean }): JSX.Element => {
     const team = useTeam();
@@ -95,19 +96,19 @@ describe("Patient remove dialog", () => {
   it("should be closed if isOpen is false", async () => {
     await mountComponent({ dialogOpened: false });
     const dialog = document.getElementById("remove-hcp-patient-dialog");
-    expect(dialog).to.be.null;
+    expect(dialog).toBeNull();
   });
 
   it("should be opened if isOpen is true", async () => {
     await mountComponent({ dialogOpened: true });
     const dialog = document.getElementById("remove-hcp-patient-dialog");
-    expect(dialog).to.be.not.null;
+    expect(dialog).not.toBeNull();
   });
 
   it("should not allow to validate if no team is selected", async () => {
     await mountComponent({ dialogOpened: true });
     const validateButton: HTMLButtonElement = document.querySelector("#remove-patient-dialog-validate-button");
-    expect(validateButton.disabled).to.be.true;
+    expect(validateButton.disabled).toBe(true);
   });
 
   it("should be able to remove patient after selecting a team", async () => {
@@ -116,11 +117,11 @@ describe("Patient remove dialog", () => {
     const teamSelect = document.querySelector("#patient-team-selector + input");
 
     Simulate.change(teamSelect, { target: { value: "private" } } as unknown as SyntheticEventData);
-    expect(validateButton.disabled).to.be.false;
+    expect(validateButton.disabled).toBe(false);
 
     Simulate.click(validateButton);
     await waitTimeout(1);
-    expect(onCloseStub.calledOnce, "click on validate button").to.be.true;
+    expect(onCloseStub).toHaveBeenCalledTimes(1);
   });
 });
 

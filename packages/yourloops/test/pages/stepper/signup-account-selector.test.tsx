@@ -26,12 +26,11 @@
  */
 
 import React from "react";
-import { expect } from "chai";
 import _ from "lodash";
 
 import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 import SignupAccountSelector from "../../../pages/signup/signup-account-selector";
-import { act } from "react-test-renderer";
+import { act } from "react-dom/test-utils";
 import ReactDOM from "react-dom";
 
 describe("Signup account selector", () => {
@@ -66,9 +65,9 @@ describe("Signup account selector", () => {
   const nextButtonDisabled = (disabled: boolean) => {
     const nextButton = document.getElementById("button-signup-steppers-next");
     if (disabled) {
-      expect(nextButton.getAttribute("disabled")).to.be.not.null;
+      expect(nextButton.getAttribute("disabled")).not.toBeNull();
     } else {
-      expect(nextButton.getAttribute("disabled")).to.be.null;
+      expect(nextButton.getAttribute("disabled")).toBeNull();
     }
   };
 

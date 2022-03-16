@@ -27,26 +27,31 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper } from "enzyme";
 
 import { Team } from "../../../lib/team";
 import { loadTeams } from "../../../lib/team/hook";
 import AddMemberDialog from "../../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../../pages/hcp/types";
-import { authHcp } from "../../lib/auth/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
+import Adapter from "enzyme-adapter-react-16";
+import { loggedInUsers } from "../../common";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 
 describe("Team member add dialog", () => {
+
+  const authHcp = loggedInUsers.hcpSession;
   const defaultProps: AddMemberDialogContentProps = {
     team: {} as Team,
-    onDialogResult: sinon.spy(),
+    onDialogResult: jest.fn(),
   };
 
   let component: ReactWrapper | null = null;
 
-  before(async () => {
+  beforeAll(async () => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     const { teams } = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.team = teams[1];
   });
@@ -56,21 +61,21 @@ describe("Team member add dialog", () => {
       component.unmount();
       component = null;
     }
-    (defaultProps.onDialogResult as sinon.SinonSpy).resetHistory();
+    (defaultProps.onDialogResult as jest.Mock).mockReset();
     resetTeamAPIStubs();
   });
 
   it("should be closed if addMember is null", () => {
     component = mount(<AddMemberDialog addMember={null} />);
-    expect(component.exists("#team-add-member-dialog")).to.be.true;
-    expect(component.html()).to.be.a("string").empty;
+    expect(component.exists("#team-add-member-dialog")).toBe(true);
+    expect(component.html().length).toBe(0);
   });
 
   it("should not be closed if addMember exists", () => {
     component = mount(<AddMemberDialog addMember={defaultProps} />);
-    expect(component.exists("#team-add-member-dialog")).to.be.true;
-    expect(component.html()).to.be.a("string").not.empty;
-    expect(component.find("#team-add-member-dialog-title-team-name").text()).to.be.equal(defaultProps.team.name);
+    expect(component.exists("#team-add-member-dialog")).toBe(true);
+    expect(component.html().length).toBeGreaterThan(0);
+    expect(component.find("#team-add-member-dialog-title-team-name").text()).toBe(defaultProps.team.name);
   });
 
   it("should return an empty email if cancel", () => {
@@ -82,11 +87,13 @@ describe("Team member add dialog", () => {
       },
     };
     component.find("input").find("#team-add-member-dialog-field-email").at(0).simulate("change", event);
-    expect(component.find("#team-add-member-dialog-button-add").at(0).prop("disabled"), "btn add disabled").to.be.false;
+    expect(
+      component.find("#team-add-member-dialog-button-add").at(0).prop("disabled")
+    ).toBe(false);
     component.find("#team-add-member-dialog-button-cancel").at(0).simulate("click");
-    const spy = defaultProps.onDialogResult as sinon.SinonSpy;
-    expect(spy.calledOnce, "calledOnce").to.be.true;
-    expect(spy.getCall(0).args[0]).to.deep.equal({ email: null, role: "member" });
+    const spy = defaultProps.onDialogResult as jest.Mock;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0][0]).toEqual({ email: null, role: "member" });
   });
 
   it("should return the email if validated", () => {
@@ -104,17 +111,19 @@ describe("Team member add dialog", () => {
       },
     };
     component.find("input").find("#team-add-member-dialog-field-email").last().simulate("change", changeEmailEvent);
-    expect(component.find("#team-add-member-dialog-button-add").last().prop("disabled"), "btn add disabled").to.be.false;
+    expect(
+      component.find("#team-add-member-dialog-button-add").last().prop("disabled")
+    ).toBe(false);
 
     component.find("#team-add-member-dialog-checkbox-admin").last().simulate("change", changeRoleEvent, true);
     component.find("#team-add-member-dialog-button-add").last().simulate("click");
 
-    const spy = defaultProps.onDialogResult as sinon.SinonSpy;
-    expect(spy.calledOnce, "calledOnce").to.be.true;
-    expect(spy.getCall(0).args.length).to.be.equal(1);
-    const argReveived = spy.getCall(0).args[0];
+    const spy = defaultProps.onDialogResult as jest.Mock;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0].length).toBe(1);
+    const argReveived = spy.mock.calls[0][0];
     const argExpected = { email: changeEmailEvent.target.value, role: "admin" };
-    expect(argReveived, JSON.stringify({ argReveived, argExpected })).to.deep.equal(argExpected);
+    expect(argReveived).toEqual(argExpected);
   });
 });
 
