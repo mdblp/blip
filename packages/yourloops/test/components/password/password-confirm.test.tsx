@@ -35,6 +35,7 @@ import { act } from "@testing-library/react-hooks/dom";
 import { PasswordConfirm } from "../../../components/password/password-confirm";
 import PasswordLeakService from "../../../services/password-leak";
 import { Simulate, SyntheticEventData } from "react-dom/test-utils";
+import { createTheme } from "@material-ui/core/styles";
 
 describe("Confirm password", () => {
 
@@ -43,6 +44,22 @@ describe("Confirm password", () => {
   const onSuccessStub = sinon.stub();
   let passwordLeakService: sinon.SinonStub;
   const securedPassword = "ThisPasswordIsSecured:)";
+
+  const mainTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#000000",
+        light: "#555555",
+        dark: "#ffffff",
+      },
+      secondary: {
+        main: "#000000",
+        light: "#555555",
+        dark: "#ffffff",
+      },
+      background: { default: "#FFFFFF" },
+    },
+  });
 
   const mountComponent = async (): Promise<void> => {
     await act(() => {
