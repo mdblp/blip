@@ -187,7 +187,7 @@
   "page-not-found": "Pagina niet gevonden",
   "password": "Wachtwoord",
   "password-dont-match": "Wachtwoorden komen niet overeen.",
-  "password-leaked": "This password has been leaked, please choose another one.",
+  "password-leaked": "Dit wachtwoord is bekend geworden, kies aub een ander.",
   "password-request-reset-instructions": "Controleer je e-mail en volg de instructies om je wachtwoord opnieuw in te stellen.",
   "password-request-reset-title": "E-mail verzonden!",
   "password-reset-success": "Je wachtwoord is gewijzigd. Je kan nu inloggen met je nieuwe wachtwoord.",
