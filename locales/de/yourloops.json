@@ -187,7 +187,7 @@
   "page-not-found": "Seite nicht gefunden",
   "password": "Passwort",
   "password-dont-match": "Die Passwörter stimmen nicht überein.",
-  "password-leaked": "This password has been leaked, please choose another one.",
+  "password-leaked": "Dieses Passwort ist bekannt geworden, bitte wählen Sie ein anderes.",
   "password-request-reset-instructions": "Überprüfen Sie Ihre E-Mail und folgen Sie den Anweisungen, um Ihr Passwort zurückzusetzen.",
   "password-request-reset-title": "E-Mail gesendet!",
   "password-reset-success": "Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit Ihrem neuen Passwort anmelden.",
