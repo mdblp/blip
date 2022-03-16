@@ -168,10 +168,7 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    // "<rootDir>/pages/hcp/team-member-add-dialog.test.tsx",
-    // "<rootDir>/components/password/password-strength-meter.test.tsx",
-    "**/__tests__/**/*.[jt]s?(x)",
-    "**/?(*.)+(spec|test).[tj]s?(x)"
+    "<rootDir>/**/*.test.tsx",
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
