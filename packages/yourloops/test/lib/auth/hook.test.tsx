@@ -569,7 +569,6 @@ describe("Auth hook", () => {
       expect(updateUserArgs[0]).toHaveProperty("user");
       expect(updateUserArgs[0]).toHaveProperty("sessionToken");
       expect(updateUserArgs[0]).toHaveProperty("traceToken");
-      // expect(updateUserArgs[0]).toHaveProperty("sessionToken", "traceToken");
       expect(updateUserArgs[1]).toEqual({ roles: [UserRoles.hcp] });
       expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(1);
       const updateProfileArgs = authApiCaregiverStubs.updateProfile.mock.calls[0];

@@ -98,8 +98,7 @@ describe("Session timeout", () => {
     container = null;
 
     expect(window.clearSessionTimeout).toBeUndefined();
-  }
-  );
+  });
 
   it("should logout the user if no action after config.SESSION_TIMEOUT is done", async () => {
     authHookHcpStubs.logout.mockImplementation(async () => {
@@ -110,8 +109,7 @@ describe("Session timeout", () => {
     await waitTimeout(config.SESSION_TIMEOUT + sessionTimeoutDelay);
     expect(authHookHcpStubs.logout).toHaveBeenCalledTimes(1);
     expect(authHookHcpStubs.logout.mock.calls[0][0]).toBe(true);
-  }
-  );
+  });
 
   it("should not logout the user when receive an event", async () => {
     authHookHcpStubs.logout.mockImplementation(async () => {
