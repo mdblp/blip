@@ -47,6 +47,7 @@ export interface PasswordProps {
   id: string;
   label: string;
   value: string;
+  onBlur?: () => void;
   onChange: (eventPayload: string) => void;
   onValidate?: () => void;
   error: boolean;
@@ -64,10 +65,7 @@ export interface PasswordProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     textField: {
-      "marginTop": "1em",
-      "& input:disabled": {
-        backgroundColor: "white",
-      },
+      marginTop: theme.spacing(2),
     },
     adornment: {
       [theme.breakpoints.down("sm")]: {
@@ -90,6 +88,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
   variant,
   margin,
   autoComplete,
+  onBlur,
   onValidate,
   onChange,
   checkStrength,
@@ -152,6 +151,7 @@ const Password: React.FunctionComponent<PasswordProps> = ({
       style={style}
       margin={margin}
       className={className ?? classes.textField}
+      onBlur={onBlur}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

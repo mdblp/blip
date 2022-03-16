@@ -29,30 +29,28 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import Assignment from "@material-ui/icons/Assignment";
 import { ClassNameMap } from "@material-ui/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 
 import { getUserEmail } from "../../lib/utils";
 import { User } from "../../lib/auth";
-import Password from "../../components/utils/password";
+import Password from "../../components/password/password";
 import { Errors } from "./models";
-import { PasswordStrengthMeter } from "../../components/utils/password-strength-meter";
-import { CheckPasswordStrengthResults } from "../../lib/auth/helpers";
+import { PasswordConfirm } from "../../components/password/password-confirm";
 
-interface AuthenticationFormProps {
+interface CredentialsFormProps {
   user: User;
-  classes: ClassNameMap<"textField">;
+  classes: ClassNameMap;
   errors: Errors;
   currentPassword: string;
   setCurrentPassword: React.Dispatch<string>;
-  password: string;
   setPassword: React.Dispatch<string>;
-  passwordConfirmation: string;
   setPasswordConfirmation: React.Dispatch<string>;
-  passwordCheckResults: CheckPasswordStrengthResults;
+  setPasswordConfirmationError: React.Dispatch<boolean>;
 }
 
-function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
+function CredentialsForm(props: CredentialsFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const {
     user,
@@ -60,21 +58,35 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
     errors,
     currentPassword,
     setCurrentPassword,
-    password,
     setPassword,
-    passwordConfirmation,
     setPasswordConfirmation,
-    passwordCheckResults,
+    setPasswordConfirmationError,
   } = props;
+
+  const onError = (password: string, passwordConfirmation: string) => {
+    setPassword(password);
+    setPasswordConfirmation(passwordConfirmation);
+    setPasswordConfirmationError(true);
+  };
+
+  const onSuccess = (password: string) => {
+    setPasswordConfirmation(password);
+    setPassword(password);
+    setPasswordConfirmationError(false);
+  };
 
   return (
     <React.Fragment>
+      <div className={classes.categoryLabel}>
+        <Assignment color="primary" style={{ margin: "0" }} />
+        <strong className={classes.uppercase}>{t("my-credentials")}</strong>
+      </div>
       <TextField
         id="profile-textfield-mail"
         label={t("email")}
         value={getUserEmail(user)}
         disabled
-        className={classes.textField}
+        className={classes.formInput}
       />
       <Password
         id="profile-textfield-password-current"
@@ -86,35 +98,13 @@ function AuthenticationForm(props: AuthenticationFormProps): JSX.Element {
         helperText={t("no-password")}
         onChange={setCurrentPassword}
       />
-      <Password
-        id="profile-textfield-password"
-        autoComplete="new-password"
-        variant="standard"
-        label={t("new-password")}
-        value={password}
-        error={errors.password && password.length > 0}
-        checkStrength
-        helperText={
-          <PasswordStrengthMeter
-            force={passwordCheckResults.score}
-            error={errors.password}
-            helperText={passwordCheckResults.helperText}
-          />
-        }
-        onChange={setPassword}
-      />
-      <Password
-        id="profile-textfield-password-confirmation"
-        autoComplete="new-password"
-        variant="standard"
-        label={t("confirm-password")}
-        value={passwordConfirmation}
-        error={errors.passwordConfirmation}
-        helperText={t("not-matching-password")}
-        onChange={setPasswordConfirmation}
+      <PasswordConfirm
+        variant={"standard"}
+        onError={onError}
+        onSuccess={onSuccess}
       />
     </React.Fragment>
   );
 }
 
-export default AuthenticationForm;
+export default CredentialsForm;
