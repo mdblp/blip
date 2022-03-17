@@ -34,7 +34,7 @@ import { act } from "react-dom/test-utils";
 import { waitTimeout } from "../../../lib/utils";
 import DialogDatePicker from "../../../components/date-pickers/dialog-date-picker";
 import initDayJS from "../../../lib/dayjs";
-import i18n, { init as i18nInit } from "../../../lib/language";
+import i18n from "../../../lib/language";
 
 describe("Dialog date picker", () => {
 
@@ -42,15 +42,11 @@ describe("Dialog date picker", () => {
 
   beforeAll(() => {
     initDayJS();
-    i18nInit().then(() => {
-      i18n.addResourceBundle("en", "yourloops", {
-        "date-picker-header-date-format": "MMMM YYYY",
-        "date-picker-toolbar-date-format": "ddd, MMM D",
-      })
-        .init({ react: { useSuspense: true } });
-    }).catch((reason: unknown) => {
-      console.error(reason);
-    });
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
+    })
+      .init({ react: { useSuspense: true } });
   });
 
   beforeEach(() => {
@@ -83,7 +79,8 @@ describe("Dialog date picker", () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DialogDatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged} onResult={_.noop} />, container, resolve);
+          <DialogDatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}
+            onResult={_.noop} />, container, resolve);
       });
     });
 

@@ -34,7 +34,6 @@ import i18n from "i18next";
 import FooterLinks from "../../components/footer-links";
 import { AuthContext, useAuth, User } from "../../lib/auth";
 import diabeloopUrls from "../../lib/diabeloop-url";
-import { init as i18nInit } from "../../lib/language";
 
 describe("Footer", () => {
   let auth: AuthContext = null;
@@ -57,10 +56,6 @@ describe("Footer", () => {
       });
     });
   };
-
-  beforeAll(() => {
-    i18nInit();
-  });
 
   beforeEach(() => {
     container = document.createElement("div");

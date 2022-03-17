@@ -30,13 +30,12 @@ import i18n from "i18next";
 import moment from "moment-timezone";
 
 import config from "../../lib/config";
-import { getCurrentLang, getLangName, init as i18nInit } from "../../lib/language";
+import { getCurrentLang, getLangName } from "../../lib/language";
 
 describe("Language", () => {
   const zeSpy = jest.fn();
 
   beforeAll(() => {
-    i18nInit();
     window.zE = zeSpy;
     config.METRICS_SERVICE = "matomo";
   });

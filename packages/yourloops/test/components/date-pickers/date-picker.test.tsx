@@ -34,7 +34,7 @@ import dayjs from "dayjs";
 import { waitTimeout } from "../../../lib/utils";
 import DatePicker from "../../../components/date-pickers/date-picker";
 import initDayJS from "../../../lib/dayjs";
-import i18n, { init as i18nInit } from "../../../lib/language";
+import i18n from "../../../lib/language";
 import { TRANSITION_DURATION } from "../../../components/date-pickers/models";
 
 describe("Date picker", () => {
@@ -45,15 +45,11 @@ describe("Date picker", () => {
 
   beforeAll(() => {
     initDayJS();
-    i18nInit().then(() => {
-      i18n.addResourceBundle("en", "yourloops", {
-        "date-picker-header-date-format": "MMMM YYYY",
-        "date-picker-toolbar-date-format": "ddd, MMM D",
-      })
-        .init({ react: { useSuspense: true } });
-    }).catch((reason: unknown) => {
-      console.error(reason);
-    });
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
+    })
+      .init({ react: { useSuspense: true } });
     window.HTMLElement.prototype.scrollIntoView = () => {
       //This is a stub
     };

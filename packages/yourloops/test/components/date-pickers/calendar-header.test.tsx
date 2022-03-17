@@ -33,7 +33,7 @@ import dayjs from "dayjs";
 
 import { CalendarChangeMonth } from "../../../components/date-pickers/models";
 import CalendarHeader from "../../../components/date-pickers/calendar-header";
-import i18n, { init as i18nInit } from "../../../lib/language";
+import i18n from "../../../lib/language";
 
 
 describe("Calendar header", () => {
@@ -41,15 +41,11 @@ describe("Calendar header", () => {
   let container: HTMLDivElement | null = null;
 
   beforeAll(() => {
-    i18nInit().then(() => {
-      i18n.addResourceBundle("en", "yourloops", {
-        "date-picker-header-date-format": "MMMM YYYY",
-        "date-picker-toolbar-date-format": "ddd, MMM D",
-      })
-        .init({ react: { useSuspense: true } });
-    }).catch((reason: unknown) => {
-      console.error(reason);
-    });
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
+    })
+      .init({ react: { useSuspense: true } });
   });
 
   beforeEach(() => {

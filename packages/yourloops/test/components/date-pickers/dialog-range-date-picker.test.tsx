@@ -32,7 +32,7 @@ import { act } from "react-dom/test-utils";
 import dayjs from "dayjs";
 
 import DialogRangeDatePicker from "../../../components/date-pickers/dialog-range-date-picker";
-import i18n, { init as i18nInit } from "../../../lib/language";
+import i18n from "../../../lib/language";
 import initDayJS from "../../../lib/dayjs";
 
 describe("Dialog range date picker", () => {
@@ -42,14 +42,10 @@ describe("Dialog range date picker", () => {
   let container: HTMLDivElement | null = null;
 
   beforeAll(() => {
-    i18nInit().then(() => {
-      initDayJS();
-      i18n.addResourceBundle("en", "yourloops", {
-        "date-picker-header-date-format": "MMMM YYYY",
-        "date-picker-toolbar-date-format": "ddd, MMM D",
-      });
-    }).catch((reason: unknown) => {
-      console.error(reason);
+    initDayJS();
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
     });
   });
 

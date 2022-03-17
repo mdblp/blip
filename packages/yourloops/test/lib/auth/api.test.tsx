@@ -35,7 +35,6 @@ import config from "../../../lib/config";
 import { Session } from "../../../lib/auth/models";
 import api from "../../../lib/auth/api";
 import User from "../../../lib/auth/user";
-import { init as i18nInit } from "../../../lib/language";
 
 describe("Auth API", () => {
   const fetchMock = jest.fn();
@@ -45,11 +44,6 @@ describe("Auth API", () => {
     delete global.fetch;
   });
 
-  beforeAll(() => {
-    i18nInit().then(() => {
-      //nothing to do
-    });
-  });
 
   describe("Login", () => {
     it("should throw if username is empty", async () => {

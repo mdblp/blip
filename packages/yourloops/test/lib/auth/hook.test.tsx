@@ -33,7 +33,6 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { MemoryRouter, Route } from "react-router-dom";
 import * as H from "history";
-import { init as i18nInit } from "../../../lib/language";
 
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
@@ -112,9 +111,6 @@ describe("Auth hook", () => {
     authContext = null;
   });
 
-  beforeAll(async () => {
-    await i18nInit();
-  });
 
   afterAll(() => {
     sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);

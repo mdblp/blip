@@ -31,7 +31,7 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 
 import DialogPDFOptions, { Presets } from "../../../components/dialogs/pdf-print-options";
-import i18n, { init as i18nInit } from "../../../lib/language";
+import i18n from "../../../lib/language";
 import initDayJS from "../../../lib/dayjs";
 
 describe("PDF print options", () => {
@@ -42,14 +42,10 @@ describe("PDF print options", () => {
   let container: HTMLDivElement | null = null;
 
   beforeAll(() => {
-    i18nInit().then(() => {
-      initDayJS();
-      i18n.addResourceBundle("en", "yourloops", {
-        "date-picker-header-date-format": "MMMM YYYY",
-        "date-picker-toolbar-date-format": "ddd, MMM D",
-      });
-    }).catch((reason: unknown) => {
-      console.error(reason);
+    initDayJS();
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
     });
   });
 
