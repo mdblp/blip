@@ -74,7 +74,7 @@ describe("Team page", () => {
     return page;
   }
 
-  beforeAll(async () => {
+  beforeAll(() => {
     enzyme.configure({
       adapter: new Adapter(),
       disableLifecycleMethods: true,
