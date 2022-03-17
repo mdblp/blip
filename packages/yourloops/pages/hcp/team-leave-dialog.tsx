@@ -101,7 +101,7 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
       <DialogContentText color="textPrimary" id="team-leave-dialog-question">
         <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} values={{ teamName }}
           parent={React.Fragment}>
-          Since you are the only &quot;member&quot; in this team, { teamName } will be <strong>permanently
+          Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently
           deleted</strong> if
           you leave it.
         </Trans>

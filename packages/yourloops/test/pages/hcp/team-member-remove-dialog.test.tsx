@@ -40,6 +40,7 @@ import Adapter from "enzyme-adapter-react-16";
 import { loggedInUsers } from "../../common";
 import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { init as i18nInit } from "../../../lib/language";
 
 describe("Team member remove dialog", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -63,6 +64,7 @@ describe("Team member remove dialog", () => {
   }
 
   beforeAll(async () => {
+    await i18nInit();
     enzyme.configure({
       adapter: new Adapter(),
       disableLifecycleMethods: true,
@@ -70,7 +72,6 @@ describe("Team member remove dialog", () => {
     const { teams } = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.member = teams[1].members[0];
   });
-
   afterEach(() => {
     if (component !== null) {
       component.unmount();

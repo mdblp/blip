@@ -89,7 +89,7 @@ function RemoveMemberDialog(props: RemoveMemberDialogProps): JSX.Element {
           components={{ strong: <strong /> }}
           values={{ teamName }} parent={React.Fragment}
         >
-          Remove a healthcare professional from the team <strong>{ teamName }</strong>
+          Remove a healthcare professional from the team <strong>{{ teamName }}</strong>
         </Trans>
       </DialogTitle>
 

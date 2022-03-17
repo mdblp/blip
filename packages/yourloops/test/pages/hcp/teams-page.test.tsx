@@ -41,6 +41,7 @@ import Adapter from "enzyme-adapter-react-16";
 import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { init as i18nInit } from "../../../lib/language";
 
 describe("Team page", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -74,7 +75,8 @@ describe("Team page", () => {
     return page;
   }
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    await i18nInit();
     enzyme.configure({
       adapter: new Adapter(),
       disableLifecycleMethods: true,
