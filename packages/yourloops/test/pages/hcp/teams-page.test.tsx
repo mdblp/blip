@@ -133,66 +133,60 @@ describe("Team page", () => {
     const leaveTeamStub = teamAPI.leaveTeam as jest.Mock;
     const deleteTeam = teamAPI.deleteTeam as jest.Mock;
 
-    it(
-      "should display the leave dialog, and call deleteTeam api on validate if the member is the only member",
-      async () => {
-        component = await createComponent();
-        expect(document.getElementById("team-leave-dialog-title")).toBeNull();
-        expect(document.getElementById("team-page-alert")).toBeNull();
+    it("should display the leave dialog, and call deleteTeam api on validate if the member is the only member", async () => {
+      component = await createComponent();
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+      expect(document.getElementById("team-page-alert")).toBeNull();
 
-        let buttonId = `team-card-${teams[2].id}-button-leave-team`;
-        const button = document.getElementById(buttonId) as HTMLButtonElement;
-        expect(button).not.toBeNull();
+      let buttonId = `team-card-${teams[2].id}-button-leave-team`;
+      const button = document.getElementById(buttonId) as HTMLButtonElement;
+      expect(button).not.toBeNull();
 
-        button.click();
+      button.click();
 
-        await waitTimeout(apiTimeout);
-        component.update();
+      await waitTimeout(apiTimeout);
+      component.update();
 
-        expect(component.exists("#team-leave-dialog-title")).toBe(true);
+      expect(component.exists("#team-leave-dialog-title")).toBe(true);
 
-        buttonId = "#team-leave-dialog-button-leave";
-        expect(component.exists(buttonId)).toBe(true);
-        component.find(buttonId).last().simulate("click");
+      buttonId = "#team-leave-dialog-button-leave";
+      expect(component.exists(buttonId)).toBe(true);
+      component.find(buttonId).last().simulate("click");
 
-        component.update();
-        await waitTimeout(apiTimeout);
+      component.update();
+      await waitTimeout(apiTimeout);
 
-        expect(deleteTeam).toHaveBeenCalledTimes(1);
-        expect(document.getElementById("team-leave-dialog-title")).toBeNull();
-      }
-    );
+      expect(deleteTeam).toHaveBeenCalledTimes(1);
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+    });
 
-    it(
-      "should display the leave dialog, and not call the api on cancel",
-      async () => {
-        component = await createComponent();
-        expect(document.getElementById("team-leave-dialog-title")).toBeNull();
-        expect(document.getElementById("team-page-alert")).toBeNull();
+    it("should display the leave dialog, and not call the api on cancel", async () => {
+      component = await createComponent();
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+      expect(document.getElementById("team-page-alert")).toBeNull();
 
-        let buttonId = `team-card-${teams[2].id}-button-leave-team`;
-        const button = document.getElementById(buttonId) as HTMLButtonElement;
-        expect(button).not.toBeNull();
+      let buttonId = `team-card-${teams[2].id}-button-leave-team`;
+      const button = document.getElementById(buttonId) as HTMLButtonElement;
+      expect(button).not.toBeNull();
 
-        button.click();
+      button.click();
 
-        await waitTimeout(apiTimeout);
-        component.update();
+      await waitTimeout(apiTimeout);
+      component.update();
 
-        expect(component.exists("#team-leave-dialog-title")).toBe(true);
+      expect(component.exists("#team-leave-dialog-title")).toBe(true);
 
-        buttonId = "#team-leave-dialog-button-cancel";
-        expect(component.exists(buttonId)).toBe(true);
-        component.find(buttonId).last().simulate("click");
+      buttonId = "#team-leave-dialog-button-cancel";
+      expect(component.exists(buttonId)).toBe(true);
+      component.find(buttonId).last().simulate("click");
 
-        component.update();
-        await waitTimeout(apiTimeout);
+      component.update();
+      await waitTimeout(apiTimeout);
 
-        expect(leaveTeamStub).toHaveBeenCalledTimes(0);
-        expect(document.getElementById("team-page-alert")).toBeNull();
-        expect(document.getElementById("team-leave-dialog-title")).toBeNull();
-      }
-    );
+      expect(leaveTeamStub).toHaveBeenCalledTimes(0);
+      expect(document.getElementById("team-page-alert")).toBeNull();
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+    });
 
     it("should display an error alert if the api call failed", async () => {
       const errorMessage = "API error message";
