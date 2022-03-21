@@ -152,6 +152,17 @@ export const teams: ITeam[] = [
         settings: null,
         idVerified: false,
       },
+      {
+        teamId: "team-0",
+        userId: "abcdef123",
+        role: TeamMemberRole.member,
+        invitationStatus: UserInvitationStatus.pending,
+        email: "macky.boy@chu-grenoble.fr",
+        preferences: null,
+        profile: { firstName: "Macky", lastName: "Boy", fullName: "Macky Boy" },
+        settings: null,
+        idVerified: false,
+      },
     ],
   },
   {

@@ -423,7 +423,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
 
   const removeMember = async (member: TeamMember): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
-      if (_.isNil(member.invitation)) {
+      if (!member.invitation || member.team.id !== member.invitation.target?.id ) {
         throw new Error("Missing invitation!");
       }
       await notificationHook.cancel(member.invitation);

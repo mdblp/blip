@@ -39,25 +39,29 @@ export interface RemoveButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
   size?: "small" | "medium";
   tooltip?: string;
+  disabled?: boolean;
 }
 
 function IconActionButton(props: RemoveButtonProps): JSX.Element {
-  const { id, onClick, className, size, icon } = props;
+  const { id, onClick, className, size, icon, disabled } = props;
   const color = props.color ?? "primary";
   const tooltip = props.tooltip ?? "";
 
   return (
     <Tooltip title={tooltip} aria-label={tooltip} placement="bottom">
-      <IconButton
-        id={id}
-        size={size}
-        color={color}
-        onClick={onClick}
-        aria-label={tooltip}
-        className={className}
-      >
-        {icon}
-      </IconButton>
+      <div>
+        <IconButton
+          id={id}
+          size={size}
+          color={color}
+          onClick={onClick}
+          aria-label={tooltip}
+          className={className}
+          disabled={disabled}
+        >
+          {icon}
+        </IconButton>
+      </div>
     </Tooltip>
   );
 }
