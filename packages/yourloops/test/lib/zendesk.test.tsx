@@ -26,9 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-import * as sinon from "sinon";
-
 import { isZendeskActive, zendeskLogin, zendeskLogout, zendeskAllowCookies } from "../../lib/zendesk";
 
 describe("Zendesk", () => {
@@ -38,62 +35,62 @@ describe("Zendesk", () => {
     zendeskAllowCookies(false);
   });
 
-  after(() => {
+  afterAll(() => {
     delete window.zE;
   });
 
   it("should see zendesk as inactive if window.zE function is missing", () => {
-    expect(isZendeskActive()).to.be.false;
+    expect(isZendeskActive()).toBe(false);
   });
 
   it("should see zendesk as active if window.zE function is present", () => {
-    window.zE = sinon.spy();
-    expect(isZendeskActive()).to.be.true;
+    window.zE = jest.fn();
+    expect(isZendeskActive()).toBe(true);
   });
 
   it("should completely logout the zendesk user on logout", () => {
-    const s = sinon.spy();
+    const s = jest.fn();
     window.zE = s;
     zendeskLogout();
-    expect(s.callCount, "callCount").to.be.equals(3);
-    expect(s.getCall(0).args, "call 1").to.be.deep.equals(["webWidget", "logout"]);
-    expect(s.getCall(1).args, "call 2").to.be.deep.equals(["webWidget", "clear"]);
-    expect(s.getCall(2).args, "call 3").to.be.deep.equals(["webWidget", "reset"]);
+    expect(s).toHaveBeenCalledTimes(3);
+    expect(s.mock.calls[0]).toEqual(["webWidget", "logout"]);
+    expect(s.mock.calls[1]).toEqual(["webWidget", "clear"]);
+    expect(s.mock.calls[2]).toEqual(["webWidget", "reset"]);
   });
 
   it("should not ask zendesk to login if cookies are not accepted", () => {
-    const s = sinon.spy();
+    const s = jest.fn();
     window.zE = s;
     zendeskLogin();
-    expect(s.callCount, "callCount").to.be.equals(0);
+    expect(s).toHaveBeenCalledTimes(0);
   });
 
   it("should ask zendesk login if cookies are accepted", () => {
     zendeskAllowCookies(true);
-    const s = sinon.spy();
+    const s = jest.fn();
     window.zE = s;
     zendeskLogin();
-    expect(s.callCount, "callCount").to.be.equals(1);
-    expect(s.getCall(0).args).to.be.deep.equals(["webWidget", "helpCenter:reauthenticate"]);
+    expect(s).toHaveBeenCalledTimes(1);
+    expect(s.mock.calls[0]).toEqual(["webWidget", "helpCenter:reauthenticate"]);
   });
 
   it("should notice zendesk about the cookies policy: accept", () => {
-    const s = sinon.spy();
+    const s = jest.fn();
     window.zE = s;
     zendeskAllowCookies(true);
-    expect(s.callCount, "callCount").to.be.equals(1);
-    expect(s.getCall(0).args).to.be.deep.equals(["webWidget", "updateSettings", { cookies: true }]);
+    expect(s).toHaveBeenCalledTimes(1);
+    expect(s.mock.calls[0]).toEqual(["webWidget", "updateSettings", { cookies: true }]);
   });
 
   it("should notice zendesk about the cookies policy: decline", () => {
-    const s = sinon.spy();
+    const s = jest.fn();
     window.zE = s;
     zendeskAllowCookies(false);
-    expect(s.callCount, "callCount").to.be.equals(4);
-    expect(s.getCall(0).args, "updateSettings").to.be.deep.equals(["webWidget", "updateSettings", { cookies: false }]);
-    expect(s.getCall(1).args, "logout call 1").to.be.deep.equals(["webWidget", "logout"]);
-    expect(s.getCall(2).args, "logout call 2").to.be.deep.equals(["webWidget", "clear"]);
-    expect(s.getCall(3).args, "logout call 3").to.be.deep.equals(["webWidget", "reset"]);
+    expect(s).toHaveBeenCalledTimes(4);
+    expect(s.mock.calls[0]).toEqual(["webWidget", "updateSettings", { cookies: false }]);
+    expect(s.mock.calls[1]).toEqual(["webWidget", "logout"]);
+    expect(s.mock.calls[2]).toEqual(["webWidget", "clear"]);
+    expect(s.mock.calls[3]).toEqual(["webWidget", "reset"]);
   });
 });
 

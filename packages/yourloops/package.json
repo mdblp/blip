@@ -21,8 +21,7 @@
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack --mode=development",
     "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack-dev-server --cache --color --port 3001 --host 0.0.0.0",
-    "test": "LANG=C TZ=UTC NODE_ENV='test' NODE_OPTIONS='--max-old-space-size=4096' karma --single-run --log-level debug start",
-    "test-debug": "LANG=C TZ=UTC NODE_ENV='test' DEBUG_UNIT_TEST='true' NODE_OPTIONS='--max-old-space-size=4096' karma --single-run=false --log-level debug start --auto-watch"
+    "test": "jest --config=test/jest.config.js"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.1.0",

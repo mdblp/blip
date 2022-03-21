@@ -29,19 +29,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act, Simulate } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 import dayjs from "dayjs";
 
-import { waitTimeout } from "../../../lib/utils";
-import { CalendarChangeMonth, TRANSITION_DURATION } from "../../../components/date-pickers/models";
 import Calendar from "../../../components/date-pickers/calendar";
+import initDayJS from "../../../lib/dayjs";
 
 describe("Calendar", () => {
 
   const minDate = dayjs("2010-01-01", { utc: true });
   const maxDate = dayjs("2040-01-01", { utc: true });
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    initDayJS();
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -58,7 +59,7 @@ describe("Calendar", () => {
 
   it("should correctly render a month", async () => {
     const today = dayjs("2021-11-09");
-    const onChange = sinon.stub<[dayjs.Dayjs, boolean | undefined], void>();
+    const onChange = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -74,62 +75,29 @@ describe("Calendar", () => {
     });
 
     const calendarElem = document.getElementById("calendar-month");
-    expect(calendarElem, "calendarElem").to.be.not.null;
-    expect(calendarElem.nodeName.toLowerCase()).to.be.eq("div");
+    expect(calendarElem).not.toBeNull();
+    expect(calendarElem.nodeName.toLowerCase()).toBe("div");
 
     const firstDay = document.getElementById("calendar-month-weekday-0");
-    expect(firstDay, "firstDay").to.be.not.null;
-    expect(firstDay.innerText).to.be.eq("Su");
+    expect(firstDay).not.toBeNull();
+    expect(firstDay.innerHTML).toBe("Su");
 
     const todayButton = document.getElementById("button-calendar-day-2021-11-09");
-    expect(todayButton).to.be.not.null;
-    expect(todayButton.getAttribute("aria-selected")).to.be.eq("true");
-    expect(todayButton.getAttribute("type")).to.be.eq("button");
-    expect(todayButton.nodeName.toLowerCase()).to.be.eq("button");
+    expect(todayButton).not.toBeNull();
+    expect(todayButton.getAttribute("aria-selected")).toBe("true");
+    expect(todayButton.getAttribute("type")).toBe("button");
+    expect(todayButton.nodeName.toLowerCase()).toBe("button");
 
     const tomorrowElem = document.getElementById("button-calendar-day-2021-11-10");
-    expect(tomorrowElem, "tomorrowElem").to.be.not.null;
+    expect(tomorrowElem).not.toBeNull();
     tomorrowElem.click();
-    expect(onChange.calledOnce).to.be.true;
-    expect(onChange.firstCall.args[0].format("YYYY-MM-DD")).to.be.eq("2021-11-10");
-  });
-
-  it("should render the month transition change", async function testTransition() {
-    this.timeout(10 * TRANSITION_DURATION);
-    const today = dayjs("2021-11-09");
-    const onChange = sinon.stub<[dayjs.Dayjs, boolean | undefined], void>();
-    const onAnimationEnd = sinon.stub();
-    const changeMonth: CalendarChangeMonth = {
-      direction: "left",
-      toMonth: today.subtract(1, "month"),
-      onAnimationEnd,
-    };
-
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <Calendar
-            currentMonth={today}
-            selection={{ mode: "single", selected: today }}
-            onChange={onChange}
-            changeMonth={changeMonth}
-            minDate={minDate}
-            maxDate={maxDate}
-          />, container, resolve);
-      });
-    });
-
-    expect(document.getElementById("calendar-month-weekdays-values-new"), "calendar-month-weekdays-values-new").to.be.not.null;
-
-    while (!onAnimationEnd.called) {
-      await waitTimeout(TRANSITION_DURATION);
-    }
-    expect(onAnimationEnd.calledOnce).to.be.true;
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.calls[0][0].format("YYYY-MM-DD")).toBe("2021-11-10");
   });
 
   it("should react to arrows keys to change the selected date", async () => {
     const today = dayjs("2021-11-09");
-    const onChange = sinon.stub<[dayjs.Dayjs, boolean | undefined], void>();
+    const onChange = jest.fn();
 
     await act(() => {
       return new Promise((resolve) => {
@@ -146,20 +114,20 @@ describe("Calendar", () => {
 
     const calendarElem = document.getElementById("calendar-month");
     Simulate.keyUp(calendarElem, { key: "ArrowUp" });
-    expect(onChange.callCount).to.be.eq(1);
-    expect(onChange.getCall(0).args[0].format("YYYY-MM-DD")).to.be.eq("2021-11-02");
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.calls[0][0].format("YYYY-MM-DD")).toBe("2021-11-02");
 
     Simulate.keyUp(calendarElem, { key: "ArrowDown" });
-    expect(onChange.callCount).to.be.eq(2);
-    expect(onChange.getCall(1).args[0].format("YYYY-MM-DD")).to.be.eq("2021-11-16");
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onChange.mock.calls[1][0].format("YYYY-MM-DD")).toBe("2021-11-16");
 
     Simulate.keyUp(calendarElem, { key: "ArrowLeft" });
-    expect(onChange.callCount).to.be.eq(3);
-    expect(onChange.getCall(2).args[0].format("YYYY-MM-DD")).to.be.eq("2021-11-08");
+    expect(onChange).toHaveBeenCalledTimes(3);
+    expect(onChange.mock.calls[2][0].format("YYYY-MM-DD")).toBe("2021-11-08");
 
     Simulate.keyUp(calendarElem, { key: "ArrowRight" });
-    expect(onChange.callCount).to.be.eq(4);
-    expect(onChange.getCall(3).args[0].format("YYYY-MM-DD")).to.be.eq("2021-11-10");
+    expect(onChange).toHaveBeenCalledTimes(4);
+    expect(onChange.mock.calls[3][0].format("YYYY-MM-DD")).toBe("2021-11-10");
   });
 });
 

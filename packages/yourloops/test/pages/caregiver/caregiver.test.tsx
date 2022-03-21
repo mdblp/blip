@@ -26,12 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 import CaregiverPage from "../../../pages/caregiver";
 
 describe("Caregiver page", () => {
   it("should be exported as a function", () => {
-    expect(CaregiverPage).to.be.a("function");
+    expect(CaregiverPage).toBeInstanceOf(Function);
   });
 });
 

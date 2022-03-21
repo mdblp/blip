@@ -27,27 +27,29 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper } from "enzyme";
 
 import { FilterType } from "../../../models/generic";
 import { waitTimeout } from "../../../lib/utils";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { TeamContextProvider } from "../../../lib/team";
 import PatientsSecondaryBar, { PatientListBarProps } from "../../../pages/hcp/patients/secondary-bar";
 
-import { authHookHcp } from "../../lib/auth/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
+import Adapter from "enzyme-adapter-react-16";
+import { loggedInUsers } from "../../common";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Patient secondary bar", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const apiTimeout = 50;
   const defaultProps: PatientListBarProps = {
     filter: "",
     filterType: FilterType.all,
-    onFilter: sinon.spy(),
-    onFilterType: sinon.spy(),
-    onInvitePatient: sinon.spy(),
+    onFilter: jest.fn(),
+    onFilterType: jest.fn(),
+    onInvitePatient: jest.fn(),
   };
 
   let component: ReactWrapper | null = null;
@@ -60,6 +62,13 @@ describe("Patient secondary bar", () => {
     resetTeamAPIStubs();
   });
 
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
+  });
+
   it("should be able to render", async () => {
     component = mount(
       <AuthContextProvider value={authHookHcp}>
@@ -70,7 +79,7 @@ describe("Patient secondary bar", () => {
     );
     // component.update();
     await waitTimeout(apiTimeout);
-    expect(component.find("#patients-list-toolbar-item-left").length).to.be.equal(1);
+    expect(component.find("#patients-list-toolbar-item-left").length).toBe(1);
   });
 });
 

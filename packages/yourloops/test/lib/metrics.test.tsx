@@ -26,14 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
-
 import config from "../../lib/config";
 import metrics from "../../lib/metrics";
 import { loggedInUsers } from "../common/index";
 
 describe("Metrics", () => {
-  after(() => {
+  afterAll(() => {
     delete window._paq;
     config.METRICS_SERVICE = "disabled";
   });
@@ -45,13 +43,13 @@ describe("Metrics", () => {
   it("should do nothing if metrics is not available", () => {
     delete window._paq;
     metrics.send("metrics", "enabled");
-    expect(window._paq).to.be.undefined;
+    expect(window._paq).toBeUndefined();
   });
 
   it("should disable the metrics", () => {
     metrics.send("metrics", "disabled");
     metrics.send("test", "you should not see me");
-    expect(window._paq).to.be.deep.equals([
+    expect(window._paq).toEqual([
       ["forgetConsentGiven"],
       ["setDoNotTrack", true],
     ]);
@@ -60,54 +58,54 @@ describe("Metrics", () => {
   it("should enable the metrics", () => {
     metrics.send("metrics", "enabled");
     metrics.send("test", "you should see me");
-    expect(window._paq).to.be.an("array");
+    expect(window._paq).toBeInstanceOf(Array);
     if (window._paq) { // Make typescript happy
       // eslint-disable-next-line no-magic-numbers
-      expect(window._paq.length).to.be.equals(7);
+      expect(window._paq.length).toBe(7);
     }
   });
 
   it("should update matomo page URL", () => {
     metrics.send("metrics", "setCustomUrl", location.pathname);
-    expect(window._paq).to.be.an("array");
+    expect(window._paq).toBeInstanceOf(Array);
     if (window._paq) { // Make typescript happy
-      expect(window._paq.length).to.be.equals(1);
-      expect(window._paq[0].length).to.be.equals(2);
-      expect(window._paq[0][0]).to.be.equals("setCustomUrl");
-      expect(window._paq[0][1]).to.be.a("string");
+      expect(window._paq.length).toBe(1);
+      expect(window._paq[0].length).toBe(2);
+      expect(window._paq[0][0]).toBe("setCustomUrl");
+      expect(typeof window._paq[0][1]).toBe("string");
     }
   });
 
   it("should set trackPageView", () => {
     metrics.send("metrics", "trackPageView");
-    expect(window._paq.length).to.be.equals(1);
-    expect(window._paq[0].length).to.be.equals(1);
-    expect(window._paq[0][0]).to.be.equals("trackPageView");
+    expect(window._paq.length).toBe(1);
+    expect(window._paq[0].length).toBe(1);
+    expect(window._paq[0][0]).toBe("trackPageView");
   });
 
   it("trackSiteSearch should have a specific call", () => {
     metrics.send("trackSiteSearch", "action", "value", 2);
-    expect(window._paq.length).to.be.equals(1);
-    expect(window._paq[0].length).to.be.equals(4);
-    expect(window._paq[0][0]).to.be.equals("trackSiteSearch");
-    expect(window._paq[0][1]).to.be.equals("action");
-    expect(window._paq[0][2]).to.be.equals("value");
-    expect(window._paq[0][3]).to.be.equals(2);
+    expect(window._paq.length).toBe(1);
+    expect(window._paq[0].length).toBe(4);
+    expect(window._paq[0][0]).toBe("trackSiteSearch");
+    expect(window._paq[0][1]).toBe("action");
+    expect(window._paq[0][2]).toBe("value");
+    expect(window._paq[0][3]).toBe(2);
   });
 
   it("should set the userId", () => {
     const user = loggedInUsers.caregiver;
     metrics.setUser(user);
-    expect(window._paq, JSON.stringify(window._paq)).to.be.deep.equals([
+    expect(window._paq).toEqual([
       ["setUserId", user.userid],
       ["setCustomVariable", 1, "UserRole", user.role, "page"],
       ["trackEvent", "registration", "login", user.role],
     ]);
   });
 
-  it("should reset the userId", () => {
+  it("shouldmockReset() the userId", () => {
     metrics.resetUser();
-    expect(window._paq, JSON.stringify(window._paq)).to.be.deep.equals([
+    expect(window._paq).toEqual([
       ["trackEvent", "registration", "logout"],
       ["deleteCustomVariable", 1, "page"],
       ["resetUserId"],
@@ -117,29 +115,30 @@ describe("Metrics", () => {
 
   it("should set the setDocumentTitle", () => {
     metrics.send("metrics", "setDocumentTitle", "title");
-    expect(window._paq).to.be.deep.equals([["setDocumentTitle", "title"]]);
+    expect(window._paq).toEqual([["setDocumentTitle", "title"]]);
   });
 
   it("should set the properties to a default value", () => {
     metrics.send("test_category", "test_action", "test_name", 2);
-    expect(window._paq).to.be.deep.equals([["trackEvent", "test_category", "test_action", "test_name", 2]]);
+    expect(window._paq).toEqual([["trackEvent", "test_category", "test_action", "test_name", 2]]);
   });
 
   it("should set the global language var", () => {
     metrics.setLanguage("de");
-    expect(window._paq).to.be.deep.equals([["setCustomVariable", 1, "UserLang", "de", "visit"]]);
+    expect(window._paq).toEqual([["setCustomVariable", 1, "UserLang", "de", "visit"]]);
   });
 
   it("should measure performance with the timer functions", () => {
     metrics.startTimer("test");
     metrics.endTimer("test");
-    expect(window._paq.length).to.be.equals(1);
-    expect(window._paq[0].length).to.be.equals(5);
-    expect(window._paq[0][0]).to.be.equals("trackEvent");
-    expect(window._paq[0][1]).to.be.equals("performance");
-    expect(window._paq[0][2]).to.be.equals("test");
-    expect(window._paq[0][3]).to.be.a("string").matches(/\/.*/);
-    expect(window._paq[0][4]).to.be.greaterThanOrEqual(0);
+    expect(window._paq.length).toBe(1);
+    expect(window._paq[0].length).toBe(5);
+    expect(window._paq[0][0]).toBe("trackEvent");
+    expect(window._paq[0][1]).toBe("performance");
+    expect(window._paq[0][2]).toBe("test");
+    expect(typeof window._paq[0][3]).toBe("string");
+    expect(window._paq[0][3]).toMatch(/\/.*/);
+    expect(window._paq[0][4]).toBeGreaterThanOrEqual(0);
   });
 });
 

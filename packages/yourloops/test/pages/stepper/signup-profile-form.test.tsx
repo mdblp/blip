@@ -28,7 +28,6 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { expect } from "chai";
 import { act } from "@testing-library/react-hooks/dom";
 import _ from "lodash";
 
@@ -86,13 +85,13 @@ describe("Signup profile form", () => {
   it("should not render the drop down list when caregiver", async () => {
     await mountComponent(false);
     const dropDownList = document.querySelector("#hcp-profession-selector");
-    expect(dropDownList).to.be.null;
+    expect(dropDownList).toBeNull();
   });
 
   it("should render the drop down list when HCP", async () => {
     await mountComponent(true);
     const dropDownList = document.querySelector("#hcp-profession-selector");
-    expect(dropDownList).to.be.not.null;
+    expect(dropDownList).not.toBeNull();
   });
 });
 

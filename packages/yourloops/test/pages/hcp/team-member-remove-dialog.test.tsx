@@ -27,85 +27,92 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper } from "enzyme";
 
 import { waitTimeout } from "../../../lib/utils";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { TeamMember, TeamContextProvider } from "../../../lib/team";
 import { loadTeams } from "../../../lib/team/hook";
 import RemoveMemberDialog, { RemoveMemberDialogProps } from "../../../pages/hcp/team-member-remove-dialog";
 import { RemoveMemberDialogContentProps } from "../../../pages/hcp/types";
 
-import { authHookHcp, authHcp } from "../../lib/auth/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
+import Adapter from "enzyme-adapter-react-16";
+import { loggedInUsers } from "../../common";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Team member remove dialog", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const apiTimeout = 50;
   const defaultProps: RemoveMemberDialogContentProps = {
     member: {} as TeamMember,
-    onDialogResult: sinon.spy(),
+    onDialogResult: jest.fn(),
   };
 
   let component: ReactWrapper | null = null;
 
   function TestComponent(props: RemoveMemberDialogProps): JSX.Element {
     return (
-      <AuthContextProvider value={authHookHcp} >
-        <TeamContextProvider teamAPI={teamAPI} >
+      <AuthContextProvider value={authHookHcp}>
+        <TeamContextProvider teamAPI={teamAPI}>
           <RemoveMemberDialog userToBeRemoved={props.userToBeRemoved} />
         </TeamContextProvider>
       </AuthContextProvider>
     );
   }
 
-  before(async () => {
+  beforeAll(async () => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     const { teams } = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
     defaultProps.member = teams[1].members[0];
   });
-
   afterEach(() => {
     if (component !== null) {
       component.unmount();
       component = null;
     }
-    (defaultProps.onDialogResult as sinon.SinonSpy).resetHistory();
+    (defaultProps.onDialogResult as jest.Mock).mockReset();
     resetTeamAPIStubs();
   });
 
   it("should be closed if addMember is null", async () => {
     component = mount(<TestComponent userToBeRemoved={null} />);
     await waitTimeout(apiTimeout);
-    expect(component.exists("#team-members-dialog-rmmember")).to.be.true;
-    expect(component.html()).to.be.a("string").empty;
+    expect(component.exists("#team-members-dialog-rmmember")).toBe(true);
+    expect(component.html().length).toBe(0);
   });
 
   it("should not be closed if addMember exists", async () => {
     component = mount(<TestComponent userToBeRemoved={defaultProps} />);
     await waitTimeout(apiTimeout);
-    expect(component.exists("#team-members-dialog-rmmember")).to.be.true;
-    expect(component.html()).to.be.a("string").not.empty;
+    expect(component.exists("#team-members-dialog-rmmember")).toBe(true);
+    expect(component.html().length).toBeGreaterThan(0);
     const { user } = defaultProps.member;
     const question = component.find("#team-members-dialog-rmmember-question").last();
-    expect(question.text()).to.be.equal(`Are you sure you want to remove ${user.profile?.firstName} ${user.profile?.lastName} from this medical team?`);
+    expect(question.text()).toBe(
+      `Are you sure you want to remove ${user.profile?.firstName} ${user.profile?.lastName} from this medical team?`
+    );
   });
 
   it("should return false if the user click on the cancel button", async () => {
     component = mount(<TestComponent userToBeRemoved={defaultProps} />);
     component.find("#team-members-dialog-rmmember-button-cancel").last().simulate("click");
     await waitTimeout(apiTimeout);
-    const spy = defaultProps.onDialogResult as sinon.SinonSpy;
-    expect(spy.calledOnce, "calledOnce").to.be.true;
-    expect(spy.calledWith(false), "calledWith(false)").to.be.true;
+    const spy = defaultProps.onDialogResult as jest.Mock;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(false);
   });
 
   it("should return true if the user click on the OK button", async () => {
     component = mount(<TestComponent userToBeRemoved={defaultProps} />);
     component.find("#team-members-dialog-rmmember-button-remove").last().simulate("click");
     await waitTimeout(apiTimeout);
-    const spy = defaultProps.onDialogResult as sinon.SinonSpy;
-    expect(spy.calledOnce, "calledOnce").to.be.true;
-    expect(spy.calledWith(true), "calledWith(true)").to.be.true;
+    const spy = defaultProps.onDialogResult as jest.Mock;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(true);
   });
 });

@@ -29,22 +29,30 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
-import * as sinon from "sinon";
-import { expect } from "chai";
 
-import DialogPDFOptions, { Presets, PrintPDFOptions } from "../../../components/dialogs/pdf-print-options";
+import DialogPDFOptions, { Presets } from "../../../components/dialogs/pdf-print-options";
+import i18n from "../../../lib/language";
+import initDayJS from "../../../lib/dayjs";
 
 describe("PDF print options", () => {
 
   const MIN_DATE = "2020-01-01";
   const MAX_DATE = "2022-12-31";
-  const handleResult = sinon.stub<[PrintPDFOptions], void>();
+  const handleResult = jest.fn();
   let container: HTMLDivElement | null = null;
+
+  beforeAll(() => {
+    initDayJS();
+    i18n.addResourceBundle("en", "yourloops", {
+      "date-picker-header-date-format": "MMMM YYYY",
+      "date-picker-toolbar-date-format": "ddd, MMM D",
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    handleResult.resetHistory();
+    handleResult.mockReset();
   });
 
   afterEach(() => {
@@ -59,7 +67,8 @@ describe("PDF print options", () => {
     return act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DialogPDFOptions open={open} minDate={minDate} maxDate={maxDate} onResult={handleResult} />, container, resolve);
+          <DialogPDFOptions open={open} minDate={minDate} maxDate={maxDate}
+            onResult={handleResult} />, container, resolve);
       });
     });
   };
@@ -77,34 +86,34 @@ describe("PDF print options", () => {
 
     switch (preset) {
     case "1week":
-      expect(oneWeekSelected, "oneWeekSelected").to.be.true;
-      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
-      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
-      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
+      expect(oneWeekSelected).toBe(true);
+      expect(twoWeeksSelected).toBe(false);
+      expect(fourWeeksSelected).toBe(false);
+      expect(threeMonthsSelected).toBe(false);
       break;
     case "2weeks":
-      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
-      expect(twoWeeksSelected, "twoWeeksSelected").to.be.true;
-      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
-      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
+      expect(oneWeekSelected).toBe(false);
+      expect(twoWeeksSelected).toBe(true);
+      expect(fourWeeksSelected).toBe(false);
+      expect(threeMonthsSelected).toBe(false);
       break;
     case "4weeks":
-      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
-      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
-      expect(fourWeeksSelected, "fourWeeksSelected").to.be.true;
-      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
+      expect(oneWeekSelected).toBe(false);
+      expect(twoWeeksSelected).toBe(false);
+      expect(fourWeeksSelected).toBe(true);
+      expect(threeMonthsSelected).toBe(false);
       break;
     case "3months":
-      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
-      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
-      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
-      expect(threeMonthsSelected, "threeMonthsSelected").to.be.true;
+      expect(oneWeekSelected).toBe(false);
+      expect(twoWeeksSelected).toBe(false);
+      expect(fourWeeksSelected).toBe(false);
+      expect(threeMonthsSelected).toBe(true);
       break;
     default:
-      expect(oneWeekSelected, "oneWeekSelected").to.be.false;
-      expect(twoWeeksSelected, "twoWeeksSelected").to.be.false;
-      expect(fourWeeksSelected, "fourWeeksSelected").to.be.false;
-      expect(threeMonthsSelected, "threeMonthsSelected").to.be.false;
+      expect(oneWeekSelected).toBe(false);
+      expect(twoWeeksSelected).toBe(false);
+      expect(fourWeeksSelected).toBe(false);
+      expect(threeMonthsSelected).toBe(false);
       break;
     }
   };
@@ -112,36 +121,36 @@ describe("PDF print options", () => {
   const expectResult = (preset: Presets | null, start = MIN_DATE, end = MAX_DATE) => {
     const buttonGenerate = document.getElementById("pdf-options-button-generate");
     buttonGenerate.click();
-    expect(handleResult.calledOnce).to.be.true;
-    expect(handleResult.firstCall.args.length).to.be.eq(1);
+    expect(handleResult).toHaveBeenCalledTimes(1);
+    expect(handleResult.mock.calls[0].length).toBe(1);
 
-    const result = handleResult.firstCall.args[0];
+    const result = handleResult.mock.calls[0][0];
     if (preset) {
-      expect(result.preset).to.be.equal(preset);
+      expect(result.preset).toBe(preset);
     } else {
-      expect(result.preset).to.be.undefined;
+      expect(result.preset).toBeUndefined();
     }
 
     switch (preset) {
     case "1week":
-      expect(result.start, "start").to.be.eq("2022-12-25");
-      expect(result.end, "end").to.be.eq(MAX_DATE);
+      expect(result.start).toBe("2022-12-25");
+      expect(result.end).toBe(MAX_DATE);
       break;
     case "2weeks":
-      expect(result.start, "start").to.be.eq("2022-12-18");
-      expect(result.end, "end").to.be.eq(MAX_DATE);
+      expect(result.start).toBe("2022-12-18");
+      expect(result.end).toBe(MAX_DATE);
       break;
     case "4weeks":
-      expect(result.start, "start").to.be.eq("2022-12-04");
-      expect(result.end, "end").to.be.eq(MAX_DATE);
+      expect(result.start).toBe("2022-12-04");
+      expect(result.end).toBe(MAX_DATE);
       break;
     case "3months":
-      expect(result.start, "start").to.be.eq("2022-10-03");
-      expect(result.end, "end").to.be.eq(MAX_DATE);
+      expect(result.start).toBe("2022-10-03");
+      expect(result.end).toBe(MAX_DATE);
       break;
     default:
-      expect(result.start, "start").to.be.equal(start);
-      expect(result.end, "end").to.be.equal(end);
+      expect(result.start).toBe(start);
+      expect(result.end).toBe(end);
       break;
     }
   };
@@ -149,27 +158,27 @@ describe("PDF print options", () => {
   it("should render nothing if not open", async () => {
     await render(false);
     const calendarElem = document.getElementById("dialog-pdf-options");
-    expect(calendarElem).to.be.null;
+    expect(calendarElem).toBeNull();
   });
 
   it("should render if open", async () => {
     await render();
     const calendarElem = document.getElementById("dialog-pdf-options");
-    expect(calendarElem).to.be.not.null;
+    expect(calendarElem).not.toBeNull();
   });
 
   it("should return undefined if cancel button is clicked", async () => {
     await render();
     document.getElementById("pdf-options-button-cancel").click();
-    expect(handleResult.calledOnce).to.be.true;
-    expect(handleResult.firstCall.args.length).to.be.eq(0);
+    expect(handleResult).toHaveBeenCalledTimes(1);
+    expect(handleResult.mock.calls[0].length).toBe(0);
   });
 
   it("should select by default the 4 weeks period", async () => {
     await render();
 
     const button = document.getElementById("pdf-options-button-four-weeks");
-    expect(button).to.be.not.null;
+    expect(button).not.toBeNull();
     expectSelectedPreset("4weeks");
   });
 
@@ -207,7 +216,8 @@ describe("PDF print options", () => {
     document.getElementById("button-calendar-day-2022-11-20").click();
     expectSelectedPreset(null);
     expectResult(null, "2022-11-01", "2022-11-20");
-  });
+  }
+  );
 
   it("should allow to select a custom range 2022-11-15 to 2022-11-08", async () => {
     await render();

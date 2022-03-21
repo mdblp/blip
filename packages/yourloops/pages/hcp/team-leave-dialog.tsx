@@ -56,6 +56,7 @@ interface LeaveTeamDialogElementsProps {
   handleClose: () => void;
   handleLeaveTeam: () => void;
 }
+
 const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "YlpLeaveTeamDialogButtons" });
 
 function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element | null {
@@ -98,8 +99,10 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
   if (onlyMember) {
     question = (
       <DialogContentText color="textPrimary" id="team-leave-dialog-question">
-        <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} values={{ teamName }} parent={React.Fragment}>
-          Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently deleted</strong> if
+        <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} values={{ teamName }}
+          parent={React.Fragment}>
+          Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently
+          deleted</strong> if
           you leave it.
         </Trans>
       </DialogContentText>

@@ -30,41 +30,20 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
-import * as sinon from "sinon";
-import { expect } from "chai";
 import { v4 as uuidv4 } from "uuid";
 
 import { waitTimeout } from "../../../lib/utils";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContext, INotification } from "../../../lib/notifications/models";
 import { NotificationContextProvider, useNotification, NotificationType } from "../../../lib/notifications";
 import { loggedInUsers } from "../../common";
-import { authHookHcp } from "../auth/hook.test";
-import { notificationAPIStub, resetNotificationAPIStub } from "./api.test";
-
-const stubNotificationContextValueInternal = {
-  accept: sinon.stub().resolves(),
-  cancel: sinon.stub().resolves(),
-  decline: sinon.stub().resolves(),
-  update: sinon.stub(),
-  initialized: true,
-  receivedInvitations: [] as INotification[],
-  sentInvitations: [] as INotification[],
-};
-
-export const stubNotificationContextValue = stubNotificationContextValueInternal as NotificationContext;
-
-export function resetNotificationContextValueStubs(): void {
-  stubNotificationContextValueInternal.accept.resetHistory();
-  stubNotificationContextValueInternal.cancel.resetHistory();
-  stubNotificationContextValueInternal.decline.resetHistory();
-  stubNotificationContextValueInternal.update.resetHistory();
-  stubNotificationContextValueInternal.initialized = true;
-  stubNotificationContextValueInternal.receivedInvitations = [];
-  stubNotificationContextValueInternal.sentInvitations = [];
-}
+import { createAuthHookStubs } from "../auth/utils";
+import { notificationAPIStub, resetNotificationAPIStub } from "./utils";
 
 describe("Notification hook", () => {
+
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
 
   let container: HTMLDivElement | null = null;
   let notifications: NotificationContext | null = null;
@@ -91,7 +70,7 @@ describe("Notification hook", () => {
       await waitTimeout(10);
       i++;
     }
-    expect(notifications.initialized, "initialized").to.be.true;
+    expect(notifications.initialized).toBe(true);
   };
 
   beforeEach(() => {
@@ -107,21 +86,21 @@ describe("Notification hook", () => {
   describe("Initialization", () => {
     it("should initialize", async () => {
       await initNotificationContext();
-      expect(notifications.initialized, "initialized").to.be.true;
-      expect(notificationAPIStub.getReceivedInvitations.calledOnce, "getReceivedInvitations").to.be.true;
-      expect(notificationAPIStub.getSentInvitations.calledOnce, "getSentInvitations").to.be.true;
+      expect(notifications.initialized).toBe(true);
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("Update", () => {
     it("should re-fetch invitations from the api", async () => {
       await initNotificationContext();
-      expect(notificationAPIStub.getReceivedInvitations.calledOnce, "getReceivedInvitations").to.be.true;
-      expect(notificationAPIStub.getSentInvitations.calledOnce, "getSentInvitations").to.be.true;
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
       notifications.update();
       await waitTimeout(100);
-      expect(notificationAPIStub.getReceivedInvitations.calledTwice, "getReceivedInvitations").to.be.true;
-      expect(notificationAPIStub.getSentInvitations.calledTwice, "getSentInvitations").to.be.true;
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -145,10 +124,9 @@ describe("Notification hook", () => {
       };
       await notifications.accept(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.acceptInvitation.calledOnce, "acceptInvitation").to.be.true;
-      // Called 2x -> init + accept
-      expect(notificationAPIStub.getReceivedInvitations.calledTwice, "getReceivedInvitations").to.be.true;
-      expect(notificationAPIStub.getSentInvitations.calledOnce, "getSentInvitations").to.be.true;
+      expect(notificationAPIStub.acceptInvitation).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -172,10 +150,9 @@ describe("Notification hook", () => {
       };
       await notifications.decline(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.declineInvitation.calledOnce, "declineInvitation").to.be.true;
-      // Called 2x -> init + decline
-      expect(notificationAPIStub.getReceivedInvitations.calledTwice, "getReceivedInvitations").to.be.true;
-      expect(notificationAPIStub.getSentInvitations.calledOnce, "getSentInvitations").to.be.true;
+      expect(notificationAPIStub.declineInvitation).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -199,11 +176,9 @@ describe("Notification hook", () => {
       };
       await notifications.cancel(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.cancelInvitation.calledOnce, "cancelInvitation").to.be.true;
-      expect(notificationAPIStub.getReceivedInvitations.calledOnce, "getReceivedInvitations").to.be.true;
-      // Called 2x -> init + cancel
-      expect(notificationAPIStub.getSentInvitations.calledTwice, "getSentInvitations").to.be.true;
+      expect(notificationAPIStub.cancelInvitation).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(2);
     });
   });
 });
-

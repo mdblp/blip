@@ -26,21 +26,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
+
 import { act } from "react-dom/test-utils";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { TeamContext, TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
 import { FilterType, SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import PatientListPage, { updatePatientList } from "../../../pages/hcp/patients/page";
-import { authHookHcp } from "../../lib/auth/hook.test";
 import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
-import { teamAPI } from "../../lib/team/hook.test";
+import "../../intersectionObserverMock";
+import { loggedInUsers } from "../../common";
+import { teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 
 describe("Patient list page", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   let team: TeamContext;
   let patients: TeamUser[];
 
@@ -70,13 +74,13 @@ describe("Patient list page", () => {
     });
   }
 
-  before(async () => {
+  beforeAll(async () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     await mountComponent();
   });
 
-  after(() => {
+  afterAll(() => {
     if (container) {
       unmountComponentAtNode(container);
       container.remove();
@@ -92,7 +96,7 @@ describe("Patient list page", () => {
     const patientReceived = updatePatientList(team, [], "", FilterType.pending, SortFields.lastname, SortDirection.asc, false);
 
     //then
-    expect(patientReceived).to.eql(patientExpected);
+    expect(patientReceived).toEqual(patientExpected);
   });
 
   it("updatePatientList should return correct patients when filter is team id", () => {
@@ -104,7 +108,7 @@ describe("Patient list page", () => {
     const patientReceived = updatePatientList(team, [], "", teamId, SortFields.lastname, SortDirection.asc, false);
 
     //then
-    expect(patientReceived).to.eql(patientExpected);
+    expect(patientReceived).toEqual(patientExpected);
   });
 });
 

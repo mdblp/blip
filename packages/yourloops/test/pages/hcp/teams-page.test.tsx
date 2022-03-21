@@ -27,23 +27,24 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper, MountRendererProps } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper, MountRendererProps } from "enzyme";
 
 import { ITeam } from "../../../models/team";
-import { AuthContextProvider } from "../../../lib/auth";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { TeamContextProvider } from "../../../lib/team";
 import { waitTimeout } from "../../../lib/utils";
 import TeamsPage from "../../../pages/hcp/teams-page";
 
-import { teams } from "../../common";
-import { authHookHcp } from "../../lib/auth/hook.test";
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
-import { teamAPI, resetTeamAPIStubs } from "../../lib/team/hook.test";
+import { loggedInUsers, teams } from "../../common";
+import Adapter from "enzyme-adapter-react-16";
+import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
 
 describe("Team page", () => {
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const apiTimeout = 50;
   const mountOptions: MountRendererProps = {
     attachTo: null,
@@ -65,15 +66,19 @@ describe("Team page", () => {
   async function createComponent(): Promise<ReactWrapper> {
     const page = mount(<TestTeamsPageComponent />, mountOptions);
 
-    expect(document.getElementById("team-page-loading-progress"), "team-page-loading-progress not null").to.be.not.null;
-    expect((teamAPI.fetchPatients as sinon.SinonStub).calledOnce, "fetchPatients calledOnce").to.be.true;
-    expect((teamAPI.fetchTeams as sinon.SinonStub).calledOnce, "fetchTeams calledOnce").to.be.true;
+    expect(document.getElementById("team-page-loading-progress")).not.toBeNull();
+    expect((teamAPI.fetchPatients as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect((teamAPI.fetchTeams as jest.Mock)).toHaveBeenCalledTimes(1);
     page.update();
     await waitTimeout(apiTimeout);
     return page;
   }
 
-  before(() => {
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
     mountOptions.attachTo = document.getElementById("app");
     if (mountOptions.attachTo === null) {
       mountOptions.attachTo = document.createElement("div");
@@ -81,7 +86,7 @@ describe("Team page", () => {
       document.body.appendChild(mountOptions.attachTo);
     }
   });
-  after(() => {
+  afterAll(() => {
     const { attachTo } = mountOptions;
     if (attachTo instanceof HTMLElement) {
       document.body.removeChild(attachTo);
@@ -92,9 +97,9 @@ describe("Team page", () => {
     if (component !== null) {
       component.unmount();
       component = null;
-      expect(document.getElementById("team-page-loading-progress"), "team-page-loading-progress null").to.be.null;
-      expect(document.getElementById("div-api-error-message"), "div-api-error-message null").to.be.null;
-      expect(document.getElementById("team-page-grid-list"), "team-page-grid-list null").to.be.null;
+      expect(document.getElementById("team-page-loading-progress")).toBeNull();
+      expect(document.getElementById("div-api-error-message")).toBeNull();
+      expect(document.getElementById("team-page-grid-list")).toBeNull();
     }
     resetTeamAPIStubs();
   });
@@ -104,128 +109,114 @@ describe("Team page", () => {
       await waitTimeout(apiTimeout);
       return [];
     };
-    (teamAPI.fetchTeams as sinon.SinonStub).returns(longWaitPromise());
+    (teamAPI.fetchTeams as jest.Mock).mockReturnValue(longWaitPromise());
     component = await createComponent();
     await waitTimeout(3 * apiTimeout);
-    expect(document.getElementById("team-page-loading-progress"), "team-page-loading-progress null").to.be.null;
-    expect(document.getElementById("team-page-grid-list"), "team-page-grid-list not null").to.be.not.null;
+    expect(document.getElementById("team-page-loading-progress")).toBeNull();
+    expect(document.getElementById("team-page-grid-list")).not.toBeNull();
   });
 
   it("should display an error message if loading failed", async () => {
-    (teamAPI.fetchTeams as sinon.SinonStub).rejects(new Error("Test error"));
+    (teamAPI.fetchTeams as jest.Mock).mockRejectedValue(new Error("Test error"));
 
     component = await createComponent();
-    expect(document.getElementById("team-page-loading-progress"), "team-page-loading-progress").to.be.null;
-    expect(document.getElementById("div-api-error-message"), "div-api-error-message").to.be.not.null;
+    expect(document.getElementById("team-page-loading-progress")).toBeNull();
+    expect(document.getElementById("div-api-error-message")).not.toBeNull();
   });
 
   it("should display the team list on successful loading", async () => {
     component = await createComponent();
-    expect(document.getElementById("team-page-grid-list")).to.be.not.null;
+    expect(document.getElementById("team-page-grid-list")).not.toBeNull();
   });
 
   describe("onShowLeaveTeamDialog", () => {
-    const leaveTeamStub = teamAPI.leaveTeam as sinon.SinonStub;
-    // const removeMember = teamAPI.removeMember as sinon.SinonStub;
-    const deleteTeam = teamAPI.deleteTeam as sinon.SinonStub;
+    const leaveTeamStub = teamAPI.leaveTeam as jest.Mock;
+    const deleteTeam = teamAPI.deleteTeam as jest.Mock;
 
     it("should display the leave dialog, and call deleteTeam api on validate if the member is the only member", async () => {
       component = await createComponent();
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
-      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+      expect(document.getElementById("team-page-alert")).toBeNull();
 
       let buttonId = `team-card-${teams[2].id}-button-leave-team`;
       const button = document.getElementById(buttonId) as HTMLButtonElement;
-      expect(button, buttonId).to.be.not.null;
+      expect(button).not.toBeNull();
 
       button.click();
 
       await waitTimeout(apiTimeout);
       component.update();
 
-      expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
+      expect(component.exists("#team-leave-dialog-title")).toBe(true);
 
       buttonId = "#team-leave-dialog-button-leave";
-      expect(component.exists(buttonId), `${buttonId} exists`).to.be.true;
+      expect(component.exists(buttonId)).toBe(true);
       component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
 
-      expect(deleteTeam.calledOnce, "deleteTeam calledOnce").to.be.true;
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
+      expect(deleteTeam).toHaveBeenCalledTimes(1);
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
     });
 
     it("should display the leave dialog, and not call the api on cancel", async () => {
       component = await createComponent();
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
-      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+      expect(document.getElementById("team-page-alert")).toBeNull();
 
       let buttonId = `team-card-${teams[2].id}-button-leave-team`;
       const button = document.getElementById(buttonId) as HTMLButtonElement;
-      expect(button, buttonId).to.be.not.null;
+      expect(button).not.toBeNull();
 
       button.click();
 
       await waitTimeout(apiTimeout);
       component.update();
 
-      expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
+      expect(component.exists("#team-leave-dialog-title")).toBe(true);
 
       buttonId = "#team-leave-dialog-button-cancel";
-      expect(component.exists(buttonId), buttonId).to.be.true;
+      expect(component.exists(buttonId)).toBe(true);
       component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
 
-      expect(leaveTeamStub.calledOnce, "leaveTeam calledOnce").to.be.false;
-      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
+      expect(leaveTeamStub).toHaveBeenCalledTimes(0);
+      expect(document.getElementById("team-page-alert")).toBeNull();
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
     });
 
     it("should display an error alert if the api call failed", async () => {
       const errorMessage = "API error message";
-      leaveTeamStub.rejects(new Error(errorMessage));
+      leaveTeamStub.mockRejectedValue(new Error(errorMessage));
 
       component = await createComponent();
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
-      expect(document.getElementById("team-page-alert"), "#team-page-alert exists").to.be.null;
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
+      expect(document.getElementById("team-page-alert")).toBeNull();
 
       let buttonId = `team-card-${teams[1].id}-button-leave-team`;
       const button = document.getElementById(buttonId) as HTMLButtonElement;
-      expect(button, buttonId).to.be.not.null;
+      expect(button).not.toBeNull();
 
       button.click();
 
       await waitTimeout(apiTimeout);
       component.update();
 
-      expect(component.exists("#team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.true;
+      expect(component.exists("#team-leave-dialog-title")).toBe(true);
 
       buttonId = "#team-leave-dialog-button-leave";
-      expect(component.exists(buttonId), buttonId).to.be.true;
+      expect(component.exists(buttonId)).toBe(true);
       component.find(buttonId).last().simulate("click");
 
       component.update();
       await waitTimeout(apiTimeout);
 
-      expect(leaveTeamStub.calledOnce, "leaveTeam calledOnce").to.be.true;
-      expect(document.getElementById("team-leave-dialog-title"), "team-leave-dialog-title exists").to.be.null;
+      expect(leaveTeamStub).toHaveBeenCalledTimes(1);
+      expect(document.getElementById("team-leave-dialog-title")).toBeNull();
     });
-  });
-
-  describe("onShowRemoveTeamMemberDialog", () => {
-    it("TODO", undefined);
-  });
-  describe("onShowEditTeamDialog", () => {
-    it("TODO", undefined);
-  });
-  describe("onShowAddMemberDialog", () => {
-    it("TODO", undefined);
-  });
-  describe("onSwitchAdminRole", () => {
-    it("TODO", undefined);
   });
 });
 

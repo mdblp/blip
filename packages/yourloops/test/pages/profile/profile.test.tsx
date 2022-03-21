@@ -30,23 +30,21 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
-import { expect } from "chai";
-import * as sinon from "sinon";
 
 import { Units } from "../../../models/generic";
 import { AuthContextProvider, Session } from "../../../lib/auth";
 import { loggedInUsers } from "../../common";
-import { createAuthHookStubs } from "../../lib/auth/hook.test";
 import { NotificationContextProvider } from "../../../lib/notifications";
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import ProfilePage from "../../../pages/profile";
 import { Preferences, Profile, Settings } from "../../../models/shoreline";
+import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
 
 describe("Profile", () => {
   let container: HTMLElement | null = null;
-  let updatePreferences: sinon.SinonStub<[Preferences, boolean | undefined], Promise<Preferences>>;
-  let updateProfile: sinon.SinonStub<[Profile, boolean | undefined], Promise<Profile>>;
-  let updateSettings: sinon.SinonStub<[Settings, boolean | undefined], Promise<Settings>>;
+  let updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
+  let updateProfile: jest.Mock<Promise<Profile>, [Profile, boolean | undefined]>;
+  let updateSettings: jest.Mock<Promise<Settings>, [Settings, boolean | undefined]>;
   const defaultUrl = "/professional/patients";
 
   async function mountProfilePage(session: Session): Promise<void> {
@@ -84,8 +82,8 @@ describe("Profile", () => {
 
   it("should be able to render", async () => {
     await mountProfilePage(loggedInUsers.hcpSession);
-    expect(container.querySelector("#profile-textfield-firstname").id).to.be.equal("profile-textfield-firstname");
-    expect(container.querySelector("#profile-button-save").id).to.be.equal("profile-button-save");
+    expect(container.querySelector("#profile-textfield-firstname").id).toBe("profile-textfield-firstname");
+    expect(container.querySelector("#profile-button-save").id).toBe("profile-button-save");
   });
 
   it("should display mg/dL Units by default if not specified", async () => {
@@ -93,21 +91,21 @@ describe("Profile", () => {
     delete session.user?.settings?.units?.bg;
     await mountProfilePage(session);
     const selectValue = container.querySelector("#profile-units-selector").innerHTML;
-    expect(selectValue).to.be.equal(Units.gram);
+    expect(selectValue).toBe(Units.gram);
   });
 
   it("should display birthdate if user is a patient", async () => {
     const session = loggedInUsers.patientSession;
     await mountProfilePage(session);
     const birthDateInput = container.querySelector("#profile-textfield-birthdate") as HTMLInputElement;
-    expect(birthDateInput?.value).to.be.equal(session.user.profile?.patient?.birthday);
+    expect(birthDateInput?.value).toBe(session.user.profile?.patient?.birthday);
   });
 
   it("should not display profession if user is a patient", async () => {
     const session = loggedInUsers.patientSession;
     await mountProfilePage(session);
     const hcpProfessionSelectInput = container.querySelector("#profile-hcp-profession-selector + input");
-    expect(hcpProfessionSelectInput).to.be.null;
+    expect(hcpProfessionSelectInput).toBeNull();
   });
 
   it("should not display pro sante connect button if user is not a french hcp", async () => {
@@ -115,7 +113,7 @@ describe("Profile", () => {
     session.user.settings.country = "EN";
     await mountProfilePage(session);
     const proSanteConnectButton = container.querySelector("#pro-sante-connect-button");
-    expect(proSanteConnectButton).to.be.null;
+    expect(proSanteConnectButton).toBeNull();
   });
 
   it("should display pro sante connect button if user is a french hcp and his account is not certified", async () => {
@@ -123,21 +121,21 @@ describe("Profile", () => {
     session.user.frProId = undefined;
     await mountProfilePage(session);
     const proSanteConnectButton = container.querySelector("#pro-sante-connect-button");
-    expect(proSanteConnectButton).to.be.not.null;
+    expect(proSanteConnectButton).not.toBeNull();
   });
 
   it("should display eCPS number if user is a french hcp and his account is certified", async () => {
     const session = loggedInUsers.hcpSession;
     await mountProfilePage(session);
     const textField = container.querySelector("#professional-account-number-text-field");
-    expect(textField).to.be.not.null;
+    expect(textField).not.toBeNull();
   });
 
   it("should display certified icon if user is a french hcp and his account is certified", async () => {
     const session = loggedInUsers.hcpSession;
     await mountProfilePage(session);
     const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
-    expect(certifiedIcon).to.be.not.null;
+    expect(certifiedIcon).not.toBeNull();
   });
 
   it("should not display certified icon if user is a french hcp and his account is not certified", async () => {
@@ -145,21 +143,7 @@ describe("Profile", () => {
     session.user.frProId = undefined;
     await mountProfilePage(session);
     const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
-    expect(certifiedIcon).to.be.null;
-  });
-
-  it("should update profile when saving after changing firstname", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
-
-    const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
-    const firstnameInput: HTMLInputElement = container.querySelector("#profile-textfield-firstname");
-
-    expect(saveButton.disabled, "button is disabled").to.be.true;
-    Simulate.change(firstnameInput, { target: { value: "Chandler" } } as unknown as SyntheticEventData);
-    expect(saveButton.disabled, "button is enabled").to.be.false;
-    Simulate.click(saveButton);
-    expect(updateProfile.calledOnce, "call to method").to.be.true;
+    expect(certifiedIcon).toBeNull();
   });
 
   it("should update settings when saving after changing units", async () => {
@@ -169,11 +153,11 @@ describe("Profile", () => {
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const unitSelectInput = container?.querySelector("#profile-units-selector + input");
 
-    expect(saveButton.disabled, "button is disabled").to.be.true;
+    expect(saveButton.disabled).toBeTruthy();
     Simulate.change(unitSelectInput, { target: { value: Units.mole } } as unknown as SyntheticEventData);
-    expect(saveButton.disabled, "button is enabled").to.be.false;
+    expect(saveButton.disabled).toBeFalsy();
     Simulate.click(saveButton);
-    expect(updateSettings.calledOnce, "call to method").to.be.true;
+    expect(updateSettings).toHaveBeenCalledTimes(1);
   });
 
   it("should update preferences when saving after changing language", async () => {
@@ -183,11 +167,25 @@ describe("Profile", () => {
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const languageSelectInput = container.querySelector("#profile-locale-selector + input");
 
-    expect(saveButton.disabled, "button is disabled").to.be.true;
+    expect(saveButton.disabled).toBeTruthy();
     Simulate.change(languageSelectInput, { target: { value: "es" } } as unknown as SyntheticEventData);
-    expect(saveButton.disabled, "button is enabled").to.be.false;
+    expect(saveButton.disabled).toBeFalsy();
     Simulate.click(saveButton);
-    expect(updatePreferences.calledOnce, "call to method").to.be.true;
+    expect(updatePreferences).toHaveBeenCalledTimes(1);
+  });
+
+  it("should update profile when saving after changing firstname", async () => {
+    const session = loggedInUsers.hcpSession;
+    await mountProfilePage(session);
+
+    const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
+    const firstnameInput: HTMLInputElement = container.querySelector("#profile-textfield-firstname");
+
+    expect(saveButton.disabled).toBe(true);
+    Simulate.change(firstnameInput, { target: { value: "Chandler" } } as unknown as SyntheticEventData);
+    expect(saveButton.disabled).toBe(false);
+    Simulate.click(saveButton);
+    expect(updateProfile).toHaveBeenCalledTimes(1);
   });
 });
 

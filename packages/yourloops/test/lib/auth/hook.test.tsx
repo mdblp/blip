@@ -33,116 +33,29 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import { MemoryRouter, Route } from "react-router-dom";
 import * as H from "history";
-import * as sinon from "sinon";
-import { expect } from "chai";
 
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
 import { waitTimeout } from "../../../lib/utils";
-import { AuthAPI, User, Session, AuthContext, SignupUser } from "../../../lib/auth";
+import { AuthAPI, AuthContext, Session, SignupUser, User } from "../../../lib/auth";
 import { AuthContextImpl } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
-import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./api.test";
 import { HcpProfession } from "../../../models/hcp-profession";
 import { STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/models";
-
-/**
- * Auth hook stubs definitions
- */
-export interface AuthContextStubs {
-  certifyProfessionalAccount: sinon.SinonStub<null, Promise<void>>;
-  flagPatient: sinon.SinonStub<[string], Promise<void>>;
-  getFlagPatients: sinon.SinonStub<[], string[]>;
-  isAuthHookInitialized: boolean;
-  isAuthInProgress: boolean;
-  isLoggedIn: boolean;
-  login: sinon.SinonStub<[string, string, string | null], Promise<User>>;
-  logout: sinon.SinonStub<[boolean | undefined], Promise<void>>;
-  redirectToProfessionalAccountLogin: sinon.SinonStub<[], void>;
-  resendSignup: sinon.SinonStub<[string], Promise<boolean>>;
-  resetPassword: sinon.SinonStub<[string, string, string], Promise<boolean>>;
-  sendPasswordResetEmail: sinon.SinonStub<[string, string], Promise<void>>;
-  session: sinon.SinonStub<[], Session | null>;
-  sessionToken: string | null;
-  setFlagPatients: sinon.SinonStub<[string[]], Promise<void>>;
-  setUser: sinon.SinonStub<[User], void>;
-  signup: sinon.SinonStub<[SignupUser], Promise<void>>;
-  switchRoleToHCP: sinon.SinonStub<[boolean, HcpProfession], Promise<void>>;
-  traceToken: string | null;
-  updatePassword: sinon.SinonStub<[string, string], Promise<void>>;
-  updatePreferences: sinon.SinonStub<[Preferences, boolean | undefined], Promise<Preferences>>;
-  updateProfile: sinon.SinonStub<[Profile, boolean | undefined], Promise<Profile>>;
-  updateSettings: sinon.SinonStub<[Settings, boolean | undefined], Promise<Settings>>;
-  user: Readonly<User> | null;
-}
-
-/**
- * Hook Stubs
- */
-export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
-  certifyProfessionalAccount: sinon.stub<null, Promise<void>>().resolves(),
-  flagPatient: sinon.stub<[string], Promise<void>>().resolves(),
-  getFlagPatients: sinon.stub<[], string[]>().returns([]),
-  isAuthHookInitialized: true,
-  isAuthInProgress: false,
-  isLoggedIn: true,
-  login: sinon.stub<[string, string, string | null], Promise<User>>().resolves(session.user),
-  logout: sinon.stub<[boolean | undefined], Promise<void>>().resolves(),
-  redirectToProfessionalAccountLogin: sinon.stub<[], void>().resolves(),
-  resendSignup: sinon.stub<[string], Promise<boolean>>().resolves(true),
-  resetPassword: sinon.stub<[string, string, string], Promise<boolean>>().resolves(true),
-  sendPasswordResetEmail: sinon.stub<[string, string], Promise<void>>().resolves(),
-  session: sinon.stub<[], Session | null>().returns(session),
-  sessionToken: session.sessionToken,
-  setFlagPatients: sinon.stub<[string[]], Promise<void>>().resolves(),
-  setUser: sinon.stub<[User], void>(),
-  signup: sinon.stub<[SignupUser], Promise<void>>().resolves(),
-  switchRoleToHCP: sinon.stub<[boolean, HcpProfession], Promise<void>>().resolves(),
-  traceToken: session.traceToken,
-  updatePassword: sinon.stub<[string, string], Promise<void>>().resolves(),
-  updatePreferences: sinon.stub<[Preferences, boolean | undefined], Promise<Preferences>>().resolves(session.user.preferences),
-  updateProfile: sinon.stub<[Profile, boolean | undefined], Promise<Profile>>().resolves(session.user.profile),
-  updateSettings: sinon.stub<[Settings, boolean | undefined], Promise<Settings>>().resolves(session.user.settings),
-  user: session?.user ?? null,
-});
-
-/**
- * Reset stubs history & behavior
- *
- * TODO complete me
- */
-export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Session): void => {
-  hookStubs.user = session?.user ?? null;
-  hookStubs.sessionToken = session.sessionToken;
-  hookStubs.traceToken = session.traceToken;
-  hookStubs.isLoggedIn = typeof session === "object";
-  hookStubs.isAuthInProgress = false;
-  hookStubs.isAuthHookInitialized = true;
-
-  hookStubs.logout.resetHistory();
-  hookStubs.logout.resetBehavior();
-  hookStubs.logout.resolves();
-
-  hookStubs.session.resetHistory();
-  hookStubs.session.resetBehavior();
-  hookStubs.session.returns(session);
-};
-
-// TODO Delete me: should be defined by in tests files
-export const authCaregiver = loggedInUsers.caregiverSession;
-export const authHcp = loggedInUsers.hcpSession;
-export const authPatient = loggedInUsers.patientSession;
-export const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-export const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
-export const authHookCaregiver: AuthContext = createAuthHookStubs(authCaregiver);
+import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./utils";
 
 describe("Auth hook", () => {
+  const authPatient = loggedInUsers.patientSession;
+  const authCaregiver = loggedInUsers.caregiverSession;
+  const authHcp = loggedInUsers.hcpSession;
 
   /* eslint-disable new-cap */
   const ReactAuthContext = React.createContext({} as AuthContext);
   const authApiHcpStubs = createAuthAPIStubs(authHcp);
+  const authApiCaregiverStubs = createAuthAPIStubs(authCaregiver);
+  const authApiPatientStubs = createAuthAPIStubs(authPatient);
   let container: HTMLDivElement | null = null;
-  let authContext: AuthContext | null = null;
+  let authContext: AuthContext = null;
   let testHistory: H.History<unknown> | null = null;
   let testLocation: H.Location<unknown> | null = null;
 
@@ -177,8 +90,8 @@ describe("Auth hook", () => {
         );
       });
     });
-    expect(authContext, "authContext").to.be.not.null;
-    expect(authContext.isAuthHookInitialized, "initialized").to.be.true;
+    expect(authContext).not.toBeNull();
+    expect(authContext.isAuthHookInitialized).toBeTruthy();
   };
 
   beforeEach(() => {
@@ -193,10 +106,13 @@ describe("Auth hook", () => {
     document.body.removeChild(container);
     container = null;
     resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpSession);
+    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverSession);
+    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientSession);
     authContext = null;
   });
 
-  after(() => {
+
+  afterAll(() => {
     sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
     sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
     sessionStorage.removeItem(STORAGE_KEY_USER);
@@ -205,41 +121,56 @@ describe("Auth hook", () => {
   describe("Initialization", () => {
     it("should initialize as logout state when no auth storage exists", async () => {
       await initAuthContext(null, authApiHcpStubs);
-      expect(authContext.traceToken, "traceToken").to.be.a("string").not.empty;
-      expect(authContext.sessionToken, "sessionToken").to.be.null;
-      expect(authContext.user, "user").to.be.null;
-    });
+      expect(typeof authContext.traceToken).toBe("string");
+      expect(authContext.traceToken.length).toBeGreaterThan(0);
+      expect(authContext.sessionToken).toBeNull();
+      expect(authContext.user).toBeNull();
+    }
+    );
 
     it("should initialized as logout state when trace token is not valid", async () => {
-      await initAuthContext({ sessionToken: authHcp.sessionToken, traceToken: "abcd", user: authHcp.user }, authApiHcpStubs);
-      expect(authContext.traceToken, "traceToken").to.be.a("string").not.empty;
-      expect(authContext.sessionToken, "sessionToken").to.be.null;
-      expect(authContext.user, "user").to.be.null;
-    });
+      await initAuthContext({
+        sessionToken: authHcp.sessionToken,
+        traceToken: "abcd",
+        user: authHcp.user,
+      }, authApiHcpStubs);
+      expect(typeof authContext.traceToken).toBe("string");
+      expect(authContext.traceToken.length).toBeGreaterThan(0);
+      expect(authContext.sessionToken).toBeNull();
+      expect(authContext.user).toBeNull();
+    }
+    );
 
     it("should initialized as logout state when session token has expired", async () => {
       const expiredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTAwMDAwMDAiLCJuYW1lIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3ZyIjoibm8iLCJyb2xlIjoiaGNwIiwiaWF0IjoxNjI0OTU2MzA3LCJleHAiOjE2MjQ5NTYzMDZ9.fEaJHx1E53fh9m4DwNNXFm--iD6gEWJ0YmlsRVCOmog";
-      await initAuthContext({ sessionToken: expiredToken, traceToken: authHcp.traceToken, user: authHcp.user }, authApiHcpStubs);
-      expect(authContext.traceToken, "traceToken").to.be.a("string").not.empty;
-      expect(authContext.sessionToken, "sessionToken").to.be.null;
-      expect(authContext.user, "user").to.be.null;
-    });
+      await initAuthContext({
+        sessionToken: expiredToken,
+        traceToken: authHcp.traceToken,
+        user: authHcp.user,
+      }, authApiHcpStubs);
+      expect(typeof authContext.traceToken).toBe("string");
+      expect(authContext.traceToken.length).toBeGreaterThan(0);
+      expect(authContext.sessionToken).toBeNull();
+      expect(authContext.user).toBeNull();
+    }
+    );
 
     it("should initialized as login state when auth storage exists", async () => {
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.traceToken, "traceToken").to.be.equals(authHcp.traceToken);
-      expect(authContext.sessionToken, "sessionToken").to.be.equals(authHcp.sessionToken);
-      expect(authContext.user, "user").to.be.not.null;
-      expect(authContext.user.userid, "userid").to.be.equals(authHcp.user.userid);
-    });
+      expect(authContext.traceToken).toBe(authHcp.traceToken);
+      expect(authContext.sessionToken).toBe(authHcp.sessionToken);
+      expect(authContext.user).not.toBeNull();
+      expect(authContext.user.userid).toBe(authHcp.user.userid);
+    }
+    );
   });
 
   describe("Login", () => {
-    before(() => {
+    beforeAll(() => {
       config.METRICS_SERVICE = "matomo";
       window._paq = [];
     });
-    after(() => {
+    afterAll(() => {
       delete window._paq;
       config.METRICS_SERVICE = "disabled";
     });
@@ -248,32 +179,32 @@ describe("Auth hook", () => {
       const session = loggedInUsers.hcpSession;
       const stubs = createAuthAPIStubs(session);
       await initAuthContext(null, stubs);
-      expect(authContext.session(), "authContext.session()").to.be.null;
-      expect(authContext.isLoggedIn, "isLoggedIn false").to.be.false;
+      expect(authContext.session()).toBeNull();
+      expect(authContext.isLoggedIn).toBe(false);
 
       const user = await authContext.login("abc", "abc", "abc");
-      expect(stubs.login.calledOnce, "calledOnce").to.be.true;
-      // session.user.settings.country = "FR";
-      expect(user, JSON.stringify({ having: user, expected: session.user }, null, 2)).to.be.deep.equals(session.user);
-      expect(authContext.traceToken, "traceToken").to.be.equals(session.traceToken);
-      expect(authContext.sessionToken, "sessionToken").to.be.equals(session.sessionToken);
-      expect(authContext.user, "user").to.be.not.null;
-      expect(authContext.user.userid, "userid").to.be.equals(session.user.userid);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN), "STORAGE_KEY_SESSION_TOKEN").to.be.equals(session.sessionToken);
-      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN), "STORAGE_KEY_SESSION_TOKEN").to.be.equals(session.traceToken);
-      expect(sessionStorage.getItem(STORAGE_KEY_USER), "STORAGE_KEY_SESSION_TOKEN").to.be.equals(JSON.stringify(session.user));
-      expect(window._paq, JSON.stringify(window._paq)).to.be.deep.equals([
+      expect(stubs.login).toHaveBeenCalledTimes(1);
+      expect(user).toEqual(session.user);
+      expect(authContext.traceToken).toBe(session.traceToken);
+      expect(authContext.sessionToken).toBe(session.sessionToken);
+      expect(authContext.user).not.toBeNull();
+      expect(authContext.user.userid).toBe(session.user.userid);
+      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(session.sessionToken);
+      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN)).toBe(session.traceToken);
+      expect(sessionStorage.getItem(STORAGE_KEY_USER)).toBe(JSON.stringify(session.user));
+      expect(window._paq).toEqual([
         ["setUserId", session.user.userid],
         ["setCustomVariable", 1, "UserRole", "hcp", "page"],
         ["trackEvent", "registration", "login", "hcp"],
       ]);
-      expect(authContext.session(), "authContext.session()").to.be.deep.equals(session);
-      expect(authContext.isLoggedIn, "isLoggedIn true").to.be.true;
-    });
+      expect(authContext.session()).toEqual(session);
+      expect(authContext.isLoggedIn).toBe(true);
+    }
+    );
 
     it("should throw an exception if the api call failed", async () => {
       await initAuthContext(null, authApiHcpStubs);
-      authApiHcpStubs.login.rejects(new Error("wrong"));
+      authApiHcpStubs.login.mockRejectedValue(new Error("wrong"));
 
       let user: User | null = null;
       let error: Error | null = null;
@@ -282,92 +213,96 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(user).to.be.null;
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("wrong");
-      expect(authContext.traceToken, "traceToken").to.be.a("string").not.empty;
-      expect(authContext.sessionToken, "sessionToken").to.be.null;
-      expect(authContext.user, "user").to.be.null;
-      expect(authContext.session()).to.be.null;
-      expect(authContext.isLoggedIn).to.be.false;
+      expect(user).toBeNull();
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("wrong");
+      expect(typeof authContext.traceToken).toBe("string");
+      expect(authContext.traceToken.length).toBeGreaterThan(0);
+      expect(authContext.sessionToken).toBeNull();
+      expect(authContext.user).toBeNull();
+      expect(authContext.session()).toBeNull();
+      expect(authContext.isLoggedIn).toBe(false);
     });
   });
 
   describe("Logout", () => {
-    const cleanBlipReduxStore = sinon.spy();
-    before(() => {
+    const cleanBlipReduxStore = jest.fn();
+    beforeAll(() => {
       config.METRICS_SERVICE = "matomo";
       window._paq = [];
       window.cleanBlipReduxStore = cleanBlipReduxStore;
     });
-    after(() => {
+    afterAll(() => {
       delete window.cleanBlipReduxStore;
       delete window._paq;
       config.METRICS_SERVICE = "disabled";
     });
     it("should logout the logged-in user", async () => {
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.session()).to.be.not.null;
-      expect(authContext.isLoggedIn).to.be.true;
+      expect(authContext.session()).not.toBeNull();
+      expect(authContext.isLoggedIn).toBe(true);
 
       window._paq = []; // Clear the login part
       await authContext.logout();
       await waitTimeout(10);
-      expect(authApiHcpStubs.logout.calledOnce, "logout calledOnce").to.be.true;
-      expect(authContext.traceToken, "traceToken").to.be.a("string").not.empty;
-      expect(authContext.sessionToken, "sessionToken").to.be.null;
-      expect(authContext.user, "user").to.be.null;
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN), "STORAGE_KEY_SESSION_TOKEN").to.be.null;
-      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN), "STORAGE_KEY_SESSION_TOKEN").to.be.null;
-      expect(sessionStorage.getItem(STORAGE_KEY_USER), "STORAGE_KEY_SESSION_TOKEN").to.be.null;
+      expect(authApiHcpStubs.logout).toHaveBeenCalledTimes(1);
+      expect(typeof authContext.traceToken).toBe("string");
+      expect(authContext.traceToken.length).toBeGreaterThan(0);
+      expect(authContext.sessionToken).toBeNull();
+      expect(authContext.user).toBeNull();
+      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBeNull();
+      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN)).toBeNull();
+      expect(sessionStorage.getItem(STORAGE_KEY_USER)).toBeNull();
       // The first entry is for the "fake" login at the init
-      expect(window._paq, "_paq").to.be.lengthOf(4);
-      expect(window._paq[0], "_paq[0]").to.be.deep.equals(["trackEvent", "registration", "logout"]);
-      expect(window._paq[1], "_paq[1]").to.be.deep.equals(["deleteCustomVariable", 1, "page"]);
-      expect(window._paq[2], "_paq[2]").to.be.deep.equals(["resetUserId"]);
-      expect(window._paq[3], "_paq[3]").to.be.deep.equals(["deleteCookies"]);
-      expect(cleanBlipReduxStore.calledOnce, "cleanBlipReduxStore").to.be.true;
-      expect(authContext.session()).to.be.null;
-      expect(authContext.isLoggedIn).to.be.false;
-      expect(testLocation.pathname).to.be.equals("/");
-      expect(testLocation.search).to.be.equals("");
-      expect(testLocation.state).to.be.undefined;
-      expect(testHistory.length).to.be.equals(2);
+      expect(window._paq).toHaveLength(4);
+      expect(window._paq[0]).toEqual(["trackEvent", "registration", "logout"]);
+      expect(window._paq[1]).toEqual(["deleteCustomVariable", 1, "page"]);
+      expect(window._paq[2]).toEqual(["resetUserId"]);
+      expect(window._paq[3]).toEqual(["deleteCookies"]);
+      expect(cleanBlipReduxStore).toHaveBeenCalledTimes(1);
+      expect(authContext.session()).toBeNull();
+      expect(authContext.isLoggedIn).toBe(false);
+      expect(testLocation.pathname).toBe("/");
+      expect(testLocation.search).toBe("");
+      expect(testLocation.state).toBeUndefined();
+      expect(testHistory.length).toBe(2);
     });
     it("should not crash if the api call crash", async () => {
-      authApiHcpStubs.logout.rejects();
+      authApiHcpStubs.logout.mockRejectedValue(_.noop);
       await initAuthContext(authHcp, authApiHcpStubs);
       await authContext.logout();
       await waitTimeout(10);
-      expect(authApiHcpStubs.logout.calledOnce, "logout calledOnce").to.be.true;
-      expect(authContext.session()).to.be.null;
-      expect(authContext.isLoggedIn).to.be.false;
+      expect(authApiHcpStubs.logout).toHaveBeenCalledTimes(1);
+      expect(authContext.session()).toBeNull();
+      expect(authContext.isLoggedIn).toBe(false);
     });
     it("should correctly set the URL parameters when logout with session timeout set to true", async () => {
-      const authApiCaregiverStubs = createAuthAPIStubs(authCaregiver);
       await initAuthContext(authCaregiver, authApiCaregiverStubs);
-      expect(authContext.session()).to.be.not.null;
-      expect(authContext.isLoggedIn).to.be.true;
+      expect(authContext.session()).not.toBeNull();
+      expect(authContext.isLoggedIn).toBe(true);
 
       await authContext.logout(true);
       await waitTimeout(10);
 
-      expect(testLocation.pathname).to.be.equals("/");
-      expect(testLocation.search).to.be.equals("?login=caregiver%40example.com&sessionExpired=true");
-      expect(testLocation.state).to.be.deep.equals({ from: { pathname: authCaregiver.user.getHomePage() } });
-      expect(testHistory.length).to.be.equals(2);
+      expect(testLocation.pathname).toBe("/");
+      expect(testLocation.search).toBe("?login=caregiver%40example.com&sessionExpired=true");
+      expect(testLocation.state).toEqual({ from: { pathname: authCaregiver.user.getHomePage() } });
+      expect(testHistory.length).toBe(2);
     });
   });
 
   describe("Updates", () => {
     const updatedPreferences: Preferences = { displayLanguageCode: "fr" };
-    const updatedProfile: Profile = { ...loggedInUsers.hcp.profile, privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true } };
+    const updatedProfile: Profile = {
+      ...loggedInUsers.hcp.profile,
+      privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true },
+    };
     const updatedSettings: Settings = { ...loggedInUsers.hcp.settings, country: "FR" };
 
     it("updatePreferences should not call the API if the user is not logged in", async () => {
-      authApiHcpStubs.updatePreferences.resolves(updatedPreferences);
+      authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
       await initAuthContext(null, authApiHcpStubs);
-      expect(authContext.user).to.be.null;
+      expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
       let result: Preferences | null = null;
@@ -376,26 +311,26 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "calledOnce").to.be.false;
-      expect(result).to.be.null;
-      expect(error).to.be.not.null;
-      expect(authContext.user).to.be.null;
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(0);
+      expect(result).toBeNull();
+      expect(error).not.toBeNull();
+      expect(authContext.user).toBeNull();
     });
     it("updatePreferences should call the API with the good parameters", async () => {
-      authApiHcpStubs.updatePreferences.resolves(updatedPreferences);
+      authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.user.preferences).to.be.deep.equals({ displayLanguageCode: "en" });
+      expect(authContext.user.preferences).toEqual({ displayLanguageCode: "en" });
 
       const result = await authContext.updatePreferences({ ...updatedPreferences });
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "calledOnce").to.be.true;
-      expect(result).to.be.deep.equals(updatedPreferences);
-      expect(authContext.user.preferences).to.be.deep.equals(updatedPreferences);
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(updatedPreferences);
+      expect(authContext.user.preferences).toEqual(updatedPreferences);
     });
 
     it("updateProfile should not call the API if the user is not logged in", async () => {
-      authApiHcpStubs.updateProfile.resolves(updatedProfile);
+      authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
       await initAuthContext(null, authApiHcpStubs);
-      expect(authContext.user).to.be.null;
+      expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
       let result: Profile | null = null;
@@ -404,26 +339,26 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.updateProfile.calledOnce, "calledOnce").to.be.false;
-      expect(result).to.be.null;
-      expect(error).to.be.not.null;
-      expect(authContext.user).to.be.null;
+      expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(0);
+      expect(result).toBeNull();
+      expect(error).not.toBeNull();
+      expect(authContext.user).toBeNull();
     });
     it("updateProfile should call the API with the good parameters", async () => {
-      authApiHcpStubs.updateProfile.resolves(updatedProfile);
+      authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.user.profile).to.be.deep.equals(loggedInUsers.hcp.profile);
+      expect(authContext.user.profile).toEqual(loggedInUsers.hcp.profile);
 
       const result = await authContext.updateProfile({ ...updatedProfile });
-      expect(authApiHcpStubs.updateProfile.calledOnce, "calledOnce").to.be.true;
-      expect(result).to.be.deep.equals(updatedProfile);
-      expect(authContext.user.profile).to.be.deep.equals(updatedProfile);
+      expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(updatedProfile);
+      expect(authContext.user.profile).toEqual(updatedProfile);
     });
 
     it("updateSettings should not call the API if the user is not logged in", async () => {
-      authApiHcpStubs.updateSettings.resolves(updatedSettings);
+      authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
       await initAuthContext(null, authApiHcpStubs);
-      expect(authContext.user).to.be.null;
+      expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
       let result: Settings | null = null;
@@ -432,26 +367,26 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.updateSettings.calledOnce, "calledOnce").to.be.false;
-      expect(result).to.be.null;
-      expect(error).to.be.not.null;
-      expect(authContext.user).to.be.null;
+      expect(authApiHcpStubs.updateSettings).toHaveBeenCalledTimes(0);
+      expect(result).toBeNull();
+      expect(error).not.toBeNull();
+      expect(authContext.user).toBeNull();
     });
     it("updateSettings should call the API with the good parameters", async () => {
-      authApiHcpStubs.updateSettings.resolves(updatedSettings);
+      authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.user.settings).to.be.deep.equals(loggedInUsers.hcp.settings);
+      expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
 
       const result = await authContext.updateSettings({ ...updatedSettings });
-      expect(authApiHcpStubs.updateSettings.calledOnce, "calledOnce").to.be.true;
-      expect(result).to.be.deep.equals(updatedSettings);
-      expect(authContext.user.settings).to.be.deep.equals(updatedSettings);
+      expect(authApiHcpStubs.updateSettings).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(updatedSettings);
+      expect(authContext.user.settings).toEqual(updatedSettings);
     });
 
     it("updatePassword should not call the API if the user is not logged in", async () => {
-      authApiHcpStubs.updateUser.resolves();
+      authApiHcpStubs.updateUser.mockResolvedValue();
       await initAuthContext(null, authApiHcpStubs);
-      expect(authContext.user).to.be.null;
+      expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
       try {
@@ -459,15 +394,14 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.updateUser.calledOnce, "calledOnce").to.be.false;
-      expect(error).to.be.not.null;
-      expect(authContext.user).to.be.null;
+      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(0);
+      expect(error).not.toBeNull();
+      expect(authContext.user).toBeNull();
     });
     it("updatePassword should not call the API if the user is a patient", async () => {
-      const authApiStubs = createAuthAPIStubs(authPatient);
-      authApiStubs.updateUser.resolves();
-      await initAuthContext(authPatient, authApiStubs);
-      expect(authContext.user).to.be.not.null;
+      authApiPatientStubs.updateUser.mockResolvedValue();
+      await initAuthContext(authPatient, authApiPatientStubs);
+      expect(authContext.user).not.toBeNull();
 
       let error: Error | null = null;
       try {
@@ -475,17 +409,17 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.updateUser.calledOnce, "calledOnce").to.be.false;
-      expect(error, "exception").to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("invalid-user-role");
+      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(0);
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("invalid-user-role");
     });
     it("updatePassword should call the API with the good parameters", async () => {
-      authApiHcpStubs.updateUser.resolves();
+      authApiHcpStubs.updateUser.mockResolvedValue();
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.user.settings).to.be.deep.equals(loggedInUsers.hcp.settings);
+      expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
 
       await authContext.updatePassword("abcd", "1234");
-      expect(authApiHcpStubs.updateUser.calledOnce, "calledOnce").to.be.true;
+      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(1);
     });
 
     it("switchRoleToHCP should failed for hcp users", async () => {
@@ -496,142 +430,175 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(error, "exception").to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("invalid-user-role");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("invalid-user-role");
     });
     it("switchRoleToHCP should failed for patient users", async () => {
-      const authApiStubs = createAuthAPIStubs(authPatient);
-      await initAuthContext(authPatient, authApiStubs);
+      await initAuthContext(authPatient, authApiPatientStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
       } catch (reason) {
         error = reason;
       }
-      expect(error, "exception").to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("invalid-user-role");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("invalid-user-role");
     });
     it("switchRoleToHCP should not call updateProfile if updateUser failed", async () => {
-      const authApiStubs = createAuthAPIStubs(authCaregiver);
-      authApiStubs.updateUser.rejects();
-      await initAuthContext(authCaregiver, authApiStubs);
+      authApiCaregiverStubs.updateUser.mockRejectedValue(_.noop);
+      await initAuthContext(authCaregiver, authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
       } catch (reason) {
         error = reason;
       }
-      expect(error).to.be.instanceOf(Error);
-      expect(authApiStubs.updateUser.calledOnce, "updateUser.calledOnce").to.be.true;
-      const updateArgs = authApiStubs.updateUser.firstCall.args;
-      expect(updateArgs[0]).to.have.all.keys("user", "sessionToken", "traceToken");
-      expect(updateArgs[1]).to.be.an("object").deep.equals({ roles: [UserRoles.hcp] });
-      expect(authApiStubs.updateProfile.called).to.be.false;
+      expect(error).toBeInstanceOf(Function);
+      expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
+      const updateArgs = authApiCaregiverStubs.updateUser.mock.calls[0];
+      expect(updateArgs[0]).toHaveProperty("user");
+      expect(updateArgs[0]).toHaveProperty("sessionToken");
+      expect(updateArgs[0]).toHaveProperty("traceToken");
+      expect(typeof updateArgs[1]).toBe("object");
+      expect(updateArgs[1]).toEqual({ roles: [UserRoles.hcp] });
+      expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(0);
     });
     it("switchRoleToHCP should call updateProfile after updateUser", async () => {
       const now = Date.now();
-      const authApiStubs = createAuthAPIStubs(authCaregiver);
-      authApiStubs.updateProfile.rejects();
-      await initAuthContext(authCaregiver, authApiStubs);
+      authApiCaregiverStubs.updateProfile.mockRejectedValue(_.noop);
+      await initAuthContext(authCaregiver, authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
       } catch (reason) {
         error = reason;
       }
-      expect(error).to.be.instanceOf(Error);
-      expect(authApiStubs.updateUser.calledOnce, "updateUser.calledOnce").to.be.true;
-      const updateUserArgs = authApiStubs.updateUser.firstCall.args;
-      expect(updateUserArgs[0]).to.have.keys(["user", "sessionToken", "traceToken"]);
-      expect(updateUserArgs[1]).to.be.an("object").deep.equals({ roles: [UserRoles.hcp] });
-      expect(authApiStubs.updateProfile.calledOnce, "updateProfile.calledOnce").to.be.true;
-      const updateProfileArgs = authApiStubs.updateProfile.firstCall.args;
-      expect(updateProfileArgs[0]).to.have.all.keys("user", "sessionToken", "traceToken");
+      expect(error).toBeInstanceOf(Function);
+      expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
+      const updateUserArgs = authApiCaregiverStubs.updateUser.mock.calls[0];
+      expect(updateUserArgs[0]).toHaveProperty("user");
+      expect(updateUserArgs[0]).toHaveProperty("sessionToken");
+      expect(updateUserArgs[0]).toHaveProperty("traceToken");
+      expect(typeof updateUserArgs[1]).toBe("object");
+      expect(updateUserArgs[1]).toEqual({ roles: [UserRoles.hcp] });
+      expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(1);
+      const updateProfileArgs = authApiCaregiverStubs.updateProfile.mock.calls[0];
+      expect(updateProfileArgs[0]).toHaveProperty("user");
+      expect(updateProfileArgs[0]).toHaveProperty("sessionToken");
+      expect(updateProfileArgs[0]).toHaveProperty("traceToken");
       const profile = updateProfileArgs[0].user.profile;
-      expect(profile, JSON.stringify(profile)).to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy");
-      expect(profile.termsOfUse.isAccepted, "termsOfUse.isAccepted").to.be.true;
-      expect(profile.privacyPolicy.isAccepted, "privacyPolicy.isAccepted").to.be.true;
-      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp), "termsOfUse").to.be.above(now);
-      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp), "privacyPolicy").to.be.above(now);
-      expect(authContext.user.profile, "hook profile not updated").to.be.an("object").and.not.have.any.keys("termsOfUse", "privacyPolicy");
+      expect(typeof profile).toBe("object");
+      expect(profile.termsOfUse).toBeDefined();
+      expect(profile.privacyPolicy).toBeDefined();
+      expect(profile.termsOfUse.isAccepted).toBe(true);
+      expect(profile.privacyPolicy.isAccepted).toBe(true);
+      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThan(now);
+      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThan(now);
+      expect(typeof authContext.user.profile).toBe("object");
+      expect(authContext.user.profile.termsOfUse).toBeUndefined();
+      expect(authContext.user.profile.privacyPolicy).toBeUndefined();
     });
     it("switchRoleToHCP should call refreshToken after updateUser, and verify the received token", async () => {
       const invalidUpdatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTBhMGEwYjAiLCJuYW1lIjoiY2FyZWdpdmVyQGV4YW1wbGUuY29tIiwiZW1haWwiOiJjYXJlZ2l2ZXJAZXhhbXBsZS5jb20iLCJzdnIiOiJubyIsInJvbGUiOiJjYXJlZ2l2ZXIiLCJpYXQiOjE2MjUwNjQxNTgsImV4cCI6NTYyNDk1NjMwNn0.MlWX87m5QdZSi2gYO22hfSvR3wZaoFZlTTLlU6dk_FY";
       const now = new Date();
-      const authApiStubs = createAuthAPIStubs(authCaregiver);
       const accepts = {
         acceptanceTimestamp: now.toISOString(),
         isAccepted: true,
       };
-      authApiStubs.updateProfile.resolves({ ...authCaregiver.user.profile, termsOfUse: accepts, privacyPolicy: accepts });
-      authApiStubs.refreshToken.resolves(invalidUpdatedToken);
-      await initAuthContext(authCaregiver, authApiStubs);
+      authApiCaregiverStubs.updateProfile.mockResolvedValue({
+        ...authCaregiver.user.profile,
+        termsOfUse: accepts,
+        privacyPolicy: accepts,
+      });
+      authApiCaregiverStubs.refreshToken.mockResolvedValue(invalidUpdatedToken);
+      await initAuthContext(authCaregiver, authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
       } catch (reason) {
         error = reason;
       }
-      expect(error).to.be.instanceOf(Error);
-      expect(error.message).to.be.equals("Role change is not effective");
-      expect(authApiStubs.updateUser.calledOnce, "updateUser.calledOnce").to.be.true;
-      const updateUserArgs = authApiStubs.updateUser.firstCall.args;
-      expect(updateUserArgs[0]).to.have.keys(["user", "sessionToken", "traceToken"]);
-      expect(updateUserArgs[1]).to.be.an("object").deep.equals({ roles: [UserRoles.hcp] });
-      expect(authApiStubs.updateProfile.calledOnce, "updateProfile.calledOnce").to.be.true;
-      const updateProfileArgs = authApiStubs.updateProfile.firstCall.args;
-      expect(updateProfileArgs[0]).to.have.all.keys("user", "sessionToken", "traceToken");
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toBe("Role change is not effective");
+      expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
+      const updateUserArgs = authApiCaregiverStubs.updateUser.mock.calls[0];
+      expect(updateUserArgs[0]).toHaveProperty("user");
+      expect(updateUserArgs[0]).toHaveProperty("sessionToken");
+      expect(updateUserArgs[0]).toHaveProperty("traceToken");
+      expect(updateUserArgs[1]).toEqual({ roles: [UserRoles.hcp] });
+      expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(1);
+      const updateProfileArgs = authApiCaregiverStubs.updateProfile.mock.calls[0];
+      expect(updateProfileArgs[0]).toHaveProperty("user");
+      expect(updateProfileArgs[0]).toHaveProperty("sessionToken");
+      expect(updateProfileArgs[0]).toHaveProperty("traceToken");
       const profile = updateProfileArgs[0].user.profile;
-      expect(profile, JSON.stringify(profile)).to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy");
-      expect(profile.termsOfUse.isAccepted, "termsOfUse.isAccepted").to.be.true;
-      expect(profile.privacyPolicy.isAccepted, "privacyPolicy.isAccepted").to.be.true;
-      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp), "termsOfUse").to.be.greaterThanOrEqual(now.valueOf());
-      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp), "privacyPolicy").to.be.greaterThanOrEqual(now.valueOf());
-      expect(authContext.user.profile, "hook profile not updated").to.be.an("object").and.not.have.any.keys("termsOfUse", "privacyPolicy");
+      expect(typeof profile).toBe("object");
+      expect(profile.termsOfUse).toBeDefined();
+      expect(profile.privacyPolicy).toBeDefined();
+      expect(profile.termsOfUse.isAccepted).toBe(true);
+      expect(profile.privacyPolicy.isAccepted).toBe(true);
+      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(typeof authContext.user.profile).toBe("object");
+      expect(authContext.user.profile.termsOfUse).toBeUndefined();
+      expect(authContext.user.profile.privacyPolicy).toBeUndefined();
     });
     it("switchRoleToHCP should succeed (accept feedback)", async () => {
       const updatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTBhMGEwYjAiLCJuYW1lIjoiY2FyZWdpdmVyQGV4YW1wbGUuY29tIiwiZW1haWwiOiJjYXJlZ2l2ZXJAZXhhbXBsZS5jb20iLCJzdnIiOiJubyIsInJvbGUiOiJoY3AiLCJpYXQiOjE2MjUwNjQxNTgsImV4cCI6NTYyNDk1NjMwNn0._PK65sdZ_o11nZtJBTILxcS9f9HhRLfAmYsn3Us4s7o";
       const now = new Date();
-      const authApiStubs = createAuthAPIStubs(authCaregiver);
       const accepts = {
         acceptanceTimestamp: now.toISOString(),
         isAccepted: true,
       };
-      authApiStubs.updateProfile.resolves({ ...authCaregiver.user.profile, termsOfUse: accepts, privacyPolicy: accepts, contactConsent: accepts });
-      authApiStubs.refreshToken.resolves(updatedToken);
-      await initAuthContext(authCaregiver, authApiStubs);
+      authApiCaregiverStubs.updateProfile.mockResolvedValue({
+        ...authCaregiver.user.profile,
+        termsOfUse: accepts,
+        privacyPolicy: accepts,
+        contactConsent: accepts,
+      });
+      authApiCaregiverStubs.refreshToken.mockResolvedValue(updatedToken);
+      await initAuthContext(authCaregiver, authApiCaregiverStubs);
 
       await authContext.switchRoleToHCP(true, HcpProfession.diabeto);
-      expect(authApiStubs.updateUser.calledOnce, "updateUser.calledOnce").to.be.true;
-      const updateUserArgs = authApiStubs.updateUser.firstCall.args;
-      expect(updateUserArgs[0]).to.have.keys(["user", "sessionToken", "traceToken"]);
-      expect(updateUserArgs[1]).to.be.an("object").deep.equals({ roles: [UserRoles.hcp] });
-      expect(authApiStubs.updateProfile.calledOnce, "updateProfile.calledOnce").to.be.true;
-      const updateProfileArgs = authApiStubs.updateProfile.firstCall.args;
-      expect(updateProfileArgs[0]).to.have.all.keys("user", "sessionToken", "traceToken");
+      expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
+      const updateUserArgs = authApiCaregiverStubs.updateUser.mock.calls[0];
+      expect(updateUserArgs[0]).toHaveProperty("user");
+      expect(updateUserArgs[0]).toHaveProperty("sessionToken");
+      expect(updateUserArgs[0]).toHaveProperty("traceToken");
+      expect(updateUserArgs[1]).toEqual({ roles: [UserRoles.hcp] });
+      expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(1);
+      const updateProfileArgs = authApiCaregiverStubs.updateProfile.mock.calls[0];
+      expect(updateUserArgs[0]).toHaveProperty("user");
+      expect(updateUserArgs[0]).toHaveProperty("sessionToken");
+      expect(updateUserArgs[0]).toHaveProperty("traceToken");
       const profile = updateProfileArgs[0].user.profile;
-      expect(profile, JSON.stringify(profile)).to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(profile.termsOfUse.isAccepted, "termsOfUse.isAccepted").to.be.true;
-      expect(profile.privacyPolicy.isAccepted, "privacyPolicy.isAccepted").to.be.true;
-      expect(profile.contactConsent.isAccepted, "contactConsent.isAccepted").to.be.true;
-      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp), "termsOfUse").to.be.greaterThanOrEqual(now.valueOf());
-      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp), "privacyPolicy").to.be.greaterThanOrEqual(now.valueOf());
-      expect(Date.parse(profile.contactConsent.acceptanceTimestamp), "contactConsent").to.be.greaterThanOrEqual(now.valueOf());
-      expect(authContext.user.profile, "hook profile updated").to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(authContext.user.role).to.be.equals(UserRoles.hcp);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN), "sessionStorage token").to.be.equals(updatedToken);
-      expect(authContext.sessionToken, "authContext.sessionToken").to.be.equals(updatedToken);
+      expect(typeof profile).toBe("object");
+      expect(profile.termsOfUse).toBeDefined();
+      expect(profile.privacyPolicy).toBeDefined();
+      expect(profile.contactConsent).toBeDefined();
+      expect(profile.termsOfUse.isAccepted).toBe(true);
+      expect(profile.privacyPolicy.isAccepted).toBe(true);
+      expect(profile.contactConsent.isAccepted).toBe(true);
+      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(Date.parse(profile.contactConsent.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(typeof authContext.user.profile).toBe("object");
+      expect(authContext.user.profile.termsOfUse).toBeDefined();
+      expect(authContext.user.profile.privacyPolicy).toBeDefined();
+      expect(authContext.user.profile.contactConsent).toBeDefined();
+      expect(authContext.user.role).toBe(UserRoles.hcp);
+      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(updatedToken);
+      expect(authContext.sessionToken).toBe(updatedToken);
       const storageUser = JSON.parse(sessionStorage.getItem(STORAGE_KEY_USER)) as User;
-      expect(storageUser.role, "sessionStorage user role").to.be.equals(UserRoles.hcp);
-      expect(storageUser.profile, "sessionStorage user profile").to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(storageUser.profile.termsOfUse, "sessionStorage user termsOfUse").to.be.deep.equals(accepts);
-      expect(storageUser.profile.privacyPolicy, "sessionStorage user privacyPolicy").to.be.deep.equals(accepts);
-      expect(storageUser.profile.contactConsent, "sessionStorage user contactConsent").to.be.deep.equals(accepts);
+      expect(storageUser.role).toBe(UserRoles.hcp);
+      expect(typeof storageUser.profile).toBe("object");
+      expect(storageUser.profile.termsOfUse).toEqual(accepts);
+      expect(storageUser.profile.privacyPolicy).toEqual(accepts);
+      expect(storageUser.profile.contactConsent).toEqual(accepts);
     });
     it("switchRoleToHCP should succeed (decline feedback)", async () => {
       const updatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTBhMGEwYjAiLCJuYW1lIjoiY2FyZWdpdmVyQGV4YW1wbGUuY29tIiwiZW1haWwiOiJjYXJlZ2l2ZXJAZXhhbXBsZS5jb20iLCJzdnIiOiJubyIsInJvbGUiOiJoY3AiLCJpYXQiOjE2MjUwNjQxNTgsImV4cCI6NTYyNDk1NjMwNn0._PK65sdZ_o11nZtJBTILxcS9f9HhRLfAmYsn3Us4s7o";
       const now = new Date();
-      const authApiStubs = createAuthAPIStubs(authCaregiver);
       const accepts = {
         acceptanceTimestamp: now.toISOString(),
         isAccepted: true,
@@ -640,36 +607,47 @@ describe("Auth hook", () => {
         acceptanceTimestamp: accepts.acceptanceTimestamp,
         isAccepted: false,
       };
-      authApiStubs.updateProfile.resolves({ ...authCaregiver.user.profile, termsOfUse: accepts, privacyPolicy: accepts, contactConsent: decline });
-      authApiStubs.refreshToken.resolves(updatedToken);
-      await initAuthContext(authCaregiver, authApiStubs);
+      authApiCaregiverStubs.updateProfile.mockResolvedValue({
+        ...authCaregiver.user.profile,
+        termsOfUse: accepts,
+        privacyPolicy: accepts,
+        contactConsent: decline,
+      });
+      authApiCaregiverStubs.refreshToken.mockResolvedValue(updatedToken);
+      await initAuthContext(authCaregiver, authApiCaregiverStubs);
 
       await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
-      expect(authApiStubs.updateUser.calledOnce, "updateUser.calledOnce").to.be.true;
-      const updateUserArgs = authApiStubs.updateUser.firstCall.args;
-      expect(updateUserArgs[0]).to.have.keys(["user", "sessionToken", "traceToken"]);
-      expect(updateUserArgs[1]).to.be.an("object").deep.equals({ roles: [UserRoles.hcp] });
-      expect(authApiStubs.updateProfile.calledOnce, "updateProfile.calledOnce").to.be.true;
-      const updateProfileArgs = authApiStubs.updateProfile.firstCall.args;
-      expect(updateProfileArgs[0]).to.have.all.keys("user", "sessionToken", "traceToken");
+      expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
+      const updateUserArgs = authApiCaregiverStubs.updateUser.mock.calls[0];
+      expect(updateUserArgs[0]).toHaveProperty(["user"]);
+      expect(updateUserArgs[1]).toEqual({ roles: [UserRoles.hcp] });
+      expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(1);
+      const updateProfileArgs = authApiCaregiverStubs.updateProfile.mock.calls[0];
+      expect(updateProfileArgs[0]).toHaveProperty(["user"]);
       const profile = updateProfileArgs[0].user.profile;
-      expect(profile, JSON.stringify(profile)).to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(profile.termsOfUse.isAccepted, "termsOfUse.isAccepted").to.be.true;
-      expect(profile.privacyPolicy.isAccepted, "privacyPolicy.isAccepted").to.be.true;
-      expect(profile.contactConsent.isAccepted, "contactConsent.isAccepted").to.be.false;
-      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp), "termsOfUse").to.be.greaterThanOrEqual(now.valueOf());
-      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp), "privacyPolicy").to.be.greaterThanOrEqual(now.valueOf());
-      expect(Date.parse(profile.contactConsent.acceptanceTimestamp), "privacyPolicy").to.be.greaterThanOrEqual(now.valueOf());
-      expect(authContext.user.profile, "hook profile updated").to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(authContext.user.role).to.be.equals(UserRoles.hcp);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN), "sessionStorage token").to.be.equals(updatedToken);
-      expect(authContext.sessionToken, "authContext.sessionToken").to.be.equals(updatedToken);
+      expect(typeof authContext.user.profile).toBe("object");
+      expect(authContext.user.profile.termsOfUse).toBeDefined();
+      expect(authContext.user.profile.privacyPolicy).toBeDefined();
+      expect(authContext.user.profile.contactConsent).toBeDefined();
+      expect(profile.termsOfUse.isAccepted).toBe(true);
+      expect(profile.privacyPolicy.isAccepted).toBe(true);
+      expect(profile.contactConsent.isAccepted).toBe(false);
+      expect(Date.parse(profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(Date.parse(profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(Date.parse(profile.contactConsent.acceptanceTimestamp)).toBeGreaterThanOrEqual(now.valueOf());
+      expect(typeof authContext.user.profile).toBe("object");
+      expect(authContext.user.profile.termsOfUse).toBeDefined();
+      expect(authContext.user.profile.privacyPolicy).toBeDefined();
+      expect(authContext.user.profile.contactConsent).toBeDefined();
+      expect(authContext.user.role).toBe(UserRoles.hcp);
+      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(updatedToken);
+      expect(authContext.sessionToken).toBe(updatedToken);
       const storageUser = JSON.parse(sessionStorage.getItem(STORAGE_KEY_USER)) as User;
-      expect(storageUser.role, "sessionStorage user role").to.be.equals(UserRoles.hcp);
-      expect(storageUser.profile, "sessionStorage user profile").to.be.an("object").and.have.any.keys("termsOfUse", "privacyPolicy", "contactConsent");
-      expect(storageUser.profile.termsOfUse, "sessionStorage user termsOfUse").to.be.deep.equals(accepts);
-      expect(storageUser.profile.privacyPolicy, "sessionStorage user privacyPolicy").to.be.deep.equals(accepts);
-      expect(storageUser.profile.contactConsent, "sessionStorage user contactConsent").to.be.deep.equals(decline);
+      expect(storageUser.role).toBe(UserRoles.hcp);
+      expect(typeof storageUser.profile).toBe("object");
+      expect(storageUser.profile.termsOfUse).toEqual(accepts);
+      expect(storageUser.profile.privacyPolicy).toEqual(accepts);
+      expect(storageUser.profile.contactConsent).toEqual(decline);
     });
   });
 
@@ -698,7 +676,20 @@ describe("Auth hook", () => {
       delete signupResolve.user.preferences;
       delete signupResolve.user.profile;
       delete signupResolve.user.settings;
-      authApiHcpStubs.signup.resolves(signupResolve);
+      authApiHcpStubs.signup.mockResolvedValue(signupResolve);
+      const callOrder: string[] = [];
+      authApiHcpStubs.updateSettings.mockImplementation(() => {
+        callOrder.push("updateSettings");
+        return Promise.resolve({} as Settings);
+      });
+      authApiHcpStubs.updateProfile.mockImplementation(() => {
+        callOrder.push("updateProfile");
+        return Promise.resolve({} as Profile);
+      });
+      authApiHcpStubs.updatePreferences.mockImplementation(() => {
+        callOrder.push("updatePreferences");
+        return Promise.resolve({} as Preferences);
+      });
 
       let error: Error | null = null;
       try {
@@ -706,27 +697,26 @@ describe("Auth hook", () => {
       } catch (reason) {
         error = reason;
       }
-      expect(authApiHcpStubs.signup.calledOnce, "signup calledOnce").to.be.true;
-      expect(authApiHcpStubs.signup.getCall(0).args).to.be.deep.equals([
+      expect(authApiHcpStubs.signup).toHaveBeenCalledTimes(1);
+      expect(authApiHcpStubs.signup.mock.calls[0]).toEqual([
         infos.accountUsername,
         infos.accountPassword,
         infos.accountRole,
         authContext.traceToken,
       ]);
-      expect(authApiHcpStubs.updateProfile.calledOnce, "updateProfile calledOnce").to.be.true;
-      const sentProfile = authApiHcpStubs.updateProfile.firstCall.args[0].user.profile;
-      expect(sentProfile).to.be.an("object").not.null;
-      expect(sentProfile.contactConsent.isAccepted).to.be.false;
-      expect(sentProfile.contactConsent.acceptanceTimestamp).to.be.a("string");
-      expect(sentProfile.hcpProfession).to.be.equal("");
-      expect(authApiHcpStubs.updateSettings.calledOnce, "updateSettings calledOnce").to.be.true;
-      expect(authApiHcpStubs.updateSettings.calledAfter(authApiHcpStubs.updateProfile), "settings after profile").to.be.true;
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "updatePreferences calledOnce").to.be.true;
-      expect(authApiHcpStubs.updatePreferences.calledAfter(authApiHcpStubs.updateSettings), "preferences after settings").to.be.true;
-      expect(authApiHcpStubs.sendAccountValidation.calledOnce, "sendAccountValidation calledOnce").to.be.true;
-      expect(authApiHcpStubs.sendAccountValidation.getCall(0).args[1]).to.be.equals(infos.preferencesLanguage);
-      expect(error).to.be.null;
-      expect(authContext.user).to.be.null;
+      expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(1);
+      const sentProfile = authApiHcpStubs.updateProfile.mock.calls[0][0].user.profile;
+      expect(sentProfile).not.toBeNull();
+      expect(sentProfile.contactConsent.isAccepted).toBe(false);
+      expect(typeof sentProfile.contactConsent.acceptanceTimestamp).toBe("string");
+      expect(sentProfile.hcpProfession).toBe("");
+      expect(authApiHcpStubs.updateSettings).toHaveBeenCalledTimes(1);
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
+      expect(authApiHcpStubs.sendAccountValidation).toHaveBeenCalledTimes(1);
+      expect(authApiHcpStubs.sendAccountValidation.mock.calls[0][1]).toBe(infos.preferencesLanguage);
+      expect(error).toBeNull();
+      expect(authContext.user).toBeNull();
+      expect(callOrder).toEqual(["updateProfile", "updateSettings", "updatePreferences"]);
     });
   });
 
@@ -734,35 +724,35 @@ describe("Auth hook", () => {
     it("should call the resend sign-up api", async () => {
       await initAuthContext(authHcp, authApiHcpStubs);
       const result = await authContext.resendSignup("abcd");
-      expect(authApiHcpStubs.resendSignup.calledOnce, "resendSignup.calledOnce").to.be.true;
-      expect(authApiHcpStubs.resendSignup.firstCall.args, "resendSignup args").to.be.deep.equals(["abcd", authHcp.traceToken, "en"]);
-      expect(result, "result").to.be.true;
+      expect(authApiHcpStubs.resendSignup).toHaveBeenCalledTimes(1);
+      expect(authApiHcpStubs.resendSignup.mock.calls[0]).toEqual(["abcd", authHcp.traceToken, "en"]);
+      expect(result).toBe(true);
     });
   });
 
   describe("Flag patient", () => {
     it("should flag a un-flagged patient", async () => {
       const userId = uuidv4();
-      authApiHcpStubs.updatePreferences.resolves({ patientsStarred: [userId] });
+      authApiHcpStubs.updatePreferences.mockResolvedValue({ patientsStarred: [userId] });
       delete authHcp.user.preferences;
       await initAuthContext(authHcp, authApiHcpStubs);
       await authContext.flagPatient(userId);
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "updatePreferences calledOnce").to.be.true;
-      const apiCall = authApiHcpStubs.updatePreferences.getCall(0).args;
-      expect((apiCall[0] as Session).user.preferences.patientsStarred, "apiCall patientsStarred").deep.equals([userId]);
-      expect(authContext.user.preferences.patientsStarred, "authContext patientsStarred").to.be.an("array").deep.equals([userId]);
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
+      const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
+      expect((apiCall[0] as Session).user.preferences.patientsStarred).toEqual([userId]);
+      expect(authContext.user.preferences.patientsStarred).toEqual([userId]);
     });
     it("should un-flag a flagged patient", async () => {
       const userId = uuidv4();
       const otherUserId = uuidv4();
       authHcp.user.preferences = { patientsStarred: [userId, otherUserId] };
-      authApiHcpStubs.updatePreferences.resolves({ patientsStarred: [otherUserId] });
+      authApiHcpStubs.updatePreferences.mockResolvedValue({ patientsStarred: [otherUserId] });
       await initAuthContext(authHcp, authApiHcpStubs);
       await authContext.flagPatient(userId);
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "updatePreferences calledOnce").to.be.true;
-      const apiCall = authApiHcpStubs.updatePreferences.getCall(0).args;
-      expect((apiCall[0] as Session).user.preferences.patientsStarred, "apiCall patientsStarred").deep.equals([otherUserId]);
-      expect(authContext.user.preferences.patientsStarred, "authContext patientsStarred").to.be.an("array").deep.equals([otherUserId]);
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
+      const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
+      expect((apiCall[0] as Session).user.preferences.patientsStarred).toEqual([otherUserId]);
+      expect(authContext.user.preferences.patientsStarred).toEqual([otherUserId]);
     });
     it("should add another user to an existing list", async () => {
       const userId1 = uuidv4();
@@ -770,35 +760,35 @@ describe("Auth hook", () => {
       const session = loggedInUsers.hcpSession;
       const stubs = createAuthAPIStubs(session);
 
-      stubs.updatePreferences.onFirstCall().resolves({ patientsStarred: [userId1] });
-      stubs.updatePreferences.onSecondCall().resolves({ patientsStarred: [userId1, userId2] });
+      stubs.updatePreferences.mockResolvedValueOnce({ patientsStarred: [userId1] });
+      stubs.updatePreferences.mockResolvedValueOnce({ patientsStarred: [userId1, userId2] });
       await initAuthContext(session, stubs);
-      expect(authContext.getFlagPatients(), "authContext getFlagPatients()").to.be.an("array").empty;
+      expect(authContext.getFlagPatients()).toEqual([]);
 
       await authContext.flagPatient(userId1);
-      expect(stubs.updatePreferences.calledOnce, "updatePreferences calledOnce (0)").to.be.true;
-      let apiCall = stubs.updatePreferences.getCall(0).args[0] as Session;
-      expect(apiCall.user.preferences.patientsStarred, "apiCall patientsStarred (0)").deep.equals([userId1]);
-      expect(authContext.user.preferences.patientsStarred, "authContext patientsStarred (0)").to.be.an("array").deep.equals([userId1]);
+      expect(stubs.updatePreferences).toHaveBeenCalledTimes(1);
+      let apiCall = stubs.updatePreferences.mock.calls[0][0] as Session;
+      expect(apiCall.user.preferences.patientsStarred).toEqual([userId1]);
+      expect(authContext.user.preferences.patientsStarred).toEqual([userId1]);
 
       await authContext.flagPatient(userId2);
-      expect(stubs.updatePreferences.calledTwice, "updatePreferences calledTwice (1)").to.be.true;
-      apiCall = stubs.updatePreferences.getCall(1).args[0] as Session;
-      expect(apiCall.user.preferences.patientsStarred, "apiCall patientsStarred (1)").deep.equals([userId1, userId2]);
-      expect(authContext.getFlagPatients(), "authContext getFlagPatients()").to.be.an("array").deep.equals([userId1, userId2]);
+      expect(stubs.updatePreferences).toHaveBeenCalledTimes(2);
+      apiCall = stubs.updatePreferences.mock.calls[1][0] as Session;
+      expect(apiCall.user.preferences.patientsStarred).toEqual([userId1, userId2]);
+      expect(authContext.getFlagPatients()).toEqual([userId1, userId2]);
     });
     it("setFlagPatients should replace the currently flagged patient", async () => {
       const userId = uuidv4();
-      authApiHcpStubs.updatePreferences.resolves({ displayLanguageCode: "fr", patientsStarred: [userId] });
+      authApiHcpStubs.updatePreferences.mockResolvedValue({ displayLanguageCode: "fr", patientsStarred: [userId] });
       authHcp.user.preferences.patientsStarred = ["old"];
       await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.getFlagPatients(), "authContext getFlagPatients() before").to.be.an("array").deep.equals(["old"]);
+      expect(authContext.getFlagPatients()).toEqual(["old"]);
       await authContext.setFlagPatients([userId]);
       const after = authContext.getFlagPatients();
-      expect(authApiHcpStubs.updatePreferences.calledOnce, "updatePreferences calledOnce").to.be.true;
-      const apiCall = authApiHcpStubs.updatePreferences.getCall(0).args;
-      expect((apiCall[0] as Session).user.preferences.patientsStarred, "apiCall patientsStarred").deep.equals([userId]);
-      expect(after, "authContext getFlagPatients() after").to.be.an("array").deep.equals([userId]);
+      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
+      const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
+      expect((apiCall[0] as Session).user.preferences.patientsStarred).toEqual([userId]);
+      expect(after).toEqual([userId]);
     });
   });
 
@@ -808,21 +798,20 @@ describe("Auth hook", () => {
       const username = loggedInUsers.caregiver.username;
       const language = loggedInUsers.caregiver.preferences.displayLanguageCode;
       await authContext.sendPasswordResetEmail(username, language);
-      const apiCall = authApiHcpStubs.requestPasswordReset.getCall(0).args;
-      expect(apiCall).to.be.deep.equals([username, authContext.traceToken, language]);
+      const apiCall = authApiHcpStubs.requestPasswordReset.mock.calls[0];
+      expect(apiCall).toMatchObject([username, authContext.traceToken, language]);
     });
     it("resetPassword should call the API", async () => {
-      authApiHcpStubs.resetPassword.resolves(true);
+      authApiHcpStubs.resetPassword.mockResolvedValue(true);
       await initAuthContext(null, authApiHcpStubs);
       const key = uuidv4();
       const username = loggedInUsers.caregiver.username;
       const password = "abcd";
       const result = await authContext.resetPassword(key, username, password);
-      expect(result).to.be.true;
-      const apiCall = authApiHcpStubs.resetPassword.getCall(0).args;
-      expect(apiCall).to.be.deep.equals([key, username, password, authContext.traceToken]);
+      expect(result).toBeTruthy();
+      const apiCall = authApiHcpStubs.resetPassword.mock.calls[0];
+      expect(apiCall).toMatchObject([key, username, password, authContext.traceToken]);
     });
   });
 });
-
 

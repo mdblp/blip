@@ -30,13 +30,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { MemoryRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
-import { expect } from "chai";
 
 import config from "../../../lib/config";
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContextProvider, SessionTimeout } from "../../../lib/auth";
 import { loggedInUsers } from "../../common";
-import { AuthContextStubs, createAuthHookStubs, resetAuthHookStubs } from "./hook.test";
+import { AuthContextStubs, createAuthHookStubs, resetAuthHookStubs } from "./utils";
 
 describe("Session timeout", () => {
 
@@ -62,11 +61,11 @@ describe("Session timeout", () => {
     });
   }
 
-  before(() => {
+  beforeAll(() => {
     config.SESSION_TIMEOUT = 10 * sessionTimeoutDelay;
   });
 
-  after(() => {
+  afterAll(() => {
     config.SESSION_TIMEOUT = 1800000;
   });
 
@@ -86,46 +85,45 @@ describe("Session timeout", () => {
   it("should do nothing if isAuthInProgress is true", async () => {
     authHookHcpStubs.isAuthInProgress = true;
     await mountSessionTimeoutComponent(authHookHcpStubs);
-    expect(window.clearSessionTimeout).to.be.undefined;
+    expect(window.clearSessionTimeout).toBeUndefined();
   });
 
   it("should setup the test interval if isAuthInProgress is false", async () => {
     await mountSessionTimeoutComponent(authHookHcpStubs);
-    expect(window.clearSessionTimeout).to.be.a("function");
+    expect(typeof window.clearSessionTimeout).toBe("function");
 
     // Unmount should remove the timer
     ReactDOM.unmountComponentAtNode(container);
     document.body.removeChild(container);
     container = null;
 
-    expect(window.clearSessionTimeout).to.be.undefined;
+    expect(window.clearSessionTimeout).toBeUndefined();
   });
 
   it("should logout the user if no action after config.SESSION_TIMEOUT is done", async () => {
-    authHookHcpStubs.logout.callsFake(async () => {
+    authHookHcpStubs.logout.mockImplementation(async () => {
       window.clearSessionTimeout();
       return waitTimeout(1);
     });
     await mountSessionTimeoutComponent(authHookHcpStubs);
     await waitTimeout(config.SESSION_TIMEOUT + sessionTimeoutDelay);
-    expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce").to.be.true;
-    expect(authHookHcpStubs.logout.firstCall.args[0], "logout sessionExpired").to.be.true;
+    expect(authHookHcpStubs.logout).toHaveBeenCalledTimes(1);
+    expect(authHookHcpStubs.logout.mock.calls[0][0]).toBe(true);
   });
 
-  it("should not logout the user when receive an event", async function withEvent() {
-    this.timeout(3 * config.SESSION_TIMEOUT);
-    authHookHcpStubs.logout.callsFake(async () => {
+  it("should not logout the user when receive an event", async () => {
+    authHookHcpStubs.logout.mockImplementation(async () => {
       window.clearSessionTimeout();
       return waitTimeout(1);
     });
     await mountSessionTimeoutComponent(authHookHcpStubs);
     await waitTimeout(6 * sessionTimeoutDelay); // eslint-disable-line no-magic-numbers
-    expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (1)").to.be.false;
+    expect(authHookHcpStubs.logout).toHaveBeenCalledTimes(0);
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     await waitTimeout(5 * sessionTimeoutDelay);
-    expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (2)").to.be.false;
+    expect(authHookHcpStubs.logout).toHaveBeenCalledTimes(0);
     await waitTimeout(config.SESSION_TIMEOUT);
-    expect(authHookHcpStubs.logout.calledOnce, "logout calledOnce (3)").to.be.true;
-  });
+    expect(authHookHcpStubs.logout).toHaveBeenCalledTimes(1);
+  }, 3 * config.SESSION_TIMEOUT);
 });
 

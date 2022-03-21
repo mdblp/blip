@@ -27,41 +27,47 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, ReactWrapper } from "enzyme";
-import * as sinon from "sinon";
+import enzyme, { mount, ReactWrapper } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
 
 import { waitTimeout } from "../../../lib/utils";
 import TeamsSecondaryBar from "../../../pages/hcp/teams-secondary-bar";
 
 describe("Team secondary bar", () => {
   const apiTimeout = 50;
-  const onShowEditTeamDialog = sinon.stub().resolves();
+  const onShowEditTeamDialog = jest.fn().mockReturnValue(() => Promise.resolve());
   let component: ReactWrapper | null = null;
+
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
+  });
 
   afterEach(() => {
     if (component !== null) {
       component.unmount();
       component = null;
     }
-    onShowEditTeamDialog.resetHistory();
+    onShowEditTeamDialog.mockReset();
   });
 
   it("should display the nav bar", () => {
     component = mount(<TeamsSecondaryBar onShowEditTeamDialog={onShowEditTeamDialog} />);
-    expect(component.exists("#teams-navbar-item-left"), "left").to.be.true;
-    expect(component.exists("#teams-navbar-item-middle"), "middle").to.be.true;
-    expect(component.exists("#teams-navbar-item-right"), "right").to.be.true;
+    expect(component.exists("#teams-navbar-item-left")).toBe(true);
+    expect(component.exists("#teams-navbar-item-middle")).toBe(true);
+    expect(component.exists("#teams-navbar-item-right")).toBe(true);
   });
 
   it("should call onShowEditTeamDialog when clicking on the button", async () => {
     component = mount(<TeamsSecondaryBar onShowEditTeamDialog={onShowEditTeamDialog} />);
 
-    expect(component.exists("#teams-navbar-add-team"), "button exists").to.be.true;
+    expect(component.exists("#teams-navbar-add-team")).toBe(true);
     component.find("#teams-navbar-add-team").last().simulate("click");
     await waitTimeout(apiTimeout);
-    expect(onShowEditTeamDialog.calledOnce, "calledOnce").to.be.true;
-    expect(onShowEditTeamDialog.calledWith(null), "calledWith(null)").to.be.true;
+    expect(onShowEditTeamDialog).toHaveBeenCalledTimes(1);
+    expect(onShowEditTeamDialog).toHaveBeenCalledWith(null);
   });
 });
 

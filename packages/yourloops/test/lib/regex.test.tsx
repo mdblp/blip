@@ -28,7 +28,6 @@
 
 
 import { REGEX_EMAIL } from "../../lib/utils";
-import { expect } from "chai";
 
 const validEmails = [
   "foobar@domain.de",
@@ -65,13 +64,13 @@ const invalidEmails = [
 describe("Regex", () => {
   it("email regex should accept a list of valid emails", () => {
     validEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email), `email ${email} should be valid`).to.be.true;
+      expect(REGEX_EMAIL.test(email)).toBe(true);
     });
   });
 
   it("email regex should refuse a list of invalid emails", () => {
     invalidEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email), `email ${email} should be invalid`).to.be.false;
+      expect(REGEX_EMAIL.test(email)).toBe(false);
     });
   });
 });

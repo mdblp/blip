@@ -27,12 +27,12 @@
  */
 
 import React from "react";
-import { expect } from "chai";
-import { mount, shallow } from "enzyme";
+import enzyme, { mount, shallow } from "enzyme";
 import moment from "moment-timezone";
 import _ from "lodash";
 import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-test-renderer";
+import Adapter from "enzyme-adapter-react-16";
+import { act } from "react-dom/test-utils";
 
 import GroupIcon from "@material-ui/icons/Group";
 import PersonIcon from "@material-ui/icons/Person";
@@ -42,6 +42,8 @@ import { UserRoles } from "../../../models/shoreline";
 import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 import { Notification } from "../../../pages/notifications/notification";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
+import { NotificationContextProvider } from "../../../lib/notifications";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
 
 describe("Notification", () => {
   const notif: INotification = {
@@ -91,21 +93,28 @@ describe("Notification", () => {
     />
   );
 
+  beforeAll(() => {
+    enzyme.configure({
+      adapter: new Adapter(),
+      disableLifecycleMethods: true,
+    });
+  });
+
   describe("wrapped notification", () => {
 
     it("should be exported as a function", () => {
-      expect(Notification).to.be.a("function");
+      expect(typeof Notification).toBe("function");
     });
 
     it("should render", () => {
       const wrapper = shallow(fakeNotification());
 
-      expect(wrapper.find("div").length).to.be.ok;
+      expect(wrapper.find("div").length).toBeTruthy();
     });
 
     it("should display the user firstname and lastname", () => {
       const wrapper = mount(fakeNotification());
-      expect(wrapper.text().includes("Jeanne Dubois")).to.be.true;
+      expect(wrapper.text().includes("Jeanne Dubois")).toBe(true);
     });
 
     it("should display direct share", () => {
@@ -113,7 +122,7 @@ describe("Notification", () => {
 
       expect(
         wrapper.text().includes("wants to share their diabetes data with you")
-      ).to.be.true;
+      ).toBe(true);
     });
 
     it("should display medical team join invitation for a member", () => {
@@ -124,7 +133,7 @@ describe("Notification", () => {
           target: { id: "0", name: "target" },
         })
       );
-      expect(wrapper.text().includes("invites you to join")).to.be.true;
+      expect(wrapper.text().includes("invites you to join")).toBe(true);
     });
 
     it("should display medical team join invitation with more info button for a member having a caregiver role", () => {
@@ -138,8 +147,8 @@ describe("Notification", () => {
         )
       );
 
-      expect(wrapper.text().includes(" invites you to join")).to.be.true;
-      expect(wrapper.find(HelpIcon).length).to.equal(1);
+      expect(wrapper.text().includes(" invites you to join")).toBe(true);
+      expect(wrapper.find(HelpIcon).length).toBe(1);
     });
 
     it("should display medical team join invitation for a patient", () => {
@@ -159,33 +168,33 @@ describe("Notification", () => {
           .includes(
             "You're invited to share your diabetes data with grenoble DIAB service"
           )
-      ).to.be.true;
-      expect(wrapper.find(HelpIcon).length).to.equal(0);
+      ).toBe(true);
+      expect(wrapper.find(HelpIcon).length).toBe(0);
     });
 
     describe("getIconToDisplay", () => {
       it("should display a PersonIcon", () => {
         const wrapper = mount(fakeNotification());
 
-        expect(wrapper.find(PersonIcon).length).to.equal(1);
-        expect(wrapper.find(GroupIcon).length).to.equal(0);
-        expect(wrapper.find(MedicalServiceIcon).length).to.equal(0);
+        expect(wrapper.find(PersonIcon).length).toBe(1);
+        expect(wrapper.find(GroupIcon).length).toBe(0);
+        expect(wrapper.find(MedicalServiceIcon).length).toBe(0);
       });
 
       it("should display a GroupIcon", () => {
         const wrapper = mount(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
 
-        expect(wrapper.find(PersonIcon).length).to.equal(0);
-        expect(wrapper.find(GroupIcon).length).to.equal(1);
-        expect(wrapper.find(MedicalServiceIcon).length).to.equal(0);
+        expect(wrapper.find(PersonIcon).length).toBe(0);
+        expect(wrapper.find(GroupIcon).length).toBe(1);
+        expect(wrapper.find(MedicalServiceIcon).length).toBe(0);
       });
 
       it("should display a MedicalServiceIcon", () => {
         const wrapper = mount(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
 
-        expect(wrapper.find(PersonIcon).length).to.equal(0);
-        expect(wrapper.find(GroupIcon).length).to.equal(0);
-        expect(wrapper.find(MedicalServiceIcon).length).to.equal(1);
+        expect(wrapper.find(PersonIcon).length).toBe(0);
+        expect(wrapper.find(GroupIcon).length).toBe(0);
+        expect(wrapper.find(MedicalServiceIcon).length).toBe(1);
       });
     });
 
@@ -194,13 +203,13 @@ describe("Notification", () => {
         const wrapper = mount(fakeNotification());
         const expectedDate = moment.utc(notif.date).utc().format("L");
 
-        expect(wrapper.text().includes(expectedDate)).to.be.true;
+        expect(wrapper.text().includes(expectedDate)).toBe(true);
       });
 
       it("should display today", () => {
         const wrapper = mount(fakeNotification({ ...notif, date: new Date().toISOString() }));
 
-        expect(wrapper.text().includes("today")).to.be.true;
+        expect(wrapper.text().includes("today")).toBe(true);
       });
 
       it("should display yesterday", () => {
@@ -208,7 +217,7 @@ describe("Notification", () => {
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
         const wrapper = mount(fakeNotification({ ...notif, date: yesterday }));
 
-        expect(wrapper.text().includes("yesterday")).to.be.true;
+        expect(wrapper.text().includes("yesterday")).toBe(true);
       });
     });
   });
@@ -231,7 +240,9 @@ describe("Notification", () => {
       await act(() => {
         return new Promise((resolve) => {
           render(
-            <NotificationComponent notif={notif} />, container, resolve);
+            <NotificationContextProvider value={stubNotificationContextValue}>
+              <NotificationComponent notif={notif} />
+            </NotificationContextProvider>, container, resolve);
         });
       });
     }
@@ -252,7 +263,7 @@ describe("Notification", () => {
     it("should be able to render", async () => {
       await mountComponent(notif);
       const component = document.getElementById(`notification-line-${notif.id}`);
-      expect(component).to.be.not.null;
+      expect(component).not.toBeNull();
     });
 
     it("should show team code dialog when accepting team invitation", async () => {
@@ -260,7 +271,7 @@ describe("Notification", () => {
       const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${teamNotif.id}`) as HTMLButtonElement;
       acceptButton.click();
       const dialog = document.getElementById("team-add-dialog-title");
-      expect(dialog).to.be.not.null;
+      expect(dialog).not.toBeNull();
     });
 
 
@@ -269,7 +280,7 @@ describe("Notification", () => {
       const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${notif.id}`) as HTMLButtonElement;
       acceptButton.click();
       const dialog = document.getElementById("team-add-dialog-title");
-      expect(dialog).to.be.null;
+      expect(dialog).toBeNull();
     });
   });
 });

@@ -25,12 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { expect } from "chai";
 
 import { onFulfilled } from "../../lib/axios";
 import { HttpHeaderKeys } from "../../models/api";
 
-function testAxios(): void {
+describe("Axios service", () => {
 
   describe("onFulfilled", () => {
     it("should return config without added headers", () => {
@@ -42,7 +41,7 @@ function testAxios(): void {
       const actual = onFulfilled(config);
 
       //then
-      expect(actual).to.deep.equal(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it("should return config with header when no param is given", () => {
@@ -51,8 +50,8 @@ function testAxios(): void {
       const actual = onFulfilled({});
 
       //then
-      expect(actual.headers).to.include.keys(HttpHeaderKeys.sessionToken);
-      expect(actual.headers).to.include.keys(HttpHeaderKeys.traceToken);
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken);
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken);
     });
 
     it("should return config with added headers", () => {
@@ -63,11 +62,9 @@ function testAxios(): void {
       const actual = onFulfilled(config);
 
       //then
-      expect(actual).to.deep.include(config);
-      expect(actual.headers).to.include.keys(HttpHeaderKeys.sessionToken);
-      expect(actual.headers).to.include.keys(HttpHeaderKeys.traceToken);
+      expect(actual).toMatchObject(config);
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken);
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken);
     });
   });
-}
-
-export default testAxios;
+});
