@@ -26,17 +26,16 @@
  */
 
 import React from "react";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
-import { ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider, Theme, makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { SessionTimeout, useAuth } from "../lib/auth";
 import { UserRoles } from "../models/shoreline";
+import { getTheme } from "../components/theme";
 import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
-import { getExternalTheme, getMainTheme } from "../components/theme";
-import { makeStyles } from "@material-ui/styles";
 import FooterLinks from "../components/footer-links";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import PatientConsentPage from "../pages/patient/patient-consent";
 import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
@@ -44,21 +43,29 @@ import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/pas
 import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
-
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, "/login", "/signup", "/request-password-reset", "/confirm-password-reset"];
 const PUBLIC_ROUTES = ["/login", "/signup", "/request-password-reset", "/confirm-password-reset"];
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, ...PUBLIC_ROUTES];
 
-const routeStyle = makeStyles(() => {
+interface StyleProps {
+  color: string;
+}
+
+const routeStyle = makeStyles<Theme, StyleProps>(() => {
   return {
-    public: {
+    "@global": {
+      body: {
+        backgroundColor: ({ color }) => color,
+      },
+    },
+    "public": {
       flex: "1 0 auto",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
     },
-    private: {
+    "private": {
       flex: "1 0 auto",
     },
   };
@@ -67,12 +74,14 @@ const routeStyle = makeStyles(() => {
 export function MainLobby(): JSX.Element {
 
   const { isLoggedIn, user, isAuthInProgress, isAuthHookInitialized } = useAuth();
-  const classes = routeStyle();
   const location = useLocation();
   const currentRoute = location.pathname;
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
+  const classes = routeStyle({
+    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? "var(--external-theme-background-color)" : "var(--main-theme-background-color)",
+  });
+  const theme = getTheme();
   const style = isCurrentRoutePublic ? classes.public : classes.private;
-  const theme = EXTERNAL_THEME_ROUTES.includes(currentRoute) ? getExternalTheme() : getMainTheme();
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
