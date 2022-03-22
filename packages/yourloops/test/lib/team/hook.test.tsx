@@ -36,6 +36,9 @@ import { loggedInUsers } from "../../common";
 import { directShareAPI } from "../direct-share/hook";
 import { teamAPI } from "./utils";
 import { createAuthHookStubs } from "../auth/utils";
+import { INotification, NotificationType } from "../../../lib/notifications";
+import { TeamMemberRole } from "../../../models/team";
+import { UserRoles } from "../../../models/shoreline";
 
 describe("Team hook", () => {
 
@@ -81,10 +84,10 @@ describe("Team hook", () => {
       const teamId = "fakeTeamId";
       const teamUser: TeamUser = {
         members: [
-            {
-              team: { id: teamId } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
+          {
+            team: { id: teamId } as Team,
+            status: UserInvitationStatus.pending,
+          } as TeamMember,
         ],
       } as TeamUser;
 
@@ -96,10 +99,10 @@ describe("Team hook", () => {
       const teamId = "fakeTeamId";
       const teamUser: TeamUser = {
         members: [
-            {
-              team: { id: teamId } as Team,
-              status: UserInvitationStatus.accepted,
-            } as TeamMember,
+          {
+            team: { id: teamId } as Team,
+            status: UserInvitationStatus.accepted,
+          } as TeamMember,
         ],
       } as TeamUser;
 
@@ -111,14 +114,14 @@ describe("Team hook", () => {
       it("should return false when team user does not have an accepted status in any team", () => {
         const teamUser: TeamUser = {
           members: [
-              {
-                team: { id: "teamId1" } as Team,
-                status: UserInvitationStatus.pending,
-              } as TeamMember,
-              {
-                team: { id: "teamId2" } as Team,
-                status: UserInvitationStatus.pending,
-              } as TeamMember,
+            {
+              team: { id: "teamId1" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
+            {
+              team: { id: "teamId2" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
           ],
         } as TeamUser;
 
@@ -129,19 +132,70 @@ describe("Team hook", () => {
       it("should return true when team user does has an accepted status in a team", () => {
         const teamUser: TeamUser = {
           members: [
-              {
-                team: { id: "teamId1" } as Team,
-                status: UserInvitationStatus.pending,
-              } as TeamMember,
-              {
-                team: { id: "teamId2" } as Team,
-                status: UserInvitationStatus.accepted,
-              } as TeamMember,
+            {
+              team: { id: "teamId1" } as Team,
+              status: UserInvitationStatus.pending,
+            } as TeamMember,
+            {
+              team: { id: "teamId2" } as Team,
+              status: UserInvitationStatus.accepted,
+            } as TeamMember,
           ],
         } as TeamUser;
 
         const res = teamHook.isInAtLeastATeam(teamUser);
         expect(res).toBe(true);
+      });
+    });
+
+    describe("removeMember", () => {
+
+      function buildTeamMember(teamId = "fakeTeamId", userId = "fakeUserId", invitation: INotification = null): TeamMember {
+        return {
+          team: { id: teamId } as Team,
+          role: TeamMemberRole.admin,
+          status: UserInvitationStatus.pending,
+          user: {
+            role: UserRoles.hcp,
+            userid: userId,
+            username: "fakeUsername",
+            members: [],
+          },
+          invitation,
+        };
+      }
+
+      function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId"): INotification {
+        return {
+          id: "fakeInviteId",
+          type: NotificationType.careTeamProInvitation,
+          metricsType: "join_team",
+          email: "fake@email.com",
+          creatorId: "fakeCreatorId",
+          date: "fakeDate",
+          target: {
+            id: teamId,
+            name: "fakeTeamName",
+          },
+          role: TeamMemberRole.admin,
+          creator: {
+            userid: userId,
+          },
+        };
+      }
+
+      it("should throw an error when there is no invitation", () => {
+        const teamMember = buildTeamMember();
+        expect(async () => {
+          await teamHook.removeMember(teamMember);
+        }).rejects.toThrow();
+      });
+
+      it("should throw an error when there is no invitation for the member team", () => {
+        const teamMember = buildTeamMember("fakeTeamId", "fakeUserId", buildInvite("wrongTeam"));
+        expect(async () => {
+          await teamHook.removeMember(teamMember);
+        }).rejects.toThrow();
       });
     });
   });

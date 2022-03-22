@@ -166,7 +166,7 @@ function sortTeamMembers(a: Readonly<TeamMember>, b: Readonly<TeamMember>): numb
   return ret;
 }
 
-function MembersTableBody(props: TeamMembersProps): JSX.Element {
+export function MembersTableBody(props: TeamMembersProps): JSX.Element {
   const { team, onSwitchAdminRole, onShowRemoveTeamMemberDialog } = props;
 
   // Hooks
@@ -234,6 +234,10 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
       await onShowRemoveTeamMemberDialog(member);
     };
 
+    const isPersonRemoveIconDisabled = (): boolean => {
+      return member.status === UserInvitationStatus.pending && (!member.invitation || member.team.id !== member.invitation.target?.id);
+    };
+
     return (
       <TableRow
         id={`team-members-list-${team.id}-row-${userId}`}
@@ -277,7 +281,8 @@ function MembersTableBody(props: TeamMembersProps): JSX.Element {
         <TableCell id={`team-members-list-${team.id}-row-${userId}-actions`} align="right">
           {userIsAdmin && (userId !== currentUserId) &&
             <IconActionButton
-              tooltip={t("team-member-remove")}
+              tooltip={isPersonRemoveIconDisabled() ? t("team-member-cannot-cancel-pending") : t("team-member-remove")}
+              disabled={isPersonRemoveIconDisabled()}
               icon={<PersonRemoveIcon />}
               id={`team-members-list-${team.id}-row-${userId}-action-remove`}
               onClick={handleClickRemoveMember}
