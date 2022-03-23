@@ -547,15 +547,6 @@ describe("DataUtil", () => {
 
   describe("applyDateFilters", () => {
 
-    const allActiveDays = {
-      monday: true,
-      tuesday: true,
-      wednesday: true,
-      thursday: true,
-      friday: false,
-      saturday: false,
-      sunday: false,
-    };
     it("should filter the data by the endpoints", () => {
       const byEndpointsSpy = sinon.spy(dataUtil.filter, "byEndpoints");
 
