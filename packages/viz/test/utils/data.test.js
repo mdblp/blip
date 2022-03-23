@@ -546,6 +546,16 @@ describe("DataUtil", () => {
   });
 
   describe("applyDateFilters", () => {
+
+    const allActiveDays = {
+      monday: true,
+      tuesday: true,
+      wednesday: true,
+      thursday: true,
+      friday: false,
+      saturday: false,
+      sunday: false,
+    };
     it("should filter the data by the endpoints", () => {
       const byEndpointsSpy = sinon.spy(dataUtil.filter, "byEndpoints");
 
@@ -569,16 +579,13 @@ describe("DataUtil", () => {
       filterAllSpy.restore();
     });
 
-    it.only("should set the `days` property based on the endpoint range", () => {
-      dataUtil = new DataUtil(smbgData, opts({ endpoints: twoWeekEndpoints, chartPrefs: {activeDays: {
-        monday: true,
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
-        saturday: true,
-        sunday: true
-      }} }));
+    it("should set the `days` property based on the endpoint range", () => {
+      dataUtil = new DataUtil(smbgData, opts({
+        endpoints: twoWeekEndpoints,
+        chartPrefs: {
+          activeDays: allActiveDays
+        },
+      }));
       dataUtil.days = 0;
       expect(dataUtil.days).to.equal(0);
       dataUtil.applyDateFilters();
@@ -590,15 +597,7 @@ describe("DataUtil", () => {
         dataUtil = new DataUtil(smbgData, opts({
           endpoints: twoWeekEndpoints,
           chartPrefs: {
-            activeDays: {
-              monday: true,
-              tuesday: true,
-              wednesday: true,
-              thursday: true,
-              friday: false,
-              saturday: false,
-              sunday: false,
-            },
+            activeDays: allActiveDays
           },
         }));
 

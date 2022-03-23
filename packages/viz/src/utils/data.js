@@ -108,16 +108,14 @@ class DataUtil {
 
       this.filter.byActiveDays(activeDays);
 
-      console.log(activeDays);
-
       // here is a more realistic version of calculating days, fixing a bug in stats
       this.days = 0;
-      let start = moment(this._endpoints[0]);
+      let start = moment.utc(this._endpoints[0]);
       for(let i = 1; i <= daysInRange; i++) {
         if (activeDays.includes(start.day())) {
           this.days += 1;
         }
-        start.add(1,"d");
+        start.add(1, "d");
       }
     }
   }
