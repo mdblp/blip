@@ -36,6 +36,7 @@ RUN npm install
 FROM base as final
 RUN \
   apk add --no-cache --virtual .user-deps shadow && \
+  apk --no-cache add bash && \
   usermod -u 10669 node && groupmod -g 10669 node && \
   apk del .user-deps
 ENV AWS_ACCESS_KEY_ID=
@@ -63,5 +64,5 @@ COPY --from=deployment --chown=node:node /cloudfront-dist/deploy.sh ./deploy.sh
 COPY --from=content --chown=node:node /content/static-dist ./static
 COPY --from=content --chown=node:node /content/templates ./templates
 COPY --from=content --chown=node:node /content/locales ./locales
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
 CMD [ "deploy.sh" ]
