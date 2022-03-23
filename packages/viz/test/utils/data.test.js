@@ -583,7 +583,15 @@ describe("DataUtil", () => {
       dataUtil = new DataUtil(smbgData, opts({
         endpoints: twoWeekEndpoints,
         chartPrefs: {
-          activeDays: allActiveDays
+          activeDays: {
+            monday: true,
+            tuesday: true,
+            wednesday: true,
+            thursday: true,
+            friday: true,
+            saturday: true,
+            sunday: true,
+          }
         },
       }));
       dataUtil.days = 0;
@@ -597,7 +605,15 @@ describe("DataUtil", () => {
         dataUtil = new DataUtil(smbgData, opts({
           endpoints: twoWeekEndpoints,
           chartPrefs: {
-            activeDays: allActiveDays
+            activeDays: {
+              monday: true,
+              tuesday: true,
+              wednesday: true,
+              thursday: true,
+              friday: false,
+              saturday: false,
+              sunday: false,
+            }
           },
         }));
 
