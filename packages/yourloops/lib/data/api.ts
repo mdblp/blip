@@ -124,6 +124,10 @@ export async function getPatientDataRange(session: Session, patient: IUser): Pro
     }
     return dataRange;
   } else if (response.status === HttpStatus.StatusNotFound) {
+    if (appConfig.CBG_BUCKETS_ENABLED) {
+      // The v2 route return nothing
+      return null;
+    }
     try {
       const text = await response.text();
       if (text.length > 0) {
