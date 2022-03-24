@@ -80,7 +80,7 @@ class ApiUtils {
     const range = await this.api.getPatientDataRange(this.patient);
     if (range === null) {
       this.log.info("Range is empty - no data available");
-      return [];
+      throw Error("no-data");
     }
 
     const start = moment.utc(range[0]).startOf("day");
