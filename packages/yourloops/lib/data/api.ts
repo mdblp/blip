@@ -32,7 +32,6 @@ import _ from "lodash";
 import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
-import { APITideWhispererErrorResponse } from "../../models/error";
 import { ComputedTIR } from "../../models/device-data";
 import { IUser, UserRoles } from "../../models/shoreline";
 
@@ -124,18 +123,7 @@ export async function getPatientDataRange(session: Session, patient: IUser): Pro
     }
     return dataRange;
   } else if (response.status === HttpStatus.StatusNotFound) {
-    try {
-      const text = await response.text();
-      if (text.length > 0) {
-        const errorResponse = JSON.parse(text) as APITideWhispererErrorResponse;
-        if (_.get(errorResponse, "status", 0) === HttpStatus.StatusNotFound) {
-          // This is a valid route response, no patient data
-          return null;
-        }
-      }
-    } catch (_err) {
-      // Ignore
-    }
+    return null;
   }
   return Promise.reject(errorFromHttpStatus(response, log));
 }
