@@ -97,7 +97,6 @@ class DataUtil {
     this.dimension.byDayOfWeek.filterAll();
 
     const daysInRange = this.getDayCountFromEndpoints();
-    this.days = daysInRange;
 
     if (this._chartPrefs.activeDays) {
       const activeDays = _.reduce(this._chartPrefs.activeDays, (result, active, day) => {
@@ -109,7 +108,15 @@ class DataUtil {
 
       this.filter.byActiveDays(activeDays);
 
-      this.days = daysInRange / 7 * activeDays.length;
+      // here is a more realistic version of calculating days, fixing a bug in stats
+      this.days = 0;
+      let start = moment.utc(this._endpoints[0]);
+      for(let i = 1; i <= daysInRange; i++) {
+        if (activeDays.includes(start.day())) {
+          this.days += 1;
+        }
+        start.add(1, "d");
+      }
     }
   }
 
@@ -427,7 +434,7 @@ class DataUtil {
       0
     );
 
-    const total = this.days * MS_IN_DAY;
+    const total = Math.round(this.days * MS_IN_DAY);
 
     return {
       sensorUsage: duration,
