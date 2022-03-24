@@ -38,15 +38,4 @@ interface APIErrorResponse {
   reason: string;
 }
 
-interface APITideWhispererErrorResponse {
-  /** Response code (HTTP status) */
-  status: number;
-  /** Trace request ID */
-  id: string;
-  /** Text code (could be used for translation?) */
-  code: string;
-  /** User readable message in english */
-  message: string;
-}
-
-export { APIErrorResponse, APITideWhispererErrorResponse };
+export { APIErrorResponse };
