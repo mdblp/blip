@@ -65,7 +65,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                         pack()
                     }
-                    if (env.GIT_BRANCH == 'dblp' || 'engineering/latest-tag') {
+                    if (env.GIT_BRANCH == 'dblp') {
                         //publish latest tag when git branch is dblp
                         echo "Push latest tag"
                         def config = getConfig()

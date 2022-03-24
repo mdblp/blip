@@ -26,10 +26,13 @@ const isProduction = mode === "production";
 const isDev = !isProduction;
 
 console.log(`Compiling ${pkg.name} v${pkg.version} for ${mode}`);
-console.log(`Branding: ${buildConfig.BRANDING}`);
 
 if (process.env.USE_WEBPACK_DEV_SERVER === "true") {
   console.log(buildConfig);
+}
+
+if (!brandings.includes(buildConfig.BRANDING)) {
+  throw new Error(`Invalid branding found ${buildConfig.BRANDING}. Valid branding must be one of : ${brandings.toString()}`);
 }
 
 const alias = {
@@ -94,7 +97,6 @@ if (isTest) {
 Since we're not importing statically assets (with import), webpack does not know he needs to bundle it,
 so we're doing it here. Moreover, we're flatting files because of the lambda serving only assets with flat hierarchy ...
 will copy /branding/diabeloop/blue/favicon.ico in /branding_diabeloop_blue_favicon.ico */
-
 const patterns = [];
 for (let branding of brandings) {
   patterns.push({

@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-1312 Data loading may be missing some ranges
 - YLP-1313 Join wizard and bolus may fail
+- YLP-1356 Can't remove a pending member from a team with a user that did not invite it
 
 ## 2.0.6 - 2022-03-03
 ### Added
