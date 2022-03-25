@@ -28,28 +28,22 @@
 
 import _ from "lodash";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 
 import "@fontsource/roboto";
 import "branding/theme.css";
 
 import metrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
-import { PrivateRoute, PublicRoute } from "../components/routes";
-import InvalidRoute from "../components/invalid-route";
-import { LoginPage, ConsentPage } from "../pages/login";
-import { SignUpPage } from "../pages/signup";
-import HcpPage from "../pages/hcp";
-import PatientPage from "../pages/patient";
-import PatientConsentPage from "../pages/patient/patient-consent";
-import CaregiverPage from "../pages/caregiver";
-import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
+import { MainLayout } from "./main-layout";
 
 /** Tell matomo the page is changed, but with a little delay, because of some async stuff */
-const trackPageView = _.debounce(() => { metrics.send("metrics", "trackPageView"); }, 1000);
+const trackPageView = _.debounce(() => {
+  metrics.send("metrics", "trackPageView");
+}, 1000);
 const RE_PATIENT_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
 const RE_CAREGIVER_URL = /^\/caregiver\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_HCP_URL = /^\/professional\/patient\/[0-9a-f]+\/?(.*)/;
+const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
 const CONFIDENTIALS_PARAMS = ["signupEmail", "signupKey", "resetKey", "login"];
 
 function MetricsLocationListener(): null {
@@ -69,7 +63,7 @@ function MetricsLocationListener(): null {
     }
     match = pathname === null ? locPathname.match(RE_HCP_URL) : null;
     if (match !== null) {
-      pathname = `/professional/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
 
     if (pathname === null) {
@@ -98,20 +92,7 @@ const Yourloops = (): JSX.Element => {
     <Router>
       <MetricsLocationListener />
       <AuthContextProvider>
-        <Switch>
-          <PublicRoute exact path="/" component={LoginPage} />
-          {/* The /login route is required because some backend service generate URL with it */}
-          <PublicRoute exact path="/login" component={LoginPage} />
-          <PublicRoute exact path="/signup" component={SignUpPage} />
-          <PublicRoute path="/request-password-reset" component={RequestPasswordResetPage} />
-          <PublicRoute path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
-          <PrivateRoute path="/new-consent" component={PatientConsentPage} />
-          <PrivateRoute path="/renew-consent" component={ConsentPage} />
-          <PrivateRoute path="/caregiver" component={CaregiverPage} />
-          <PrivateRoute path="/professional" component={HcpPage} />
-          <PrivateRoute path="/patient" component={PatientPage} />
-          <Route component={InvalidRoute} />
-        </Switch>
+        <MainLayout />
       </AuthContextProvider>
     </Router>
   );

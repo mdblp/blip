@@ -105,7 +105,7 @@ function Page(props: ConsentProps): JSX.Element {
     throw new Error("User must be logged-in");
   }
 
-  const destinationPath = fromPath ?? user.getHomePage();
+  const destinationPath = fromPath ?? "/";
   const consentsChecked = policyAccepted && termsAccepted;
   // Ask for feedback only if the user is an HCP, and didn't have previously
   // see that option (e.g. Account created before it was implemented)

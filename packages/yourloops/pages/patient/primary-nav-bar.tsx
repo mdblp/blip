@@ -33,17 +33,14 @@ import { useHistory } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import HeaderBar, { HeaderActions } from "../../components/header-bars/primary";
 
-interface PrimaryNavBarProps {
-  prefixURL: string;
-}
 
-function PatientNavBar(props: PrimaryNavBarProps): JSX.Element {
+function PatientNavBar(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const history = useHistory();
   const refHeaderBar = React.useRef<HeaderActions>(null);
 
-  const caregiversURL = `${props.prefixURL}/caregivers`;
-  const teamURL = `${props.prefixURL}/teams`;
+  const caregiversURL = "/caregivers";
+  const teamURL = "/teams";
 
   const handleOpenCaregiversPage = () => {
     if (refHeaderBar.current) {

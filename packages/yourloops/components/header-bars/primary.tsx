@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, withStyles, Theme } from "@material-ui/core/styles";
@@ -66,8 +66,6 @@ interface HeaderProps {
   actions?: {
     current: null | HeaderActions;
   };
-  /** Redirect route when clicking on the logo */
-  headerLogoURL?: string;
 }
 
 const toolbarStyles = makeStyles((theme: Theme) => ({
@@ -173,26 +171,18 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     setAnchorEl(event.currentTarget);
   };
 
-  const onLogoClick = (): void => {
-    if (props.headerLogoURL) {
-      history.push(props.headerLogoURL);
-    } else {
-      history.push(auth.user?.getHomePage() ?? "/");
-    }
-  };
-
   const handleCloseAccountMenu = () => {
     setAnchorEl(null);
   };
 
   const handleOpenProfilePage = () => {
     setAnchorEl(null);
-    history.push(auth.user?.getHomePage("/preferences") ?? "/");
+    history.push(auth.user? "/preferences" : "/");
   };
 
   const handleOpenNotifications = () => {
     setAnchorEl(null);
-    history.push(auth.user?.getHomePage("/notifications") ?? "/");
+    history.push(auth.user? "/notifications" : "/");
   };
 
   const handleOpenSupport = () => {
@@ -262,13 +252,15 @@ function HeaderBar(props: HeaderProps): JSX.Element {
     );
   }
 
-  const numInvitations = notificationHook.receivedInvitations.length;
+  const numInvitations = notificationHook.receivedInvitations?.length;
   return (
     <AppBar id="primary-appbar" position="relative">
       <Toolbar id="primary-toolbar" className={classes.toolBar}>
         <div id="primary-toolbar-left" className={classes.toolbarLeft}>
-          <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo.svg`} onClick={onLogoClick} />
-          <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo-icon.svg`} onClick={onLogoClick} />
+          <Link to="/">
+            <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo.svg`} />
+            <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo-icon.svg`} />
+          </Link>
         </div>
         {
           _.isNil(props.children) ? null : (

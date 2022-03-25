@@ -237,7 +237,7 @@ function PatientListPage(): JSX.Element {
 
   const handleSelectPatient = (user: TeamUser): void => {
     metrics.send("patient_selection", "select_patient", flagged.includes(user.userid) ? "flagged" : "not_flagged");
-    historyHook.push(`/professional/patient/${user.userid}`);
+    historyHook.push(`/patient/${user.userid}`);
   };
 
   const handleFlagPatient = async (userId: string): Promise<void> => {

@@ -30,12 +30,6 @@ import { MedicalData } from "../../models/device-data";
 import { IUser, Preferences, Profile, Settings, Consent, UserRoles } from "../../models/shoreline";
 import config from "../config";
 
-const urlPrefixFromUserRole = {
-  patient: "/patient",
-  hcp: "/professional",
-  caregiver: "/caregiver",
-};
-
 class User implements IUser {
   emails?: string[];
   emailVerified: boolean;
@@ -153,26 +147,6 @@ class User implements IUser {
     }
 
     return true;
-  }
-
-  getHomePage(suffix?: string): string {
-    let path = "/";
-    switch (this.role) {
-    case UserRoles.caregiver:
-      path = urlPrefixFromUserRole.caregiver;
-      break;
-    case UserRoles.hcp:
-      path = urlPrefixFromUserRole.hcp;
-      break;
-    case UserRoles.patient:
-      path = `${urlPrefixFromUserRole.patient}/${this.userid}`;
-      break;
-    }
-    if (suffix) {
-      path = `/${path}/${suffix}`;
-      path = path.replace(/\/+/g, "/");
-    }
-    return path;
   }
 
   getParsedFrProId(): string | null {
