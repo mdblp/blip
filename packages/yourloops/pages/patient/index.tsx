@@ -54,12 +54,12 @@ function PatientPage(): JSX.Element {
       <DataContextProvider context={DefaultDataContext}>
         <PrimaryNavBar />
         <Switch>
-          <Route exact path={"/caregivers"} component={CaregiversPage} />
-          <Route exact path={"/teams"} component={TeamsPage} />
-          <Route exact path={"/preferences"} component={ProfilePage} />
-          <Route exact path={"/notifications"} component={NotificationsPage} />
+          <Route exact path="/caregivers" component={CaregiversPage} />
+          <Route exact path="/teams" component={TeamsPage} />
+          <Route exact path="/preferences" component={ProfilePage} />
+          <Route exact path="/notifications" component={NotificationsPage} />
           <Route path="/" exact>
-            <Redirect to={"/daily"} />
+            <Redirect to="/daily" />
           </Route>
           <Route path="/" component={PatientDataPage} />
         </Switch>

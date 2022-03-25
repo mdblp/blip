@@ -73,7 +73,7 @@ function SecondaryBar(): JSX.Element {
     <SecondaryHeaderBar>
       <div id="profile-navbar-item-left">
         <Breadcrumbs id="profile-navbar-breadcrumbs" className="secondary-navbar-breadcrumbs" aria-label={t("aria-breadcrumbs")}>
-          <Link id="profile-navbar-breadcrumbs-linkhome" component={RouterLink} to={"/"} className={`${classes.breadcrumbLink} secondary-navbar-breadcrumbs-link-home`}>
+          <Link id="profile-navbar-breadcrumbs-linkhome" component={RouterLink} to="/" className={`${classes.breadcrumbLink} secondary-navbar-breadcrumbs-link-home`}>
             <HomeIcon id="profile-navbar-breadcrumbs-homeicon" className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>

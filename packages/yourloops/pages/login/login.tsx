@@ -211,7 +211,7 @@ function Login(): JSX.Element {
   return (
     <Container maxWidth="sm">
       {auth.isLoggedIn && auth.user &&
-        <Redirect to={"/"}/>
+        <Redirect to="/"/>
       }
       <Grid container spacing={0} alignItems="center" justifyContent="center">
         <Grid item xs={12}>

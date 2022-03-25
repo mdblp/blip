@@ -75,7 +75,7 @@ const CaregiverRoutes = (): JSX.Element => {
       <Route path="/patient/:patientId" component={PatientDataPage} />
       <Route path="/patients" component={PatientListPage} />
       <Route path="/">
-        <Redirect to={"/patients"} />
+        <Redirect to="/patients" />
       </Route>
     </Switch>
   );
