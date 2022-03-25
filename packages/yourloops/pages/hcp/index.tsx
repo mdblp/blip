@@ -59,7 +59,7 @@ function HcpPage(): JSX.Element {
         <Route path="/teams" component={TeamsPage} />
         <Route path="/preferences" exact component={ProfilePage} />
         <Route path="/notifications" exact component={NotificationsPage} />
-        <Route path={"/certify"} component={CertifyAccountPage} />
+        <Route path="/certify" component={CertifyAccountPage} />
         <Route path="/patient/:patientId">
           <DataContextProvider context={DefaultDataContext}>
             <PatientDataPage />
@@ -67,7 +67,7 @@ function HcpPage(): JSX.Element {
         </Route>
         <Route path="/patients" component={PatientListPage} />
         <Route path="/">
-          <Redirect to={"/patients"} />
+          <Redirect to="/patients" />
         </Route>
       </Switch>
     </TeamContextProvider>
