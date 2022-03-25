@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Health care pro nav bar
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,36 +26,28 @@
  */
 
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
+import { useAuth } from "../lib/auth";
+import { UserRoles } from "../models/shoreline";
+import CaregiverPage from "../pages/caregiver";
+import HcpPage from "../pages/hcp";
+import PatientPage from "../pages/patient";
+import { NotificationContextProvider } from "../lib/notifications";
 
-import HeaderBar from "../../components/header-bars/primary";
 
-const tabStyle: React.CSSProperties = { color: "black" };
-
-function HcpNavBar(): JSX.Element {
-  const historyHook = useHistory();
-  const { t } = useTranslation("yourloops");
-  const location = historyHook.location.pathname;
-
-  let currentTab: number | boolean = false;
-  if (location.startsWith("/patients")) {
-    currentTab = 0;
-  } else if (location.startsWith("/teams")) {
-    currentTab = 1;
-  }
+export function MainPageLayout(): JSX.Element {
+  const authHook = useAuth();
+  const session = authHook.session();
 
   return (
-    <HeaderBar>
-      <Tabs id="hcp-tabs" value={currentTab} indicatorColor="primary" textColor="primary" centered>
-        <Tab id="hcp-tab-patients" style={tabStyle} label={t("hcp-tab-patients")} component={Link} to="/patients" />
-        <Tab id="hcp-tab-teams" style={tabStyle} label={t("hcp-tab-teams")} component={Link} to="/teams" />
-      </Tabs>
-    </HeaderBar>
+    <React.Fragment>
+      {session &&
+        <NotificationContextProvider>
+          {session.user.role === UserRoles.caregiver && <CaregiverPage />}
+          {session.user.role === UserRoles.hcp && <HcpPage />}
+          {session.user.role === UserRoles.patient && <PatientPage />}
+        </NotificationContextProvider>
+      }
+    </React.Fragment>
   );
 }
-
-export default HcpNavBar;

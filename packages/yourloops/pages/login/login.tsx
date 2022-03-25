@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, Redirect, useHistory } from "react-router-dom";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
 
@@ -210,6 +210,9 @@ function Login(): JSX.Element {
 
   return (
     <Container maxWidth="sm">
+      {auth.isLoggedIn && auth.user &&
+        <Redirect to={"/"}/>
+      }
       <Grid container spacing={0} alignItems="center" justifyContent="center">
         <Grid item xs={12}>
           <Card className={classes.Card}>
