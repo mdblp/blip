@@ -65,7 +65,7 @@ const routeStyle = makeStyles(() => {
 
 export function MainLayout(): JSX.Element {
 
-  const authHook = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const classes = routeStyle();
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -74,13 +74,13 @@ export function MainLayout(): JSX.Element {
   const theme = EXTERNAL_THEME_ROUTES.includes(currentRoute) ? getExternalTheme() : getMainTheme();
   let redirectTo = null;
 
-  if (isCurrentRoutePublic && authHook.isLoggedIn && authHook.user) {
+  if (isCurrentRoutePublic && isLoggedIn) {
     redirectTo = "/";
-  } else if (!isCurrentRoutePublic && !authHook.isLoggedIn && !authHook.user) {
+  } else if (!isCurrentRoutePublic && !isLoggedIn) {
     redirectTo = "/login";
-  } else if (currentRoute !== NEW_CONSENT_PATH && authHook.user && authHook.user.role === UserRoles.patient && authHook.user.shouldAcceptConsent()) {
+  } else if (currentRoute !== NEW_CONSENT_PATH && user && user.role === UserRoles.patient && user.shouldAcceptConsent()) {
     redirectTo = "/new-consent";
-  } else if (currentRoute !== RENEW_CONSENT_PATH && authHook.user && authHook.user.shouldRenewConsent()) {
+  } else if (currentRoute !== RENEW_CONSENT_PATH && user && user.shouldRenewConsent()) {
     redirectTo = "/renew-consent";
   }
 
@@ -95,10 +95,10 @@ export function MainLayout(): JSX.Element {
               <Switch>
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/signup" component={SignUpPage} />
-                <Route path="/request-password-reset" component={RequestPasswordResetPage} />
-                <Route path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
-                <Route path="/renew-consent" component={ConsentPage} />
-                <Route path="/new-consent" component={PatientConsentPage} />
+                <Route exact path="/request-password-reset" component={RequestPasswordResetPage} />
+                <Route exact path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
+                <Route exact path="/renew-consent" component={ConsentPage} />
+                <Route exact path="/new-consent" component={PatientConsentPage} />
                 <Route path="/" component={MainPageLayout} />
               </Switch>
             </div>

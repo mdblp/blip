@@ -39,6 +39,7 @@ import PrimaryNavBar from "./primary-nav-bar";
 import PatientListPage from "./patients/page";
 import TeamsPage from "./teams-page";
 import CertifyAccountPage from "./certify-account-page";
+import InvalidRoute from "../../components/invalid-route";
 
 /**
  * Health care professional page
@@ -66,8 +67,11 @@ function HcpPage(): JSX.Element {
           </DataContextProvider>
         </Route>
         <Route path="/patients" component={PatientListPage} />
-        <Route path="/">
+        <Route exact path="/">
           <Redirect to="/patients" />
+        </Route>
+        <Route>
+          <InvalidRoute/>
         </Route>
       </Switch>
     </TeamContextProvider>
