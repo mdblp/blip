@@ -57,19 +57,17 @@ function HcpPage(): JSX.Element {
     <TeamContextProvider>
       <PrimaryNavBar />
       <Switch>
-        <Route path="/teams" component={TeamsPage} />
-        <Route path="/preferences" exact component={ProfilePage} />
-        <Route path="/notifications" exact component={NotificationsPage} />
-        <Route path="/certify" component={CertifyAccountPage} />
+        <Route exact path="/teams" component={TeamsPage} />
+        <Route exact path="/preferences" component={ProfilePage} />
+        <Route exact path="/notifications" component={NotificationsPage} />
+        <Route exact path="/certify" component={CertifyAccountPage} />
         <Route path="/patient/:patientId">
           <DataContextProvider context={DefaultDataContext}>
             <PatientDataPage />
           </DataContextProvider>
         </Route>
         <Route path="/patients" component={PatientListPage} />
-        <Route exact path="/">
-          <Redirect to="/patients" />
-        </Route>
+        <Redirect exact from="/" to="/patients"/>
         <Route>
           <InvalidRoute/>
         </Route>

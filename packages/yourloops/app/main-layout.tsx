@@ -99,7 +99,7 @@ export function MainLayout(): JSX.Element {
                 <Route exact path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
                 <Route exact path="/renew-consent" component={ConsentPage} />
                 <Route exact path="/new-consent" component={PatientConsentPage} />
-                <Route path="/" component={MainPageLayout} />
+                <Route component={MainPageLayout} />
               </Switch>
             </div>
           </SnackbarContextProvider>

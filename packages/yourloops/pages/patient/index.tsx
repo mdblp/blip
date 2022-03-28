@@ -58,9 +58,7 @@ function PatientPage(): JSX.Element {
           <Route exact path="/teams" component={TeamsPage} />
           <Route exact path="/preferences" component={ProfilePage} />
           <Route exact path="/notifications" component={NotificationsPage} />
-          <Route exact path="/">
-            <Redirect to="/daily" />
-          </Route>
+          <Redirect exact from="/" to="/daily"/>
           <Route path="/" component={PatientDataPage} />
         </Switch>
       </DataContextProvider>
