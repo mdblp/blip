@@ -122,7 +122,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient.user}
         profileDialog={ProfileDialog}
-        prefixURL={`/caregiver/patient/${paramPatientId}`}
+        prefixURL={`/patient/${paramPatientId}`}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}

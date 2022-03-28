@@ -51,6 +51,7 @@ import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
 import PatientDataPage from "./patient-data";
 import PatientListPage from "./patients/page";
+import InvalidRoute from "../../components/invalid-route";
 
 const log = bows("CaregiverPage");
 
@@ -76,6 +77,9 @@ const CaregiverRoutes = (): JSX.Element => {
       <Route path="/patients" component={PatientListPage} />
       <Route path="/">
         <Redirect to="/patients" />
+      </Route>
+      <Route>
+        <InvalidRoute defaultURL="/patients" />
       </Route>
     </Switch>
   );
@@ -104,7 +108,7 @@ const CaregiverPage = (): JSX.Element => {
     if (session === null) {
       throw new Error("User must be looged-in");
     }
-    if (sharedUsers === null && errorMessage === null && !loading) {
+    if (!sharedUsers && !errorMessage && !loading) {
       setPageTitle();
       setLoading(true);
       getDirectShares(session)
