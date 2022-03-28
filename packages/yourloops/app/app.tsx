@@ -41,8 +41,8 @@ import { MainLayout } from "./main-layout";
 const trackPageView = _.debounce(() => {
   metrics.send("metrics", "trackPageView");
 }, 1000);
-const RE_PATIENT_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_CAREGIVER_URL = /^\/caregiver\/patient\/[0-9a-f]+\/?(.*)/;
+const RE_PATIENT_URL = /^\/[0-9a-f]+\/?(.*)/;
+const RE_CAREGIVER_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
 const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
 const CONFIDENTIALS_PARAMS = ["signupEmail", "signupKey", "resetKey", "login"];
 
@@ -55,11 +55,11 @@ function MetricsLocationListener(): null {
     let pathname: string | null = null;
     let match = locPathname.match(RE_PATIENT_URL);
     if (match !== null) {
-      pathname = `/patient/userid/${match[1]}`;
+      pathname = `/userid/${match[1]}`;
     }
     match = pathname === null ? locPathname.match(RE_CAREGIVER_URL) : null;
     if (match !== null) {
-      pathname = `/caregiver/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
     match = pathname === null ? locPathname.match(RE_HCP_URL) : null;
     if (match !== null) {

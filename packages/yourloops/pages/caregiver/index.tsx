@@ -75,9 +75,7 @@ const CaregiverRoutes = (): JSX.Element => {
       <Route path="/notifications" exact component={NotificationsPage} />
       <Route path="/patient/:patientId" component={PatientDataPage} />
       <Route path="/patients" component={PatientListPage} />
-      <Route path="/">
-        <Redirect to="/patients" />
-      </Route>
+      <Redirect exact from="/" to="/patients"/>
       <Route>
         <InvalidRoute defaultURL="/patients" />
       </Route>
