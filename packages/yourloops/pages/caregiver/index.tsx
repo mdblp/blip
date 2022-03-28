@@ -71,10 +71,10 @@ const pageStyles = makeStyles(
 const CaregiverRoutes = (): JSX.Element => {
   return (
     <Switch>
-      <Route path="/preferences" exact component={ProfilePage} />
-      <Route path="/notifications" exact component={NotificationsPage} />
+      <Route exact path="/preferences" component={ProfilePage} />
+      <Route exact path="/notifications" component={NotificationsPage} />
       <Route path="/patient/:patientId" component={PatientDataPage} />
-      <Route path="/patients" component={PatientListPage} />
+      <Route exact path="/patients" component={PatientListPage} />
       <Redirect exact from="/" to="/patients"/>
       <Route>
         <InvalidRoute defaultURL="/patients" />
