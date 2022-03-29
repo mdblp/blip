@@ -72,15 +72,16 @@ export function MainLayout(): JSX.Element {
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
   const style = isCurrentRoutePublic ? classes.public : classes.private;
   const theme = EXTERNAL_THEME_ROUTES.includes(currentRoute) ? getExternalTheme() : getMainTheme();
+  const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
   if (isCurrentRoutePublic && isLoggedIn) {
     redirectTo = "/";
   } else if (!isCurrentRoutePublic && !isLoggedIn) {
     redirectTo = "/login";
-  } else if (currentRoute !== NEW_CONSENT_PATH && user && user.role === UserRoles.patient && user.shouldAcceptConsent()) {
+  } else if (!renewConsentPath && user && user.role === UserRoles.patient && user.shouldAcceptConsent()) {
     redirectTo = "/new-consent";
-  } else if (currentRoute !== RENEW_CONSENT_PATH && currentRoute !== NEW_CONSENT_PATH && user && user.shouldRenewConsent()) {
+  } else if (!renewConsentPath && user && user.shouldRenewConsent()) {
     redirectTo = "/renew-consent";
   }
 
