@@ -41,7 +41,7 @@ import PatientConsentPage from "../pages/patient/patient-consent";
 import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/password-reset";
-import { MainPageLayout } from "./main-page-layout";
+import { MainPageLayout } from "../pages/main-page-layout";
 
 
 const RENEW_CONSENT_PATH = "/renew-consent";
@@ -80,7 +80,7 @@ export function MainLayout(): JSX.Element {
     redirectTo = "/login";
   } else if (currentRoute !== NEW_CONSENT_PATH && user && user.role === UserRoles.patient && user.shouldAcceptConsent()) {
     redirectTo = "/new-consent";
-  } else if (currentRoute !== RENEW_CONSENT_PATH && user && user.shouldRenewConsent()) {
+  } else if (currentRoute !== RENEW_CONSENT_PATH && currentRoute !== NEW_CONSENT_PATH && user && user.shouldRenewConsent()) {
     redirectTo = "/renew-consent";
   }
 
