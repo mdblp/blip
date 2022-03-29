@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import React from "react";
-import { BrowserRouter as Router, useLocation } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 
 import "@fontsource/roboto";
 import "branding/theme.css";
@@ -89,12 +89,12 @@ function MetricsLocationListener(): null {
 
 const Yourloops = (): JSX.Element => {
   return (
-    <Router>
+    <BrowserRouter>
       <MetricsLocationListener />
       <AuthContextProvider>
         <MainLayout />
       </AuthContextProvider>
-    </Router>
+    </BrowserRouter>
   );
 };
 
