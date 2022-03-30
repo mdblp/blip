@@ -39,7 +39,7 @@ export default class PasswordLeakService {
     const hashedPassword = await EncoderService.encodeSHA1(password);
     const hashedPasswordPrefix = hashedPassword.substring(0, 5);
     const hashedPasswordSuffix = hashedPassword.substring(5);
-    const config = { params: { noHeader: true } };
+    const config = { params: { noHeader: true }, timeout : 10000 };
     try {
       const response = await HttpService.get<string>({
         url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
