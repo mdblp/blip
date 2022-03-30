@@ -22,3 +22,15 @@ export const Images = {
   siteChangeTubingImage: null,
   siteChangeReservoirDiabeloopImage: null,
 };
+export const Fonts = {
+  default: {
+    regularName: "Helvetica",
+    boldName: "Helvetica-Bold",
+  },
+  ja: {
+    regular: null,
+    regularName: null,
+    bold: null,
+    boldName: null,
+  },
+};
