@@ -149,6 +149,7 @@ function genContentSecurityPolicy() {
     contentSecurityPolicy.connectSrc.push("https://api.axept.io", "https://client.axept.io");
     contentSecurityPolicy.imgSrc.push("https://axeptio.imgix.net", "https://www.google.com");
   }
+  contentSecurityPolicy.connectSrc.push("https://api.pwnedpasswords.com");
 
   let csp = "";
   for (const cspName in contentSecurityPolicy) {
