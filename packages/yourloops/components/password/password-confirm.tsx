@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import _ from "lodash";
 
 import { makeStyles, Theme } from "@material-ui/core";
@@ -87,16 +87,19 @@ export function PasswordConfirm({
         confirmNewPassword: !confirmPassword.trim() || confirmPassword !== passwordState.newPassword,
         passwordLeaked: passwordState.hasLeaked,
       };
-      if (_.some(err)) {
-        onError(passwordState.newPassword, confirmPassword);
-      } else if (!passwordState.hasBeenCheckedForLeak) {
-        checkPasswordLeak();
-      } else {
-        onSuccess(passwordState.newPassword);
-      }
       return err;
-    }, [confirmPassword, passwordCheck.onError, passwordState, checkPasswordLeak, onError, onSuccess]
+    }, [passwordCheck.onError, confirmPassword, passwordState.newPassword, passwordState.hasLeaked]
   );
+
+  useEffect(() => {
+    if (_.some(errors)) {
+      onError(passwordState.newPassword, confirmPassword);
+    } else if (!passwordState.hasBeenCheckedForLeak) {
+      checkPasswordLeak();
+    } else {
+      onSuccess(passwordState.newPassword);
+    }
+  }, [passwordCheck.onError, confirmPassword, passwordState.newPassword, passwordState.hasLeaked, passwordState.hasBeenCheckedForLeak, onError, onSuccess, checkPasswordLeak, errors]);
 
   const onBlur = () => {
     if (!errors.newPassword && !errors.passwordLeaked) {
