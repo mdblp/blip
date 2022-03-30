@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 ### Fixed
+- YLP-1199 Stats in trends view may be wrong
 - YLP-1312 Data loading may be missing some ranges
 - YLP-1313 Join wizard and bolus may fail
 - YLP-1356 Can't remove a pending member from a team with a user that did not invite it

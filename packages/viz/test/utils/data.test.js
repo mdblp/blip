@@ -546,6 +546,7 @@ describe("DataUtil", () => {
   });
 
   describe("applyDateFilters", () => {
+
     it("should filter the data by the endpoints", () => {
       const byEndpointsSpy = sinon.spy(dataUtil.filter, "byEndpoints");
 
@@ -570,7 +571,20 @@ describe("DataUtil", () => {
     });
 
     it("should set the `days` property based on the endpoint range", () => {
-      dataUtil = new DataUtil(smbgData, opts({ endpoints: twoWeekEndpoints, chartPrefs: {} }));
+      dataUtil = new DataUtil(smbgData, opts({
+        endpoints: twoWeekEndpoints,
+        chartPrefs: {
+          activeDays: {
+            monday: true,
+            tuesday: true,
+            wednesday: true,
+            thursday: true,
+            friday: true,
+            saturday: true,
+            sunday: true,
+          }
+        },
+      }));
       dataUtil.days = 0;
       expect(dataUtil.days).to.equal(0);
       dataUtil.applyDateFilters();
@@ -590,7 +604,7 @@ describe("DataUtil", () => {
               friday: false,
               saturday: false,
               sunday: false,
-            },
+            }
           },
         }));
 
