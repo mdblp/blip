@@ -82,12 +82,11 @@ export function PasswordConfirm({
 
   const errors: Errors = React.useMemo(
     () => {
-      const err = {
+      return {
         newPassword: passwordCheck.onError,
         confirmNewPassword: !confirmPassword.trim() || confirmPassword !== passwordState.newPassword,
         passwordLeaked: passwordState.hasLeaked,
       };
-      return err;
     }, [passwordCheck.onError, confirmPassword, passwordState.newPassword, passwordState.hasLeaked]
   );
 
