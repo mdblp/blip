@@ -37,10 +37,7 @@ export default class PasswordLeakService {
 
   static async verifyPassword(password: string): Promise<PasswordLeakResponse> {
     try {
-      const hashedPassword = await Promise.race([
-        await EncoderService.encodeSHA1(password),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000)),
-      ]) as string;
+      const hashedPassword = await EncoderService.encodeSHA1(password);
       const hashedPasswordPrefix = hashedPassword.substring(0, 5);
       const hashedPasswordSuffix = hashedPassword.substring(5);
       const config = { params: { noHeader: true } };
@@ -56,6 +53,7 @@ export default class PasswordLeakService {
       //if the service is unavailable, we do not want to block the user from creating an account
       metrics.send("error", "password_leak", "The password leak API is unavailable");
       console.error("Could not check whether entered password has been leaked");
+      console.error(error);
       return { hasLeaked: undefined };
     }
   }
