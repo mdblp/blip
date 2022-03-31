@@ -25,7 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { AxiosResponse } from "axios";
 
+import metrics from "../lib/metrics";
+import EncoderService from "./encoder";
+import HttpService from "./http";
 
 export interface PasswordLeakResponse {
   hasLeaked?: boolean
@@ -34,8 +38,27 @@ export interface PasswordLeakResponse {
 export default class PasswordLeakService {
 
   static async verifyPassword(password: string): Promise<PasswordLeakResponse> {
-    console.log(password);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return { hasLeaked: undefined };
+    const hashedPassword = await EncoderService.encodeSHA1(password);
+    const hashedPasswordPrefix = hashedPassword.substring(0, 5);
+    const hashedPasswordSuffix = hashedPassword.substring(5);
+    const config = { params: { noHeader: true } };
+    try {
+      const response = await Promise.race([
+        HttpService.get<string>({
+          url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
+          config,
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000)),
+      ]) as unknown as AxiosResponse;
+      const hasLeaked = response.data.includes(hashedPasswordSuffix);
+      return {
+        hasLeaked,
+      };
+    } catch (error) {
+      //if the service is unavailable, we do not want to block the user from creating an account
+      metrics.send("error", "password_leak", "The password leak API is unavailable");
+      console.error("Could not check whether entered password has been leaked");
+      return { hasLeaked: undefined };
+    }
   }
 }
