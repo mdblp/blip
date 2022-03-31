@@ -21,6 +21,22 @@ pipeline {
                 }
             }
         }
+        stage('Build') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    reuseNode true
+                }
+            }
+            steps {
+                withCredentials([
+                  string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN'),
+                  string(credentialsId: 'github-token', variable: 'GIT_TOKEN'),
+                ]) {
+                    sh 'nice bash build.sh'
+                }
+            }
+        }
         stage('Package') {
             steps {
                 script {
