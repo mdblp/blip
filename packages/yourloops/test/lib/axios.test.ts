@@ -54,6 +54,19 @@ describe("Axios service", () => {
       expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken);
     });
 
+    it("should return config with header when no param is given", () => {
+      //given
+      //when
+      try {
+        const variable = null;
+        console.log(variable);
+        variable.toto;
+      } catch (error) {
+        console.log("error");
+        console.log(error);
+      }
+    });
+
     it("should return config with added headers", () => {
       //given
       const config = { params: { fakeParam: true } };

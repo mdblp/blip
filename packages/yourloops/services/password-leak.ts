@@ -36,16 +36,21 @@ export interface PasswordLeakResponse {
 export default class PasswordLeakService {
 
   static async verifyPassword(password: string): Promise<PasswordLeakResponse> {
-    const hashedPassword = await EncoderService.encodeSHA1(password);
-    const hashedPasswordPrefix = hashedPassword.substring(0, 5);
-    const config = { params: { noHeader: true } };
     try {
-      await HttpService.get<string>({
+      const hashedPassword = await Promise.race([
+        await EncoderService.encodeSHA1(password),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000)),
+      ]) as string;
+      const hashedPasswordPrefix = hashedPassword.substring(0, 5);
+      const hashedPasswordSuffix = hashedPassword.substring(5);
+      const config = { params: { noHeader: true } };
+      const response = await HttpService.get<string>({
         url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
         config,
       });
+      const hasLeaked = response.data.includes(hashedPasswordSuffix);
       return {
-        hasLeaked : undefined,
+        hasLeaked,
       };
     } catch (error) {
       //if the service is unavailable, we do not want to block the user from creating an account
