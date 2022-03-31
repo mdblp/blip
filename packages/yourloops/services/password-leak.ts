@@ -25,8 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AxiosResponse } from "axios";
-
 import metrics from "../lib/metrics";
 import EncoderService from "./encoder";
 import HttpService from "./http";
@@ -40,19 +38,14 @@ export default class PasswordLeakService {
   static async verifyPassword(password: string): Promise<PasswordLeakResponse> {
     const hashedPassword = await EncoderService.encodeSHA1(password);
     const hashedPasswordPrefix = hashedPassword.substring(0, 5);
-    const hashedPasswordSuffix = hashedPassword.substring(5);
     const config = { params: { noHeader: true } };
     try {
-      const response = await Promise.race([
-        HttpService.get<string>({
-          url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
-          config,
-        }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 5000)),
-      ]) as unknown as AxiosResponse;
-      const hasLeaked = response.data.includes(hashedPasswordSuffix);
+      await HttpService.get<string>({
+        url: `https://api.pwnedpasswords.com/range/${hashedPasswordPrefix}`,
+        config,
+      });
       return {
-        hasLeaked,
+        hasLeaked : undefined,
       };
     } catch (error) {
       //if the service is unavailable, we do not want to block the user from creating an account
