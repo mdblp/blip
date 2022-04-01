@@ -105,7 +105,6 @@ function Page(props: ConsentProps): JSX.Element {
     throw new Error("User must be logged-in");
   }
 
-  const destinationPath = fromPath ?? "/";
   const consentsChecked = policyAccepted && termsAccepted;
   // Ask for feedback only if the user is an HCP, and didn't have previously
   // see that option (e.g. Account created before it was implemented)
@@ -127,7 +126,7 @@ function Page(props: ConsentProps): JSX.Element {
     auth.updateProfile(updatedProfile).catch((reason: unknown) => {
       log.error(reason);
     }).finally(() => {
-      historyHook.push(destinationPath);
+      historyHook.push(fromPath ?? "/");
     });
   };
 

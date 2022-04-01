@@ -49,6 +49,7 @@ import config from "../../lib/config";
 import { User, useAuth } from "../../lib/auth";
 
 type CloseMenuCallback = () => void;
+
 export interface HeaderActions {
   closeMenu: CloseMenuCallback;
 }
@@ -177,12 +178,12 @@ function HeaderBar(props: HeaderProps): JSX.Element {
 
   const handleOpenProfilePage = () => {
     setAnchorEl(null);
-    history.push(auth.user? "/preferences" : "/");
+    history.push(auth.user ? "/preferences" : "/");
   };
 
   const handleOpenNotifications = () => {
     setAnchorEl(null);
-    history.push(auth.user? "/notifications" : "/");
+    history.push(auth.user ? "/notifications" : "/");
   };
 
   const handleOpenSupport = () => {
@@ -238,7 +239,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
           onClose={handleCloseAccountMenu}>
           {menuItems}
           {_.isObject(menuItems) ? <hr id="menu-user-account-separator" /> : null}
-          <MenuItem id="menu-user-account-profile" onClick={handleOpenProfilePage} disabled={history.location.pathname.endsWith("/preferences")}>
+          <MenuItem id="menu-user-account-profile" onClick={handleOpenProfilePage}
+            disabled={history.location.pathname.endsWith("/preferences")}>
             {t("account-preferences")}
           </MenuItem>
           <MenuItem id="menu-user-account-support" onClick={handleOpenSupport}>
@@ -258,8 +260,10 @@ function HeaderBar(props: HeaderProps): JSX.Element {
       <Toolbar id="primary-toolbar" className={classes.toolBar}>
         <div id="primary-toolbar-left" className={classes.toolbarLeft}>
           <Link to="/">
-            <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo.svg`} />
-            <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")} src={`/branding_${config.BRANDING}_logo-icon.svg`} />
+            <input id="branding-logo-full" type="image" className={classes.toolbarLogoFull} alt={t("alt-img-logo")}
+              src={`/branding_${config.BRANDING}_logo.svg`} />
+            <input id="branding-logo-icon" type="image" className={classes.toolbarLogoIcon} alt={t("alt-img-logo")}
+              src={`/branding_${config.BRANDING}_logo-icon.svg`} />
           </Link>
         </div>
         {
@@ -271,7 +275,8 @@ function HeaderBar(props: HeaderProps): JSX.Element {
         }
         <div id="primary-toolbar-right" className={classes.toolbarRight}>
           <IconButton id="primary-toolbar-button-notifications" onClick={handleOpenNotifications}>
-            <Badge id="primary-toolbar-button-notifications-badge" data-num-invites={numInvitations} color="error" badgeContent={numInvitations}>
+            <Badge id="primary-toolbar-button-notifications-badge" data-num-invites={numInvitations} color="error"
+              badgeContent={numInvitations}>
               <NotificationsIcon id="primary-toolbar-button-notifications-badgeicon" />
             </Badge>
           </IconButton>

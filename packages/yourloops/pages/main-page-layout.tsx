@@ -29,11 +29,10 @@ import React from "react";
 
 import { useAuth } from "../lib/auth";
 import { UserRoles } from "../models/shoreline";
+import { NotificationContextProvider } from "../lib/notifications";
 import CaregiverPage from "./caregiver";
 import HcpPage from "./hcp";
 import PatientPage from "./patient";
-import { NotificationContextProvider } from "../lib/notifications";
-
 
 export function MainPageLayout(): JSX.Element {
   const authHook = useAuth();
@@ -43,7 +42,7 @@ export function MainPageLayout(): JSX.Element {
     <React.Fragment>
       {session &&
         <NotificationContextProvider>
-          {session.user.role === UserRoles.caregiver && <CaregiverPage/>}
+          {session.user.role === UserRoles.caregiver && <CaregiverPage />}
           {session.user.role === UserRoles.hcp && <HcpPage />}
           {session.user.role === UserRoles.patient && <PatientPage />}
         </NotificationContextProvider>
