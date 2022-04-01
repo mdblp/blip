@@ -41,7 +41,7 @@ import PatientConsentPage from "../../pages/patient/patient-consent";
 import { SignUpPage } from "../../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
 
-describe("Main layout", () => {
+describe("Main lobby", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const authPatient = loggedInUsers.patientSession;
