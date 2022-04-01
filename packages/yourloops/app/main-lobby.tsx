@@ -44,7 +44,6 @@ import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/pas
 import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
-
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
 const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, "/login", "/signup", "/request-password-reset", "/confirm-password-reset"];
@@ -66,7 +65,7 @@ const routeStyle = makeStyles(() => {
 
 export function MainLobby(): JSX.Element {
 
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, isAuthInProgress, isAuthHookInitialized } = useAuth();
   const classes = routeStyle();
   const location = useLocation();
   const currentRoute = location.pathname;
@@ -75,6 +74,10 @@ export function MainLobby(): JSX.Element {
   const theme = EXTERNAL_THEME_ROUTES.includes(currentRoute) ? getExternalTheme() : getMainTheme();
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
+
+  if (!isCurrentRoutePublic && (isAuthInProgress || !isAuthHookInitialized)) {
+    return <React.Fragment />;
+  }
 
   if (isCurrentRoutePublic && isLoggedIn) {
     redirectTo = "/";
