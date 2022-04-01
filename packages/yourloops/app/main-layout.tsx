@@ -42,6 +42,7 @@ import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/password-reset";
 import { MainPageLayout } from "../pages/main-page-layout";
+import InvalidRoute from "../components/invalid-route";
 
 
 const RENEW_CONSENT_PATH = "/renew-consent";
@@ -100,6 +101,7 @@ export function MainLayout(): JSX.Element {
                 <Route exact path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
                 <Route exact path="/renew-consent" component={ConsentPage} />
                 <Route exact path="/new-consent" component={PatientConsentPage} />
+                <Route exact path="/not-found" component={InvalidRoute} />
                 <Route component={MainPageLayout} />
               </Switch>
             </div>

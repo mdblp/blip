@@ -51,8 +51,6 @@ import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
 import PatientDataPage from "./patient-data";
 import PatientListPage from "./patients/page";
-import InvalidRoute from "../../components/invalid-route";
-
 const log = bows("CaregiverPage");
 
 const pageStyles = makeStyles(
@@ -75,10 +73,8 @@ const CaregiverRoutes = (): JSX.Element => {
       <Route exact path="/notifications" component={NotificationsPage} />
       <Route path="/patient/:patientId" component={PatientDataPage} />
       <Route exact path="/patients" component={PatientListPage} />
-      <Redirect exact from="/" to="/patients"/>
-      <Route>
-        <InvalidRoute defaultURL="/patients" />
-      </Route>
+      <Redirect exact from="/" to="/patients" />
+      <Redirect to="/not-found" />
     </Switch>
   );
 };
