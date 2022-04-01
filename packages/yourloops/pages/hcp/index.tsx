@@ -66,7 +66,7 @@ function HcpPage(): JSX.Element {
             <PatientDataPage />
           </DataContextProvider>
         </Route>
-        <Route path="/patients" component={PatientListPage} />
+        <Route exact path="/patients" component={PatientListPage} />
         <Redirect exact from="/" to="/patients"/>
         <Route>
           <InvalidRoute/>
