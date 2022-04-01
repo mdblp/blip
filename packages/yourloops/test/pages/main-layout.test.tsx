@@ -37,9 +37,7 @@ import HcpPage from "../../pages/hcp";
 import CaregiverPage from "../../pages/caregiver";
 import PatientPage from "../../pages/patient";
 
-
-
-describe("Main page layout", () => {
+describe("Main layout", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authCaregiver = loggedInUsers.caregiverSession;
   const authPatient = loggedInUsers.patientSession;
