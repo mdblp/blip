@@ -32,9 +32,9 @@ import { Router } from "react-router-dom";
 import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
-import { MainLayout } from "../../app/main-layout";
+import { MainLobby } from "../../app/main-lobby";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { MainPageLayout } from "../../pages/main-page-layout";
+import { MainLayout } from "../../pages/main-layout";
 import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
@@ -61,7 +61,7 @@ describe("Main layout", () => {
     return renderer.create(
       <Router history={history}>
         <AuthContextProvider value={authContext}>
-          <MainLayout />
+          <MainLobby />
         </AuthContextProvider>
       </Router>
     );
@@ -75,13 +75,13 @@ describe("Main layout", () => {
   it("should render MainPageLayout when user is logged in and route is '/'", () => {
     const history = createMemoryHistory({ initialEntries: ["/"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainPageLayout, "/patients");
+    checkRenderAndRoute(component, history, MainLayout, "/patients");
   });
 
   it("should render MainPageLayout when user is logged in and route is '/login'", () => {
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainPageLayout, "/patients");
+    checkRenderAndRoute(component, history, MainLayout, "/patients");
   });
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {

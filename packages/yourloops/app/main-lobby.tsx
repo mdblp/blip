@@ -41,7 +41,7 @@ import PatientConsentPage from "../pages/patient/patient-consent";
 import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/password-reset";
-import { MainPageLayout } from "../pages/main-page-layout";
+import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
 
@@ -64,7 +64,7 @@ const routeStyle = makeStyles(() => {
   };
 });
 
-export function MainLayout(): JSX.Element {
+export function MainLobby(): JSX.Element {
 
   const { isLoggedIn, user } = useAuth();
   const classes = routeStyle();
@@ -102,7 +102,7 @@ export function MainLayout(): JSX.Element {
                 <Route exact path="/renew-consent" component={ConsentPage} />
                 <Route exact path="/new-consent" component={PatientConsentPage} />
                 <Route exact path="/not-found" component={InvalidRoute} />
-                <Route component={MainPageLayout} />
+                <Route component={MainLayout} />
               </Switch>
             </div>
           </SnackbarContextProvider>
