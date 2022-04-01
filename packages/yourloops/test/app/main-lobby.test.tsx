@@ -96,8 +96,8 @@ describe("Main lobby", () => {
     checkRenderAndRoute(component, history, PatientConsentPage, "/new-consent");
   });
 
-  it("should render LoginPage when user is not logged in route is '/'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/"] });
+  it("should render LoginPage when user is not logged in route is '/login'", () => {
+    const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, LoginPage, "/login");
   });

@@ -76,7 +76,7 @@ export function MainLobby(): JSX.Element {
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
-  if (!isCurrentRoutePublic && currentRoute !== "/" && (isAuthInProgress || !isAuthHookInitialized)) {
+  if (!isCurrentRoutePublic && (isAuthInProgress || !isAuthHookInitialized)) {
     return <React.Fragment />;
   }
 
