@@ -32,7 +32,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
-import { MainPageLayout } from "../../pages/main-page-layout";
+import { MainLayout } from "../../pages/main-layout";
 import HcpPage from "../../pages/hcp";
 import CaregiverPage from "../../pages/caregiver";
 import PatientPage from "../../pages/patient";
@@ -51,7 +51,7 @@ describe("Main page layout", () => {
     return renderer.create(
       <BrowserRouter>
         <AuthContextProvider value={authContext}>
-          <MainPageLayout />
+          <MainLayout />
         </AuthContextProvider>
       </BrowserRouter>
     );

@@ -35,7 +35,7 @@ import "branding/theme.css";
 
 import metrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
-import { MainLayout } from "./main-layout";
+import { MainLobby } from "./main-lobby";
 
 /** Tell matomo the page is changed, but with a little delay, because of some async stuff */
 const trackPageView = _.debounce(() => {
@@ -92,7 +92,7 @@ const Yourloops = (): JSX.Element => {
     <BrowserRouter>
       <MetricsLocationListener />
       <AuthContextProvider>
-        <MainLayout />
+        <MainLobby />
       </AuthContextProvider>
     </BrowserRouter>
   );

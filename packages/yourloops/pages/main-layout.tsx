@@ -34,7 +34,7 @@ import CaregiverPage from "./caregiver";
 import HcpPage from "./hcp";
 import PatientPage from "./patient";
 
-export function MainPageLayout(): JSX.Element {
+export function MainLayout(): JSX.Element {
   const authHook = useAuth();
   const session = authHook.session();
 
