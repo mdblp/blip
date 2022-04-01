@@ -44,6 +44,7 @@ import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/pas
 import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
+
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
 const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, "/login", "/signup", "/request-password-reset", "/confirm-password-reset"];
