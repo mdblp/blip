@@ -136,7 +136,7 @@ const webpackConfig = {
     historyApiFallback: {
       rewrites: [
         {
-          from: /^\/(professional|caregiver|patient|login|signup|request-password-reset|confirm-password-reset|new-consent|renew-consent)/,
+          from: /./,
           to: (context) => {
             const dirname = path.dirname(context.parsedUrl.pathname);
             const basename = path.basename(context.parsedUrl.pathname);

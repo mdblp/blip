@@ -60,12 +60,11 @@ describe("Auth hook", () => {
   let testLocation: H.Location<unknown> | null = null;
 
   const initAuthContext = async (session: Session | null, stubApi: AuthAPI | AuthAPIStubs): Promise<void> => {
-    let initialRoute = "/";
+    const initialRoute = "/";
     if (session !== null) {
       sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, session.sessionToken);
       sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, session.traceToken);
       sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(session.user));
-      initialRoute = session.user.getHomePage();
     }
     const AuthContextProvider = (): JSX.Element => {
       authContext = AuthContextImpl(stubApi as AuthAPI);
@@ -262,7 +261,7 @@ describe("Auth hook", () => {
       expect(cleanBlipReduxStore).toHaveBeenCalledTimes(1);
       expect(authContext.session()).toBeNull();
       expect(authContext.isLoggedIn).toBe(false);
-      expect(testLocation.pathname).toBe("/");
+      expect(testLocation.pathname).toBe("/login");
       expect(testLocation.search).toBe("");
       expect(testLocation.state).toBeUndefined();
       expect(testHistory.length).toBe(2);
@@ -286,7 +285,7 @@ describe("Auth hook", () => {
 
       expect(testLocation.pathname).toBe("/");
       expect(testLocation.search).toBe("?login=caregiver%40example.com&sessionExpired=true");
-      expect(testLocation.state).toEqual({ from: { pathname: authCaregiver.user.getHomePage() } });
+      expect(testLocation.state).toEqual({ from: { pathname: "/" } });
       expect(testHistory.length).toBe(2);
     });
   });
