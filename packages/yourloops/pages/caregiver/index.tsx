@@ -27,9 +27,8 @@
  */
 
 import React from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import bows from "bows";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
@@ -44,17 +43,10 @@ import {
   sharedUserInitialState,
   sharedUserReducer,
 } from "../../lib/share";
-import { DataContextProvider, DefaultDataContext } from "../../lib/data";
 import { setPageTitle } from "../../lib/utils";
-import PrimaryNavBar from "../../components/header-bars/primary";
-import ProfilePage from "../profile";
-import NotificationsPage from "../notifications";
-import PatientDataPage from "./patient-data";
-import PatientListPage from "./patients/page";
-const log = bows("CaregiverPage");
 
 const pageStyles = makeStyles(
-  (/* theme: Theme */) => {
+  () => {
     return {
       loadingProgress: {
         position: "absolute",
@@ -66,23 +58,10 @@ const pageStyles = makeStyles(
   { name: "ylp-caregiver-page" }
 );
 
-const CaregiverRoutes = (): JSX.Element => {
-  return (
-    <Switch>
-      <Route exact path="/preferences" component={ProfilePage} />
-      <Route exact path="/notifications" component={NotificationsPage} />
-      <Route path="/patient/:patientId" component={PatientDataPage} />
-      <Route exact path="/patients" component={PatientListPage} />
-      <Redirect exact from="/" to="/patients" />
-      <Redirect to="/not-found" />
-    </Switch>
-  );
-};
-
 /**
  * Health care professional page
  */
-const CaregiverPage = (): JSX.Element => {
+const CaregiverPage = ({ children }: { children: JSX.Element }): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const historyHook = useHistory();
   const authHook = useAuth();
@@ -109,8 +88,7 @@ const CaregiverPage = (): JSX.Element => {
         .then((result: ShareUser[]): void => {
           sharedUsersDispatch({ type: "set-users", sharedUsers: result });
         })
-        .catch((reason: unknown) => {
-          log.error(reason);
+        .catch(() => {
           sharedUsersDispatch({ type: "set-error", message: t("error-failed-display-patients") });
         })
         .finally(() => {
@@ -134,15 +112,12 @@ const CaregiverPage = (): JSX.Element => {
   } else if (session === null || sharedUsersState.sharedUsers === null || loading) {
     content = <CircularProgress disableShrink className={classes.loadingProgress} />;
   } else {
-    content = <CaregiverRoutes />;
+    content = children;
   }
 
   return (
     <SharedUserContextProvider value={[sharedUsersState, sharedUsersDispatch]}>
-      <DataContextProvider context={DefaultDataContext}>
-        <PrimaryNavBar />
-        {content}
-      </DataContextProvider>
+      {content}
     </SharedUserContextProvider>
   );
 };

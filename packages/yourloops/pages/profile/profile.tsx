@@ -53,7 +53,6 @@ import CredentialsForm from "./credentials-form";
 import PersonalInfoForm from "./personal-info-form";
 import PreferencesForm from "./preferences-form";
 import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
-import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -266,7 +265,6 @@ const ProfilePage = (): JSX.Element => {
 
   return (
     <React.Fragment>
-      <SecondaryHeaderBar />
       <Container className={classes.container} maxWidth="sm">
         <Box display="flex" flexDirection="column" margin={2}>
           <DialogTitle className={classes.title} id="profile-title">

@@ -70,7 +70,7 @@ function MainHeader(): JSX.Element {
   const { user } = useAuth();
 
   return (
-    <AppBar elevation={0} className={appBar}>
+    <AppBar elevation={0} className={appBar} position="sticky">
       <Toolbar>
         <Box
           width="100%"

@@ -26,6 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { NotificationsPage } from "./notifications-list";
+import NotificationsPage from "./notifications-list";
 
 export default NotificationsPage;
