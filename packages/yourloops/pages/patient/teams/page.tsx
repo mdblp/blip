@@ -48,16 +48,12 @@ import TeamCard from "./team-card";
 import AddTeamDialog from "./add-dialog";
 import LeaveTeamDialog from "./leave-dialog";
 
-interface PatientTeamsPageProps {
-  defaultURL: string;
-}
-
 const log = bows("PatientTeamsPage");
 
 /**
  * Patient teams page
  */
-function PatientTeamsPage(props: PatientTeamsPageProps): JSX.Element | null {
+function PatientTeamsPage(): JSX.Element | null {
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
   const teamHook = useTeam();
@@ -195,7 +191,7 @@ function PatientTeamsPage(props: PatientTeamsPageProps): JSX.Element | null {
 
   return (
     <React.Fragment>
-      <SecondaryBar defaultURL={props.defaultURL} onShowAddTeamDialog={handleShowAddTeamDialog} />
+      <SecondaryBar onShowAddTeamDialog={handleShowAddTeamDialog} />
       <Container maxWidth="lg" style={{ marginTop: "2em", marginBottom: "2em" }}>
         <Grid id="team-page-grid-list" container spacing={3}>
           {teamsItems}

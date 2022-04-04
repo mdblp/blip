@@ -119,21 +119,6 @@ describe("User", () => {
     expect(user.shouldRenewConsent()).toBe(false);
   });
 
-  it("getHomePage", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.getHomePage()).toBe("/");
-    expect(user.getHomePage("/suffix")).toBe("/suffix");
-    user.role = UserRoles.caregiver;
-    expect(user.getHomePage()).toBe("/caregiver");
-    expect(user.getHomePage("/suffix")).toBe("/caregiver/suffix");
-    user.role = UserRoles.hcp;
-    expect(user.getHomePage()).toBe("/professional");
-    expect(user.getHomePage("suffix")).toBe("/professional/suffix");
-    user.role = UserRoles.patient;
-    expect(user.getHomePage()).toBe("/patient/abcd");
-    expect(user.getHomePage("//suffix")).toBe("/patient/abcd/suffix");
-  });
-
   it("getParsedFrProId should return null when user frProId is null", () => {
     const user = new User({ frProId: null } as User);
     const res = user.getParsedFrProId();

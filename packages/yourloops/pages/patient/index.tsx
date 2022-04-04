@@ -27,79 +27,39 @@
  */
 
 import React from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
-import bows from "bows";
-import { useTranslation } from "react-i18next";
+import { Redirect, Route, Switch } from "react-router-dom";
 
-import { UserRoles } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth";
 import { TeamContextProvider } from "../../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../../lib/data";
-import { setPageTitle } from "../../lib/utils";
 import PatientDataPage from "../../components/patient-data";
-import InvalidRoute from "../../components/invalid-route";
 import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
 import PrimaryNavBar from "./primary-nav-bar";
 import CaregiversPage from "./caregivers/page";
 import TeamsPage from "./teams/page";
 
-const log = bows("PatientPage");
-
 /**
  * Patient page
  */
 function PatientPage(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const historyHook = useHistory();
-  const { pathname } = historyHook.location;
   const { user } = useAuth();
 
   if (user === null) {
     throw new Error("User not logged-in");
   }
 
-  const prefixURL = React.useMemo(() => user.getHomePage(), [user]);
-  const defaultURL = `${prefixURL}/data`;
-
-  React.useEffect(() => {
-    if (user.role !== UserRoles.patient) {
-      // Only allow patient for this route
-      setPageTitle();
-      log.info("Wrong page for current user");
-      historyHook.replace(prefixURL);
-    } else if (new RegExp(`^${prefixURL}/?$`).test(pathname)) {
-      // We are on the home page (getHomePage) -> redirect to the correct default route
-      // for this user
-      log.info(`Redirecting to ${defaultURL}`);
-      historyHook.replace(defaultURL);
-    }
-  }, [pathname, historyHook, prefixURL, defaultURL, user, t]);
-
   return (
     <TeamContextProvider>
       <DataContextProvider context={DefaultDataContext}>
-        <PrimaryNavBar prefixURL={prefixURL} />
+        <PrimaryNavBar />
         <Switch>
-          <Route path={defaultURL}>
-            <PatientDataPage prefixURL={defaultURL} />
-          </Route>
-          <Route exact={true} path={`${prefixURL}/caregivers`}>
-            <CaregiversPage defaultURL={defaultURL} />
-          </Route>
-          <Route exact={true} path={`${prefixURL}/teams`}>
-            <TeamsPage defaultURL={defaultURL} />
-          </Route>
-          <Route exact={true} path={`${prefixURL}/preferences`}>
-            <ProfilePage defaultURL={defaultURL} />
-          </Route>
-          <Route exact={true} path={`${prefixURL}/notifications`}>
-            <NotificationsPage defaultURL={defaultURL} />
-          </Route>
-          <Route path={prefixURL} exact={true} />
-          <Route>
-            <InvalidRoute defaultURL={defaultURL} />
-          </Route>
+          <Route exact path="/caregivers" component={CaregiversPage} />
+          <Route exact path="/teams" component={TeamsPage} />
+          <Route exact path="/preferences" component={ProfilePage} />
+          <Route exact path="/notifications" component={NotificationsPage} />
+          <Redirect exact from="/" to="/daily"/>
+          <Route path="/" component={PatientDataPage} />
         </Switch>
       </DataContextProvider>
     </TeamContextProvider>

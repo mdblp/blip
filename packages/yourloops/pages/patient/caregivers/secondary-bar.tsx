@@ -43,7 +43,6 @@ import HomeIcon from "@material-ui/icons/Home";
 import SecondaryHeaderBar from "../../../components/header-bars/secondary";
 
 interface BarProps {
-  defaultURL: string;
   /** Add a caregiver */
   onShowAddCaregiverDialog: () => Promise<void>;
 }
@@ -106,7 +105,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
     <SecondaryHeaderBar>
       <div id="patient-navbar-item-left" className={classes.toolBarLeft}>
         <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-          <Link component={RouterLink} to={props.defaultURL} className={classes.breadcrumbLink}>
+          <Link component={RouterLink} to="/" className={classes.breadcrumbLink}>
             <HomeIcon className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>

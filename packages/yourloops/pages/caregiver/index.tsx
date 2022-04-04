@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import bows from "bows";
 
@@ -36,7 +36,6 @@ import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { UserRoles } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth";
 import {
   ShareUser,
@@ -47,14 +46,11 @@ import {
 } from "../../lib/share";
 import { DataContextProvider, DefaultDataContext } from "../../lib/data";
 import { setPageTitle } from "../../lib/utils";
-import InvalidRoute from "../../components/invalid-route";
 import PrimaryNavBar from "../../components/header-bars/primary";
 import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
 import PatientDataPage from "./patient-data";
 import PatientListPage from "./patients/page";
-
-const defaultURL = "/caregiver/patients";
 const log = bows("CaregiverPage");
 
 const pageStyles = makeStyles(
@@ -73,14 +69,12 @@ const pageStyles = makeStyles(
 const CaregiverRoutes = (): JSX.Element => {
   return (
     <Switch>
-      <Route path={defaultURL} exact={true} component={PatientListPage} />
-      <Route path="/caregiver/preferences" exact={true} component={() => <ProfilePage defaultURL={defaultURL} />} />
-      <Route path="/caregiver/notifications" exact={true} component={() => <NotificationsPage defaultURL={defaultURL} />} />
-      <Route path="/caregiver/patient/:patientId" component={PatientDataPage} />
-      <Route path="/caregiver" exact={true} />
-      <Route>
-        <InvalidRoute defaultURL={defaultURL} />
-      </Route>
+      <Route exact path="/preferences" component={ProfilePage} />
+      <Route exact path="/notifications" component={NotificationsPage} />
+      <Route path="/patient/:patientId" component={PatientDataPage} />
+      <Route exact path="/patients" component={PatientListPage} />
+      <Redirect exact from="/" to="/patients" />
+      <Redirect to="/not-found" />
     </Switch>
   );
 };
@@ -108,20 +102,7 @@ const CaregiverPage = (): JSX.Element => {
     if (session === null) {
       throw new Error("User must be looged-in");
     }
-    const userRole = session.user.role;
-    log.info("useEffect", { pathname, userRole });
-    if (userRole !== UserRoles.caregiver) {
-      // Only allow caregivers for this route
-      setPageTitle();
-      log.info("Wrong page for current user");
-      historyHook.replace(session.user.getHomePage());
-    } else if (/^\/caregiver\/?$/.test(pathname)) {
-      // We are on the home page (getHomePage) -> redirect to the correct default route
-      // for this user
-      log.info("Redirecting to the patients list", { from: pathname, to: defaultURL });
-      setPageTitle();
-      historyHook.replace(defaultURL);
-    } else if (sharedUsers === null && errorMessage === null && loading === false) {
+    if (!sharedUsers && !errorMessage && !loading) {
       setPageTitle();
       setLoading(true);
       getDirectShares(session)
@@ -159,7 +140,7 @@ const CaregiverPage = (): JSX.Element => {
   return (
     <SharedUserContextProvider value={[sharedUsersState, sharedUsersDispatch]}>
       <DataContextProvider context={DefaultDataContext}>
-        <PrimaryNavBar headerLogoURL={defaultURL} />
+        <PrimaryNavBar />
         {content}
       </DataContextProvider>
     </SharedUserContextProvider>

@@ -45,7 +45,6 @@ describe("Profile", () => {
   let updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
   let updateProfile: jest.Mock<Promise<Profile>, [Profile, boolean | undefined]>;
   let updateSettings: jest.Mock<Promise<Settings>, [Settings, boolean | undefined]>;
-  const defaultUrl = "/professional/patients";
 
   async function mountProfilePage(session: Session): Promise<void> {
     const context = createAuthHookStubs(session);
@@ -59,7 +58,7 @@ describe("Profile", () => {
           <BrowserRouter>
             <AuthContextProvider value={context}>
               <NotificationContextProvider value={stubNotificationContextValue}>
-                <ProfilePage defaultURL={defaultUrl} />
+                <ProfilePage/>
               </NotificationContextProvider>
             </AuthContextProvider>
           </BrowserRouter>, container, resolve);
