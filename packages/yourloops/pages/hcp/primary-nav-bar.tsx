@@ -43,17 +43,17 @@ function HcpNavBar(): JSX.Element {
   const location = historyHook.location.pathname;
 
   let currentTab: number | boolean = false;
-  if (location.startsWith("/professional/patients")) {
+  if (location.startsWith("/patients")) {
     currentTab = 0;
-  } else if (location.startsWith("/professional/teams")) {
+  } else if (location.startsWith("/teams")) {
     currentTab = 1;
   }
 
   return (
     <HeaderBar>
       <Tabs id="hcp-tabs" value={currentTab} indicatorColor="primary" textColor="primary" centered>
-        <Tab id="hcp-tab-patients" style={tabStyle} label={t("hcp-tab-patients")} component={Link} to="/professional/patients" />
-        <Tab id="hcp-tab-teams" style={tabStyle} label={t("hcp-tab-teams")} component={Link} to="/professional/teams" />
+        <Tab id="hcp-tab-patients" style={tabStyle} label={t("hcp-tab-patients")} component={Link} to="/patients" />
+        <Tab id="hcp-tab-teams" style={tabStyle} label={t("hcp-tab-teams")} component={Link} to="/teams" />
       </Tabs>
     </HeaderBar>
   );

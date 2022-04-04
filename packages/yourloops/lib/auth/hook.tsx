@@ -355,7 +355,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       const pathname = historyHook.location.pathname;
       historyHook.push(`/?login=${encodeURIComponent(user.username)}&sessionExpired=true`, { from: { pathname } });
     } else {
-      historyHook.push("/");
+      historyHook.push("/login");
     }
     setAuthInProgress(false);
     log.info("logout done", { sessionExpired });

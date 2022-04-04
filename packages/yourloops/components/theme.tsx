@@ -30,29 +30,37 @@ import { createTheme, Theme } from "@material-ui/core/styles";
 import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import config from "../lib/config";
 
+const DEFAULT_PRIMARY_MAIN_COLOR = "#039BE5";
+const DEFAULT_PRIMARY_LIGHT_COLOR = "#4DABF5";
+const DEFAULT_PRIMARY_DARK_COLOR = "#1769AA";
+const DEFAULT_SECONDARY_MAIN_COLOR = "#EDFAFF";
+const DEFAULT_SECONDARY_LIGHT_COLOR = "#F5F9F9";
+const DEFAULT_SECONDARY_DARK_COLOR = "#BBC7CC";
+
 /** Set one and only one class for the branding in `<div id='app'>` */
 export function initTheme() {
   const classList = document.getElementById("app")?.classList;
   classList?.remove(...BRANDING_LIST);
-  classList?.add(config.BRANDING.replace("_","-"));
+  classList?.add(config.BRANDING.replace("_", "-"));
 
   const favIcon = document.getElementById("favicon") as HTMLAnchorElement;
   favIcon.href = `./branding_${config.BRANDING}_favicon.ico`;
 }
 
-function getCommonTheme(): PaletteOptions {
+export function getCommonTheme(): PaletteOptions {
+  const appElement = document.getElementById("app");
   const cssVar = (name: string): string => getComputedStyle(document.getElementById("app") as HTMLElement).getPropertyValue(name).trim();
   return {
     type: "light",
     primary: {
-      main: cssVar("--color-primary-main"),
-      light: cssVar("--color-primary-light"),
-      dark: cssVar("--color-primary-dark"),
+      main: appElement ? cssVar("--color-primary-main") : DEFAULT_PRIMARY_MAIN_COLOR,
+      light: appElement ? cssVar("--color-primary-light") : DEFAULT_PRIMARY_LIGHT_COLOR,
+      dark: appElement ? cssVar("--color-primary-dark") : DEFAULT_PRIMARY_DARK_COLOR,
     },
     secondary: {
-      main: cssVar("--color-secondary-main"),
-      light: cssVar("--color-secondary-light"),
-      dark: cssVar("--color-secondary-dark"),
+      main: appElement ? cssVar("--color-secondary-main") : DEFAULT_SECONDARY_MAIN_COLOR,
+      light: appElement ? cssVar("--color-secondary-light") : DEFAULT_SECONDARY_LIGHT_COLOR,
+      dark: appElement ? cssVar("--color-secondary-dark") : DEFAULT_SECONDARY_DARK_COLOR,
     },
   };
 }

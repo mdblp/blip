@@ -61,7 +61,7 @@ function CertifyAccountPage(): JSX.Element {
       alert.error(errorTextFromException(err));
     } finally {
       setProcessing(false);
-      history.push("/professional/preferences");
+      history.push("/preferences");
     }
   };
 

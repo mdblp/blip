@@ -39,9 +39,6 @@ import HomeIcon from "@material-ui/icons/Home";
 
 import SecondaryHeaderBar from "../../components/header-bars/secondary";
 
-interface SecondaryBarProps {
-  defaultURL: string;
-}
 
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
@@ -69,7 +66,7 @@ const pageBarStyles = makeStyles(
   { name: "ylp-notifications-secondary-bar" }
 );
 
-function SecondaryBar(props: SecondaryBarProps): JSX.Element {
+function SecondaryBar(): JSX.Element {
   const classes = pageBarStyles();
   const { t } = useTranslation("yourloops");
 
@@ -77,7 +74,7 @@ function SecondaryBar(props: SecondaryBarProps): JSX.Element {
     <SecondaryHeaderBar>
       <div id="notifications-navbar-item-left">
         <Breadcrumbs id="notifications-navbar-breadcrumbs" aria-label={t("aria-breadcrumbs")}>
-          <Link id="notifications-navbar-breadcrumbs-linkhome" component={RouterLink} to={props.defaultURL} className={`${classes.breadcrumbLink} secondary-navbar-breadcrumbs-link-home`}>
+          <Link id="notifications-navbar-breadcrumbs-linkhome" component={RouterLink} to="/" className={`${classes.breadcrumbLink} secondary-navbar-breadcrumbs-link-home`}>
             <HomeIcon className={classes.homeIcon} />
             {t("breadcrumb-home")}
           </Link>

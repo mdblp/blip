@@ -29,7 +29,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import _ from "lodash";
 import bows from "bows";
-import { useHistory } from "react-router-dom";
+import { Link as LinkRedirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -56,14 +56,13 @@ import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-bu
 import SecondaryHeaderBar from "./secondary-bar";
 import SwitchRoleDialogs from "../../components/switch-role";
 
-interface ProfilePageProps {
-  defaultURL: string;
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
       marginLeft: theme.spacing(2),
+    },
+    cancelLink: {
+      textDecoration: "unset",
     },
     formInput: {
       marginTop: theme.spacing(2),
@@ -114,10 +113,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const log = bows("ProfilePage");
 
-const ProfilePage = (props: ProfilePageProps): JSX.Element => {
+const ProfilePage = (): JSX.Element => {
   const { t, i18n } = useTranslation("yourloops");
   const classes = useStyles();
-  const history = useHistory();
   const alert = useAlert();
   const {
     user,
@@ -268,7 +266,7 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
 
   return (
     <React.Fragment>
-      <SecondaryHeaderBar defaultURL={props.defaultURL} />
+      <SecondaryHeaderBar />
       <Container className={classes.container} maxWidth="sm">
         <Box display="flex" flexDirection="column" margin={2}>
           <DialogTitle className={classes.title} id="profile-title">
@@ -316,12 +314,13 @@ const ProfilePage = (props: ProfilePageProps): JSX.Element => {
           />
 
           <Box display="flex" justifyContent="flex-end" my={3}>
-            <Button
-              id="profile-button-cancel"
-              onClick={() => history.push(props.defaultURL)}
-            >
-              {t("button-cancel")}
-            </Button>
+            <LinkRedirect className={classes.cancelLink} to="/">
+              <Button
+                id="profile-button-cancel"
+              >
+                {t("button-cancel")}
+              </Button>
+            </LinkRedirect>
             <ProgressIconButtonWrapper inProgress={saving}>
               <Button
                 id="profile-button-save"
