@@ -114,7 +114,6 @@ async function loadFonts() {
       const response = await fetch(jaFontRegular);
       if (response.ok) {
         constants.Fonts.ja.regular = await response.arrayBuffer();
-        constants.Fonts.ja.regularName = "NotoSerifJP-Regular";
       } else {
         console.error("Failed to download", response.status, jaFontRegular);
       }
@@ -123,7 +122,6 @@ async function loadFonts() {
       const response = await fetch(jaFontBold);
       if (response.ok) {
         constants.Fonts.ja.bold = await response.arrayBuffer();
-        constants.Fonts.ja.boldName = "NotoSerifJP-Bold";
       } else {
         console.error("Failed to download", response.status, jaFontBold);
       }
@@ -257,10 +255,10 @@ export function createPrintPDFPackage(data, opts) {
       const stream = doc.pipe(utils.blobStream());
 
       _.forOwn(constants.Fonts, (f) => {
-        if (typeof f.regularName === "string" && typeof f.regular === "object") {
+        if (typeof f.regularName === "string" && f.regular) {
           doc.registerFont(f.regularName, f.regular);
         }
-        if (typeof f.boldName === "string" && typeof f.bold === "object") {
+        if (typeof f.boldName === "string" && f.bold) {
           doc.registerFont(f.boldName, f.bold);
         }
       });
