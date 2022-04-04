@@ -158,6 +158,12 @@ function Login(): JSX.Element {
     }
   }, [signupEmail, username]);
 
+  React.useEffect(() => {
+    if (auth.isLoggedIn && auth.user) {
+      historyHook.push("/");
+    }
+  }, [auth.isLoggedIn, auth.user, historyHook]);
+
   const onClickLoginButton = async (): Promise<void> => {
     if (_.isEmpty(username) || _.isEmpty(password)) {
       setValidateError(true);

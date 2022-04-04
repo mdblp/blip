@@ -46,10 +46,6 @@ import SwitchRoleDialogs from "../../components/switch-role";
 import SecondaryHeaderBar from "./secondary-bar";
 import { Notification } from "./notification";
 
-interface NotificationsPageProps {
-  defaultURL: string;
-}
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     homeIcon: {
@@ -72,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }), { name: "ylp-page-notifications-list" }
 );
 
-export const NotificationsPage = (props: NotificationsPageProps): JSX.Element => {
+export const NotificationsPage = (): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
   const { user } = useAuth();
@@ -110,7 +106,7 @@ export const NotificationsPage = (props: NotificationsPageProps): JSX.Element =>
 
   return (
     <React.Fragment>
-      <SecondaryHeaderBar defaultURL={props.defaultURL} />
+      <SecondaryHeaderBar />
       <Container maxWidth="lg" style={{ marginTop: "1em" }}>
         <List>
           {notifications.length > 0 ? (

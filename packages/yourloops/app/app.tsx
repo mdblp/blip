@@ -28,28 +28,22 @@
 
 import _ from "lodash";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, useLocation } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 
 import "@fontsource/roboto";
 import "branding/theme.css";
 
 import metrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
-import { PrivateRoute, PublicRoute } from "../components/routes";
-import InvalidRoute from "../components/invalid-route";
-import { LoginPage, ConsentPage } from "../pages/login";
-import { SignUpPage } from "../pages/signup";
-import HcpPage from "../pages/hcp";
-import PatientPage from "../pages/patient";
-import PatientConsentPage from "../pages/patient/patient-consent";
-import CaregiverPage from "../pages/caregiver";
-import { RequestPasswordResetPage, ConfirmPasswordResetPage } from "../pages/password-reset";
+import { MainLobby } from "./main-lobby";
 
 /** Tell matomo the page is changed, but with a little delay, because of some async stuff */
-const trackPageView = _.debounce(() => { metrics.send("metrics", "trackPageView"); }, 1000);
-const RE_PATIENT_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_CAREGIVER_URL = /^\/caregiver\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_HCP_URL = /^\/professional\/patient\/[0-9a-f]+\/?(.*)/;
+const trackPageView = _.debounce(() => {
+  metrics.send("metrics", "trackPageView");
+}, 1000);
+const RE_PATIENT_URL = /^\/[0-9a-f]+\/?(.*)/;
+const RE_CAREGIVER_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
+const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
 const CONFIDENTIALS_PARAMS = ["signupEmail", "signupKey", "resetKey", "login"];
 
 function MetricsLocationListener(): null {
@@ -61,15 +55,15 @@ function MetricsLocationListener(): null {
     let pathname: string | null = null;
     let match = locPathname.match(RE_PATIENT_URL);
     if (match !== null) {
-      pathname = `/patient/userid/${match[1]}`;
+      pathname = `/userid/${match[1]}`;
     }
     match = pathname === null ? locPathname.match(RE_CAREGIVER_URL) : null;
     if (match !== null) {
-      pathname = `/caregiver/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
     match = pathname === null ? locPathname.match(RE_HCP_URL) : null;
     if (match !== null) {
-      pathname = `/professional/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
     }
 
     if (pathname === null) {
@@ -95,25 +89,12 @@ function MetricsLocationListener(): null {
 
 const Yourloops = (): JSX.Element => {
   return (
-    <Router>
+    <BrowserRouter>
       <MetricsLocationListener />
       <AuthContextProvider>
-        <Switch>
-          <PublicRoute exact path="/" component={LoginPage} />
-          {/* The /login route is required because some backend service generate URL with it */}
-          <PublicRoute exact path="/login" component={LoginPage} />
-          <PublicRoute exact path="/signup" component={SignUpPage} />
-          <PublicRoute path="/request-password-reset" component={RequestPasswordResetPage} />
-          <PublicRoute path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
-          <PrivateRoute path="/new-consent" component={PatientConsentPage} />
-          <PrivateRoute path="/renew-consent" component={ConsentPage} />
-          <PrivateRoute path="/caregiver" component={CaregiverPage} />
-          <PrivateRoute path="/professional" component={HcpPage} />
-          <PrivateRoute path="/patient" component={PatientPage} />
-          <Route component={InvalidRoute} />
-        </Switch>
+        <MainLobby />
       </AuthContextProvider>
-    </Router>
+    </BrowserRouter>
   );
 };
 

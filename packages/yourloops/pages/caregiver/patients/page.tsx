@@ -180,7 +180,7 @@ function PatientListPage(): JSX.Element {
 
   const handleSelectPatient = (user: IUser, flagged: boolean): void => {
     metrics.send("patient_selection", "select_patient", flagged ? "flagged" : "not_flagged");
-    historyHook.push(`/caregiver/patient/${user.userid}`);
+    historyHook.push(`/patient/${user.userid}`);
   };
 
   const handleFlagPatient = async (userId: string, flagged: boolean): Promise<void> => {

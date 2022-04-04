@@ -48,10 +48,6 @@ import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 
-interface PatientDataPageProps {
-  prefixURL: string;
-}
-
 interface PatientDataParam {
   patientId?: string;
 }
@@ -70,7 +66,7 @@ function PatientDataPageError({ msg }: PatientDataPageErrorProps): JSX.Element {
   );
 }
 
-function PatientDataPage(props: PatientDataPageProps): JSX.Element | null {
+function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation("yourloops");
   const paramHook = useParams();
   const authHook = useAuth();
@@ -85,10 +81,9 @@ function PatientDataPage(props: PatientDataPageProps): JSX.Element | null {
   const authUser = authHook.user;
   const userId = authUser?.userid ?? null;
   const userIsPatient = authHook.user?.role === UserRoles.patient;
-  const prefixURL = userIsPatient ? props.prefixURL : `${props.prefixURL}/${paramPatientId}`;
+  const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
   const initialized = authHook.isAuthHookInitialized && teamHook.initialized && blipApi !== null;
-
   React.useEffect(() => {
     if (!initialized) {
       return;
