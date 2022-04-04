@@ -27,17 +27,12 @@
  */
 
 import React from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
-import bows from "bows";
-import { useTranslation } from "react-i18next";
+import { Redirect, Route, Switch } from "react-router-dom";
 
-import { UserRoles } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth";
 import { TeamContextProvider } from "../../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../../lib/data";
-import { setPageTitle } from "../../lib/utils";
 import PatientDataPage from "../../components/patient-data";
-import InvalidRoute from "../../components/invalid-route";
 import ProfilePage from "../profile";
 import NotificationsPage from "../notifications";
 import PrimaryNavBar from "./primary-nav-bar";
@@ -45,59 +40,34 @@ import PatientListPage from "./patients/page";
 import TeamsPage from "./teams-page";
 import CertifyAccountPage from "./certify-account-page";
 
-const defaultURL = "/professional/patients";
-const preferencesUrl = "/professional/preferences";
-const log = bows("HcpPage");
-
 /**
  * Health care professional page
  */
 function HcpPage(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const historyHook = useHistory();
   const authHook = useAuth();
 
   const user = authHook.user;
-  const { pathname } = historyHook.location;
 
   if (user === null) {
     throw new Error("User must be looged-in");
   }
 
-  React.useEffect(() => {
-    if (user.role !== UserRoles.hcp) {
-      // Only allow hcp for this route
-      setPageTitle();
-      log.info("Wrong page for current user");
-      historyHook.replace(user.getHomePage());
-    } else if (!/^\/professional\/preferences$/.test(pathname) && user.role === UserRoles.hcp && user.shouldUpdateHcpProfession()) {
-      historyHook.replace(preferencesUrl);
-    } else if (/^\/professional\/?$/.test(pathname)) {
-      // We are on the home page (getHomePage) -> redirect to the correct default route
-      // for this user
-      log.info("Redirecting to the patients list");
-      historyHook.replace(defaultURL);
-    }
-  }, [historyHook, user, t, pathname]);
-
   return (
     <TeamContextProvider>
       <PrimaryNavBar />
       <Switch>
-        <Route path={defaultURL} component={PatientListPage} />
-        <Route path="/professional/teams" component={TeamsPage} />
-        <Route path="/professional/preferences" exact={true} component={() => <ProfilePage defaultURL={defaultURL} />} />
-        <Route path="/professional/notifications" exact={true} component={() => <NotificationsPage defaultURL={defaultURL} />} />
-        <Route path={"/professional/certify"} component={() => <CertifyAccountPage />} />
-        <DataContextProvider context={DefaultDataContext}>
-          <Route path="/professional/patient/:patientId">
-            <PatientDataPage prefixURL="/professional/patient" />
-          </Route>
-        </DataContextProvider>
-        <Route path="/professional" exact={true} />
-        <Route>
-          <InvalidRoute defaultURL={defaultURL} />
+        <Route exact path="/teams" component={TeamsPage} />
+        <Route exact path="/preferences" component={ProfilePage} />
+        <Route exact path="/notifications" component={NotificationsPage} />
+        <Route exact path="/certify" component={CertifyAccountPage} />
+        <Route path="/patient/:patientId">
+          <DataContextProvider context={DefaultDataContext}>
+            <PatientDataPage />
+          </DataContextProvider>
         </Route>
+        <Route exact path="/patients" component={PatientListPage} />
+        <Redirect exact from="/" to="/patients"/>
+        <Redirect to="/not-found"/>
       </Switch>
     </TeamContextProvider>
   );

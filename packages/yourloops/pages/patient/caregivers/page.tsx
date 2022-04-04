@@ -48,16 +48,12 @@ import AddCaregiveDialog from "./add-dialog";
 import RemoveCaregiverDialog from "./remove-dialog";
 import CaregiverTable from "./table";
 
-interface PatientCaregiversPageProps {
-  defaultURL: string;
-}
-
 const log = bows("PatientCaregiversPage");
 
 /**
  * Patient caregivers page
  */
-function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
+function PatientCaregiversPage(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
   const authHook = useAuth();
@@ -170,7 +166,7 @@ function PatientCaregiversPage(props: PatientCaregiversPageProps): JSX.Element {
 
   return (
     <React.Fragment>
-      <SecondaryBar defaultURL={props.defaultURL} onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
+      <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
       <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
         <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
       </Container>

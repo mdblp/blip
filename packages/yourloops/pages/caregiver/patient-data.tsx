@@ -99,7 +99,7 @@ function PatientDataPage(): JSX.Element | null {
   log.debug("render", { sharedUsersContext, patient, error, paramPatientId });
 
   if (error !== null) {
-    return <InvalidRoute message={error} defaultURL={"/caregiver/patients"} />;
+    return <InvalidRoute message={error} defaultURL="/caregiver/patients" />;
   }
 
   if (blipApi === null || patient === null) {
@@ -122,7 +122,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient.user}
         profileDialog={ProfileDialog}
-        prefixURL={`/caregiver/patient/${paramPatientId}`}
+        prefixURL={`/patient/${paramPatientId}`}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
