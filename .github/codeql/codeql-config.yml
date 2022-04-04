@@ -1,4 +1,4 @@
 languages: ${{ matrix.language }}
 paths-ignore:
-  - 'test/**'
-  - 'packages/*/test/**'
+  - 'test/*'
+  - 'packages/*/test/*'
