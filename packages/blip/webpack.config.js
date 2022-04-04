@@ -148,6 +148,8 @@ const resolve = {
     "infusion.png": path.resolve(__dirname, "../../branding/sitechange/infusion.png"),
     "cartridge-vicentra.png": path.resolve(__dirname, "../../branding/sitechange/cartridge-vicentra.png"),
     "warmup-dexcom.svg": path.resolve(__dirname, "../../branding/warmup/warmup-dexcom.svg"),
+    "jaFont-Regular.ttf": path.resolve(__dirname, "../../branding/fonts/noto/NotoSerifJP-Regular.ttf"),
+    "jaFont-Bold.ttf": path.resolve(__dirname, "../../branding/fonts/noto/NotoSerifJP-Bold.ttf"),
   },
   fallback: {
     stream: require.resolve("stream-browserify"),

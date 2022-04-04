@@ -10,9 +10,7 @@
   "resources": {
     "de": {
       "name": "Deutsch",
-      "main": {
-        "Log in": "Einloggen"
-      },
+      "main": {},
       "params": {},
       "yourloops": {}
     },
@@ -24,33 +22,31 @@
     },
     "es": {
       "name": "Español",
-      "main": {
-        "Log in": "Iniciar sesión"
-      },
+      "main": {},
       "params": {},
       "yourloops": {}
     },
     "fr": {
       "name": "Français",
-      "main": {
-        "Log in": "Connexion"
-      },
+      "main": {},
       "params": {},
       "yourloops": {}
     },
     "it": {
       "name": "Italiano",
-      "main": {
-        "Log in": "Accedi"
-      },
+      "main": {},
       "params": {},
       "yourloops": {}
     },
     "nl": {
       "name": "Nederlands",
-      "main": {
-        "Log in": "Inloggen"
-      },
+      "main": {},
+      "params": {},
+      "yourloops": {}
+    },
+    "ja": {
+      "name": "日本語",
+      "main": {},
       "params": {},
       "yourloops": {}
     }
