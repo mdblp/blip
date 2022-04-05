@@ -1,8 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 # WORK ONLY with the docker images !
 # Require TARGET_ENVIRONMENT=test
 echo "Current user: $(whoami)"
+
+echo " $(ls ./static/)"
+
+if [[ -n "${BRANDING}" ]] && [[ ! -f "./static/branding_${BRANDING}_logo.svg" ]]
+then
+  echo "ERROR: Branding value is incorrect!"
+  exit 1
+fi
+
 cd server
 npm run gen-robot
 npm run gen-sitemap

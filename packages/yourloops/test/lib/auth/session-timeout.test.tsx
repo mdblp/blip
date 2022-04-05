@@ -45,7 +45,7 @@ describe("Session timeout", () => {
 
   function TestSessionTimeoutComponent(props: { hookStubs: AuthContextStubs }): JSX.Element {
     return (
-      <MemoryRouter initialEntries={[props.hookStubs.user.getHomePage()]}>
+      <MemoryRouter initialEntries={["/"]}>
         <AuthContextProvider value={props.hookStubs}>
           <SessionTimeout sessionTimeoutDelay={sessionTimeoutDelay} />
         </AuthContextProvider>

@@ -19,7 +19,6 @@ import _ from "lodash";
 import PdfTable from "voilab-pdf-table";
 import PdfTableFitColumn from "voilab-pdf-table/plugins/fitcolumn";
 import i18next from "i18next";
-import moment from "moment-timezone";
 import colors from "../../styles/colors.css";
 
 import {
@@ -42,13 +41,13 @@ import {
   LARGE_FONT_SIZE,
   SMALL_FONT_SIZE,
   Images,
+  Fonts,
 } from "./utils/constants";
 
 const t = i18next.t.bind(i18next);
 
 class PrintView {
   constructor(doc, data = {}, opts) {
-    moment.locale(i18next.language);
     this.doc = doc;
 
     this.title = opts.title;
@@ -59,8 +58,9 @@ class PrintView {
     this.dpi = opts.dpi || DPI;
     this.margins = opts.margins || MARGINS;
 
-    this.font = "Helvetica";
-    this.boldFont = "Helvetica-Bold";
+    const fonts = PrintView.getFonts();
+    this.font = fonts.regularName;
+    this.boldFont = fonts.boldName;
 
     this.defaultFontSize = opts.defaultFontSize || DEFAULT_FONT_SIZE;
     this.footerFontSize = opts.footerFontSize || FOOTER_FONT_SIZE;
@@ -285,7 +285,7 @@ class PrintView {
   }
 
   getDateRange(startDate, endDate, format, timezone) {
-    return t("Date range: ") + formatDateRange(startDate, endDate, format, timezone);
+    return t("pdf-date-range", { range: formatDateRange(startDate, endDate, format, timezone) });
   }
 
   setFill(color = "black", opacity = 1) {
@@ -685,6 +685,7 @@ class PrintView {
     const patientDOB = t("DOB: {{birthdate}}", { birthdate: patientBirthdate });
 
     this.doc
+      .font(this.font)
       .fontSize(10)
       .text(patientDOB);
 
@@ -717,7 +718,7 @@ class PrintView {
       ? this.title
       : t("{{title}} (cont.)", { title: this.title });
 
-    this.doc.text(title, xOffset, yOffset);
+    this.doc.font(this.font).text(title, xOffset, yOffset);
     this.titleWidth = this.doc.widthOfString(title);
   }
 
@@ -863,10 +864,14 @@ class PrintView {
     const height = opts.height ?? HEIGHT;
     const pageCount = doc.bufferedPageRange().count;
     let page = 0;
+    const fonts = PrintView.getFonts();
     while (page < pageCount) {
       page++;
       doc.switchToPage(page - 1);
-      doc.fontSize(footerFontSize).fillColor("#979797").fillOpacity(1);
+      doc.font(fonts.regularName)
+        .fontSize(footerFontSize)
+        .fillColor("#979797")
+        .fillOpacity(1);
       doc.text(
         t("Page {{page}} of {{pageCount}}", { page, pageCount }),
         margins.left,
@@ -874,6 +879,13 @@ class PrintView {
         { align: "right" }
       );
     }
+  }
+
+  static getFonts() {
+    return {
+      regularName: _.get(Fonts, `${i18next.language}.regularName`) ?? Fonts.default.regularName,
+      boldName: _.get(Fonts, `${i18next.language}.boldName`) ?? Fonts.default.boldName,
+    };
   }
 
   setFooterSize() {

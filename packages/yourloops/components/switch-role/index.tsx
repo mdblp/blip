@@ -38,12 +38,14 @@ import { useAlert } from "../utils/snackbar";
 import SwitchRoleConsequencesDialog from "./consequences-dialog";
 import SwitchRoleConsentDialog from "./consent-dialog";
 import SwitchRoleProfessionDialog from "./profession-dialog";
+import { useHistory } from "react-router-dom";
 
 const log = bows("SwitchRoleDialogs");
 
 function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { switchRoleToHCP, user } = useAuth();
+  const history = useHistory();
   const alert = useAlert();
   const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none);
   const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false);
@@ -61,6 +63,7 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
     try {
       await switchRoleToHCP(feedbackConsent, hcpProfession);
       metrics.send("switch_account", "accept_terms");
+      history.push("/");
     } catch (reason: unknown) {
       alert.error(t("modal-switch-hcp-failure"));
       log.error("switchRoleToHCP", reason);

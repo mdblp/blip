@@ -107,7 +107,10 @@ describe("Confirm password", () => {
     passwordLeakService = jest.spyOn(PasswordLeakService, "verifyPassword").mockResolvedValue({ hasLeaked: undefined });
     setPasswords(securedPassword, securedPassword);
     await Promise.resolve();
-    expect(onSuccessStub).toHaveBeenCalled();
+    const timeoutId = setTimeout(() => {
+      expect(onSuccessStub).toHaveBeenCalled();
+    }, 0);
+    clearTimeout(timeoutId);
     expect(passwordLeakService).toHaveBeenCalledWith(securedPassword);
     passwordLeakService.mockRestore();
   });
@@ -119,7 +122,10 @@ describe("Confirm password", () => {
     });
     setPasswords(securedPassword, securedPassword);
     await Promise.resolve();
-    expect(onSuccessStub).toHaveBeenCalled();
+    const timeoutId = setTimeout(() => {
+      expect(onSuccessStub).toHaveBeenCalled();
+    }, 0);
+    clearTimeout(timeoutId);
     expect(passwordLeakService).toHaveBeenCalledWith(securedPassword);
     passwordLeakService.mockRestore();
   });
