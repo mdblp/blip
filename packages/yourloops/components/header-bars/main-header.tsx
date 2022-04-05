@@ -70,7 +70,12 @@ function MainHeader(): JSX.Element {
   const { user } = useAuth();
 
   return (
-    <AppBar elevation={0} className={appBar} position="sticky">
+    <AppBar
+      id="app-main-header"
+      elevation={0}
+      className={appBar}
+      position="sticky"
+    >
       <Toolbar>
         <Box
           width="100%"
@@ -80,6 +85,7 @@ function MainHeader(): JSX.Element {
         >
           <RouterLink to="/">
             <Avatar
+              id="header-main-logo"
               variant="square"
               src={`/branding_${config.BRANDING}_logo.svg`}
               alt={t("alt-img-logo")}
@@ -89,7 +95,11 @@ function MainHeader(): JSX.Element {
 
           <Box display="flex" alignItems="center">
             <RouterLink to="/notifications">
-              <Badge badgeContent={receivedInvitations.length} color="error">
+              <Badge
+                id="notification-count-badge"
+                badgeContent={receivedInvitations.length}
+                color="error"
+              >
                 <NotificationsNoneIcon />
               </Badge>
             </RouterLink>

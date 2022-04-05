@@ -90,3 +90,8 @@ export const refreshToken = (token: string): string => {
   const b64Payload = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
   return `${b64Header}.${b64Payload}.`;
 };
+
+export function triggerMouseClick(domElement: HTMLElement): void {
+  const clickEvent = new MouseEvent("click", { bubbles: true });
+  domElement.dispatchEvent(clickEvent);
+}
