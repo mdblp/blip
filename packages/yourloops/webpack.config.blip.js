@@ -107,6 +107,8 @@ const resolve = {
   alias: {
     "pdfkit": "pdfkit/js/pdfkit.standalone.js",
     "lock.svg": path.resolve(__dirname, "../../branding/lock.svg"),
+    "jaFont-Regular.ttf": path.resolve(__dirname, "../../branding/fonts/noto/NotoSerifJP-Regular.ttf"),
+    "jaFont-Bold.ttf": path.resolve(__dirname, "../../branding/fonts/noto/NotoSerifJP-Bold.ttf"),
   },
 };
 
