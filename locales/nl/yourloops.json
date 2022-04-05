@@ -309,5 +309,5 @@
   "units": "Eenheden",
   "user-name": "{{firstName}} {{lastName}}",
   "yesterday": "Gisteren",
-  "team-member-cannot-cancel-pending": "Only the inviter can cancel a pending invitation."
+  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren."
 }
