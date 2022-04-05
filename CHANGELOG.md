@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
+- YLP-1345 Correct blip pdf export to display japanese chars
 - YLP-1383 Rework app routing
 ### Fixed
 - YLP-1199 Stats in trends view may be wrong
