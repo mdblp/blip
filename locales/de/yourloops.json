@@ -309,5 +309,5 @@
   "units": "Einheiten",
   "user-name": "{{firstName}} {{lastName}}",
   "yesterday": "Gestern",
-  "team-member-cannot-cancel-pending": "Only the inviter can cancel a pending invitation."
+  "team-member-cannot-cancel-pending": "Nur der Einladende kann eine ausstehende Einladung stornieren."
 }
