@@ -308,5 +308,6 @@
   "tooltip-release-notes": "リリースノート",
   "units": "単位",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "昨日"
+  "yesterday": "昨日",
+  "team-member-cannot-cancel-pending": "Only the inviter can cancel a pending invitation."
 }
