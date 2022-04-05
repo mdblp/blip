@@ -90,12 +90,14 @@ function TeamMenu(): JSX.Element {
   return (
     <React.Fragment>
       <Box
+        id="team-menu"
         display="flex"
         alignItems="center"
         className={clickableMenu}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
         <Badge
+          id="team-menu-count-badge"
           badgeContent={filteredTeams.length}
           className={teamIcon}
           classes={{ badge }}
@@ -119,7 +121,7 @@ function TeamMenu(): JSX.Element {
         </ListSubheader>
 
         {filteredTeams.map(team => (
-          <ListItem key={team.id}>
+          <ListItem key={team.id} className="team-menu-list-item">
             <Box marginX={1}>•</Box>
             <Typography>{team.name}</Typography>
           </ListItem>

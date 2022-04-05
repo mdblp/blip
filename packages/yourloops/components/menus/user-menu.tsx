@@ -100,12 +100,15 @@ function UserMenu(): JSX.Element {
   return (
     <React.Fragment>
       <Box
+        id="user-menu"
         display="flex"
         alignItems="center"
         className={clickableMenu}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
-        {getRoleIcon()}
+        <Box id="user-role-icon">
+          {getRoleIcon()}
+        </Box>
         <Box marginX={1}>
           <Typography>
             {`${user?.role === UserRoles.hcp ? "Dr" : ""} ${user?.fullName}`}
@@ -118,7 +121,7 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <MenuItem onClick={onClickSettings}>
+        <MenuItem id="settings-menu-item" onClick={onClickSettings}>
           <ListItemIcon>
             <PermContactCalendarIcon className={svgIcon} />
           </ListItemIcon>
@@ -127,7 +130,7 @@ function UserMenu(): JSX.Element {
           </Typography>
         </MenuItem>
 
-        <MenuItem onClick={onClickSupport}>
+        <MenuItem id="contact-menu-item" onClick={onClickSupport}>
           <ListItemIcon>
             <ContactSupportOutlinedIcon className={svgIcon} />
           </ListItemIcon>
@@ -140,7 +143,7 @@ function UserMenu(): JSX.Element {
           <Divider variant="middle" />
         </Box>
 
-        <MenuItem onClick={onClickLogout}>
+        <MenuItem id="logout-menu-item" onClick={onClickLogout}>
           <ListItemIcon>
             <CancelIcon className={svgIcon} />
           </ListItemIcon>

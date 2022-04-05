@@ -46,15 +46,16 @@ import MainHeader from "../../../components/header-bars/main-header";
 describe("Main Header", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/preferences"] });
+  const { hcpSession } = loggedInUsers;
 
   async function mountComponent(session: Session): Promise<void> {
-    const context = createAuthHookStubs(session);
+    const authContext = createAuthHookStubs(session);
 
     await act(() => {
       return new Promise((resolve) => {
         render(
           <Router history={history}>
-            <AuthContextProvider value={context}>
+            <AuthContextProvider value={authContext}>
               <TeamContextProvider teamAPI={teamAPI}>
                 <NotificationContextProvider api={notificationAPIStub}>
                   <MainHeader />
@@ -80,20 +81,20 @@ describe("Main Header", () => {
   });
 
   it("Should be able to render", async () => {
-    await mountComponent(loggedInUsers.hcpSession);
+    await mountComponent(hcpSession);
     const header = container.querySelector("#app-main-header");
     expect(header).toBeDefined();
   });
 
   it("should redirect to '/' route when clicking on logo", async () => {
-    await mountComponent(loggedInUsers.hcpSession);
+    await mountComponent(hcpSession);
     const logo = document.getElementById("header-main-logo");
     triggerMouseClick(logo);
     expect(history.location.pathname).toBe("/");
   });
 
   it("should redirect to '/notifications' route when clicking on notification icon", async () => {
-    await mountComponent(loggedInUsers.hcpSession);
+    await mountComponent(hcpSession);
     const notificationLink = document.getElementById("notification-count-badge");
     triggerMouseClick(notificationLink);
     expect(history.location.pathname).toBe("/notifications");
@@ -103,14 +104,14 @@ describe("Main Header", () => {
     const notifications: INotification[] = [{
       metricsType: "join_team",
       type: NotificationType.careTeamDoAdmin,
-      creator: { userid: loggedInUsers.hcpSession.user.userid, profile: loggedInUsers.hcpSession.user.profile },
-      creatorId: loggedInUsers.hcpSession.user.userid,
+      creator: { userid: hcpSession.user.userid, profile: hcpSession.user.profile },
+      creatorId: hcpSession.user.userid,
       date: new Date().toISOString(),
-      email: loggedInUsers.hcpSession.user.username,
+      email: hcpSession.user.username,
       id: uuidv4(),
     }];
     notificationAPIStub.getReceivedInvitations.mockResolvedValue(notifications);
-    await mountComponent(loggedInUsers.hcpSession);
+    await mountComponent(hcpSession);
     const notificationBadge = container.querySelector("#notification-count-badge");
     expect(notificationBadge.textContent).toEqual(notifications.length.toString());
   });
@@ -122,7 +123,7 @@ describe("Main Header", () => {
   });
 
   it("Team Menu should be rendered for Hcp", async () => {
-    await mountComponent(loggedInUsers.hcpSession);
+    await mountComponent(hcpSession);
     const teamMenu = container.querySelector("#team-menu");
     expect(teamMenu).toBeDefined();
   });
