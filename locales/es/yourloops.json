@@ -308,5 +308,6 @@
   "tooltip-release-notes": "Notas de la versión",
   "units": "Unidades",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Ayer"
+  "yesterday": "Ayer",
+  "team-member-cannot-cancel-pending": "Solo la persona que invita puede cancelar una invitación pendiente."
 }
