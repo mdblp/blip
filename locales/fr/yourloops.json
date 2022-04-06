@@ -308,5 +308,6 @@
   "tooltip-release-notes": "Notes de version",
   "units": "Unités",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Hier"
+  "yesterday": "Hier",
+  "team-member-cannot-cancel-pending": "Seul la personne ayant envoyé l'invitation peut annuler une invitation en attente."
 }

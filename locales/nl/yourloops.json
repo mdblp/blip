@@ -308,5 +308,6 @@
   "tooltip-release-notes": "Release-opmerkingen",
   "units": "Eenheden",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Gisteren"
+  "yesterday": "Gisteren",
+  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren."
 }
