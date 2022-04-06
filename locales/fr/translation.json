@@ -319,7 +319,7 @@
   "month": "mois",
   "months": "mois",
   "note": "note",
-  "pdf-date-range": "Date range: {{range}}",
+  "pdf-date-range": "Plage de dates : {{range}}",
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
   "scheduled": "Planifié",
   "seconds": "secondes",
