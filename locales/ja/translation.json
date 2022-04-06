@@ -319,7 +319,7 @@
   "month": "月",
   "months": "ヶ月",
   "note": "note",
-  "pdf-date-range": "Date range: {{range}}",
+  "pdf-date-range": "日付範囲: {{range}}",
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
   "scheduled": "スケジュール済み",
   "seconds": "秒",
