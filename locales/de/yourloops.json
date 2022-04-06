@@ -308,5 +308,6 @@
   "tooltip-release-notes": "Anmerkungen zur Veröffentlichung",
   "units": "Einheiten",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Gestern"
+  "yesterday": "Gestern",
+  "team-member-cannot-cancel-pending": "Nur der Einladende kann eine ausstehende Einladung stornieren."
 }
