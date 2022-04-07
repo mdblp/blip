@@ -53,6 +53,14 @@ export function initTheme() {
 export function getTheme(): Theme {
   return createTheme({
     overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          a: {
+            color: "inherit",
+            textDecoration: "none",
+          },
+        },
+      },
       MuiButton: {
         root: {
           fontWeight: 600,

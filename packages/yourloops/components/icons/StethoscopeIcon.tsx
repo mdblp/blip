@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  * Stethoscope Icon
  *
  * All rights reserved.

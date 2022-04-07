@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -36,12 +36,14 @@ import FaceIcon from "@material-ui/icons/Face";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import StethoscopeIcon from "../icons/StethoscopeIcon";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { UserRoles } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth";
@@ -50,32 +52,43 @@ import config from "../../lib/config";
 import metrics from "../../lib/metrics";
 import MenuLayout from "../layouts/menu-layout";
 
-const classes = makeStyles(() => ({
+const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {
     cursor: "pointer",
   },
   svgIcon: {
     margin: "inherit",
   },
+  typography: {
+    margin: `0 ${theme.spacing(1)}px`,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
 }));
 
 function UserMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { user, logout } = useAuth();
-  const { svgIcon, clickableMenu } = classes();
+  const { svgIcon, clickableMenu, typography } = classes();
   const history = useHistory();
-
+  const theme = useTheme();
+  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
+  const [tooltipTex, setTooltipText] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const opened = !!anchorEl;
 
-  const getRoleIcon = (): JSX.Element => {
+  const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
     case UserRoles.hcp:
       return <StethoscopeIcon />;
     case UserRoles.caregiver:
       return <RoundedHospitalIcon />;
-    default:
+    case UserRoles.patient:
       return <FaceIcon />;
+    default:
+      console.error("Unknown role");
+      return null;
     }
   };
 
@@ -97,6 +110,21 @@ function UserMenu(): JSX.Element {
     metrics.send("support", "click_customer_service");
   };
 
+
+  /**
+   * User full name is hidden with an ellipsis if too long
+   * Here we check if the ellipsis is on, if so we add a tooltip on hover to see the entire name.
+   */
+  const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
+    return element ? element.offsetWidth < element.scrollWidth : undefined;
+  };
+
+  useEffect(() => {
+    const userFullNameHtmlElement = document.getElementById("user-menu-full-name");
+    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? user?.fullName as string : "");
+  }, [user?.fullName]);
+
+
   return (
     <React.Fragment>
       <Box
@@ -104,17 +132,22 @@ function UserMenu(): JSX.Element {
         display="flex"
         alignItems="center"
         className={clickableMenu}
+        maxWidth={250}
         onClick={event => setAnchorEl(event.currentTarget)}
       >
-        <Box id="user-role-icon">
+        <Box id="user-role-icon" display="flex">
           {getRoleIcon()}
         </Box>
-        <Box marginX={1}>
-          <Typography>
-            {`${user?.role === UserRoles.hcp ? "Dr" : ""} ${user?.fullName}`}
-          </Typography>
-        </Box>
-        <ArrowDropDownIcon />
+        {!isMobileBreakpoint &&
+          <React.Fragment>
+            <Tooltip title={tooltipTex}>
+              <Typography id="user-menu-full-name" className={typography}>
+                {user?.fullName}
+              </Typography>
+            </Tooltip>
+            <ArrowDropDownIcon />
+          </React.Fragment>
+        }
       </Box>
       <MenuLayout
         open={opened}

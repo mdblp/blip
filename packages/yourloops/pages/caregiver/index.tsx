@@ -29,6 +29,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import bows from "bows";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
@@ -44,6 +45,8 @@ import {
   sharedUserReducer,
 } from "../../lib/share";
 import { setPageTitle } from "../../lib/utils";
+
+const log = bows("CaregiverPage");
 
 const pageStyles = makeStyles(
   () => {
@@ -88,7 +91,8 @@ const CaregiverPage = ({ children }: { children: JSX.Element }): JSX.Element => 
         .then((result: ShareUser[]): void => {
           sharedUsersDispatch({ type: "set-users", sharedUsers: result });
         })
-        .catch(() => {
+        .catch((reason: unknown) => {
+          log.error(reason);
           sharedUsersDispatch({ type: "set-error", message: t("error-failed-display-patients") });
         })
         .finally(() => {
@@ -97,8 +101,8 @@ const CaregiverPage = ({ children }: { children: JSX.Element }): JSX.Element => 
     }
   }, [historyHook, pathname, session, t, errorMessage, sharedUsers, loading]);
 
-  let content: JSX.Element;
-  if (errorMessage !== null) {
+  let content: JSX.Element = children;
+  if (errorMessage) {
     content = (
       <div id="div-api-error-message" className="api-error-message">
         <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
@@ -109,10 +113,8 @@ const CaregiverPage = ({ children }: { children: JSX.Element }): JSX.Element => 
         </Button>
       </div>
     );
-  } else if (session === null || sharedUsersState.sharedUsers === null || loading) {
+  } else if (!session || !sharedUsersState.sharedUsers || loading) {
     content = <CircularProgress disableShrink className={classes.loadingProgress} />;
-  } else {
-    content = children;
   }
 
   return (

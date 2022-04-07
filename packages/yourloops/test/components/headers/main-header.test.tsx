@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021-2022, Diabeloop
- * Profile page tests
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -78,12 +77,6 @@ describe("Main Header", () => {
       container.remove();
       container = null;
     }
-  });
-
-  it("Should be able to render", async () => {
-    await mountComponent(hcpSession);
-    const header = container.querySelector("#app-main-header");
-    expect(header).toBeDefined();
   });
 
   it("should redirect to '/' route when clicking on logo", async () => {

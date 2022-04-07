@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Stethoscope Icon
+ * Copyright (c) 2022, Diabeloop
+ * Rounded Hospital Icon
  *
  * All rights reserved.
  *

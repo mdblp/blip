@@ -32,7 +32,8 @@ import { useHistory } from "react-router-dom";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Badge from "@material-ui/core/Badge";
 import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
@@ -46,19 +47,13 @@ import { Team, useTeam } from "../../lib/team";
 import MenuLayout from "../layouts/menu-layout";
 
 const classes = makeStyles((theme: Theme) => ({
-  clickableMenu: {
-    cursor: "pointer",
-  },
-  svgIcon: {
-    margin: "inherit",
-  },
-  teamIcon: {
-    marginRight: theme.spacing(2),
-  },
   badge: {
     right: -8,
     color: theme.palette.common.white,
     backgroundColor: "var(--text-base-color)",
+  },
+  clickableMenu: {
+    cursor: "pointer",
   },
   separator: {
     flexGrow: 1,
@@ -67,6 +62,12 @@ const classes = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1),
     marginTop: 2,
   },
+  svgIcon: {
+    margin: "inherit",
+  },
+  teamIcon: {
+    marginRight: theme.spacing(2),
+  },
 }));
 
 function TeamMenu(): JSX.Element {
@@ -74,6 +75,8 @@ function TeamMenu(): JSX.Element {
   const { svgIcon, badge, teamIcon, clickableMenu, separator } = classes();
   const { teams } = useTeam();
   const history = useHistory();
+  const theme = useTheme();
+  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const opened = !!anchorEl;
@@ -100,11 +103,14 @@ function TeamMenu(): JSX.Element {
           id="team-menu-count-badge"
           badgeContent={filteredTeams.length}
           className={teamIcon}
+          overlap="circular"
           classes={{ badge }}
         >
           <GroupOutlinedIcon />
         </Badge>
-        <ArrowDropDownIcon />
+        {!isMobileBreakpoint &&
+          <ArrowDropDownIcon />
+        }
       </Box>
       <MenuLayout
         open={opened}
@@ -121,7 +127,12 @@ function TeamMenu(): JSX.Element {
         </ListSubheader>
 
         {filteredTeams.map(team => (
-          <ListItem key={team.id} className="team-menu-list-item">
+          <ListItem
+            key={team.id}
+            className="team-menu-list-item"
+            button
+            onClick={onClickTeamSettings}
+          >
             <Box marginX={1}>•</Box>
             <Typography>{team.name}</Typography>
           </ListItem>

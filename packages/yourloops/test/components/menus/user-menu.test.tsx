@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021-2022, Diabeloop
- * Profile page tests
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +42,7 @@ import UserMenu from "../../../components/menus/user-menu";
 import { triggerMouseClick } from "../../common/utils";
 import { loggedInUsers } from "../../common";
 
-describe("Team Menu", () => {
+describe("User Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
   const { hcpSession, caregiverSession, patientSession } = loggedInUsers;

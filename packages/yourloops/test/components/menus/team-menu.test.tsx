@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021-2022, Diabeloop
- * Profile page tests
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -90,7 +89,7 @@ describe("Team Menu", () => {
   it("should list all the teams user belongs to", async () => {
     await mountComponent(hcpSession);
     openMenu();
-    const teamListItems = document.querySelectorAll("li.team-menu-list-item");
+    const teamListItems = document.querySelectorAll("div.team-menu-list-item");
     expect(filteredTeams.length).toEqual(teamListItems.length);
   });
 });

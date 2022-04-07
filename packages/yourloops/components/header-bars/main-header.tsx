@@ -27,8 +27,10 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import NotificationsActiveOutlinedIcon from "@material-ui/icons/NotificationsActiveOutlined";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -41,7 +43,6 @@ import config from "../../lib/config";
 import { useNotification } from "../../lib/notifications";
 import { useAuth } from "../../lib/auth";
 import { UserRoles } from "../../models/shoreline";
-import RouterLink from "../utils/router-link";
 import TeamMenu from "../menus/team-menu";
 import UserMenu from "../menus/user-menu";
 
@@ -83,7 +84,7 @@ function MainHeader(): JSX.Element {
           justifyContent="space-between"
           alignItems="center"
         >
-          <RouterLink to="/">
+          <Link to="/">
             <Avatar
               id="header-main-logo"
               variant="square"
@@ -91,18 +92,19 @@ function MainHeader(): JSX.Element {
               alt={t("alt-img-logo")}
               className={desktopLogo}
             />
-          </RouterLink>
+          </Link>
 
           <Box display="flex" alignItems="center">
-            <RouterLink to="/notifications">
+            <Link to="/notifications">
               <Badge
                 id="notification-count-badge"
                 badgeContent={receivedInvitations.length}
+                overlap="circular"
                 color="error"
               >
-                <NotificationsNoneIcon />
+                {receivedInvitations.length ? <NotificationsActiveOutlinedIcon /> : <NotificationsNoneIcon />}
               </Badge>
-            </RouterLink>
+            </Link>
             <div className={separator} />
             {user?.role !== UserRoles.caregiver &&
               <React.Fragment>
