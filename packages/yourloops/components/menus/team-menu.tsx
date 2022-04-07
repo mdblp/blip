@@ -102,7 +102,7 @@ function TeamMenu(): JSX.Element {
         <Badge
           id="team-menu-count-badge"
           badgeContent={filteredTeams.length}
-          className={teamIcon}
+          className={filteredTeams.length ? teamIcon : ""}
           overlap="circular"
           classes={{ badge }}
         >
@@ -126,18 +126,23 @@ function TeamMenu(): JSX.Element {
           </Box>
         </ListSubheader>
 
-        {filteredTeams.map(team => (
-          <ListItem
-            key={team.id}
-            className="team-menu-list-item"
-            button
-            onClick={onClickTeamSettings}
-          >
-            <Box marginX={1}>•</Box>
-            <Typography>{team.name}</Typography>
+        {filteredTeams.length ?
+          filteredTeams.map(team => (
+            <ListItem
+              key={team.id}
+              className="team-menu-list-item"
+              button
+              onClick={onClickTeamSettings}
+            >
+              <Box marginX={1}>•</Box>
+              <Typography>{team.name}</Typography>
+            </ListItem>
+          ))
+          :
+          <ListItem>
+            <Typography>{t("care-team-no-membership")}</Typography>
           </ListItem>
-        ))}
-
+        }
         <Box marginY={1}>
           <Divider variant="middle" />
         </Box>
