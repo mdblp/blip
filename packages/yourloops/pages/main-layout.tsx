@@ -38,7 +38,8 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import NotificationsPage from "./notifications";
 import TeamsPage from "./hcp/teams-page";
 import CertifyAccountPage from "./hcp/certify-account-page";
-import PatientListPage from "./hcp/patients/page";
+import HcpPatientListPage from "./hcp/patients/page";
+import CaregiverPatientListPage from "./caregiver/patients/page";
 import CaregiversPage from "./patient/caregivers/page";
 import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
@@ -64,7 +65,7 @@ export function MainLayout(): JSX.Element {
                     <Route exact path="/teams" component={TeamsPage} />
                     <Route exact path="/certify" component={CertifyAccountPage} />
                     <Route path="/patient/:patientId" component={PatientDataPage} />
-                    <Route exact path="/patients" component={PatientListPage} />
+                    <Route exact path="/patients" component={HcpPatientListPage} />
                     <Redirect exact from="/" to="/patients" />
                     <Redirect to="/not-found" />
                   </Switch>
@@ -74,7 +75,7 @@ export function MainLayout(): JSX.Element {
                   <CaregiverPage>
                     <Switch>
                       <Route path="/patient/:patientId" component={PatientDataPage} />
-                      <Route exact path="/patients" component={PatientListPage} />
+                      <Route exact path="/patients" component={CaregiverPatientListPage} />
                       <Redirect exact from="/" to="/patients" />
                       <Redirect to="/not-found" />
                     </Switch>

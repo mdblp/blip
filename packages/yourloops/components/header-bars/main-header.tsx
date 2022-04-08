@@ -95,7 +95,7 @@ function MainHeader(): JSX.Element {
           </Link>
 
           <Box display="flex" alignItems="center">
-            <Link to="/notifications">
+            <Link to="/notifications" id="header-notification-link">
               <Badge
                 id="notification-count-badge"
                 badgeContent={receivedInvitations.length}

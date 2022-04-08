@@ -102,7 +102,7 @@ describe("User Menu", () => {
   it("should redirect to '/preferences' route when clicking on profile link", async () => {
     await mountComponent(hcpSession);
     openMenu();
-    const profileItem = document.getElementById("settings-menu-item");
+    const profileItem = document.getElementById("user-menu-settings-item");
     triggerMouseClick(profileItem);
     expect(history.location.pathname).toBe("/preferences");
   });
@@ -110,7 +110,7 @@ describe("User Menu", () => {
   it("should logout the user when clicking on logout item", async () => {
     await mountComponent(hcpSession);
     openMenu();
-    const logoutItem = document.getElementById("logout-menu-item");
+    const logoutItem = document.getElementById("user-menu-logout-item");
     triggerMouseClick(logoutItem);
     expect(authContext.logout).toBeCalledTimes(1);
   });

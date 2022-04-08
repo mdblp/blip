@@ -147,7 +147,7 @@ function TeamMenu(): JSX.Element {
           <Divider variant="middle" />
         </Box>
 
-        <MenuItem onClick={onClickTeamSettings}>
+        <MenuItem id="team-menu-teams-link" onClick={onClickTeamSettings}>
           <ListItemIcon>
             <GroupOutlinedIcon className={svgIcon} />
           </ListItemIcon>

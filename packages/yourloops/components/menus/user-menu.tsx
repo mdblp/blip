@@ -74,7 +74,7 @@ function UserMenu(): JSX.Element {
   const history = useHistory();
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
-  const [tooltipTex, setTooltipText] = useState<string>("");
+  const [tooltipText, setTooltipText] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const opened = !!anchorEl;
 
@@ -93,6 +93,11 @@ function UserMenu(): JSX.Element {
   };
 
   const closeMenu = () => setAnchorEl(null);
+
+  const onClickCaregivers = () => {
+    history.push("/caregivers");
+    closeMenu();
+  };
 
   const onClickSettings = () => {
     history.push("/preferences");
@@ -140,7 +145,7 @@ function UserMenu(): JSX.Element {
         </Box>
         {!isMobileBreakpoint &&
           <React.Fragment>
-            <Tooltip title={tooltipTex}>
+            <Tooltip title={tooltipText}>
               <Typography id="user-menu-full-name" className={typography}>
                 {user?.fullName}
               </Typography>
@@ -154,7 +159,22 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        <MenuItem id="settings-menu-item" onClick={onClickSettings}>
+        {user?.role === UserRoles.patient &&
+          <React.Fragment>
+            <MenuItem id="user-menu-caregiver-link-item" onClick={onClickCaregivers}>
+              <ListItemIcon>
+                <RoundedHospitalIcon className={svgIcon} />
+              </ListItemIcon>
+              <Typography>
+                {t("caregivers")}
+              </Typography>
+            </MenuItem>
+            <Box marginY={1}>
+              <Divider variant="middle" />
+            </Box>
+          </React.Fragment>
+        }
+        <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
           <ListItemIcon>
             <PermContactCalendarIcon className={svgIcon} />
           </ListItemIcon>
@@ -176,7 +196,7 @@ function UserMenu(): JSX.Element {
           <Divider variant="middle" />
         </Box>
 
-        <MenuItem id="logout-menu-item" onClick={onClickLogout}>
+        <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
           <ListItemIcon>
             <CancelIcon className={svgIcon} />
           </ListItemIcon>
