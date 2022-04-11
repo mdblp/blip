@@ -22,3 +22,18 @@ export const Images = {
   siteChangeTubingImage: null,
   siteChangeReservoirDiabeloopImage: null,
 };
+/** @type {{[x:string]: {regularName:string;regular:false|null|ArrayBuffer;boldName:string;bold:false|null|ArrayBuffer;}}} */
+export const Fonts = {
+  default: {
+    regularName: "Helvetica",
+    regular: false, // Be sure it is evaluated to false for default western font
+    boldName: "Helvetica-Bold",
+    bold: false,
+  },
+  ja: {
+    regular: null,
+    regularName: "jaFontRegular",
+    bold: null,
+    boldName: "jaFontBold",
+  },
+};

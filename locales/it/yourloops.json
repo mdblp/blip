@@ -308,5 +308,6 @@
   "tooltip-release-notes": "Note di rilascio",
   "units": "Unità",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Ieri"
+  "yesterday": "Ieri",
+  "team-member-cannot-cancel-pending": "Solo la persona che invita può annullare un invito in sospeso."
 }
