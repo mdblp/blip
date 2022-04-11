@@ -28,7 +28,7 @@
 import React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 
-import { ThemeProvider, Theme, makeStyles } from "@material-ui/core/styles";
+import { ThemeProvider, Theme, makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { SessionTimeout, useAuth } from "../lib/auth";
@@ -77,10 +77,11 @@ export function MainLobby(): JSX.Element {
   const location = useLocation();
   const currentRoute = location.pathname;
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
-  const classes = routeStyle({
-    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? "var(--external-theme-background-color)" : "var(--main-theme-background-color)",
-  });
   const theme = getTheme();
+  const { palette } = useTheme();
+  const classes = routeStyle({
+    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper,
+  });
   const style = isCurrentRoutePublic ? classes.public : classes.private;
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
