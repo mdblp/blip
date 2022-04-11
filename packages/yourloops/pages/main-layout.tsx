@@ -43,11 +43,25 @@ import CaregiverPatientListPage from "./caregiver/patients/page";
 import CaregiversPage from "./patient/caregivers/page";
 import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
-import MainHeader from "../components/header-bars/main-header";
+import DashboardLayout from "../components/layouts/dashboard-layout";
 
 export function MainLayout(): JSX.Element {
   const authHook = useAuth();
   const session = authHook.session();
+
+  const getHomePage = (): JSX.Element => {
+    switch (session?.user.role) {
+    case UserRoles.hcp:
+      return <HcpPatientListPage />;
+    case UserRoles.caregiver:
+      return <CaregiverPatientListPage />;
+    case UserRoles.patient:
+      return <PatientDataPage />;
+    default:
+      console.error(`no route found for role ${session?.user.role}`);
+      return <Redirect to="/not-found" />;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -55,42 +69,44 @@ export function MainLayout(): JSX.Element {
         <NotificationContextProvider>
           <TeamContextProvider>
             <DataContextProvider context={DefaultDataContext}>
-              <MainHeader />
-              <Switch>
-                <Route exact path="/preferences" component={ProfilePage} />
-                <Route exact path="/notifications" component={NotificationsPage} />
+              <DashboardLayout>
+                <Switch>
+                  <Route exact path="/preferences" component={ProfilePage} />
+                  <Route exact path="/notifications" component={NotificationsPage} />
+                  <Route exact path="/home">
+                    {getHomePage()}
+                  </Route>
 
-                {session.user.role === UserRoles.hcp &&
-                  <Switch>
-                    <Route exact path="/teams" component={TeamsPage} />
-                    <Route exact path="/certify" component={CertifyAccountPage} />
-                    <Route path="/patient/:patientId" component={PatientDataPage} />
-                    <Route exact path="/patients" component={HcpPatientListPage} />
-                    <Redirect exact from="/" to="/patients" />
-                    <Redirect to="/not-found" />
-                  </Switch>
-                }
-
-                {session.user.role === UserRoles.caregiver &&
-                  <CaregiverPage>
+                  {session.user.role === UserRoles.hcp &&
                     <Switch>
+                      <Route exact path="/teams" component={TeamsPage} />
+                      <Route exact path="/certify" component={CertifyAccountPage} />
                       <Route path="/patient/:patientId" component={PatientDataPage} />
-                      <Route exact path="/patients" component={CaregiverPatientListPage} />
-                      <Redirect exact from="/" to="/patients" />
+                      <Redirect exact from="/" to="/home" />
                       <Redirect to="/not-found" />
                     </Switch>
-                  </CaregiverPage>
-                }
+                  }
 
-                {session.user.role === UserRoles.patient &&
-                  <Switch>
-                    <Route exact path="/caregivers" component={CaregiversPage} />
-                    <Route exact path="/teams" component={PatientTeamsPage} />
-                    <Redirect exact from="/" to="/daily" />
-                    <Route path="/" component={PatientDataPage} />
-                  </Switch>
-                }
-              </Switch>
+                  {session.user.role === UserRoles.caregiver &&
+                    <CaregiverPage>
+                      <Switch>
+                        <Route path="/patient/:patientId" component={PatientDataPage} />
+                        <Redirect exact from="/" to="/home" />
+                        <Redirect to="/not-found" />
+                      </Switch>
+                    </CaregiverPage>
+                  }
+
+                  {session.user.role === UserRoles.patient &&
+                    <Switch>
+                      <Route exact path="/caregivers" component={CaregiversPage} />
+                      <Route exact path="/teams" component={PatientTeamsPage} />
+                      <Redirect exact from="/" to="/daily" />
+                      <Route path="/" component={PatientDataPage} />
+                    </Switch>
+                  }
+                </Switch>
+              </DashboardLayout>
             </DataContextProvider>
           </TeamContextProvider>
         </NotificationContextProvider>

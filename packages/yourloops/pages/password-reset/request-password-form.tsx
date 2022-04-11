@@ -118,7 +118,7 @@ export default function RequestPasswordForm(props: RequestPasswordFormProps): JS
         </form>
       </CardContent>
       <CardActions className={classes.CardActions}>
-        <Button variant="contained" color="secondary" onClick={props.onBack}>
+        <Button onClick={props.onBack}>
           {t("button-cancel")}
         </Button>
         <Button

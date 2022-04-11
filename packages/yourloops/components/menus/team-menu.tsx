@@ -47,6 +47,9 @@ import { Team, useTeam } from "../../lib/team";
 import MenuLayout from "../layouts/menu-layout";
 
 const classes = makeStyles((theme: Theme) => ({
+  teamIcon: {
+    marginRight: theme.spacing(2),
+  },
   badge: {
     right: -8,
     color: theme.palette.common.white,
@@ -62,17 +65,11 @@ const classes = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1),
     marginTop: 2,
   },
-  svgIcon: {
-    margin: "inherit",
-  },
-  teamIcon: {
-    marginRight: theme.spacing(2),
-  },
 }));
 
 function TeamMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const { svgIcon, badge, teamIcon, clickableMenu, separator } = classes();
+  const { badge, teamIcon, clickableMenu, separator } = classes();
   const { teams } = useTeam();
   const history = useHistory();
   const theme = useTheme();
@@ -102,8 +99,8 @@ function TeamMenu(): JSX.Element {
         <Badge
           id="team-menu-count-badge"
           badgeContent={filteredTeams.length}
-          className={filteredTeams.length ? teamIcon : ""}
           overlap="circular"
+          className={teamIcon}
           classes={{ badge }}
         >
           <GroupOutlinedIcon />
@@ -149,7 +146,7 @@ function TeamMenu(): JSX.Element {
 
         <MenuItem id="team-menu-teams-link" onClick={onClickTeamSettings}>
           <ListItemIcon>
-            <GroupOutlinedIcon className={svgIcon} />
+            <GroupOutlinedIcon />
           </ListItemIcon>
           <Typography>
             {t("care-team-settings")}
