@@ -45,7 +45,7 @@ import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
 import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { PatientElementCardProps, PatientListCommonProps } from "./models";
+import { PatientElementCardProps, PatientTableCardCommonProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
@@ -87,7 +87,7 @@ const patientListStyle = makeStyles(theme => ({
 const removeButtonEnabled = false;
 
 function PatientCard(props: PatientElementCardProps): JSX.Element {
-  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient, trTIR, trTBR, trUpload } = props;
+  const { patient, flagged, onFlagPatient, onClickPatient, trTIR, trTBR, trUpload } = props;
   const { t } = useTranslation("yourloops");
   const trNA = t("N/A");
   const classes = patientListStyle();
@@ -116,7 +116,6 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
 
   const onClickRemoveIcon = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClickRemovePatient(patient);
   };
 
   React.useEffect(() => {
@@ -250,8 +249,8 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   );
 }
 
-function Cards(props: PatientListCommonProps): JSX.Element {
-  const { patients, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
+function Cards(props: PatientTableCardCommonProps): JSX.Element {
+  const { patients, flagged, onClickPatient, onFlagPatient } = props;
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const trTIR = translateSortField(t, SortFields.tir);
@@ -263,7 +262,7 @@ function Cards(props: PatientListCommonProps): JSX.Element {
       {patients.map((teamUser: Patient, index): JSX.Element => (
         <React.Fragment key={index}>
           {teamHook.isOnlyPendingInvitation(teamUser) ?
-            <PendingPatientCard patient={teamUser} onClickRemovePatient={() => onClickRemovePatient} />
+            <PendingPatientCard patient={teamUser} />
             : <PatientCard
               key={index}
               trTIR={trTIR}
@@ -273,7 +272,6 @@ function Cards(props: PatientListCommonProps): JSX.Element {
               flagged={flagged}
               onClickPatient={onClickPatient}
               onFlagPatient={onFlagPatient}
-              onClickRemovePatient={onClickRemovePatient}
             />
           }
         </React.Fragment>

@@ -29,7 +29,7 @@
 import moment from "moment-timezone"; // TODO: Change moment-timezone lib with something else
 import { TFunction } from "i18next";
 
-import { SortFields } from "../../../models/generic";
+import { PatientTableSortFields, SortFields } from "../../../models/generic";
 import { MedicalData } from "../../../models/device-data";
 import { MedicalTableValues } from "./models";
 import { TeamMember, TeamUser } from "../../../lib/team";
@@ -102,6 +102,61 @@ export const translateSortField = (t: TFunction, field: SortFields): string => {
     break;
   }
   return trOrderBy;
+};
+
+/**
+ * Compare two patient for sorting the patient table
+ * @param a A patient
+ * @param b A patient
+ * @param orderBy Sort field
+ */
+export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSortFields): number => {
+  let aValue: string | number | boolean | Date | null | undefined;
+  let bValue: string | number | boolean | Date | null | undefined;
+
+  switch (orderBy) {
+  case PatientTableSortFields.alertTimeTarget:
+    aValue = a.alerts?.timeSpentAwayFromTargetRate;
+    bValue = b.alerts?.timeSpentAwayFromTargetRate;
+    break;
+  case PatientTableSortFields.alertHypoglycemic:
+    aValue = a.alerts?.frequencyOfSevereHypoglycemiaActive;
+    bValue = b.alerts?.frequencyOfSevereHypoglycemiaActive;
+    break;
+  case PatientTableSortFields.ldu:
+    aValue = getMedicalValues(a.medicalData).lastUploadEpoch;
+    bValue = getMedicalValues(b.medicalData).lastUploadEpoch;
+    break;
+  case PatientTableSortFields.patientFullName:
+    aValue = a.fullName;
+    bValue = b.fullName;
+    break;
+  case PatientTableSortFields.remoteMonitoring:
+    aValue = a.remoteMonitoring;
+    bValue = b.remoteMonitoring;
+    break;
+  case PatientTableSortFields.system:
+    aValue = a.system;
+    bValue = b.system;
+    break;
+  }
+
+  if (typeof aValue === "string" && typeof bValue === "string") {
+    return aValue.localeCompare(bValue);
+  }
+  if (typeof aValue === "boolean") {
+    return aValue ? -1 : 1;
+  }
+  if (aValue instanceof Date && bValue instanceof Date) {
+    return Number(aValue > bValue);
+  }
+  if (typeof aValue !== "number" || !Number.isFinite(aValue)) {
+    return -1;
+  }
+  if (typeof bValue !== "number" || !Number.isFinite(bValue)) {
+    return 1;
+  }
+  return aValue - bValue;
 };
 
 export const mapMembersToPatientTeamStatus = (member : TeamMember): PatientTeam => {

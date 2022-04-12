@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress } from "../../models/generic";
+import { UserInvitationStatus, PostalAddress, FilterType } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
@@ -124,6 +124,13 @@ export interface TeamContext {
    * Return all patients
    */
   getPatients: () => Readonly<Patient>[];
+  /**
+   * Return all patients filtered on the given params
+   * @param filterType a FilterType value or a team id
+   * @param filter a patient name
+   * @param flagged the list of flagged patients
+   */
+  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Readonly<Patient>[];
   /**
    * Return the medical members of a team.
    */

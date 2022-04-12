@@ -104,15 +104,6 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     }
   };
 
-  function compare( a: PatientTeam, b: PatientTeam ) {
-    if ( a.teamName < b.teamName ) {
-      return -1;
-    }
-    if ( a.teamName > b.teamName ) {
-      return 1;
-    }
-    return 0;
-  }
   useEffect(() => {
     if (teamMembers) {
       if (teamMembers?.length === 1) {
@@ -125,7 +116,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       if (teamMembers?.length > 1) {
         const teams = teamMembers;
 
-        setSortedTeams(teams.sort(compare));
+        setSortedTeams(teams.sort((a,b) => +a.teamName - +b.teamName));
 
         teams.forEach((team, index) => {
           if (team.code === "private") {

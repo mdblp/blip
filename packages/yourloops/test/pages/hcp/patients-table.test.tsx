@@ -37,13 +37,13 @@ import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 
 import "../../intersectionObserverMock";
 
-import PatientListTable from "../../../pages/hcp/patients/table";
+import PatientTable from "../../../pages/hcp/patients/table";
 import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
 import { TablePagination, ThemeProvider } from "@material-ui/core";
-import { getMainTheme } from "../../../components/theme";
+import { getTheme } from "../../../components/theme";
 import renderer from "react-test-renderer";
 import PatientRow from "../../../pages/hcp/patients/row";
 import { createPatient, createPatientTeam } from "../../common/utils";
@@ -93,8 +93,8 @@ describe("Patient list table", () => {
     const patients = team.getPatients();
 
     return (
-      <ThemeProvider theme={getMainTheme()}>
-        <PatientListTable
+      <ThemeProvider theme={getTheme()}>
+        <PatientTable
           patients={patients}
           flagged={[]}
           order={SortDirection.asc}
@@ -102,7 +102,6 @@ describe("Patient list table", () => {
           onClickPatient={clickPatientStub}
           onFlagPatient={clickFlagPatientStub}
           onSortList={jest.fn()}
-          onClickRemovePatient={clickRemovePatientStub}
         />
       </ThemeProvider>
     );
@@ -125,10 +124,10 @@ describe("Patient list table", () => {
 
   function renderPatientList(teamUsers: Patient[]) {
     return renderer.create(
-      <ThemeProvider theme={getMainTheme()}>
+      <ThemeProvider theme={getTheme()}>
         <AuthContextProvider value={authHookHcp}>
           <TeamContextProvider teamAPI={teamAPI}>
-            <PatientListTable
+            <PatientTable
               patients={teamUsers}
               flagged={[]}
               order={SortDirection.asc}
@@ -136,7 +135,6 @@ describe("Patient list table", () => {
               onClickPatient={clickPatientStub}
               onFlagPatient={clickFlagPatientStub}
               onSortList={jest.fn()}
-              onClickRemovePatient={clickRemovePatientStub}
             />
           </TeamContextProvider>
         </AuthContextProvider>

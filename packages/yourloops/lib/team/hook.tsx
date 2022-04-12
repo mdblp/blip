@@ -30,7 +30,7 @@ import React from "react";
 import _ from "lodash";
 import bows from "bows";
 
-import { UserInvitationStatus } from "../../models/generic";
+import { FilterType, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType, TypeTeamMemberRole } from "../../models/team";
@@ -284,27 +284,74 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team) => team.status === UserInvitationStatus.pending);
+    const tm = patient.teams.find(team => team.status === UserInvitationStatus.pending);
     return typeof tm === "object";
   };
   const isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team) => team.status !== UserInvitationStatus.pending);
+    const tm = patient.teams.find(team => team.status !== UserInvitationStatus.pending);
     return typeof tm === "undefined";
   };
 
-  const isUserInvitationPending = (patient : Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team) => team.teamId === teamId && team.status === UserInvitationStatus.pending);
+  const isUserInvitationPending = (patient: Patient, teamId: string): boolean => {
+    const tm = patient.teams.find(team => team.teamId === teamId && team.status === UserInvitationStatus.pending);
     return !!tm;
   };
 
   const isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team) => team.status === UserInvitationStatus.accepted);
+    const tm = patient.teams.find(team => team.status === UserInvitationStatus.accepted);
     return !!tm;
   };
 
   const isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team) => team.teamId === teamId);
+    const tm = patient.teams.find(team => team.teamId === teamId);
     return typeof tm === "object";
+  };
+
+  const filterPatients = (filterType: FilterType | string, filter: string, flagged: string[]): Patient[] => {
+    const allPatients = getPatients();
+    let patients: Readonly<Patient>[];
+    if (!(filterType in FilterType)) {
+      //filterType is a team id, retrieve all patients not pending in given team
+      patients = allPatients.filter((patient) => !isUserInvitationPending(patient, filterType));
+    } else if (filterType === FilterType.pending) {
+      patients = allPatients.filter((patient) => isInvitationPending(patient));
+    } else {
+      patients = allPatients.filter((patient) => !isOnlyPendingInvitation(patient));
+    }
+
+    const searchByName = filter.length > 0;
+    if (searchByName) {
+      const searchText = filter.toLocaleLowerCase();
+      patients = patients.filter((patient: Patient): boolean => {
+        switch (filterType) {
+        case FilterType.all:
+        case FilterType.pending:
+          break;
+        case FilterType.flagged:
+          if (!flagged.includes(patient.userid)) {
+            return false;
+          }
+          break;
+        default:
+          if (!isInTeam(patient, filterType)) {
+            return false;
+          }
+          break;
+        }
+
+        const firstName = patient.firstName ?? "";
+        if (firstName.toLocaleLowerCase().includes(searchText)) {
+          return true;
+        }
+        const lastName = patient.lastName ?? "";
+        return lastName.toLocaleLowerCase().includes(searchText);
+      });
+    } else if (filterType === FilterType.flagged) {
+      patients = patients.filter(patient => flagged.includes(patient.userid));
+    } else if (filterType !== FilterType.all && filterType !== FilterType.pending) {
+      patients = patients.filter(patient => isInTeam(patient, filterType));
+    }
+    return patients;
   };
 
   const invitePatient = async (team: Team, username: string): Promise<void> => {
@@ -432,7 +479,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
 
   const removeMember = async (member: TeamMember): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
-      if (!member.invitation || member.team.id !== member.invitation.target?.id ) {
+      if (!member.invitation || member.team.id !== member.invitation.target?.id) {
         throw new Error("Missing invitation!");
       }
       await notificationHook.cancel(member.invitation);
@@ -563,6 +610,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     getMedicalTeams,
     getPatientsAsTeamUsers,
     getPatients,
+    filterPatients,
     getMedicalMembers,
     getNumMedicalMembers,
     teamHasOnlyOneMember,

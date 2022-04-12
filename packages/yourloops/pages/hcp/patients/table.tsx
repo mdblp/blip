@@ -43,7 +43,7 @@ import { TablePagination } from "@material-ui/core";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import { PatientTableSortFields, SortDirection } from "../../../models/generic";
-import { PatientListProps } from "./models";
+import { PatientTableProps } from "./models";
 import PatientRow from "./row";
 import { Patient } from "../../../models/patient";
 
@@ -101,7 +101,7 @@ export const StyledTableCell = styled(withTheme(TableCell))((props) => ({
   },
 }));
 
-function PatientListTable(props: PatientListProps): JSX.Element {
+function PatientTable(props: PatientTableProps): JSX.Element {
   const {
     patients,
     flagged,
@@ -111,7 +111,6 @@ function PatientListTable(props: PatientListProps): JSX.Element {
     onClickPatient,
     onFlagPatient,
     onSortList,
-    onClickRemovePatient,
   } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
@@ -128,7 +127,6 @@ function PatientListTable(props: PatientListProps): JSX.Element {
         filter={filter}
         onClickPatient={onClickPatient}
         onFlagPatient={onFlagPatient}
-        onClickRemovePatient={onClickRemovePatient}
       />
     )
   );
@@ -237,4 +235,4 @@ function PatientListTable(props: PatientListProps): JSX.Element {
   );
 }
 
-export default PatientListTable;
+export default PatientTable;

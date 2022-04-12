@@ -40,7 +40,6 @@ import { Patient } from "../../../models/patient";
 
 interface PendingPatientCardProps {
   patient: Patient;
-  onClickRemovePatient: (patient: Patient) => void;
 }
 
 const style = makeStyles(theme => ({
@@ -67,14 +66,13 @@ const style = makeStyles(theme => ({
 const removeButtonEnabled = false;
 
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
-  const { patient, onClickRemovePatient } = props;
+  const { patient } = props;
   const classes = style();
   const email = _.get(patient, "emails[0]", patient.username);
   const patientId = patient.userid;
 
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClickRemovePatient(patient);
   };
 
   return (
