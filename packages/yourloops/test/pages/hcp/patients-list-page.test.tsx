@@ -32,7 +32,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
-import { TeamContext, TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
+import { TeamContext, TeamContextProvider, useTeam } from "../../../lib/team";
 import {
   FilterType,
   PatientTableSortFields,
@@ -47,19 +47,20 @@ import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
 import { getMainTheme } from "../../../components/theme";
 import { ThemeProvider } from "@material-ui/core";
+import { Patient } from "../../../models/patient";
 
 
 describe("Patient list page", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-  let team: TeamContext;
-  let patients: TeamUser[];
+  let teamContext: TeamContext;
+  let patients: Patient[];
 
   let container: HTMLElement | null = null;
 
   const PatientListPageComponent = (): JSX.Element => {
-    team = useTeam();
-    patients = team.getPatients();
+    teamContext = useTeam();
+    patients = teamContext.getPatients();
 
     return (
       <PatientListPage />
@@ -99,10 +100,10 @@ describe("Patient list page", () => {
 
   it("updatePatientList should return correct patients when filter is pending", () => {
     //given
-    const patientExpected = patients.filter(patient => patient.members.find(member => member.status === UserInvitationStatus.pending) !== undefined);
+    const patientExpected = patients.filter(patient => patient.teams.find(team => team.status === UserInvitationStatus.pending) !== undefined);
 
     //when
-    const patientReceived = updatePatientList(team, [], "", FilterType.pending, PatientTableSortFields.patientFullName, SortDirection.asc);
+    const patientReceived = updatePatientList(teamContext, [], "", FilterType.pending, PatientTableSortFields.patientFullName, SortDirection.asc);
 
     //then
     expect(patientReceived).toEqual(patientExpected);
@@ -110,11 +111,11 @@ describe("Patient list page", () => {
 
   it("updatePatientList should return correct patients when filter is team id", () => {
     //given
-    const teamId = patients[0].members[0].team.id;
-    const patientExpected = patients.filter(patient => patient.members.find(member => member.team.id === teamId && member.status !== UserInvitationStatus.pending) !== undefined);
+    const teamId = patients[0].teams[0].teamId;
+    const patientExpected = patients.filter(patient => patient.teams.find(team => teamId === teamId && team.status !== UserInvitationStatus.pending) !== undefined);
 
     //when
-    const patientReceived = updatePatientList(team, [], "", teamId, PatientTableSortFields.patientFullName, SortDirection.asc);
+    const patientReceived = updatePatientList(teamContext, [], "", teamId, PatientTableSortFields.patientFullName, SortDirection.asc);
 
     //then
     expect(patientReceived).toEqual(patientExpected);

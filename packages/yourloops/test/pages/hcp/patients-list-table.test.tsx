@@ -31,7 +31,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act, Simulate } from "react-dom/test-utils";
 
 import { PatientTableSortFields, SortDirection, UserInvitationStatus } from "../../../models/generic";
-import { TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
+import { TeamContextProvider, useTeam } from "../../../lib/team";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 
@@ -46,7 +46,8 @@ import { TablePagination, ThemeProvider } from "@material-ui/core";
 import { getMainTheme } from "../../../components/theme";
 import renderer from "react-test-renderer";
 import PatientRow from "../../../pages/hcp/patients/row";
-import { createTeamMember, createTeamUser } from "../../common/utils";
+import { createPatient, createPatientTeam } from "../../common/utils";
+import { Patient } from "../../../models/patient";
 
 describe("Patient list table", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -56,17 +57,17 @@ describe("Patient list table", () => {
   const clickRemovePatientStub = jest.fn();
 
   const team1Id = "team1Id";
-  const patient1 = createTeamUser("id1", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient2 = createTeamUser("id2", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient3 = createTeamUser("id3", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient4 = createTeamUser("id4", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient5 = createTeamUser("id5", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient6 = createTeamUser("id6", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient7 = createTeamUser("id7", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient8 = createTeamUser("id8", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient9 = createTeamUser("id9", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient10 = createTeamUser("id10", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
-  const patient11 = createTeamUser("id11", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient1 = createPatient("id1", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient2 = createPatient("id2", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient3 = createPatient("id3", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient4 = createPatient("id4", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient5 = createPatient("id5", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient6 = createPatient("id6", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient7 = createPatient("id7", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient8 = createPatient("id8", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient9 = createPatient("id9", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient10 = createPatient("id10", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
+  const patient11 = createPatient("id11", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
   const allPatients = [patient1, patient2, patient3, patient4, patient5, patient6, patient7, patient8, patient9, patient10, patient11];
 
   let container: HTMLElement | null = null;
@@ -122,7 +123,7 @@ describe("Patient list table", () => {
     });
   }
 
-  function renderPatientList(teamUsers: TeamUser[]) {
+  function renderPatientList(teamUsers: Patient[]) {
     return renderer.create(
       <ThemeProvider theme={getMainTheme()}>
         <AuthContextProvider value={authHookHcp}>

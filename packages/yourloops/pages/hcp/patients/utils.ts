@@ -32,6 +32,8 @@ import { TFunction } from "i18next";
 import { SortFields } from "../../../models/generic";
 import { MedicalData } from "../../../models/device-data";
 import { MedicalTableValues } from "./models";
+import { TeamMember, TeamUser } from "../../../lib/team";
+import { Patient, PatientTeam } from "../../../models/patient";
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
   let tir = "-";
@@ -100,4 +102,29 @@ export const translateSortField = (t: TFunction, field: SortFields): string => {
     break;
   }
   return trOrderBy;
+};
+
+export const mapMembersToPatientTeamStatus = (member : TeamMember): PatientTeam => {
+  return {
+    code : member.team.code,
+    invitation: member.invitation,
+    status: member.status,
+    teamId: member.team.id,
+    teamName: member.team.name,
+  };
+};
+
+export const mapTeamUserToPatient = (teamUser : TeamUser): Patient => {
+  return {
+    alerts: null,
+    firstName: teamUser.profile?.firstName,
+    fullName: teamUser.profile?.fullName ?? teamUser.username,
+    lastName: teamUser.profile?.lastName,
+    medicalData: null,
+    remoteMonitoring : undefined,
+    system : undefined,
+    teams: teamUser.members.map(member => mapMembersToPatientTeamStatus(member)),
+    userid : teamUser.userid,
+    username: teamUser.username,
+  };
 };

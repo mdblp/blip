@@ -27,15 +27,15 @@
  */
 
 import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
-import { TeamUser } from "../../../lib/team";
+import { Patient } from "../../../models/patient";
 
 export interface PatientListCommonProps {
-  patients: TeamUser[];
+  patients: Patient[];
   flagged: string[];
   filter?: FilterType | string;
-  onClickPatient: (user: TeamUser) => void;
+  onClickPatient: (user: Patient) => void;
   onFlagPatient: (userId: string) => Promise<void>;
-  onClickRemovePatient: (patient: TeamUser) => void;
+  onClickRemovePatient: (patient: Patient) => void;
 }
 
 export interface PatientListProps extends PatientListCommonProps {
@@ -45,12 +45,12 @@ export interface PatientListProps extends PatientListCommonProps {
 }
 
 export interface PatientElementProps {
-  patient: TeamUser;
+  patient: Patient;
   flagged: string[];
   filter?: FilterType | string;
-  onClickPatient: (user: TeamUser) => void;
+  onClickPatient: (user: Patient) => void;
   onFlagPatient: (userId: string) => Promise<void>;
-  onClickRemovePatient: (patient: TeamUser) => void;
+  onClickRemovePatient: (patient: Patient) => void;
 }
 
 export interface PatientElementCardProps extends PatientElementProps {

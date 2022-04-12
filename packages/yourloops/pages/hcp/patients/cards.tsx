@@ -41,10 +41,9 @@ import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import { SortFields } from "../../../models/generic";
 import { MedicalData } from "../../../models/device-data";
-import { getUserFirstLastName } from "../../../lib/utils";
 import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
-import { TeamUser, useTeam } from "../../../lib/team";
+import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientElementCardProps, PatientListCommonProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
@@ -52,6 +51,7 @@ import { getMedicalValues, translateSortField } from "./utils";
 import PendingPatientCard from "./pending-patient-card";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 import IconActionButton from "../../../components/buttons/icon-action";
+import { Patient } from "../../../models/patient";
 
 const patientListStyle = makeStyles(theme => ({
   patientPaperCard: {
@@ -101,7 +101,7 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
 
   const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
-  const fullName = t("user-name", getUserFirstLastName(patient));
+  const fullName = t("user-name", { firstName: patient.firstName, lastName: patient.lastName });
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -260,7 +260,7 @@ function Cards(props: PatientListCommonProps): JSX.Element {
 
   return (
     <React.Fragment>
-      {patients.map((teamUser: TeamUser, index): JSX.Element => (
+      {patients.map((teamUser: Patient, index): JSX.Element => (
         <React.Fragment key={index}>
           {teamHook.isOnlyPendingInvitation(teamUser) ?
             <PendingPatientCard patient={teamUser} onClickRemovePatient={() => onClickRemovePatient} />

@@ -42,7 +42,6 @@ import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
 import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { getUserFullName } from "../../../lib/utils";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { StyledTableCell } from "./table";
@@ -110,7 +109,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const userId = patient.userid;
   const email = patient.username;
   const isFlagged = flagged.includes(userId);
-  const patientFullName = getUserFullName(patient);
+  const patientFullName = patient.fullName;
+  const patientSystem = patient.system ?? trNA;
+  const patientRemoteMonitoring = patient.remoteMonitoring ?? t("no");
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -210,16 +211,19 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       ref={rowRef}
     >
       <StyledTableCell id={`${rowId}-icon`} className={classes.iconCell}>{firstRowIcon}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-patient-full-name`}>
+      <StyledTableCell id={`${rowId}-patient-full-name`} className={classes.typography}>
         <Tooltip title={tooltipText}>
           <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
             {patientFullName}
           </Typography>
         </Tooltip>
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-tir`}>{tir}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-tbr`}>{tbr}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-ldu`}>{lastUpload}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-remote-monitoring`}
+        className={classes.typography}>{patientRemoteMonitoring}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-tir`} className={classes.typography}>{tir}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-tbr`} className={classes.typography}>{tbr}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>{lastUpload}</StyledTableCell>
     </StyledTableRow>
   );
 }

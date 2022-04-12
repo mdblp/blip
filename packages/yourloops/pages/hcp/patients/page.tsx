@@ -47,12 +47,9 @@ import { useAlert } from "../../../components/utils/snackbar";
 import { useAuth } from "../../../lib/auth";
 import {
   errorTextFromException,
-  getUserFirstName,
-  getUserLastName,
   setPageTitle,
-  getUserFullName,
 } from "../../../lib/utils";
-import { Team, TeamContext, TeamUser, useTeam } from "../../../lib/team";
+import { Team, TeamContext, useTeam } from "../../../lib/team";
 import { AddPatientDialogResult, AddPatientDialogContentProps } from "../types";
 import PatientsSecondaryBar from "./secondary-bar";
 import { getMedicalValues } from "./utils";
@@ -61,6 +58,7 @@ import PatientListCards from "./cards";
 import AddPatientDialog from "./add-dialog";
 import RemovePatientDialog from "./remove-dialog";
 import TeamCodeDialog from "./team-code-dialog";
+import { Patient } from "../../../models/patient";
 
 const log = bows("PatientListPage");
 
@@ -75,36 +73,50 @@ const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true }
  * @param b A patient
  * @param orderBy Sort field
  */
-function doCompare(a: TeamUser, b: TeamUser, orderBy: PatientTableSortFields): number {
-  let aValue: string | number;
-  let bValue: string | number;
+function doCompare(a: Patient, b: Patient, orderBy: PatientTableSortFields): number {
+  let aValue: string | number | boolean | Date | null | undefined;
+  let bValue: string | number | boolean | Date | null | undefined;
 
   switch (orderBy) {
-  case PatientTableSortFields.patientFullName:
-    aValue = getUserFullName(a);
-    bValue = getUserFullName(b);
+  case PatientTableSortFields.alertTimeTarget:
+    aValue = a.alerts?.timeSpentAwayFromTargetRate;
+    bValue = b.alerts?.timeSpentAwayFromTargetRate;
     break;
-  case PatientTableSortFields.tir:
-    aValue = getMedicalValues(a.medicalData).tirNumber;
-    bValue = getMedicalValues(b.medicalData).tirNumber;
-    break;
-  case PatientTableSortFields.tbr:
-    aValue = getMedicalValues(a.medicalData).tbrNumber;
-    bValue = getMedicalValues(b.medicalData).tbrNumber;
+  case PatientTableSortFields.alertHypoglycemic:
+    aValue = a.alerts?.frequencyOfSevereHypoglycemiaActive;
+    bValue = b.alerts?.frequencyOfSevereHypoglycemiaActive;
     break;
   case PatientTableSortFields.ldu:
     aValue = getMedicalValues(a.medicalData).lastUploadEpoch;
     bValue = getMedicalValues(b.medicalData).lastUploadEpoch;
+    break;
+  case PatientTableSortFields.patientFullName:
+    aValue = a.fullName;
+    bValue = b.fullName;
+    break;
+  case PatientTableSortFields.remoteMonitoring:
+    aValue = a.remoteMonitoring;
+    bValue = b.remoteMonitoring;
+    break;
+  case PatientTableSortFields.system:
+    aValue = a.system;
+    bValue = b.system;
     break;
   }
 
   if (typeof aValue === "string" && typeof bValue === "string") {
     return aValue.localeCompare(bValue);
   }
+  if (typeof aValue === "boolean") {
+    return aValue ? -1 : 1;
+  }
+  if (aValue instanceof Date && bValue instanceof Date) {
+    return Number(aValue > bValue);
+  }
   if (typeof aValue !== "number" || !Number.isFinite(aValue)) {
     return -1;
   }
-  if (typeof bValue !== "number" ||!Number.isFinite(bValue)) {
+  if (typeof bValue !== "number" || !Number.isFinite(bValue)) {
     return 1;
   }
   return aValue - bValue;
@@ -117,9 +129,9 @@ export function updatePatientList(
   filterType: FilterType | string,
   orderBy: PatientTableSortFields,
   order: SortDirection
-): TeamUser[] {
+): Patient[] {
   const allPatients = teamHook.getPatients();
-  let patients: Readonly<TeamUser>[];
+  let patients: Readonly<Patient>[];
   if (!(filterType in FilterType)) {
     //filterType is a team id, retrieve all patients not pending in given team
     patients = allPatients.filter((patient) => !teamHook.isUserInvitationPending(patient, filterType));
@@ -132,7 +144,7 @@ export function updatePatientList(
   const searchByName = filter.length > 0;
   if (searchByName) {
     const searchText = filter.toLocaleLowerCase();
-    patients = patients.filter((patient: TeamUser): boolean => {
+    patients = patients.filter((patient: Patient): boolean => {
       switch (filterType) {
       case FilterType.all:
       case FilterType.pending:
@@ -149,24 +161,21 @@ export function updatePatientList(
         break;
       }
 
-      const firstName = getUserFirstName(patient);
+      const firstName = patient.firstName ?? "";
       if (firstName.toLocaleLowerCase().includes(searchText)) {
         return true;
       }
-      const lastName = getUserLastName(patient);
-      if (lastName.toLocaleLowerCase().includes(searchText)) {
-        return true;
-      }
-      return false;
+      const lastName = patient.lastName ?? "";
+      return lastName.toLocaleLowerCase().includes(searchText);
     });
   } else if (filterType === FilterType.flagged) {
-    patients = patients.filter((patient: TeamUser): boolean => flagged.includes(patient.userid));
+    patients = patients.filter((patient: Patient): boolean => flagged.includes(patient.userid));
   } else if (filterType !== FilterType.all && filterType !== FilterType.pending) {
-    patients = patients.filter((patient: TeamUser): boolean => teamHook.isInTeam(patient, filterType));
+    patients = patients.filter((patient: Patient): boolean => teamHook.isInTeam(patient, filterType));
   }
 
   // Sort the patients
-  patients.sort((a: TeamUser, b: TeamUser): number => {
+  patients.sort((a: Patient, b: Patient): number => {
     let c = doCompare(a, b, orderBy);
     if (c === 0) {
       c = doCompare(a, b, PatientTableSortFields.patientFullName);
@@ -197,7 +206,7 @@ function PatientListPage(): JSX.Element {
   const [filterType, setFilterType] = React.useState<FilterType | string>(FilterType.all);
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
-  const [patientToRemove, setPatientToRemove] = React.useState<TeamUser | null>(null);
+  const [patientToRemove, setPatientToRemove] = React.useState<Patient | null>(null);
   const flagged = authHook.getFlagPatients();
 
   const handleRefresh = async (force = false) => {
@@ -214,9 +223,9 @@ function PatientListPage(): JSX.Element {
     setLoading(false);
   };
 
-  const handleSelectPatient = (user: TeamUser): void => {
-    metrics.send("patient_selection", "select_patient", flagged.includes(user.userid) ? "flagged" : "not_flagged");
-    historyHook.push(`/patient/${user.userid}`);
+  const handleSelectPatient = (patient: Patient): void => {
+    metrics.send("patient_selection", "select_patient", flagged.includes(patient.userid) ? "flagged" : "not_flagged");
+    historyHook.push(`/patient/${patient.userid}`);
   };
 
   const handleFlagPatient = async (userId: string): Promise<void> => {
@@ -279,7 +288,7 @@ function PatientListPage(): JSX.Element {
     setTeamCodeToDisplay(null);
   };
 
-  const handleOnClickRemovePatient = (patient: TeamUser): void => setPatientToRemove(patient);
+  const handleOnClickRemovePatient = (patient: Patient): void => setPatientToRemove(patient);
 
   const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null);
 
@@ -319,7 +328,8 @@ function PatientListPage(): JSX.Element {
 
   if (loading) {
     return (
-      <CircularProgress disableShrink style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
+      <CircularProgress disableShrink
+        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
     );
   }
 
@@ -376,7 +386,8 @@ function PatientListPage(): JSX.Element {
         onFilterType={handleFilterType}
         onInvitePatient={handleInvitePatient}
       />
-      <Grid container direction="row" justifyContent="center" alignItems="center" style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
+      <Grid container direction="row" justifyContent="center" alignItems="center"
+        style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
         <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
       </Grid>
       {patientListElement}

@@ -31,8 +31,8 @@ import jwtDecode from "jwt-decode";
 
 import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
-import { Team, TeamMember, TeamUser } from "../../lib/team";
 import { UserInvitationStatus } from "../../models/generic";
+import { Patient, PatientTeam } from "../../models/patient";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -98,16 +98,16 @@ export function triggerMouseClick(domElement: HTMLElement): void {
   domElement.dispatchEvent(clickEvent);
 }
 
-export const createTeamUser = (id : string, members: TeamMember[]): TeamUser => {
+export const createPatient = (id : string, teams: PatientTeam[]): Patient => {
   return {
     userid: id,
-    members,
-  } as TeamUser;
+    teams,
+  } as Patient;
 };
 
-export const createTeamMember = (id : string, status: UserInvitationStatus): TeamMember => {
+export const createPatientTeam = (id : string, status: UserInvitationStatus): PatientTeam => {
   return {
-    team: { id } as Team,
+    teamId: id,
     status,
-  } as TeamMember;
+  } as PatientTeam;
 };

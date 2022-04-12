@@ -34,13 +34,13 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
-import { TeamUser } from "../../../lib/team";
 import IconActionButton from "../../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
+import { Patient } from "../../../models/patient";
 
 interface PendingPatientCardProps {
-  patient: TeamUser;
-  onClickRemovePatient: (patient: TeamUser) => void;
+  patient: Patient;
+  onClickRemovePatient: (patient: Patient) => void;
 }
 
 const style = makeStyles(theme => ({

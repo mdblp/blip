@@ -43,6 +43,8 @@ import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUs
 import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
+import { Patient, PatientTeam } from "../../models/patient";
+import { mapTeamUserToPatient } from "../../pages/hcp/patients/utils";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -232,7 +234,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return teams.filter((team: Team): boolean => team.type === TeamType.medical);
   };
 
-  const getPatients = (): TeamUser[] => {
+  const getPatientsAsTeamUsers = (): TeamUser[] => {
     const patients = new Map<string, TeamUser>();
     const nTeams = teams.length;
     for (let i = 0; i < nTeams; i++) {
@@ -247,6 +249,13 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       }
     }
     return Array.from(patients.values());
+  };
+
+  const getPatients = (): Patient[] => {
+    const teamUsers = getPatientsAsTeamUsers();
+    return teamUsers.map(teamUser => {
+      return mapTeamUserToPatient(teamUser);
+    });
   };
 
   const getMedicalMembers = (team: Team): TeamMember[] => {
@@ -274,27 +283,27 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return admins.length === 1 && admins[0].user.userid === userId;
   };
 
-  const isInvitationPending = (user: TeamUser): boolean => {
-    const tm = user.members.find((tm) => tm.status === UserInvitationStatus.pending);
+  const isInvitationPending = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team) => team.status === UserInvitationStatus.pending);
     return typeof tm === "object";
   };
-  const isOnlyPendingInvitation = (user: TeamUser): boolean => {
-    const tm = user.members.find((tm) => tm.status !== UserInvitationStatus.pending);
+  const isOnlyPendingInvitation = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team) => team.status !== UserInvitationStatus.pending);
     return typeof tm === "undefined";
   };
 
-  const isUserInvitationPending = (user: TeamUser, teamId: string): boolean => {
-    const tm = user.members.find((tm) => tm.team.id === teamId && tm.status === UserInvitationStatus.pending);
+  const isUserInvitationPending = (patient : Patient, teamId: string): boolean => {
+    const tm = patient.teams.find((team) => team.teamId === teamId && team.status === UserInvitationStatus.pending);
     return !!tm;
   };
 
-  const isInAtLeastATeam = (user: TeamUser): boolean => {
-    const tm = user.members.find((tm) => tm.status === UserInvitationStatus.accepted);
+  const isInAtLeastATeam = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team) => team.status === UserInvitationStatus.accepted);
     return !!tm;
   };
 
-  const isInTeam = (user: TeamUser, teamId: string): boolean => {
-    const tm = user.members.find((tm) => tm.team.id === teamId);
+  const isInTeam = (patient: Patient, teamId: string): boolean => {
+    const tm = patient.teams.find((team) => team.teamId === teamId);
     return typeof tm === "object";
   };
 
@@ -440,7 +449,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     }
   };
 
-  const removePatient = async (patient: TeamUser, member: TeamMember, teamId: string): Promise<void> => {
+  const removePatient = async (patient: Patient, member: PatientTeam, teamId: string): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
       if (_.isNil(member.invitation)) {
         throw new Error("Missing invitation!");
@@ -453,13 +462,15 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       await teamAPI.removePatient(session, teamId, patient.userid);
     }
 
-    const { team } = member;
+    const team = teams.find(team => team.id === teamId);
+    if (!team) {
+      throw Error(`Could not find team with id ${teamId}`);
+    }
     const memberIndex = team.members.findIndex(member => member.user.userid === patient.userid);
     team.members.splice(memberIndex, 1);
-    patient.members = patient.members.filter(member => member.team.id !== teamId);
     setTeams(teams);
 
-    if (patient.members.length < 1) {
+    if (team.members.length < 1) {
       const isFlagged = authHook.getFlagPatients().includes(patient.userid);
       if (isFlagged) {
         await authHook.flagPatient(patient.userid);
@@ -550,6 +561,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     getTeam,
     getUser,
     getMedicalTeams,
+    getPatientsAsTeamUsers,
     getPatients,
     getMedicalMembers,
     getNumMedicalMembers,

@@ -39,7 +39,7 @@ import { createAuthHookStubs } from "../auth/utils";
 import { INotification, NotificationType } from "../../../lib/notifications";
 import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
-import { createTeamMember, createTeamUser } from "../../common/utils";
+import { createPatient, createPatientTeam } from "../../common/utils";
 
 describe("Team hook", () => {
 
@@ -83,14 +83,14 @@ describe("Team hook", () => {
   describe("isUserInvitationPending", () => {
     it("should return true when team user has a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser = createTeamUser("id1", [createTeamMember(teamId, UserInvitationStatus.pending)]);
+      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.pending)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(true);
     });
 
     it("should return false when team user does not have a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser = createTeamUser("id1", [createTeamMember(teamId, UserInvitationStatus.accepted)]);
+      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.accepted)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(false);
     });
@@ -98,10 +98,10 @@ describe("Team hook", () => {
     describe("isInAtLeastATeam", () => {
       it("should return false when team user does not have an accepted status in any team", () => {
         const members = [
-          createTeamMember("team1Id", UserInvitationStatus.pending),
-          createTeamMember("team2Id", UserInvitationStatus.pending),
+          createPatientTeam("team1Id", UserInvitationStatus.pending),
+          createPatientTeam("team2Id", UserInvitationStatus.pending),
         ];
-        const teamUser = createTeamUser("id1", members);
+        const teamUser = createPatient("id1", members);
         const res = teamHook.isInAtLeastATeam(teamUser);
         expect(res).toBe(false);
       });
@@ -109,10 +109,10 @@ describe("Team hook", () => {
       it("should return true when team user does has an accepted status in a team", () => {
 
         const members = [
-          createTeamMember("team1Id", UserInvitationStatus.pending),
-          createTeamMember("team2Id", UserInvitationStatus.accepted),
+          createPatientTeam("team1Id", UserInvitationStatus.pending),
+          createPatientTeam("team2Id", UserInvitationStatus.accepted),
         ];
-        const teamUser = createTeamUser("id1", members);
+        const teamUser = createPatient("id1", members);
 
         const res = teamHook.isInAtLeastATeam(teamUser);
         expect(res).toBe(true);

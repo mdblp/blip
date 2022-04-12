@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Yourloops API client type definition for shoreline
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,77 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units } from "./generic";
-import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
-import { HcpProfession } from "./hcp-profession";
 import { IAlert } from "./alert";
+import { UserInvitationStatus } from "./generic";
+import { INotification } from "../lib/notifications";
 
-enum UserRoles {
-  hcp = "hcp",
-  caregiver = "caregiver",
-  patient = "patient",
-  /** Used only for signup-account-selector */
-  unset = "unset",
-  /** When the account is created but not yet confirm */
-  unverified = "unverified"
-}
-
-interface Consent {
-  acceptanceTimestamp?: string;
-  isAccepted?: boolean;
+interface PatientTeam {
+  code : string,
+  invitation?: INotification
+  status: UserInvitationStatus,
+  teamId : string,
+  teamName : string,
 }
 
 interface Patient {
-  birthday?: string;
-  diagnosisDate?: string;
-  diagnosisType?: string;
-}
-
-interface Profile {
-  fullName: string;
+  alerts?: IAlert | null;
   firstName?: string;
+  fullName: string;
   lastName?: string;
-  patient?: Patient;
-  termsOfUse?: Consent;
-  privacyPolicy?: Consent;
-  contactConsent?: Consent;
-  hcpProfession?: HcpProfession;
-}
-
-interface Settings {
-  units?: {
-    bg?: Units;
-  };
-  country?: string;
-  a1c?: {
-    date: string;
-    value: string;
-  };
-}
-
-interface Preferences {
-  displayLanguageCode?: LanguageCodes;
-  patientsStarred?: string[];
-}
-
-interface IUser {
-  emails?: string[];
-  readonly emailVerified?: boolean;
-  frProId?: string;
-  /** A boolean that indicates if the user has certified another account, like eCPS */
-  readonly idVerified?: boolean;
-  /** Main role of the user */
-  readonly role: UserRoles;
-  roles?: UserRoles[];
-  readonly userid: string;
-  readonly username: string;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  preferences?: Preferences | null;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
-  alerts?: IAlert | null;
+  remoteMonitoring? : Date;
+  system? : string;
+  teams : PatientTeam[];
+  readonly userid: string;
+  readonly username: string;
 }
 
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles };
+export { Patient, PatientTeam };

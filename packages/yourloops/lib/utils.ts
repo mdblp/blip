@@ -104,13 +104,6 @@ export function getUserLastName(user: IUser): string {
 }
 
 /**
- * Return the user full name
- */
-export function getUserFullName(user: IUser): string {
-  return user.profile?.fullName ?? "";
-}
-
-/**
  * @param user The user to have firstName / lastName
  * @returns The object for "user-name" translation string
  */
@@ -178,33 +171,6 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
 export function numberPrecision(value: number, precision = 1): number {
   const v = 10 ** precision;
   return Math.round(value * v) / v;
-}
-
-/**
- * This function is useful to sort arrays of objects.
- * You must specify which object key you want to sort the array
- * ex: myArray.sort(compareValues("name")
- */
-export function compareValues<T extends object>(key: keyof T, order = "asc") {
-  return (a: T, b: T) => {
-    if (!(key in a && key in b)) {
-      return 0;
-    }
-
-    const aKey = a[key];
-    const bKey = b[key];
-    const varA = (typeof aKey === "string") ? aKey.toLocaleUpperCase() : aKey;
-    const varB = (typeof bKey === "string") ? bKey.toLocaleUpperCase() : bKey;
-
-    let comparison = 0;
-    if (varA > varB) {
-      comparison = 1;
-    } else if (varA < varB) {
-      comparison = -1;
-    }
-
-    return (order === "desc") ? (comparison * -1) : comparison;
-  };
 }
 
 export function getFromSessionStorage(key: string): string {

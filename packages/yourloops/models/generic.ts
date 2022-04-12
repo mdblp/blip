@@ -40,13 +40,13 @@ enum SortFields {
   upload = "upload",
 }
 enum PatientTableSortFields {
-  patientFullName = "patientFullName",
-  /** Time in range */
-  tir = "tir",
-  /** Time below range */
-  tbr = "tbr",
   /** Last data update */
   ldu = "ldu",
+  alertTimeTarget = "alertTimeTarget",
+  alertHypoglycemic = "alertHypoglycemic",
+  patientFullName = "patientFullName",
+  remoteMonitoring = "remoteMonitoring",
+  system = "system",
 }
 enum UserInvitationStatus {
   pending = "pending",

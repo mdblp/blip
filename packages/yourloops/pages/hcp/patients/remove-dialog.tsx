@@ -44,15 +44,15 @@ import Select from "@material-ui/core/Select";
 import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 import ProgressIconButtonWrapper from "../../../components/buttons/progress-icon-button-wrapper";
 
-import { Team, TeamMember, TeamUser, useTeam } from "../../../lib/team";
-import { compareValues, getUserFirstLastName } from "../../../lib/utils";
+import { useTeam } from "../../../lib/team";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
 import { UserInvitationStatus } from "../../../models/generic";
+import { Patient, PatientTeam } from "../../../models/patient";
 
 interface RemoveDialogProps {
   isOpen: boolean;
-  patient: TeamUser | null;
+  patient: Patient | null;
   onClose: () => void;
 }
 
@@ -67,22 +67,22 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
   const [selectedTeamId, setSelectedTeamId] = useState<string>("");
   const [processing, setProcessing] = useState<boolean>(false);
-  const [sortedTeams, setSortedTeams] = useState<Team[]>([]);
+  const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([]);
 
-  const userName = patient ? getUserFirstLastName(patient) : { firstName: "", lastName: "" };
+  const userName = patient ? { firstName: patient.firstName, lastName: patient.lastName } : { firstName: "", lastName: "" };
   const patientName = t("user-name", userName);
-  const teamMembers = patient?.members;
-  const member = teamMembers?.find(member => member.team.id === selectedTeamId) as TeamMember;
+  const teamMembers = patient?.teams;
+  const patientTeamStatus = teamMembers?.find(team => team.teamId === selectedTeamId) as PatientTeam;
 
   const getSuccessAlertMessage = () => {
-    if (member.status === UserInvitationStatus.pending) {
+    if (patientTeamStatus.status === UserInvitationStatus.pending) {
       return alert.success(t("alert-remove-patient-pending-invitation-success"));
     }
-    const team = sortedTeams.find(team => team.id === selectedTeamId) as Team;
+    const team = sortedTeams.find(team => team.teamId === selectedTeamId) as PatientTeam;
     if (team.code === "private") {
       return alert.success(t("alert-remove-private-practice-success", { patientName }));
     }
-    return alert.success(t("alert-remove-patient-from-team-success", { teamName: team.name, patientName }));
+    return alert.success(t("alert-remove-patient-from-team-success", { teamName: team.teamName, patientName }));
   };
 
 
@@ -94,7 +94,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true);
-      await teamHook.removePatient(patient as TeamUser, member, selectedTeamId);
+      await teamHook.removePatient(patient as Patient, patientTeamStatus, selectedTeamId);
       getSuccessAlertMessage();
       handleOnClose();
     } catch (err) {
@@ -104,19 +104,28 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     }
   };
 
+  function compare( a: PatientTeam, b: PatientTeam ) {
+    if ( a.teamName < b.teamName ) {
+      return -1;
+    }
+    if ( a.teamName > b.teamName ) {
+      return 1;
+    }
+    return 0;
+  }
   useEffect(() => {
     if (teamMembers) {
       if (teamMembers?.length === 1) {
-        setSelectedTeamId(teamMembers[0].team.id);
-        setSortedTeams([teamMembers[0].team]);
+        setSelectedTeamId(teamMembers[0].teamId);
+        setSortedTeams([teamMembers[0]]);
         return;
       }
 
       // Sorting teams in alphabetical order if there are several
       if (teamMembers?.length > 1) {
-        const teams = teamMembers?.map(teamMember => teamMember.team);
+        const teams = teamMembers;
 
-        setSortedTeams(teams.sort(compareValues("name")));
+        setSortedTeams(teams.sort(compare));
 
         teams.forEach((team, index) => {
           if (team.code === "private") {
@@ -127,6 +136,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       }
     }
   }, [teamMembers]);
+
 
   return (
     <Dialog
@@ -158,7 +168,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
-              <MenuItem value={team.id} key={index}>
+              <MenuItem value={team.teamId} key={index}>
                 {team.code === "private" ?
                   <Box display="flex" alignItems="center">
                     <React.Fragment>
@@ -168,7 +178,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
                       {t("private-practice")}
                     </React.Fragment>
                   </Box>
-                  : team.name
+                  : team.teamName
                 }
               </MenuItem>
             ))

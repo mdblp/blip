@@ -72,7 +72,7 @@ class BlipApi {
     this.log.debug("getPatientDataRange", { userId: patient.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiGetPatientDataRange(session, patient);
+      return apiGetPatientDataRange(session, patient.userid);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

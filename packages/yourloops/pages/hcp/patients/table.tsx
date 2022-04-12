@@ -43,9 +43,9 @@ import { TablePagination } from "@material-ui/core";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import { PatientTableSortFields, SortDirection } from "../../../models/generic";
-import { TeamUser } from "../../../lib/team";
 import { PatientListProps } from "./models";
 import PatientRow from "./row";
+import { Patient } from "../../../models/patient";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -76,11 +76,14 @@ const patientListStyle = makeStyles(
         padding: 0,
       },
       tableCellHeader: {
-        height: theme.spacing(8),
+        height: "62px",
         fontWeight: 600,
         fontSize: "14px",
         padding: 0,
         paddingLeft: "11px",
+      },
+      alertTimeTargetHeader: {
+        maxWidth: "210px",
       },
       tableHeaderFlag: {
         width: "56px",
@@ -95,10 +98,6 @@ export const StyledTableCell = styled(withTheme(TableCell))((props) => ({
   "&": {
     border: "unset",
     borderRight: `0.5px solid ${(props.theme as Theme).palette.divider}`,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "244px",
   },
 }));
 
@@ -121,7 +120,7 @@ function PatientListTable(props: PatientListProps): JSX.Element {
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);
 
   const patientsRows = patientsToDisplay.map(
-    (patient: TeamUser): JSX.Element => (
+    (patient: Patient): JSX.Element => (
       <PatientRow
         key={patient.userid}
         patient={patient}
@@ -173,22 +172,40 @@ function PatientListTable(props: PatientListProps): JSX.Element {
                   {t("patient")}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell id="patients-list-header-tir" className={classes.tableCellHeader}>
+              <StyledTableCell id="patients-list-header-system" className={classes.tableCellHeader}>
                 <TableSortLabel
-                  id={`patients-list-header-tir-label${orderBy === PatientTableSortFields.tir ? `-${order}` : ""}`}
-                  active={orderBy === PatientTableSortFields.tir}
+                  id={`patients-list-header-system-label${orderBy === PatientTableSortFields.system ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.system}
                   direction={order}
-                  onClick={createSortHandler(PatientTableSortFields.tir)}>
-                  {t("time-in-range-percentage")}
+                  onClick={createSortHandler(PatientTableSortFields.system)}>
+                  {t("system")}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell id="patients-list-header-tbr" className={classes.tableCellHeader}>
+              <StyledTableCell id="patients-list-header-remote-monitoring" className={classes.tableCellHeader}>
                 <TableSortLabel
-                  id={`patients-list-header-tbr-label${orderBy === PatientTableSortFields.tbr ? `-${order}` : ""}`}
-                  active={orderBy === PatientTableSortFields.tbr}
+                  id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.remoteMonitoring}
                   direction={order}
-                  onClick={createSortHandler(PatientTableSortFields.tbr)}>
-                  {t("time-below-range-percentage")}
+                  onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
+                  {t("remote-monitoring")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-alert-time-target" className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader}`}>
+                <TableSortLabel
+                  id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.alertTimeTarget}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.alertTimeTarget)}>
+                  {t("alert-time-target")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-alert-hypoglycemic" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-tir-alert-hypoglycemic${orderBy === PatientTableSortFields.alertHypoglycemic ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.alertHypoglycemic}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.alertHypoglycemic)}>
+                  {t("alert-hypoglycemic")}
                 </TableSortLabel>
               </StyledTableCell>
               <StyledTableCell id="patients-list-header-upload" className={classes.tableCellHeader}>
