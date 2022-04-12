@@ -104,13 +104,6 @@ export function getUserLastName(user: IUser): string {
 }
 
 /**
- * Return the user full name
- */
-export function getUserFullName(user: IUser): string {
-  return user.profile?.fullName ?? "";
-}
-
-/**
  * @param user The user to have firstName / lastName
  * @returns The object for "user-name" translation string
  */
