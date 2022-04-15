@@ -130,7 +130,7 @@ export interface TeamContext {
    * @param filter a patient name
    * @param flagged the list of flagged patients
    */
-  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Readonly<Patient>[];
+  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Patient[];
   /**
    * Return the medical members of a team.
    */
@@ -180,6 +180,12 @@ export interface TeamContext {
    * @param teamId A team id
    */
   isInTeam(patient: Patient, teamId: string): boolean;
+  /**
+   * Return the list of patient updated with the flag attribute.
+   * @param patients The patients to update
+   * @param flaggedPatients The list of patients that the current user has flagged
+   */
+  computeFlaggedPatients(patients : Patient[], flaggedPatients: string[]): Patient[];
   /**
    * As an HCP invite a patient to a team.
    * @param team The team to invite the patient

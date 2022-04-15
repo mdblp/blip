@@ -40,7 +40,6 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { styled, withTheme } from "@material-ui/styles";
 import { TablePagination } from "@material-ui/core";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import { PatientTableSortFields, SortDirection } from "../../../models/generic";
 import { PatientTableProps } from "./models";
@@ -50,6 +49,10 @@ import { Patient } from "../../../models/patient";
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
+      flagSort: {
+        width: "100%",
+        justifyContent: "center",
+      },
       pagination: {
         "& .MuiTablePagination-spacer": {
           display: "none",
@@ -62,7 +65,6 @@ const patientListStyle = makeStyles(
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        color: "#818181",
         width: theme.spacing(7),
       },
       table: {
@@ -76,9 +78,10 @@ const patientListStyle = makeStyles(
         padding: 0,
       },
       tableCellHeader: {
-        height: "62px",
+        backgroundColor: "#FFF",
+        fontSize: "15px",
         fontWeight: 600,
-        fontSize: "14px",
+        height: "62px",
         padding: 0,
         paddingLeft: "11px",
       },
@@ -157,13 +160,18 @@ function PatientTable(props: PatientTableProps): JSX.Element {
           <TableHead>
             <TableRow className={classes.tableRowHeader}>
               <StyledTableCell id="patients-list-header-icon" className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}>
-                <div className={classes.tableHeaderFlagIcon}>
-                  <FlagOutlineIcon id={"table-cell-flag-icon"} />
-                </div>
-              </StyledTableCell>
-              <StyledTableCell id="patients-list-header-lastname" className={classes.tableCellHeader}>
                 <TableSortLabel
-                  id={`patients-list-header-lastname-label${orderBy === PatientTableSortFields.patientFullName ? `-${order}` : ""}`}
+                  id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.flag}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.flag)}
+                  className={classes.flagSort}
+                >
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-full-name" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-full-name-label${orderBy === PatientTableSortFields.patientFullName ? `-${order}` : ""}`}
                   active={orderBy === PatientTableSortFields.patientFullName}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.patientFullName)}>

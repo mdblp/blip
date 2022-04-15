@@ -40,10 +40,11 @@ enum SortFields {
   upload = "upload",
 }
 enum PatientTableSortFields {
+  alertHypoglycemic = "alertHypoglycemic",
+  alertTimeTarget = "alertTimeTarget",
+  flag = "flag",
   /** Last data update */
   ldu = "ldu",
-  alertTimeTarget = "alertTimeTarget",
-  alertHypoglycemic = "alertHypoglycemic",
   patientFullName = "patientFullName",
   remoteMonitoring = "remoteMonitoring",
   system = "system",

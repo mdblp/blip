@@ -52,7 +52,7 @@ const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
       flag: {
-        color: "#000000",
+        color: theme.palette.primary.main,
       },
       flagIconCell: {
         width: "56px",
@@ -67,7 +67,7 @@ const patientListStyle = makeStyles(
         justifyContent: "center",
       },
       iconCell: {
-        width: theme.spacing(7),
+        width: "56px",
         padding: 0,
       },
       tableRow: {

@@ -77,13 +77,11 @@ function PatientList(props: PatientListProps): JSX.Element {
     orderBy: PatientTableSortFields,
     order: SortDirection
   ) => {
-    const filteredPatients = teamHook.filterPatients(filterType, filter, flagged);
+    let filteredPatients = teamHook.filterPatients(filterType, filter, flagged);
+    filteredPatients = teamHook.computeFlaggedPatients(filteredPatients, flagged);
     // Sort the patients
     filteredPatients.sort((a: Patient, b: Patient): number => {
-      let c = comparePatients(a, b, orderBy);
-      if (c === 0) {
-        c = comparePatients(a, b, PatientTableSortFields.patientFullName);
-      }
+      const c = comparePatients(a, b, orderBy);
       return order === SortDirection.asc ? c : -c;
     });
     const searchByName = filter.length > 0;

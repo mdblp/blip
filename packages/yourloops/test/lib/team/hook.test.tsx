@@ -107,6 +107,16 @@ describe("Team hook", () => {
     });
   });
 
+  describe("computeFlaggedPatients", () => {
+    it("should return patients with the correct flagged attribute", () => {
+      const flaggedPatientIds = [patients[0].userid];
+      const patientsUpdated = teamHook.computeFlaggedPatients(patients, flaggedPatientIds);
+      patientsUpdated.forEach(patient => {
+        expect(patient.flagged).toBe(flaggedPatientIds.includes(patient.userid));
+      });
+    });
+  });
+
   describe("isUserInvitationPending", () => {
     it("should return true when team user has a pending status in given team", () => {
       const teamId = "fakeTeamId";

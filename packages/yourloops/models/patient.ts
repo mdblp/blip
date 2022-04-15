@@ -26,7 +26,7 @@
  */
 
 import { MedicalData } from "./device-data";
-import { IAlert } from "./alert";
+import { Alert } from "./alert";
 import { UserInvitationStatus } from "./generic";
 import { INotification } from "../lib/notifications";
 
@@ -39,8 +39,9 @@ interface PatientTeam {
 }
 
 interface Patient {
-  alerts?: IAlert | null;
+  alerts?: Alert | null;
   firstName?: string;
+  flagged?: boolean,
   fullName: string;
   lastName?: string;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */

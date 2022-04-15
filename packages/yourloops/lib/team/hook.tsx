@@ -284,32 +284,32 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find(team => team.status === UserInvitationStatus.pending);
+    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending);
     return typeof tm === "object";
   };
   const isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find(team => team.status !== UserInvitationStatus.pending);
+    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
     return typeof tm === "undefined";
   };
 
   const isUserInvitationPending = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find(team => team.teamId === teamId && team.status === UserInvitationStatus.pending);
+    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId && team.status === UserInvitationStatus.pending);
     return !!tm;
   };
 
   const isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find(team => team.status === UserInvitationStatus.accepted);
+    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted);
     return !!tm;
   };
 
   const isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find(team => team.teamId === teamId);
+    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId);
     return typeof tm === "object";
   };
 
-  const filterPatients = (filterType: FilterType | string, filter: string, flagged: string[]): Patient[] => {
+  const filterPatients = (filterType: FilterType | string, filter: string, flaggedPatients: string[]): Patient[] => {
     const allPatients = getPatients();
-    let patients: Readonly<Patient>[];
+    let patients: Patient[];
     if (!(filterType in FilterType)) {
       //filterType is a team id, retrieve all patients not pending in given team
       patients = allPatients.filter((patient) => !isUserInvitationPending(patient, filterType));
@@ -328,7 +328,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
         case FilterType.pending:
           break;
         case FilterType.flagged:
-          if (!flagged.includes(patient.userid)) {
+          if (!flaggedPatients.includes(patient.userid)) {
             return false;
           }
           break;
@@ -347,11 +347,17 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
         return lastName.toLocaleLowerCase().includes(searchText);
       });
     } else if (filterType === FilterType.flagged) {
-      patients = patients.filter(patient => flagged.includes(patient.userid));
+      patients = patients.filter(patient => flaggedPatients.includes(patient.userid));
     } else if (filterType !== FilterType.all && filterType !== FilterType.pending) {
       patients = patients.filter(patient => isInTeam(patient, filterType));
     }
     return patients;
+  };
+
+  const computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
+    return patients.map(patient => {
+      return { ...patient, flagged: flaggedPatients.includes(patient.userid) };
+    });
   };
 
   const invitePatient = async (team: Team, username: string): Promise<void> => {
@@ -621,6 +627,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     isUserInvitationPending,
     isInAtLeastATeam,
     isInTeam,
+    computeFlaggedPatients,
     invitePatient,
     inviteMember,
     createTeam,

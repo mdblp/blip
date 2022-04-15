@@ -25,16 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface IAlerts {
+export interface Alerts {
   userID: string;
-  alert: IAlert;
+  alert: Alert;
 }
 
-export interface IAlert {
-  timeSpentAwayFromTargetRate: number; //28%
-  timeSpentAwayFromTargetActive: boolean; // true => alarme en cours
-  frequencyOfSevereHypoglycemiaRate : number;
-  frequencyOfSevereHypoglycemiaActive :boolean;// true => alarme en cours
-  nonDataTransmissitionRate: number; //  (Téléchargement des données)
-  nonDataTransmissitionActive : boolean; // true => alarme en cours (Alerte Données non-transférées) -> Ne pas mettre la colonne pour le moment
+export interface Alert {
+  timeSpentAwayFromTargetRate: number;
+  timeSpentAwayFromTargetActive: boolean;
+  frequencyOfSevereHypoglycemiaRate: number;
+  frequencyOfSevereHypoglycemiaActive: boolean;
+  nonDataTransmissitionRate: number;
+  nonDataTransmissitionActive: boolean;
 }

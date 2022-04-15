@@ -104,6 +104,40 @@ export const translateSortField = (t: TFunction, field: SortFields): string => {
   return trOrderBy;
 };
 
+export const compareNumbers = (a: number, b: number): number => {
+  return a - b;
+};
+
+export const compareString = (a: string, b: string): number => {
+  return a.localeCompare(b);
+};
+
+export const compareDate = (a: Date, b: Date): number => {
+  return a.getTime() - b.getTime();
+};
+
+function compareValues(
+  a: string | number | Date | boolean | null | undefined,
+  b: string | number | boolean | Date | null | undefined
+) {
+  if (typeof a === "string" && typeof b === "string") {
+    return compareString(a, b);
+  }
+  if (a instanceof Date && b instanceof Date) {
+    return compareDate(a, b);
+  }
+  if (typeof a === "number" && typeof b === "number") {
+    return compareNumbers(a, b);
+  }
+  if (!a && b) {
+    return 1;
+  }
+  if (!b && a) {
+    return -1;
+  }
+  return 0;
+}
+
 /**
  * Compare two patient for sorting the patient table
  * @param a A patient
@@ -111,8 +145,8 @@ export const translateSortField = (t: TFunction, field: SortFields): string => {
  * @param orderBy Sort field
  */
 export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSortFields): number => {
-  let aValue: string | number | boolean | Date | null | undefined;
-  let bValue: string | number | boolean | Date | null | undefined;
+  let aValue: string | number | Date | boolean | null | undefined;
+  let bValue: string | number | Date | boolean | null | undefined;
 
   switch (orderBy) {
   case PatientTableSortFields.alertTimeTarget:
@@ -120,8 +154,12 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
     bValue = b.alerts?.timeSpentAwayFromTargetRate;
     break;
   case PatientTableSortFields.alertHypoglycemic:
-    aValue = a.alerts?.frequencyOfSevereHypoglycemiaActive;
-    bValue = b.alerts?.frequencyOfSevereHypoglycemiaActive;
+    aValue = a.alerts?.frequencyOfSevereHypoglycemiaRate;
+    bValue = b.alerts?.frequencyOfSevereHypoglycemiaRate;
+    break;
+  case PatientTableSortFields.flag:
+    aValue = a.flagged;
+    bValue = b.flagged;
     break;
   case PatientTableSortFields.ldu:
     aValue = getMedicalValues(a.medicalData).lastUploadEpoch;
@@ -140,28 +178,12 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
     bValue = b.system;
     break;
   }
-
-  if (typeof aValue === "string" && typeof bValue === "string") {
-    return aValue.localeCompare(bValue);
-  }
-  if (typeof aValue === "boolean") {
-    return aValue ? -1 : 1;
-  }
-  if (aValue instanceof Date && bValue instanceof Date) {
-    return Number(aValue > bValue);
-  }
-  if (typeof aValue !== "number" || !Number.isFinite(aValue)) {
-    return -1;
-  }
-  if (typeof bValue !== "number" || !Number.isFinite(bValue)) {
-    return 1;
-  }
-  return aValue - bValue;
+  return compareValues(aValue, bValue);
 };
 
-export const mapMembersToPatientTeamStatus = (member : TeamMember): PatientTeam => {
+export const mapMembersToPatientTeamStatus = (member: TeamMember): PatientTeam => {
   return {
-    code : member.team.code,
+    code: member.team.code,
     invitation: member.invitation,
     status: member.status,
     teamId: member.team.id,
@@ -169,17 +191,18 @@ export const mapMembersToPatientTeamStatus = (member : TeamMember): PatientTeam 
   };
 };
 
-export const mapTeamUserToPatient = (teamUser : TeamUser): Patient => {
+export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
   return {
     alerts: null,
     firstName: teamUser.profile?.firstName,
+    flagged: undefined,
     fullName: teamUser.profile?.fullName ?? teamUser.username,
     lastName: teamUser.profile?.lastName,
     medicalData: null,
-    remoteMonitoring : undefined,
-    system : undefined,
+    remoteMonitoring: undefined,
+    system: undefined,
     teams: teamUser.members.map(member => mapMembersToPatientTeamStatus(member)),
-    userid : teamUser.userid,
+    userid: teamUser.userid,
     username: teamUser.username,
   };
 };

@@ -33,6 +33,9 @@ import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../models/patient";
+import { Alert } from "../../models/alert";
+import { Team, TeamMember, TeamUser } from "../../lib/team";
+import { Profile } from "../../models/shoreline";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -98,16 +101,50 @@ export function triggerMouseClick(domElement: HTMLElement): void {
   domElement.dispatchEvent(clickEvent);
 }
 
-export const createPatient = (id : string, teams: PatientTeam[]): Patient => {
+export const createPatient = (
+  id: string,
+  teams: PatientTeam[],
+  alerts: Alert = null,
+  fullName = "fakePatientFullName",
+  remoteMonitoring: Date = null,
+  system: string = null,
+  flagged: boolean = null
+): Patient => {
   return {
-    userid: id,
+    alerts,
+    fullName,
+    remoteMonitoring,
+    system,
     teams,
+    userid: id,
+    flagged,
   } as Patient;
 };
 
-export const createPatientTeam = (id : string, status: UserInvitationStatus): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
   return {
     teamId: id,
     status,
   } as PatientTeam;
+};
+export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alert => {
+  return {
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+  } as Alert;
+};
+
+export const createTeamUser = (id: string, members: TeamMember[], profile: Profile = null): TeamUser => {
+  return {
+    userid: id,
+    members,
+    profile,
+  } as TeamUser;
+};
+
+export const createTeamMember = (id: string, name: string, teamCode: string, status: UserInvitationStatus): TeamMember => {
+  return {
+    team: { id, name, code: teamCode } as Team,
+    status,
+  } as TeamMember;
 };
