@@ -1,14 +1,3 @@
-body {
-  height: 100vh;
-  margin: 0;
-  display: "flex";
-  flex-direction: "column";
-}
-
-html {
-  height: 100%;
-}
-
 :global(#app) {
   min-height: 100vh;
   display: flex;

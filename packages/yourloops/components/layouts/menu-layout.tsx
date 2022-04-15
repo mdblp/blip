@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Health care pro nav bar
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,36 +26,27 @@
  */
 
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import Menu, { MenuProps } from "@material-ui/core/Menu";
 
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
+interface MenuLayoutProps extends MenuProps {
+  open: boolean;
+  anchorEl: HTMLElement | null;
+  onClose: () => void;
+}
 
-import HeaderBar from "../../components/header-bars/primary";
-
-const tabStyle: React.CSSProperties = { color: "black" };
-
-function HcpNavBar(): JSX.Element {
-  const historyHook = useHistory();
-  const { t } = useTranslation("yourloops");
-  const location = historyHook.location.pathname;
-
-  let currentTab: number | boolean = false;
-  if (location.startsWith("/patients")) {
-    currentTab = 0;
-  } else if (location.startsWith("/teams")) {
-    currentTab = 1;
-  }
-
+function MenuLayout(props: MenuLayoutProps): JSX.Element {
   return (
-    <HeaderBar>
-      <Tabs id="hcp-tabs" value={currentTab} indicatorColor="primary" textColor="primary" centered>
-        <Tab id="hcp-tab-patients" style={tabStyle} label={t("hcp-tab-patients")} component={Link} to="/patients" />
-        <Tab id="hcp-tab-teams" style={tabStyle} label={t("hcp-tab-teams")} component={Link} to="/teams" />
-      </Tabs>
-    </HeaderBar>
+    <Menu
+      open={props.open}
+      anchorEl={props.anchorEl}
+      getContentAnchorEl={null}
+      anchorOrigin={props.anchorOrigin || { vertical: "bottom", horizontal: "right" }}
+      transformOrigin={props.transformOrigin || { vertical: -10, horizontal: "right" }}
+      onClose={props.onClose}
+    >
+      {props.children}
+    </Menu>
   );
 }
 
-export default HcpNavBar;
+export default MenuLayout;
