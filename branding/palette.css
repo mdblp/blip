@@ -1,3 +1,8 @@
+:root {
+  --text-base-color: #444444;
+  --footer-background-color: #F5F5F5;
+}
+
 :root .diabeloop-blue{
   --color-primary-main: #039be5;
   --color-primary-light: #4dabf5;

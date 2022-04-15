@@ -66,11 +66,11 @@ class User implements IUser {
     if (Array.isArray(u.emails)) {
       this.emails = Array.from(u.emails);
     } else {
-      this.emails = [ this.username ];
+      this.emails = [this.username];
     }
     this.profile = u.profile ? _.cloneDeep(u.profile) : null;
     this.settings = u.settings ? _.cloneDeep(u.settings) : null;
-    this.preferences = u.preferences ? _.cloneDeep(u.preferences): null;
+    this.preferences = u.preferences ? _.cloneDeep(u.preferences) : null;
     this.medicalData = u.medicalData ? _.cloneDeep(u.medicalData) : null;
 
     if (u instanceof User) {
@@ -94,6 +94,10 @@ class User implements IUser {
    */
   get lastName(): string {
     return this.profile?.lastName ?? this.profile?.fullName ?? this.username;
+  }
+
+  get fullName(): string {
+    return this.profile?.fullName || this.username;
   }
 
   /**

@@ -73,6 +73,19 @@ describe("User", () => {
     expect(user.lastName).toBe("Example");
   });
 
+  it("getFullName", () => {
+    const user = new User({
+      userid: "abcd",
+      username: "Barack.Afritt@test.com",
+      role: UserRoles.unverified,
+    });
+    expect(user.fullName).toBe("Barack.Afritt@test.com");
+    user.profile = {
+      fullName: "Barack Afritt",
+    };
+    expect(user.fullName).toBe("Barack Afritt");
+  });
+
   it("shouldAcceptConsent", () => {
     const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
     expect(user.shouldAcceptConsent()).toBe(true);
