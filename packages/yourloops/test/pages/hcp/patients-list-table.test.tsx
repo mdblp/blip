@@ -30,18 +30,23 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act, Simulate } from "react-dom/test-utils";
 
-import { SortDirection, SortFields } from "../../../models/generic";
-import { useTeam, TeamContextProvider } from "../../../lib/team";
+import { PatientTableSortFields, SortDirection, UserInvitationStatus } from "../../../models/generic";
+import { TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import "../../intersectionObserverMock";
 
 import PatientListTable from "../../../pages/hcp/patients/table";
 import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { TablePagination, ThemeProvider } from "@material-ui/core";
+import { getMainTheme } from "../../../components/theme";
+import renderer from "react-test-renderer";
+import PatientRow from "../../../pages/hcp/patients/row";
+import { createTeamMember, createTeamUser } from "../../common/utils";
 
 describe("Patient list table", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -49,6 +54,20 @@ describe("Patient list table", () => {
   const clickPatientStub = jest.fn();
   const clickFlagPatientStub = jest.fn();
   const clickRemovePatientStub = jest.fn();
+
+  const team1Id = "team1Id";
+  const patient1 = createTeamUser("id1", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient2 = createTeamUser("id2", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient3 = createTeamUser("id3", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient4 = createTeamUser("id4", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient5 = createTeamUser("id5", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient6 = createTeamUser("id6", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient7 = createTeamUser("id7", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient8 = createTeamUser("id8", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient9 = createTeamUser("id9", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient10 = createTeamUser("id10", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const patient11 = createTeamUser("id11", [createTeamMember(team1Id, UserInvitationStatus.accepted)]);
+  const allPatients = [patient1, patient2, patient3, patient4, patient5, patient6, patient7, patient8, patient9, patient10, patient11];
 
   let container: HTMLElement | null = null;
 
@@ -73,19 +92,20 @@ describe("Patient list table", () => {
     const patients = team.getPatients();
 
     return (
-      <PatientListTable
-        patients={patients}
-        flagged={[]}
-        order={SortDirection.asc}
-        orderBy={SortFields.lastname}
-        onClickPatient={clickPatientStub}
-        onFlagPatient={clickFlagPatientStub}
-        onSortList={jest.fn()}
-        onClickRemovePatient={clickRemovePatientStub}
-      />
+      <ThemeProvider theme={getMainTheme()}>
+        <PatientListTable
+          patients={patients}
+          flagged={[]}
+          order={SortDirection.asc}
+          orderBy={PatientTableSortFields.patientFullName}
+          onClickPatient={clickPatientStub}
+          onFlagPatient={clickFlagPatientStub}
+          onSortList={jest.fn()}
+          onClickRemovePatient={clickRemovePatientStub}
+        />
+      </ThemeProvider>
     );
   };
-
 
   async function mountComponent(): Promise<void> {
     await act(() => {
@@ -100,6 +120,27 @@ describe("Patient list table", () => {
           </AuthContextProvider>, container, resolve);
       });
     });
+  }
+
+  function renderPatientList(teamUsers: TeamUser[]) {
+    return renderer.create(
+      <ThemeProvider theme={getMainTheme()}>
+        <AuthContextProvider value={authHookHcp}>
+          <TeamContextProvider teamAPI={teamAPI}>
+            <PatientListTable
+              patients={teamUsers}
+              flagged={[]}
+              order={SortDirection.asc}
+              orderBy={PatientTableSortFields.patientFullName}
+              onClickPatient={clickPatientStub}
+              onFlagPatient={clickFlagPatientStub}
+              onSortList={jest.fn()}
+              onClickRemovePatient={clickRemovePatientStub}
+            />
+          </TeamContextProvider>
+        </AuthContextProvider>
+      </ThemeProvider>
+    );
   }
 
   it("should be able to render", async () => {
@@ -129,17 +170,18 @@ describe("Patient list table", () => {
     expect(clickFlagPatientStub).toHaveBeenCalledTimes(1);
   });
 
-  /*
-  * TODO Can't add this feature for the moment
-  *  we need to wait until yourloops will be certified to level 2 of medical device
-  *  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
-   */
-  // it("should call onRemovePatient method when clicking on a remove icon", async () => {
-  //   await mountComponent();
-  //   const firstRow = document.querySelector(".patients-list-row");
-  //   const removeButton = firstRow.querySelector(".remove-patient-hcp-view-button");
-  //   Simulate.click(removeButton);
-  //   expect(clickRemovePatientStub.calledOnce).toBeTruthy();
-  // });
+  it("should display only 10 patients when number pagination is by 10", () => {
+    const component = renderPatientList(allPatients);
+    const patientRows = component.root.findAllByType(PatientRow);
+    expect(patientRows).toHaveLength(10);
+  });
+
+  it("should display all patients when number pagination is by 100", () => {
+    const component = renderPatientList(allPatients);
+    const tablePagination = component.root.findByType(TablePagination);
+    tablePagination.props.onRowsPerPageChange({ target: { value: "100" } });
+    const patientRows = component.root.findAllByType(PatientRow);
+    expect(patientRows).toHaveLength(allPatients.length);
+  });
 });
 

@@ -46,7 +46,7 @@ import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
 import { TeamUser, useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { PatientElementCardProps, PatientListProps } from "./models";
+import { PatientElementCardProps, PatientListCommonProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
@@ -87,8 +87,9 @@ const patientListStyle = makeStyles(theme => ({
 const removeButtonEnabled = false;
 
 function PatientCard(props: PatientElementCardProps): JSX.Element {
-  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient, trNA, trTIR, trTBR, trUpload } = props;
+  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient, trTIR, trTBR, trUpload } = props;
   const { t } = useTranslation("yourloops");
+  const trNA = t("N/A");
   const classes = patientListStyle();
   const authHook = useAuth();
   const teamHook = useTeam();
@@ -249,12 +250,10 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   );
 }
 
-function Cards(props: PatientListProps): JSX.Element {
+function Cards(props: PatientListCommonProps): JSX.Element {
   const { patients, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
-
-  const trNA = t("N/A");
   const trTIR = translateSortField(t, SortFields.tir);
   const trTBR = translateSortField(t, SortFields.tbr);
   const trUpload = translateSortField(t, SortFields.upload);
@@ -267,7 +266,6 @@ function Cards(props: PatientListProps): JSX.Element {
             <PendingPatientCard patient={teamUser} onClickRemovePatient={() => onClickRemovePatient} />
             : <PatientCard
               key={index}
-              trNA={trNA}
               trTIR={trTIR}
               trTBR={trTBR}
               trUpload={trUpload}

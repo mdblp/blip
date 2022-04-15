@@ -30,7 +30,7 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { Team, TeamContext, TeamContextProvider, TeamMember, TeamUser, useTeam } from "../../../lib/team";
+import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
 import { UserInvitationStatus } from "../../../models/generic";
 import { loggedInUsers } from "../../common";
 import { directShareAPI } from "../direct-share/hook";
@@ -39,6 +39,7 @@ import { createAuthHookStubs } from "../auth/utils";
 import { INotification, NotificationType } from "../../../lib/notifications";
 import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
+import { createTeamMember, createTeamUser } from "../../common/utils";
 
 describe("Team hook", () => {
 
@@ -82,66 +83,36 @@ describe("Team hook", () => {
   describe("isUserInvitationPending", () => {
     it("should return true when team user has a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser: TeamUser = {
-        members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.pending,
-          } as TeamMember,
-        ],
-      } as TeamUser;
-
+      const teamUser = createTeamUser("id1", [createTeamMember(teamId, UserInvitationStatus.pending)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(true);
     });
 
     it("should return false when team user does not have a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser: TeamUser = {
-        members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.accepted,
-          } as TeamMember,
-        ],
-      } as TeamUser;
-
+      const teamUser = createTeamUser("id1", [createTeamMember(teamId, UserInvitationStatus.accepted)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(false);
     });
 
     describe("isInAtLeastATeam", () => {
       it("should return false when team user does not have an accepted status in any team", () => {
-        const teamUser: TeamUser = {
-          members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-          ],
-        } as TeamUser;
-
+        const members = [
+          createTeamMember("team1Id", UserInvitationStatus.pending),
+          createTeamMember("team2Id", UserInvitationStatus.pending),
+        ];
+        const teamUser = createTeamUser("id1", members);
         const res = teamHook.isInAtLeastATeam(teamUser);
         expect(res).toBe(false);
       });
 
       it("should return true when team user does has an accepted status in a team", () => {
-        const teamUser: TeamUser = {
-          members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.accepted,
-            } as TeamMember,
-          ],
-        } as TeamUser;
+
+        const members = [
+          createTeamMember("team1Id", UserInvitationStatus.pending),
+          createTeamMember("team2Id", UserInvitationStatus.accepted),
+        ];
+        const teamUser = createTeamUser("id1", members);
 
         const res = teamHook.isInAtLeastATeam(teamUser);
         expect(res).toBe(true);

@@ -34,7 +34,6 @@ import { TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import { directShareAPI } from "../../lib/direct-share/hook";
 
 import RemoveDialog from "../../../pages/hcp/patients/remove-dialog";
@@ -42,6 +41,7 @@ import { waitTimeout } from "../../../lib/utils";
 import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
 
 
 describe("Patient remove dialog", () => {

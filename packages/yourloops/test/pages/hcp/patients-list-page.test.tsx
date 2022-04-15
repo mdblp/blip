@@ -33,13 +33,20 @@ import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { TeamContext, TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
-import { FilterType, SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
+import {
+  FilterType,
+  PatientTableSortFields,
+  SortDirection,
+  UserInvitationStatus,
+} from "../../../models/generic";
 import PatientListPage, { updatePatientList } from "../../../pages/hcp/patients/page";
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import "../../intersectionObserverMock";
 import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { getMainTheme } from "../../../components/theme";
+import { ThemeProvider } from "@material-ui/core";
 
 
 describe("Patient list page", () => {
@@ -63,13 +70,15 @@ describe("Patient list page", () => {
     await act(() => {
       return new Promise((resolve) => {
         render(
-          <AuthContextProvider value={authHookHcp}>
-            <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider teamAPI={teamAPI}>
-                <PatientListPageComponent />
-              </TeamContextProvider>
-            </NotificationContextProvider>
-          </AuthContextProvider>, container, resolve);
+          <ThemeProvider theme={getMainTheme()}>
+            <AuthContextProvider value={authHookHcp}>
+              <NotificationContextProvider value={stubNotificationContextValue}>
+                <TeamContextProvider teamAPI={teamAPI}>
+                  <PatientListPageComponent />
+                </TeamContextProvider>
+              </NotificationContextProvider>
+            </AuthContextProvider>
+          </ThemeProvider>, container, resolve);
       });
     });
   }
@@ -93,7 +102,7 @@ describe("Patient list page", () => {
     const patientExpected = patients.filter(patient => patient.members.find(member => member.status === UserInvitationStatus.pending) !== undefined);
 
     //when
-    const patientReceived = updatePatientList(team, [], "", FilterType.pending, SortFields.lastname, SortDirection.asc, false);
+    const patientReceived = updatePatientList(team, [], "", FilterType.pending, PatientTableSortFields.patientFullName, SortDirection.asc);
 
     //then
     expect(patientReceived).toEqual(patientExpected);
@@ -105,7 +114,7 @@ describe("Patient list page", () => {
     const patientExpected = patients.filter(patient => patient.members.find(member => member.team.id === teamId && member.status !== UserInvitationStatus.pending) !== undefined);
 
     //when
-    const patientReceived = updatePatientList(team, [], "", teamId, SortFields.lastname, SortDirection.asc, false);
+    const patientReceived = updatePatientList(team, [], "", teamId, PatientTableSortFields.patientFullName, SortDirection.asc);
 
     //then
     expect(patientReceived).toEqual(patientExpected);

@@ -39,6 +39,15 @@ enum SortFields {
   /** Last upload date */
   upload = "upload",
 }
+enum PatientTableSortFields {
+  patientFullName = "patientFullName",
+  /** Time in range */
+  tir = "tir",
+  /** Time below range */
+  tbr = "tbr",
+  /** Last data update */
+  ldu = "ldu",
+}
 enum UserInvitationStatus {
   pending = "pending",
   accepted = "accepted",
@@ -69,6 +78,7 @@ export {
   FilterType,
   SortDirection,
   SortFields,
+  PatientTableSortFields,
   UserInvitationStatus,
   MS_IN_DAY,
 };

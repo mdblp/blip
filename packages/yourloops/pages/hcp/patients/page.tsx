@@ -41,11 +41,17 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 
-import { FilterType, SortDirection, SortFields } from "../../../models/generic";
+import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
 import metrics from "../../../lib/metrics";
 import { useAlert } from "../../../components/utils/snackbar";
 import { useAuth } from "../../../lib/auth";
-import { errorTextFromException, getUserFirstName, getUserLastName, getUserEmail, setPageTitle } from "../../../lib/utils";
+import {
+  errorTextFromException,
+  getUserFirstName,
+  getUserLastName,
+  setPageTitle,
+  getUserFullName,
+} from "../../../lib/utils";
 import { Team, TeamContext, TeamUser, useTeam } from "../../../lib/team";
 import { AddPatientDialogResult, AddPatientDialogContentProps } from "../types";
 import PatientsSecondaryBar from "./secondary-bar";
@@ -69,32 +75,24 @@ const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true }
  * @param b A patient
  * @param orderBy Sort field
  */
-function doCompare(a: TeamUser, b: TeamUser, orderBy: SortFields): number {
+function doCompare(a: TeamUser, b: TeamUser, orderBy: PatientTableSortFields): number {
   let aValue: string | number;
   let bValue: string | number;
 
   switch (orderBy) {
-  case SortFields.firstname:
-    aValue = getUserFirstName(a);
-    bValue = getUserFirstName(b);
+  case PatientTableSortFields.patientFullName:
+    aValue = getUserFullName(a);
+    bValue = getUserFullName(b);
     break;
-  case SortFields.lastname:
-    aValue = getUserLastName(a);
-    bValue = getUserLastName(b);
-    break;
-  case SortFields.email: // Not used for HCP, but to make typescript happy
-    aValue = getUserEmail(a);
-    bValue = getUserEmail(b);
-    break;
-  case SortFields.tir:
+  case PatientTableSortFields.tir:
     aValue = getMedicalValues(a.medicalData).tirNumber;
     bValue = getMedicalValues(b.medicalData).tirNumber;
     break;
-  case SortFields.tbr:
+  case PatientTableSortFields.tbr:
     aValue = getMedicalValues(a.medicalData).tbrNumber;
     bValue = getMedicalValues(b.medicalData).tbrNumber;
     break;
-  case SortFields.upload:
+  case PatientTableSortFields.ldu:
     aValue = getMedicalValues(a.medicalData).lastUploadEpoch;
     bValue = getMedicalValues(b.medicalData).lastUploadEpoch;
     break;
@@ -117,9 +115,8 @@ export function updatePatientList(
   flagged: string[],
   filter: string,
   filterType: FilterType | string,
-  orderBy: SortFields,
-  order: SortDirection,
-  sortFlaggedFirst: boolean
+  orderBy: PatientTableSortFields,
+  order: SortDirection
 ): TeamUser[] {
   const allPatients = teamHook.getPatients();
   let patients: Readonly<TeamUser>[];
@@ -170,26 +167,9 @@ export function updatePatientList(
 
   // Sort the patients
   patients.sort((a: TeamUser, b: TeamUser): number => {
-    if (sortFlaggedFirst) {
-      const aFlagged = flagged.includes(a.userid);
-      const bFlagged = flagged.includes(b.userid);
-      // Flagged: always first
-      if (aFlagged && !bFlagged) {
-        return -1;
-      }
-      if (!aFlagged && bFlagged) {
-        return 1;
-      }
-    }
-
     let c = doCompare(a, b, orderBy);
     if (c === 0) {
-      // In case of equality: choose another field
-      if (orderBy === SortFields.lastname) {
-        c = doCompare(a, b, SortFields.lastname);
-      } else {
-        c = doCompare(a, b, SortFields.firstname);
-      }
+      c = doCompare(a, b, PatientTableSortFields.patientFullName);
     }
     return order === SortDirection.asc ? c : -c;
   });
@@ -212,10 +192,9 @@ function PatientListPage(): JSX.Element {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
-  const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname);
+  const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName);
   const [filter, setFilter] = React.useState<string>("");
   const [filterType, setFilterType] = React.useState<FilterType | string>(FilterType.all);
-  const [sortFlaggedFirst, setSortFlaggedFirst] = React.useState<boolean>(true);
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
   const [patientToRemove, setPatientToRemove] = React.useState<TeamUser | null>(null);
@@ -274,9 +253,8 @@ function PatientListPage(): JSX.Element {
     }
   };
 
-  const handleSortList = (orderBy: SortFields, order: SortDirection): void => {
+  const handleSortList = (orderBy: PatientTableSortFields, order: SortDirection): void => {
     metrics.send("patient_selection", "sort_patients", orderBy, order === SortDirection.asc ? 1 : -1);
-    setSortFlaggedFirst(false);
     setOrder(order);
     setOrderBy(orderBy);
   };
@@ -309,8 +287,8 @@ function PatientListPage(): JSX.Element {
     if (!teamHook.initialized || errorMessage !== null) {
       return [];
     }
-    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order, sortFlaggedFirst);
-  }, [teamHook, flagged, filter, filterType, orderBy, order, sortFlaggedFirst, errorMessage]);
+    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order);
+  }, [teamHook, flagged, filter, filterType, orderBy, order, errorMessage]);
 
   React.useEffect(() => {
     if (!teamHook.initialized) {
@@ -365,11 +343,8 @@ function PatientListPage(): JSX.Element {
         <PatientListCards
           patients={patients}
           flagged={flagged}
-          order={order}
-          orderBy={orderBy}
           onClickPatient={handleSelectPatient}
           onFlagPatient={handleFlagPatient}
-          onSortList={handleSortList}
           onClickRemovePatient={handleOnClickRemovePatient}
         />
       </Container>
