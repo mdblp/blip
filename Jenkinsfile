@@ -143,12 +143,14 @@ pipeline {
                     }
                     publish()
                 }
-                if (env.version != "master") {
-                    withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
-                        sh """
-                            docker build -t ${config.dockerImageName}-lambda:itg-${env.version}  -f Dockerfile.lambda --build-arg APP_VERSION=${env.version} .
-                        """
-                        pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}-lambda:itg-${env.version}", "${env.version}", false, [:])
+                script {
+                    if (env.version != "master") {
+                        withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
+                            sh """
+                                docker build -t ${config.dockerImageName}-lambda:itg-${env.version}  -f Dockerfile.lambda --build-arg APP_VERSION=${env.version} .
+                            """
+                            pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}-lambda:itg-${env.version}", "${env.version}", false, [:])
+                        }
                     }
                 }
             }
