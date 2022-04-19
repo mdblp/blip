@@ -64,7 +64,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
                         pack()
-                    }
+                                            }
                     if (env.GIT_BRANCH == 'dblp') {
                         //publish latest tag when git branch is dblp
                         echo "Push latest tag"
@@ -72,6 +72,10 @@ pipeline {
                         dockerImageName = config.dockerImageName
                         withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
                             pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}:${GIT_COMMIT}", "latest", false, [:])
+                            sh """
+                                docker build -t ${config.dockerImageName}-lambda:itg-latest  -f Dockerfile.lambda --build-arg APP_VERSION=latest .
+                            """
+                            pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}-lambda:itg-latest", "itg-latest", false, [:])
                         }
                     }
                 }
@@ -140,7 +144,14 @@ pipeline {
                     }
                     publish()
                 }
-            }
+                if (env.version != "master") {
+                    withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PWD')]) {
+                        sh """
+                            docker build -t ${config.dockerImageName}-lambda:itg-${env.version}  -f Dockerfile.lambda --build-arg APP_VERSION=${env.version} .
+                        """
+                        pushDocker("${utils.diabeloopRegistry}", "${NEXUS_USER}", "${NEXUS_PWD}", "${dockerImageName}-lambda:itg-${env.version}", "${env.version}", false, [:])
+                    }
+                }
         }
     }
     post {
