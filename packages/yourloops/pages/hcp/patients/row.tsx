@@ -112,6 +112,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const patientFullName = patient.fullName;
   const patientSystem = patient.system ?? trNA;
   const patientRemoteMonitoring = patient.remoteMonitoring ?? t("no");
+  const timeSpentAwayFromTargetRate = patient.alerts?.timeSpentAwayFromTargetRate ? `${patient.alerts.timeSpentAwayFromTargetRate}%` : trNA;
+  const frequencyOfSevereHypoglycemiaRate = patient.alerts?.frequencyOfSevereHypoglycemiaRate ? `${patient.alerts.frequencyOfSevereHypoglycemiaRate}%` : trNA;
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -124,7 +126,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     metrics.send("patient_selection", "select_patient", isFlagged ? "flagged" : "un-flagged");
   };
 
-  const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
+  const { lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
   // Replace the "@" if the userid is the email (status pending)
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
@@ -221,8 +223,10 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
       <StyledTableCell id={`${rowId}-remote-monitoring`}
         className={classes.typography}>{patientRemoteMonitoring}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-tir`} className={classes.typography}>{tir}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-tbr`} className={classes.typography}>{tbr}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-time-away-target`}
+        className={classes.typography}>{timeSpentAwayFromTargetRate}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-hypo-frequency-rate`}
+        className={classes.typography}>{frequencyOfSevereHypoglycemiaRate}</StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>{lastUpload}</StyledTableCell>
     </StyledTableRow>
   );
