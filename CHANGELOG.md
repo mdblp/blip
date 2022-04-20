@@ -15,6 +15,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1345 Correct blip pdf export to display japanese chars
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
+- YLP-1448 Run tests on a selenium grid out of jenkins machine
+
 ### Fixed
 - YLP-1199 Stats in trends view may be wrong
 - YLP-1312 Data loading may be missing some ranges
