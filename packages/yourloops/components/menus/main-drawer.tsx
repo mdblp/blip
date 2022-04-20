@@ -96,7 +96,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (4)` },
   ];
 
-  const handleMouseAction = (status: boolean) => {
+  const computeFullDrawer = (status: boolean) => {
     if (miniVariant) {
       setFullDrawer(status);
     }
@@ -109,8 +109,8 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
-      onMouseEnter={() => handleMouseAction(true)}
-      onMouseLeave={() => handleMouseAction(false)}
+      onMouseEnter={() => computeFullDrawer(true)}
+      onMouseLeave={() => computeFullDrawer(false)}
     >
       <Toolbar />
       <List>

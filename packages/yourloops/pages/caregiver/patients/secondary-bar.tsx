@@ -141,15 +141,15 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const classes = pageBarStyles();
 
   const selectFilterValues = [
-    { value: "all", label: t("select-all-patients"), icon: null },
+    { value: "all", label: t("all-patients"), icon: null },
     {
       value: "flagged",
-      label: t("select-flagged-patients"),
+      label: t("flagged"),
       icon: <FlagIcon color="primary" className={classes.selectFilterIcon} />,
     },
     {
       value: "pending",
-      label: t("select-pending-invitation-patients"),
+      label: t("pending"),
       icon: <AccessTimeIcon color="primary" className={classes.selectFilterIcon} />,
     },
   ];
