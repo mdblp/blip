@@ -98,7 +98,7 @@ function MainHeader({ withLeftIcon, onClickLeftIcon }: MainHeaderProps): JSX.Ele
           alignItems="center"
         >
           <Box display="flex" alignItems="center">
-            {withLeftIcon && <MenuIcon className={leftIcon} onClick={onClickLeftIcon} />}
+            {withLeftIcon && <MenuIcon id="left-menu-icon" className={leftIcon} onClick={onClickLeftIcon} />}
             <Link to="/">
               <Avatar
                 id="header-main-logo"

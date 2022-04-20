@@ -106,6 +106,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
 
   return (
     <Drawer
+      id="main-left-drawer"
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}

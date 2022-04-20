@@ -39,15 +39,16 @@ import { notificationAPIStub } from "../../lib/notifications/utils";
 import { TeamContextProvider } from "../../../lib/team";
 import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
-import { triggerMouseClick } from "../../common/utils";
+import { triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
 
 describe("Main Header", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/preferences"] });
   const { hcpSession } = loggedInUsers;
+  const onClickLeftIcon = jest.fn();
 
-  async function mountComponent(session: Session): Promise<void> {
+  async function mountComponent(session: Session, withLeftIcon?: boolean): Promise<void> {
     const authContext = createAuthHookStubs(session);
 
     await act(() => {
@@ -57,7 +58,7 @@ describe("Main Header", () => {
             <AuthContextProvider value={authContext}>
               <TeamContextProvider teamAPI={teamAPI}>
                 <NotificationContextProvider api={notificationAPIStub}>
-                  <MainHeader />
+                  <MainHeader withLeftIcon={withLeftIcon} onClickLeftIcon={onClickLeftIcon} />
                 </NotificationContextProvider>
               </TeamContextProvider>
             </AuthContextProvider>
@@ -82,14 +83,14 @@ describe("Main Header", () => {
   it("should redirect to '/' route when clicking on logo", async () => {
     await mountComponent(hcpSession);
     const logo = document.getElementById("header-main-logo");
-    triggerMouseClick(logo);
+    triggerMouseEvent("click", logo);
     expect(history.location.pathname).toBe("/");
   });
 
   it("should redirect to '/notifications' route when clicking on notification icon", async () => {
     await mountComponent(hcpSession);
     const notificationLink = document.getElementById("notification-count-badge");
-    triggerMouseClick(notificationLink);
+    triggerMouseEvent("click", notificationLink);
     expect(history.location.pathname).toBe("/notifications");
   });
 
@@ -118,13 +119,26 @@ describe("Main Header", () => {
   it("Team Menu should be rendered for Hcp", async () => {
     await mountComponent(hcpSession);
     const teamMenu = container.querySelector("#team-menu");
-    expect(teamMenu).toBeDefined();
+    expect(teamMenu).toBeTruthy();
   });
 
   it("Team Menu should be rendered for Patient", async () => {
     await mountComponent(loggedInUsers.patientSession);
     const teamMenu = container.querySelector("#team-menu");
-    expect(teamMenu).toBeDefined();
+    expect(teamMenu).toBeTruthy();
+  });
+
+  it("Should display left menu icon if activated", async () => {
+    await mountComponent(loggedInUsers.patientSession, true);
+    const leftIcon = document.getElementById("left-menu-icon");
+    expect(leftIcon).toBeTruthy();
+  });
+
+  it("Should call onClickLeftIcon when clicking left menu icon", async () => {
+    await mountComponent(loggedInUsers.patientSession, true);
+    const leftIcon = document.getElementById("left-menu-icon");
+    triggerMouseEvent("click", leftIcon);
+    expect(onClickLeftIcon).toBeCalledTimes(1);
   });
 });
 
