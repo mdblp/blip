@@ -101,6 +101,7 @@ export const StyledTableCell = styled(withTheme(TableCell))((props) => ({
   "&": {
     border: "unset",
     borderRight: `0.5px solid ${(props.theme as Theme).palette.divider}`,
+    maxWidth: "400px",
   },
 }));
 
