@@ -31,7 +31,6 @@ import _ from "lodash";
 
 import { MS_IN_DAY } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
-import { IUser, UserRoles } from "../../models/shoreline";
 import { numberPrecision } from "../utils";
 import metrics from "../metrics";
 import { Session } from "../auth";
@@ -40,6 +39,7 @@ import {
   getPatientsDataSummary,
   getPatientDataRange,
 } from "./api";
+import { Patient } from "../../models/patient";
 
 const log = bows("FetchSummaries");
 
@@ -67,12 +67,12 @@ function addMetric(metric: ITimerAvgMetrics): void {
   sendTimerMetrics();
 }
 
-async function fetchSummary(session: Session, patient: IUser): Promise<MedicalData | null> {
+async function fetchSummary(session: Session, patient: Patient): Promise<MedicalData | null> {
   let range: string[] | null = null;
   const startTime = Date.now();
 
   try {
-    range = await getPatientDataRange(session, patient);
+    range = await getPatientDataRange(session, patient.userid);
   } catch (reason) {
     log.info("fetchSummary:getPatientDataRange", patient.userid, { reason });
     addMetric({ result: "range-error", duration: Date.now() - startTime });
@@ -119,7 +119,7 @@ type PendingSummaryFetchPromiseFuncs = {
 };
 interface PendingSummaryFetch {
   /** To know the patient we need data */
-  patient: IUser;
+  patient: Patient;
   /** Our sessions infos for the API call */
   session: Session;
   /** To know if we are processing this patient -> API call in progress */
@@ -178,10 +178,7 @@ function startFetchSummary() {
  * @param patient Patient infos
  * @returns The medical data (TIR/last upload data), or null if theses infos are not available, or undefined, if cancelled
  */
-function addPendingFetch(session: Session, patient: IUser): Promise<MedicalData | null | undefined> {
-  if (patient.role !== UserRoles.patient) {
-    return Promise.reject(new Error("invalid-user"));
-  }
+function addPendingFetch(session: Session, patient: Patient): Promise<MedicalData | null | undefined> {
   if (patient.medicalData) {
     return Promise.resolve(patient.medicalData);
   }
@@ -206,7 +203,7 @@ function addPendingFetch(session: Session, patient: IUser): Promise<MedicalData 
  * Cancel a pending summary fetch
  * @param patient Patient infos
  */
-function removePendingFetch(patient: IUser): void {
+function removePendingFetch(patient: Patient): void {
   const psf = mapPendingFetch.get(patient.userid);
   if (psf !== undefined && psf.inProgress === false) {
     mapPendingFetch.delete(patient.userid);

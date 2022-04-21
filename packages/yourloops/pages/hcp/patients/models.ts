@@ -26,29 +26,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, SortDirection, SortFields } from "../../../models/generic";
-import { TeamUser } from "../../../lib/team";
+import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
+import { Patient } from "../../../models/patient";
+
+export interface PatientTableCardCommonProps {
+  patients: Patient[];
+  flagged: string[];
+  filter?: FilterType | string;
+  onClickPatient: (user: Patient) => void;
+  onFlagPatient: (userId: string) => Promise<void>;
+}
+
+export interface PatientTableProps extends PatientTableCardCommonProps {
+  order: SortDirection;
+  orderBy: PatientTableSortFields;
+  onSortList: (field: PatientTableSortFields, direction: SortDirection) => void;
+}
 
 export interface PatientListProps {
-  patients: TeamUser[];
-  flagged: string[];
-  order: SortDirection;
-  orderBy: SortFields;
-  filter?: FilterType | string;
-  onClickPatient: (user: TeamUser) => void;
-  onFlagPatient: (userId: string) => Promise<void>;
-  onSortList: (field: SortFields, direction: SortDirection) => void;
-  onClickRemovePatient: (patient: TeamUser) => void;
+  filter: string;
+  filterType: FilterType | string;
 }
 
 export interface PatientElementProps {
-  trNA: string;
-  patient: TeamUser;
+  patient: Patient;
   flagged: string[];
   filter?: FilterType | string;
-  onClickPatient: (user: TeamUser) => void;
+  onClickPatient: (user: Patient) => void;
   onFlagPatient: (userId: string) => Promise<void>;
-  onClickRemovePatient: (patient: TeamUser) => void;
 }
 
 export interface PatientElementCardProps extends PatientElementProps {

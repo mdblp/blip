@@ -30,15 +30,18 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { Team, TeamContext, TeamContextProvider, TeamMember, TeamUser, useTeam } from "../../../lib/team";
-import { UserInvitationStatus } from "../../../models/generic";
+import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
+import { FilterType, UserInvitationStatus } from "../../../models/generic";
 import { loggedInUsers } from "../../common";
 import { directShareAPI } from "../direct-share/hook";
 import { teamAPI } from "./utils";
 import { createAuthHookStubs } from "../auth/utils";
-import { INotification, NotificationType } from "../../../lib/notifications";
+import { INotification, NotificationContextProvider, NotificationType } from "../../../lib/notifications";
 import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
+import { createPatient, createPatientTeam } from "../../common/utils";
+import { Patient } from "../../../models/patient";
+import { stubNotificationContextValue } from "../notifications/utils";
 
 describe("Team hook", () => {
 
@@ -47,18 +50,22 @@ describe("Team hook", () => {
   let container: HTMLElement | null = null;
 
   let teamHook: TeamContext;
+  let patients: Patient[];
 
   async function mountComponent(): Promise<void> {
     const DummyComponent = (): JSX.Element => {
       teamHook = useTeam();
+      patients = teamHook.getPatients();
       return (<div />);
     };
     await act(() => {
       return new Promise(resolve => render(
         <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider teamAPI={teamAPI} directShareAPI={directShareAPI}>
-            <DummyComponent />
-          </TeamContextProvider>
+          <NotificationContextProvider value={stubNotificationContextValue}>
+            <TeamContextProvider teamAPI={teamAPI} directShareAPI={directShareAPI}>
+              <DummyComponent />
+            </TeamContextProvider>
+          </NotificationContextProvider>
         </AuthContextProvider>,
         container, resolve)
       );
@@ -79,124 +86,125 @@ describe("Team hook", () => {
     }
   });
 
+  describe("filterPatients", () => {
+    it("should return correct patients when filter is pending", () => {
+      const patientsExpected = patients.filter(patient => patient.teams.find(team => team.status === UserInvitationStatus.pending) !== undefined);
+      const patientsReceived = teamHook.filterPatients(FilterType.pending, "", []);
+      expect(patientsReceived).toEqual(patientsExpected);
+    });
+
+    it("should return correct patients when filter is a teamId", () => {
+      const teamId = patients[1].teams[0].teamId;
+      const patientExpected = patients.filter(patient => patient.teams.find(team => team.teamId === teamId && team.status !== UserInvitationStatus.pending) !== undefined);
+      const patientsReceived = teamHook.filterPatients(teamId, "", []);
+      expect(patientsReceived).toEqual(patientExpected);
+    });
+
+    it("should return correct patients when provided a flag list", () => {
+      const patientExpected = patients[0];
+      const patientsReceived = teamHook.filterPatients(FilterType.flagged, "", [patientExpected.userid]);
+      expect(patientsReceived).toEqual([patientExpected]);
+    });
+  });
+
+  describe("computeFlaggedPatients", () => {
+    it("should return patients with the correct flagged attribute", () => {
+      const flaggedPatientIds = [patients[0].userid];
+      const patientsUpdated = teamHook.computeFlaggedPatients(patients, flaggedPatientIds);
+      patientsUpdated.forEach(patient => {
+        expect(patient.flagged).toBe(flaggedPatientIds.includes(patient.userid));
+      });
+    });
+  });
+
   describe("isUserInvitationPending", () => {
     it("should return true when team user has a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser: TeamUser = {
-        members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.pending,
-          } as TeamMember,
-        ],
-      } as TeamUser;
-
+      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.pending)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(true);
     });
 
     it("should return false when team user does not have a pending status in given team", () => {
       const teamId = "fakeTeamId";
-      const teamUser: TeamUser = {
-        members: [
-          {
-            team: { id: teamId } as Team,
-            status: UserInvitationStatus.accepted,
-          } as TeamMember,
-        ],
-      } as TeamUser;
-
+      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.accepted)]);
       const res = teamHook.isUserInvitationPending(teamUser, teamId);
       expect(res).toBe(false);
     });
+  });
 
-    describe("isInAtLeastATeam", () => {
-      it("should return false when team user does not have an accepted status in any team", () => {
-        const teamUser: TeamUser = {
-          members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-          ],
-        } as TeamUser;
-
-        const res = teamHook.isInAtLeastATeam(teamUser);
-        expect(res).toBe(false);
-      });
-
-      it("should return true when team user does has an accepted status in a team", () => {
-        const teamUser: TeamUser = {
-          members: [
-            {
-              team: { id: "teamId1" } as Team,
-              status: UserInvitationStatus.pending,
-            } as TeamMember,
-            {
-              team: { id: "teamId2" } as Team,
-              status: UserInvitationStatus.accepted,
-            } as TeamMember,
-          ],
-        } as TeamUser;
-
-        const res = teamHook.isInAtLeastATeam(teamUser);
-        expect(res).toBe(true);
-      });
+  describe("isInAtLeastATeam", () => {
+    it("should return false when team user does not have an accepted status in any team", () => {
+      const members = [
+        createPatientTeam("team1Id", UserInvitationStatus.pending),
+        createPatientTeam("team2Id", UserInvitationStatus.pending),
+      ];
+      const teamUser = createPatient("id1", members);
+      const res = teamHook.isInAtLeastATeam(teamUser);
+      expect(res).toBe(false);
     });
 
-    describe("removeMember", () => {
+    it("should return true when team user does has an accepted status in a team", () => {
 
-      function buildTeamMember(teamId = "fakeTeamId", userId = "fakeUserId", invitation: INotification = null): TeamMember {
-        return {
-          team: { id: teamId } as Team,
-          role: TeamMemberRole.admin,
-          status: UserInvitationStatus.pending,
-          user: {
-            role: UserRoles.hcp,
-            userid: userId,
-            username: "fakeUsername",
-            members: [],
-          },
-          invitation,
-        };
-      }
+      const members = [
+        createPatientTeam("team1Id", UserInvitationStatus.pending),
+        createPatientTeam("team2Id", UserInvitationStatus.accepted),
+      ];
+      const teamUser = createPatient("id1", members);
 
-      function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId"): INotification {
-        return {
-          id: "fakeInviteId",
-          type: NotificationType.careTeamProInvitation,
-          metricsType: "join_team",
-          email: "fake@email.com",
-          creatorId: "fakeCreatorId",
-          date: "fakeDate",
-          target: {
-            id: teamId,
-            name: "fakeTeamName",
-          },
-          role: TeamMemberRole.admin,
-          creator: {
-            userid: userId,
-          },
-        };
-      }
+      const res = teamHook.isInAtLeastATeam(teamUser);
+      expect(res).toBe(true);
+    });
+  });
 
-      it("should throw an error when there is no invitation", () => {
-        const teamMember = buildTeamMember();
-        expect(async () => {
-          await teamHook.removeMember(teamMember);
-        }).rejects.toThrow();
-      });
+  describe("removeMember", () => {
 
-      it("should throw an error when there is no invitation for the member team", () => {
-        const teamMember = buildTeamMember("fakeTeamId", "fakeUserId", buildInvite("wrongTeam"));
-        expect(async () => {
-          await teamHook.removeMember(teamMember);
-        }).rejects.toThrow();
-      });
+    function buildTeamMember(teamId = "fakeTeamId", userId = "fakeUserId", invitation: INotification = null): TeamMember {
+      return {
+        team: { id: teamId } as Team,
+        role: TeamMemberRole.admin,
+        status: UserInvitationStatus.pending,
+        user: {
+          role: UserRoles.hcp,
+          userid: userId,
+          username: "fakeUsername",
+          members: [],
+        },
+        invitation,
+      };
+    }
+
+    function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId"): INotification {
+      return {
+        id: "fakeInviteId",
+        type: NotificationType.careTeamProInvitation,
+        metricsType: "join_team",
+        email: "fake@email.com",
+        creatorId: "fakeCreatorId",
+        date: "fakeDate",
+        target: {
+          id: teamId,
+          name: "fakeTeamName",
+        },
+        role: TeamMemberRole.admin,
+        creator: {
+          userid: userId,
+        },
+      };
+    }
+
+    it("should throw an error when there is no invitation", () => {
+      const teamMember = buildTeamMember();
+      expect(async () => {
+        await teamHook.removeMember(teamMember);
+      }).rejects.toThrow();
+    });
+
+    it("should throw an error when there is no invitation for the member team", () => {
+      const teamMember = buildTeamMember("fakeTeamId", "fakeUserId", buildInvite("wrongTeam"));
+      expect(async () => {
+        await teamHook.removeMember(teamMember);
+      }).rejects.toThrow();
     });
   });
 });
