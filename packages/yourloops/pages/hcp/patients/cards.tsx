@@ -41,17 +41,17 @@ import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
 import { SortFields } from "../../../models/generic";
 import { MedicalData } from "../../../models/device-data";
-import { getUserFirstLastName } from "../../../lib/utils";
 import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
-import { TeamUser, useTeam } from "../../../lib/team";
+import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { PatientElementCardProps, PatientListProps } from "./models";
+import { PatientElementCardProps, PatientTableCardCommonProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
 import IconActionButton from "../../../components/buttons/icon-action";
+import { Patient } from "../../../models/patient";
 
 const patientListStyle = makeStyles(theme => ({
   patientPaperCard: {
@@ -87,8 +87,9 @@ const patientListStyle = makeStyles(theme => ({
 const removeButtonEnabled = false;
 
 function PatientCard(props: PatientElementCardProps): JSX.Element {
-  const { patient, flagged, onFlagPatient, onClickPatient, onClickRemovePatient, trNA, trTIR, trTBR, trUpload } = props;
+  const { patient, flagged, onFlagPatient, onClickPatient, trTIR, trTBR, trUpload } = props;
   const { t } = useTranslation("yourloops");
+  const trNA = t("N/A");
   const classes = patientListStyle();
   const authHook = useAuth();
   const teamHook = useTeam();
@@ -100,7 +101,7 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
 
   const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
-  const fullName = t("user-name", getUserFirstLastName(patient));
+  const fullName = t("user-name", { firstName: patient.firstName, lastName: patient.lastName });
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -115,7 +116,6 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
 
   const onClickRemoveIcon = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClickRemovePatient(patient);
   };
 
   React.useEffect(() => {
@@ -249,25 +249,22 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   );
 }
 
-function Cards(props: PatientListProps): JSX.Element {
-  const { patients, flagged, onClickPatient, onFlagPatient, onClickRemovePatient } = props;
+function Cards(props: PatientTableCardCommonProps): JSX.Element {
+  const { patients, flagged, onClickPatient, onFlagPatient } = props;
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
-
-  const trNA = t("N/A");
   const trTIR = translateSortField(t, SortFields.tir);
   const trTBR = translateSortField(t, SortFields.tbr);
   const trUpload = translateSortField(t, SortFields.upload);
 
   return (
     <React.Fragment>
-      {patients.map((teamUser: TeamUser, index): JSX.Element => (
+      {patients.map((teamUser: Patient, index): JSX.Element => (
         <React.Fragment key={index}>
           {teamHook.isOnlyPendingInvitation(teamUser) ?
-            <PendingPatientCard patient={teamUser} onClickRemovePatient={() => onClickRemovePatient} />
+            <PendingPatientCard patient={teamUser} />
             : <PatientCard
               key={index}
-              trNA={trNA}
               trTIR={trTIR}
               trTBR={trTBR}
               trUpload={trUpload}
@@ -275,7 +272,6 @@ function Cards(props: PatientListProps): JSX.Element {
               flagged={flagged}
               onClickPatient={onClickPatient}
               onFlagPatient={onFlagPatient}
-              onClickRemovePatient={onClickRemovePatient}
             />
           }
         </React.Fragment>

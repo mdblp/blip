@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress } from "../../models/generic";
+import { UserInvitationStatus, PostalAddress, FilterType } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
@@ -40,6 +40,7 @@ import {
 } from "../../models/team";
 import { Session } from "../auth";
 import { DirectShareAPI } from "../share/models";
+import { Patient, PatientTeam } from "../../models/patient";
 
 export const TEAM_CODE_LENGTH = 9;
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/;
@@ -118,7 +119,18 @@ export interface TeamContext {
   /**
    * Return all patients (team user) we have
    */
-  getPatients: () => Readonly<TeamUser>[];
+  getPatientsAsTeamUsers: () => Readonly<TeamUser>[];
+  /**
+   * Return all patients
+   */
+  getPatients: () => Readonly<Patient>[];
+  /**
+   * Return all patients filtered on the given params
+   * @param filterType a FilterType value or a team id
+   * @param filter a patient name
+   * @param flagged the list of flagged patients
+   */
+  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Patient[];
   /**
    * Return the medical members of a team.
    */
@@ -145,29 +157,35 @@ export interface TeamContext {
    * @param user The user to test
    * @returns true is the user has an invitation pending on one team
    */
-  isInvitationPending: (user: TeamUser) => boolean;
+  isInvitationPending: (patient: Patient) => boolean;
   /**
    * @param user The user to test
    * @returns {boolean} True if all members status is pending
    */
-  isOnlyPendingInvitation: (user: TeamUser) => boolean;
+  isOnlyPendingInvitation: (patient: Patient) => boolean;
   /**
    * @param user The user to test
    * @param teamId A team id
    * @returns {boolean} True if members status is pending in given team
    */
-   isUserInvitationPending: (user: TeamUser, teamId: string) => boolean;
+   isUserInvitationPending: (patient: Patient, teamId: string) => boolean;
   /**
    * @param user The user to test
    * @returns {boolean} True if members status is accepted in at least a team
    */
-   isInAtLeastATeam: (user: TeamUser) => boolean;
+   isInAtLeastATeam: (patient: Patient) => boolean;
   /**
    * Return true if this user is in a specific team
    * @param user The user to test
    * @param teamId A team id
    */
-  isInTeam(user: TeamUser, teamId: string): boolean;
+  isInTeam(patient: Patient, teamId: string): boolean;
+  /**
+   * Return the list of patient updated with the flag attribute.
+   * @param patients The patients to update
+   * @param flaggedPatients The list of patients that the current user has flagged
+   */
+  computeFlaggedPatients(patients : Patient[], flaggedPatients: string[]): Patient[];
   /**
    * As an HCP invite a patient to a team.
    * @param team The team to invite the patient
@@ -208,7 +226,7 @@ export interface TeamContext {
    * @param member
    * @param teamId id of the team ("private" if it's a private practice)
    */
-  removePatient(patient: TeamUser, member: TeamMember, teamId: string): Promise<void>;
+  removePatient(patient: Patient, member: PatientTeam, teamId: string): Promise<void>;
   /**
    * Change a member role
    * @param member The concerned member

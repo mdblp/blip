@@ -39,6 +39,16 @@ enum SortFields {
   /** Last upload date */
   upload = "upload",
 }
+enum PatientTableSortFields {
+  alertHypoglycemic = "alertHypoglycemic",
+  alertTimeTarget = "alertTimeTarget",
+  flag = "flag",
+  /** Last data update */
+  ldu = "ldu",
+  patientFullName = "patientFullName",
+  remoteMonitoring = "remoteMonitoring",
+  system = "system",
+}
 enum UserInvitationStatus {
   pending = "pending",
   accepted = "accepted",
@@ -69,6 +79,7 @@ export {
   FilterType,
   SortDirection,
   SortFields,
+  PatientTableSortFields,
   UserInvitationStatus,
   MS_IN_DAY,
 };

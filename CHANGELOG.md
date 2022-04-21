@@ -6,12 +6,14 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-1260 Verify password leak on signup or password change
 - YLP-1379 New Header
+- YLP-1411 Implement the Patient list table with the new layout
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 - YLP-1345 Correct blip pdf export to display japanese chars
 - YLP-1383 Rework app routing
+- YLP-1447 Skip flaky test
 ### Fixed
 - YLP-1199 Stats in trends view may be wrong
 - YLP-1312 Data loading may be missing some ranges

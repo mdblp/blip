@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  * Patient list for HCPs
  *
  * All rights reserved.
@@ -30,41 +30,66 @@ import _ from "lodash";
 import React from "react";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
+import { useTheme } from "@material-ui/core/styles";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 
-import { FilterType } from "../../../models/generic";
+import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
 import metrics from "../../../lib/metrics";
-import { useAlert } from "../../../components/utils/snackbar";
+import { useAuth } from "../../../lib/auth";
 import { errorTextFromException, setPageTitle } from "../../../lib/utils";
-import { Team, useTeam } from "../../../lib/team";
-import { AddPatientDialogContentProps, AddPatientDialogResult } from "../types";
-import PatientsSecondaryBar from "./secondary-bar";
-import AddPatientDialog from "./add-dialog";
-import RemovePatientDialog from "./remove-dialog";
-import TeamCodeDialog from "./team-code-dialog";
+import { TeamContext, useTeam } from "../../../lib/team";
+import PatientsTable from "./table";
+import PatientsCards from "./cards";
 import { Patient } from "../../../models/patient";
-import PatientList from "./list";
+import { PatientListProps } from "./models";
+import { comparePatients } from "./utils";
 
 const log = bows("PatientListPage");
 
 // eslint-disable-next-line no-magic-numbers
-const throttledMetrics = _.throttle(metrics.send, 60000); // No more than one per minute
+const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true });
 
-function PatientPage(): JSX.Element {
+function PatientList(props: PatientListProps): JSX.Element {
+  const { filter, filterType } = props;
+  const historyHook = useHistory();
   const { t } = useTranslation("yourloops");
+  const theme = useTheme();
+  const matchesMediaSizeSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const authHook = useAuth();
   const teamHook = useTeam();
-  const alert = useAlert();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [filter, setFilter] = React.useState<string>("");
-  const [filterType, setFilterType] = React.useState<FilterType | string>(FilterType.all);
-  const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
-  const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
-  const [patientToRemove, setPatientToRemove] = React.useState<Patient | null>(null);
+  const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
+  const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName);
+  const flagged = authHook.getFlagPatients();
+
+  const updatePatientList = (
+    teamHook: TeamContext,
+    flagged: string[],
+    filter: string,
+    filterType: FilterType | string,
+    orderBy: PatientTableSortFields,
+    order: SortDirection
+  ) => {
+    let filteredPatients = teamHook.filterPatients(filterType, filter, flagged);
+    filteredPatients = teamHook.computeFlaggedPatients(filteredPatients, flagged);
+    // Sort the patients
+    filteredPatients.sort((a: Patient, b: Patient): number => {
+      const c = comparePatients(a, b, orderBy);
+      return order === SortDirection.asc ? c : -c;
+    });
+    const searchByName = filter.length > 0;
+    if (searchByName) {
+      throttleSearchMetrics("trackSiteSearch", "patient_name", "hcp", filteredPatients.length);
+    }
+    return filteredPatients;
+  };
 
   const handleRefresh = async (force = false) => {
     log.debug("handleRefresh:", { force });
@@ -80,56 +105,28 @@ function PatientPage(): JSX.Element {
     setLoading(false);
   };
 
-  const handleInvitePatient = async (): Promise<void> => {
-    const getPatientEmailAndTeam = (): Promise<AddPatientDialogResult | null> => {
-      const teams = teamHook.getMedicalTeams();
-      return new Promise((resolve: (value: AddPatientDialogResult | null) => void) => {
-        setPatientToAdd({ onDialogResult: resolve, teams });
-      });
-    };
+  const handleSelectPatient = (patient: Patient): void => {
+    metrics.send("patient_selection", "select_patient", flagged.includes(patient.userid) ? "flagged" : "not_flagged");
+    historyHook.push(`/patient/${patient.userid}`);
+  };
 
-    const result = await getPatientEmailAndTeam();
-    setPatientToAdd(null); // Close the dialog
+  const handleFlagPatient = async (userId: string): Promise<void> => {
+    metrics.send("patient_selection", "flag_patient", flagged.includes(userId) ? "flagged" : "un-flagged");
+    await authHook.flagPatient(userId);
+  };
 
-    if (result !== null) {
-      try {
-        const { email, teamId } = result;
-        const team = teamHook.getTeam(teamId);
-        await teamHook.invitePatient(team as Team, email);
-        alert.success(t("alert-invitation-sent-success"));
-        metrics.send("invitation", "send_invitation", "patient");
-        setTeamCodeToDisplay(team);
-      } catch (reason) {
-        log.error(reason);
-        // TODO Errors:
-        // - "alert-invitation-patient-failed-already-in-team"
-        // - "alert-invitation-patient-failed-already-invited"
-        alert.error(t("alert-invitation-patient-failed"));
-      }
+  const handleSortList = (orderBy: PatientTableSortFields, order: SortDirection): void => {
+    metrics.send("patient_selection", "sort_patients", orderBy, order === SortDirection.asc ? 1 : -1);
+    setOrder(order);
+    setOrderBy(orderBy);
+  };
+
+  const patients = React.useMemo(() => {
+    if (!teamHook.initialized || errorMessage !== null) {
+      return [];
     }
-  };
-
-  const handleFilter = (filter: string): void => {
-    log.info("Filter patients name", filter);
-    throttledMetrics("patient_selection", "search_patient", "by-name");
-    setFilter(filter);
-  };
-
-  const handleFilterType = (filterType: FilterType | string): void => {
-    log.info("Filter patients with", filterType);
-    setFilterType(filterType);
-    if (!(filterType in FilterType)) {
-      log.info("Replace", filterType, "with team"); // TODO Remove me if it works
-      filterType = "team";
-    }
-    metrics.send("patient_selection", "filter_patient", filterType);
-  };
-
-  const handleCloseTeamCodeDialog = (): void => {
-    setTeamCodeToDisplay(null);
-  };
-
-  const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null);
+    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order);
+  }, [teamHook, flagged, filter, filterType, orderBy, order, errorMessage]);
 
   React.useEffect(() => {
     if (!teamHook.initialized) {
@@ -177,34 +174,33 @@ function PatientPage(): JSX.Element {
       </div>
     );
   }
-
   return (
     <React.Fragment>
-      <PatientsSecondaryBar
-        filter={filter}
-        filterType={filterType}
-        onFilter={handleFilter}
-        onFilterType={handleFilterType}
-        onInvitePatient={handleInvitePatient}
-      />
-      <Grid container direction="row" justifyContent="center" alignItems="center"
-        style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-        <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
-      </Grid>
-      <PatientList filter={filter} filterType={filterType}/>
-      <AddPatientDialog actions={patientToAdd} />
-      <TeamCodeDialog
-        onClose={handleCloseTeamCodeDialog}
-        code={teamCodeToDisplay?.code ?? ""}
-        name={teamCodeToDisplay?.name ?? ""}
-      />
-      <RemovePatientDialog
-        isOpen={!!patientToRemove}
-        onClose={handleCloseRemovePatientDialog}
-        patient={patientToRemove}
-      />
+      {matchesMediaSizeSmall ? (
+        <Container id="patient-list-container">
+          <PatientsCards
+            patients={patients}
+            flagged={flagged}
+            onClickPatient={handleSelectPatient}
+            onFlagPatient={handleFlagPatient}
+          />
+        </Container>
+      ) : (
+        <Container id="patient-list-container" maxWidth="lg">
+          <PatientsTable
+            patients={patients}
+            flagged={flagged}
+            order={order}
+            orderBy={orderBy}
+            filter={filterType}
+            onClickPatient={handleSelectPatient}
+            onFlagPatient={handleFlagPatient}
+            onSortList={handleSortList}
+          />
+        </Container>)
+      }
     </React.Fragment>
   );
 }
 
-export default PatientPage;
+export default PatientList;

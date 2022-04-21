@@ -27,7 +27,6 @@
  */
 
 import React from "react";
-import _ from "lodash";
 import { useTranslation } from "react-i18next";
 
 import Paper from "@material-ui/core/Paper";
@@ -39,204 +38,81 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Tooltip from "@material-ui/core/Tooltip";
+import { styled, withTheme } from "@material-ui/styles";
+import { TablePagination } from "@material-ui/core";
 
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import FlagIcon from "@material-ui/icons/Flag";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
-
-import IconActionButton from "../../../components/buttons/icon-action";
-// import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-
-import { FilterType, SortDirection, SortFields } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
-import metrics from "../../../lib/metrics";
-import { getUserFirstName, getUserLastName } from "../../../lib/utils";
-import { useAuth } from "../../../lib/auth";
-import { TeamUser, useTeam } from "../../../lib/team";
-import { addPendingFetch, removePendingFetch } from "../../../lib/data";
-import { PatientListProps, PatientElementProps } from "./models";
-import { getMedicalValues } from "./utils";
+import { PatientTableSortFields, SortDirection } from "../../../models/generic";
+import { PatientTableProps } from "./models";
+import PatientRow from "./row";
+import { Patient } from "../../../models/patient";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
-      table: {
+      flagSort: {
         width: "100%",
+        justifyContent: "center",
       },
-      tableRow: {
-        cursor: "pointer",
+      pagination: {
+        "& .MuiTablePagination-spacer": {
+          display: "none",
+        },
+        "& .MuiTablePagination-caption:last-of-type": {
+          marginLeft: "auto",
+        },
       },
-      tableRowPending: {
-        cursor: "default",
-        backgroundColor: theme.palette.secondary.main,
+      tableContainer: {
+        boxShadow: theme.shadows[2],
       },
       tableRowHeader: {
-        textTransform: "uppercase",
+        padding: 0,
       },
       tableCellHeader: {
-        fontSize: "14px",
+        backgroundColor: theme.palette.common.white,
+        fontSize: "15px",
+        fontWeight: 600,
+        height: "62px",
+        padding: 0,
+        paddingLeft: "11px",
       },
-      flag: {
-        color: theme.palette.primary.main,
+      alertTimeTargetHeader: {
+        maxWidth: "210px",
+      },
+      tableHeaderFlag: {
+        width: "56px",
+        padding: 0,
       },
     };
   },
   { name: "ylp-hcp-patients-table" }
 );
 
-function PatientRow(props: PatientElementProps): JSX.Element {
-  const { trNA, patient, flagged, filter, onClickPatient, onFlagPatient /* ,onClickRemovePatient */ } = props;
-  const { t } = useTranslation("yourloops");
-  const authHook = useAuth();
-  const teamHook = useTeam();
-  const classes = patientListStyle();
-  const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
-  const rowRef = React.createRef<HTMLTableRowElement>();
+export const StyledTableCell = styled(withTheme(TableCell))((props) => ({
+  "&": {
+    border: "unset",
+    borderRight: `0.5px solid ${(props.theme as Theme).palette.divider}`,
+    maxWidth: "400px",
+  },
+}));
 
-  const userId = patient.userid;
-  const email = patient.username;
-  const isFlagged = flagged.includes(userId);
-  const firstName = getUserFirstName(patient);
-  const lastName = getUserLastName(patient);
-
-  const onClickFlag = (e: React.MouseEvent): void => {
-    e.stopPropagation();
-    onFlagPatient(userId);
-    metrics.send("patient_selection", "flag_patient", isFlagged ? "un-flagged" : "flagged");
-  };
-
-  const onRowClick = (/* e: React.MouseEvent */): void => {
-    onClickPatient(patient);
-    metrics.send("patient_selection", "select_patient", isFlagged ? "flagged" : "un-flagged");
-  };
-
-  /*
-  * TODO Can't add this feature for the moment
-  *  we need to wait until yourloops will be certified to level 2 of medical device
-  *  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
-   */
-  // const onClickRemoveIcon = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   onClickRemovePatient(patient);
-  // };
-
-  const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
-  // Replace the "@" if the userid is the email (status pending)
-  // wdio used in the system tests do not accept "@"" in selectors
-  // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
-  const rowId = `patients-list-row-${userId.replace(/@/g, "_")}`;
-  const session = authHook.session();
-  const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
-  const hasPendingInvitation = teamHook.isInvitationPending(patient);
-  const isAlreadyInATeam = teamHook.isInAtLeastATeam(patient);
-
-  React.useEffect(() => {
-    const observedElement = rowRef.current;
-    if (session !== null && observedElement !== null && typeof medicalData === "undefined" && !isPendingInvitation) {
-      /** If unmounted, we want to discard the result, react don't like to update an unmounted component */
-      let componentMounted = true;
-      const observer = new IntersectionObserver((entries) => {
-        const rowDisplayed = entries[0];
-        if (rowDisplayed.intersectionRatio > 0) {
-          // Displayed: queue the fetch
-          addPendingFetch(session, patient).then((md) => {
-            if (typeof md !== "undefined") {
-              teamHook.setPatientMedicalData(patient.userid, md);
-              if (componentMounted) setMedicalData(md);
-            }
-          }).catch(() => {
-            teamHook.setPatientMedicalData(patient.userid, null);
-            if (componentMounted) setMedicalData(null);
-          });
-        } else {
-          // No longer displayed, cancel the fetch
-          removePendingFetch(patient);
-        }
-      });
-
-      observer.observe(observedElement);
-
-      return (): void => {
-        // Effect callback -> cancel subscriptions to the observer
-        // and the API fetch
-        observer.disconnect();
-        removePendingFetch(patient);
-        componentMounted = false;
-      };
-    }
-    return _.noop;
-  }, [medicalData, patient, session, isPendingInvitation, teamHook, rowRef]);
-
-  const firstRowIcon = filter === FilterType.pending && hasPendingInvitation ?
-    (<Tooltip
-      id={`${rowId}-tooltip-pending`}
-      title={t("pending-invitation") as string}
-      aria-label={t("pending-invitation")}
-      placement="bottom"
-    >
-      <AccessTimeIcon id={`${rowId}-pendingicon`} />
-    </Tooltip>) :
-    (<IconActionButton
-      icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
-      id={`${rowId}-icon-button-flag`}
-      onClick={onClickFlag}
-      className={`${classes.flag} patient-flag-button`}
-    />);
-
-  return (
-    <TableRow
-      id={rowId}
-      tabIndex={-1}
-      hover
-      onClick={hasPendingInvitation && !isAlreadyInATeam ? undefined : onRowClick}
-      className={`${classes.tableRow} patients-list-row`}
-      data-userid={userId}
-      data-email={email}
-      ref={rowRef}
-    >
-      <TableCell id={`${rowId}-icon`}>{firstRowIcon}</TableCell>
-      <TableCell id={`${rowId}-lastname`}>{lastName}</TableCell>
-      <TableCell id={`${rowId}-firstname`}>{firstName}</TableCell>
-      <TableCell id={`${rowId}-tir`}>{tir}</TableCell>
-      <TableCell id={`${rowId}-tbr`}>{tbr}</TableCell>
-      <TableCell id={`${rowId}-upload`}>{lastUpload}</TableCell>
-      <TableCell id={`${rowId}-remove-icon`}>
-        {/* TODO Can't add this feature for the moment */}
-        {/*  we need to wait until yourloops will be certified to level 2 of medical device */}
-        {/*  see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370) */}
-        {/*<IconActionButton*/}
-        {/*  icon={<PersonRemoveIcon />}*/}
-        {/*  className="remove-patient-hcp-view-button"*/}
-        {/*  onClick={onClickRemoveIcon}*/}
-        {/*/>*/}
-      </TableCell>
-    </TableRow>
-  );
-}
-
-function PatientListTable(props: PatientListProps): JSX.Element {
-  const { patients, flagged, order, filter, orderBy, onClickPatient, onFlagPatient, onSortList, onClickRemovePatient } = props;
+function PatientTable(props: PatientTableProps): JSX.Element {
+  const {
+    patients,
+    flagged,
+    order,
+    filter,
+    orderBy,
+    onClickPatient,
+    onFlagPatient,
+    onSortList,
+  } = props;
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
-  const trNA = t("N/A");
+  const [page, setPage] = React.useState<number>(0);
+  const [rowPerPage, setRowPerPage] = React.useState<number>(10);
+  const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);
 
-  const patientsRows = patients.map(
-    (patient: TeamUser): JSX.Element => (
-      <PatientRow
-        key={patient.userid}
-        trNA={trNA}
-        patient={patient}
-        flagged={flagged}
-        filter={filter}
-        onClickPatient={onClickPatient}
-        onFlagPatient={onFlagPatient}
-        onClickRemovePatient={onClickRemovePatient}
-      />
-    )
-  );
-
-  const createSortHandler = (property: SortFields): (() => void) => {
+  const createSortHandler = (property: PatientTableSortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
       let newOrder = order;
       if (property === orderBy) {
@@ -246,64 +122,119 @@ function PatientListTable(props: PatientListProps): JSX.Element {
     };
   };
 
+  const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setRowPerPage(+event.target.value);
+    setPage(0);
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table id="patients-list-table" className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
-        <TableHead>
-          <TableRow className={classes.tableRowHeader}>
-            <TableCell id="patients-list-header-icon" className={classes.tableCellHeader} />
-            <TableCell id="patients-list-header-lastname" className={classes.tableCellHeader}>
-              <TableSortLabel
-                id={`patients-list-header-lastname-label${orderBy === SortFields.lastname ? `-${order}` : ""}`}
-                active={orderBy === SortFields.lastname}
-                direction={order}
-                onClick={createSortHandler(SortFields.lastname)}>
-                {t("lastname")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-firstname" className={classes.tableCellHeader}>
-              <TableSortLabel
-                id={`patients-list-header-firstname-label${orderBy === SortFields.firstname ? `-${order}` : ""}`}
-                active={orderBy === SortFields.firstname}
-                direction={order}
-                onClick={createSortHandler(SortFields.firstname)}>
-                {t("firstname")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-tir" className={classes.tableCellHeader}>
-              <TableSortLabel
-                id={`patients-list-header-tir-label${orderBy === SortFields.tir ? `-${order}` : ""}`}
-                active={orderBy === SortFields.tir}
-                direction={order}
-                onClick={createSortHandler(SortFields.tir)}>
-                {t("list-patient-tir")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-tbr" className={classes.tableCellHeader}>
-              <TableSortLabel
-                id={`patients-list-header-tbr-label${orderBy === SortFields.tbr ? `-${order}` : ""}`}
-                active={orderBy === SortFields.tbr}
-                direction={order}
-                onClick={createSortHandler(SortFields.tbr)}>
-                {t("list-patient-tbr")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-upload" className={classes.tableCellHeader}>
-              <TableSortLabel
-                id={`patients-list-header-upload-label${orderBy === SortFields.upload ? `-${order}` : ""}`}
-                active={orderBy === SortFields.upload}
-                direction={order}
-                onClick={createSortHandler(SortFields.upload)}>
-                {t("list-patient-upload")}
-              </TableSortLabel>
-            </TableCell>
-            <TableCell id="patients-list-header-remove-icon" className={classes.tableCellHeader} />
-          </TableRow>
-        </TableHead>
-        <TableBody>{patientsRows}</TableBody>
-      </Table>
-    </TableContainer>
+    <div>
+      <TableContainer component={Paper} className={classes.tableContainer}>
+        <Table id="patients-list-table" aria-label={t("aria-table-list-patient")}
+          stickyHeader>
+          <TableHead>
+            <TableRow className={classes.tableRowHeader}>
+              <StyledTableCell id="patients-list-header-icon"
+                className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}>
+                <TableSortLabel
+                  id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.flag}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.flag)}
+                  className={classes.flagSort}
+                >
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-full-name" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-full-name-label${orderBy === PatientTableSortFields.patientFullName ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.patientFullName}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.patientFullName)}>
+                  {t("patient")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-system" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-system-label${orderBy === PatientTableSortFields.system ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.system}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.system)}>
+                  {t("system")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-remote-monitoring" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.remoteMonitoring}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
+                  {t("remote-monitoring")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-alert-time-target"
+                className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader}`}>
+                <TableSortLabel
+                  id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.alertTimeTarget}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.alertTimeTarget)}>
+                  {t("alert-time-target")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-alert-hypoglycemic" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-tir-alert-hypoglycemic${orderBy === PatientTableSortFields.alertHypoglycemic ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.alertHypoglycemic}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.alertHypoglycemic)}>
+                  {t("alert-hypoglycemic")}
+                </TableSortLabel>
+              </StyledTableCell>
+              <StyledTableCell id="patients-list-header-upload" className={classes.tableCellHeader}>
+                <TableSortLabel
+                  id={`patients-list-header-ldu-label${orderBy === PatientTableSortFields.ldu ? `-${order}` : ""}`}
+                  active={orderBy === PatientTableSortFields.ldu}
+                  direction={order}
+                  onClick={createSortHandler(PatientTableSortFields.ldu)}>
+                  {t("last-data-update")}
+                </TableSortLabel>
+              </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {patientsToDisplay.map(
+              (patient: Patient): JSX.Element => (
+                <PatientRow
+                  key={patient.userid}
+                  patient={patient}
+                  flagged={flagged}
+                  filter={filter}
+                  onClickPatient={onClickPatient}
+                  onFlagPatient={onFlagPatient}
+                />
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        count={patients.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowPerPage}
+        rowsPerPageOptions={[10, 25, 50, 100]}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage={t("rows-per-page")}
+        className={classes.pagination}
+      />
+    </div>
   );
 }
 
-export default PatientListTable;
+export default PatientTable;

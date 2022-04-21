@@ -30,11 +30,10 @@ import React from "react";
 import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { TeamContextProvider, TeamUser, useTeam } from "../../../lib/team";
+import { TeamContextProvider, useTeam } from "../../../lib/team";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { NotificationContextProvider } from "../../../lib/notifications";
 
-import { stubNotificationContextValue } from "../../lib/notifications/hook.test";
 import { directShareAPI } from "../../lib/direct-share/hook";
 
 import RemoveDialog from "../../../pages/hcp/patients/remove-dialog";
@@ -42,13 +41,15 @@ import { waitTimeout } from "../../../lib/utils";
 import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { Patient } from "../../../models/patient";
 
 
 describe("Patient remove dialog", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   let container: HTMLElement | null = null;
-  let patient: TeamUser | undefined;
+  let patient: Patient | undefined;
 
   const onCloseStub = jest.fn();
 
