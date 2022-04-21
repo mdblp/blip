@@ -26,75 +26,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
 import React from "react";
-import { BrowserRouter, useLocation } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import "@fontsource/roboto";
 import "branding/theme.css";
 
-import metrics from "../lib/metrics";
 import { AuthContextProvider } from "../lib/auth";
 import { MainLobby } from "./main-lobby";
 
-/** Tell matomo the page is changed, but with a little delay, because of some async stuff */
-const trackPageView = _.debounce(() => {
-  metrics.send("metrics", "trackPageView");
-}, 1000);
-const RE_PATIENT_URL = /^\/[0-9a-f]+\/?(.*)/;
-const RE_CAREGIVER_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const CONFIDENTIALS_PARAMS = ["signupEmail", "signupKey", "resetKey", "login"];
-
-function MetricsLocationListener(): null {
-  const location = useLocation();
-  const locPathname = location.pathname;
-  const locSearch = location.search;
-
-  React.useEffect(() => {
-    let pathname: string | null = null;
-    let match = locPathname.match(RE_PATIENT_URL);
-    if (match !== null) {
-      pathname = `/userid/${match[1]}`;
-    }
-    match = pathname === null ? locPathname.match(RE_CAREGIVER_URL) : null;
-    if (match !== null) {
-      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
-    }
-    match = pathname === null ? locPathname.match(RE_HCP_URL) : null;
-    if (match !== null) {
-      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
-    }
-
-    if (pathname === null) {
-      pathname = locPathname;
-    }
-
-    const searchParams = new URLSearchParams(locSearch);
-    let nParams = 0;
-    searchParams.forEach((value: string, key: string) => {
-      if (CONFIDENTIALS_PARAMS.includes(key)) {
-        pathname = `${pathname}${nParams > 0 ? "&" : "?"}${key}=confidential`;
-      } else {
-        pathname = `${pathname}${nParams > 0 ? "&" : "?"}${key}=${value}`;
-      }
-      nParams++;
-    });
-
-    metrics.send("metrics", "setCustomUrl", pathname);
-    trackPageView();
-  }, [locPathname, locSearch]);
-  return null;
-}
-
 const Yourloops = (): JSX.Element => {
   return (
-    <BrowserRouter>
-      <MetricsLocationListener />
-      <AuthContextProvider>
-        <MainLobby />
-      </AuthContextProvider>
-    </BrowserRouter>
+    <Auth0Provider
+      domain="yourloops-dev.eu.auth0.com"
+      clientId="HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
+      redirectUri={window.location.origin}
+      useRefreshTokens
+    >
+      <BrowserRouter>
+        <AuthContextProvider>
+          <MainLobby />
+        </AuthContextProvider>
+      </BrowserRouter>
+    </Auth0Provider>
   );
 };
 

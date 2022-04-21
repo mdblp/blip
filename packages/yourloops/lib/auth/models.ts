@@ -79,7 +79,7 @@ export interface SignupUser {
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
-  login: (username: string, password: string, traceToken: string) => Promise<Session>;
+  getUserInfo: (session: Session) => Promise<User>
   logout: (session: Readonly<Session>) => Promise<void>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
   requestPasswordReset: (username: string, traceToken: string, language?: string) => Promise<void>;
@@ -103,19 +103,16 @@ export interface AuthContext {
   isAuthHookInitialized: boolean;
   isAuthInProgress: boolean;
   isLoggedIn: boolean;
-  login: (username: string, password: string, key: string | null) => Promise<User>;
   logout: (sessionExpired?: boolean) => Promise<void>; // sessionExpired True if the call is performed for a session expired mechanism
   redirectToProfessionalAccountLogin: () => void;
   resendSignup: (username: string) => Promise<boolean>;
   resetPassword: (key: string, username: string, password: string) => Promise<boolean>;
   sendPasswordResetEmail: (username: string, language: string) => Promise<void>;
   session: () => Session | null;
-  sessionToken: string | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   signup: (signup: SignupUser) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  traceToken: string | null;
   updatePassword: (currentPassword: string, password: string) => Promise<void>;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
   updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;

@@ -26,21 +26,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import bows from "bows";
 import _ from "lodash";
-import jwtDecode, { JwtPayload } from "jwt-decode";
-import { v4 as uuidv4, validate as validateUuid } from "uuid";
+import jwtDecode from "jwt-decode";
+import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
+import { useAuth0 } from "@auth0/auth0-react";
 import { HistoryState } from "../../models/generic";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { defer, fixYLP878Settings, numberPrecision } from "../utils";
-import { availableLanguageCodes, changeLanguage, getCurrentLang } from "../language";
+import { getCurrentLang } from "../language";
 import metrics from "../metrics";
-import { zendeskLogin, zendeskLogout } from "../zendesk";
+import { zendeskLogout } from "../zendesk";
 import User from "./user";
 import {
   AuthAPI,
@@ -55,52 +55,26 @@ import {
 } from "./models";
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
+import { useAuthApi } from "./useAuthApi";
+import { HttpHeaderKeys } from "../../models/api";
 
 
-const ReactAuthContext = React.createContext({} as AuthContext);
+const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
-let firstLoadingDone = false;
 
-const warnNoValidateUUID = _.once(() => log.warn("validateUuid function is not available"));
-const validateUuidV4 = (value: string): boolean => {
-  // FIXME validateUuid is sometime not present
-  // because we have some SOUP which depends on an old deprecated uuid version (v3)
-  // and the build seems to choose from one or another...
-  if (_.isFunction(validateUuid)) {
-    return validateUuid(value);
-  }
-  warnNoValidateUUID();
-  return true;
-};
-
-const updateLanguageForUser = (user: User) => {
-  const userLanguage = user.preferences?.displayLanguageCode;
-  if (typeof userLanguage === "string" && availableLanguageCodes.includes(userLanguage) && userLanguage !== getCurrentLang()) {
-    log.info("Update language to user preferences", { userLanguage, currentLanguage: getCurrentLang() });
-    // Update the current UI language based on the user preferences
-    changeLanguage(userLanguage);
-  }
-};
-
-/**
- * Provider hook that creates auth object and handles state
- */
 export function AuthContextImpl(api: AuthAPI): AuthContext {
+  const { logout: auth0logout, user: auth0user, isAuthenticated } = useAuth0();
+  const { getUser } = useAuthApi();
   const historyHook = useHistory<HistoryState>();
   const { t } = useTranslation("yourloops");
-  // Trace token is used to trace the calls betweens different microservices API calls for debug purpose.
-  const [traceToken, setTraceToken] = React.useState<string | null>(null);
-  // JWT token as a string.
-  const [sessionToken, setSessionToken] = React.useState<string | null>(null);
-  // Current authenticated user
-  const [user, setUserPrivate] = React.useState<User | null>(null);
-  const [isAuthInProgress, setAuthInProgress] = React.useState<boolean>(false);
+  const [traceToken, setTraceToken] = useState<string | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthInProgress, setAuthInProgress] = useState<boolean>(false);
 
-  // Get the current location path, needed to redirect on refresh the page
-  const pathname = historyHook.location.pathname;
   const isAuthHookInitialized = traceToken !== null;
-  const isLoggedIn = sessionToken !== null && traceToken !== null && user !== null;
-  const session = React.useCallback(
+  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !user, [isAuthenticated, user]);
+  const session = useCallback(
     (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? {
       sessionToken,
       traceToken,
@@ -115,85 +89,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       return Promise.resolve(s);
     }
     return Promise.reject(new Error(t("not-logged-in")));
-  };
-
-  /**
-   * Update hook users infos, perform zendesk & matomo login
-   * @param session sessionToken
-   * @param trace traceToken
-   * @param usr user
-   */
-  const setAuthInfos = React.useCallback((session: string, trace: string, usr: User): void => {
-    updateLanguageForUser(usr);
-    setUserPrivate(usr);
-    if (session !== sessionToken) {
-      setSessionToken(session);
-    }
-    if (trace !== traceToken) {
-      setTraceToken(trace);
-    }
-    zendeskLogin();
-    metrics.setUser(usr);
-  }, [sessionToken, traceToken]);
-
-  /**
-   * - Update the hook user (no API call is performed with this function)
-   * - Update the storage
-   * @param u The user
-   */
-  const setUser = (u: User): void => {
-    setUserPrivate(u);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(u));
-  };
-
-  const loginPrivate = async (username: string, password: string, key: string | null): Promise<User> => {
-    if (!isAuthHookInitialized) {
-      throw new Error("not-yet-initialized");
-    }
-
-    if (key !== null) {
-      await api.accountConfirmed(key, traceToken);
-    }
-
-    const auth = await api.login(username, password, traceToken);
-    const tokenInfos = jwtDecode<JwtShorelinePayload>(auth.sessionToken);
-    if (!_.isString(tokenInfos.role)) {
-      // old API support
-      let role = _.get(auth.user, "roles[0]", UserRoles.patient);
-      if (role === "clinic") {
-        role = UserRoles.caregiver;
-      }
-      auth.user.role = role;
-      log.warn("User as a clinic role");
-    } else if (tokenInfos.role === "clinic") {
-      // TODO After BDD migration this check will be useless
-      auth.user.role = UserRoles.caregiver;
-    } else {
-      auth.user.role = tokenInfos.role as UserRoles;
-    }
-
-    auth.user.settings = fixYLP878Settings(auth.user.settings);
-
-    const expirationDate = tokenInfos.exp;
-    if (typeof expirationDate === "number" && Number.isSafeInteger(expirationDate)) {
-      log.info("Authenticated until ", new Date(expirationDate * 1000).toISOString());
-    }
-
-    sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, auth.sessionToken);
-    sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, auth.traceToken);
-    sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(auth.user));
-
-    setAuthInfos(auth.sessionToken, auth.traceToken, auth.user);
-    return auth.user;
-  };
-
-  const login = (username: string, password: string, key: string | null): Promise<User> => {
-    log.info("login", username);
-    setAuthInProgress(true);
-    return loginPrivate(username, password, key).finally(() => {
-      setAuthInProgress(false);
-      log.info("login done");
-    });
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
@@ -346,7 +241,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     metrics.resetUser();
     zendeskLogout();
 
-    setUserPrivate(null);
+    setUser(null);
     setSessionToken(null);
     setTraceToken(null);
 
@@ -408,103 +303,8 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     const updatedUser = new User(authInfo.user);
     updatedUser.role = UserRoles.hcp;
     updatedUser.profile = profile;
-    sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, newToken);
     setSessionToken(newToken);
     setUser(updatedUser);
-  };
-
-  const initHook = () => {
-    if (isAuthInProgress) {
-      return;
-    }
-
-    // TODO: Do not delete me yet
-    // const onStorageChange = (ev: StorageEvent) => {
-    //   log.debug("onStorageChange");
-    //   if (ev.storageArea === sessionStorage) {
-    //     log.info("onStorageChange", ev.storageArea);
-    //     // Not sure on this one
-    //     window.removeEventListener("storage", onStorageChange);
-    //     setInitialized(false);
-    //   }
-    // };
-    // const unmount = () => {
-    //   window.removeEventListener("storage", onStorageChange);
-    // };
-
-    // Prevent to set two times the trace token, when we have found one in the storage.
-    let initializedFromStorage = false;
-
-    // Use traceToken to know if the API hook is initialized
-    if (traceToken === null) {
-      log.info("Initializing hook from storage");
-
-      const sessionTokenStored = sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN);
-      const traceTokenStored = sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN);
-      const userStored = sessionStorage.getItem(STORAGE_KEY_USER);
-
-      if (sessionTokenStored === null || traceTokenStored === null || userStored === null) {
-        // Clear the storage if one is missing at this point
-        sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-        sessionStorage.removeItem(STORAGE_KEY_USER);
-        zendeskLogout();
-      } else {
-        try {
-          // FIXME check storage items validity
-          const jsonUser = JSON.parse(userStored) as IUser;
-          const currentUser = new User(jsonUser);
-
-          if (!validateUuidV4(traceTokenStored)) {
-            throw new Error("Invalid trace token uuid");
-          }
-          const decoded = jwtDecode<JwtPayload>(sessionTokenStored);
-          if (typeof decoded.exp === "undefined") {
-            throw new Error("Invalid session token");
-          }
-          if (decoded.exp < (Date.now() / 1000)) {
-            throw new Error("Session token as expired");
-          }
-
-          log.info("Token expiration date:", new Date(decoded.exp * 1000).toISOString());
-
-          initializedFromStorage = true;
-          setAuthInfos(sessionTokenStored, traceTokenStored, currentUser);
-
-          if (pathname !== historyHook.location.pathname) {
-            log.info("Reused session storage items, and redirect to", pathname);
-            historyHook.push(pathname);
-          }
-
-        } catch (e) {
-          log.warn("Invalid auth in session storage", e);
-          sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-          sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-          sessionStorage.removeItem(STORAGE_KEY_USER);
-        }
-      }
-      // window.addEventListener("storage", onStorageChange);
-    }
-
-    if (traceToken === null && !initializedFromStorage) {
-      // Create a trace token since, we do not have one set in
-      // the DOM storage
-      setTraceToken(uuidv4());
-    }
-
-    if (!firstLoadingDone) {
-      firstLoadingDone = true;
-      defer(() => {
-        const startLoadingTime = window.startLoadingTime;
-        if (_.isNumber(startLoadingTime) && Number.isFinite(startLoadingTime)) {
-          const loadingTime = (Date.now() - startLoadingTime) / 1000;
-          metrics.send("performance", "load_time", "initial", numberPrecision(loadingTime));
-          delete window.startLoadingTime;
-        }
-      }, 1);
-    }
-
-    // return unmount;
   };
 
   const certifyProfessionalAccount = async (): Promise<void> => {
@@ -518,19 +318,56 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
 
-  React.useEffect(initHook, [historyHook, pathname, traceToken, isAuthInProgress, setAuthInfos]);
+  /************************************************/
+  /****** AUTH 0 HACK FOR LOGIN AND SIGNUP *******/
+  /************************************************/
 
-  // Return the user object and auth methods
+  const mapAuth0UserToIUser = useMemo<IUser>(() => {
+    let user = {};
+    if (auth0user && auth0user.sub) {
+      const parsedSub = auth0user.sub.split("|");
+      const id = parsedSub[1];
+      user = {
+        role: auth0user["http://your-loops.com/roles"][0],
+        userid: id,
+        emailVerified: auth0user.email_verified,
+        username: auth0user.email || "",
+      };
+    }
+    return user as IUser;
+  }, [auth0user]);
+
+  const getUserInfo = useCallback(async () => {
+    console.log(auth0logout);
+    try {
+      if (auth0user) {
+        const { headers } = await getUser(auth0user.email as string);
+        const user = new User(mapAuth0UserToIUser);
+        const sessionToken = headers[HttpHeaderKeys.sessionToken]; // await getAccessTokenSilently();
+        const traceToken = uuidv4();
+        const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
+        setUser(updatedUser);
+        setSessionToken(sessionToken);
+        setTraceToken(traceToken);
+      }
+    } catch (err) {
+      log.error(err);
+    }
+  }, [api, auth0logout, auth0user, getUser, mapAuth0UserToIUser]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getUserInfo();
+    }
+  }, [getUserInfo, isLoggedIn]);
+
   return {
     user,
-    sessionToken,
-    traceToken,
     isLoggedIn,
     isAuthInProgress,
     isAuthHookInitialized,
     session,
     setUser,
-    login,
     certifyProfessionalAccount,
     redirectToProfessionalAccountLogin,
     updateProfile,
@@ -552,7 +389,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 // Hook for child components to get the auth object
 // and re-render when it changes.
 export function useAuth(): AuthContext {
-  return React.useContext(ReactAuthContext);
+  return useContext(ReactAuthContext);
 }
 
 /**

@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import { ThemeProvider, Theme, makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -71,8 +72,8 @@ const routeStyle = makeStyles<Theme, StyleProps>(() => {
 });
 
 export function MainLobby(): JSX.Element {
-
-  const { isLoggedIn, user, isAuthInProgress, isAuthHookInitialized } = useAuth();
+  const { isLoading, isAuthenticated } = useAuth0();
+  const { user } = useAuth();
   const location = useLocation();
   const currentRoute = location.pathname;
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
@@ -85,13 +86,21 @@ export function MainLobby(): JSX.Element {
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
-  if (!isCurrentRoutePublic && (isAuthInProgress || !isAuthHookInitialized)) {
+  const [firstLoading, setFirstLoading] = useState(true);
+
+  useEffect(() => {
+    if (firstLoading && !isLoading) {
+      setFirstLoading(false);
+    }
+  }, [firstLoading, isAuthenticated, isLoading]);
+
+  if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />;
   }
 
-  if (isCurrentRoutePublic && isLoggedIn) {
+  if (isCurrentRoutePublic && isAuthenticated) {
     redirectTo = "/";
-  } else if (!isCurrentRoutePublic && !isLoggedIn) {
+  } else if (!isAuthenticated && !isCurrentRoutePublic) {
     redirectTo = "/login";
   } else if (!renewConsentPath && user && user.isUserPatient() && user.shouldAcceptConsent()) {
     redirectTo = "/new-consent";
@@ -101,7 +110,8 @@ export function MainLobby(): JSX.Element {
 
   return (
     <React.Fragment>
-      {redirectTo ? <Redirect to={redirectTo} /> :
+      {redirectTo && <Redirect to={redirectTo} />}
+      {!firstLoading &&
         <ThemeProvider theme={theme}>
           <SessionTimeout />
           <CssBaseline />

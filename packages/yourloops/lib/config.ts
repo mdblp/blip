@@ -48,8 +48,6 @@ const defaultConfig: AppConfig = {
   ASSETS_URL: DUMMY_URL,
   BRANDING: "diabeloop_blue",
   METRICS_SERVICE: "disabled",
-  MAX_FAILED_LOGIN_ATTEMPTS: 5,
-  DELAY_BEFORE_NEXT_LOGIN_ATTEMPT: 10,
   TERMS_PRIVACY_DATE: "",
   STONLY_WID: "disabled",
   COOKIE_BANNER_CLIENT_ID: "disabled",

@@ -54,7 +54,7 @@ function initAxios() {
   /**
    * We use axios request interceptor to set the access token into headers each request the app send
    */
-  axios.interceptors.request.use(onFulfilled);
+  // axios.interceptors.request.use(onFulfilled);
 }
 
 export default initAxios;

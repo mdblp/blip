@@ -51,6 +51,7 @@ import RoundedHospitalIcon from "../icons/RoundedHospitalIcon";
 import config from "../../lib/config";
 import metrics from "../../lib/metrics";
 import MenuLayout from "../layouts/menu-layout";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {
@@ -66,6 +67,7 @@ const classes = makeStyles((theme: Theme) => ({
 
 function UserMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
+  const { logout: auth0logout } = useAuth0();
   const { user, logout } = useAuth();
   const { clickableMenu, typography } = classes();
   const history = useHistory();
@@ -98,6 +100,7 @@ function UserMenu(): JSX.Element {
 
   const onClickLogout = async () => {
     await logout();
+    await auth0logout({ returnTo: window.location.origin });
     closeMenu();
   };
 

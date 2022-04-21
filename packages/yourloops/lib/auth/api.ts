@@ -43,89 +43,6 @@ import User from "./user";
 import HttpService from "../../services/http";
 
 const log = bows("Auth API");
-const failedLoginCounter = new Map<string, number>();
-
-/**
- * Perform a login.
- * @param {string} username Generally an email
- * @param {string} password The account password
- * @param {string} traceToken A generated uuidv4 trace token
- * @return {Promise<User>} Return the logged-in user or a promise rejection.
- */
-async function authenticate(username: string, password: string, traceToken: string): Promise<Session> {
-  if (!_.isString(username) || _.isEmpty(username)) {
-    return Promise.reject(new Error("no-username"));
-  }
-
-  if (!_.isString(password) || _.isEmpty(password)) {
-    return Promise.reject(new Error("no-password"));
-  }
-
-  log.debug("login: /auth/login", appConfig.API_HOST);
-  const authURL = new URL("/auth/login", appConfig.API_HOST);
-
-  try {
-    // Allow username / password with non ASCII characters
-    // Encode the string to UTF-8 first
-    const encoder = new TextEncoder();
-    const utf8 = encoder.encode(`${username}:${password}`);
-    const basicAuth = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-
-    const response = await fetch(authURL.toString(), {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        [HttpHeaderKeys.traceToken]: traceToken,
-        Authorization: `Basic ${basicAuth}`,
-      },
-    });
-
-    if (!response.ok || response.status !== HttpStatus.StatusOK) {
-      let reason: string | null = null;
-      switch (response.status) {
-      case HttpStatus.StatusUnauthorized:
-        if (typeof appConfig.MAX_FAILED_LOGIN_ATTEMPTS === "number") {
-          let wrongCredentialCount = failedLoginCounter.get(username) ?? 0;
-          wrongCredentialCount += 1;
-          failedLoginCounter.set(username, wrongCredentialCount);
-          if (wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-            reason = "error-account-lock";
-          }
-        }
-        break;
-      case HttpStatus.StatusForbidden:
-        reason = "email-not-verified";
-        break;
-      default:
-        reason = "error-http-500";
-        break;
-      }
-
-      if (reason === null) {
-        reason = "error-invalid-credentials";
-      }
-
-      return Promise.reject(new Error(reason));
-    }
-
-    const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
-    if (sessionToken === null) {
-      return Promise.reject(new Error("error-http-40x"));
-    }
-
-    const user = await response
-      .json()
-      .then((res: IUser) => new User(res));
-
-    // We may miss some case, but it's probably good enough:
-    failedLoginCounter.clear();
-
-    return { sessionToken, traceToken, user };
-  } catch (reason) {
-    return Promise.reject(new Error("error-http-500"));
-  }
-}
-
 
 /**
  * Perform a signup.
@@ -286,26 +203,12 @@ async function getSettings(session: Readonly<Session>, userId?: string): Promise
   return settings;
 }
 
-/**
- * Perform a login.
- * @param {string} username Generally an email
- * @param {string} password The account password
- * @param {string} traceToken A generated uuidv4 trace token
- * @return {Promise<User>} Return the logged-in user or a promise rejection.
- */
-async function login(username: string, password: string, traceToken: string): Promise<Session> {
-  const auth = await authenticate(username, password, traceToken);
-  const [profile, preferences, settings] = await Promise.all([getProfile(auth), getPreferences(auth), getSettings(auth)]);
-  if (profile !== null) {
-    auth.user.profile = profile;
-  }
-  if (preferences !== null) {
-    auth.user.preferences = preferences;
-  }
-  if (settings !== null) {
-    auth.user.settings = settings;
-  }
-  return auth;
+async function getUserInfo(session: Session): Promise<User> {
+  const [profile, preferences, settings] = await Promise.all([getProfile(session), getPreferences(session), getSettings(session)]);
+  session.user.profile = profile;
+  session.user.preferences = preferences;
+  session.user.settings = settings;
+  return session.user;
 }
 
 async function requestPasswordReset(username: string, traceToken: string, language = "en"): Promise<void> {
@@ -562,9 +465,9 @@ async function certifyProfessionalAccount(): Promise<IUser> {
 }
 
 export default {
+  getUserInfo,
   accountConfirmed,
   certifyProfessionalAccount,
-  login,
   logout,
   signup,
   refreshToken,

@@ -40,8 +40,6 @@ export interface AppConfig {
   SUPPORT_WEB_ADDRESS?: string;
   ASSETS_URL?: string | null;
   METRICS_SERVICE?: string | null;
-  MAX_FAILED_LOGIN_ATTEMPTS?: number;
-  DELAY_BEFORE_NEXT_LOGIN_ATTEMPT?: number;
   TERMS_PRIVACY_DATE?: string;
   STONLY_WID: string;
   COOKIE_BANNER_CLIENT_ID: string;
