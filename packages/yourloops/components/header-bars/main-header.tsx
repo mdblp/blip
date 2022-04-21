@@ -31,7 +31,6 @@ import { Link } from "react-router-dom";
 
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import NotificationsActiveOutlinedIcon from "@material-ui/icons/NotificationsActiveOutlined";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -118,7 +117,7 @@ function MainHeader({ withLeftIcon, onClickLeftIcon }: MainHeaderProps): JSX.Ele
                 overlap="circular"
                 color="error"
               >
-                {receivedInvitations.length ? <NotificationsActiveOutlinedIcon /> : <NotificationsNoneIcon />}
+                <NotificationsNoneIcon />
               </Badge>
             </Link>
             <div className={separator} />
