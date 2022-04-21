@@ -209,7 +209,7 @@ describe("Trends", () => {
       expect(wrapper.state()?.atMostRecent, "atMostRecent").to.be.true;
     });
 
-    it("should set the extendSize", async () => {
+    it.skip("should set the extendSize", async () => {
       const props = {...baseProps, msRange: MS_IN_DAY };
       wrapper = mount(<Trends {...props} />);
       await Utils.waitTimeout(10);
