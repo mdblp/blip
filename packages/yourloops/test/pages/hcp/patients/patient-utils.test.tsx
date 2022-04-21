@@ -28,7 +28,7 @@
 import { createAlert, createPatient, createTeamMember, createTeamUser } from "../../../common/utils";
 import {
   comparePatients,
-  mapMembersToPatientTeamStatus,
+  mapTeamMemberToPatientTeam,
   mapTeamUserToPatient,
 } from "../../../../pages/hcp/patients/utils";
 import { PatientTableSortFields, UserInvitationStatus } from "../../../../models/generic";
@@ -291,7 +291,7 @@ describe("Patient utils", () => {
         teamId: member.team.id,
         teamName: member.team.name,
       };
-      const res = mapMembersToPatientTeamStatus(member);
+      const res = mapTeamMemberToPatientTeam(member);
       expect(res).toStrictEqual(patientTeam);
     });
   });
@@ -315,7 +315,7 @@ describe("Patient utils", () => {
         medicalData: null,
         remoteMonitoring: undefined,
         system: undefined,
-        teams: [mapMembersToPatientTeamStatus(teamUser.members[0])],
+        teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
         userid: teamUser.userid,
         username: teamUser.username,
       };

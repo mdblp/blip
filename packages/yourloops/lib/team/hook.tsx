@@ -253,9 +253,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
 
   const getPatients = (): Patient[] => {
     const teamUsers = getPatientsAsTeamUsers();
-    return teamUsers.map(teamUser => {
-      return mapTeamUserToPatient(teamUser);
-    });
+    return teamUsers.map(teamUser => mapTeamUserToPatient(teamUser));
   };
 
   const getMedicalMembers = (team: Team): TeamMember[] => {

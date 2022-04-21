@@ -181,7 +181,7 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
   return compareValues(aValue, bValue);
 };
 
-export const mapMembersToPatientTeamStatus = (member: TeamMember): PatientTeam => {
+export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
   return {
     code: member.team.code,
     invitation: member.invitation,
@@ -201,7 +201,7 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
     medicalData: null,
     remoteMonitoring: undefined,
     system: undefined,
-    teams: teamUser.members.map(member => mapMembersToPatientTeamStatus(member)),
+    teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
     userid: teamUser.userid,
     username: teamUser.username,
   };

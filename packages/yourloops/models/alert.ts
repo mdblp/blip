@@ -35,6 +35,6 @@ export interface Alert {
   timeSpentAwayFromTargetActive: boolean;
   frequencyOfSevereHypoglycemiaRate: number;
   frequencyOfSevereHypoglycemiaActive: boolean;
-  nonDataTransmissitionRate: number;
-  nonDataTransmissitionActive: boolean;
+  nonDataTransmissionRate: number;
+  nonDataTransmissionActive: boolean;
 }

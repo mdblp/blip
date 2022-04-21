@@ -61,24 +61,14 @@ const patientListStyle = makeStyles(
           marginLeft: "auto",
         },
       },
-      tableHeaderFlagIcon: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: theme.spacing(7),
-      },
-      table: {
-        width: "100%",
-      },
       tableContainer: {
-        borderRadius: "5px",
-        boxShadow: "0px 1px 4px rgb(0 0 0 / 25%)",
+        boxShadow: theme.shadows[2],
       },
       tableRowHeader: {
         padding: 0,
       },
       tableCellHeader: {
-        backgroundColor: "#FFF",
+        backgroundColor: theme.palette.common.white,
         fontSize: "15px",
         fontWeight: 600,
         height: "62px",
@@ -122,19 +112,6 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const [rowPerPage, setRowPerPage] = React.useState<number>(10);
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);
 
-  const patientsRows = patientsToDisplay.map(
-    (patient: Patient): JSX.Element => (
-      <PatientRow
-        key={patient.userid}
-        patient={patient}
-        flagged={flagged}
-        filter={filter}
-        onClickPatient={onClickPatient}
-        onFlagPatient={onFlagPatient}
-      />
-    )
-  );
-
   const createSortHandler = (property: PatientTableSortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
       let newOrder = order;
@@ -157,10 +134,12 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   return (
     <div>
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table id="patients-list-table" className={classes.table} aria-label={t("aria-table-list-patient")} stickyHeader>
+        <Table id="patients-list-table" aria-label={t("aria-table-list-patient")}
+          stickyHeader>
           <TableHead>
             <TableRow className={classes.tableRowHeader}>
-              <StyledTableCell id="patients-list-header-icon" className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}>
+              <StyledTableCell id="patients-list-header-icon"
+                className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}>
                 <TableSortLabel
                   id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ""}`}
                   active={orderBy === PatientTableSortFields.flag}
@@ -197,7 +176,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t("remote-monitoring")}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell id="patients-list-header-alert-time-target" className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader}`}>
+              <StyledTableCell id="patients-list-header-alert-time-target"
+                className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader}`}>
                 <TableSortLabel
                   id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ""}`}
                   active={orderBy === PatientTableSortFields.alertTimeTarget}
@@ -226,7 +206,20 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               </StyledTableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{patientsRows}</TableBody>
+          <TableBody>
+            {patientsToDisplay.map(
+              (patient: Patient): JSX.Element => (
+                <PatientRow
+                  key={patient.userid}
+                  patient={patient}
+                  flagged={flagged}
+                  filter={filter}
+                  onClickPatient={onClickPatient}
+                  onFlagPatient={onFlagPatient}
+                />
+              )
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination

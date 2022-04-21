@@ -54,15 +54,8 @@ const patientListStyle = makeStyles(
       flag: {
         color: theme.palette.primary.main,
       },
-      flagIconCell: {
+      icon: {
         width: "56px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      pendingIconCell: {
-        width: "56px",
-        display: "flex",
         alignItems: "center",
         justifyContent: "center",
       },
@@ -83,9 +76,9 @@ const patientListStyle = makeStyles(
   { name: "ylp-hcp-patients-row" }
 );
 
-const StyledTableRow = styled(TableRow)(() => ({
+const StyledTableRow = styled(TableRow)((props) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: "#F8F7F7",
+    backgroundColor: (props.theme as Theme).palette.grey[100],
   },
   "&": {
     height: "64px",
@@ -147,7 +140,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
 
   React.useEffect(() => {
     const observedElement = rowRef.current;
-    if (session !== null && observedElement !== null && typeof medicalData === "undefined" && !isPendingInvitation) {
+    if (session && observedElement && !medicalData && !isPendingInvitation) {
       /** If unmounted, we want to discard the result, react don't like to update an unmounted component */
       let componentMounted = true;
       const observer = new IntersectionObserver((entries) => {
@@ -182,25 +175,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     return _.noop;
   }, [medicalData, patient, session, isPendingInvitation, teamHook, rowRef]);
 
-  const firstRowIcon = filter === FilterType.pending && hasPendingInvitation ?
-    (
-      <Tooltip
-        id={`${rowId}-tooltip-pending`}
-        title={t("pending-invitation") as string}
-        aria-label={t("pending-invitation")}
-        placement="bottom"
-      >
-        <Box display="flex">
-          <AccessTimeIcon id={`${rowId}-pendingicon`} className={classes.pendingIconCell} />
-        </Box>
-      </Tooltip>) :
-    (<IconActionButton
-      icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
-      id={`${rowId}-icon-button-flag`}
-      onClick={onClickFlag}
-      className={`${!isFlagged ? classes.flag : ""} ${classes.flagIconCell} patient-flag-button`}
-    />);
-
   return (
     <StyledTableRow
       id={rowId}
@@ -212,7 +186,25 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       data-email={email}
       ref={rowRef}
     >
-      <StyledTableCell id={`${rowId}-icon`} className={classes.iconCell}>{firstRowIcon}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-icon`} className={classes.iconCell}>
+        {filter === FilterType.pending && hasPendingInvitation ?
+          (<Tooltip
+            id={`${rowId}-tooltip-pending`}
+            title={t("pending-invitation") as string}
+            aria-label={t("pending-invitation")}
+            placement="bottom"
+          >
+            <Box display="flex">
+              <AccessTimeIcon id={`${rowId}-pendingicon`} className={classes.icon} />
+            </Box>
+          </Tooltip>) :
+          (<IconActionButton
+            icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
+            id={`${rowId}-icon-button-flag`}
+            onClick={onClickFlag}
+            className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
+          />)}
+      </StyledTableCell>
       <StyledTableCell id={`${rowId}-patient-full-name`} className={classes.typography}>
         <Tooltip title={tooltipText}>
           <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
@@ -220,14 +212,22 @@ function PatientRow(props: PatientElementProps): JSX.Element {
           </Typography>
         </Tooltip>
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-remote-monitoring`}
-        className={classes.typography}>{patientRemoteMonitoring}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-time-away-target`}
-        className={classes.typography}>{timeSpentAwayFromTargetRate}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-hypo-frequency-rate`}
-        className={classes.typography}>{frequencyOfSevereHypoglycemiaRate}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>{lastUpload}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>
+        {patientSystem}
+      </StyledTableCell>
+      <StyledTableCell
+        id={`${rowId}-remote-monitoring`} className={classes.typography}>
+        {patientRemoteMonitoring}
+      </StyledTableCell>
+      <StyledTableCell id={`${rowId}-time-away-target`} className={classes.typography}>
+        {timeSpentAwayFromTargetRate}
+      </StyledTableCell>
+      <StyledTableCell id={`${rowId}-hypo-frequency-rate`} className={classes.typography}>
+        {frequencyOfSevereHypoglycemiaRate}
+      </StyledTableCell>
+      <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
+        {lastUpload}
+      </StyledTableCell>
     </StyledTableRow>
   );
 }
