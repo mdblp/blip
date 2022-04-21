@@ -36,6 +36,8 @@ import siteChangeCannulaImage from "./images/sitechange-cannula.png";
 import siteChangeReservoirImage from "./images/sitechange-reservoir.png";
 import siteChangeTubingImage from "./images/sitechange-tubing.png";
 import siteChangeReservoirDiabeloopImage from "./images/diabeloop/sitechange-cartridge.png";
+import jaFontRegular from "jaFont-Regular.ttf";
+import jaFontBold from "jaFont-Bold.ttf";
 
 const t = i18next.t.bind(i18next);
 
@@ -103,6 +105,27 @@ async function loadImages() {
       imageStr = base64Flag + arrayBufferToBase64(buffer);
     }
     constants.Images.siteChangeReservoirDiabeloopImage = imageStr;
+  }
+}
+
+async function loadFonts() {
+  if (i18next.language === "ja") {
+    if (constants.Fonts.ja.regular === null) {
+      const response = await fetch(jaFontRegular);
+      if (response.ok) {
+        constants.Fonts.ja.regular = await response.arrayBuffer();
+      } else {
+        console.error("Failed to download", response.status, jaFontRegular);
+      }
+    }
+    if (constants.Fonts.ja.bold === null) {
+      const response = await fetch(jaFontBold);
+      if (response.ok) {
+        constants.Fonts.ja.bold = await response.arrayBuffer();
+      } else {
+        console.error("Failed to download", response.status, jaFontBold);
+      }
+    }
   }
 }
 
@@ -228,7 +251,17 @@ export function createPrintPDFPackage(data, opts) {
           ModDate: mReportDate.toDate(),
         },
       });
+
       const stream = doc.pipe(utils.blobStream());
+
+      _.forOwn(constants.Fonts, (f) => {
+        if (typeof f.regularName === "string" && f.regular) {
+          doc.registerFont(f.regularName, f.regular);
+        }
+        if (typeof f.boldName === "string" && f.bold) {
+          doc.registerFont(f.boldName, f.bold);
+        }
+      });
 
       if (data.basics) createPrintView("basics", data.basics, pdfOpts, doc).render();
       if (data.daily) createPrintView("daily", data.daily, pdfOpts, doc).render();
@@ -258,6 +291,7 @@ export function createPrintPDFPackage(data, opts) {
 
 async function doPrint(data, opts) {
   await loadImages();
+  await loadFonts();
   return createPrintPDFPackage(data, opts);
 }
 

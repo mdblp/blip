@@ -7,11 +7,13 @@ import locales from "../../../locales/languages.json";
 // Partial translation to avoid changing lot of tests
 locales.resources.en.main = {
   ...locales.resources.en.main,
-  abbrev_duration_day: "d", // eslint-disable-line camelcase
-  abbrev_duration_hour: "h", // eslint-disable-line camelcase
-  abbrev_duration_minute: "min", // eslint-disable-line camelcase
-  abbrev_duration_minute_m: "m", // eslint-disable-line camelcase
-  abbrev_duration_second: "s", // eslint-disable-line camelcase
+  "abbrev_duration_day": "d",
+  "abbrev_duration_hour": "h",
+  "abbrev_duration_minute": "min",
+  "abbrev_duration_minute_m": "m",
+  "abbrev_duration_second": "s",
+  "birthday-format": "ll",
+  "pdf-date-range": "Date range: {{range}}",
 };
 
 const i18nOptions = {

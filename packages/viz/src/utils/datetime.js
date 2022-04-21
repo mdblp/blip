@@ -159,9 +159,9 @@ export function getTimezoneFromTimePrefs(timePrefs) {
  * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
  */
 export function formatBirthdate(patient) {
-  const bday = _.get(patient, "profile.patient.birthday", "");
-  if (bday) {
-    return utcFormat(t("%b %-d, %Y"))(Date.parse(bday));
+  const birthday = _.get(patient, "profile.patient.birthday", "");
+  if (birthday) {
+    return moment.utc(birthday).format(t("birthday-format"));
   }
   return "";
 }

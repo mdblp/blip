@@ -87,15 +87,12 @@ export async function getPatientsDataSummary(session: Session, userId: string, o
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-function getRange(session: Session, patient: IUser): Promise<Response> {
+function getRange(session: Session, patientId: string): Promise<Response> {
   const { sessionToken, traceToken } = session;
-  if (patient.role !== UserRoles.patient) {
-    return Promise.reject(new Error(t("not-a-patient")));
-  }
 
-  let endpoint = `/data/v1/range/${patient.userid}`;
+  let endpoint = `/data/v1/range/${patientId}`;
   if (appConfig.CBG_BUCKETS_ENABLED) {
-    endpoint = `/data/v2/range/${patient.userid}`;
+    endpoint = `/data/v2/range/${patientId}`;
   }
 
   const dataURL = new URL(endpoint, appConfig.API_HOST);
@@ -114,8 +111,8 @@ function getRange(session: Session, patient: IUser): Promise<Response> {
  * @param patient The patient (user) to fetch data
  * @returns Array [string, string] of ISO 8601 dates time
  */
-export async function getPatientDataRange(session: Session, patient: IUser): Promise<string[] | null> {
-  const response = await getRange(session, patient);
+export async function getPatientDataRange(session: Session, patientId: string): Promise<string[] | null> {
+  const response = await getRange(session, patientId);
   if (response.ok) {
     const dataRange = (await response.json()) as string[];
     if (!Array.isArray(dataRange) || dataRange.length !== 2) {

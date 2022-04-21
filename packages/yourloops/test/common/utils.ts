@@ -31,6 +31,11 @@ import jwtDecode from "jwt-decode";
 
 import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
+import { UserInvitationStatus } from "../../models/generic";
+import { Patient, PatientTeam } from "../../models/patient";
+import { Alert } from "../../models/alert";
+import { Team, TeamMember, TeamUser } from "../../lib/team";
+import { Profile } from "../../models/shoreline";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -89,4 +94,57 @@ export const refreshToken = (token: string): string => {
   utf8 = encoder.encode(JSON.stringify(payload));
   const b64Payload = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
   return `${b64Header}.${b64Payload}.`;
+};
+
+export function triggerMouseClick(domElement: HTMLElement): void {
+  const clickEvent = new MouseEvent("click", { bubbles: true });
+  domElement.dispatchEvent(clickEvent);
+}
+
+export const createPatient = (
+  id: string,
+  teams: PatientTeam[],
+  alerts: Alert = null,
+  fullName = "fakePatientFullName",
+  remoteMonitoring: Date = null,
+  system: string = null,
+  flagged: boolean = null
+): Patient => {
+  return {
+    alerts,
+    fullName,
+    remoteMonitoring,
+    system,
+    teams,
+    userid: id,
+    flagged,
+  } as Patient;
+};
+
+export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
+  return {
+    teamId: id,
+    status,
+  } as PatientTeam;
+};
+export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alert => {
+  return {
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+  } as Alert;
+};
+
+export const createTeamUser = (id: string, members: TeamMember[], profile: Profile = null): TeamUser => {
+  return {
+    userid: id,
+    members,
+    profile,
+  } as TeamUser;
+};
+
+export const createTeamMember = (id: string, name: string, teamCode: string, status: UserInvitationStatus): TeamMember => {
+  return {
+    team: { id, name, code: teamCode } as Team,
+    status,
+  } as TeamMember;
 };

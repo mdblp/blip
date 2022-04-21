@@ -34,13 +34,12 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 
-import { TeamUser } from "../../../lib/team";
 import IconActionButton from "../../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
+import { Patient } from "../../../models/patient";
 
 interface PendingPatientCardProps {
-  patient: TeamUser;
-  onClickRemovePatient: (patient: TeamUser) => void;
+  patient: Patient;
 }
 
 const style = makeStyles(theme => ({
@@ -67,14 +66,13 @@ const style = makeStyles(theme => ({
 const removeButtonEnabled = false;
 
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
-  const { patient, onClickRemovePatient } = props;
+  const { patient } = props;
   const classes = style();
   const email = _.get(patient, "emails[0]", patient.username);
   const patientId = patient.userid;
 
   const handleOnClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClickRemovePatient(patient);
   };
 
   return (

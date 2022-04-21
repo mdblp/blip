@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import bows from "bows";
 
@@ -44,17 +44,12 @@ import {
   sharedUserInitialState,
   sharedUserReducer,
 } from "../../lib/share";
-import { DataContextProvider, DefaultDataContext } from "../../lib/data";
 import { setPageTitle } from "../../lib/utils";
-import PrimaryNavBar from "../../components/header-bars/primary";
-import ProfilePage from "../profile";
-import NotificationsPage from "../notifications";
-import PatientDataPage from "./patient-data";
-import PatientListPage from "./patients/page";
+
 const log = bows("CaregiverPage");
 
 const pageStyles = makeStyles(
-  (/* theme: Theme */) => {
+  () => {
     return {
       loadingProgress: {
         position: "absolute",
@@ -66,23 +61,10 @@ const pageStyles = makeStyles(
   { name: "ylp-caregiver-page" }
 );
 
-const CaregiverRoutes = (): JSX.Element => {
-  return (
-    <Switch>
-      <Route exact path="/preferences" component={ProfilePage} />
-      <Route exact path="/notifications" component={NotificationsPage} />
-      <Route path="/patient/:patientId" component={PatientDataPage} />
-      <Route exact path="/patients" component={PatientListPage} />
-      <Redirect exact from="/" to="/patients" />
-      <Redirect to="/not-found" />
-    </Switch>
-  );
-};
-
 /**
  * Health care professional page
  */
-const CaregiverPage = (): JSX.Element => {
+const CaregiverPage = ({ children }: { children: JSX.Element }): JSX.Element => {
   const { t } = useTranslation("yourloops");
   const historyHook = useHistory();
   const authHook = useAuth();
@@ -119,8 +101,8 @@ const CaregiverPage = (): JSX.Element => {
     }
   }, [historyHook, pathname, session, t, errorMessage, sharedUsers, loading]);
 
-  let content: JSX.Element;
-  if (errorMessage !== null) {
+  let content: JSX.Element = children;
+  if (errorMessage) {
     content = (
       <div id="div-api-error-message" className="api-error-message">
         <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
@@ -131,18 +113,13 @@ const CaregiverPage = (): JSX.Element => {
         </Button>
       </div>
     );
-  } else if (session === null || sharedUsersState.sharedUsers === null || loading) {
+  } else if (!session || !sharedUsersState.sharedUsers || loading) {
     content = <CircularProgress disableShrink className={classes.loadingProgress} />;
-  } else {
-    content = <CaregiverRoutes />;
   }
 
   return (
     <SharedUserContextProvider value={[sharedUsersState, sharedUsersDispatch]}>
-      <DataContextProvider context={DefaultDataContext}>
-        <PrimaryNavBar />
-        {content}
-      </DataContextProvider>
+      {content}
     </SharedUserContextProvider>
   );
 };

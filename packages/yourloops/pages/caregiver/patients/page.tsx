@@ -36,7 +36,13 @@ import Container from "@material-ui/core/Container";
 
 import { FilterType, SortDirection, SortFields, UserInvitationStatus } from "../../../models/generic";
 import { IUser, UserRoles } from "../../../models/shoreline";
-import { getUserFirstName, getUserLastName, getUserEmail, errorTextFromException, setPageTitle } from "../../../lib/utils";
+import {
+  getUserFirstName,
+  getUserLastName,
+  getUserEmail,
+  errorTextFromException,
+  setPageTitle,
+} from "../../../lib/utils";
 import metrics from "../../../lib/metrics";
 import { useAuth } from "../../../lib/auth";
 import { useSharedUser, ShareUser, removeDirectShare } from "../../../lib/share";

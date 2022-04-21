@@ -27,7 +27,6 @@
  */
 
 import { createTheme, Theme } from "@material-ui/core/styles";
-import { PaletteOptions } from "@material-ui/core/styles/createPalette";
 import config from "../lib/config";
 
 const DEFAULT_PRIMARY_MAIN_COLOR = "#039BE5";
@@ -36,6 +35,10 @@ const DEFAULT_PRIMARY_DARK_COLOR = "#1769AA";
 const DEFAULT_SECONDARY_MAIN_COLOR = "#EDFAFF";
 const DEFAULT_SECONDARY_LIGHT_COLOR = "#F5F9F9";
 const DEFAULT_SECONDARY_DARK_COLOR = "#BBC7CC";
+const DEFAULT_TEXT_BASE_COLOR = "#444444";
+
+const appElement = document.getElementById("app");
+const cssVar = (name: string): string => getComputedStyle(appElement as HTMLElement).getPropertyValue(name).trim();
 
 /** Set one and only one class for the branding in `<div id='app'>` */
 export function initTheme() {
@@ -47,27 +50,17 @@ export function initTheme() {
   favIcon.href = `./branding_${config.BRANDING}_favicon.ico`;
 }
 
-export function getCommonTheme(): PaletteOptions {
-  const appElement = document.getElementById("app");
-  const cssVar = (name: string): string => getComputedStyle(document.getElementById("app") as HTMLElement).getPropertyValue(name).trim();
-  return {
-    type: "light",
-    primary: {
-      main: appElement ? cssVar("--color-primary-main") : DEFAULT_PRIMARY_MAIN_COLOR,
-      light: appElement ? cssVar("--color-primary-light") : DEFAULT_PRIMARY_LIGHT_COLOR,
-      dark: appElement ? cssVar("--color-primary-dark") : DEFAULT_PRIMARY_DARK_COLOR,
-    },
-    secondary: {
-      main: appElement ? cssVar("--color-secondary-main") : DEFAULT_SECONDARY_MAIN_COLOR,
-      light: appElement ? cssVar("--color-secondary-light") : DEFAULT_SECONDARY_LIGHT_COLOR,
-      dark: appElement ? cssVar("--color-secondary-dark") : DEFAULT_SECONDARY_DARK_COLOR,
-    },
-  };
-}
-
-export function getMainTheme() {
+export function getTheme(): Theme {
   return createTheme({
     overrides: {
+      MuiCssBaseline: {
+        "@global": {
+          a: {
+            color: "inherit",
+            textDecoration: "none",
+          },
+        },
+      },
       MuiButton: {
         root: {
           fontWeight: 600,
@@ -81,19 +74,32 @@ export function getMainTheme() {
           },
         },
       },
+      MuiListItemIcon: {
+        root: {
+          minWidth: 40,
+        },
+      },
+      MuiPaper: {
+        rounded: {
+          borderRadius: 12,
+        },
+      },
     },
     palette: {
-      ...getCommonTheme(),
-      background: { default: "#FFFFFF" },
-    },
-  });
-}
-
-export function getExternalTheme() {
-  return createTheme({
-    palette: {
-      ...getCommonTheme(),
-      background: { default: "#F7F7F8" },
+      type: "light",
+      text: {
+        primary: appElement ? cssVar("--text-base-color") : DEFAULT_TEXT_BASE_COLOR,
+      },
+      primary: {
+        main: appElement ? cssVar("--color-primary-main") : DEFAULT_PRIMARY_MAIN_COLOR,
+        light: appElement ? cssVar("--color-primary-light") : DEFAULT_PRIMARY_LIGHT_COLOR,
+        dark: appElement ? cssVar("--color-primary-dark") : DEFAULT_PRIMARY_DARK_COLOR,
+      },
+      secondary: {
+        main: appElement ? cssVar("--color-secondary-main") : DEFAULT_SECONDARY_MAIN_COLOR,
+        light: appElement ? cssVar("--color-secondary-light") : DEFAULT_SECONDARY_LIGHT_COLOR,
+        dark: appElement ? cssVar("--color-secondary-dark") : DEFAULT_SECONDARY_DARK_COLOR,
+      },
     },
   });
 }

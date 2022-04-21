@@ -76,7 +76,7 @@ const footerStyle = makeStyles((theme: Theme) => {
     },
     container: {
       alignItems: "center",
-      boxShadow: "0px -1px 4px rgba(0, 0, 0, 0.25)",
+      backgroundColor: "var(--footer-background-color)",
       color: theme.palette.grey[700],
       display: "flex",
       flexShrink: 0,
@@ -139,7 +139,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       },
     },
     link: {
-      color: theme.palette.grey[700],
+      color: theme.palette.grey[600],
       fontWeight: 400,
       [theme.breakpoints.down("xs")]: {
         marginBottom: "15px",
@@ -207,12 +207,12 @@ function FooterLinks(): JSX.Element {
   return (
     <Container id="footer-links-container" className={classes.container} maxWidth={false}>
       <Box className={`${classes.sideBox} ${classes.leftBox}`}>
-        <Box className={classes.supportButton}></Box>
+        <Box className={classes.supportButton} />
       </Box>
       <Box className={classes.centerBox}>
         {!user &&
           <Box id="footer-language-box" className={classes.languageBox}>
-            <LanguageIcon className={classes.languageIcon}></LanguageIcon>
+            <LanguageIcon className={classes.languageIcon} />
             <LanguageSelector />
             <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
           </Box>
