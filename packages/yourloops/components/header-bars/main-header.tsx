@@ -47,8 +47,8 @@ import TeamMenu from "../menus/team-menu";
 import UserMenu from "../menus/user-menu";
 
 interface MainHeaderProps {
-  withLeftIcon?: boolean;
-  onClickLeftIcon?: () => void;
+  withShrinkIcon?: boolean;
+  onClickShrinkIcon?: () => void;
 }
 
 const classes = makeStyles((theme: Theme) => ({
@@ -76,7 +76,7 @@ const classes = makeStyles((theme: Theme) => ({
   },
 }));
 
-function MainHeader({ withLeftIcon, onClickLeftIcon }: MainHeaderProps): JSX.Element {
+function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
   const { desktopLogo, separator, appBar, leftIcon, toolbar } = classes();
   const { t } = useTranslation("yourloops");
   const { receivedInvitations } = useNotification();
@@ -97,7 +97,7 @@ function MainHeader({ withLeftIcon, onClickLeftIcon }: MainHeaderProps): JSX.Ele
           alignItems="center"
         >
           <Box display="flex" alignItems="center">
-            {withLeftIcon && <MenuIcon id="left-menu-icon" className={leftIcon} onClick={onClickLeftIcon} />}
+            {withShrinkIcon && <MenuIcon id="left-menu-icon" className={leftIcon} onClick={onClickShrinkIcon} />}
             <Link to="/">
               <Avatar
                 id="header-main-logo"

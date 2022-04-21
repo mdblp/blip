@@ -28,14 +28,11 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import MainDrawer from "../../../components/menus/main-drawer";
+import MainDrawer, { mainDrawerDefaultWidth, mainDrawerMiniVariantWidth } from "../../../components/menus/main-drawer";
 import { triggerMouseEvent } from "../../common/utils";
 
 describe("Main Drawer", () => {
   let container: HTMLElement | null = null;
-  const defaultWidth = "240px";
-  const miniVariantWidth = "57px";
-
   async function mountComponent(miniVariant = true): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
@@ -60,26 +57,26 @@ describe("Main Drawer", () => {
   it("Should render miniVariant by default", async () => {
     await mountComponent();
     const drawer = document.getElementById("main-left-drawer");
-    expect(getComputedStyle(drawer).width).toEqual(miniVariantWidth);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerMiniVariantWidth);
   });
 
   it("Should render full width when miniVariant is set to false", async () => {
     await mountComponent(false);
     const drawer = document.getElementById("main-left-drawer");
-    expect(getComputedStyle(drawer).width).toEqual(defaultWidth);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 
   it("Should open the drawer when hover it", async () => {
     await mountComponent();
     const drawer = document.getElementById("main-left-drawer");
     triggerMouseEvent("mouseover", drawer);
-    expect(getComputedStyle(drawer).width).toEqual(defaultWidth);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 
   it("Hover should be disabled when miniVariant is set to false", async () => {
     await mountComponent(false);
     const drawer = document.getElementById("main-left-drawer");
     triggerMouseEvent("mouseover", drawer);
-    expect(getComputedStyle(drawer).width).toEqual(defaultWidth);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 });

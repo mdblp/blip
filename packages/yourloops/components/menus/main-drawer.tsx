@@ -47,24 +47,24 @@ interface MainDrawerProps {
   miniVariant?: boolean;
 }
 
-const defaultWidth = 240;
-const miniVariantWidth = 57;
+export const mainDrawerDefaultWidth = "240px";
+export const mainDrawerMiniVariantWidth = "57px";
 
 const styles = makeStyles((theme: Theme) => ({
   drawer: {
-    width: defaultWidth,
+    width: mainDrawerDefaultWidth,
     whiteSpace: "nowrap",
   },
   drawerPaper: {
-    width: defaultWidth,
+    width: mainDrawerDefaultWidth,
     overflowX: "hidden",
   },
   miniDrawer: {
-    width: miniVariantWidth,
+    width: mainDrawerMiniVariantWidth,
     whiteSpace: "nowrap",
   },
   miniDrawerPaper: {
-    width: miniVariantWidth,
+    width: mainDrawerMiniVariantWidth,
     overflowX: "hidden",
   },
   enterTransition: {

@@ -43,11 +43,11 @@ function DashboardLayout({ children }: { children: JSX.Element }) {
   const { toolbar } = classes();
   const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true);
 
-  const onClickMainHeaderMenuIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant);
+  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant);
 
   return (
     <Box display="flex">
-      <MainHeader withLeftIcon onClickLeftIcon={onClickMainHeaderMenuIcon} />
+      <MainHeader withShrinkIcon onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
       <MainDrawer miniVariant={drawerMiniVariant} />
       <Container>
         <div className={toolbar} />

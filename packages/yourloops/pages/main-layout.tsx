@@ -54,7 +54,11 @@ export function MainLayout(): JSX.Element {
     case UserRoles.hcp:
       return <HcpPatientListPage />;
     case UserRoles.caregiver:
-      return <CaregiverPatientListPage />;
+      return (
+        <CaregiverPage>
+          <CaregiverPatientListPage />
+        </CaregiverPage>
+      );
     case UserRoles.patient:
       return <PatientDataPage />;
     default:
@@ -88,13 +92,11 @@ export function MainLayout(): JSX.Element {
                   }
 
                   {session.user.role === UserRoles.caregiver &&
-                    <CaregiverPage>
                       <Switch>
                         <Route path="/patient/:patientId" component={PatientDataPage} />
                         <Redirect exact from="/" to="/home" />
                         <Redirect to="/not-found" />
                       </Switch>
-                    </CaregiverPage>
                   }
 
                   {session.user.role === UserRoles.patient &&

@@ -34,8 +34,8 @@ import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLayout } from "../../pages/main-layout";
 import HcpPatientListPage from "../../pages/hcp/patients/page";
-import CaregiverPatientListPage from "../../pages/caregiver/patients/page";
 import PatientDataPage from "../../components/patient-data";
+import CaregiverPage from "../../pages/caregiver";
 
 describe("Main layout", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -63,7 +63,7 @@ describe("Main layout", () => {
 
   it("should render CaregiverPage when current user has caregiver role", () => {
     const component = renderMainPageLayout(authHookCaregiver);
-    const caregiverPage = component.root.findByType(CaregiverPatientListPage);
+    const caregiverPage = component.root.findByType(CaregiverPage);
     expect(caregiverPage).toBeDefined();
   });
 

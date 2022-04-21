@@ -58,7 +58,7 @@ describe("Main Header", () => {
             <AuthContextProvider value={authContext}>
               <TeamContextProvider teamAPI={teamAPI}>
                 <NotificationContextProvider api={notificationAPIStub}>
-                  <MainHeader withLeftIcon={withLeftIcon} onClickLeftIcon={onClickLeftIcon} />
+                  <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
                 </NotificationContextProvider>
               </TeamContextProvider>
             </AuthContextProvider>
