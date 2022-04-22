@@ -34,10 +34,10 @@ import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLobby } from "../../app/main-lobby";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { MainLayout } from "../../pages/main-layout";
 import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
+import HcpPatientListPage from "../../pages/hcp/patients/page";
 import { SignUpPage } from "../../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
 
@@ -72,16 +72,22 @@ describe("Main lobby", () => {
     expect(history.location.pathname).toBe(route);
   }
 
-  it("should render MainPageLayout when user is logged in and route is '/'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/"] });
+  it("should display the HcpPatientListPage when hcp is logged in and route is /home", () => {
+    const history = createMemoryHistory({ initialEntries: ["/home"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainLayout, "/patients");
+    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
   });
 
-  it("should render MainPageLayout when user is logged in and route is '/login'", () => {
+  it("should redirect to home page when user is logged in as a hcp and route is '/'", () => {
+    const history = createMemoryHistory({ initialEntries: ["/"] });
+    const component = renderMainLayout(history, authHookHcpWithSession);
+    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
+  });
+
+  it("should redirect to home page when user is logged in as a hcp and route is '/login'", () => {
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainLayout, "/patients");
+    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
   });
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {

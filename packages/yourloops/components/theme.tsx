@@ -74,9 +74,15 @@ export function getTheme(): Theme {
           },
         },
       },
+      MuiSvgIcon: {
+        root: {
+          margin: 0,
+        },
+      },
       MuiListItemIcon: {
         root: {
           minWidth: 40,
+          color: appElement ? cssVar("--text-base-color") : DEFAULT_TEXT_BASE_COLOR,
         },
       },
       MuiPaper: {

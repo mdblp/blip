@@ -85,6 +85,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       padding: "11px",
       paddingBottom: "11px",
       paddingTop: "11px",
+      zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down("sm")]: {
         flexWrap: "wrap",
       },

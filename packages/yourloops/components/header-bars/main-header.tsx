@@ -29,8 +29,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import NotificationsActiveOutlinedIcon from "@material-ui/icons/NotificationsActiveOutlined";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -46,12 +46,21 @@ import { UserRoles } from "../../models/shoreline";
 import TeamMenu from "../menus/team-menu";
 import UserMenu from "../menus/user-menu";
 
+interface MainHeaderProps {
+  withShrinkIcon?: boolean;
+  onClickShrinkIcon?: () => void;
+}
+
 const classes = makeStyles((theme: Theme) => ({
   appBar: {
-    borderBottom: "1px solid var(--text-base-color)",
+    borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
     color: "var(--text-base-color)",
+  },
+  leftIcon: {
+    cursor: "pointer",
+    marginRight: theme.spacing(3),
   },
   desktopLogo: {
     width: 140,
@@ -62,10 +71,13 @@ const classes = makeStyles((theme: Theme) => ({
     backgroundColor: "var(--text-base-color)",
     margin: `0 ${theme.spacing(2)}px`,
   },
+  toolbar: {
+    padding: `0 ${theme.spacing(2)}px`,
+  },
 }));
 
-function MainHeader(): JSX.Element {
-  const { desktopLogo, separator, appBar } = classes();
+function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
+  const { desktopLogo, separator, appBar, leftIcon, toolbar } = classes();
   const { t } = useTranslation("yourloops");
   const { receivedInvitations } = useNotification();
   const { user } = useAuth();
@@ -75,24 +87,27 @@ function MainHeader(): JSX.Element {
       id="app-main-header"
       elevation={0}
       className={appBar}
-      position="sticky"
+      position="fixed"
     >
-      <Toolbar>
+      <Toolbar className={toolbar}>
         <Box
           width="100%"
           display="flex"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Link to="/">
-            <Avatar
-              id="header-main-logo"
-              variant="square"
-              src={`/branding_${config.BRANDING}_logo.svg`}
-              alt={t("alt-img-logo")}
-              className={desktopLogo}
-            />
-          </Link>
+          <Box display="flex" alignItems="center">
+            {withShrinkIcon && <MenuIcon id="left-menu-icon" className={leftIcon} onClick={onClickShrinkIcon} />}
+            <Link to="/">
+              <Avatar
+                id="header-main-logo"
+                variant="square"
+                src={`/branding_${config.BRANDING}_logo.svg`}
+                alt={t("alt-img-logo")}
+                className={desktopLogo}
+              />
+            </Link>
+          </Box>
 
           <Box display="flex" alignItems="center">
             <Link to="/notifications" id="header-notification-link">
@@ -102,7 +117,7 @@ function MainHeader(): JSX.Element {
                 overlap="circular"
                 color="error"
               >
-                {receivedInvitations.length ? <NotificationsActiveOutlinedIcon /> : <NotificationsNoneIcon />}
+                <NotificationsNoneIcon />
               </Badge>
             </Link>
             <div className={separator} />
