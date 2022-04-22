@@ -33,9 +33,9 @@ import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLayout } from "../../pages/main-layout";
-import CaregiverPage from "../../pages/caregiver";
-import PatientListPage from "../../pages/hcp/patients/page";
+import HcpPatientListPage from "../../pages/hcp/patients/page";
 import PatientDataPage from "../../components/patient-data";
+import CaregiverPage from "../../pages/caregiver";
 
 describe("Main layout", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -57,7 +57,7 @@ describe("Main layout", () => {
 
   it("should render HcpPage when current user has hcp role", () => {
     const component = renderMainPageLayout(authHookHcp);
-    const hcpPage = component.root.findByType(PatientListPage);
+    const hcpPage = component.root.findByType(HcpPatientListPage);
     expect(hcpPage).toBeDefined();
   });
 
