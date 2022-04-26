@@ -31,7 +31,7 @@ import config from "../config";
 import personUtils from "../core/personutils";
 import utils from "../core/utils";
 import ApiUtils from "../core/api-utils";
-import { Header, Basics, Daily, Trends, Settings } from "./chart";
+import { Header, Basics, Daily, Trends, Settings, PatientDashboard } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
 
@@ -130,6 +130,7 @@ class PatientDataPage extends React.Component {
           /** To keep the wanted extentSize (num days between endpoints) between charts switch. */
           extentSize: 14,
         },
+        dashboard: {},
         bgLog: {
           bgSource: "smbg",
         },
@@ -184,6 +185,9 @@ class PatientDataPage extends React.Component {
       case "trends":
         this.handleSwitchToTrends();
         break;
+      case "dashboard":
+          this.handleSwitchToDashboard();
+          break;
       default:
         this.handleSwitchToDaily();
         break;
@@ -444,6 +448,15 @@ class PatientDataPage extends React.Component {
             trackMetric={this.trackMetric}
           />
         </Route>
+        <Route path={`${prefixURL}/dashboard`}>
+          <PatientDashboard
+            bgPrefs={this.state.bgPrefs}
+            chartPrefs={this.state.chartPrefs}
+            dataUtil={this.dataUtil}
+            epochLocation={epochLocation}
+            msRange={msRange}
+          />
+        </Route>
       </Switch>
     );
   }
@@ -494,6 +507,8 @@ class PatientDataPage extends React.Component {
       return "trends";
     case `${prefixURL}/settings`:
       return "settings";
+    case `${prefixURL}/dashboard`:
+        return "dashboard";
     }
     return null;
   }
@@ -675,6 +690,21 @@ class PatientDataPage extends React.Component {
     if (e) {
       e.preventDefault();
     }
+    if (fromChart !== toChart) {
+      history.push(`${prefixURL}/${toChart}`);
+      this.trackMetric("data_visualization", "click_view", toChart);
+    }
+  }
+
+  handleSwitchToDashboard(e) {
+    const { prefixURL, history } = this.props;
+    const fromChart = this.getChartType();
+    const toChart = "dashboard";
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
     if (fromChart !== toChart) {
       history.push(`${prefixURL}/${toChart}`);
       this.trackMetric("data_visualization", "click_view", toChart);
