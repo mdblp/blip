@@ -19,6 +19,7 @@ import Trends from "./trends";
 import Settings from "./settings";
 import Header from "./header";
 import Footer from "./footer";
+import PatientDashboard from "./patientDashboard";
 
 export {
   Basics,
@@ -26,5 +27,6 @@ export {
   Trends,
   Settings,
   Header,
-  Footer
+  Footer,
+  PatientDashboard
 };
