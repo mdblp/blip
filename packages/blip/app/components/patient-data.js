@@ -335,7 +335,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
+    const { patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -346,6 +346,7 @@ class PatientDataPage extends React.Component {
       msRange,
       tidelineData,
     } = this.state;
+    const user = api.whoami;
 
     return (
       <Switch>
@@ -354,6 +355,8 @@ class PatientDataPage extends React.Component {
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             patient={patient}
+            teams={teams}
+            user={user}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
             epochLocation={epochLocation}
@@ -363,6 +366,7 @@ class PatientDataPage extends React.Component {
             tidelineData={tidelineData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
+            chatWidget={chatWidget}
           />
         </Route>
         <Route path={`${prefixURL}/overview`}>

@@ -59,12 +59,14 @@ function ReduxProvider(props) {
         api={props.api}
         store={store}
         patient={props.patient}
+        teams={props.teams}
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
+        chatWidget={props.chatWidget}
       />
     </Provider>
   );
@@ -73,11 +75,13 @@ function ReduxProvider(props) {
 ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  teams: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
 };
 
 /**
@@ -86,18 +90,20 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions } = props;
+      const { config, api, patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget } = props;
       updateConfig(config);
 
       return (
         <ReduxProvider
           api={api}
           patient={patient}
+          teams={teams}
           profileDialog={profileDialog}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
+          chatWidget={chatWidget}
         />
       );
     } catch (err) {
@@ -113,11 +119,13 @@ Blip.propTypes = {
   config: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  teams: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
 };
 
 export { cleanStore };
