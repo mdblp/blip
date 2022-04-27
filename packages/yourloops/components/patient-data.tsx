@@ -126,7 +126,7 @@ function PatientDataPage(): JSX.Element | null {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}

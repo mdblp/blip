@@ -77,7 +77,7 @@ class TidelineHeader extends React.Component {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
     const { profileDialog: ProfileDialog, children } = this.props;
 
-    const printViews = ["basics", "daily", "bgLog", "settings"];
+    const printViews = ["dashboard", "basics", "daily", "bgLog", "settings"];
     const showPrintLink = _.includes(printViews, chartType);
     const homeValue = personUtils.fullName(this.props.patient);
 
