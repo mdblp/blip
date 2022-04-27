@@ -14,6 +14,7 @@ const PatientDashboard = (props) => {
     return [start, end];
   };
   /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
+  // eslint-disable-next-line react/prop-types
   const teamId = patient.members.filter(member => member.role === "patient" /*&& member.team.isMonitored === true*/)[0].team.id;
 
   const endpoints = getEndpoints();
@@ -37,7 +38,8 @@ const PatientDashboard = (props) => {
           endpoints={endpoints}
           loading={loading}
         />
-      <ChatWidget patientId={patient.userid} teamId={teamId} userId={user.userid} role={user.role}/>
+        {/* eslint-disable-next-line react/prop-types */}
+        <ChatWidget patientId={patient.userid} teamId={teamId} userId={user.userid} role={user.role}/>
       </Box>
     </div>
   );
