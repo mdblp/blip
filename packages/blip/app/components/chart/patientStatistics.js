@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined';
+import InsertChartOutlinedIcon from "material-ui/icons/InsertChartOutlined";
 import { useTranslation } from "react-i18next";
 import Stats from "./stats";
 
