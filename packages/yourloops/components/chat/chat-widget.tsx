@@ -83,7 +83,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       paddingBottom: theme.spacing(1),
     },
     chatWidgetInput: {
-      // "fontFamily": "Roboto",
+      "fontFamily": "Roboto",
       "fontStyle": "normal",
       "marginLeft": theme.spacing(1),
       "display": "block",
