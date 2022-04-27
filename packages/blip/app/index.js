@@ -43,7 +43,6 @@ import "./style.less";
 import { updateConfig } from "./config";
 import { initStore, cleanStore } from "./redux";
 import PatientData from "./components/patient-data";
-import chatWidget from "yourloops/components/chat/chat-widget";
 
 const log = bows("Blip");
 

@@ -36,6 +36,9 @@ import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfie
 import EmailOutlinedIcon from "@material-ui/icons/EmailOutlined";
 import Card from "@material-ui/core/Card";
 import ChatMessage from "./chat-message";
+import { getChatMessages, sendChatMessage } from "../../lib/chat/api";
+import { useAuth } from "../../lib/auth";
+import { IMessage } from "../../models/chat";
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -56,8 +59,11 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       padding: theme.spacing(1),
     },
     iconButton: {
-      backgroundColor: "white",
-      border: "none",
+      "backgroundColor": "white",
+      "border": "none",
+      "& :hover": {
+        cursor: "pointer",
+      },
     },
     chatWidgetContent: {
       background: "white",
@@ -102,69 +108,78 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
   };
 }, { name: "ylp-chat-widget" });
 
-interface Message {text: string, isMine: boolean}
+export interface Message {text: string, isMine: boolean}
+export interface ChatWidgetProps {
+  patientId: string;
+  teamId: string;
+  userId: string
+  role: string
+}
 
-function ChatWidget(): JSX.Element {
+function ChatWidget(props: ChatWidgetProps): JSX.Element {
+  const { patientId, teamId, userId, role } = props;
+  const authHook = useAuth();
   const [showPicker, setShowPicker] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const endOfLife = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  const content = useRef<HTMLDivElement>(null);
+  const footer = useRef<HTMLDivElement>(null);
   const classes = chatWidgetStyles();
 
   useEffect(() => {
-    endOfLife.current?.lastElementChild?.scrollIntoView();
+    content.current?.lastElementChild?.scrollIntoView();
   }, [messages]);
 
-  useEffect(()=> {
-    setMessages([
-      { text: "salut", isMine: false },
-      { text: "Hey tu m'entends ??", isMine: false },
-      { text: "Bizarre tu reponds pas ... ", isMine: false },
-      { text: "Désole j'étais occupé ", isMine: true },
-      { text: "Comment ca va ?", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "On y retourne bientot tu veux venir ?", isMine: true },
-      { text: "Alors ?", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "Hier je suis allé au karaoké, c'était super ... on a chanté du JJ goldman et plein de tubes des années 80", isMine: true },
-      { text: "Alors ?", isMine: true },
-    ]);
-  },[]);
+  useEffect(() => {
+    async function fetchMessages() {
+      const session = authHook.session();
+      if (session !== null) {
+        console.log(patientId);
+        console.log(teamId);
+        console.log(userId);
+        const messages = await getChatMessages(session, teamId, patientId);
+        setMessages(messages);
+      }
+    }
+    fetchMessages();
+  }, [authHook, userId, patientId, teamId]);
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
     setShowPicker(false);
-    const input = document.getElementById("chatWidgetInput");
-    if (!input) {
-      throw new Error("Cannot find elements for injecting emoji");
-    }
     setInputText(inputText + emojiObject.emoji);
   };
+
+  const sendMessage = async () => {
+    const session = authHook.session();
+    if (session !== null) {
+      await sendChatMessage(session, teamId, patientId, inputText);
+      const messages = await getChatMessages(session, teamId, patientId);
+      setMessages(messages);
+      setInputText("");
+    }
+  };
+
 
   const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(event.target.value);
     event.target.style.height = "1px";
     event.target.style.height = (event.target.scrollHeight) + "px";
-    const content = document.getElementById("chatWidgetContent");
-    const footer = document.getElementById("chatWidgetFooter");
-    if (!footer || !content) {
+    if (!content.current || !footer.current) {
       throw new Error("Cannot find elements for resize");
     }
     //values are 24 (lineHeight = 24 + margin 5 top and 5 bottom) - 44 - 64
     //we display the scrollbar only when 3 lines are present
     if (event.target.scrollHeight > 44) {
       event.target.style.overflow = "auto";
-      content.style.height = "380px";
-      footer.style.height = "80px";
+      content.current.style.height = "380px";
+      footer.current.style.height = "80px";
     } else if (event.target.scrollHeight > 24) {
-      content.style.height = "400px";
-      footer.style.height = "60px";
+      content.current.style.height = "400px";
+      footer.current.style.height = "60px";
       event.target.style.overflow = "hidden";
     } else {
-      content.style.height = "420px";
-      footer.style.height = "40px";
+      content.current.style.height = "420px";
+      footer.current.style.height = "40px";
       event.target.style.overflow = "hidden";
     }
   };
@@ -175,10 +190,10 @@ function ChatWidget(): JSX.Element {
         <EmailOutlinedIcon className={`${classes.icon}`}/>
         <span className={`${classes.chatWidgetHeaderText}`}>Messages (+1)</span>
       </div>
-      <div ref={endOfLife} id={"chatWidgetContent"} className={`${classes.chatWidgetContent}`}>
+      <div ref={content} id={"chatWidgetContent"} className={`${classes.chatWidgetContent}`}>
         {messages.map(
           (msg): JSX.Element => (
-            <ChatMessage key={Math.random()} text={msg.text} isMine={msg.isMine}/>
+            <ChatMessage key={Math.random()} text={msg.text} isMine={msg.author === userId || role === "hcp" && msg.author !== patientId }/>
           ))
         }
       </div>
@@ -187,13 +202,13 @@ function ChatWidget(): JSX.Element {
           <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
         }
       </div>
-      <div id={"chatWidgetFooter"} className={`${classes.chatWidgetFooter}`}>
+      <div ref={footer} id={"chatWidgetFooter"} className={`${classes.chatWidgetFooter}`}>
         <button className={`${classes.iconButton}`} onClick={() => setShowPicker(true)}>
           <SentimentSatisfiedOutlinedIcon/>
         </button>
-        <textarea value={inputText} rows={1} id={"chatWidgetInput"} className={`${classes.chatWidgetInput}`} onInput={inputHandler}
-          placeholder={"Commencer à écrire ..."}></textarea>
-        <button className={`${classes.iconButton}`} onClick={() => setShowPicker(true)}>
+        <textarea value={inputText} rows={1} id={"chatWidgetInput"} className={`${classes.chatWidgetInput}`}
+          onInput={inputHandler} placeholder={"Commencer à écrire ..."}/>
+        <button disabled={inputText.length < 1} className={`${classes.iconButton}`} onClick={sendMessage}>
           <SendIcon/>
         </button>
       </div>

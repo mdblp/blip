@@ -2,17 +2,17 @@ import React from "react";
 import moment from "moment-timezone";
 import PatientStatistics from "./patientStatistics";
 import Header from "./header";
-import chatWidget from "yourloops/components/chat/chat-widget";
 
 export default function PatientDashboard(props) {
-  const { patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
+  const { patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange / 2).toISOString();
     const end = moment.utc(epochLocation + msRange / 2).toISOString();
     return [start, end];
   };
+  /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
+  const teamId = patient.members.filter(member => member.role === "patient" /*&& member.team.isMonitored === true*/)[0].team.id;
 
-  console.log(props);
   const endpoints = getEndpoints();
   return (
     <div id="patient-dashboard" className="patient-dashboard">
@@ -32,7 +32,7 @@ export default function PatientDashboard(props) {
         endpoints={endpoints}
         loading={loading}
       />
-      <ChatWidget/>
+      <ChatWidget patientId={patient.userid} teamId={teamId} userId={user.userid} role={user.role}/>
     </div>
   );
 }
