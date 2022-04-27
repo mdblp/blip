@@ -186,10 +186,10 @@ class PatientDataPage extends React.Component {
         this.handleSwitchToTrends();
         break;
       case "dashboard":
-          this.handleSwitchToDashboard();
-          break;
+        this.handleSwitchToDashboard();
+        break;
       default:
-        this.handleSwitchToDaily();
+        this.handleSwitchToDashboard();
         break;
       }
     });
@@ -349,6 +349,19 @@ class PatientDataPage extends React.Component {
 
     return (
       <Switch>
+        <Route path={`${prefixURL}/dashboard`}>
+          <PatientDashboard profileDialog={this.showProfileDialog ? profileDialog : null}
+            bgPrefs={this.state.bgPrefs}
+            chartPrefs={chartPrefs}
+            patient={patient}
+            dataUtil={this.dataUtil}
+            timePrefs={this.state.timePrefs}
+            epochLocation={epochLocation}
+            msRange={msRange}
+            prefixURL={prefixURL}
+            loading={loadingState !== LOADING_STATE_DONE}
+          />
+        </Route>
         <Route path={`${prefixURL}/overview`}>
           <Basics
             profileDialog={this.showProfileDialog ? profileDialog : null}
@@ -508,7 +521,7 @@ class PatientDataPage extends React.Component {
     case `${prefixURL}/settings`:
       return "settings";
     case `${prefixURL}/dashboard`:
-        return "dashboard";
+      return "dashboard";
     }
     return null;
   }
