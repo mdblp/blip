@@ -4,8 +4,6 @@
 .corner-dates {
 	position: absolute;
 	top: 0;
-	left: 0;
-	padding-left: @small-pad;
   padding-top: @small-pad/4;
   z-index: 1;
 }
@@ -21,20 +19,20 @@
     > div {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      grid-gap: 1em;
+      grid-gap: 0.1em;
       overflow: hidden;
 
-      @media (max-width: @screen-sm-max) {
-        grid-gap: .5em;
-      }
+      // @media (max-width: @screen-sm-max) {
+      //   grid-gap: .5em;
+      // }
 
-      @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-        grid-gap: .75em;
-      }
+      // @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      //   grid-gap: .75em;
+      // }
 
       > div {
         display: flex;
-        align-items: flex-start;
+        // align-items: flex-start;
         justify-content: center;
         margin-left: 0;
       }
@@ -48,7 +46,7 @@
 		.Calendar-day, .Calendar-day-future, .Calendar-day--HOVER {
 			position: relative;
       color: @calendar-label-color;
-
+			min-height: 90px;
       &::before {
         content: '';
         width: 0;
@@ -69,7 +67,7 @@
 		}
 
 		.Calendar-day-label {
-      justify-self: flex-start;
+      // justify-self: flex-start;
       padding-left: .5em;
       font-size: @small-text;
       color: @calendar-label-color;
