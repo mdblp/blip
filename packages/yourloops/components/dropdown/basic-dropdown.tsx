@@ -33,6 +33,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/styles";
 import { Theme } from "@material-ui/core/styles";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 export interface BasicDropdownProps {
   id: string;
@@ -43,9 +44,13 @@ export interface BasicDropdownProps {
 
 const styles = makeStyles((theme: Theme) => ({
   select: {
-    backgroundColor: theme.palette.grey[100],
-    height: "40px",
-    maxWidth: "200px",
+    "backgroundColor": theme.palette.grey[100],
+    "height": "40px",
+    "maxWidth": "200px",
+    "borderRadius": "8px",
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
   },
 }));
 
@@ -67,6 +72,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       value={selectedValue}
       className={classes.select}
       variant="outlined"
+      input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}>
       {values.map(item => (
         <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>

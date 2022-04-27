@@ -88,10 +88,11 @@ const useStyles = makeStyles(() => ({
 
 export interface TeamInformationProps {
   team: Team;
+  refresh : () => void;
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
-  const { team } = props;
+  const { team, refresh } = props;
   const teamHook = useTeam();
   const alert = useAlert();
   const classes = useStyles();
@@ -105,6 +106,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
       try {
         await teamHook.editTeam(editedTeam as Team);
         alert.success(t("team-page-success-edit"));
+        refresh();
       } catch (reason: unknown) {
         alert.error(t("team-page-failed-edit"));
       }

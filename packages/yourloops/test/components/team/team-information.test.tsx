@@ -40,6 +40,7 @@ import { buildTeam } from "../../common/utils";
 describe("TeamInformation", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+  const refresh = jest.fn();
 
   function renderTeamInformation(props: TeamInformationProps) {
     return renderer.create(
@@ -48,6 +49,7 @@ describe("TeamInformation", () => {
           <TeamContextProvider teamAPI={teamAPI}>
             <TeamInformation
               team={props.team}
+              refresh={props.refresh}
             />
           </TeamContextProvider>
         </AuthContextProvider>
@@ -66,7 +68,7 @@ describe("TeamInformation", () => {
       city: "Vouilly",
       country: "France",
     };
-    const props: TeamInformationProps = { team };
+    const props: TeamInformationProps = { team, refresh };
     const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;
     const component = renderTeamInformation(props);
     expect(component.root.findByProps({ id: `team-information-${teamId}-name` }).props.children).toEqual(team.name);

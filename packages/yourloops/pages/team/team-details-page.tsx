@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
@@ -128,12 +128,16 @@ function TeamDetailPage(): JSX.Element {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  React.useEffect(() => {
+  const refresh = useCallback(() => {
     setDropdownData({
       selectedTeam: getTeam(teamId) as Team,
       teamNames: teams.filter(team => team.id !== "private").map((team: Team) => team.name),
     });
   }, [getTeam, teamId, teams]);
+
+  React.useEffect(() => {
+    refresh();
+  }, [refresh]);
 
   const redirectToDashboard = () => {
     history.push("/");
@@ -192,7 +196,7 @@ function TeamDetailPage(): JSX.Element {
             </div>
             <div className={classes.teamDetails}>
               <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
-                <TeamInformation team={dropdownData.selectedTeam} />
+                <TeamInformation team={dropdownData.selectedTeam} refresh={refresh}/>
               </div>
               <div className={classes.separator} />
               <div ref={teamMembers} className={classes.refElement}>

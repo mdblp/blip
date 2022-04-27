@@ -79,7 +79,6 @@ function TeamMenu(): JSX.Element {
   const opened = !!anchorEl;
 
   const filteredTeams = teams.filter(team => team.code !== "private");
-
   const closeMenu = () => setAnchorEl(null);
 
   const onClickTeamSettings = () => {
