@@ -4,8 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined';
 import { useTranslation } from "react-i18next";
 import Stats from "./stats";
 
@@ -15,7 +14,6 @@ const useStyles = makeStyles(() => ({
   },
   cardContent: {
     overflowY: "auto",
-    maxHeight: 500,
   },
 }));
 
@@ -27,11 +25,8 @@ const PatientStatistics = (props) => {
   return (
     <Card className={classes.card}>
       <CardHeader
-        avatar={<VisibilityIcon/>}
+        avatar={<InsertChartOutlinedIcon/>}
         title={t("patient-statistics")}
-        action={
-          <Typography variant="overline" display="block">{t("show-more")}</Typography>
-        }
       />
       <CardContent className={classes.cardContent}>
         <Stats
@@ -39,10 +34,11 @@ const PatientStatistics = (props) => {
           //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
-          chartType="daily"
+          chartType="patientStatistics"
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
+          hideToolTips={true}
         />
       </CardContent>
     </Card>
