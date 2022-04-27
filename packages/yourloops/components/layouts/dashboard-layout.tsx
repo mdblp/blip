@@ -49,7 +49,7 @@ function DashboardLayout({ children }: { children: JSX.Element }) {
     <Box display="flex">
       <MainHeader withShrinkIcon onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
       <MainDrawer miniVariant={drawerMiniVariant} />
-      <Container>
+      <Container maxWidth={false}>
         <div className={toolbar} />
         {children}
       </Container>

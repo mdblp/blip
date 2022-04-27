@@ -1,17 +1,25 @@
 import React from "react";
 import moment from "moment-timezone";
 import PatientStatistics from "./patientStatistics";
+import Header from "./header";
 
 export default function PatientDashboard(props) {
-  const { bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget } = props;
+  const { patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange} = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange / 2).toISOString();
     const end = moment.utc(epochLocation + msRange / 2).toISOString();
     return [start, end];
-  }
+  };
   const endpoints = getEndpoints();
   return (
-    <div id="tidelineMain" className="patient-dashboard">
+    <div id="patient-dashboard" className="patient-dashboard">
+      <Header
+        profileDialog={profileDialog}
+        chartType={"dashboard"}
+        patient={patient}
+        prefixURL={prefixURL}
+        canPrint={true}
+      />
       <PatientStatistics
         bgPrefs={bgPrefs}
         bgSource={dataUtil.bgSource}
@@ -21,7 +29,7 @@ export default function PatientDashboard(props) {
         endpoints={endpoints}
         loading={loading}
       />
-      <chatWidget/>
+      {/*<chatWidget/>*/}
     </div>
-  )
+  );
 }
