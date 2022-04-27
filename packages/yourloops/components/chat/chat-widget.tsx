@@ -83,7 +83,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       paddingBottom: theme.spacing(1),
     },
     chatWidgetInput: {
-      "fontFamily": "Roboto",
+      // "fontFamily": "Roboto",
       "fontStyle": "normal",
       "marginLeft": theme.spacing(1),
       "display": "block",
@@ -123,6 +123,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const content = useRef<HTMLDivElement>(null);
+  const input = useRef<HTMLTextAreaElement>(null);
   const footer = useRef<HTMLDivElement>(null);
   const classes = chatWidgetStyles();
 
@@ -149,6 +150,16 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     setInputText(inputText + emojiObject.emoji);
   };
 
+  const resetInputSize = () => {
+    if (!content.current || !footer.current || !input.current) {
+      throw new Error("Cannot find elements for resize");
+    }
+    content.current.style.height = "420px";
+    footer.current.style.height = "40px";
+    input.current.style.overflow = "hidden";
+    input.current.style.height = "24px";
+  };
+
   const sendMessage = async () => {
     const session = authHook.session();
     if (session !== null) {
@@ -156,9 +167,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       const messages = await getChatMessages(session, teamId, patientId);
       setMessages(messages);
       setInputText("");
+      resetInputSize();
+      if (input.current) {
+        input.current.value = "";
+      }
     }
   };
-
 
   const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputText(event.target.value);
@@ -167,7 +181,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     if (!content.current || !footer.current) {
       throw new Error("Cannot find elements for resize");
     }
-    //values are 24 (lineHeight = 24 + margin 5 top and 5 bottom) - 44 - 64
+    //values for scrollHeight are 24 one line, 44 2 lines and 64 3 lines
     //we display the scrollbar only when 3 lines are present
     if (event.target.scrollHeight > 44) {
       event.target.style.overflow = "auto";
@@ -178,9 +192,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       footer.current.style.height = "60px";
       event.target.style.overflow = "hidden";
     } else {
-      content.current.style.height = "420px";
-      footer.current.style.height = "40px";
-      event.target.style.overflow = "hidden";
+      resetInputSize();
     }
   };
 
@@ -206,7 +218,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         <button className={`${classes.iconButton}`} onClick={() => setShowPicker(true)}>
           <SentimentSatisfiedOutlinedIcon/>
         </button>
-        <textarea value={inputText} rows={1} id={"chatWidgetInput"} className={`${classes.chatWidgetInput}`}
+        <textarea ref={input} value={inputText} rows={1} id={"chatWidgetInput"} className={`${classes.chatWidgetInput}`}
           onInput={inputHandler} placeholder={"Commencer à écrire ..."}/>
         <button disabled={inputText.length < 1} className={`${classes.iconButton}`} onClick={sendMessage}>
           <SendIcon/>
