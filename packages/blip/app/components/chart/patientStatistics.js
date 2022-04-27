@@ -4,13 +4,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import InsertChartOutlinedIcon from "material-ui/icons/InsertChartOutlined";
+import InsertChartOutlinedIcon from "@material-ui/icons/InsertChartOutlined";
 import { useTranslation } from "react-i18next";
 import Stats from "./stats";
 
 const useStyles = makeStyles(() => ({
   card: {
     maxWidth: 345,
+  },
+  cardHeader: {
+    textTransform: "uppercase",
   },
   cardContent: {
     overflowY: "auto",
@@ -26,6 +29,7 @@ const PatientStatistics = (props) => {
     <Card className={classes.card}>
       <CardHeader
         avatar={<InsertChartOutlinedIcon/>}
+        className={classes.cardHeader}
         title={t("patient-statistics")}
       />
       <CardContent className={classes.cardContent}>
