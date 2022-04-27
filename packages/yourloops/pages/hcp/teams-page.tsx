@@ -38,14 +38,14 @@ import Grid from "@material-ui/core/Grid";
 
 import { TypeTeamMemberRole } from "../../models/team";
 import { useAuth } from "../../lib/auth";
-import { useTeam, Team, TeamMember } from "../../lib/team";
+import { Team, TeamMember, useTeam } from "../../lib/team";
 import { errorTextFromException, setPageTitle } from "../../lib/utils";
 import { useAlert } from "../../components/utils/snackbar";
 
 import {
-  SwitchRoleDialogContentProps,
   AddMemberDialogContentProps,
   RemoveMemberDialogContentProps,
+  SwitchRoleDialogContentProps,
   TeamEditModalContentProps,
   TeamLeaveDialogContentProps,
 } from "./types";
@@ -160,28 +160,24 @@ function TeamsPage(): JSX.Element | null {
     return false;
   };
 
-  const handleShowAddMemberDialog = async (team: Team): Promise<void> => {
-    log.debug("handleShowAddMemberDialog:", { team });
-
-    const getMemberEmail = () =>
-      new Promise((resolve: (result: { email: string | null; role: Exclude<TypeTeamMemberRole, "patient"> }) => void): void => {
-        setAddMember({ team, onDialogResult: resolve });
-      });
-
-    const { email, role } = await getMemberEmail();
+  const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
+    if (member) {
+      await teamHook.inviteMember(member.team, member.email, member.role);
+      try {
+        await teamHook.inviteMember(member.team, member.email, member.role);
+        alert.success(t("team-page-success-invite-hcp", { email: member.email }));
+      } catch (reason: unknown) {
+        log.error("handleShowAddMemberDialog", reason);
+        const errorMessage = errorTextFromException(reason);
+        alert.error(t("team-page-failed-invite-hcp", { errorMessage }));
+      }
+    }
     setAddMember(null);
-    if (email === null) {
-      return;
-    }
+  };
 
-    try {
-      await teamHook.inviteMember(team, email, role);
-      alert.success(t("team-page-success-invite-hcp", { email }));
-    } catch (reason: unknown) {
-      log.error("handleShowAddMemberDialog", reason);
-      const errorMessage = errorTextFromException(reason);
-      alert.error(t("team-page-failed-invite-hcp", { errorMessage }));
-    }
+  const handleShowAddMemberDialog = (team: Team) => {
+    log.debug("handleShowAddMemberDialog:", { team });
+    setAddMember({ team, onMemberInvited });
   };
 
   const handleSwitchAdminRole = async (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {

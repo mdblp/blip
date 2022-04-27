@@ -37,11 +37,14 @@ import { loggedInUsers } from "../../common";
 import { NotificationContextProvider } from "../../../lib/notifications";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
 import { triggerMouseEvent } from "../../common/utils";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
 
 describe("Team Menu", () => {
   let container: HTMLElement | null = null;
   let filteredTeams: Team[];
   const { hcpSession } = loggedInUsers;
+  const history = createMemoryHistory({ initialEntries: ["/"] });
 
   function openMenu(): void {
     const teamMenu = document.getElementById("team-menu");
@@ -56,13 +59,15 @@ describe("Team Menu", () => {
     await act(() => {
       return new Promise((resolve) => {
         render(
-          <AuthContextProvider value={context}>
-            <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider teamAPI={teamAPI}>
-                <TeamMenu />
-              </TeamContextProvider>
-            </NotificationContextProvider>
-          </AuthContextProvider>, container, resolve);
+          <Router history={history}>
+            <AuthContextProvider value={context}>
+              <NotificationContextProvider value={stubNotificationContextValue}>
+                <TeamContextProvider teamAPI={teamAPI}>
+                  <TeamMenu />
+                </TeamContextProvider>
+              </NotificationContextProvider>
+            </AuthContextProvider>
+          </Router>, container, resolve);
       });
     });
   }
@@ -91,5 +96,14 @@ describe("Team Menu", () => {
     openMenu();
     const teamListItems = document.querySelectorAll("div.team-menu-list-item");
     expect(filteredTeams.length).toEqual(teamListItems.length);
+  });
+
+  it("should redirect to team details page when clicking on a team name", async () => {
+    await mountComponent(hcpSession);
+    const teamToSelect = filteredTeams[0];
+    openMenu();
+    const teamElement = document.getElementById(`team-menu-list-item-${teamToSelect.id}`);
+    triggerMouseEvent("click", teamElement);
+    expect(history.location.pathname).toBe(`/teams/${teamToSelect.id}`);
   });
 });

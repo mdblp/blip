@@ -80,7 +80,7 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
   return (
     <Dialog
       id="patient-list-dialog-team-code"
-      aria-labelledby={t("team-card-label-code")}
+      aria-labelledby={t("identification-code")}
       open={dialogIsOpen}
       onClose={onClose}
     >
