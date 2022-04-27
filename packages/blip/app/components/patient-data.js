@@ -464,15 +464,6 @@ class PatientDataPage extends React.Component {
             trackMetric={this.trackMetric}
           />
         </Route>
-        <Route path={`${prefixURL}/dashboard`}>
-          <PatientDashboard
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={this.state.chartPrefs}
-            dataUtil={this.dataUtil}
-            epochLocation={epochLocation}
-            msRange={msRange}
-          />
-        </Route>
       </Switch>
     );
   }
