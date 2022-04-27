@@ -335,7 +335,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
+    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -360,6 +360,7 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             prefixURL={prefixURL}
             loading={loadingState !== LOADING_STATE_DONE}
+            chatWidget={chatWidget}
           />
         </Route>
         <Route path={`${prefixURL}/overview`}>

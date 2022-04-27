@@ -43,6 +43,7 @@ import "./style.less";
 import { updateConfig } from "./config";
 import { initStore, cleanStore } from "./redux";
 import PatientData from "./components/patient-data";
+import chatWidget from "yourloops/components/chat/chat-widget";
 
 const log = bows("Blip");
 
@@ -65,6 +66,7 @@ function ReduxProvider(props) {
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
+        chatWidget={props.chatWidget}
       />
     </Provider>
   );
@@ -78,6 +80,7 @@ ReduxProvider.propTypes = {
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
 };
 
 /**
@@ -86,7 +89,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions } = props;
+      const { config, api, patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget } = props;
       updateConfig(config);
 
       return (
@@ -98,6 +101,7 @@ function Blip(props) {
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
+          chatWidget={chatWidget}
         />
       );
     } catch (err) {
@@ -118,6 +122,7 @@ Blip.propTypes = {
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
 };
 
 export { cleanStore };

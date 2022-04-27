@@ -47,7 +47,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       padding: theme.spacing(1),
       display: "flex",
       alignItems: "center",
-      background: "#F6F6F6",
+      background: "#035271",
       color: "black",
       width: "100%",
       height: "40px",

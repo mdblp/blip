@@ -46,6 +46,7 @@ import ProfileDialog from "../../components/dialogs/patient-profile";
 import DialogDatePicker from "../../components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../components/dialogs/pdf-print-options";
+import ChatWidget from "../../components/chat/chat-widget";
 
 interface PatientDataParam {
   patientId?: string;
@@ -126,6 +127,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        chatWidget={ChatWidget}
       />
     </Container>
   );
