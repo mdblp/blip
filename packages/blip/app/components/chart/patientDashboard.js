@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment-timezone";
+import Box from "@material-ui/core/Box";
 import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 
@@ -22,17 +23,19 @@ const PatientDashboard = (props) => {
         prefixURL={prefixURL}
         canPrint={true}
       />
-      <PatientStatistics
-        bgPrefs={bgPrefs}
-        //eslint-disable-next-line
-        bgSource={dataUtil.bgSource}
-        chartPrefs={chartPrefs}
-        chartType="daily"
-        dataUtil={dataUtil}
-        endpoints={endpoints}
-        loading={loading}
-      />
-      {/*<chatWidget/>*/}
+      <Box id="patient-dashboard-content">
+        <PatientStatistics
+          bgPrefs={bgPrefs}
+          //eslint-disable-next-line
+          bgSource={dataUtil.bgSource}
+          chartPrefs={chartPrefs}
+          chartType="daily"
+          dataUtil={dataUtil}
+          endpoints={endpoints}
+          loading={loading}
+        />
+        {/*<chatWidget/>*/}
+      </Box>
     </div>
   );
 };
