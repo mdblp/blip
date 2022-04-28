@@ -31,9 +31,9 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "@testing-library/react-hooks/dom";
 import i18n from "i18next";
 
-import FooterLinks from "../../components/footer-links";
-import { AuthContext, useAuth, User } from "../../lib/auth";
-import diabeloopUrls from "../../lib/diabeloop-url";
+import Footer from "../../../components/footer/footer";
+import { AuthContext, useAuth, User } from "../../../lib/auth";
+import diabeloopUrls from "../../../lib/diabeloop-url";
 
 describe("Footer", () => {
   let auth: AuthContext = null;
@@ -44,7 +44,7 @@ describe("Footer", () => {
     auth.user = data.user;
 
     return (
-      <FooterLinks />
+      <Footer />
     );
   };
 
@@ -81,16 +81,20 @@ describe("Footer", () => {
     expect(component).not.toBeNull();
   });
 
-  it("should render language selector when user is not logged in", async () => {
+  it("should render language selector and accompanying document selector when user is not logged in", async () => {
     await mountComponent();
     const languageSelector = document.getElementById("footer-language-box");
+    const documentSelector = document.getElementById("footer-accompanying-documents-box");
     expect(languageSelector).not.toBeNull();
+    expect(documentSelector).not.toBeNull();
   });
 
   it("should not render language selector when user is logged in", async () => {
     await mountComponent({} as User);
     const languageSelector = document.getElementById("footer-language-box");
+    const documentSelector = document.getElementById("footer-accompanying-documents-box");
     expect(languageSelector).toBeNull();
+    expect(documentSelector).not.toBeNull();
   });
 
   it("should privacy policy link redirect to correct url", async () => {
@@ -101,11 +105,6 @@ describe("Footer", () => {
   it("should terms of use link redirect to correct url", async () => {
     await mountComponent();
     checkLinkHref("footer-link-url-terms", diabeloopUrls.getTermsUrL(i18n.language));
-  });
-
-  it("should intended use link redirect to correct url", async () => {
-    await mountComponent();
-    checkLinkHref("footer-link-url-intended-use", diabeloopUrls.getIntendedUseUrL(i18n.language));
   });
 
   it("should cookies policy link redirect to correct url", async () => {

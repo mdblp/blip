@@ -25,9 +25,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from "react";
-import Link from "@material-ui/core/Link";
-
 import config from "./config";
 
 /**
@@ -37,7 +34,6 @@ class DiabeloopUrl {
   private rootPathName: string;
   private termsUrl: string;
   private privacyPolicyUrl: string;
-  private intendedUseUrL: string;
   private cookiesPolicyUrL: string;
   private supportUrL: string;
 
@@ -45,7 +41,6 @@ class DiabeloopUrl {
     this.rootPathName = `${config.ASSETS_URL}`;
     this.termsUrl = `${this.rootPathName}terms.pdf`;
     this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`;
-    this.intendedUseUrL = `${this.rootPathName}intended-use.pdf`;
     this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.pdf`;
     this.supportUrL = "https://www.diabeloop.com";
   }
@@ -59,33 +54,29 @@ class DiabeloopUrl {
     return this.termsUrl;
   }
 
-  getTermsLink(currentLangue: string): JSX.Element {
-    return (
-      <Link
-        href={this.getTermsUrL(currentLangue)}
-        target="_blank"
-        rel="noreferrer">
-        anyword
-      </Link>
-    );
-  }
-
   getPrivacyPolicyUrL(currentLangue: string): string {
     this.privacyPolicyUrl = `${this.rootPathName}yourloops-data-privacy.${currentLangue}.pdf`;
     return this.privacyPolicyUrl;
   }
 
-  getPrivacyPolicyLink(currentLangue: string): JSX.Element {
-    return (
-      <Link href={this.getPrivacyPolicyUrL(currentLangue)} target="_blank" rel="noreferrer">
-        anyword
-      </Link>
-    );
+  getIntendedUseUrL(currentLangue: string): string {
+    return `${this.rootPathName}intended-use.${currentLangue}.pdf`;
   }
 
-  getIntendedUseUrL(currentLangue: string): string {
-    this.intendedUseUrL = `${this.rootPathName}intended-use.${currentLangue}.pdf`;
-    return this.intendedUseUrL;
+  getLoginTrainingUrL(currentLangue: string): string {
+    return `${this.rootPathName}yourloops-login-training.${currentLangue}.pdf`;
+  }
+
+  getPatientTrainingUrL(currentLangue: string): string {
+    return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`;
+  }
+
+  getHcpTrainingUrL(currentLangue: string): string {
+    return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
+  }
+
+  getCaregiverTrainingUrL(currentLangue: string): string {
+    return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
   }
 
   getCookiesPolicyUrl(currentLangue: string): string {

@@ -35,7 +35,7 @@ import { SessionTimeout, useAuth } from "../lib/auth";
 import { UserRoles } from "../models/shoreline";
 import { getTheme } from "../components/theme";
 import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
-import FooterLinks from "../components/footer-links";
+import Footer from "../components/footer/footer";
 import PatientConsentPage from "../pages/patient/patient-consent";
 import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
@@ -120,7 +120,7 @@ export function MainLobby(): JSX.Element {
               </Switch>
             </div>
           </SnackbarContextProvider>
-          <FooterLinks />
+          <Footer />
         </ThemeProvider>
       }
     </React.Fragment>

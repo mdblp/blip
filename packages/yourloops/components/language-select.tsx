@@ -37,7 +37,7 @@ const languageSelectStyle = makeStyles((theme: Theme) => {
   return {
     select: {
       fontSize: "12px",
-      color: theme.palette.grey[700],
+      color: theme.palette.grey[600],
     },
   };
 });
