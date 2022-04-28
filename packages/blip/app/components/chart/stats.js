@@ -13,7 +13,7 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends"]).isRequired,
+    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage"]).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
@@ -168,6 +168,10 @@ class Stats extends React.Component {
       addStat(commonStats.standardDev);
       addStat(commonStats.coefficientOfVariation);
       break;
+
+      case "deviceUsage":
+        cbgSelected && addStat(commonStats.sensorUsage);
+        break;
     }
 
     return stats;

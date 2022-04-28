@@ -45,6 +45,10 @@ const PatientDashboard = (props) => {
           tidelineData={tidelineData}
           permsOfLoggedInUser={permsOfLoggedInUser}
           trackMetric={trackMetric}
+          dataUtil={dataUtil}
+          chartPrefs={chartPrefs}
+          endpoints={endpoints}
+          loading={loading}
         />
         {/*<chatWidget/>*/}
       </Box>
