@@ -13,3 +13,4 @@ import "./unit/components/messages/messages.test.js";
 import "./unit/components/messages/message.test.js";
 import "./unit/components/messages/messageform.test.js";
 import "./unit/lib/partial-data-load.test";
+import "./unit/components/chart/deviceUsage.test.js";
