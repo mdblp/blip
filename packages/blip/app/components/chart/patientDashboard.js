@@ -5,6 +5,7 @@ import Box from "@material-ui/core/Box";
 import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 import DeviceUsage from "./deviceUsage";
+import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
   //eslint-disable-next-line

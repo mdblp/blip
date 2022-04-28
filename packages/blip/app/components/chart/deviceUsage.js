@@ -28,18 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     textTransform: "uppercase",
+    backgroundColor: "var(--card-header-background-color)",
   },
   cardContent: {
     overflowY: "auto",
     maxHeight: 800,
   },
   sectionTitles: {
-    fontSize: "16px",
-    fontWeight: 500,
-    lineHeight: "20px",
-    whiteSpace: "nowrap",
-    margin: theme.spacing(1),
-    color: "#414141"
+    fontSize: "var(--section-title-font-size)",
+    fontWeight: "var(--section-title-font-weight)",
+    lineHeight: "var(--section-title-line-height)",
+    margin: "var(--section-title-margin)",
+    color: "var(--section-title-color)"
   },
   sectionContent: {
     fontSize: "13px",
@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     margin: theme.spacing(1, 0),
     width: "99%",
-    backgroundColor: "#000000"
   },
   parameterChanges: {
     width: '100%',
