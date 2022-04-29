@@ -91,7 +91,7 @@ const DeviceUsage = (props) => {
   const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric,
     dataUtil, chartPrefs, endpoints, loading
   } = props;
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation();
   const classes = useStyles();
   const mostRecentSettings = _.last(tidelineData.grouped.pumpSettings);
   const device = _.get(mostRecentSettings, "payload.device", null);
@@ -100,9 +100,7 @@ const DeviceUsage = (props) => {
   const history = _.sortBy(_.cloneDeep(_.get(mostRecentSettings, "payload.history", null)), ["changeDate"]);
 
   const dateFormat = getLongDayHourFormat();
-  console.dir(history)
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
-  console.dir(paramChanges)
   const deviceData = {
     device: {
       label: `${t("DBL")}:`,

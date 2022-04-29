@@ -336,5 +336,12 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} days in view",
   "{{patientName}} does not have any data yet.": "{{patientName}} does not have any data yet.",
-  "{{title}} (cont.)": "{{title}} (cont.)"
+  "{{title}} (cont.)": "{{title}} (cont.)",
+  "DBL": "DBL",
+  "Device Usage": "Device Usage",
+  "Devices": "Devices",
+  "Last updates": "Last updates",
+  "deleted": "deleted",
+  "Overview": "Patient statistics",
+  "Show More": "Show More"
 }
