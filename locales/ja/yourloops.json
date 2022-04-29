@@ -9,6 +9,7 @@
   "Spain": "スペイン",
   "Switzerland": "スイス",
   "United Kingdom": "イギリス",
+  "accompanying-documents": "Accompanying documents",
   "account-preferences": "アカウント設定",
   "add-patient": "患者を追加",
   "alert-hypoglycemic": "Severe hypoglycemia alert",
@@ -317,6 +318,7 @@
   "terms-of-use": "利用規約",
   "today": "今日",
   "tooltip-release-notes": "リリースノート",
+  "training": "Training",
   "units": "単位",
   "user-name": "{{firstName}} {{lastName}}",
   "yesterday": "昨日"
