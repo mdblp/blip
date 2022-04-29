@@ -95,7 +95,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       "maxHeight": "60px",
       "lineHeight": "20px",
       "border": "1px solid white",
-      "&:focus" : {
+      "& :focus": {
         outlineColor: "#F6F6F6",
       },
     },
@@ -108,16 +108,21 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
   };
 }, { name: "ylp-chat-widget" });
 
-export interface Message {text: string, isMine: boolean}
+export interface Message {
+  text: string,
+  isMine: boolean
+}
+
 export interface ChatWidgetProps {
   patientId: string;
   teamId: string;
-  userId: string
-  role: string
+  userId: string;
+  userRole: string;
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
-  const { patientId, teamId, userId, role } = props;
+  const { patientId, userId, teamId, userRole } = props;
+  const classes = chatWidgetStyles();
   const authHook = useAuth();
   const [showPicker, setShowPicker] = useState(false);
   const [inputText, setInputText] = useState("");
@@ -125,7 +130,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const footer = useRef<HTMLDivElement>(null);
-  const classes = chatWidgetStyles();
+  /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
+  /*TODO : get monitoring team, today the field is not present in the UI so it's taking the first team*/
 
   useEffect(() => {
     content.current?.lastElementChild?.scrollIntoView();
@@ -135,15 +141,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages() {
       const session = authHook.session();
       if (session !== null) {
-        console.log(patientId);
-        console.log(teamId);
-        console.log(userId);
         const messages = await getChatMessages(session, teamId, patientId);
         setMessages(messages);
       }
     }
     fetchMessages();
-  }, [authHook, userId, patientId, teamId]);
+  }, [userId, patientId, teamId, authHook]);
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
     setShowPicker(false);
@@ -197,35 +200,41 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   return (
-    <Card className={`${classes.chatWidget}`} >
+    <Card className={`${classes.chatWidget}`}>
       <div className={`${classes.chatWidgetHeader}`}>
-        <EmailOutlinedIcon className={`${classes.icon}`}/>
-        <span className={`${classes.chatWidgetHeaderText}`}>Messages (+1)</span>
+        <EmailOutlinedIcon className={`${classes.icon}`} />
+        {/* TODO : add unread messages number in (), then click on input text is going to ack and
+        no messages will be unread */}
+        <span className={`${classes.chatWidgetHeaderText}`}>Messages</span>
       </div>
       <div ref={content} id={"chatWidgetContent"} className={`${classes.chatWidgetContent}`}>
         {messages.map(
           (msg): JSX.Element => (
-            <ChatMessage key={Math.random()} text={msg.text} isMine={msg.author === userId || role === "hcp" && msg.author !== patientId }/>
+            <ChatMessage key={msg.id} text={msg.text}
+              isMine={msg.authorId === userId || userRole === "hcp" && msg.authorId !== patientId} />
           ))
         }
       </div>
       <div>
-        { showPicker &&
-          <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
+        {showPicker &&
+              <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
         }
       </div>
       <div ref={footer} id={"chatWidgetFooter"} className={`${classes.chatWidgetFooter}`}>
         <button className={`${classes.iconButton}`} onClick={() => setShowPicker(true)}>
-          <SentimentSatisfiedOutlinedIcon/>
+          <SentimentSatisfiedOutlinedIcon />
         </button>
-        <textarea ref={input} value={inputText} rows={1} id={"chatWidgetInput"} className={`${classes.chatWidgetInput}`}
-          onInput={inputHandler} placeholder={"Commencer à écrire ..."}/>
+        <textarea ref={input} value={inputText} rows={1} id={"chatWidgetInput"}
+          className={`${classes.chatWidgetInput}`}
+          onInput={inputHandler} placeholder={"Commencer à écrire ..."} />
         <button disabled={inputText.length < 1} className={`${classes.iconButton}`} onClick={sendMessage}>
-          <SendIcon/>
+          <SendIcon />
         </button>
       </div>
     </Card>
-  );
+
+  )
+  ;
 }
 
 export default ChatWidget;

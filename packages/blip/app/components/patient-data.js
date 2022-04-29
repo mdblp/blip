@@ -335,7 +335,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget, api } = this.props;
+    const { patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -355,6 +355,7 @@ class PatientDataPage extends React.Component {
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             patient={patient}
+            teams={teams}
             user={user}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}

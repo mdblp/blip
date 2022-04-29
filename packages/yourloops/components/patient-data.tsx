@@ -39,7 +39,7 @@ import Blip from "blip";
 import { UserRoles, IUser } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { useTeam } from "../lib/team";
+import { Team, useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
 
@@ -75,6 +75,7 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
+  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
   const { blipApi } = dataHook;
@@ -89,6 +90,9 @@ function PatientDataPage(): JSX.Element | null {
     if (!initialized) {
       return;
     }
+
+    setTeams(teamHook.getMedicalTeams());
+
 
     if (userIsPatient && !_.isNil(authUser)) {
       setPatient(authUser);
@@ -132,6 +136,7 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
+        teams={teams}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}

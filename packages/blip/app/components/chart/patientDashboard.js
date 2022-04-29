@@ -7,15 +7,16 @@ import Header from "./header";
 
 const PatientDashboard = (props) => {
   //eslint-disable-next-line
-  const { patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
+  const { patient, user, teams, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange / 2).toISOString();
     const end = moment.utc(epochLocation + msRange / 2).toISOString();
     return [start, end];
   };
-  /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
-  // eslint-disable-next-line react/prop-types
-  const teamId = patient.members.filter(member => member.role === "patient" /*&& member.team.isMonitored === true*/)[0].team.id;
+  /*TODO : retrieve only team with a filter on isMonitored (not present in front today so taking the first ...)*/
+  /*Tricky for hcp, there could be more than one monitoring team. \
+  See if it's possible to search for the team with the patient in it*/
+  const monitoringTeam = teams[0];
 
   const endpoints = getEndpoints();
   return (
@@ -38,8 +39,10 @@ const PatientDashboard = (props) => {
           endpoints={endpoints}
           loading={loading}
         />
-        {/* eslint-disable-next-line react/prop-types */}
-        <ChatWidget patientId={patient.userid} teamId={teamId} userId={user.userid} role={user.role}/>
+        {monitoringTeam &&
+          /* eslint-disable-next-line react/prop-types */
+          <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+        }
       </Box>
     </div>
   );
@@ -48,6 +51,7 @@ const PatientDashboard = (props) => {
 PatientDashboard.propType = {
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
+  teams: PropTypes.object,
   prefixURL:  PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,

@@ -7,7 +7,7 @@ export interface IMessage {
   readonly id: string;
   patientId: string;
   teamId: string;
-  author: string;
+  authorId: string;
   destAck: boolean;
   text: string;
   timezone: string;
