@@ -66,25 +66,25 @@ describe("DocumentSelect", () => {
   it("should open url for login training pdf when no user is given", () => {
     const component = renderDocumentSelect({ user: null });
     component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getLoginTrainingUrL(i18n.language));
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-login-training.${i18n.language}.pdf`);
   });
 
   it("should open url for patient training pdf when user is patient", () => {
     const component = renderDocumentSelect({ user: { role: UserRoles.patient } as User });
     component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getPatientTrainingUrL(i18n.language));
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-patient-training.${i18n.language}.pdf`);
   });
 
   it("should open url for caregiver training pdf when user is caregiver", () => {
     const component = renderDocumentSelect({ user: { role: UserRoles.caregiver } as User });
     component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getCaregiverTrainingUrL(i18n.language));
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-caregiver-training.${i18n.language}.pdf`);
   });
 
   it("should open url for hcp training pdf when user is hcp", () => {
     const component = renderDocumentSelect({ user: { role: UserRoles.hcp } as User });
     component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getHcpTrainingUrL(i18n.language));
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-hcp-training.${i18n.language}.pdf`);
   });
 });
 

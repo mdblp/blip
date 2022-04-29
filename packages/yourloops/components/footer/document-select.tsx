@@ -32,7 +32,6 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useTranslation } from "react-i18next";
 import diabeloopUrls from "../../lib/diabeloop-url";
-import { UserRoles } from "../../models/shoreline";
 import User from "../../lib/auth/user";
 
 const documentSelectStyle = makeStyles((theme: Theme) => {
@@ -67,16 +66,7 @@ function DocumentSelect(props: DocumentSelectProps): JSX.Element {
     case intendedUse:
       return diabeloopUrls.getIntendedUseUrL(i18n.language);
     case training:
-      if (!user) {
-        return diabeloopUrls.getLoginTrainingUrL(i18n.language);
-      } else if (user.role === UserRoles.patient) {
-        return diabeloopUrls.getPatientTrainingUrL(i18n.language);
-      } else if (user.role === UserRoles.hcp) {
-        return diabeloopUrls.getHcpTrainingUrL(i18n.language);
-      } else if (user.role === UserRoles.caregiver) {
-        return diabeloopUrls.getCaregiverTrainingUrL(i18n.language);
-      }
-      throw Error(`Could not find training for role ${user.role}`);
+      return diabeloopUrls.getTrainingUrl(i18n.language, user?.role);
     default:
       return null;
     }

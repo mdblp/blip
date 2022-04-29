@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import config from "./config";
+import { UserRoles } from "../models/shoreline";
 
 /**
  * Class containing all URLs related to Diableloop
@@ -63,20 +64,15 @@ class DiabeloopUrl {
     return `${this.rootPathName}intended-use.${currentLangue}.pdf`;
   }
 
-  getLoginTrainingUrL(currentLangue: string): string {
+  getTrainingUrl(currentLangue: string, role?: UserRoles): string {
+    if (role === UserRoles.patient) {
+      return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`;
+    } else if (role === UserRoles.hcp) {
+      return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
+    } else if (role === UserRoles.caregiver) {
+      return `${this.rootPathName}yourloops-caregiver-training.${currentLangue}.pdf`;
+    }
     return `${this.rootPathName}yourloops-login-training.${currentLangue}.pdf`;
-  }
-
-  getPatientTrainingUrL(currentLangue: string): string {
-    return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`;
-  }
-
-  getHcpTrainingUrL(currentLangue: string): string {
-    return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
-  }
-
-  getCaregiverTrainingUrL(currentLangue: string): string {
-    return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
   }
 
   getCookiesPolicyUrl(currentLangue: string): string {
