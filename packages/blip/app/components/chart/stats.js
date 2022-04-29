@@ -14,7 +14,7 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage"]).isRequired,
+    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage", "patientStatistics"]).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,

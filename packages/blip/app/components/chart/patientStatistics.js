@@ -26,13 +26,14 @@ const PatientStatistics = (props) => {
   const { t } = useTranslation();
   const classes = useStyles();
   return (
-    <Card className={classes.card}>
+    <Card id="patient-statistics" className={classes.card}>
       <CardHeader
+        id="patient-statistics-header"
         avatar={<InsertChartOutlinedIcon/>}
         className={classes.cardHeader}
         title={t("patient-statistics")}
       />
-      <CardContent className={classes.cardContent}>
+      <CardContent id="patient-statistics-content" className={classes.cardContent}>
         <Stats
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
