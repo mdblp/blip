@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,12 +28,13 @@
 import React from "react";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useTranslation } from "react-i18next";
+import diabeloopUrls from "../../lib/diabeloop-url";
+import User from "../../lib/auth/user";
 
-const languageSelectStyle = makeStyles((theme: Theme) => {
+const documentSelectStyle = makeStyles((theme: Theme) => {
   return {
     select: {
       fontSize: "12px",
@@ -42,48 +43,63 @@ const languageSelectStyle = makeStyles((theme: Theme) => {
   };
 });
 
-function LanguageSelect(): JSX.Element {
-  const { i18n } = useTranslation();
-  const [val, setVal] = React.useState(i18n.language);
-  const classes = languageSelectStyle();
+export interface DocumentSelectProps {
+  user?: User,
+}
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const lang = event.target.value as string;
-    i18n.changeLanguage(lang);
-    setVal(lang);
+export const ACCOMPANYING_DOCUMENTS = "accompanying-documents";
+export const INTENDED_USE = "intended-use";
+export const TRAINING = "training";
+
+function DocumentSelect(props: DocumentSelectProps): JSX.Element {
+  const { user } = props;
+  const { t, i18n } = useTranslation("yourloops");
+  const classes = documentSelectStyle();
+  const selectedValue = t(ACCOMPANYING_DOCUMENTS);
+  const intendedUse = t(INTENDED_USE);
+  const training = t(TRAINING);
+
+  const values = [selectedValue, intendedUse, training];
+
+  const getUrl = (documentName: string) => {
+    switch (documentName) {
+    case intendedUse:
+      return diabeloopUrls.getIntendedUseUrL(i18n.language);
+    case training:
+      return diabeloopUrls.getTrainingUrl(i18n.language, user?.role);
+    default:
+      return null;
+    }
   };
 
-  const langs = [];
-  for (const lang in i18n.options.resources) {
-    if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name;
-      langs.push(
-        <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
-          {language}
-        </MenuItem>
-      );
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedValue = event.target.value as string;
+    const url = getUrl(selectedValue);
+    if (url) {
+      window.open(url);
     }
-  }
+  };
 
   return (
-    <FormControl>
-      <Select
-        id="language-selector"
-        name="language-select"
-        disableUnderline
-        inputProps={{
-          classes: {
-            select: classes.select,
-          },
-        }}
-        IconComponent={ArrowDropDownIcon}
-        value={val}
-        onChange={handleChange}
-      >
-        {langs}
-      </Select>
-    </FormControl>
+    <Select
+      id="document-selector"
+      disableUnderline
+      value={selectedValue}
+      inputProps={{
+        classes: {
+          select: classes.select,
+        },
+      }}
+      IconComponent={ArrowDropDownIcon}
+      onChange={handleChange}
+    >
+      {values.map(item => (
+        <MenuItem id={`document-select-menuitem-${item}`} disabled={item === selectedValue} key={item} value={item}>
+          {t(item)}
+        </MenuItem>
+      ))}
+    </Select>
   );
 }
 
-export default LanguageSelect;
+export default DocumentSelect;

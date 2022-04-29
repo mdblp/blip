@@ -142,10 +142,10 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const classes = pageBarStyles();
   const teamHook = useTeam();
   const selectFilterValues = [
-    { value: "all", label: t("select-all-patients"), icon: null, id: "menuitem-filter-patients-all" },
+    { value: "all", label: t("all-patients"), icon: null, id: "menuitem-filter-patients-all" },
     {
       value: "flagged",
-      label: t("select-flagged-patients"),
+      label: t("flagged"),
       icon: <FlagIcon color="primary" className={classes.selectFilterIcon} />,
       id: "menuitem-filter-patients-flagged",
     },
@@ -157,7 +157,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
     },
     {
       value: "pending",
-      label: t("select-pending-invitation-patients"),
+      label: t("pending"),
       icon: <AccessTimeIcon color="primary" className={classes.selectFilterIcon} />,
       id: "menuitem-filter-patients-pending-invitation",
     },

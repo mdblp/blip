@@ -32,17 +32,19 @@ import { useTranslation } from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
-import { Theme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import LanguageIcon from "@material-ui/icons/Language";
+import HelpOutlinedIcon from "@material-ui/icons/HelpOutlined";
 
-import LanguageSelector from "../components/language-select";
-import diabeloopUrls from "../lib/diabeloop-url";
-import { useAuth } from "../lib/auth";
-import config from "../lib/config";
-import metrics from "../lib/metrics";
+import LanguageSelector from "../language-select";
+import diabeloopUrls from "../../lib/diabeloop-url";
+import { useAuth } from "../../lib/auth";
+import config from "../../lib/config";
+import metrics from "../../lib/metrics";
 import diabeloopLabel from "diabeloop-label.svg";
 import diabeloopLogo from "diabeloop-logo.svg";
+import DocumentSelect from "./document-select";
 
 const footerStyle = makeStyles((theme: Theme) => {
   return {
@@ -85,6 +87,7 @@ const footerStyle = makeStyles((theme: Theme) => {
       padding: "11px",
       paddingBottom: "11px",
       paddingTop: "11px",
+      zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down("sm")]: {
         flexWrap: "wrap",
       },
@@ -102,35 +105,53 @@ const footerStyle = makeStyles((theme: Theme) => {
         marginTop: "12px",
       },
     },
-    languageBox: {
+    firstLine: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "6px",
+      width: "100%",
+      [theme.breakpoints.down("sm")]: {
+        marginBottom: "0px",
+      },
+      [theme.breakpoints.down("xs")]: {
+        flexWrap: "wrap",
+      },
+    },
+    firstLineElement: {
       display: "flex",
       height: "20px",
       alignItems: "center",
       [theme.breakpoints.down("sm")]: {
-        width: "100%",
-        display: "inline-block",
         marginTop: "10px",
         marginBottom: "17px",
       },
       [theme.breakpoints.down("xs")]: {
-        marginBottom: "27px",
-        marginTop: "6px",
+        marginBottom: "15px",
+        marginTop: "0px",
+        width: "100%",
+        justifyContent: "center",
       },
     },
-    languageIcon: {
-      width: "20px",
-      marginRight: "18px",
+    icon: {
       alignSelf: "center",
-      [theme.breakpoints.down("sm")]: {
-        marginTop: "3px",
+      color: "#808080",
+      marginRight: "18px",
+      width: "20px",
+      marginBottom: "3px",
+    },
+    documentBox: {
+      display: "flex",
+      height: "20px",
+      alignItems: "center",
+      [theme.breakpoints.down("xs")]: {
+        marginBottom: "15px",
+        marginTop: "0px",
+        width: "100%",
+        justifyContent: "center",
       },
     },
     languageSeparator: {
       alignSelf: "center",
-      [theme.breakpoints.down("sm")]: {
-        display: "none",
-        visibility: "hidden",
-      },
     },
     leftBox: {
       width: "134px",
@@ -189,7 +210,7 @@ const footerStyle = makeStyles((theme: Theme) => {
   };
 }, { name: "footer-component-styles" });
 
-function FooterLinks(): JSX.Element {
+function Footer(): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const { user } = useAuth();
   const classes = footerStyle();
@@ -210,13 +231,26 @@ function FooterLinks(): JSX.Element {
         <Box className={classes.supportButton} />
       </Box>
       <Box className={classes.centerBox}>
-        {!user &&
-          <Box id="footer-language-box" className={classes.languageBox}>
-            <LanguageIcon className={classes.languageIcon} />
-            <LanguageSelector />
-            <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
+        {!user ? (
+          <Box className={classes.firstLine}>
+            <Box id="footer-language-box" className={classes.firstLineElement}>
+              <LanguageIcon className={classes.icon} />
+              <LanguageSelector />
+              <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
+            </Box>
+            <Box id="footer-accompanying-documents-box" className={classes.firstLineElement}>
+              <HelpOutlinedIcon className={classes.icon} />
+              <DocumentSelect/>
+            </Box>
           </Box>
-        }
+        ) : (
+          <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
+            <HelpOutlinedIcon className={classes.icon} />
+            <DocumentSelect user={user}/>
+            <Box className={classes.separator}>|</Box>
+          </Box>
+        )}
+
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
@@ -237,17 +271,6 @@ function FooterLinks(): JSX.Element {
           className={classes.link}
         >
           {t("terms-of-use")}
-        </Link>
-        <Box className={classes.separator}>|</Box>
-        <Link
-          id="footer-link-url-intended-use"
-          target="_blank"
-          href={diabeloopUrls.getIntendedUseUrL(i18n.language)}
-          rel="nofollow"
-          onClick={metricsPdfDocument("intended_use")}
-          className={classes.link}
-        >
-          {t("intended-use")}
         </Link>
         <Box className={classes.separator}>|</Box>
         <Link id="footer-link-cookies-management"
@@ -290,13 +313,14 @@ function FooterLinks(): JSX.Element {
           </Tooltip>
           <span className={classes.bySpan}>by </span>
         </Box>
-        <Link id="footer-link-url-diabeloop" className={classes.diabeloopLink} target="_blank" href={diabeloopUrls.SupportUrl} rel="nofollow" >
+        <Link id="footer-link-url-diabeloop" className={classes.diabeloopLink} target="_blank"
+          href={diabeloopUrls.SupportUrl} rel="nofollow">
           <img src={diabeloopLogo} alt={t("alt-img-logo")} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t("alt-img-logo")} className={classes.svg} />
         </Link>
       </Box>
-    </Container >
+    </Container>
   );
 }
 
-export default FooterLinks;
+export default Footer;

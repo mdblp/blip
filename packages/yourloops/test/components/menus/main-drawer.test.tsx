@@ -28,41 +28,15 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-import { loadTeams, Team, TeamContextProvider } from "../../../lib/team";
-import TeamMenu from "../../../components/menus/team-menu";
-import { teamAPI } from "../../lib/team/utils";
-import { AuthContextProvider, Session } from "../../../lib/auth";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-import { loggedInUsers } from "../../common";
-import { NotificationContextProvider } from "../../../lib/notifications";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import MainDrawer, { mainDrawerDefaultWidth, mainDrawerMiniVariantWidth } from "../../../components/menus/main-drawer";
 import { triggerMouseEvent } from "../../common/utils";
 
-describe("Team Menu", () => {
+describe("Main Drawer", () => {
   let container: HTMLElement | null = null;
-  let filteredTeams: Team[];
-  const { hcpSession } = loggedInUsers;
-
-  function openMenu(): void {
-    const teamMenu = document.getElementById("team-menu");
-    triggerMouseEvent("click", teamMenu);
-  }
-
-  async function mountComponent(session: Session): Promise<void> {
-    const context = createAuthHookStubs(session);
-    const { teams } = await loadTeams(hcpSession, teamAPI.fetchTeams, teamAPI.fetchPatients);
-    filteredTeams = teams.filter(team => team.code !== "private");
-
+  async function mountComponent(miniVariant = true): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
-        render(
-          <AuthContextProvider value={context}>
-            <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider teamAPI={teamAPI}>
-                <TeamMenu />
-              </TeamContextProvider>
-            </NotificationContextProvider>
-          </AuthContextProvider>, container, resolve);
+        render(<MainDrawer miniVariant={miniVariant} />, container, resolve);
       });
     });
   }
@@ -80,16 +54,29 @@ describe("Team Menu", () => {
     }
   });
 
-  it("should display number of teams user belongs to", async () => {
-    await mountComponent(hcpSession);
-    const teamBadge = container.querySelector("#team-menu-count-badge");
-    expect(filteredTeams.length.toString()).toEqual(teamBadge.textContent);
+  it("Should render miniVariant by default", async () => {
+    await mountComponent();
+    const drawer = document.getElementById("main-left-drawer");
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerMiniVariantWidth);
   });
 
-  it("should list all the teams user belongs to", async () => {
-    await mountComponent(hcpSession);
-    openMenu();
-    const teamListItems = document.querySelectorAll("div.team-menu-list-item");
-    expect(filteredTeams.length).toEqual(teamListItems.length);
+  it("Should render full width when miniVariant is set to false", async () => {
+    await mountComponent(false);
+    const drawer = document.getElementById("main-left-drawer");
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
+  });
+
+  it("Should open the drawer when hover it", async () => {
+    await mountComponent();
+    const drawer = document.getElementById("main-left-drawer");
+    triggerMouseEvent("mouseover", drawer);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
+  });
+
+  it("Hover should be disabled when miniVariant is set to false", async () => {
+    await mountComponent(false);
+    const drawer = document.getElementById("main-left-drawer");
+    triggerMouseEvent("mouseover", drawer);
+    expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 });
