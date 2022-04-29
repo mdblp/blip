@@ -97,12 +97,12 @@ describe("PatientStatistics", () => {
     });
 
     it("should render without errors when provided all required props", () => {
-        expect(wrapper.find("#patient-statistics")).to.have.length(1);
-        expect(console.error.callCount).to.equal(0);
+      expect(wrapper.find("#patient-statistics")).to.have.length(1);
+      expect(console.error.callCount).to.equal(0);
     });
 
     it("should show card header", () => {
-      const header = wrapper.find("#patient-statistics-header")
+      const header = wrapper.find("#patient-statistics-header");
       expect(header).to.have.length(1);
     });
 
@@ -113,7 +113,7 @@ describe("PatientStatistics", () => {
     it("should show patient statistics", () => {
       const statsComponent = wrapper.find(Stats);
       expect(statsComponent).to.have.length(1);
-      expect(statsComponent.prop('chartType')).to.be.equal("patientStatistics")
+      expect(statsComponent.prop("chartType")).to.be.equal("patientStatistics");
     });
   });
 });
