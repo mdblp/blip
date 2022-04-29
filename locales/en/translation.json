@@ -343,5 +343,6 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} days in view",
   "{{patientName}} does not have any data yet.": "{{patientName}} does not have any data yet.",
-  "{{title}} (cont.)": "{{title}} (cont.)"
+  "{{title}} (cont.)": "{{title}} (cont.)",
+  "Patient statistics": "Patient statistics"
 }
