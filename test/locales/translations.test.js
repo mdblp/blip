@@ -127,6 +127,9 @@ const ignoredTransKeyForYourLoops = [
   // TODO
   "alert-invitation-patient-failed-already-in-team",
   "alert-invitation-patient-failed-already-invited",
+  "accompanying-documents",
+  "intended-use",
+  "training",
 ];
 const ignoredTransKeyInYourLoopsFiles = [
   "yourloops|${s}",
