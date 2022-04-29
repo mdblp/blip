@@ -9,6 +9,7 @@
   "Spain": "Espagne",
   "Switzerland": "Suisse",
   "United Kingdom": "Royaume-Uni",
+  "accompanying-documents": "Accompanying documents",
   "account-preferences": "Préférences du compte",
   "add-patient": "Ajouter un patient",
   "alert-hypoglycemic": "Severe hypoglycemia alert",
@@ -317,6 +318,7 @@
   "terms-of-use": "Conditions d'utilisation",
   "today": "Aujourd'hui",
   "tooltip-release-notes": "Notes de version",
+  "training": "Training",
   "units": "Unités",
   "user-name": "{{firstName}} {{lastName}}",
   "yesterday": "Hier"
