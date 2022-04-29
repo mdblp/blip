@@ -64,10 +64,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface TeamMembersProps {
   team: Team;
   teamMember: TeamMember;
+  refreshParent: () => void;
 }
 
 function MemberRow(props: TeamMembersProps): JSX.Element {
-  const { teamMember, team } = props;
+  const { teamMember, team, refreshParent } = props;
   const classes = useStyles();
   const rowId = teamMember.user.userid.replace(/@/g, "_");
   const teamHook = useTeam();
@@ -87,6 +88,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     setUserUpdateInProgress(true);
     await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member);
     setUserUpdateInProgress(false);
+    refreshParent();
   };
 
   return (

@@ -162,7 +162,6 @@ function TeamsPage(): JSX.Element | null {
 
   const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
     if (member) {
-      await teamHook.inviteMember(member.team, member.email, member.role);
       try {
         await teamHook.inviteMember(member.team, member.email, member.role);
         alert.success(t("team-page-success-invite-hcp", { email: member.email }));

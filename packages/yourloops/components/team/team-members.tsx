@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import Paper from "@material-ui/core/Paper";
@@ -105,9 +105,14 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const classes = useStyles();
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
-
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);
   const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null);
+
+  const getNonPatientMembers = (team? : Team) => {
+    return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : [];
+  };
+
+  const [members, setMembers] = React.useState<TeamMember[]>(getNonPatientMembers(team));
 
   const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
     if (member) {
@@ -119,6 +124,10 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const openInviteMemberDialog = () => {
     setAddMember({ team, onMemberInvited });
   };
+
+  useEffect(() => {
+    setMembers(getNonPatientMembers(team));
+  }, [team]);
 
   const onTeamLeft = async (hasLeft: boolean) => {
     if (hasLeft) {
@@ -144,7 +153,9 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     setTeamToLeave({ team, onDialogResult: onTeamLeft });
   };
 
-  const nonPatientTeamMembers = team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member);
+  const refresh = () => {
+    setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined));
+  };
 
   return (
     <React.Fragment>
@@ -153,7 +164,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           <div className={classes.headerTiltleIcon}>
             <GroupOutlinedIcon className={classes.groupOutlinedIcon} />
             <Typography className={commonTeamClasses.title}>
-              {t("members").toUpperCase()} ({nonPatientTeamMembers.length})
+              {t("members").toUpperCase()} ({members.length})
             </Typography>
           </div>
           <div>
@@ -187,12 +198,13 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {nonPatientTeamMembers.map(
+                {members.map(
                   (teamMember: TeamMember): JSX.Element => (
                     <MemberRow
                       key={teamMember.user.userid}
                       teamMember={teamMember}
                       team={team}
+                      refreshParent={refresh}
                     />
                   )
                 )}

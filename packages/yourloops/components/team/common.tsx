@@ -65,7 +65,7 @@ export const commonTeamStyles = makeStyles((theme: Theme) => ({
 
 export const StyledTableRow = styled(TableRow)((props) => ({
   "&:nth-of-type(odd)": {
-    backgroundColor: (props.theme as Theme).palette.grey[100],
+    backgroundColor: props.theme.palette.grey[100],
   },
   "&": {
     whiteSpace: "nowrap",

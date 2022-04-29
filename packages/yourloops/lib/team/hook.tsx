@@ -277,7 +277,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
-    const admins = team.members.filter((member) => member.role === TeamMemberRole.admin);
+    const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted);
     return admins.length === 1 && admins[0].user.userid === userId;
   };
 

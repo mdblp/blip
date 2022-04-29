@@ -42,6 +42,7 @@ import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
 describe("MemberRow", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+  const refreshParent = jest.fn();
 
   function renderMemberRow(props: TeamMembersProps) {
     return renderer.create(
@@ -51,6 +52,7 @@ describe("MemberRow", () => {
             <MemberRow
               team={props.team}
               teamMember={props.teamMember}
+              refreshParent={props.refreshParent}
             />
           </TeamContextProvider>
         </AuthContextProvider>
@@ -66,6 +68,7 @@ describe("MemberRow", () => {
     const props: TeamMembersProps = {
       team,
       teamMember,
+      refreshParent,
     };
     const component = renderMemberRow(props);
     expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
@@ -91,6 +94,7 @@ describe("MemberRow", () => {
     const props: TeamMembersProps = {
       team,
       teamMember,
+      refreshParent,
     };
     const component = renderMemberRow(props);
     expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
@@ -116,6 +120,7 @@ describe("MemberRow", () => {
     const props: TeamMembersProps = {
       team,
       teamMember,
+      refreshParent,
     };
     const component = renderMemberRow(props);
     expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
@@ -150,6 +155,7 @@ describe("MemberRow", () => {
     const props: TeamMembersProps = {
       team,
       teamMember,
+      refreshParent,
     };
     const component = renderMemberRow(props);
     expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
@@ -184,6 +190,7 @@ describe("MemberRow", () => {
     const props: TeamMembersProps = {
       team,
       teamMember,
+      refreshParent,
     };
     const component = renderMemberRow(props);
     await act(async () => {

@@ -61,9 +61,9 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
   const [selectedValue, setSelectedValue] = React.useState(defaultValue);
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = event.target.value as string;
-    setSelectedValue(selectedValue);
-    onSelect(selectedValue);
+    const value = event.target.value as string;
+    setSelectedValue(value);
+    onSelect(value);
   };
 
   return (
@@ -75,7 +75,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}>
       {values.map(item => (
-        <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
           {t(item)}
         </MenuItem>
       ))}

@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Switch role from caregiver to HCP dialog - Accept terms
  *
  * All rights reserved.
  *
