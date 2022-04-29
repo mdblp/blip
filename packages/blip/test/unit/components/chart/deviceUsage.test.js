@@ -16,18 +16,15 @@
  */
 
 import React from "react";
-import _ from "lodash";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 import * as sinon from "sinon";
 import chai from "chai";
 
-import { MGDL_UNITS } from "tideline";
-import { utils as vizUtils } from "tidepool-viz";
+import { MGDL_UNITS , BasicsChart } from "tideline";
 
 import DataUtilStub from "../../../helpers/DataUtil";
 import DeviceUsage from "../../../../app/components/chart/deviceUsage";
 
-import { BasicsChart } from "tideline";
 import Stats from "../../../../app/components/chart/stats";
 
 const expect = chai.expect;
@@ -163,12 +160,12 @@ describe("DeviceUsage", () => {
     });
 
     it("should render without errors when provided all required props", () => {
-        expect(wrapper.find("#device-usage")).to.have.length(1);
-        expect(console.error.callCount).to.equal(0);
+      expect(wrapper.find("#device-usage")).to.have.length(1);
+      expect(console.error.callCount).to.equal(0);
     });
 
     it("should show card header", () => {
-      const header = wrapper.find("#device-usage-header")
+      const header = wrapper.find("#device-usage-header");
       expect(header).to.have.length(1);
     });
 
@@ -179,12 +176,12 @@ describe("DeviceUsage", () => {
     it("should show devices info", () => {
       const deviceSection = wrapper.find("#device-usage-device");
       expect(deviceSection).to.have.length(1);
-      const deviceLabels = wrapper.find('.device-label');
+      const deviceLabels = wrapper.find(".device-label");
       expect(deviceLabels).to.have.length(3);
       expect(deviceLabels.at(0).text()).to.equal("DBL:");
       expect(deviceLabels.at(1).text()).to.equal("Pump:");
       expect(deviceLabels.at(2).text()).to.equal("CGM:");
-      const deviceValues = wrapper.find('.device-value');
+      const deviceValues = wrapper.find(".device-value");
       expect(deviceValues).to.have.length(3);
       expect(deviceValues.at(0).text()).to.equal("test-device");
       expect(deviceValues.at(1).text()).to.equal("test-pump");
@@ -194,13 +191,13 @@ describe("DeviceUsage", () => {
     it("should show parameters updates", () => {
       const parametersSection = wrapper.find("#device-usage-updates");
       expect(parametersSection).to.have.length(1);
-      const parameterUpdates = wrapper.find('.parameter-update');
+      const parameterUpdates = wrapper.find(".parameter-update");
       expect(parameterUpdates).to.have.length(2);
-      const parameterDates = wrapper.find('.parameter-date');
+      const parameterDates = wrapper.find(".parameter-date");
       expect(parameterDates).to.have.length(2);
       expect(parameterDates.at(0).text()).to.equal("Jan 2, 2020 12:00 am");
       expect(parameterDates.at(1).text()).to.equal("Jan 1, 2020 12:00 am");
-      const parameterChange = wrapper.find('.parameter-value');
+      const parameterChange = wrapper.find(".parameter-value");
       expect(parameterChange).to.have.length(2);
       expect(parameterChange.at(0).text()).to.equal("test (12 % -> 10 %)");
       expect(parameterChange.at(1).text()).to.equal("test (12 %)");

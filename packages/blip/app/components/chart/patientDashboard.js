@@ -8,9 +8,10 @@ import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
-  //eslint-disable-next-line
   const {
+    //eslint-disable-next-line
     patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange,
+    //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
   } = props;
   const getEndpoints = () => {

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import _ from "lodash";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -20,7 +21,7 @@ import PhonelinkSetupOutlinedIcon from "@material-ui/icons/PhonelinkSetupOutline
 
 import { BasicsChart } from "tideline";
 import Stats from "./stats";
-import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from "tidepool-viz"
+import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from "tidepool-viz";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     width: "99%",
   },
   parameterChanges: {
-    width: '100%',
+    width: "100%",
   },
   parameterChangesTable: {
     maxHeight: 200,
@@ -72,27 +73,29 @@ const useStyles = makeStyles((theme) => ({
 
 const getLabel = (row, t) => {
   const fCurrentValue = `${formatParameterValue(row.value, row.unit)} ${row.unit}`;
-  const currentLabel = t(`params|${row.name}`)
+  const currentLabel = t(`params|${row.name}`);
   switch (row.changeType) {
-    case "added":
-      return `${currentLabel} (${fCurrentValue})`
-    case "deleted":
-      return `${currentLabel} (${fCurrentValue} -> ${t('deleted')})`
-    case "updated":
-      const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
-      return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`
-    default:
-      return `${currentLabel} X (${fCurrentValue})`
+  case "added":
+    return `${currentLabel} (${fCurrentValue})`;
+  case "deleted":
+    return `${currentLabel} (${fCurrentValue} -> ${t("deleted")})`;
+  case "updated":
+    const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
+    return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`;
+  default:
+    return `${currentLabel} X (${fCurrentValue})`;
   }
-}
+};
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric,
+    //eslint-disable-next-line
     dataUtil, chartPrefs, endpoints, loading
   } = props;
   const { t } = useTranslation();
   const classes = useStyles();
+  //eslint-disable-next-line
   const mostRecentSettings = _.last(tidelineData.grouped.pumpSettings);
   const device = _.get(mostRecentSettings, "payload.device", null);
   const pump = _.get(mostRecentSettings, "payload.pump", null);
@@ -100,7 +103,7 @@ const DeviceUsage = (props) => {
   const history = _.sortBy(_.cloneDeep(_.get(mostRecentSettings, "payload.history", null)), ["changeDate"]);
 
   const dateFormat = getLongDayHourFormat();
-  const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
+  const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false);
   const deviceData = {
     device: {
       label: `${t("DBL")}:`,
@@ -114,7 +117,7 @@ const DeviceUsage = (props) => {
       label: `${t("CGM")}:`,
       value: `${cgm.manufacturer} ${cgm.name}`
     }
-  }
+  };
 
   return (
     <Card id="device-usage" className={classes.card}>
@@ -128,7 +131,7 @@ const DeviceUsage = (props) => {
         <Box id="device-usage-device">
           <Typography className={classes.sectionTitles}>{t("Devices")}</Typography>
           <Grid className={classes.sectionContent} container spacing={1}>
-          {Object.keys(deviceData).map(
+            {Object.keys(deviceData).map(
               (key) =>
                 <React.Fragment key={key}>
                   <Grid item xs={6}>
@@ -161,7 +164,7 @@ const DeviceUsage = (props) => {
                       {["date", "value"].map((column) => {
                         return (
                           <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
-                            {column=="date"?row.parameterDate:getLabel(row, t)}
+                            {column === "date" ? row.parameterDate : getLabel(row, t)}
                           </TableCell>
                         );
                       })}
@@ -172,7 +175,7 @@ const DeviceUsage = (props) => {
             </Table>
           </TableContainer>
         </Box>
-        <Divider variant="fullWidth"  className={classes.divider}/>
+        <Divider variant="fullWidth" className={classes.divider}/>
         <Stats
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
@@ -184,15 +187,17 @@ const DeviceUsage = (props) => {
           loading={loading}
         />
         <BasicsChart
-            bgClasses={bgPrefs.bgClasses}
-            bgUnits={bgPrefs.bgUnits}
-            onSelectDay={()=>null}
-            patient={patient}
-            tidelineData={tidelineData}
-            permsOfLoggedInUser={permsOfLoggedInUser}
-            timePrefs={timePrefs}
-            trackMetric={trackMetric} />
-        </CardContent>
+          //eslint-disable-next-line
+          bgClasses={bgPrefs.bgClasses}
+          //eslint-disable-next-line
+          bgUnits={bgPrefs.bgUnits}
+          onSelectDay={()=>null}
+          patient={patient}
+          tidelineData={tidelineData}
+          permsOfLoggedInUser={permsOfLoggedInUser}
+          timePrefs={timePrefs}
+          trackMetric={trackMetric} />
+      </CardContent>
     </Card>
   );
 };

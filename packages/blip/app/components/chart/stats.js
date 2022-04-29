@@ -171,9 +171,9 @@ class Stats extends React.Component {
       addStat(commonStats.coefficientOfVariation);
       break;
 
-      case "deviceUsage":
-        cbgSelected && addStat(commonStats.sensorUsage);
-        break;
+    case "deviceUsage":
+      cbgSelected && addStat(commonStats.sensorUsage);
+      break;
     }
 
     return stats;
