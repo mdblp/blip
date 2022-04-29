@@ -9,6 +9,7 @@
   "Spain": "Spanje",
   "Switzerland": "Zwitserland",
   "United Kingdom": "Verenigd Koninkrijk",
+  "accompanying-documents": "Accompanying documents",
   "account-preferences": "Accountvoorkeuren",
   "add-patient": "Patiënt toevoegen",
   "alert-hypoglycemic": "Severe hypoglycemia alert",
@@ -317,6 +318,7 @@
   "terms-of-use": "Gebruiksvoorwaarden",
   "today": "Vandaag",
   "tooltip-release-notes": "Release-opmerkingen",
+  "training": "Training",
   "units": "Eenheden",
   "user-name": "{{firstName}} {{lastName}}",
   "yesterday": "Gisteren"
