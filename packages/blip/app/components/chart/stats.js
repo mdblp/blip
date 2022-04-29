@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import bows from "bows";
+import Divider from "@material-ui/core/Divider";
 import { utils as vizUtils, components as vizComponents } from "tidepool-viz";
 
 import { BG_DATA_TYPES } from "../../core/constants";
@@ -87,6 +88,7 @@ class Stats extends React.Component {
     return _.map(stats, stat => (
       <div id={`Stat--${stat.id}`} key={stat.id}>
         <Stat animate={animate} bgPrefs={this.bgPrefs} {...stat} />
+        <Divider variant="fullWidth"/>
       </div>
     ));
   }
