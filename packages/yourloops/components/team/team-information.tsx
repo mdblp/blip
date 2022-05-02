@@ -43,7 +43,6 @@ import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
-import { TeamMemberRole } from "../../models/team";
 
 const useStyles = makeStyles(() => ({
   body: {
@@ -100,7 +99,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const classes = useStyles();
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
-  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
+  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;

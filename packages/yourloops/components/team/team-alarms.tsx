@@ -40,8 +40,7 @@ import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import BasicDropdown from "../dropdown/basic-dropdown";
 import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
-import { TeamMemberRole } from "../../models/team";
-import { Team } from "../../lib/team";
+import { Team, useTeam } from "../../lib/team";
 
 const useStyles = makeStyles(() => ({
   alarmsTitle: {
@@ -94,11 +93,12 @@ export interface TeamAlarmsProps {
 function TeamAlarms(props : TeamAlarmsProps): JSX.Element {
   const { team } = props;
   const classes = useStyles();
+  const teamHook = useTeam();
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
-  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
+  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
 
   return (
     <React.Fragment>

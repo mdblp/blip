@@ -96,17 +96,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface TeamMembersProps {
   team: Team;
+  refreshParent : () => void;
 }
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
-  const { team } = props;
+  const { team, refreshParent } = props;
   const teamHook = useTeam();
   const alert = useAlert();
   const historyHook = useHistory();
   const classes = useStyles();
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
-  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
+  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);
@@ -160,6 +161,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
 
   const refresh = () => {
     setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined));
+    refreshParent();
   };
 
   return (

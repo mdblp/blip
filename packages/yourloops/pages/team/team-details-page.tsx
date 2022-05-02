@@ -200,7 +200,7 @@ function TeamDetailPage(): JSX.Element {
               </div>
               <div className={classes.separator} />
               <div ref={teamMembers} className={classes.refElement}>
-                <TeamMembers team={dropdownData.selectedTeam} />
+                <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh}/>
               </div>
               <div className={classes.separator} />
               <div ref={teamAlarms} className={classes.refElement}>
