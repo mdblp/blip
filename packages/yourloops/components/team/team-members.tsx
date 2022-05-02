@@ -51,6 +51,7 @@ import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
 import { useAlert } from "../utils/snackbar";
 import { useHistory } from "react-router-dom";
 import { commonTeamStyles } from "./common";
+import { useAuth } from "../../lib/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -103,12 +104,15 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const alert = useAlert();
   const historyHook = useHistory();
   const classes = useStyles();
+  const authContext = useAuth();
+  const loggedInUserId = authContext.user?.userid as string;
+  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);
   const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null);
 
-  const getNonPatientMembers = (team? : Team) => {
+  const getNonPatientMembers = (team?: Team) => {
     return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : [];
   };
 
@@ -117,6 +121,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
     if (member) {
       await teamHook.inviteMember(member.team, member.email, member.role);
+      setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
     }
     setAddMember(null);
   };
@@ -171,10 +176,13 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             <Button className={`${commonTeamClasses.button} ${classes.buttonLeaveTeam}`} onClick={openLeaveTeamDialog}>
               <ExitToAppIcon className={commonTeamClasses.icon} />{t("button-team-leave")}
             </Button>
-            <Button className={commonTeamClasses.button} onClick={openInviteMemberDialog}>
-              <GroupAddIcon className={commonTeamClasses.icon} />
-              {t("button-team-add-member")}
-            </Button>
+            {
+              isUserAdmin &&
+              <Button className={commonTeamClasses.button} onClick={openInviteMemberDialog}>
+                <GroupAddIcon className={commonTeamClasses.icon} />
+                {t("button-team-add-member")}
+              </Button>
+            }
           </div>
         </div>
         <div className={classes.body}>

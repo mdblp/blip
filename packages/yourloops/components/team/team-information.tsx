@@ -42,6 +42,8 @@ import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAlert } from "../utils/snackbar";
+import { useAuth } from "../../lib/auth";
+import { TeamMemberRole } from "../../models/team";
 
 const useStyles = makeStyles(() => ({
   body: {
@@ -88,14 +90,17 @@ const useStyles = makeStyles(() => ({
 
 export interface TeamInformationProps {
   team: Team;
-  refresh : () => void;
+  refreshParent : () => void;
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
-  const { team, refresh } = props;
+  const { team, refreshParent } = props;
   const teamHook = useTeam();
   const alert = useAlert();
   const classes = useStyles();
+  const authContext = useAuth();
+  const loggedInUserId = authContext.user?.userid as string;
+  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;
@@ -106,7 +111,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
       try {
         await teamHook.editTeam(editedTeam as Team);
         alert.success(t("team-page-success-edit"));
-        refresh();
+        refreshParent();
       } catch (reason: unknown) {
         alert.error(t("team-page-failed-edit"));
       }
@@ -128,14 +133,16 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t("information").toUpperCase()}
             </Typography>
           </div>
-          <Button
-            id="edit-team-button"
-            className={commonTeamClasses.button}
-            onClick={editTeam}
-          >
-            <EditIcon className={commonTeamClasses.icon} />
-            {t("edit-information")}
-          </Button>
+          { isUserAdmin &&
+            <Button
+              id="edit-team-button"
+              className={commonTeamClasses.button}
+              onClick={editTeam}
+            >
+              <EditIcon className={commonTeamClasses.icon} />
+              {t("edit-information")}
+            </Button>
+          }
         </div>
         <div className={classes.body}>
           <div className={classes.teamInfo}>

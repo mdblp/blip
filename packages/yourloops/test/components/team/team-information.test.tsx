@@ -49,7 +49,7 @@ describe("TeamInformation", () => {
           <TeamContextProvider teamAPI={teamAPI}>
             <TeamInformation
               team={props.team}
-              refresh={props.refresh}
+              refreshParent={props.refreshParent}
             />
           </TeamContextProvider>
         </AuthContextProvider>
@@ -68,7 +68,7 @@ describe("TeamInformation", () => {
       city: "Vouilly",
       country: "France",
     };
-    const props: TeamInformationProps = { team, refresh };
+    const props: TeamInformationProps = { team, refreshParent: refresh };
     const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;
     const component = renderTeamInformation(props);
     expect(component.root.findByProps({ id: `team-information-${teamId}-name` }).props.children).toEqual(team.name);

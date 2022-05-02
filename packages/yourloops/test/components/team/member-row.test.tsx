@@ -71,7 +71,7 @@ describe("MemberRow", () => {
       refreshParent,
     };
     const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
+    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual("--");
     expect(component.root.findByProps({ id: `${id}-pending-icon` })).not.toBeNull();
     expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
     expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeTruthy();
@@ -97,7 +97,7 @@ describe("MemberRow", () => {
       refreshParent,
     };
     const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
+    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual("--");
     expect(component.root.findByProps({ id: `${id}-pending-icon` })).not.toBeNull();
     expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
     expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeFalsy();

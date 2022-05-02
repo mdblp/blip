@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function TeamDetailPage(): JSX.Element {
-  const { teams, getTeam } = useTeam();
+  const { getTeam, getMedicalTeams } = useTeam();
   const classes = useStyles();
   const commonTeamClasses = commonTeamStyles();
   const paramHook = useParams();
@@ -131,9 +131,9 @@ function TeamDetailPage(): JSX.Element {
   const refresh = useCallback(() => {
     setDropdownData({
       selectedTeam: getTeam(teamId) as Team,
-      teamNames: teams.filter(team => team.id !== "private").map((team: Team) => team.name),
+      teamNames: getMedicalTeams().map((team: Team) => team.name),
     });
-  }, [getTeam, teamId, teams]);
+  }, [getTeam, teamId, getMedicalTeams]);
 
   React.useEffect(() => {
     refresh();
@@ -144,7 +144,7 @@ function TeamDetailPage(): JSX.Element {
   };
 
   const redirectToTeam = (selectedTeam: string) => {
-    const teamToRedirectTo = teams.find((team: Team) => team.name === selectedTeam);
+    const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam);
     history.push(`/teams/${teamToRedirectTo?.id}`);
   };
 
@@ -196,7 +196,7 @@ function TeamDetailPage(): JSX.Element {
             </div>
             <div className={classes.teamDetails}>
               <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
-                <TeamInformation team={dropdownData.selectedTeam} refresh={refresh}/>
+                <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh}/>
               </div>
               <div className={classes.separator} />
               <div ref={teamMembers} className={classes.refElement}>
@@ -204,7 +204,7 @@ function TeamDetailPage(): JSX.Element {
               </div>
               <div className={classes.separator} />
               <div ref={teamAlarms} className={classes.refElement}>
-                <TeamAlarms />
+                <TeamAlarms team={dropdownData.selectedTeam} />
               </div>
             </div>
           </div>

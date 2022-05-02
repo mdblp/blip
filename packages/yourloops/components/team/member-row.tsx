@@ -103,7 +103,10 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.typography}
           size="small"
         >
-          {teamMember.user.profile?.fullName}
+          {currentUserIsPending ?
+            ("--") :
+            (teamMember.user.profile?.fullName)
+          }
         </StyledTableCell>
         <StyledTableCell
           size="small"

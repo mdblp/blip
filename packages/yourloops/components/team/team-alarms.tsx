@@ -39,6 +39,9 @@ import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 
 import BasicDropdown from "../dropdown/basic-dropdown";
 import { commonTeamStyles } from "./common";
+import { useAuth } from "../../lib/auth";
+import { TeamMemberRole } from "../../models/team";
+import { Team } from "../../lib/team";
 
 const useStyles = makeStyles(() => ({
   alarmsTitle: {
@@ -84,10 +87,18 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function TeamAlarms(): JSX.Element {
+export interface TeamAlarmsProps {
+  team : Team,
+}
+
+function TeamAlarms(props : TeamAlarmsProps): JSX.Element {
+  const { team } = props;
   const classes = useStyles();
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
+  const authContext = useAuth();
+  const loggedInUserId = authContext.user?.userid as string;
+  const isUserAdmin = team.members.find(member => member.user.userid === loggedInUserId && member.role === TeamMemberRole.admin);
 
   return (
     <React.Fragment>
@@ -99,10 +110,13 @@ function TeamAlarms(): JSX.Element {
               {t("telemonitoring-alarms").toUpperCase()}
             </Typography>
           </div>
-          <Button className={commonTeamClasses.button} disabled>
-            <SaveIcon className={commonTeamClasses.icon}/>
-            {t("save-modifications")}
-          </Button>
+          {
+            isUserAdmin &&
+            <Button className={commonTeamClasses.button} disabled>
+              <SaveIcon className={commonTeamClasses.icon}/>
+              {t("save-modifications")}
+            </Button>
+          }
         </div>
         <div className={classes.body}>
           <div className={classes.teamInfo}>
