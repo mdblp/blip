@@ -39,12 +39,13 @@ import ChatMessage from "./chat-message";
 import { getChatMessages, sendChatMessage } from "../../lib/chat/api";
 import { useAuth } from "../../lib/auth";
 import { IMessage } from "../../models/chat";
+import { Button, Tab, Tabs } from "@material-ui/core";
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
     chatWidget: {
       width: "300px",
-      height: "500px",
+      height: "400px",
     },
     chatWidgetHeader: {
       padding: theme.spacing(1),
@@ -68,19 +69,37 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     chatWidgetContent: {
       background: "white",
       width: "100%",
-      height: "420px",
+      height: "280px",
       overflow: "auto",
     },
     chatWidgetFooter: {
-      display: "flex",
-      alignItems: "center",
       borderTop: "1px solid #E9E9E9",
       background: "white",
       borderRadius: "0px 0px 12px 12px",
-      width: "100%",
-      height: "40px",
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
+    },
+    chatWidgetTabs: {
+      minHeight: "0px",
+    },
+    chatWidgetTab: {
+      minWidth: "0px",
+      minHeight: "0px",
+      padding: "0px",
+      marginLeft: "10px",
+      marginRight: "10px",
+      fontSize: "0.6rem",
+      textTransform: "none",
+    },
+    chatWidgetInputRow: {
+      display: "flex",
+      alignItems: "center",
+      background: "white",
+      width: "100%",
+      height: "40px",
+    },
+    chatWidgetHCPToggle: {
+      height: "20px",
     },
     chatWidgetInput: {
       "fontFamily": "Roboto",
@@ -127,11 +146,19 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [showPicker, setShowPicker] = useState(false);
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [inputTab, setInputTab] = useState(0);
   const content = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
-  const footer = useRef<HTMLDivElement>(null);
+  const inputRow = useRef<HTMLDivElement>(null);
   /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
   /*TODO : get monitoring team, today the field is not present in the UI so it's taking the first team*/
+
+
+  // TODO remove this lint issue ???
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
+    setInputTab(newValue);
+  };
 
   useEffect(() => {
     content.current?.lastElementChild?.scrollIntoView();
@@ -139,11 +166,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages() {
-      const session = authHook.session();
-      if (session !== null) {
-        const messages = await getChatMessages(session, teamId, patientId);
-        setMessages(messages);
-      }
+      const messages = await getChatMessages(teamId, patientId);
+      setMessages(messages);
     }
     fetchMessages();
   }, [userId, patientId, teamId, authHook]);
@@ -154,26 +178,23 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   const resetInputSize = () => {
-    if (!content.current || !footer.current || !input.current) {
+    if (!content.current || !inputRow.current || !input.current) {
       throw new Error("Cannot find elements for resize");
     }
-    content.current.style.height = "420px";
-    footer.current.style.height = "40px";
+    content.current.style.height = "280px";
+    inputRow.current.style.height = "40px";
     input.current.style.overflow = "hidden";
     input.current.style.height = "24px";
   };
 
   const sendMessage = async () => {
-    const session = authHook.session();
-    if (session !== null) {
-      await sendChatMessage(session, teamId, patientId, inputText);
-      const messages = await getChatMessages(session, teamId, patientId);
-      setMessages(messages);
-      setInputText("");
-      resetInputSize();
-      if (input.current) {
-        input.current.value = "";
-      }
+    await sendChatMessage(teamId, patientId, inputText);
+    const messages = await getChatMessages(teamId, patientId);
+    setMessages(messages);
+    setInputText("");
+    resetInputSize();
+    if (input.current) {
+      input.current.value = "";
     }
   };
 
@@ -181,18 +202,18 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     setInputText(event.target.value);
     event.target.style.height = "1px";
     event.target.style.height = (event.target.scrollHeight) + "px";
-    if (!content.current || !footer.current) {
+    if (!content.current || !inputRow.current) {
       throw new Error("Cannot find elements for resize");
     }
     //values for scrollHeight are 24 one line, 44 2 lines and 64 3 lines
     //we display the scrollbar only when 3 lines are present
     if (event.target.scrollHeight > 44) {
       event.target.style.overflow = "auto";
-      content.current.style.height = "380px";
-      footer.current.style.height = "80px";
+      content.current.style.height = "240px";
+      inputRow.current.style.height = "80px";
     } else if (event.target.scrollHeight > 24) {
-      content.current.style.height = "400px";
-      footer.current.style.height = "60px";
+      content.current.style.height = "260px";
+      inputRow.current.style.height = "60px";
       event.target.style.overflow = "hidden";
     } else {
       resetInputSize();
@@ -200,14 +221,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   return (
-    <Card className={`${classes.chatWidget}`}>
-      <div className={`${classes.chatWidgetHeader}`}>
-        <EmailOutlinedIcon className={`${classes.icon}`} />
+    <Card className={classes.chatWidget}>
+      <div className={classes.chatWidgetHeader}>
+        <EmailOutlinedIcon className={classes.icon} />
         {/* TODO : add unread messages number in (), then click on input text is going to ack and
         no messages will be unread */}
-        <span className={`${classes.chatWidgetHeaderText}`}>Messages</span>
+        <span className={classes.chatWidgetHeaderText}>Messages</span>
       </div>
-      <div ref={content} id={"chatWidgetContent"} className={`${classes.chatWidgetContent}`}>
+      <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
           (msg): JSX.Element => (
             <ChatMessage key={msg.id} text={msg.text}
@@ -215,24 +236,35 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           ))
         }
       </div>
-      <div>
-        {showPicker &&
-              <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
-        }
-      </div>
-      <div ref={footer} id={"chatWidgetFooter"} className={`${classes.chatWidgetFooter}`}>
-        <button className={`${classes.iconButton}`} onClick={() => setShowPicker(true)}>
-          <SentimentSatisfiedOutlinedIcon />
-        </button>
-        <textarea ref={input} value={inputText} rows={1} id={"chatWidgetInput"}
-          className={`${classes.chatWidgetInput}`}
-          onInput={inputHandler} placeholder={"Commencer à écrire ..."} />
-        <button disabled={inputText.length < 1} className={`${classes.iconButton}`} onClick={sendMessage}>
-          <SendIcon />
-        </button>
+      {showPicker &&
+        <div id="chat-widget-emoji-picker">
+          <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
+        </div>
+      }
+      <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
+        <div className={classes.chatWidgetHCPToggle}>
+          { patientId !== userId &&
+            <div>
+              <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
+                <Tab className={classes.chatWidgetTab} label="Répondre" />
+                <Tab className={classes.chatWidgetTab}label="Message entre pros"/>
+              </Tabs>
+            </div>
+          }
+        </div>
+        <div ref={inputRow} className={classes.chatWidgetInputRow}>
+          <Button id="chat-widget-emoji-button" className={classes.iconButton} onClick={() => setShowPicker(true)}>
+            <SentimentSatisfiedOutlinedIcon />
+          </Button>
+          <textarea ref={input} value={inputText} rows={1} id="chatWidgetInput"
+            className={classes.chatWidgetInput}
+            onInput={inputHandler} placeholder={"Commencer à écrire ..."} />
+          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} onClick={sendMessage}>
+            <SendIcon />
+          </Button>
+        </div>
       </div>
     </Card>
-
   )
   ;
 }

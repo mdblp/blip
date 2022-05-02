@@ -6,7 +6,6 @@ import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 
 const PatientDashboard = (props) => {
-  //eslint-disable-next-line
   const { patient, user, teams, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange / 2).toISOString();
@@ -31,7 +30,6 @@ const PatientDashboard = (props) => {
       <Box id="patient-dashboard-content">
         <PatientStatistics
           bgPrefs={bgPrefs}
-          //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
           chartType="daily"
@@ -40,7 +38,6 @@ const PatientDashboard = (props) => {
           loading={loading}
         />
         {monitoringTeam &&
-          /* eslint-disable-next-line react/prop-types */
           <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
         }
       </Box>
@@ -48,10 +45,12 @@ const PatientDashboard = (props) => {
   );
 };
 
-PatientDashboard.propType = {
+PatientDashboard.propTypes = {
+  user: PropTypes.object,
+  teams: PropTypes.array,
+  chatWidget: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
-  teams: PropTypes.object,
   prefixURL:  PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,

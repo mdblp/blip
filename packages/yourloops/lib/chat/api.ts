@@ -27,52 +27,37 @@
  */
 
 import bows from "bows";
-
-import { HttpHeaderKeys } from "../../models/api";
-import { errorFromHttpStatus } from "../../lib/utils";
-import { Session } from "../auth";
-import appConfig from "../config";
 import { IMessage } from "../../models/chat";
+import HttpService from "../../services/http";
 
 const log = bows("ChatAPI");
 
-export async function getChatMessages(session: Session, teamId: string, patientId: string): Promise<IMessage[]> {
-  const { sessionToken, traceToken } = session;
+export async function getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
   log.info("getMessages()");
 
-  const apiURL = new URL(`chat/v1/messages/teams/${teamId}/patients/${patientId}`, appConfig.API_HOST);
-  const response = await fetch(apiURL.toString(), {
-    method: "GET",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.sessionToken]: sessionToken,
-    },
+  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
+  const response = await HttpService.get<IMessage[]>({
+    url,
   });
 
-  if (response.ok) {
-    return response.json() as Promise<IMessage[]>;
+  if (response.status === 200) {
+    return response.data;
   }
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
-export async function sendChatMessage(session: Session, teamId: string, patientId: string, text: string): Promise<void> {
-  const { sessionToken, traceToken } = session;
+export async function sendChatMessage(teamId: string, patientId: string, text: string): Promise<boolean> {
   log.info("getMessages()");
-
-  const apiURL = new URL(`chat/v1/messages/teams/${teamId}/patients/${patientId}`, appConfig.API_HOST);
-  const response = await fetch(apiURL.toString(), {
-    method: "POST",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.sessionToken]: sessionToken,
-    },
-    body: JSON.stringify({ text }),
+  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
+  const response = await HttpService.post<boolean, string>({
+    url,
+    payload: JSON.stringify({ text }) ,
   });
 
-  if (response.ok) {
-    return response.json() as Promise<void>;
+  if (response.status !== 200) {
+    return Promise.reject(response.statusText);
   }
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return true;
 }
 
 export default {

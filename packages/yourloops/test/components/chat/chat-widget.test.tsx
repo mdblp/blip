@@ -27,84 +27,130 @@
  */
 
 import React from "react";
-import renderer from "react-test-renderer";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { TeamContextProvider } from "../../../lib/team";
-import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { loggedInUsers } from "../../common";
 import ChatWidget from "../../../components/chat/chat-widget";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
-import { NotificationContextProvider } from "../../../lib/notifications";
+import { act, Simulate } from "react-dom/test-utils";
+import { render, unmountComponentAtNode } from "react-dom";
+import * as chatAPI from "../../../lib/chat/api";
 
 describe("Chat widget", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authPatient = loggedInUsers.patientSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
-  console.log(authHookPatient);
 
-  // let container: HTMLElement | null = null;
+  let container: HTMLElement | null = null;
 
-  // async function mountComponent(authContext: AuthContext): Promise<void> {
-  //   await act(() => {
-  //     return new Promise((resolve) => {
-  //       render(
-  //         <AuthContextProvider value={authContext}>
-  //           <ChatWidget teamId={"222"} patientId={"132"} userRole={"patient"} userId={"254"}/>
-  //         </AuthContextProvider>, container, resolve);
-  //     });
-  //   });
-  // }
-  //
-  // beforeEach(() => {
-  //   container = document.createElement("div");
-  //   document.body.appendChild(container);
-  // });
-  //
-  // afterEach(() => {
-  //   if (container) {
-  //     unmountComponentAtNode(container);
-  //     container.remove();
-  //     container = null;
-  //   }
-  // });
-
-  function renderChatWidget(authContext: AuthContext) {
-    return renderer.create(
-      <AuthContextProvider value={authContext}>
-        <NotificationContextProvider value={stubNotificationContextValue}>
-          <TeamContextProvider teamAPI={teamAPI}>
-            <ChatWidget teamId="777" patientId={"132"} userRole={"patient"} userId={"254"}/>
-          </TeamContextProvider>
-        </NotificationContextProvider>
-      </AuthContextProvider>
-    );
+  async function mountComponent(authContext: AuthContext): Promise<void> {
+    await act(() => {
+      return new Promise((resolve) => {
+        render(
+          <AuthContextProvider value={authContext}>
+            <ChatWidget teamId="777" patientId={"132"} userRole={"patient"} userId={"254"} />
+          </AuthContextProvider>, container, resolve);
+      });
+    });
   }
 
-  // it("should render an empty chat widget when no messages for HCP", async () => {
-  //   await mountComponent(authHookHcp);
-  //   // await new Promise((r) => setTimeout(r, 2000));
-  //   const chatContent = container.querySelector("#chatWidgetContent");
-  //   expect(chatContent).toBeDefined();
-  // });
-
-  // it("should render an empty chat widget when no messages for patient", () => {
-  //   const component = renderChatWidget(authHookPatient);
-  //   const chatWidget = component.root.findByType(ChatWidget);
-  //   expect(chatWidget).toBeDefined();
-  // });
-
-  it("should render an empty chat widget when no messages for patient", () => {
-    const component = renderChatWidget(authHookPatient);
-    const chatWidget = component.root.findByType(ChatWidget);
-    expect(chatWidget).toBeDefined();
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
   });
 
-  it("should render an empty chat widget when no messages for hcp", () => {
-    const component = renderChatWidget(authHookHcp);
-    const chatWidget = component.root.findByType(ChatWidget);
-    expect(chatWidget).toBeDefined();
+  afterEach(() => {
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
+    }
+  });
+
+  function expectBaseState() {
+    const sendButton = container.querySelector("#chat-widget-send-button");
+    expect(sendButton).toBeDefined();
+    expect(sendButton.getAttribute("disabled")).toBeDefined();
+    const textInput = container.querySelector("#chatWidgetInput");
+    expect(textInput).toBeDefined();
+    expect(textInput.innerHTML.length).toEqual(0);
+    const emojiPicker = container.querySelector("#chat-widget-emoji-picker");
+    expect(emojiPicker).toBeNull();
+  }
+
+  it("should render an empty chat widget when no messages for HCP", async () => {
+    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    await mountComponent(authHookHcp);
+    expect(apiStub).toHaveBeenCalled();
+    expectBaseState();
+  });
+
+  it("should render an empty chat widget when no messages for patient", async () => {
+    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    await mountComponent(authHookPatient);
+    expect(apiStub).toHaveBeenCalled();
+    expectBaseState();
+  });
+
+  it("should display messages", async () => {
+    const patient = authPatient.user;
+    const mockedMessages = [{
+      id: "123456",
+      patientId: patient.userid,
+      teamId: "team1",
+      authorId: patient.userid,
+      destAck: false,
+      text: "Hello HCPs",
+      timezone: "UTC",
+      timestamp: Date.now().toString(),
+      user: patient,
+    }];
+    //hack because scrollIntoView is not implemented in jsdom used by the testing library
+    Element.prototype.scrollIntoView = jest.fn();
+    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
+    await mountComponent(authHookPatient);
+    expect(apiStub).toHaveBeenCalled();
+    const messages = container.querySelectorAll(".message");
+    expect(messages.length).toEqual(mockedMessages.length);
+  });
+
+  it("should render an emoji picker when clicking on the emoji button and add the clicked emoji in the text input before disappearing", async () => {
+    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    await mountComponent(authHookPatient);
+    expect(apiStub).toHaveBeenCalled();
+
+    //when clicking on the emoji button
+    const emojiButton = container.querySelector("#chat-widget-emoji-button");
+    expect(emojiButton).toBeDefined();
+    Simulate.click(emojiButton);
+    let emojiPicker = container.querySelector("#chat-widget-emoji-picker");
+    expect(emojiPicker).toBeDefined();
+
+    //when clicking on an emoji
+    const emojiItem = emojiPicker.querySelector(".emoji");
+    expect(emojiItem).toBeDefined();
+    Simulate.click(emojiItem.querySelector("button"));
+    emojiPicker = container.querySelector("#chat-widget-emoji-picker");
+    expect(emojiPicker).toBeNull();
+
+    const textInput = container.querySelector("#chatWidgetInput");
+    expect(textInput.innerHTML.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("should send the message when clicking on send button", async () => {
+    jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    await mountComponent(authHookPatient);
+
+    const textInput = container.querySelector("#chatWidgetInput");
+    expect(textInput).toBeDefined();
+    textInput.innerHTML = "Hello";
+    Simulate.input(textInput);
+
+    const apiStubSendMessage = jest.spyOn(chatAPI, "sendChatMessage").mockResolvedValue(true);
+    const sendButton = container.querySelector("#chat-widget-send-button");
+    expect(sendButton).toBeDefined();
+    expect(sendButton.getAttribute("disabled")).toBeNull();
+    Simulate.click(sendButton);
+    expect(apiStubSendMessage).toHaveBeenCalled();
   });
 });
-

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Generic Chat window
+ * Chat message
  *
  * All rights reserved.
  *
@@ -81,17 +81,17 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
 function ChatMessage(props: ChatMessageProps): JSX.Element {
   const { text, isMine } = props;
   const classes = chatMessageStyles();
-  const messageContainerType = isMine ? `${classes.chatMessageRightContainer}` : `${classes.chatMessageLeftContainer}`;
+  const messageContainerType = isMine ? classes.chatMessageRightContainer : classes.chatMessageLeftContainer;
 
   return (
-    <div className={`${messageContainerType}`}>
+    <div className={`message ${messageContainerType}`}>
       {
         !isMine &&
         <svg height="10" width="10" transform="scale(-1,1)">
           <polygon points="0,0 10,0 0,10"/>
         </svg>
       }
-      <span className={`${classes.chatMessage}`}>{ text }</span>
+      <span className={classes.chatMessage}>{ text }</span>
       {
         isMine &&
         <svg height="10" width="10">
