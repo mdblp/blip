@@ -47,6 +47,7 @@ import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
+import PatientInfoWidget from "./dashboard-widgets/patient-info-widget"
 
 interface PatientDataParam {
   patientId?: string;
@@ -136,6 +137,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        patientInfoWidget={PatientInfoWidget}
       />
     </Container>
   );

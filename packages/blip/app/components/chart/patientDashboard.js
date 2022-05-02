@@ -8,11 +8,12 @@ import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
-  const {
+  //eslint-disable-next-line
+  const { patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil,
     //eslint-disable-next-line
-    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange,
+    epochLocation, msRange, timePrefs, tidelineData, permsOfLoggedInUser, trackMetric,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
+    patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
@@ -30,6 +31,7 @@ const PatientDashboard = (props) => {
         canPrint={true}
       />
       <Box id="patient-dashboard-content">
+        {<PatientInfoWidget patient={patient}/>}
         <PatientStatistics
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
@@ -68,6 +70,7 @@ PatientDashboard.propType = {
   dataUtil: PropTypes.object,
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
+  patientInfoWidget:  PropTypes.func.isRequired,
 };
 
 export default PatientDashboard;

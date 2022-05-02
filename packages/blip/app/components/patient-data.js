@@ -60,9 +60,10 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../index").DialogDatePicker } DialogDatePicker
  * @typedef { import("../index").DialogRangeDatePicker } DialogRangeDatePicker
  * @typedef { import("../index").ProfileDialog } ProfileDialog
+ * @typedef { import("../index").PatientInfoWidget } PatientInfoWidget
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -335,7 +336,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
+    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -363,6 +364,7 @@ class PatientDataPage extends React.Component {
             tidelineData={tidelineData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
+            patientInfoWidget={patientInfoWidget}
           />
         </Route>
         <Route path={`${prefixURL}/overview`}>
@@ -1007,6 +1009,7 @@ PatientDataPage.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
 };
 
 export default PatientDataPage;
