@@ -94,9 +94,9 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   // patient.remoteMonitoring
   const patientInfo :Record<string, string>= {
     "patient": `${userName.firstName} ${userName.lastName}`,
-    "patient-profile-birthdate": birthDate,
+    "birthdate": birthDate,
     "email": patient.username,
-    "patient-info-initial-hba1c": hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
+    "hba1c": hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
   }
 
   return (
@@ -105,7 +105,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         id="patient-info-header"
         avatar={<LocalHospitalOutlinedIcon/>}
         className={classes.cardHeader}
-        title={t("patient-info-header")}
+        title={t("patient-info")}
       />
       <CardContent id="patient-info-content" className={classes.cardContent}>
         <Grid className={classes.sectionContent} container spacing={1}>
@@ -117,7 +117,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                     {t(key)}:
                   </div>
                 </Grid>
-                <Grid item xs={6} className="device-value">
+                <Grid item xs={6} id={`patient-info-${key}-value`}className="device-value">
                   {patientInfo[key]}
                 </Grid>
               </React.Fragment>
