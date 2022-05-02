@@ -78,7 +78,7 @@ const getLabel = (row, t) => {
   case "added":
     return `${currentLabel} (${fCurrentValue})`;
   case "deleted":
-    return `${currentLabel} (${fCurrentValue} -> ${t("deleted")})`;
+    return `${currentLabel} (${fCurrentValue} -> ${t("device-usage-deleted")})`;
   case "updated":
     const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
     return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`;
@@ -96,17 +96,18 @@ const DeviceUsage = (props) => {
   const { t } = useTranslation();
   const classes = useStyles();
   //eslint-disable-next-line
-  const mostRecentSettings = _.last(tidelineData.grouped.pumpSettings);
-  const device = _.get(mostRecentSettings, "payload.device", null);
-  const pump = _.get(mostRecentSettings, "payload.pump", null);
-  const cgm = _.get(mostRecentSettings, "payload.cgm", null);
-  const history = _.sortBy(_.cloneDeep(_.get(mostRecentSettings, "payload.history", null)), ["changeDate"]);
+  const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0];
+
+  const device = mostRecentSettings?.payload?.device;
+  const pump = mostRecentSettings?.payload?.pump;
+  const cgm = mostRecentSettings?.payload?.cgm;
+  const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ["changeDate"]);
 
   const dateFormat = getLongDayHourFormat();
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false);
   const deviceData = {
     device: {
-      label: `${t("DBL")}:`,
+      label: `${t("device-usage-dbl")}:`,
       value: device.manufacturer
     },
     pump: {
@@ -125,11 +126,11 @@ const DeviceUsage = (props) => {
         id="device-usage-header"
         avatar={<PhonelinkSetupOutlinedIcon/>}
         className={classes.cardHeader}
-        title={t("Device Usage")}
+        title={t("device-usage-header")}
       />
       <CardContent id="device-usage-content" className={classes.cardContent}>
         <Box id="device-usage-device">
-          <Typography className={classes.sectionTitles}>{t("Devices")}</Typography>
+          <Typography className={classes.sectionTitles}>{t("device-usage-devices")}</Typography>
           <Grid className={classes.sectionContent} container spacing={1}>
             {Object.keys(deviceData).map(
               (key) =>
@@ -148,7 +149,7 @@ const DeviceUsage = (props) => {
         </Box>
         <Divider variant="fullWidth" className={classes.divider}/>
         <Box id="device-usage-updates" className={classes.parameterChanges}>
-          <Typography className={classes.sectionTitles}>{t("Last updates")}</Typography>
+          <Typography className={classes.sectionTitles}>{t("device-usage-last-updates")}</Typography>
           <TableContainer className={classes.parameterChangesTable}>
             <Table>
               <TableBody className={classes.sectionContent}>

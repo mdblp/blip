@@ -28,9 +28,9 @@ const PatientStatistics = (props) => {
     <Card className={classes.card}>
       <CardHeader
         avatar={<VisibilityIcon/>}
-        title={t("Overview")}
+        title={t("patient-statistics-header")}
         action={
-          <Typography variant="overline" display="block">{t("Show More")}</Typography>
+          <Typography variant="overline" display="block">{t("patient-dashboard-show-more")}</Typography>
         }
       />
       <CardContent className={classes.cardContent}>
