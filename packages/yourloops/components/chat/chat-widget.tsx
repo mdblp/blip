@@ -40,6 +40,7 @@ import { getChatMessages, sendChatMessage } from "../../lib/chat/api";
 import { useAuth } from "../../lib/auth";
 import { IMessage } from "../../models/chat";
 import { Button, Tab, Tabs } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -140,6 +141,7 @@ export interface ChatWidgetProps {
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
+  const { t } = useTranslation("yourloops");
   const { patientId, userId, teamId, userRole } = props;
   const classes = chatWidgetStyles();
   const authHook = useAuth();
@@ -226,7 +228,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         <EmailOutlinedIcon className={classes.icon} />
         {/* TODO : add unread messages number in (), then click on input text is going to ack and
         no messages will be unread */}
-        <span className={classes.chatWidgetHeaderText}>Messages</span>
+        <span className={classes.chatWidgetHeaderText}>{t("chat-messages-header")}</span>
       </div>
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
@@ -246,8 +248,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           { patientId !== userId &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label="Répondre" />
-                <Tab className={classes.chatWidgetTab}label="Message entre pros"/>
+                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} />
+                <Tab className={classes.chatWidgetTab}label={t("chat-footer-private")}/>
               </Tabs>
             </div>
           }
@@ -258,7 +260,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           </Button>
           <textarea ref={input} value={inputText} rows={1} id="chatWidgetInput"
             className={classes.chatWidgetInput}
-            onInput={inputHandler} placeholder={"Commencer à écrire ..."} />
+            onInput={inputHandler} placeholder={t("chat-footer-start-writing")} />
           <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} onClick={sendMessage}>
             <SendIcon />
           </Button>
