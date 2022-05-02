@@ -363,7 +363,7 @@ describe("Stats", () => {
           "sensorUsage",
         ];
 
-        _.forEach(expectedStats, statId => {
+        expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
         });
       });

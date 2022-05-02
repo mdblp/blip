@@ -28,7 +28,6 @@
 
 import bows from "bows";
 import moment from "moment-timezone";
-import _ from "lodash";
 
 const log = bows("ParametersHistoryUtil");
 
@@ -97,7 +96,7 @@ const getKey = (row) => [row.name,row.effectiveDate, row.value, row.unit].join("
 export default function getParametersChanges(history, timePrefs, dateFormat, includeGroupChange = false) {
   const rows = [];
 
-  if (!_.isArray(history)) {
+  if (!Array.isArray(history)) {
     return rows;
   }
 
@@ -107,7 +106,7 @@ export default function getParametersChanges(history, timePrefs, dateFormat, inc
   for (let i = 0; i < nHistory; i++) {
     const parameters = history[i].parameters;
 
-    if (!_.isArray(parameters)) {
+    if (!Array.isArray(parameters)) {
       continue;
     }
     const nParameters = parameters.length;
