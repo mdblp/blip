@@ -317,7 +317,7 @@ function TeamMemberTable(props: TeamMembersProps): JSX.Element {
             {t("email")}
           </TableCell>
           <TableCell id={`team-members-list-${team.id}-cellheader-role`}>
-            {t("team-member-admin")}
+            {t("admin")}
           </TableCell>
           <TableCell id={`team-members-list-${team.id}-cellheader-actions`} />
         </TableRow>
@@ -385,7 +385,7 @@ function TeamMembersCards(props: TeamMembersProps): JSX.Element {
 
           {member.role === TeamMemberRole.admin &&
             <div className={classes.paperMemberChip}>
-              <Chip size="small" label={t("team-member-admin")} />
+              <Chip size="small" label={t("admin")} />
             </div>
           }
           {member.status === UserInvitationStatus.pending &&

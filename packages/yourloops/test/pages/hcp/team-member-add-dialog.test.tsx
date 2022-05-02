@@ -42,7 +42,7 @@ describe("Team member add dialog", () => {
   const authHcp = loggedInUsers.hcpSession;
   const defaultProps: AddMemberDialogContentProps = {
     team: {} as Team,
-    onDialogResult: jest.fn(),
+    onMemberInvited: jest.fn(),
   };
 
   let component: ReactWrapper | null = null;
@@ -61,7 +61,7 @@ describe("Team member add dialog", () => {
       component.unmount();
       component = null;
     }
-    (defaultProps.onDialogResult as jest.Mock).mockReset();
+    (defaultProps.onMemberInvited as jest.Mock).mockReset();
     resetTeamAPIStubs();
   });
 
@@ -91,9 +91,9 @@ describe("Team member add dialog", () => {
       component.find("#team-add-member-dialog-button-add").at(0).prop("disabled")
     ).toBe(false);
     component.find("#team-add-member-dialog-button-cancel").at(0).simulate("click");
-    const spy = defaultProps.onDialogResult as jest.Mock;
+    const spy = defaultProps.onMemberInvited as jest.Mock;
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toEqual({ email: null, role: "member" });
+    expect(spy.mock.calls[0][0]).toEqual(null);
   });
 
   it("should return the email if validated", () => {
@@ -118,12 +118,12 @@ describe("Team member add dialog", () => {
     component.find("#team-add-member-dialog-checkbox-admin").last().simulate("change", changeRoleEvent, true);
     component.find("#team-add-member-dialog-button-add").last().simulate("click");
 
-    const spy = defaultProps.onDialogResult as jest.Mock;
+    const spy = defaultProps.onMemberInvited as jest.Mock;
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spy.mock.calls[0].length).toBe(1);
     const argReveived = spy.mock.calls[0][0];
-    const argExpected = { email: changeEmailEvent.target.value, role: "admin" };
-    expect(argReveived).toEqual(argExpected);
+    expect(argReveived).toHaveProperty("email", changeEmailEvent.target.value);
+    expect(argReveived).toHaveProperty("role", "admin");
   });
 });
 

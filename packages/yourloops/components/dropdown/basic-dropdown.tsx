@@ -29,69 +29,57 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
+import { Theme } from "@material-ui/core/styles";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 
-type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
-type HandleChange<E> = (event: E) => void;
-
-export interface Errors {
-  notAllowedValue: boolean;
-}
-
-export interface BasicDropdownProps<T> {
+export interface BasicDropdownProps {
   id: string;
   defaultValue: string;
-  disabledValues: string[];
   values: string[];
-  inputTranslationKey: string;
-  errorTranslationKey: string;
-  onSelect: (value: T) => void;
+  onSelect: (value: string) => void;
 }
 
-const dialogStyles = makeStyles(() => ({
-  formControl: { display: "flex" },
-}), { name: "component-basic-dropdown" });
+const styles = makeStyles((theme: Theme) => ({
+  select: {
+    "backgroundColor": theme.palette.grey[100],
+    "height": "40px",
+    "maxWidth": "200px",
+    "borderRadius": "8px",
+    "& .MuiOutlinedInput-notchedOutline": {
+      border: "none",
+    },
+  },
+}));
 
-function BasicDropdown<T>(props: BasicDropdownProps<T>): JSX.Element {
-  const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props;
-  const classes = dialogStyles();
+function BasicDropdown(props: BasicDropdownProps): JSX.Element {
+  const { onSelect, defaultValue, values, id } = props;
   const { t } = useTranslation("yourloops");
-
+  const classes = styles();
   const [selectedValue, setSelectedValue] = React.useState(defaultValue);
-  const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent> => (event) => {
-    setState(event.target.value as K);
-    onSelect(event.target.value as T);
+
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const value = event.target.value as string;
+    setSelectedValue(value);
+    onSelect(value);
   };
 
   return (
-    <FormControl id={`dropdown-form-${id}`} className={classes.formControl}>
-      <FormGroup>
-        <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
-        <Select
-          name={`dropdown-${id}`}
-          labelId="locale-selector"
-          id={`dropdown-${id}-selector`}
-          value={selectedValue}
-          error={disabledValues.includes(selectedValue)}
-          onChange={createHandleSelectChange(setSelectedValue)}>
-          {values.map(item => (
-            <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
-              {t(item)}
-            </MenuItem>
-          ))}
-        </Select>
-        {disabledValues.includes(selectedValue) &&
-          <FormHelperText id={`dropdown-error-${id}`} error>{t(errorTranslationKey)}</FormHelperText>
-        }
-      </FormGroup>
-    </FormControl>
+    <Select
+      id={`basic-dropdown-${id}-selector`}
+      value={selectedValue}
+      className={classes.select}
+      variant="outlined"
+      input={<OutlinedInput margin="dense" />}
+      onChange={handleSelectChange}>
+      {values.map(item => (
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
+          {t(item)}
+        </MenuItem>
+      ))}
+    </Select>
   );
 }
 

@@ -66,12 +66,12 @@ const patientListStyle = makeStyles(
       },
       tableRowHeader: {
         padding: 0,
+        height: "62px",
       },
       tableCellHeader: {
         backgroundColor: theme.palette.common.white,
         fontSize: "15px",
         fontWeight: 600,
-        height: "62px",
         padding: 0,
         paddingLeft: "11px",
       },
@@ -92,6 +92,7 @@ export const StyledTableCell = styled(withTheme(TableCell))((props) => ({
     border: "unset",
     borderRight: `0.5px solid ${(props.theme as Theme).palette.divider}`,
     maxWidth: "400px",
+    height: "inherit",
   },
 }));
 

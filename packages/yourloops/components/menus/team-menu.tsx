@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -43,7 +43,7 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-import { Team, useTeam } from "../../lib/team";
+import { useTeam } from "../../lib/team";
 import MenuLayout from "../layouts/menu-layout";
 
 const classes = makeStyles((theme: Theme) => ({
@@ -78,12 +78,16 @@ function TeamMenu(): JSX.Element {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const opened = !!anchorEl;
 
-  const filteredTeams = useMemo<Team[]>(() => teams.filter(team => team.code !== "private"), [teams]);
-
+  const filteredTeams = teams.filter(team => team.code !== "private");
   const closeMenu = () => setAnchorEl(null);
 
   const onClickTeamSettings = () => {
     history.push("/teams");
+    closeMenu();
+  };
+
+  const redirectToTeamDetails = (teamId: string) => {
+    history.push(`/teams/${teamId}`);
     closeMenu();
   };
 
@@ -127,9 +131,12 @@ function TeamMenu(): JSX.Element {
           filteredTeams.map(team => (
             <ListItem
               key={team.id}
+              id={`team-menu-list-item-${team.id}`}
               className="team-menu-list-item"
               button
-              onClick={onClickTeamSettings}
+              onClick={() => {
+                redirectToTeamDetails(team.id);
+              }}
             >
               <Box marginX={1}>•</Box>
               <Typography>{team.name}</Typography>

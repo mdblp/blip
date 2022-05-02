@@ -39,10 +39,10 @@ import Link from "@material-ui/core/Link";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import PhoneIcon from "@material-ui/icons/Phone";
 
-import VerifiedIcon from "./icons/VerifiedIcon";
+import VerifiedIcon from "../icons/VerifiedIcon";
 
-import locales from "../../../locales/languages.json";
-import { Team, getDisplayTeamCode } from "../lib/team";
+import locales from "../../../../locales/languages.json";
+import { Team, getDisplayTeamCode } from "../../lib/team";
 
 export interface TeamCardProps {
   team: Readonly<Team>;

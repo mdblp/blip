@@ -33,10 +33,10 @@ import enzyme, { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import { UserInvitationStatus } from "../../../models/generic";
 import { TeamMemberRole } from "../../../models/team";
 import { Team, loadTeams } from "../../../lib/team";
-import { TeamInfo } from "../../../components/team-card"; // TODO move theses tests
 import TeamCard, { TeamCardProps } from "../../../pages/hcp/team-card";
 import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
+import { TeamInfo } from "../../../components/team/team-card";
 
 describe("Team card", () => {
   const authHcp = loggedInUsers.hcpSession;

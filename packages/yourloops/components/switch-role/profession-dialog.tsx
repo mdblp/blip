@@ -38,7 +38,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 import { SwitchRoleProfessionDialogProps } from "./models";
-import BasicDropdown from "../dropdown/basic-dropdown";
+import BasicDropdownWithValidation from "../dropdown/basic-dropdown-with-validation";
 
 function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
   const { open, onAccept, onCancel } = props;
@@ -67,7 +67,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
         <Box>
-          <BasicDropdown
+          <BasicDropdownWithValidation
             onSelect={setHcpProfession}
             defaultValue={HcpProfession.empty}
             disabledValues={[HcpProfession.empty]}
