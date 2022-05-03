@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1411 Implement the Patient list table with the new layout
 - YLP-1415 Implement the team details page
 - YLP-1462 Create Patient statistics card for dashboard
+- YLP-1463 create Patient information card for dashboard
 - YLP-1465 create Device usage card for dashboard
 - YLP-1469 Update footer with "Accompanying documents" dropdown
 ### Engineering Use
