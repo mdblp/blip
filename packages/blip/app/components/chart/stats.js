@@ -92,6 +92,7 @@ class Stats extends React.Component {
     return _.map(stats, stat => (
       <div id={`Stat--${stat.id}`} key={stat.id}>
         <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
+        <Divider variant="fullWidth"/>
       </div>
     ));
   }

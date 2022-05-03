@@ -703,6 +703,7 @@ describe("Stats", () => {
         });
         wrapper.update();
         const stats = instance.getStatsByChartType();
+        expect(stats).to.have.length(0);
       });
     });
 

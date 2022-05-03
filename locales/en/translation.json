@@ -331,7 +331,6 @@
   "seconds": "seconds",
   "sensor-warmup": "Sensor warmup",
   "sensor-warmup-session-end": "Session end",
-  "show-more": "Show More",
   "to": "to",
   "unknown": "unknown",
   "week": "week",
@@ -343,6 +342,5 @@
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} days in view",
   "{{patientName}} does not have any data yet.": "{{patientName}} does not have any data yet.",
-  "{{title}} (cont.)": "{{title}} (cont.)",
-  "Patient statistics": "Patient statistics"
+  "{{title}} (cont.)": "{{title}} (cont.)"
 }

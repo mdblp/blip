@@ -14,6 +14,7 @@ const useStyles = makeStyles(() => ({
   },
   cardHeader: {
     textTransform: "uppercase",
+    backgroundColor: "var(--card-header-background-color)",
   },
   cardContent: {
     overflowY: "auto",
