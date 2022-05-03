@@ -4,10 +4,16 @@ import moment from "moment-timezone";
 import Box from "@material-ui/core/Box";
 import PatientStatistics from "./patientStatistics";
 import Header from "./header";
+import DeviceUsage from "./deviceUsage";
+import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
-  //eslint-disable-next-line
-  const { patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange} = props;
+  const {
+    //eslint-disable-next-line
+    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange,
+    //eslint-disable-next-line
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
+  } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange / 2).toISOString();
     const end = moment.utc(epochLocation + msRange / 2).toISOString();
@@ -31,6 +37,18 @@ const PatientDashboard = (props) => {
           chartPrefs={chartPrefs}
           chartType="daily"
           dataUtil={dataUtil}
+          endpoints={endpoints}
+          loading={loading}
+        />
+        <DeviceUsage
+          bgPrefs={bgPrefs}
+          timePrefs={timePrefs}
+          patient={patient}
+          tidelineData={tidelineData}
+          permsOfLoggedInUser={permsOfLoggedInUser}
+          trackMetric={trackMetric}
+          dataUtil={dataUtil}
+          chartPrefs={chartPrefs}
           endpoints={endpoints}
           loading={loading}
         />
