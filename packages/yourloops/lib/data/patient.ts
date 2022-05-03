@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from "./device-data";
-import { Alert } from "./alert";
-import { UserInvitationStatus } from "./generic";
-import { INotification } from "../lib/notifications";
+import { MedicalData } from "../../models/device-data";
+import { Alarm } from "../../models/alarm";
+import { UserInvitationStatus } from "../../models/generic";
+import { INotification } from "../notifications";
 
 interface PatientTeam {
   code : string,
@@ -39,7 +39,7 @@ interface PatientTeam {
 }
 
 interface Patient {
-  alerts?: Alert | null;
+  alarm?: Alarm | null;
   firstName?: string;
   flagged?: boolean,
   fullName: string;

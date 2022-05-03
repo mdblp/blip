@@ -47,7 +47,7 @@ import { getTheme } from "../../../components/theme";
 import renderer from "react-test-renderer";
 import PatientRow from "../../../pages/hcp/patients/row";
 import { createPatient, createPatientTeam } from "../../common/utils";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 describe("Patient list table", () => {
   const authHcp = loggedInUsers.hcpSession;

@@ -30,7 +30,7 @@ import { Units } from "./generic";
 import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
 import { HcpProfession } from "./hcp-profession";
-import { Alert } from "./alert";
+import { Alarm } from "./alarm";
 
 enum UserRoles {
   hcp = "hcp",
@@ -96,7 +96,7 @@ interface IUser {
   preferences?: Preferences | null;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
-  alerts?: Alert | null;
+  alerts?: Alarm | null;
 }
 
 export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

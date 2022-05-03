@@ -34,6 +34,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 
 import IconActionButton from "../../../components/buttons/icon-action";
 import { FilterType } from "../../../models/generic";
@@ -44,13 +45,20 @@ import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
-import { StyledTableCell } from "./table";
+import { patientListCommonStyle, StyledTableCell } from "./table";
 import { Box, Typography } from "@material-ui/core";
 import { StyledTableRow } from "../../../components/team/common";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
+      alert: {
+        color: theme.palette.warning.main,
+      },
+      bellIcon: {
+        marginLeft: theme.spacing(2),
+        verticalAlign: "bottom",
+      },
       flag: {
         color: theme.palette.primary.main,
       },
@@ -84,6 +92,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const authHook = useAuth();
   const teamHook = useTeam();
   const classes = patientListStyle();
+  const patientListCommonClasses = patientListCommonStyle();
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
   const [tooltipText, setTooltipText] = React.useState<string>("");
   const rowRef = React.createRef<HTMLTableRowElement>();
@@ -92,10 +101,45 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const email = patient.username;
   const isFlagged = flagged.includes(userId);
   const patientFullName = patient.fullName;
-  const patientSystem = patient.system ?? trNA;
-  const patientRemoteMonitoring = patient.remoteMonitoring ?? t("no");
-  const timeSpentAwayFromTargetRate = patient.alerts?.timeSpentAwayFromTargetRate ? `${patient.alerts.timeSpentAwayFromTargetRate}%` : trNA;
-  const frequencyOfSevereHypoglycemiaRate = patient.alerts?.frequencyOfSevereHypoglycemiaRate ? `${patient.alerts.frequencyOfSevereHypoglycemiaRate}%` : trNA;
+
+  const computeRowInformation = () => {
+    const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`;
+    const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`;
+    const timeSpentAwayFromTargetActive = patient.alarm?.timeSpentAwayFromTargetActive ?? false;
+    const frequencyOfSevereHypoglycemiaActive = patient.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
+    const dataNotTransferredActive = patient.alarm?.nonDataTransmissionRate ?? false;
+    const nonDataTransmissionActive = patient.alarm?.nonDataTransmissionActive ?? false;
+    const hasAlert= timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
+    return {
+      patientSystem: patient.system ?? trNA,
+      patientRemoteMonitoring: patient.remoteMonitoring ?? t("no"),
+      timeSpentAwayFromTargetRate: patient.alarm?.timeSpentAwayFromTargetRate ? `${patient.alarm.timeSpentAwayFromTargetRate}%` : trNA,
+      frequencyOfSevereHypoglycemiaRate: patient.alarm?.frequencyOfSevereHypoglycemiaRate ? `${patient.alarm.frequencyOfSevereHypoglycemiaRate}%` : trNA,
+      dataNotTransferredRate: patient.alarm?.nonDataTransmissionRate ? `${patient.alarm.nonDataTransmissionRate}%` : trNA,
+      timeSpentAwayFromTargetActive,
+      frequencyOfSevereHypoglycemiaActive,
+      nonDataTransmissionActive,
+      patientFullNameClasses: hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`,
+      timeSpentAwayFromTargetRateClasses: timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
+      frequencyOfSevereHypoglycemiaRateClasses: frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
+      dataNotTransferredRateClasses: dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
+    };
+  };
+
+  const {
+    patientSystem,
+    patientRemoteMonitoring,
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+    dataNotTransferredRate,
+    timeSpentAwayFromTargetActive,
+    frequencyOfSevereHypoglycemiaActive,
+    nonDataTransmissionActive,
+    patientFullNameClasses,
+    timeSpentAwayFromTargetRateClasses,
+    frequencyOfSevereHypoglycemiaRateClasses,
+    dataNotTransferredRateClasses,
+  } = computeRowInformation();
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -194,25 +238,36 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-patient-full-name`} className={classes.typography}>
+      <StyledTableCell id={`${rowId}-patient-full-name`} className={patientFullNameClasses}>
         <Tooltip title={tooltipText}>
           <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
             {patientFullName}
           </Typography>
         </Tooltip>
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>
-        {patientSystem}
+      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
+      <StyledTableCell id={`${rowId}-remote-monitoring`}
+        className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}>{patientRemoteMonitoring}</StyledTableCell>
+      <StyledTableCell
+        id={`${rowId}-time-away-target`}
+        className={timeSpentAwayFromTargetRateClasses}
+      >
+        {timeSpentAwayFromTargetRate}
+        {timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.bellIcon} />}
       </StyledTableCell>
       <StyledTableCell
-        id={`${rowId}-remote-monitoring`} className={classes.typography}>
-        {patientRemoteMonitoring}
-      </StyledTableCell>
-      <StyledTableCell id={`${rowId}-time-away-target`} className={classes.typography}>
-        {timeSpentAwayFromTargetRate}
-      </StyledTableCell>
-      <StyledTableCell id={`${rowId}-hypo-frequency-rate`} className={classes.typography}>
+        id={`${rowId}-hypo-frequency-rate`}
+        className={frequencyOfSevereHypoglycemiaRateClasses}
+      >
         {frequencyOfSevereHypoglycemiaRate}
+        {frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.bellIcon} />}
+      </StyledTableCell>
+      <StyledTableCell
+        id={`${rowId}-data-not-transferred`}
+        className={dataNotTransferredRateClasses}
+      >
+        {dataNotTransferredRate}
+        {nonDataTransmissionActive && <AnnouncementIcon className={classes.bellIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}

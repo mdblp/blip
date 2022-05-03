@@ -43,7 +43,7 @@ import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUs
 import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
-import { Patient, PatientTeam } from "../../models/patient";
+import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../pages/hcp/patients/utils";
 
 const log = bows("TeamHook");
