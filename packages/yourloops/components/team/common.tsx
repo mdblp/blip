@@ -25,43 +25,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import React from "react";
-import renderer from "react-test-renderer";
-import BasicDropdown, { BasicDropdownProps } from "../../../components/dropdown/basic-dropdown";
-import { getTheme } from "../../../components/theme";
+import { makeStyles, styled, Theme } from "@material-ui/core/styles";
+import TableRow from "@material-ui/core/TableRow";
 
-describe("BasicDropdown", () => {
+export const commonTeamStyles = makeStyles((theme: Theme) => ({
+  button: {
+    "backgroundColor": "#00A3E2",
+    "color": theme.palette.common.white,
+    "marginBottom": "12px",
+    "textTransform": "none",
+    "&:hover": {
+      backgroundColor: "#00A3E2",
+      color: theme.palette.common.white,
+    },
+    "&:disabled": {
+      color: theme.palette.common.white,
+      opacity: 0.5,
+    },
+  },
+  icon: {
+    marginRight: "15px",
+    marginLeft: "0px",
+  },
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    marginLeft: "46px",
+    marginRight: "46px",
+  },
+  title: {
+    color: theme.palette.grey[800],
+    fontSize: "16px",
+    fontWeight: 600,
+    lineHeight: "20px",
+    marginLeft: "12px",
+  },
+}));
 
-  const spyOnSelect = jest.fn();
 
-  function renderBasicDropdown(props: BasicDropdownProps) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <BasicDropdown
-          id={props.id}
-          onSelect={props.onSelect}
-          defaultValue={props.defaultValue}
-          values={props.values}
-        />
-      </ThemeProvider>
-    );
-  }
-
-  it("should call onSelect spy when an option is selected", () => {
-    const defaultValue = "defaultValue";
-    const valueToSelect = "valueToSelect";
-    const id = "id";
-    const values = [defaultValue, valueToSelect];
-    const props: BasicDropdownProps = {
-      onSelect: spyOnSelect,
-      defaultValue: defaultValue,
-      values,
-      id,
-    };
-    const component = renderBasicDropdown(props);
-    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } });
-    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect);
-  });
-});
-
+export const StyledTableRow = styled(TableRow)((props) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: props.theme.palette.grey[100],
+  },
+  "&": {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+}));

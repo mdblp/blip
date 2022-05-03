@@ -44,6 +44,7 @@ import CaregiversPage from "./patient/caregivers/page";
 import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
+import TeamDetailPage from "./team/team-details-page";
 
 export function MainLayout(): JSX.Element {
   const authHook = useAuth();
@@ -84,6 +85,7 @@ export function MainLayout(): JSX.Element {
                   {session.user.role === UserRoles.hcp &&
                     <Switch>
                       <Route exact path="/teams" component={TeamsPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Route exact path="/certify" component={CertifyAccountPage} />
                       <Route path="/patient/:patientId" component={PatientDataPage} />
                       <Redirect exact from="/" to="/home" />

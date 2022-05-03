@@ -39,7 +39,7 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { UserInvitationStatus } from "../../models/generic";
 import { TeamMemberRole } from "../../models/team";
 import { Team } from "../../lib/team";
-import GenericTeamCard from "../../components/team-card";
+import GenericTeamCard from "../../components/team/team-card";
 
 export interface TeamCardProps {
   team: Readonly<Team>;
@@ -47,7 +47,7 @@ export interface TeamCardProps {
   memberStatus: UserInvitationStatus;
   onShowEditTeamDialog: (team: Team | null) => Promise<void>;
   onShowLeaveTeamDialog: (team: Team) => Promise<boolean>;
-  onShowAddMemberDialog: (team: Team) => Promise<void>;
+  onShowAddMemberDialog: (team: Team) => void;
   teamMembers?: JSX.Element;
 }
 

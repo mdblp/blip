@@ -45,8 +45,8 @@ import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { StyledTableCell } from "./table";
-import { Box, TableRow, Typography } from "@material-ui/core";
-import { styled } from "@material-ui/styles";
+import { Box, Typography } from "@material-ui/core";
+import { StyledTableRow } from "../../../components/team/common";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -65,6 +65,7 @@ const patientListStyle = makeStyles(
       },
       tableRow: {
         cursor: "pointer",
+        height: "64px",
       },
       typography: {
         overflow: "hidden",
@@ -75,18 +76,6 @@ const patientListStyle = makeStyles(
   },
   { name: "ylp-hcp-patients-row" }
 );
-
-const StyledTableRow = styled(TableRow)((props) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: (props.theme as Theme).palette.grey[100],
-  },
-  "&": {
-    height: "64px",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-}));
 
 function PatientRow(props: PatientElementProps): JSX.Element {
   const { patient, flagged, filter, onClickPatient, onFlagPatient } = props;

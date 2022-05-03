@@ -32,17 +32,16 @@ import renderer from "react-test-renderer";
 
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { loadTeams, Team, TeamContextProvider, TeamMember } from "../../../lib/team";
+import { loadTeams, Team, TeamContextProvider } from "../../../lib/team";
 import TeamMembers, { MembersTableBody, TeamMembersProps } from "../../../pages/hcp/team-members-table";
 
 import { loggedInUsers } from "../../common";
-import { TeamMemberRole, TeamType } from "../../../models/team";
+import { TeamMemberRole } from "../../../models/team";
 import Adapter from "enzyme-adapter-react-16";
 import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
+import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
 import { UserInvitationStatus } from "../../../models/generic";
-import { UserRoles } from "../../../models/shoreline";
-import { INotification, NotificationType } from "../../../lib/notifications";
 
 describe("Team member table", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -59,6 +58,16 @@ describe("Team member table", () => {
     attachTo: null,
   };
   const teamId = "fakeTeamId";
+
+  const teamAdmin = buildTeamMember(
+    teamId,
+    authHcp.user.userid,
+    buildInvite(teamId, authHcp.user.userid, TeamMemberRole.admin),
+    TeamMemberRole.admin,
+    "fake@admin.com",
+    "fake admin full name",
+    UserInvitationStatus.accepted
+  );
 
   function TestTeamMembersComponent(props: TeamMembersProps): JSX.Element {
     return (
@@ -112,64 +121,6 @@ describe("Team member table", () => {
     return component;
   }
 
-  function buildTeam(teamMembers: TeamMember[]): Team {
-    const admin: TeamMember =
-      {
-        team: { id: teamId } as Team,
-        role: TeamMemberRole.admin,
-        status: UserInvitationStatus.accepted,
-        user: {
-          role: UserRoles.hcp,
-          userid: loggedInUsers.hcp.userid,
-          username: loggedInUsers.hcp.username,
-          members: [],
-        },
-        invitation: null,
-      };
-    return {
-      id: teamId,
-      name: "CHU Grenoble",
-      code: "123456789",
-      owner: "abcdef",
-      type: TeamType.medical,
-      members: [admin, ...teamMembers],
-    };
-  }
-
-  function buildTeamMember(teamId = "fakeTeamId", userId = "fakeUserId", invitation: INotification = null): TeamMember {
-    return {
-      team: { id: teamId } as Team,
-      role: TeamMemberRole.admin,
-      status: UserInvitationStatus.pending,
-      user: {
-        role: UserRoles.hcp,
-        userid: userId,
-        username: "fakeUsername",
-        members: [],
-      },
-      invitation,
-    };
-  }
-
-  function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId"): INotification {
-    return {
-      id: "fakeInviteId",
-      type: NotificationType.careTeamProInvitation,
-      metricsType: "join_team",
-      email: "fake@email.com",
-      creatorId: "fakeCreatorId",
-      date: "fakeDate",
-      target: {
-        id: teamId,
-        name: "fakeTeamName",
-      },
-      role: TeamMemberRole.admin,
-      creator: {
-        userid: userId,
-      },
-    };
-  }
-
   it("should display a collapse accordion by default", async () => {
     component = mount(<TestTeamMembersComponent {...defaultProps} />, mountOptions);
     await waitTimeout(apiTimeout);
@@ -208,7 +159,7 @@ describe("Team member table", () => {
     it("should disable the remove button for pending member that has no invite", () => {
       const memberWithNoInvite = buildTeamMember();
       const props = {
-        team: buildTeam([memberWithNoInvite]),
+        team: buildTeam(teamId, [memberWithNoInvite, teamAdmin]),
         onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
         onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
       };
@@ -222,7 +173,7 @@ describe("Team member table", () => {
     it("should disable the remove button for pending member that was not invited by the current user", () => {
       const memberWithWrongInvite = buildTeamMember(teamId, "fakeUserId", buildInvite("wrongTeamId"));
       const props = {
-        team: buildTeam([memberWithWrongInvite]),
+        team: buildTeam(teamId,[memberWithWrongInvite, teamAdmin]),
         onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
         onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
       };
@@ -236,7 +187,7 @@ describe("Team member table", () => {
     it("should enable the remove button for pending member that was invited by the current user", () => {
       const memberWithInvite = buildTeamMember(teamId, "fakeUserId", buildInvite());
       const props = {
-        team: buildTeam([memberWithInvite]),
+        team: buildTeam(teamId, [memberWithInvite, teamAdmin]),
         onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
         onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
       };

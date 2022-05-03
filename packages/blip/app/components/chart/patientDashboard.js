@@ -4,20 +4,24 @@ import moment from "moment-timezone";
 import Box from "@material-ui/core/Box";
 import PatientStatistics from "./patientStatistics";
 import Header from "./header";
+import DeviceUsage from "./deviceUsage";
+import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
-  const { patient, user, teams, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget} = props;
+  const {
+    //eslint-disable-next-line
+    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget
+    //eslint-disable-next-line
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
+  } = props;
   const getEndpoints = () => {
-    const start = moment.utc(epochLocation - msRange / 2).toISOString();
-    const end = moment.utc(epochLocation + msRange / 2).toISOString();
+    const start = moment.utc(epochLocation - msRange).toISOString();
+    const end = moment.utc(epochLocation).toISOString();
     return [start, end];
   };
-  /*TODO : retrieve only team with a filter on isMonitored (not present in front today so taking the first ...)*/
-  /*Tricky for hcp, there could be more than one monitoring team. \
-  See if it's possible to search for the team with the patient in it*/
   const monitoringTeam = teams[0];
-
   const endpoints = getEndpoints();
+  
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
@@ -30,9 +34,10 @@ const PatientDashboard = (props) => {
       <Box id="patient-dashboard-content">
         <PatientStatistics
           bgPrefs={bgPrefs}
+          //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
-          chartType="daily"
+          chartType="patientStatistics"
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
@@ -40,6 +45,18 @@ const PatientDashboard = (props) => {
         {monitoringTeam &&
           <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
         }
+        <DeviceUsage
+          bgPrefs={bgPrefs}
+          timePrefs={timePrefs}
+          patient={patient}
+          tidelineData={tidelineData}
+          permsOfLoggedInUser={permsOfLoggedInUser}
+          trackMetric={trackMetric}
+          dataUtil={dataUtil}
+          chartPrefs={chartPrefs}
+          endpoints={endpoints}
+          loading={loading}
+        />
       </Box>
     </div>
   );

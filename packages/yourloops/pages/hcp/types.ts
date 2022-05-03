@@ -52,7 +52,7 @@ export interface TeamLeaveDialogContentProps {
 
 export interface AddMemberDialogContentProps {
   team: Readonly<Team>;
-  onDialogResult: (result: { email: string | null; role: Exclude<TypeTeamMemberRole, "patient"> }) => void;
+  onMemberInvited: (result: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => void;
 }
 
 export interface RemoveMemberDialogContentProps {

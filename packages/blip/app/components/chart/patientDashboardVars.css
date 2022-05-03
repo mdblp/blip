@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
+ * Dashboard common css variable
  *
  * All rights reserved.
  *
@@ -25,43 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import React from "react";
-import renderer from "react-test-renderer";
-import BasicDropdown, { BasicDropdownProps } from "../../../components/dropdown/basic-dropdown";
-import { getTheme } from "../../../components/theme";
-
-describe("BasicDropdown", () => {
-
-  const spyOnSelect = jest.fn();
-
-  function renderBasicDropdown(props: BasicDropdownProps) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <BasicDropdown
-          id={props.id}
-          onSelect={props.onSelect}
-          defaultValue={props.defaultValue}
-          values={props.values}
-        />
-      </ThemeProvider>
-    );
-  }
-
-  it("should call onSelect spy when an option is selected", () => {
-    const defaultValue = "defaultValue";
-    const valueToSelect = "valueToSelect";
-    const id = "id";
-    const values = [defaultValue, valueToSelect];
-    const props: BasicDropdownProps = {
-      onSelect: spyOnSelect,
-      defaultValue: defaultValue,
-      values,
-      id,
-    };
-    const component = renderBasicDropdown(props);
-    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } });
-    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect);
-  });
-});
-
+:root {
+  --section-title-color: #414141;
+  --section-title-font-size: 16px;
+  --section-title-font-weight: 500;
+  --section-title-line-height: 20px;
+  --section-title-margin: 0.25em;
+  --card-header-background-color: #F6F6F6;
+}

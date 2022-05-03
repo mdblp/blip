@@ -35,7 +35,9 @@ import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../models/patient";
 import { Alert } from "../../models/alert";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
-import { Profile } from "../../models/shoreline";
+import { Profile, UserRoles } from "../../models/shoreline";
+import { TeamMemberRole, TeamType } from "../../models/team";
+import { INotification, NotificationType } from "../../lib/notifications";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -148,3 +150,59 @@ export const createTeamMember = (id: string, name: string, teamCode: string, sta
     status,
   } as TeamMember;
 };
+
+export function buildTeam(id: string, members: TeamMember[]): Team {
+  return {
+    id,
+    name: "fake team name",
+    code: "123456789",
+    owner: "fakeOwner",
+    type: TeamType.medical,
+    members,
+  };
+}
+
+export function buildTeamMember(
+  teamId = "fakeTeamId",
+  userId = "fakeUserId",
+  invitation: INotification = null,
+  role: TeamMemberRole = TeamMemberRole.admin,
+  username = "fake@username.com",
+  fullName = "fake full name",
+  status = UserInvitationStatus.pending
+): TeamMember {
+  return {
+    team: { id: teamId } as Team,
+    role,
+    status,
+    user: {
+      role: UserRoles.hcp,
+      userid: userId,
+      username,
+      members: [],
+      profile: {
+        fullName,
+      },
+    },
+    invitation,
+  };
+}
+
+export function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId", role = TeamMemberRole.admin): INotification {
+  return {
+    id: "fakeInviteId",
+    type: NotificationType.careTeamProInvitation,
+    metricsType: "join_team",
+    email: "fake@email.com",
+    creatorId: "fakeCreatorId",
+    date: "fakeDate",
+    target: {
+      id: teamId,
+      name: "fakeTeamName",
+    },
+    role,
+    creator: {
+      userid: userId,
+    },
+  };
+}

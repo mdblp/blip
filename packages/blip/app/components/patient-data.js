@@ -364,6 +364,9 @@ class PatientDataPage extends React.Component {
             prefixURL={prefixURL}
             loading={loadingState !== LOADING_STATE_DONE}
             chatWidget={chatWidget}
+            tidelineData={tidelineData}
+            permsOfLoggedInUser={permsOfLoggedInUser}
+            trackMetric={this.trackMetric}
           />
         </Route>
         <Route path={`${prefixURL}/overview`}>
@@ -713,6 +716,11 @@ class PatientDataPage extends React.Component {
     }
 
     this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
+    // Default one week data period for dashboard (now() - 7 days)
+    this.setState({
+      epochLocation: new Date().valueOf(),
+      msRange: MS_IN_DAY * 7,
+    });
     if (fromChart !== toChart) {
       history.push(`${prefixURL}/${toChart}`);
       this.trackMetric("data_visualization", "click_view", toChart);
