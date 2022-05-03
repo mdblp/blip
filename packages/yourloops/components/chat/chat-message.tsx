@@ -37,17 +37,13 @@ export interface ChatMessageProps {
 
 const chatMessageStyles = makeStyles((theme: Theme) => {
   return {
-    chatMessage: {
-      fontFamily: "Roboto",
-      fontStyle: "normal",
-      color: "white",
-      width: "80%",
-      padding: theme.spacing(1),
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    chatMessageLeftContainer: {
+    chatMessageContainer: {
       "display": "flex",
+      "& svg" : {
+        marginTop: theme.spacing(1),
+      },
+    },
+    left: {
       "& span": {
         borderRadius: "0px 12px 12px 12px",
         backgroundColor: "#00A3E2",
@@ -56,12 +52,10 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       },
       "& svg" : {
         fill: "#00A3E2",
-        marginTop: theme.spacing(1),
         marginLeft: theme.spacing(1),
       },
     },
-    chatMessageRightContainer: {
-      "display": "flex",
+    right: {
       "& span": {
         borderRadius: "12px 0px 12px 12px",
         backgroundColor: "#035271",
@@ -70,9 +64,16 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       },
       "& svg" : {
         fill: "#035271",
-        marginTop: theme.spacing(1),
         marginRight: theme.spacing(1),
       },
+    },
+    chatMessageText: {
+      fontFamily: "Roboto",
+      color: "white",
+      width: "80%",
+      padding: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
     },
   };
 }, { name: "ylp-chat-message" });
@@ -81,17 +82,17 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
 function ChatMessage(props: ChatMessageProps): JSX.Element {
   const { text, isMine } = props;
   const classes = chatMessageStyles();
-  const messageContainerType = isMine ? classes.chatMessageRightContainer : classes.chatMessageLeftContainer;
+  const messageContainerType = isMine ? classes.right : classes.left;
 
   return (
-    <div className={`message ${messageContainerType}`}>
+    <div className={`${classes.chatMessageContainer} ${messageContainerType}`}>
       {
         !isMine &&
         <svg height="10" width="10" transform="scale(-1,1)">
           <polygon points="0,0 10,0 0,10"/>
         </svg>
       }
-      <span className={classes.chatMessage}>{ text }</span>
+      <span className={classes.chatMessageText}>{ text }</span>
       {
         isMine &&
         <svg height="10" width="10">

@@ -52,7 +52,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       padding: theme.spacing(1),
       display: "flex",
       alignItems: "center",
-      background: "#035271",
+      background: theme.palette.grey[200],
       color: "black",
       width: "100%",
       height: "40px",
@@ -68,17 +68,21 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       },
     },
     chatWidgetContent: {
-      background: "white",
+      background: theme.palette.common.white,
       width: "100%",
       height: "280px",
       overflow: "auto",
     },
     chatWidgetFooter: {
       borderTop: "1px solid #E9E9E9",
-      background: "white",
+      background: theme.palette.common.white,
       borderRadius: "0px 0px 12px 12px",
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(1),
+    },
+    chatWidgetEmojiPickerContainer: {
+      position: "relative",
+      top: "-250px",
     },
     chatWidgetTabs: {
       minHeight: "0px",
@@ -95,7 +99,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     chatWidgetInputRow: {
       display: "flex",
       alignItems: "center",
-      background: "white",
+      background : theme.palette.common.white,
       width: "100%",
       height: "40px",
     },
@@ -152,11 +156,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const content = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const inputRow = useRef<HTMLDivElement>(null);
-  /*retrieve for the patient the first monitoring team found (only one monitoring team is allowed)*/
-  /*TODO : get monitoring team, today the field is not present in the UI so it's taking the first team*/
 
-
-  // TODO remove this lint issue ???
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
     setInputTab(newValue);
@@ -226,8 +226,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     <Card className={classes.chatWidget}>
       <div className={classes.chatWidgetHeader}>
         <EmailOutlinedIcon className={classes.icon} />
-        {/* TODO : add unread messages number in (), then click on input text is going to ack and
-        no messages will be unread */}
         <span className={classes.chatWidgetHeaderText}>{t("chat-messages-header")}</span>
       </div>
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
@@ -239,7 +237,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         }
       </div>
       {showPicker &&
-        <div id="chat-widget-emoji-picker">
+        <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
           <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
         </div>
       }

@@ -564,7 +564,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     lock = true;
 
     loadTeams(session, teamAPI.fetchTeams, teamAPI.fetchPatients).then(({ teams, flaggedNotInResult }: LoadTeams) => {
-
       log.debug("Loaded teams: ", teams);
       for (const invitation of notificationHook.sentInvitations) {
         const user = getUserByEmail(teams, invitation.email);
