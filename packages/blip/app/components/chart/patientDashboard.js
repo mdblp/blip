@@ -15,8 +15,8 @@ const PatientDashboard = (props) => {
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
   } = props;
   const getEndpoints = () => {
-    const start = moment.utc(epochLocation - msRange / 2).toISOString();
-    const end = moment.utc(epochLocation + msRange / 2).toISOString();
+    const start = moment.utc(epochLocation - msRange).toISOString();
+    const end = moment.utc(epochLocation).toISOString();
     return [start, end];
   };
   const endpoints = getEndpoints();
@@ -35,7 +35,7 @@ const PatientDashboard = (props) => {
           //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
-          chartType="daily"
+          chartType="patientStatistics"
           dataUtil={dataUtil}
           endpoints={endpoints}
           loading={loading}
