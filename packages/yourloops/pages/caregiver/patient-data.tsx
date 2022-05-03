@@ -46,7 +46,8 @@ import ProfileDialog from "../../components/dialogs/patient-profile";
 import DialogDatePicker from "../../components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../components/dialogs/pdf-print-options";
-import PatientInfoWidget from "../../components/dashboard-widgets/patient-info-widget"
+import PatientInfoWidget from "../../components/dashboard-widgets/patient-info-widget";
+
 interface PatientDataParam {
   patientId?: string;
 }

@@ -33,47 +33,44 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid"
-import LocalHospitalOutlinedIcon from '@material-ui/icons/LocalHospitalOutlined';
+import Grid from "@material-ui/core/Grid";
+import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 
 import { Settings, IUser } from "../../models/shoreline";
 import { getUserFirstLastName } from "../../lib/utils";
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   {
-      card: {
-        width: 430,
-      },
-      cardHeader: {
-        textTransform: "uppercase",
-        backgroundColor: "var(--card-header-background-color)",
-      },
-      cardContent: {
-        overflowY: "auto",
-        maxHeight: 800,
-      },
-      sectionTitles: {
-        fontSize: "var(--section-title-font-size)",
-        // TODO fontWeight typechecking make it not assignable with a CSS variable
-        // fontWeight: "var(--section-title-font-weight)",
-        fontWeight: 400,
-        lineHeight: "var(--section-title-line-height)",
-        margin: "var(--section-title-margin)",
-        color: "var(--section-title-color)"
-      },
-      sectionContent: {
-        fontSize: "13px",
-        fontWeight: 300,
-        lineHeight: "15px",
-        color: "#444444"
-      },
-      deviceLabels: {
-        paddingLeft: theme.spacing(2),
-      },
-   }),
-   { name: "patient-info-widget" }
-);
-
+    card: {
+      width: 430,
+    },
+    cardHeader: {
+      textTransform: "uppercase",
+      backgroundColor: "var(--card-header-background-color)",
+    },
+    cardContent: {
+      overflowY: "auto",
+      maxHeight: 800,
+    },
+    sectionTitles: {
+      fontSize: "var(--section-title-font-size)",
+      // TODO fontWeight typechecking make it not assignable with a CSS variable
+      // fontWeight: "var(--section-title-font-weight)",
+      fontWeight: 400,
+      lineHeight: "var(--section-title-line-height)",
+      margin: "var(--section-title-margin)",
+      color: "var(--section-title-color)",
+    },
+    sectionContent: {
+      fontSize: "13px",
+      fontWeight: 300,
+      lineHeight: "15px",
+      color: "#444444",
+    },
+    deviceLabels: {
+      paddingLeft: theme.spacing(2),
+    },
+  }), { name: "patient-info-widget" });
 
 export interface PatientInfoWidgetProps {
   patient: Readonly<IUser>,
@@ -93,11 +90,11 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const userName = getUserFirstLastName(patient);
   // patient.remoteMonitoring
   const patientInfo :Record<string, string>= {
-    "patient": `${userName.firstName} ${userName.lastName}`,
-    "birthdate": birthDate,
-    "email": patient.username,
-    "hba1c": hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
-  }
+    patient: `${userName.firstName} ${userName.lastName}`,
+    birthdate: birthDate,
+    email: patient.username,
+    hba1c: hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
+  };
 
   return (
     <Card id="patient-info" className={classes.card}>
@@ -126,6 +123,6 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       </CardContent>
     </Card>
   );
- }
+}
 
- export default PatientInfoWidget;
+export default PatientInfoWidget;
