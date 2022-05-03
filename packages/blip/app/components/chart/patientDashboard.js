@@ -6,11 +6,12 @@ import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
+import { teams } from "yourloops/test/common";
 
 const PatientDashboard = (props) => {
   const {
     //eslint-disable-next-line
-    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget
+    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
   } = props;
@@ -21,7 +22,7 @@ const PatientDashboard = (props) => {
   };
   const monitoringTeam = teams[0];
   const endpoints = getEndpoints();
-  
+
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
@@ -43,6 +44,7 @@ const PatientDashboard = (props) => {
           loading={loading}
         />
         {monitoringTeam &&
+          // eslint-disable-next-line no-undef
           <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
         }
         <DeviceUsage
