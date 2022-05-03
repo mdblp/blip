@@ -98,7 +98,7 @@ export const refreshToken = (token: string): string => {
   return `${b64Header}.${b64Payload}.`;
 };
 
-export function triggerMouseEvent(event: string, domElement: HTMLElement): void {
+export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true });
   domElement.dispatchEvent(clickEvent);
 }

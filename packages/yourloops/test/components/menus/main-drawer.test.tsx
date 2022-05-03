@@ -56,26 +56,26 @@ describe("Main Drawer", () => {
 
   it("Should render miniVariant by default", async () => {
     await mountComponent();
-    const drawer = document.getElementById("main-left-drawer");
+    const drawer = document.querySelector("#main-left-drawer .MuiPaper-root");
     expect(getComputedStyle(drawer).width).toEqual(mainDrawerMiniVariantWidth);
   });
 
   it("Should render full width when miniVariant is set to false", async () => {
     await mountComponent(false);
-    const drawer = document.getElementById("main-left-drawer");
+    const drawer = document.querySelector("#main-left-drawer .MuiPaper-root");
     expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 
   it("Should open the drawer when hover it", async () => {
     await mountComponent();
-    const drawer = document.getElementById("main-left-drawer");
+    const drawer = document.querySelector("#main-left-drawer .MuiPaper-root");
     triggerMouseEvent("mouseover", drawer);
     expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
 
   it("Hover should be disabled when miniVariant is set to false", async () => {
     await mountComponent(false);
-    const drawer = document.getElementById("main-left-drawer");
+    const drawer = document.querySelector("#main-left-drawer .MuiPaper-root");
     triggerMouseEvent("mouseover", drawer);
     expect(getComputedStyle(drawer).width).toEqual(mainDrawerDefaultWidth);
   });
