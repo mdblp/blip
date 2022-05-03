@@ -106,7 +106,7 @@ const getLabel = (row, t) => {
   case "added":
     return `${currentLabel} (${fCurrentValue})`;
   case "deleted":
-    return `${currentLabel} (${fCurrentValue} -> ${t("device-usage-deleted")})`;
+    return `${currentLabel} (${fCurrentValue} -> ${t("deleted")})`;
   case "updated":
     const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
     return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`;
@@ -135,7 +135,7 @@ const DeviceUsage = (props) => {
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false);
   const deviceData = {
     device: {
-      label: `${t("device-usage-dbl")}:`,
+      label: `${t("dbl")}:`,
       value: device.manufacturer
     },
     pump: {
@@ -154,11 +154,11 @@ const DeviceUsage = (props) => {
         id="device-usage-header"
         avatar={<PhonelinkSetupOutlinedIcon/>}
         className={classes.cardHeader}
-        title={t("device-usage-header")}
+        title={t("device-usage")}
       />
       <CardContent id="device-usage-content" className={classes.cardContent}>
         <Box id="device-usage-device">
-          <Typography className={classes.sectionTitles}>{t("device-usage-devices")}</Typography>
+          <Typography className={classes.sectionTitles}>{t("devices")}</Typography>
           <Grid className={classes.sectionContent} container spacing={1}>
             {Object.keys(deviceData).map(
               (key) =>
@@ -177,7 +177,7 @@ const DeviceUsage = (props) => {
         </Box>
         <Divider variant="fullWidth" className={classes.divider}/>
         <Box id="device-usage-updates" className={classes.parameterChanges}>
-          <Typography className={classes.sectionTitles}>{t("device-usage-last-updates")}</Typography>
+          <Typography className={classes.sectionTitles}>{t("last-updates")}</Typography>
           <TableContainer className={classes.parameterChangesTable}>
             <Table>
               <TableBody className={classes.sectionContent}>
