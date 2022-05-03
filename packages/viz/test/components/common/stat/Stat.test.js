@@ -83,6 +83,7 @@ describe("Stat", () => {
       muteOthersOnHover: true,
       type: statTypes.simple,
       units: false,
+      hideToolTips: false,
     });
   });
 

@@ -81,6 +81,7 @@ class Stat extends React.Component {
     title: PropTypes.string.isRequired,
     type: PropTypes.oneOf(_.keys(statTypes)),
     units: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+    hideToolTips: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -98,6 +99,7 @@ class Stat extends React.Component {
     muteOthersOnHover: true,
     type: statTypes.simple,
     units: false,
+    hideToolTips: false,
   };
 
   static displayName = "Stat";
@@ -132,11 +134,11 @@ class Stat extends React.Component {
       : this.getFormattedDataByKey("title");
 
     const titleDataValue = _.get(titleData, "value");
-
+    const { emptyDataPlaceholder, annotations, hideToolTips } = this.props;
     return (
       <div className={styles.chartTitle}>
         {this.state.chartTitle}
-        {titleDataValue && titleDataValue !== this.props.emptyDataPlaceholder && (
+        {titleDataValue && titleDataValue !== emptyDataPlaceholder && (
           <span className={styles.chartTitleData}>
             (&nbsp;
             <span
@@ -152,7 +154,7 @@ class Stat extends React.Component {
             &nbsp;)
           </span>
         )}
-        {this.props.annotations && !isDatumHovered && (
+        {!hideToolTips && annotations && !isDatumHovered && (
           <span
             className={styles.tooltipIcon}
           >
@@ -567,6 +569,7 @@ class Stat extends React.Component {
             barSpacing={barSpacing}
             chartLabelWidth={chartLabelWidth}
             domain={domain}
+            horizontal={true}
           />
         ),
         domain,
@@ -645,7 +648,6 @@ class Stat extends React.Component {
         },
       });
       break;
-
     case "wheel":
       total = _.get(data, "total.value", 0);
       value = _.get(data, "data[1].value", 0);
