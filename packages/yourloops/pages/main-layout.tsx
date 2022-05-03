@@ -105,6 +105,7 @@ export function MainLayout(): JSX.Element {
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
                       <Route exact path="/teams" component={PatientTeamsPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Redirect exact from="/" to="/daily" />
                       <Route path="/" component={PatientDataPage} />
                     </Switch>

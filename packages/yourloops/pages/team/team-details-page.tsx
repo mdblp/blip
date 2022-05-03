@@ -43,6 +43,8 @@ import TeamInformation from "../../components/team/team-information";
 import TeamMembers from "../../components/team/team-members";
 import Typography from "@material-ui/core/Typography";
 import { commonTeamStyles } from "../../components/team/common";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
 
 const useStyles = makeStyles((theme: Theme) => ({
   basicDropdown: {
@@ -52,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   body: {
     display: "flex",
     flexDirection: "row",
+  },
+  centerContent: {
+    justifyContent: "center",
   },
   disableRipple: {
     "&:hover": {
@@ -114,11 +119,14 @@ function TeamDetailPage(): JSX.Element {
   const commonTeamClasses = commonTeamStyles();
   const paramHook = useParams();
   const history = useHistory();
+  const authContext = useAuth();
   const { t } = useTranslation("yourloops");
   const { teamId } = paramHook as { teamId: string };
   const [dropdownData, setDropdownData] = React.useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
     { selectedTeam: null, teamNames: [] }
   );
+  const isUserHcp = authContext.user?.role === UserRoles.hcp;
+  const bodyClass = isUserHcp ? classes.body : `${classes.body} ${classes.centerContent}`;
 
   const teamInformation = useRef<HTMLDivElement>(null);
   const teamMembers = useRef<HTMLDivElement>(null);
@@ -167,45 +175,51 @@ function TeamDetailPage(): JSX.Element {
                 onSelect={redirectToTeam} />
             </div>
           </div>
-          <div className={classes.body}>
-            <div className={classes.drawer}>
-              <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamInformation)}
-                onKeyDown={() => scrollTo(teamInformation)}
-                tabIndex={0}>
-                <InfoOutlinedIcon className={commonTeamClasses.icon} />
-                <Typography className={classes.title}>
-                  {t("information").toUpperCase()}
-                </Typography>
+          <div className={bodyClass}>
+            {isUserHcp &&
+              <div className={classes.drawer}>
+                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamInformation)}
+                  onKeyDown={() => scrollTo(teamInformation)}
+                  tabIndex={0}>
+                  <InfoOutlinedIcon className={commonTeamClasses.icon} />
+                  <Typography className={classes.title}>
+                    {t("information").toUpperCase()}
+                  </Typography>
+                </div>
+                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamMembers)}
+                  onKeyDown={() => scrollTo(teamMembers)}
+                  tabIndex={0}>
+                  <GroupOutlinedIcon className={commonTeamClasses.icon} />
+                  <Typography className={classes.title}>
+                    {t("members").toUpperCase()}
+                  </Typography>
+                </div>
+                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamAlarms)}
+                  onKeyDown={() => scrollTo(teamAlarms)}
+                  tabIndex={0}>
+                  <DesktopMacIcon className={commonTeamClasses.icon} />
+                  <Typography className={classes.title}>
+                    {t("telemonitoring-alarms").toUpperCase()}
+                  </Typography>
+                </div>
               </div>
-              <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamMembers)}
-                onKeyDown={() => scrollTo(teamMembers)}
-                tabIndex={0}>
-                <GroupOutlinedIcon className={commonTeamClasses.icon} />
-                <Typography className={classes.title}>
-                  {t("members").toUpperCase()}
-                </Typography>
-              </div>
-              <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamAlarms)}
-                onKeyDown={() => scrollTo(teamAlarms)}
-                tabIndex={0}>
-                <DesktopMacIcon className={commonTeamClasses.icon} />
-                <Typography className={classes.title}>
-                  {t("telemonitoring-alarms").toUpperCase()}
-                </Typography>
-              </div>
-            </div>
+            }
             <div className={classes.teamDetails}>
               <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
                 <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh}/>
               </div>
-              <div className={classes.separator} />
-              <div ref={teamMembers} className={classes.refElement}>
-                <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh}/>
-              </div>
-              <div className={classes.separator} />
-              <div ref={teamAlarms} className={classes.refElement}>
-                <TeamAlarms team={dropdownData.selectedTeam} />
-              </div>
+              { isUserHcp &&
+                <div>
+                  <div className={classes.separator} />
+                  <div ref={teamMembers} className={classes.refElement}>
+                    <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh}/>
+                  </div>
+                  <div className={classes.separator} />
+                  <div ref={teamAlarms} className={classes.refElement}>
+                    <TeamAlarms team={dropdownData.selectedTeam} />
+                  </div>
+                </div>
+              }
             </div>
           </div>
         </div>
