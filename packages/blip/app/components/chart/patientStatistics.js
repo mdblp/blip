@@ -22,15 +22,15 @@ const useStyles = makeStyles(() => ({
 const PatientStatistics = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, loading, chartPrefs, dataUtil, endpoints } = props;
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation();
   const classes = useStyles();
   return (
     <Card className={classes.card}>
       <CardHeader
         avatar={<VisibilityIcon/>}
-        title={t("Overview")}
+        title={t("patient-statistics")}
         action={
-          <Typography variant="overline" display="block">{t("Show More")}</Typography>
+          <Typography variant="overline" display="block">{t("show-more")}</Typography>
         }
       />
       <CardContent className={classes.cardContent}>

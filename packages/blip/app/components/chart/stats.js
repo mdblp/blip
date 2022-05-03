@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import bows from "bows";
+import Divider from "@material-ui/core/Divider";
 import { utils as vizUtils, components as vizComponents } from "tidepool-viz";
 
 import { BG_DATA_TYPES } from "../../core/constants";
@@ -13,7 +14,7 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends"]).isRequired,
+    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage"]).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
@@ -87,6 +88,7 @@ class Stats extends React.Component {
     return _.map(stats, stat => (
       <div id={`Stat--${stat.id}`} key={stat.id}>
         <Stat animate={animate} bgPrefs={this.bgPrefs} {...stat} />
+        <Divider variant="fullWidth"/>
       </div>
     ));
   }
@@ -167,6 +169,10 @@ class Stats extends React.Component {
       cbgSelected && addStat(commonStats.glucoseManagementIndicator);
       addStat(commonStats.standardDev);
       addStat(commonStats.coefficientOfVariation);
+      break;
+
+    case "deviceUsage":
+      cbgSelected && addStat(commonStats.sensorUsage);
       break;
     }
 
