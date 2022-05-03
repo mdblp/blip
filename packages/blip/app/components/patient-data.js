@@ -360,6 +360,9 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             prefixURL={prefixURL}
             loading={loadingState !== LOADING_STATE_DONE}
+            tidelineData={tidelineData}
+            permsOfLoggedInUser={permsOfLoggedInUser}
+            trackMetric={this.trackMetric}
           />
         </Route>
         <Route path={`${prefixURL}/overview`}>

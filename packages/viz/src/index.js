@@ -38,11 +38,11 @@ import WarmUpTooltip from "./components/daily/warmuptooltip/WarmUpTooltip";
 
 import reducers from "./redux/reducers/";
 
-import { formatBgValue } from "./utils/format";
+import { formatBgValue, formatParameterValue } from "./utils/format";
 import { reshapeBgClassesToBgBounds } from "./utils/bloodglucose";
 import { getTotalBasalFromEndpoints, getGroupDurations } from "./utils/basal";
 import { isAutomatedBasalDevice } from "./utils/device";
-import { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs } from "./utils/datetime";
+import { addDuration, getLocalizedCeiling, getTimezoneFromTimePrefs, getLongDayHourFormat } from "./utils/datetime";
 import {
   commonStats,
   getStatAnnotations,
@@ -53,6 +53,7 @@ import {
   statFetchMethods,
 } from "./utils/stat";
 import DataUtil from "./utils/data";
+import getParametersChanges from "./utils/parametersHistory";
 import createPrintPDFPackage from "./modules/print";
 import { selectDailyViewData, generatePumpSettings, generatePDFStats } from "./utils/print/data";
 
@@ -120,4 +121,7 @@ export {
   utils,
   reducers,
   createPrintPDFPackage,
+  getParametersChanges,
+  getLongDayHourFormat,
+  formatParameterValue
 };
