@@ -411,7 +411,7 @@ describe("Stats", () => {
           "carbs",
         ];
 
-        _.forEach(expectedStats, statId => {
+        expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
         });
       });
@@ -438,7 +438,7 @@ describe("Stats", () => {
           "carbs",
         ];
 
-        _.forEach(expectedStats, statId => {
+        expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
         });
 
@@ -458,7 +458,7 @@ describe("Stats", () => {
           "averageDailyDose",
           "carbs",
         ];
-        _.forEach(expectedStats, statId => {
+        expectedStats.forEach(statId => {
           expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
         });
       });

@@ -8,9 +8,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-1379 New Header
 - YLP-1410 New left navigation drawer
 - YLP-1411 Implement the Patient list table with the new layout
+- YLP-1462 Create Patient statistics card for dashboard
 - YLP-1465 create Device usage card for dashboard
 - YLP-1469 Update footer with "Accompanying documents" dropdown
-- YLP-1462 Create Patient statistics card for dashboard
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
