@@ -14,10 +14,14 @@ class Stats extends React.Component {
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object,
-    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage"]).isRequired,
+    chartType: PropTypes.oneOf(["basics", "daily", "bgLog", "trends", "deviceUsage", "patientStatistics"]).isRequired,
     dataUtil: PropTypes.object.isRequired,
     endpoints: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool.isRequired,
+    hideToolTips: PropTypes.bool.isRequired,
+  };
+  static defaultProps = {
+    hideToolTips: false,
   };
 
   constructor(props) {
@@ -84,21 +88,21 @@ class Stats extends React.Component {
       : false;
   }
 
-  renderStats(stats, animate) {
+  renderStats(stats, animate, hideToolTips) {
     return _.map(stats, stat => (
       <div id={`Stat--${stat.id}`} key={stat.id}>
-        <Stat animate={animate} bgPrefs={this.bgPrefs} {...stat} />
+        <Stat animate={animate} bgPrefs={this.bgPrefs} hideToolTips={hideToolTips} {...stat} />
         <Divider variant="fullWidth"/>
       </div>
     ));
   }
 
   render() {
-    const { chartPrefs: { animateStats } } = this.props;
+    const { chartPrefs: { animateStats }, hideToolTips } = this.props;
 
     return (
       <div className="Stats">
-        {this.renderStats(this.state.stats, animateStats)}
+        {this.renderStats(this.state.stats, animateStats, hideToolTips)}
       </div>
     );
   }
@@ -173,6 +177,15 @@ class Stats extends React.Component {
 
     case "deviceUsage":
       cbgSelected && addStat(commonStats.sensorUsage);
+      break;
+
+    case "patientStatistics":
+      cbgSelected && addStat(commonStats.timeInRange);
+      smbgSelected && addStat(commonStats.readingsInRange);
+      addStat(commonStats.averageGlucose);
+      addStat(commonStats.averageDailyDose);
+      isAutomatedBasalDevice && addStat(commonStats.timeInAuto);
+      addStat(commonStats.carbs);
       break;
     }
 
