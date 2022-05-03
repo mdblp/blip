@@ -45,9 +45,9 @@ import { useTeam } from "../../../lib/team";
 import { addPendingFetch, removePendingFetch } from "../../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
-import { patientListCommonStyle, StyledTableCell } from "./table";
+import { patientListCommonStyle } from "./table";
 import { Box, Typography } from "@material-ui/core";
-import { StyledTableRow } from "../../../components/team/common";
+import { StyledTableCell, StyledTableRow } from "../../../components/styled-components";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -55,7 +55,7 @@ const patientListStyle = makeStyles(
       alert: {
         color: theme.palette.warning.main,
       },
-      bellIcon: {
+      alertIcon: {
         marginLeft: theme.spacing(2),
         verticalAlign: "bottom",
       },
@@ -109,7 +109,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     const frequencyOfSevereHypoglycemiaActive = patient.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
     const dataNotTransferredActive = patient.alarm?.nonDataTransmissionRate ?? false;
     const nonDataTransmissionActive = patient.alarm?.nonDataTransmissionActive ?? false;
-    const hasAlert= timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
+    const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
     return {
       patientSystem: patient.system ?? trNA,
       patientRemoteMonitoring: patient.remoteMonitoring ?? t("no"),
@@ -219,7 +219,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       data-email={email}
       ref={rowRef}
     >
-      <StyledTableCell id={`${rowId}-icon`} className={classes.iconCell}>
+      <StyledTableCell
+        id={`${rowId}-icon`} className={classes.iconCell}
+      >
         {filter === FilterType.pending && hasPendingInvitation ?
           (<Tooltip
             id={`${rowId}-tooltip-pending`}
@@ -238,7 +240,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-patient-full-name`} className={patientFullNameClasses}>
+      <StyledTableCell
+        id={`${rowId}-patient-full-name`} className={patientFullNameClasses}
+      >
         <Tooltip title={tooltipText}>
           <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
             {patientFullName}
@@ -246,28 +250,31 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         </Tooltip>
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
-      <StyledTableCell id={`${rowId}-remote-monitoring`}
-        className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}>{patientRemoteMonitoring}</StyledTableCell>
+      <StyledTableCell
+        id={`${rowId}-remote-monitoring`}
+        className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}
+      >{patientRemoteMonitoring}
+      </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-time-away-target`}
         className={timeSpentAwayFromTargetRateClasses}
       >
         {timeSpentAwayFromTargetRate}
-        {timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.bellIcon} />}
+        {timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
         {frequencyOfSevereHypoglycemiaRate}
-        {frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.bellIcon} />}
+        {frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
         {dataNotTransferredRate}
-        {nonDataTransmissionActive && <AnnouncementIcon className={classes.bellIcon} />}
+        {nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}

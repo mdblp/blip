@@ -25,38 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import TableCell from "@material-ui/core/TableCell";
+import { Tooltip, withStyles } from "@material-ui/core";
+import TableRow from "@material-ui/core/TableRow";
+import { styled } from "@material-ui/core/styles";
 
-export const commonTeamStyles = makeStyles((theme: Theme) => ({
-  button: {
-    "backgroundColor": "#00A3E2",
-    "color": theme.palette.common.white,
-    "marginBottom": "12px",
-    "textTransform": "none",
-    "&:hover": {
-      backgroundColor: "#00A3E2",
-      color: theme.palette.common.white,
-    },
-    "&:disabled": {
-      color: theme.palette.common.white,
-      opacity: 0.5,
-    },
+export const StyledTableCell = styled(TableCell)((props) => ({
+  "&": {
+    border: "unset",
+    borderRight: `0.5px solid ${props.theme.palette.divider}`,
+    fontSize: "15px",
+    height: "inherit",
   },
-  icon: {
-    marginRight: "15px",
-    marginLeft: "0px",
+}));
+
+export const StyledTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.primary.main,
+    boxShadow: theme.shadows[1],
+    fontSize: "12px",
+    whiteSpace: "pre-line",
   },
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: "46px",
-    marginRight: "46px",
+  arrow: {
+    color: theme.palette.primary.main,
   },
-  title: {
-    color: theme.palette.grey[800],
-    fontSize: "16px",
-    fontWeight: 600,
-    lineHeight: "20px",
-    marginLeft: "12px",
+}))(Tooltip);
+
+export const StyledTableRow = styled(TableRow)((props) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: props.theme.palette.grey[100],
+  },
+  "&": {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 }));

@@ -197,7 +197,14 @@ export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
 
 export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
   return {
-    alarm: null,
+    alarm: {
+      timeSpentAwayFromTargetRate: 10,
+      timeSpentAwayFromTargetActive: true,
+      frequencyOfSevereHypoglycemiaRate: 20,
+      frequencyOfSevereHypoglycemiaActive: false,
+      nonDataTransmissionRate: 30,
+      nonDataTransmissionActive: true,
+    },
     firstName: teamUser.profile?.firstName,
     flagged: undefined,
     fullName: teamUser.profile?.fullName ?? teamUser.username,
