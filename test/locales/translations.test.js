@@ -69,6 +69,7 @@ const ignoredTransKeyInBlipFiles = [
   "${pa.reportedIntensity}-pa",
   "bolus_${bolusType}",
   "params|${parameter.name}",
+  "params|${row.name}"
 ];
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
