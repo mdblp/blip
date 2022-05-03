@@ -189,7 +189,7 @@ describe("DeviceUsage", () => {
       expect(deviceSection).to.have.length(1);
       const deviceLabels = wrapper.find(".device-label");
       expect(deviceLabels).to.have.length(3);
-      expect(deviceLabels.at(0).text()).to.equal("DBL:");
+      expect(deviceLabels.at(0).text()).to.equal("device-usage-dbl:");
       expect(deviceLabels.at(1).text()).to.equal("Pump:");
       expect(deviceLabels.at(2).text()).to.equal("CGM:");
       const deviceValues = wrapper.find(".device-value");
