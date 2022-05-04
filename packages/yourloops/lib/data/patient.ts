@@ -25,28 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { MedicalData } from "../../models/device-data";
+import { Alarm } from "../../models/alarm";
+import { UserInvitationStatus } from "../../models/generic";
+import { INotification } from "../notifications";
 
-export const commonTeamStyles = makeStyles((theme: Theme) => ({
-  button: {
-    marginBottom: "12px",
-    textTransform: "none",
-  },
-  icon: {
-    marginRight: "15px",
-    marginLeft: "0px",
-  },
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: "46px",
-    marginRight: "46px",
-  },
-  title: {
-    color: theme.palette.grey[800],
-    fontSize: "16px",
-    fontWeight: 600,
-    lineHeight: "20px",
-    marginLeft: "12px",
-  },
-}));
+interface PatientTeam {
+  code : string,
+  invitation?: INotification
+  status: UserInvitationStatus,
+  teamId : string,
+  teamName : string,
+}
+
+interface Patient {
+  alarm?: Alarm | null;
+  firstName?: string;
+  flagged?: boolean,
+  fullName: string;
+  lastName?: string;
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null;
+  remoteMonitoring? : Date;
+  system? : string;
+  teams : PatientTeam[];
+  readonly userid: string;
+  readonly username: string;
+}
+
+export { Patient, PatientTeam };

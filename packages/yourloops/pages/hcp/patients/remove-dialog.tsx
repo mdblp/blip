@@ -48,7 +48,7 @@ import { useTeam } from "../../../lib/team";
 import { makeButtonsStyles } from "../../../components/theme";
 import { useAlert } from "../../../components/utils/snackbar";
 import { UserInvitationStatus } from "../../../models/generic";
-import { Patient, PatientTeam } from "../../../models/patient";
+import { Patient, PatientTeam } from "../../../lib/data/patient";
 
 interface RemoveDialogProps {
   isOpen: boolean;

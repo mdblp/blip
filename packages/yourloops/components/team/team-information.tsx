@@ -37,12 +37,15 @@ import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
 import LocalPhoneOutlinedIcon from "@material-ui/icons/LocalPhoneOutlined";
 import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import EditIcon from "@material-ui/icons/Edit";
+
 import { Team, useTeam } from "../../lib/team";
 import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
+import LeaveTeamButton from "./leave-team-button";
 
 const useStyles = makeStyles(() => ({
   body: {
@@ -89,7 +92,7 @@ const useStyles = makeStyles(() => ({
 
 export interface TeamInformationProps {
   team: Team;
-  refreshParent : () => void;
+  refreshParent: () => void;
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
@@ -99,6 +102,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const classes = useStyles();
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
+  const isUserPatient = authContext.user?.role === UserRoles.patient;
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
@@ -132,15 +136,21 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t("information").toUpperCase()}
             </Typography>
           </div>
-          { isUserAdmin &&
+          {isUserAdmin &&
             <Button
               id="edit-team-button"
-              className={commonTeamClasses.button}
+              variant="contained"
+              color="primary"
+              disableElevation
               onClick={editTeam}
+              className={commonTeamClasses.button}
             >
               <EditIcon className={commonTeamClasses.icon} />
               {t("edit-information")}
             </Button>
+          }
+          {isUserPatient &&
+            <LeaveTeamButton team={team} />
           }
         </div>
         <div className={classes.body}>

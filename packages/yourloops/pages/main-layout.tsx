@@ -101,6 +101,7 @@ export function MainLayout(): JSX.Element {
                   {session.user.role === UserRoles.patient &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Redirect exact from="/" to="/daily" />
                       <Route path="/" component={PatientDataPage} />
                     </Switch>

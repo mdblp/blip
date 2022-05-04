@@ -25,12 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Alerts {
-  userID: string;
-  alert: Alert;
-}
-
-export interface Alert {
+export interface Alarm {
   timeSpentAwayFromTargetRate: number;
   timeSpentAwayFromTargetActive: boolean;
   frequencyOfSevereHypoglycemiaRate: number;
