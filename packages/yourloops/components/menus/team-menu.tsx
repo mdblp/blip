@@ -48,6 +48,8 @@ import MenuLayout from "../layouts/menu-layout";
 import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
@@ -76,6 +78,8 @@ function TeamMenu(): JSX.Element {
   const { teams, createTeam } = useTeam();
   const history = useHistory();
   const alert = useAlert();
+  const authHook = useAuth();
+  const isUserHcp = authHook.user?.role === UserRoles.hcp;
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
@@ -164,18 +168,23 @@ function TeamMenu(): JSX.Element {
             <Typography>{t("care-team-no-membership")}</Typography>
           </ListItem>
         }
-        <Box marginY={1}>
-          <Divider variant="middle" />
-        </Box>
 
-        <MenuItem id="team-menu-teams-link" onClick={createCareTeam}>
-          <ListItemIcon>
-            <GroupOutlinedIcon />
-          </ListItemIcon>
-          <Typography>
-            {t("new-care-team")}
-          </Typography>
-        </MenuItem>
+        {isUserHcp &&
+          <Box>
+            <Box marginY={1}>
+              <Divider variant="middle" />
+            </Box>
+
+            <MenuItem id="team-menu-teams-link" onClick={createCareTeam}>
+              <ListItemIcon>
+                <GroupOutlinedIcon />
+              </ListItemIcon>
+              <Typography>
+                {t("new-care-team")}
+              </Typography>
+            </MenuItem>
+          </Box>
+        }
       </MenuLayout>
       <TeamEditDialog teamToEdit={teamCreationDialogData} />
     </React.Fragment>
