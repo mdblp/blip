@@ -84,7 +84,7 @@ function TeamMenu(): JSX.Element {
 
   const filteredTeams = teams.filter(team => team.code !== "private");
   const closeMenu = () => setAnchorEl(null);
-  const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null);
+  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
@@ -100,11 +100,11 @@ function TeamMenu(): JSX.Element {
         alert.error(t("team-page-failed-edit"));
       }
     }
-    setTeamToEdit(null);
+    setTeamCreationDialogData(null);
   };
 
   const createCareTeam = () => {
-    setTeamToEdit({ team: null, onSaveTeam });
+    setTeamCreationDialogData({ team: null, onSaveTeam });
     closeMenu();
   };
 
@@ -177,7 +177,7 @@ function TeamMenu(): JSX.Element {
           </Typography>
         </MenuItem>
       </MenuLayout>
-      <TeamEditDialog teamToEdit={teamToEdit} />
+      <TeamEditDialog teamToEdit={teamCreationDialogData} />
     </React.Fragment>
   );
 }
