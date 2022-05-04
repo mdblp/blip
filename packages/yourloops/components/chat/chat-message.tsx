@@ -38,42 +38,45 @@ export interface ChatMessageProps {
 const chatMessageStyles = makeStyles((theme: Theme) => {
   return {
     chatMessageContainer: {
-      "display": "flex",
-      "& svg" : {
-        marginTop: theme.spacing(1),
-      },
+      fontFamily: "Roboto",
+      color: "white",
+      width: "90%",
+      display: "flex",
+      position: "relative",
+      padding: theme.spacing(1),
+      marginTop: theme.spacing(1),
     },
     left: {
-      "& span": {
-        borderRadius: "0px 12px 12px 12px",
-        backgroundColor: "#00A3E2",
-        position: "relative",
-        left: "-16%",
-      },
-      "& svg" : {
-        fill: "#00A3E2",
-        marginLeft: theme.spacing(1),
+      "borderRadius": "0px 12px 12px 12px",
+      "backgroundColor": theme.palette.primary.main,
+      "&::before": {
+        content: "''",
+        width: 0,
+        height: 0,
+        borderTop: `20px solid ${theme.palette.primary.main}`,
+        borderLeft: "20px solid transparent",
+        position: "absolute",
+        top: 0,
+        left: -8,
       },
     },
     right: {
-      "& span": {
-        borderRadius: "12px 0px 12px 12px",
-        backgroundColor: "#035271",
-        position: "relative",
-        right: "-16%",
-      },
-      "& svg" : {
-        fill: "#035271",
-        marginRight: theme.spacing(1),
+      "marginLeft": "auto",
+      "borderRadius": "12px 0px 12px 12px",
+      "backgroundColor": theme.palette.primary.dark,
+      "&::after": {
+        content: "''",
+        width: 0,
+        height: 0,
+        borderTop:`20px solid ${theme.palette.primary.dark}`,
+        borderRight: "20px solid transparent",
+        position: "absolute",
+        top: 0,
+        right: -8,
       },
     },
     chatMessageText: {
-      fontFamily: "Roboto",
-      color: "white",
-      width: "80%",
-      padding: theme.spacing(1),
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+      zIndex: 2,
     },
   };
 }, { name: "ylp-chat-message" });
@@ -86,19 +89,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
 
   return (
     <div className={`${classes.chatMessageContainer} ${messageContainerType}`}>
-      {
-        !isMine &&
-        <svg height="10" width="10" transform="scale(-1,1)">
-          <polygon points="0,0 10,0 0,10"/>
-        </svg>
-      }
       <span className={classes.chatMessageText}>{ text }</span>
-      {
-        isMine &&
-        <svg height="10" width="10">
-          <polygon points="0,0 10,0 0,10"/>
-        </svg>
-      }
     </div>
   );
 }

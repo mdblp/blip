@@ -63,6 +63,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       },
     },
     chatWidgetContent: {
+      padding: theme.spacing(2),
       background: theme.palette.common.white,
       width: "100%",
       height: "290px",
@@ -103,21 +104,8 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
       height: "20px",
     },
     chatWidgetInput: {
-      // "fontFamily": "Roboto",
-      // "fontStyle": "normal",
-      // marginLeft: theme.spacing(1),
-      // display: "block",
       width: "90%",
       maxWidth: "90%",
-      // "overflow": "hidden",
-      // "resize": "none",
-      // "height": "24px",
-      // "maxHeight": "60px",
-      // "lineHeight": "20px",
-      // "border": "1px solid white",
-      // "& :focus": {
-      //   outlineColor: "#F6F6F6",
-      // },
     },
     emojiPicker: {
       display: "none",
@@ -158,6 +146,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   useEffect(() => {
+    console.log(content);
     content.current?.scroll({ left: 0, top: content.current?.scrollHeight });
   }, [messages]);
 
@@ -216,10 +205,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         className={classes.chatWidgetHeader}
         title={t("chat-messages-header")}
       />
-      {/*<div className={classes.chatWidgetHeader}>*/}
-      {/*  <EmailOutlinedIcon className={classes.icon} />*/}
-      {/*  <span className={classes.chatWidgetHeaderText}>{t("chat-messages-header")}</span>*/}
-      {/*</div>*/}
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
           (msg): JSX.Element => (
