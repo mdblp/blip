@@ -1003,6 +1003,8 @@ class PatientDataPage extends React.Component {
 
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
+  teams: PropTypes.object.isRequired,
+  chatWidget: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
