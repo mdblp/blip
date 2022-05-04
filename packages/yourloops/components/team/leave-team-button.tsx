@@ -78,9 +78,10 @@ function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
     <React.Fragment>
       <Button
         className={commonTeamClasses.button}
-        onClick={openLeaveTeamDialog}
         variant="contained"
         color="primary"
+        disableElevation
+        onClick={openLeaveTeamDialog}
       >
         <ExitToAppIcon className={commonTeamClasses.icon} />{t("button-team-leave")}
       </Button>

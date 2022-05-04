@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  buttonAddTeamMember: {
+  addTeamMemberButton: {
     marginLeft: "23px",
   },
   groupOutlinedIcon: {
@@ -149,10 +149,11 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             {
               isUserAdmin &&
               <Button
-                className={`${commonTeamClasses.button} ${classes.buttonAddTeamMember}`}
-                onClick={openInviteMemberDialog}
+                className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
                 variant="contained"
                 color="primary"
+                disableElevation
+                onClick={openInviteMemberDialog}
               >
                 <GroupAddIcon className={commonTeamClasses.icon} />
                 {t("button-team-add-member")}

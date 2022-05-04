@@ -139,10 +139,11 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
           {isUserAdmin &&
             <Button
               id="edit-team-button"
-              className={commonTeamClasses.button}
-              onClick={editTeam}
               variant="contained"
               color="primary"
+              disableElevation
+              onClick={editTeam}
+              className={commonTeamClasses.button}
             >
               <EditIcon className={commonTeamClasses.icon} />
               {t("edit-information")}

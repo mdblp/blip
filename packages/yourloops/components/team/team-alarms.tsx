@@ -115,6 +115,7 @@ function TeamAlarms(props : TeamAlarmsProps): JSX.Element {
             <Button
               className={commonTeamClasses.button}
               disabled
+              disableElevation
               variant="contained"
               color="primary"
             >

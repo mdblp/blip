@@ -178,25 +178,37 @@ function TeamDetailPage(): JSX.Element {
           <div className={bodyClass}>
             {isUserHcp &&
               <div className={classes.drawer}>
-                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamInformation)}
+                <div
+                  role="link"
+                  className={classes.drawerTitle}
+                  tabIndex={0}
                   onKeyDown={() => scrollTo(teamInformation)}
-                  tabIndex={0}>
+                  onClick={() => scrollTo(teamInformation)}
+                >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
                     {t("information").toUpperCase()}
                   </Typography>
                 </div>
-                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamMembers)}
+                <div
+                  role="link"
+                  className={classes.drawerTitle}
+                  tabIndex={0}
+                  onClick={() => scrollTo(teamMembers)}
                   onKeyDown={() => scrollTo(teamMembers)}
-                  tabIndex={0}>
+                >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
                     {t("members").toUpperCase()}
                   </Typography>
                 </div>
-                <div role="link" className={classes.drawerTitle} onClick={() => scrollTo(teamAlarms)}
+                <div
+                  role="link"
+                  className={classes.drawerTitle}
+                  tabIndex={0}
+                  onClick={() => scrollTo(teamAlarms)}
                   onKeyDown={() => scrollTo(teamAlarms)}
-                  tabIndex={0}>
+                >
                   <DesktopMacIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
                     {t("telemonitoring-alarms").toUpperCase()}
@@ -206,13 +218,13 @@ function TeamDetailPage(): JSX.Element {
             }
             <div className={classes.teamDetails}>
               <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
-                <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh}/>
+                <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh} />
               </div>
-              { isUserHcp &&
+              {isUserHcp &&
                 <div>
                   <div className={classes.separator} />
                   <div ref={teamMembers} className={classes.refElement}>
-                    <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh}/>
+                    <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                   </div>
                   <div className={classes.separator} />
                   <div ref={teamAlarms} className={classes.refElement}>
