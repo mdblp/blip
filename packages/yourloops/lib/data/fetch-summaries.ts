@@ -39,7 +39,7 @@ import {
   getPatientsDataSummary,
   getPatientDataRange,
 } from "./api";
-import { Patient } from "../../models/patient";
+import { Patient } from "./patient";
 
 const log = bows("FetchSummaries");
 

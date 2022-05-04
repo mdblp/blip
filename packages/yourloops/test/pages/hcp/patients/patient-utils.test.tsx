@@ -32,7 +32,7 @@ import {
   mapTeamUserToPatient,
 } from "../../../../pages/hcp/patients/utils";
 import { PatientTableSortFields, UserInvitationStatus } from "../../../../models/generic";
-import { Patient, PatientTeam } from "../../../../models/patient";
+import { Patient, PatientTeam } from "../../../../lib/data/patient";
 import { INotification } from "../../../../lib/notifications";
 import { Profile } from "../../../../models/shoreline";
 
@@ -307,7 +307,7 @@ describe("Patient utils", () => {
       const member = createTeamMember("fakeTeamMember", "teamName", "fakeTeamCode", UserInvitationStatus.accepted);
       const teamUser = createTeamUser("fakeTeamMember", [member], profile);
       const patient : Patient = {
-        alerts: null,
+        alarm: null,
         firstName: profile.firstName,
         flagged: undefined,
         fullName: profile.fullName,

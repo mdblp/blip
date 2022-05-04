@@ -40,7 +40,7 @@ import {
 } from "../../models/team";
 import { Session } from "../auth";
 import { DirectShareAPI } from "../share/models";
-import { Patient, PatientTeam } from "../../models/patient";
+import { Patient, PatientTeam } from "../data/patient";
 
 export const TEAM_CODE_LENGTH = 9;
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/;

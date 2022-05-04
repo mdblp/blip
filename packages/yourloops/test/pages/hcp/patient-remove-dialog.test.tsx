@@ -42,7 +42,7 @@ import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 
 describe("Patient remove dialog", () => {

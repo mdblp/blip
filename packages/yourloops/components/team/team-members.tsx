@@ -41,7 +41,6 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { StyledTableCell } from "../../pages/hcp/patients/table";
 import MemberRow from "./member-row";
 import TableBody from "@material-ui/core/TableBody";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
@@ -52,6 +51,7 @@ import { useAlert } from "../utils/snackbar";
 import { useHistory } from "react-router-dom";
 import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
+import { StyledTableCell } from "../styled-components";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
