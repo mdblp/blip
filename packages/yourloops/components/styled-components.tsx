@@ -43,7 +43,6 @@ export const StyledTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.primary.main,
     boxShadow: theme.shadows[1],
-    fontSize: "12px",
     whiteSpace: "pre-line",
   },
   arrow: {
