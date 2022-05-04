@@ -197,7 +197,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               </StyledTableCell>
               <StyledTableCell
                 id="patients-list-header-alert-time-target"
-                className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader} ${patientListCommonClasses.mediumCell}`}>
+                className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader} ${patientListCommonClasses.mediumCell}`}
+              >
                 <TableSortLabel
                   id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ""}`}
                   active={orderBy === PatientTableSortFields.alertTimeTarget}
