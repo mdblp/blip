@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1410 New left navigation drawer
 - YLP-1411 Implement the Patient list table with the new layout
 - YLP-1415 Implement the team details page
+- YLP-1445 Implement alerts in patients table
 - YLP-1469 Update footer with "Accompanying documents" dropdown
 - YLP-1475 Implement the team details page for patients
 ### Engineering Use

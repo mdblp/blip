@@ -40,7 +40,6 @@ import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { StyledTableCell } from "../../pages/hcp/patients/table";
 import MemberRow from "./member-row";
 import TableBody from "@material-ui/core/TableBody";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
@@ -49,6 +48,7 @@ import { AddMemberDialogContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
 import LeaveTeamButton from "./leave-team-button";
+import { StyledTableCell } from "../styled-components";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {

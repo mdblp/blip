@@ -36,7 +36,7 @@ import Paper from "@material-ui/core/Paper";
 
 import IconActionButton from "../../../components/buttons/icon-action";
 import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 interface PendingPatientCardProps {
   patient: Patient;

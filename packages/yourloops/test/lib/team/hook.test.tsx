@@ -40,7 +40,7 @@ import { INotification, NotificationContextProvider, NotificationType } from "..
 import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
 import { createPatient, createPatientTeam } from "../../common/utils";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 import { stubNotificationContextValue } from "../notifications/utils";
 
 describe("Team hook", () => {

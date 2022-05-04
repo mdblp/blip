@@ -32,8 +32,8 @@ import jwtDecode from "jwt-decode";
 import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
-import { Patient, PatientTeam } from "../../models/patient";
-import { Alert } from "../../models/alert";
+import { Patient, PatientTeam } from "../../lib/data/patient";
+import { Alarm } from "../../models/alarm";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
 import { Profile, UserRoles } from "../../models/shoreline";
 import { TeamMemberRole, TeamType } from "../../models/team";
@@ -106,14 +106,14 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 export const createPatient = (
   id: string,
   teams: PatientTeam[],
-  alerts: Alert = null,
+  alerts: Alarm = null,
   fullName = "fakePatientFullName",
   remoteMonitoring: Date = null,
   system: string = null,
   flagged: boolean = null
 ): Patient => {
   return {
-    alerts,
+    alarm: alerts,
     fullName,
     remoteMonitoring,
     system,
@@ -129,11 +129,11 @@ export const createPatientTeam = (id: string, status: UserInvitationStatus): Pat
     status,
   } as PatientTeam;
 };
-export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alert => {
+export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate,
-  } as Alert;
+  } as Alarm;
 };
 
 export const createTeamUser = (id: string, members: TeamMember[], profile: Profile = null): TeamUser => {

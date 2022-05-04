@@ -46,7 +46,7 @@ import { errorTextFromException, setPageTitle } from "../../../lib/utils";
 import { TeamContext, useTeam } from "../../../lib/team";
 import PatientsTable from "./table";
 import PatientsCards from "./cards";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 import { PatientListProps } from "./models";
 import { comparePatients } from "./utils";
 
@@ -186,7 +186,7 @@ function PatientList(props: PatientListProps): JSX.Element {
           />
         </Container>
       ) : (
-        <Container id="patient-list-container" maxWidth="lg">
+        <Container id="patient-list-container" maxWidth={false}>
           <PatientsTable
             patients={patients}
             flagged={flagged}

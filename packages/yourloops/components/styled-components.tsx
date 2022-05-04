@@ -25,32 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from "./device-data";
-import { Alert } from "./alert";
-import { UserInvitationStatus } from "./generic";
-import { INotification } from "../lib/notifications";
+import TableCell from "@material-ui/core/TableCell";
+import { Tooltip, withStyles } from "@material-ui/core";
+import TableRow from "@material-ui/core/TableRow";
+import { styled } from "@material-ui/core/styles";
 
-interface PatientTeam {
-  code : string,
-  invitation?: INotification
-  status: UserInvitationStatus,
-  teamId : string,
-  teamName : string,
-}
+export const StyledTableCell = styled(TableCell)((props) => ({
+  "&": {
+    border: "unset",
+    borderRight: `0.5px solid ${props.theme.palette.divider}`,
+    fontSize: "15px",
+    height: "inherit",
+  },
+}));
 
-interface Patient {
-  alerts?: Alert | null;
-  firstName?: string;
-  flagged?: boolean,
-  fullName: string;
-  lastName?: string;
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  remoteMonitoring? : Date;
-  system? : string;
-  teams : PatientTeam[];
-  readonly userid: string;
-  readonly username: string;
-}
+export const StyledTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.primary.main,
+    boxShadow: theme.shadows[1],
+    whiteSpace: "pre-line",
+  },
+  arrow: {
+    color: theme.palette.primary.main,
+  },
+}))(Tooltip);
 
-export { Patient, PatientTeam };
+export const StyledTableRow = styled(TableRow)((props) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: props.theme.palette.grey[100],
+  },
+  "&": {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+}));

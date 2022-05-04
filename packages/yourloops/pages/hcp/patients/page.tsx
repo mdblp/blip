@@ -46,7 +46,7 @@ import PatientsSecondaryBar from "./secondary-bar";
 import AddPatientDialog from "./add-dialog";
 import RemovePatientDialog from "./remove-dialog";
 import TeamCodeDialog from "./team-code-dialog";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 import PatientList from "./list";
 
 const log = bows("PatientListPage");

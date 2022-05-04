@@ -27,7 +27,7 @@
  */
 
 import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 export interface PatientTableCardCommonProps {
   patients: Patient[];
