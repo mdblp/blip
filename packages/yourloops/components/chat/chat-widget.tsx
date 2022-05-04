@@ -146,7 +146,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   useEffect(() => {
-    console.log(content);
     content.current?.scroll({ left: 0, top: content.current?.scrollHeight });
   }, [messages]);
 

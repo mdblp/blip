@@ -88,7 +88,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
   const messageContainerType = isMine ? classes.right : classes.left;
 
   return (
-    <div className={`${classes.chatMessageContainer} ${messageContainerType}`}>
+    <div className={`message ${classes.chatMessageContainer} ${messageContainerType}`}>
       <span className={classes.chatMessageText}>{ text }</span>
     </div>
   );

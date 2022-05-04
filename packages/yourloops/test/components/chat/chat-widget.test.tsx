@@ -34,6 +34,7 @@ import ChatWidget from "../../../components/chat/chat-widget";
 import { act, Simulate } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import * as chatAPI from "../../../lib/chat/api";
+import { text } from "body-parser";
 
 describe("Chat widget", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -54,6 +55,10 @@ describe("Chat widget", () => {
     });
   }
 
+  beforeAll(()=>{
+    Element.prototype.scroll = jest.fn();
+  });
+
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -71,7 +76,7 @@ describe("Chat widget", () => {
     const sendButton = container.querySelector("#chat-widget-send-button");
     expect(sendButton).toBeDefined();
     expect(sendButton.getAttribute("disabled")).toBeDefined();
-    const textInput = container.querySelector("#chatWidgetInput");
+    const textInput = container.querySelector("#standard-multiline-flexible");
     expect(textInput).toBeDefined();
     expect(textInput.innerHTML.length).toEqual(0);
     const emojiPicker = container.querySelector("#chat-widget-emoji-picker");
@@ -105,8 +110,6 @@ describe("Chat widget", () => {
       timestamp: Date.now().toString(),
       user: patient,
     }];
-    //hack because scrollIntoView is not implemented in jsdom used by the testing library
-    Element.prototype.scrollIntoView = jest.fn();
     const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
     await mountComponent(authHookPatient);
     expect(apiStub).toHaveBeenCalled();
@@ -133,7 +136,7 @@ describe("Chat widget", () => {
     emojiPicker = container.querySelector("#chat-widget-emoji-picker");
     expect(emojiPicker).toBeNull();
 
-    const textInput = container.querySelector("#chatWidgetInput");
+    const textInput = container.querySelector("#standard-multiline-flexible");
     expect(textInput.innerHTML.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -141,10 +144,10 @@ describe("Chat widget", () => {
     jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
     await mountComponent(authHookPatient);
 
-    const textInput = container.querySelector("#chatWidgetInput");
+    const textInput = container.querySelector("#standard-multiline-flexible") as HTMLTextAreaElement;
     expect(textInput).toBeDefined();
     textInput.innerHTML = "Hello";
-    Simulate.input(textInput);
+    Simulate.change(textInput);
 
     const apiStubSendMessage = jest.spyOn(chatAPI, "sendChatMessage").mockResolvedValue(true);
     const sendButton = container.querySelector("#chat-widget-send-button");
