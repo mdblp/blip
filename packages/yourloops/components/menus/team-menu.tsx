@@ -95,9 +95,9 @@ function TeamMenu(): JSX.Element {
     if (createdTeam) {
       try {
         await createTeam(createdTeam as Team);
-        alert.success(t("team-page-success-edit"));
+        alert.success(t("team-page-success-create"));
       } catch (reason: unknown) {
-        alert.error(t("team-page-failed-edit"));
+        alert.error(t("team-page-failed-create"));
       }
     }
     setTeamCreationDialogData(null);
