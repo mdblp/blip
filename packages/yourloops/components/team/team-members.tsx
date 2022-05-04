@@ -148,8 +148,12 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             <LeaveTeamButton team={team} />
             {
               isUserAdmin &&
-              <Button className={`${commonTeamClasses.button} ${classes.buttonAddTeamMember}`}
-                onClick={openInviteMemberDialog}>
+              <Button
+                className={`${commonTeamClasses.button} ${classes.buttonAddTeamMember}`}
+                onClick={openInviteMemberDialog}
+                variant="contained"
+                color="primary"
+              >
                 <GroupAddIcon className={commonTeamClasses.icon} />
                 {t("button-team-add-member")}
               </Button>

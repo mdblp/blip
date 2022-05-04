@@ -141,6 +141,8 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               id="edit-team-button"
               className={commonTeamClasses.button}
               onClick={editTeam}
+              variant="contained"
+              color="primary"
             >
               <EditIcon className={commonTeamClasses.icon} />
               {t("edit-information")}

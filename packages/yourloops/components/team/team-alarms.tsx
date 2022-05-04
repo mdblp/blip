@@ -112,7 +112,12 @@ function TeamAlarms(props : TeamAlarmsProps): JSX.Element {
           </div>
           {
             isUserAdmin &&
-            <Button className={commonTeamClasses.button} disabled>
+            <Button
+              className={commonTeamClasses.button}
+              disabled
+              variant="contained"
+              color="primary"
+            >
               <SaveIcon className={commonTeamClasses.icon}/>
               {t("save-modifications")}
             </Button>
