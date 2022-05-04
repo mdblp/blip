@@ -34,7 +34,6 @@ import ChatWidget from "../../../components/chat/chat-widget";
 import { act, Simulate } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import * as chatAPI from "../../../lib/chat/api";
-import { text } from "body-parser";
 
 describe("Chat widget", () => {
   const authHcp = loggedInUsers.hcpSession;
