@@ -44,7 +44,7 @@ import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
 import { Patient, PatientTeam } from "../data/patient";
-import { mapTeamUserToPatient } from "../../pages/hcp/patients/utils";
+import { mapTeamUserToPatient } from "../../components/patient/utils";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);

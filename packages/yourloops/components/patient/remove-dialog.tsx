@@ -41,14 +41,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 
-import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
-import ProgressIconButtonWrapper from "../../../components/buttons/progress-icon-button-wrapper";
+import MedicalServiceIcon from "../icons/MedicalServiceIcon";
+import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
-import { useTeam } from "../../../lib/team";
-import { makeButtonsStyles } from "../../../components/theme";
-import { useAlert } from "../../../components/utils/snackbar";
-import { UserInvitationStatus } from "../../../models/generic";
-import { Patient, PatientTeam } from "../../../lib/data/patient";
+import { useTeam } from "../../lib/team";
+import { makeButtonsStyles } from "../theme";
+import { useAlert } from "../utils/snackbar";
+import { UserInvitationStatus } from "../../models/generic";
+import { Patient, PatientTeam } from "../../lib/data/patient";
 
 interface RemoveDialogProps {
   isOpen: boolean;

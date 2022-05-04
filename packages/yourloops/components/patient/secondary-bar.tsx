@@ -42,13 +42,13 @@ import HomeIcon from "@material-ui/icons/Home";
 import FlagIcon from "@material-ui/icons/Flag";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
-import { FilterType } from "../../../models/generic";
-import { TeamType } from "../../../models/team";
-import { useTeam } from "../../../lib/team";
+import { FilterType } from "../../models/generic";
+import { TeamType } from "../../models/team";
+import { useTeam } from "../../lib/team";
 
-import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
-import SecondaryHeaderBar from "../../../components/header-bars/secondary";
-import PatientFilters from "../../../components/header-bars/patient-filters";
+import MedicalServiceIcon from "../icons/MedicalServiceIcon";
+import SecondaryHeaderBar from "../header-bars/secondary";
+import PatientFilters from "../header-bars/patient-filters";
 
 export interface PatientListBarProps {
   filter: string;

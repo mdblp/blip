@@ -32,19 +32,17 @@ import { useAuth } from "../lib/auth";
 import { NotificationContextProvider } from "../lib/notifications";
 import { TeamContextProvider } from "../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../lib/data";
-import CaregiverPage from "./caregiver";
 import ProfilePage from "./profile";
 import { Redirect, Route, Switch } from "react-router-dom";
 import NotificationsPage from "./notifications";
 import TeamsPage from "./hcp/teams-page";
 import CertifyAccountPage from "./hcp/certify-account-page";
-import HcpPatientListPage from "./hcp/patients/page";
-import CaregiverPatientListPage from "./caregiver/patients/page";
 import CaregiversPage from "./patient/caregivers/page";
 import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
 import TeamDetailPage from "./team/team-details-page";
+import HomePage from "./home-page";
 
 export function MainLayout(): JSX.Element {
   const authHook = useAuth();
@@ -53,13 +51,8 @@ export function MainLayout(): JSX.Element {
   const getHomePage = (): JSX.Element => {
     switch (session?.user.role) {
     case UserRoles.hcp:
-      return <HcpPatientListPage />;
     case UserRoles.caregiver:
-      return (
-        <CaregiverPage>
-          <CaregiverPatientListPage />
-        </CaregiverPage>
-      );
+      return <HomePage />;
     case UserRoles.patient:
       return <PatientDataPage />;
     default:

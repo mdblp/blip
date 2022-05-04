@@ -36,18 +36,19 @@ import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 
-import IconActionButton from "../../../components/buttons/icon-action";
-import { FilterType } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
-import metrics from "../../../lib/metrics";
-import { useAuth } from "../../../lib/auth";
-import { useTeam } from "../../../lib/team";
-import { addPendingFetch, removePendingFetch } from "../../../lib/data";
+import IconActionButton from "../buttons/icon-action";
+import { FilterType } from "../../models/generic";
+import { MedicalData } from "../../models/device-data";
+import metrics from "../../lib/metrics";
+import { useAuth } from "../../lib/auth";
+import { useTeam } from "../../lib/team";
+import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
 import { Box, Typography } from "@material-ui/core";
-import { StyledTableCell, StyledTableRow } from "../../../components/styled-components";
+import { StyledTableCell, StyledTableRow } from "../styled-components";
+import { UserRoles } from "../../models/shoreline";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -91,6 +92,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const trNA = t("N/A");
   const authHook = useAuth();
   const teamHook = useTeam();
+  const isUserHcp = authHook.user?.role === UserRoles.hcp;
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
@@ -107,9 +109,19 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`;
     const timeSpentAwayFromTargetActive = patient.alarm?.timeSpentAwayFromTargetActive ?? false;
     const frequencyOfSevereHypoglycemiaActive = patient.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
-    const dataNotTransferredActive = patient.alarm?.nonDataTransmissionRate ?? false;
     const nonDataTransmissionActive = patient.alarm?.nonDataTransmissionActive ?? false;
-    const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
+    let patientFullNameClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`;
+    let timeSpentAwayFromTargetRateClasses = mediumCellWithClasses;
+    let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses;
+    let dataNotTransferredRateClasses = mediumCellWithClasses;
+    if (isUserHcp) {
+      const dataNotTransferredActive = patient.alarm?.nonDataTransmissionRate ?? false;
+      const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
+      patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`;
+      timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      dataNotTransferredRateClasses = dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+    }
     return {
       patientSystem: patient.system ?? trNA,
       patientRemoteMonitoring: patient.remoteMonitoring ?? t("no"),
@@ -119,10 +131,10 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       timeSpentAwayFromTargetActive,
       frequencyOfSevereHypoglycemiaActive,
       nonDataTransmissionActive,
-      patientFullNameClasses: hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`,
-      timeSpentAwayFromTargetRateClasses: timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
-      frequencyOfSevereHypoglycemiaRateClasses: frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
-      dataNotTransferredRateClasses: dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses,
+      patientFullNameClasses,
+      timeSpentAwayFromTargetRateClasses,
+      frequencyOfSevereHypoglycemiaRateClasses,
+      dataNotTransferredRateClasses,
     };
   };
 
@@ -250,31 +262,34 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         </Tooltip>
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
-      <StyledTableCell
-        id={`${rowId}-remote-monitoring`}
-        className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}
-      >{patientRemoteMonitoring}
-      </StyledTableCell>
+      {isUserHcp &&
+        <StyledTableCell
+          id={`${rowId}-remote-monitoring`}
+          className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}
+        >
+          {patientRemoteMonitoring}
+        </StyledTableCell>
+      }
       <StyledTableCell
         id={`${rowId}-time-away-target`}
         className={timeSpentAwayFromTargetRateClasses}
       >
         {timeSpentAwayFromTargetRate}
-        {timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
         {frequencyOfSevereHypoglycemiaRate}
-        {frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
         {dataNotTransferredRate}
-        {nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}

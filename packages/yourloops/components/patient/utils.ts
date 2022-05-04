@@ -29,11 +29,11 @@
 import moment from "moment-timezone"; // TODO: Change moment-timezone lib with something else
 import { TFunction } from "i18next";
 
-import { PatientTableSortFields, SortFields } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
+import { PatientTableSortFields, SortFields } from "../../models/generic";
+import { MedicalData } from "../../models/device-data";
 import { MedicalTableValues } from "./models";
-import { TeamMember, TeamUser } from "../../../lib/team";
-import { Patient, PatientTeam } from "../../../lib/data/patient";
+import { TeamMember, TeamUser } from "../../lib/team";
+import { Patient, PatientTeam } from "../../lib/data/patient";
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
   let tir = "-";

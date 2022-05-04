@@ -39,19 +39,19 @@ import Typography from "@material-ui/core/Typography";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 
-import { SortFields } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
-import metrics from "../../../lib/metrics";
-import { useAuth } from "../../../lib/auth";
-import { useTeam } from "../../../lib/team";
-import { addPendingFetch, removePendingFetch } from "../../../lib/data";
+import { SortFields } from "../../models/generic";
+import { MedicalData } from "../../models/device-data";
+import metrics from "../../lib/metrics";
+import { useAuth } from "../../lib/auth";
+import { useTeam } from "../../lib/team";
+import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementCardProps, PatientTableCardCommonProps } from "./models";
 import { getMedicalValues, translateSortField } from "./utils";
 
 import PendingPatientCard from "./pending-patient-card";
-import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-import IconActionButton from "../../../components/buttons/icon-action";
-import { Patient } from "../../../lib/data/patient";
+import PersonRemoveIcon from "../icons/PersonRemoveIcon";
+import IconActionButton from "../buttons/icon-action";
+import { Patient } from "../../lib/data/patient";
 
 const patientListStyle = makeStyles(theme => ({
   patientPaperCard: {
