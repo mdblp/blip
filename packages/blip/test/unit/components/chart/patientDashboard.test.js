@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 import moment from "moment-timezone";
 import * as sinon from "sinon";
 import chai from "chai";
@@ -74,39 +74,6 @@ describe("PatientDashboard", () => {
       grouped: {
         smbg: smbgs,
         cbg: [],
-        pumpSettings: [{
-          source: "diabeloop",
-          type: "pumpSettings",
-          deviceId: "123456789-ID",
-          deviceTime: "2021-01-31T10:26:04",
-          payload: {
-            device: {
-              deviceId: "123456789-ID",
-              imei: "123456789-IMEI",
-              manufacturer: "Diabeloop",
-              name: "DBLG1",
-              swVersion: "1.1.0",
-            },
-            cgm: {
-              apiVersion: "1.0.0",
-              endOfLifeTransmitterDate: "2021-03-31T08:21:00.000Z",
-              expirationDate: "2021-03-31T08:21:00.000Z",
-              manufacturer: "Dexcom",
-              name: "G6",
-              swVersionTransmitter: "1.0.0",
-              transmitterId: "123456789",
-            },
-            pump: {
-              expirationDate: "2021-03-30T17:47:32.000Z",
-              manufacturer: "Roche",
-              name: "Pump0001",
-              serialNumber: "123456789",
-              swVersion: "1.0.0",
-            },
-            history: [],
-            parameters: [],
-          },
-        }]
       },
       data: smbgs,
       basicsData: {
@@ -135,9 +102,10 @@ describe("PatientDashboard", () => {
     },
     permsOfLoggedInUser: {},
     trackMetric: sinon.stub(),
-    user: null,
-    teams: [],
-    chatWidget: chatWidget,
+    user: { id: "fakeUser"},
+    teams: [{id: "teamMock"}],
+    chatWidget: sinon.stub().returns(<div id="chat-widget"/>),
+    // chatWidget: chatWidget,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -164,7 +132,7 @@ describe("PatientDashboard", () => {
   describe("render", () => {
     before(() => {
       sinon.spy(console, "error");
-      wrapper = mount(<PatientDashboard {...baseProps} />);
+      wrapper = shallow(<PatientDashboard {...baseProps} />);
     });
 
     after(() => {
@@ -182,12 +150,12 @@ describe("PatientDashboard", () => {
     });
 
     it("should show chat widget", () => {
-      const chatWidget = wrapper.find("#chat-widget");
+      const chatWidget = wrapper.find("#dashboard-chat-widget");
       expect(chatWidget).to.have.length(1);
     });
 
     it("should show patient statistics", () => {
-      const statisticsWidget = wrapper.find("#patient-statistics");
+      const statisticsWidget = wrapper.find("#dashboard-patient-statistics");
       expect(statisticsWidget).to.have.length(1);
     });
   });
