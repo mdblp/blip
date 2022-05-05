@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
 import moment from "moment-timezone";
 import * as sinon from "sinon";
 import chai from "chai";
@@ -36,7 +36,6 @@ import { MGDL_UNITS, MS_IN_DAY } from "tideline";
 
 import DataUtilStub from "../../../helpers/DataUtil";
 import { PatientDashboard } from "../../../../app/components/chart";
-import ChatWidget from "yourloops/components/chat/chat-widget";
 
 const expect = chai.expect;
 
@@ -61,15 +60,82 @@ describe("PatientDashboard", () => {
     },
     bgUnits: MGDL_UNITS
   };
+  const date1 = new Date(Date.now() - 60*60*1000);
+  const date2 = new Date();
+  const smbgs = [
+    { type: "smbg", normalTime: date1.toISOString(), epoch: date1.valueOf() },
+    { type: "smbg", normalTime: date2.toISOString(), epoch: date2.valueOf() }
+  ];
 
   const baseProps = {
+    tidelineData: {
+      grouped: {
+        smbg: smbgs,
+        cbg: [],
+        pumpSettings: [{
+          source: "diabeloop",
+          type: "pumpSettings",
+          deviceId: "123456789-ID",
+          deviceTime: "2021-01-31T10:26:04",
+          payload: {
+            device: {
+              deviceId: "123456789-ID",
+              imei: "123456789-IMEI",
+              manufacturer: "Diabeloop",
+              name: "DBLG1",
+              swVersion: "1.1.0",
+            },
+            cgm: {
+              apiVersion: "1.0.0",
+              endOfLifeTransmitterDate: "2021-03-31T08:21:00.000Z",
+              expirationDate: "2021-03-31T08:21:00.000Z",
+              manufacturer: "Dexcom",
+              name: "G6",
+              swVersionTransmitter: "1.0.0",
+              transmitterId: "123456789",
+            },
+            pump: {
+              expirationDate: "2021-03-30T17:47:32.000Z",
+              manufacturer: "Roche",
+              name: "Pump0001",
+              serialNumber: "123456789",
+              swVersion: "1.0.0",
+            },
+            history: [],
+            parameters: [],
+          },
+        }]
+      },
+      data: smbgs,
+      basicsData: {
+        nData: 1,
+        dateRange: [date1.toISOString(), date2.toISOString()],
+        data: {
+          smbg: {
+            data: smbgs,
+          },
+          cbg: [],
+        },
+        days: [
+          {
+            type: "mostRecent",
+          },
+        ],
+      },
+    },
     bgPrefs,
+    timePrefs: {
+      timezoneAware: false,
+      timezoneName: "US/Pacific",
+    },
     chartPrefs: {
       daily: {},
     },
+    permsOfLoggedInUser: {},
+    trackMetric: sinon.stub(),
     user: null,
     teams: [],
-    chatWidget: ChatWidget,
+    chatWidget: sinon.stub().returns(<div id="chat-widget" />),
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -96,7 +162,7 @@ describe("PatientDashboard", () => {
   describe("render", () => {
     before(() => {
       sinon.spy(console, "error");
-      wrapper = shallow(<PatientDashboard {...baseProps} />);
+      wrapper = mount(<PatientDashboard {...baseProps} />);
     });
 
     after(() => {
@@ -116,6 +182,11 @@ describe("PatientDashboard", () => {
     it("should show chat widget", () => {
       const chatWidget = wrapper.find("#chat-widget");
       expect(chatWidget).to.have.length(1);
+    });
+
+    it("should show patient statistics", () => {
+      const statisticsWidget = wrapper.find("#patient-statistics");
+      expect(statisticsWidget).to.have.length(1);
     });
   });
 });
