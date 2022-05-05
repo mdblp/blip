@@ -66,6 +66,8 @@ describe("PatientDashboard", () => {
     { type: "smbg", normalTime: date1.toISOString(), epoch: date1.valueOf() },
     { type: "smbg", normalTime: date2.toISOString(), epoch: date2.valueOf() }
   ];
+  const chatWidget = document.createElement ("div");
+  chatWidget.id = "chat-widget";
 
   const baseProps = {
     tidelineData: {
@@ -135,7 +137,7 @@ describe("PatientDashboard", () => {
     trackMetric: sinon.stub(),
     user: null,
     teams: [],
-    chatWidget: sinon.stub().returns(<div id="chat-widget" />),
+    chatWidget: chatWidget,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
