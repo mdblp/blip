@@ -164,7 +164,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
               id="team-add-dialog-label-code"
               htmlFor="team-add-dialog-field-code"
             >
-              {t("modal-add-medical-team-code")}
+              {teamName ? (t("modal-add-medical-team-code")) : (t("modal-add-medical-team-code-no-invite"))}
             </InputLabel>
             <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
               <TextField
@@ -226,7 +226,8 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
 
   const privacyPolicy = t("privacy-policy");
   const linkPrivacyPolicy = (
-    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer" onClick={() => metrics.send("pdf_document", "view_document", "privacy_policy")}>
+    <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank"
+      rel="noreferrer" onClick={() => metrics.send("pdf_document", "view_document", "privacy_policy")}>
       {privacyPolicy}
     </Link>
   );
@@ -332,18 +333,19 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   };
 
   const handleClose = () => {
-    actions?.onDialogResult(null);
+    actions?.onDialogResult(undefined);
     resetDialog();
   };
 
   const handleAccept = () => {
-    actions?.onDialogResult(team?.id ?? null);
+    actions?.onDialogResult(team?.id ?? undefined);
     resetDialog();
   };
 
   let content: JSX.Element;
   if (idCode === "") {
-    content = <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />;
+    content =
+      <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />;
   } else if (errorMessage) {
     content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />;
   } else if (team === null) {
@@ -370,7 +372,8 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   }
 
   return (
-    <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t("modal-add-medical-team")} onClose={handleClose}>
+    <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t("modal-add-medical-team")}
+      onClose={handleClose}>
       {content}
     </Dialog>
   );

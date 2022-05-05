@@ -34,5 +34,5 @@ export interface LeaveTeamDialogContentProps {
 }
 
 export interface AddTeamDialogContentProps {
-  onDialogResult: (teamId: string | null) => void;
+  onDialogResult: (teamId?: string) => void;
 }
