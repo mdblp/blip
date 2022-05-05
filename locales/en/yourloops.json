@@ -268,6 +268,7 @@
   "signup-steppers-step2": "Consent",
   "signup-steppers-step3": "Create profile",
   "signup-steppers-step4": "Complete Signup",
+  "since": "Since",
   "success-resent-activation-link": "Activation link sent!",
   "system": "System",
   "time-away-from-target": "Time away from target",
@@ -336,5 +337,6 @@
   "units": "Units",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Yesterday"
 }

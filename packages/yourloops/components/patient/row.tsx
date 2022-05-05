@@ -71,6 +71,9 @@ const patientListStyle = makeStyles(
         width: "56px",
         padding: 0,
       },
+      remoteMonitoringCell: {
+        whiteSpace: "pre-line",
+      },
       tableRow: {
         cursor: "pointer",
         height: "64px",
@@ -78,7 +81,6 @@ const patientListStyle = makeStyles(
       typography: {
         overflow: "hidden",
         textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
       },
     };
   },
@@ -124,7 +126,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     }
     return {
       patientSystem: patient.system ?? trNA,
-      patientRemoteMonitoring: patient.remoteMonitoring ?? t("no"),
+      patientRemoteMonitoring: patient.remoteMonitoring ? `${t("yes")}\n(${t("since")} ${patient.remoteMonitoring.toDateString()})` : t("no"),
       timeSpentAwayFromTargetRate: patient.alarm?.timeSpentAwayFromTargetRate ? `${patient.alarm.timeSpentAwayFromTargetRate}%` : trNA,
       frequencyOfSevereHypoglycemiaRate: patient.alarm?.frequencyOfSevereHypoglycemiaRate ? `${patient.alarm.frequencyOfSevereHypoglycemiaRate}%` : trNA,
       dataNotTransferredRate: patient.alarm?.nonDataTransmissionRate ? `${patient.alarm.nonDataTransmissionRate}%` : trNA,
@@ -265,7 +267,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       {isUserHcp &&
         <StyledTableCell
           id={`${rowId}-remote-monitoring`}
-          className={`${classes.typography} ${patientListCommonClasses.mediumCell}`}
+          className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}
         >
           {patientRemoteMonitoring}
         </StyledTableCell>
