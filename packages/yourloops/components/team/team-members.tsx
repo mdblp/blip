@@ -49,6 +49,8 @@ import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
 import LeaveTeamButton from "./leave-team-button";
 import { StyledTableCell } from "../styled-components";
+import { useAlert } from "../utils/snackbar";
+import { errorTextFromException } from "../../lib/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -101,6 +103,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const teamHook = useTeam();
   const classes = useStyles();
   const authContext = useAuth();
+  const alert = useAlert();
   const loggedInUserId = authContext.user?.userid as string;
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
@@ -117,6 +120,13 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     if (member) {
       await teamHook.inviteMember(member.team, member.email, member.role);
       setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
+      try {
+        await teamHook.inviteMember(member.team, member.email, member.role);
+        alert.success(t("team-page-success-invite-hcp", { email: member.email }));
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        alert.error(t("team-page-failed-invite-hcp", { errorMessage }));
+      }
     }
     setAddMember(null);
   };

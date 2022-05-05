@@ -36,6 +36,9 @@ import { UserInvitationStatus } from "../../models/generic";
 import { TeamMemberRole } from "../../models/team";
 import { useAuth } from "../../lib/auth";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
+import { errorTextFromException } from "../../lib/utils";
+import { useAlert } from "../utils/snackbar";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -72,6 +75,8 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const rowId = teamMember.user.userid.replace(/@/g, "_");
   const teamHook = useTeam();
   const authContext = useAuth();
+  const alert = useAlert();
+  const { t } = useTranslation("yourloops");
   const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false);
   const currentUserId = teamMember.user.userid;
   const loggedInUserId = authContext.user?.userid as string;
@@ -85,8 +90,15 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked;
     setUserUpdateInProgress(true);
-    await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member);
-    setUserUpdateInProgress(false);
+
+    try {
+      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member);
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason);
+      alert.error(t("team-page-failed-update-role", { errorMessage }));
+    } finally {
+      setUserUpdateInProgress(false);
+    }
     refreshParent();
   };
 
