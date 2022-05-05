@@ -53,4 +53,22 @@ interface Patient {
   readonly username: string;
 }
 
-export { Patient, PatientTeam };
+interface PatientMonitored {
+  readonly userId: string;
+  readonly teamId: string;
+  monitoring?: {
+    enabled: boolean;
+    parameters?: {
+      bgUnit: string;
+      lowBg: number;
+      highBg: number;
+      outOfRangeThreshold: number;
+      veryLowBg: number;
+      hypoThreshold: number;
+      nonDataTxThreshold: number;
+      reportingPeriod: number;
+    }
+  }
+}
+
+export { Patient, PatientTeam , PatientMonitored};

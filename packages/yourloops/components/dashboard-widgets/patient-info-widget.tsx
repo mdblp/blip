@@ -38,6 +38,7 @@ import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined"
 
 import { Settings, IUser } from "../../models/shoreline";
 import { getUserFirstLastName } from "../../lib/utils";
+import { PatientMonitored } from "../../models/patient";
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   {
@@ -74,10 +75,11 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
 
 export interface PatientInfoWidgetProps {
   patient: Readonly<IUser>,
+  patientMonitored: PatientMonitored | null,
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const { patient } = props;
+  const { patient, patientMonitored } = props;
   const classes = patientInfoWidgetStyles();
   const { t } = useTranslation("yourloops");
 
@@ -95,6 +97,9 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     email: patient.username,
     hba1c: hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
   };
+  if (patientMonitored) {
+    patientInfo["remote-monitoring"] = patientMonitored?.monitoring?.enabled ? t("yes"): t("no");
+  }
 
   return (
     <Card id="patient-info" className={classes.card}>

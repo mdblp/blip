@@ -13,7 +13,7 @@ const PatientDashboard = (props) => {
     //eslint-disable-next-line
     epochLocation, msRange, timePrefs, tidelineData, permsOfLoggedInUser, trackMetric,
     //eslint-disable-next-line
-    patientInfoWidget: PatientInfoWidget
+    patientMonitored, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
@@ -31,7 +31,7 @@ const PatientDashboard = (props) => {
         canPrint={true}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget patient={patient}/>}
+        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored}/>}
         <PatientStatistics
           bgPrefs={bgPrefs}
           //eslint-disable-next-line
@@ -63,6 +63,7 @@ const PatientDashboard = (props) => {
 PatientDashboard.propType = {
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
+  patientMonitored: PropTypes.object,
   prefixURL:  PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,

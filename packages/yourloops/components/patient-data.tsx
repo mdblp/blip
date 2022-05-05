@@ -31,17 +31,18 @@ import bows from "bows";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 
 import { UserRoles, IUser } from "../models/shoreline";
+import { PatientMonitored } from "../models/patient";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
+import TeamAPIImpl from "../lib/team/api"
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
@@ -76,6 +77,7 @@ function PatientDataPage(): JSX.Element | null {
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
   const [error, setError] = React.useState<string | null>(null);
+  const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
@@ -116,6 +118,20 @@ function PatientDataPage(): JSX.Element | null {
     } else {
       setPageTitle();
     }
+    async function fetchPatientMonitored(patientID: string) {
+      const session = authHook.session()
+      if (session !== null) {
+        const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
+        setPatientMonitored(monitoredPatient);
+      }
+    }
+
+    if(patient !== null) {
+      fetchPatientMonitored(patient.userid).catch(console.error);
+    } else {
+      setPatientMonitored(null);
+    }
+
   }, [userId, patient, t]);
 
   if (error !== null) {
@@ -132,6 +148,7 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
+        patientMonitored={patientMonitored}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
