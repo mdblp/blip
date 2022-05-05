@@ -156,7 +156,7 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        {user?.role === UserRoles.patient &&
+        {user?.isUserPatient() &&
           <React.Fragment>
             <MenuItem id="user-menu-caregiver-link-item" onClick={onClickCaregivers}>
               <ListItemIcon>

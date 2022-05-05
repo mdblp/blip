@@ -80,7 +80,7 @@ function PatientDataPage(): JSX.Element | null {
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
   const authUser = authHook.user;
   const userId = authUser?.userid ?? null;
-  const userIsPatient = authHook.user?.role === UserRoles.patient;
+  const userIsPatient = authHook.user?.isUserPatient();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
   const initialized = authHook.isAuthHookInitialized && teamHook.initialized && blipApi !== null;

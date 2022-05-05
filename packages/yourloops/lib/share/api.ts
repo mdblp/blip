@@ -72,7 +72,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
             settings: fixYLP878Settings(directShareWith.settings),
             username: directShareWith.email,
             emails: [directShareWith.email],
-            role: user.role === UserRoles.patient ? UserRoles.caregiver : UserRoles.patient,
+            role: user.isUserPatient() ? UserRoles.caregiver : UserRoles.patient,
             idVerified: directShareWith.idVerified,
           },
         };
@@ -113,7 +113,7 @@ async function removeDirectShare(session: Session, userId: string): Promise<void
   log.info("removeDirectShare", userId);
 
   let apiURL: URL;
-  if (user.role === UserRoles.patient) {
+  if (user.isUserPatient()) {
     apiURL = new URL(`/crew/v0/direct-share/${user.userid}/${userId}`, appConfig.API_HOST);
   } else {
     apiURL = new URL(`/crew/v0/direct-share/${userId}/${user.userid}`, appConfig.API_HOST);

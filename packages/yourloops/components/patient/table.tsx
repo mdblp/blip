@@ -46,7 +46,6 @@ import PatientRow from "./row";
 import { Patient } from "../../lib/data/patient";
 import { StyledTableCell, StyledTooltip } from "../styled-components";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -119,7 +118,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
   const authHook = useAuth();
-  const isUserHcp = authHook.user?.role === UserRoles.hcp;
+  const isUserHcp = authHook.user?.isUserHcp();
   const [page, setPage] = React.useState<number>(0);
   const [rowPerPage, setRowPerPage] = React.useState<number>(10);
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);

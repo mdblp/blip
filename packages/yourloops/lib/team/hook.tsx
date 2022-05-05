@@ -106,7 +106,7 @@ export async function loadTeams(
   const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
 
   // If we are a patient, we are not in the list, add ourself
-  if (session.user.role === UserRoles.patient && _.isNil(apiPatients.find((m) => m.userId === session.user.userid))) {
+  if (session.user.isUserPatient() && _.isNil(apiPatients.find((m) => m.userId === session.user.userid))) {
     log.debug("Add ourself as a team member");
     for (const team of apiTeams) {
       apiPatients.push({

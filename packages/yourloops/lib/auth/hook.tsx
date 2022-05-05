@@ -237,7 +237,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const updatePassword = async (currentPassword: string, password: string): Promise<void> => {
     const authInfo = await getAuthInfos();
-    if (authInfo.user.role === UserRoles.patient) {
+    if (authInfo.user.isUserPatient()) {
       throw new Error("invalid-user-role");
     }
 

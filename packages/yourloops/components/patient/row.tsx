@@ -48,7 +48,6 @@ import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
 import { Box, Typography } from "@material-ui/core";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
-import { UserRoles } from "../../models/shoreline";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -92,7 +91,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const trNA = t("N/A");
   const authHook = useAuth();
   const teamHook = useTeam();
-  const isUserHcp = authHook.user?.role === UserRoles.hcp;
+  const isUserHcp = authHook.user?.isUserHcp();
+  const patientIsMonitored = patient.remoteMonitoring !== null;
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
@@ -275,21 +275,21 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         className={timeSpentAwayFromTargetRateClasses}
       >
         {timeSpentAwayFromTargetRate}
-        {isUserHcp && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
         {frequencyOfSevereHypoglycemiaRate}
-        {isUserHcp && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
         {dataNotTransferredRate}
-        {isUserHcp && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && patientIsMonitored && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}

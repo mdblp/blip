@@ -75,7 +75,7 @@ export function MainLayout(): JSX.Element {
                     {getHomePage()}
                   </Route>
 
-                  {session.user.role === UserRoles.hcp &&
+                  {session.user.isUserHcp() &&
                     <Switch>
                       <Route exact path="/teams" component={TeamsPage} />
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
@@ -86,7 +86,7 @@ export function MainLayout(): JSX.Element {
                     </Switch>
                   }
 
-                  {session.user.role === UserRoles.caregiver &&
+                  {session.user.isUserCaregiver() &&
                       <Switch>
                         <Route path="/patient/:patientId" component={PatientDataPage} />
                         <Redirect exact from="/" to="/home" />
@@ -94,7 +94,7 @@ export function MainLayout(): JSX.Element {
                       </Switch>
                   }
 
-                  {session.user.role === UserRoles.patient &&
+                  {session.user.isUserPatient() &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
                       <Route exact path="/teams" component={PatientTeamsPage} />
