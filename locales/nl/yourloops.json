@@ -253,6 +253,7 @@
   "team-add-member-dialog-checkbox-admin": "Aanwijzen als beheerder",
   "team-add-member-dialog-title": "Nieuw lid",
   "team-card-label-address": "Adres",
+  "team-card-label-code": "Identificatiecode",
   "team-edit-dialog-placeholder-addr-city": "Stad (staat/provincie)",
   "team-edit-dialog-placeholder-addr-country": "Land",
   "team-edit-dialog-placeholder-addr-line1": "Adres 1",
@@ -269,7 +270,7 @@
   "team-leave-dialog-only-admin-title": "Je kunt dit team niet verlaten",
   "team-leave-dialog-question": "Weet je zeker dat je dit behandelteam wilt verlaten?",
   "team-leave-dialog-title": "Een behandelteam verlaten",
-  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren.",
+  "team-member-admin": "Beheer",
   "team-member-remove": "Uit team verwijderen",
   "team-members-dialog-rmmember-consequences": "Hij/zij zal geen toegang meer hebben tot patiëntengegevens.",
   "team-members-dialog-rmmember-question": "Weet je zeker dat je <strong>{{hcpFirstName}} {{hcpLastName}}</strong> uit dit behandelteam wilt verwijderen?",
@@ -307,5 +308,6 @@
   "tooltip-release-notes": "Release-opmerkingen",
   "units": "Eenheden",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Gisteren"
+  "yesterday": "Gisteren",
+  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren."
 }

@@ -253,6 +253,7 @@
   "team-add-member-dialog-checkbox-admin": "Désigner comme administrateur",
   "team-add-member-dialog-title": "Nouveau membre",
   "team-card-label-address": "Adresse",
+  "team-card-label-code": "Code d'identification",
   "team-edit-dialog-placeholder-addr-city": "Ville (Etat / Province)",
   "team-edit-dialog-placeholder-addr-country": "Pays",
   "team-edit-dialog-placeholder-addr-line1": "Adresse 1",
@@ -269,7 +270,7 @@
   "team-leave-dialog-only-admin-title": "Vous ne pouvez pas quitter cette équipe",
   "team-leave-dialog-question": "Êtes vous sûr·e de vouloir quitter cette équipe de soins ?",
   "team-leave-dialog-title": "Quitter une équipe de soins",
-  "team-member-cannot-cancel-pending": "Seul la personne ayant envoyé l'invitation peut annuler une invitation en attente.",
+  "team-member-admin": "Admin",
   "team-member-remove": "Supprimer de l'équipe",
   "team-members-dialog-rmmember-consequences": "Il·elle n'aura plus accès aux données des patient·e·s.",
   "team-members-dialog-rmmember-question": "Êtes-vous sûr•e de vouloir supprimer <strong>{{hcpFirstName}} {{hcpLastName}}</strong> de cette équipe de soins ?",
@@ -307,5 +308,6 @@
   "tooltip-release-notes": "Notes de version",
   "units": "Unités",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Hier"
+  "yesterday": "Hier",
+  "team-member-cannot-cancel-pending": "Seul la personne ayant envoyé l'invitation peut annuler une invitation en attente."
 }

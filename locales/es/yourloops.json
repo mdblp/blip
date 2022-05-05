@@ -253,6 +253,7 @@
   "team-add-member-dialog-checkbox-admin": "Definir como administrador",
   "team-add-member-dialog-title": "Miembro nuevo",
   "team-card-label-address": "Dirección",
+  "team-card-label-code": "Código de identificación",
   "team-edit-dialog-placeholder-addr-city": "Ciudad (Estado/Provincia)",
   "team-edit-dialog-placeholder-addr-country": "País",
   "team-edit-dialog-placeholder-addr-line1": "Dirección 1",
@@ -269,7 +270,7 @@
   "team-leave-dialog-only-admin-title": "No puede abandonar este equipo",
   "team-leave-dialog-question": "¿Seguro que desea abandonar este equipo de atención médica?",
   "team-leave-dialog-title": "Abandonar un equipo de atención médica",
-  "team-member-cannot-cancel-pending": "Solo la persona que invita puede cancelar una invitación pendiente.",
+  "team-member-admin": "Administrador",
   "team-member-remove": "Eliminar del equipo",
   "team-members-dialog-rmmember-consequences": "Dejarán de tener acceso a los datos de los pacientes.",
   "team-members-dialog-rmmember-question": "¿Seguro que desea eliminar a <strong>{{hcpFirstName}} {{hcpLastName}}</strong> de este equipo de atención médica?",
@@ -307,5 +308,6 @@
   "tooltip-release-notes": "Notas de la versión",
   "units": "Unidades",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Ayer"
+  "yesterday": "Ayer",
+  "team-member-cannot-cancel-pending": "Solo la persona que invita puede cancelar una invitación pendiente."
 }
