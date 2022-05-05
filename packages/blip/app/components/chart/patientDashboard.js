@@ -10,7 +10,7 @@ import "./patientDashboardVars.css";
 const PatientDashboard = (props) => {
   const {
     //eslint-disable-next-line
-    patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange,
+    patient, user, teams, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
   } = props;
@@ -19,6 +19,11 @@ const PatientDashboard = (props) => {
     const end = moment.utc(epochLocation).toISOString();
     return [start, end];
   };
+  /*TODO : retrieve only team with a filter on isMonitored (not present in front today so taking the first ...)*/
+  /*Tricky for hcp, there could be more than one monitoring team. \
+  See if it's possible to search for the team with the patient in it*/
+  const monitoringTeam = teams[0];
+
   const endpoints = getEndpoints();
   return (
     <div id="patient-dashboard" className="patient-dashboard">
@@ -32,7 +37,6 @@ const PatientDashboard = (props) => {
       <Box id="patient-dashboard-content">
         <PatientStatistics
           bgPrefs={bgPrefs}
-          //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
           chartType="patientStatistics"
@@ -52,13 +56,18 @@ const PatientDashboard = (props) => {
           endpoints={endpoints}
           loading={loading}
         />
-        {/*<chatWidget/>*/}
+        {monitoringTeam &&
+          <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+        }
       </Box>
     </div>
   );
 };
 
-PatientDashboard.propType = {
+PatientDashboard.propTypes = {
+  user: PropTypes.object,
+  teams: PropTypes.array,
+  chatWidget: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   prefixURL:  PropTypes.string,
