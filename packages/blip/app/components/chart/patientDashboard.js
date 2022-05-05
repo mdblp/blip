@@ -28,6 +28,7 @@ const PatientDashboard = (props) => {
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
+        id="dashboard-header"
         profileDialog={profileDialog}
         chartType={"dashboard"}
         patient={patient}
