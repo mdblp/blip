@@ -45,6 +45,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       position: "relative",
       padding: theme.spacing(1),
       marginTop: theme.spacing(1),
+      whiteSpace: "pre-line",
     },
     left: {
       "borderRadius": "0px 12px 12px 12px",
