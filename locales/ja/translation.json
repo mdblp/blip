@@ -286,7 +286,7 @@
   "compute-oneday-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.",
   "compute-total-insulin": "**これを計算する方法:**\n\n**(%)**は、この期間のインシュリンの総供給量でそれぞれの基底またはボーラスの総供給量です。",
   "custom": "カスタム",
-  "day": "day",
+  "day": "日",
   "days": "days",
   "dbl": "DBL",
   "ddd": "ddd",
