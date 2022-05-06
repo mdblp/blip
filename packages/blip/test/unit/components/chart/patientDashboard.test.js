@@ -27,7 +27,7 @@
  */
 
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { shallow } from "enzyme";
 import moment from "moment-timezone";
 import * as sinon from "sinon";
 import chai from "chai";
