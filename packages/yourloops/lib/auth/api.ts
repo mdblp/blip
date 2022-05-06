@@ -436,26 +436,6 @@ async function refreshToken(session: Readonly<Session>): Promise<string> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function logout(session: Readonly<Session>): Promise<void> {
-  const refreshURL = new URL("/auth/logout", appConfig.API_HOST);
-
-  log.debug("logout", refreshURL.toString());
-  const response = await fetch(refreshURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve();
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
 async function certifyProfessionalAccount(): Promise<IUser> {
   const { data } = await HttpService.post<IUser>({
     url: "/auth/oauth/merge",
@@ -468,7 +448,6 @@ export default {
   getUserInfo,
   accountConfirmed,
   certifyProfessionalAccount,
-  logout,
   signup,
   refreshToken,
   requestPasswordReset,

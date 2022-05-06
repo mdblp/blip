@@ -32,14 +32,11 @@ import _ from "lodash";
 import jwtDecode from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { HistoryState } from "../../models/generic";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
 import { getCurrentLang } from "../language";
-import metrics from "../metrics";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
 import {
@@ -49,9 +46,6 @@ import {
   JwtShorelinePayload,
   Session,
   SignupUser,
-  STORAGE_KEY_USER,
-  STORAGE_KEY_SESSION_TOKEN,
-  STORAGE_KEY_TRACE_TOKEN,
 } from "./models";
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
@@ -65,30 +59,22 @@ const log = bows("AuthHook");
 export function AuthContextImpl(api: AuthAPI): AuthContext {
   const { logout: auth0logout, user: auth0user, isAuthenticated } = useAuth0();
   const { getUser } = useAuthApi();
-  const historyHook = useHistory<HistoryState>();
   const { t } = useTranslation("yourloops");
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthInProgress, setAuthInProgress] = useState<boolean>(false);
+  const [isAuthInProgress] = useState<boolean>(false);
 
   const isAuthHookInitialized = traceToken !== null;
-  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !user, [isAuthenticated, user]);
+  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
-    (): Session | null => sessionToken !== null && traceToken !== null && user !== null ? {
-      sessionToken,
-      traceToken,
-      user,
-    } : null,
+    (): Session | null => sessionToken && traceToken && user ? { sessionToken, traceToken, user } : null,
     [sessionToken, traceToken, user]
   );
 
   const getAuthInfos = (): Promise<Session> => {
     const s = session();
-    if (s !== null) {
-      return Promise.resolve(s);
-    }
-    return Promise.reject(new Error(t("not-logged-in")));
+    return s ? Promise.resolve(s) : Promise.reject(new Error(t("not-logged-in")));
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
@@ -221,41 +207,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     return [];
   };
 
-  const logout = async (sessionExpired = false): Promise<void> => {
-    log.info("logout", { sessionExpired });
-    setAuthInProgress(true);
-
-    try {
-      const authInfo = await getAuthInfos();
-      await api.logout(authInfo);
-    } catch (reason) {
-      log.error("logout", reason);
-    }
-
-    if (typeof window.cleanBlipReduxStore === "function") {
-      window.cleanBlipReduxStore();
-    }
-    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_USER);
-    metrics.resetUser();
-    zendeskLogout();
-
-    setUser(null);
-    setSessionToken(null);
-    setTraceToken(null);
-
-    // Push the new location (this reset the state.from.pathname value)
-    if (sessionExpired && user !== null) {
-      const pathname = historyHook.location.pathname;
-      historyHook.push(`/?login=${encodeURIComponent(user.username)}&sessionExpired=true`, { from: { pathname } });
-    } else {
-      historyHook.push("/login");
-    }
-    setAuthInProgress(false);
-    log.info("logout done", { sessionExpired });
-  };
-
   /**
    * @returns true if the email was sucessfully sent.
    */
@@ -318,9 +269,9 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
 
-  /************************************************/
-  /****** AUTH 0 HACK FOR LOGIN AND SIGNUP *******/
-  /************************************************/
+  /*******************************************************/
+  /****** AUTH 0 HACK FOR LOGIN/LOGOUT AND SIGNUP *******/
+  /*****************************************************/
 
   const mapAuth0UserToIUser = useMemo<IUser>(() => {
     let user = {};
@@ -338,7 +289,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   }, [auth0user]);
 
   const getUserInfo = useCallback(async () => {
-    console.log(auth0logout);
     try {
       if (auth0user) {
         const { headers } = await getUser(auth0user.email as string);
@@ -353,13 +303,25 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     } catch (err) {
       log.error(err);
     }
-  }, [api, auth0logout, auth0user, getUser, mapAuth0UserToIUser]);
+  }, [api, auth0user, getUser, mapAuth0UserToIUser]);
+
+  const logout = async (): Promise<void> => {
+    try {
+      if (window.cleanBlipReduxStore) {
+        window.cleanBlipReduxStore();
+      }
+      zendeskLogout();
+      await auth0logout({ returnTo: window.location.origin });
+    } catch (err) {
+      log.error("logout", err);
+    }
+  };
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isAuthenticated && !user) {
       getUserInfo();
     }
-  }, [getUserInfo, isLoggedIn]);
+  }, [getUserInfo, isAuthenticated, user]);
 
   return {
     user,

@@ -80,7 +80,6 @@ export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
   getUserInfo: (session: Session) => Promise<User>
-  logout: (session: Readonly<Session>) => Promise<void>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
   requestPasswordReset: (username: string, traceToken: string, language?: string) => Promise<void>;
   resendSignup: (username: string, traceToken: string, language?: string) => Promise<boolean>;
@@ -103,7 +102,7 @@ export interface AuthContext {
   isAuthHookInitialized: boolean;
   isAuthInProgress: boolean;
   isLoggedIn: boolean;
-  logout: (sessionExpired?: boolean) => Promise<void>; // sessionExpired True if the call is performed for a session expired mechanism
+  logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
   resendSignup: (username: string) => Promise<boolean>;
   resetPassword: (key: string, username: string, password: string) => Promise<boolean>;

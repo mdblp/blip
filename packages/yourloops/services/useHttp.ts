@@ -50,7 +50,7 @@ export const useHttp = () => {
 
   const postRequest = async <R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> => {
     try {
-      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config });
+      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...await setConfig(config) });
     } catch (error) {
       throw handleError(error as AxiosError);
     }
@@ -58,7 +58,7 @@ export const useHttp = () => {
 
   const putRequest = async <R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> => {
     try {
-      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config });
+      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...await setConfig(config) });
     } catch (error) {
       throw handleError(error as AxiosError);
     }
@@ -66,7 +66,7 @@ export const useHttp = () => {
 
   const deleteRequest = async ({ url, config }: Args): Promise<AxiosResponse> => {
     try {
-      return await axios.delete(url, { ...config });
+      return await axios.delete(url, { ...await setConfig(config) });
     } catch (error) {
       throw handleError(error as AxiosError);
     }
