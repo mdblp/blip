@@ -36,16 +36,20 @@ import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-optio
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
+import ChatWidget from "../../yourloops/components/chat/chat-widget";
+import { Team } from "../../yourloops/lib/team";
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
   patient: IUser;
+  teams: Team[];
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
+  chatWidget: typeof ChatWidget;
 }
 
 // FIXME: For some reason, the yourloops auth hook

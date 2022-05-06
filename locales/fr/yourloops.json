@@ -271,6 +271,7 @@
   "team-leave-dialog-question": "Êtes vous sûr·e de vouloir quitter cette équipe de soins ?",
   "team-leave-dialog-title": "Quitter une équipe de soins",
   "team-member-admin": "Admin",
+  "team-member-cannot-cancel-pending": "Seul la personne ayant envoyé l'invitation peut annuler une invitation en attente.",
   "team-member-remove": "Supprimer de l'équipe",
   "team-members-dialog-rmmember-consequences": "Il·elle n'aura plus accès aux données des patient·e·s.",
   "team-members-dialog-rmmember-question": "Êtes-vous sûr•e de vouloir supprimer <strong>{{hcpFirstName}} {{hcpLastName}}</strong> de cette équipe de soins ?",
@@ -308,6 +309,5 @@
   "tooltip-release-notes": "Notes de version",
   "units": "Unités",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Hier",
-  "team-member-cannot-cancel-pending": "Seul la personne ayant envoyé l'invitation peut annuler une invitation en attente."
+  "yesterday": "Hier"
 }

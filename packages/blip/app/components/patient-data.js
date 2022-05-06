@@ -31,7 +31,7 @@ import config from "../config";
 import personUtils from "../core/personutils";
 import utils from "../core/utils";
 import ApiUtils from "../core/api-utils";
-import { Header, Basics, Daily, Trends, Settings } from "./chart";
+import { Header, Basics, Daily, Trends, Settings, PatientDashboard } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
 
@@ -130,6 +130,7 @@ class PatientDataPage extends React.Component {
           /** To keep the wanted extentSize (num days between endpoints) between charts switch. */
           extentSize: 14,
         },
+        dashboard: {},
         bgLog: {
           bgSource: "smbg",
         },
@@ -184,8 +185,11 @@ class PatientDataPage extends React.Component {
       case "trends":
         this.handleSwitchToTrends();
         break;
+      case "dashboard":
+        this.handleSwitchToDashboard();
+        break;
       default:
-        this.handleSwitchToDaily();
+        this.handleSwitchToDashboard();
         break;
       }
     });
@@ -331,7 +335,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
+    const { patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -342,9 +346,29 @@ class PatientDataPage extends React.Component {
       msRange,
       tidelineData,
     } = this.state;
+    const user = api.whoami;
 
     return (
       <Switch>
+        <Route path={`${prefixURL}/dashboard`}>
+          <PatientDashboard profileDialog={this.showProfileDialog ? profileDialog : null}
+            bgPrefs={this.state.bgPrefs}
+            chartPrefs={chartPrefs}
+            patient={patient}
+            teams={teams}
+            user={user}
+            dataUtil={this.dataUtil}
+            timePrefs={this.state.timePrefs}
+            epochLocation={epochLocation}
+            msRange={msRange}
+            prefixURL={prefixURL}
+            loading={loadingState !== LOADING_STATE_DONE}
+            tidelineData={tidelineData}
+            permsOfLoggedInUser={permsOfLoggedInUser}
+            trackMetric={this.trackMetric}
+            chatWidget={chatWidget}
+          />
+        </Route>
         <Route path={`${prefixURL}/overview`}>
           <Basics
             profileDialog={this.showProfileDialog ? profileDialog : null}
@@ -494,6 +518,8 @@ class PatientDataPage extends React.Component {
       return "trends";
     case `${prefixURL}/settings`:
       return "settings";
+    case `${prefixURL}/dashboard`:
+      return "dashboard";
     }
     return null;
   }
@@ -675,6 +701,26 @@ class PatientDataPage extends React.Component {
     if (e) {
       e.preventDefault();
     }
+    if (fromChart !== toChart) {
+      history.push(`${prefixURL}/${toChart}`);
+      this.trackMetric("data_visualization", "click_view", toChart);
+    }
+  }
+
+  handleSwitchToDashboard(e) {
+    const { prefixURL, history } = this.props;
+    const fromChart = this.getChartType();
+    const toChart = "dashboard";
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
+    // Default one week data period for dashboard (now() - 7 days)
+    this.setState({
+      epochLocation: new Date().valueOf(),
+      msRange: MS_IN_DAY * 7,
+    });
     if (fromChart !== toChart) {
       history.push(`${prefixURL}/${toChart}`);
       this.trackMetric("data_visualization", "click_view", toChart);
@@ -957,6 +1003,8 @@ class PatientDataPage extends React.Component {
 
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
+  teams: PropTypes.object.isRequired,
+  chatWidget: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,

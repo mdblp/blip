@@ -39,7 +39,7 @@ import Blip from "blip";
 import { UserRoles, IUser } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { useTeam } from "../lib/team";
+import { Team, useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
 
@@ -47,6 +47,7 @@ import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
+import ChatWidget from "./chat/chat-widget";
 
 interface PatientDataParam {
   patientId?: string;
@@ -74,6 +75,7 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
+  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
   const { blipApi } = dataHook;
@@ -88,6 +90,9 @@ function PatientDataPage(): JSX.Element | null {
     if (!initialized) {
       return;
     }
+
+    setTeams(teamHook.getMedicalTeams());
+
 
     if (userIsPatient && !_.isNil(authUser)) {
       setPatient(authUser);
@@ -126,16 +131,18 @@ function PatientDataPage(): JSX.Element | null {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}
         patient={patient}
+        teams={teams}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        chatWidget={ChatWidget}
       />
     </Container>
   );

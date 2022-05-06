@@ -46,6 +46,8 @@ import ProfileDialog from "../../components/dialogs/patient-profile";
 import DialogDatePicker from "../../components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../components/dialogs/pdf-print-options";
+import ChatWidget from "../../components/chat/chat-widget";
+import { Team, useTeam } from "../../lib/team";
 
 interface PatientDataParam {
   patientId?: string;
@@ -57,10 +59,12 @@ const log = bows("PatientDataPage");
 function PatientDataPage(): JSX.Element | null {
   const { t } = useTranslation("yourloops");
   const paramHook = useParams();
+  const teamHook = useTeam();
   const [sharedUsersContext /*, sharedUsersDispatch */] = useSharedUser();
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<ShareUser> | null>(null);
+  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
   const { blipApi } = dataHook;
@@ -76,6 +80,7 @@ function PatientDataPage(): JSX.Element | null {
         const sharedUser = sharedUsers.find((su) => su.user.userid === paramPatientId);
         if (sharedUser) {
           setPatient(sharedUser);
+          setTeams(teamHook.getMedicalTeams());
         } else {
           log.error("Missing patient", paramPatientId);
           setError(t("patient-not-found"));
@@ -116,16 +121,18 @@ function PatientDataPage(): JSX.Element | null {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}
         patient={patient.user}
+        teams={teams}
         profileDialog={ProfileDialog}
         prefixURL={`/patient/${paramPatientId}`}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        chatWidget={ChatWidget}
       />
     </Container>
   );
