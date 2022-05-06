@@ -80,6 +80,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     chatWidgetEmojiPickerContainer: {
       position: "relative",
       top: "-250px",
+      zIndex: 3,
     },
     chatWidgetTabs: {
       minHeight: "0px",
@@ -106,9 +107,6 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     chatWidgetInput: {
       width: "90%",
       maxWidth: "90%",
-    },
-    emojiPicker: {
-      display: "none",
     },
     icon: {
       margin: theme.spacing(1),
