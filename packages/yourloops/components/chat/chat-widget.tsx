@@ -208,8 +208,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
           (msg): JSX.Element => (
-            <ChatMessage key={msg.id} text={msg.text} privateMsg={msg.private}
-              isMine={msg.authorId === userId || userRole === "hcp" && msg.authorId !== patientId} />
+            <ChatMessage key={msg.id} text={msg.text} privateMsg={msg.private} author={msg.user.fullName}
+              isMine={msg.authorId === userId} />
           ))
         }
       </div>
@@ -220,7 +220,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       }
       <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
         <div className={classes.chatWidgetHCPToggle}>
-          { patientId !== userId &&
+          { userRole === "hcp" &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
                 <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} onClick={() => setPrivateMessage(false)}/>
