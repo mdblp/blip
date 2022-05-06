@@ -197,7 +197,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   return (
-    <Card className={classes.chatWidget}>
+    <Card className={classes.chatWidget} id="chat-widget">
       <CardHeader
         id="chat-widget-header"
         avatar={<EmailOutlinedIcon/>}
