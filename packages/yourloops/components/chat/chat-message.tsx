@@ -98,7 +98,6 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       marginBottom: theme.spacing(1),
     },
-    chatMessageText: {},
   };
 }, { name: "ylp-chat-message" });
 
@@ -118,7 +117,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
         </div>
       }
 
-      <span className={classes.chatMessageText}>
+      <span>
         {text}</span>
     </div>
   );
