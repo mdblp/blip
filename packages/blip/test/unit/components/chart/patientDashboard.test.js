@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Tests for Patient Statistics widget component
+ * Tests for Patient Dashboard
  *
  * All rights reserved.
  *
