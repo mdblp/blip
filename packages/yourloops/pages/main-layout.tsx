@@ -36,12 +36,10 @@ import CaregiverPage from "./caregiver";
 import ProfilePage from "./profile";
 import { Redirect, Route, Switch } from "react-router-dom";
 import NotificationsPage from "./notifications";
-import TeamsPage from "./hcp/teams-page";
 import CertifyAccountPage from "./hcp/certify-account-page";
 import HcpPatientListPage from "./hcp/patients/page";
 import CaregiverPatientListPage from "./caregiver/patients/page";
 import CaregiversPage from "./patient/caregivers/page";
-import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
 import TeamDetailPage from "./team/team-details-page";
@@ -84,7 +82,6 @@ export function MainLayout(): JSX.Element {
 
                   {session.user.role === UserRoles.hcp &&
                     <Switch>
-                      <Route exact path="/teams" component={TeamsPage} />
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Route exact path="/certify" component={CertifyAccountPage} />
                       <Route path="/patient/:patientId" component={PatientDataPage} />
@@ -104,7 +101,6 @@ export function MainLayout(): JSX.Element {
                   {session.user.role === UserRoles.patient &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
-                      <Route exact path="/teams" component={PatientTeamsPage} />
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Redirect exact from="/" to="/daily" />
                       <Route path="/" component={PatientDataPage} />

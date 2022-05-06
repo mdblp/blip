@@ -43,8 +43,13 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 
-import { useTeam } from "../../lib/team";
+import { Team, useTeam } from "../../lib/team";
 import MenuLayout from "../layouts/menu-layout";
+import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
+import { TeamEditModalContentProps } from "../../pages/hcp/types";
+import { useAlert } from "../utils/snackbar";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
@@ -70,8 +75,11 @@ const classes = makeStyles((theme: Theme) => ({
 function TeamMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { badge, teamIcon, clickableMenu, separator } = classes();
-  const { teams } = useTeam();
+  const { teams, createTeam } = useTeam();
   const history = useHistory();
+  const alert = useAlert();
+  const authHook = useAuth();
+  const isUserHcp = authHook.user?.role === UserRoles.hcp;
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
@@ -80,14 +88,27 @@ function TeamMenu(): JSX.Element {
 
   const filteredTeams = teams.filter(team => team.code !== "private");
   const closeMenu = () => setAnchorEl(null);
-
-  const onClickTeamSettings = () => {
-    history.push("/teams");
-    closeMenu();
-  };
+  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
+    closeMenu();
+  };
+
+  const onSaveTeam = async (createdTeam: Partial<Team> | null) => {
+    if (createdTeam) {
+      try {
+        await createTeam(createdTeam as Team);
+        alert.success(t("team-page-success-create"));
+      } catch (reason: unknown) {
+        alert.error(t("team-page-failed-create"));
+      }
+    }
+    setTeamCreationDialogData(null);
+  };
+
+  const createCareTeam = () => {
+    setTeamCreationDialogData({ team: null, onSaveTeam });
     closeMenu();
   };
 
@@ -147,19 +168,25 @@ function TeamMenu(): JSX.Element {
             <Typography>{t("care-team-no-membership")}</Typography>
           </ListItem>
         }
-        <Box marginY={1}>
-          <Divider variant="middle" />
-        </Box>
 
-        <MenuItem id="team-menu-teams-link" onClick={onClickTeamSettings}>
-          <ListItemIcon>
-            <GroupOutlinedIcon />
-          </ListItemIcon>
-          <Typography>
-            {t("care-team-settings")}
-          </Typography>
-        </MenuItem>
+        {isUserHcp &&
+          <Box>
+            <Box marginY={1}>
+              <Divider variant="middle" />
+            </Box>
+
+            <MenuItem id="team-menu-teams-link" onClick={createCareTeam}>
+              <ListItemIcon>
+                <GroupOutlinedIcon />
+              </ListItemIcon>
+              <Typography>
+                {t("new-care-team")}
+              </Typography>
+            </MenuItem>
+          </Box>
+        }
       </MenuLayout>
+      <TeamEditDialog teamToEdit={teamCreationDialogData} />
     </React.Fragment>
   );
 }
