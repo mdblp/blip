@@ -29,7 +29,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
@@ -49,6 +49,7 @@ import { useTeam } from "../../lib/team";
 import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import SecondaryHeaderBar from "../header-bars/secondary";
 import PatientFilters from "../header-bars/patient-filters";
+import { useAuth } from "../../lib/auth";
 
 export interface PatientListBarProps {
   filter: string;
@@ -141,6 +142,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = pageBarStyles();
   const teamHook = useTeam();
+  const authHook = useAuth();
   const selectFilterValues = [
     { value: "all", label: t("all-patients"), icon: null, id: "menuitem-filter-patients-all" },
     {
@@ -170,7 +172,8 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   const optionsFilterElements: JSX.Element[] = [];
   for (const sfv of selectFilterValues) {
     optionsFilterElements.push(
-      <MenuItem value={sfv.value} key={sfv.value} aria-label={sfv.label} id={sfv.id} className="menuitem-filter-patients">
+      <MenuItem value={sfv.value} key={sfv.value} aria-label={sfv.label} id={sfv.id}
+        className="menuitem-filter-patients">
         {sfv.icon}
         {sfv.label}
       </MenuItem>
@@ -182,7 +185,8 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
     optionsFilterElements.push(<ListSubheader key="team-sub-header">{t("teams")}</ListSubheader>);
     for (const team of teams) {
       optionsFilterElements.push(
-        <MenuItem value={team.id} key={team.id} aria-label={team.name} id={`menuitem-filter-patients-team-${team.id}`} className="menuitem-filter-patients">
+        <MenuItem value={team.id} key={team.id} aria-label={team.name} id={`menuitem-filter-patients-team-${team.id}`}
+          className="menuitem-filter-patients">
           {team.name}
         </MenuItem>
       );
@@ -192,7 +196,8 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   return (
     <SecondaryHeaderBar>
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
-        <Breadcrumbs id="team-navbar-breadcrumbs" className="secondary-navbar-breadcrumbs" aria-label={t("aria-breadcrumbs")}>
+        <Breadcrumbs id="team-navbar-breadcrumbs" className="secondary-navbar-breadcrumbs"
+          aria-label={t("aria-breadcrumbs")}>
           <Typography id="team-navbar-breadcrumbs-mypatients" color="textPrimary" className={classes.breadcrumbText}>
             <HomeIcon id="team-navbar-breadcrumbs-homeicon" className={classes.homeIcon} />
             <span>{t("my-patients-title")}</span>
@@ -208,17 +213,20 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
           optionsFilterElements={optionsFilterElements}
         />
       </div>
-      <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
-        <Button
-          id="patient-list-toolbar-add-patient"
-          color="primary"
-          variant="contained"
-          className={classes.buttonAddPatient}
-          onClick={handleOpenModalAddPatient}>
-          <PersonAddIcon />
-          <span className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</span>
-        </Button>
-      </div>
+      {
+        authHook.user?.isUserHcp() &&
+        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
+          <Button
+            id="patient-list-toolbar-add-patient"
+            color="primary"
+            variant="contained"
+            className={classes.buttonAddPatient}
+            onClick={handleOpenModalAddPatient}>
+            <PersonAddIcon />
+            <span className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</span>
+          </Button>
+        </div>
+      }
     </SecondaryHeaderBar>
   );
 }
