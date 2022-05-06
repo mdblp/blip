@@ -153,6 +153,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages() {
       const messages = await getChatMessages(teamId, patientId);
       setMessages(messages);
+      console.log(messages);
     }
 
     fetchMessages();
@@ -208,7 +209,11 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
           (msg): JSX.Element => (
-            <ChatMessage key={msg.id} text={msg.text} privateMsg={msg.private} author={msg.user.fullName}
+            <ChatMessage key={msg.id} text={msg.text}
+              privateMsg={msg.private}
+              author={msg.user.fullName}
+              timestamp={msg.timestamp}
+              ack={msg.destAck}
               isMine={msg.authorId === userId} />
           ))
         }

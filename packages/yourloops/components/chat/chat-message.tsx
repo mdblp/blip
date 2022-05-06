@@ -30,12 +30,16 @@ import React from "react";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Face from "@material-ui/icons/Face";
+import { useTranslation } from "react-i18next";
+import { CheckSharp } from "@material-ui/icons";
 
 export interface ChatMessageProps {
   text: string;
   author: string;
   privateMsg: boolean;
   isMine: boolean;
+  timestamp: string;
+  ack: boolean;
 }
 
 const chatMessageStyles = makeStyles((theme: Theme) => {
@@ -98,15 +102,67 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       marginBottom: theme.spacing(1),
     },
+    chatMessageFooter: {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      fontSize: "0.75em",
+    },
+    chatMessageCheckMarkAck: {
+      color: "#81E299",
+    },
+    chatMessageCheckMarkNack: {
+      color: "grey",
+    },
+    chatMessageCheckMark: {
+      width: 20,
+      fontSize: "0.85rem",
+    },
+    chatMessageSecondCheckMark: {
+      position: "relative",
+      left: -15,
+    },
+    chatMessageNew: {
+      "backgroundColor": "white",
+      "borderRadius": 12,
+      "paddingLeft": theme.spacing(1),
+      "paddingRight": theme.spacing(1),
+      "marginLeft": theme.spacing(1),
+      "color": theme.palette.primary.main,
+      "&.private": {
+        color:"var(--chat-widget-private-msg-mine)",
+      },
+    },
+    chatMessageText: {
+    },
   };
 }, { name: "ylp-chat-message" });
 
 
+
 function ChatMessage(props: ChatMessageProps): JSX.Element {
-  const { text, author, privateMsg, isMine } = props;
+  const { t } = useTranslation("yourloops");
+  const { text, author, privateMsg, isMine, timestamp, ack } = props;
   const classes = chatMessageStyles();
   const messageContainerType = isMine ? classes.right : classes.left;
   const privateMessage = privateMsg ? "private" : "";
+  const isNew = !isMine && !ack;
+  const messageAck = ack ? classes.chatMessageCheckMarkAck : classes.chatMessageCheckMarkNack;
+  const displayDate = new Date(timestamp);
+
+  const isToday = (someDate: Date) => {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear();
+  };
+
+  const isYesterday = (someDate: Date) => {
+    const today = new Date();
+    return someDate.getDate() === today.getDate() -1 &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear();
+  };
 
   return (
     <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
@@ -117,8 +173,21 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
         </div>
       }
 
-      <span>
-        {text}</span>
+      <div className={classes.chatMessageText}>
+        { text }
+      </div>
+      <div className={classes.chatMessageFooter}>
+        <div>
+          { isToday(displayDate) ? t("today") : (isYesterday(displayDate) ? t("yesterday") : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDate.getMinutes()}`}
+        </div>
+        {isNew ? <div className={`${classes.chatMessageNew} ${privateMessage}`}>Nouveau</div>
+          : <div className={messageAck}>
+            <CheckSharp className={classes.chatMessageCheckMark}/>
+            <CheckSharp className={`${classes.chatMessageCheckMark} ${classes.chatMessageSecondCheckMark}`}/>
+          </div>
+        }
+      </div>
+
     </div>
   );
 }
