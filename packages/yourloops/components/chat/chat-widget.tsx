@@ -134,6 +134,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const classes = chatWidgetStyles();
   const authHook = useAuth();
   const [showPicker, setShowPicker] = useState(false);
+  const [privateMessage, setPrivateMessage] = useState(false);
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [inputTab, setInputTab] = useState(0);
@@ -171,7 +172,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   const sendMessage = async () => {
-    await sendChatMessage(teamId, patientId, inputText);
+    await sendChatMessage(teamId, patientId, inputText, privateMessage);
     const messages = await getChatMessages(teamId, patientId);
     setMessages(messages);
     setInputText("");
@@ -207,7 +208,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
           (msg): JSX.Element => (
-            <ChatMessage key={msg.id} text={msg.text}
+            <ChatMessage key={msg.id} text={msg.text} privateMsg={msg.private}
               isMine={msg.authorId === userId || userRole === "hcp" && msg.authorId !== patientId} />
           ))
         }
@@ -222,8 +223,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           { patientId !== userId &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} />
-                <Tab className={classes.chatWidgetTab}label={t("chat-footer-private")}/>
+                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} onClick={() => setPrivateMessage(false)}/>
+                <Tab className={classes.chatWidgetTab}label={t("chat-footer-private")} onClick={() => setPrivateMessage(true)}/>
               </Tabs>
             </div>
           }

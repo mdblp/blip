@@ -32,6 +32,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 
 export interface ChatMessageProps {
   text: string;
+  privateMsg: boolean;
   isMine: boolean;
 }
 
@@ -60,6 +61,12 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
         top: 0,
         left: -8,
       },
+      "&.private": {
+        "backgroundColor": "var(--chat-widget-private-msg-not-mine)",
+        "&::after": {
+          borderTop:"20px solid var(--chat-widget-private-msg-not-mine)",
+        },
+      },
     },
     right: {
       "marginLeft": "auto",
@@ -75,6 +82,12 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
         top: 0,
         right: -8,
       },
+      "&.private": {
+        "backgroundColor": "var(--chat-widget-private-msg-mine)",
+        "&::after": {
+          borderTop:"20px solid var(--chat-widget-private-msg-mine)",
+        },
+      },
     },
     chatMessageText: {
       zIndex: 2,
@@ -84,12 +97,13 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
 
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
-  const { text, isMine } = props;
+  const { text, privateMsg, isMine } = props;
   const classes = chatMessageStyles();
   const messageContainerType = isMine ? classes.right : classes.left;
+  const privateMessage = privateMsg ? "private" : "";
 
   return (
-    <div className={`message ${classes.chatMessageContainer} ${messageContainerType}`}>
+    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
       <span className={classes.chatMessageText}>{ text }</span>
     </div>
   );
