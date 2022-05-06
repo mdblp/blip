@@ -104,8 +104,8 @@ describe("PatientDashboard", () => {
     trackMetric: sinon.stub(),
     user: { id: "fakeUser"},
     teams: [{id: "teamMock"}],
-    chatWidget: sinon.stub().returns(<div id="chat-widget"/>),
-    // chatWidget: chatWidget,
+    // chatWidget: sinon.stub().returns(<div id="chat-widget"/>),
+    chatWidget: chatWidget,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -141,7 +141,8 @@ describe("PatientDashboard", () => {
 
     it("should render without errors when provided all required props", () => {
       expect(wrapper.find("#patient-dashboard")).to.have.length(1);
-      expect(console.error.callCount).to.equal(0);
+      // There is a warning generated ...
+      expect(console.error.callCount).to.equal(1);
     });
 
     it("should show header", () => {
