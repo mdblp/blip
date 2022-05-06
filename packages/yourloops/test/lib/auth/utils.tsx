@@ -36,35 +36,27 @@ import { HcpProfession } from "../../../models/hcp-profession";
  * API Stubs
  */
 export interface AuthAPIStubs {
-  login: jest.Mock<Promise<Session>, [string, string, string]>;
-  requestPasswordReset: jest.Mock<Promise<void>, [string, string, string | undefined, boolean | undefined]>;
-  resetPassword: jest.Mock<Promise<boolean>, [string, string, string, string]>;
-  signup: jest.Mock<Promise<Session>, [string, string, UserRoles, string]>;
+  accountConfirmed: jest.Mock<Promise<boolean>, string[]>;
+  refreshToken: jest.Mock<Promise<string>, [Readonly<Session>]>;
   resendSignup: jest.Mock<Promise<boolean>, [string, string, string | undefined]>;
   sendAccountValidation: jest.Mock<Promise<boolean>, [Readonly<Session>, string | undefined]>;
-  accountConfirmed: jest.Mock<Promise<boolean>, string[]>;
+  signup: jest.Mock<Promise<Session>, [string, string, UserRoles, string]>;
   updatePreferences: jest.Mock<Promise<Preferences>, [Readonly<Session>]>;
   updateProfile: jest.Mock<Promise<Profile>, [Readonly<Session>]>;
   updateSettings: jest.Mock<Promise<Settings>, [Readonly<Session>]>;
   updateUser: jest.Mock<Promise<void>, [Readonly<Session>, UpdateUser]>;
-  refreshToken: jest.Mock<Promise<string>, [Readonly<Session>]>;
-  logout: jest.Mock<Promise<void>, [Readonly<Session>]>;
 }
 
 export const createAuthAPIStubs = (session: Session): AuthAPIStubs => ({
-  login: jest.fn<Promise<Session>, [string, string, string]>().mockResolvedValue(session),
-  requestPasswordReset: jest.fn<Promise<void>, [string, string, string | undefined, boolean | undefined]>().mockResolvedValue(),
-  resetPassword: jest.fn<Promise<boolean>, [string, string, string, string]>().mockResolvedValue(true),
-  signup: jest.fn<Promise<Session>, [string, string, UserRoles, string]>().mockResolvedValue(session),
+  accountConfirmed: jest.fn().mockResolvedValue(true),
+  refreshToken: jest.fn<Promise<string>, [Readonly<Session>]>().mockResolvedValue(""),
   resendSignup: jest.fn<Promise<boolean>, [string, string, string | undefined]>().mockResolvedValue(true),
   sendAccountValidation: jest.fn<Promise<boolean>, [Readonly<Session>, string | undefined]>().mockResolvedValue(true),
-  accountConfirmed: jest.fn().mockResolvedValue(true),
+  signup: jest.fn<Promise<Session>, [string, string, UserRoles, string]>().mockResolvedValue(session),
   updatePreferences: jest.fn<Promise<Preferences>, [Readonly<Session>]>().mockResolvedValue(session.user.preferences),
   updateProfile: jest.fn<Promise<Profile>, [Readonly<Session>]>().mockResolvedValue(session.user.profile),
   updateSettings: jest.fn<Promise<Settings>, [Readonly<Session>]>().mockResolvedValue(session.user.settings),
   updateUser: jest.fn<Promise<void>, [Readonly<Session>, UpdateUser]>().mockResolvedValue(),
-  refreshToken: jest.fn<Promise<string>, [Readonly<Session>]>().mockResolvedValue(""),
-  logout: jest.fn<Promise<void>, [Readonly<Session>]>().mockResolvedValue(),
 });
 
 export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, session: Session): void => {
@@ -72,29 +64,13 @@ export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, session: Session): voi
   apiStubs.accountConfirmed = jest.fn().mockResolvedValue(true);
   apiStubs.accountConfirmed.mockResolvedValue(true);
 
-  apiStubs.login.mockReset();
-  apiStubs.login = jest.fn<Promise<Session>, [string, string, string]>().mockResolvedValue(session);
-  apiStubs.login.mockResolvedValue(session);
-
-  apiStubs.logout.mockReset();
-  apiStubs.logout = jest.fn<Promise<void>, [Readonly<Session>]>().mockResolvedValue();
-  apiStubs.logout.mockResolvedValue();
-
   apiStubs.refreshToken.mockReset();
   apiStubs.refreshToken = jest.fn<Promise<string>, [Readonly<Session>]>().mockResolvedValue("");
   apiStubs.refreshToken.mockResolvedValue("");
 
-  apiStubs.requestPasswordReset.mockReset();
-  apiStubs.requestPasswordReset = jest.fn<Promise<void>, [string, string, string | undefined, boolean | undefined]>().mockResolvedValue();
-  apiStubs.requestPasswordReset.mockResolvedValue();
-
   apiStubs.resendSignup.mockReset();
   apiStubs.resendSignup = jest.fn<Promise<boolean>, [string, string, string | undefined]>().mockResolvedValue(true);
   apiStubs.resendSignup.mockResolvedValue(true);
-
-  apiStubs.resetPassword.mockReset();
-  apiStubs.resetPassword = jest.fn<Promise<boolean>, [string, string, string, string]>().mockResolvedValue(true);
-  apiStubs.resetPassword.mockResolvedValue(true);
 
   apiStubs.sendAccountValidation.mockReset();
   apiStubs.sendAccountValidation = jest.fn<Promise<boolean>, [Readonly<Session>, string | undefined]>().mockResolvedValue(true);
@@ -120,6 +96,7 @@ export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, session: Session): voi
   apiStubs.updateSettings = jest.fn<Promise<Settings>, [Readonly<Session>]>().mockResolvedValue(session.user.settings);
   apiStubs.updateSettings.mockResolvedValue(session.user.settings);
 };
+
 /**
  * Auth hook stubs definitions
  */
@@ -130,19 +107,14 @@ export interface AuthContextStubs {
   isAuthHookInitialized: boolean;
   isAuthInProgress: boolean;
   isLoggedIn: boolean;
-  login: jest.Mock<Promise<User>, [string, string, string | null]>;
-  logout: jest.Mock<Promise<void>, [boolean | undefined]>;
+  logout: jest.Mock<Promise<void>>;
   redirectToProfessionalAccountLogin: jest.Mock<void, []>;
   resendSignup: jest.Mock<Promise<boolean>, [string]>;
-  resetPassword: jest.Mock<Promise<boolean>, [string, string, string]>;
-  sendPasswordResetEmail: jest.Mock<Promise<void>, [string, string]>;
   session: jest.Mock<Session | null, []>;
-  sessionToken: string | null;
   setFlagPatients: jest.Mock<Promise<void>, [string[]]>;
   setUser: jest.Mock<void, [User]>;
   signup: jest.Mock<Promise<void>, [SignupUser]>;
   switchRoleToHCP: jest.Mock<Promise<void>, [boolean, HcpProfession]>;
-  traceToken: string | null;
   updatePassword: jest.Mock<Promise<void>, [string, string]>;
   updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
   updateProfile: jest.Mock<Promise<Profile>, [Profile, boolean | undefined]>;
@@ -160,19 +132,14 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   isAuthHookInitialized: true,
   isAuthInProgress: false,
   isLoggedIn: true,
-  login: jest.fn<Promise<User>, [string, string, string | null]>().mockResolvedValue(session.user),
   logout: jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue(),
   redirectToProfessionalAccountLogin: jest.fn<void, []>().mockReturnValue(),
   resendSignup: jest.fn<Promise<boolean>, [string]>().mockResolvedValue(true),
-  resetPassword: jest.fn<Promise<boolean>, [string, string, string]>().mockResolvedValue(true),
-  sendPasswordResetEmail: jest.fn<Promise<void>, [string, string]>().mockResolvedValue(),
   session: jest.fn<Session | null, []>().mockReturnValue(session),
-  sessionToken: session.sessionToken,
   setFlagPatients: jest.fn<Promise<void>, [string[]]>().mockResolvedValue(),
   setUser: jest.fn<void, [User]>(),
   signup: jest.fn<Promise<void>, [SignupUser]>().mockResolvedValue(),
   switchRoleToHCP: jest.fn<Promise<void>, [boolean, HcpProfession]>().mockResolvedValue(),
-  traceToken: session.traceToken,
   updatePassword: jest.fn<Promise<void>, [string, string]>().mockResolvedValue(),
   updatePreferences: jest.fn<Promise<Preferences>, [Preferences, boolean | undefined]>().mockResolvedValue(session.user.preferences),
   updateProfile: jest.fn<Promise<Profile>, [Profile, boolean | undefined]>().mockResolvedValue(session.user.profile),
@@ -187,8 +154,6 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
  */
 export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Session): void => {
   hookStubs.user = session?.user ?? null;
-  hookStubs.sessionToken = session.sessionToken;
-  hookStubs.traceToken = session.traceToken;
   hookStubs.isLoggedIn = typeof session === "object";
   hookStubs.isAuthInProgress = false;
   hookStubs.isAuthHookInitialized = true;

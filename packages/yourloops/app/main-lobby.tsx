@@ -39,13 +39,12 @@ import Footer from "../components/footer/footer";
 import PatientConsentPage from "../pages/patient/patient-consent";
 import { ConsentPage, LoginPage } from "../pages/login";
 import { SignUpPage } from "../pages/signup";
-import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../pages/password-reset";
 import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
-const PUBLIC_ROUTES = ["/login", "/signup", "/request-password-reset", "/confirm-password-reset"];
+const PUBLIC_ROUTES = ["/login", "/signup"];
 const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, ...PUBLIC_ROUTES];
 
 interface StyleProps {
@@ -120,8 +119,6 @@ export function MainLobby(): JSX.Element {
               <Switch>
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/signup" component={SignUpPage} />
-                <Route exact path="/request-password-reset" component={RequestPasswordResetPage} />
-                <Route exact path="/confirm-password-reset" component={ConfirmPasswordResetPage} />
                 <Route exact path="/renew-consent" component={ConsentPage} />
                 <Route exact path="/new-consent" component={PatientConsentPage} />
                 <Route exact path="/not-found" component={InvalidRoute} />

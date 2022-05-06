@@ -207,24 +207,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     return [];
   };
 
-  /**
-   * @returns true if the email was sucessfully sent.
-   */
-  const sendPasswordResetEmail = (username: string, language: string): Promise<void> => {
-    log.info("sendPasswordResetEmail", username);
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    return api.requestPasswordReset(username, traceToken, language);
-  };
-
-  const resetPassword = (key: string, username: string, password: string): Promise<boolean> => {
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    return api.resetPassword(key, username, password, traceToken);
-  };
-
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
     const authInfo = await getAuthInfos();
     if (authInfo.user.role !== UserRoles.caregiver) {
@@ -339,8 +321,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     logout,
     signup,
     resendSignup,
-    sendPasswordResetEmail,
-    resetPassword,
     flagPatient,
     setFlagPatients,
     getFlagPatients,

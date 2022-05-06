@@ -211,31 +211,6 @@ async function getUserInfo(session: Session): Promise<User> {
   return session.user;
 }
 
-async function requestPasswordReset(username: string, traceToken: string, language = "en"): Promise<void> {
-  if (_.isEmpty(username)) {
-    log.error("forbidden call to request password api, username is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL(
-    `/confirm/send/forgot/${username}`,
-    appConfig.API_HOST
-  );
-  const response = await fetch(confirmURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.language]: language,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve();
-  }
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
 async function sendAccountValidation(session: Readonly<Session>, language = "en"): Promise<boolean> {
   const confirmURL = new URL(`/confirm/send/signup/${session.user.userid}`, appConfig.API_HOST);
 
@@ -269,30 +244,6 @@ async function accountConfirmed(key: string, traceToken: string): Promise<boolea
     headers: {
       [HttpHeaderKeys.traceToken]: traceToken,
     },
-  });
-
-  if (response.ok) {
-    return Promise.resolve(true);
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
-async function resetPassword(key: string, username: string, password: string, traceToken: string): Promise<boolean> {
-  if (_.isEmpty(key) || _.isEmpty(username) || _.isEmpty(password)) {
-    log.error("forbidden call to reset password api, one of the required parameters is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL("/confirm/accept/forgot", appConfig.API_HOST);
-  const response = await fetch(confirmURL.toString(), {
-    method: "PUT",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.traceToken]: traceToken,
-    },
-    body: JSON.stringify({ key, email: username, password }),
   });
 
   if (response.ok) {
@@ -450,9 +401,7 @@ export default {
   certifyProfessionalAccount,
   signup,
   refreshToken,
-  requestPasswordReset,
   resendSignup,
-  resetPassword,
   sendAccountValidation,
   updatePreferences,
   updateProfile,
