@@ -228,7 +228,7 @@ function TeamDetailPage(): JSX.Element {
                   </div>
                   <div className={classes.separator} />
                   <div ref={teamAlarms} className={classes.refElement}>
-                    <TeamAlarms team={dropdownData.selectedTeam} />
+                    <TeamAlarms />
                   </div>
                 </div>
               }

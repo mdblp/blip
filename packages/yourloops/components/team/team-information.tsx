@@ -56,6 +56,7 @@ const useStyles = makeStyles(() => ({
     placeContent: "center",
   },
   header: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -133,7 +134,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
           <div className={classes.informationTitle}>
             <InfoOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
-              {t("information").toUpperCase()}
+              {t("information")}
             </Typography>
           </div>
           {isUserAdmin &&

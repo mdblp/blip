@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: "0px",
   },
   header: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -141,7 +142,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           <div className={classes.headerTiltleIcon}>
             <GroupOutlinedIcon className={classes.groupOutlinedIcon} />
             <Typography className={commonTeamClasses.title}>
-              {t("members").toUpperCase()} ({members.length})
+              {t("members")} ({members.length})
             </Typography>
           </div>
           <div>

@@ -44,9 +44,10 @@ export const commonTeamStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     color: theme.palette.grey[800],
-    fontSize: "16px",
+    fontSize: "24px",
     fontWeight: 600,
     lineHeight: "20px",
     marginLeft: "12px",
+    textTransform: "uppercase",
   },
 }));
