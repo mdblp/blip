@@ -28,6 +28,7 @@ const PatientDashboard = (props) => {
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
+        id="dashboard-header"
         profileDialog={profileDialog}
         chartType={"dashboard"}
         patient={patient}
@@ -36,6 +37,7 @@ const PatientDashboard = (props) => {
       />
       <Box id="patient-dashboard-content">
         <PatientStatistics
+          id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
@@ -45,6 +47,7 @@ const PatientDashboard = (props) => {
           loading={loading}
         />
         <DeviceUsage
+          id="dashboard-device-usage"
           bgPrefs={bgPrefs}
           timePrefs={timePrefs}
           patient={patient}
@@ -57,7 +60,8 @@ const PatientDashboard = (props) => {
           loading={loading}
         />
         {monitoringTeam &&
-          <ChatWidget patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+          <ChatWidget id="dashboard-chat-widget"
+            patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
         }
       </Box>
     </div>
