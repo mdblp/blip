@@ -9,6 +9,7 @@ export interface IMessage {
   teamId: string;
   authorId: string;
   destAck: boolean;
+  private: boolean;
   text: string;
   timezone: string;
   timestamp?: string;

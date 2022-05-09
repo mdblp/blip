@@ -33,4 +33,6 @@
   --section-title-line-height: 20px;
   --section-title-margin: 0.25em;
   --card-header-background-color: #F6F6F6;
+  --chat-widget-private-msg-mine: #329F92;
+  --chat-widget-private-msg-not-mine: #5ABCB3;
 }
