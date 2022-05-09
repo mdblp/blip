@@ -66,7 +66,7 @@ const PatientDashboard = (props) => {
 
 PatientDashboard.propTypes = {
   user: PropTypes.object,
-  chatWidget: PropTypes.object,
+  chatWidget: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   patientMonitored: PropTypes.object,

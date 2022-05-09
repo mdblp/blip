@@ -39,6 +39,9 @@ import { PatientDashboard } from "../../../../app/components/chart";
 
 const expect = chai.expect;
 
+const PatientInfoWidget = () => <div id="patinet-info-widget"/>;
+const ChatWidget = () => <div id="chat-widget"/>;
+
 describe("PatientDashboard", () => {
   const bgPrefs = {
     bgClasses: {
@@ -66,8 +69,6 @@ describe("PatientDashboard", () => {
     { type: "smbg", normalTime: date1.toISOString(), epoch: date1.valueOf() },
     { type: "smbg", normalTime: date2.toISOString(), epoch: date2.valueOf() }
   ];
-  const chatWidget = document.createElement ("div");
-  chatWidget.id = "chat-widget";
 
   const baseProps = {
     tidelineData: {
@@ -103,9 +104,9 @@ describe("PatientDashboard", () => {
     permsOfLoggedInUser: {},
     trackMetric: sinon.stub(),
     user: { id: "fakeUser"},
-    teams: [{id: "teamMock"}],
-    // chatWidget: sinon.stub().returns(<div id="chat-widget"/>),
-    chatWidget: chatWidget,
+    chatWidget: ChatWidget,
+    patientInfoWidget: PatientInfoWidget,
+    patientMonitored: null,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -142,7 +143,7 @@ describe("PatientDashboard", () => {
     it("should render without errors when provided all required props", () => {
       expect(wrapper.find("#patient-dashboard")).to.have.length(1);
       // There is a warning generated ...
-      expect(console.error.callCount).to.equal(1);
+      expect(console.error.callCount).to.equal(0);
     });
 
     it("should show header", () => {
@@ -150,9 +151,18 @@ describe("PatientDashboard", () => {
       expect(header).to.have.length(1);
     });
 
-    it("should show chat widget", () => {
-      const chatWidget = wrapper.find("#dashboard-chat-widget");
-      expect(chatWidget).to.have.length(1);
+    it("should not show chat widget when patient is not monitored", () => {
+      expect(ChatWidget).to.have.length(0);
+    });
+
+    it("should show chat widget when patient is monitored", () => {
+      baseProps.patientMonitored = {userId: "1"}
+      wrapper = shallow(<PatientDashboard {...baseProps} />);
+      expect(wrapper.find(ChatWidget)).to.have.length(1);
+    });
+
+    it("should show patient info widget", () => {
+      expect(wrapper.find(PatientInfoWidget)).to.have.length(1);
     });
 
     it("should show patient statistics", () => {

@@ -136,15 +136,15 @@ const DeviceUsage = (props) => {
   const deviceData = {
     device: {
       label: `${t("dbl")}:`,
-      value: device.manufacturer ? device.manufacturer : "",
+      value: device.manufacturer ?? "",
     },
     pump: {
       label: `${t("Pump")}:`,
-      value: pump.manufacturer ? pump.manufacturer : "",
+      value: pump.manufacturer ?? "",
     },
     cgm: {
       label: `${t("CGM")}:`,
-      value: cgm.manufacture && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : "",
+      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : "",
     }
   };
 
