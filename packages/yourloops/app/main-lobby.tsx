@@ -32,7 +32,6 @@ import { ThemeProvider, Theme, makeStyles, useTheme } from "@material-ui/core/st
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { SessionTimeout, useAuth } from "../lib/auth";
-import { UserRoles } from "../models/shoreline";
 import { getTheme } from "../components/theme";
 import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
 import Footer from "../components/footer/footer";
@@ -94,7 +93,7 @@ export function MainLobby(): JSX.Element {
     redirectTo = "/";
   } else if (!isCurrentRoutePublic && !isLoggedIn) {
     redirectTo = "/login";
-  } else if (!renewConsentPath && user && user.role === UserRoles.patient && user.shouldAcceptConsent()) {
+  } else if (!renewConsentPath && user && user.isUserPatient() && user.shouldAcceptConsent()) {
     redirectTo = "/new-consent";
   } else if (!renewConsentPath && user && user.shouldRenewConsent()) {
     redirectTo = "/renew-consent";
