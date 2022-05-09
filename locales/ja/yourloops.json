@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Impossible to remove patient. Please try again later.",
   "alert-remove-patient-from-team-success": "{{patientName}} is no longer a member of {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "The invitation has been canceled",
-  "alert-remove-patient-success": "You no longer have access to this patient data.",
   "alert-remove-private-practice-success": "Direct data sharing with {{patientName}} has been removed",
   "all-patients": "All patients",
   "alt-img-logo": "YourLoopsロゴ",
@@ -115,7 +114,6 @@
   "email": "Email",
   "email-not-verified": "Please verify your email first",
   "error-account-lock": "ログインに失敗しました。 {{delayBeforeNextLoginAttempt}} 分後にもう一度お試しください。",
-  "error-failed-display-patients": "Impossible to display your patient list. Please try again later.",
   "error-failed-display-teams": "チームを表示できません: {{errorMessage}}",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
@@ -217,7 +215,6 @@
   "password-too-weak": "パスワードが弱すぎます。大文字、数字、特殊文字を追加してください",
   "password-very-strong": "非常に強力なパスワード",
   "patient": "Patient",
-  "patient-not-found": "Patient not found",
   "patient-profile-birthdate": "生年月日",
   "patient-profile-hba1c": "初期HbA1c {{hba1cDate}}",
   "patient-profile-title": "Patient profile",
@@ -271,6 +268,7 @@
   "signup-steppers-step2": "同意",
   "signup-steppers-step3": "プロフィールを作成",
   "signup-steppers-step4": "Complete Signup",
+  "since": "Since",
   "success-resent-activation-link": "Activation link sent!",
   "system": "System",
   "team": "チーム",
@@ -334,5 +332,6 @@
   "units": "単位",
   "untransferred-data": "Untransferred data",
   "user-name": "{{lastName}}{{firstName}}",
+  "yes": "Yes",
   "yesterday": "Yesterday"
 }
