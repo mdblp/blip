@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Impossibile rimuovere il paziente. Riprovare più tardi.",
   "alert-remove-patient-from-team-success": "{{patientName}} non è più un membro di {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "L'invito è stato annullato",
-  "alert-remove-patient-success": "Lei non può più accedere ai dati di questo paziente.",
   "alert-remove-private-practice-success": "Lo scambio dati diretto con {{patientName}} è stato cancellato",
   "all-patients": "All patients",
   "alt-img-logo": "Logo del marchio",
@@ -115,7 +114,6 @@
   "email": "E-mail",
   "email-not-verified": "Verifica prima la sua email",
   "error-account-lock": "Troppi tentativi di accesso non riusciti. Riprovare tra {{delayBeforeNextLoginAttempt}} minuti.",
-  "error-failed-display-patients": "Impossibile visualizzare l'elenco dei pazienti. Riprovare più tardi.",
   "error-failed-display-teams": "Impossibile visualizzare i team: {{errorMessage}}",
   "error-http-40x": "Si è verificato un errore. Contattare il supporto per ricevere assistenza",
   "error-http-500": "Si è verificato un problema. Riprovare tra qualche minuto. Se il problema persiste, contattare il supporto per ricevere assistenza",
@@ -217,7 +215,6 @@
   "password-too-weak": "Minimo {{minLength}} caratteri",
   "password-very-strong": "Password assai complesso",
   "patient": "Paziente",
-  "patient-not-found": "Paziente non trovato",
   "patient-profile-birthdate": "Data di nascita",
   "patient-profile-hba1c": "HbA1c iniziale {{hba1cDate}}",
   "patient-profile-title": "Profilo del paziente",
@@ -271,6 +268,7 @@
   "signup-steppers-step2": "Consenso",
   "signup-steppers-step3": "Crea profilo",
   "signup-steppers-step4": "Completa iscrizione",
+  "since": "Since",
   "success-resent-activation-link": "Link di attivazione inviato!",
   "system": "System",
   "team": "Team",
@@ -334,5 +332,6 @@
   "units": "Unità",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Ieri"
 }
