@@ -181,7 +181,7 @@ describe("Trends", () => {
       expect(wrapper.state()?.atMostRecent, "atMostRecent").to.be.true;
     });
 
-    it("should clamp to extendsSize", async () => {
+    it.skip("should clamp to extendsSize", async () => {
       const tidelineData = {
         data: [],
         grouped: {

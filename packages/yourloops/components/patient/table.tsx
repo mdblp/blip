@@ -40,11 +40,12 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { TablePagination, Typography } from "@material-ui/core";
 import InfoIcon from "@material-ui/icons/Info";
 
-import { PatientTableSortFields, SortDirection } from "../../../models/generic";
+import { PatientTableSortFields, SortDirection } from "../../models/generic";
 import { PatientTableProps } from "./models";
 import PatientRow from "./row";
-import { Patient } from "../../../lib/data/patient";
-import { StyledTableCell, StyledTooltip } from "../../../components/styled-components";
+import { Patient } from "../../lib/data/patient";
+import { StyledTableCell, StyledTooltip } from "../styled-components";
+import { useAuth } from "../../lib/auth";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -116,6 +117,8 @@ function PatientTable(props: PatientTableProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
+  const authHook = useAuth();
+  const isUserHcp = authHook.user?.isUserHcp();
   const [page, setPage] = React.useState<number>(0);
   const [rowPerPage, setRowPerPage] = React.useState<number>(10);
   const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);
@@ -183,18 +186,20 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t("system")}
                 </TableSortLabel>
               </StyledTableCell>
-              <StyledTableCell
-                id="patients-list-header-remote-monitoring"
-                className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
-              >
-                <TableSortLabel
-                  id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ""}`}
-                  active={orderBy === PatientTableSortFields.remoteMonitoring}
-                  direction={order}
-                  onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
-                  {t("remote-monitoring")}
-                </TableSortLabel>
-              </StyledTableCell>
+              { isUserHcp &&
+                <StyledTableCell
+                  id="patients-list-header-remote-monitoring"
+                  className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
+                >
+                  <TableSortLabel
+                    id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ""}`}
+                    active={orderBy === PatientTableSortFields.remoteMonitoring}
+                    direction={order}
+                    onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
+                    {t("remote-monitoring")}
+                  </TableSortLabel>
+                </StyledTableCell>
+              }
               <StyledTableCell
                 id="patients-list-header-alert-time-target"
                 className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader} ${patientListCommonClasses.mediumCell}`}

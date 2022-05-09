@@ -92,6 +92,7 @@ const ignoredTransKeyForYourLoops = [
   "consent-welcome-message",
   "modal-add-patient-warning-line2",
   "modal-patient-team-privacy-2",
+  "no",
   "notification-caregiver-invitation-by-patient",
   "notification-hcp-invitation-by-team",
   "notification-patient-invitation-by-team",
@@ -117,6 +118,7 @@ const ignoredTransKeyForYourLoops = [
   "signup-steppers-step2",
   "signup-steppers-step3",
   "signup-steppers-step4",
+  "since",
   "team-card-label-address",
   // Errors messages
   "email-not-verified",

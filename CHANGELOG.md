@@ -5,7 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-1260 Verify password leak on signup or password change
-- YLP-1370 hcp and patient can communicate through messaging system
+- YLP-1369 HCP can send private messages for this team
+- YLP-1370 HCP and patient can communicate through messaging system
 - YLP-1379 New Header
 - YLP-1410 New left navigation drawer
 - YLP-1411 Implement the Patient list table with the new layout
@@ -16,6 +17,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1469 Update footer with "Accompanying documents" dropdown
 - YLP-1475 Implement the team details page for patients
 - YLP-1476 Remove care teams page
+- YLP-1494 Implement patient table for caregiver
 - YLP-1500 Patient can join a team from header
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
@@ -24,6 +26,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1345 Correct blip pdf export to display japanese chars
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
+- YLP-1506 Skip flaky test
 ### Fixed
 - YLP-1199 Stats in trends view may be wrong
 - YLP-1312 Data loading may be missing some ranges

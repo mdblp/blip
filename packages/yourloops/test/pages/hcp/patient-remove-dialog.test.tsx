@@ -36,7 +36,7 @@ import { NotificationContextProvider } from "../../../lib/notifications";
 
 import { directShareAPI } from "../../lib/direct-share/hook";
 
-import RemoveDialog from "../../../pages/hcp/patients/remove-dialog";
+import RemoveDialog from "../../../components/patient/remove-dialog";
 import { waitTimeout } from "../../../lib/utils";
 import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";

@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Impossible to remove patient. Please try again later.",
   "alert-remove-patient-from-team-success": "{{patientName}} is no longer a member of {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "The invitation has been canceled",
-  "alert-remove-patient-success": "You no longer have access to this patient data.",
   "alert-remove-private-practice-success": "Direct data sharing with {{patientName}} has been removed",
   "all-patients": "All patients",
   "alt-img-logo": "YourLoops Logo",
@@ -115,7 +114,6 @@
   "email": "Email",
   "email-not-verified": "Please verify your email first",
   "error-account-lock": "Too many failed login attempts. Please try again in {{delayBeforeNextLoginAttempt}} minutes.",
-  "error-failed-display-patients": "Impossible to display your patient list. Please try again later.",
   "error-failed-display-teams": "Impossible to display teams: {{errorMessage}}",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
@@ -221,7 +219,6 @@
   "password-too-weak": "Password too weak, add uppercase, number or special character",
   "password-very-strong": "Very strong password",
   "patient": "Patient",
-  "patient-not-found": "Patient not found",
   "patient-profile-birthdate": "Date of birth",
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-profile-title": "Patient profile",
@@ -275,6 +272,7 @@
   "signup-steppers-step2": "Consent",
   "signup-steppers-step3": "Create profile",
   "signup-steppers-step4": "Complete Signup",
+  "since": "Since",
   "success-resent-activation-link": "Activation link sent!",
   "system": "System",
   "team": "Team",
@@ -338,5 +336,6 @@
   "units": "Units",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Yesterday"
 }
