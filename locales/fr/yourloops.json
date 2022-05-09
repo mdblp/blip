@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Impossible de supprimer le·la patient·e. Veuillez réessayer plus tard.",
   "alert-remove-patient-from-team-success": "{{patientName}} n'est plus membre de {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "L’invitation a été annulée",
-  "alert-remove-patient-success": "Vous n'avez plus accès aux données du·de la patient·e.",
   "alert-remove-private-practice-success": "Le partage direct de données avec {{patientName}} a été supprimé",
   "all-patients": "All patients",
   "alt-img-logo": "Logo",
@@ -115,7 +114,6 @@
   "email": "Email",
   "email-not-verified": "Veuillez d'abord vérifier votre email.",
   "error-account-lock": "Nombre maximum de tentatives de connexion atteint. Réessayez dans {{delayBeforeNextLoginAttempt}} minutes.",
-  "error-failed-display-patients": "Impossible d'afficher la liste de vos patients. Veuillez réessayer plus tard.",
   "error-failed-display-teams": "Impossible d'afficher les équipes de soins. Réessayez plus tard.",
   "error-http-40x": "Une erreur est survenue. Veuillez contacter le support.",
   "error-http-500": "Un erreur est survenue. Veuillez réessayer dans quelques instants. Si le problème persiste, contactez le support.",
@@ -217,7 +215,6 @@
   "password-too-weak": "10 caractères minimum",
   "password-very-strong": "Mot de passe très fort",
   "patient": "Patient",
-  "patient-not-found": "Patient introuvable",
   "patient-profile-birthdate": "Date de naissance",
   "patient-profile-hba1c": "HbA1c initiale {{hba1cDate}}",
   "patient-profile-title": "Profil patient",
@@ -271,6 +268,7 @@
   "signup-steppers-step2": "Consentement",
   "signup-steppers-step3": "Création du profil",
   "signup-steppers-step4": "Création du compte",
+  "since": "Since",
   "success-resent-activation-link": "Lien d'activation envoyé !",
   "system": "System",
   "team": "Équipe",
@@ -334,5 +332,6 @@
   "units": "Unités",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Hier"
 }
