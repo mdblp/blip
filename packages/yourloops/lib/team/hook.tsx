@@ -44,7 +44,7 @@ import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
 import { Patient, PatientTeam } from "../data/patient";
-import { mapTeamUserToPatient } from "../../pages/hcp/patients/utils";
+import { mapTeamUserToPatient } from "../../components/patient/utils";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -106,7 +106,7 @@ export async function loadTeams(
   const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
 
   // If we are a patient, we are not in the list, add ourself
-  if (session.user.role === UserRoles.patient && _.isNil(apiPatients.find((m) => m.userId === session.user.userid))) {
+  if (session.user.isUserPatient() && _.isNil(apiPatients.find((m) => m.userId === session.user.userid))) {
     log.debug("Add ourself as a team member");
     for (const team of apiTeams) {
       apiPatients.push({

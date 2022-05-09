@@ -33,7 +33,7 @@ import { FilterType } from "../../../models/generic";
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { TeamContextProvider } from "../../../lib/team";
-import PatientsSecondaryBar, { PatientListBarProps } from "../../../pages/hcp/patients/secondary-bar";
+import PatientsSecondaryBar, { PatientListBarProps } from "../../../components/patient/secondary-bar";
 
 import Adapter from "enzyme-adapter-react-16";
 import { loggedInUsers } from "../../common";

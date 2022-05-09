@@ -36,25 +36,25 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 
-import { FilterType } from "../../../models/generic";
-import metrics from "../../../lib/metrics";
-import { useAlert } from "../../../components/utils/snackbar";
-import { errorTextFromException, setPageTitle } from "../../../lib/utils";
-import { Team, useTeam } from "../../../lib/team";
-import { AddPatientDialogContentProps, AddPatientDialogResult } from "../types";
-import PatientsSecondaryBar from "./secondary-bar";
-import AddPatientDialog from "./add-dialog";
-import RemovePatientDialog from "./remove-dialog";
-import TeamCodeDialog from "./team-code-dialog";
-import { Patient } from "../../../lib/data/patient";
-import PatientList from "./list";
+import { FilterType } from "../models/generic";
+import metrics from "../lib/metrics";
+import { useAlert } from "../components/utils/snackbar";
+import { errorTextFromException, setPageTitle } from "../lib/utils";
+import { Team, useTeam } from "../lib/team";
+import { AddPatientDialogContentProps, AddPatientDialogResult } from "./hcp/types";
+import PatientsSecondaryBar from "../components/patient/secondary-bar";
+import AddPatientDialog from "../components/patient/add-dialog";
+import RemovePatientDialog from "../components/patient/remove-dialog";
+import TeamCodeDialog from "../components/patient/team-code-dialog";
+import { Patient } from "../lib/data/patient";
+import PatientList from "../components/patient/list";
 
 const log = bows("PatientListPage");
 
 // eslint-disable-next-line no-magic-numbers
 const throttledMetrics = _.throttle(metrics.send, 60000); // No more than one per minute
 
-function PatientPage(): JSX.Element {
+function HomePage(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();
@@ -207,4 +207,4 @@ function PatientPage(): JSX.Element {
   );
 }
 
-export default PatientPage;
+export default HomePage;
