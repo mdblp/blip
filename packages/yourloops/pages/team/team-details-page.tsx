@@ -44,7 +44,6 @@ import TeamMembers from "../../components/team/team-members";
 import Typography from "@material-ui/core/Typography";
 import { commonTeamStyles } from "../../components/team/common";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
 
 const useStyles = makeStyles((theme: Theme) => ({
   basicDropdown: {
@@ -125,7 +124,7 @@ function TeamDetailPage(): JSX.Element {
   const [dropdownData, setDropdownData] = React.useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
     { selectedTeam: null, teamNames: [] }
   );
-  const isUserHcp = authContext.user?.role === UserRoles.hcp;
+  const isUserHcp = authContext.user?.isUserHcp();
   const bodyClass = isUserHcp ? classes.body : `${classes.body} ${classes.centerContent}`;
 
   const teamInformation = useRef<HTMLDivElement>(null);

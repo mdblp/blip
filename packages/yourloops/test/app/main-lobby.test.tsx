@@ -37,9 +37,9 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
-import HcpPatientListPage from "../../pages/hcp/patients/page";
 import { SignUpPage } from "../../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
+import HomePage from "../../pages/home-page";
 
 describe("Main lobby", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -72,22 +72,22 @@ describe("Main lobby", () => {
     expect(history.location.pathname).toBe(route);
   }
 
-  it("should display the HcpPatientListPage when hcp is logged in and route is /home", () => {
+  it("should display the HomePage when hcp is logged in and route is /home", () => {
     const history = createMemoryHistory({ initialEntries: ["/home"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
+    checkRenderAndRoute(component, history, HomePage, "/home");
   });
 
   it("should redirect to home page when user is logged in as a hcp and route is '/'", () => {
     const history = createMemoryHistory({ initialEntries: ["/"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
+    checkRenderAndRoute(component, history, HomePage, "/home");
   });
 
   it("should redirect to home page when user is logged in as a hcp and route is '/login'", () => {
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, HcpPatientListPage, "/home");
+    checkRenderAndRoute(component, history, HomePage, "/home");
   });
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {

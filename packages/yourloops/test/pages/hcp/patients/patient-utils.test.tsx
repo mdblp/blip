@@ -30,7 +30,7 @@ import {
   comparePatients,
   mapTeamMemberToPatientTeam,
   mapTeamUserToPatient,
-} from "../../../../pages/hcp/patients/utils";
+} from "../../../../components/patient/utils";
 import { PatientTableSortFields, UserInvitationStatus } from "../../../../models/generic";
 import { Patient, PatientTeam } from "../../../../lib/data/patient";
 import { INotification } from "../../../../lib/notifications";

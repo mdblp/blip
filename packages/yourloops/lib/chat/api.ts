@@ -41,11 +41,11 @@ export async function getChatMessages(teamId: string, patientId: string): Promis
   return Promise.reject(response.statusText);
 }
 
-export async function sendChatMessage(teamId: string, patientId: string, text: string): Promise<boolean> {
+export async function sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
   const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
   const response = await HttpService.post<boolean, string>({
     url,
-    payload: JSON.stringify({ text }) ,
+    payload: JSON.stringify({ text , private: isPrivate }) ,
   });
 
   if (response.status !== 200) {

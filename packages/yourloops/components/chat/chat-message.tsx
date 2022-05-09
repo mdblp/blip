@@ -29,9 +29,12 @@
 import React from "react";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import Face from "@material-ui/icons/Face";
 
 export interface ChatMessageProps {
   text: string;
+  author: string;
+  privateMsg: boolean;
   isMine: boolean;
 }
 
@@ -46,6 +49,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       padding: theme.spacing(1),
       marginTop: theme.spacing(1),
       whiteSpace: "pre-line",
+      flexDirection: "column",
     },
     left: {
       "borderRadius": "0px 12px 12px 12px",
@@ -60,6 +64,12 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
         top: 0,
         left: -8,
       },
+      "&.private": {
+        "backgroundColor": "var(--chat-widget-private-msg-not-mine)",
+        "&::before": {
+          borderTop: "20px solid var(--chat-widget-private-msg-not-mine)",
+        },
+      },
     },
     right: {
       "marginLeft": "auto",
@@ -69,28 +79,47 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
         content: "''",
         width: 0,
         height: 0,
-        borderTop:`20px solid ${theme.palette.primary.dark}`,
+        borderTop: `20px solid ${theme.palette.primary.dark}`,
         borderRight: "20px solid transparent",
         position: "absolute",
         top: 0,
         right: -8,
       },
+      "&.private": {
+        "backgroundColor": "var(--chat-widget-private-msg-mine)",
+        "&::after": {
+          borderTop: "20px solid var(--chat-widget-private-msg-mine)",
+        },
+      },
     },
-    chatMessageText: {
+    chatMessageHeader: {
       zIndex: 2,
+      display: "flex",
+      alignItems: "center",
+      marginBottom: theme.spacing(1),
     },
+    chatMessageText: {},
   };
 }, { name: "ylp-chat-message" });
 
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
-  const { text, isMine } = props;
+  const { text, author, privateMsg, isMine } = props;
   const classes = chatMessageStyles();
   const messageContainerType = isMine ? classes.right : classes.left;
+  const privateMessage = privateMsg ? "private" : "";
 
   return (
-    <div className={`message ${classes.chatMessageContainer} ${messageContainerType}`}>
-      <span className={classes.chatMessageText}>{ text }</span>
+    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
+      {!isMine &&
+        <div className={classes.chatMessageHeader}>
+          <Face />
+          <b>{author}</b>
+        </div>
+      }
+
+      <span className={classes.chatMessageText}>
+        {text}</span>
     </div>
   );
 }
