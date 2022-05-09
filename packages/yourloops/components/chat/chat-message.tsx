@@ -123,7 +123,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       left: -15,
     },
     chatMessageNew: {
-      "backgroundColor": "white",
+      "backgroundColor": theme.palette.common.white,
       "borderRadius": 12,
       "paddingLeft": theme.spacing(1),
       "paddingRight": theme.spacing(1),
@@ -132,8 +132,6 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       "&.private": {
         color:"var(--chat-widget-private-msg-mine)",
       },
-    },
-    chatMessageText: {
     },
   };
 }, { name: "ylp-chat-message" });
@@ -173,7 +171,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
         </div>
       }
 
-      <div className={classes.chatMessageText}>
+      <div>
         { text }
       </div>
       <div className={classes.chatMessageFooter}>
