@@ -12,6 +12,6 @@ export interface IMessage {
   private: boolean;
   text: string;
   timezone: string;
-  timestamp?: string;
+  timestamp: string;
   user: User;
 }
