@@ -91,11 +91,6 @@ function UserMenu(): JSX.Element {
 
   const closeMenu = () => setAnchorEl(null);
 
-  const onClickCaregivers = () => {
-    history.push("/caregivers");
-    closeMenu();
-  };
-
   const onClickSettings = () => {
     history.push("/preferences");
     closeMenu();
@@ -156,21 +151,6 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        {user?.role === UserRoles.patient &&
-          <Box>
-            <MenuItem id="user-menu-caregiver-link-item" onClick={onClickCaregivers}>
-              <ListItemIcon>
-                <RoundedHospitalIcon />
-              </ListItemIcon>
-              <Typography>
-                {t("caregivers")}
-              </Typography>
-            </MenuItem>
-            <Box marginY={1}>
-              <Divider variant="middle" />
-            </Box>
-          </Box>
-        }
         <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
           <ListItemIcon>
             <PermContactCalendarIcon />

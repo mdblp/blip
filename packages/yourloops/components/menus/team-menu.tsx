@@ -50,6 +50,7 @@ import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import { UserRoles } from "../../models/shoreline";
+import { getDirectShares, ShareUser } from "../../lib/share";
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
@@ -79,16 +80,29 @@ function TeamMenu(): JSX.Element {
   const history = useHistory();
   const alert = useAlert();
   const authHook = useAuth();
+  const session = authHook.session();
   const isUserHcp = authHook.user?.role === UserRoles.hcp;
+  const isUserPatient = authHook.user?.role === UserRoles.patient;
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null);
   const opened = !!anchorEl;
 
   const filteredTeams = teams.filter(team => team.code !== "private");
   const closeMenu = () => setAnchorEl(null);
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
+
+  React.useEffect(() => {
+    if (caregivers === null && session !== null) {
+      getDirectShares(session).then((value) => {
+        setCaregivers(value);
+      }).catch(() => {
+        setCaregivers([]);
+      });
+    }
+  }, [caregivers, session]);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
@@ -109,6 +123,11 @@ function TeamMenu(): JSX.Element {
 
   const createCareTeam = () => {
     setTeamCreationDialogData({ team: null, onSaveTeam });
+    closeMenu();
+  };
+
+  const redirectToCaregivers = () => {
+    history.push("/caregivers");
     closeMenu();
   };
 
@@ -181,6 +200,26 @@ function TeamMenu(): JSX.Element {
               </ListItemIcon>
               <Typography>
                 {t("new-care-team")}
+              </Typography>
+            </MenuItem>
+          </Box>
+        }
+        {isUserPatient &&
+          <Box>
+            <ListSubheader>
+              <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="caption">
+                  {t("my-caregivers")}
+                </Typography>
+                <div className={separator} />
+              </Box>
+            </ListSubheader>
+            <MenuItem id="team-menu-caregivers-link" onClick={redirectToCaregivers}>
+              <ListItemIcon>
+                <GroupOutlinedIcon />
+              </ListItemIcon>
+              <Typography>
+                {t("my-caregivers")}  ({caregivers?.length})
               </Typography>
             </MenuItem>
           </Box>
