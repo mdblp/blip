@@ -63,7 +63,7 @@ describe("Daily", () => {
     onClickPrint: sinon.stub(),
     onCreateMessage: sinon.stub(),
     onShowMessageThread: sinon.stub(),
-    onSwitchToBasics: sinon.stub(),
+    onSwitchToDashboard: sinon.stub(),
     onSwitchToDaily: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
     onSwitchToTrends: sinon.stub(),

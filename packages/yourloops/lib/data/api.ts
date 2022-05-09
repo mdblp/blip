@@ -33,14 +33,14 @@ import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { ComputedTIR } from "../../models/device-data";
-import { IUser, UserRoles } from "../../models/shoreline";
+import { IUser } from "../../models/shoreline";
 
 import HttpStatus from "../http-status-codes";
 import appConfig from "../config";
-import { t } from "../language";
 import { errorFromHttpStatus } from "../utils";
 import { Session } from "../auth";
-import { GetPatientDataOptionsV0, GetPatientDataOptions } from "./models";
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";
+import { Patient } from "./patient";
 
 const log = bows("data-api");
 
@@ -132,11 +132,8 @@ export async function getPatientDataRange(session: Session, patientId: string): 
  * @param options Options to pas to the API
  * @returns Patient data array
  */
-export async function getPatientData(session: Session, patient: IUser, options?: GetPatientDataOptions): Promise<PatientData> {
+export async function getPatientData(session: Session, patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
   const { sessionToken, traceToken } = session;
-  if (patient.role !== UserRoles.patient) {
-    return Promise.reject(new Error(t("not-a-patient")));
-  }
 
   let endpoint = `/data/v1/data/${patient.userid}`;
   if (appConfig.CBG_BUCKETS_ENABLED) {

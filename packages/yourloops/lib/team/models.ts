@@ -117,6 +117,12 @@ export interface TeamContext {
    */
   getUser: (userId: string) => Readonly<TeamUser> | null;
   /**
+   * Return the user which the userId belongs to.
+   * *All your base are belong to us*
+   * @param userId The user we want
+   */
+  getPatient: (userId: string) => Readonly<Patient> | null;
+  /**
    * Return all patients (team user) we have
    */
   getPatientsAsTeamUsers: () => Readonly<TeamUser>[];

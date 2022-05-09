@@ -20,10 +20,12 @@ import PropTypes from "prop-types";
 import cx from "classnames";
 import i18next from "i18next";
 
-import Link from "@material-ui/core/Link";
-import Timeline from "@material-ui/icons/Timeline";
-import StayCurrentPortrait from "@material-ui/icons/StayCurrentPortrait";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import Face from "@material-ui/icons/Face";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
@@ -43,6 +45,9 @@ class TidelineHeader extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     patient: PropTypes.object,
+    setPatient: PropTypes.func.isRequired,
+    patients: PropTypes.object,
+    userIsHCP: PropTypes.bool,
     chartType: PropTypes.string.isRequired,
     prefixURL: PropTypes.string,
     inTransition: PropTypes.bool,
@@ -54,14 +59,14 @@ class TidelineHeader extends React.Component {
     trackMetric: PropTypes.func.isRequired,
     canPrint: PropTypes.bool,
     onClickBack: PropTypes.func,
-    onClickBasics: PropTypes.func,
+    onClickDashboard: PropTypes.func,
     onClickTrends: PropTypes.func,
     onClickMostRecent: PropTypes.func,
     onClickNext: PropTypes.func,
     onClickOneDay: PropTypes.func,
-    onClickSettings: PropTypes.func,
     onClickPrint: PropTypes.func,
-    profileDialog: PropTypes.func,
+    onSwitchPatient: PropTypes.func,
+    onClickNavigationBack: PropTypes.func,
   };
 
   static defaultProps = {
@@ -69,21 +74,15 @@ class TidelineHeader extends React.Component {
     atMostRecent: false,
     loading: false,
     canPrint: false,
-    profileDialog: null,
     prefixURL: "",
   };
 
   renderStandard() {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
-    const { profileDialog: ProfileDialog, children } = this.props;
+    const { children } = this.props;
 
-    const printViews = ["dashboard", "basics", "daily", "bgLog", "settings"];
+    const printViews = ["basics", "daily", "bgLog", "settings"];
     const showPrintLink = _.includes(printViews, chartType);
-    const homeValue = personUtils.fullName(this.props.patient);
-
-    const home = cx({
-      "js-home": true,
-    });
 
     const basicsLinkClass = cx({
       "js-basics": true,
@@ -121,13 +120,6 @@ class TidelineHeader extends React.Component {
       "patient-data-subnav-hidden": chartType === "settings" || chartType === "no-data",
     });
 
-    const settingsLinkClass = cx({
-      "patient-data-subnav-button": true,
-      "js-settings": true,
-      "patient-data-subnav-active": chartType === "settings",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
     let printLink = null;
     if (canPrint && showPrintLink) {
       const printLinkClass = cx({
@@ -137,41 +129,38 @@ class TidelineHeader extends React.Component {
 
       printLink = (
         <button className={printLinkClass} onClick={this.onClickPrint}>
-          <Timeline className="print-icon" />
+          <GetAppIcon className="print-icon" />
           {t("pdf-generate-report")}
         </button>
       );
     }
 
-    /** @type {(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void} */
-    const handleShowPatientProfile = (/* e */) => {
-      this.props.trackMetric("data_visualization", "display_patient_profile");
-      this.setState({ isDialogOpen: true });
-    };
-
-    const handleDialogClose = () => {
-      this.setState({ isDialogOpen: false });
-    };
-
-    let profileDialog = null;
-    if (_.isFunction(ProfileDialog)) {
-      profileDialog = (
-        <div className="patient-data-subnav-left">
-          <AccountCircleIcon className={home} />
-          <Link className={home} onClick={handleShowPatientProfile} title={t("Profile")}>
-            {homeValue}
-          </Link>
-          <ProfileDialog user={this.props.patient} isOpen={this.state.isDialogOpen} handleClose={handleDialogClose} />
-        </div>
-      );
-    }
-
     return (
       <div className="grid patient-data-subnav">
-        {profileDialog}
+        { this.props.userIsHCP &&
+          <div>
+            <IconButton>
+              <ArrowBack onClick={() => this.props.onClickNavigationBack()}/>
+            </IconButton>
+            <Face/>
+            <span>Patient:</span>
+            <FormControl variant="outlined">
+              <Select
+                defaultValue={this.props.patient.userid}
+                onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
+              >
+                {
+                  this.props.patients.map((patient,i) => {
+                    return(<MenuItem key={i} value={patient.userid}>{personUtils.fullName(patient)}</MenuItem>);
+                  })
+                }
+              </Select>
+            </FormControl>
+          </div>
+        }
         <div className="patient-data-subnav-left">
-          <a id="button-tab-overview" href={`${prefixURL}/overview`} className={basicsLinkClass} onClick={this.props.onClickBasics}>
-            {t("Basics")}
+          <a id="button-tab-dashboard" href={`${prefixURL}/dashboard`} className={basicsLinkClass} onClick={this.props.onClickDashboard}>
+            {t("Dashboard")}
           </a>
           <a id="button-tab-daily" href={`${prefixURL}/daily`} className={dayLinkClass} onClick={this.props.onClickOneDay}>
             {t("Daily")}
@@ -188,10 +177,6 @@ class TidelineHeader extends React.Component {
         </div>
         <div className="patient-data-subnav-right">
           {printLink}
-          <button id="button-tab-settings" className={settingsLinkClass} onClick={this.props.onClickSettings}>
-            <StayCurrentPortrait />
-            {t("Device settings")}
-          </button>
         </div>
       </div>
     );
@@ -199,8 +184,8 @@ class TidelineHeader extends React.Component {
 
   render() {
     return (
-      <div className="container-box-outer patient-data-subnav-outer">
-        <div className="container-box-inner patient-data-subnav-inner">{this.renderStandard()}</div>
+      <div className="patient-data-subnav-outer">
+        <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
     );
   }

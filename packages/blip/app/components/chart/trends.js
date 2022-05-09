@@ -175,19 +175,22 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
+    patients: PropTypes.object.isRequired,
+    userIsHCP: PropTypes.bool.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     trendsState: PropTypes.object.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
-    onSwitchToBasics: PropTypes.func.isRequired,
+    onSwitchToDashboard: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
-    onSwitchToSettings: PropTypes.func.isRequired,
+    onSwitchPatient: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
     profileDialog: PropTypes.func,
     dialogRangeDatePicker: PropTypes.func.isRequired,
+    onClickNavigationBack: PropTypes.func.isRequired,
   };
   static defaultProps = {
     profileDialog: null,
@@ -223,7 +226,6 @@ class Trends extends React.Component {
     this.handleClickDaily = this.handleClickDaily.bind(this);
     this.handleClickForward = this.handleClickForward.bind(this);
     this.handleClickMostRecent = this.handleClickMostRecent.bind(this);
-    this.handleClickSettings = this.handleClickSettings.bind(this);
     this.handleClickTrends = this.handleClickTrends.bind(this);
     this.handleSelectDate = this.handleSelectDate.bind(this);
     this.toggleDay = this.toggleDay.bind(this);
@@ -600,13 +602,6 @@ class Trends extends React.Component {
     this.props.onSwitchToDaily(epochLocation);
   }
 
-  handleClickSettings(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    this.props.onSwitchToSettings();
-  }
-
   handleClickTrends(e) {
     if (e) {
       e.preventDefault();
@@ -724,6 +719,8 @@ class Trends extends React.Component {
         profileDialog={this.props.profileDialog}
         chartType={this.chartType}
         patient={this.props.patient}
+        patients={this.props.patients}
+        userIsHCP={this.props.userIsHCP}
         atMostRecent={this.state.atMostRecent}
         prefixURL={this.props.prefixURL}
         canPrint={this.props.canPrint}
@@ -733,12 +730,13 @@ class Trends extends React.Component {
         iconNext
         iconMostRecent
         onClickBack={this.handleClickBack}
-        onClickBasics={this.props.onSwitchToBasics}
+        onClickDashboard={this.props.onSwitchToDashboard}
         onClickTrends={this.handleClickTrends}
         onClickMostRecent={this.handleClickMostRecent}
         onClickNext={this.handleClickForward}
         onClickOneDay={this.handleClickDaily}
-        onClickSettings={this.handleClickSettings}
+        onSwitchPatient={this.props.onSwitchPatient}
+        onClickNavigationBack={this.props.onClickNavigationBack}
       >
         {title}
       </Header>

@@ -201,7 +201,7 @@ Basics.propTypes = {
   canPrint: PropTypes.bool.isRequired,
   onClickRefresh: PropTypes.func.isRequired,
   onClickNoDataRefresh: PropTypes.func.isRequired,
-  onSwitchToBasics: PropTypes.func.isRequired,
+  onSwitchToDashboard: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   onSwitchToTrends: PropTypes.func.isRequired,
   onClickPrint: PropTypes.func.isRequired,

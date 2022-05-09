@@ -56,10 +56,14 @@ function ReduxProvider(props) {
     // @ts-ignore
     <Provider store={store}>
       <PatientData
+        key={props.patient.userid}
         api={props.api}
         store={store}
         patient={props.patient}
         patientMonitored={props.patientMonitored}
+        setPatient={props.setPatient}
+        patients={props.patients}
+        userIsHCP={props.userIsHCP}
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
@@ -77,6 +81,10 @@ ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   patientMonitored: PropTypes.object,
+  setPatient: PropTypes.func.isRequired,
+  patients: PropTypes.object.isRequired,
+  userIsHCP: PropTypes.bool.isRequired,
+  teams: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
@@ -92,13 +100,16 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, patientMonitored, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, patientInfoWidget } = props;
+      const { config, api, patient, patientMonitored, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, patientInfoWidget } = props;
       updateConfig(config);
 
       return (
         <ReduxProvider
           api={api}
           patient={patient}
+          patients={patients}
+          setPatient={setPatient}
+          userIsHCP={userIsHCP}
           profileDialog={profileDialog}
           patientMonitored={patientMonitored}
           prefixURL={prefixURL}
@@ -123,6 +134,9 @@ Blip.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   patientMonitored: PropTypes.object,
+  setPatient: PropTypes.func.isRequired,
+  patients: PropTypes.object.isRequired,
+  userIsHCP: PropTypes.bool.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,

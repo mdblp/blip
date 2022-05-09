@@ -89,7 +89,7 @@ describe("Trends", () => {
     canPrint: false,
     onClickRefresh: sinon.stub(),
     onClickNoDataRefresh: sinon.stub(),
-    onSwitchToBasics: sinon.stub(),
+    onSwitchToDashboard: sinon.stub(),
     onSwitchToDaily: sinon.stub(),
     onSwitchToTrends: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
