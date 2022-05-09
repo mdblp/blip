@@ -29,7 +29,7 @@ import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import { ThemeProvider, Theme, makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, Theme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { SessionTimeout, useAuth } from "../lib/auth";
@@ -109,8 +109,8 @@ export function MainLobby(): JSX.Element {
 
   return (
     <React.Fragment>
-      {redirectTo && <Redirect to={redirectTo} />}
-      {!firstLoading &&
+      {redirectTo ? <Redirect to={redirectTo} /> : (
+        !firstLoading &&
         <ThemeProvider theme={theme}>
           <SessionTimeout />
           <CssBaseline />
@@ -128,7 +128,7 @@ export function MainLobby(): JSX.Element {
           </SnackbarContextProvider>
           <Footer />
         </ThemeProvider>
-      }
+      )}
     </React.Fragment>
   );
 }

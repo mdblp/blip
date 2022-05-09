@@ -38,7 +38,8 @@ import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
 import { SignUpPage } from "../../pages/signup";
-import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
+import * as auth0Mock from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
 import HomePage from "../../pages/home-page";
 import * as shareLib from "../../lib/share";
 
@@ -62,13 +63,23 @@ describe("Main lobby", () => {
 
   function renderMainLayout(history: MemoryHistory, authContext: AuthContext) {
     return renderer.create(
-      <Router history={history}>
-        <AuthContextProvider value={authContext}>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
+      <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
+        <Router history={history}>
+          <AuthContextProvider value={authContext}>
+            <MainLobby />
+          </AuthContextProvider>
+        </Router>
+      </Auth0Provider>
     );
   }
+
+  beforeEach(() => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  });
+
   function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: () => JSX.Element, route: string) {
     const mainPageLayout = currentComponent.root.findByType(expectedComponent);
     expect(mainPageLayout).toBeDefined();
@@ -110,27 +121,23 @@ describe("Main lobby", () => {
   });
 
   it("should render LoginPage when user is not logged in route is '/login'", () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+    });
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, LoginPage, "/login");
   });
 
   it("should render SignUpPage when user is not logged in route is '/signup'", () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+    });
     const history = createMemoryHistory({ initialEntries: ["/signup"] });
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, SignUpPage, "/signup");
-  });
-
-  it("should render RequestPasswordResetPage when user is not logged in route is '/request-password-reset'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/request-password-reset"] });
-    const component = renderMainLayout(history, null);
-    checkRenderAndRoute(component, history, RequestPasswordResetPage, "/request-password-reset");
-  });
-
-  it("should render ConfirmPasswordResetPage when user is not logged in route is '/confirm-password-reset'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/confirm-password-reset"] });
-    const component = renderMainLayout(history, null);
-    checkRenderAndRoute(component, history, ConfirmPasswordResetPage, "/confirm-password-reset");
   });
 
 });
