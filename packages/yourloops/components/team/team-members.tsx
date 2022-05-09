@@ -118,10 +118,9 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
 
   const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
     if (member) {
-      await teamHook.inviteMember(member.team, member.email, member.role);
-      setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
       try {
         await teamHook.inviteMember(member.team, member.email, member.role);
+        setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
         alert.success(t("team-page-success-invite-hcp", { email: member.email }));
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason);
