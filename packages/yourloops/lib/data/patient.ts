@@ -71,4 +71,4 @@ interface PatientMonitored {
   }
 }
 
-export { Patient, PatientTeam , PatientMonitored};
+export { Patient, PatientTeam , PatientMonitored };

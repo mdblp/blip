@@ -99,7 +99,6 @@ function Blip(props) {
         <ReduxProvider
           api={api}
           patient={patient}
-          teams={teams}
           profileDialog={profileDialog}
           patientMonitored={patientMonitored}
           prefixURL={prefixURL}

@@ -39,10 +39,10 @@ import { UserRoles, IUser } from "../models/shoreline";
 import { PatientMonitored } from "../lib/data/patient";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { Team, useTeam } from "../lib/team";
+import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
-import TeamAPIImpl from "../lib/team/api"
+import TeamAPIImpl from "../lib/team/api";
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
@@ -77,7 +77,6 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
-  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
@@ -93,9 +92,6 @@ function PatientDataPage(): JSX.Element | null {
     if (!initialized) {
       return;
     }
-
-    setTeams(teamHook.getMedicalTeams());
-
 
     if (userIsPatient && !_.isNil(authUser)) {
       setPatient(authUser);
@@ -117,27 +113,28 @@ function PatientDataPage(): JSX.Element | null {
     }
   }, [initialized, paramPatientId, patient, userId, teamHook, authUser, userIsPatient]);
 
+  const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
+    const session = authHook.session();
+    if (session !== null) {
+      const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
+      setPatientMonitored(monitoredPatient);
+    }
+  },[authHook]);
+
   React.useEffect(() => {
     if (patient !== null && patient.userid !== userId) {
       setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
     } else {
       setPageTitle();
     }
-    async function fetchPatientMonitored(patientID: string) {
-      const session = authHook.session()
-      if (session !== null) {
-        const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
-        setPatientMonitored(monitoredPatient);
-      }
-    }
 
-    if(patient !== null) {
+    if (patient !== null) {
       fetchPatientMonitored(patient.userid).catch(console.error);
     } else {
       setPatientMonitored(null);
     }
 
-  }, [userId, patient, t]);
+  }, [userId, patient, t, fetchPatientMonitored]);
 
   if (error !== null) {
     return <PatientDataPageError msg={error} />;

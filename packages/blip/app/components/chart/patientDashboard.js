@@ -31,7 +31,7 @@ const PatientDashboard = (props) => {
         canPrint={true}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored}/>}
+        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -57,7 +57,7 @@ const PatientDashboard = (props) => {
         />
         {patientMonitored &&
           <ChatWidget id="dashboard-chat-widget"
-            patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+            patientId={patientMonitored.userId} userId={user.userid} teamId={patientMonitored.teamId} userRole={user.role} />
         }
       </Box>
     </div>
@@ -70,14 +70,14 @@ PatientDashboard.propTypes = {
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   patientMonitored: PropTypes.object,
-  prefixURL:  PropTypes.string,
+  prefixURL: PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,
   chartPrefs: PropTypes.object.isRequired,
   dataUtil: PropTypes.object,
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
-  patientInfoWidget:  PropTypes.func.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
 };
 
 export default PatientDashboard;
