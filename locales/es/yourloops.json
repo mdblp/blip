@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Imposible eliminar un paciente. Vuelva a intentarlo más tarde.",
   "alert-remove-patient-from-team-success": "{{patientName}} ya no es miembro de {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "La invitación ha sido cancelada",
-  "alert-remove-patient-success": "Ya no tiene acceso a los datos de este paciente.",
   "alert-remove-private-practice-success": "El intercambio directo de datos con {{patientName}} ha sido eliminado",
   "all-patients": "All patients",
   "alt-img-logo": "Logotipo de YourLoops",
@@ -115,7 +114,6 @@
   "email": "Correo electrónico",
   "email-not-verified": "Por favor, primero verifique su correo electrónico",
   "error-account-lock": "Demasiados intentos fallidos de inicio de sesión. Vuelva a intentarlo dentro de {{delayBeforeNextLoginAttempt}} minutos.",
-  "error-failed-display-patients": "Imposible de mostrar a sus pacientes. Vuelva a intentarlo más tarde.",
   "error-failed-display-teams": "No se han podido mostrar los equipos: {{errorMessage}}",
   "error-http-40x": "Se ha producido un error. Póngase en contacto con la asistencia al cliente para recibir ayuda",
   "error-http-500": "Algo ha fallado. Vuelva a intentarlo más tarde. Si el problema persiste, póngase en contacto con la asistencia al cliente para recibir ayuda",
@@ -217,7 +215,6 @@
   "password-too-weak": "Mínimo 10 caracteres",
   "password-very-strong": "Contraseña muy fuerte",
   "patient": "Paciente",
-  "patient-not-found": "Paciente no encontrado",
   "patient-profile-birthdate": "Fecha de nacimiento",
   "patient-profile-hba1c": "Hba1c inicial {{hba1cDate}}",
   "patient-profile-title": "Perfil del paciente",
@@ -271,6 +268,7 @@
   "signup-steppers-step2": "Consentimiento",
   "signup-steppers-step3": "Crear perfil",
   "signup-steppers-step4": "Inscripción completa",
+  "since": "Since",
   "success-resent-activation-link": "¡Enlace de activación enviado!",
   "system": "System",
   "team": "Equipo",
@@ -334,5 +332,6 @@
   "units": "Unidades",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Ayer"
 }
