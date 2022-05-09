@@ -153,7 +153,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages() {
       const messages = await getChatMessages(teamId, patientId);
       setMessages(messages);
-      console.log(messages);
     }
 
     fetchMessages();
