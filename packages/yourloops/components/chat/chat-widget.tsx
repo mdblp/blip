@@ -98,7 +98,7 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     chatWidgetInputRow: {
       display: "flex",
       alignItems: "center",
-      background : theme.palette.common.white,
+      background: theme.palette.common.white,
       width: "100%",
       height: "60px",
     },
@@ -154,6 +154,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       const messages = await getChatMessages(teamId, patientId);
       setMessages(messages);
     }
+
     fetchMessages();
   }, [userId, patientId, teamId, authHook]);
 
@@ -200,7 +201,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     <Card className={classes.chatWidget} id="chat-widget">
       <CardHeader
         id="chat-widget-header"
-        avatar={<EmailOutlinedIcon/>}
+        avatar={<EmailOutlinedIcon />}
         className={classes.chatWidgetHeader}
         title={t("chat-messages-header")}
       />
@@ -219,11 +220,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       }
       <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
         <div className={classes.chatWidgetHCPToggle}>
-          { userRole === UserRoles.hcp &&
+          {userRole === UserRoles.hcp &&
             <div>
-              <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} onClick={() => setPrivateMessage(false)}/>
-                <Tab className={classes.chatWidgetTab}label={t("chat-footer-private")} onClick={() => setPrivateMessage(true)}/>
+              <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
+                onChange={handleChange}>
+                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")}
+                  onClick={() => setPrivateMessage(false)} />
+                <Tab className={classes.chatWidgetTab} label={t("chat-footer-private")}
+                  onClick={() => setPrivateMessage(true)} />
               </Tabs>
             </div>
           }
@@ -243,7 +247,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             variant="outlined"
             InputLabelProps={{ shrink: false }}
           />
-          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} onClick={sendMessage}>
+          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton}
+            onClick={sendMessage}>
             <SendIcon />
           </Button>
         </div>

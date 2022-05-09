@@ -67,7 +67,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       "&.private": {
         "backgroundColor": "var(--chat-widget-private-msg-not-mine)",
         "&::before": {
-          borderTop:"20px solid var(--chat-widget-private-msg-not-mine)",
+          borderTop: "20px solid var(--chat-widget-private-msg-not-mine)",
         },
       },
     },
@@ -79,7 +79,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
         content: "''",
         width: 0,
         height: 0,
-        borderTop:`20px solid ${theme.palette.primary.dark}`,
+        borderTop: `20px solid ${theme.palette.primary.dark}`,
         borderRight: "20px solid transparent",
         position: "absolute",
         top: 0,
@@ -88,7 +88,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       "&.private": {
         "backgroundColor": "var(--chat-widget-private-msg-mine)",
         "&::after": {
-          borderTop:"20px solid var(--chat-widget-private-msg-mine)",
+          borderTop: "20px solid var(--chat-widget-private-msg-mine)",
         },
       },
     },
@@ -98,8 +98,7 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       marginBottom: theme.spacing(1),
     },
-    chatMessageText: {
-    },
+    chatMessageText: {},
   };
 }, { name: "ylp-chat-message" });
 
@@ -114,13 +113,13 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
     <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
       {!isMine &&
         <div className={classes.chatMessageHeader}>
-          <Face/>
-          <b>{ author }</b>
+          <Face />
+          <b>{author}</b>
         </div>
       }
 
       <span className={classes.chatMessageText}>
-        { text }</span>
+        {text}</span>
     </div>
   );
 }
