@@ -148,6 +148,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
   const isNew = !isMine && !ack;
   const messageAck = ack ? classes.chatMessageCheckMarkAck : classes.chatMessageCheckMarkNack;
   const displayDate = new Date(timestamp);
+  const displayDateMn = ("0" + displayDate.getMinutes()).slice(-2);
 
   const isToday = (someDate: Date) => {
     const today = new Date();
@@ -177,7 +178,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
       </div>
       <div className={classes.chatMessageFooter}>
         <div>
-          { isToday(displayDate) ? t("today") : (isYesterday(displayDate) ? t("yesterday") : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDate.getMinutes()}`}
+          { isToday(displayDate) ? t("today") : (isYesterday(displayDate) ? t("yesterday") : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDateMn}`}
         </div>
         {isNew ? <div className={`${classes.chatMessageNew} ${privateMessage}`}>Nouveau</div>
           : <div className={messageAck}>
