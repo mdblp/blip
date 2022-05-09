@@ -24,7 +24,6 @@
   "alert-remove-patient-failure": "Der Patient kann nicht entfernt werden. Versuchen Sie es zu einem späteren Zeitpunkt erneut.",
   "alert-remove-patient-from-team-success": "{{patientName}} ist nicht länger Mitglied von {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "Die Einladung wurde storniert",
-  "alert-remove-patient-success": "Sie haben dann keinen Zugriff mehr auf die Daten dieses Patienten.",
   "alert-remove-private-practice-success": "Der direkte Datenaustausch mit {{patientName}} wurde beendet",
   "all-patients": "All patients",
   "alt-img-logo": "YourLoops",
@@ -115,7 +114,6 @@
   "email": "E-Mail",
   "email-not-verified": "Bitte bestätigen Sie zuerst Ihre E-Mail",
   "error-account-lock": "Zu viele fehlgeschlagene Anmeldeversuche. Bitte versuchen Sie es in {{delayBeforeNextLoginAttempt}} wenigen Minuten erneut.",
-  "error-failed-display-patients": "Es ist nicht möglich, Ihre Patientenliste anzuzeigen. Bitte versuchen Sie es später noch einmal.",
   "error-failed-display-teams": "Teams konnten nicht angezeigt werden: {{errorMessage}}",
   "error-http-40x": "Es ist ein Fehler aufgetreten. Wenden Sie sich an den Kundendienst.",
   "error-http-500": "Etwas ist schiefgelaufen. Versuchen Sie es in Kürze erneut. Wenden Sie sich an den Kundendienst, falls das Problem weiterhin besteht.",
@@ -217,7 +215,6 @@
   "password-too-weak": "Mindestens 10 Zeichen",
   "password-very-strong": "Sehr starkes Passwort",
   "patient": "Patienten",
-  "patient-not-found": "Patient nicht gefunden",
   "patient-profile-birthdate": "Geb. -Datum",
   "patient-profile-hba1c": "Ausgangs-HbA1c-Wert {{hba1cDate}}",
   "patient-profile-title": "Patientenprofil",
@@ -271,6 +268,7 @@
   "signup-steppers-step2": "Zustimmen",
   "signup-steppers-step3": "Profil erstellen",
   "signup-steppers-step4": "Registrierung abschließen",
+  "since": "Since",
   "success-resent-activation-link": "Aktivierungslink gesendet!",
   "system": "System",
   "team": "Team",
@@ -334,5 +332,6 @@
   "units": "Einheiten",
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
+  "yes": "Yes",
   "yesterday": "Gestern"
 }
