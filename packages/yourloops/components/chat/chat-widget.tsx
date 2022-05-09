@@ -136,6 +136,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [privateMessage, setPrivateMessage] = useState(false);
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [nbUnread, setNbUnread] = useState(0);
   const [inputTab, setInputTab] = useState(0);
   const content = useRef<HTMLDivElement>(null);
   const inputRow = useRef<HTMLDivElement>(null);
@@ -153,6 +154,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages() {
       const messages = await getChatMessages(teamId, patientId);
       setMessages(messages);
+      setNbUnread(messages.filter(m =>!(m.authorId === userId) && !m.destAck).length);
     }
 
     fetchMessages();
@@ -203,7 +205,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         id="chat-widget-header"
         avatar={<EmailOutlinedIcon />}
         className={classes.chatWidgetHeader}
-        title={t("chat-messages-header")}
+        title={`${t("chat-messages-header")} ${nbUnread > 0 ? `(+${nbUnread})` : ""}`}
       />
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
