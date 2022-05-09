@@ -18,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1475 Implement the team details page for patients
 - YLP-1476 Remove care teams page
 - YLP-1494 Implement patient table for caregiver
+- YLP-1511 Display message date, status and the number of unread messages in chat widget
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
