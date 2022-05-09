@@ -97,8 +97,6 @@ export interface AuthContext {
   certifyProfessionalAccount: () => Promise<void>;
   flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
   getFlagPatients: () => string[];
-  isAuthHookInitialized: boolean;
-  isAuthInProgress: boolean;
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;

@@ -63,9 +63,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthInProgress] = useState<boolean>(false);
 
-  const isAuthHookInitialized = traceToken !== null;
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
     (): Session | null => sessionToken && traceToken && user ? { sessionToken, traceToken, user } : null,
@@ -308,8 +306,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   return {
     user,
     isLoggedIn,
-    isAuthInProgress,
-    isAuthHookInitialized,
     session,
     setUser,
     certifyProfessionalAccount,

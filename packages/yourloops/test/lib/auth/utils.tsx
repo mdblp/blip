@@ -104,8 +104,6 @@ export interface AuthContextStubs {
   certifyProfessionalAccount: jest.Mock<Promise<void>, null>;
   flagPatient: jest.Mock<Promise<void>, [string]>;
   getFlagPatients: jest.Mock<string[], []>;
-  isAuthHookInitialized: boolean;
-  isAuthInProgress: boolean;
   isLoggedIn: boolean;
   logout: jest.Mock<Promise<void>>;
   redirectToProfessionalAccountLogin: jest.Mock<void, []>;
@@ -129,8 +127,6 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   certifyProfessionalAccount: jest.fn<Promise<void>, null>().mockResolvedValue(),
   flagPatient: jest.fn<Promise<void>, [string]>().mockResolvedValue(),
   getFlagPatients: jest.fn<string[], []>().mockReturnValue([]),
-  isAuthHookInitialized: true,
-  isAuthInProgress: false,
   isLoggedIn: true,
   logout: jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue(),
   redirectToProfessionalAccountLogin: jest.fn<void, []>().mockReturnValue(),
@@ -155,8 +151,6 @@ export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
 export const resetAuthHookStubs = (hookStubs: AuthContextStubs, session?: Session): void => {
   hookStubs.user = session?.user ?? null;
   hookStubs.isLoggedIn = typeof session === "object";
-  hookStubs.isAuthInProgress = false;
-  hookStubs.isAuthHookInitialized = true;
 
   hookStubs.logout.mockReset();
   hookStubs.logout = jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue();

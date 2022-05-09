@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import _ from "lodash";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
@@ -89,120 +89,121 @@ const style = makeStyles((theme: Theme) => {
 /**
  * Renew consents page
  */
-function Page(props: ConsentProps): JSX.Element {
+function Page(props: ConsentProps): JSX.Element | null {
   const { t } = useTranslation("yourloops");
   const historyHook = useHistory<HistoryState>();
   const auth = useAuth();
   const classes = style();
-  const [policyAccepted, setPolicyAccepted] = React.useState(false);
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(Boolean(auth.user?.profile?.contactConsent?.isAccepted));
-  const log = React.useMemo(() => bows("consent"), []);
-  const fromPath = React.useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
+  const [policyAccepted, setPolicyAccepted] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted);
+  const log = useMemo(() => bows("consent"), []);
+  const fromPath = useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
 
   const user = auth.user;
-  if (user === null) {
-    throw new Error("User must be logged-in");
+
+  if (user) {
+    const consentsChecked = policyAccepted && termsAccepted;
+    // Ask for feedback only if the user is an HCP, and didn't have previously
+    // see that option (e.g. Account created before it was implemented)
+    const showFeedback = user.isUserHcp() && !user.profile?.contactConsent;
+
+    const onDecline = () => {
+      auth.logout().catch((reason) => console.error("logout", reason));
+    };
+
+    const onConfirm = () => {
+      // api call
+      const now = new Date().toISOString();
+      const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
+      updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted };
+      updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted };
+      if (showFeedback) {
+        updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted };
+      }
+      auth.updateProfile(updatedProfile).catch((reason: unknown) => {
+        log.error(reason);
+      }).finally(() => {
+        historyHook.push(fromPath ?? "/");
+      });
+    };
+
+    return (
+      <React.Fragment>
+        <Container maxWidth="sm" className={classes.mainContainer}>
+          <Grid
+            container
+            spacing={0}
+            alignItems="center"
+            justify="center"
+            style={{ minHeight: "100vh" }}>
+            <Grid item xs={12}>
+              <Card className={classes.card}>
+                <CardMedia
+                  style={{
+                    display: "flex",
+                    paddingTop: "1em",
+                    paddingBottom: "1em",
+                  }}>
+                  <img
+                    src={`/branding_${appConfig.BRANDING}_logo.svg`}
+                    style={{
+                      height: "60px",
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                    }}
+                    alt={t("alt-img-logo")}
+                  />
+                </CardMedia>
+                <CardContent className={classes.cardContent}>
+                  <Typography variant="body1" gutterBottom>
+                    {t(props.messageKey)}
+                  </Typography>
+                  <form
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                    noValidate
+                    autoComplete="off">
+                    <ConsentForm
+                      id="login-renew-consents"
+                      userRole={user.role}
+                      policyAccepted={policyAccepted}
+                      setPolicyAccepted={setPolicyAccepted}
+                      termsAccepted={termsAccepted}
+                      setTermsAccepted={setTermsAccepted}
+                      feedbackAccepted={feedbackAccepted}
+                      setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
+                    />
+                    <div id="consent-button-group" className={classes.buttons}>
+                      <Button
+                        id="consent-button-decline"
+                        onClick={onDecline}
+                      >
+                        {t("button-decline")}
+                      </Button>
+                      <Button
+                        id="consent-button-confirm"
+                        variant="contained"
+                        color="primary"
+                        disableElevation
+                        disabled={!consentsChecked}
+                        onClick={onConfirm}>
+                        {t("button-accept")}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Container>
+      </React.Fragment>
+    );
   }
-
-  const consentsChecked = policyAccepted && termsAccepted;
-  // Ask for feedback only if the user is an HCP, and didn't have previously
-  // see that option (e.g. Account created before it was implemented)
-  const showFeedback = user.isUserHcp() && _.isNil(user.profile?.contactConsent);
-
-  const onDecline = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
-    auth.logout().catch((reason) => console.error("logout", reason));
-  };
-
-  const onConfirm = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
-    // api call
-    const now = new Date().toISOString();
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
-    updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted };
-    updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted };
-    if (showFeedback) {
-      updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted };
-    }
-    auth.updateProfile(updatedProfile).catch((reason: unknown) => {
-      log.error(reason);
-    }).finally(() => {
-      historyHook.push(fromPath ?? "/");
-    });
-  };
-
-  return (
-    <Container maxWidth="sm" className={classes.mainContainer}>
-      <Grid
-        container
-        spacing={0}
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: "100vh" }}>
-        <Grid item xs={12}>
-          <Card className={classes.card}>
-            <CardMedia
-              style={{
-                display: "flex",
-                paddingTop: "1em",
-                paddingBottom: "1em",
-              }}>
-              <img
-                src={`/branding_${appConfig.BRANDING}_logo.svg`}
-                style={{
-                  height: "60px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                }}
-                alt={t("alt-img-logo")}
-              />
-            </CardMedia>
-            <CardContent className={classes.cardContent}>
-              <Typography variant="body1" gutterBottom>
-                {t(props.messageKey)}
-              </Typography>
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-                noValidate
-                autoComplete="off">
-                <ConsentForm
-                  id="login-renew-consents"
-                  userRole={user.role}
-                  policyAccepted={policyAccepted}
-                  setPolicyAccepted={setPolicyAccepted}
-                  termsAccepted={termsAccepted}
-                  setTermsAccepted={setTermsAccepted}
-                  feedbackAccepted={feedbackAccepted}
-                  setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
-                />
-                <div id="consent-button-group" className={classes.buttons}>
-                  <Button
-                    id="consent-button-decline"
-                    onClick={onDecline}
-                  >
-                    {t("button-decline")}
-                  </Button>
-                  <Button
-                    id="consent-button-confirm"
-                    variant="contained"
-                    color="primary"
-                    disableElevation
-                    disabled={!consentsChecked}
-                    onClick={onConfirm}
-                  >
-                    {t("button-accept")}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </Container>
-  );
+  return null;
 }
 
 export default Page;
