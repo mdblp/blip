@@ -111,7 +111,7 @@ function TeamMenu(): JSX.Element {
     setTeamCreationDialogData(null);
   };
 
-  const onTeamMenuTeamsAction = () => {
+  const onTeamAction = () => {
     if (isUserHcp) {
       setTeamCreationDialogData({ team: null, onSaveTeam });
     } else if (isUserPatient) {
@@ -191,19 +191,19 @@ function TeamMenu(): JSX.Element {
           </ListItem>
         }
 
-        {isUserHcp || isUserPatient &&
+        {(isUserHcp || isUserPatient) &&
           <Box>
             <Box marginY={1}>
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" onClick={onTeamMenuTeamsAction}>
+            <MenuItem id="team-menu-teams-link" onClick={onTeamAction}>
               <ListItemIcon>
                 <GroupOutlinedIcon />
               </ListItemIcon>
               <Typography>
-                { isUserHcp && t("new-care-team")}
-                { isUserPatient && t("join-care-team")}
+                {isUserHcp && t("new-care-team")}
+                {isUserPatient && t("join-care-team")}
               </Typography>
             </MenuItem>
           </Box>
@@ -213,7 +213,7 @@ function TeamMenu(): JSX.Element {
       {showJoinTeamDialog &&
         <AddTeamDialog
           error={t("error-joining-team")}
-          actions={{ onDialogResult : (teamId) => { onJoinTeam(teamId); } }} />
+          actions={{ onDialogResult: (teamId) => onJoinTeam(teamId) }} />
       }
     </React.Fragment>
   );
