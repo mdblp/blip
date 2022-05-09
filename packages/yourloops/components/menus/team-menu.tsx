@@ -49,7 +49,6 @@ import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
 import { getDirectShares, ShareUser } from "../../lib/share";
 
 const classes = makeStyles((theme: Theme) => ({
