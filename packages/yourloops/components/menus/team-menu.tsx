@@ -81,8 +81,8 @@ function TeamMenu(): JSX.Element {
   const alert = useAlert();
   const authHook = useAuth();
   const session = authHook.session();
-  const isUserHcp = authHook.user?.role === UserRoles.hcp;
-  const isUserPatient = authHook.user?.role === UserRoles.patient;
+  const isUserHcp = authHook.user?.isUserHcp();
+  const isUserPatient = authHook.user?.isUserPatient();
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 

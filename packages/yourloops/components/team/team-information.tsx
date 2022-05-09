@@ -44,7 +44,6 @@ import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
 import LeaveTeamButton from "./leave-team-button";
 
 const useStyles = makeStyles(() => ({
@@ -102,7 +101,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const classes = useStyles();
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
-  const isUserPatient = authContext.user?.role === UserRoles.patient;
+  const isUserPatient = authContext.user?.isUserPatient();
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");

@@ -43,9 +43,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
-import { REGEX_EMAIL } from "../../../lib/utils";
-import DiabeloopUrl from "../../../lib/diabeloop-url";
-import { AddPatientDialogContentProps } from "../types";
+import { REGEX_EMAIL } from "../../lib/utils";
+import DiabeloopUrl from "../../lib/diabeloop-url";
+import { AddPatientDialogContentProps } from "../../pages/hcp/types";
 
 export interface AddDialogProps {
   actions: AddPatientDialogContentProps | null;

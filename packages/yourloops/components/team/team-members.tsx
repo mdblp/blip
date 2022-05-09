@@ -47,8 +47,8 @@ import AddMemberDialog from "../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
-import LeaveTeamButton from "./leave-team-button";
 import { StyledTableCell } from "../styled-components";
+import LeaveTeamButton from "./leave-team-button";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {

@@ -42,7 +42,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { HistoryState } from "../../models/generic";
-import { Profile, UserRoles } from "../../models/shoreline";
+import { Profile } from "../../models/shoreline";
 import { useAuth } from "../../lib/auth";
 import ConsentForm from "./form";
 import appConfig from "../../lib/config";
@@ -108,7 +108,7 @@ function Page(props: ConsentProps): JSX.Element {
   const consentsChecked = policyAccepted && termsAccepted;
   // Ask for feedback only if the user is an HCP, and didn't have previously
   // see that option (e.g. Account created before it was implemented)
-  const showFeedback = user.role === UserRoles.hcp && _.isNil(user.profile?.contactConsent);
+  const showFeedback = user.isUserHcp() && _.isNil(user.profile?.contactConsent);
 
   const onDecline = (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
     auth.logout().catch((reason) => console.error("logout", reason));
