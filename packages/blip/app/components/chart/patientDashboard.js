@@ -8,12 +8,11 @@ import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
 
 const PatientDashboard = (props) => {
-  //eslint-disable-next-line
-  const { patient, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil,
+  const {
     //eslint-disable-next-line
-    epochLocation, msRange, timePrefs, tidelineData, permsOfLoggedInUser, trackMetric,
+    patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
     //eslint-disable-next-line
-    patientMonitored, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, patientMonitored, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
@@ -24,6 +23,7 @@ const PatientDashboard = (props) => {
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
+        id="dashboard-header"
         profileDialog={profileDialog}
         chartType={"dashboard"}
         patient={patient}
@@ -33,8 +33,8 @@ const PatientDashboard = (props) => {
       <Box id="patient-dashboard-content">
         {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored}/>}
         <PatientStatistics
+          id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
-          //eslint-disable-next-line
           bgSource={dataUtil.bgSource}
           chartPrefs={chartPrefs}
           chartType="patientStatistics"
@@ -43,6 +43,7 @@ const PatientDashboard = (props) => {
           loading={loading}
         />
         <DeviceUsage
+          id="dashboard-device-usage"
           bgPrefs={bgPrefs}
           timePrefs={timePrefs}
           patient={patient}
@@ -54,13 +55,18 @@ const PatientDashboard = (props) => {
           endpoints={endpoints}
           loading={loading}
         />
-        {/*<chatWidget/>*/}
+        {patientMonitored &&
+          <ChatWidget id="dashboard-chat-widget"
+            patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+        }
       </Box>
     </div>
   );
 };
 
-PatientDashboard.propType = {
+PatientDashboard.propTypes = {
+  user: PropTypes.object,
+  chatWidget: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   patientMonitored: PropTypes.object,

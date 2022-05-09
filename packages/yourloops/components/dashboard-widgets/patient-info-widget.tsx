@@ -38,7 +38,7 @@ import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined"
 
 import { Settings, IUser } from "../../models/shoreline";
 import { getUserFirstLastName } from "../../lib/utils";
-import { PatientMonitored } from "../../models/patient";
+import { PatientMonitored } from "../../lib/data/patient";
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   {

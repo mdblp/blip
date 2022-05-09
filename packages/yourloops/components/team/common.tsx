@@ -25,23 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles, styled, Theme } from "@material-ui/core/styles";
-import TableRow from "@material-ui/core/TableRow";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 export const commonTeamStyles = makeStyles((theme: Theme) => ({
   button: {
-    "backgroundColor": "#00A3E2",
-    "color": theme.palette.common.white,
-    "marginBottom": "12px",
-    "textTransform": "none",
-    "&:hover": {
-      backgroundColor: "#00A3E2",
-      color: theme.palette.common.white,
-    },
-    "&:disabled": {
-      color: theme.palette.common.white,
-      opacity: 0.5,
-    },
+    marginBottom: "12px",
+    textTransform: "none",
   },
   icon: {
     marginRight: "15px",
@@ -59,17 +48,5 @@ export const commonTeamStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600,
     lineHeight: "20px",
     marginLeft: "12px",
-  },
-}));
-
-
-export const StyledTableRow = styled(TableRow)((props) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: props.theme.palette.grey[100],
-  },
-  "&": {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
   },
 }));

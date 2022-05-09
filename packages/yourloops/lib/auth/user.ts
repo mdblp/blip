@@ -27,7 +27,7 @@
 
 import _ from "lodash";
 import { MedicalData } from "../../models/device-data";
-import { IUser, Preferences, Profile, Settings, Consent, UserRoles } from "../../models/shoreline";
+import { Consent, IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import config from "../config";
 
 class User implements IUser {
@@ -114,6 +114,18 @@ class User implements IUser {
    */
   shouldUpdateHcpProfession(): boolean {
     return this.role === UserRoles.hcp && this.profile?.hcpProfession === undefined;
+  }
+
+  isUserHcp() {
+    return this.role === UserRoles.hcp;
+  }
+
+  isUserPatient() {
+    return this.role === UserRoles.patient;
+  }
+
+  isUserCaregiver() {
+    return this.role === UserRoles.caregiver;
   }
 
   /**

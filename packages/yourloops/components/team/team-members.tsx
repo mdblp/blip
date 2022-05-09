@@ -37,21 +37,18 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { StyledTableCell } from "../../pages/hcp/patients/table";
 import MemberRow from "./member-row";
 import TableBody from "@material-ui/core/TableBody";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import AddMemberDialog from "../../pages/hcp/team-member-add-dialog";
-import { AddMemberDialogContentProps, TeamLeaveDialogContentProps } from "../../pages/hcp/types";
-import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
-import { useAlert } from "../utils/snackbar";
-import { useHistory } from "react-router-dom";
+import { AddMemberDialogContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
 import { useAuth } from "../../lib/auth";
+import { StyledTableCell } from "../styled-components";
+import LeaveTeamButton from "./leave-team-button";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -59,8 +56,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "row",
     flexWrap: "wrap",
   },
-  buttonLeaveTeam: {
-    marginRight: "23px",
+  addTeamMemberButton: {
+    marginLeft: "23px",
   },
   groupOutlinedIcon: {
     margin: "0px",
@@ -96,14 +93,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface TeamMembersProps {
   team: Team;
-  refreshParent : () => void;
+  refreshParent: () => void;
 }
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
   const { team, refreshParent } = props;
   const teamHook = useTeam();
-  const alert = useAlert();
-  const historyHook = useHistory();
   const classes = useStyles();
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
@@ -111,7 +106,6 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);
-  const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null);
 
   const getNonPatientMembers = (team?: Team) => {
     return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : [];
@@ -135,30 +129,6 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     setMembers(getNonPatientMembers(team));
   }, [team]);
 
-  const onTeamLeft = async (hasLeft: boolean) => {
-    if (hasLeft) {
-      const onlyMember = !((team.members.length ?? 0) > 1);
-      try {
-        await teamHook.leaveTeam(team);
-        const message = teamHook.teamHasOnlyOneMember(team)
-          ? t("team-page-success-deleted")
-          : t("team-page-leave-success");
-        alert.success(message);
-        historyHook.push("/");
-      } catch (reason: unknown) {
-        const message = onlyMember
-          ? t("team-page-failure-deleted")
-          : t("team-page-failed-leave");
-        alert.error(message);
-      }
-    }
-    setTeamToLeave(null);
-  };
-
-  const openLeaveTeamDialog = () => {
-    setTeamToLeave({ team, onDialogResult: onTeamLeft });
-  };
-
   const refresh = () => {
     setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined));
     refreshParent();
@@ -175,12 +145,16 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             </Typography>
           </div>
           <div>
-            <Button className={`${commonTeamClasses.button} ${classes.buttonLeaveTeam}`} onClick={openLeaveTeamDialog}>
-              <ExitToAppIcon className={commonTeamClasses.icon} />{t("button-team-leave")}
-            </Button>
+            <LeaveTeamButton team={team} />
             {
               isUserAdmin &&
-              <Button className={commonTeamClasses.button} onClick={openInviteMemberDialog}>
+              <Button
+                className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
+                variant="contained"
+                color="primary"
+                disableElevation
+                onClick={openInviteMemberDialog}
+              >
                 <GroupAddIcon className={commonTeamClasses.icon} />
                 {t("button-team-add-member")}
               </Button>
@@ -223,7 +197,6 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           </TableContainer>
         </div>
       </div>
-      <LeaveTeamDialog teamToLeave={teamToLeave} />
       <AddMemberDialog addMember={addMember} />
     </React.Fragment>
   );

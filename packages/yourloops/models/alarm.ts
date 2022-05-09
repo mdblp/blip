@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Types definitions for Typescript
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AddPatientDialogResult {
-  email: string;
-}
-
-export interface AddPatientDialogContentProps {
-  onDialogResult: (value: AddPatientDialogResult | null) => void;
+export interface Alarm {
+  timeSpentAwayFromTargetRate: number;
+  timeSpentAwayFromTargetActive: boolean;
+  frequencyOfSevereHypoglycemiaRate: number;
+  frequencyOfSevereHypoglycemiaActive: boolean;
+  nonDataTransmissionRate: number;
+  nonDataTransmissionActive: boolean;
 }

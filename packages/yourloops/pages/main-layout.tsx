@@ -32,19 +32,15 @@ import { useAuth } from "../lib/auth";
 import { NotificationContextProvider } from "../lib/notifications";
 import { TeamContextProvider } from "../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../lib/data";
-import CaregiverPage from "./caregiver";
 import ProfilePage from "./profile";
 import { Redirect, Route, Switch } from "react-router-dom";
 import NotificationsPage from "./notifications";
-import TeamsPage from "./hcp/teams-page";
 import CertifyAccountPage from "./hcp/certify-account-page";
-import HcpPatientListPage from "./hcp/patients/page";
-import CaregiverPatientListPage from "./caregiver/patients/page";
 import CaregiversPage from "./patient/caregivers/page";
-import PatientTeamsPage from "./patient/teams/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
 import TeamDetailPage from "./team/team-details-page";
+import HomePage from "./home-page";
 
 export function MainLayout(): JSX.Element {
   const authHook = useAuth();
@@ -53,13 +49,8 @@ export function MainLayout(): JSX.Element {
   const getHomePage = (): JSX.Element => {
     switch (session?.user.role) {
     case UserRoles.hcp:
-      return <HcpPatientListPage />;
     case UserRoles.caregiver:
-      return (
-        <CaregiverPage>
-          <CaregiverPatientListPage />
-        </CaregiverPage>
-      );
+      return <HomePage />;
     case UserRoles.patient:
       return <PatientDataPage />;
     default:
@@ -82,9 +73,8 @@ export function MainLayout(): JSX.Element {
                     {getHomePage()}
                   </Route>
 
-                  {session.user.role === UserRoles.hcp &&
+                  {session.user.isUserHcp() &&
                     <Switch>
-                      <Route exact path="/teams" component={TeamsPage} />
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Route exact path="/certify" component={CertifyAccountPage} />
                       <Route path="/patient/:patientId" component={PatientDataPage} />
@@ -93,7 +83,7 @@ export function MainLayout(): JSX.Element {
                     </Switch>
                   }
 
-                  {session.user.role === UserRoles.caregiver &&
+                  {session.user.isUserCaregiver() &&
                       <Switch>
                         <Route path="/patient/:patientId" component={PatientDataPage} />
                         <Redirect exact from="/" to="/home" />
@@ -101,10 +91,10 @@ export function MainLayout(): JSX.Element {
                       </Switch>
                   }
 
-                  {session.user.role === UserRoles.patient &&
+                  {session.user.isUserPatient() &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
-                      <Route exact path="/teams" component={PatientTeamsPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Redirect exact from="/" to="/daily" />
                       <Route path="/" component={PatientDataPage} />
                     </Switch>

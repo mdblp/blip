@@ -168,10 +168,10 @@ const ProfilePage = (): JSX.Element => {
     updatedProfile.lastName = lastName;
     updatedProfile.fullName = `${firstName} ${lastName}`;
 
-    if (user.role === UserRoles.patient) {
+    if (user.isUserPatient()) {
       _.set(updatedProfile, "patient.birthday", birthDate);
     }
-    if (user.role === UserRoles.hcp) {
+    if (user.isUserHcp()) {
       updatedProfile.hcpProfession = hcpProfession;
     }
     if (showFeedback && !!user?.profile?.contactConsent?.isAccepted !== feedbackAccepted) {

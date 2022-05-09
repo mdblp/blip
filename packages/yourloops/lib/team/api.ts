@@ -36,7 +36,7 @@ import { errorFromHttpStatus } from "../../lib/utils";
 import { Session } from "../auth";
 import appConfig from "../config";
 import { getCurrentLang } from "../language";
-import { PatientMonitored } from "models/patient";
+import { PatientMonitored } from "../data/patient";
 
 const log = bows("TeamAPI");
 

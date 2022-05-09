@@ -26,8 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
-import { Patient } from "../../../models/patient";
+import { FilterType, PatientTableSortFields, SortDirection } from "../../models/generic";
+import { Patient } from "../../lib/data/patient";
 
 export interface PatientTableCardCommonProps {
   patients: Patient[];

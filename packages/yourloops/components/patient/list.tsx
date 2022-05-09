@@ -39,14 +39,14 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 
-import { FilterType, PatientTableSortFields, SortDirection } from "../../../models/generic";
-import metrics from "../../../lib/metrics";
-import { useAuth } from "../../../lib/auth";
-import { errorTextFromException, setPageTitle } from "../../../lib/utils";
-import { TeamContext, useTeam } from "../../../lib/team";
+import { FilterType, PatientTableSortFields, SortDirection } from "../../models/generic";
+import metrics from "../../lib/metrics";
+import { useAuth } from "../../lib/auth";
+import { errorTextFromException, setPageTitle } from "../../lib/utils";
+import { TeamContext, useTeam } from "../../lib/team";
 import PatientsTable from "./table";
 import PatientsCards from "./cards";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../lib/data/patient";
 import { PatientListProps } from "./models";
 import { comparePatients } from "./utils";
 
@@ -186,7 +186,7 @@ function PatientList(props: PatientListProps): JSX.Element {
           />
         </Container>
       ) : (
-        <Container id="patient-list-container" maxWidth="lg">
+        <Container id="patient-list-container" maxWidth={false}>
           <PatientsTable
             patients={patients}
             flagged={flagged}

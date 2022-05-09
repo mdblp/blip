@@ -28,15 +28,14 @@
 import React, { useState } from "react";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import Checkbox from "@material-ui/core/Checkbox";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { StyledTableCell } from "../../pages/hcp/patients/table";
 import { UserInvitationStatus } from "../../models/generic";
-import Checkbox from "@material-ui/core/Checkbox";
 import { TeamMemberRole } from "../../models/team";
 import { useAuth } from "../../lib/auth";
-import { StyledTableRow } from "./common";
+import { StyledTableCell, StyledTableRow } from "../styled-components";
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {

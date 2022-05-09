@@ -37,7 +37,7 @@ import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 
 import "../../intersectionObserverMock";
 
-import PatientTable from "../../../pages/hcp/patients/table";
+import PatientTable from "../../../components/patient/table";
 import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { createAuthHookStubs } from "../../lib/auth/utils";
@@ -45,9 +45,9 @@ import { stubNotificationContextValue } from "../../lib/notifications/utils";
 import { TablePagination, ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";
 import renderer from "react-test-renderer";
-import PatientRow from "../../../pages/hcp/patients/row";
+import PatientRow from "../../../components/patient/row";
 import { createPatient, createPatientTeam } from "../../common/utils";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 describe("Patient list table", () => {
   const authHcp = loggedInUsers.hcpSession;

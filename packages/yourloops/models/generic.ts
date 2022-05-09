@@ -42,6 +42,7 @@ enum SortFields {
 enum PatientTableSortFields {
   alertHypoglycemic = "alertHypoglycemic",
   alertTimeTarget = "alertTimeTarget",
+  dataNotTransferred = "dataNotTransferred",
   flag = "flag",
   /** Last data update */
   ldu = "ldu",

@@ -271,6 +271,7 @@
   "team-leave-dialog-question": "Weet je zeker dat je dit behandelteam wilt verlaten?",
   "team-leave-dialog-title": "Een behandelteam verlaten",
   "team-member-admin": "Beheer",
+  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren.",
   "team-member-remove": "Uit team verwijderen",
   "team-members-dialog-rmmember-consequences": "Hij/zij zal geen toegang meer hebben tot patiëntengegevens.",
   "team-members-dialog-rmmember-question": "Weet je zeker dat je <strong>{{hcpFirstName}} {{hcpLastName}}</strong> uit dit behandelteam wilt verwijderen?",
@@ -308,6 +309,5 @@
   "tooltip-release-notes": "Release-opmerkingen",
   "units": "Eenheden",
   "user-name": "{{firstName}} {{lastName}}",
-  "yesterday": "Gisteren",
-  "team-member-cannot-cancel-pending": "Alleen de uitnodigende partij kan een openstaande uitnodiging annuleren."
+  "yesterday": "Gisteren"
 }

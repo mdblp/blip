@@ -36,8 +36,9 @@ import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-optio
 import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
-import { PatientMonitored } from "../../yourloops/models/patient"
+import { PatientMonitored } from "../../yourloops/lib/data/patient"
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
+import ChatWidget from "../../yourloops/components/chat/chat-widget";
 
 interface BlipProperties {
   config: AppConfig;
@@ -50,6 +51,7 @@ interface BlipProperties {
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
   patientInfoWidget: typeof PatientInfoWidget;
+  chatWidget: typeof ChatWidget;
 }
 
 // FIXME: For some reason, the yourloops auth hook

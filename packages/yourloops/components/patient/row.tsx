@@ -34,23 +34,31 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
+import AnnouncementIcon from "@material-ui/icons/Announcement";
 
-import IconActionButton from "../../../components/buttons/icon-action";
-import { FilterType } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
-import metrics from "../../../lib/metrics";
-import { useAuth } from "../../../lib/auth";
-import { useTeam } from "../../../lib/team";
-import { addPendingFetch, removePendingFetch } from "../../../lib/data";
+import IconActionButton from "../buttons/icon-action";
+import { FilterType } from "../../models/generic";
+import { MedicalData } from "../../models/device-data";
+import metrics from "../../lib/metrics";
+import { useAuth } from "../../lib/auth";
+import { useTeam } from "../../lib/team";
+import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
-import { StyledTableCell } from "./table";
+import { patientListCommonStyle } from "./table";
 import { Box, Typography } from "@material-ui/core";
-import { StyledTableRow } from "../../../components/team/common";
+import { StyledTableCell, StyledTableRow } from "../styled-components";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
+      alert: {
+        color: theme.palette.warning.main,
+      },
+      alertIcon: {
+        marginLeft: theme.spacing(2),
+        verticalAlign: "bottom",
+      },
       flag: {
         color: theme.palette.primary.main,
       },
@@ -63,6 +71,9 @@ const patientListStyle = makeStyles(
         width: "56px",
         padding: 0,
       },
+      remoteMonitoringCell: {
+        whiteSpace: "pre-line",
+      },
       tableRow: {
         cursor: "pointer",
         height: "64px",
@@ -70,7 +81,6 @@ const patientListStyle = makeStyles(
       typography: {
         overflow: "hidden",
         textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
       },
     };
   },
@@ -83,7 +93,10 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const trNA = t("N/A");
   const authHook = useAuth();
   const teamHook = useTeam();
+  const isUserHcp = authHook.user?.isUserHcp();
+  const patientIsMonitored = patient.remoteMonitoring !== null;
   const classes = patientListStyle();
+  const patientListCommonClasses = patientListCommonStyle();
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
   const [tooltipText, setTooltipText] = React.useState<string>("");
   const rowRef = React.createRef<HTMLTableRowElement>();
@@ -92,10 +105,55 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const email = patient.username;
   const isFlagged = flagged.includes(userId);
   const patientFullName = patient.fullName;
-  const patientSystem = patient.system ?? trNA;
-  const patientRemoteMonitoring = patient.remoteMonitoring ?? t("no");
-  const timeSpentAwayFromTargetRate = patient.alerts?.timeSpentAwayFromTargetRate ? `${patient.alerts.timeSpentAwayFromTargetRate}%` : trNA;
-  const frequencyOfSevereHypoglycemiaRate = patient.alerts?.frequencyOfSevereHypoglycemiaRate ? `${patient.alerts.frequencyOfSevereHypoglycemiaRate}%` : trNA;
+
+  const computeRowInformation = () => {
+    const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`;
+    const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`;
+    const timeSpentAwayFromTargetActive = patient.alarm?.timeSpentAwayFromTargetActive ?? false;
+    const frequencyOfSevereHypoglycemiaActive = patient.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
+    const nonDataTransmissionActive = patient.alarm?.nonDataTransmissionActive ?? false;
+    let patientFullNameClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`;
+    let timeSpentAwayFromTargetRateClasses = mediumCellWithClasses;
+    let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses;
+    let dataNotTransferredRateClasses = mediumCellWithClasses;
+    if (isUserHcp) {
+      const dataNotTransferredActive = patient.alarm?.nonDataTransmissionRate ?? false;
+      const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
+      patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`;
+      timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      dataNotTransferredRateClasses = dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+    }
+    return {
+      patientSystem: patient.system ?? trNA,
+      patientRemoteMonitoring: patient.remoteMonitoring ? `${t("yes")}\n(${t("since")} ${patient.remoteMonitoring.toDateString()})` : t("no"),
+      timeSpentAwayFromTargetRate: patient.alarm?.timeSpentAwayFromTargetRate ? `${patient.alarm.timeSpentAwayFromTargetRate}%` : trNA,
+      frequencyOfSevereHypoglycemiaRate: patient.alarm?.frequencyOfSevereHypoglycemiaRate ? `${patient.alarm.frequencyOfSevereHypoglycemiaRate}%` : trNA,
+      dataNotTransferredRate: patient.alarm?.nonDataTransmissionRate ? `${patient.alarm.nonDataTransmissionRate}%` : trNA,
+      timeSpentAwayFromTargetActive,
+      frequencyOfSevereHypoglycemiaActive,
+      nonDataTransmissionActive,
+      patientFullNameClasses,
+      timeSpentAwayFromTargetRateClasses,
+      frequencyOfSevereHypoglycemiaRateClasses,
+      dataNotTransferredRateClasses,
+    };
+  };
+
+  const {
+    patientSystem,
+    patientRemoteMonitoring,
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+    dataNotTransferredRate,
+    timeSpentAwayFromTargetActive,
+    frequencyOfSevereHypoglycemiaActive,
+    nonDataTransmissionActive,
+    patientFullNameClasses,
+    timeSpentAwayFromTargetRateClasses,
+    frequencyOfSevereHypoglycemiaRateClasses,
+    dataNotTransferredRateClasses,
+  } = computeRowInformation();
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();
@@ -175,7 +233,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       data-email={email}
       ref={rowRef}
     >
-      <StyledTableCell id={`${rowId}-icon`} className={classes.iconCell}>
+      <StyledTableCell
+        id={`${rowId}-icon`} className={classes.iconCell}
+      >
         {filter === FilterType.pending && hasPendingInvitation ?
           (<Tooltip
             id={`${rowId}-tooltip-pending`}
@@ -194,25 +254,44 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-patient-full-name`} className={classes.typography}>
+      <StyledTableCell
+        id={`${rowId}-patient-full-name`} className={patientFullNameClasses}
+      >
         <Tooltip title={tooltipText}>
           <Typography id={`${rowId}-patient-full-name-value`} className={classes.typography}>
             {patientFullName}
           </Typography>
         </Tooltip>
       </StyledTableCell>
-      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>
-        {patientSystem}
+      <StyledTableCell id={`${rowId}-system`} className={classes.typography}>{patientSystem}</StyledTableCell>
+      {isUserHcp &&
+        <StyledTableCell
+          id={`${rowId}-remote-monitoring`}
+          className={`${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.remoteMonitoringCell}`}
+        >
+          {patientRemoteMonitoring}
+        </StyledTableCell>
+      }
+      <StyledTableCell
+        id={`${rowId}-time-away-target`}
+        className={timeSpentAwayFromTargetRateClasses}
+      >
+        {timeSpentAwayFromTargetRate}
+        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
-        id={`${rowId}-remote-monitoring`} className={classes.typography}>
-        {patientRemoteMonitoring}
-      </StyledTableCell>
-      <StyledTableCell id={`${rowId}-time-away-target`} className={classes.typography}>
-        {timeSpentAwayFromTargetRate}
-      </StyledTableCell>
-      <StyledTableCell id={`${rowId}-hypo-frequency-rate`} className={classes.typography}>
+        id={`${rowId}-hypo-frequency-rate`}
+        className={frequencyOfSevereHypoglycemiaRateClasses}
+      >
         {frequencyOfSevereHypoglycemiaRate}
+        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
+      </StyledTableCell>
+      <StyledTableCell
+        id={`${rowId}-data-not-transferred`}
+        className={dataNotTransferredRateClasses}
+      >
+        {dataNotTransferredRate}
+        {isUserHcp && patientIsMonitored && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}

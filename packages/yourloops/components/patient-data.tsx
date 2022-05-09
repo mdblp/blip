@@ -36,10 +36,10 @@ import Container from "@material-ui/core/Container";
 import Blip from "blip";
 
 import { UserRoles, IUser } from "../models/shoreline";
-import { PatientMonitored } from "../models/patient";
+import { PatientMonitored } from "../lib/data/patient";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { useTeam } from "../lib/team";
+import { Team, useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
 import TeamAPIImpl from "../lib/team/api"
@@ -49,6 +49,7 @@ import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
+import ChatWidget from "./chat/chat-widget";
 
 interface PatientDataParam {
   patientId?: string;
@@ -76,6 +77,7 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
+  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
@@ -83,7 +85,7 @@ function PatientDataPage(): JSX.Element | null {
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
   const authUser = authHook.user;
   const userId = authUser?.userid ?? null;
-  const userIsPatient = authHook.user?.role === UserRoles.patient;
+  const userIsPatient = authHook.user?.isUserPatient();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
   const initialized = authHook.isAuthHookInitialized && teamHook.initialized && blipApi !== null;
@@ -91,6 +93,9 @@ function PatientDataPage(): JSX.Element | null {
     if (!initialized) {
       return;
     }
+
+    setTeams(teamHook.getMedicalTeams());
+
 
     if (userIsPatient && !_.isNil(authUser)) {
       setPatient(authUser);
@@ -155,6 +160,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
         patientInfoWidget={PatientInfoWidget}
+        chatWidget={ChatWidget}
       />
     </Container>
   );

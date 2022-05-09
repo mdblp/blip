@@ -25,16 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Alerts {
-  userID: string;
-  alert: Alert;
-}
+import TableCell from "@material-ui/core/TableCell";
+import { Tooltip, withStyles } from "@material-ui/core";
+import TableRow from "@material-ui/core/TableRow";
+import { styled } from "@material-ui/core/styles";
 
-export interface Alert {
-  timeSpentAwayFromTargetRate: number;
-  timeSpentAwayFromTargetActive: boolean;
-  frequencyOfSevereHypoglycemiaRate: number;
-  frequencyOfSevereHypoglycemiaActive: boolean;
-  nonDataTransmissionRate: number;
-  nonDataTransmissionActive: boolean;
-}
+export const StyledTableCell = styled(TableCell)((props) => ({
+  "&": {
+    border: "unset",
+    borderRight: `0.5px solid ${props.theme.palette.divider}`,
+    fontSize: "15px",
+    height: "inherit",
+  },
+}));
+
+export const StyledTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.primary.main,
+    boxShadow: theme.shadows[1],
+    whiteSpace: "pre-line",
+  },
+  arrow: {
+    color: theme.palette.primary.main,
+  },
+}))(Tooltip);
+
+export const StyledTableRow = styled(TableRow)((props) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: props.theme.palette.grey[100],
+  },
+  "&": {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+}));

@@ -29,11 +29,11 @@
 import moment from "moment-timezone"; // TODO: Change moment-timezone lib with something else
 import { TFunction } from "i18next";
 
-import { PatientTableSortFields, SortFields } from "../../../models/generic";
-import { MedicalData } from "../../../models/device-data";
+import { PatientTableSortFields, SortFields } from "../../models/generic";
+import { MedicalData } from "../../models/device-data";
 import { MedicalTableValues } from "./models";
-import { TeamMember, TeamUser } from "../../../lib/team";
-import { Patient, PatientTeam } from "../../../models/patient";
+import { TeamMember, TeamUser } from "../../lib/team";
+import { Patient, PatientTeam } from "../../lib/data/patient";
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
   let tir = "-";
@@ -150,12 +150,16 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
 
   switch (orderBy) {
   case PatientTableSortFields.alertTimeTarget:
-    aValue = a.alerts?.timeSpentAwayFromTargetRate;
-    bValue = b.alerts?.timeSpentAwayFromTargetRate;
+    aValue = a.alarm?.timeSpentAwayFromTargetRate;
+    bValue = b.alarm?.timeSpentAwayFromTargetRate;
     break;
   case PatientTableSortFields.alertHypoglycemic:
-    aValue = a.alerts?.frequencyOfSevereHypoglycemiaRate;
-    bValue = b.alerts?.frequencyOfSevereHypoglycemiaRate;
+    aValue = a.alarm?.frequencyOfSevereHypoglycemiaRate;
+    bValue = b.alarm?.frequencyOfSevereHypoglycemiaRate;
+    break;
+  case PatientTableSortFields.dataNotTransferred:
+    aValue = a.alarm?.nonDataTransmissionRate;
+    bValue = b.alarm?.nonDataTransmissionRate;
     break;
   case PatientTableSortFields.flag:
     aValue = a.flagged;
@@ -193,7 +197,7 @@ export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
 
 export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
   return {
-    alerts: null,
+    alarm: null,
     firstName: teamUser.profile?.firstName,
     flagged: undefined,
     fullName: teamUser.profile?.fullName ?? teamUser.username,

@@ -59,6 +59,9 @@ const styles = makeStyles((theme: Theme) => ({
     width: mainDrawerDefaultWidth,
     overflowX: "hidden",
   },
+  drawerBoxShadow: {
+    boxShadow: theme.shadows[5],
+  },
   miniDrawer: {
     width: mainDrawerMiniVariantWidth,
     whiteSpace: "nowrap",
@@ -82,12 +85,24 @@ const styles = makeStyles((theme: Theme) => ({
 }));
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
-  const { drawer, drawerPaper, miniDrawer, miniDrawerPaper, enterTransition, leaveTransition } = styles();
+  const {
+    drawer,
+    drawerPaper,
+    miniDrawer,
+    miniDrawerPaper,
+    enterTransition,
+    leaveTransition,
+    drawerBoxShadow,
+  } = styles();
   const { t } = useTranslation("yourloops");
 
   const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant);
+  const [onHover, setOnHover] = useState<boolean>(false);
+
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
-  const paperClass = fullDrawer ? `${drawerPaper} ${enterTransition}` : `${miniDrawerPaper} ${enterTransition}`;
+  const paperClass = fullDrawer || onHover ?
+    `${drawerPaper} ${enterTransition} ${onHover && !fullDrawer ? drawerBoxShadow : ""}` :
+    `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
     { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (104)` },
@@ -95,12 +110,6 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     { icon: <PendingIcon />, text: `${t("pending")} (7)` },
     { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (4)` },
   ];
-
-  const computeFullDrawer = (status: boolean) => {
-    if (miniVariant) {
-      setFullDrawer(status);
-    }
-  };
 
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant]);
 
@@ -110,8 +119,8 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
-      onMouseEnter={() => computeFullDrawer(true)}
-      onMouseLeave={() => computeFullDrawer(false)}
+      onMouseEnter={() => setOnHover(true)}
+      onMouseLeave={() => setOnHover(false)}
     >
       <Toolbar />
       <List>

@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Caregiver page tests
+ * Copyright (c) 2022, Diabeloop
+ * Chat system - API calls
  *
  * All rights reserved.
  *
@@ -26,11 +26,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import CaregiverPage from "../../../pages/caregiver";
+import { IMessage } from "../../models/chat";
+import HttpService from "../../services/http";
 
-describe("Caregiver page", () => {
-  it("should be exported as a function", () => {
-    expect(CaregiverPage).toBeInstanceOf(Function);
+export async function getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
+  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
+  const response = await HttpService.get<IMessage[]>({
+    url,
   });
-});
 
+  if (response.status === 200) {
+    return response.data;
+  }
+  return Promise.reject(response.statusText);
+}
+
+export async function sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
+  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
+  const response = await HttpService.post<boolean, string>({
+    url,
+    payload: JSON.stringify({ text , private: isPrivate }) ,
+  });
+
+  if (response.status !== 200) {
+    return Promise.reject(response.statusText);
+  }
+  return true;
+}
