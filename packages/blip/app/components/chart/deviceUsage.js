@@ -126,9 +126,9 @@ const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0];
 
-  const device = mostRecentSettings?.payload?.device;
-  const pump = mostRecentSettings?.payload?.pump;
-  const cgm = mostRecentSettings?.payload?.cgm;
+  const device = mostRecentSettings?.payload?.device ?? {};
+  const pump = mostRecentSettings?.payload?.pump ?? {};
+  const cgm = mostRecentSettings?.payload?.cgm ?? {};
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ["changeDate"]);
 
   const dateFormat = getLongDayHourFormat();
@@ -136,15 +136,15 @@ const DeviceUsage = (props) => {
   const deviceData = {
     device: {
       label: `${t("dbl")}:`,
-      value: device.manufacturer
+      value: device.manufacturer ? device.manufacturer : "",
     },
     pump: {
       label: `${t("Pump")}:`,
-      value: pump.manufacturer
+      value: pump.manufacturer ? pump.manufacturer : "",
     },
     cgm: {
       label: `${t("CGM")}:`,
-      value: `${cgm.manufacturer} ${cgm.name}`
+      value: cgm.manufacture && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : "",
     }
   };
 
