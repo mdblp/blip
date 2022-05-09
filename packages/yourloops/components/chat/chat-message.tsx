@@ -32,6 +32,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Face from "@material-ui/icons/Face";
 import { useTranslation } from "react-i18next";
 import { CheckSharp } from "@material-ui/icons";
+import green from "@material-ui/core/colors/green";
 
 export interface ChatMessageProps {
   text: string;
@@ -109,10 +110,10 @@ const chatMessageStyles = makeStyles((theme: Theme) => {
       fontSize: "0.75em",
     },
     chatMessageCheckMarkAck: {
-      color: "#81E299",
+      color: green.A200,
     },
     chatMessageCheckMarkNack: {
-      color: "grey",
+      color: theme.palette.grey[400],
     },
     chatMessageCheckMark: {
       width: 20,
