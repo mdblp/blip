@@ -100,10 +100,6 @@ class User implements IUser {
     return this.profile?.fullName || this.username;
   }
 
-  isUserPatient() : boolean {
-    return this.role === UserRoles.patient;
-  }
-
   /**
    * Check If the user should accept is consent at a first login.
    * @description the first login is determined by null consents object
