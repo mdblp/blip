@@ -53,15 +53,6 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
       overflowY: "auto",
       maxHeight: 800,
     },
-    sectionTitles: {
-      fontSize: "var(--section-title-font-size)",
-      // TODO fontWeight typechecking make it not assignable with a CSS variable
-      // fontWeight: "var(--section-title-font-weight)",
-      fontWeight: 400,
-      lineHeight: "var(--section-title-line-height)",
-      margin: "var(--section-title-margin)",
-      color: "var(--section-title-color)",
-    },
     sectionContent: {
       fontSize: "13px",
       fontWeight: 300,
@@ -70,6 +61,9 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
     },
     deviceLabels: {
       paddingLeft: theme.spacing(2),
+    },
+    deviceValues: {
+      overflowWrap: "break-word",
     },
   }), { name: "patient-info-widget" });
 
@@ -114,12 +108,12 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
           {Object.keys(patientInfo).map(
             (key) =>
               <React.Fragment key={key}>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <div className={`${classes.deviceLabels} device-label`}>
                     {t(key)}:
                   </div>
                 </Grid>
-                <Grid item xs={6} id={`patient-info-${key}-value`}className="device-value">
+                <Grid item xs={8} id={`patient-info-${key}-value`} className={`${classes.deviceValues} device-value`}>
                   {patientInfo[key]}
                 </Grid>
               </React.Fragment>
