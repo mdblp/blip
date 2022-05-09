@@ -41,6 +41,7 @@ import { useAuth } from "../../lib/auth";
 import { IMessage } from "../../models/chat";
 import { Button, CardHeader, Tab, Tabs, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { UserRoles } from "../../models/shoreline";
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -218,7 +219,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       }
       <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
         <div className={classes.chatWidgetHCPToggle}>
-          { userRole === "hcp" &&
+          { userRole === UserRoles.hcp &&
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example" onChange={handleChange}>
                 <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")} onClick={() => setPrivateMessage(false)}/>
