@@ -37,18 +37,20 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
+import TableBody from "@material-ui/core/TableBody";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import MemberRow from "./member-row";
-import TableBody from "@material-ui/core/TableBody";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import AddMemberDialog from "../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../pages/hcp/types";
 import { commonTeamStyles } from "./common";
+import LeaveTeamButton from "./leave-team-button";
 import { useAuth } from "../../lib/auth";
 import { StyledTableCell } from "../styled-components";
-import LeaveTeamButton from "./leave-team-button";
+import { useAlert } from "../utils/snackbar";
+import { errorTextFromException } from "../../lib/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -102,6 +104,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const teamHook = useTeam();
   const classes = useStyles();
   const authContext = useAuth();
+  const alert = useAlert();
   const loggedInUserId = authContext.user?.userid as string;
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonTeamStyles();
@@ -116,8 +119,14 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
 
   const onMemberInvited = async (member: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => {
     if (member) {
-      await teamHook.inviteMember(member.team, member.email, member.role);
-      setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
+      try {
+        await teamHook.inviteMember(member.team, member.email, member.role);
+        setMembers(getNonPatientMembers(teamHook.getTeam(team.id) as Team));
+        alert.success(t("team-page-success-invite-hcp", { email: member.email }));
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        alert.error(t("team-page-failed-invite-hcp", { errorMessage }));
+      }
     }
     setAddMember(null);
   };

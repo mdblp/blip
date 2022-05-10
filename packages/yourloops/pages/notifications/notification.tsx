@@ -226,7 +226,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   };
 
-  const closeTeamAcceptDialog = (teamId: string | null): void => {
+  const closeTeamAcceptDialog = (teamId?: string): void => {
     setAddTeamDialogVisible(false);
     if (notification.target && teamId && notification.target.id === teamId) {
       acceptInvitation();
