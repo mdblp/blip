@@ -31,8 +31,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { HttpHeaderKeys } from "../models/api";
 import appConfig from "./config";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import HttpService from "../services/http";
 
 export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
   if (config.params?.noHeader) {
@@ -41,7 +40,7 @@ export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
     config = {
       ...config,
       headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
+        Authorization: `Bearer ${HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4(),
       },
     };
@@ -54,7 +53,7 @@ function initAxios() {
   /**
    * We use axios request interceptor to set the access token into headers each request the app send
    */
-  // axios.interceptors.request.use(onFulfilled);
+  axios.interceptors.request.use(onFulfilled);
 }
 
 export default initAxios;

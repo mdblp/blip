@@ -47,18 +47,15 @@ import {
   Session,
   SignupUser,
 } from "./models";
-import AuthAPIImpl from "./api";
+import AuthAPIImpl, { getShorelineAccessToken } from "./api";
 import appConfig from "../config";
-import { useAuthApi } from "./useAuthApi";
-import { HttpHeaderKeys } from "../../models/api";
-
+import HttpService from "../../services/http";
 
 const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
 
 export function AuthContextImpl(api: AuthAPI): AuthContext {
-  const { logout: auth0logout, user: auth0user, isAuthenticated } = useAuth0();
-  const { getUser } = useAuthApi();
+  const { logout: auth0logout, user: auth0user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const { t } = useTranslation("yourloops");
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
@@ -271,9 +268,8 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const getUserInfo = useCallback(async () => {
     try {
       if (auth0user) {
-        const { headers } = await getUser(auth0user.email as string);
         const user = new User(mapAuth0UserToIUser);
-        const sessionToken = headers[HttpHeaderKeys.sessionToken]; // await getAccessTokenSilently();
+        const sessionToken = await getShorelineAccessToken(auth0user.email as string);
         const traceToken = uuidv4();
         const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
         setUser(updatedUser);
@@ -283,7 +279,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     } catch (err) {
       log.error(err);
     }
-  }, [api, auth0user, getUser, mapAuth0UserToIUser]);
+  }, [api, auth0user, mapAuth0UserToIUser]);
 
   const logout = async (): Promise<void> => {
     try {
@@ -298,10 +294,14 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   useEffect(() => {
-    if (isAuthenticated && !user) {
-      getUserInfo();
-    }
-  }, [getUserInfo, isAuthenticated, user]);
+    (async () => {
+      if (isAuthenticated && !user) {
+        const token = await getAccessTokenSilently();
+        HttpService.setAccessToken(token);
+        await getUserInfo();
+      }
+    })();
+  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user]);
 
   return {
     user,
