@@ -133,7 +133,6 @@ const ignoredTransKeyForYourLoops = [
   "accompanying-documents",
   "intended-use",
   "training",
-  "birthdate",
   "initial-hba1c",
 ];
 const ignoredTransKeyInYourLoopsFiles = [

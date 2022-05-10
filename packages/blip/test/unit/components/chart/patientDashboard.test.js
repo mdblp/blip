@@ -39,7 +39,7 @@ import { PatientDashboard } from "../../../../app/components/chart";
 
 const expect = chai.expect;
 
-const PatientInfoWidget = () => <div id="patinet-info-widget"/>;
+const PatientInfoWidget = () => <div id="patient-info-widget"/>;
 const ChatWidget = () => <div id="chat-widget"/>;
 
 describe("PatientDashboard", () => {
@@ -156,7 +156,7 @@ describe("PatientDashboard", () => {
     });
 
     it("should show chat widget when patient is monitored", () => {
-      baseProps.patientMonitored = {userId: "1"}
+      baseProps.patientMonitored = {userId: "1"};
       wrapper = shallow(<PatientDashboard {...baseProps} />);
       expect(wrapper.find(ChatWidget)).to.have.length(1);
     });

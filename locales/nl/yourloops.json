@@ -198,7 +198,6 @@
   "password-too-weak": "Minimaal {{minLength}} tekens",
   "password-very-strong": "Zeer sterk wachtwoord",
   "patient-not-found": "Patiënt niet gevonden",
-  "patient-profile-birthdate": "Geboortedatum",
   "patient-profile-hba1c": "Initiële HbA1c waarde {{hba1cDate}}",
   "patient-profile-title": "Patiëntprofiel",
   "pdf-generate-report": "Rapport genereren",

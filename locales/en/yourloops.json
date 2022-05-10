@@ -218,7 +218,6 @@
   "password-very-strong": "Very strong password",
   "patient": "Patient",
   "patient-info": "Patient Information",
-  "patient-profile-birthdate": "Date of birth",
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-profile-title": "Patient profile",
   "pdf-generate-report": "Generate report",

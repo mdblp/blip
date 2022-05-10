@@ -57,7 +57,7 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
       fontSize: "13px",
       fontWeight: 300,
       lineHeight: "15px",
-      color: "#444444",
+      color: theme.palette.grey[800],
     },
     deviceLabels: {
       paddingLeft: theme.spacing(2),
@@ -77,14 +77,12 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const classes = patientInfoWidgetStyles();
   const { t } = useTranslation("yourloops");
 
-
-
   const hbA1c: Settings["a1c"] = patient.settings?.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
   const birthDate = moment.utc(patient.profile?.patient?.birthday).format("L");
   const userName = getUserFirstLastName(patient);
-  // patient.remoteMonitoring
+
   const patientInfo :Record<string, string>= {
     patient: `${userName.firstName} ${userName.lastName}`,
     birthdate: birthDate,
