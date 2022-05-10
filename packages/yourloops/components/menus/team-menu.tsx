@@ -50,7 +50,6 @@ import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import { getDirectShares, ShareUser } from "../../lib/share";
-import { UserRoles } from "../../models/shoreline";
 import AddTeamDialog from "../../pages/patient/teams/add-dialog";
 import { errorTextFromException } from "../../lib/utils";
 
