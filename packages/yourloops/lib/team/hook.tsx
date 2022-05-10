@@ -552,8 +552,9 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return team;
   };
 
-  const joinTeam = (teamId: string): Promise<void> => {
-    return teamAPI.joinTeam(session, teamId);
+  const joinTeam = async (teamId: string): Promise<void> => {
+    await teamAPI.joinTeam(session, teamId);
+    refresh(true);
   };
 
   const initHook = () => {
