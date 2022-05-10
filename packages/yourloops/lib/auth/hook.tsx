@@ -47,7 +47,7 @@ import {
   Session,
   SignupUser,
 } from "./models";
-import AuthAPIImpl, { getShorelineAccessToken } from "./api";
+import AuthAPIImpl from "./api";
 import appConfig from "../config";
 import HttpService from "../../services/http";
 
@@ -269,7 +269,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     try {
       if (auth0user) {
         const user = new User(mapAuth0UserToIUser);
-        const sessionToken = await getShorelineAccessToken(auth0user.email as string);
+        const sessionToken = await api.getShorelineAccessToken(auth0user.email as string);
         const traceToken = uuidv4();
         const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
         setUser(updatedUser);
@@ -294,10 +294,10 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   useEffect(() => {
+    const getAccessToken = async () => getAccessTokenSilently();
     (async () => {
       if (isAuthenticated && !user) {
-        const token = await getAccessTokenSilently();
-        HttpService.setAccessToken(token);
+        HttpService.setAccessToken(getAccessToken);
         await getUserInfo();
       }
     })();

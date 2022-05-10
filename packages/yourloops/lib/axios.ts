@@ -33,14 +33,14 @@ import { HttpHeaderKeys } from "../models/api";
 import appConfig from "./config";
 import HttpService from "../services/http";
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
+export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
   if (config.params?.noHeader) {
     delete config.params.noHeader;
   } else {
     config = {
       ...config,
       headers: {
-        Authorization: `Bearer ${HttpService.getAccessToken()}`,
+        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4(),
       },
     };

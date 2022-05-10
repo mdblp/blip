@@ -395,13 +395,14 @@ async function certifyProfessionalAccount(): Promise<IUser> {
   return data;
 }
 
-export async function getShorelineAccessToken(email: string): Promise<string> {
+async function getShorelineAccessToken(email: string): Promise<string> {
   const { headers } = await HttpService.post({ url : `auth/hack/user/${email}` });
   return headers[HttpHeaderKeys.sessionToken];
 }
 
 export default {
   getUserInfo,
+  getShorelineAccessToken,
   accountConfirmed,
   certifyProfessionalAccount,
   signup,
