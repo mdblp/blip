@@ -57,7 +57,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
     <React.Fragment>
       <TextField
         id="profile-textfield-birthdate"
-        label={t("patient-profile-birthdate")}
+        label={t("birthdate")}
         value={birthDate}
         onChange={event => setBirthDate(event.target.value)}
         error={errors.birthDate}

@@ -60,9 +60,10 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../index").DialogDatePicker } DialogDatePicker
  * @typedef { import("../index").DialogRangeDatePicker } DialogRangeDatePicker
  * @typedef { import("../index").ProfileDialog } ProfileDialog
+ * @typedef { import("../index").PatientInfoWidget } PatientInfoWidget
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -335,7 +336,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, chatWidget, api } = this.props;
+    const { patient, patientMonitored, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, api  } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -355,7 +356,7 @@ class PatientDataPage extends React.Component {
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             patient={patient}
-            teams={teams}
+            patientMonitored={patientMonitored}
             user={user}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
@@ -366,6 +367,7 @@ class PatientDataPage extends React.Component {
             tidelineData={tidelineData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
+            patientInfoWidget={patientInfoWidget}
             chatWidget={chatWidget}
           />
         </Route>
@@ -1006,6 +1008,7 @@ PatientDataPage.propTypes = {
   teams: PropTypes.object.isRequired,
   chatWidget: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  patientMonitored: PropTypes.object,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
@@ -1013,6 +1016,7 @@ PatientDataPage.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
 };
 
 export default PatientDataPage;

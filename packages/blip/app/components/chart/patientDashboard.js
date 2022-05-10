@@ -10,20 +10,15 @@ import "./patientDashboardVars.css";
 const PatientDashboard = (props) => {
   const {
     //eslint-disable-next-line
-    patient, user, teams, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
+    patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, patientMonitored, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
     const end = moment.utc(epochLocation).toISOString();
     return [start, end];
   };
-  /*TODO : retrieve only team with a filter on isMonitored (not present in front today so taking the first ...)*/
-  /*Tricky for hcp, there could be more than one monitoring team. \
-  See if it's possible to search for the team with the patient in it*/
-  const monitoringTeam = teams[0];
-
   const endpoints = getEndpoints();
   return (
     <div id="patient-dashboard" className="patient-dashboard">
@@ -36,6 +31,7 @@ const PatientDashboard = (props) => {
         canPrint={true}
       />
       <Box id="patient-dashboard-content">
+        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -59,9 +55,9 @@ const PatientDashboard = (props) => {
           endpoints={endpoints}
           loading={loading}
         />
-        {monitoringTeam &&
+        {patientMonitored &&
           <ChatWidget id="dashboard-chat-widget"
-            patientId={patient.userid} userId={user.userid} teamId={monitoringTeam.id} userRole={user.role}/>
+            patientId={patientMonitored.userId} userId={user.userid} teamId={patientMonitored.teamId} userRole={user.role} />
         }
       </Box>
     </div>
@@ -70,17 +66,18 @@ const PatientDashboard = (props) => {
 
 PatientDashboard.propTypes = {
   user: PropTypes.object,
-  teams: PropTypes.array,
-  chatWidget: PropTypes.object,
+  chatWidget: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
-  prefixURL:  PropTypes.string,
+  patientMonitored: PropTypes.object,
+  prefixURL: PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,
   chartPrefs: PropTypes.object.isRequired,
   dataUtil: PropTypes.object,
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
 };
 
 export default PatientDashboard;
