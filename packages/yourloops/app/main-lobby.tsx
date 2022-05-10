@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -85,14 +85,6 @@ export function MainLobby(): JSX.Element {
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
-  const [firstLoading, setFirstLoading] = useState(true);
-
-  useEffect(() => {
-    if (firstLoading && !isLoading) {
-      setFirstLoading(false);
-    }
-  }, [firstLoading, isAuthenticated, isLoading]);
-
   if (!isCurrentRoutePublic && isLoading) {
     return <React.Fragment />;
   }
@@ -109,26 +101,26 @@ export function MainLobby(): JSX.Element {
 
   return (
     <React.Fragment>
-      {redirectTo ? <Redirect to={redirectTo} /> : (
-        !firstLoading &&
-        <ThemeProvider theme={theme}>
-          <SessionTimeout />
-          <CssBaseline />
-          <SnackbarContextProvider context={DefaultSnackbarContext}>
-            <div className={style}>
-              <Switch>
-                <Route exact path="/login" component={LoginPage} />
-                <Route exact path="/signup" component={SignUpPage} />
-                <Route exact path="/renew-consent" component={ConsentPage} />
-                <Route exact path="/new-consent" component={PatientConsentPage} />
-                <Route exact path="/not-found" component={InvalidRoute} />
-                <Route component={MainLayout} />
-              </Switch>
-            </div>
-          </SnackbarContextProvider>
-          <Footer />
-        </ThemeProvider>
-      )}
+      {redirectTo ? <Redirect to={redirectTo} /> :
+        (!isLoading &&
+          <ThemeProvider theme={theme}>
+            <SessionTimeout />
+            <CssBaseline />
+            <SnackbarContextProvider context={DefaultSnackbarContext}>
+              <div className={style}>
+                <Switch>
+                  <Route exact path="/login" component={LoginPage} />
+                  <Route exact path="/signup" component={SignUpPage} />
+                  <Route exact path="/renew-consent" component={ConsentPage} />
+                  <Route exact path="/new-consent" component={PatientConsentPage} />
+                  <Route exact path="/not-found" component={InvalidRoute} />
+                  <Route component={MainLayout} />
+                </Switch>
+              </div>
+            </SnackbarContextProvider>
+            <Footer />
+          </ThemeProvider>
+        )}
     </React.Fragment>
   );
 }

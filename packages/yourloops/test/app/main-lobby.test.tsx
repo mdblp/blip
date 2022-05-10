@@ -28,6 +28,8 @@
 import React from "react";
 import { createMemoryHistory, MemoryHistory } from "history";
 import { Router } from "react-router-dom";
+import * as auth0Mock from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
@@ -38,8 +40,6 @@ import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
 import { SignUpPage } from "../../pages/signup";
-import * as auth0Mock from "@auth0/auth0-react";
-import { Auth0Provider } from "@auth0/auth0-react";
 import HomePage from "../../pages/home-page";
 import * as shareLib from "../../lib/share";
 
@@ -139,6 +139,5 @@ describe("Main lobby", () => {
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, SignUpPage, "/signup");
   });
-
 });
 
