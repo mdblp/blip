@@ -27,21 +27,22 @@
 
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-
 import FlagOutlinedIcon from "@material-ui/icons/FlagOutlined";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
-
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+
 import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import PendingIcon from "../icons/PendingIcon";
+import { useTeam } from "../../lib/team";
+import { useAuth } from "../../lib/auth";
 
 interface MainDrawerProps {
   miniVariant?: boolean;
@@ -98,6 +99,12 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
 
   const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant);
   const [onHover, setOnHover] = useState<boolean>(false);
+  const teamHook = useTeam();
+  const authHook = useAuth();
+  const numberTotalOfPatients = teamHook.getPatients().length;
+  const numberOfFlaggedPatients = authHook.getFlagPatients().length;
+  const numberOfPendingPatients = teamHook.getPendingPatients().length;
+  const numberOfDirectSharePatients = teamHook.getDirectSharePatients().length;
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?
@@ -105,10 +112,10 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
-    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (104)` },
-    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (12)` },
-    { icon: <PendingIcon />, text: `${t("pending")} (7)` },
-    { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (4)` },
+    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberTotalOfPatients})`, filter: "all" },
+    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: "flagged" },
+    { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: "pending" },
+    { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (${numberOfDirectSharePatients})`, filter: "private" },
   ];
 
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant]);
@@ -125,14 +132,16 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       <Toolbar />
       <List>
         {drawerItems.map((item, index) => (
-          <ListItem button key={index}>
-            <ListItemIcon>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText>
-              {item.text}
-            </ListItemText>
-          </ListItem>
+          <Link key={index} to={`/home?filter=${item.filter}`}>
+            <ListItem button >
+              <ListItemIcon>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText>
+                {item.text}
+              </ListItemText>
+            </ListItem>
+          </Link>
         ))}
       </List>
     </Drawer>

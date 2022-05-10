@@ -27,7 +27,7 @@
  */
 
 import _ from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 import bows from "bows";
 import { useTranslation } from "react-i18next";
 
@@ -48,6 +48,7 @@ import RemovePatientDialog from "../components/patient/remove-dialog";
 import TeamCodeDialog from "../components/patient/team-code-dialog";
 import { Patient } from "../lib/data/patient";
 import PatientList from "../components/patient/list";
+import { useLocation } from "react-router-dom";
 
 const log = bows("PatientListPage");
 
@@ -58,13 +59,15 @@ function HomePage(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();
+  const { search } = useLocation();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [filter, setFilter] = React.useState<string>("");
-  const [filterType, setFilterType] = React.useState<FilterType | string>(FilterType.all);
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null);
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
   const [patientToRemove, setPatientToRemove] = React.useState<Patient | null>(null);
+
+  const filterType = useMemo(() => new URLSearchParams(search).get("filter") as FilterType ?? FilterType.all, [search]);
 
   const handleRefresh = async (force = false) => {
     log.debug("handleRefresh:", { force });
@@ -113,16 +116,6 @@ function HomePage(): JSX.Element {
     log.info("Filter patients name", filter);
     throttledMetrics("patient_selection", "search_patient", "by-name");
     setFilter(filter);
-  };
-
-  const handleFilterType = (filterType: FilterType | string): void => {
-    log.info("Filter patients with", filterType);
-    setFilterType(filterType);
-    if (!(filterType in FilterType)) {
-      log.info("Replace", filterType, "with team"); // TODO Remove me if it works
-      filterType = "team";
-    }
-    metrics.send("patient_selection", "filter_patient", filterType);
   };
 
   const handleCloseTeamCodeDialog = (): void => {
@@ -182,16 +175,14 @@ function HomePage(): JSX.Element {
     <React.Fragment>
       <PatientsSecondaryBar
         filter={filter}
-        filterType={filterType}
         onFilter={handleFilter}
-        onFilterType={handleFilterType}
         onInvitePatient={handleInvitePatient}
       />
       <Grid container direction="row" justifyContent="center" alignItems="center"
         style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
         <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
       </Grid>
-      <PatientList filter={filter} filterType={filterType}/>
+      <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />
       <TeamCodeDialog
         onClose={handleCloseTeamCodeDialog}
