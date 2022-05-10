@@ -198,7 +198,6 @@
   "password-too-weak": "パスワードが弱すぎます。大文字、数字、特殊文字を追加してください",
   "password-very-strong": "非常に強力なパスワード",
   "patient-not-found": "患者が見つかりません",
-  "patient-profile-birthdate": "誕生日",
   "patient-profile-hba1c": "初期HbA1c {{hba1cDate}}",
   "patient-profile-title": "患者のプロフィール",
   "pdf-generate-report": "レポートを生成する",
