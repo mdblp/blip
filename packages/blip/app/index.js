@@ -59,13 +59,14 @@ function ReduxProvider(props) {
         api={props.api}
         store={store}
         patient={props.patient}
-        teams={props.teams}
+        patientMonitored={props.patientMonitored}
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
+        patientInfoWidget={props.patientInfoWidget}
         chatWidget={props.chatWidget}
       />
     </Provider>
@@ -75,12 +76,13 @@ function ReduxProvider(props) {
 ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  teams: PropTypes.object.isRequired,
+  patientMonitored: PropTypes.object,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
 };
 
@@ -90,19 +92,20 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, teams, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget } = props;
+      const { config, api, patient, patientMonitored, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, patientInfoWidget } = props;
       updateConfig(config);
 
       return (
         <ReduxProvider
           api={api}
           patient={patient}
-          teams={teams}
           profileDialog={profileDialog}
+          patientMonitored={patientMonitored}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
+          patientInfoWidget={patientInfoWidget}
           chatWidget={chatWidget}
         />
       );
@@ -119,12 +122,13 @@ Blip.propTypes = {
   config: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  teams: PropTypes.object.isRequired,
+  patientMonitored: PropTypes.object,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
 };
 

@@ -198,7 +198,6 @@
   "password-too-weak": "Minimo {{minLength}} caratteri",
   "password-very-strong": "Password assai complesso",
   "patient-not-found": "Paziente non trovato",
-  "patient-profile-birthdate": "Data di nascita",
   "patient-profile-hba1c": "HbA1c iniziale {{hba1cDate}}",
   "patient-profile-title": "Profilo del paziente",
   "pdf-generate-report": "Generare rapporto",

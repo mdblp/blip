@@ -198,7 +198,6 @@
   "password-too-weak": "Mindestens 10 Zeichen",
   "password-very-strong": "Sehr starkes Passwort",
   "patient-not-found": "Patient nicht gefunden",
-  "patient-profile-birthdate": "Geb. -Datum",
   "patient-profile-hba1c": "Ausgangs-HbA1c-Wert {{hba1cDate}}",
   "patient-profile-title": "Patientenprofil",
   "pdf-generate-report": "Bericht erstellen",

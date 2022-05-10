@@ -31,22 +31,24 @@ import bows from "bows";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 
 import { UserRoles, IUser } from "../models/shoreline";
+import { PatientMonitored } from "../lib/data/patient";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
-import { Team, useTeam } from "../lib/team";
+import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { getUserFirstLastName, setPageTitle } from "../lib/utils";
+import TeamAPIImpl from "../lib/team/api";
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
+import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
 
 interface PatientDataParam {
@@ -75,8 +77,8 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
 
   const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
-  const [teams, setTeams] = React.useState<Readonly<Team>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
+  const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
@@ -90,9 +92,6 @@ function PatientDataPage(): JSX.Element | null {
     if (!initialized) {
       return;
     }
-
-    setTeams(teamHook.getMedicalTeams());
-
 
     if (userIsPatient && !_.isNil(authUser)) {
       setPatient(authUser);
@@ -114,13 +113,28 @@ function PatientDataPage(): JSX.Element | null {
     }
   }, [initialized, paramPatientId, patient, userId, teamHook, authUser, userIsPatient]);
 
+  const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
+    const session = authHook.session();
+    if (session !== null) {
+      const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
+      setPatientMonitored(monitoredPatient);
+    }
+  },[authHook]);
+
   React.useEffect(() => {
     if (patient !== null && patient.userid !== userId) {
       setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
     } else {
       setPageTitle();
     }
-  }, [userId, patient, t]);
+
+    if (patient !== null) {
+      fetchPatientMonitored(patient.userid).catch(console.error);
+    } else {
+      setPatientMonitored(null);
+    }
+
+  }, [userId, patient, t, fetchPatientMonitored]);
 
   if (error !== null) {
     return <PatientDataPageError msg={error} />;
@@ -136,12 +150,13 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
-        teams={teams}
+        patientMonitored={patientMonitored}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        patientInfoWidget={PatientInfoWidget}
         chatWidget={ChatWidget}
       />
     </Container>
