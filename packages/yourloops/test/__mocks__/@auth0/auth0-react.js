@@ -17,5 +17,6 @@ export const useAuth0 = jest.fn().mockReturnValue({
       "sub": "auth0|0123456789",
       "http://your-loops.com/roles": ["hcp"],
     },
-  }
+  },
+  getAccessTokenSilently: () => Promise.resolve("token"),
 });

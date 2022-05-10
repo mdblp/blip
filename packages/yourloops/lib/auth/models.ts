@@ -79,7 +79,8 @@ export interface SignupUser {
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
-  getUserInfo: (session: Session) => Promise<User>
+  getUserInfo: (session: Session) => Promise<User>;
+  getShorelineAccessToken: (email: string) => Promise<string>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
   resendSignup: (username: string, traceToken: string, language?: string) => Promise<boolean>;
   sendAccountValidation: (session: Readonly<Session>, language?: string) => Promise<boolean>;

@@ -31,17 +31,15 @@ import ReactDOM from "react-dom";
 import { act } from "react-dom/test-utils";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
-import { MemoryRouter, Route } from "react-router-dom";
-import * as H from "history";
+import * as auth0Mock from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
-import { waitTimeout } from "../../../lib/utils";
-import { AuthAPI, AuthContext, Session, SignupUser, User } from "../../../lib/auth";
+import { AuthAPI, AuthContext, Session, SignupUser } from "../../../lib/auth";
 import { AuthContextImpl } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
 import { HcpProfession } from "../../../models/hcp-profession";
-import { STORAGE_KEY_SESSION_TOKEN, STORAGE_KEY_TRACE_TOKEN, STORAGE_KEY_USER } from "../../../lib/auth/models";
 import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./utils";
 
 describe("Auth hook", () => {
@@ -56,16 +54,8 @@ describe("Auth hook", () => {
   const authApiPatientStubs = createAuthAPIStubs(authPatient);
   let container: HTMLDivElement | null = null;
   let authContext: AuthContext = null;
-  let testHistory: H.History<unknown> | null = null;
-  let testLocation: H.Location<unknown> | null = null;
 
-  const initAuthContext = async (session: Session | null, stubApi: AuthAPI | AuthAPIStubs): Promise<void> => {
-    const initialRoute = "/";
-    if (session !== null) {
-      sessionStorage.setItem(STORAGE_KEY_SESSION_TOKEN, session.sessionToken);
-      sessionStorage.setItem(STORAGE_KEY_TRACE_TOKEN, session.traceToken);
-      sessionStorage.setItem(STORAGE_KEY_USER, JSON.stringify(session.user));
-    }
+  const initAuthContext = async (stubApi: AuthAPI | AuthAPIStubs): Promise<void> => {
     const AuthContextProvider = (): JSX.Element => {
       authContext = AuthContextImpl(stubApi as AuthAPI);
       return <ReactAuthContext.Provider value={authContext} />;
@@ -73,32 +63,35 @@ describe("Auth hook", () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <MemoryRouter initialEntries={[initialRoute]}>
+          <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
             <AuthContextProvider />
-            <Route
-              path="*"
-              render={({ history, location }) => {
-                testHistory = history;
-                testLocation = location;
-                return null;
-              }}
-            />
-          </MemoryRouter>,
-          container,
-          resolve
-        );
+          </Auth0Provider>, container, resolve);
       });
     });
     expect(authContext).not.toBeNull();
-    expect(authContext.isAuthHookInitialized).toBeTruthy();
+  };
+
+  const unAuthenticateUser = () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+    });
   };
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_USER);
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: true,
+      user: {
+        user: {
+          "email": "john.spartan@demolition.man",
+          "email_verified": true,
+          "sub": "auth0|0123456789",
+          "http://your-loops.com/roles": ["hcp"],
+        },
+      },
+      logout: jest.fn(),
+    });
   });
 
   afterEach(() => {
@@ -110,183 +103,37 @@ describe("Auth hook", () => {
     authContext = null;
   });
 
-
-  afterAll(() => {
-    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_USER);
-  });
-
   describe("Initialization", () => {
-    it("should initialize as logout state when no auth storage exists", async () => {
-      await initAuthContext(null, authApiHcpStubs);
-      expect(typeof authContext.traceToken).toBe("string");
-      expect(authContext.traceToken.length).toBeGreaterThan(0);
-      expect(authContext.sessionToken).toBeNull();
-      expect(authContext.user).toBeNull();
-    }
-    );
-
-    it("should initialized as logout state when trace token is not valid", async () => {
-      await initAuthContext({
-        sessionToken: authHcp.sessionToken,
-        traceToken: "abcd",
-        user: authHcp.user,
-      }, authApiHcpStubs);
-      expect(typeof authContext.traceToken).toBe("string");
-      expect(authContext.traceToken.length).toBeGreaterThan(0);
-      expect(authContext.sessionToken).toBeNull();
-      expect(authContext.user).toBeNull();
-    }
-    );
-
-    it("should initialized as logout state when session token has expired", async () => {
-      const expiredToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTAwMDAwMDAiLCJuYW1lIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3ZyIjoibm8iLCJyb2xlIjoiaGNwIiwiaWF0IjoxNjI0OTU2MzA3LCJleHAiOjE2MjQ5NTYzMDZ9.fEaJHx1E53fh9m4DwNNXFm--iD6gEWJ0YmlsRVCOmog";
-      await initAuthContext({
-        sessionToken: expiredToken,
-        traceToken: authHcp.traceToken,
-        user: authHcp.user,
-      }, authApiHcpStubs);
-      expect(typeof authContext.traceToken).toBe("string");
-      expect(authContext.traceToken.length).toBeGreaterThan(0);
-      expect(authContext.sessionToken).toBeNull();
-      expect(authContext.user).toBeNull();
-    }
-    );
-
-    it("should initialized as login state when auth storage exists", async () => {
-      await initAuthContext(authHcp, authApiHcpStubs);
-      expect(authContext.traceToken).toBe(authHcp.traceToken);
-      expect(authContext.sessionToken).toBe(authHcp.sessionToken);
-      expect(authContext.user).not.toBeNull();
-      expect(authContext.user.userid).toBe(authHcp.user.userid);
-    }
-    );
-  });
-
-  describe("Login", () => {
-    beforeAll(() => {
-      config.METRICS_SERVICE = "matomo";
-      window._paq = [];
-    });
-    afterAll(() => {
-      delete window._paq;
-      config.METRICS_SERVICE = "disabled";
-    });
-
-    it("should call the login api function and set the context values", async () => {
-      const session = loggedInUsers.hcpSession;
-      const stubs = createAuthAPIStubs(session);
-      await initAuthContext(null, stubs);
-      expect(authContext.session()).toBeNull();
-      expect(authContext.isLoggedIn).toBe(false);
-
-      const user = await authContext.login("abc", "abc", "abc");
-      expect(stubs.login).toHaveBeenCalledTimes(1);
-      expect(user).toEqual(session.user);
-      expect(authContext.traceToken).toBe(session.traceToken);
-      expect(authContext.sessionToken).toBe(session.sessionToken);
-      expect(authContext.user).not.toBeNull();
-      expect(authContext.user.userid).toBe(session.user.userid);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(session.sessionToken);
-      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN)).toBe(session.traceToken);
-      expect(sessionStorage.getItem(STORAGE_KEY_USER)).toBe(JSON.stringify(session.user));
-      expect(window._paq).toEqual([
-        ["setUserId", session.user.userid],
-        ["setCustomVariable", 1, "UserRole", "hcp", "page"],
-        ["trackEvent", "registration", "login", "hcp"],
-      ]);
-      expect(authContext.session()).toEqual(session);
-      expect(authContext.isLoggedIn).toBe(true);
-    }
-    );
-
-    it("should throw an exception if the api call failed", async () => {
-      await initAuthContext(null, authApiHcpStubs);
-      authApiHcpStubs.login.mockRejectedValue(new Error("wrong"));
-
-      let user: User | null = null;
-      let error: Error | null = null;
-      try {
-        user = await authContext.login("abc", "abc", "abc");
-      } catch (reason) {
-        error = reason;
-      }
-      expect(user).toBeNull();
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe("wrong");
-      expect(typeof authContext.traceToken).toBe("string");
-      expect(authContext.traceToken.length).toBeGreaterThan(0);
-      expect(authContext.sessionToken).toBeNull();
-      expect(authContext.user).toBeNull();
-      expect(authContext.session()).toBeNull();
-      expect(authContext.isLoggedIn).toBe(false);
+    it("should getUserInfo when authentication is successfully done", async () => {
+      console.log(authContext);
+      await initAuthContext(authApiHcpStubs);
+      expect(authContext.isLoggedIn).toBeTruthy();
+      expect(authContext.user.username).toBe("john.doe@example.com");
     });
   });
 
   describe("Logout", () => {
     const cleanBlipReduxStore = jest.fn();
+
     beforeAll(() => {
       config.METRICS_SERVICE = "matomo";
       window._paq = [];
       window.cleanBlipReduxStore = cleanBlipReduxStore;
     });
+
     afterAll(() => {
       delete window.cleanBlipReduxStore;
       delete window._paq;
       config.METRICS_SERVICE = "disabled";
     });
+
     it("should logout the logged-in user", async () => {
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.session()).not.toBeNull();
       expect(authContext.isLoggedIn).toBe(true);
 
-      window._paq = []; // Clear the login part
       await authContext.logout();
-      await waitTimeout(10);
-      expect(authApiHcpStubs.logout).toHaveBeenCalledTimes(1);
-      expect(typeof authContext.traceToken).toBe("string");
-      expect(authContext.traceToken.length).toBeGreaterThan(0);
-      expect(authContext.sessionToken).toBeNull();
-      expect(authContext.user).toBeNull();
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBeNull();
-      expect(sessionStorage.getItem(STORAGE_KEY_TRACE_TOKEN)).toBeNull();
-      expect(sessionStorage.getItem(STORAGE_KEY_USER)).toBeNull();
-      // The first entry is for the "fake" login at the init
-      expect(window._paq).toHaveLength(4);
-      expect(window._paq[0]).toEqual(["trackEvent", "registration", "logout"]);
-      expect(window._paq[1]).toEqual(["deleteCustomVariable", 1, "page"]);
-      expect(window._paq[2]).toEqual(["resetUserId"]);
-      expect(window._paq[3]).toEqual(["deleteCookies"]);
-      expect(cleanBlipReduxStore).toHaveBeenCalledTimes(1);
-      expect(authContext.session()).toBeNull();
-      expect(authContext.isLoggedIn).toBe(false);
-      expect(testLocation.pathname).toBe("/login");
-      expect(testLocation.search).toBe("");
-      expect(testLocation.state).toBeUndefined();
-      expect(testHistory.length).toBe(2);
-    });
-    it("should not crash if the api call crash", async () => {
-      authApiHcpStubs.logout.mockRejectedValue(_.noop);
-      await initAuthContext(authHcp, authApiHcpStubs);
-      await authContext.logout();
-      await waitTimeout(10);
-      expect(authApiHcpStubs.logout).toHaveBeenCalledTimes(1);
-      expect(authContext.session()).toBeNull();
-      expect(authContext.isLoggedIn).toBe(false);
-    });
-    it("should correctly set the URL parameters when logout with session timeout set to true", async () => {
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
-      expect(authContext.session()).not.toBeNull();
-      expect(authContext.isLoggedIn).toBe(true);
-
-      await authContext.logout(true);
-      await waitTimeout(10);
-
-      expect(testLocation.pathname).toBe("/");
-      expect(testLocation.search).toBe("?login=caregiver%40example.com&sessionExpired=true");
-      expect(testLocation.state).toEqual({ from: { pathname: "/" } });
-      expect(testHistory.length).toBe(2);
+      expect(auth0Mock.useAuth0().logout).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -299,8 +146,9 @@ describe("Auth hook", () => {
     const updatedSettings: Settings = { ...loggedInUsers.hcp.settings, country: "FR" };
 
     it("updatePreferences should not call the API if the user is not logged in", async () => {
+      unAuthenticateUser();
       authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
-      await initAuthContext(null, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
@@ -315,9 +163,11 @@ describe("Auth hook", () => {
       expect(error).not.toBeNull();
       expect(authContext.user).toBeNull();
     });
+
     it("updatePreferences should call the API with the good parameters", async () => {
       authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
+      console.log(authContext);
       expect(authContext.user.preferences).toEqual({ displayLanguageCode: "en" });
 
       const result = await authContext.updatePreferences({ ...updatedPreferences });
@@ -327,8 +177,9 @@ describe("Auth hook", () => {
     });
 
     it("updateProfile should not call the API if the user is not logged in", async () => {
+      unAuthenticateUser();
       authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
-      await initAuthContext(null, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
@@ -345,7 +196,7 @@ describe("Auth hook", () => {
     });
     it("updateProfile should call the API with the good parameters", async () => {
       authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user.profile).toEqual(loggedInUsers.hcp.profile);
 
       const result = await authContext.updateProfile({ ...updatedProfile });
@@ -355,8 +206,9 @@ describe("Auth hook", () => {
     });
 
     it("updateSettings should not call the API if the user is not logged in", async () => {
+      unAuthenticateUser();
       authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
-      await initAuthContext(null, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
@@ -373,7 +225,7 @@ describe("Auth hook", () => {
     });
     it("updateSettings should call the API with the good parameters", async () => {
       authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
 
       const result = await authContext.updateSettings({ ...updatedSettings });
@@ -383,8 +235,9 @@ describe("Auth hook", () => {
     });
 
     it("updatePassword should not call the API if the user is not logged in", async () => {
+      unAuthenticateUser();
       authApiHcpStubs.updateUser.mockResolvedValue();
-      await initAuthContext(null, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user).toBeNull();
 
       let error: Error | null = null;
@@ -399,7 +252,7 @@ describe("Auth hook", () => {
     });
     it("updatePassword should not call the API if the user is a patient", async () => {
       authApiPatientStubs.updateUser.mockResolvedValue();
-      await initAuthContext(authPatient, authApiPatientStubs);
+      await initAuthContext(authApiPatientStubs);
       expect(authContext.user).not.toBeNull();
 
       let error: Error | null = null;
@@ -414,7 +267,7 @@ describe("Auth hook", () => {
     });
     it("updatePassword should call the API with the good parameters", async () => {
       authApiHcpStubs.updateUser.mockResolvedValue();
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
 
       await authContext.updatePassword("abcd", "1234");
@@ -422,7 +275,7 @@ describe("Auth hook", () => {
     });
 
     it("switchRoleToHCP should failed for hcp users", async () => {
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
@@ -433,7 +286,7 @@ describe("Auth hook", () => {
       expect(error.message).toBe("invalid-user-role");
     });
     it("switchRoleToHCP should failed for patient users", async () => {
-      await initAuthContext(authPatient, authApiPatientStubs);
+      await initAuthContext(authApiPatientStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
@@ -445,7 +298,7 @@ describe("Auth hook", () => {
     });
     it("switchRoleToHCP should not call updateProfile if updateUser failed", async () => {
       authApiCaregiverStubs.updateUser.mockRejectedValue(_.noop);
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
+      await initAuthContext(authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
@@ -465,7 +318,7 @@ describe("Auth hook", () => {
     it("switchRoleToHCP should call updateProfile after updateUser", async () => {
       const now = Date.now();
       authApiCaregiverStubs.updateProfile.mockRejectedValue(_.noop);
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
+      await initAuthContext(authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
@@ -510,7 +363,7 @@ describe("Auth hook", () => {
         privacyPolicy: accepts,
       });
       authApiCaregiverStubs.refreshToken.mockResolvedValue(invalidUpdatedToken);
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
+      await initAuthContext(authApiCaregiverStubs);
       let error: Error | null = null;
       try {
         await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
@@ -542,6 +395,7 @@ describe("Auth hook", () => {
       expect(authContext.user.profile.termsOfUse).toBeUndefined();
       expect(authContext.user.profile.privacyPolicy).toBeUndefined();
     });
+
     it("switchRoleToHCP should succeed (accept feedback)", async () => {
       const updatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTBhMGEwYjAiLCJuYW1lIjoiY2FyZWdpdmVyQGV4YW1wbGUuY29tIiwiZW1haWwiOiJjYXJlZ2l2ZXJAZXhhbXBsZS5jb20iLCJzdnIiOiJubyIsInJvbGUiOiJoY3AiLCJpYXQiOjE2MjUwNjQxNTgsImV4cCI6NTYyNDk1NjMwNn0._PK65sdZ_o11nZtJBTILxcS9f9HhRLfAmYsn3Us4s7o";
       const now = new Date();
@@ -556,7 +410,7 @@ describe("Auth hook", () => {
         contactConsent: accepts,
       });
       authApiCaregiverStubs.refreshToken.mockResolvedValue(updatedToken);
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
+      await initAuthContext(authApiCaregiverStubs);
 
       await authContext.switchRoleToHCP(true, HcpProfession.diabeto);
       expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
@@ -586,14 +440,7 @@ describe("Auth hook", () => {
       expect(authContext.user.profile.privacyPolicy).toBeDefined();
       expect(authContext.user.profile.contactConsent).toBeDefined();
       expect(authContext.user.role).toBe(UserRoles.hcp);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(updatedToken);
-      expect(authContext.sessionToken).toBe(updatedToken);
-      const storageUser = JSON.parse(sessionStorage.getItem(STORAGE_KEY_USER)) as User;
-      expect(storageUser.role).toBe(UserRoles.hcp);
-      expect(typeof storageUser.profile).toBe("object");
-      expect(storageUser.profile.termsOfUse).toEqual(accepts);
-      expect(storageUser.profile.privacyPolicy).toEqual(accepts);
-      expect(storageUser.profile.contactConsent).toEqual(accepts);
+      expect(authContext.session().sessionToken).toBe(updatedToken);
     });
     it("switchRoleToHCP should succeed (decline feedback)", async () => {
       const updatedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNyIjoiYTBhMGEwYjAiLCJuYW1lIjoiY2FyZWdpdmVyQGV4YW1wbGUuY29tIiwiZW1haWwiOiJjYXJlZ2l2ZXJAZXhhbXBsZS5jb20iLCJzdnIiOiJubyIsInJvbGUiOiJoY3AiLCJpYXQiOjE2MjUwNjQxNTgsImV4cCI6NTYyNDk1NjMwNn0._PK65sdZ_o11nZtJBTILxcS9f9HhRLfAmYsn3Us4s7o";
@@ -613,7 +460,7 @@ describe("Auth hook", () => {
         contactConsent: decline,
       });
       authApiCaregiverStubs.refreshToken.mockResolvedValue(updatedToken);
-      await initAuthContext(authCaregiver, authApiCaregiverStubs);
+      await initAuthContext(authApiCaregiverStubs);
 
       await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
       expect(authApiCaregiverStubs.updateUser).toHaveBeenCalledTimes(1);
@@ -639,18 +486,11 @@ describe("Auth hook", () => {
       expect(authContext.user.profile.privacyPolicy).toBeDefined();
       expect(authContext.user.profile.contactConsent).toBeDefined();
       expect(authContext.user.role).toBe(UserRoles.hcp);
-      expect(sessionStorage.getItem(STORAGE_KEY_SESSION_TOKEN)).toBe(updatedToken);
-      expect(authContext.sessionToken).toBe(updatedToken);
-      const storageUser = JSON.parse(sessionStorage.getItem(STORAGE_KEY_USER)) as User;
-      expect(storageUser.role).toBe(UserRoles.hcp);
-      expect(typeof storageUser.profile).toBe("object");
-      expect(storageUser.profile.termsOfUse).toEqual(accepts);
-      expect(storageUser.profile.privacyPolicy).toEqual(accepts);
-      expect(storageUser.profile.contactConsent).toEqual(decline);
+      expect(authContext.session().sessionToken).toBe(updatedToken);
     });
   });
 
-  describe("Signup", () => {
+  describe.skip("Signup", () => {
     it("should call the API with all the good parameters", async () => {
       const infos: SignupUser = {
         accountPassword: "abcd",
@@ -666,11 +506,11 @@ describe("Auth hook", () => {
         terms: true,
         feedback: false,
       };
-      await initAuthContext(null, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       const signupResolve: Session = {
         user: _.cloneDeep(authCaregiver.user),
         sessionToken: authCaregiver.sessionToken,
-        traceToken: authContext.traceToken,
+        traceToken: authContext.session().traceToken,
       };
       delete signupResolve.user.preferences;
       delete signupResolve.user.profile;
@@ -701,7 +541,6 @@ describe("Auth hook", () => {
         infos.accountUsername,
         infos.accountPassword,
         infos.accountRole,
-        authContext.traceToken,
       ]);
       expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(1);
       const sentProfile = authApiHcpStubs.updateProfile.mock.calls[0][0].user.profile;
@@ -721,10 +560,10 @@ describe("Auth hook", () => {
 
   describe("Resend sign-up", () => {
     it("should call the resend sign-up api", async () => {
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       const result = await authContext.resendSignup("abcd");
       expect(authApiHcpStubs.resendSignup).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.resendSignup.mock.calls[0]).toEqual(["abcd", authHcp.traceToken, "en"]);
+      expect(authApiHcpStubs.resendSignup.mock.calls[0]).toEqual(["abcd", authContext.session().traceToken, "en"]);
       expect(result).toBe(true);
     });
   });
@@ -734,7 +573,7 @@ describe("Auth hook", () => {
       const userId = uuidv4();
       authApiHcpStubs.updatePreferences.mockResolvedValue({ patientsStarred: [userId] });
       delete authHcp.user.preferences;
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       await authContext.flagPatient(userId);
       expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
       const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
@@ -746,7 +585,7 @@ describe("Auth hook", () => {
       const otherUserId = uuidv4();
       authHcp.user.preferences = { patientsStarred: [userId, otherUserId] };
       authApiHcpStubs.updatePreferences.mockResolvedValue({ patientsStarred: [otherUserId] });
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       await authContext.flagPatient(userId);
       expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
       const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
@@ -761,7 +600,7 @@ describe("Auth hook", () => {
 
       stubs.updatePreferences.mockResolvedValueOnce({ patientsStarred: [userId1] });
       stubs.updatePreferences.mockResolvedValueOnce({ patientsStarred: [userId1, userId2] });
-      await initAuthContext(session, stubs);
+      await initAuthContext(stubs);
       expect(authContext.getFlagPatients()).toEqual([]);
 
       await authContext.flagPatient(userId1);
@@ -780,7 +619,7 @@ describe("Auth hook", () => {
       const userId = uuidv4();
       authApiHcpStubs.updatePreferences.mockResolvedValue({ displayLanguageCode: "fr", patientsStarred: [userId] });
       authHcp.user.preferences.patientsStarred = ["old"];
-      await initAuthContext(authHcp, authApiHcpStubs);
+      await initAuthContext(authApiHcpStubs);
       expect(authContext.getFlagPatients()).toEqual(["old"]);
       await authContext.setFlagPatients([userId]);
       const after = authContext.getFlagPatients();
@@ -788,28 +627,6 @@ describe("Auth hook", () => {
       const apiCall = authApiHcpStubs.updatePreferences.mock.calls[0];
       expect((apiCall[0] as Session).user.preferences.patientsStarred).toEqual([userId]);
       expect(after).toEqual([userId]);
-    });
-  });
-
-  describe("Password", () => {
-    it("sendPasswordResetEmail should call the API", async () => {
-      await initAuthContext(null, authApiHcpStubs);
-      const username = loggedInUsers.caregiver.username;
-      const language = loggedInUsers.caregiver.preferences.displayLanguageCode;
-      await authContext.sendPasswordResetEmail(username, language);
-      const apiCall = authApiHcpStubs.requestPasswordReset.mock.calls[0];
-      expect(apiCall).toMatchObject([username, authContext.traceToken, language]);
-    });
-    it("resetPassword should call the API", async () => {
-      authApiHcpStubs.resetPassword.mockResolvedValue(true);
-      await initAuthContext(null, authApiHcpStubs);
-      const key = uuidv4();
-      const username = loggedInUsers.caregiver.username;
-      const password = "abcd";
-      const result = await authContext.resetPassword(key, username, password);
-      expect(result).toBeTruthy();
-      const apiCall = authApiHcpStubs.resetPassword.mock.calls[0];
-      expect(apiCall).toMatchObject([key, username, password, authContext.traceToken]);
     });
   });
 });
