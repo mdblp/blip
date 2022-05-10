@@ -50,6 +50,9 @@ import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import { getDirectShares, ShareUser } from "../../lib/share";
+import { UserRoles } from "../../models/shoreline";
+import AddTeamDialog from "../../pages/patient/teams/add-dialog";
+import { errorTextFromException } from "../../lib/utils";
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
@@ -75,7 +78,7 @@ const classes = makeStyles((theme: Theme) => ({
 function TeamMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { badge, teamIcon, clickableMenu, separator } = classes();
-  const { teams, createTeam } = useTeam();
+  const { teams, createTeam, joinTeam } = useTeam();
   const history = useHistory();
   const alert = useAlert();
   const authHook = useAuth();
@@ -92,6 +95,7 @@ function TeamMenu(): JSX.Element {
   const filteredTeams = teams.filter(team => team.code !== "private");
   const closeMenu = () => setAnchorEl(null);
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
+  const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false);
 
   React.useEffect(() => {
     if (caregivers === null && session !== null) {
@@ -120,14 +124,32 @@ function TeamMenu(): JSX.Element {
     setTeamCreationDialogData(null);
   };
 
-  const createCareTeam = () => {
-    setTeamCreationDialogData({ team: null, onSaveTeam });
+  const onTeamAction = () => {
+    if (isUserHcp) {
+      setTeamCreationDialogData({ team: null, onSaveTeam });
+    } else if (isUserPatient) {
+      setShowJoinTeamDialog(true);
+    }
+
     closeMenu();
   };
 
   const redirectToCaregivers = () => {
     history.push("/caregivers");
     closeMenu();
+  };
+
+  const onJoinTeam = async (teamId?: string) => {
+    setShowJoinTeamDialog(false);
+    if (teamId) {
+      try {
+        await joinTeam(teamId);
+        alert.success(t("modal-patient-add-team-success"));
+      } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason);
+        alert.error(t("modal-patient-add-team-failure", { errorMessage }));
+      }
+    }
   };
 
   return (
@@ -187,18 +209,19 @@ function TeamMenu(): JSX.Element {
           </ListItem>
         }
 
-        {isUserHcp &&
+        {(isUserHcp || isUserPatient) &&
           <Box>
             <Box marginY={1}>
               <Divider variant="middle" />
             </Box>
 
-            <MenuItem id="team-menu-teams-link" onClick={createCareTeam}>
+            <MenuItem id="team-menu-teams-link" onClick={onTeamAction}>
               <ListItemIcon>
                 <GroupOutlinedIcon />
               </ListItemIcon>
               <Typography>
-                {t("new-care-team")}
+                {isUserHcp && t("new-care-team")}
+                {isUserPatient && t("join-care-team")}
               </Typography>
             </MenuItem>
           </Box>
@@ -225,6 +248,11 @@ function TeamMenu(): JSX.Element {
         }
       </MenuLayout>
       <TeamEditDialog teamToEdit={teamCreationDialogData} />
+      {showJoinTeamDialog &&
+        <AddTeamDialog
+          error={t("error-joining-team")}
+          actions={{ onDialogResult: (teamId) => onJoinTeam(teamId) }} />
+      }
     </React.Fragment>
   );
 }
