@@ -208,7 +208,13 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
         <Button id="date-picker-button-cancel" onClick={handleCancel}>
           {t("button-cancel")}
         </Button>
-        <Button id="date-picker-button-ok" onClick={handleOK} color="primary" variant="contained">
+        <Button
+          id="date-picker-button-ok"
+          color="primary"
+          variant="contained"
+          disableElevation
+          onClick={handleOK}
+        >
           {t("button-ok")}
         </Button>
       </DialogActions>

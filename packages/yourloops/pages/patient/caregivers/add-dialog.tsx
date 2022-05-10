@@ -124,10 +124,11 @@ function AddDialog(props: AddDialogProps): JSX.Element {
         </Button>
         <Button
           id="patient-add-caregiver-dialog-button-add"
-          onClick={handleClickAdd}
           disabled={buttonAddDisabled}
           variant="contained"
           color="primary"
+          disableElevation
+          onClick={handleClickAdd}
         >
           {t("button-invite")}
         </Button>

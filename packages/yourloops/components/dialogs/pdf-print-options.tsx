@@ -273,10 +273,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         </Button>
         <Button
           id="pdf-options-button-generate"
-          onClick={() => onResult(pdfOptions)}
           disabled={!!customStartDate}
           color="primary"
           variant="contained"
+          disableElevation
+          onClick={() => onResult(pdfOptions)}
         >
           {t("button-generate")}
         </Button>
