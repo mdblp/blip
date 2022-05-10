@@ -156,7 +156,7 @@
   "modal-add-patient": "Paciente nuevo",
   "modal-add-patient-warning-line1": "Al invitar a este paciente a compartir sus datos conmigo y su equipo de atención médica, declaro bajo mi responsabilidad profesional que formo parte del equipo de atención médica y que, como tal, tengo derecho a acceder a los datos personales del paciente según los reglamentos aplicables.",
   "modal-add-patient-warning-line2": "Lea nuestras <linkTerms>{{terms}}</linkTerms> y <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
-  "modal-patient-add-team-success": "Your care team has now access to your data.",
+  "modal-patient-add-team-success": "Su equipo de atención médica ya tiene acceso a sus datos.",
   "modal-patient-add-team-failure": "Imposible añadir un equipo de atención médica. Vuelva a intentarlo más tarde.",
   "modal-patient-add-team-failure-exists": "Ya compartes datos con este equipo.",
   "modal-patient-add-team-info": "Está a punto de compartir sus datos con",
