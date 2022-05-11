@@ -158,8 +158,10 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
             id="patient-list-toolbar-add-patient"
             color="primary"
             variant="contained"
+            disableElevation
             className={classes.buttonAddPatient}
-            onClick={handleOpenModalAddPatient}>
+            onClick={handleOpenModalAddPatient}
+          >
             <PersonAddIcon />
             <span className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</span>
           </Button>

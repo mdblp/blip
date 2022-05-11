@@ -203,8 +203,10 @@ function SignUpAccountSelector(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
+          disableElevation
           disabled={isInvalidRole}
-          onClick={onNext}>
+          onClick={onNext}
+        >
           {t("signup-steppers-next")}
         </Button>
       </Box>

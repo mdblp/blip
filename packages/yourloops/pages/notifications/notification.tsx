@@ -260,9 +260,11 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             id={`notification-button-accept-${id}`}
             color="primary"
             variant="contained"
+            disableElevation
             className={`${classes.buttonAccept} notification-button-accept`}
             disabled={inProgress}
-            onClick={onOpenInvitationDialog}>
+            onClick={onOpenInvitationDialog}
+          >
             {t("button-accept")}
           </Button>
         )}

@@ -164,7 +164,13 @@ function HomePage(): JSX.Element {
         <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
           {errorMessage}
         </Alert>
-        <Button id="button-api-error-message" variant="contained" color="secondary" onClick={() => handleRefresh(true)}>
+        <Button
+          id="button-api-error-message"
+          variant="contained"
+          color="secondary"
+          disableElevation
+          onClick={() => handleRefresh(true)}
+        >
           {t("button-refresh-page-on-error")}
         </Button>
       </div>
