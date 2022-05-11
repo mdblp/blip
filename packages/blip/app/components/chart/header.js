@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 import _ from "lodash";
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import i18next from "i18next";
@@ -23,14 +23,19 @@ import i18next from "i18next";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import Face from "@material-ui/icons/Face";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
-
+import AccessTime from "@material-ui/icons/AccessTime";
 import IconButton from "@material-ui/core/IconButton";
+import Dashboard from "@material-ui/icons/Dashboard";
+import Today from "@material-ui/icons/Today";
+import TrendingUp from "@material-ui/icons/TrendingUp";
 
 import personUtils from "../../core/personutils";
 
@@ -39,8 +44,23 @@ const t = i18next.t.bind(i18next);
 class TidelineHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isDialogOpen: false };
+    this.state = { isDialogOpen: false, tabSelected: 0, };
   }
+
+  selectedTab(){
+    switch (this.props.chartType) {
+    case "dashboard":
+      return 0;
+    case "daily":
+      return 1;
+    case "trends":
+      return 2;
+    }
+  }
+
+  // handleTabChange(_event, newValue) {
+  //   this.setState({tabSelected: newValue});
+  // }
 
   static propTypes = {
     children: PropTypes.node,
@@ -81,26 +101,8 @@ class TidelineHeader extends React.Component {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
     const { children } = this.props;
 
-    const printViews = ["basics", "daily", "bgLog", "settings"];
+    const printViews = ["dashboard", "daily", "trends"];
     const showPrintLink = _.includes(printViews, chartType);
-
-    const basicsLinkClass = cx({
-      "js-basics": true,
-      "patient-data-subnav-active": chartType === "basics",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
-    const dayLinkClass = cx({
-      "js-daily": true,
-      "patient-data-subnav-active": chartType === "daily",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
-    const trendsLinkClass = cx({
-      "js-trends": true,
-      "patient-data-subnav-active": chartType === "trends",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
 
     const mostRecentDisabled = atMostRecent || inTransition || loading;
     const mostRecentClass = cx({
@@ -137,14 +139,15 @@ class TidelineHeader extends React.Component {
 
     return (
       <div className="grid patient-data-subnav">
-        { this.props.userIsHCP &&
-          <div>
-            <IconButton>
-              <ArrowBack onClick={() => this.props.onClickNavigationBack()}/>
+        <div className="patient-data-subnav-left">
+          { this.props.userIsHCP &&
+          <div id="subnav-hcp-container">
+            <IconButton >
+              <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()}/>
             </IconButton>
-            <Face/>
-            <span>Patient:</span>
-            <FormControl variant="outlined">
+            <Face className="subnav-icon"/>
+            <span >Patient :</span>
+            <FormControl id="subnav-patient-list" variant="outlined">
               <Select
                 defaultValue={this.props.patient.userid}
                 onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
@@ -156,25 +159,31 @@ class TidelineHeader extends React.Component {
                 }
               </Select>
             </FormControl>
+            {this.props.chartType === "dashboard" &&
+              <Fragment>
+                <AccessTime className="subnav-icon" />
+                <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
+              </Fragment>
+            }
           </div>
-        }
-        <div className="patient-data-subnav-left">
-          <a id="button-tab-dashboard" href={`${prefixURL}/dashboard`} className={basicsLinkClass} onClick={this.props.onClickDashboard}>
-            {t("Dashboard")}
-          </a>
-          <a id="button-tab-daily" href={`${prefixURL}/daily`} className={dayLinkClass} onClick={this.props.onClickOneDay}>
-            {t("Daily")}
-          </a>
-          <a id="button-tab-trends" href={`${prefixURL}/trends`} className={trendsLinkClass} onClick={this.props.onClickTrends}>
-            {t("Trends")}
-          </a>
-        </div>
-        <div className="patient-data-subnav-center" id="tidelineLabel">
+          }
           {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
           {children}
           {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
           {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
         </div>
+        <div className="patient-data-subnav-center">
+          <Tabs
+            value={this.selectedTab()}
+            textColor="primary"
+            indicatorColor="primary"
+          >
+            <Tab href={`${prefixURL}/dashboard`} label={t("Dashboard")} icon={<Dashboard />} onClick={this.props.onClickDashboard}/> |
+            <Tab href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay}/>
+            <Tab href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />} onClick={this.props.onClickTrends}/>
+          </Tabs>
+        </div>
+
         <div className="patient-data-subnav-right">
           {printLink}
         </div>

@@ -420,9 +420,33 @@ a.js-home {
   }
 }
 
+#subnav-hcp-container {
+  display: flex;
+  align-items: center;
+
+  #subnav-arrow-back {
+    color: @black-black;
+  }
+
+  .subnav-icon {
+    margin: @spacing-small;
+  }
+
+  #subnav-patient-list {
+    margin: 0 @spacing-large;
+    max-width: 150px;
+  }
+
+  #subnav-period-label {
+    width: 150px;
+    font-style: italic;
+    text-align: center;
+  }
+}
+
 @media print {
   .patient-data-subnav-inner {
-    color: gray;
+    color: @grey-card;
     background-color: transparent;
 
     padding: @patient-data-subnav-vertical-padding
