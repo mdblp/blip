@@ -124,8 +124,10 @@ export default function RequestPasswordForm(props: RequestPasswordFormProps): JS
         <Button
           variant="contained"
           color="primary"
+          disableElevation
+          disabled={emptyUsername || props.inProgress}
           onClick={props.onSendResetLink}
-          disabled={emptyUsername || props.inProgress}>
+        >
           {btnResetLabel}
         </Button>
       </CardActions>

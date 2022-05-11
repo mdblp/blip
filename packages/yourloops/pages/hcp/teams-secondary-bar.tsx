@@ -98,8 +98,10 @@ function TeamsSecondaryBar(props: BarProps): JSX.Element {
           id="teams-navbar-add-team"
           color="primary"
           variant="contained"
+          disableElevation
           className={classes.buttonAddTeam}
-          onClick={handleOpenModalAddTeam}>
+          onClick={handleOpenModalAddTeam}
+        >
           <AddIcon />
           <span className={classes.buttonAddTeamText}>&nbsp;{t("button-create-a-team")}</span>
         </Button>

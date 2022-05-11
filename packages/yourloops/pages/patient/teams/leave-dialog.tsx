@@ -92,9 +92,10 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
         </Button>
         <Button
           id="team-leave-dialog-button-leave"
-          onClick={handleLeaveTeam}
           className={buttonsClasses.alertActionButton}
           variant="contained"
+          disableElevation
+          onClick={handleLeaveTeam}
         >
           {t("modal-patient-remove-team-remove")}
         </Button>

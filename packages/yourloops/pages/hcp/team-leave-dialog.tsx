@@ -167,6 +167,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         disabled={buttonsDisabled}
         className={buttonClasses.alertActionButton}
         variant="contained"
+        disableElevation
       >
         {t("team-leave-dialog-button-leave-and-del")}
       </Button>
@@ -184,10 +185,11 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
     buttonOK = (
       <Button
         id="team-leave-dialog-button-ok"
-        onClick={handleClose}
         disabled={buttonsDisabled}
         color="primary"
         variant="contained"
+        disableElevation
+        onClick={handleClose}
       >
         {t("button-ok")}
       </Button>
@@ -197,10 +199,11 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
       <Button
         className={buttonClasses.alertActionButton}
         id="team-leave-dialog-button-leave"
-        onClick={handleLeaveTeam}
         disabled={buttonsDisabled}
         color="primary"
         variant="contained"
+        disableElevation
+        onClick={handleLeaveTeam}
       >
         {t("team-leave-dialog-button-leave")}
       </Button>

@@ -193,10 +193,11 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         <ProgressIconButtonWrapper inProgress={processing}>
           <Button
             id="remove-patient-dialog-validate-button"
-            onClick={handleOnClickRemove}
             className={buttonClasses.alertActionButton}
             disabled={!selectedTeamId || processing}
             variant="contained"
+            disableElevation
+            onClick={handleOnClickRemove}
           >
             {t("remove-patient")}
           </Button>

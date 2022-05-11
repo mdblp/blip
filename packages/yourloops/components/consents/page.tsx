@@ -189,8 +189,10 @@ function Page(props: ConsentProps): JSX.Element {
                     id="consent-button-confirm"
                     variant="contained"
                     color="primary"
+                    disableElevation
                     disabled={!consentsChecked}
-                    onClick={onConfirm}>
+                    onClick={onConfirm}
+                  >
                     {t("button-accept")}
                   </Button>
                 </div>

@@ -104,9 +104,10 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
       <DialogActions>
         <Button
           id={`${props.id}-error-button-ok`}
-          onClick={props.handleClose}
           color="primary"
           variant="contained"
+          disableElevation
+          onClick={props.handleClose}
         >
           {t("button-ok")}
         </Button>
@@ -188,10 +189,11 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
         </Button>
         <Button
           id="team-add-dialog-button-add-team"
-          onClick={handleClickJoinTeam}
           disabled={buttonJoinDisabled}
           variant="contained"
           color="primary"
+          disableElevation
+          onClick={handleClickJoinTeam}
         >
           {t("button-add-team")}
         </Button>
@@ -294,9 +296,10 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
         <Button
           id="team-add-dialog-confirm-team-button-add-team"
           disabled={!privacyAccepted}
-          onClick={props.handleAccept}
           variant="contained"
           color="primary"
+          disableElevation
+          onClick={props.handleAccept}
         >
           {t("button-add-medical-team")}
         </Button>

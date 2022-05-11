@@ -158,6 +158,7 @@ function SignUpAccountForm(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-create"
           variant="contained"
           color="primary"
+          disableElevation
           disabled={_.some(errors) || inProgress}
           onClick={onNext}
         >
