@@ -138,7 +138,7 @@ class TidelineHeader extends React.Component {
     }
 
     return (
-      <div className="grid patient-data-subnav">
+      <div className="patient-data-subnav">
         <div className="patient-data-subnav-left">
           { this.props.userIsHCP &&
           <div id="subnav-hcp-container">
@@ -159,13 +159,13 @@ class TidelineHeader extends React.Component {
                 }
               </Select>
             </FormControl>
-            {this.props.chartType === "dashboard" &&
-              <Fragment>
-                <AccessTime className="subnav-icon" />
-                <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
-              </Fragment>
-            }
           </div>
+          }
+          {this.props.chartType === "dashboard" &&
+            <Fragment>
+              <AccessTime className="subnav-icon" />
+              <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
+            </Fragment>
           }
           {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
           {children}

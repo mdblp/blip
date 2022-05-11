@@ -433,15 +433,21 @@ a.js-home {
   }
 
   #subnav-patient-list {
-    margin: 0 @spacing-large;
+    margin: 0 @spacing-medium;
     max-width: 150px;
   }
+}
 
-  #subnav-period-label {
-    width: 150px;
-    font-style: italic;
-    text-align: center;
-  }
+#subnav-period-label {
+  width: 150px;
+  font-style: italic;
+  text-align: center;
+}
+
+.patient-data-subnav-left {
+  display: flex;
+  align-items: center;
+  width: 750px;
 }
 
 @media print {
