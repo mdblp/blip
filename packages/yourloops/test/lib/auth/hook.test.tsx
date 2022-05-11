@@ -42,6 +42,8 @@ import { loggedInUsers } from "../../common";
 import { HcpProfession } from "../../../models/hcp-profession";
 import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./utils";
 
+jest.mock("@auth0/auth0-react");
+
 describe("Auth hook", () => {
   const authPatient = loggedInUsers.patientSession;
   const authCaregiver = loggedInUsers.caregiverSession;
@@ -80,6 +82,12 @@ describe("Auth hook", () => {
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
+    (auth0Mock.withAuthenticationRequired as jest.Mock) = jest.fn().mockImplementation((component) => {
+      return component;
+    });
+    (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: true,
       user: {

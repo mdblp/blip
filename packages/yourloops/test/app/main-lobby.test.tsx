@@ -45,6 +45,8 @@ import * as shareLib from "../../lib/share";
 
 jest.mock("../../lib/share");
 
+jest.mock("@auth0/auth0-react");
+
 describe("Main lobby", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
@@ -74,6 +76,12 @@ describe("Main lobby", () => {
   }
 
   beforeEach(() => {
+    (auth0Mock.withAuthenticationRequired as jest.Mock) = jest.fn().mockImplementation((component) => {
+      return component;
+    });
+    (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: true,
       isLoading: false,

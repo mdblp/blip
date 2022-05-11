@@ -97,7 +97,7 @@ function Login(): JSX.Element {
                   variant="contained"
                   color="primary"
                 >
-                  {t("signup")}
+                  {t("signup-steppers-create-account")}
                 </Button>
               </Link>
             </CardActions>
