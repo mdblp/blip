@@ -108,6 +108,7 @@ function SwitchRoleDialog(props: SwitchRoleDialogProps): JSX.Element | null {
           onClick={handleClickOK}
           color="primary"
           variant="contained"
+          disableElevation
         >
           {t("team-members-dialog-switch-role-button-ok")}
         </Button>

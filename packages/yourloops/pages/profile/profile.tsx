@@ -325,8 +325,9 @@ const ProfilePage = (): JSX.Element => {
                 variant="contained"
                 disabled={!canSave}
                 color="primary"
-                onClick={onSave}
+                disableElevation
                 className={classes.button}
+                onClick={onSave}
               >
                 {t("button-save")}
               </Button>

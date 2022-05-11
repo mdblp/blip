@@ -97,15 +97,18 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           className={classes.backButton}
           id="button-signup-steppers-back"
           disabled={props.activeStep === 0}
-          onClick={handleBack}>
+          onClick={handleBack}
+        >
           {t("signup-steppers-back")}
         </Button>
         <Button
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
+          disableElevation
           disabled={!consentsChecked}
-          onClick={onNext}>
+          onClick={onNext}
+        >
           {t("signup-steppers-next")}
         </Button>
       </Box>

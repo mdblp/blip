@@ -273,9 +273,11 @@ function Login(): JSX.Element {
                 id="login-button"
                 variant="contained"
                 color="primary"
-                onClick={onClickLoginButton}
+                disableElevation
                 className={classes.loginButton}
-                disabled={emptyUsername || emptyPassword || resendActivationLinkInProgress}>
+                disabled={emptyUsername || emptyPassword || resendActivationLinkInProgress}
+                onClick={onClickLoginButton}
+              >
                 {t("login")}
               </Button>
             </CardActions>

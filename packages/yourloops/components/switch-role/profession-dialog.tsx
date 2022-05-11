@@ -88,10 +88,11 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         </Button>
         <Button
           id="switch-role-profession-dialog-button-validate"
-          onClick={handleAccept}
           variant="contained"
           color="primary"
+          disableElevation
           disabled={hcpProfession === HcpProfession.empty}
+          onClick={handleAccept}
         >
           {t("button-validate")}
         </Button>

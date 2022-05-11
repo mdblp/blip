@@ -89,9 +89,10 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
         </Button>
         <Button
           id="switch-role-consequences-dialog-button-ok"
-          onClick={onAccept}
           variant="contained"
           color="primary"
+          disableElevation
+          onClick={onAccept}
         >
           {t("modal-switch-hcp-action")}
         </Button>
