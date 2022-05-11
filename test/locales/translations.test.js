@@ -134,6 +134,7 @@ const ignoredTransKeyForYourLoops = [
   "accompanying-documents",
   "intended-use",
   "training",
+  "initial-hba1c",
 ];
 const ignoredTransKeyInYourLoopsFiles = [
   "yourloops|${s}",

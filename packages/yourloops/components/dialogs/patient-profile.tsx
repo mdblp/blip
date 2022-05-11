@@ -112,7 +112,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="birthDate"
-          label={t("patient-profile-birthdate")}
+          label={t("birthdate")}
           value={birthDate}
           className={textField}
           InputProps={{ classes: { disabled } }}
