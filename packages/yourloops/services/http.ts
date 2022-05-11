@@ -40,14 +40,14 @@ interface ArgsWithPayload<P> extends Args {
 }
 
 export default class HttpService {
-  private static accessToken: () => Promise<string>;
+  private static retrieveAccessToken: () => Promise<string>;
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
-    HttpService.accessToken = accessTokenMethod;
+    HttpService.retrieveAccessToken = accessTokenMethod;
   }
 
   static getAccessToken() {
-    return HttpService.accessToken();
+    return HttpService.retrieveAccessToken();
   }
 
   static async get<T>({ url, config }: Args): Promise<AxiosResponse<T>> {

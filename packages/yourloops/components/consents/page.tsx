@@ -129,78 +129,77 @@ function Page(props: ConsentProps): JSX.Element {
     };
 
     return (
-      <React.Fragment>
-        <Container maxWidth="sm" className={classes.mainContainer}>
-          <Grid
-            container
-            spacing={0}
-            alignItems="center"
-            justify="center"
-            style={{ minHeight: "100vh" }}>
-            <Grid item xs={12}>
-              <Card className={classes.card}>
-                <CardMedia
+      <Container maxWidth="sm" className={classes.mainContainer}>
+        <Grid
+          container
+          spacing={0}
+          alignItems="center"
+          justify="center"
+          style={{ minHeight: "100vh" }}>
+          <Grid item xs={12}>
+            <Card className={classes.card}>
+              <CardMedia
+                style={{
+                  display: "flex",
+                  paddingTop: "1em",
+                  paddingBottom: "1em",
+                }}>
+                <img
+                  src={`/branding_${appConfig.BRANDING}_logo.svg`}
+                  style={{
+                    height: "60px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                  alt={t("alt-img-logo")}
+                />
+              </CardMedia>
+              <CardContent className={classes.cardContent}>
+                <Typography variant="body1" gutterBottom>
+                  {t(props.messageKey)}
+                </Typography>
+                <form
                   style={{
                     display: "flex",
-                    paddingTop: "1em",
-                    paddingBottom: "1em",
-                  }}>
-                  <img
-                    src={`/branding_${appConfig.BRANDING}_logo.svg`}
-                    style={{
-                      height: "60px",
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                    }}
-                    alt={t("alt-img-logo")}
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                  noValidate
+                  autoComplete="off">
+                  <ConsentForm
+                    id="login-renew-consents"
+                    userRole={user.role}
+                    policyAccepted={policyAccepted}
+                    setPolicyAccepted={setPolicyAccepted}
+                    termsAccepted={termsAccepted}
+                    setTermsAccepted={setTermsAccepted}
+                    feedbackAccepted={feedbackAccepted}
+                    setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
                   />
-                </CardMedia>
-                <CardContent className={classes.cardContent}>
-                  <Typography variant="body1" gutterBottom>
-                    {t(props.messageKey)}
-                  </Typography>
-                  <form
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                    }}
-                    noValidate
-                    autoComplete="off">
-                    <ConsentForm
-                      id="login-renew-consents"
-                      userRole={user.role}
-                      policyAccepted={policyAccepted}
-                      setPolicyAccepted={setPolicyAccepted}
-                      termsAccepted={termsAccepted}
-                      setTermsAccepted={setTermsAccepted}
-                      feedbackAccepted={feedbackAccepted}
-                      setFeedbackAccepted={showFeedback ? setFeedbackAccepted : undefined}
-                    />
-                    <div id="consent-button-group" className={classes.buttons}>
-                      <Button
-                        id="consent-button-decline"
-                        onClick={onDecline}
-                      >
-                        {t("button-decline")}
-                      </Button>
-                      <Button
-                        id="consent-button-confirm"
-                        variant="contained"
-                        color="primary"
-                        disableElevation
-                        disabled={!consentsChecked}
-                        onClick={onConfirm}>
-                        {t("button-accept")}
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </Grid>
+                  <div id="consent-button-group" className={classes.buttons}>
+                    <Button
+                      id="consent-button-decline"
+                      onClick={onDecline}
+                    >
+                      {t("button-decline")}
+                    </Button>
+                    <Button
+                      id="consent-button-confirm"
+                      variant="contained"
+                      color="primary"
+                      disableElevation
+                      disabled={!consentsChecked}
+                      onClick={onConfirm}
+                    >
+                      {t("button-accept")}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           </Grid>
-        </Container>
-      </React.Fragment>
+        </Grid>
+      </Container>
     );
   }
   return <React.Fragment />;
