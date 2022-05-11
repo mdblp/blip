@@ -101,7 +101,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const [onHover, setOnHover] = useState<boolean>(false);
   const teamHook = useTeam();
   const authHook = useAuth();
-  const numberTotalOfPatients = teamHook.getPatients().length;
+  const numberOfPatients = teamHook.getPatients().length;
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
   const numberOfPendingPatients = teamHook.getPendingPatients().length;
   const numberOfDirectSharePatients = teamHook.getDirectSharePatients().length;
@@ -112,7 +112,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
-    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberTotalOfPatients})`, filter: "all" },
+    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberOfPatients})`, filter: "all" },
     { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: "flagged" },
     { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: "pending" },
     { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (${numberOfDirectSharePatients})`, filter: "private" },
