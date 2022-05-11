@@ -76,9 +76,6 @@ describe("Main lobby", () => {
   }
 
   beforeEach(() => {
-    (auth0Mock.withAuthenticationRequired as jest.Mock) = jest.fn().mockImplementation((component) => {
-      return component;
-    });
     (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });

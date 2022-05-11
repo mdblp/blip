@@ -31,3 +31,7 @@ export STONLY_WID='disabled'
 export COOKIE_BANNER_CLIENT_ID='disabled'
 # Environement for CloudFront config:
 export TARGET_ENVIRONMENT='dev'
+
+# Auth0 configuration (yourloops-front-dev app)
+export AUTH0_DOMAIN="yourloops-dev.eu.auth0.com"
+export AUTH0_CLIENT_ID="HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"

@@ -39,12 +39,10 @@ import CertifyAccountPage from "./hcp/certify-account-page";
 import CaregiversPage from "./patient/caregivers/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
-import { useAuth0 } from "@auth0/auth0-react";
 import TeamDetailPage from "./team/team-details-page";
 import HomePage from "./home-page";
 
 export function MainLayout(): JSX.Element {
-  const { isAuthenticated } = useAuth0();
   const authHook = useAuth();
   const session = authHook.session();
 
@@ -63,7 +61,7 @@ export function MainLayout(): JSX.Element {
 
   return (
     <React.Fragment>
-      {isAuthenticated && session &&
+      {session &&
         <NotificationContextProvider>
           <TeamContextProvider>
             <DataContextProvider context={DefaultDataContext}>

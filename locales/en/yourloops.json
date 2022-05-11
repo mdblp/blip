@@ -331,5 +331,6 @@
   "untransferred-data": "Untransferred data",
   "user-name": "{{firstName}} {{lastName}}",
   "yes": "Yes",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "welcome-message": "Welcome to Yourloops. Please login or register"
 }

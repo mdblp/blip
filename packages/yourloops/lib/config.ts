@@ -57,6 +57,8 @@ const defaultConfig: AppConfig = {
   TEST: false,
   CBG_BUCKETS_ENABLED: true,
   ECPS_ENABLED: true,
+  AUTH0_DOMAIN: "",
+  AUTH0_CLIENT_ID: "",
 };
 const appConfig = _.assign({}, defaultConfig);
 if (_.has(window, "config") && _.isObjectLike(_.get(window, "config", null))) {

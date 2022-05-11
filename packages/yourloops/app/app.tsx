@@ -33,18 +33,21 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import "@fontsource/roboto";
 import "branding/theme.css";
 
+import appConfig from "../lib/config";
 import { AuthContextProvider } from "../lib/auth";
 import { MainLobby } from "./main-lobby";
+import MetricsLocationListener from "../components/MetricsLocationListener";
 
 const Yourloops = (): JSX.Element => {
   return (
     <Auth0Provider
-      domain="yourloops-dev.eu.auth0.com"
-      clientId="HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
+      domain={appConfig.AUTH0_DOMAIN}
+      clientId={appConfig.AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
       useRefreshTokens
     >
       <BrowserRouter>
+        <MetricsLocationListener />
         <AuthContextProvider>
           <MainLobby />
         </AuthContextProvider>

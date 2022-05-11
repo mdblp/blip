@@ -47,4 +47,6 @@ export interface AppConfig {
   YLP820_BASAL_TIME: number;
   CBG_BUCKETS_ENABLED: boolean;
   ECPS_ENABLED: boolean;
+  AUTH0_DOMAIN: string;
+  AUTH0_CLIENT_ID: string;
 }

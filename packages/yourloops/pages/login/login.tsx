@@ -79,7 +79,9 @@ function Login(): JSX.Element {
               </CardMedia>
             </Box>
             <CardContent>
-              <Typography>Bienvenue sur Yourloops,vous pouvez vous connecter ou vous inscrire</Typography>
+              <Typography>
+                {t("welcome-message")}
+              </Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
               <Button
@@ -93,7 +95,7 @@ function Login(): JSX.Element {
               </Button>
               <Link to="/signup">
                 <Button
-                  id="login-button"
+                  id="signup-button"
                   variant="contained"
                   color="primary"
                 >

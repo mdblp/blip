@@ -82,9 +82,6 @@ describe("Auth hook", () => {
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    (auth0Mock.withAuthenticationRequired as jest.Mock) = jest.fn().mockImplementation((component) => {
-      return component;
-    });
     (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });
@@ -113,7 +110,6 @@ describe("Auth hook", () => {
 
   describe("Initialization", () => {
     it("should getUserInfo when authentication is successfully done", async () => {
-      console.log(authContext);
       await initAuthContext(authApiHcpStubs);
       expect(authContext.isLoggedIn).toBeTruthy();
       expect(authContext.user.username).toBe("john.doe@example.com");
@@ -175,7 +171,6 @@ describe("Auth hook", () => {
     it("updatePreferences should call the API with the good parameters", async () => {
       authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
       await initAuthContext(authApiHcpStubs);
-      console.log(authContext);
       expect(authContext.user.preferences).toEqual({ displayLanguageCode: "en" });
 
       const result = await authContext.updatePreferences({ ...updatedPreferences });

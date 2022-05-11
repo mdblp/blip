@@ -67,13 +67,16 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     [sessionToken, traceToken, user]
   );
 
-  const getAuthInfos = (): Promise<Session> => {
+  const getAuthInfos = (): Session => {
     const s = session();
-    return s ? Promise.resolve(s) : Promise.reject(new Error(t("not-logged-in")));
+    if (s) {
+      return s;
+    }
+    throw Error(t("not-logged-in"));
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     log.info("updatePreferences", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.preferences = preferences;
@@ -86,7 +89,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const updateProfile = async (profile: Profile, refresh = true): Promise<Profile> => {
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     log.info("updateProfile", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.profile = profile;
@@ -99,7 +102,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const updateSettings = async (settings: Settings, refresh = true): Promise<Settings> => {
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     log.info("updateSettings", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.settings = settings;
@@ -112,7 +115,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const updatePassword = async (currentPassword: string, password: string): Promise<void> => {
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     if (authInfo.user.isUserPatient()) {
       throw new Error("invalid-user-role");
     }
@@ -165,7 +168,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const flagPatient = async (userId: string): Promise<void> => {
     log.info("flagPatient", userId);
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     const updatedUser = new User(authInfo.user);
     if (_.isNil(updatedUser.preferences)) {
       updatedUser.preferences = {};
@@ -184,7 +187,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
     log.info("setFlagPatients", userIds);
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     const updatedUser = new User(authInfo.user);
     if (_.isNil(updatedUser.preferences)) {
       updatedUser.preferences = {};
@@ -203,7 +206,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   };
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
-    const authInfo = await getAuthInfos();
+    const authInfo = getAuthInfos();
     if (authInfo.user.role !== UserRoles.caregiver) {
       throw new Error("invalid-user-role");
     }
@@ -297,7 +300,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     const getAccessToken = async () => getAccessTokenSilently();
     (async () => {
       if (isAuthenticated && !user) {
-        HttpService.setAccessToken(getAccessToken);
+        HttpService.setGetAccessTokenMethod(getAccessToken);
         await getUserInfo();
       }
     })();

@@ -89,7 +89,7 @@ const style = makeStyles((theme: Theme) => {
 /**
  * Renew consents page
  */
-function Page(props: ConsentProps): JSX.Element | null {
+function Page(props: ConsentProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const historyHook = useHistory<HistoryState>();
   const auth = useAuth();
@@ -203,7 +203,7 @@ function Page(props: ConsentProps): JSX.Element | null {
       </React.Fragment>
     );
   }
-  return null;
+  return <React.Fragment />;
 }
 
 export default Page;

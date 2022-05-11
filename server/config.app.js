@@ -84,6 +84,8 @@ const config = {
   SESSION_TIMEOUT: integerFromText(process.env.SESSION_TIMEOUT, 30 * 60 * 1000), // default: 30min
   DEV: isDev || isTest,
   TEST: isTest,
+  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID
 };
 
 module.exports = config;

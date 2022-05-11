@@ -42,8 +42,8 @@ interface ArgsWithPayload<P> extends Args {
 export default class HttpService {
   private static accessToken: () => Promise<string>;
 
-  static setAccessToken(refreshTokenMethod: () => Promise<string>) {
-    HttpService.accessToken = refreshTokenMethod;
+  static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
+    HttpService.accessToken = accessTokenMethod;
   }
 
   static getAccessToken() {
