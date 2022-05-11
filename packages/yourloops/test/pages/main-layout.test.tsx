@@ -35,6 +35,9 @@ import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLayout } from "../../pages/main-layout";
 import PatientDataPage from "../../components/patient-data";
 import HomePage from "../../pages/home-page";
+import * as shareLib from "../../lib/share";
+
+jest.mock("../../lib/share");
 
 describe("Main layout", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -53,6 +56,10 @@ describe("Main layout", () => {
       </BrowserRouter>
     );
   }
+
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+  });
 
   it("should render HomePage when current user has hcp role", () => {
     const component = renderMainPageLayout(authHookHcp);

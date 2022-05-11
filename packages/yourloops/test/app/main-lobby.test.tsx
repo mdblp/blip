@@ -40,6 +40,9 @@ import PatientConsentPage from "../../pages/patient/patient-consent";
 import { SignUpPage } from "../../pages/signup";
 import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
 import HomePage from "../../pages/home-page";
+import * as shareLib from "../../lib/share";
+
+jest.mock("../../lib/share");
 
 describe("Main lobby", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -71,6 +74,10 @@ describe("Main lobby", () => {
     expect(mainPageLayout).toBeDefined();
     expect(history.location.pathname).toBe(route);
   }
+
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+  });
 
   it("should display the HomePage when hcp is logged in and route is /home", () => {
     const history = createMemoryHistory({ initialEntries: ["/home"] });

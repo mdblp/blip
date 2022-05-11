@@ -28,6 +28,7 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
+import { Router } from "react-router-dom";
 import { loadTeams, Team, TeamContextProvider } from "../../../lib/team";
 import TeamMenu from "../../../components/menus/team-menu";
 import { teamAPI } from "../../lib/team/utils";
@@ -38,8 +39,9 @@ import { NotificationContextProvider } from "../../../lib/notifications";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
 import { triggerMouseEvent } from "../../common/utils";
 import { createMemoryHistory } from "history";
-import { Router } from "react-router-dom";
+import * as shareLib from "../../../lib/share";
 
+jest.mock("../../../lib/share");
 describe("Team Menu", () => {
   let container: HTMLElement | null = null;
   let filteredTeams: Team[];
@@ -71,6 +73,10 @@ describe("Team Menu", () => {
       });
     });
   }
+
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");

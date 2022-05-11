@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -88,7 +88,7 @@ function TeamMenu(): JSX.Element {
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null);
+  const [caregivers, setCaregivers] = React.useState<ShareUser[]>([]);
   const opened = !!anchorEl;
 
   const filteredTeams = teams.filter(team => team.code !== "private");
@@ -96,15 +96,13 @@ function TeamMenu(): JSX.Element {
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false);
 
-  React.useEffect(() => {
-    if (caregivers === null && session !== null) {
-      getDirectShares(session).then((value) => {
-        setCaregivers(value);
-      }).catch(() => {
-        setCaregivers([]);
-      });
-    }
-  }, [caregivers, session]);
+  useEffect(() => {
+    (async () => {
+      if (!caregivers.length && session) {
+        setCaregivers(await getDirectShares(session));
+      }
+    })();
+  }, [caregivers.length, session]);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
