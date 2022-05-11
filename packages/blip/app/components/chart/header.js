@@ -47,20 +47,16 @@ class TidelineHeader extends React.Component {
     this.state = { isDialogOpen: false, tabSelected: 0, };
   }
 
-  selectedTab(){
+  selectedTab() {
     switch (this.props.chartType) {
     case "dashboard":
       return 0;
     case "daily":
-      return 1;
-    case "trends":
       return 2;
+    case "trends":
+      return 3;
     }
   }
-
-  // handleTabChange(_event, newValue) {
-  //   this.setState({tabSelected: newValue});
-  // }
 
   static propTypes = {
     children: PropTypes.node,
@@ -140,26 +136,26 @@ class TidelineHeader extends React.Component {
     return (
       <div className="patient-data-subnav">
         <div className="patient-data-subnav-left">
-          { this.props.userIsHCP &&
-          <div id="subnav-hcp-container">
-            <IconButton >
-              <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()}/>
-            </IconButton>
-            <Face className="subnav-icon"/>
-            <span >Patient :</span>
-            <FormControl id="subnav-patient-list" variant="outlined">
-              <Select
-                defaultValue={this.props.patient.userid}
-                onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
-              >
-                {
-                  this.props.patients.map((patient,i) => {
-                    return(<MenuItem key={i} value={patient.userid}>{personUtils.fullName(patient)}</MenuItem>);
-                  })
-                }
-              </Select>
-            </FormControl>
-          </div>
+          {this.props.userIsHCP &&
+            <div id="subnav-hcp-container">
+              <IconButton>
+                <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
+              </IconButton>
+              <Face className="subnav-icon" />
+              <span>Patient :</span>
+              <FormControl id="subnav-patient-list" variant="outlined">
+                <Select
+                  defaultValue={this.props.patient.userid}
+                  onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
+                >
+                  {
+                    this.props.patients.map((patient, i) => {
+                      return (<MenuItem key={i} value={patient.userid}>{personUtils.fullName(patient)}</MenuItem>);
+                    })
+                  }
+                </Select>
+              </FormControl>
+            </div>
           }
           {this.props.chartType === "dashboard" &&
             <Fragment>
@@ -178,9 +174,12 @@ class TidelineHeader extends React.Component {
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab href={`${prefixURL}/dashboard`} label={t("Dashboard")} icon={<Dashboard />} onClick={this.props.onClickDashboard}/> |
-            <Tab href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay}/>
-            <Tab href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />} onClick={this.props.onClickTrends}/>
+            <Tab style={{ minWidth: 80 }} className="dashboard-divider" href={`${prefixURL}/dashboard`} label={t("Dashboard")} icon={<Dashboard />}
+              onClick={this.props.onClickDashboard} />
+            <Tab disabled style={{ minWidth: 1, background: "linear-gradient(grey, grey) no-repeat center/2px 100%"}} label=""/>
+            <Tab style={{ minWidth: 80 }} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
+            <Tab style={{ minWidth: 80 }} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+              onClick={this.props.onClickTrends} />
           </Tabs>
         </div>
 
