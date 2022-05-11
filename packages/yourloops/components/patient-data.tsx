@@ -37,7 +37,6 @@ import Container from "@material-ui/core/Container";
 import Blip from "blip";
 
 import { UserRoles } from "../models/shoreline";
-import { PatientMonitored } from "../lib/data/patient";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
@@ -51,7 +50,7 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
-import { Patient } from "../lib/data/patient";
+import { PatientMonitored, Patient } from "../lib/data/patient";
 import { mapTeamUserToPatient } from "./patient/utils";
 
 interface PatientDataParam {
