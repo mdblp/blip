@@ -72,7 +72,6 @@ class TidelineHeader extends React.Component {
     iconBack: PropTypes.bool,
     iconNext: PropTypes.bool,
     iconMostRecent: PropTypes.bool,
-    trackMetric: PropTypes.func.isRequired,
     canPrint: PropTypes.bool,
     onClickBack: PropTypes.func,
     onClickDashboard: PropTypes.func,
@@ -174,7 +173,7 @@ class TidelineHeader extends React.Component {
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab style={{ minWidth: 80 }} className="dashboard-divider" href={`${prefixURL}/dashboard`} label={t("Dashboard")} icon={<Dashboard />}
+            <Tab style={{ minWidth: 80 }} className="dashboard-divider" href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
               onClick={this.props.onClickDashboard} />
             <Tab disabled style={{ minWidth: 1, background: "linear-gradient(grey, grey) no-repeat center/2px 100%"}} label=""/>
             <Tab style={{ minWidth: 80 }} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />

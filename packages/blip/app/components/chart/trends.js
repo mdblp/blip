@@ -724,7 +724,6 @@ class Trends extends React.Component {
         atMostRecent={this.state.atMostRecent}
         prefixURL={this.props.prefixURL}
         canPrint={this.props.canPrint}
-        trackMetric={this.props.trackMetric}
         loading={this.props.loading}
         iconBack
         iconNext

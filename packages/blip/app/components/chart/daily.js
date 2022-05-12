@@ -425,7 +425,6 @@ class Daily extends React.Component {
           iconNext
           iconMostRecent
           canPrint={this.props.canPrint}
-          trackMetric={trackMetric}
           onClickBack={this.handlePanBack}
           onClickDashboard={this.props.onSwitchToDashboard}
           onClickTrends={this.props.onSwitchToTrends}
