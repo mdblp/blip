@@ -21,16 +21,11 @@ const PatientDashboard = (props) => {
   };
 
   const handleClickDashboard = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    return false;
+    e.preventDefault();
   };
 
   const handleClickDaily = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
     onSwitchToDaily(epochLocation);
   };
 

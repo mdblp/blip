@@ -603,11 +603,7 @@ class Trends extends React.Component {
   }
 
   handleClickTrends(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    // when you're on Trends view, clicking Trends does nothing
-    return;
+    e.preventDefault();
   }
 
   handleSelectDate(date) {

@@ -143,9 +143,7 @@ class Settings extends React.Component {
 
   // handlers
   handleClickTrends = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
     this.props.onSwitchToTrends();
   };
 

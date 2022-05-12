@@ -143,7 +143,7 @@ class TidelineHeader extends React.Component {
                 <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
               </IconButton>
               <Face className="subnav-icon" />
-              <span>Patient :</span>
+              <span>{ t("Patient") } :</span>
               <FormControl id="subnav-patient-list" variant="outlined">
                 <Select
                   defaultValue={this.props.patient.userid}
