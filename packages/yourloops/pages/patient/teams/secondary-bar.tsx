@@ -113,14 +113,16 @@ function SecondaryBar(props: BarProps): JSX.Element {
           <Typography id="patient-navbar-breadcrumbs-teams" className={classes.breadcrumbText}>{t("breadcrumb-patient-teams")}</Typography>
         </Breadcrumbs>
       </div>
-      <div id="patient-navbar-item-middle"></div>
+      <div id="patient-navbar-item-middle" />
       <div id="patient-navbar-item-right" className={classes.toolBarRight}>
         <Button
           id="patient-navbar-add-team"
           color="primary"
           variant="contained"
+          disableElevation
           className={classes.buttonAddTeam}
-          onClick={handleOpenModalAddTeam}>
+          onClick={handleOpenModalAddTeam}
+        >
           <AddIcon />
           <span className={classes.buttonAddTeamText}>&nbsp;{t("button-add-team")}</span>
         </Button>

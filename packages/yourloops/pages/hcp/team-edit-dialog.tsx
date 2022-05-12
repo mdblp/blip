@@ -382,9 +382,10 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
         <Button
           id="team-edit-dialog-button-validate"
           disabled={formIsIncomplete}
-          onClick={handleValidateModal}
           color="primary"
           variant="contained"
+          disableElevation
+          onClick={handleValidateModal}
         >
           {modalButtonValidate}
         </Button>

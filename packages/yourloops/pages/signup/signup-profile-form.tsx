@@ -254,6 +254,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-next"
           variant="contained"
           color="primary"
+          disableElevation
           onClick={onNext}
         >
           {t("signup-steppers-next")}

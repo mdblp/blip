@@ -100,10 +100,11 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
         </Button>
         <Button
           id="switch-role-consent-dialog-button-accept"
-          onClick={handleAccept}
           variant="contained"
           color="primary"
+          disableElevation
           disabled={!(policyAccepted && termsAccepted)}
+          onClick={handleAccept}
         >
           {t("button-accept")}
         </Button>

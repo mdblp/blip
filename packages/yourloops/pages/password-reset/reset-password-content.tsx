@@ -164,8 +164,9 @@ export default function ResetPasswordContent(): JSX.Element {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={onSendResetPassword}
+                disableElevation
                 disabled={_.some(errors) || inProgress}
+                onClick={onSendResetPassword}
               >
                 {t("button-save")}
               </Button>
