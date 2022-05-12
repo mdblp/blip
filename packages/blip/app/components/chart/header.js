@@ -136,14 +136,14 @@ class TidelineHeader extends React.Component {
     return (
       <div className="patient-data-subnav">
         <div className="patient-data-subnav-left">
-          <div style={{ display: "flex", alignItems: "center", width: 750 }}>
+          <div className="subnav-left-container">
             {this.props.userIsHCP &&
             <div id="subnav-hcp-container">
               <IconButton>
                 <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
               </IconButton>
               <Face className="subnav-icon" />
-              <span>{ t("Patient") } :</span>
+              <span>{ t("patient") } :</span>
               <FormControl id="subnav-patient-list" variant="outlined">
                 <Select
                   defaultValue={this.props.patient.userid}
@@ -175,11 +175,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
+              <Tab className={"subnav-tab"} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
                 onClick={this.props.onClickDashboard} />
-              <div className={"dashboard-divider"} style={{ borderLeft: "1px solid grey", height: "60px", marginTop:"auto", marginBottom: "auto", marginRight: "10px", marginLeft: "10px"}}></div>
-              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+              <div className={"dashboard-divider"}></div>
+              <Tab className={"subnav-tab"} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={"subnav-tab"} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>

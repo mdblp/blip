@@ -82,7 +82,7 @@ ReduxProvider.propTypes = {
   patient: PropTypes.object.isRequired,
   patientMonitored: PropTypes.object,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.object.isRequired,
+  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   teams: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,

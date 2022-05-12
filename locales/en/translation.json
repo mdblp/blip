@@ -324,6 +324,7 @@
   "month": "month",
   "months": "months",
   "note": "note",
+  "patient": "Patient",
   "patient-statistics": "Patient statistics",
   "pdf-date-range": "Date range: {{range}}",
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
