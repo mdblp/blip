@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
@@ -47,6 +47,9 @@ import { commonTeamStyles } from "../../components/team/common";
 import { useAuth } from "../../lib/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
+  activeLink: {
+    color: theme.palette.primary.main,
+  },
   disableRipple: {
     "paddingLeft": 0,
     "&:hover": {
@@ -83,7 +86,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: "32px",
   },
   title: {
-    color: theme.palette.grey[800],
     fontWeight: 600,
     lineHeight: "20px",
     textTransform: "uppercase",
@@ -99,9 +101,10 @@ function TeamDetailPage(): JSX.Element {
   const authContext = useAuth();
   const { t } = useTranslation("yourloops");
   const { teamId } = paramHook as { teamId: string };
-  const [dropdownData, setDropdownData] = React.useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
+  const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
     { selectedTeam: null, teamNames: [] }
   );
+  const [activeLink, setActiveLink] = useState<string>("information");
   const isUserHcp = authContext.user?.isUserHcp();
 
   const teamInformation = useRef<HTMLDivElement>(null);
@@ -109,6 +112,7 @@ function TeamDetailPage(): JSX.Element {
   const teamAlarms = useRef<HTMLDivElement>(null);
 
   const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {
+    setActiveLink(ref.current?.dataset.link as string);
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -119,7 +123,7 @@ function TeamDetailPage(): JSX.Element {
     });
   }, [getTeam, teamId, getMedicalTeams]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     refresh();
   }, [refresh]);
 
@@ -155,7 +159,7 @@ function TeamDetailPage(): JSX.Element {
               <div className={classes.drawer}>
                 <div
                   role="link"
-                  className={classes.drawerTitle}
+                  className={`${classes.drawerTitle} ${activeLink === "information" ? classes.activeLink : ""}`}
                   tabIndex={0}
                   onKeyDown={() => scrollTo(teamInformation)}
                   onClick={() => scrollTo(teamInformation)}
@@ -167,7 +171,7 @@ function TeamDetailPage(): JSX.Element {
                 </div>
                 <div
                   role="link"
-                  className={classes.drawerTitle}
+                  className={`${classes.drawerTitle} ${activeLink === "members" ? classes.activeLink : ""}`}
                   tabIndex={0}
                   onClick={() => scrollTo(teamMembers)}
                   onKeyDown={() => scrollTo(teamMembers)}
@@ -179,31 +183,43 @@ function TeamDetailPage(): JSX.Element {
                 </div>
                 <div
                   role="link"
-                  className={classes.drawerTitle}
+                  className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
                   tabIndex={0}
                   onClick={() => scrollTo(teamAlarms)}
                   onKeyDown={() => scrollTo(teamAlarms)}
                 >
                   <DesktopMacIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("telemonitoring-alarms")}
+                    {t("events-configuration")}
                   </Typography>
                 </div>
               </div>
             }
-            <Box display="flex" justifyContent="center" width="100%">
+            <Box display="flex" justifyContent="center" margin="auto">
               <div className={classes.teamDetails}>
-                <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
+                <div
+                  ref={teamInformation}
+                  data-link="information"
+                  className={`${classes.teamInformation} ${classes.refElement}`}
+                >
                   <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh} />
                 </div>
                 {isUserHcp &&
                   <div>
                     <div className={classes.separator} />
-                    <div ref={teamMembers} className={classes.refElement}>
+                    <div
+                      ref={teamMembers}
+                      data-link="members"
+                      className={classes.refElement}
+                    >
                       <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                     </div>
                     <div className={classes.separator} />
-                    <div ref={teamAlarms} className={classes.refElement}>
+                    <div
+                      ref={teamAlarms}
+                      data-link="configuration"
+                      className={classes.refElement}
+                    >
                       <TeamAlarms />
                     </div>
                   </div>
