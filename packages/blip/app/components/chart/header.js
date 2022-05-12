@@ -44,11 +44,12 @@ const t = i18next.t.bind(i18next);
 class TidelineHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isDialogOpen: false, tabSelected: 0, };
+    this.state = { isDialogOpen: false };
   }
 
   selectedTab() {
     switch (this.props.chartType) {
+    // 1 is the separator, so we're skipping it
     case "dashboard":
       return 0;
     case "daily":
@@ -135,7 +136,8 @@ class TidelineHeader extends React.Component {
     return (
       <div className="patient-data-subnav">
         <div className="patient-data-subnav-left">
-          {this.props.userIsHCP &&
+          <div style={{ display: "flex", alignItems: "center", width: 750 }}>
+            {this.props.userIsHCP &&
             <div id="subnav-hcp-container">
               <IconButton>
                 <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
@@ -155,31 +157,32 @@ class TidelineHeader extends React.Component {
                 </Select>
               </FormControl>
             </div>
-          }
-          {this.props.chartType === "dashboard" &&
+            }
+            {this.props.chartType === "dashboard" &&
             <Fragment>
               <AccessTime className="subnav-icon" />
               <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
             </Fragment>
-          }
-          {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
-          {children}
-          {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
-          {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
-        </div>
-        <div className="patient-data-subnav-center">
-          <Tabs
-            value={this.selectedTab()}
-            textColor="primary"
-            indicatorColor="primary"
-          >
-            <Tab style={{ minWidth: 80 }} className="dashboard-divider" href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
-              onClick={this.props.onClickDashboard} />
-            <Tab disabled style={{ minWidth: 1, background: "linear-gradient(grey, grey) no-repeat center/2px 100%"}} label=""/>
-            <Tab style={{ minWidth: 80 }} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
-            <Tab style={{ minWidth: 80 }} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
-              onClick={this.props.onClickTrends} />
-          </Tabs>
+            }
+            {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
+            {children}
+            {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
+            {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
+          </div>
+          <div>
+            <Tabs
+              value={this.selectedTab()}
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
+                onClick={this.props.onClickDashboard} />
+              <div className={"dashboard-divider"} style={{ borderLeft: "1px solid grey", height: "60px", marginTop:"auto", marginBottom: "auto", marginRight: "10px", marginLeft: "10px"}}></div>
+              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab style={{ minWidth: 80 }} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+                onClick={this.props.onClickTrends} />
+            </Tabs>
+          </div>
         </div>
 
         <div className="patient-data-subnav-right">
