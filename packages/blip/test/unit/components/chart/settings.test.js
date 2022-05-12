@@ -9,7 +9,7 @@ import chai from "chai";
 import { MGDL_UNITS } from "tideline";
 import Settings from "../../../../app/components/chart/settings";
 
-describe("Settings", function () {
+describe.skip("Settings", function () {
   const { expect } = chai;
 
   const bgPrefs = {

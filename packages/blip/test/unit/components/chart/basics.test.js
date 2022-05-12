@@ -25,7 +25,7 @@ import { MGDL_UNITS } from "tideline";
 import DataUtilStub from "../../../helpers/DataUtil";
 import Basics from "../../../../app/components/chart/basics";
 
-describe("Basics", () => {
+describe.skip("Basics", () => {
   const { expect } = chai;
 
   const bgPrefs = {

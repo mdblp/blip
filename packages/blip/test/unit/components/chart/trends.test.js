@@ -44,6 +44,10 @@ describe("Trends", () => {
     ],
     getTimezoneAt: sinon.stub().returns("UTC"),
   };
+
+  const patient = {
+    userid: "1234",
+  };
   const baseProps = {
     bgPrefs: {
       bgClasses: {
@@ -81,9 +85,10 @@ describe("Trends", () => {
     },
     epochLocation: moment.utc("2021-01-01T12:00:00.000Z").valueOf(),
     msRange: MS_IN_DAY*7,
-    patient: {
-      userid: "1234",
-    },
+    patient,
+    patients: [patient],
+    isUserHCP: true,
+    onClickNavigationBack: sinon.stub(),
     dataUtil: new DataUtilStub(),
     loading: false,
     canPrint: false,

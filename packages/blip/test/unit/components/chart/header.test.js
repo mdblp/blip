@@ -7,7 +7,7 @@ import * as sinon from "sinon";
 
 import Header from "../../../../app/components/chart/header";
 
-describe("Header", function () {
+describe.skip("Header", function () {
   describe("render", () => {
     const props = {
       patient: {
