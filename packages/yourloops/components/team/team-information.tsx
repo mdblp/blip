@@ -27,7 +27,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -46,47 +46,31 @@ import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import LeaveTeamButton from "./leave-team-button";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   body: {
     display: "flex",
-    flexDirection: "row",
     flexWrap: "wrap",
-    paddingTop: "25px",
-    placeContent: "center",
-  },
-  header: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: "18px",
-  },
-  informationTitle: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    paddingTop: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
   },
   label: {
-    width: "180px",
     fontWeight: 600,
     fontSize: "13px",
-    lineHeight: "16px",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    width: "180px",
   },
   value: {
     fontSize: "13px",
-    lineHeight: "16px",
-    whiteSpace: "pre-line",
-    display: "flex",
-    alignItems: "center",
   },
   teamInfo: {
-    display: "flex",
-    flexDirection: "row",
-    width: "420px",
+    "display": "flex",
+    "alignItems": "top",
+    "width": "50%",
+    "marginBottom": theme.spacing(4),
+    "& > div": {
+      display: "flex",
+      alignItems: "center",
+    },
   },
 }));
 
@@ -129,8 +113,8 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   return (
     <React.Fragment>
       <div className={commonTeamClasses.root}>
-        <div className={classes.header}>
-          <div className={classes.informationTitle}>
+        <div className={commonTeamClasses.categoryHeader}>
+          <div>
             <InfoOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
               {t("information")}
@@ -149,44 +133,54 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t("edit-information")}
             </Button>
           }
-          {isUserPatient &&
-            <LeaveTeamButton team={team} />
-          }
+          {isUserPatient && <LeaveTeamButton team={team} />}
         </div>
+
         <div className={classes.body}>
           <div className={classes.teamInfo}>
-            <Typography className={classes.label}>
+            <div>
               <FolderSharedOutlinedIcon className={commonTeamClasses.icon} />
-              {t("team-name")}
-            </Typography>
+              <Typography className={classes.label}>
+                {t("team-name")}
+              </Typography>
+            </div>
             <Typography id={`team-information-${team.id}-name`} className={classes.value}>
               {team.name}
             </Typography>
           </div>
           <div className={classes.teamInfo}>
-            <Typography className={classes.label}>
+            <div>
               <LocalPhoneOutlinedIcon className={commonTeamClasses.icon} />
-              {t("phone-number")}
-            </Typography>
+              <Typography className={classes.label}>
+                {t("phone-number")}
+              </Typography>
+            </div>
             <Typography id={`team-information-${team.id}-phone`} className={classes.value}>
               {team.phone}
             </Typography>
           </div>
           <div className={classes.teamInfo}>
-            <Typography className={classes.label}>
+            <div>
               <VerifiedUserOutlinedIcon className={commonTeamClasses.icon} />
-              {t("identification-code")}
-            </Typography>
+              <Typography className={classes.label}>
+                {t("identification-code")}
+              </Typography>
+            </div>
             <Typography id={`team-information-${team.id}-code`} className={classes.value}>
               {team.code}
             </Typography>
           </div>
           <div className={classes.teamInfo}>
-            <Typography className={classes.label}>
+            <div>
               <LocationOnOutlinedIcon className={commonTeamClasses.icon} />
-              {t("address")}
-            </Typography>
-            <Typography id={`team-information-${team.id}-address`} className={classes.value}>
+              <Typography className={classes.label}>
+                {t("address")}
+              </Typography>
+            </div>
+            <Typography
+              id={`team-information-${team.id}-address`}
+              className={classes.value}
+            >
               {address}
             </Typography>
           </div>

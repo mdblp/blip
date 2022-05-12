@@ -29,12 +29,13 @@ import React, { useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
-import IconButton from "@material-ui/core/IconButton";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Box from "@material-ui/core/Box";
 import DesktopMacIcon from "@material-ui/icons/DesktopMac";
+import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
+import IconButton from "@material-ui/core/IconButton";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
 import { Team, useTeam } from "../../lib/team";
 import BasicDropdown from "../../components/dropdown/basic-dropdown";
@@ -46,36 +47,20 @@ import { commonTeamStyles } from "../../components/team/common";
 import { useAuth } from "../../lib/auth";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  basicDropdown: {
-    marginLeft: "15px",
-    width: "180px",
-  },
-  body: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  centerContent: {
-    justifyContent: "center",
-  },
   disableRipple: {
+    "paddingLeft": 0,
     "&:hover": {
       backgroundColor: "transparent",
     },
     "color": theme.palette.common.black,
   },
   drawer: {
-    minWidth: "370px",
-    maxWidth: "400px",
     position: "sticky",
     height: "200px",
     top: "80px",
   },
-  groupOutlinedIcon: {
-    margin: "0px",
-  },
   drawerTitle: {
     "display": "flex",
-    "flexDirection": "row",
     "alignItems": "center",
     "marginTop": "30px",
     "&:hover": {
@@ -85,30 +70,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   refElement: {
     scrollMarginTop: "70px",
   },
-  root: {
-    display: "flex",
-    flexDirection: "row",
-  },
   separator: {
-    border: "1px solid #C4C4C4",
-    marginBottom: "50px",
-    marginTop: "50px",
+    border: `1px solid ${theme.palette.divider}`,
+    marginBottom: theme.spacing(6),
+    marginTop: theme.spacing(6),
   },
   teamDetails: {
-    maxWidth: "1030px",
+    maxWidth: "1140px",
+    padding: "0 20px",
   },
   teamInformation: {
     marginTop: "32px",
   },
-  teamSelection: {
-    display: "flex",
-    alignItems: "center",
-  },
   title: {
     color: theme.palette.grey[800],
-    fontSize: "16px",
     fontWeight: 600,
     lineHeight: "20px",
+    textTransform: "uppercase",
   },
 }));
 
@@ -125,7 +103,6 @@ function TeamDetailPage(): JSX.Element {
     { selectedTeam: null, teamNames: [] }
   );
   const isUserHcp = authContext.user?.isUserHcp();
-  const bodyClass = isUserHcp ? classes.body : `${classes.body} ${classes.centerContent}`;
 
   const teamInformation = useRef<HTMLDivElement>(null);
   const teamMembers = useRef<HTMLDivElement>(null);
@@ -159,22 +136,21 @@ function TeamDetailPage(): JSX.Element {
     <React.Fragment>
       {dropdownData?.selectedTeam &&
         <div>
-          <div className={classes.teamSelection}>
-            <IconButton className={classes.disableRipple} disableTouchRipple={true} onClick={redirectToDashboard}>
+          <Box display="flex" alignItems="center">
+            <IconButton className={classes.disableRipple} onClick={redirectToDashboard}>
               <ArrowBackIcon />
             </IconButton>
-            <GroupOutlinedIcon className={classes.groupOutlinedIcon} />
-            {t("team")}
-            <div className={classes.basicDropdown}>
-              <BasicDropdown
-                key={dropdownData.selectedTeam.name}
-                id={"team-basic-dropdown"}
-                defaultValue={dropdownData.selectedTeam.name}
-                values={dropdownData.teamNames}
-                onSelect={redirectToTeam} />
-            </div>
-          </div>
-          <div className={bodyClass}>
+            <GroupOutlinedIcon />
+            <Box marginLeft={0.5} marginRight={2}>{t("team")}</Box>
+            <BasicDropdown
+              key={dropdownData.selectedTeam.name}
+              id={"team-basic-dropdown"}
+              defaultValue={dropdownData.selectedTeam.name}
+              values={dropdownData.teamNames}
+              onSelect={redirectToTeam}
+            />
+          </Box>
+          <Box display="flex" justifyContent={isUserHcp}>
             {isUserHcp &&
               <div className={classes.drawer}>
                 <div
@@ -186,7 +162,7 @@ function TeamDetailPage(): JSX.Element {
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("information").toUpperCase()}
+                    {t("information")}
                   </Typography>
                 </div>
                 <div
@@ -198,7 +174,7 @@ function TeamDetailPage(): JSX.Element {
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("members").toUpperCase()}
+                    {t("members")}
                   </Typography>
                 </div>
                 <div
@@ -210,29 +186,31 @@ function TeamDetailPage(): JSX.Element {
                 >
                   <DesktopMacIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("telemonitoring-alarms").toUpperCase()}
+                    {t("telemonitoring-alarms")}
                   </Typography>
                 </div>
               </div>
             }
-            <div className={classes.teamDetails}>
-              <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
-                <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh} />
-              </div>
-              {isUserHcp &&
-                <div>
-                  <div className={classes.separator} />
-                  <div ref={teamMembers} className={classes.refElement}>
-                    <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
-                  </div>
-                  <div className={classes.separator} />
-                  <div ref={teamAlarms} className={classes.refElement}>
-                    <TeamAlarms />
-                  </div>
+            <Box display="flex" justifyContent="center" width="100%">
+              <div className={classes.teamDetails}>
+                <div ref={teamInformation} className={`${classes.teamInformation} ${classes.refElement}`}>
+                  <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh} />
                 </div>
-              }
-            </div>
-          </div>
+                {isUserHcp &&
+                  <div>
+                    <div className={classes.separator} />
+                    <div ref={teamMembers} className={classes.refElement}>
+                      <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
+                    </div>
+                    <div className={classes.separator} />
+                    <div ref={teamAlarms} className={classes.refElement}>
+                      <TeamAlarms />
+                    </div>
+                  </div>
+                }
+              </div>
+            </Box>
+          </Box>
         </div>
       }
     </React.Fragment>

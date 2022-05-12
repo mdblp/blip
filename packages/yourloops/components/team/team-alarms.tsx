@@ -28,98 +28,52 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
+import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import TuneIcon from "@material-ui/icons/Tune";
 
 import BasicDropdown from "../dropdown/basic-dropdown";
 import { commonTeamStyles } from "./common";
 
-const useStyles = makeStyles(() => ({
-  body: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    marginLeft: "10px",
-  },
-  categoryBody: {
-    display: "flex",
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   categoryInfo: {
-    fontSize: "10px",
-    marginBottom: "16px",
-    marginLeft: "10px",
+    marginLeft: theme.spacing(3),
+  },
+  categoryTitle: {
+    fontWeight: 600,
+    textTransform: "uppercase",
   },
   defaultLabel: {
-    marginTop: "10px",
+    marginTop: theme.spacing(2),
     fontSize: "10px",
     fontStyle: "italic",
-    marginLeft: "10px",
-  },
-  displayFlex: {
-    display: "flex",
-    alignItems: "center",
+    marginLeft: theme.spacing(3),
   },
   divider: {
-    border: "1px solid #C4C4C4",
-    marginTop: "20px",
-    marginBottom: "20px",
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
   },
   dropdown: {
-    marginLeft: "15px",
-    marginRight: "15px",
-    marginTop: "0px",
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
   },
-  halfWidth: {
+  subCategoryContainer: {
+    display: "flex",
+    flexDirection: "column",
     width: "50%",
   },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  icon: {
-    margin: "0px",
-  },
-  label: {
-    width: "255px",
+  subCategoryTitle: {
     fontWeight: 600,
     fontSize: "13px",
-    lineHeight: "16px",
-  },
-  teamInfo: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: "30px",
-  },
-  subSubTitle: {
-    fontWeight: 600,
-    fontSize: "13px",
-    lineHeight: "112%",
-    marginBottom: "6px",
-  },
-  subTitle: {
-    fontWeight: 600,
-    fontSize: "16px",
-    lineHeight: "112%",
-    textTransform: "uppercase",
-    marginBottom: "6px",
-  },
-  title: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    marginBottom: "24px",
-  },
-  value: {
-    fontSize: "13px",
-    lineHeight: "16px",
-    whiteSpace: "pre-line",
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(2),
   },
   valueSelection: {
     display: "flex",
-    marginLeft: "10px",
+    alignItems: "center",
+    marginLeft: theme.spacing(3),
   },
 }));
 
@@ -129,140 +83,137 @@ function TeamAlarms(): JSX.Element {
   const { t } = useTranslation("yourloops");
 
   return (
-    <React.Fragment>
-      <div className={commonTeamClasses.root}>
-        <div className={classes.title}>
-          <TuneIcon className={classes.icon} />
+    <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.categoryHeader}>
+        <div>
+          <TuneIcon />
           <Typography className={commonTeamClasses.title}>
             {t("event-configuration")}
           </Typography>
         </div>
-        <div className={classes.body}>
-          <div>
-            <Typography className={classes.subTitle}>1. {t("time-away-from-target")}</Typography>
-            <Typography className={classes.categoryInfo}>{t("current-trigger-setting-tir")}</Typography>
-            <div className={classes.categoryBody}>
-              <div className={classes.halfWidth}>
-                <Typography className={classes.subSubTitle}>A. {t("glycemic-target")}</Typography>
-                <div className={classes.valueSelection}>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("minimum")} :</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="70mg/dL"
-                        values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("maximum")} :</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="180mg/dL"
-                        values={["160mg/dL", "170mg/dL", "180mg/dL", "200mg/dL"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                </div>
-                <Typography className={classes.defaultLabel}>{t("default-min-max")}</Typography>
-              </div>
-              <div className={classes.halfWidth}>
-                <Typography className={classes.subSubTitle}>B. {t("event-trigger-threshold")}</Typography>
-                <div className={classes.valueSelection}>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("time-spent-off-target")}</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="50%"
-                        values={["10%", "30%", "50%", "60%"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                </div>
-                <Typography className={classes.defaultLabel}>{t("default", { value : "50%" })}</Typography>
-              </div>
-            </div>
-          </div>
-          <div className={classes.divider} />
-          <div>
-            <Typography className={classes.subTitle}>2. {t("severe-hypoglycemia")}</Typography>
-            <Typography className={classes.categoryInfo}>{t("current-trigger-setting-hypoglycemia")}</Typography>
-            <div className={classes.categoryBody}>
-              <div className={classes.halfWidth}>
-                <Typography className={classes.subSubTitle}>A. {t("severe-hypoglycemia-threshold")}:</Typography>
-                <div className={classes.valueSelection}>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("severe-hypoglycemia-below")}:</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="70mg/dL"
-                        values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                </div>
-                <Typography className={classes.defaultLabel}>{t("default", { value : "50mg/dL" })}</Typography>
-              </div>
-              <div className={classes.halfWidth}>
-                <Typography className={classes.subSubTitle}>B. {t("event-trigger-threshold")}</Typography>
-                <div className={classes.valueSelection}>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("time-spent-severe-hypoglycemia")}</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="50%"
-                        values={["10%", "30%", "50%", "60%"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                </div>
-                <Typography className={classes.defaultLabel}>{t("default", { value : "5%" })}</Typography>
-              </div>
-            </div>
-          </div>
-          <div className={classes.divider} />
-          <div>
-            <Typography className={classes.subTitle}>3. {t("data-not-transmitted")}</Typography>
-            <Typography className={classes.categoryInfo}>{t("current-trigger-setting-data")}</Typography>
-            <div className={classes.categoryBody}>
-              <div className={classes.halfWidth}>
-                <Typography className={classes.subSubTitle}>A. {t("event-trigger-threshold")}</Typography>
-                <div className={classes.valueSelection}>
-                  <div className={classes.displayFlex}>
-                    <Typography>{t("time-spent-without-uploaded-data")}</Typography>
-                    <div className={classes.dropdown}>
-                      <BasicDropdown
-                        id={"team-basic-dropdown"}
-                        defaultValue="50%"
-                        values={["40%", "50%", "60%", "70%"]}
-                        onSelect={() => {
-                          console.log("Selected");
-                        }} />
-                    </div>
-                  </div>
-                </div>
-                <Typography className={classes.defaultLabel}>{t("default", { value : "50%" })}</Typography>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </React.Fragment>
+
+      <Box marginLeft={0}>
+        <Typography className={classes.categoryTitle}>
+          1. {t("time-away-from-target")}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t("current-trigger-setting-tir")}
+        </Typography>
+        <Box display="flex" marginTop={2}>
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>
+              A. {t("glycemic-target")}
+            </Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t("minimum")} :</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="70mg/dL"
+                  values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+              <Typography>{t("maximum")} :</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="180mg/dL"
+                  values={["160mg/dL", "170mg/dL", "180mg/dL", "200mg/dL"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+            </div>
+            <Typography className={classes.defaultLabel}>{t("default-min-max")}</Typography>
+          </div>
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>B. {t("event-trigger-threshold")}</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t("time-spent-off-target")}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="50%"
+                  values={["10%", "30%", "50%", "60%"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+            </div>
+            <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          </div>
+        </Box>
+
+        <Divider variant="middle" className={classes.divider} />
+
+        <Typography className={classes.categoryTitle}>
+          2. {t("severe-hypoglycemia")}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t("current-trigger-setting-hypoglycemia")}
+        </Typography>
+        <Box display="flex" marginTop={2}>
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>A. {t("severe-hypoglycemia-threshold")}:</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t("severe-hypoglycemia-below")}:</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="70mg/dL"
+                  values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+            </div>
+            <Typography className={classes.defaultLabel}>{t("default", { value: "50mg/dL" })}</Typography>
+          </div>
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>
+              B. {t("event-trigger-threshold")}
+            </Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t("time-spent-severe-hypoglycemia")}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="50%"
+                  values={["10%", "30%", "50%", "60%"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+            </div>
+            <Typography className={classes.defaultLabel}>{t("default", { value: "5%" })}</Typography>
+          </div>
+        </Box>
+
+        <Divider variant="middle" className={classes.divider} />
+
+        <Typography className={classes.categoryTitle}>
+          3. {t("data-not-transmitted")}
+        </Typography>
+        <Typography variant="caption" className={classes.categoryInfo}>
+          {t("current-trigger-setting-data")}
+        </Typography>
+        <Box display="flex" marginTop={2}>
+          <div className={classes.subCategoryContainer}>
+            <Typography className={classes.subCategoryTitle}>A. {t("event-trigger-threshold")}</Typography>
+            <div className={classes.valueSelection}>
+              <Typography>{t("time-spent-without-uploaded-data")}</Typography>
+              <div className={classes.dropdown}>
+                <BasicDropdown
+                  id={"team-basic-dropdown"}
+                  defaultValue="50%"
+                  values={["40%", "50%", "60%", "70%"]}
+                  onSelect={() => console.log("Selected")}
+                />
+              </div>
+            </div>
+            <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          </div>
+        </Box>
+      </Box>
+    </div>
   );
 }
 
