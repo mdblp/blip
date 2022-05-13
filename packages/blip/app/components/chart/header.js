@@ -15,20 +15,27 @@
  * == BSD2 LICENSE ==
  */
 import _ from "lodash";
-import React from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 import i18next from "i18next";
 
-import Link from "@material-ui/core/Link";
-import Timeline from "@material-ui/icons/Timeline";
-import StayCurrentPortrait from "@material-ui/icons/StayCurrentPortrait";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import Face from "@material-ui/icons/Face";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SkipNextIcon from "@material-ui/icons/SkipNext";
-
+import AccessTime from "@material-ui/icons/AccessTime";
 import IconButton from "@material-ui/core/IconButton";
+import Dashboard from "@material-ui/icons/Dashboard";
+import Today from "@material-ui/icons/Today";
+import TrendingUp from "@material-ui/icons/TrendingUp";
 
 import personUtils from "../../core/personutils";
 
@@ -40,9 +47,23 @@ class TidelineHeader extends React.Component {
     this.state = { isDialogOpen: false };
   }
 
+  selectedTab() {
+    switch (this.props.chartType) {
+    // 1 is the separator, so we're skipping it
+    case "dashboard":
+      return 0;
+    case "daily":
+      return 2;
+    case "trends":
+      return 3;
+    }
+  }
+
   static propTypes = {
     children: PropTypes.node,
     patient: PropTypes.object,
+    patients: PropTypes.array,
+    userIsHCP: PropTypes.bool,
     chartType: PropTypes.string.isRequired,
     prefixURL: PropTypes.string,
     inTransition: PropTypes.bool,
@@ -51,17 +72,16 @@ class TidelineHeader extends React.Component {
     iconBack: PropTypes.bool,
     iconNext: PropTypes.bool,
     iconMostRecent: PropTypes.bool,
-    trackMetric: PropTypes.func.isRequired,
     canPrint: PropTypes.bool,
     onClickBack: PropTypes.func,
-    onClickBasics: PropTypes.func,
+    onClickDashboard: PropTypes.func,
     onClickTrends: PropTypes.func,
     onClickMostRecent: PropTypes.func,
     onClickNext: PropTypes.func,
     onClickOneDay: PropTypes.func,
-    onClickSettings: PropTypes.func,
     onClickPrint: PropTypes.func,
-    profileDialog: PropTypes.func,
+    onSwitchPatient: PropTypes.func,
+    onClickNavigationBack: PropTypes.func,
   };
 
   static defaultProps = {
@@ -69,39 +89,15 @@ class TidelineHeader extends React.Component {
     atMostRecent: false,
     loading: false,
     canPrint: false,
-    profileDialog: null,
     prefixURL: "",
   };
 
   renderStandard() {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
-    const { profileDialog: ProfileDialog, children } = this.props;
+    const { children } = this.props;
 
-    const printViews = ["dashboard", "basics", "daily", "bgLog", "settings"];
+    const printViews = ["dashboard", "daily", "trends"];
     const showPrintLink = _.includes(printViews, chartType);
-    const homeValue = personUtils.fullName(this.props.patient);
-
-    const home = cx({
-      "js-home": true,
-    });
-
-    const basicsLinkClass = cx({
-      "js-basics": true,
-      "patient-data-subnav-active": chartType === "basics",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
-    const dayLinkClass = cx({
-      "js-daily": true,
-      "patient-data-subnav-active": chartType === "daily",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
-    const trendsLinkClass = cx({
-      "js-trends": true,
-      "patient-data-subnav-active": chartType === "trends",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
 
     const mostRecentDisabled = atMostRecent || inTransition || loading;
     const mostRecentClass = cx({
@@ -121,13 +117,6 @@ class TidelineHeader extends React.Component {
       "patient-data-subnav-hidden": chartType === "settings" || chartType === "no-data",
     });
 
-    const settingsLinkClass = cx({
-      "patient-data-subnav-button": true,
-      "js-settings": true,
-      "patient-data-subnav-active": chartType === "settings",
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
-
     let printLink = null;
     if (canPrint && showPrintLink) {
       const printLinkClass = cx({
@@ -137,61 +126,66 @@ class TidelineHeader extends React.Component {
 
       printLink = (
         <button className={printLinkClass} onClick={this.onClickPrint}>
-          <Timeline className="print-icon" />
+          <GetAppIcon className="print-icon" />
           {t("pdf-generate-report")}
         </button>
       );
     }
 
-    /** @type {(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void} */
-    const handleShowPatientProfile = (/* e */) => {
-      this.props.trackMetric("data_visualization", "display_patient_profile");
-      this.setState({ isDialogOpen: true });
-    };
-
-    const handleDialogClose = () => {
-      this.setState({ isDialogOpen: false });
-    };
-
-    let profileDialog = null;
-    if (_.isFunction(ProfileDialog)) {
-      profileDialog = (
-        <div className="patient-data-subnav-left">
-          <AccountCircleIcon className={home} />
-          <Link className={home} onClick={handleShowPatientProfile} title={t("Profile")}>
-            {homeValue}
-          </Link>
-          <ProfileDialog user={this.props.patient} isOpen={this.state.isDialogOpen} handleClose={handleDialogClose} />
-        </div>
-      );
-    }
-
     return (
-      <div className="grid patient-data-subnav">
-        {profileDialog}
+      <div className="patient-data-subnav">
         <div className="patient-data-subnav-left">
-          <a id="button-tab-overview" href={`${prefixURL}/overview`} className={basicsLinkClass} onClick={this.props.onClickBasics}>
-            {t("Basics")}
-          </a>
-          <a id="button-tab-daily" href={`${prefixURL}/daily`} className={dayLinkClass} onClick={this.props.onClickOneDay}>
-            {t("Daily")}
-          </a>
-          <a id="button-tab-trends" href={`${prefixURL}/trends`} className={trendsLinkClass} onClick={this.props.onClickTrends}>
-            {t("Trends")}
-          </a>
+          <div className="subnav-left-container">
+            {this.props.userIsHCP &&
+            <div id="subnav-hcp-container">
+              <IconButton>
+                <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
+              </IconButton>
+              <Face className="subnav-icon" />
+              <span>{ t("patient") } :</span>
+              <FormControl id="subnav-patient-list" variant="outlined">
+                <Select
+                  defaultValue={this.props.patient.userid}
+                  onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
+                >
+                  {
+                    this.props.patients.map((patient, i) => {
+                      return (<MenuItem key={i} value={patient.userid}>{personUtils.fullName(patient)}</MenuItem>);
+                    })
+                  }
+                </Select>
+              </FormControl>
+            </div>
+            }
+            {this.props.chartType === "dashboard" &&
+            <Fragment>
+              <AccessTime className="subnav-icon" />
+              <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
+            </Fragment>
+            }
+            {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
+            {children}
+            {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
+            {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
+          </div>
+          <div>
+            <Tabs
+              value={this.selectedTab()}
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              <Tab className={"subnav-tab"} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
+                onClick={this.props.onClickDashboard} />
+              <div className={"dashboard-divider"}></div>
+              <Tab className={"subnav-tab"} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={"subnav-tab"} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+                onClick={this.props.onClickTrends} />
+            </Tabs>
+          </div>
         </div>
-        <div className="patient-data-subnav-center" id="tidelineLabel">
-          {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
-          {children}
-          {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
-          {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
-        </div>
+
         <div className="patient-data-subnav-right">
           {printLink}
-          <button id="button-tab-settings" className={settingsLinkClass} onClick={this.props.onClickSettings}>
-            <StayCurrentPortrait />
-            {t("Device settings")}
-          </button>
         </div>
       </div>
     );
@@ -199,8 +193,8 @@ class TidelineHeader extends React.Component {
 
   render() {
     return (
-      <div className="container-box-outer patient-data-subnav-outer">
-        <div className="container-box-inner patient-data-subnav-inner">{this.renderStandard()}</div>
+      <div className="patient-data-subnav-outer">
+        <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
     );
   }

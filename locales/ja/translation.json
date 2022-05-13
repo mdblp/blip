@@ -106,7 +106,6 @@
   "Derived from _**{{total}}**_ carb entries.": "_**{{total}}**_炭水化物エントリ、レスキュー炭水化物を含むから派生しました。",
   "Derived from _**{{total}}**_ {{smbgLabel}} readings.": "_**{{total}}**_ {{smbgLabel}} の測定値から派生しました。",
   "Device": "DBL",
-  "Device settings": "DBLの設定",
   "Duration": "期間",
   "Edit": "編集",
   "Entered at": "入力日時",

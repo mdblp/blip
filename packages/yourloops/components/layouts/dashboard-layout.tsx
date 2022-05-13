@@ -36,12 +36,15 @@ import MainHeader from "../header-bars/main-header";
 import MainDrawer from "../menus/main-drawer";
 import { useAuth } from "../../lib/auth";
 
-const classes = makeStyles((theme: Theme) => ({
+const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
   toolbar: { ...theme.mixins.toolbar },
+  container: {
+    padding: "0px",
+  },
 }));
 
 function DashboardLayout({ children }: { children: JSX.Element }) {
-  const { toolbar } = classes();
+  const classes = dashboardLayoutStyle();
   const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true);
   const authHook = useAuth();
   const isUserPatient = authHook.user?.isUserPatient();
@@ -54,8 +57,8 @@ function DashboardLayout({ children }: { children: JSX.Element }) {
       {!isUserPatient &&
         <MainDrawer miniVariant={drawerMiniVariant} />
       }
-      <Container maxWidth={false}>
-        <div className={toolbar} />
+      <Container maxWidth={false} className={classes.container}>
+        <div className={classes.toolbar} />
         {children}
       </Container>
     </Box>

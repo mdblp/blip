@@ -39,12 +39,16 @@ import MessageNote from "../../yourloops/models/message";
 import { PatientMonitored } from "../../yourloops/lib/data/patient"
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
+import { Patient } from "../../yourloops/lib/data/patient";
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
-  patient: IUser;
+  patient: Patient;
+  setPatient: Function;
   patientMonitored: PatientMonitored | null;
+  patients: Patient[];
+  userIsHCP: boolean;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;

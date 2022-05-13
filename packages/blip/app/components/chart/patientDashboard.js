@@ -12,13 +12,23 @@ const PatientDashboard = (props) => {
     //eslint-disable-next-line
     patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, patientMonitored, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientMonitored, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
     const end = moment.utc(epochLocation).toISOString();
     return [start, end];
   };
+
+  const handleClickDashboard = (e) => {
+    e.preventDefault();
+  };
+
+  const handleClickDaily = (e) => {
+    e.preventDefault();
+    onSwitchToDaily(epochLocation);
+  };
+
   const endpoints = getEndpoints();
   return (
     <div id="patient-dashboard" className="patient-dashboard">
@@ -27,8 +37,15 @@ const PatientDashboard = (props) => {
         profileDialog={profileDialog}
         chartType={"dashboard"}
         patient={patient}
+        patients={patients}
+        userIsHCP={userIsHCP}
         prefixURL={prefixURL}
         canPrint={true}
+        onClickTrends={onSwitchToTrends}
+        onClickOneDay={handleClickDaily}
+        onClickDashboard={handleClickDashboard}
+        onSwitchPatient={onSwitchPatient}
+        onClickNavigationBack={onClickNavigationBack}
       />
       <Box id="patient-dashboard-content">
         {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
@@ -78,6 +95,10 @@ PatientDashboard.propTypes = {
   epochLocation: PropTypes.number.isRequired,
   msRange: PropTypes.number.isRequired,
   patientInfoWidget: PropTypes.func.isRequired,
+  onSwitchToTrends: PropTypes.func.isRequired,
+  onSwitchToDaily: PropTypes.func.isRequired,
+  onSwitchPatient: PropTypes.func.isRequired,
+  onClickNavigationBack: PropTypes.func.isRequired,
 };
 
 export default PatientDashboard;
