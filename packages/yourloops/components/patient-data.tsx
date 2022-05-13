@@ -52,6 +52,15 @@ import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
 import { PatientMonitored, Patient } from "../lib/data/patient";
 import { mapTeamUserToPatient } from "./patient/utils";
+import { makeStyles } from "@material-ui/core";
+
+const patientDataStyles = makeStyles(() => {
+  return {
+    container: {
+      padding: 0,
+    },
+  };
+});
 
 interface PatientDataParam {
   patientId?: string;
@@ -77,6 +86,8 @@ function PatientDataPage(): JSX.Element | null {
   const authHook = useAuth();
   const teamHook = useTeam();
   const dataHook = useData();
+  const classes = patientDataStyles();
+
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
   const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
@@ -158,7 +169,7 @@ function PatientDataPage(): JSX.Element | null {
   }
 
   return (
-    <Container style={{ padding: "0px" }} maxWidth={false}>
+    <Container className={classes.container} maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}
