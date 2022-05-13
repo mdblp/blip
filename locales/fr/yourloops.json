@@ -195,7 +195,6 @@
   "new-password": "Nouveau mot de passe",
   "no": "No",
   "no-password": "Mot de passe manquant",
-  "not-a-patient": "Cette personne n'est pas un patient",
   "not-logged-in": "Vous n'êtes pas connecté·e",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}}{{lastName}}</strong> souhaite partager ses données avec vous.",
   "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> vous invite à rejoindre <strong>{{careteam}}</strong>.",
