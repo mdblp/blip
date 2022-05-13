@@ -36,13 +36,12 @@ import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 
-import { UserRoles, IUser } from "../models/shoreline";
-import { PatientMonitored } from "../lib/data/patient";
+import { UserRoles } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
-import { getUserFirstLastName, setPageTitle } from "../lib/utils";
+import { setPageTitle } from "../lib/utils";
 import TeamAPIImpl from "../lib/team/api";
 
 import ProfileDialog from "./dialogs/patient-profile";
@@ -51,6 +50,17 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
+import { PatientMonitored, Patient } from "../lib/data/patient";
+import { mapTeamUserToPatient } from "./patient/utils";
+import { makeStyles } from "@material-ui/core";
+
+const patientDataStyles = makeStyles(() => {
+  return {
+    container: {
+      padding: 0,
+    },
+  };
+});
 
 interface PatientDataParam {
   patientId?: string;
@@ -76,8 +86,11 @@ function PatientDataPage(): JSX.Element | null {
   const authHook = useAuth();
   const teamHook = useTeam();
   const dataHook = useData();
+  const classes = patientDataStyles();
 
-  const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
+
+  const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
+  const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
@@ -86,6 +99,7 @@ function PatientDataPage(): JSX.Element | null {
   const authUser = authHook.user;
   const userId = authUser?.userid ?? null;
   const userIsPatient = authHook.user?.isUserPatient();
+  const userIsHCP = authHook.user?.isUserHcp();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
   const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi;
@@ -95,8 +109,16 @@ function PatientDataPage(): JSX.Element | null {
       return;
     }
 
+    setPatients(teamHook.getPatients());
+
     if (userIsPatient && !_.isNil(authUser)) {
-      setPatient(authUser);
+      const patientToSet = teamHook.getPatient(authUser.userid);
+      if (patientToSet) {
+        setPatient(patientToSet);
+      } else {
+        log.error("Patient not found");
+        setError("Patient not found");
+      }
     } else {
       const patientId = paramPatientId ?? userId;
       if (!patientId) {
@@ -110,10 +132,10 @@ function PatientDataPage(): JSX.Element | null {
         log.error("Patient not found");
         setError("Patient not found");
       } else {
-        setPatient(user);
+        setPatient(mapTeamUserToPatient(user));
       }
     }
-  }, [initialized, paramPatientId, patient, userId, teamHook, authUser, userIsPatient]);
+  }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
 
   const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
     const session = authHook.session();
@@ -125,7 +147,7 @@ function PatientDataPage(): JSX.Element | null {
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
+      setPageTitle(t("user-name", patient.lastName), "PatientName");
     } else {
       setPageTitle();
     }
@@ -147,12 +169,15 @@ function PatientDataPage(): JSX.Element | null {
   }
 
   return (
-    <Container maxWidth={false}>
+    <Container className={classes.container} maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}
         patient={patient}
         patientMonitored={patientMonitored}
+        userIsHCP={userIsHCP!}
+        patients={patients}
+        setPatient={setPatient}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}

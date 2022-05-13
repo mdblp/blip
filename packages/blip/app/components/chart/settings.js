@@ -44,7 +44,7 @@ class Settings extends React.Component {
     canPrint: PropTypes.bool.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
     onClickNoDataRefresh: PropTypes.func.isRequired,
-    onSwitchToBasics: PropTypes.func.isRequired,
+    onSwitchToDashboard: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
     onSwitchToTrends: PropTypes.func.isRequired,
     onSwitchToSettings: PropTypes.func.isRequired,
@@ -79,7 +79,7 @@ class Settings extends React.Component {
           prefixURL={this.props.prefixURL}
           trackMetric={this.props.trackMetric}
           onClickMostRecent={this.handleClickMostRecent}
-          onClickBasics={this.props.onSwitchToBasics}
+          onClickDashboard={this.props.onSwitchToDashboard}
           onClickOneDay={this.handleClickOneDay}
           onClickTrends={this.handleClickTrends}
           onClickRefresh={this.props.onClickRefresh}
@@ -143,9 +143,7 @@ class Settings extends React.Component {
 
   // handlers
   handleClickTrends = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
+    e.preventDefault();
     this.props.onSwitchToTrends();
   };
 

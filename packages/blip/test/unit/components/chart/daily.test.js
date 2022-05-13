@@ -45,6 +45,16 @@ describe("Daily", () => {
     bgUnits: MGDL_UNITS
   };
 
+  const patient = {
+    profile: {
+      fullName: "Jane Doe"
+    },
+    permissions: {
+      note: {},
+      view: {}
+    }
+  };
+
   const baseProps = {
     bgPrefs,
     chartPrefs: {
@@ -63,22 +73,17 @@ describe("Daily", () => {
     onClickPrint: sinon.stub(),
     onCreateMessage: sinon.stub(),
     onShowMessageThread: sinon.stub(),
-    onSwitchToBasics: sinon.stub(),
+    onSwitchToDashboard: sinon.stub(),
     onSwitchToDaily: sinon.stub(),
     onSwitchToSettings: sinon.stub(),
     onSwitchToTrends: sinon.stub(),
     onDatetimeLocationChange: sinon.stub().resolves(false),
     trackMetric: sinon.stub(),
     updateChartPrefs: sinon.stub(),
-    patient: {
-      profile: {
-        fullName: "Jane Doe"
-      },
-      permissions: {
-        note: {},
-        view: {}
-      }
-    },
+    patient,
+    patients: [patient],
+    isUserHCP: true,
+    onClickNavigationBack: sinon.stub(),
     tidelineData: {
       opts: {
         timePrefs: {

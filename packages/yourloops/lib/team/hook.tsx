@@ -212,6 +212,20 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return null;
   };
 
+  const getPatient = (userId: string): Patient | null => {
+    // Sorry for the "for", I know it's now forbidden
+    // But today it's too late for me to think how to use a magic function
+    // to have this info.
+    for (const team of teams) {
+      for (const member of team.members) {
+        if (member.user.userid === userId) {
+          return mapTeamUserToPatient(member.user);
+        }
+      }
+    }
+    return null;
+  };
+
   const getMapUsers = (): Map<string, TeamUser> => {
     const users = new Map<string, TeamUser>();
     for (const team of teams) {
@@ -620,6 +634,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     refresh,
     getTeam,
     getUser,
+    getPatient,
     getMedicalTeams,
     getPatientsAsTeamUsers,
     getPatients,
