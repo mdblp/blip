@@ -47,6 +47,7 @@
     "npm": ">=7.x"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.9.0",
     "blip": "file:packages/blip",
     "sundial": "file:packages/sundial",
     "tideline": "file:packages/tideline",

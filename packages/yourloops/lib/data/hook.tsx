@@ -48,8 +48,8 @@ export function DefaultDataContext(): DataContext {
   const [blipApi, setBlipApi] = React.useState<BlipApi | null>(null);
 
   React.useEffect(() => {
-    if (authHook.isAuthHookInitialized) {
-      if (blipApi === null) {
+    if (authHook.isLoggedIn) {
+      if (!blipApi) {
         log.debug("Creating BlipApi");
         setBlipApi(new BlipApi(authHook));
       } else {

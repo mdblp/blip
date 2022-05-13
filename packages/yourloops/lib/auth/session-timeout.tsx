@@ -26,6 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// TODO Need to be adapted to Auth0 (see https://diabeloop.atlassian.net/browse/YLP-1503)
+
 import React from "react";
 import bows from "bows";
 import config from "../config";
@@ -41,14 +43,14 @@ const defaultSessionTimeoutDelay = 60000;
 const log = bows("SessionTimeout");
 
 function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
-  const { isAuthInProgress, isAuthHookInitialized, isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const intervalTimeout = sessionTimeoutDelay ?? defaultSessionTimeoutDelay;
 
   // Only setup the timeout session when
   // - user if fully logged in
   // - No authentication is in progress
   // - The authHook is fully initialized
-  const setupSessionTimeout = isAuthHookInitialized && isLoggedIn && !isAuthInProgress;
+  const setupSessionTimeout = isLoggedIn;
 
   React.useEffect(() => {
     let sessionTimeoutId = Number.NaN;
@@ -63,7 +65,7 @@ function SessionTimeout({ sessionTimeoutDelay }: SessionTimeoutProps): null {
       const now = Date.now();
       if (now - lastUpdate > config.SESSION_TIMEOUT) {
         log.info(`Session timeout: Logout after more than ${config.SESSION_TIMEOUT}ms of inactivity`);
-        logout(true);
+        logout();
       }
     };
 

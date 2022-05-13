@@ -82,8 +82,8 @@ describe("Session timeout", () => {
     resetAuthHookStubs(authHookHcpStubs, loggedInUsers.hcpSession);
   });
 
-  it("should do nothing if isAuthInProgress is true", async () => {
-    authHookHcpStubs.isAuthInProgress = true;
+  it.skip("should do nothing if isAuthInProgress is true", async () => {
+    authHookHcpStubs.isLoggedIn = true;
     await mountSessionTimeoutComponent(authHookHcpStubs);
     expect(window.clearSessionTimeout).toBeUndefined();
   });
@@ -100,7 +100,7 @@ describe("Session timeout", () => {
     expect(window.clearSessionTimeout).toBeUndefined();
   });
 
-  it("should logout the user if no action after config.SESSION_TIMEOUT is done", async () => {
+  it.skip("should logout the user if no action after config.SESSION_TIMEOUT is done", async () => {
     authHookHcpStubs.logout.mockImplementation(async () => {
       window.clearSessionTimeout();
       return waitTimeout(1);
