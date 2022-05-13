@@ -125,6 +125,14 @@ export interface TeamContext {
    */
   getPatients: () => Readonly<Patient>[];
   /**
+   * Return all pending patients
+   */
+  getPendingPatients: () => Readonly<Patient>[];
+  /**
+   * Return all direct share patients
+   */
+  getDirectSharePatients: () => Readonly<Patient>[];
+  /**
    * Return all patients filtered on the given params
    * @param filterType a FilterType value or a team id
    * @param filter a patient name

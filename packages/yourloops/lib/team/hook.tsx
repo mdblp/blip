@@ -305,6 +305,14 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return typeof tm === "object";
   };
 
+  const getPendingPatients = () : Patient[] => {
+    return getPatients().filter((patient) => isInvitationPending(patient));
+  };
+
+  const getDirectSharePatients = () : Patient[] => {
+    return getPatients().filter((patient) => patient.teams.find(team => team.teamId === "private"));
+  };
+
   const filterPatients = (filterType: FilterType | string, filter: string, flaggedPatients: string[]): Patient[] => {
     const allPatients = getPatients();
     let patients: Patient[];
@@ -618,6 +626,8 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     filterPatients,
     getMedicalMembers,
     getNumMedicalMembers,
+    getPendingPatients,
+    getDirectSharePatients,
     teamHasOnlyOneMember,
     isUserAdministrator,
     isUserTheOnlyAdministrator,

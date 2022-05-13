@@ -29,37 +29,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
-import { MenuProps } from "@material-ui/core/Menu";
-import Select from "@material-ui/core/Select";
 
 import SearchIcon from "@material-ui/icons/Search";
 
-import { FilterType } from "../../models/generic";
-
 export interface PatientFiltersProps {
   filter: string;
-  filterType: FilterType | string;
-  optionsFilterElements: JSX.Element[];
-  /** If true the filter drop down menu is not displayed */
-  noFilter?: boolean;
   onFilter: (text: string) => void;
-  onFilterType: (filterType: FilterType | string) => void;
 }
-
-const selectMenuProps: Partial<MenuProps> = {
-  anchorOrigin: {
-    vertical: "bottom",
-    horizontal: "left",
-  },
-  transformOrigin: {
-    vertical: "top",
-    horizontal: "left",
-  },
-  getContentAnchorEl: null,
-};
 
 const filtersStyles = makeStyles((theme: Theme) => {
   return {
@@ -167,31 +145,14 @@ const filtersStyles = makeStyles((theme: Theme) => {
 function PatientFilters(props: PatientFiltersProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = filtersStyles();
-  const { filter, filterType, optionsFilterElements, noFilter, onFilter, onFilterType } = props;
+  const { filter, onFilter } = props;
 
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     onFilter(e.target.value);
   };
-  const handleFilterCategory = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
-    onFilterType(e.target.value as string);
-  };
 
   return (
     <React.Fragment>
-      {!noFilter &&
-        <FormControl color="primary" className={classes.formControl}>
-          <Select
-            id="select-patient-list-filtertype"
-            value={filterType}
-            onChange={handleFilterCategory}
-            classes={{ root: classes.selectFilterInnerDiv }}
-            className={classes.selectFilter}
-            disableUnderline
-            MenuProps={selectMenuProps}>
-            {optionsFilterElements}
-          </Select>
-        </FormControl>
-      }
       <div className={classes.search}>
         <div className={classes.searchIcon}>
           <SearchIcon />

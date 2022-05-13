@@ -28,15 +28,33 @@
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
+import { BrowserRouter } from "react-router-dom";
+
 import MainDrawer, { mainDrawerDefaultWidth, mainDrawerMiniVariantWidth } from "../../../components/menus/main-drawer";
 import { triggerMouseEvent } from "../../common/utils";
+import { TeamContextProvider } from "../../../lib/team";
+import { teamAPI } from "../../lib/team/utils";
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
+import { loggedInUsers } from "../../common";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Main Drawer", () => {
   let container: HTMLElement | null = null;
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+
   async function mountComponent(miniVariant = true): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
-        render(<MainDrawer miniVariant={miniVariant} />, container, resolve);
+        render(
+          <BrowserRouter>
+            <AuthContextProvider value={authHookHcp}>
+              <TeamContextProvider teamAPI={teamAPI}>
+                <MainDrawer miniVariant={miniVariant} />
+              </TeamContextProvider>
+            </AuthContextProvider>
+          </BrowserRouter>
+          ,container ,resolve);
       });
     });
   }
