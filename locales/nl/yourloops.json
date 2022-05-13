@@ -195,7 +195,6 @@
   "new-password": "Nieuw wachtwoord",
   "no": "No",
   "no-password": "Wachtwoord ontbreekt",
-  "not-a-patient": "Deze persoon is geen patiënt",
   "not-logged-in": "Je bent niet aangemeld",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wil zijn/haar diabetesgegevens met jou delen.",
   "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> X nodigt je uit om lid te worden van <strong>{{careteam}}</strong>.",
