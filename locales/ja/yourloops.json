@@ -195,7 +195,6 @@
   "new-password": "新しいパスワード",
   "no": "No",
   "no-password": "Missing password",
-  "not-a-patient": "This person is not a patient",
   "not-logged-in": "You are not logged in",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",
   "notification-hcp-invitation-by-team": "<strong>{{firstName}} {{lastName}}</strong> invites you to join <strong>{{careteam}}</strong>.",
