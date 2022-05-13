@@ -22,92 +22,49 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
 import React from "react";
-import i18next from "i18next";
-import { Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import bows from "bows";
+
+import { makeStyles } from "@material-ui/core/styles";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
 
 import * as viz from "tidepool-viz";
 
-import Header from "./header";
-import Footer from "./footer";
 
 const PumpSettingsContainer = viz.containers.PumpSettingsContainer;
 
-class Settings extends React.Component {
-  static propTypes = {
-    bgPrefs: PropTypes.object.isRequired,
-    chartPrefs: PropTypes.object.isRequired,
-    timePrefs: PropTypes.object.isRequired,
-    patient: PropTypes.object,
-    patientData: PropTypes.object.isRequired,
-    currentPatientInViewId: PropTypes.string.isRequired,
-    canPrint: PropTypes.bool.isRequired,
-    onClickRefresh: PropTypes.func.isRequired,
-    onClickNoDataRefresh: PropTypes.func.isRequired,
-    onSwitchToDashboard: PropTypes.func.isRequired,
-    onSwitchToDaily: PropTypes.func.isRequired,
-    onSwitchToTrends: PropTypes.func.isRequired,
-    onSwitchToSettings: PropTypes.func.isRequired,
-    onClickPrint: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired,
-    prefixURL: PropTypes.string,
-  };
+const useStyles = makeStyles((theme) => ({
+  dialogTitle: {
+    textAlign: "center",
+    fontSize: theme.typography.h5,
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+}));
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      atMostRecent: true,
-      inTransition: false,
-      title: ""
-    };
-    this.chartType = "settings";
 
-    /** @type {Console} */
-    this.log = bows("ChartSettings");
-  }
-
-  render() {
-    return (
-      <div id="tidelineMain">
-        <Header
-          chartType={this.chartType}
-          patient={this.props.patient}
-          atMostRecent={true}
-          inTransition={this.state.inTransition}
-          title={this.state.title}
-          canPrint={this.props.canPrint}
-          prefixURL={this.props.prefixURL}
-          trackMetric={this.props.trackMetric}
-          onClickMostRecent={this.handleClickMostRecent}
-          onClickDashboard={this.props.onSwitchToDashboard}
-          onClickOneDay={this.handleClickOneDay}
-          onClickTrends={this.handleClickTrends}
-          onClickRefresh={this.props.onClickRefresh}
-          onClickSettings={this.handleClickSettings}
-          onClickPrint={this.props.onClickPrint} />
-        <div className="container-box-outer patient-data-content-outer">
-          <div className="container-box-inner patient-data-content-inner">
-            <div className="patient-data-content">
-              {this.isMissingSettings() ? this.renderMissingSettingsMessage() : this.renderChart()}
-            </div>
-          </div>
-        </div>
-        <Footer
-          chartType={this.chartType}
-          onClickRefresh={this.props.onClickRefresh}
-          onClickSettings={this.props.onSwitchToSettings} />
-      </div>
-    );
-  }
-
-  renderChart() {
+const SettingsDialog = (props) => {
+  const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props;
+  const classes = useStyles();
+  const log = bows("ChartSettings");
+  const { t } = useTranslation();
+  const renderChart = () => {
     /** @type {{patientData: TidelineData}} */
-    const { patientData } = this.props;
     const mostRecentSettings = _.last(patientData.grouped.pumpSettings);
-    this.log.debug("Settings.renderChart()", mostRecentSettings);
+    log.debug("Settings.renderChart()", mostRecentSettings);
+
     const handleCopySettings = (success, useClipboardAPI, error ) => {
-      this.log.info("handleCopySettings", { success, useClipboardAPI, error });
-      this.props.trackMetric("export_data", "copy_as_text", "settings");
+      log.info("handleCopySettings", { success, useClipboardAPI, error });
+      trackMetric("export_data", "copy_as_text", "settings");
     };
 
     return (
@@ -115,58 +72,59 @@ class Settings extends React.Component {
         copySettingsClicked={handleCopySettings}
         manufacturerKey={_.get(mostRecentSettings, "source", patientData.opts.defaultSource).toLowerCase()}
         pumpSettings={mostRecentSettings}
-        timePrefs={this.props.timePrefs}
-        onSwitchToDaily={this.props.onSwitchToDaily}
-        bgUnits={this.props.bgPrefs.bgUnits}
+        timePrefs={timePrefs}
+        onSwitchToDaily={onSwitchToDaily}
+        bgUnits={bgPrefs.bgUnits}
       />
     );
-  }
+  };
 
-  renderMissingSettingsMessage() {
-    const t = i18next.t.bind(i18next);
+  const renderMissingSettingsMessage = () => {
     return (
       <Trans className="patient-data-message patient-data-message-loading" i18nKey="html.setting-no-uploaded-data" t={t}>
         <p>
-          The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn't sent data yet.
-        </p>
-        <p>
-          If you just checked it, try <button type="button" onClick={this.props.onClickNoDataRefresh}>refreshing</button>.
+          The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn&apos;t sent data yet.
         </p>
       </Trans>
     );
-  }
+  };
 
-  isMissingSettings() {
-    const pumpSettings = _.get(this.props, "patientData.grouped.pumpSettings", []);
+  const isMissingSettings = () => {
+    const pumpSettings = _.get(patientData, "grouped.pumpSettings", []);
     return _.isEmpty(pumpSettings);
-  }
-
-  // handlers
-  handleClickTrends = (e) => {
-    e.preventDefault();
-    this.props.onSwitchToTrends();
   };
 
-  handleClickMostRecent = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    return;
-  };
+  return (
+    <Dialog
+      id="device-usage-details-dialog"
+      open={open}
+      onClose={()=>setOpen(false)}
+      maxWidth="lg"
+      scroll="body"
+    >
+      <DialogTitle>
+        <Typography className={classes.dialogTitle}>
+          <strong>{t("device-usage")}</strong>
+        </Typography>
+        <IconButton className={classes.closeButton} onClick={()=>setOpen(false)}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        {isMissingSettings() ? renderMissingSettingsMessage() : renderChart()}
+      </DialogContent>
+    </Dialog>
+  );
+};
 
-  handleClickOneDay = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    this.props.onSwitchToDaily();
-  };
 
-  handleClickSettings = (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    return;
-  };
-}
-
-export default Settings;
+SettingsDialog.propTypes = {
+  bgPrefs: PropTypes.object.isRequired,
+  timePrefs: PropTypes.object.isRequired,
+  patientData: PropTypes.object.isRequired,
+  onSwitchToDaily: PropTypes.func.isRequired,
+  trackMetric: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};
+export default SettingsDialog;
