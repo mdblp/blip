@@ -101,7 +101,13 @@ function PatientDataPage(): JSX.Element | null {
     setPatients(teamHook.getPatients());
 
     if (userIsPatient && !_.isNil(authUser)) {
-      setPatient(teamHook.getPatient(authUser.userid)!);
+      const patientToSet = teamHook.getPatient(authUser.userid);
+      if (patientToSet) {
+        setPatient(patientToSet);
+      } else {
+        log.error("Patient not found");
+        setError("Patient not found");
+      }
     } else {
       const patientId = paramPatientId ?? userId;
       if (!patientId) {
