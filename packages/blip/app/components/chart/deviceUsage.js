@@ -38,14 +38,17 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
+import SettingsDialog from "./settingsDialog";
 
 import PhonelinkSetupOutlinedIcon from "@material-ui/icons/PhonelinkSetupOutlined";
+import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
 
 import { BasicsChart } from "tideline";
 import Stats from "./stats";
@@ -119,8 +122,9 @@ const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric,
     //eslint-disable-next-line
-    dataUtil, chartPrefs, endpoints, loading
+    dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily
   } = props;
+  const [dialogOpened, setDialogOpened] = React.useState(false);
   const { t } = useTranslation();
   const classes = useStyles();
   //eslint-disable-next-line
@@ -149,85 +153,101 @@ const DeviceUsage = (props) => {
   };
 
   return (
-    <Card id="device-usage" className={classes.card}>
-      <CardHeader
-        id="device-usage-header"
-        avatar={<PhonelinkSetupOutlinedIcon/>}
-        className={classes.cardHeader}
-        title={t("device-usage")}
-      />
-      <CardContent id="device-usage-content" className={classes.cardContent}>
-        <Box id="device-usage-device">
-          <Typography className={classes.sectionTitles}>{t("devices")}</Typography>
-          <Grid className={classes.sectionContent} container spacing={1}>
-            {Object.keys(deviceData).map(
-              (key) =>
-                <React.Fragment key={key}>
-                  <Grid item xs={6}>
-                    <div className={`${classes.deviceLabels} device-label`}>
-                      {deviceData[key].label}
-                    </div>
-                  </Grid>
-                  <Grid item xs={6} className="device-value">
-                    {deviceData[key].value}
-                  </Grid>
-                </React.Fragment>
-            )}
-          </Grid>
-        </Box>
-        <Divider variant="fullWidth" className={classes.divider}/>
-        <Box id="device-usage-updates" className={classes.parameterChanges}>
-          <Typography className={classes.sectionTitles}>{t("last-updates")}</Typography>
-          <TableContainer className={classes.parameterChangesTable}>
-            <Table>
-              <TableBody className={classes.sectionContent}>
-                {paramChanges.map((row) =>
-                  (
-                    <TableRow
-                      key={row.key}
-                      data-param={row.name}
-                      data-changetype={row.changeType}
-                      data-isodate={row.effectiveDate}
-                      className={`${classes.tableRows} parameter-update`}
-                    >
-                      {["date", "value"].map((column) => {
-                        return (
-                          <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
-                            {column === "date" ? row.parameterDate : getLabel(row, t)}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  )
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-        <Divider variant="fullWidth" className={classes.divider}/>
-        <Stats
-          bgPrefs={bgPrefs}
-          //eslint-disable-next-line
-          bgSource={dataUtil.bgSource}
-          chartPrefs={chartPrefs}
-          chartType="deviceUsage"
-          dataUtil={dataUtil}
-          endpoints={endpoints}
-          loading={loading}
+    <>
+      <Card id="device-usage" className={classes.card}>
+        <CardHeader
+          id="device-usage-header"
+          avatar={<PhonelinkSetupOutlinedIcon/>}
+          className={classes.cardHeader}
+          title={t("device-usage")}
+          action={
+            <IconButton aria-label="settings" onClick={()=>setDialogOpened(true)}>
+              <MoreHorizOutlinedIcon />
+            </IconButton>
+          }
         />
-        <BasicsChart
-          //eslint-disable-next-line
-          bgClasses={bgPrefs.bgClasses}
-          //eslint-disable-next-line
-          bgUnits={bgPrefs.bgUnits}
-          onSelectDay={()=>null}
-          patient={patient}
-          tidelineData={tidelineData}
-          permsOfLoggedInUser={permsOfLoggedInUser}
-          timePrefs={timePrefs}
-          trackMetric={trackMetric} />
-      </CardContent>
-    </Card>
+        <CardContent id="device-usage-content" className={classes.cardContent}>
+          <Box id="device-usage-device">
+            <Typography className={classes.sectionTitles}>{t("devices")}</Typography>
+            <Grid className={classes.sectionContent} container spacing={1}>
+              {Object.keys(deviceData).map(
+                (key) =>
+                  <React.Fragment key={key}>
+                    <Grid item xs={6}>
+                      <div className={`${classes.deviceLabels} device-label`}>
+                        {deviceData[key].label}
+                      </div>
+                    </Grid>
+                    <Grid item xs={6} className="device-value">
+                      {deviceData[key].value}
+                    </Grid>
+                  </React.Fragment>
+              )}
+            </Grid>
+          </Box>
+          <Divider variant="fullWidth" className={classes.divider}/>
+          <Box id="device-usage-updates" className={classes.parameterChanges}>
+            <Typography className={classes.sectionTitles}>{t("last-updates")}</Typography>
+            <TableContainer className={classes.parameterChangesTable}>
+              <Table>
+                <TableBody className={classes.sectionContent}>
+                  {paramChanges.map((row) =>
+                    (
+                      <TableRow
+                        key={row.key}
+                        data-param={row.name}
+                        data-changetype={row.changeType}
+                        data-isodate={row.effectiveDate}
+                        className={`${classes.tableRows} parameter-update`}
+                      >
+                        {["date", "value"].map((column) => {
+                          return (
+                            <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
+                              {column === "date" ? row.parameterDate : getLabel(row, t)}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    )
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+          <Divider variant="fullWidth" className={classes.divider}/>
+          <Stats
+            bgPrefs={bgPrefs}
+            //eslint-disable-next-line
+            bgSource={dataUtil.bgSource}
+            chartPrefs={chartPrefs}
+            chartType="deviceUsage"
+            dataUtil={dataUtil}
+            endpoints={endpoints}
+            loading={loading}
+          />
+          <BasicsChart
+            //eslint-disable-next-line
+            bgClasses={bgPrefs.bgClasses}
+            //eslint-disable-next-line
+            bgUnits={bgPrefs.bgUnits}
+            onSelectDay={()=>null}
+            patient={patient}
+            tidelineData={tidelineData}
+            permsOfLoggedInUser={permsOfLoggedInUser}
+            timePrefs={timePrefs}
+            trackMetric={trackMetric} />
+        </CardContent>
+      </Card>
+      <SettingsDialog
+        bgPrefs={bgPrefs}
+        timePrefs={timePrefs}
+        patientData={tidelineData}
+        onSwitchToDaily={onSwitchToDaily}
+        trackMetric={trackMetric}
+        open={dialogOpened}
+        setOpen={setDialogOpened}
+      />
+    </>
   );
 };
 
@@ -238,6 +258,7 @@ DeviceUsage.propType = {
   tidelineData: PropTypes.object.isRequired,
   permsOfLoggedInUser: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
+  onSwitchToDaily:  PropTypes.func.isRequired,
 };
 
 export default DeviceUsage;
