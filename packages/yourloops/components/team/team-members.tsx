@@ -148,8 +148,8 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
         <Box paddingX={3}>
           <TableContainer component={Paper}>
             <Table
-              id="patients-list-table"
-              aria-label={t("aria-table-list-patient")}
+              id="team-members-list-table"
+              aria-label={t("aria-table-team-members")}
               stickyHeader
             >
               <TableHead>
