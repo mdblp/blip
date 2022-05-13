@@ -149,7 +149,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           <TableContainer component={Paper}>
             <Table
               id="team-members-list-table"
-              aria-label={t("aria-table-team-members")}
+              aria-label={t("aria-table-list-members")}
               stickyHeader
             >
               <TableHead>
