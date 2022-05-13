@@ -321,7 +321,7 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
-    patients: PropTypes.object.isRequired,
+    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),

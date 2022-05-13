@@ -175,7 +175,7 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
-    patients: PropTypes.object.isRequired,
+    patients: PropTypes.array.isRequired,
     userIsHCP: PropTypes.bool.isRequired,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,

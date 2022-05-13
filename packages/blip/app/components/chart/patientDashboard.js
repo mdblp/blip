@@ -98,7 +98,7 @@ PatientDashboard.propTypes = {
   onSwitchToTrends: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired,
   onSwitchPatient: PropTypes.func.isRequired,
-  onClickBack: PropTypes.func.isRequired,
+  onClickNavigationBack: PropTypes.func.isRequired,
 };
 
 export default PatientDashboard;

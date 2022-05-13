@@ -62,8 +62,7 @@ class TidelineHeader extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     patient: PropTypes.object,
-    setPatient: PropTypes.func.isRequired,
-    patients: PropTypes.object,
+    patients: PropTypes.array,
     userIsHCP: PropTypes.bool,
     chartType: PropTypes.string.isRequired,
     prefixURL: PropTypes.string,

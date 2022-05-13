@@ -331,7 +331,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, patientMonitored, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, api  } = this.props;
+    const { patient, patientMonitored, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -941,11 +941,11 @@ class PatientDataPage extends React.Component {
 
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
-  chatWidget: PropTypes.object.isRequired,
+  chatWidget: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   patientMonitored: PropTypes.object,
   setPatient: PropTypes.func.isRequired,
-  patients: PropTypes.object.isRequired,
+  patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
