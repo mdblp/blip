@@ -88,7 +88,7 @@ function TeamMenu(): JSX.Element {
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [caregivers, setCaregivers] = React.useState<ShareUser[]>([]);
+  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null);
   const opened = !!anchorEl;
 
   const filteredTeams = teams.filter(team => team.code !== "private");
@@ -98,11 +98,15 @@ function TeamMenu(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!caregivers.length && session) {
-        setCaregivers(await getDirectShares(session));
+      if (!caregivers && session) {
+        try {
+          setCaregivers(await getDirectShares(session));
+        } catch (error) {
+          setCaregivers([]);
+        }
       }
     })();
-  }, [caregivers.length, session]);
+  }, [caregivers, session]);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
