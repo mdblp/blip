@@ -31,17 +31,16 @@ import { v4 as uuidv4 } from "uuid";
 
 import { HttpHeaderKeys } from "../models/api";
 import appConfig from "./config";
-import { getFromSessionStorage } from "./utils";
-import { STORAGE_KEY_SESSION_TOKEN } from "./auth/models";
+import HttpService from "../services/http";
 
-export const onFulfilled = (config: AxiosRequestConfig): AxiosRequestConfig => {
+export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
   if (config.params?.noHeader) {
     delete config.params.noHeader;
   } else {
     config = {
       ...config,
       headers: {
-        [HttpHeaderKeys.sessionToken]: getFromSessionStorage(STORAGE_KEY_SESSION_TOKEN),
+        Authorization: `Bearer ${await HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4(),
       },
     };

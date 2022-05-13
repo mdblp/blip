@@ -43,89 +43,6 @@ import User from "./user";
 import HttpService from "../../services/http";
 
 const log = bows("Auth API");
-const failedLoginCounter = new Map<string, number>();
-
-/**
- * Perform a login.
- * @param {string} username Generally an email
- * @param {string} password The account password
- * @param {string} traceToken A generated uuidv4 trace token
- * @return {Promise<User>} Return the logged-in user or a promise rejection.
- */
-async function authenticate(username: string, password: string, traceToken: string): Promise<Session> {
-  if (!_.isString(username) || _.isEmpty(username)) {
-    return Promise.reject(new Error("no-username"));
-  }
-
-  if (!_.isString(password) || _.isEmpty(password)) {
-    return Promise.reject(new Error("no-password"));
-  }
-
-  log.debug("login: /auth/login", appConfig.API_HOST);
-  const authURL = new URL("/auth/login", appConfig.API_HOST);
-
-  try {
-    // Allow username / password with non ASCII characters
-    // Encode the string to UTF-8 first
-    const encoder = new TextEncoder();
-    const utf8 = encoder.encode(`${username}:${password}`);
-    const basicAuth = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-
-    const response = await fetch(authURL.toString(), {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        [HttpHeaderKeys.traceToken]: traceToken,
-        Authorization: `Basic ${basicAuth}`,
-      },
-    });
-
-    if (!response.ok || response.status !== HttpStatus.StatusOK) {
-      let reason: string | null = null;
-      switch (response.status) {
-      case HttpStatus.StatusUnauthorized:
-        if (typeof appConfig.MAX_FAILED_LOGIN_ATTEMPTS === "number") {
-          let wrongCredentialCount = failedLoginCounter.get(username) ?? 0;
-          wrongCredentialCount += 1;
-          failedLoginCounter.set(username, wrongCredentialCount);
-          if (wrongCredentialCount >= appConfig.MAX_FAILED_LOGIN_ATTEMPTS) {
-            reason = "error-account-lock";
-          }
-        }
-        break;
-      case HttpStatus.StatusForbidden:
-        reason = "email-not-verified";
-        break;
-      default:
-        reason = "error-http-500";
-        break;
-      }
-
-      if (reason === null) {
-        reason = "error-invalid-credentials";
-      }
-
-      return Promise.reject(new Error(reason));
-    }
-
-    const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
-    if (sessionToken === null) {
-      return Promise.reject(new Error("error-http-40x"));
-    }
-
-    const user = await response
-      .json()
-      .then((res: IUser) => new User(res));
-
-    // We may miss some case, but it's probably good enough:
-    failedLoginCounter.clear();
-
-    return { sessionToken, traceToken, user };
-  } catch (reason) {
-    return Promise.reject(new Error("error-http-500"));
-  }
-}
-
 
 /**
  * Perform a signup.
@@ -286,51 +203,12 @@ async function getSettings(session: Readonly<Session>, userId?: string): Promise
   return settings;
 }
 
-/**
- * Perform a login.
- * @param {string} username Generally an email
- * @param {string} password The account password
- * @param {string} traceToken A generated uuidv4 trace token
- * @return {Promise<User>} Return the logged-in user or a promise rejection.
- */
-async function login(username: string, password: string, traceToken: string): Promise<Session> {
-  const auth = await authenticate(username, password, traceToken);
-  const [profile, preferences, settings] = await Promise.all([getProfile(auth), getPreferences(auth), getSettings(auth)]);
-  if (profile !== null) {
-    auth.user.profile = profile;
-  }
-  if (preferences !== null) {
-    auth.user.preferences = preferences;
-  }
-  if (settings !== null) {
-    auth.user.settings = settings;
-  }
-  return auth;
-}
-
-async function requestPasswordReset(username: string, traceToken: string, language = "en"): Promise<void> {
-  if (_.isEmpty(username)) {
-    log.error("forbidden call to request password api, username is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL(
-    `/confirm/send/forgot/${username}`,
-    appConfig.API_HOST
-  );
-  const response = await fetch(confirmURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.language]: language,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve();
-  }
-  return Promise.reject(errorFromHttpStatus(response, log));
+async function getUserInfo(session: Session): Promise<User> {
+  const [profile, preferences, settings] = await Promise.all([getProfile(session), getPreferences(session), getSettings(session)]);
+  session.user.profile = profile;
+  session.user.preferences = preferences;
+  session.user.settings = settings;
+  return session.user;
 }
 
 async function sendAccountValidation(session: Readonly<Session>, language = "en"): Promise<boolean> {
@@ -366,30 +244,6 @@ async function accountConfirmed(key: string, traceToken: string): Promise<boolea
     headers: {
       [HttpHeaderKeys.traceToken]: traceToken,
     },
-  });
-
-  if (response.ok) {
-    return Promise.resolve(true);
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
-async function resetPassword(key: string, username: string, password: string, traceToken: string): Promise<boolean> {
-  if (_.isEmpty(key) || _.isEmpty(username) || _.isEmpty(password)) {
-    log.error("forbidden call to reset password api, one of the required parameters is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL("/confirm/accept/forgot", appConfig.API_HOST);
-  const response = await fetch(confirmURL.toString(), {
-    method: "PUT",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.traceToken]: traceToken,
-    },
-    body: JSON.stringify({ key, email: username, password }),
   });
 
   if (response.ok) {
@@ -533,26 +387,6 @@ async function refreshToken(session: Readonly<Session>): Promise<string> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function logout(session: Readonly<Session>): Promise<void> {
-  const refreshURL = new URL("/auth/logout", appConfig.API_HOST);
-
-  log.debug("logout", refreshURL.toString());
-  const response = await fetch(refreshURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve();
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
 async function certifyProfessionalAccount(): Promise<IUser> {
   const { data } = await HttpService.post<IUser>({
     url: "/auth/oauth/merge",
@@ -561,16 +395,19 @@ async function certifyProfessionalAccount(): Promise<IUser> {
   return data;
 }
 
+async function getShorelineAccessToken(email: string): Promise<string> {
+  const { headers } = await HttpService.post({ url : `auth/hack/user/${email}` });
+  return headers[HttpHeaderKeys.sessionToken];
+}
+
 export default {
+  getUserInfo,
+  getShorelineAccessToken,
   accountConfirmed,
   certifyProfessionalAccount,
-  login,
-  logout,
   signup,
   refreshToken,
-  requestPasswordReset,
   resendSignup,
-  resetPassword,
   sendAccountValidation,
   updatePreferences,
   updateProfile,

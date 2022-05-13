@@ -13,9 +13,9 @@
 <body>
   <script>
     window.onerror = function(event, source, lineno, colno, error) {
-      var divApp = null;
-      var p = null;
-      var span = null;
+      let divApp;
+      let p;
+      let span;
 
       console.log(event, source, lineno, colno, error);
 
@@ -43,7 +43,6 @@
     window.startLoadingTime = Date.now();
   </script>
   <div id="app">
-    <p class="loading">Loading app...</p>
   </div>
   <!-- config -->
   <!-- Start of cookie-banner -->

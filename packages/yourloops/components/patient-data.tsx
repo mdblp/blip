@@ -31,6 +31,7 @@ import bows from "bows";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
@@ -87,7 +88,8 @@ function PatientDataPage(): JSX.Element | null {
   const userIsPatient = authHook.user?.isUserPatient();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
-  const initialized = authHook.isAuthHookInitialized && teamHook.initialized && blipApi !== null;
+  const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi;
+
   React.useEffect(() => {
     if (!initialized) {
       return;
@@ -97,14 +99,14 @@ function PatientDataPage(): JSX.Element | null {
       setPatient(authUser);
     } else {
       const patientId = paramPatientId ?? userId;
-      if (patientId === null) {
+      if (!patientId) {
         log.error("Invalid patient Id", patientId);
         setError("Invalid patient Id");
         return;
       }
 
       const user = teamHook.getUser(patientId);
-      if (user === null || user.role !== UserRoles.patient) {
+      if (!user || user.role !== UserRoles.patient) {
         log.error("Patient not found");
         setError("Patient not found");
       } else {
@@ -115,20 +117,20 @@ function PatientDataPage(): JSX.Element | null {
 
   const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
     const session = authHook.session();
-    if (session !== null) {
+    if (session) {
       const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
       setPatientMonitored(monitoredPatient);
     }
   },[authHook]);
 
   React.useEffect(() => {
-    if (patient !== null && patient.userid !== userId) {
+    if (patient && patient.userid !== userId) {
       setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
     } else {
       setPageTitle();
     }
 
-    if (patient !== null) {
+    if (patient) {
       fetchPatientMonitored(patient.userid).catch(console.error);
     } else {
       setPatientMonitored(null);
@@ -136,11 +138,11 @@ function PatientDataPage(): JSX.Element | null {
 
   }, [userId, patient, t, fetchPatientMonitored]);
 
-  if (error !== null) {
+  if (error) {
     return <PatientDataPageError msg={error} />;
   }
 
-  if (blipApi === null || patient === null) {
+  if (!blipApi || !patient) {
     return null;
   }
 
