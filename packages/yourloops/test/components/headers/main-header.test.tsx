@@ -41,6 +41,9 @@ import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
+import * as shareLib from "../../../lib/share";
+
+jest.mock("../../../lib/share");
 
 describe("Main Header", () => {
   let container: HTMLElement | null = null;
@@ -66,6 +69,10 @@ describe("Main Header", () => {
       });
     });
   }
+
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");

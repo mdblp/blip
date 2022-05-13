@@ -34,6 +34,7 @@ import Container from "@material-ui/core/Container";
 
 import MainHeader from "../header-bars/main-header";
 import MainDrawer from "../menus/main-drawer";
+import { useAuth } from "../../lib/auth";
 
 const classes = makeStyles((theme: Theme) => ({
   toolbar: { ...theme.mixins.toolbar },
@@ -42,13 +43,17 @@ const classes = makeStyles((theme: Theme) => ({
 function DashboardLayout({ children }: { children: JSX.Element }) {
   const { toolbar } = classes();
   const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true);
+  const authHook = useAuth();
+  const isUserPatient = authHook.user?.isUserPatient();
 
   const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant);
 
   return (
     <Box display="flex">
-      <MainHeader withShrinkIcon onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
-      <MainDrawer miniVariant={drawerMiniVariant} />
+      <MainHeader withShrinkIcon={!isUserPatient} onClickShrinkIcon={onClickMainHeaderShrinkIcon} />
+      {!isUserPatient &&
+        <MainDrawer miniVariant={drawerMiniVariant} />
+      }
       <Container maxWidth={false}>
         <div className={toolbar} />
         {children}

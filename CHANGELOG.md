@@ -20,10 +20,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-1476 Remove care teams page
 - YLP-1494 Implement patient table for caregiver
 - YLP-1495 Add success/error messages on team details page
+- YLP-1496 Add possibility for a patient to add a caregiver
 - YLP-1497 Change all buttons to a flat design
 - YLP-1500 Patient can join a team from header
 - YLP-1501 Update team details alarms management with new design
 - YLP-1511 Display message date, status and the number of unread messages in chat widget
+- YLP-1518 Implement drawer filters
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs

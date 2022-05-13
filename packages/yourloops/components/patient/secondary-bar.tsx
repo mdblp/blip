@@ -33,29 +33,16 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
-
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import HomeIcon from "@material-ui/icons/Home";
-import FlagIcon from "@material-ui/icons/Flag";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-
-import { FilterType } from "../../models/generic";
-import { TeamType } from "../../models/team";
-import { useTeam } from "../../lib/team";
-
-import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import SecondaryHeaderBar from "../header-bars/secondary";
-import PatientFilters from "../header-bars/patient-filters";
 import { useAuth } from "../../lib/auth";
+import PatientFilters from "../header-bars/patient-filters";
 
 export interface PatientListBarProps {
   filter: string;
-  filterType: FilterType | string;
   onFilter: (text: string) => void;
-  onFilterType: (filterType: FilterType | string) => void;
   onInvitePatient: () => Promise<void>;
 }
 
@@ -138,60 +125,14 @@ const pageBarStyles = makeStyles(
 );
 
 function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
-  const { filter, filterType, onFilter, onFilterType, onInvitePatient } = props;
+  const { filter, onFilter, onInvitePatient } = props;
   const { t } = useTranslation("yourloops");
   const classes = pageBarStyles();
-  const teamHook = useTeam();
   const authHook = useAuth();
-  const selectFilterValues = [
-    { value: "all", label: t("all-patients"), icon: null, id: "menuitem-filter-patients-all" },
-    {
-      value: "flagged",
-      label: t("flagged"),
-      icon: <FlagIcon color="primary" className={classes.selectFilterIcon} />,
-      id: "menuitem-filter-patients-flagged",
-    },
-    {
-      value: TeamType.private,
-      label: t("private-practice"),
-      icon: <MedicalServiceIcon color="primary" className={classes.selectFilterIcon} />,
-      id: "menuitem-filter-patients-private-practice",
-    },
-    {
-      value: "pending",
-      label: t("pending"),
-      icon: <AccessTimeIcon color="primary" className={classes.selectFilterIcon} />,
-      id: "menuitem-filter-patients-pending-invitation",
-    },
-  ];
 
   const handleOpenModalAddPatient = (): void => {
     onInvitePatient();
   };
-
-  const optionsFilterElements: JSX.Element[] = [];
-  for (const sfv of selectFilterValues) {
-    optionsFilterElements.push(
-      <MenuItem value={sfv.value} key={sfv.value} aria-label={sfv.label} id={sfv.id}
-        className="menuitem-filter-patients">
-        {sfv.icon}
-        {sfv.label}
-      </MenuItem>
-    );
-  }
-
-  const teams = teamHook.getMedicalTeams();
-  if (teams.length > 0) {
-    optionsFilterElements.push(<ListSubheader key="team-sub-header">{t("teams")}</ListSubheader>);
-    for (const team of teams) {
-      optionsFilterElements.push(
-        <MenuItem value={team.id} key={team.id} aria-label={team.name} id={`menuitem-filter-patients-team-${team.id}`}
-          className="menuitem-filter-patients">
-          {team.name}
-        </MenuItem>
-      );
-    }
-  }
 
   return (
     <SecondaryHeaderBar>
@@ -207,10 +148,7 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
       <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
         <PatientFilters
           filter={filter}
-          filterType={filterType}
           onFilter={onFilter}
-          onFilterType={onFilterType}
-          optionsFilterElements={optionsFilterElements}
         />
       </div>
       {
