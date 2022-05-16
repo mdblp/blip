@@ -24,6 +24,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1496 Add possibility for a patient to add a caregiver
 - YLP-1497 Change all buttons to a flat design
 - YLP-1500 Patient can join a team from header
+- YLP-1501 Update team details alarms management with new design
 - YLP-1511 Display message date, status and the number of unread messages in chat widget
 - YLP-1518 Implement drawer filters
 ### Engineering Use

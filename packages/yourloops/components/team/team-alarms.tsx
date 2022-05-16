@@ -28,196 +28,32 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import SaveIcon from "@material-ui/icons/Save";
-import DesktopMacIcon from "@material-ui/icons/DesktopMac";
-import TimelineIcon from "@material-ui/icons/Timeline";
-import SignalWifiOffIcon from "@material-ui/icons/SignalWifiOff";
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import TuneIcon from "@material-ui/icons/Tune";
 
-import BasicDropdown from "../dropdown/basic-dropdown";
 import { commonTeamStyles } from "./common";
-import { useAuth } from "../../lib/auth";
-import { Team, useTeam } from "../../lib/team";
+import TeamAlarmsContent from "./team-alarms-content";
 
-const useStyles = makeStyles(() => ({
-  alarmsTitle: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  body: {
-    display: "flex",
-    flexDirection: "column",
-    flexWrap: "wrap",
-    marginLeft: "44px",
-  },
-  desktopMacIcon: {
-    margin: "0px",
-  },
-  dropdown: {
-    marginLeft: "15px",
-    marginRight: "15px",
-    marginTop: "0px",
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  label: {
-    width: "255px",
-    fontWeight: 600,
-    fontSize: "13px",
-    lineHeight: "16px",
-  },
-  teamInfo: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: "30px",
-  },
-  value: {
-    fontSize: "13px",
-    lineHeight: "16px",
-    whiteSpace: "pre-line",
-  },
-}));
-
-export interface TeamAlarmsProps {
-  team : Team,
-}
-
-function TeamAlarms(props : TeamAlarmsProps): JSX.Element {
-  const { team } = props;
-  const classes = useStyles();
-  const teamHook = useTeam();
+function TeamAlarms(): JSX.Element {
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
-  const authContext = useAuth();
-  const loggedInUserId = authContext.user?.userid as string;
-  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
 
   return (
-    <React.Fragment>
-      <div className={commonTeamClasses.root}>
-        <div className={classes.header}>
-          <div className={classes.alarmsTitle}>
-            <DesktopMacIcon className={classes.desktopMacIcon} />
-            <Typography className={commonTeamClasses.title}>
-              {t("telemonitoring-alarms").toUpperCase()}
-            </Typography>
-          </div>
-          {
-            isUserAdmin &&
-            <Button
-              className={commonTeamClasses.button}
-              disabled
-              disableElevation
-              variant="contained"
-              color="primary"
-            >
-              <SaveIcon className={commonTeamClasses.icon}/>
-              {t("save-modifications")}
-            </Button>
-          }
-        </div>
-        <div className={classes.body}>
-          <div className={classes.teamInfo}>
-            <HourglassEmptyIcon className={commonTeamClasses.icon}/>
-            <Typography className={classes.label}>
-              {t("time-away-from-target")}
-            </Typography>
-            <Typography className={classes.value}>
-              {t("threshold")}
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="25%"
-                values={["10%", "25%", "50%", "75%"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-            <Typography className={classes.value}>
-              {t("on-a-period-of")}
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="12 hours"
-                values={["12 hours", "24 hours"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-          </div>
-          <div className={classes.teamInfo}>
-            <TimelineIcon className={commonTeamClasses.icon}/>
-            <Typography className={classes.label}>
-              {t("severe-hypoglycemia")}
-            </Typography>
-            <Typography className={classes.value}>
-              {t("criteria")} #1
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="Units"
-                values={["Units"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-            <Typography className={classes.value}>
-              {t("criteria")} #2
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="Units"
-                values={["Units"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-          </div>
-          <div className={classes.teamInfo}>
-            <SignalWifiOffIcon className={commonTeamClasses.icon}/>
-            <Typography className={classes.label}>
-              {t("untransferred-data")}
-            </Typography>
-            <Typography className={classes.value}>
-              {t("criteria")} #1
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="Units"
-                values={["Units"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-            <Typography className={classes.value}>
-              {t("criteria")} #2
-            </Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="Units"
-                values={["Units"]}
-                onSelect={() => {
-                  console.log("Selected");
-                }} />
-            </div>
-          </div>
+    <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.categoryHeader}>
+        <div>
+          <TuneIcon />
+          <Typography className={commonTeamClasses.title}>
+            {t("events-configuration")}
+          </Typography>
         </div>
       </div>
-    </React.Fragment>
+
+      <Box paddingX={3}>
+        <TeamAlarmsContent />
+      </Box>
+    </div>
   );
 }
 

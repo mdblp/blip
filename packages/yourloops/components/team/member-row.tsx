@@ -41,6 +41,9 @@ import { useAlert } from "../utils/snackbar";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({
+  checkboxTableCellBody: {
+    padding: `0 ${theme.spacing(2)}px !important`,
+  },
   icon: {
     width: "56px",
     alignItems: "center",
@@ -138,7 +141,8 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         <StyledTableCell
           size="small"
           id={`${rowId}-checkbox`}
-          className={classes.typography}
+          className={`${classes.typography} ${classes.checkboxTableCellBody}`}
+          padding="checkbox"
         >
           <Checkbox
             disabled={checkboxAdminDisabled}

@@ -28,6 +28,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -53,43 +54,18 @@ import { useAlert } from "../utils/snackbar";
 import { errorTextFromException } from "../../lib/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  body: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
   addTeamMemberButton: {
-    marginLeft: "23px",
+    marginLeft: theme.spacing(2),
   },
-  groupOutlinedIcon: {
-    margin: "0px",
-  },
-  header: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: "12px",
-  },
-  headerTiltleIcon: {
-    display: "flex",
-    flexDirection: "row",
+  checkboxTableCellHeader: {
+    padding: `0 ${theme.spacing(1)}px !important`,
   },
   tableCellHeader: {
     backgroundColor: theme.palette.common.white,
-    fontSize: "15px",
     fontWeight: 600,
-    height: "49px",
-    padding: 0,
-    paddingLeft: "11px",
   },
   tableCellIcon: {
     width: "67px",
-  },
-  tableContainer: {
-    boxShadow: theme.shadows[2],
-  },
-  tableRowHeader: {
-    padding: 0,
   },
 }));
 
@@ -146,17 +122,16 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   return (
     <React.Fragment>
       <div className={commonTeamClasses.root}>
-        <div className={classes.header}>
-          <div className={classes.headerTiltleIcon}>
-            <GroupOutlinedIcon className={classes.groupOutlinedIcon} />
+        <div className={commonTeamClasses.categoryHeader}>
+          <div>
+            <GroupOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
-              {t("members").toUpperCase()} ({members.length})
+              {t("members")} ({members.length})
             </Typography>
           </div>
           <div>
             <LeaveTeamButton team={team} />
-            {
-              isUserAdmin &&
+            {isUserAdmin &&
               <Button
                 className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
                 variant="contained"
@@ -170,22 +145,37 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             }
           </div>
         </div>
-        <div className={classes.body}>
-          <TableContainer component={Paper} className={classes.tableContainer}>
-            <Table id="patients-list-table" aria-label={t("aria-table-list-patient")}
-              stickyHeader>
+        <Box paddingX={3}>
+          <TableContainer component={Paper}>
+            <Table
+              id="team-members-list-table"
+              aria-label={t("aria-table-list-members")}
+              stickyHeader
+            >
               <TableHead>
-                <TableRow className={classes.tableRowHeader}>
-                  <StyledTableCell id="team-members-full-name" className={classes.tableCellHeader}>
+                <TableRow>
+                  <StyledTableCell
+                    id="team-members-full-name"
+                    className={classes.tableCellHeader}
+                  >
                     {t("member")}
                   </StyledTableCell>
-                  <StyledTableCell id="team-members-status"
-                    className={`${classes.tableCellHeader} ${classes.tableCellIcon}`}>
+                  <StyledTableCell
+                    id="team-members-status"
+                    className={`${classes.tableCellHeader} ${classes.tableCellIcon}`}
+                  >
                   </StyledTableCell>
-                  <StyledTableCell id="team-members-email" className={classes.tableCellHeader}>
+                  <StyledTableCell
+                    id="team-members-email"
+                    className={classes.tableCellHeader}
+                  >
                     {t("email")}
                   </StyledTableCell>
-                  <StyledTableCell id="team-members-admin" className={classes.tableCellHeader}>
+                  <StyledTableCell
+                    id="team-members-admin"
+                    className={`${classes.tableCellHeader} ${classes.checkboxTableCellHeader}`}
+                    padding="checkbox"
+                  >
                     {t("admin")}
                   </StyledTableCell>
                 </TableRow>
@@ -198,13 +188,12 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
                       teamMember={teamMember}
                       team={team}
                       refreshParent={refresh}
-                    />
-                  )
+                    />)
                 )}
               </TableBody>
             </Table>
           </TableContainer>
-        </div>
+        </Box>
       </div>
       <AddMemberDialog addMember={addMember} />
     </React.Fragment>
