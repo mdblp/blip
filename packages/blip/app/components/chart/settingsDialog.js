@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const SettingsDialog = (props) => {
   const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props;
   const classes = useStyles();
-  const log = bows("ChartSettings");
+  const log = bows("SettingsDialog");
   const { t } = useTranslation();
   const renderChart = () => {
     /** @type {{patientData: TidelineData}} */

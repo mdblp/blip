@@ -22,7 +22,7 @@ import bows from "bows";
 import moment from "moment-timezone";
 import i18next from "i18next";
 import clsx from "clsx";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import { TidelineData, nurseShark, MS_IN_DAY, MGDL_UNITS } from "tideline";
 import { utils as vizUtils, components as vizComponents, createPrintPDFPackage } from "tidepool-viz";
@@ -435,6 +435,7 @@ class PatientDataPage extends React.Component {
             onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
+        <Redirect to="/not-found" />
       </Switch>
     );
   }
