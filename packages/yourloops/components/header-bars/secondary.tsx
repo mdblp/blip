@@ -35,6 +35,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 interface SecondaryHeaderBarProps {
   children?: React.ReactNode;
+  className?: string
 }
 
 const pageBarStyles = makeStyles((theme: Theme) => {
@@ -64,7 +65,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 function SecondaryHeaderBar(props: SecondaryHeaderBarProps): JSX.Element {
   const classes = pageBarStyles();
   return (
-    <AppBar id="secondary-header-bar" position="static" variant="outlined" className={classes.appBar}>
+    <AppBar id="secondary-header-bar" position="static" variant="outlined" className={`${props.className} ${classes.appBar}`}>
       <Toolbar id="secondary-toolbar" className={classes.toolBar}>
         {props.children}
       </Toolbar>
