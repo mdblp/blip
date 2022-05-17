@@ -43,12 +43,7 @@ describe("TidelineData", function() {
     "latestPumpManufacturer",
     "endpoints",
     "basicsData",
-    "filterData",
     "dataByDate",
-    "basalUtil",
-    "bolusUtil",
-    "cbgUtil",
-    "smbgUtil",
     "timezonesList",
   ];
 
@@ -889,19 +884,6 @@ describe("TidelineData", function() {
     it('should set set a basal utility', function() {
       expect(baseObject.basalUtil).to.be.an('object');
     });
-
-    it('should set set a bolus utility', function() {
-      expect(baseObject.bolusUtil).to.be.an('object');
-    });
-
-    it('should set set a cbg utility', function() {
-      expect(baseObject.cbgUtil).to.be.an('object');
-    });
-
-    it('should set set an smbg utility', function() {
-      expect(baseObject.smbgUtil).to.be.an('object');
-    });
-  });
 
   // describe('filterDataArray', function() {
   //   var diabetesData = [

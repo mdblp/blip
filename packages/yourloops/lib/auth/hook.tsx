@@ -272,8 +272,11 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     try {
       if (auth0user) {
         const user = new User(mapAuth0UserToIUser);
-        const sessionToken = await api.getShorelineAccessToken(auth0user.email as string);
+        const [sessionToken, userId] = await api.getShorelineAccessToken(auth0user.email as string);
         const traceToken = uuidv4();
+        if (userId) {
+          user.userid = userId;
+        }
         const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
         setUser(updatedUser);
         setSessionToken(sessionToken);

@@ -38,8 +38,6 @@ import "./datetime.test";
 import "./constants.test";
 import "./tidelinedata.test";
 import "./basalutil.test";
-import "./bgutil.test";
-import "./bolusutil.test";
 import "./categorize.test";
 
 /* js/plot/ */
