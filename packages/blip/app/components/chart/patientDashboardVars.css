@@ -32,7 +32,8 @@
   --section-title-font-weight: 500;
   --section-title-line-height: 20px;
   --section-title-margin: 0.25em;
-  --card-header-background-color: #F6F6F6;
+  /*equivalent to theme.palette.grey[100] in yourloops*/
+  --card-header-background-color: #F5F5F5;
   --chat-widget-private-msg-mine: #329F92;
   --chat-widget-private-msg-not-mine: #5ABCB3;
 }

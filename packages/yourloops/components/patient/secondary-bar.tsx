@@ -30,15 +30,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import HomeIcon from "@material-ui/icons/Home";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SecondaryHeaderBar from "../header-bars/secondary";
 import { useAuth } from "../../lib/auth";
 import PatientFilters from "../header-bars/patient-filters";
+import AccessTime from "@material-ui/icons/AccessTime";
 
 export interface PatientListBarProps {
   filter: string;
@@ -50,15 +47,16 @@ const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
       toolBarLeft: {
-        [theme.breakpoints.down("sm")]: {
-          order: 1,
-        },
+        display: "flex",
+        alignItems: "center",
+        color: theme.palette.grey[800],
       },
       toolBarMiddle: {
         display: "flex",
         flexDirection: "row",
-        marginRight: "auto",
-        marginLeft: "auto",
+        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
+        flex: "1 1 1000px",
         [theme.breakpoints.down("sm")]: {
           order: 3,
           width: "100%",
@@ -75,16 +73,6 @@ const pageBarStyles = makeStyles(
           order: 2,
           marginLeft: "auto",
         },
-      },
-      homeIcon: {
-        marginRight: "0.5em",
-      },
-      breadcrumbText: {
-        display: "flex",
-        cursor: "default",
-      },
-      selectFilterIcon: {
-        margin: "0 .5em 0 0",
       },
       buttonAddPatient: {
         marginLeft: "auto",
@@ -137,13 +125,8 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   return (
     <SecondaryHeaderBar>
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
-        <Breadcrumbs id="team-navbar-breadcrumbs" className="secondary-navbar-breadcrumbs"
-          aria-label={t("aria-breadcrumbs")}>
-          <Typography id="team-navbar-breadcrumbs-mypatients" color="textPrimary" className={classes.breadcrumbText}>
-            <HomeIcon id="team-navbar-breadcrumbs-homeicon" className={classes.homeIcon} />
-            <span>{t("my-patients-title")}</span>
-          </Typography>
-        </Breadcrumbs>
+        <AccessTime className="subnav-icon" />
+        <span id={"subnav-period-label"}>{t("secondary-bar-period-text")}</span>
       </div>
       <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
         <PatientFilters

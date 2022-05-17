@@ -81,7 +81,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       "marginRight": theme.spacing(2),
       "marginLeft": "auto",
       [theme.breakpoints.up("sm")]: {
-        width: "15em",
+        width: "100%",
       },
       [theme.breakpoints.down("sm")]: {
         "width": "50%",

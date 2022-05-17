@@ -42,17 +42,12 @@ const pageBarStyles = makeStyles((theme: Theme) => {
     appBar: {
       boxShadow: "0px 1px 2px #00000029",
       borderWidth: "0px",
+      backgroundColor: theme.palette.grey[100],
     },
     toolBar: {
-      display: "grid",
-      gridTemplateRows: "auto",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      paddingLeft: theme.spacing(12), // eslint-disable-line no-magic-numbers
-      paddingRight: theme.spacing(12), // eslint-disable-line no-magic-numbers
-      [theme.breakpoints.down("lg")]: {
-        paddingLeft: theme.spacing(4),
-        paddingRight: theme.spacing(4),
-      },
+      display: "flex",
+      paddingLeft: theme.spacing(4), // eslint-disable-line no-magic-numbers
+      paddingRight: theme.spacing(4), // eslint-disable-line no-magic-numbers
       [theme.breakpoints.down("sm")]: {
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
@@ -69,7 +64,7 @@ const pageBarStyles = makeStyles((theme: Theme) => {
 function SecondaryHeaderBar(props: SecondaryHeaderBarProps): JSX.Element {
   const classes = pageBarStyles();
   return (
-    <AppBar id="secondary-header-bar" position="static" color="secondary" variant="outlined" className={classes.appBar}>
+    <AppBar id="secondary-header-bar" position="static" variant="outlined" className={classes.appBar}>
       <Toolbar id="secondary-toolbar" className={classes.toolBar}>
         {props.children}
       </Toolbar>
