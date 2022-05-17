@@ -43,7 +43,7 @@ async function getDirectShares(session: Session): Promise<ShareUser[]> {
   log.info("getDirectShares");
   const { sessionToken, traceToken, user } = session;
 
-  const apiURL = new URL("/v0/my-direct-shares", appConfig.API_HOST);
+  const apiURL = new URL("/v0/direct-shares", appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "GET",
     headers: {
