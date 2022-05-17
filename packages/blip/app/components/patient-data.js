@@ -435,7 +435,7 @@ class PatientDataPage extends React.Component {
             onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
-        <Redirect to="/not-found" />
+        <Redirect to="/" />
       </Switch>
     );
   }
