@@ -44,7 +44,7 @@ import InvalidRoute from "../components/invalid-route";
 
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
-const PUBLIC_ROUTES = ["/login", "/signup"];
+const PUBLIC_ROUTES = ["/login"];
 const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, ...PUBLIC_ROUTES];
 
 interface StyleProps {
@@ -72,7 +72,7 @@ const routeStyle = makeStyles<Theme, StyleProps>(() => {
 
 export function MainLobby(): JSX.Element {
   const { isLoading, isAuthenticated } = useAuth0();
-  const { user } = useAuth();
+  const { user, fetchingUser } = useAuth();
   const location = useLocation();
   const currentRoute = location.pathname;
   const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
@@ -89,20 +89,26 @@ export function MainLobby(): JSX.Element {
     return <React.Fragment />;
   }
 
-  if (isCurrentRoutePublic && isAuthenticated) {
-    redirectTo = "/";
-  } else if (!isAuthenticated && !isCurrentRoutePublic) {
-    redirectTo = "/login";
-  } else if (!renewConsentPath && user && user.isUserPatient() && user.shouldAcceptConsent()) {
-    redirectTo = "/new-consent";
-  } else if (!renewConsentPath && user && user.shouldRenewConsent()) {
-    redirectTo = "/renew-consent";
-  }
+  const checkRedirect = () => {
+    if (isCurrentRoutePublic && isAuthenticated) {
+      redirectTo = "/";
+    } else if (!isAuthenticated && !isCurrentRoutePublic) {
+      redirectTo = "/login";
+    } else if (currentRoute !== "/complete-signup" && isAuthenticated && user && user.isFirstLogin()) {
+      redirectTo = "/complete-signup";
+    } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+      redirectTo = "/new-consent";
+    } else if (!renewConsentPath && user && user.hasToRenewConsent()) {
+      redirectTo = "/renew-consent";
+    }
+  };
+
+  checkRedirect();
 
   return (
     <React.Fragment>
       {redirectTo ? <Redirect to={redirectTo} /> :
-        (!isLoading &&
+        (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
             <SessionTimeout />
             <CssBaseline />
@@ -110,7 +116,7 @@ export function MainLobby(): JSX.Element {
               <div className={style}>
                 <Switch>
                   <Route exact path="/login" component={LoginPage} />
-                  <Route exact path="/signup" component={SignUpPage} />
+                  <Route exact path="/complete-signup" component={SignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />
                   <Route exact path="/new-consent" component={PatientConsentPage} />
                   <Route exact path="/not-found" component={InvalidRoute} />

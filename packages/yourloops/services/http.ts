@@ -41,6 +41,7 @@ interface ArgsWithPayload<P> extends Args {
 
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>;
+  static shorelineAccessToken: string;
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
     HttpService.retrieveAccessToken = accessTokenMethod;

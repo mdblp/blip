@@ -43,6 +43,7 @@ import { AuthAPI, AuthContext, AuthProvider, JwtShorelinePayload, Session, Signu
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
 import HttpService from "../../services/http";
+import UserApi from "./user-api";
 
 const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
@@ -53,6 +54,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [fetchingUser, setFetchingUer] = useState<boolean>(false);
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
@@ -255,7 +257,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
         role: auth0user["http://your-loops.com/roles"][0],
         userid: id,
         emailVerified: auth0user.email_verified,
-        username: auth0user.email || "",
+        username: auth0user.email,
       };
     }
     return user as IUser;
@@ -264,21 +266,28 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const getUserInfo = useCallback(async () => {
     try {
       if (auth0user) {
+        setFetchingUer(true);
         const user = new User(mapAuth0UserToIUser);
-        const [sessionToken, userId] = await api.getShorelineAccessToken(auth0user.email as string);
-        const traceToken = uuidv4();
-        if (userId) {
-          user.userid = userId;
-        }
-        const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
-        setUser(updatedUser);
+
+        // Temporary here waiting all backend services be compatible with Auth0
+        // see https://diabeloop.atlassian.net/browse/YLP-1553
+        const sessionToken = await UserApi.getShorelineAccessToken(user.username);
+        HttpService.shorelineAccessToken = sessionToken;
+
+        user.profile = await UserApi.getProfile(user.userid);
+        user.preferences = await UserApi.getPreferences(user.userid);
+        user.settings = await UserApi.getSettings(user.userid);
+
+        setUser(user);
         setSessionToken(sessionToken);
-        setTraceToken(traceToken);
+        setTraceToken(uuidv4());
       }
     } catch (err) {
-      log.error(err);
+      console.error(err);
+    } finally {
+      setFetchingUer(false);
     }
-  }, [api, auth0user, mapAuth0UserToIUser]);
+  }, [auth0user, mapAuth0UserToIUser]);
 
   const logout = async (): Promise<void> => {
     try {
@@ -306,6 +315,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     user,
     isLoggedIn,
     session,
+    fetchingUser,
     setUser,
     certifyProfessionalAccount,
     redirectToProfessionalAccountLogin,
