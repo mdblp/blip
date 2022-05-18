@@ -28,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1504 Plug team alarms configuration to backend
 - YLP-1511 Display message date, status and the number of unread messages in chat widget
 - YLP-1518 Implement drawer filters
+- YLP-1537 Display settings page in a dialog
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs

@@ -16,7 +16,7 @@
 import Basics from "./basics";
 import Daily from "./daily";
 import Trends from "./trends";
-import Settings from "./settings";
+import SettingsDialog from "./settingsDialog";
 import Header from "./header";
 import Footer from "./footer";
 import PatientDashboard from "./patientDashboard";
@@ -25,7 +25,7 @@ export {
   Basics,
   Daily,
   Trends,
-  Settings,
+  SettingsDialog,
   Header,
   Footer,
   PatientDashboard

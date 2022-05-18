@@ -129,6 +129,7 @@ describe("PatientDashboard", () => {
         view: {}
       }
     },
+    onSwitchToDaily: sinon.stub(),
   };
 
   let wrapper;
@@ -149,7 +150,6 @@ describe("PatientDashboard", () => {
 
     it("should render without errors when provided all required props", () => {
       expect(wrapper.find("#patient-dashboard")).to.have.length(1);
-      // There is a warning generated ...
       expect(console.error.callCount).to.equal(0);
     });
 

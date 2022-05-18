@@ -32,9 +32,6 @@ import bows from "bows";
 import { MS_IN_DAY, MGDL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD, DEVICE_PARAMS_OFFSET } from "./data/util/constants";
 import { validateAll } from "./validation/validate";
 
-import BasalUtil from "./data/basalutil";
-import BolusUtil from "./data/bolusutil";
-import BGUtil from "./data/bgutil";
 import dt from "./data/util/datetime";
 
 const RE_ISO_TIME = /^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+|.{0})(?:Z|[+-][01]\d:[0-5]\d)$/;
@@ -129,20 +126,8 @@ function TidelineData(opts = defaults) {
   this.basicsData = null;
 
   // Crossfilters
-  /** @type {crossfilter.Crossfilter<Datum>} */
-  this.filterData = null;
   /** @type {crossfilter.Dimension<Datum, string>} */
   this.dataByDate = null;
-
-  // Utils
-  /** @type {BasalUtil} */
-  this.basalUtil = null;
-  /** @type {BolusUtil} */
-  this.bolusUtil = null;
-  /** @type {BGUtil} */
-  this.cbgUtil = null;
-  /** @type {BGUtil} */
-  this.smbgUtil = null;
 
   /**
    * Maximum datum duration in milliseconds (normalEnd - normalTime)
@@ -511,18 +496,6 @@ TidelineData.prototype.getTimezoneAt = function getTimezoneAt(date) {
 /**
  * @param {string | null} defaultTimezone
  */
-TidelineData.prototype.getFirstTimezone = function getFirstTimezone(defaultTimezone = null) {
-  if (Array.isArray(this.timezonesList)) {
-    return this.timezonesList[0].timezone;
-  } else if (defaultTimezone !== null) {
-    return defaultTimezone;
-  }
-  return this.opts.timePrefs.timezoneName;
-};
-
-/**
- * @param {string | null} defaultTimezone
- */
 TidelineData.prototype.getLastTimezone = function getLastTimezone(defaultTimezone = null) {
   if (Array.isArray(this.timezonesList)) {
     return this.timezonesList[this.timezonesList.length - 1].timezone;
@@ -820,24 +793,11 @@ TidelineData.prototype.getLatestManufacturer = function getLatestManufacturer() 
 };
 
 TidelineData.prototype.updateCrossFilters = function updateCrossFilters() {
-  this.filterData = crossfilter(this.data);
-  this.dataByDate = this.filterData.dimension((d) => d.normalTime);
+  const filterData = crossfilter(this.data);
+  this.dataByDate = filterData.dimension((d) => d.normalTime);
   return this;
 };
-TidelineData.prototype.setUtilities = function setUtilities() {
-  this.basalUtil = new BasalUtil(this.grouped.basal);
-  this.bolusUtil = new BolusUtil(this.grouped.bolus);
-  this.cbgUtil = new BGUtil(this.grouped.cbg, {
-    bgUnits: this.opts.bgUnits,
-    bgClasses: this.opts.bgClasses,
-    DAILY_MIN: this.opts.CBG_PERCENT_FOR_ENOUGH * this.opts.CBG_MAX_DAILY,
-  });
-  this.smbgUtil = new BGUtil(this.grouped.smbg, {
-    bgUnits: this.opts.bgUnits,
-    bgClasses: this.opts.bgClasses,
-    DAILY_MIN: this.opts.SMBG_DAILY_MIN,
-  });
-};
+
 
 /**
  * Check this.grouped required type, if missing, create an empty array.
@@ -1054,12 +1014,7 @@ TidelineData.prototype.addData = async function addData(newData) {
   this.endpoints = null;
   this.basicsData = null;
 
-  this.filterData = null;
   this.dataByDate = null;
-  this.basalUtil = null;
-  this.bolusUtil = null;
-  this.cbgUtil = null;
-  this.smbgUtil = null;
 
   this.maxDuration = 0;
   this.timezonesList = null;
@@ -1166,10 +1121,6 @@ TidelineData.prototype.addData = async function addData(newData) {
   startTimer("updateCrossFilters");
   this.updateCrossFilters();
   endTimer("updateCrossFilters");
-
-  startTimer("setUtilities");
-  this.setUtilities();
-  endTimer("setUtilities");
 
   startTimer("checkRequired");
   this.checkRequired();

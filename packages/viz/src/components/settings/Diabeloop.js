@@ -171,7 +171,7 @@ const Diabeloop = (props) => {
           <CgmTable cgm={cgm} timePrefs={timePrefs} />
         </div>
         {renderDiabeloopParameters(parametersByLevel)}
-        <div className={styles.categoryContainer}>
+        <div className={styles.historyContainer}>
           <div className={styles.categoryTitle}>&nbsp;</div>
           <HistoryTable
             id="parameters-history-table"
