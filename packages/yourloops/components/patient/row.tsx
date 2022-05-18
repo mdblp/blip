@@ -270,21 +270,21 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         id={`${rowId}-time-away-target`}
         className={timeSpentAwayFromTargetRateClasses}
       >
-        {`${patient.alarm.timeSpentAwayFromTargetRate}%`}
+        {`${Math.round(patient.alarm.timeSpentAwayFromTargetRate * 10) /10}%`}
         {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
-        {`${patient.alarm.frequencyOfSevereHypoglycemiaRate}%`}
+        {`${Math.round(patient.alarm.frequencyOfSevereHypoglycemiaRate * 10) /10}%`}
         {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
-        {`${patient.alarm.nonDataTransmissionRate}%`}
+        {`${Math.round(patient.alarm.nonDataTransmissionRate * 10) /10}%`}
         {isUserHcp && patientIsMonitored && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
