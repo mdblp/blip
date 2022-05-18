@@ -33,8 +33,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
 import AddIcon from "@material-ui/icons/Add";
-
-import SecondaryHeaderBar from "../../../components/header-bars/secondary";
+import Box from "@material-ui/core/Box";
 
 interface BarProps {
   /** Add a caregiver */
@@ -44,19 +43,10 @@ interface BarProps {
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
-      headerBar: {
-        flexDirection: "row-reverse",
-      },
-      toolBarRight: {
+      topBar: {
         display: "flex",
-        [theme.breakpoints.down("sm")]: {
-          order: 2,
-          marginLeft: "auto",
-        },
-        [theme.breakpoints.down("xs")]: {
-          marginTop: theme.spacing(1),
-          marginBottom: theme.spacing(1),
-        },
+        flexDirection: "row-reverse",
+        margin: theme.spacing(1),
       },
       buttonAddCaregiver: {
         marginLeft: "auto",
@@ -80,21 +70,19 @@ function SecondaryBar(props: BarProps): JSX.Element {
   };
 
   return (
-    <SecondaryHeaderBar className={classes.headerBar}>
-      <div id="patient-navbar-item-right" className={classes.toolBarRight}>
-        <Button
-          id="patient-navbar-add-caregiver"
-          color="primary"
-          variant="contained"
-          disableElevation
-          className={classes.buttonAddCaregiver}
-          onClick={handleOpenAddCaregiverDialog}
-        >
-          <AddIcon />
-          <span className={classes.buttonAddCaregiverText}>&nbsp;{t("button-add-caregiver")}</span>
-        </Button>
-      </div>
-    </SecondaryHeaderBar>
+    <div id="patient-navbar-item-right" className={classes.topBar}>
+      <Button
+        id="patient-navbar-add-caregiver"
+        color="primary"
+        variant="contained"
+        disableElevation
+        className={classes.buttonAddCaregiver}
+        onClick={handleOpenAddCaregiverDialog}
+      >
+        <AddIcon />
+        <Box component="span" className={classes.buttonAddCaregiverText}>&nbsp;{t("button-add-caregiver")}</Box>
+      </Button>
+    </div>
   );
 }
 

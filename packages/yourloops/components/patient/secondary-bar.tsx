@@ -32,10 +32,10 @@ import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import SecondaryHeaderBar from "../header-bars/secondary";
 import { useAuth } from "../../lib/auth";
 import PatientFilters from "../header-bars/patient-filters";
 import AccessTime from "@material-ui/icons/AccessTime";
+import { Box } from "@material-ui/core";
 
 export interface PatientListBarProps {
   filter: string;
@@ -46,6 +46,10 @@ export interface PatientListBarProps {
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
+      topBar: {
+        display: "flex",
+        margin: theme.spacing(1),
+      },
       toolBarLeft: {
         display: "flex",
         alignItems: "center",
@@ -56,23 +60,7 @@ const pageBarStyles = makeStyles(
         flexDirection: "row",
         marginRight: theme.spacing(2),
         marginLeft: theme.spacing(2),
-        flex: "1 1 1000px",
-        [theme.breakpoints.down("sm")]: {
-          order: 3,
-          width: "100%",
-          marginTop: theme.spacing(1),
-          marginBottom: theme.spacing(1),
-        },
-        [theme.breakpoints.down("xs")]: {
-          flexWrap: "wrap",
-        },
-      },
-      toolBarRight: {
-        display: "flex",
-        [theme.breakpoints.down("sm")]: {
-          order: 2,
-          marginLeft: "auto",
-        },
+        flex: "1 1",
       },
       buttonAddPatient: {
         marginLeft: "auto",
@@ -87,29 +75,8 @@ const pageBarStyles = makeStyles(
         alignItems: "center",
         justifyContent: "center",
       },
-      divModal: {
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: theme.shape.borderRadius,
-        boxShadow: theme.shadows[5], // eslint-disable-line no-magic-numbers
-        padding: theme.spacing(2, 4, 3), // eslint-disable-line no-magic-numbers
-        width: "25em",
-      },
-      formModal: {
-        display: "flex",
-        flexDirection: "column",
-      },
-      divModalButtons: {
-        display: "inline-flex",
-        flexDirection: "row",
-        marginTop: "2.5em",
-      },
-      divModalButtonCancel: {
-        marginLeft: "auto",
-        marginRight: theme.spacing(1),
-      },
     };
-  },
-  { name: "ylp-hcp-patients-secondary-bar" }
+  }
 );
 
 function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
@@ -123,20 +90,20 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
   };
 
   return (
-    <SecondaryHeaderBar>
+    <Box className={classes.topBar}>
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
         <AccessTime className="subnav-icon" />
-        <span id={"subnav-period-label"}>{t("secondary-bar-period-text")}</span>
+        <span id="subnav-period-label">{t("secondary-bar-period-text")}</span>
       </div>
-      <div id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
+      <Box id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
         <PatientFilters
           filter={filter}
           onFilter={onFilter}
         />
-      </div>
+      </Box>
       {
         authHook.user?.isUserHcp() &&
-        <div id="patients-list-toolbar-item-right" className={classes.toolBarRight}>
+        <div id="patients-list-toolbar-item-right">
           <Button
             id="patient-list-toolbar-add-patient"
             color="primary"
@@ -146,11 +113,11 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
             onClick={handleOpenModalAddPatient}
           >
             <PersonAddIcon />
-            <span className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</span>
+            <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</Box>
           </Button>
         </div>
       }
-    </SecondaryHeaderBar>
+    </Box>
   );
 }
 
