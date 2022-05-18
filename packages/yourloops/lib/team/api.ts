@@ -44,7 +44,7 @@ async function fetchTeams(session: Session): Promise<ITeam[]> {
   const { sessionToken, traceToken } = session;
   log.info("fetchTeams()");
 
-  const apiURL = new URL("/v0/teams", appConfig.API_HOST);
+  const apiURL = new URL("/v0/my-teams", appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "GET",
     headers: {
@@ -64,7 +64,7 @@ async function fetchPatients(session: Session): Promise<ITeamMember[]> {
   const { sessionToken, traceToken } = session;
   log.info("fetchPatients()");
 
-  const apiURL = new URL("/v0/patients", appConfig.API_HOST);
+  const apiURL = new URL("/v0/my-patients", appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "GET",
     headers: {
