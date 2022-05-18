@@ -127,9 +127,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     return {
       patientSystem: patient.system ?? trNA,
       patientRemoteMonitoring: patient.remoteMonitoring ? `${t("yes")}\n(${t("since")} ${patient.remoteMonitoring.toDateString()})` : t("no"),
-      timeSpentAwayFromTargetRate: patient.alarm?.timeSpentAwayFromTargetRate ? `${patient.alarm.timeSpentAwayFromTargetRate}%` : trNA,
-      frequencyOfSevereHypoglycemiaRate: patient.alarm?.frequencyOfSevereHypoglycemiaRate ? `${patient.alarm.frequencyOfSevereHypoglycemiaRate}%` : trNA,
-      dataNotTransferredRate: patient.alarm?.nonDataTransmissionRate ? `${patient.alarm.nonDataTransmissionRate}%` : trNA,
       timeSpentAwayFromTargetActive,
       frequencyOfSevereHypoglycemiaActive,
       nonDataTransmissionActive,
@@ -143,9 +140,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const {
     patientSystem,
     patientRemoteMonitoring,
-    timeSpentAwayFromTargetRate,
-    frequencyOfSevereHypoglycemiaRate,
-    dataNotTransferredRate,
     timeSpentAwayFromTargetActive,
     frequencyOfSevereHypoglycemiaActive,
     nonDataTransmissionActive,
@@ -276,21 +270,21 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         id={`${rowId}-time-away-target`}
         className={timeSpentAwayFromTargetRateClasses}
       >
-        {timeSpentAwayFromTargetRate}
+        {`${patient.alarm.timeSpentAwayFromTargetRate}%`}
         {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
-        {frequencyOfSevereHypoglycemiaRate}
+        {`${patient.alarm.frequencyOfSevereHypoglycemiaRate}%`}
         {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
-        {dataNotTransferredRate}
+        {`${patient.alarm.nonDataTransmissionRate}%`}
         {isUserHcp && patientIsMonitored && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createAlert, createPatient, createTeamMember, createTeamUser } from "../../../common/utils";
+import { createAlarm, createPatient, createTeamMember, createTeamUser } from "../../../common/utils";
 import {
   comparePatients,
   mapTeamMemberToPatientTeam,
@@ -41,45 +41,45 @@ describe("Patient utils", () => {
   describe("comparePatients", () => {
 
     describe("alertTimeTarget", () => {
-      const smallerAlert = createAlert(10, 0);
-      const biggerAlert = createAlert(11, 0);
+      const smallerAlarm = createAlarm(10, 0);
+      const biggerAlarm = createAlarm(11, 0);
 
-      it("should return -1 when first patient has a smaller alert value", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], biggerAlert);
+      it("should return negative number when first patient has a smaller alarm value", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], biggerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has a smaller alert value", () => {
-        const patient1 = createPatient("fakePatient1Id", [], biggerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return positive number when second patient has a smaller alarm value", () => {
+        const patient1 = createPatient("fakePatient1Id", [], biggerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return 0 when patients have same alert value", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return 0 when patients have same alarm value", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
         expect(res).toBe(0);
       });
 
-      it("should return 1 when first patient has no alert", () => {
-        const patient1 = createPatient("fakePatient1Id", []);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return positive number when first patient has smaller alarm", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], biggerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
-        expect(res).toBe(1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has no alert", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", []);
+      it("should return negative number when second patient has bigger alarm", () => {
+        const patient1 = createPatient("fakePatient1Id", [], biggerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
-        expect(res).toBe(-1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return 0 when both patient have no alert", () => {
+      it("should return 0 when both patient have same alarm", () => {
         const patient1 = createPatient("fakePatient1Id", []);
         const patient2 = createPatient("fakePatient2Id", []);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertTimeTarget);
@@ -88,45 +88,45 @@ describe("Patient utils", () => {
     });
 
     describe("alertHypoglycemic", () => {
-      const smallerAlert = createAlert(0, 10);
-      const biggerAlert = createAlert(0, 11);
+      const smallerAlarm = createAlarm(0, 10);
+      const biggerAlarm = createAlarm(0, 11);
 
-      it("should return -1 when first patient has a smaller alert", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], biggerAlert);
+      it("should return negative number when first patient has a smaller alarm", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], biggerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has a smaller alert value", () => {
-        const patient1 = createPatient("fakePatient1Id", [], biggerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return positive number when second patient has a smaller alarm value", () => {
+        const patient1 = createPatient("fakePatient1Id", [], biggerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return 0 when patients have same alert value", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return 0 when patients have same alarm value", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
         expect(res).toBe(0);
       });
 
-      it("should return 1 when first patient has no alert", () => {
-        const patient1 = createPatient("fakePatient1Id", []);
-        const patient2 = createPatient("fakePatient2Id", [], smallerAlert);
+      it("should return positive number when first patient has smaller alarm", () => {
+        const patient1 = createPatient("fakePatient1Id", [], smallerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], biggerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
-        expect(res).toBe(1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has no alert", () => {
-        const patient1 = createPatient("fakePatient1Id", [], smallerAlert);
-        const patient2 = createPatient("fakePatient2Id", []);
+      it("should return positive number when second patient has smaller alarm", () => {
+        const patient1 = createPatient("fakePatient1Id", [], biggerAlarm);
+        const patient2 = createPatient("fakePatient2Id", [], smallerAlarm);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
-        expect(res).toBe(-1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return 0 when both patient have no alert", () => {
+      it("should return 0 when both patient have same alarm", () => {
         const patient1 = createPatient("fakePatient1Id", []);
         const patient2 = createPatient("fakePatient2Id", []);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.alertHypoglycemic);
@@ -138,18 +138,18 @@ describe("Patient utils", () => {
       const smallerDate = new Date();
       const biggerDate = new Date(smallerDate.getUTCFullYear(), smallerDate.getMonth() + 1);
 
-      it("should return -1 when first patient has a more recent date", () => {
+      it("should return negative number when first patient has a more recent date", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", smallerDate);
         const patient2 = createPatient("fakePatient2Id", [], null, "", biggerDate);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
-        expect(res).toBeLessThanOrEqual(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has a more recent date", () => {
+      it("should return positive number when second patient has a more recent date", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", biggerDate);
         const patient2 = createPatient("fakePatient2Id", [], null, "", smallerDate);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
-        expect(res).toBeGreaterThanOrEqual(1);
+        expect(res).toBeGreaterThan(0);
       });
 
       it("should return 0 when patients have same date", () => {
@@ -159,18 +159,18 @@ describe("Patient utils", () => {
         expect(res).toBe(0);
       });
 
-      it("should return 1 when first patient has no remote monitoring", () => {
+      it("should return positive number when first patient has no remote monitoring", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "");
         const patient2 = createPatient("fakePatient2Id", [], null, "", smallerDate);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
-        expect(res).toBeGreaterThanOrEqual(1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return -1 when second patient has no remote monitoring", () => {
+      it("should return negative number when second patient has no remote monitoring", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", smallerDate);
         const patient2 = createPatient("fakePatient2Id", [], null, "");
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
-        expect(res).toBeLessThanOrEqual(-1);
+        expect(res).toBeLessThan(0);
       });
 
       it("should return 0 when both patient have no remote monitoring", () => {
@@ -185,18 +185,18 @@ describe("Patient utils", () => {
       const smallerSystemName = "DBLG1";
       const biggerSystemName = "DBLG2";
 
-      it("should return -1 when first patient has a smaller system name", () => {
+      it("should return negative number when first patient has a smaller system name", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", null, smallerSystemName);
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, biggerSystemName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has a smaller system name", () => {
+      it("should return positive number when second patient has a smaller system name", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", null, biggerSystemName);
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, smallerSystemName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
       it("should return 0 when patients have same system name", () => {
@@ -206,18 +206,18 @@ describe("Patient utils", () => {
         expect(res).toBe(0);
       });
 
-      it("should return 1 when first patient has no system name", () => {
+      it("should return positive number when first patient has no system name", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "" );
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, smallerSystemName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
-      it("should return -1 when second patient has no system name", () => {
+      it("should return negative number when second patient has no system name", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", null, smallerSystemName);
         const patient2 = createPatient("fakePatient2Id", [], null, "");
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
       it("should return 0 when both patient have no system name", () => {
@@ -232,18 +232,18 @@ describe("Patient utils", () => {
       const smallerPatientName = "aaron";
       const biggerPatientName = "zacchaeus";
 
-      it("should return -1 when first patient has a smaller fullname", () => {
+      it("should return negative number when first patient has a smaller fullname", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, smallerPatientName);
         const patient2 = createPatient("fakePatient2Id", [], null, biggerPatientName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient has a smaller fullname", () => {
+      it("should return positive number when second patient has a smaller fullname", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, biggerPatientName);
         const patient2 = createPatient("fakePatient2Id", [], null, smallerPatientName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
       it("should return 0 when patients have same fullname", () => {
@@ -256,18 +256,18 @@ describe("Patient utils", () => {
 
     describe("flag", () => {
 
-      it("should return -1 when first patient is flagged", () => {
+      it("should return negative number when first patient is flagged", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "", null, null, true);
         const patient2 = createPatient("fakePatient2Id", []);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName);
-        expect(res).toBe(-1);
+        expect(res).toBeLessThan(0);
       });
 
-      it("should return -1 when second patient is flagged", () => {
+      it("should return positive number when second patient is flagged", () => {
         const patient1 = createPatient("fakePatient1Id", [], );
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, null, true);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName);
-        expect(res).toBe(1);
+        expect(res).toBeGreaterThan(0);
       });
 
       it("should return 0 when patients are flagged", () => {
@@ -307,19 +307,20 @@ describe("Patient utils", () => {
       const member = createTeamMember("fakeTeamMember", "teamName", "fakeTeamCode", UserInvitationStatus.accepted);
       const teamUser = createTeamUser("fakeTeamMember", [member], profile);
       const patient : Patient = {
-        alarm: null,
+        alarm: teamUser.alarms,
         firstName: profile.firstName,
         flagged: undefined,
         fullName: profile.fullName,
         lastName: profile.lastName,
         medicalData: null,
         remoteMonitoring: undefined,
-        system: undefined,
+        system: "DBLG1",
         teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
         userid: teamUser.userid,
         username: teamUser.username,
       };
       const res = mapTeamUserToPatient(teamUser);
+      patient.remoteMonitoring = res.remoteMonitoring;
       expect(res).toStrictEqual(patient);
     });
   });

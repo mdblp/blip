@@ -122,13 +122,13 @@ describe("Patient list table", () => {
     });
   }
 
-  function renderPatientList(teamUsers: Patient[]) {
+  function renderPatientList(patients: Patient[]) {
     return renderer.create(
       <ThemeProvider theme={getTheme()}>
         <AuthContextProvider value={authHookHcp}>
           <TeamContextProvider teamAPI={teamAPI}>
             <PatientTable
-              patients={teamUsers}
+              patients={patients}
               flagged={[]}
               order={SortDirection.asc}
               orderBy={PatientTableSortFields.patientFullName}

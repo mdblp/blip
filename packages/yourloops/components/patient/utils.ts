@@ -145,21 +145,21 @@ function compareValues(
  * @param orderBy Sort field
  */
 export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSortFields): number => {
-  let aValue: string | number | Date | boolean | null | undefined;
-  let bValue: string | number | Date | boolean | null | undefined;
+  let aValue: string | number | Date | boolean | undefined;
+  let bValue: string | number | Date | boolean | undefined;
 
   switch (orderBy) {
   case PatientTableSortFields.alertTimeTarget:
-    aValue = a.alarm?.timeSpentAwayFromTargetRate;
-    bValue = b.alarm?.timeSpentAwayFromTargetRate;
+    aValue = a.alarm.timeSpentAwayFromTargetRate;
+    bValue = b.alarm.timeSpentAwayFromTargetRate;
     break;
   case PatientTableSortFields.alertHypoglycemic:
-    aValue = a.alarm?.frequencyOfSevereHypoglycemiaRate;
-    bValue = b.alarm?.frequencyOfSevereHypoglycemiaRate;
+    aValue = a.alarm.frequencyOfSevereHypoglycemiaRate;
+    bValue = b.alarm.frequencyOfSevereHypoglycemiaRate;
     break;
   case PatientTableSortFields.dataNotTransferred:
-    aValue = a.alarm?.nonDataTransmissionRate;
-    bValue = b.alarm?.nonDataTransmissionRate;
+    aValue = a.alarm.nonDataTransmissionRate;
+    bValue = b.alarm.nonDataTransmissionRate;
     break;
   case PatientTableSortFields.flag:
     aValue = a.flagged;
@@ -196,15 +196,21 @@ export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
 };
 
 export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
+  if (!teamUser.alarms) {
+    throw Error(`The patient with id ${teamUser.userid} has no defined alarms`);
+  }
+  if (!teamUser.monitoring) {
+    throw Error(`The patient with id ${teamUser.userid} has no information regarding its monitoring`);
+  }
   return {
-    alarm: null,
+    alarm: teamUser.alarms,
     firstName: teamUser.profile?.firstName,
     flagged: undefined,
     fullName: teamUser.profile?.fullName ?? teamUser.username,
     lastName: teamUser.profile?.lastName,
     medicalData: null,
-    remoteMonitoring: undefined,
-    system: undefined,
+    remoteMonitoring: teamUser.monitoring.enabled ? new Date() : undefined,
+    system: "DBLG1",
     teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
     userid: teamUser.userid,
     username: teamUser.username,
