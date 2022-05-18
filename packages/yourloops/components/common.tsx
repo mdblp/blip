@@ -27,7 +27,7 @@
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
-export const commonTeamStyles = makeStyles((theme: Theme) => ({
+export const commonComponentStyles = makeStyles((theme: Theme) => ({
   button: {
     textTransform: "none",
   },

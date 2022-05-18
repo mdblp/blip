@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment-timezone";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -34,14 +34,21 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 
-import { Settings, IUser } from "../../models/shoreline";
-import { getUserFirstLastName } from "../../lib/utils";
-import { PatientMonitored } from "../../lib/data/patient";
+import { Settings } from "../../models/shoreline";
+import { Patient } from "../../lib/data/patient";
+import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
+import { useAuth } from "../../lib/auth";
+import { MonitoringStatus } from "../../models/monitoring";
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   {
+    button: {
+      margin: theme.spacing(1),
+    },
     card: {
       width: 430,
     },
@@ -68,36 +75,51 @@ const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   }), { name: "patient-info-widget" });
 
 export interface PatientInfoWidgetProps {
-  patient: Readonly<IUser>,
-  patientMonitored: PatientMonitored | null,
+  patient: Readonly<Patient>,
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const { patient, patientMonitored } = props;
+  const { patient } = props;
   const classes = patientInfoWidgetStyles();
   const { t } = useTranslation("yourloops");
-
-  const hbA1c: Settings["a1c"] = patient.settings?.a1c
+  const trNA = t("N/A");
+  const authHook = useAuth();
+  const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
+  const hbA1c: Settings["a1c"] = patient.settings.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
-  const birthDate = moment.utc(patient.profile?.patient?.birthday).format("L");
-  const userName = getUserFirstLastName(patient);
+  const birthDate = moment.utc(patient.profile.birthdate).format("L");
+  const userName = { firstName: patient.profile.firstName, lastName: patient.profile.lastName };
 
-  const patientInfo :Record<string, string>= {
+  const patientInfo: Record<string, string> = {
     patient: `${userName.firstName} ${userName.lastName}`,
     birthdate: birthDate,
-    email: patient.username,
-    hba1c: hbA1c? `${hbA1c.value} (${hbA1c?.date})`: "",
+    email: patient.profile.username,
+    hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
-  if (patientMonitored) {
-    patientInfo["remote-monitoring"] = patientMonitored?.monitoring?.enabled ? t("yes"): t("no");
+  if (patient.metadata.monitoring) {
+    patientInfo["remote-monitoring"] = patient.metadata.monitoring.enabled ? t("yes") : t("no");
   }
+
+  const displayInviteButton = patient.metadata.monitoring?.enabled === false
+    && patient.metadata.monitoring.status !== MonitoringStatus.pending
+    && patient.metadata.monitoring.status !== MonitoringStatus.accepted;
+
+  const displayCancelInviteButton = patient.metadata.monitoring?.enabled === false
+    && patient.metadata.monitoring.status === MonitoringStatus.pending;
+
+  const displayRenewAndRemoveMonitoringButton = (patient.metadata.monitoring?.enabled === false
+    && patient.metadata.monitoring.status === MonitoringStatus.accepted) || patient.metadata.monitoring?.enabled;
+
+  const onCloseInviteRemoteMonitoringDialog = () => {
+    setShowInviteRemoteMonitoringDialog(false);
+  };
 
   return (
     <Card id="patient-info" className={classes.card}>
       <CardHeader
         id="patient-info-header"
-        avatar={<LocalHospitalOutlinedIcon/>}
+        avatar={<LocalHospitalOutlinedIcon />}
         className={classes.cardHeader}
         title={t("patient-info")}
       />
@@ -111,13 +133,77 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                     {t(key)}:
                   </div>
                 </Grid>
-                <Grid item xs={8} id={`patient-info-${key}-value`} className={`${classes.deviceValues} device-value`}>
-                  {patientInfo[key]}
+                <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
+                  <Box display="flex" alignItems="center">
+                    <Box id={`patient-info-${key}-value`}>
+                      {patientInfo[key]}
+                    </Box>
+                    {key === "remote-monitoring" && (authHook.user?.isUserCaregiver() || authHook.user?.isUserHcp()) &&
+                      <div>
+                        {displayInviteButton && <Button
+                          id="invite-button-id"
+                          className={classes.button}
+                          variant="contained"
+                          color="primary"
+                          disableElevation
+                          onClick={() => {
+                            setShowInviteRemoteMonitoringDialog(true);
+                          }}>
+                          {t("button-invite")}
+                        </Button>
+                        }
+                        {displayCancelInviteButton &&
+                          <Button
+                            id="cancel-invite-button-id"
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            disableElevation
+                            onClick={() => {
+                              console.log("cancel clicked");
+                            }}>
+                            {t("button-cancel")}
+                          </Button>
+                        }
+                        {displayRenewAndRemoveMonitoringButton &&
+                          <div>
+                            <Button
+                              id="renew-button-id"
+                              className={classes.button}
+                              variant="contained"
+                              color="primary"
+                              disableElevation
+                              onClick={() => {
+                                console.log("Renew clicked");
+                              }}>
+                              {t("button-renew")}
+                            </Button>
+                            <Button
+                              id="remove-button-id"
+                              className={classes.button}
+                              variant="contained"
+                              color="primary"
+                              disableElevation
+                              onClick={() => {
+                                console.log("Remove clicked");
+                              }}>
+                              {t("button-remove")}
+                            </Button>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </Box>
                 </Grid>
               </React.Fragment>
           )}
         </Grid>
       </CardContent>
+      {showInviteRemoteMonitoringDialog && <RemoteMonitoringPatientInviteDialog
+        patient={patient}
+        onClose={onCloseInviteRemoteMonitoringDialog}
+      />
+      }
     </Card>
   );
 }

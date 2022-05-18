@@ -109,6 +109,10 @@ export interface TeamContext {
    */
   getMedicalTeams: () => Readonly<Team>[];
   /**
+   * Return the remote monitoring teams only
+   */
+  getRemoteMonitoringTeams: () => Readonly<Team>[];
+  /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
    */

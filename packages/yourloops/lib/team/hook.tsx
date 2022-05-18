@@ -253,6 +253,10 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return teams.filter((team: Team): boolean => team.type === TeamType.medical);
   };
 
+  const getRemoteMonitoringTeams = (): Team[] => {
+    return teams.filter(team => team.monitoring?.enabled);
+  };
+
   const getPatientsAsTeamUsers = (): TeamUser[] => {
     const patients = new Map<string, TeamUser>();
     const nTeams = teams.length;
@@ -364,11 +368,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
           break;
         }
 
-        const firstName = patient.firstName ?? "";
+        const firstName = patient.profile.firstName ?? "";
         if (firstName.toLocaleLowerCase().includes(searchText)) {
           return true;
         }
-        const lastName = patient.lastName ?? "";
+        const lastName = patient.profile.lastName ?? "";
         return lastName.toLocaleLowerCase().includes(searchText);
       });
     } else if (filterType === FilterType.flagged) {
@@ -661,6 +665,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     getUser,
     getPatient,
     getMedicalTeams,
+    getRemoteMonitoringTeams,
     getPatientsAsTeamUsers,
     getPatients,
     filterPatients,

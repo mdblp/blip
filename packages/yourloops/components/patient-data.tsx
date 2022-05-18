@@ -42,7 +42,6 @@ import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { setPageTitle } from "../lib/utils";
-import TeamAPIImpl from "../lib/team/api";
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
@@ -50,7 +49,7 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
-import { PatientMonitored, Patient } from "../lib/data/patient";
+import { Patient } from "../lib/data/patient";
 import { mapTeamUserToPatient } from "./patient/utils";
 import { makeStyles } from "@material-ui/core";
 
@@ -92,7 +91,6 @@ function PatientDataPage(): JSX.Element | null {
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
   const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
-  const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
@@ -137,28 +135,14 @@ function PatientDataPage(): JSX.Element | null {
     }
   }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
 
-  const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
-    const session = authHook.session();
-    if (session) {
-      const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
-      setPatientMonitored(monitoredPatient);
-    }
-  },[authHook]);
-
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t("user-name", patient.lastName), "PatientName");
+      setPageTitle(t("user-name", patient.profile.lastName), "PatientName");
     } else {
       setPageTitle();
     }
 
-    if (patient) {
-      fetchPatientMonitored(patient.userid).catch(console.error);
-    } else {
-      setPatientMonitored(null);
-    }
-
-  }, [userId, patient, t, fetchPatientMonitored]);
+  }, [userId, patient, t]);
 
   if (error) {
     return <PatientDataPageError msg={error} />;
@@ -174,7 +158,6 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
-        patientMonitored={patientMonitored}
         userIsHCP={userIsHCP!}
         patients={patients}
         setPatient={setPatient}

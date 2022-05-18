@@ -38,6 +38,8 @@ import { Team, TeamMember, TeamUser } from "../../lib/team";
 import { Profile, UserRoles } from "../../models/shoreline";
 import { TeamMemberRole, TeamType } from "../../models/team";
 import { INotification, NotificationType } from "../../lib/notifications";
+import { Monitoring } from "../../models/monitoring";
+import { UNITS_TYPE } from "../../lib/units/utils";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -115,19 +117,31 @@ export const createPatient = (
     nonDataTransmissionActive: false,
   },
   fullName = "fakePatientFullName",
-  remoteMonitoring: Date = null,
+  monitoring: Monitoring = null,
   system: string = null,
   flagged: boolean = null
 ): Patient => {
   return {
-    alarm: alarm,
-    fullName,
-    remoteMonitoring,
-    system,
-    teams,
+    metadata: {
+      alarm: alarm,
+      flagged: flagged,
+      medicalData: null,
+      monitoring,
+    },
+    profile: {
+      birthdate: new Date(),
+      firstName: undefined,
+      fullName: fullName,
+      lastName: undefined,
+      username: "fakeUsername",
+    },
+    settings: {
+      a1c: { date : new Date().toDateString(), value : "fakeA1cValue" },
+      system: system,
+    },
+    teams: teams,
     userid: id,
-    flagged,
-  } as Patient;
+  };
 };
 
 export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
@@ -182,7 +196,7 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
     monitoring: {
       enabled: true,
       parameters: {
-        bgUnit: "bgUnits",
+        bgUnit: UNITS_TYPE.MGDL,
         lowBg: 1,
         highBg: 2,
         outOfRangeThreshold: 3,

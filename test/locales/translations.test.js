@@ -118,8 +118,8 @@ const ignoredTransKeyForYourLoops = [
   "signup-steppers-step2",
   "signup-steppers-step3",
   "signup-steppers-step4",
-  "since",
   "team-card-label-address",
+  "until",
   // Errors messages
   "email-not-verified",
   "error-account-lock",
@@ -135,6 +135,7 @@ const ignoredTransKeyForYourLoops = [
   "intended-use",
   "training",
   "initial-hba1c",
+  "optional",
 ];
 const ignoredTransKeyInYourLoopsFiles = [
   "yourloops|${s}",

@@ -68,7 +68,7 @@ const removeButtonEnabled = false;
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
   const { patient } = props;
   const classes = style();
-  const email = _.get(patient, "emails[0]", patient.username);
+  const email = _.get(patient, "emails[0]", patient.profile.username);
   const patientId = patient.userid;
 
   const handleOnClick = (e: React.MouseEvent) => {
