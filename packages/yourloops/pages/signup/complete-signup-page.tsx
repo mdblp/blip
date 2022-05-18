@@ -28,76 +28,45 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import SignUpStepper from "./signup-stepper";
 import { SignUpFormStateProvider } from "./signup-formstate-context";
 import appConfig from "../../lib/config";
 
-const formStyle = makeStyles((theme: Theme) => {
-  return {
-    mainContainer: { margin: "auto" },
-    Button: {
-      marginLeft: "auto !important",
-    },
-    Typography: {
-      alignItems: "center",
-    },
-    Card: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      textAlign: "center",
-      paddingTop: theme.spacing(4),
-      paddingBottom: 0,
-      marginTop: theme.spacing(2),
-      [theme.breakpoints.up("sm")]: {
-        padding: theme.spacing(4),
-      },
-    },
-    CardContent: {
-      paddingLeft: 0,
-      paddingRight: 0,
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up("sm")]: {
-        padding: theme.spacing(2),
-      },
-    },
-    logoHeader: {
-      [theme.breakpoints.up("sm")]: {
-        paddingTop: theme.spacing(4),
-        paddingBottom: theme.spacing(4),
-      },
-    },
-  };
-}, { name: "signup-page-styles" });
+const formStyle = makeStyles((theme: Theme) => ({
+  card: {
+    marginTop: theme.spacing(2),
+  },
+  cardContent: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    padding: `0 ${theme.spacing(4)}px`,
+  },
+  logoHeader: {
+    margin: theme.spacing(2),
+  },
+}), { name: "signup-page-styles" });
 
-/**
- * Signup page
- */
-function SignUpPage(): JSX.Element {
+function CompleteSignUpPage(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = formStyle();
-  const theme = useTheme();
-  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   return (
-    <Container maxWidth="sm" className={classes.mainContainer}>
+    <Container maxWidth="sm">
       <Grid container spacing={0} alignItems="center" justify="center">
         <Grid item xs={12}>
           <SignUpFormStateProvider>
-            <Card id="card-signup" className={classes.Card}>
+            <Card id="card-signup" className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
-                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={isXSBreakpoint ? 50 : 60} alt={t("alt-img-logo")} />
+                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t("alt-img-logo")} />
               </CardMedia>
-              <CardContent className={classes.CardContent}>
+              <CardContent className={classes.cardContent}>
                 <SignUpStepper />
               </CardContent>
             </Card>
@@ -108,4 +77,4 @@ function SignUpPage(): JSX.Element {
   );
 }
 
-export default SignUpPage;
+export default CompleteSignUpPage;

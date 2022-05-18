@@ -38,6 +38,16 @@ import { Alarm } from "../../models/alarm";
 
 export { createSessionToken, refreshToken } from "./utils";
 
+const newUserHCP = new User({
+  userid: "123456789",
+  username: "ace@ventura.com",
+  emailVerified: true,
+  role: UserRoles.hcp,
+  profile: undefined,
+  settings: undefined,
+  preferences: undefined,
+});
+
 const userCaregiver = new User({
   userid: "b0000000",
   username: "caregiver@example.com",
@@ -84,6 +94,15 @@ export const loggedInUsers = {
   hcp: userHCP,
   patient: userPatient,
   caregiver: userCaregiver,
+  newHcp: newUserHCP,
+  get newHcpSession(): Session {
+    const user = new User(newUserHCP);
+    return {
+      user,
+      sessionToken: createSessionToken(user),
+      traceToken: uuidv4(),
+    };
+  },
   get hcpSession(): Session {
     const user = new User(userHCP);
     return {

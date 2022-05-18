@@ -36,13 +36,20 @@ import { useTranslation } from "react-i18next";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { getCurrentLang } from "../language";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
-import { AuthAPI, AuthContext, AuthProvider, JwtShorelinePayload, Session, SignupUser } from "./models";
+import {
+  AuthAPI,
+  AuthContext,
+  AuthProvider,
+  JwtShorelinePayload,
+  Session,
+  SignupForm,
+} from "./models";
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
 import HttpService from "../../services/http";
+import UserApi from "./user-api";
 
 const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
@@ -53,6 +60,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [fetchingUser, setFetchingUser] = useState<boolean>(false);
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
@@ -114,49 +122,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     }
 
     return api.updateUser(authInfo, { currentPassword, password });
-  };
-
-  const signup = async (signup: SignupUser): Promise<void> => {
-    log.info("signup", signup.accountUsername);
-    const now = new Date().toISOString();
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    const auth = await api.signup(
-      signup.accountUsername,
-      signup.accountPassword,
-      signup.accountRole,
-      traceToken
-    );
-
-    auth.user.profile = {
-      fullName: `${signup.profileFirstname} ${signup.profileLastname}`,
-      firstName: signup.profileFirstname,
-      lastName: signup.profileLastname,
-      termsOfUse: { acceptanceTimestamp: now, isAccepted: signup.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signup.privacyPolicy },
-      contactConsent: { acceptanceTimestamp: now, isAccepted: signup.feedback },
-      hcpProfession: signup.hcpProfession,
-    };
-    auth.user.settings = { country: signup.profileCountry };
-    auth.user.preferences = { displayLanguageCode: signup.preferencesLanguage };
-
-    // Cannot Use Promise.All as Backend do not handle parallel call correctly
-    await api.updateProfile(auth);
-    await api.updateSettings(auth);
-    await api.updatePreferences(auth);
-
-    // send confirmation signup mail
-    await api.sendAccountValidation(auth, signup.preferencesLanguage);
-
-    log.info("signup done", auth);
-  };
-
-  const resendSignup = (username: string): Promise<boolean> => {
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    return api.resendSignup(username, traceToken, getCurrentLang());
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
@@ -255,7 +220,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
         role: auth0user["http://your-loops.com/roles"][0],
         userid: id,
         emailVerified: auth0user.email_verified,
-        username: auth0user.email || "",
+        username: auth0user.email,
       };
     }
     return user as IUser;
@@ -264,21 +229,28 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const getUserInfo = useCallback(async () => {
     try {
       if (auth0user) {
+        setFetchingUser(true);
         const user = new User(mapAuth0UserToIUser);
-        const [sessionToken, userId] = await api.getShorelineAccessToken(auth0user.email as string);
-        const traceToken = uuidv4();
-        if (userId) {
-          user.userid = userId;
-        }
-        const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
-        setUser(updatedUser);
+
+        // Temporary here waiting all backend services be compatible with Auth0
+        // see https://diabeloop.atlassian.net/browse/YLP-1553
+        const sessionToken = await UserApi.getShorelineAccessToken(user.username);
+        HttpService.shorelineAccessToken = sessionToken;
+
+        user.profile = await UserApi.getProfile(user.userid);
+        user.preferences = await UserApi.getPreferences(user.userid);
+        user.settings = await UserApi.getSettings(user.userid);
+
+        setUser(user);
         setSessionToken(sessionToken);
-        setTraceToken(traceToken);
+        setTraceToken(uuidv4());
       }
     } catch (err) {
-      log.error(err);
+      console.error(err);
+    } finally {
+      setFetchingUser(false);
     }
-  }, [api, auth0user, mapAuth0UserToIUser]);
+  }, [auth0user, mapAuth0UserToIUser]);
 
   const logout = async (): Promise<void> => {
     try {
@@ -292,10 +264,34 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     }
   };
 
+  const completeSignup = async (signupForm: SignupForm): Promise<void> => {
+    const now = new Date().toISOString();
+    const profile: Profile = {
+      fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
+      firstName: signupForm.profileFirstname,
+      lastName: signupForm.profileLastname,
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy },
+      contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
+      hcpProfession: signupForm.hcpProfession,
+    };
+    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage };
+    const settings: Settings = { country: signupForm.profileCountry };
+
+    if (user) {
+      await UserApi.updateProfile(user?.userid, profile);
+      await UserApi.updatePreferences(user?.userid, preferences);
+      await UserApi.updateSettings(user?.userid, settings);
+      user.preferences = preferences;
+      user.profile = profile;
+      user.settings = settings;
+    }
+  };
+
   useEffect(() => {
-    const getAccessToken = async () => getAccessTokenSilently();
     (async () => {
       if (isAuthenticated && !user) {
+        const getAccessToken = async () => getAccessTokenSilently();
         HttpService.setGetAccessTokenMethod(getAccessToken);
         await getUserInfo();
       }
@@ -306,6 +302,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     user,
     isLoggedIn,
     session,
+    fetchingUser,
     setUser,
     certifyProfessionalAccount,
     redirectToProfessionalAccountLogin,
@@ -314,8 +311,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     updateSettings,
     updatePassword,
     logout,
-    signup,
-    resendSignup,
+    completeSignup,
     flagPatient,
     setFlagPatients,
     getFlagPatients,

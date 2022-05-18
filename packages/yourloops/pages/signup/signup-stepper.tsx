@@ -29,87 +29,55 @@
  */
 
 import React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import _ from "lodash";
-import { Trans, useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
 
-import metrics from "../../lib/metrics";
-import SignUpAccountForm from "./signup-account-form";
-import SignUpAccountSelector from "./signup-account-selector";
 import SignUpProfileForm from "./signup-profile-form";
 import SignUpConsent from "./signup-consent";
 import { useSignUpFormState } from "./signup-formstate-context";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    instructions: {
-      textAlign: "left",
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-    stepper: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  })
-);
+import { useAuth } from "../../lib/auth";
 
 export default function SignUpStepper(): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const classes = useStyles();
-  const { state, dispatch } = useSignUpFormState();
+  const { dispatch } = useSignUpFormState();
+  const { logout } = useAuth();
   const history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [title, setTitle] = React.useState("");
   const steps = [
     "signup-steppers-step1",
     "signup-steppers-step2",
-    "signup-steppers-step3",
-    "signup-steppers-step4",
   ];
-
-  React.useEffect(() => {
-    if (!_.isEmpty(state.formValues?.accountRole)) {
-      setTitle(t(`signup-steppers-${state.formValues.accountRole}-title`));
-    }
-  }, [state.formValues.accountRole, t]);
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
-    if (activeStep === 0) {
-      history.push("/");
-    } else {
+  const handleBack = async () => {
+    if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    } else {
+      await logout();
     }
   };
 
-  const handleLogin = () => {
-    metrics.send("registration", "confirm_email", state.formValues.accountRole);
+  const redirectToHome = () => {
     dispatch({ type: "RESET_FORMVALUES" });
-    history.push("/");
+    history.replace("/");
   };
 
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return (<SignUpAccountSelector handleBack={handleBack} handleNext={handleNext} />);
-      case 1:
         return (<SignUpConsent handleBack={handleBack} handleNext={handleNext} />);
-      case 2:
+      case 1:
         return (<SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />);
-      case 3:
-        return (<SignUpAccountForm handleBack={handleBack} handleNext={handleNext} />);
       default:
         return t("signup-steppers-step-unknown");
     }
@@ -117,14 +85,13 @@ export default function SignUpStepper(): JSX.Element {
 
   return (
     <React.Fragment>
-      {activeStep > 0 && (
-        <Typography color="primary" variant="h4" gutterBottom>
-          {title}
+      <Box marginX="auto" marginY={3} textAlign="center" maxWidth="60%">
+        <Typography variant="h5">
+          {t("account-creation-finalization")}
         </Typography>
-      )}
+      </Box>
       <Stepper
         id="signup-stepper"
-        className={classes.stepper}
         activeStep={activeStep}
         alternativeLabel
       >
@@ -138,43 +105,39 @@ export default function SignUpStepper(): JSX.Element {
           );
         })}
       </Stepper>
-        {activeStep === steps.length ? (
-          <Box px={1}>
-            <Typography id="signup-steppers-ending-text-1" className={classes.instructions}>
-              <Trans
-                t={t}
-                i18nKey="signup-steppers-ending-message-1"
-                components={{ strong: <strong /> }}
-                values={{ email: state.formValues.accountUsername }}
-              >
-                Please follow the link in the email we just sent you at <strong>email</strong> to verify and activate
-                your account.
-              </Trans>
-            </Typography>
-            <Typography id="signup-steppers-ending-text-2" className={classes.instructions}>
-              <Trans
-                t={t}
-                i18nKey="signup-steppers-ending-message-2"
-                components={{ a: <a /> }}
-              >
-                If you don’t receive any email from us, please contact our support at
-                technical.support@diabeloop.com
-              </Trans>
-            </Typography>
-            <Box mt={2}>
-            <Link
-              id="link-signup-gotologin"
-              component={RouterLink}
-              to="/"
-              onClick={handleLogin}
+      {activeStep === steps.length ? (
+        <Box paddingX={4} paddingY={2} textAlign="left">
+          <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
+            {t("account-creation-finalized")}
+          </Typography>
+          <Typography gutterBottom>
+            {t("account-created-info-1")}.
+          </Typography>
+          <Typography gutterBottom>
+            {t("account-created-info-2")}.
+          </Typography>
+          <Box
+            id="signup-consent-button-group"
+            display="flex"
+            justifyContent="center"
+            mx={0}
+            mt={4}
+          >
+            <Button
+              id="button-signup-steppers-next"
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={redirectToHome}
             >
-              {t("signup-steppers-back-login")}
-            </Link>
-            </Box>
+              {t("continue")}
+            </Button>
           </Box>
-        ) : (
-          <div>{getStepContent(activeStep)}</div>
-        )}
+        </Box>
+      ) : (
+        <div>{getStepContent(activeStep)}</div>
+      )}
     </React.Fragment>
   );
 }
+
