@@ -61,10 +61,7 @@ export interface UpdateUser {
   currentPassword?: string;
 }
 
-export interface SignupUser {
-  accountUsername: string;
-  accountPassword: string;
-  accountRole: UserRoles;
+export interface SignupForm {
   feedback: boolean; // Consent to be contacted by Diabeloop
   hcpProfession: HcpProfession;
   preferencesLanguage: LanguageCodes;
@@ -72,7 +69,6 @@ export interface SignupUser {
   profileCountry: string;
   profileFirstname: string;
   profileLastname: string;
-  profilePhone: string;
   terms: boolean;
 }
 
@@ -105,7 +101,7 @@ export interface AuthContext {
   session: () => Session | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
-  signup: (signup: SignupUser) => Promise<void>;
+  completeSignup: (signupForm: SignupForm) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
   updatePassword: (currentPassword: string, password: string) => Promise<void>;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;

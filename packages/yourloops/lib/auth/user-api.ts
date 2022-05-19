@@ -43,4 +43,28 @@ export default class UserApi {
       return undefined;
     }
   }
+
+  static async updateProfile(userId: string, profile: Profile): Promise<Profile> {
+    const { data } = await HttpService.put<Profile, Profile>({
+      url: `/metadata/${userId}/profile`,
+      payload: profile,
+    });
+    return data;
+  }
+
+  static async updatePreferences(userId: string, preferences: Preferences): Promise<Preferences> {
+    const { data } = await HttpService.put<Preferences, Preferences>({
+      url: `/metadata/${userId}/preferences`,
+      payload: preferences,
+    });
+    return data;
+  }
+
+  static async updateSettings(userId: string, settings: Settings): Promise<Settings> {
+    const { data } = await HttpService.put<Settings, Settings>({
+      url: `/metadata/${userId}/settings`,
+      payload: settings,
+    });
+    return data;
+  }
 }

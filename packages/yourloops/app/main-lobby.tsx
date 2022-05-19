@@ -37,15 +37,15 @@ import { getTheme } from "../components/theme";
 import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
 import Footer from "../components/footer/footer";
 import PatientConsentPage from "../pages/patient/patient-consent";
+import CompleteSignUpPage from "../pages/signup/complete-signup-page";
 import { ConsentPage, LoginPage } from "../pages/login";
-import { SignUpPage } from "../pages/signup";
 import { MainLayout } from "../pages/main-layout";
 import InvalidRoute from "../components/invalid-route";
 
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
 const PUBLIC_ROUTES = ["/login"];
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, ...PUBLIC_ROUTES];
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, "/complete-signup", ...PUBLIC_ROUTES];
 
 interface StyleProps {
   color: string;
@@ -81,7 +81,7 @@ export function MainLobby(): JSX.Element {
   const classes = routeStyle({
     color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper,
   });
-  const style = isCurrentRoutePublic ? classes.public : classes.private;
+  const style = isCurrentRoutePublic || currentRoute === "/complete-signup" ? classes.public : classes.private;
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
@@ -116,7 +116,7 @@ export function MainLobby(): JSX.Element {
               <div className={style}>
                 <Switch>
                   <Route exact path="/login" component={LoginPage} />
-                  <Route exact path="/complete-signup" component={SignUpPage} />
+                  <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />
                   <Route exact path="/new-consent" component={PatientConsentPage} />
                   <Route exact path="/not-found" component={InvalidRoute} />
