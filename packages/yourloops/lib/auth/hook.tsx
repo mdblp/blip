@@ -36,7 +36,6 @@ import { useTranslation } from "react-i18next";
 import { useAuth0 } from "@auth0/auth0-react";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { getCurrentLang } from "../language";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
 import {
@@ -123,13 +122,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     }
 
     return api.updateUser(authInfo, { currentPassword, password });
-  };
-
-  const resendSignup = (username: string): Promise<boolean> => {
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    return api.resendSignup(username, traceToken, getCurrentLang());
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
@@ -317,7 +309,6 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     updatePassword,
     logout,
     completeSignup,
-    resendSignup,
     flagPatient,
     setFlagPatients,
     getFlagPatients,

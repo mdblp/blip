@@ -30,186 +30,17 @@ import bows from "bows";
 import _ from "lodash";
 
 import { APIErrorResponse } from "../../models/error";
-import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 
 import { errorFromHttpStatus } from "../utils";
 import appConfig from "../config";
 import { t } from "../language";
-import HttpStatus from "../http-status-codes";
 
 import { Session, UpdateUser } from "./models";
-import User from "./user";
 import HttpService from "../../services/http";
 
 const log = bows("Auth API");
-
-/**
- * Perform a signup.
- * @param {string} username Generally an email
- * @param {string} password The account password
- * @param {string} traceToken A generated uuidv4 trace token
- * @return {Promise<User>} Return the logged-in user or a promise rejection.
- */
-async function signup(username: string, password: string, role: UserRoles, traceToken: string): Promise<Session> {
-  if (!_.isString(username) || _.isEmpty(username)) {
-    return Promise.reject(new Error("no-username"));
-  }
-
-  if (!_.isString(password) || _.isEmpty(password)) {
-    return Promise.reject(new Error("no-password"));
-  }
-
-  log.debug("signup", username, role);
-  const authURL = new URL("/auth/user", appConfig.API_HOST);
-
-  try {
-    const response = await fetch(authURL.toString(), {
-      cache: "no-store",
-      method: "POST",
-      headers: {
-        [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-        [HttpHeaderKeys.traceToken]: traceToken,
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        emails: [username],
-        roles: [role],
-      }),
-    });
-
-    if (response.ok) {
-      const sessionToken = response.headers.get(HttpHeaderKeys.sessionToken);
-      if (sessionToken === null) {
-        return Promise.reject(new Error("error-http-40x"));
-      }
-
-      const user = await response
-        .json()
-        .then((res: IUser) => new User(res));
-
-      return Promise.resolve({
-        sessionToken,
-        traceToken,
-        user,
-      });
-    }
-
-    return Promise.reject(errorFromHttpStatus(response, log));
-  } catch (reason) {
-    return Promise.reject(new Error("error-http-500"));
-  }
-}
-
-async function resendSignup(username: string, traceToken: string, language = "en"): Promise<boolean> {
-  if (!_.isString(username) || _.isEmpty(username)) {
-    return Promise.reject(new Error("no-username"));
-  }
-
-  log.debug("resendSignup", username);
-  const resendURL = new URL(`/confirm/resend/signup/${username}`, appConfig.API_HOST);
-  const response = await fetch(resendURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.language]: language,
-    },
-  });
-
-  return response.ok;
-}
-
-async function getProfile(session: Readonly<Session>, userId?: string): Promise<Profile | null> {
-  const seagullURL = new URL(`/metadata/${userId ?? session.user.userid}/profile`, appConfig.API_HOST);
-
-  const response = await fetch(seagullURL.toString(), {
-    method: "GET",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-    },
-  });
-
-  let profile: Profile | null = null;
-  if (response.ok) {
-    try {
-      profile = (await response.json()) as Profile;
-    } catch (e) {
-      log.debug(e);
-    }
-  } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug(`No profile for ${userId ?? session.user.userid}`);
-  } else {
-    return Promise.reject(errorFromHttpStatus(response, log));
-  }
-
-  return profile;
-}
-
-async function getPreferences(session: Readonly<Session>, userId?: string): Promise<Preferences | null> {
-  const seagullURL = new URL(`/metadata/${userId ?? session.user.userid}/preferences`, appConfig.API_HOST);
-  const response = await fetch(seagullURL.toString(), {
-    method: "GET",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-    },
-  });
-
-  let preferences: Preferences | null = null;
-  if (response.ok) {
-    try {
-      preferences = (await response.json()) as Preferences;
-    } catch (e) {
-      log.debug(e);
-    }
-  } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug(`No preferences for ${userId ?? session.user.userid}`);
-  } else {
-    return Promise.reject(errorFromHttpStatus(response, log));
-  }
-
-  return preferences;
-}
-
-async function getSettings(session: Readonly<Session>, userId?: string): Promise<Settings | null> {
-  const seagullURL = new URL(`/metadata/${userId ?? session.user.userid}/settings`, appConfig.API_HOST);
-  const response = await fetch(seagullURL.toString(), {
-    method: "GET",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-    },
-  });
-
-  let settings: Settings | null = null;
-  if (response.ok) {
-    try {
-      settings = (await response.json()) as Settings;
-    } catch (e) {
-      log.debug(e);
-    }
-  } else if (response.status === HttpStatus.StatusNotFound) {
-    log.debug(`No settings for ${userId ?? session.user.userid}`);
-  } else {
-    return Promise.reject(errorFromHttpStatus(response, log));
-  }
-
-  return settings;
-}
-
-async function getUserInfo(session: Session): Promise<User> {
-  const [profile, preferences, settings] = await Promise.all([getProfile(session), getPreferences(session), getSettings(session)]);
-  session.user.profile = profile;
-  session.user.preferences = preferences;
-  session.user.settings = settings;
-  return session.user;
-}
 
 async function sendAccountValidation(session: Readonly<Session>, language = "en"): Promise<boolean> {
   const confirmURL = new URL(`/confirm/send/signup/${session.user.userid}`, appConfig.API_HOST);
@@ -396,12 +227,9 @@ async function certifyProfessionalAccount(): Promise<IUser> {
 }
 
 export default {
-  getUserInfo,
   accountConfirmed,
   certifyProfessionalAccount,
-  signup,
   refreshToken,
-  resendSignup,
   sendAccountValidation,
   updatePreferences,
   updateProfile,

@@ -75,11 +75,8 @@ export interface SignupForm {
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
-  getUserInfo: (session: Session) => Promise<User>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
-  resendSignup: (username: string, traceToken: string, language?: string) => Promise<boolean>;
   sendAccountValidation: (session: Readonly<Session>, language?: string) => Promise<boolean>;
-  signup: (username: string, password: string, role: UserRoles, traceToken: string) => Promise<Session>;
   updatePreferences: (session: Readonly<Session>) => Promise<Preferences>;
   updateProfile: (session: Readonly<Session>) => Promise<Profile>;
   updateSettings: (session: Readonly<Session>) => Promise<Settings>;
@@ -97,7 +94,6 @@ export interface AuthContext {
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
-  resendSignup: (username: string) => Promise<boolean>;
   session: () => Session | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
