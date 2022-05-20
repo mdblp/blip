@@ -28,7 +28,7 @@
 
 
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
-import { Session, SignupUser, UpdateUser } from "../../../lib/auth/models";
+import { Session, SignupForm, UpdateUser } from "../../../lib/auth/models";
 import { User } from "../../../lib/auth";
 import { HcpProfession } from "../../../models/hcp-profession";
 
@@ -106,16 +106,16 @@ export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, session: Session): voi
  */
 export interface AuthContextStubs {
   certifyProfessionalAccount: jest.Mock<Promise<void>, null>;
+  fetchingUser: boolean;
   flagPatient: jest.Mock<Promise<void>, [string]>;
   getFlagPatients: jest.Mock<string[], []>;
   isLoggedIn: boolean;
   logout: jest.Mock<Promise<void>>;
   redirectToProfessionalAccountLogin: jest.Mock<void, []>;
-  resendSignup: jest.Mock<Promise<boolean>, [string]>;
   session: jest.Mock<Session | null, []>;
   setFlagPatients: jest.Mock<Promise<void>, [string[]]>;
   setUser: jest.Mock<void, [User]>;
-  signup: jest.Mock<Promise<void>, [SignupUser]>;
+  completeSignup: jest.Mock<Promise<void>, [SignupForm]>;
   switchRoleToHCP: jest.Mock<Promise<void>, [boolean, HcpProfession]>;
   updatePassword: jest.Mock<Promise<void>, [string, string]>;
   updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
@@ -129,16 +129,16 @@ export interface AuthContextStubs {
  */
 export const createAuthHookStubs = (session?: Session): AuthContextStubs => ({
   certifyProfessionalAccount: jest.fn<Promise<void>, null>().mockResolvedValue(),
+  fetchingUser: false,
   flagPatient: jest.fn<Promise<void>, [string]>().mockResolvedValue(),
   getFlagPatients: jest.fn<string[], []>().mockReturnValue([]),
   isLoggedIn: true,
   logout: jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue(),
   redirectToProfessionalAccountLogin: jest.fn<void, []>().mockReturnValue(),
-  resendSignup: jest.fn<Promise<boolean>, [string]>().mockResolvedValue(true),
   session: jest.fn<Session | null, []>().mockReturnValue(session),
   setFlagPatients: jest.fn<Promise<void>, [string[]]>().mockResolvedValue(),
   setUser: jest.fn<void, [User]>(),
-  signup: jest.fn<Promise<void>, [SignupUser]>().mockResolvedValue(),
+  completeSignup: jest.fn<Promise<void>, [SignupForm]>().mockResolvedValue(),
   switchRoleToHCP: jest.fn<Promise<void>, [boolean, HcpProfession]>().mockResolvedValue(),
   updatePassword: jest.fn<Promise<void>, [string, string]>().mockResolvedValue(),
   updatePreferences: jest.fn<Promise<Preferences>, [Preferences, boolean | undefined]>().mockResolvedValue(session.user.preferences),

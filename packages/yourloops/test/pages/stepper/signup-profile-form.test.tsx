@@ -31,40 +31,29 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "@testing-library/react-hooks/dom";
 import _ from "lodash";
 
-import { SignUpFormStateProvider, useSignUpFormState } from "../../../pages/signup/signup-formstate-context";
+import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 import SignUpProfileForm from "../../../pages/signup/signup-profile-form";
-
-
-function FakeHcpSelector(): JSX.Element {
-  const { state, dispatch } = useSignUpFormState();
-
-  React.useEffect(() => {
-    if (state.formValues.accountRole !== "hcp") {
-      dispatch({
-        type: "EDIT_FORMVALUE",
-        key: "accountRole",
-        value: "hcp",
-      });
-    }
-  }, [dispatch, state.formValues.accountRole]);
-
-  return null;
-}
+import { AuthContext, AuthContextProvider } from "../../../lib/auth";
+import { loggedInUsers } from "../../common";
+import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Signup profile form", () => {
   let container: HTMLElement | null = null;
+  const authHcp = loggedInUsers.hcpSession;
+  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+  const authPatient = loggedInUsers.patientSession;
+  const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
 
-  const mountComponent = async (hcp: boolean): Promise<void> => {
+  const mountComponent = async (authContext: AuthContext): Promise<void> => {
     await act(() => {
       return new Promise((resolve) => {
 
         render(
-          <SignUpFormStateProvider>
-            {hcp &&
-              <FakeHcpSelector />
-            }
-            <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
-          </SignUpFormStateProvider>, container, resolve);
+          <AuthContextProvider value={authContext}>
+            <SignUpFormStateProvider>
+              <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
+            </SignUpFormStateProvider>
+          </AuthContextProvider>, container, resolve);
       });
     });
   };
@@ -83,13 +72,13 @@ describe("Signup profile form", () => {
   });
 
   it("should not render the drop down list when caregiver", async () => {
-    await mountComponent(false);
+    await mountComponent(authHookPatient);
     const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).toBeNull();
   });
 
   it("should render the drop down list when HCP", async () => {
-    await mountComponent(true);
+    await mountComponent(authHookHcp);
     const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).not.toBeNull();
   });

@@ -51,10 +51,6 @@ export interface JwtShorelinePayload extends JwtPayload {
   srv: "yes" | "no";
 }
 
-export const STORAGE_KEY_SESSION_TOKEN = "session-token";
-export const STORAGE_KEY_TRACE_TOKEN = "trace-token";
-export const STORAGE_KEY_USER = "logged-in-user";
-
 export interface UpdateUser {
   roles?: UserRoles[];
   password?: string;
@@ -73,10 +69,8 @@ export interface SignupForm {
 }
 
 export interface AuthAPI {
-  accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
-  sendAccountValidation: (session: Readonly<Session>, language?: string) => Promise<boolean>;
   updatePreferences: (session: Readonly<Session>) => Promise<Preferences>;
   updateProfile: (session: Readonly<Session>) => Promise<Profile>;
   updateSettings: (session: Readonly<Session>) => Promise<Settings>;

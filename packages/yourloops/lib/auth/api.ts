@@ -27,7 +27,6 @@
  */
 
 import bows from "bows";
-import _ from "lodash";
 
 import { APIErrorResponse } from "../../models/error";
 import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
@@ -41,48 +40,6 @@ import { Session, UpdateUser } from "./models";
 import HttpService from "../../services/http";
 
 const log = bows("Auth API");
-
-async function sendAccountValidation(session: Readonly<Session>, language = "en"): Promise<boolean> {
-  const confirmURL = new URL(`/confirm/send/signup/${session.user.userid}`, appConfig.API_HOST);
-
-  const response = await fetch(confirmURL.toString(), {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-      [HttpHeaderKeys.language]: language,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve(true);
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
-async function accountConfirmed(key: string, traceToken: string): Promise<boolean> {
-  if (_.isEmpty(key)) {
-    log.error("forbidden call to Account confirmation api, key is missing");
-    throw new Error("error-http-40x");
-  }
-
-  const confirmURL = new URL(`/confirm/accept/signup/${key}`, appConfig.API_HOST);
-  const response = await fetch(confirmURL.toString(), {
-    method: "PUT",
-    cache: "no-store",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-    },
-  });
-
-  if (response.ok) {
-    return Promise.resolve(true);
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
 
 async function updateProfile(session: Readonly<Session>): Promise<Profile> {
   const seagullURL = new URL(`/metadata/${session.user.userid}/profile`, appConfig.API_HOST);
@@ -227,10 +184,8 @@ async function certifyProfessionalAccount(): Promise<IUser> {
 }
 
 export default {
-  accountConfirmed,
   certifyProfessionalAccount,
   refreshToken,
-  sendAccountValidation,
   updatePreferences,
   updateProfile,
   updateSettings,

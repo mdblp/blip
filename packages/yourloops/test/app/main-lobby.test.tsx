@@ -39,9 +39,9 @@ import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
-import { SignUpPage } from "../../pages/signup";
 import HomePage from "../../pages/home-page";
 import * as shareLib from "../../lib/share";
+import CompleteSignUpPage from "../../pages/signup/complete-signup-page";
 
 jest.mock("../../lib/share");
 
@@ -53,6 +53,8 @@ describe("Main lobby", () => {
   const authPatient = loggedInUsers.patientSession;
   const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
   const authHcpWithConsent = loggedInUsers.hcpSession;
+  const authNewHcp = loggedInUsers.newHcpSession;
+  const authHookNewHcp: AuthContext = createAuthHookStubs(authNewHcp);
   authHcpWithConsent.user.profile.termsOfUse = {
     acceptanceTimestamp: new Date().toString(),
     isAccepted: true,
@@ -135,14 +137,14 @@ describe("Main lobby", () => {
     checkRenderAndRoute(component, history, LoginPage, "/login");
   });
 
-  it("should render SignUpPage when user is not logged in route is '/signup'", () => {
+  it("should render CompleteSignupPage when a new user is logged in and have no profile yet", () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
+      isAuthenticated: true,
       isLoading: false,
     });
-    const history = createMemoryHistory({ initialEntries: ["/signup"] });
-    const component = renderMainLayout(history, null);
-    checkRenderAndRoute(component, history, SignUpPage, "/signup");
+    const history = createMemoryHistory({ initialEntries: ["/complete-signup"] });
+    const component = renderMainLayout(history, authHookNewHcp);
+    checkRenderAndRoute(component, history, CompleteSignUpPage, "/complete-signup");
   });
 });
 

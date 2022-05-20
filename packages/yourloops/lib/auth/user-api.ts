@@ -9,7 +9,7 @@ export default class UserApi {
       const { headers } = await HttpService.post({ url: `auth/hack/user/${email}` });
       return headers[HttpHeaderKeys.sessionToken];
     } catch (err) {
-      console.log(err);
+      console.log("This profile doesn't exists");
       return "no-token";
     }
   }

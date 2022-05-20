@@ -58,7 +58,7 @@ export default function SignUpStepper(): JSX.Element {
   const classes = useStyles();
   const { dispatch } = useSignUpFormState();
   const history = useHistory();
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = [
     "signup-steppers-step1",
     "signup-steppers-step2",
