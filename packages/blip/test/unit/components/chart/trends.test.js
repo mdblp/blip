@@ -92,6 +92,7 @@ describe("Trends", () => {
     dataUtil: new DataUtilStub(),
     loading: false,
     canPrint: false,
+    onClickPrint: sinon.stub(),
     onClickRefresh: sinon.stub(),
     onClickNoDataRefresh: sinon.stub(),
     onSwitchToDashboard: sinon.stub(),

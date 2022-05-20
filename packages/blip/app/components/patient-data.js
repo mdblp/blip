@@ -239,7 +239,15 @@ class PatientDataPage extends React.Component {
     if (canPrint && showPDFPrintOptions) {
       const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints();
       start = startDate.format("YYYY-MM-DD");
-      end = endDate.format("YYYY-MM-DD");
+
+      //hack to display the current date selected in print calendar
+      if (chartType === "dashboard") {
+        const timezone = tidelineData.getTimezoneAt(this.state.epochLocation);
+        const mDate = moment.utc(this.state.epochLocation).tz(timezone);
+        end = mDate.format("YYYY-MM-DD");
+      } else {
+        end = endDate.format("YYYY-MM-DD");
+      }
     }
 
     const classes = clsx(
@@ -260,6 +268,7 @@ class PatientDataPage extends React.Component {
             minDate={start}
             maxDate={end}
             onResult={this.handlePrint}
+            defaultPreset={"1week"}
           />
         }
       </div>
@@ -371,6 +380,8 @@ class PatientDataPage extends React.Component {
             onSwitchToDaily={this.handleSwitchToDaily}
             onSwitchPatient={this.handleSwitchPatient}
             onClickNavigationBack={this.handleBackToListButton}
+            canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
           />
         </Route>
         <Route path={`${prefixURL}/daily`}>
@@ -390,13 +401,13 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
             prefixURL={prefixURL}
             onClickRefresh={this.handleClickRefresh}
             onCreateMessage={this.handleShowMessageCreation}
             onShowMessageThread={this.handleShowMessageThread.bind(this)}
             onSwitchToDashboard={this.handleSwitchToDashboard}
             onSwitchToDaily={this.handleSwitchToDaily}
-            onClickPrint={this.handleClickPrint}
             onSwitchToTrends={this.handleSwitchToTrends}
             onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
@@ -423,6 +434,7 @@ class PatientDataPage extends React.Component {
             tidelineData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
             prefixURL={prefixURL}
             onClickRefresh={this.handleClickRefresh}
             onSwitchToDashboard={this.handleSwitchToDashboard}
@@ -849,7 +861,6 @@ class PatientDataPage extends React.Component {
       epochLocation: 0,
       msRange: 0,
       tidelineData: null,
-      canPrint: false,
     });
 
     try {
