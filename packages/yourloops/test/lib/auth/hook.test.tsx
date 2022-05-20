@@ -36,11 +36,13 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
 import config from "../../../lib/config";
-import { AuthAPI, AuthContext, Session, SignupUser } from "../../../lib/auth";
+import { AuthAPI, AuthContext, Session } from "../../../lib/auth";
 import { AuthContextImpl } from "../../../lib/auth/hook";
 import { loggedInUsers } from "../../common";
 import { HcpProfession } from "../../../models/hcp-profession";
 import { AuthAPIStubs, createAuthAPIStubs, resetAuthAPIStubs } from "./utils";
+import UserApi from "../../../lib/auth/user-api";
+import { Units } from "../../../models/generic";
 
 jest.mock("@auth0/auth0-react");
 
@@ -88,15 +90,22 @@ describe("Auth hook", () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: true,
       user: {
-        user: {
-          "email": "john.spartan@demolition.man",
-          "email_verified": true,
-          "sub": "auth0|0123456789",
-          "http://your-loops.com/roles": ["hcp"],
-        },
+        "email": "john.doe@example.com",
+        "email_verified": true,
+        "sub": "auth0|0123456789",
+        "http://your-loops.com/roles": ["caregiver"],
       },
       logout: jest.fn(),
     });
+    jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve(loggedInUsers.hcpSession.sessionToken));
+    jest.spyOn(UserApi, "getProfile").mockResolvedValue(Promise.resolve({
+      firstName: "John",
+      lastName: "Doe",
+      fullName: "John Doe",
+      hcpProfession: HcpProfession.diabeto,
+    }));
+    jest.spyOn(UserApi, "getPreferences").mockResolvedValue(Promise.resolve({ displayLanguageCode: "en" }));
+    jest.spyOn(UserApi, "getSettings").mockResolvedValue(Promise.resolve({ country: "FR", units: { bg: Units.gram } }));
   });
 
   afterEach(() => {
@@ -229,6 +238,7 @@ describe("Auth hook", () => {
     it("updateSettings should call the API with the good parameters", async () => {
       authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
       await initAuthContext(authApiHcpStubs);
+      jest.spyOn(UserApi, "updateSettings").mockResolvedValue(Promise.resolve(updatedSettings));
       expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
 
       const result = await authContext.updateSettings({ ...updatedSettings });
@@ -253,21 +263,7 @@ describe("Auth hook", () => {
       expect(error).not.toBeNull();
       expect(authContext.user).toBeNull();
     });
-    it("updatePassword should not call the API if the user is a patient", async () => {
-      authApiPatientStubs.updateUser.mockResolvedValue();
-      await initAuthContext(authApiPatientStubs);
-      expect(authContext.user).not.toBeNull();
 
-      let error: Error | null = null;
-      try {
-        await authContext.updatePassword("abcd", "1234");
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(0);
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe("invalid-user-role");
-    });
     it("updatePassword should call the API with the good parameters", async () => {
       authApiHcpStubs.updateUser.mockResolvedValue();
       await initAuthContext(authApiHcpStubs);
@@ -277,28 +273,6 @@ describe("Auth hook", () => {
       expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(1);
     });
 
-    it("switchRoleToHCP should failed for hcp users", async () => {
-      await initAuthContext(authApiHcpStubs);
-      let error: Error | null = null;
-      try {
-        await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
-      } catch (reason) {
-        error = reason;
-      }
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe("invalid-user-role");
-    });
-    it("switchRoleToHCP should failed for patient users", async () => {
-      await initAuthContext(authApiPatientStubs);
-      let error: Error | null = null;
-      try {
-        await authContext.switchRoleToHCP(false, HcpProfession.diabeto);
-      } catch (reason) {
-        error = reason;
-      }
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe("invalid-user-role");
-    });
     it("switchRoleToHCP should not call updateProfile if updateUser failed", async () => {
       authApiCaregiverStubs.updateUser.mockRejectedValue(_.noop);
       await initAuthContext(authApiCaregiverStubs);
@@ -318,6 +292,7 @@ describe("Auth hook", () => {
       expect(updateArgs[1]).toEqual({ roles: [UserRoles.hcp] });
       expect(authApiCaregiverStubs.updateProfile).toHaveBeenCalledTimes(0);
     });
+
     it("switchRoleToHCP should call updateProfile after updateUser", async () => {
       const now = Date.now();
       authApiCaregiverStubs.updateProfile.mockRejectedValue(_.noop);
@@ -493,84 +468,6 @@ describe("Auth hook", () => {
     });
   });
 
-  describe.skip("Signup", () => {
-    it("should call the API with all the good parameters", async () => {
-      const infos: SignupUser = {
-        accountPassword: "abcd",
-        accountRole: UserRoles.caregiver,
-        accountUsername: loggedInUsers.caregiver.username,
-        preferencesLanguage: loggedInUsers.caregiver.preferences.displayLanguageCode,
-        privacyPolicy: true,
-        profileCountry: loggedInUsers.caregiver.settings.country,
-        profileFirstname: loggedInUsers.caregiver.profile.firstName,
-        profileLastname: loggedInUsers.caregiver.profile.lastName,
-        profilePhone: "+0000000",
-        hcpProfession: HcpProfession.empty,
-        terms: true,
-        feedback: false,
-      };
-      await initAuthContext(authApiHcpStubs);
-      const signupResolve: Session = {
-        user: _.cloneDeep(authCaregiver.user),
-        sessionToken: authCaregiver.sessionToken,
-        traceToken: authContext.session().traceToken,
-      };
-      delete signupResolve.user.preferences;
-      delete signupResolve.user.profile;
-      delete signupResolve.user.settings;
-      authApiHcpStubs.signup.mockResolvedValue(signupResolve);
-      const callOrder: string[] = [];
-      authApiHcpStubs.updateSettings.mockImplementation(() => {
-        callOrder.push("updateSettings");
-        return Promise.resolve({} as Settings);
-      });
-      authApiHcpStubs.updateProfile.mockImplementation(() => {
-        callOrder.push("updateProfile");
-        return Promise.resolve({} as Profile);
-      });
-      authApiHcpStubs.updatePreferences.mockImplementation(() => {
-        callOrder.push("updatePreferences");
-        return Promise.resolve({} as Preferences);
-      });
-
-      let error: Error | null = null;
-      try {
-        await authContext.signup(infos);
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.signup).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.signup.mock.calls[0]).toEqual([
-        infos.accountUsername,
-        infos.accountPassword,
-        infos.accountRole,
-      ]);
-      expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(1);
-      const sentProfile = authApiHcpStubs.updateProfile.mock.calls[0][0].user.profile;
-      expect(sentProfile).not.toBeNull();
-      expect(sentProfile.contactConsent.isAccepted).toBe(false);
-      expect(typeof sentProfile.contactConsent.acceptanceTimestamp).toBe("string");
-      expect(sentProfile.hcpProfession).toBe("");
-      expect(authApiHcpStubs.updateSettings).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.sendAccountValidation).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.sendAccountValidation.mock.calls[0][1]).toBe(infos.preferencesLanguage);
-      expect(error).toBeNull();
-      expect(authContext.user).toBeNull();
-      expect(callOrder).toEqual(["updateProfile", "updateSettings", "updatePreferences"]);
-    });
-  });
-
-  describe("Resend sign-up", () => {
-    it("should call the resend sign-up api", async () => {
-      await initAuthContext(authApiHcpStubs);
-      const result = await authContext.resendSignup("abcd");
-      expect(authApiHcpStubs.resendSignup).toHaveBeenCalledTimes(1);
-      expect(authApiHcpStubs.resendSignup.mock.calls[0]).toEqual(["abcd", authContext.session().traceToken, "en"]);
-      expect(result).toBe(true);
-    });
-  });
-
   describe("Flag patient", () => {
     it("should flag a un-flagged patient", async () => {
       const userId = uuidv4();
@@ -618,11 +515,17 @@ describe("Auth hook", () => {
       expect(apiCall.user.preferences.patientsStarred).toEqual([userId1, userId2]);
       expect(authContext.getFlagPatients()).toEqual([userId1, userId2]);
     });
+
     it("setFlagPatients should replace the currently flagged patient", async () => {
-      const userId = uuidv4();
+      const userId = "0123456789";
       authApiHcpStubs.updatePreferences.mockResolvedValue({ displayLanguageCode: "fr", patientsStarred: [userId] });
       authHcp.user.preferences.patientsStarred = ["old"];
+      jest.spyOn(UserApi, "getPreferences").mockResolvedValue(Promise.resolve({
+        displayLanguageCode: "en",
+        patientsStarred: ["old"],
+      }));
       await initAuthContext(authApiHcpStubs);
+      console.log(authContext.getFlagPatients());
       expect(authContext.getFlagPatients()).toEqual(["old"]);
       await authContext.setFlagPatients([userId]);
       const after = authContext.getFlagPatients();

@@ -38,7 +38,7 @@ import { HcpProfession } from "../../../models/hcp-profession";
 export interface AuthAPIStubs {
   accountConfirmed: jest.Mock<Promise<boolean>, string[]>;
   getUserInfo: jest.Mock<Promise<User>, [string]>;
-  getShorelineAccessToken: jest.Mock<Promise<[string, string]>, [string]>;
+  getShorelineAccessToken: jest.Mock<Promise<string>, [string]>;
   refreshToken: jest.Mock<Promise<string>, [Readonly<Session>]>;
   resendSignup: jest.Mock<Promise<boolean>, [string, string, string | undefined]>;
   sendAccountValidation: jest.Mock<Promise<boolean>, [Readonly<Session>, string | undefined]>;
@@ -52,7 +52,7 @@ export interface AuthAPIStubs {
 export const createAuthAPIStubs = (session: Session): AuthAPIStubs => ({
   accountConfirmed: jest.fn().mockResolvedValue(true),
   getUserInfo: jest.fn<Promise<User>, [string]>().mockResolvedValue(session.user),
-  getShorelineAccessToken: jest.fn<Promise<[string, string]>, [string]>().mockResolvedValue(["token", "userid"]),
+  getShorelineAccessToken: jest.fn<Promise<string>, [string]>().mockResolvedValue("token"),
   refreshToken: jest.fn<Promise<string>, [Readonly<Session>]>().mockResolvedValue(""),
   resendSignup: jest.fn<Promise<boolean>, [string, string, string | undefined]>().mockResolvedValue(true),
   sendAccountValidation: jest.fn<Promise<boolean>, [Readonly<Session>, string | undefined]>().mockResolvedValue(true),
