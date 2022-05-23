@@ -57,7 +57,8 @@ const filtersStyles = makeStyles((theme: Theme) => {
       },
     },
     inputRoot: {
-      color: "black",
+      color: theme.palette.grey[800],
+      width: "100%",
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
@@ -65,15 +66,12 @@ const filtersStyles = makeStyles((theme: Theme) => {
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // eslint-disable-line no-magic-numbers
       transition: theme.transitions.create("width"),
       width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
     },
     search: {
       "display": "flex",
       "position": "relative",
       "borderRadius": theme.shape.borderRadius,
-      "backgroundColor": theme.palette.common.white,
+      "backgroundColor": theme.palette.grey[100],
       "&:hover": {
         backgroundColor: theme.palette.secondary.dark,
       },
@@ -81,7 +79,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       "marginRight": theme.spacing(2),
       "marginLeft": "auto",
       [theme.breakpoints.up("sm")]: {
-        width: "15em",
+        width: "100%",
       },
       [theme.breakpoints.down("sm")]: {
         "width": "50%",
@@ -105,7 +103,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      color: theme.palette.primary.main,
+      color: theme.palette.grey[800],
     },
     selectFilter: {
       flex: "1",
