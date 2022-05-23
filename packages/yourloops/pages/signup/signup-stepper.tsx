@@ -32,7 +32,6 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Stepper from "@material-ui/core/Stepper";
@@ -43,20 +42,12 @@ import Typography from "@material-ui/core/Typography";
 import SignUpProfileForm from "./signup-profile-form";
 import SignUpConsent from "./signup-consent";
 import { useSignUpFormState } from "./signup-formstate-context";
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    stepper: {
-      paddingLeft: 0,
-      paddingRight: 0,
-    },
-  })
-);
+import { useAuth } from "../../lib/auth";
 
 export default function SignUpStepper(): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const classes = useStyles();
   const { dispatch } = useSignUpFormState();
+  const { logout } = useAuth();
   const history = useHistory();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = [
@@ -68,9 +59,11 @@ export default function SignUpStepper(): JSX.Element {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
     if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    } else {
+      await logout();
     }
   };
 
@@ -99,7 +92,6 @@ export default function SignUpStepper(): JSX.Element {
       </Box>
       <Stepper
         id="signup-stepper"
-        className={classes.stepper}
         activeStep={activeStep}
         alternativeLabel
       >
