@@ -127,7 +127,7 @@ pipeline {
             }
             steps {
                 script {
-                    env.target = "android-qa"
+                    env.target = "itg"
                     if (env.version == "UNRELEASED") {
                         env.version = "master"
                     }

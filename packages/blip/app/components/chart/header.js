@@ -160,7 +160,7 @@ class TidelineHeader extends React.Component {
             {this.props.chartType === "dashboard" &&
             <Fragment>
               <AccessTime className="subnav-icon" />
-              <span id={"subnav-period-label"}>{t("dashboard-header-period-text")}</span>
+              <span id="subnav-period-label">{t("dashboard-header-period-text")}</span>
             </Fragment>
             }
             {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}

@@ -46,6 +46,7 @@ const PatientDashboard = (props) => {
         onClickDashboard={handleClickDashboard}
         onSwitchPatient={onSwitchPatient}
         onClickNavigationBack={onClickNavigationBack}
+        trackMetric={trackMetric}
       />
       <Box id="patient-dashboard-content">
         {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
@@ -71,6 +72,7 @@ const PatientDashboard = (props) => {
           chartPrefs={chartPrefs}
           endpoints={endpoints}
           loading={loading}
+          onSwitchToDaily={onSwitchToDaily}
         />
         {patientMonitored &&
           <ChatWidget id="dashboard-chat-widget"

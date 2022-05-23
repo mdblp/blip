@@ -152,6 +152,7 @@ describe("DeviceUsage", () => {
       root: true,
     },
     trackMetric: sinon.stub(),
+    onSwitchToDaily: sinon.stub(),
   };
 
   let wrapper;
