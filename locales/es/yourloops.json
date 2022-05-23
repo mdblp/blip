@@ -14,7 +14,7 @@
   "add-patient": "Añadir paciente",
   "address": "Dirección",
   "admin": "Admin",
-  "alert-hypoglycemic": "Severe hypoglycemia alert",
+  "alert-hypoglycemic": "Severe hypoglycemia",
   "alert-invitation-caregiver-failed": "Imposible añadir cuidador. Vuelva a intentarlo más tarde.",
   "alert-invitation-patient-failed": "Imposible añadir paciente. Vuelva a intentarlo más tarde.",
   "alert-invitation-patient-failed-already-in-team": "Este paciente ya compartió sus datos con el equipo.",
