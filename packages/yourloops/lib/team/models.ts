@@ -41,6 +41,7 @@ import {
 import { Session } from "../auth";
 import { DirectShareAPI } from "../share/models";
 import { Patient, PatientTeam } from "../data/patient";
+import { Monitoring } from "../../models/monitoring";
 
 export const TEAM_CODE_LENGTH = 9;
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/;
@@ -71,6 +72,7 @@ export interface Team {
   address?: PostalAddress;
   description?: string;
   members: TeamMember[];
+  remotePatientMonitoring?: Monitoring;
 }
 
 export interface TeamAPI {
@@ -80,6 +82,8 @@ export interface TeamAPI {
   inviteMember: (session: Session, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<INotificationAPI>;
   createTeam: (session: Session, team: Partial<ITeam>) => Promise<ITeam>;
   editTeam: (session: Session, editedTeam: ITeam) => Promise<void>;
+  updateTeamAlerts: (session: Session, teamId: string, monitoring: Monitoring) => Promise<void>
+  getTeamWithAlerts: (session: Session, teamId: string) => Promise<Team>
   deleteTeam: (session: Session, teamId: string) => Promise<void>;
   leaveTeam: (session: Session, teamId: string) => Promise<void>;
   removeMember: (session: Session, teamId: string, userId: string, email: string) => Promise<void>;
@@ -223,6 +227,16 @@ export interface TeamContext {
    * @param team The updated team
    */
   editTeam(team: Team): Promise<void>;
+  /**
+   * Update team alarm configuration
+   * @param team The updated team
+   */
+  updateTeamAlerts(team: Team): Promise<void>;
+  /**
+   * Retrieve a team with its alerts
+   * @param teamId the team to retrieve
+   */
+  getTeamWithAlerts(teamId: string): Promise<Team>;
   /**
    * Leave a team
    * @param team The team to leave

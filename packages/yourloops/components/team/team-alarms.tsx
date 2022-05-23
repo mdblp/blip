@@ -34,10 +34,32 @@ import TuneIcon from "@material-ui/icons/Tune";
 
 import { commonTeamStyles } from "./common";
 import TeamAlarmsContent from "./team-alarms-content";
+import { Team, useTeam } from "../../lib/team";
+import { Monitoring } from "../../models/monitoring";
+import { useAlert } from "../utils/snackbar";
 
-function TeamAlarms(): JSX.Element {
+interface TeamAlarmsProps {
+  team: Team,
+  monitoring: Monitoring,
+}
+
+function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
+  const { team, monitoring } = props;
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
+  const teamHook = useTeam();
+  const alert = useAlert();
+
+  const save = async (monitoring: Monitoring) => {
+    team.remotePatientMonitoring = monitoring;
+    try {
+      await teamHook.updateTeamAlerts(team);
+      alert.success(t("team-update-success"));
+    } catch (error) {
+      console.error(error);
+      alert.error(t("team-update-error"));
+    }
+  };
 
   return (
     <div className={commonTeamClasses.root}>
@@ -51,7 +73,7 @@ function TeamAlarms(): JSX.Element {
       </div>
 
       <Box paddingX={3}>
-        <TeamAlarmsContent />
+        <TeamAlarmsContent monitoring={monitoring} onSave={save}/>
       </Box>
     </div>
   );

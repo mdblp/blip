@@ -159,6 +159,19 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
     owner: "fakeOwner",
     type: TeamType.medical,
     members,
+    remotePatientMonitoring: {
+      enabled: true,
+      parameters: {
+        bgUnit: "bgUnits",
+        lowBg: 1,
+        highBg: 2,
+        outOfRangeThreshold: 3,
+        veryLowBg: 4,
+        hypoThreshold: 5,
+        nonDataTxThreshold: 6,
+        reportingPeriod: 7,
+      },
+    },
   };
 }
 

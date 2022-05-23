@@ -35,16 +35,16 @@ import Box from "@material-ui/core/Box";
 import DesktopMacIcon from "@material-ui/icons/DesktopMac";
 import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
 import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
 import { Team, useTeam } from "../../lib/team";
 import BasicDropdown from "../../components/dropdown/basic-dropdown";
-import TeamAlarms from "../../components/team/team-alarms";
 import TeamInformation from "../../components/team/team-information";
 import TeamMembers from "../../components/team/team-members";
-import Typography from "@material-ui/core/Typography";
 import { commonTeamStyles } from "../../components/team/common";
 import { useAuth } from "../../lib/auth";
+import TeamAlarms from "../../components/team/team-alarms";
 
 const useStyles = makeStyles((theme: Theme) => ({
   activeLink: {
@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function TeamDetailPage(): JSX.Element {
-  const { getTeam, getMedicalTeams } = useTeam();
+  const { getTeam, getMedicalTeams, getTeamWithAlerts } = useTeam();
   const classes = useStyles();
   const commonTeamClasses = commonTeamStyles();
   const paramHook = useParams();
@@ -104,6 +104,7 @@ function TeamDetailPage(): JSX.Element {
   const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
     { selectedTeam: null, teamNames: [] }
   );
+  const [teamWithAlert, setTeamWithAlert] = useState<Team | null>(null);
   const [activeLink, setActiveLink] = useState<string>("information");
   const isUserHcp = authContext.user?.isUserHcp();
 
@@ -116,12 +117,14 @@ function TeamDetailPage(): JSX.Element {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const refresh = useCallback(() => {
+  const refresh = useCallback(async () => {
     setDropdownData({
       selectedTeam: getTeam(teamId) as Team,
       teamNames: getMedicalTeams().map((team: Team) => team.name),
     });
-  }, [getTeam, teamId, getMedicalTeams]);
+    const t = await getTeamWithAlerts(teamId);
+    setTeamWithAlert(t);
+  }, [getTeam, teamId, getMedicalTeams, getTeamWithAlerts]);
 
   useEffect(() => {
     refresh();
@@ -214,14 +217,18 @@ function TeamDetailPage(): JSX.Element {
                     >
                       <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                     </div>
-                    <div className={classes.separator} />
-                    <div
-                      ref={teamAlarms}
-                      data-link="configuration"
-                      className={classes.refElement}
-                    >
-                      <TeamAlarms />
-                    </div>
+                    {teamWithAlert && teamWithAlert.remotePatientMonitoring &&
+                      <div>
+                        <div className={classes.separator} />
+                        <div
+                          ref={teamAlarms}
+                          data-link="configuration"
+                          className={classes.refElement}
+                        >
+                          <TeamAlarms team={teamWithAlert} monitoring={teamWithAlert.remotePatientMonitoring} />
+                        </div>
+                      </div>
+                    }
                   </div>
                 }
               </div>
