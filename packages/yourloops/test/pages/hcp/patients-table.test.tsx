@@ -88,7 +88,7 @@ describe("Patient list table", () => {
     }
   });
 
-  const PatientListTableComponent = (): JSX.Element => {
+  const PatientTableComponent = (): JSX.Element => {
     const team = useTeam();
     const patients = team.getPatients();
 
@@ -114,7 +114,7 @@ describe("Patient list table", () => {
           <AuthContextProvider value={authHookHcp}>
             <NotificationContextProvider value={stubNotificationContextValue}>
               <TeamContextProvider teamAPI={teamAPI}>
-                <PatientListTableComponent />
+                <PatientTableComponent />
               </TeamContextProvider>
             </NotificationContextProvider>
           </AuthContextProvider>, container, resolve);
@@ -122,7 +122,7 @@ describe("Patient list table", () => {
     });
   }
 
-  function renderPatientList(patients: Patient[]) {
+  function renderPatientTable(patients: Patient[]) {
     return renderer.create(
       <ThemeProvider theme={getTheme()}>
         <AuthContextProvider value={authHookHcp}>
@@ -170,13 +170,13 @@ describe("Patient list table", () => {
   });
 
   it("should display only 10 patients when number pagination is by 10", () => {
-    const component = renderPatientList(allPatients);
+    const component = renderPatientTable(allPatients);
     const patientRows = component.root.findAllByType(PatientRow);
     expect(patientRows).toHaveLength(10);
   });
 
   it("should display all patients when number pagination is by 100", () => {
-    const component = renderPatientList(allPatients);
+    const component = renderPatientTable(allPatients);
     const tablePagination = component.root.findByType(TablePagination);
     tablePagination.props.onRowsPerPageChange({ target: { value: "100" } });
     const patientRows = component.root.findAllByType(PatientRow);

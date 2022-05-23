@@ -34,6 +34,7 @@ import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import { createSessionToken } from "./utils";
 import { HcpProfession } from "../../models/hcp-profession";
+import { Alarm } from "../../models/alarm";
 
 export { createSessionToken, refreshToken } from "./utils";
 
@@ -261,6 +262,14 @@ export const members: ITeamMember[] = [
     idVerified: true,
   },
 ];
+const alarms: Alarm = {
+  timeSpentAwayFromTargetRate: 10,
+  timeSpentAwayFromTargetActive: false,
+  frequencyOfSevereHypoglycemiaRate: 0,
+  frequencyOfSevereHypoglycemiaActive: false,
+  nonDataTransmissionRate: 0,
+  nonDataTransmissionActive: false,
+};
 
 export const patients: ITeamMember[] = [
   {
@@ -273,15 +282,8 @@ export const patients: ITeamMember[] = [
     profile: userPatient.profile,
     settings: userPatient.settings,
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
   {
     invitationStatus: UserInvitationStatus.accepted,
@@ -293,15 +295,8 @@ export const patients: ITeamMember[] = [
     profile: userPatient.profile,
     settings: userPatient.settings,
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
   {
     invitationStatus: UserInvitationStatus.accepted,
@@ -311,15 +306,8 @@ export const patients: ITeamMember[] = [
     email: "michel.dupont@example.com",
     profile: { firstName: "Michel", lastName: "Dupont", fullName: "Michel D." },
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
   {
     invitationStatus: UserInvitationStatus.accepted,
@@ -329,15 +317,8 @@ export const patients: ITeamMember[] = [
     email: "marivone.duplessie@example.com",
     profile: { firstName: "Marivone", lastName: "Duplessie", fullName: "Marivone Duplessie" },
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
   {
     invitationStatus: UserInvitationStatus.accepted,
@@ -347,15 +328,8 @@ export const patients: ITeamMember[] = [
     email: "marivone.duplessie@example.com",
     profile: { firstName: "Marivone", lastName: "Duplessie", fullName: "Marivone Duplessie" },
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
   {
     invitationStatus: UserInvitationStatus.pending,
@@ -365,14 +339,7 @@ export const patients: ITeamMember[] = [
     email: "gerard.dumoulin@example.com",
     profile: { firstName: "Gerard", lastName: "Dumoulin", fullName: "Gerard D." },
     idVerified: false,
-    alarms : {
-      timeSpentAwayFromTargetRate: 10,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 0,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 0,
-      nonDataTransmissionActive: false,
-    },
-    monitoring: { enabled : false },
+    alarms,
+    monitoring: { enabled: false },
   },
 ];
