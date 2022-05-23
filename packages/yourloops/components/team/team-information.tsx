@@ -133,7 +133,10 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t("edit-information")}
             </Button>
           }
-          {isUserPatient && <LeaveTeamButton team={team} />}
+          {isUserPatient && <div id="leave-team-button">
+            <LeaveTeamButton team={team} />
+          </div>
+          }
         </div>
 
         <div className={classes.body}>
