@@ -106,14 +106,21 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 export const createPatient = (
   id: string,
   teams: PatientTeam[],
-  alerts: Alarm = null,
+  alarm: Alarm = {
+    timeSpentAwayFromTargetRate: 10,
+    timeSpentAwayFromTargetActive: false,
+    frequencyOfSevereHypoglycemiaRate: 20,
+    frequencyOfSevereHypoglycemiaActive: false,
+    nonDataTransmissionRate: 30,
+    nonDataTransmissionActive: false,
+  },
   fullName = "fakePatientFullName",
   remoteMonitoring: Date = null,
   system: string = null,
   flagged: boolean = null
 ): Patient => {
   return {
-    alarm: alerts,
+    alarm: alarm,
     fullName,
     remoteMonitoring,
     system,
@@ -129,18 +136,31 @@ export const createPatientTeam = (id: string, status: UserInvitationStatus): Pat
     status,
   } as PatientTeam;
 };
-export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
+export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate,
   } as Alarm;
 };
 
-export const createTeamUser = (id: string, members: TeamMember[], profile: Profile = null): TeamUser => {
+export const createTeamUser = (
+  id: string,
+  members: TeamMember[],
+  profile: Profile = null,
+  alarms: Alarm = {
+    timeSpentAwayFromTargetRate: 10,
+    timeSpentAwayFromTargetActive: true,
+    frequencyOfSevereHypoglycemiaRate: 10,
+    frequencyOfSevereHypoglycemiaActive: true,
+    nonDataTransmissionRate: 10,
+    nonDataTransmissionActive: true,
+  }): TeamUser => {
   return {
     userid: id,
     members,
     profile,
+    alarms,
+    monitoring: { enabled: false },
   } as TeamUser;
 };
 

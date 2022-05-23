@@ -25,6 +25,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1497 Change all buttons to a flat design
 - YLP-1500 Patient can join a team from header
 - YLP-1501 Update team details alarms management with new design
+- YLP-1504 Plug team alarms configuration to backend
 - YLP-1511 Display message date, status and the number of unread messages in chat widget
 - YLP-1518 Implement drawer filters
 - YLP-1537 Display settings page in a dialog

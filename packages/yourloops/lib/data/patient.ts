@@ -39,7 +39,7 @@ interface PatientTeam {
 }
 
 interface Patient {
-  alarm?: Alarm | null;
+  alarm: Alarm;
   firstName?: string;
   flagged?: boolean,
   fullName: string;
