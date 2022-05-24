@@ -54,7 +54,7 @@ const styles = makeStyles((theme: Theme) => ({
     },
   },
   error: {
-    border: "2px solid #ea4633",
+    border: `1px solid ${theme.palette.error.main}`,
   },
 }));
 

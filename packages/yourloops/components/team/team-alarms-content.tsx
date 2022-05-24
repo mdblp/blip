@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -90,6 +90,11 @@ export interface TeamAlarmsContentProps {
   onSave: (monitoring: Monitoring) => void;
 }
 
+interface ValueErrorPair {
+  value?: number,
+  error: boolean,
+}
+
 export const MIN_HIGH_BG = 140;
 export const MAX_HIGH_BG = 250;
 export const MIN_VERY_LOW_BG = 40;
@@ -112,39 +117,50 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
     return !PERCENTAGES.includes(`${value}%`);
   };
 
-  const [highBg, setHighBg] = useState<{ value?: number, error: boolean }>({
+  const [highBg, setHighBg] = useState<ValueErrorPair>({
     value: monitoring?.parameters?.highBg,
     error: !monitoring?.parameters?.highBg || isError(monitoring?.parameters?.highBg, MIN_HIGH_BG, MAX_HIGH_BG),
   });
-  const [veryLowBg, setVeryLowBg] = useState<{ value?: number, error: boolean }>({
+  const [veryLowBg, setVeryLowBg] = useState<ValueErrorPair>({
     value: monitoring?.parameters?.veryLowBg,
     error: !monitoring?.parameters?.veryLowBg || isError(monitoring?.parameters?.veryLowBg, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG),
   });
-  const [lowBg, setLowBg] = useState<{ value?: number, error: boolean }>({
+  const [lowBg, setLowBg] = useState<ValueErrorPair>({
     value: monitoring?.parameters?.lowBg,
     error: !monitoring?.parameters?.lowBg || isError(monitoring?.parameters?.lowBg, MIN_LOW_BG, MAX_LOW_BG),
   });
-  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<{ value?: number, error: boolean }>(
+  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
     {
       value: monitoring?.parameters?.nonDataTxThreshold,
       error: monitoring?.parameters?.nonDataTxThreshold === undefined || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold),
     });
-  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<{ value?: number, error: boolean }>(
+  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(
     {
       value: monitoring?.parameters?.outOfRangeThreshold,
       error: monitoring?.parameters?.outOfRangeThreshold === undefined || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold),
     });
-  const [hypoThreshold, setHypoThreshold] = useState<{ value?: number, error: boolean }>(
+  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(
     {
       value: monitoring?.parameters?.hypoThreshold,
       error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold),
     });
 
+  const saveButtonDisabled = useMemo(() => {
+    return lowBg.error
+        || highBg.error
+        || veryLowBg.error
+        || outOfRangeThreshold.error
+        || hypoThreshold.error
+        || nonDataTxThreshold.error
+        || saveInProgress;
+  },
+  [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error]);
+
   const onChange = (
     value: number,
     lowValue: number,
     highValue: number,
-    setValue: React.Dispatch<{ value?: number, error: boolean }>,
+    setValue: React.Dispatch<ValueErrorPair>,
   ) => {
     setValue({
       value: value,
@@ -153,8 +169,14 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   };
 
   const save = () => {
-    if (lowBg.value !== undefined && highBg.value !== undefined && veryLowBg.value !== undefined
-      && outOfRangeThreshold.value !== undefined && nonDataTxThreshold.value !== undefined && hypoThreshold.value !== undefined) {
+    if (
+      lowBg.value !== undefined
+      && highBg.value !== undefined
+      && veryLowBg.value !== undefined
+      && outOfRangeThreshold.value !== undefined
+      && nonDataTxThreshold.value !== undefined
+      && hypoThreshold.value !== undefined
+    ) {
       const monitoringUpdated: Monitoring = {
         enabled: true,
         parameters: {
@@ -174,7 +196,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
     }
   };
 
-  const select = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => {
+  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => {
     const valueAsNumber = +value.slice(0, -1);
     setValue({
       value: valueAsNumber,
@@ -247,7 +269,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
                 defaultValue={`${outOfRangeThreshold.value}%` ?? ""}
                 values={PERCENTAGES}
                 error={outOfRangeThreshold.error}
-                onSelect={(value) => select(value, setOutOfRangeThreshold)}
+                onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
               />
             </div>
           </div>
@@ -300,7 +322,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
                 defaultValue={`${hypoThreshold.value}%` ?? ""}
                 values={PERCENTAGES}
                 error={hypoThreshold.error}
-                onSelect={(value) => select(value, setHypoThreshold)}
+                onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
               />
             </div>
           </div>
@@ -327,7 +349,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
                 defaultValue={`${nonDataTxThreshold.value}%` ?? ""}
                 values={PERCENTAGES.slice(0, 11)}
                 error={nonDataTxThreshold.error}
-                onSelect={(value) => select(value, setNonDataTxThreshold)}
+                onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
               />
             </div>
           </div>
@@ -341,7 +363,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
             variant="contained"
             color="primary"
             disableElevation
-            disabled={lowBg.error || highBg.error || veryLowBg.error || outOfRangeThreshold.error || hypoThreshold.error || nonDataTxThreshold.error || saveInProgress}
+            disabled={saveButtonDisabled}
             onClick={save}
           >
             {t("button-save")}

@@ -122,8 +122,7 @@ function TeamDetailPage(): JSX.Element {
       selectedTeam: getTeam(teamId) as Team,
       teamNames: getMedicalTeams().map((team: Team) => team.name),
     });
-    const t = await getTeamWithAlerts(teamId);
-    setTeamWithAlert(t);
+    setTeamWithAlert(await getTeamWithAlerts(teamId));
   }, [getTeam, teamId, getMedicalTeams, getTeamWithAlerts]);
 
   useEffect(() => {
