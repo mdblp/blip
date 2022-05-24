@@ -39,6 +39,11 @@ import TeamAlarmsContent, {
 } from "../../../components/team/team-alarms-content";
 import { triggerMouseEvent } from "../../common/utils";
 
+function checkSaveButtonDisabled() {
+  const saveButton = document.getElementById("save-button-id");
+  expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+}
+
 describe("TeamInformation", () => {
   const onSave = jest.fn();
   const monitoring = {
@@ -75,11 +80,12 @@ describe("TeamInformation", () => {
       <TeamAlarmsContent
         monitoring={props.monitoring}
         onSave={props.onSave}
+        saveInProgress={props.saveInProgress}
       />
     </ThemeProvider>;
   }
 
-  function renderTeamAlarmsContent(props: TeamAlarmsContentProps = { monitoring, onSave }) {
+  function renderTeamAlarmsContent(props: TeamAlarmsContentProps = { monitoring, onSave, saveInProgress: false }) {
     act(() => {
       ReactDOM.render(getTeamAlarmsContentJSX(props), container);
     });
@@ -114,9 +120,8 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when high bg value is not in correct range", () => {
@@ -133,9 +138,8 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when very low bg value is not in correct range", () => {
@@ -152,9 +156,8 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when outOfRangeThreshold is not correct", () => {
@@ -171,9 +174,8 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when hypoThreshold is not correct", () => {
@@ -190,9 +192,8 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when nonDataTxThreshold is not correct", () => {
@@ -209,8 +210,12 @@ describe("TeamInformation", () => {
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave });
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    checkSaveButtonDisabled();
+  });
+
+  it("save button should be disabled when save in progress is true", () => {
+    renderTeamAlarmsContent({ monitoring, onSave, saveInProgress: true });
+    checkSaveButtonDisabled();
   });
 });
