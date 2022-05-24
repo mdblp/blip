@@ -127,17 +127,17 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   const [nonDataTxThreshold, setNonDataTxThreshold] = useState<{ value?: number, error: boolean }>(
     {
       value: monitoring?.parameters?.nonDataTxThreshold,
-      error: !monitoring?.parameters?.nonDataTxThreshold || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold),
+      error: monitoring?.parameters?.nonDataTxThreshold === undefined || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold),
     });
   const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<{ value?: number, error: boolean }>(
     {
       value: monitoring?.parameters?.outOfRangeThreshold,
-      error: !monitoring?.parameters?.outOfRangeThreshold || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold),
+      error: monitoring?.parameters?.outOfRangeThreshold === undefined || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold),
     });
   const [hypoThreshold, setHypoThreshold] = useState<{ value?: number, error: boolean }>(
     {
       value: monitoring?.parameters?.hypoThreshold,
-      error: !monitoring?.parameters?.hypoThreshold || isInvalidPercentage(monitoring.parameters.hypoThreshold),
+      error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold),
     });
 
   const onChange = (
@@ -153,23 +153,25 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   };
 
   const save = () => {
-    if (!lowBg.value || !highBg.value || !veryLowBg.value || !outOfRangeThreshold.value || !nonDataTxThreshold.value || !hypoThreshold.value) {
+    if (lowBg.value !== undefined && highBg.value !== undefined && veryLowBg.value !== undefined
+      && outOfRangeThreshold.value !== undefined && nonDataTxThreshold.value !== undefined && hypoThreshold.value !== undefined) {
+      const monitoringUpdated: Monitoring = {
+        enabled: true,
+        parameters: {
+          bgUnit: monitoring?.parameters?.bgUnit ?? "mg/dl",
+          lowBg: lowBg.value,
+          highBg: highBg.value,
+          outOfRangeThreshold: outOfRangeThreshold.value,
+          veryLowBg: veryLowBg.value,
+          hypoThreshold: hypoThreshold.value,
+          nonDataTxThreshold: nonDataTxThreshold.value,
+          reportingPeriod: monitoring?.parameters?.reportingPeriod ?? 55,
+        },
+      };
+      onSave(monitoringUpdated);
+    } else {
       throw Error("Cannot update team monitoring as some values are not defined");
     }
-    const monitoringUpdated: Monitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: monitoring?.parameters?.bgUnit ?? "mg/dl",
-        lowBg: lowBg.value,
-        highBg: highBg.value,
-        outOfRangeThreshold: outOfRangeThreshold.value,
-        veryLowBg: veryLowBg.value,
-        hypoThreshold: hypoThreshold.value,
-        nonDataTxThreshold: nonDataTxThreshold.value,
-        reportingPeriod: monitoring?.parameters?.reportingPeriod ?? 55,
-      },
-    };
-    onSave(monitoringUpdated);
   };
 
   const select = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => {
@@ -195,7 +197,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
           </Typography>
           <div className={classes.valueSelection}>
             <Box display="flex" alignItems="center" marginRight={2}>
-              <Typography>{t("minimum")}:</Typography>
+              <Typography>{t("minimum")}</Typography>
               <TextField
                 id="low-bg-text-field-id"
                 defaultValue={lowBg.value}
@@ -214,7 +216,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
               />
               <Typography>{t("mg/dL")}</Typography>
             </Box>
-            <Typography>{t("maximum")}:</Typography>
+            <Typography>{t("maximum")}</Typography>
             <TextField
               id="high-bg-text-field-id"
               defaultValue={highBg.value}
@@ -265,7 +267,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>A. {t("severe-hypoglycemia-threshold")}:</Typography>
           <div className={classes.valueSelection}>
-            <Typography>{t("severe-hypoglycemia-below")}:</Typography>
+            <Typography>{t("severe-hypoglycemia-below")}</Typography>
             <TextField
               id="very-low-bg-text-field-id"
               defaultValue={veryLowBg.value}
