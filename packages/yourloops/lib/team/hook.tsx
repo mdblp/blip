@@ -45,6 +45,7 @@ import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
+import { Alarm } from "../../models/alarm";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -52,7 +53,7 @@ const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
 let lock = false;
 
 export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map<string, TeamUser>): TeamMember {
-  const { userId, invitationStatus, role, email, preferences, profile, settings, idVerified } = iTeamMember;
+  const { userId, invitationStatus, role, email, preferences, profile, settings, idVerified, alarms, monitoring } = iTeamMember;
 
   let teamUser = users.get(userId);
   if (!teamUser) {
@@ -66,6 +67,8 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
       settings: fixYLP878Settings(settings),
       members: [],
       idVerified,
+      alarms,
+      monitoring,
     };
     users.set(userId, teamUser);
   }
@@ -119,6 +122,8 @@ export async function loadTeams(
         profile: session.user.profile,
         settings: session.user.settings,
         idVerified: false,
+        alarms : {} as Alarm,
+        monitoring: { enabled : true },
       });
     }
   }

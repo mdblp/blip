@@ -51,7 +51,8 @@ export interface ITeamMember {
   settings?: Settings | null;
   preferences?: Preferences | null;
   idVerified: boolean;
-  alert?: Alarm;
+  alarms?: Alarm;
+  monitoring?: { enabled: boolean}
 }
 
 /**
