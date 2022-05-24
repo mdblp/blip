@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import Box from "@material-ui/core/Box";
@@ -49,15 +49,19 @@ function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
   const save = async (monitoring: Monitoring) => {
     team.remotePatientMonitoring = monitoring;
+    setSaveInProgress(true);
     try {
       await teamHook.updateTeamAlerts(team);
       alert.success(t("team-update-success"));
     } catch (error) {
       console.error(error);
       alert.error(t("team-update-error"));
+    } finally {
+      setSaveInProgress(false);
     }
   };
 
@@ -73,7 +77,7 @@ function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
       </div>
 
       <Box paddingX={3}>
-        <TeamAlarmsContent monitoring={monitoring} onSave={save}/>
+        <TeamAlarmsContent monitoring={monitoring} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
   );

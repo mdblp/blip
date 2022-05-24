@@ -184,18 +184,20 @@ function TeamDetailPage(): JSX.Element {
                     {t("members")}
                   </Typography>
                 </div>
-                <div
-                  role="link"
-                  className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
-                  tabIndex={0}
-                  onClick={() => scrollTo(teamAlarms)}
-                  onKeyDown={() => scrollTo(teamAlarms)}
-                >
-                  <DesktopMacIcon className={commonTeamClasses.icon} />
-                  <Typography className={classes.title}>
-                    {t("events-configuration")}
-                  </Typography>
-                </div>
+                {teamWithAlert && teamWithAlert.remotePatientMonitoring &&
+                  <div
+                    role="link"
+                    className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
+                    tabIndex={0}
+                    onClick={() => scrollTo(teamAlarms)}
+                    onKeyDown={() => scrollTo(teamAlarms)}
+                  >
+                    <DesktopMacIcon className={commonTeamClasses.icon} />
+                    <Typography className={classes.title}>
+                      {t("events-configuration")}
+                    </Typography>
+                  </div>
+                }
               </div>
             }
             <Box display="flex" justifyContent="center" margin="auto">

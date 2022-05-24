@@ -37,6 +37,7 @@ import BasicDropdown from "../dropdown/basic-dropdown";
 import { Monitoring } from "../../models/monitoring";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryInfo: {
@@ -74,6 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    width: 70,
   },
   valueSelection: {
     display: "flex",
@@ -83,7 +85,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface TeamAlarmsContentProps {
-  monitoring?: Monitoring,
+  monitoring?: Monitoring;
+  saveInProgress: boolean;
   onSave: (monitoring: Monitoring) => void;
 }
 
@@ -97,7 +100,7 @@ export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`);
 
 function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
-  const { monitoring, onSave } = props;
+  const { monitoring, saveInProgress, onSave } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
 
@@ -150,8 +153,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   };
 
   const save = () => {
-    if (!lowBg.value || !highBg.value || !veryLowBg.value || !outOfRangeThreshold ||
-      !nonDataTxThreshold.value || !outOfRangeThreshold.value || !hypoThreshold.value) {
+    if (!lowBg.value || !highBg.value || !veryLowBg.value || !outOfRangeThreshold.value || !nonDataTxThreshold.value || !hypoThreshold.value) {
       throw Error("Cannot update team monitoring as some values are not defined");
     }
     const monitoringUpdated: Monitoring = {
@@ -192,28 +194,35 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
             A. {t("glycemic-target")}
           </Typography>
           <div className={classes.valueSelection}>
-            <Typography>{t("minimum")} :</Typography>
-            <TextField
-              id="low-bg-text-field-id"
-              defaultValue={lowBg.value}
-              error={lowBg.error}
-              type="number"
-              className={classes.textField}
-              InputProps={{
-                inputProps: {
-                  min: MIN_LOW_BG,
-                  max: MAX_LOW_BG,
-                },
-              }}
-              onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
-            />
-            <Typography>{t("mg/dL")}</Typography>
-            <Typography>{t("maximum")} :</Typography>
+            <Box display="flex" alignItems="center" marginRight={2}>
+              <Typography>{t("minimum")}:</Typography>
+              <TextField
+                id="low-bg-text-field-id"
+                defaultValue={lowBg.value}
+                error={lowBg.error}
+                type="number"
+                className={classes.textField}
+                variant="outlined"
+                size="small"
+                InputProps={{
+                  inputProps: {
+                    min: MIN_LOW_BG,
+                    max: MAX_LOW_BG,
+                  },
+                }}
+                onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
+              />
+              <Typography>{t("mg/dL")}</Typography>
+            </Box>
+            <Typography>{t("maximum")}:</Typography>
             <TextField
               id="high-bg-text-field-id"
               defaultValue={highBg.value}
               error={highBg.error}
               type="number"
+              className={classes.textField}
+              variant="outlined"
+              size="small"
               InputProps={{
                 inputProps: {
                   min: MIN_HIGH_BG,
@@ -262,6 +271,9 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
               defaultValue={veryLowBg.value}
               error={veryLowBg.error}
               type="number"
+              className={classes.textField}
+              variant="outlined"
+              size="small"
               InputProps={{
                 inputProps: {
                   min: MIN_VERY_LOW_BG,
@@ -321,16 +333,18 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
         </div>
       </Box>
       <Box display="flex" justifyContent="end">
-        <Button
-          id="save-button-id"
-          variant="contained"
-          color="primary"
-          disableElevation
-          disabled={lowBg.error || highBg.error || veryLowBg.error || outOfRangeThreshold.error || hypoThreshold.error || nonDataTxThreshold.error}
-          onClick={save}
-        >
-          {t("button-save")}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={saveInProgress}>
+          <Button
+            id="save-button-id"
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={lowBg.error || highBg.error || veryLowBg.error || outOfRangeThreshold.error || hypoThreshold.error || nonDataTxThreshold.error || saveInProgress}
+            onClick={save}
+          >
+            {t("button-save")}
+          </Button>
+        </ProgressIconButtonWrapper>
       </Box>
     </React.Fragment>
   );
