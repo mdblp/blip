@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Main App file
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,35 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
+export const MMOLL_PER_MGDL = 0.0555;
 
-import "@fontsource/roboto";
-import "branding/theme.css";
+export enum UNITS_TYPE {
+  MGDL = "mg/dL",
+  MMOLL = "mmol/L",
+}
 
-import appConfig from "../lib/config";
-import { AuthContextProvider } from "../lib/auth";
-import { MainLobby } from "./main-lobby";
-import MetricsLocationListener from "../components/MetricsLocationListener";
-
-const Yourloops = (): JSX.Element => {
-  return (
-    <Auth0Provider
-      domain={appConfig.AUTH0_DOMAIN}
-      clientId={appConfig.AUTH0_CLIENT_ID}
-      redirectUri={window.location.origin}
-      useRefreshTokens
-      audience="https://api-ext.your-loops.com"
-    >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
-  );
-};
-
-export default Yourloops;
+/**
+ * convertBG converts bg values
+ * @param {number} value The value to convert
+ * @param {"mg/dL"|"mmol/L"} currentUnit The unit of the passed value
+ * @return: The converted value in the opposite unit
+ */
+export function convertBG(value: number, currentUnit: UNITS_TYPE): number {
+  if (value < 0) {
+    throw Error("Invalid glycemia value");
+  }
+  switch (currentUnit) {
+  case UNITS_TYPE.MGDL:
+    return value * MMOLL_PER_MGDL;
+  case UNITS_TYPE.MMOLL:
+    return value / MMOLL_PER_MGDL;
+  default:
+    throw new Error("Invalid parameter unit");
+  }
+}

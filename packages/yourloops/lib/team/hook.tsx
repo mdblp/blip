@@ -484,27 +484,22 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
 
   const updateTeamAlerts = async (team: Team): Promise<void> => {
     const session = authHook.session() as Session;
-    if (!team.remotePatientMonitoring) {
+    if (!team.monitoring) {
       throw Error("Cannot update team monitoring with undefined");
     }
     try {
-      await teamAPI.updateTeamAlerts(session, team.id, team.remotePatientMonitoring);
+      await teamAPI.updateTeamAlerts(session, team.id, team.monitoring);
     } catch (error) {
       console.error(error);
       throw Error(`Failed to update team with id ${team.id}`);
     }
     const cachedTeam = teams.find(t => t.id === team.id);
     if (cachedTeam) {
-      cachedTeam.remotePatientMonitoring = team.remotePatientMonitoring;
+      cachedTeam.monitoring = team.monitoring;
       setTeams(teams);
     } else {
       throw Error(`Could not find team with id ${team.id}`);
     }
-  };
-
-  const getTeamWithAlerts = async (teamId: string): Promise<Team> => {
-    const session = authHook.session() as Session;
-    return teamAPI.getTeamWithAlerts(session, teamId);
   };
 
   const leaveTeam = async (team: Team): Promise<void> => {
@@ -687,7 +682,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     createTeam,
     editTeam,
     updateTeamAlerts,
-    getTeamWithAlerts,
     leaveTeam,
     removeMember,
     removePatient,

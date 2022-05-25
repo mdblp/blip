@@ -33,11 +33,13 @@ import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import { getTheme } from "../../../components/theme";
 import TeamAlarmsContent, {
-  MIN_HIGH_BG, MIN_VERY_LOW_BG,
+  MIN_HIGH_BG,
   MIN_LOW_BG,
+  MIN_VERY_LOW_BG,
   TeamAlarmsContentProps,
 } from "../../../components/team/team-alarms-content";
 import { triggerMouseEvent } from "../../common/utils";
+import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
 
 function checkSaveButtonDisabled() {
   const saveButton = document.getElementById("save-button-id");
@@ -49,7 +51,7 @@ describe("TeamInformation", () => {
   const monitoring = {
     enabled: true,
     parameters: {
-      bgUnit: "bgUnits",
+      bgUnit: UNITS_TYPE.MGDL,
       lowBg: MIN_LOW_BG,
       highBg: MIN_HIGH_BG,
       outOfRangeThreshold: 5,
@@ -106,110 +108,72 @@ describe("TeamInformation", () => {
     expect(onSave).toHaveBeenCalledWith(monitoring);
   });
 
-  it("save button should be disabled when low bg value is not in correct range", () => {
-    const incorrectMonitoring = {
+  it("should display correct alarm information in mg/dL when given mmol/L", () => {
+    const monitoringInMMOLL = {
       enabled: true,
       parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG - 1,
-        highBg: MIN_HIGH_BG,
+        bgUnit: UNITS_TYPE.MMOLL,
+        lowBg: convertBG(MIN_LOW_BG, UNITS_TYPE.MGDL),
+        highBg: convertBG(MIN_HIGH_BG, UNITS_TYPE.MGDL),
         outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
+        veryLowBg: convertBG(MIN_VERY_LOW_BG, UNITS_TYPE.MGDL),
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
         reportingPeriod: 7,
       },
     };
+    renderTeamAlarmsContent({ monitoring : monitoringInMMOLL, onSave, saveInProgress: false });
+    expect((document.getElementById("low-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString());
+    expect((document.getElementById("high-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString());
+    expect((document.getElementById("very-low-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_VERY_LOW_BG.toString());
+    expect(document.getElementById("basic-dropdown-out-of-range-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`);
+    expect(document.getElementById("basic-dropdown-hypo-threshold-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`);
+    expect(document.getElementById("basic-dropdown-non-data-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`);
+    const saveButton = document.getElementById("save-button-id");
+    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy();
+    triggerMouseEvent("click", saveButton);
+    expect(onSave).toHaveBeenCalledTimes(1);
+    expect(onSave).toHaveBeenCalledWith(monitoring);
+  });
+
+  it("save button should be disabled when low bg value is not in correct range", () => {
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.lowBg--;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when high bg value is not in correct range", () => {
-    const incorrectMonitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG - 1,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.highBg--;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when very low bg value is not in correct range", () => {
-    const incorrectMonitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG - 1,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.veryLowBg--;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when outOfRangeThreshold is not correct", () => {
-    const incorrectMonitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 8,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.outOfRangeThreshold = 8;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when hypoThreshold is not correct", () => {
-    const incorrectMonitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 11,
-        nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.hypoThreshold = 11;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when nonDataTxThreshold is not correct", () => {
-    const incorrectMonitoring = {
-      enabled: true,
-      parameters: {
-        bgUnit: "bgUnits",
-        lowBg: MIN_LOW_BG,
-        highBg: MIN_HIGH_BG,
-        outOfRangeThreshold: 5,
-        veryLowBg: MIN_VERY_LOW_BG,
-        hypoThreshold: 10,
-        nonDataTxThreshold: 150,
-        reportingPeriod: 7,
-      },
-    };
+    const incorrectMonitoring = monitoring;
+    incorrectMonitoring.parameters.nonDataTxThreshold = 150;
     renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });

@@ -24,12 +24,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+import { UNITS_TYPE } from "../lib/units/utils";
 
 export interface Monitoring {
   enabled: boolean;
   parameters?: {
-    bgUnit: string;
+    bgUnit: UNITS_TYPE;
     lowBg: number;
     highBg: number;
     outOfRangeThreshold: number;

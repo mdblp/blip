@@ -40,19 +40,22 @@ import { useAlert } from "../utils/snackbar";
 
 interface TeamAlarmsProps {
   team: Team,
-  monitoring: Monitoring,
 }
 
 function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
-  const { team, monitoring } = props;
+  const { team } = props;
   const commonTeamClasses = commonTeamStyles();
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
+  if (!team.monitoring?.enabled) {
+    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`);
+  }
+
   const save = async (monitoring: Monitoring) => {
-    team.remotePatientMonitoring = monitoring;
+    team.monitoring = monitoring;
     setSaveInProgress(true);
     try {
       await teamHook.updateTeamAlerts(team);
@@ -77,7 +80,7 @@ function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
       </div>
 
       <Box paddingX={3}>
-        <TeamAlarmsContent monitoring={monitoring} onSave={save} saveInProgress={saveInProgress}/>
+        <TeamAlarmsContent monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
   );

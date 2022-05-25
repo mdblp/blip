@@ -38,6 +38,7 @@ import { Monitoring } from "../../models/monitoring";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import { convertBG, UNITS_TYPE } from "../../lib/units/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryInfo: {
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 70,
+    width: 90,
   },
   valueSelection: {
     display: "flex",
@@ -108,6 +109,19 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   const { monitoring, saveInProgress, onSave } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
+
+  if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
+    monitoring.parameters = {
+      bgUnit: UNITS_TYPE.MGDL,
+      lowBg: convertBG(monitoring.parameters.lowBg, UNITS_TYPE.MMOLL),
+      highBg: convertBG(monitoring.parameters.highBg, UNITS_TYPE.MMOLL),
+      outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
+      veryLowBg: convertBG(monitoring.parameters.veryLowBg, UNITS_TYPE.MMOLL),
+      hypoThreshold: monitoring.parameters?.hypoThreshold,
+      nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
+      reportingPeriod: monitoring.parameters.reportingPeriod,
+    };
+  }
 
   const isError = (value: number, lowValue: number, highValue: number): boolean => {
     return !(value >= lowValue && value <= highValue);
@@ -180,7 +194,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
       const monitoringUpdated: Monitoring = {
         enabled: true,
         parameters: {
-          bgUnit: monitoring?.parameters?.bgUnit ?? "mg/dl",
+          bgUnit: monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL,
           lowBg: lowBg.value,
           highBg: highBg.value,
           outOfRangeThreshold: outOfRangeThreshold.value,

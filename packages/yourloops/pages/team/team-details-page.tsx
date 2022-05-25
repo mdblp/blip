@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function TeamDetailPage(): JSX.Element {
-  const { getTeam, getMedicalTeams, getTeamWithAlerts } = useTeam();
+  const { getTeam, getMedicalTeams } = useTeam();
   const classes = useStyles();
   const commonTeamClasses = commonTeamStyles();
   const paramHook = useParams();
@@ -104,7 +104,6 @@ function TeamDetailPage(): JSX.Element {
   const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
     { selectedTeam: null, teamNames: [] }
   );
-  const [teamWithAlert, setTeamWithAlert] = useState<Team | null>(null);
   const [activeLink, setActiveLink] = useState<string>("information");
   const isUserHcp = authContext.user?.isUserHcp();
 
@@ -117,13 +116,12 @@ function TeamDetailPage(): JSX.Element {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(() => {
     setDropdownData({
       selectedTeam: getTeam(teamId) as Team,
       teamNames: getMedicalTeams().map((team: Team) => team.name),
     });
-    setTeamWithAlert(await getTeamWithAlerts(teamId));
-  }, [getTeam, teamId, getMedicalTeams, getTeamWithAlerts]);
+  }, [getTeam, teamId, getMedicalTeams]);
 
   useEffect(() => {
     refresh();
@@ -136,6 +134,10 @@ function TeamDetailPage(): JSX.Element {
   const redirectToTeam = (selectedTeam: string) => {
     const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam);
     history.push(`/teams/${teamToRedirectTo?.id}`);
+  };
+
+  const isMonitoringEnabled = () => {
+    return dropdownData && dropdownData.selectedTeam && dropdownData.selectedTeam.monitoring && dropdownData.selectedTeam.monitoring.enabled;
   };
 
   return (
@@ -183,7 +185,7 @@ function TeamDetailPage(): JSX.Element {
                     {t("members")}
                   </Typography>
                 </div>
-                {teamWithAlert && teamWithAlert.remotePatientMonitoring &&
+                {isMonitoringEnabled() &&
                   <div
                     role="link"
                     className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
@@ -218,7 +220,7 @@ function TeamDetailPage(): JSX.Element {
                     >
                       <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                     </div>
-                    {teamWithAlert && teamWithAlert.remotePatientMonitoring &&
+                    {isMonitoringEnabled() &&
                       <div>
                         <div className={classes.separator} />
                         <div
@@ -226,7 +228,7 @@ function TeamDetailPage(): JSX.Element {
                           data-link="configuration"
                           className={classes.refElement}
                         >
-                          <TeamAlarms team={teamWithAlert} monitoring={teamWithAlert.remotePatientMonitoring} />
+                          <TeamAlarms team={dropdownData.selectedTeam} />
                         </div>
                       </div>
                     }

@@ -179,7 +179,7 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
     owner: "fakeOwner",
     type: TeamType.medical,
     members,
-    remotePatientMonitoring: {
+    monitoring: {
       enabled: true,
       parameters: {
         bgUnit: "bgUnits",
