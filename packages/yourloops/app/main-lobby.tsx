@@ -32,7 +32,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles, Theme, ThemeProvider, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import { SessionTimeout, useAuth } from "../lib/auth";
+import { useAuth } from "../lib/auth";
 import { getTheme } from "../components/theme";
 import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
 import Footer from "../components/footer/footer";
@@ -111,7 +111,6 @@ export function MainLobby(): JSX.Element {
       {redirectTo ? <Redirect to={redirectTo} /> :
         (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
-            <SessionTimeout />
             <CssBaseline />
             <SnackbarContextProvider context={DefaultSnackbarContext}>
               <div className={style}>
@@ -131,3 +130,4 @@ export function MainLobby(): JSX.Element {
     </React.Fragment>
   );
 }
+
