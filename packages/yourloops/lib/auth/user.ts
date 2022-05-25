@@ -139,7 +139,7 @@ class User implements IUser {
   }
 
   /**
-   * Check If the user should accept is consent at a first login.
+   * Check If the user should accept his consent at a first login.
    * @description the first login is determined by null consents object
    */
   shouldAcceptConsent(): boolean {
@@ -147,7 +147,7 @@ class User implements IUser {
   }
 
   /**
-   * Check If the user should renew is consent.
+   * Check If the user should renew his consent.
    */
   shouldRenewConsent(): boolean {
     if (!this.profile?.termsOfUse || !this.profile.privacyPolicy) {

@@ -44,8 +44,9 @@ import InvalidRoute from "../components/invalid-route";
 
 const RENEW_CONSENT_PATH = "/renew-consent";
 const NEW_CONSENT_PATH = "/new-consent";
+const COMPLETE_SIGNUP_PATH = "/complete-signup";
 const PUBLIC_ROUTES = ["/login"];
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, "/complete-signup", ...PUBLIC_ROUTES];
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, ...PUBLIC_ROUTES];
 
 interface StyleProps {
   color: string;
@@ -81,7 +82,7 @@ export function MainLobby(): JSX.Element {
   const classes = routeStyle({
     color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper,
   });
-  const style = isCurrentRoutePublic || currentRoute === "/complete-signup" ? classes.public : classes.private;
+  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private;
   const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
   let redirectTo = null;
 
@@ -94,7 +95,7 @@ export function MainLobby(): JSX.Element {
       redirectTo = "/";
     } else if (!isAuthenticated && !isCurrentRoutePublic) {
       redirectTo = "/login";
-    } else if (currentRoute !== "/complete-signup" && isAuthenticated && user && user.isFirstLogin()) {
+    } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
       redirectTo = "/complete-signup";
     } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
       redirectTo = "/new-consent";

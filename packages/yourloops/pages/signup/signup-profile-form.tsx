@@ -39,7 +39,7 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
 import metrics from "../../lib/metrics";
-import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
+import { FormValuesType, useSignUpFormState } from "./signup-formstate-context";
 import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
 import { HcpProfessionList } from "../../models/hcp-profession";
@@ -127,7 +127,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
 
   const validateHcpProfession = (): boolean => {
     let err = false;
-    if (userRole === "hcp") {
+    if (userRole === UserRoles.hcp) {
       err = !state.formValues?.hcpProfession;
       setErrors({ ...errors, hcpProfession: err });
     }
@@ -209,7 +209,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      {userRole === "hcp" &&
+      {userRole === UserRoles.hcp &&
         <FormControl
           variant="outlined"
           margin="normal"

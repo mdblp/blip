@@ -60,7 +60,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [fetchingUser, setFetchingUer] = useState<boolean>(false);
+  const [fetchingUser, setFetchingUser] = useState<boolean>(false);
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
@@ -229,7 +229,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
   const getUserInfo = useCallback(async () => {
     try {
       if (auth0user) {
-        setFetchingUer(true);
+        setFetchingUser(true);
         const user = new User(mapAuth0UserToIUser);
 
         // Temporary here waiting all backend services be compatible with Auth0
@@ -248,7 +248,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     } catch (err) {
       console.error(err);
     } finally {
-      setFetchingUer(false);
+      setFetchingUser(false);
     }
   }, [auth0user, mapAuth0UserToIUser]);
 
@@ -282,6 +282,9 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       await UserApi.updateProfile(user?.userid, profile);
       await UserApi.updatePreferences(user?.userid, preferences);
       await UserApi.updateSettings(user?.userid, settings);
+      user.preferences = preferences;
+      user.profile = profile;
+      user.settings = settings;
     }
   };
 
