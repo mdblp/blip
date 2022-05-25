@@ -191,6 +191,7 @@ class Trends extends React.Component {
     profileDialog: PropTypes.func,
     dialogRangeDatePicker: PropTypes.func.isRequired,
     onClickNavigationBack: PropTypes.func.isRequired,
+    onClickPrint: PropTypes.func.isRequired,
   };
   static defaultProps = {
     profileDialog: null,
@@ -720,6 +721,7 @@ class Trends extends React.Component {
         atMostRecent={this.state.atMostRecent}
         prefixURL={this.props.prefixURL}
         canPrint={this.props.canPrint}
+        onClickPrint={this.props.onClickPrint}
         loading={this.props.loading}
         iconBack
         iconNext

@@ -129,7 +129,8 @@ describe("PatientDashboard", () => {
         view: {}
       }
     },
-    onSwitchToDaily: sinon.stub(),
+    canPrint: false,
+    onClickPrint: sinon.stub(),
   };
 
   let wrapper;

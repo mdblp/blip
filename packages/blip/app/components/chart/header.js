@@ -37,8 +37,6 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import Today from "@material-ui/icons/Today";
 import TrendingUp from "@material-ui/icons/TrendingUp";
 
-import personUtils from "../../core/personutils";
-
 const t = i18next.t.bind(i18next);
 
 class TidelineHeader extends React.Component {
@@ -82,6 +80,7 @@ class TidelineHeader extends React.Component {
     onClickPrint: PropTypes.func,
     onSwitchPatient: PropTypes.func,
     onClickNavigationBack: PropTypes.func,
+    printDefaultPeriod: PropTypes.string
   };
 
   static defaultProps = {
@@ -96,7 +95,7 @@ class TidelineHeader extends React.Component {
     const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
     const { children } = this.props;
 
-    const printViews = ["dashboard", "daily", "trends"];
+    const printViews = ["dashboard", "daily"];
     const showPrintLink = _.includes(printViews, chartType);
 
     const mostRecentDisabled = atMostRecent || inTransition || loading;
@@ -150,7 +149,7 @@ class TidelineHeader extends React.Component {
                 >
                   {
                     this.props.patients.map((patient, i) => {
-                      return (<MenuItem key={i} value={patient.userid}>{personUtils.fullName(patient)}</MenuItem>);
+                      return (<MenuItem key={i} value={patient.userid}>{patient.fullName}</MenuItem>);
                     })
                   }
                 </Select>
