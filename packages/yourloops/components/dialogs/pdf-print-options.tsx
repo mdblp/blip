@@ -63,6 +63,7 @@ interface DialogPDFOptionsProps {
   /** Newest available date date (ISO day ex: 2022-02-10) */
   maxDate: string;
   onResult: (options?: PrintPDFOptions) => void;
+  defaultPreset?: Presets;
 }
 const DEFAULT_PRESET: Presets = "4weeks";
 const MAX_SELECTABLE_DAYS = 90;
@@ -121,7 +122,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
 }
 
 function DialogPDFOptions(props: DialogPDFOptionsProps) {
-  const { open, onResult } = props;
+  const { open, defaultPreset, onResult } = props;
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matchLandscape = useMediaQuery(theme.breakpoints.up("sm"));
@@ -147,7 +148,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   }, [props.minDate, props.maxDate, customStartDate]);
 
   const [openState, setOpenState] = React.useState(false);
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
+  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset ? defaultPreset : DEFAULT_PRESET, minDate, maxDate));
 
   const { start, end, displayedDates } = React.useMemo(() => {
     const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
@@ -162,12 +163,12 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
     if (open && !openState) {
       setOpenState(true);
-      setPDFOptions(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
+      setPDFOptions(getDatesFromPreset(defaultPreset ? defaultPreset : DEFAULT_PRESET, minDate, maxDate));
     }
     if (!open && openState) {
       setOpenState(false);
     }
-  }, [open, openState, minDate, maxDate]);
+  }, [defaultPreset, open, openState, minDate, maxDate]);
 
   const handleClickPreset = (preset: Presets) => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate));
