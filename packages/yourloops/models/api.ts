@@ -35,4 +35,5 @@ export enum HttpHeaderKeys {
 
 export enum HttpHeaderValues {
   json = "application/json",
+  csv = "application/csv",
 }

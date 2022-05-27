@@ -226,6 +226,8 @@
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-profile-title": "Patient profile",
   "pdf-generate-report": "Generate report",
+  "dialog-pdf-options-output-format-pdf": "PDF",
+  "dialog-pdf-options-output-format-csv": "CSV",
   "pending": "Pending",
   "pending-invitation": "Pending invitation",
   "personal-information": "Personal Information",

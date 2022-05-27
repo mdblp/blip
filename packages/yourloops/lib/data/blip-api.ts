@@ -44,6 +44,7 @@ import {
   getPatientDataRange as apiGetPatientDataRange,
   replyMessageThread as apiReplyMessageThread,
   startMessageThread as apiStartMessageThread,
+  exportData as apiExportData,
 } from "./api";
 import { Patient } from "./patient";
 
@@ -135,6 +136,15 @@ class BlipApi {
     const session = this.authHook.session();
     if (session !== null) {
       return apiEditMessage(session, message);
+    }
+    return Promise.reject(new Error(translate("not-logged-in")));
+  }
+
+  public exportData(patient: IUser): Promise<Blob> {
+    this.log.debug("exportData", { userId: patient.userid });
+    const session = this.authHook.session();
+    if (session !== null) {
+      return apiExportData(session, patient.userid);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

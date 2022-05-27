@@ -34,6 +34,7 @@ import ApiUtils from "../core/api-utils";
 import { Header, Daily, Trends, PatientDashboard } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
+import api from "../../../yourloops/lib/auth/api";
 
 const { waitTimeout } = utils;
 const { DataUtil } = vizUtils.data;
@@ -507,7 +508,7 @@ class PatientDataPage extends React.Component {
    * @param {{ start: string; end: string; preset?: string; }} printOptions
    * @returns {Promise<void>}
    */
-  async generatePDF(printOptions) {
+  async generateReport(printOptions) {
     const { patient } = this.props;
     const { tidelineData, bgPrefs } = this.state;
 
@@ -693,7 +694,7 @@ class PatientDataPage extends React.Component {
   }
 
   /**
-   * @param {{ start: string; end: string; preset?: string; }|undefined} printOptions
+   * @param {{ start: string; end: string; format?: string; preset?: string; }|undefined} printOptions
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
@@ -715,15 +716,17 @@ class PatientDataPage extends React.Component {
 
     // Return a promise for the tests
     return new Promise((resolve, reject) => {
+      const {api, patient} = this.props;
       this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
-      this.generatePDF(printOptions)
+      if (printOptions.format == "pdf") {
+        this.generateReport(printOptions)
         .then((pdf) => {
           this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
           openPDFWindow(pdf);
           resolve();
         })
         .catch((err) => {
-          this.log.error("generatePDF:", err);
+          this.log.error("generateReport:", err);
           this.trackMetric("export_data", "save_report", "error");
           if (_.isFunction(window.onerror)) {
             window.onerror("print", "patient-data", 0, 0, err);
@@ -732,6 +735,20 @@ class PatientDataPage extends React.Component {
         }).finally(() => {
           this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
         });
+      } else {
+        console.log(`manage csv for ${printOptions}`)
+        api.exportData(patient).then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = `${patient.userid}.csv`;
+          document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+          a.click();
+          a.remove();
+          resolve();
+        })
+        this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+      }
     });
   }
 
