@@ -41,7 +41,7 @@ import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -278,15 +278,27 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
           />
         </Box>
 
-        <Box>
+        <Box >
+          <Typography variant="body2" className={classes.customRangeText}>{t("dialog-pdf-options-format")}</Typography>
+
           <RadioGroup
             id="pdf-options-output-format"
             value={outputFormat}
-            // onClick={() => handleClickFormat(outputFormat)}
+            row
             onChange={handleOutputFormat}
           >
-            <FormControlLabel value="pdf" control={<Radio />} label={t("dialog-pdf-options-output-format-pdf")} />
-            <FormControlLabel value="csv" control={<Radio />} label={t("dialog-pdf-options-output-format-csv")} />
+            <FormControlLabel value="pdf"
+              control={
+                <Radio id="dialog-pdf-options-selector-pdf" color="primary"/>
+              }
+              label={t("dialog-pdf-options-output-format-pdf")}
+            />
+            <FormControlLabel
+              value="csv"
+              control={
+                <Radio id="dialog-pdf-options-selector-csv" color="primary"/>
+              }
+              label={t("dialog-pdf-options-output-format-csv")} />
           </RadioGroup>
         </Box>
       </DialogContent>

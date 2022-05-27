@@ -293,9 +293,16 @@ export async function editMessage(session: Session, message: MessageNote): Promi
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-export async function exportData(auth: Readonly<Session>, userid: string): Promise<Blob> {
+/**
+ * Export data from export service
+ * @param auth
+ * @param userid
+ * @param startDate formatted as ISO string
+ * @param endDate formatted as ISO string
+ */
+export async function exportData(auth: Readonly<Session>, userid: string, start: string, end: string): Promise<Blob> {
   const units = auth.user.settings?.units ?? Units.gram;
-  const exportURL = new URL(`/export/${userid}?bgUnits=${units}`, appConfig.API_HOST);
+  const exportURL = new URL(`/export/${userid}?bgUnits=${encodeURIComponent(units.toString())}&startDate=${encodeURIComponent(start)}&endDate=${encodeURIComponent(end)}`, appConfig.API_HOST);
 
   const response = await fetch(exportURL.toString(), {
     method: "GET",
@@ -308,7 +315,7 @@ export async function exportData(auth: Readonly<Session>, userid: string): Promi
   });
 
   if (response.ok) {
-    const blob = await response.blob()
+    const blob = await response.blob();
     return Promise.resolve(blob);
   }
   return Promise.reject(errorFromHttpStatus(response, log));

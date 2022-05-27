@@ -140,11 +140,11 @@ class BlipApi {
     return Promise.reject(new Error(translate("not-logged-in")));
   }
 
-  public exportData(patient: IUser): Promise<Blob> {
+  public exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
     this.log.debug("exportData", { userId: patient.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiExportData(session, patient.userid);
+      return apiExportData(session, patient.userid, startDate, endDate);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

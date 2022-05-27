@@ -34,7 +34,6 @@ import ApiUtils from "../core/api-utils";
 import { Header, Daily, Trends, PatientDashboard } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
-import api from "../../../yourloops/lib/auth/api";
 
 const { waitTimeout } = utils;
 const { DataUtil } = vizUtils.data;
@@ -549,6 +548,14 @@ class PatientDataPage extends React.Component {
     return createPrintPDFPackage(pdfData, opts);
   }
 
+  async generateCSV(printOptions) {
+    const { api, patient } = this.props;
+
+    const startDate = moment(printOptions.start).toISOString();
+    const endDate = moment(printOptions.end).toISOString();
+    return api.exportData(patient, startDate, endDate);
+  }
+
   async handleMessageCreation(message) {
     await this.chartRef.current.createMessage(nurseShark.reshapeMessage(message));
     this.trackMetric("note", "create_note");
@@ -707,6 +714,15 @@ class PatientDataPage extends React.Component {
         }
       }
     };
+    const openCSVWindow = (csv, userid) => {
+      const url = window.URL.createObjectURL(csv);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = `${userid}.csv`;
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove();
+    };
 
     this.setState({ showPDFPrintOptions: false });
 
@@ -716,38 +732,42 @@ class PatientDataPage extends React.Component {
 
     // Return a promise for the tests
     return new Promise((resolve, reject) => {
-      const {api, patient} = this.props;
+      const { patient } = this.props;
       this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
-      if (printOptions.format == "pdf") {
+      if (printOptions.format === "pdf") {
         this.generateReport(printOptions)
-        .then((pdf) => {
-          this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
-          openPDFWindow(pdf);
-          resolve();
-        })
-        .catch((err) => {
-          this.log.error("generateReport:", err);
-          this.trackMetric("export_data", "save_report", "error");
-          if (_.isFunction(window.onerror)) {
-            window.onerror("print", "patient-data", 0, 0, err);
-          }
-          reject(err);
-        }).finally(() => {
-          this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
-        });
+          .then((pdf) => {
+            this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
+            openPDFWindow(pdf);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
       } else {
-        console.log(`manage csv for ${printOptions}`)
-        api.exportData(patient).then((blob) => {
-          const url = window.URL.createObjectURL(blob);
-          var a = document.createElement('a');
-          a.href = url;
-          a.download = `${patient.userid}.csv`;
-          document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-          a.click();
-          a.remove();
-          resolve();
-        })
-        this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+        this.generateCSV(printOptions)
+          .then((blob) => {
+            this.trackMetric("export_data", "save_report_csv", printOptions.preset ?? "custom");
+            openCSVWindow(blob, patient.userid);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report_csv", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
       }
     });
   }

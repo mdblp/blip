@@ -114,6 +114,7 @@
   "default-min-max": "Default: min at 70mg/dL and max at 180mg/dL",
   "dialog-pdf-options-custom-range": "or a customized period",
   "dialog-pdf-options-presets": "Choose a fixed period",
+  "dialog-pdf-options-format": "Choose an output format",
   "edit-information": "Edit information",
   "email": "Email",
   "email-not-verified": "Please verify your email first",
