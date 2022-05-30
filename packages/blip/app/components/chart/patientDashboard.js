@@ -6,6 +6,7 @@ import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
+import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files-widget";
 
 const PatientDashboard = (props) => {
   const {
@@ -51,6 +52,14 @@ const PatientDashboard = (props) => {
       />
       <Box id="patient-dashboard-content">
         {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
+        {patientMonitored &&
+          <MedicalFilesWidget
+            id="dashboard-medical-files-widget"
+            patientId={patientMonitored.userId}
+            teamId={patientMonitored.teamId}
+            userRole={user.role}
+          />
+        }
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -76,8 +85,13 @@ const PatientDashboard = (props) => {
           onSwitchToDaily={onSwitchToDaily}
         />
         {patientMonitored &&
-          <ChatWidget id="dashboard-chat-widget"
-            patientId={patientMonitored.userId} userId={user.userid} teamId={patientMonitored.teamId} userRole={user.role} />
+          <ChatWidget
+            id="dashboard-chat-widget"
+            patientId={patientMonitored.userId}
+            userId={user.userid}
+            teamId={patientMonitored.teamId}
+            userRole={user.role}
+          />
         }
       </Box>
     </div>

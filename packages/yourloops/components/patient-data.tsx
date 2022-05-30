@@ -32,6 +32,7 @@ import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import { makeStyles } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
@@ -50,9 +51,9 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
+import MedicalFilesWidget from "./dashboard-widgets/medical-files-widget";
 import { PatientMonitored, Patient } from "../lib/data/patient";
 import { mapTeamUserToPatient } from "./patient/utils";
-import { makeStyles } from "@material-ui/core";
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -175,7 +176,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient}
         patientMonitored={patientMonitored}
-        userIsHCP={userIsHCP!}
+        userIsHCP={!!userIsHCP}
         patients={patients}
         setPatient={setPatient}
         profileDialog={ProfileDialog}
@@ -185,6 +186,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogPDFOptions={DialogPDFOptions}
         patientInfoWidget={PatientInfoWidget}
         chatWidget={ChatWidget}
+        medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>
   );

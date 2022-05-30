@@ -342,5 +342,10 @@
   "user-name": "{{firstName}} {{lastName}}",
   "yes": "Yes",
   "yesterday": "Yesterday",
-  "welcome-message": "Welcome to Yourloops. Please login or register"
+  "welcome-message": "Welcome to Yourloops. Please login or register",
+  "medical-files": "Medical files",
+  "weekly-reports": "Weekly reports",
+  "prescriptions": "Prescriptions",
+  "medical-records": "Medical records",
+  "new": "New"
 }
