@@ -24,40 +24,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { UNITS_TYPE } from "../lib/units/utils";
 
-import { MedicalData } from "../../models/device-data";
-import { Alarm } from "../../models/alarm";
-import { UserInvitationStatus } from "../../models/generic";
-import { INotification } from "../notifications";
-import { Monitoring } from "../../models/monitoring";
-
-interface PatientTeam {
-  code : string,
-  invitation?: INotification
-  status: UserInvitationStatus,
-  teamId : string,
-  teamName : string,
+export interface Monitoring {
+  enabled: boolean;
+  parameters?: {
+    bgUnit: UNITS_TYPE;
+    lowBg: number;
+    highBg: number;
+    outOfRangeThreshold: number;
+    veryLowBg: number;
+    hypoThreshold: number;
+    nonDataTxThreshold: number;
+    reportingPeriod: number;
+  }
 }
-
-interface Patient {
-  alarm: Alarm;
-  firstName?: string;
-  flagged?: boolean,
-  fullName: string;
-  lastName?: string;
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  remoteMonitoring? : Date;
-  system? : string;
-  teams : PatientTeam[];
-  readonly userid: string;
-  readonly username: string;
-}
-
-interface PatientMonitored {
-  readonly userId: string;
-  readonly teamId: string;
-  monitoring?: Monitoring;
-}
-
-export { Patient, PatientTeam , PatientMonitored };

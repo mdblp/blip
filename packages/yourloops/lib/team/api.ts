@@ -37,6 +37,7 @@ import { Session } from "../auth";
 import appConfig from "../config";
 import { getCurrentLang } from "../language";
 import { PatientMonitored } from "../data/patient";
+import { Monitoring } from "../../models/monitoring";
 
 const log = bows("TeamAPI");
 
@@ -174,6 +175,26 @@ async function editTeam(session: Session, editedTeam: ITeam): Promise<void> {
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
     body: JSON.stringify(editedTeam),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+async function updateTeamAlerts(session: Session, teamId: string, monitoring: Monitoring): Promise<void> {
+  const { sessionToken, traceToken } = session;
+
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/remote-monitoring`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify(monitoring),
   });
 
   if (response.ok) {
@@ -404,6 +425,7 @@ export default {
   leaveTeam,
   removeMember,
   removePatient,
+  updateTeamAlerts,
   changeMemberRole,
   getTeamFromCode,
   joinTeam,

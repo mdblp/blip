@@ -21,6 +21,7 @@
 import { Profile, Settings, Preferences } from "./shoreline";
 import { UserInvitationStatus, PostalAddress } from "./generic";
 import { Alarm } from "./alarm";
+import { Monitoring } from "./monitoring";
 
 export enum TeamType {
   medical = "medical",
@@ -69,4 +70,5 @@ export interface ITeam {
   address?: PostalAddress;
   description?: string;
   members: ITeamMember[];
+  monitoring?: Monitoring;
 }

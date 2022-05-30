@@ -25,39 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from "../../models/device-data";
-import { Alarm } from "../../models/alarm";
-import { UserInvitationStatus } from "../../models/generic";
-import { INotification } from "../notifications";
-import { Monitoring } from "../../models/monitoring";
+export const MMOLL_PER_MGDL = 0.0555;
 
-interface PatientTeam {
-  code : string,
-  invitation?: INotification
-  status: UserInvitationStatus,
-  teamId : string,
-  teamName : string,
+export enum UNITS_TYPE {
+  MGDL = "mg/dL",
+  MMOLL = "mmol/L",
 }
 
-interface Patient {
-  alarm: Alarm;
-  firstName?: string;
-  flagged?: boolean,
-  fullName: string;
-  lastName?: string;
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  remoteMonitoring? : Date;
-  system? : string;
-  teams : PatientTeam[];
-  readonly userid: string;
-  readonly username: string;
+/**
+ * convertBG converts bg values
+ * @param {number} value The value to convert
+ * @param {"mg/dL"|"mmol/L"} currentUnit The unit of the passed value
+ * @return: The converted value in the opposite unit
+ */
+export function convertBG(value: number, currentUnit: UNITS_TYPE): number {
+  if (value < 0) {
+    throw Error("Invalid glycemia value");
+  }
+  switch (currentUnit) {
+  case UNITS_TYPE.MGDL:
+    return value * MMOLL_PER_MGDL;
+  case UNITS_TYPE.MMOLL:
+    return value / MMOLL_PER_MGDL;
+  default:
+    throw new Error("Invalid parameter unit");
+  }
 }
-
-interface PatientMonitored {
-  readonly userId: string;
-  readonly teamId: string;
-  monitoring?: Monitoring;
-}
-
-export { Patient, PatientTeam , PatientMonitored };

@@ -39,6 +39,7 @@ export interface BasicDropdownProps {
   id: string;
   defaultValue: string;
   values: string[];
+  error?: boolean;
   onSelect: (value: string) => void;
 }
 
@@ -52,13 +53,28 @@ const styles = makeStyles((theme: Theme) => ({
       border: "none",
     },
   },
+  error: {
+    border: `1px solid ${theme.palette.error.main}`,
+  },
 }));
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultValue, values, id } = props;
+  const { onSelect, defaultValue, values, id, error } = props;
   const { t } = useTranslation("yourloops");
   const classes = styles();
   const [selectedValue, setSelectedValue] = React.useState(defaultValue);
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const value = event.target.value as string;
@@ -73,7 +89,10 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       className={classes.select}
       variant="outlined"
       input={<OutlinedInput margin="dense" />}
-      onChange={handleSelectChange}>
+      onChange={handleSelectChange}
+      MenuProps={MenuProps}
+      classes={error ? { root: classes.error } : undefined}
+    >
       {values.map(item => (
         <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
           {t(item)}

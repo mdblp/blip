@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -34,6 +34,11 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
 import BasicDropdown from "../dropdown/basic-dropdown";
+import { Monitoring } from "../../models/monitoring";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import { convertBG, UNITS_TYPE } from "../../lib/units/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryInfo: {
@@ -68,6 +73,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(1),
     marginLeft: theme.spacing(2),
   },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 90,
+  },
   valueSelection: {
     display: "flex",
     alignItems: "center",
@@ -75,9 +85,138 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function TeamAlarmsContent(): JSX.Element {
+export interface TeamAlarmsContentProps {
+  monitoring?: Monitoring;
+  saveInProgress: boolean;
+  onSave: (monitoring: Monitoring) => void;
+}
+
+interface ValueErrorPair {
+  value?: number,
+  error: boolean,
+}
+
+export const MIN_HIGH_BG = 140;
+export const MAX_HIGH_BG = 250;
+export const MIN_VERY_LOW_BG = 40;
+export const MAX_VERY_LOW_BG = 90;
+export const MIN_LOW_BG = 50;
+export const MAX_LOW_BG = 100;
+export const PERCENTAGES = [...new Array(21)]
+  .map((_each, index) => `${index * 5}%`);
+
+function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
+  const { monitoring, saveInProgress, onSave } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
+
+  if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
+    monitoring.parameters = {
+      bgUnit: UNITS_TYPE.MGDL,
+      lowBg: convertBG(monitoring.parameters.lowBg, UNITS_TYPE.MMOLL),
+      highBg: convertBG(monitoring.parameters.highBg, UNITS_TYPE.MMOLL),
+      outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
+      veryLowBg: convertBG(monitoring.parameters.veryLowBg, UNITS_TYPE.MMOLL),
+      hypoThreshold: monitoring.parameters?.hypoThreshold,
+      nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
+      reportingPeriod: monitoring.parameters.reportingPeriod,
+    };
+  }
+
+  const isError = (value: number, lowValue: number, highValue: number): boolean => {
+    return !(value >= lowValue && value <= highValue);
+  };
+
+  const isInvalidPercentage = (value: number): boolean => {
+    return !PERCENTAGES.includes(`${value}%`);
+  };
+
+  const [highBg, setHighBg] = useState<ValueErrorPair>({
+    value: monitoring?.parameters?.highBg,
+    error: !monitoring?.parameters?.highBg || isError(monitoring?.parameters?.highBg, MIN_HIGH_BG, MAX_HIGH_BG),
+  });
+  const [veryLowBg, setVeryLowBg] = useState<ValueErrorPair>({
+    value: monitoring?.parameters?.veryLowBg,
+    error: !monitoring?.parameters?.veryLowBg || isError(monitoring?.parameters?.veryLowBg, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG),
+  });
+  const [lowBg, setLowBg] = useState<ValueErrorPair>({
+    value: monitoring?.parameters?.lowBg,
+    error: !monitoring?.parameters?.lowBg || isError(monitoring?.parameters?.lowBg, MIN_LOW_BG, MAX_LOW_BG),
+  });
+  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(
+    {
+      value: monitoring?.parameters?.nonDataTxThreshold,
+      error: monitoring?.parameters?.nonDataTxThreshold === undefined || isInvalidPercentage(monitoring.parameters.nonDataTxThreshold),
+    });
+  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(
+    {
+      value: monitoring?.parameters?.outOfRangeThreshold,
+      error: monitoring?.parameters?.outOfRangeThreshold === undefined || isInvalidPercentage(monitoring.parameters.outOfRangeThreshold),
+    });
+  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(
+    {
+      value: monitoring?.parameters?.hypoThreshold,
+      error: monitoring?.parameters?.hypoThreshold === undefined || isInvalidPercentage(monitoring.parameters.hypoThreshold),
+    });
+
+  const saveButtonDisabled = useMemo(() => {
+    return lowBg.error
+        || highBg.error
+        || veryLowBg.error
+        || outOfRangeThreshold.error
+        || hypoThreshold.error
+        || nonDataTxThreshold.error
+        || saveInProgress;
+  },
+  [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error]);
+
+  const onChange = (
+    value: number,
+    lowValue: number,
+    highValue: number,
+    setValue: React.Dispatch<ValueErrorPair>,
+  ) => {
+    setValue({
+      value: value,
+      error: isError(value, lowValue, highValue),
+    });
+  };
+
+  const save = () => {
+    if (
+      lowBg.value !== undefined
+      && highBg.value !== undefined
+      && veryLowBg.value !== undefined
+      && outOfRangeThreshold.value !== undefined
+      && nonDataTxThreshold.value !== undefined
+      && hypoThreshold.value !== undefined
+    ) {
+      const monitoringUpdated: Monitoring = {
+        enabled: true,
+        parameters: {
+          bgUnit: monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL,
+          lowBg: lowBg.value,
+          highBg: highBg.value,
+          outOfRangeThreshold: outOfRangeThreshold.value,
+          veryLowBg: veryLowBg.value,
+          hypoThreshold: hypoThreshold.value,
+          nonDataTxThreshold: nonDataTxThreshold.value,
+          reportingPeriod: monitoring?.parameters?.reportingPeriod ?? 55,
+        },
+      };
+      onSave(monitoringUpdated);
+    } else {
+      throw Error("Cannot update team monitoring as some values are not defined");
+    }
+  };
+
+  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => {
+    const valueAsNumber = +value.slice(0, -1);
+    setValue({
+      value: valueAsNumber,
+      error: false,
+    });
+  };
 
   return (
     <React.Fragment>
@@ -93,24 +232,44 @@ function TeamAlarmsContent(): JSX.Element {
             A. {t("glycemic-target")}
           </Typography>
           <div className={classes.valueSelection}>
-            <Typography>{t("minimum")} :</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="70mg/dL"
-                values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
-                onSelect={() => console.log("Selected")}
+            <Box display="flex" alignItems="center" marginRight={2}>
+              <Typography>{t("minimum")}</Typography>
+              <TextField
+                id="low-bg-text-field-id"
+                defaultValue={lowBg.value}
+                error={lowBg.error}
+                type="number"
+                className={classes.textField}
+                variant="outlined"
+                size="small"
+                InputProps={{
+                  inputProps: {
+                    min: MIN_LOW_BG,
+                    max: MAX_LOW_BG,
+                  },
+                }}
+                onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
               />
-            </div>
-            <Typography>{t("maximum")} :</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="180mg/dL"
-                values={["160mg/dL", "170mg/dL", "180mg/dL", "200mg/dL"]}
-                onSelect={() => console.log("Selected")}
-              />
-            </div>
+              <Typography>{t("mg/dL")}</Typography>
+            </Box>
+            <Typography>{t("maximum")}</Typography>
+            <TextField
+              id="high-bg-text-field-id"
+              defaultValue={highBg.value}
+              error={highBg.error}
+              type="number"
+              className={classes.textField}
+              variant="outlined"
+              size="small"
+              InputProps={{
+                inputProps: {
+                  min: MIN_HIGH_BG,
+                  max: MAX_HIGH_BG,
+                },
+              }}
+              onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
+            />
+            <Typography>{t("mg/dL")}</Typography>
           </div>
           <Typography className={classes.defaultLabel}>{t("default-min-max")}</Typography>
         </div>
@@ -120,10 +279,11 @@ function TeamAlarmsContent(): JSX.Element {
             <Typography>{t("time-spent-off-target")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="50%"
-                values={["10%", "30%", "50%", "60%"]}
-                onSelect={() => console.log("Selected")}
+                id={"out-of-range"}
+                defaultValue={`${outOfRangeThreshold.value}%` ?? ""}
+                values={PERCENTAGES}
+                error={outOfRangeThreshold.error}
+                onSelect={(value) => onBasicDropdownSelect(value, setOutOfRangeThreshold)}
               />
             </div>
           </div>
@@ -143,15 +303,24 @@ function TeamAlarmsContent(): JSX.Element {
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>A. {t("severe-hypoglycemia-threshold")}:</Typography>
           <div className={classes.valueSelection}>
-            <Typography>{t("severe-hypoglycemia-below")}:</Typography>
-            <div className={classes.dropdown}>
-              <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="70mg/dL"
-                values={["60mg/dL", "70mg/dL", "80mg/dL", "100mg/dL"]}
-                onSelect={() => console.log("Selected")}
-              />
-            </div>
+            <Typography>{t("severe-hypoglycemia-below")}</Typography>
+            <TextField
+              id="very-low-bg-text-field-id"
+              defaultValue={veryLowBg.value}
+              error={veryLowBg.error}
+              type="number"
+              className={classes.textField}
+              variant="outlined"
+              size="small"
+              InputProps={{
+                inputProps: {
+                  min: MIN_VERY_LOW_BG,
+                  max: MAX_VERY_LOW_BG,
+                },
+              }}
+              onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
+            />
+            <Typography>{t("mg/dL")}</Typography>
           </div>
           <Typography className={classes.defaultLabel}>{t("default", { value: "50mg/dL" })}</Typography>
         </div>
@@ -163,10 +332,11 @@ function TeamAlarmsContent(): JSX.Element {
             <Typography>{t("time-spent-severe-hypoglycemia")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="50%"
-                values={["10%", "30%", "50%", "60%"]}
-                onSelect={() => console.log("Selected")}
+                id={"hypo-threshold"}
+                defaultValue={`${hypoThreshold.value}%` ?? ""}
+                values={PERCENTAGES}
+                error={hypoThreshold.error}
+                onSelect={(value) => onBasicDropdownSelect(value, setHypoThreshold)}
               />
             </div>
           </div>
@@ -189,15 +359,30 @@ function TeamAlarmsContent(): JSX.Element {
             <Typography>{t("time-spent-without-uploaded-data")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id={"team-basic-dropdown"}
-                defaultValue="50%"
-                values={["40%", "50%", "60%", "70%"]}
-                onSelect={() => console.log("Selected")}
+                id={"non-data"}
+                defaultValue={`${nonDataTxThreshold.value}%` ?? ""}
+                values={PERCENTAGES.slice(0, 11)}
+                error={nonDataTxThreshold.error}
+                onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
               />
             </div>
           </div>
           <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
         </div>
+      </Box>
+      <Box display="flex" justifyContent="end">
+        <ProgressIconButtonWrapper inProgress={saveInProgress}>
+          <Button
+            id="save-button-id"
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={saveButtonDisabled}
+            onClick={save}
+          >
+            {t("button-save")}
+          </Button>
+        </ProgressIconButtonWrapper>
       </Box>
     </React.Fragment>
   );
