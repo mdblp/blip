@@ -126,8 +126,8 @@ export const createPatient = (
       alarm: alarm,
       flagged: flagged,
       medicalData: null,
-      monitoring,
     },
+    monitoring,
     profile: {
       birthdate: new Date(),
       firstName: undefined,

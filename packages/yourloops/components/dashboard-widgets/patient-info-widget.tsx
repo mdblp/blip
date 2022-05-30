@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import moment from "moment-timezone";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -39,10 +39,11 @@ import Box from "@material-ui/core/Box";
 import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 
 import { Settings } from "../../models/shoreline";
-import { Patient } from "../../lib/data/patient";
+import { Patient, PatientMonitored } from "../../lib/data/patient";
 import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
 import { useAuth } from "../../lib/auth";
 import { MonitoringStatus } from "../../models/monitoring";
+import { useTeam } from "../../lib/team";
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
   {
@@ -84,32 +85,58 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const trNA = t("N/A");
   const authHook = useAuth();
+  const teamHook = useTeam();
+  const [monitoredPatientRetrieved, setMonitoredPatientRetrieved] = useState(false);
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
+  const [buttonsVisible, setButtonsVisible] = useState<{ invite: boolean, cancel: boolean, renewAndRemove: boolean }>({
+    invite: false,
+    cancel: false,
+    renewAndRemove: false,
+  });
   const hbA1c: Settings["a1c"] = patient.settings.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
   const birthDate = moment.utc(patient.profile.birthdate).format("L");
   const userName = { firstName: patient.profile.firstName, lastName: patient.profile.lastName };
 
-  const patientInfo: Record<string, string> = {
+  const [patientInfo, setPatientInfo] = useState<Record<string, string>>({
     patient: `${userName.firstName} ${userName.lastName}`,
     birthdate: birthDate,
     email: patient.profile.username,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
-  };
-  if (patient.monitoring) {
-    patientInfo["remote-monitoring"] = patient.monitoring.enabled ? t("yes") : t("no");
-  }
+  });
 
-  const displayInviteButton = patient.monitoring?.enabled === false
-    && patient.monitoring.status !== MonitoringStatus.pending
-    && patient.monitoring.status !== MonitoringStatus.accepted;
+  const computePatientInformation = useCallback((monitoredPatient: PatientMonitored | null) => {
+    setMonitoredPatientRetrieved(true);
+    if (monitoredPatient?.monitoring) {
+      const patientInfoCloned = patientInfo;
+      patientInfoCloned["remote-monitoring"] = monitoredPatient.monitoring.enabled ? t("yes") : t("no");
+      setPatientInfo(patientInfoCloned);
+    }
 
-  const displayCancelInviteButton = patient.monitoring?.enabled === false
-    && patient.monitoring.status === MonitoringStatus.pending;
+    const displayInviteButton = monitoredPatient?.monitoring?.enabled === false
+      && monitoredPatient.monitoring.status !== MonitoringStatus.pending
+      && monitoredPatient.monitoring.status !== MonitoringStatus.accepted;
+    const displayCancelInviteButton = monitoredPatient?.monitoring?.enabled === false
+      && monitoredPatient.monitoring.status === MonitoringStatus.pending;
+    const displayRenewAndRemoveMonitoringButton = (monitoredPatient?.monitoring?.enabled === false
+      && monitoredPatient.monitoring.status === MonitoringStatus.accepted) || monitoredPatient?.monitoring?.enabled === true;
 
-  const displayRenewAndRemoveMonitoringButton = (patient.monitoring?.enabled === false
-    && patient.monitoring.status === MonitoringStatus.accepted) || patient.monitoring?.enabled;
+    setButtonsVisible({
+      invite: displayInviteButton,
+      cancel: displayCancelInviteButton,
+      renewAndRemove: displayRenewAndRemoveMonitoringButton,
+    });
+  }, [patientInfo, t]);
+
+  useEffect(() => {
+    if (!monitoredPatientRetrieved) {
+      teamHook.getMonitoredPatient(patient.userid).then(monitoredPatient => {
+        computePatientInformation(monitoredPatient);
+      });
+    }
+  }, [computePatientInformation, monitoredPatientRetrieved, patient.userid, teamHook]);
+
 
   const onCloseInviteRemoteMonitoringDialog = () => {
     setShowInviteRemoteMonitoringDialog(false);
@@ -140,32 +167,34 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                     </Box>
                     {key === "remote-monitoring" && (authHook.user?.isUserCaregiver() || authHook.user?.isUserHcp()) &&
                       <div>
-                        {displayInviteButton && <Button
+                        {buttonsVisible.invite && <Button
                           id="invite-button-id"
                           className={classes.button}
                           variant="contained"
                           color="primary"
                           disableElevation
+                          size="small"
                           onClick={() => {
                             setShowInviteRemoteMonitoringDialog(true);
                           }}>
                           {t("button-invite")}
                         </Button>
                         }
-                        {displayCancelInviteButton &&
+                        {buttonsVisible.cancel &&
                           <Button
                             id="cancel-invite-button-id"
                             className={classes.button}
                             variant="contained"
                             color="primary"
                             disableElevation
+                            size="small"
                             onClick={() => {
                               console.log("cancel clicked");
                             }}>
                             {t("button-cancel")}
                           </Button>
                         }
-                        {displayRenewAndRemoveMonitoringButton &&
+                        {buttonsVisible.renewAndRemove &&
                           <div>
                             <Button
                               id="renew-button-id"
@@ -173,6 +202,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                               variant="contained"
                               color="primary"
                               disableElevation
+                              size="small"
                               onClick={() => {
                                 console.log("Renew clicked");
                               }}>
@@ -184,6 +214,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                               variant="contained"
                               color="primary"
                               disableElevation
+                              size="small"
                               onClick={() => {
                                 console.log("Remove clicked");
                               }}>

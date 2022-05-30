@@ -104,7 +104,6 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
 
   useEffect(() => {
-    console.log("updatePrescriptionInfo");
     const prescriptionInfo: PrescriptionInfo = {
       teamId: selectedTeam?.id,
       memberId: selectedMember?.user.userid,
@@ -113,7 +112,6 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     };
     setPrescriptionInfo(prescriptionInfo);
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo]);
-
 
   const selectMember = useCallback((memberName: string) => {
     const member = selectedTeam?.members.find(member => member.user.profile?.fullName === memberName);
@@ -134,15 +132,6 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
       .map(member => member.user.profile?.fullName) as string[];
     setMembersName(members);
   }, [teams]);
-
-  useEffect(() => {
-    if (!selectedTeam && teams.length > 0) {
-      selectTeam(teams[0].name);
-    }
-    if (!selectedMember && membersName.length > 0) {
-      selectMember(membersName[0]);
-    }
-  }, [membersName, selectMember, selectTeam, selectedMember, selectedTeam, teams]);
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files.length > 0) {
@@ -168,7 +157,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
             <div className={classes.dropdown}>
               <BasicDropdown
                 id={"team-basic-dropdown"}
-                defaultValue={teams[0]?.name ?? ""}
+                defaultValue={""}
                 values={teams.map(team => team.name)}
                 onSelect={selectTeam}
               />
@@ -182,7 +171,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
             <div className={classes.dropdown}>
               <BasicDropdown
                 id={"team-member-basic-dropdown"}
-                defaultValue={membersName[0] ?? ""}
+                defaultValue={""}
                 values={membersName}
                 onSelect={selectMember}
               />
