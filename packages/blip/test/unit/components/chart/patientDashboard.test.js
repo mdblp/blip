@@ -126,7 +126,8 @@ describe("PatientDashboard", () => {
       permissions: {
         note: {},
         view: {}
-      }
+      },
+      metadata: {},
     },
     canPrint: false,
     onClickPrint: sinon.stub(),

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -35,17 +35,13 @@ import Typography from "@material-ui/core/Typography";
 import DesktopMacIcon from "@material-ui/icons/DesktopMac";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-
-import BasicDropdown from "../dropdown/basic-dropdown";
 import { commonComponentStyles } from "../common";
 import { Patient } from "../../lib/data/patient";
-import { Team, TeamMember, useTeam } from "../../lib/team";
-import { UserRoles } from "../../models/shoreline";
 import PatientInfo from "../patient/patient-info";
+import PatientMonitoringPrescription, { PrescriptionInfo } from "../patient/patient-monitoring-prescription";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -104,69 +100,35 @@ export interface RemoteMonitoringPatientInviteDialogProps {
 }
 
 function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInviteDialogProps): JSX.Element {
-  const commonTeamClasses = commonComponentStyles();
+  const commonClasses = commonComponentStyles();
   const { patient, onClose } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
-  const teamHook = useTeam();
-  const month = t("month").toLowerCase();
-  const monthValues = [...new Array(6)]
-    .map((_each, index) => `${index + 1} ${month}`);
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [membersName, setMembersName] = useState<string[]>([]);
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [physician, setPhysician] = useState("");
-  const [prescription, setPrescription] = useState<File | null>(null);
-  const [numberOfMonthSelected, setNumberOfMonthSelected] = useState(3);
-
-  const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
-
-  const selectMember = useCallback((memberName: string) => {
-    const member = selectedTeam?.members.find(member => member.user.profile?.fullName === memberName);
-    if (!member) {
-      throw new Error(`The selected member with the name ${memberName} does not exists`);
-    }
-    setSelectedMember(member);
-  }, [selectedTeam?.members]);
-
-  const selectTeam = useCallback((teamName: string) => {
-    const team = teams.find(team => team.name === teamName);
-    if (!team) {
-      throw new Error(`The selected team with the name ${teamName} does not exists`);
-    }
-    setSelectedTeam(team);
-    const members = team.members
-      .filter(member => member.user.profile?.fullName && (member.user.role === UserRoles.hcp || member.user.role === UserRoles.caregiver))
-      .map(member => member.user.profile?.fullName) as string[];
-    setMembersName(members);
-  }, [teams]);
-
-  useEffect(() => {
-    if (!selectedTeam && teams.length > 0) {
-      selectTeam(teams[0].name);
-    }
-    if (!selectedMember && membersName.length > 0) {
-      selectMember(membersName[0]);
-    }
-  }, [membersName, selectMember, selectTeam, selectedMember, selectedTeam, teams]);
-
-  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setPrescription(file);
-    }
+  let prescriptionInfo: PrescriptionInfo = {
+    teamId: undefined,
+    memberId: undefined,
+    file: undefined,
+    numberOfMonth: 3,
   };
-
-  const onMonthDropdownSelect = (value: string) => {
-    setNumberOfMonthSelected(+value.charAt(0));
-  };
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
   const onSave = () => {
-    console.log(selectedTeam);
-    console.log(selectedMember);
-    console.log(prescription);
-    console.log(numberOfMonthSelected);
+    console.log(prescriptionInfo.teamId);
+    console.log(prescriptionInfo.memberId);
+    console.log(prescriptionInfo.file);
+    console.log(prescriptionInfo.numberOfMonth);
     console.log(physician);
+  };
+
+  const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo) => {
+    prescriptionInfo = {
+      teamId: prescriptionInformation.teamId,
+      memberId: prescriptionInformation.memberId,
+      file: prescriptionInformation.file,
+      numberOfMonth: prescriptionInformation.numberOfMonth,
+    };
+    setSaveButtonDisabled(!prescriptionInfo.teamId || !prescriptionInfo.memberId || !prescriptionInfo.file || !prescriptionInfo.numberOfMonth);
   };
 
   return (
@@ -174,7 +136,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
       <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
         <Box display="flex">
           <DesktopMacIcon />
-          <Typography className={commonTeamClasses.title}>
+          <Typography className={commonClasses.title}>
             {t("remote-monitoring-patient-invite")}
           </Typography>
         </Box>
@@ -184,90 +146,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
         <PatientInfo patient={patient} />
         <Divider variant="middle" className={classes.divider} />
 
-        <Typography className={classes.categoryTitle}>
-          2. {t("prescription")}
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Typography className={classes.subCategoryTitle}>A. {t("choice-of-remote-monitoring-team")}:</Typography>
-            <Box className={classes.valueSelection}>
-              <Typography>{t("requesting-team")}</Typography>
-              <div className={classes.dropdown}>
-                <BasicDropdown
-                  id={"team-basic-dropdown"}
-                  defaultValue={teams[0]?.name ?? ""}
-                  values={teams.map(team => team.name)}
-                  onSelect={selectTeam}
-                />
-              </div>
-            </Box>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={classes.subCategoryTitle}>B. {t("choice-of-healthcare-professional")}:</Typography>
-            <div className={classes.valueSelection}>
-              <Typography>{t("requesting-team-member")}</Typography>
-              <div className={classes.dropdown}>
-                <BasicDropdown
-                  id={"team-member-basic-dropdown"}
-                  defaultValue={membersName[0] ?? ""}
-                  values={membersName}
-                  onSelect={selectMember}
-                />
-              </div>
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={classes.subCategoryTitle}>
-              C. {t("upload-prescription")}
-            </Typography>
-            <div className={classes.valueSelection}>
-              <Typography>{t("prescription")}:</Typography>
-              <Box display="flex">
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  classes={{ root: classes.fileTextField }}
-                  InputProps={{
-                    classes: {
-                      root: classes.fileTextFieldOutlined,
-                      disabled: classes.fileTextFieldOutlined,
-                    },
-                  }}
-                  value={prescription?.name ?? t("file-uploaded-pdf-jpeg-png")}
-                  disabled
-                />
-                <input
-                  id="upload-file-input-id"
-                  accept="image/*,application/pdf"
-                  className={classes.input}
-                  onChange={handleFileSelected}
-                  type="file"
-                />
-                <label htmlFor="upload-file-input-id">
-                  <Button variant="contained" color="primary" component="span">
-                    {t("browse")}
-                  </Button>
-                </label>
-              </Box>
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={classes.subCategoryTitle}>
-              D. {t("prescription-duration")}
-            </Typography>
-            <div className={classes.valueSelection}>
-              <Typography>{t("remote-monitoring-prescription-duration")}:</Typography>
-              <div className={classes.dropdown}>
-                <BasicDropdown
-                  id={"team-basic-dropdown"}
-                  defaultValue={`${numberOfMonthSelected} ${month}`}
-                  values={monthValues}
-                  onSelect={onMonthDropdownSelect}
-                />
-              </div>
-            </div>
-          </Grid>
-        </Grid>
+        <PatientMonitoringPrescription setPrescriptionInfo={updatePrescriptionInfo} />
 
         <Divider variant="middle" className={classes.divider} />
 
@@ -301,7 +180,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
           color="primary"
           variant="contained"
           disableElevation
-          disabled={!selectedTeam || !selectedMember}
+          disabled={saveButtonDisabled}
           onClick={onSave}
         >
           {t("button-save")}
