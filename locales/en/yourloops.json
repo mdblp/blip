@@ -20,7 +20,6 @@
   "alert-invitation-patient-failed-already-in-team": "This patient already shared their data with the team.",
   "alert-invitation-patient-failed-already-invited": "This patient has already been invited and hasn't confirmed yet.",
   "alert-invitation-sent-success": "Invitation sent!",
-  "alert-patient-list-data-computed": "Data pulled from the last 24h",
   "alert-remove-patient-failure": "Impossible to remove patient. Please try again later.",
   "alert-remove-patient-from-team-success": "{{patientName}} is no longer a member of {{teamName}}",
   "alert-remove-patient-pending-invitation-success": "The invitation has been canceled",
