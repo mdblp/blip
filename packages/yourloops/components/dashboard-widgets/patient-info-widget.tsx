@@ -97,19 +97,19 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     email: patient.profile.username,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
-  if (patient.metadata.monitoring) {
-    patientInfo["remote-monitoring"] = patient.metadata.monitoring.enabled ? t("yes") : t("no");
+  if (patient.monitoring) {
+    patientInfo["remote-monitoring"] = patient.monitoring.enabled ? t("yes") : t("no");
   }
 
-  const displayInviteButton = patient.metadata.monitoring?.enabled === false
-    && patient.metadata.monitoring.status !== MonitoringStatus.pending
-    && patient.metadata.monitoring.status !== MonitoringStatus.accepted;
+  const displayInviteButton = patient.monitoring?.enabled === false
+    && patient.monitoring.status !== MonitoringStatus.pending
+    && patient.monitoring.status !== MonitoringStatus.accepted;
 
-  const displayCancelInviteButton = patient.metadata.monitoring?.enabled === false
-    && patient.metadata.monitoring.status === MonitoringStatus.pending;
+  const displayCancelInviteButton = patient.monitoring?.enabled === false
+    && patient.monitoring.status === MonitoringStatus.pending;
 
-  const displayRenewAndRemoveMonitoringButton = (patient.metadata.monitoring?.enabled === false
-    && patient.metadata.monitoring.status === MonitoringStatus.accepted) || patient.metadata.monitoring?.enabled;
+  const displayRenewAndRemoveMonitoringButton = (patient.monitoring?.enabled === false
+    && patient.monitoring.status === MonitoringStatus.accepted) || patient.monitoring?.enabled;
 
   const onCloseInviteRemoteMonitoringDialog = () => {
     setShowInviteRemoteMonitoringDialog(false);

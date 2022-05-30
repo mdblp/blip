@@ -175,8 +175,8 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
     bValue = b.profile.fullName;
     break;
   case PatientTableSortFields.remoteMonitoring:
-    aValue = a.metadata.monitoring?.monitoringEnd;
-    bValue = b.metadata.monitoring?.monitoringEnd;
+    aValue = a.monitoring?.monitoringEnd;
+    bValue = b.monitoring?.monitoringEnd;
     break;
   case PatientTableSortFields.system:
     aValue = a.settings.system;
@@ -209,8 +209,8 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
       alarm: teamUser.alarms ?? {} as Alarm,
       flagged: undefined,
       medicalData: null,
-      monitoring: teamUser.monitoring,
     },
+    monitoring: teamUser.monitoring,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
       firstName: teamUser.profile?.firstName,

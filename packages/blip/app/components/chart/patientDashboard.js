@@ -77,7 +77,7 @@ const PatientDashboard = (props) => {
           loading={loading}
           onSwitchToDaily={onSwitchToDaily}
         />
-        {patient.metadata.monitoring?.enabled &&
+        {patient.monitoring?.enabled &&
           <ChatWidget id="dashboard-chat-widget"
             patientId={patient.userId} userId={user.userid} teamId={patient.teamId} userRole={user.role} />
         }

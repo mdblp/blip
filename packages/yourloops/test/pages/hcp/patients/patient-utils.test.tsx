@@ -331,7 +331,7 @@ describe("Patient utils", () => {
         userid: teamUser.userid,
       };
       const res = mapTeamUserToPatient(teamUser);
-      patient.metadata.monitoring = res.metadata.monitoring;
+      patient.monitoring = res.monitoring;
       expect(res).toStrictEqual(patient);
     });
   });

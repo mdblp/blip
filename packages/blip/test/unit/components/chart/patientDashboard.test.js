@@ -164,7 +164,7 @@ describe("PatientDashboard", () => {
     });
 
     it("should show chat widget when patient is monitored", () => {
-      baseProps.patient.metadata.monitoring = { enabled: true };
+      baseProps.patient.monitoring = { enabled: true };
       wrapper = shallow(<PatientDashboard {...baseProps} />);
       expect(wrapper.find(ChatWidget)).to.have.length(1);
     });

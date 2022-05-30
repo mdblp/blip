@@ -94,7 +94,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const authHook = useAuth();
   const teamHook = useTeam();
   const isUserHcp = authHook.user?.isUserHcp();
-  const patientIsMonitored = patient.metadata.monitoring !== null;
+  const patientIsMonitored = patient.monitoring !== null;
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
   const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.metadata.medicalData);
@@ -113,9 +113,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
     const nonDataTransmissionActive = patient.metadata.alarm?.nonDataTransmissionActive ?? false;
     let patientRemoteMonitoring;
-    if (patient.metadata.monitoring?.enabled) {
-      if (patient.metadata.monitoring.monitoringEnd) {
-        patientRemoteMonitoring = `${t("yes")}\n(${t("until")} ${new Date(patient.metadata.monitoring.monitoringEnd).toDateString()})`;
+    if (patient.monitoring?.enabled) {
+      if (patient.monitoring.monitoringEnd) {
+        patientRemoteMonitoring = `${t("yes")}\n(${t("until")} ${new Date(patient.monitoring.monitoringEnd).toDateString()})`;
       } else {
         patientRemoteMonitoring = t("yes");
       }

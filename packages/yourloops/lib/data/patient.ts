@@ -60,13 +60,13 @@ interface PatientMetadata {
   flagged?: boolean;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
-  monitoring? : Monitoring;
 }
 
 interface Patient {
   profile: PatientProfile;
   settings: PatientSettings;
   metadata : PatientMetadata;
+  monitoring? : Monitoring;
   teams : PatientTeam[];
   readonly userid: string;
 }
