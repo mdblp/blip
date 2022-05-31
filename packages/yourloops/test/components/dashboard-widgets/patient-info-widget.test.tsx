@@ -36,18 +36,18 @@ import { createPatient } from "../../common/utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import i18n from "../../../lib/language";
 import * as authHookMock from "../../../lib/auth";
-import * as teamHookMock from "../../../lib/team";
 import { AuthContextProvider } from "../../../lib/auth";
+import * as teamHookMock from "../../../lib/team";
+import { TeamContextProvider } from "../../../lib/team";
 import User from "../../../lib/auth/user";
 import { Monitoring, MonitoringStatus } from "../../../models/monitoring";
-import { TeamContextProvider } from "../../../lib/team";
 
 jest.mock("../../../lib/auth");
 jest.mock("../../../lib/team");
 describe("PatientInfoWidget", () => {
   const patient = createPatient("fakePatientId", []);
   let container: HTMLElement | null = null;
-  let getMonitoredPatientRes : { monitoring : Monitoring} | null = null;
+  const getMonitoredPatientRes: { monitoring: Monitoring } | null = null;
 
   beforeAll(() => {
     i18n.changeLanguage("en");
@@ -78,27 +78,23 @@ describe("PatientInfoWidget", () => {
     }
   });
 
-  async function mountComponent(props: PatientInfoWidgetProps) {
-    await act(() => {
-      return new Promise((resolve) => {
-        render(
-          <ThemeProvider theme={getTheme()}>
-            <AuthContextProvider>
-              <TeamContextProvider>
-                <PatientInfoWidget
-                  patient={props.patient}
-                />
-              </TeamContextProvider>
-            </AuthContextProvider>
-          </ThemeProvider>, container, resolve);
-      });
+  function mountComponent(props: PatientInfoWidgetProps) {
+    act(() => {
+      render(
+        <ThemeProvider theme={getTheme()}>
+          <AuthContextProvider>
+            <TeamContextProvider>
+              <PatientInfoWidget
+                patient={props.patient}
+              />
+            </TeamContextProvider>
+          </AuthContextProvider>
+        </ThemeProvider>, container);
     });
   }
 
-  it("should display correct patient information", async () => {
-    const props: PatientInfoWidgetProps = { patient };
-    getMonitoredPatientRes = null;
-    await mountComponent(props);
+  it("should display correct patient information", () => {
+    mountComponent({ patient });
     const birthDate = moment.utc(patient.profile.birthdate).format("L");
     const a1cDate = moment.utc(patient.settings.a1c.date).format("L");
     expect(document.getElementById("patient-info-patient-value").innerHTML).toEqual(`${patient.profile.firstName} ${patient.profile.lastName}`);
@@ -112,9 +108,9 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("remove-button-id")).toBeNull();
   });
 
-  it("should display cancel invite button when patient is not monitored and status is pending", async () => {
-    getMonitoredPatientRes = { monitoring : { enabled: false, status: MonitoringStatus.pending } as Monitoring };
-    await mountComponent({ patient });
+  it("should display cancel invite button when patient is not monitored and status is pending", () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring;
+    mountComponent({ patient });
     expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
     expect(document.getElementById("invite-button-id")).toBeNull();
     expect(document.getElementById("cancel-invite-button-id")).not.toBeNull();
@@ -122,9 +118,9 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("remove-button-id")).toBeNull();
   });
 
-  it("should display renew and remove button when patient is not monitored and status is accepted", async () => {
-    getMonitoredPatientRes = { monitoring : { enabled: false, status: MonitoringStatus.accepted } as Monitoring };
-    await mountComponent({ patient });
+  it("should display renew and remove button when patient is not monitored and status is accepted", () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.accepted } as Monitoring;
+    mountComponent({ patient });
     expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
     expect(document.getElementById("invite-button-id")).toBeNull();
     expect(document.getElementById("cancel-invite-button-id")).toBeNull();
@@ -132,9 +128,9 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("remove-button-id")).not.toBeNull();
   });
 
-  it("should display invite button when patient is not monitored and status is undefined", async () => {
-    getMonitoredPatientRes = { monitoring : { enabled: false, status: undefined } as Monitoring };
-    await mountComponent({ patient });
+  it("should display invite button when patient is not monitored and status is undefined", () => {
+    patient.monitoring = { enabled: false, status: undefined } as Monitoring;
+    mountComponent({ patient });
     expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
     expect(document.getElementById("invite-button-id")).not.toBeNull();
     expect(document.getElementById("cancel-invite-button-id")).toBeNull();
@@ -142,9 +138,9 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("remove-button-id")).toBeNull();
   });
 
-  it("should display cancel renew and remove button when patient is monitored", async () => {
-    getMonitoredPatientRes = { monitoring : { enabled: true, status: undefined } as Monitoring };
-    await mountComponent({ patient });
+  it("should display cancel renew and remove button when patient is monitored", () => {
+    patient.monitoring = { enabled: true, status: undefined } as Monitoring;
+    mountComponent({ patient });
     expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("yes");
     expect(document.getElementById("invite-button-id")).toBeNull();
     expect(document.getElementById("cancel-invite-button-id")).toBeNull();

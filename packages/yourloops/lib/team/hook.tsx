@@ -53,7 +53,18 @@ const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
 let lock = false;
 
 export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map<string, TeamUser>): TeamMember {
-  const { userId, invitationStatus, role, email, preferences, profile, settings, idVerified, alarms, monitoring } = iTeamMember;
+  const {
+    userId,
+    invitationStatus,
+    role,
+    email,
+    preferences,
+    profile,
+    settings,
+    idVerified,
+    alarms,
+    monitoring,
+  } = iTeamMember;
 
   let teamUser = users.get(userId);
   if (!teamUser) {
@@ -122,8 +133,8 @@ export async function loadTeams(
         profile: session.user.profile,
         settings: session.user.settings,
         idVerified: false,
-        alarms : {} as Alarm,
-        monitoring: { enabled : true },
+        alarms: {} as Alarm,
+        monitoring: undefined,
       });
     }
   }
@@ -332,11 +343,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return typeof tm === "object";
   };
 
-  const getPendingPatients = () : Patient[] => {
+  const getPendingPatients = (): Patient[] => {
     return getPatients().filter((patient) => isInvitationPending(patient));
   };
 
-  const getDirectSharePatients = () : Patient[] => {
+  const getDirectSharePatients = (): Patient[] => {
     return getPatients().filter((patient) => patient.teams.find(team => team.teamId === "private"));
   };
 

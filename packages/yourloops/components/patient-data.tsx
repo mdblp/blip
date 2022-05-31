@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import bows from "bows";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
@@ -35,8 +35,6 @@ import { useTranslation } from "react-i18next";
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
-
-import { UserRoles } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
@@ -50,7 +48,6 @@ import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
 import { Patient } from "../lib/data/patient";
-import { mapTeamUserToPatient } from "./patient/utils";
 import { makeStyles } from "@material-ui/core";
 
 const patientDataStyles = makeStyles(() => {
@@ -87,7 +84,7 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
   const classes = patientDataStyles();
 
-
+  const [monitoredPatientRetrieved, setMonitoredPatientRetrieved] = useState(false);
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
   const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -108,30 +105,21 @@ function PatientDataPage(): JSX.Element | null {
     }
 
     setPatients(teamHook.getPatients());
-
+    let patientId = paramPatientId ?? userId;
     if (userIsPatient && !_.isNil(authUser)) {
-      const patientToSet = teamHook.getPatient(authUser.userid);
-      if (patientToSet) {
-        setPatient(patientToSet);
-      } else {
-        log.error("Patient not found");
-        setError("Patient not found");
-      }
+      patientId = authUser.userid;
+    }
+    if (!patientId) {
+      log.error("Invalid patient Id");
+      setError("Invalid patient Id");
+      return;
+    }
+    const patientToSet = teamHook.getPatient(patientId);
+    if (patientToSet) {
+      setPatient(patientToSet);
     } else {
-      const patientId = paramPatientId ?? userId;
-      if (!patientId) {
-        log.error("Invalid patient Id", patientId);
-        setError("Invalid patient Id");
-        return;
-      }
-
-      const user = teamHook.getUser(patientId);
-      if (!user || user.role !== UserRoles.patient) {
-        log.error("Patient not found");
-        setError("Patient not found");
-      } else {
-        setPatient(mapTeamUserToPatient(user));
-      }
+      log.error("Patient not found");
+      setError("Patient not found");
     }
   }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
 
@@ -144,6 +132,20 @@ function PatientDataPage(): JSX.Element | null {
 
   }, [userId, patient, t]);
 
+  React.useEffect(() => {
+    if (patient && !monitoredPatientRetrieved) {
+      teamHook.getMonitoredPatient(patient.userid).then(monitoredPatient => {
+        if (monitoredPatient) {
+          const clonePatient = patient as Patient;
+          clonePatient.monitoring = monitoredPatient.monitoring;
+          setPatient(clonePatient);
+        }
+        setMonitoredPatientRetrieved(true);
+      });
+    }
+
+  }, [monitoredPatientRetrieved, patient, teamHook]);
+
   if (error) {
     return <PatientDataPageError msg={error} />;
   }
@@ -154,21 +156,23 @@ function PatientDataPage(): JSX.Element | null {
 
   return (
     <Container className={classes.container} maxWidth={false}>
-      <Blip
-        config={appConfig}
-        api={blipApi}
-        patient={patient}
-        userIsHCP={userIsHCP!}
-        patients={patients}
-        setPatient={setPatient}
-        profileDialog={ProfileDialog}
-        prefixURL={prefixURL}
-        dialogDatePicker={DialogDatePicker}
-        dialogRangeDatePicker={DialogRangeDatePicker}
-        dialogPDFOptions={DialogPDFOptions}
-        patientInfoWidget={PatientInfoWidget}
-        chatWidget={ChatWidget}
-      />
+      {monitoredPatientRetrieved &&
+        <Blip
+          config={appConfig}
+          api={blipApi}
+          patient={patient}
+          userIsHCP={userIsHCP!}
+          patients={patients}
+          setPatient={setPatient}
+          profileDialog={ProfileDialog}
+          prefixURL={prefixURL}
+          dialogDatePicker={DialogDatePicker}
+          dialogRangeDatePicker={DialogRangeDatePicker}
+          dialogPDFOptions={DialogPDFOptions}
+          patientInfoWidget={PatientInfoWidget}
+          chatWidget={ChatWidget}
+        />
+      }
     </Container>
   );
 }

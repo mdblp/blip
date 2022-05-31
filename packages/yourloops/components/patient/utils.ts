@@ -200,9 +200,6 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
   if (!teamUser.alarms) {
     throw Error(`The patient with id ${teamUser.userid} has no defined alarms`);
   }
-  if (!teamUser.monitoring) {
-    throw Error(`The patient with id ${teamUser.userid} has no information regarding its monitoring`);
-  }
   const birthdate = teamUser.profile?.patient?.birthday;
   return {
     metadata: {
