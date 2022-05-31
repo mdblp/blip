@@ -29,32 +29,23 @@ import React from "react";
 import moment from "moment-timezone";
 import { act } from "react-dom/test-utils";
 
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import { getTheme } from "../../../components/theme";
 import PatientInfoWidget, { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
 import { createPatient } from "../../common/utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import i18n from "../../../lib/language";
 import * as authHookMock from "../../../lib/auth";
 import { AuthContextProvider } from "../../../lib/auth";
-import * as teamHookMock from "../../../lib/team";
-import { TeamContextProvider } from "../../../lib/team";
 import User from "../../../lib/auth/user";
 import { Monitoring, MonitoringStatus } from "../../../models/monitoring";
 
 jest.mock("../../../lib/auth");
-jest.mock("../../../lib/team");
 describe("PatientInfoWidget", () => {
   const patient = createPatient("fakePatientId", []);
   let container: HTMLElement | null = null;
-  const getMonitoredPatientRes: { monitoring: Monitoring } | null = null;
 
   beforeAll(() => {
     i18n.changeLanguage("en");
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
@@ -65,9 +56,6 @@ describe("PatientInfoWidget", () => {
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { getMonitoredPatient: () => Promise.resolve(getMonitoredPatientRes) };
-    });
   });
 
   afterEach(() => {
@@ -81,15 +69,11 @@ describe("PatientInfoWidget", () => {
   function mountComponent(props: PatientInfoWidgetProps) {
     act(() => {
       render(
-        <ThemeProvider theme={getTheme()}>
-          <AuthContextProvider>
-            <TeamContextProvider>
-              <PatientInfoWidget
-                patient={props.patient}
-              />
-            </TeamContextProvider>
-          </AuthContextProvider>
-        </ThemeProvider>, container);
+        <AuthContextProvider>
+          <PatientInfoWidget
+            patient={props.patient}
+          />
+        </AuthContextProvider>, container);
     });
   }
 
