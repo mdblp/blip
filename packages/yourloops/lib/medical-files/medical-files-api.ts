@@ -23,7 +23,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { MedicalRecord, Prescription } from "./model";
+import { MedicalRecord, NewMedicalRecord, Prescription } from "./model";
 import HttpService from "../../services/http";
 
 export default class MedicalFilesApi {
@@ -56,16 +56,43 @@ export default class MedicalFilesApi {
       return data;
     } catch (err) {
       const arr = [...Array(7).keys()];
+      let id = 0;
       return arr.map(() => ({
         authorId: "",
         creationDate: new Date(),
-        diagnosis: "",
-        id: "",
+        diagnosis: "coucou petite perruche",
+        id: id++,
         patientId: "",
-        progressionProposal: "",
+        progressionProposal: "bonjour",
         teamId: "",
-        trainingSubject: "",
+        trainingSubject: "gogogo",
       }));
     }
+  }
+
+  static async getMedicalRecord(patientId: string, teamId: string, medicalRecordId: string): Promise<MedicalRecord> {
+    const { data } = await HttpService.get<MedicalRecord>({
+      url: `/v0/medical-records/${medicalRecordId}`,
+      config: { params: { teamId, patientId } },
+    });
+    return data;
+  }
+
+  static async createMedicalRecord(payload: NewMedicalRecord): Promise<void> {
+    await HttpService.post<void, NewMedicalRecord>({
+      url: "/v0/medical-records",
+      payload,
+    });
+  }
+
+  static async updateMedicalRecord(payload: MedicalRecord): Promise<void> {
+    await HttpService.post<void, MedicalRecord>({
+      url: "/v0/medical-records",
+      payload,
+    });
+  }
+
+  static async deleteMedicalRecord(medicalRecordId: string): Promise<void> {
+    await HttpService.delete({ url: `/v0/medical-records/${medicalRecordId}` });
   }
 }
