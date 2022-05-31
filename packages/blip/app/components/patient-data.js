@@ -550,9 +550,10 @@ class PatientDataPage extends React.Component {
 
   async generateCSV(printOptions) {
     const { api, patient } = this.props;
+    const { tidelineData } = this.state;
 
-    const startDate = moment(printOptions.start).toISOString();
-    const endDate = moment(printOptions.end).toISOString();
+    const startDate = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf("day").toISOString();
+    const endDate = moment.tz(printOptions.end, tidelineData.getTimezoneAt(printOptions.end)).endOf("day").toISOString();
     return api.exportData(patient, startDate, endDate);
   }
 
