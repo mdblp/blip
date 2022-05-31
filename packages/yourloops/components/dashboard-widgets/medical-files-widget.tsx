@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Generic Chat window
  *
  * All rights reserved.
  *
@@ -32,6 +31,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import FileChartOutlinedIcon from "../icons/FileChartOutlinedIcon";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
 
 import Button from "@material-ui/core/Button";
@@ -46,11 +46,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
-import { Prescription, WeeklyReport, MedicalRecord } from "../../lib/medical-files/model";
+import { Prescription, MedicalRecord } from "../../lib/medical-files/model";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
-import FileChartOutlinedIcon from "../icons/FileChartOutlinedIcon";
+import MedicalRecordEditDialog from "../dialogs/medical-record-edit-dialog";
 
-const medicalFilestStyles = makeStyles((theme: Theme) => {
+const useStyle = makeStyles((theme: Theme) => {
   return {
     cardActions: {
       justifyContent: "end",
@@ -83,7 +83,7 @@ const medicalFilestStyles = makeStyles((theme: Theme) => {
       padding: theme.spacing(1),
     },
   };
-}, { name: "ylp-medical-files-card" });
+});
 
 export interface MedicalFilesWidgetProps {
   patientId: string;
@@ -93,123 +93,90 @@ export interface MedicalFilesWidgetProps {
 
 function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const classes = medicalFilestStyles();
+  const classes = useStyle();
   const { patientId, teamId } = props;
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([]);
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId));
-      setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId));
       setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId));
     })();
   }, [patientId, teamId]);
-  //
-  // // TODO: is it relevent to make it generics =>  onDownload<T> = async (file: T): Promise<void> ?
-  // const onPrescriptionDownload = async (file: Prescrition): Promise<void> => {
-  //   // api call
-  //   try {
-  //     const result = await getPrescription(file.id);
-  //     const url = window.URL.createObjectURL(new Blob([result]));
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.setAttribute("download", file.name); //or any other extension
-  //     document.body.appendChild(link);
-  //     link.click();
-  //   } catch (error) {
-  //     log.error(error);
-  //   }
-  //   return Promise.resolve();
-  // };
 
   return (
-    <Card className={classes.medicalFilesWidget} id="medical-files-card">
-      <CardHeader
-        id="medical-files-card-header"
-        avatar={<AssignmentIcon />}
-        className={classes.medicalFilesWidgetHeader}
-        title={`${t("medical-files")}`}
+    <React.Fragment>
+      <Card className={classes.medicalFilesWidget} id="medical-files-card">
+        <CardHeader
+          id="medical-files-card-header"
+          avatar={<AssignmentIcon />}
+          className={classes.medicalFilesWidgetHeader}
+          title={`${t("medical-files")}`}
+        />
+        <CardContent className={classes.cardContent}>
+          <Box className={classes.categoryContainer}>
+            <Typography className={classes.categoryTitle}>
+              {t("prescriptions")}
+            </Typography>
+            <List className={classes.list}>
+              {prescriptions.map((file, index) => (
+                <ListItem
+                  dense
+                  divider
+                  key={index}
+                >
+                  <ListItemIcon>
+                    <FileChartOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {t("prescription")}-{file.uploadedAt.toLocaleDateString()}
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+
+          <Box className={classes.categoryContainer}>
+            <Typography className={classes.categoryTitle}>
+              {t("medical-records")}
+            </Typography>
+            <List className={classes.list}>
+              {medicalRecords.map((file, index) => (
+                <ListItem
+                  dense
+                  divider
+                  key={index}
+                >
+                  <ListItemIcon>
+                    <DescriptionOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {t("medical-record")}-{file.creationDate.toLocaleDateString()}
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            startIcon={<NoteAddIcon />}
+            onClick={() => setIsEditDialogOpen(true)}
+          >
+            {t("new")}
+          </Button>
+        </CardActions>
+      </Card>
+      <MedicalRecordEditDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
       />
-      <CardContent className={classes.cardContent}>
-        <Box className={classes.categoryContainer}>
-          <Typography className={classes.categoryTitle}>
-            {t("prescriptions")}
-          </Typography>
-          <List className={classes.list}>
-            {prescriptions.map((file, index) => (
-              <ListItem
-                dense
-                divider
-                key={index}
-              >
-                <ListItemIcon>
-                  <DescriptionOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  {file.name}
-                </ListItemText>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-
-        <Box className={classes.categoryContainer}>
-          <Typography className={classes.categoryTitle}>
-            {t("weekly-reports")}
-          </Typography>
-          <List className={classes.list}>
-            {weeklyReports.map((file, index) => (
-              <ListItem
-                dense
-                divider
-                key={index}
-              >
-                <ListItemIcon>
-                  <FileChartOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  {file.name}
-                </ListItemText>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-
-        <Box className={classes.categoryContainer}>
-          <Typography className={classes.categoryTitle}>
-            {t("medical-records")}
-          </Typography>
-          <List className={classes.list}>
-            {medicalRecords.map((file, index) => (
-              <ListItem
-                dense
-                divider
-                key={index}
-              >
-                <ListItemIcon>
-                  <DescriptionOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>
-                  {file.name}
-                </ListItemText>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </CardContent>
-      <CardActions className={classes.cardActions}>
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          startIcon={<NoteAddIcon />}
-        >
-          {t("new")}
-        </Button>
-      </CardActions>
-    </Card>
+    </React.Fragment>
   );
 }
 

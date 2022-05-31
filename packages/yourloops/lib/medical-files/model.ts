@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,49 +24,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { MedicalRecord, Prescription } from "./model";
-import HttpService from "../../services/http";
 
-export default class MedicalFilesApi {
-  static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {
-    try {
-      const { data } = await HttpService.get<Prescription[]>({
-        url: "/v0/prescriptions",
-        config: { params: { teamId, patientId } },
-      });
-      return data;
-    } catch (err) {
-      const arr = [...Array(1).keys()];
-      return arr.map(() => ({
-        id: "56445d354",
-        link: "",
-        patientId: "se454216",
-        prescriptorId: "78454315",
-        teamId: "145246",
-        uploadedAt: new Date(),
-      }));
-    }
-  }
-
-  static async getMedicalRecords(patientId: string, teamId: string): Promise<MedicalRecord[]> {
-    try {
-      const { data } = await HttpService.get<MedicalRecord[]>({
-        url: "/v0/medical-records",
-        config: { params: { teamId, patientId } },
-      });
-      return data;
-    } catch (err) {
-      const arr = [...Array(7).keys()];
-      return arr.map(() => ({
-        authorId: "",
-        creationDate: new Date(),
-        diagnosis: "",
-        id: "",
-        patientId: "",
-        progressionProposal: "",
-        teamId: "",
-        trainingSubject: "",
-      }));
-    }
-  }
+interface Prescription {
+  id: string;
+  patientId: string;
+  teamId: string;
+  prescriptorId: string;
+  link: string;
+  uploadedAt: Date;
 }
+
+interface MedicalRecord {
+  id: string;
+  patientId: string;
+  teamId: string;
+  authorId: string;
+  diagnosis: string;
+  progressionProposal: string;
+  trainingSubject: string
+  creationDate: Date;
+}
+
+export { Prescription, MedicalRecord };

@@ -346,6 +346,12 @@
   "medical-files": "Medical files",
   "weekly-reports": "Weekly reports",
   "prescriptions": "Prescriptions",
+  "prescription": "Prescription",
   "medical-records": "Medical records",
-  "new": "New"
+  "medical-record": "Medical record",
+  "new": "New",
+  "write-medical-report": "Write medical report",
+  "diagnosis": "Diagnosis",
+  "progression-proposal": "Progression proposal",
+  "training-subject": "Training subject"
 }
