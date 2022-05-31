@@ -120,7 +120,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         patientRemoteMonitoring = t("yes");
       }
     } else {
-      patientRemoteMonitoring =t("no");
+      patientRemoteMonitoring = t("no");
     }
 
     let patientFullNameClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`;
@@ -281,22 +281,25 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         id={`${rowId}-time-away-target`}
         className={timeSpentAwayFromTargetRateClasses}
       >
-        {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) /10}%`}
-        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
+        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive &&
+          <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
-        {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) /10}%`}
-        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive &&
+          <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
-        {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) /10}%`}
-        {isUserHcp && patientIsMonitored && nonDataTransmissionActive && <AnnouncementIcon className={classes.alertIcon} />}
+        {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
+        {isUserHcp && patientIsMonitored && nonDataTransmissionActive &&
+          <AnnouncementIcon className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}
