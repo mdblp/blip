@@ -54,6 +54,7 @@ import Typography from "@material-ui/core/Typography";
 import { Prescription, MedicalRecord } from "../../lib/medical-files/model";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
 import MedicalRecordEditDialog from "../dialogs/medical-record-edit-dialog";
+import MedicalRecordDeleteDialog from "../dialogs/medical-record-delete-dialog";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -79,6 +80,9 @@ const useStyle = makeStyles((theme: Theme) => {
     medicalRecordItem: {
       "&:hover": {
         cursor: "pointer",
+      },
+      "&.selected": {
+        backgroundColor: theme.palette.grey[200],
       },
     },
     medicalFilesWidget: {
@@ -108,28 +112,36 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [selectedMedicalRecord, setSelectedMedicalRecord] = useState<MedicalRecord | undefined>(undefined);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined);
+  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined);
   const [hoveredMedicalRecord, setHoveredMedicalRecord] = useState<number | undefined>(undefined);
 
   const onCloseMedicalRecordEditDialog = () => {
     setHoveredMedicalRecord(undefined);
     setIsEditDialogOpen(false);
-    setSelectedMedicalRecord(undefined);
+    setMedicalRecordToEdit(undefined);
+  };
+
+  const onCloseMedicalRecordDeleteDialog = () => {
+    setHoveredMedicalRecord(undefined);
+    setIsDeleteDialogOpen(false);
+    setMedicalRecordToDelete(undefined);
   };
 
   const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setSelectedMedicalRecord(medicalRecord);
+    setMedicalRecordToEdit(medicalRecord);
     setIsEditDialogOpen(true);
+  };
+
+  const onDeleteMedicalRecord = (medicalRecord: MedicalRecord): void => {
+    setMedicalRecordToDelete(medicalRecord);
+    setIsDeleteDialogOpen(true);
   };
 
   const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
     // TODO add PDF generation
     console.log(`click medical record ${medicalRecord.id}`);
-  };
-
-  const onDeleteMedicalRecord = (id: number): void => {
-    // TODO add a modal to delete medical record
-    console.log(`delete medical record ${id}`);
   };
 
   useEffect(() => {
@@ -181,7 +193,7 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
                   dense
                   divider
                   key={index}
-                  className={classes.medicalRecordItem}
+                  className={`${classes.medicalRecordItem} ${medicalRecord.id === hoveredMedicalRecord ? "selected" : ""}`}
                   onClick={() => onClickMedicalRecord(medicalRecord)}
                   onMouseOver={() => setHoveredMedicalRecord(medicalRecord.id)}
                   onMouseOut={() => setHoveredMedicalRecord(undefined)}
@@ -211,7 +223,7 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
                           size="small"
                           disableRipple
                           disableFocusRipple
-                          onClick={() => onDeleteMedicalRecord(medicalRecord.id)}
+                          onClick={() => onDeleteMedicalRecord(medicalRecord)}
                         >
                           <TrashCanOutlined />
                         </IconButton>
@@ -238,7 +250,13 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
       {isEditDialogOpen &&
         <MedicalRecordEditDialog
           onClose={onCloseMedicalRecordEditDialog}
-          medicalRecord={selectedMedicalRecord}
+          medicalRecord={medicalRecordToEdit}
+        />
+      }
+      {isDeleteDialogOpen && medicalRecordToDelete &&
+        <MedicalRecordDeleteDialog
+          onClose={onCloseMedicalRecordDeleteDialog}
+          medicalRecord={medicalRecordToDelete}
         />
       }
     </React.Fragment>

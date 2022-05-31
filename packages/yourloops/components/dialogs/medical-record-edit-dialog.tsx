@@ -42,7 +42,6 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { MedicalRecord } from "../../lib/medical-files/model";
 
-
 interface Props {
   onClose: () => void;
   medicalRecord?: MedicalRecord;
@@ -53,9 +52,9 @@ const classes = makeStyles((theme: Theme) => ({
     margin: "30px 0 10px 16px",
   },
   title: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    "display": "flex",
+    "alignItems": "center",
+    "justifyContent": "center",
     "& > svg": {
       marginRight: theme.spacing(1),
     },
@@ -150,8 +149,6 @@ export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Prop
 
       <DialogActions>
         <Button
-          variant="outlined"
-          color="primary"
           disableElevation
           onClick={onClose}
         >
