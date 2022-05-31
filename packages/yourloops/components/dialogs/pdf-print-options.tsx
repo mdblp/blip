@@ -45,10 +45,10 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { Radio, RadioGroup } from "@material-ui/core";
 
 import { CalendarOrientation } from "../date-pickers/models";
 import RangeDatePicker from "../date-pickers/range-date-picker";
-import { Radio, RadioGroup } from "@material-ui/core";
 
 export type Presets = "1week" | "2weeks" | "4weeks" | "3months";
 export type OutputFormat = "pdf" | "csv";
@@ -123,7 +123,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
   if (start.isBefore(minDate)) {
     start = minDate;
   }
-  const outputFormat = "pdf" as OutputFormat;
+  const outputFormat : OutputFormat = "pdf";
   return { start: start.format("YYYY-MM-DD"), end, preset, format: outputFormat };
 }
 
