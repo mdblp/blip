@@ -41,6 +41,9 @@ import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 import { convertBG, UNITS_TYPE } from "../../lib/units/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
+  cancelButton: {
+    marginRight: theme.spacing(2),
+  },
   categoryInfo: {
     marginLeft: theme.spacing(3),
   },
@@ -88,6 +91,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface TeamAlarmsContentProps {
   monitoring?: Monitoring;
   saveInProgress: boolean;
+  showCancelButton?: boolean;
+  onClose?: () => void;
   onSave: (monitoring: Monitoring) => void;
 }
 
@@ -105,8 +110,8 @@ export const MAX_LOW_BG = 100;
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`);
 
-function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
-  const { monitoring, saveInProgress, onSave } = props;
+function AlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
+  const { monitoring, saveInProgress, showCancelButton, onSave, onClose } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
 
@@ -191,8 +196,11 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
       && nonDataTxThreshold.value !== undefined
       && hypoThreshold.value !== undefined
     ) {
+      const reportingPeriod = (monitoring?.parameters?.reportingPeriod && monitoring?.parameters?.reportingPeriod > 0) ? monitoring?.parameters?.reportingPeriod : 55;
       const monitoringUpdated: Monitoring = {
-        enabled: true,
+        enabled: monitoring?.enabled ?? true,
+        status: monitoring?.status,
+        monitoringEnd: monitoring?.monitoringEnd,
         parameters: {
           bgUnit: monitoring?.parameters?.bgUnit ?? UNITS_TYPE.MGDL,
           lowBg: lowBg.value,
@@ -201,7 +209,7 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
           veryLowBg: veryLowBg.value,
           hypoThreshold: hypoThreshold.value,
           nonDataTxThreshold: nonDataTxThreshold.value,
-          reportingPeriod: monitoring?.parameters?.reportingPeriod ?? 55,
+          reportingPeriod,
         },
       };
       onSave(monitoringUpdated);
@@ -371,6 +379,15 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
         </div>
       </Box>
       <Box display="flex" justifyContent="end">
+        {showCancelButton &&
+          <Button
+            id="cancel-button-id"
+            className={classes.cancelButton}
+            onClick={onClose}
+          >
+            {t("button-cancel")}
+          </Button>
+        }
         <ProgressIconButtonWrapper inProgress={saveInProgress}>
           <Button
             id="save-button-id"
@@ -388,4 +405,4 @@ function TeamAlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   );
 }
 
-export default TeamAlarmsContent;
+export default AlarmsContent;

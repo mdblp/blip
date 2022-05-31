@@ -32,21 +32,20 @@ import { act } from "react-dom/test-utils";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import { getTheme } from "../../../components/theme";
-import TeamAlarmsContent, {
-  MIN_HIGH_BG,
-  MIN_LOW_BG,
-  MIN_VERY_LOW_BG,
-  TeamAlarmsContentProps,
-} from "../../../components/team/team-alarms-content";
 import { triggerMouseEvent } from "../../common/utils";
 import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
+import AlarmsContent, {
+  MIN_HIGH_BG,
+  MIN_LOW_BG, MIN_VERY_LOW_BG,
+  TeamAlarmsContentProps,
+} from "../../../components/alarm/alarms-content";
 
 function checkSaveButtonDisabled() {
   const saveButton = document.getElementById("save-button-id");
   expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
 }
 
-describe("TeamInformation", () => {
+describe("AlarmsContent", () => {
   const onSave = jest.fn();
   const monitoring = {
     enabled: true,
@@ -79,7 +78,7 @@ describe("TeamInformation", () => {
 
   function getTeamAlarmsContentJSX(props: TeamAlarmsContentProps) {
     return <ThemeProvider theme={getTheme()}>
-      <TeamAlarmsContent
+      <AlarmsContent
         monitoring={props.monitoring}
         onSave={props.onSave}
         saveInProgress={props.saveInProgress}

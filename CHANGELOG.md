@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1462 Create Patient statistics card for dashboard
 - YLP-1463 create Patient information card for dashboard
 - YLP-1465 create Device usage card for dashboard
+- YLP-1466 Create alarm card
 - YLP-1469 Update footer with "Accompanying documents" dropdown
 - YLP-1475 Implement the team details page for patients
 - YLP-1476 Remove care teams page

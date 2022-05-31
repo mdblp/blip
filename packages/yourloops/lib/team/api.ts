@@ -203,6 +203,26 @@ async function updateTeamAlerts(session: Session, teamId: string, monitoring: Mo
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
+async function updatePatientAlerts(session: Session, teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
+  const { sessionToken, traceToken } = session;
+
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify(monitoring),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
 async function deleteTeam(session: Session, teamId: string): Promise<void> {
   const { sessionToken, traceToken } = session;
   log.info("deleteTeam()", teamId);
@@ -401,6 +421,7 @@ export default {
   removeMember,
   removePatient,
   updateTeamAlerts,
+  updatePatientAlerts,
   changeMemberRole,
   getTeamFromCode,
   joinTeam,

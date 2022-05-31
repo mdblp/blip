@@ -83,6 +83,7 @@ export interface TeamAPI {
   createTeam: (session: Session, team: Partial<ITeam>) => Promise<ITeam>;
   editTeam: (session: Session, editedTeam: ITeam) => Promise<void>;
   updateTeamAlerts: (session: Session, teamId: string, monitoring: Monitoring) => Promise<void>
+  updatePatientAlerts: (session: Session, teamId: string, patientId: string, monitoring: Monitoring) => Promise<void>
   deleteTeam: (session: Session, teamId: string) => Promise<void>;
   leaveTeam: (session: Session, teamId: string) => Promise<void>;
   removeMember: (session: Session, teamId: string, userId: string, email: string) => Promise<void>;
@@ -239,6 +240,11 @@ export interface TeamContext {
    * @param team The updated team
    */
   updateTeamAlerts(team: Team): Promise<void>;
+  /**
+   * Update team alarm configuration
+   * @param team The updated team
+   */
+  updatePatientAlerts(patient: Patient): Promise<void>;
   /**
    * Leave a team
    * @param team The team to leave
