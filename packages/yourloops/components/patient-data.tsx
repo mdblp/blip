@@ -134,16 +134,19 @@ function PatientDataPage(): JSX.Element | null {
 
   React.useEffect(() => {
     if (patient && !monitoredPatientRetrieved) {
-      teamHook.getMonitoredPatient(patient.userid).then(monitoredPatient => {
-        if (monitoredPatient) {
-          const clonePatient = patient as Patient;
-          clonePatient.monitoring = monitoredPatient.monitoring;
-          setPatient(clonePatient);
-        }
+      if (patient.monitoring) {
         setMonitoredPatientRetrieved(true);
-      });
+      } else {
+        teamHook.getMonitoredPatient(patient.userid).then(monitoredPatient => {
+          if (monitoredPatient) {
+            const clonePatient = patient as Patient;
+            clonePatient.monitoring = monitoredPatient.monitoring;
+            setPatient(clonePatient);
+          }
+          setMonitoredPatientRetrieved(true);
+        });
+      }
     }
-
   }, [monitoredPatientRetrieved, patient, teamHook]);
 
   if (error) {
