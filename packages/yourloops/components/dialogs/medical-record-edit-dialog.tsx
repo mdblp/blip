@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -40,11 +40,12 @@ import Divider from "@material-ui/core/Divider";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { MedicalRecord } from "../../lib/medical-files/model";
 
 
 interface Props {
-  isOpen: boolean;
   onClose: () => void;
+  medicalRecord?: MedicalRecord;
 }
 
 const classes = makeStyles((theme: Theme) => ({
@@ -65,14 +66,30 @@ const classes = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX.Element {
+export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Props): JSX.Element {
   const { title, textArea, divider } = classes();
   const { t } = useTranslation("yourloops");
 
-  const handleOnClose = () => console.log("coucou");
+  const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || "");
+  const [proposal, setProposal] = useState<string>(medicalRecord?.progressionProposal || "");
+  const [training, setTraining] = useState<string>(medicalRecord?.trainingSubject || "");
+
+  const saveMedicalRecord = () => {
+    // TODO save medical record
+    console.log("medical record saved");
+  };
+
+  useEffect(() => {
+    return () => {
+      setProposal("");
+      setDiagnosis("");
+      setTraining("");
+    };
+  }, []);
+
   return (
     <Dialog
-      open={isOpen}
+      open
       fullWidth
       maxWidth="md"
       onClose={onClose}
@@ -91,11 +108,13 @@ export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX
           1. {t("diagnosis")}
         </Typography>
         <TextField
+          value={diagnosis}
           className={textArea}
           fullWidth
           multiline
           rows={4}
           variant="outlined"
+          onChange={(event) => setDiagnosis(event.target.value)}
         />
 
         <Divider className={divider} />
@@ -104,11 +123,13 @@ export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX
           2. {t("progression-proposal")}
         </Typography>
         <TextField
+          value={proposal}
           className={textArea}
           fullWidth
           multiline
           rows={4}
           variant="outlined"
+          onChange={(event) => setProposal(event.target.value)}
         />
 
         <Divider className={divider} />
@@ -117,11 +138,13 @@ export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX
           3. {t("training-subject")}
         </Typography>
         <TextField
+          value={training}
           className={textArea}
           fullWidth
           multiline
           rows={4}
           variant="outlined"
+          onChange={(event) => setTraining(event.target.value)}
         />
       </DialogContent>
 
@@ -130,7 +153,7 @@ export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX
           variant="outlined"
           color="primary"
           disableElevation
-          onClick={handleOnClose}
+          onClick={onClose}
         >
           {t("cancel")}
         </Button>
@@ -138,7 +161,8 @@ export default function MedicalRecordEditDialog({ isOpen, onClose }: Props): JSX
           variant="contained"
           color="primary"
           disableElevation
-          onClick={handleOnClose}
+          disabled={!diagnosis && !training && !proposal}
+          onClick={saveMedicalRecord}
         >
           {t("save")}
         </Button>

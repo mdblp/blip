@@ -30,9 +30,11 @@ import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
 import FileChartOutlinedIcon from "../icons/FileChartOutlinedIcon";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import TrashCanOutlined from "../icons/TrashCanOutlined";
 
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
@@ -40,10 +42,13 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
 import { Prescription, MedicalRecord } from "../../lib/medical-files/model";
@@ -70,6 +75,11 @@ const useStyle = makeStyles((theme: Theme) => {
     list: {
       maxHeight: 160,
       overflow: "auto",
+    },
+    medicalRecordItem: {
+      "&:hover": {
+        cursor: "pointer",
+      },
     },
     medicalFilesWidget: {
       width: "400px",
@@ -98,6 +108,29 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [selectedMedicalRecord, setSelectedMedicalRecord] = useState<MedicalRecord | undefined>(undefined);
+  const [hoveredMedicalRecord, setHoveredMedicalRecord] = useState<number | undefined>(undefined);
+
+  const onCloseMedicalRecordEditDialog = () => {
+    setHoveredMedicalRecord(undefined);
+    setIsEditDialogOpen(false);
+    setSelectedMedicalRecord(undefined);
+  };
+
+  const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
+    setSelectedMedicalRecord(medicalRecord);
+    setIsEditDialogOpen(true);
+  };
+
+  const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
+    // TODO add PDF generation
+    console.log(`click medical record ${medicalRecord.id}`);
+  };
+
+  const onDeleteMedicalRecord = (id: number): void => {
+    // TODO add a modal to delete medical record
+    console.log(`delete medical record ${id}`);
+  };
 
   useEffect(() => {
     (async () => {
@@ -121,7 +154,7 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
               {t("prescriptions")}
             </Typography>
             <List className={classes.list}>
-              {prescriptions.map((file, index) => (
+              {prescriptions.map((prescription, index) => (
                 <ListItem
                   dense
                   divider
@@ -131,7 +164,7 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
                     <FileChartOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText>
-                    {t("prescription")}-{file.uploadedAt.toLocaleDateString()}
+                    {t("prescription-pdf")}{prescription.uploadedAt.toLocaleDateString()}
                   </ListItemText>
                 </ListItem>
               ))}
@@ -143,18 +176,48 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
               {t("medical-records")}
             </Typography>
             <List className={classes.list}>
-              {medicalRecords.map((file, index) => (
+              {medicalRecords.map((medicalRecord, index) => (
                 <ListItem
                   dense
                   divider
                   key={index}
+                  className={classes.medicalRecordItem}
+                  onClick={() => onClickMedicalRecord(medicalRecord)}
+                  onMouseOver={() => setHoveredMedicalRecord(medicalRecord.id)}
+                  onMouseOut={() => setHoveredMedicalRecord(undefined)}
                 >
                   <ListItemIcon>
                     <DescriptionOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText>
-                    {t("medical-record")}-{file.creationDate.toLocaleDateString()}
+                    {t("medical-record-pdf")}{medicalRecord.creationDate.toLocaleDateString()}
                   </ListItemText>
+                  {medicalRecord.id === hoveredMedicalRecord &&
+                    <ListItemSecondaryAction>
+                      <Tooltip title={t("edit") as string}>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          disableRipple
+                          disableFocusRipple
+                          onClick={() => onEditMedicalRecord(medicalRecord)}
+                        >
+                          <CreateOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t("delete") as string}>
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          disableRipple
+                          disableFocusRipple
+                          onClick={() => onDeleteMedicalRecord(medicalRecord.id)}
+                        >
+                          <TrashCanOutlined />
+                        </IconButton>
+                      </Tooltip>
+                    </ListItemSecondaryAction>
+                  }
                 </ListItem>
               ))}
             </List>
@@ -172,10 +235,12 @@ function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
           </Button>
         </CardActions>
       </Card>
-      <MedicalRecordEditDialog
-        isOpen={isEditDialogOpen}
-        onClose={() => setIsEditDialogOpen(false)}
-      />
+      {isEditDialogOpen &&
+        <MedicalRecordEditDialog
+          onClose={onCloseMedicalRecordEditDialog}
+          medicalRecord={selectedMedicalRecord}
+        />
+      }
     </React.Fragment>
   );
 }

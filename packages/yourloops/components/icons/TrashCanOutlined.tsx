@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
+ * Rounded Hospital Icon
  *
  * All rights reserved.
  *
@@ -25,25 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Prescription {
-  id: string;
-  patientId: string;
-  teamId: string;
-  prescriptorId: string;
-  link: string;
-  uploadedAt: Date;
-}
+import React from "react";
 
-export interface NewMedicalRecord {
-  patientId: string;
-  teamId: string;
-  authorId: string;
-  diagnosis: string;
-  progressionProposal: string;
-  trainingSubject: string
-  creationDate: Date;
-}
+import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 
-export interface MedicalRecord extends NewMedicalRecord {
-  id: number;
-}
+const TrashCanOutlined = (props: SvgIconProps): JSX.Element => {
+  return (
+    <SvgIcon xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24" {...props}>
+      <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+    </SvgIcon>
+  );
+};
+
+export default TrashCanOutlined;
