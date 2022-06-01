@@ -37,13 +37,13 @@ export interface Prescription {
 export interface NewMedicalRecord {
   patientId: string;
   teamId: string;
-  authorId: string;
   diagnosis: string;
   progressionProposal: string;
   trainingSubject: string
-  creationDate: Date;
 }
 
 export interface MedicalRecord extends NewMedicalRecord {
-  id: number;
+  id: string;
+  authorId: string;
+  creationDate: string;
 }

@@ -28,71 +28,46 @@ import HttpService from "../../services/http";
 
 export default class MedicalFilesApi {
   static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {
-    try {
-      const { data } = await HttpService.get<Prescription[]>({
-        url: "/v0/prescriptions",
-        config: { params: { teamId, patientId } },
-      });
-      return data;
-    } catch (err) {
-      const arr = [...Array(1).keys()];
-      return arr.map(() => ({
-        id: "56445d354",
-        link: "",
-        patientId: "se454216",
-        prescriptorId: "78454315",
-        teamId: "145246",
-        uploadedAt: new Date(),
-      }));
-    }
-  }
-
-  static async getMedicalRecords(patientId: string, teamId: string): Promise<MedicalRecord[]> {
-    try {
-      const { data } = await HttpService.get<MedicalRecord[]>({
-        url: "/v0/medical-records",
-        config: { params: { teamId, patientId } },
-      });
-      return data;
-    } catch (err) {
-      const arr = [...Array(7).keys()];
-      let id = 0;
-      return arr.map(() => ({
-        authorId: "",
-        creationDate: new Date(),
-        diagnosis: "coucou petite perruche",
-        id: id++,
-        patientId: "",
-        progressionProposal: "bonjour",
-        teamId: "",
-        trainingSubject: "gogogo",
-      }));
-    }
-  }
-
-  static async getMedicalRecord(patientId: string, teamId: string, medicalRecordId: string): Promise<MedicalRecord> {
-    const { data } = await HttpService.get<MedicalRecord>({
-      url: `/v0/medical-records/${medicalRecordId}`,
+    const { data } = await HttpService.get<Prescription[]>({
+      url: "cargo/v0/prescriptions",
       config: { params: { teamId, patientId } },
     });
     return data;
   }
 
-  static async createMedicalRecord(payload: NewMedicalRecord): Promise<void> {
-    await HttpService.post<void, NewMedicalRecord>({
-      url: "/v0/medical-records",
-      payload,
+  static async getMedicalRecords(patientId: string, teamId: string): Promise<MedicalRecord[]> {
+    const { data } = await HttpService.get<MedicalRecord[]>({
+      url: "/cargo/v0/medical-records",
+      config: { params: { teamId, patientId } },
     });
+    return data;
   }
 
-  static async updateMedicalRecord(payload: MedicalRecord): Promise<void> {
-    await HttpService.post<void, MedicalRecord>({
-      url: "/v0/medical-records",
+  static async getMedicalRecord(patientId: string, teamId: string, medicalRecordId: string): Promise<MedicalRecord> {
+    const { data } = await HttpService.get<MedicalRecord>({
+      url: `/cargo/v0/medical-records/${medicalRecordId}`,
+      config: { params: { teamId, patientId } },
+    });
+    return data;
+  }
+
+  static async createMedicalRecord(payload: NewMedicalRecord): Promise<MedicalRecord> {
+    const { data } = await HttpService.post<MedicalRecord, NewMedicalRecord>({
+      url: "/cargo/v0/medical-records",
       payload,
     });
+    return data;
+  }
+
+  static async updateMedicalRecord(payload: MedicalRecord): Promise<MedicalRecord> {
+    const { data } = await HttpService.post<MedicalRecord, MedicalRecord>({
+      url: "/cargo/v0/medical-records",
+      payload,
+    });
+    return data;
   }
 
   static async deleteMedicalRecord(medicalRecordId: string): Promise<void> {
-    await HttpService.delete({ url: `/v0/medical-records/${medicalRecordId}` });
+    await HttpService.delete({ url: `/cargo/v0/medical-records/${medicalRecordId}` });
   }
 }

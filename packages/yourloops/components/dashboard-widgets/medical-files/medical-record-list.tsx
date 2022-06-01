@@ -69,23 +69,24 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MedicalRecordList({ patientId, teamId }: MedicalFilesWidgetProps): JSX.Element {
+export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
+  const { teamId, patientId } = props;
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
   const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined);
   const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined);
-  const [hoveredItem, setHoveredItem] = useState<number | undefined>(undefined);
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
 
-  const onCloseMedicalRecordEditDialog = () => {
+  const closeMedicalRecordEditDialog = () => {
     setHoveredItem(undefined);
     setIsEditDialogOpen(false);
     setMedicalRecordToEdit(undefined);
   };
 
-  const onCloseMedicalRecordDeleteDialog = () => {
+  const closeMedicalRecordDeleteDialog = () => {
     setHoveredItem(undefined);
     setIsDeleteDialogOpen(false);
     setMedicalRecordToDelete(undefined);
@@ -104,6 +105,20 @@ export default function MedicalRecordList({ patientId, teamId }: MedicalFilesWid
   const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
     // TODO add PDF generation
     console.log(`click medical record ${medicalRecord.id}`);
+  };
+
+  const updateMedicalRecordList = (payload: MedicalRecord) => {
+    const index = medicalRecords.findIndex((mr) => mr.id === payload.id);
+    if (index > -1) {
+      medicalRecords.splice(index, 1, payload);
+    } else {
+      medicalRecords.push(payload);
+    }
+  };
+
+  const removeMedicalRecordFromList = (medicalRecordId: string) => {
+    const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId);
+    medicalRecords.splice(index, 1);
   };
 
   useEffect(() => {
@@ -132,7 +147,7 @@ export default function MedicalRecordList({ patientId, teamId }: MedicalFilesWid
               <DescriptionOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("medical-record-pdf")}{medicalRecord.creationDate.toLocaleDateString()}
+              {t("medical-record-pdf")}{new Date(medicalRecord.creationDate).toLocaleDateString()}
             </ListItemText>
             {medicalRecord.id === hoveredItem &&
               <ListItemSecondaryAction>
@@ -178,15 +193,18 @@ export default function MedicalRecordList({ patientId, teamId }: MedicalFilesWid
 
       {isEditDialogOpen &&
         <MedicalRecordEditDialog
-          onClose={onCloseMedicalRecordEditDialog}
+          {...props}
           medicalRecord={medicalRecordToEdit}
+          onClose={closeMedicalRecordEditDialog}
+          onSaved={updateMedicalRecordList}
         />
       }
 
       {isDeleteDialogOpen && medicalRecordToDelete &&
         <MedicalRecordDeleteDialog
-          onClose={onCloseMedicalRecordDeleteDialog}
           medicalRecord={medicalRecordToDelete}
+          onClose={closeMedicalRecordDeleteDialog}
+          onDelete={removeMedicalRecordFromList}
         />
       }
     </React.Fragment>

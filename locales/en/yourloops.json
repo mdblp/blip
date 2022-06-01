@@ -154,6 +154,10 @@
   "maximum": "Maximum:",
   "medical-files": "Medical files",
   "medical-record-pdf": "Medical_record_",
+  "medical-record-save-failed": "Medical record save failed",
+  "medical-record-delete-failed": "Medical record delete failed",
+  "medical-record-delete-success": "Medical record successfully deleted",
+  "medical-record-save-success": "Medical record successfully saved",
   "medical-records": "Medical records",
   "member": "Member",
   "members": "Members",
@@ -353,7 +357,7 @@
   "user-name": "{{firstName}} {{lastName}}",
   "weekly-reports": "Weekly reports",
   "welcome-message": "Welcome to Yourloops. Please login or register",
-  "write-medical-report": "Write medical report",
+  "write-medical-record": "Write medical record",
   "yes": "Yes",
   "yesterday": "Yesterday"
 }

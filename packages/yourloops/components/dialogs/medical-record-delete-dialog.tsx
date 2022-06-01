@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -38,20 +38,38 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 import { makeButtonsStyles } from "../theme";
 import { MedicalRecord } from "../../lib/medical-files/model";
+import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
+import { useAlert } from "../utils/snackbar";
+import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
 interface Props {
   onClose: () => void;
+  onDelete: (medicalRecordId: string) => void;
   medicalRecord: MedicalRecord;
 }
 
 const buttons = makeStyles(makeButtonsStyles);
 
-export default function MedicalRecordDeleteDialog({ onClose, medicalRecord }: Props): JSX.Element {
+export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: Props): JSX.Element {
   const { alertActionButton } = buttons();
   const { t } = useTranslation("yourloops");
+  const alert = useAlert();
 
-  const onDeleteButton = () => {
-    console.log("delete", medicalRecord);
+  const [inProgress, setInProgress] = useState<boolean>(false);
+
+  const deleteMedicalRecord = async () => {
+    try {
+      setInProgress(true);
+      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id);
+      onDelete(medicalRecord.id);
+      setInProgress(false);
+      alert.success(t("medical-record-delete-success"));
+      onClose();
+    } catch (err) {
+      console.log(err);
+      setInProgress(false);
+      alert.error(t("medical-record-delete-failed"));
+    }
   };
 
   return (
@@ -69,7 +87,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord }: Pr
 
       <DialogContent>
         <DialogContentText>
-          {t("delete-warning")} {t("medical-record-pdf")}{medicalRecord.creationDate.toLocaleDateString()} ?
+          {t("delete-warning")} {t("medical-record-pdf")}{new Date(medicalRecord.creationDate).toLocaleDateString()} ?
         </DialogContentText>
       </DialogContent>
 
@@ -80,14 +98,17 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord }: Pr
         >
           {t("cancel")}
         </Button>
-        <Button
-          variant="contained"
-          disableElevation
-          className={alertActionButton}
-          onClick={onDeleteButton}
-        >
-          {t("delete")}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={inProgress}>
+          <Button
+            variant="contained"
+            disableElevation
+            disabled={inProgress}
+            className={alertActionButton}
+            onClick={deleteMedicalRecord}
+          >
+            {t("delete")}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
   );

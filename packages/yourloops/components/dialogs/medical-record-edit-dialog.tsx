@@ -41,9 +41,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { MedicalRecord } from "../../lib/medical-files/model";
+import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
+import { MedicalFilesWidgetProps } from "../dashboard-widgets/medical-files/medical-files-widget";
+import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import { useAlert } from "../utils/snackbar";
 
-interface Props {
+interface Props extends MedicalFilesWidgetProps {
   onClose: () => void;
+  onSaved: (payload: MedicalRecord) => void;
   medicalRecord?: MedicalRecord;
 }
 
@@ -65,24 +70,53 @@ const classes = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Props): JSX.Element {
+export default function MedicalRecordEditDialog(props: Props): JSX.Element {
   const { title, textArea, divider } = classes();
   const { t } = useTranslation("yourloops");
+  const alert = useAlert();
+  const { onClose, onSaved, medicalRecord, teamId, patientId } = props;
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || "");
-  const [proposal, setProposal] = useState<string>(medicalRecord?.progressionProposal || "");
-  const [training, setTraining] = useState<string>(medicalRecord?.trainingSubject || "");
+  const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || "");
+  const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || "");
+  const [inProgress, setInProgress] = useState<boolean>(false);
 
-  const saveMedicalRecord = () => {
-    // TODO save medical record
-    console.log("medical record saved");
+  const saveMedicalRecord = async () => {
+    try {
+      setInProgress(true);
+      let payload: MedicalRecord;
+      if (medicalRecord) {
+        payload = await MedicalFilesApi.updateMedicalRecord({
+          ...medicalRecord,
+          diagnosis,
+          progressionProposal,
+          trainingSubject,
+        });
+      } else {
+        payload = await MedicalFilesApi.createMedicalRecord({
+          teamId,
+          patientId,
+          diagnosis,
+          progressionProposal,
+          trainingSubject,
+        });
+      }
+      onSaved(payload);
+      setInProgress(false);
+      alert.success(t("medical-record-save-success"));
+      onClose();
+    } catch (err) {
+      console.log(err);
+      setInProgress(false);
+      alert.error(t("medical-record-save-failed"));
+    }
   };
 
   useEffect(() => {
     return () => {
-      setProposal("");
+      setProgressionProposal("");
       setDiagnosis("");
-      setTraining("");
+      setTrainingSubject("");
     };
   }, []);
 
@@ -97,7 +131,7 @@ export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Prop
         <Box className={title}>
           <DescriptionOutlinedIcon />
           <Typography variant="h5">
-            {t("write-medical-report")}
+            {t("write-medical-record")}
           </Typography>
         </Box>
       </DialogTitle>
@@ -122,13 +156,13 @@ export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Prop
           2. {t("progression-proposal")}
         </Typography>
         <TextField
-          value={proposal}
+          value={progressionProposal}
           className={textArea}
           fullWidth
           multiline
           rows={4}
           variant="outlined"
-          onChange={(event) => setProposal(event.target.value)}
+          onChange={(event) => setProgressionProposal(event.target.value)}
         />
 
         <Divider className={divider} />
@@ -137,13 +171,13 @@ export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Prop
           3. {t("training-subject")}
         </Typography>
         <TextField
-          value={training}
+          value={trainingSubject}
           className={textArea}
           fullWidth
           multiline
           rows={4}
           variant="outlined"
-          onChange={(event) => setTraining(event.target.value)}
+          onChange={(event) => setTrainingSubject(event.target.value)}
         />
       </DialogContent>
 
@@ -154,15 +188,17 @@ export default function MedicalRecordEditDialog({ onClose, medicalRecord }: Prop
         >
           {t("cancel")}
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          disabled={!diagnosis && !training && !proposal}
-          onClick={saveMedicalRecord}
-        >
-          {t("save")}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={inProgress}>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={inProgress || !diagnosis && !trainingSubject && !progressionProposal}
+            onClick={saveMedicalRecord}
+          >
+            {t("save")}
+          </Button>
+        </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
   );
