@@ -43,7 +43,7 @@ import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUs
 import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
-import { Patient, PatientMonitored, PatientTeam } from "../data/patient";
+import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
 import { Alarm } from "../../models/alarm";
 
@@ -240,10 +240,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       }
     }
     return null;
-  };
-
-  const getMonitoredPatient = async (patientId: string): Promise<PatientMonitored | null> => {
-    return teamAPI.getMonitoredPatient(session, patientId);
   };
 
   const getMapUsers = (): Map<string, TeamUser> => {
@@ -721,7 +717,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     setPatientMedicalData,
     getTeamFromCode,
     joinTeam,
-    getMonitoredPatient,
   };
 }
 

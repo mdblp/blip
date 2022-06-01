@@ -55,12 +55,6 @@ interface PatientSettings {
   system? : string;
 }
 
-interface PatientMonitored {
-  readonly userId: string;
-  readonly teamId: string;
-  monitoring?: Monitoring;
-}
-
 interface PatientMetadata {
   alarm: Alarm;
   flagged?: boolean;
@@ -77,4 +71,4 @@ interface Patient {
   readonly userid: string;
 }
 
-export { Patient, PatientTeam, PatientMonitored };
+export { Patient, PatientTeam };

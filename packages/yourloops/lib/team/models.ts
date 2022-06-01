@@ -40,7 +40,7 @@ import {
 } from "../../models/team";
 import { Session } from "../auth";
 import { DirectShareAPI } from "../share/models";
-import { Patient, PatientMonitored, PatientTeam } from "../data/patient";
+import { Patient, PatientTeam } from "../data/patient";
 import { Monitoring } from "../../models/monitoring";
 
 export const TEAM_CODE_LENGTH = 9;
@@ -90,7 +90,6 @@ export interface TeamAPI {
   changeMemberRole: (session: Session, teamId: string, userId: string, email: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<void>;
   getTeamFromCode: (session: Session, code: string) => Promise<ITeam | null>;
   joinTeam: (session: Session, teamId: string) => Promise<void>;
-  getMonitoredPatient: (session: Session, patientId: string) => Promise<PatientMonitored | null>;
 }
 
 export interface TeamContext {
@@ -258,11 +257,6 @@ export interface TeamContext {
    * @param teamId id of the team ("private" if it's a private practice)
    */
   removePatient(patient: Patient, member: PatientTeam, teamId: string): Promise<void>;
-  /**
-   * Get a monitored patient
-   * @param patientId the patient id
-   */
-  getMonitoredPatient(patientId: string): Promise<PatientMonitored | null>;
   /**
    * Change a member role
    * @param member The concerned member

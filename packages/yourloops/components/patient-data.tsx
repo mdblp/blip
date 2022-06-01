@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React from "react";
 import bows from "bows";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
@@ -84,7 +84,6 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
   const classes = patientDataStyles();
 
-  const [monitoredPatientRetrieved, setMonitoredPatientRetrieved] = useState(false);
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
   const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
@@ -132,23 +131,6 @@ function PatientDataPage(): JSX.Element | null {
 
   }, [userId, patient, t]);
 
-  React.useEffect(() => {
-    if (patient && !monitoredPatientRetrieved) {
-      if (patient.monitoring) {
-        setMonitoredPatientRetrieved(true);
-      } else {
-        teamHook.getMonitoredPatient(patient.userid).then(monitoredPatient => {
-          if (monitoredPatient) {
-            const clonePatient = patient as Patient;
-            clonePatient.monitoring = monitoredPatient.monitoring;
-            setPatient(clonePatient);
-          }
-          setMonitoredPatientRetrieved(true);
-        });
-      }
-    }
-  }, [monitoredPatientRetrieved, patient, teamHook]);
-
   if (error) {
     return <PatientDataPageError msg={error} />;
   }
@@ -159,23 +141,21 @@ function PatientDataPage(): JSX.Element | null {
 
   return (
     <Container className={classes.container} maxWidth={false}>
-      {monitoredPatientRetrieved &&
-        <Blip
-          config={appConfig}
-          api={blipApi}
-          patient={patient}
-          userIsHCP={userIsHCP!}
-          patients={patients}
-          setPatient={setPatient}
-          profileDialog={ProfileDialog}
-          prefixURL={prefixURL}
-          dialogDatePicker={DialogDatePicker}
-          dialogRangeDatePicker={DialogRangeDatePicker}
-          dialogPDFOptions={DialogPDFOptions}
-          patientInfoWidget={PatientInfoWidget}
-          chatWidget={ChatWidget}
-        />
-      }
+      <Blip
+        config={appConfig}
+        api={blipApi}
+        patient={patient}
+        userIsHCP={userIsHCP!}
+        patients={patients}
+        setPatient={setPatient}
+        profileDialog={ProfileDialog}
+        prefixURL={prefixURL}
+        dialogDatePicker={DialogDatePicker}
+        dialogRangeDatePicker={DialogRangeDatePicker}
+        dialogPDFOptions={DialogPDFOptions}
+        patientInfoWidget={PatientInfoWidget}
+        chatWidget={ChatWidget}
+      />
     </Container>
   );
 }
