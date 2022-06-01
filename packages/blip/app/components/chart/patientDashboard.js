@@ -79,7 +79,7 @@ const PatientDashboard = (props) => {
         />
         {patient.monitoring?.enabled &&
           <ChatWidget id="dashboard-chat-widget"
-            patientId={patient.userId} userId={user.userid} teamId={patient.teamId} userRole={user.role} />
+            patient={patient} userId={user.userid} userRole={user.role} />
         }
       </Box>
     </div>
