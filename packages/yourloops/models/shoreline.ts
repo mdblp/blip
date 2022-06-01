@@ -98,6 +98,7 @@ interface IUser {
   medicalData?: MedicalData | null;
   alarms?: Alarm | null;
   monitoring?: { enabled: boolean}
+  unreadMessages?: number;
 }
 
 export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

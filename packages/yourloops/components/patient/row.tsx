@@ -30,6 +30,7 @@ import _ from "lodash";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import EmailIcon from "@material-ui/icons/Email";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
@@ -59,7 +60,7 @@ const patientListStyle = makeStyles(
         marginLeft: theme.spacing(2),
         verticalAlign: "bottom",
       },
-      flag: {
+      coloredIcon: {
         color: theme.palette.primary.main,
       },
       icon: {
@@ -256,7 +257,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
             id={`${rowId}-icon-button-flag`}
             onClick={onClickFlag}
-            className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
+            className={`${!isFlagged ? classes.coloredIcon : ""} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
       <StyledTableCell
@@ -303,6 +304,11 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}
+      </StyledTableCell>
+      <StyledTableCell id={`${rowId}-messages`}>
+        {patient.metadata.unreadMessagesSent > 0 &&
+          <EmailIcon className={classes.coloredIcon} />
+        }
       </StyledTableCell>
     </StyledTableRow>
   );
