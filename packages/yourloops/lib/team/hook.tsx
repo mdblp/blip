@@ -294,6 +294,17 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return teamUsers.map(teamUser => mapTeamUserToPatient(teamUser));
   };
 
+  const getPatientRemoteMonitoringTeam = (patient: Patient): PatientTeam => {
+    if (!patient.monitoring) {
+      throw Error("Cannot get patient remote monitoring team as patient is not remote monitored");
+    }
+    const res = patient.teams.find(team => getRemoteMonitoringTeams().find(t => t.id === team.teamId) !== undefined);
+    if (!res) {
+      throw Error("Could not find team to which patient is remote monitored");
+    }
+    return res;
+  };
+
   const getMedicalMembers = (team: Team): TeamMember[] => {
     return team.members.filter((member) => member.role !== TeamMemberRole.patient);
   };
@@ -688,6 +699,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     getNumMedicalMembers,
     getPendingPatients,
     getDirectSharePatients,
+    getPatientRemoteMonitoringTeam,
     teamHasOnlyOneMember,
     isUserAdministrator,
     isUserTheOnlyAdministrator,

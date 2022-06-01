@@ -142,12 +142,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0);
   const content = useRef<HTMLDivElement>(null);
   const inputRow = useRef<HTMLDivElement>(null);
-  const team = patient.teams.find(team => teamHook.getRemoteMonitoringTeams().find(t => t.id === team.teamId) !== undefined);
-
-  if (!team) {
-    throw Error("Chat widget: Current patient is not present in any monitored teams");
-  }
-  const teamId = team.teamId;
+  const team = teamHook.getPatientRemoteMonitoringTeam(patient);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
@@ -160,13 +155,13 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages() {
-      const messages = await getChatMessages(teamId, patient.userid);
+      const messages = await getChatMessages(team.teamId, patient.userid);
       setMessages(messages);
       setNbUnread(messages.filter(m =>!(m.authorId === userId) && !m.destAck).length);
     }
 
     fetchMessages();
-  }, [userId, teamId, authHook, patient.userid]);
+  }, [userId, authHook, patient.userid, team.teamId]);
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
     setShowPicker(false);
@@ -182,8 +177,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   const sendMessage = async () => {
-    await sendChatMessage(teamId, patient.userid, inputText, privateMessage);
-    const messages = await getChatMessages(teamId, patient.userid);
+    await sendChatMessage(team.teamId, patient.userid, inputText, privateMessage);
+    const messages = await getChatMessages(team.teamId, patient.userid);
     setMessages(messages);
     setInputText("");
     resetInputSize();

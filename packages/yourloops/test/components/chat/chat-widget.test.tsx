@@ -37,7 +37,8 @@ import { render, unmountComponentAtNode } from "react-dom";
 import * as chatAPI from "../../../lib/chat/api";
 import { Patient, PatientTeam } from "../../../lib/data/patient";
 import * as teamHookMock from "../../../lib/team";
-import { Team, TeamContextProvider } from "../../../lib/team";
+import { TeamContextProvider } from "../../../lib/team";
+import { IMessage } from "../../../models/chat";
 
 jest.mock("../../../lib/team");
 describe("Chat widget", () => {
@@ -46,10 +47,10 @@ describe("Chat widget", () => {
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
   const teamId = "777";
-  const teams: Team[] = [{ id: teamId } as Team];
+  const patientTeam = { teamId: teamId } as PatientTeam;
   const patient: Patient = {
     userid: "132",
-    teams: [{ teamId: teamId } as PatientTeam],
+    teams: [patientTeam],
   } as Patient;
 
   let container: HTMLElement | null = null;
@@ -73,7 +74,7 @@ describe("Chat widget", () => {
       return children;
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { getRemoteMonitoringTeams: jest.fn().mockReturnValue(teams) };
+      return { getPatientRemoteMonitoringTeam: jest.fn().mockReturnValue(patientTeam) };
     });
   });
 
@@ -117,7 +118,7 @@ describe("Chat widget", () => {
 
   it("should display messages", async () => {
     const patient = authPatient.user;
-    const mockedMessages = [{
+    const mockedMessages : IMessage[] = [{
       id: "123456",
       patientId: patient.userid,
       teamId: "team1",
@@ -127,7 +128,7 @@ describe("Chat widget", () => {
       timezone: "UTC",
       timestamp: Date.now().toString(),
       user: patient,
-    }];
+    } as IMessage];
     const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
     await mountComponent(authHookPatient);
     expect(apiStub).toHaveBeenCalled();

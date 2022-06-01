@@ -139,6 +139,10 @@ export interface TeamContext {
    */
   getPatients: () => Readonly<Patient>[];
   /**
+   * Return the remote monitoring team the patient is in
+   */
+  getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam;
+  /**
    * Return all pending patients
    */
   getPendingPatients: () => Readonly<Patient>[];
