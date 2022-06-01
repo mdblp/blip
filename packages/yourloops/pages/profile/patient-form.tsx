@@ -31,6 +31,10 @@ import { tz } from "moment-timezone";
 import { useTranslation } from "react-i18next";
 
 import { ClassNameMap } from "@material-ui/styles/withStyles";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
 import { User } from "../../lib/auth";
@@ -40,19 +44,32 @@ interface PatientProfileFormProps {
   user: User;
   classes: ClassNameMap<"formInput">;
   birthDate?: string;
+  birthPlace?: string;
+  ins?: string;
+  sex?: string;
+  ssn?: string;
+  referringDoctor?: string;
   setBirthDate: React.Dispatch<string>;
+  setBirthPlace: React.Dispatch<string>;
+  setIns: React.Dispatch<string>;
+  setSex: React.Dispatch<string>;
+  setSsn: React.Dispatch<string>;
+  setReferringDoctor: React.Dispatch<string>;
   errors: Errors;
 }
 
 function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const { user, birthDate, setBirthDate, classes, errors } = props;
+  const { user, classes, errors,
+    birthDate, birthPlace, ins, sex, ssn, referringDoctor,
+    setBirthDate, setBirthPlace, setIns, setSex, setSsn, setReferringDoctor
+  } = props;
 
   const browserTimezone = React.useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, []);
 
   const a1cDate = user.settings?.a1c?.date;
   const a1cValue = user.settings?.a1c?.value;
-
+  const country = user.settings?.country ?? ""
   return (
     <React.Fragment>
       <TextField
@@ -64,6 +81,59 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         helperText={errors.birthDate && t("required-field")}
         className={classes.formInput}
       />
+      <TextField
+        id="profile-textfield-birthplace"
+        label={t("birthplace")}
+        value={birthPlace}
+        onChange={event => setBirthPlace(event.target.value)}
+        className={classes.formInput}
+        inputProps={{maxlength: "50"}}
+      />
+      <FormControl className={`${props.classes.formInput}`}>
+        <InputLabel id="profile-select-gender-label" htmlFor="profile-select-gender">{t("gender")}</InputLabel>
+        <Select
+          id="profile-select-gender"
+          labelId="profile-select-gender-label"
+          value={sex}
+          onChange={event => setSex(event.target.value as string)}
+        >
+          <MenuItem value={""} aria-label={t("none")}>{t("none")}</MenuItem>
+          <MenuItem value={"M"} aria-label={t("male")}>{t("male")}</MenuItem>
+          <MenuItem value={"F"} aria-label={t("female")}>{t("female")}</MenuItem>
+        </Select>
+      </FormControl>
+       <TextField
+        id="profile-textfield-referringDoctor"
+        label={t("referringDoctor")}
+        value={referringDoctor}
+        onChange={event => setReferringDoctor(event.target.value)}
+        className={classes.formInput}
+        inputProps={{maxlength: "50"}}
+      />
+      {country === "FR" &&
+      <>
+        <TextField
+          id="profile-textfield-ins"
+          label={t("ins")}
+          value={ins}
+          onChange={event => setIns(event.target.value)}
+          className={classes.formInput}
+          inputProps={{maxlength: "15"}}
+          error={errors.ins}
+          helperText={errors.ins && t("field-with-exactly-15-characters")}
+        />
+        <TextField
+          id="profile-textfield-ssn"
+          label={t("ssn")}
+          value={ssn}
+          onChange={event => setSsn(event.target.value)}
+          className={classes.formInput}
+          inputProps={{maxlength: "15"}}
+          error={errors.ssn}
+          helperText={errors.ssn && t("field-with-exactly-15-characters")}
+        />
+      </>
+      }
       {a1cValue && a1cDate &&
         <TextField
           id="hbA1c"
