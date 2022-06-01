@@ -203,6 +203,7 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
       alarm: teamUser.alarms ?? {} as Alarm,
       flagged: undefined,
       medicalData: null,
+      unreadMessagesSent: teamUser.unreadMessages ?? 0,
     },
     monitoring: teamUser.monitoring,
     profile: {
