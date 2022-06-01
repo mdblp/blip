@@ -39,7 +39,7 @@ import MessageNote from "../../yourloops/models/message";
 import { PatientMonitored, Patient } from "yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
-import MedicalFilesWidget from "../../yourloops/components/dashboard-widgets/medical-files-widget";
+import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
 
 interface BlipProperties {
   config: AppConfig;

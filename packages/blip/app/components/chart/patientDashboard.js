@@ -6,7 +6,7 @@ import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
-import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files-widget";
+import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
 
 const PatientDashboard = (props) => {
   const {

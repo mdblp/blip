@@ -51,7 +51,7 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
-import MedicalFilesWidget from "./dashboard-widgets/medical-files-widget";
+import MedicalFilesWidget from "./dashboard-widgets/medical-files/medical-files-widget";
 import { PatientMonitored, Patient } from "../lib/data/patient";
 import { mapTeamUserToPatient } from "./patient/utils";
 
