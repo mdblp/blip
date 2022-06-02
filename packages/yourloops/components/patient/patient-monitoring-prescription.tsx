@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -107,7 +107,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const [numberOfMonthSelected, setNumberOfMonthSelected] = useState(3);
 
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
-  const teamsMap : Map<string, string> = new Map<string, string>();
+  const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
 
   useEffect(() => {
@@ -120,15 +120,15 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     setPrescriptionInfo(prescriptionInfo);
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo]);
 
-  const selectMember = useCallback((userId: string) => {
+  const selectMember = (userId: string) => {
     const member = selectedTeam?.members.find(member => member.user.userid === userId);
     if (!member) {
       throw new Error(`The selected member with the name ${userId} does not exists`);
     }
     setSelectedMember(member);
-  }, [selectedTeam?.members]);
+  };
 
-  const selectTeam = useCallback((teamId: string) => {
+  const selectTeam = (teamId: string) => {
     const team = teams.find(team => team.id === teamId);
     if (!team) {
       throw new Error(`The selected team with the name ${teamId} does not exists`);
@@ -139,7 +139,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
       .filter(member => member.user.profile?.fullName && member.user.role === UserRoles.hcp)
       .forEach(member => membersHasMap.set(member.user.userid, member.user.profile?.fullName ?? ""));
     setMembersMap(membersHasMap);
-  }, [teams]);
+  };
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files.length > 0) {
