@@ -128,7 +128,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     }
     setSelectedTeam(team);
     const members = team.members
-      .filter(member => member.user.profile?.fullName && (member.user.role === UserRoles.hcp || member.user.role === UserRoles.caregiver))
+      .filter(member => member.user.profile?.fullName && member.user.role === UserRoles.hcp)
       .map(member => member.user.profile?.fullName) as string[];
     setMembersName(members);
   }, [teams]);
