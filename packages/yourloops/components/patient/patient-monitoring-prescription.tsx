@@ -27,13 +27,20 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Box, Button, Grid, TextField, Typography } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
+import { makeStyles, Theme } from "@material-ui/core/styles";
+
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+
 import BasicDropdown from "../dropdown/basic-dropdown";
+import Dropdown from "../dropdown/dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserRoles } from "../../models/shoreline";
-import Dropdown from "../dropdown/dropdown";
+import { commonComponentStyles } from "../common";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -66,9 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(1),
     marginLeft: theme.spacing(2),
   },
-  title: {
-    alignSelf: "center",
-  },
   valueSelection: {
     alignItems: "center",
     display: "flex",
@@ -91,11 +95,11 @@ export interface PatientInfoProps {
 function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const { setPrescriptionInfo } = props;
   const classes = useStyles();
+  const commonClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const month = t("month").toLowerCase();
-  const monthValues = [...new Array(6)]
-    .map((_each, index) => `${index + 1} ${month}`);
+  const monthValues = [...new Array(6)].map((_each, index) => `${index + 1} ${month}`);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [membersMap, setMembersMap] = useState<Map<string, string>>(new Map<string, string>());
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
@@ -186,7 +190,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
           </Typography>
           <div className={classes.valueSelection}>
             <Typography>{t("prescription")}:</Typography>
-            <Box display="flex">
+            <Box display="flex" alignItems="center">
               <TextField
                 variant="outlined"
                 size="small"
@@ -208,7 +212,12 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
                 type="file"
               />
               <label htmlFor="upload-file-input-id">
-                <Button variant="contained" color="primary" component="span">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={commonClasses.button}
+                >
                   {t("browse")}
                 </Button>
               </label>
