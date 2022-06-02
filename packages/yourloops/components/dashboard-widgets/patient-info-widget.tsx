@@ -89,7 +89,6 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
   const birthDate = moment.utc(patient.profile.birthdate).format("L");
-  const userName = { firstName: patient.profile.firstName, lastName: patient.profile.lastName };
 
   const buttonsVisible :{ invite: boolean, cancel: boolean, renewAndRemove: boolean } ={
     invite: false,
@@ -97,7 +96,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     renewAndRemove: false,
   };
   const patientInfo: Record<string, string> = {
-    patient: `${userName.firstName} ${userName.lastName}`,
+    patient: patient.profile.fullName,
     birthdate: birthDate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
@@ -151,7 +150,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                     <Box id={`patient-info-${key}-value`}>
                       {patientInfo[key]}
                     </Box>
-                    {key === "remote-monitoring" && (authHook.user?.isUserCaregiver() || authHook.user?.isUserHcp()) &&
+                    {key === "remote-monitoring" && authHook.user?.isUserHcp() &&
                       <div>
                         {buttonsVisible.invite && <Button
                           id="invite-button-id"

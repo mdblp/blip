@@ -81,7 +81,7 @@ describe("PatientInfoWidget", () => {
     mountComponent({ patient });
     const birthDate = moment.utc(patient.profile.birthdate).format("L");
     const a1cDate = moment.utc(patient.settings.a1c.date).format("L");
-    expect(document.getElementById("patient-info-patient-value").innerHTML).toEqual(`${patient.profile.firstName} ${patient.profile.lastName}`);
+    expect(document.getElementById("patient-info-patient-value").innerHTML).toEqual(patient.profile.fullName);
     expect(document.getElementById("patient-info-birthdate-value").innerHTML).toEqual(birthDate);
     expect(document.getElementById("patient-info-email-value").innerHTML).toEqual(patient.profile.email);
     expect(document.getElementById("patient-info-hba1c-value").innerHTML).toEqual(`${patient.settings?.a1c?.value} (${a1cDate})`);
