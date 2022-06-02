@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 import BasicDropdown from "../dropdown/basic-dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserRoles } from "../../models/shoreline";
+import Dropdown from "../dropdown/dropdown";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -96,12 +97,14 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const monthValues = [...new Array(6)]
     .map((_each, index) => `${index + 1} ${month}`);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [membersName, setMembersName] = useState<string[]>([]);
+  const [membersMap, setMembersMap] = useState<Map<string, string>>(new Map<string, string>());
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [prescription, setPrescription] = useState<File | undefined>(undefined);
   const [numberOfMonthSelected, setNumberOfMonthSelected] = useState(3);
 
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
+  const teamsMap : Map<string, string> = new Map<string, string>();
+  teams.forEach(team => teamsMap.set(team.id, team.name));
 
   useEffect(() => {
     const prescriptionInfo: PrescriptionInfo = {
@@ -113,24 +116,25 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     setPrescriptionInfo(prescriptionInfo);
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo]);
 
-  const selectMember = useCallback((memberName: string) => {
-    const member = selectedTeam?.members.find(member => member.user.profile?.fullName === memberName);
+  const selectMember = useCallback((userId: string) => {
+    const member = selectedTeam?.members.find(member => member.user.userid === userId);
     if (!member) {
-      throw new Error(`The selected member with the name ${memberName} does not exists`);
+      throw new Error(`The selected member with the name ${userId} does not exists`);
     }
     setSelectedMember(member);
   }, [selectedTeam?.members]);
 
-  const selectTeam = useCallback((teamName: string) => {
-    const team = teams.find(team => team.name === teamName);
+  const selectTeam = useCallback((teamId: string) => {
+    const team = teams.find(team => team.id === teamId);
     if (!team) {
-      throw new Error(`The selected team with the name ${teamName} does not exists`);
+      throw new Error(`The selected team with the name ${teamId} does not exists`);
     }
     setSelectedTeam(team);
-    const members = team.members
+    const membersHasMap = new Map<string, string>();
+    team.members
       .filter(member => member.user.profile?.fullName && member.user.role === UserRoles.hcp)
-      .map(member => member.user.profile?.fullName) as string[];
-    setMembersName(members);
+      .forEach(member => membersHasMap.set(member.user.userid, member.user.profile?.fullName ?? ""));
+    setMembersMap(membersHasMap);
   }, [teams]);
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -155,10 +159,9 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
           <Box className={classes.valueSelection}>
             <Typography>{t("requesting-team")}</Typography>
             <div className={classes.dropdown}>
-              <BasicDropdown
+              <Dropdown
                 id={"team-basic-dropdown"}
-                defaultValue={""}
-                values={teams.map(team => team.name)}
+                values={teamsMap}
                 onSelect={selectTeam}
               />
             </div>
@@ -169,10 +172,9 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
           <div className={classes.valueSelection}>
             <Typography>{t("requesting-team-member")}</Typography>
             <div className={classes.dropdown}>
-              <BasicDropdown
+              <Dropdown
                 id={"team-member-basic-dropdown"}
-                defaultValue={""}
-                values={membersName}
+                values={membersMap}
                 onSelect={selectMember}
               />
             </div>
