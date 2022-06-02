@@ -88,7 +88,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const hbA1c: Settings["a1c"] = patient.settings.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
-  const birthDate = moment.utc(patient.profile.birthdate).format("L");
+  const birthdate = moment.utc(patient.profile.birthdate).format("L");
 
   const buttonsVisible :{ invite: boolean, cancel: boolean, renewAndRemove: boolean } ={
     invite: false,
@@ -97,7 +97,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   };
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
-    birthdate: birthDate,
+    birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
@@ -191,7 +191,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                               onClick={() => {
                                 console.log("Renew clicked");
                               }}>
-                              {t("button-renew")}
+                              {t("renew")}
                             </Button>
                             <Button
                               id="remove-button-id"

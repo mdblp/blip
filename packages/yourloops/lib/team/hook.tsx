@@ -45,7 +45,6 @@ import ShareAPIImpl from "../share";
 import TeamAPIImpl from "./api";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
-import { Alarm } from "../../models/alarm";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -118,26 +117,6 @@ export async function loadTeams(
 
   const users = new Map<string, TeamUser>();
   const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
-
-  // If we are a patient, we are not in the list, add ourself
-  if (session.user.isUserPatient() && _.isNil(apiPatients.find((m) => m.userId === session.user.userid))) {
-    log.debug("Add ourself as a team member");
-    for (const team of apiTeams) {
-      apiPatients.push({
-        userId: session.user.userid,
-        email: session.user.username,
-        invitationStatus: UserInvitationStatus.accepted,
-        role: TeamMemberRole.patient,
-        teamId: team.id,
-        preferences: session.user.preferences,
-        profile: session.user.profile,
-        settings: session.user.settings,
-        idVerified: false,
-        alarms: {} as Alarm,
-        monitoring: undefined,
-      });
-    }
-  }
 
   const nPatients = apiPatients.length;
   log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
