@@ -133,7 +133,7 @@ export const createPatient = (
       firstName: undefined,
       fullName: fullName,
       lastName: undefined,
-      username: "fakeUsername",
+      email: "fakeUsername",
     },
     settings: {
       a1c: { date : new Date().toDateString(), value : "fakeA1cValue" },

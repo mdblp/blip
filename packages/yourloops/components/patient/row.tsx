@@ -102,7 +102,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const rowRef = React.createRef<HTMLTableRowElement>();
 
   const userId = patient.userid;
-  const email = patient.profile.username;
+  const email = patient.profile.email;
   const isFlagged = flagged.includes(userId);
   const patientFullName = patient.profile.fullName;
 

@@ -210,7 +210,7 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
       firstName: teamUser.profile?.firstName,
       fullName: teamUser.profile?.fullName ?? teamUser.username,
       lastName: teamUser.profile?.lastName,
-      username: teamUser.username,
+      email: teamUser.username,
     },
     settings: {
       a1c: teamUser.settings?.a1c,

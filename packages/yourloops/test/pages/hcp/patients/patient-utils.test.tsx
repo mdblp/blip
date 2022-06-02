@@ -321,7 +321,7 @@ describe("Patient utils", () => {
           firstName: profile.firstName,
           fullName: profile.fullName,
           lastName: profile.lastName,
-          username: teamUser.username,
+          email: teamUser.username,
         },
         settings: {
           a1c: undefined,

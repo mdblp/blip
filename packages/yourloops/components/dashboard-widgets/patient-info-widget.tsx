@@ -99,7 +99,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const patientInfo: Record<string, string> = {
     patient: `${userName.firstName} ${userName.lastName}`,
     birthdate: birthDate,
-    email: patient.profile.username,
+    email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
 

@@ -44,7 +44,7 @@ interface PatientProfile {
   firstName?: string;
   fullName: string;
   lastName?: string;
-  username: string;
+  email: string;
 }
 
 interface PatientSettings {

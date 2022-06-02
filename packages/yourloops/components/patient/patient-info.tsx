@@ -97,7 +97,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
               </Typography>
             </div>
             <Typography id={`patient-${patient.userid}-email`} className={classes.value}>
-              {patient.profile.username}
+              {patient.profile.email}
             </Typography>
           </div>
           <div className={classes.patientInfo}>
