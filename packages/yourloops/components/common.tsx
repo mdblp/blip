@@ -29,7 +29,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 
 export const commonComponentStyles = makeStyles((theme: Theme) => ({
   button: {
-    textTransform: "none",
+    textTransform: "capitalize",
   },
   categoryHeader: {
     "display": "flex",

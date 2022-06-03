@@ -28,7 +28,6 @@
 
 import React from "react";
 import bows from "bows";
-import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -106,7 +105,7 @@ function PatientDataPage(): JSX.Element | null {
 
     setPatients(teamHook.getPatients());
     let patientId = paramPatientId ?? userId;
-    if (userIsPatient && !_.isNil(authUser)) {
+    if (userIsPatient && authUser) {
       patientId = authUser.userid;
     }
     if (!patientId) {
@@ -146,7 +145,7 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
-        userIsHCP={userIsHCP!}
+        userIsHCP={!!userIsHCP}
         patients={patients}
         setPatient={setPatient}
         profileDialog={ProfileDialog}

@@ -81,41 +81,33 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
       <Box display="flex" marginTop={2}>
         <div className={classes.body}>
           <div className={classes.patientInfo}>
-            <div>
-              <Typography className={classes.label}>
-                {t("patient")}
-              </Typography>
-            </div>
+            <Typography className={classes.label}>
+              {t("patient")}
+            </Typography>
             <Typography id={`patient-${patient.userid}-full-name`} className={classes.value}>
               {patient.profile.fullName}
             </Typography>
           </div>
           <div className={classes.patientInfo}>
-            <div>
-              <Typography className={classes.label}>
-                {t("email")}
-              </Typography>
-            </div>
+            <Typography className={classes.label}>
+              {t("email")}
+            </Typography>
             <Typography id={`patient-${patient.userid}-email`} className={classes.value}>
               {patient.profile.email}
             </Typography>
           </div>
           <div className={classes.patientInfo}>
-            <div>
-              <Typography className={classes.label}>
-                {t("birthdate")}
-              </Typography>
-            </div>
+            <Typography className={classes.label}>
+              {t("birthdate")}
+            </Typography>
             <Typography id={`patient-${patient.userid}-birthdate`} className={classes.value}>
               {patient.profile.birthdate?.toDateString()}
             </Typography>
           </div>
           <div className={classes.patientInfo}>
-            <div>
-              <Typography className={classes.label}>
-                {t("initial-hba1c")}
-              </Typography>
-            </div>
+            <Typography className={classes.label}>
+              {t("initial-hba1c")}
+            </Typography>
             <Typography id={`patient-${patient.userid}-a1c`} className={classes.value}>
               {patient.settings.a1c?.value ?? trNA}
             </Typography>

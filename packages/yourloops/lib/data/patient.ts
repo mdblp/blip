@@ -32,11 +32,11 @@ import { INotification } from "../notifications";
 import { Monitoring } from "../../models/monitoring";
 
 interface PatientTeam {
-  code : string;
+  code: string;
   invitation?: INotification;
   status: UserInvitationStatus;
-  teamId : string;
-  teamName : string;
+  teamId: string;
+  teamName: string;
 }
 
 interface PatientProfile {
@@ -52,7 +52,7 @@ interface PatientSettings {
     date: string;
     value: string;
   };
-  system? : string;
+  system?: string;
 }
 
 interface PatientMetadata {
@@ -65,9 +65,9 @@ interface PatientMetadata {
 interface Patient {
   profile: PatientProfile;
   settings: PatientSettings;
-  metadata : PatientMetadata;
-  monitoring? : Monitoring;
-  teams : PatientTeam[];
+  metadata: PatientMetadata;
+  monitoring?: Monitoring;
+  teams: PatientTeam[];
   readonly userid: string;
 }
 
