@@ -3,7 +3,6 @@ import HttpService from "../../services/http";
 import { HttpHeaderKeys } from "../../models/api";
 
 export default class UserApi {
-
   static async getShorelineAccessToken(email: string): Promise<string> {
     try {
       const { headers } = await HttpService.post({ url: `auth/hack/user/${email}` });

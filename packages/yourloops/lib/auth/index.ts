@@ -27,7 +27,6 @@
  */
 
 import {
-  AuthAPI,
   AuthContext,
   Session,
   SignupForm,
@@ -42,7 +41,6 @@ import User from "./user";
 import SessionTimeout from "./session-timeout";
 
 export {
-  AuthAPI,
   AuthContext,
   Session,
   User,
