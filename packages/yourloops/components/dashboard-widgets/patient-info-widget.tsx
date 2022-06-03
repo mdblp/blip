@@ -32,14 +32,14 @@ import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { commonComponentStyles } from "../common";
 
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 
 import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
