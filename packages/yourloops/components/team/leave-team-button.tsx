@@ -32,7 +32,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { Team, useTeam } from "../../lib/team";
 import { TeamLeaveDialogContentProps } from "../../pages/hcp/types";
-import { commonTeamStyles } from "./common";
+import { commonComponentStyles } from "../common";
 import { useAlert } from "../utils/snackbar";
 import { useHistory } from "react-router-dom";
 import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
@@ -46,7 +46,7 @@ function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
   const teamHook = useTeam();
   const alert = useAlert();
   const historyHook = useHistory();
-  const commonTeamClasses = commonTeamStyles();
+  const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null);
 

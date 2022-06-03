@@ -27,19 +27,31 @@
  */
 
 import React from "react";
+import { act, Simulate } from "react-dom/test-utils";
+
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { loggedInUsers } from "../../common";
 import ChatWidget from "../../../components/chat/chat-widget";
-import { act, Simulate } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import * as chatAPI from "../../../lib/chat/api";
+import { Patient, PatientTeam } from "../../../lib/data/patient";
+import * as teamHookMock from "../../../lib/team";
+import { TeamContextProvider } from "../../../lib/team";
+import { IMessage } from "../../../models/chat";
 
+jest.mock("../../../lib/team");
 describe("Chat widget", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authPatient = loggedInUsers.patientSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
+  const teamId = "777";
+  const patientTeam = { teamId: teamId } as PatientTeam;
+  const patient: Patient = {
+    userid: "132",
+    teams: [patientTeam],
+  } as Patient;
 
   let container: HTMLElement | null = null;
 
@@ -48,14 +60,22 @@ describe("Chat widget", () => {
       return new Promise((resolve) => {
         render(
           <AuthContextProvider value={authContext}>
-            <ChatWidget teamId="777" patientId={"132"} userRole={"patient"} userId={"254"} />
+            <TeamContextProvider>
+              <ChatWidget patient={patient} userRole={"patient"} userId={"254"} />
+            </TeamContextProvider>
           </AuthContextProvider>, container, resolve);
       });
     });
   }
 
-  beforeAll(()=>{
+  beforeAll(() => {
     Element.prototype.scroll = jest.fn();
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { getPatientRemoteMonitoringTeam: jest.fn().mockReturnValue(patientTeam) };
+    });
   });
 
   beforeEach(() => {
@@ -98,7 +118,7 @@ describe("Chat widget", () => {
 
   it("should display messages", async () => {
     const patient = authPatient.user;
-    const mockedMessages = [{
+    const mockedMessages : IMessage[] = [{
       id: "123456",
       patientId: patient.userid,
       teamId: "team1",
@@ -108,7 +128,7 @@ describe("Chat widget", () => {
       timezone: "UTC",
       timestamp: Date.now().toString(),
       user: patient,
-    }];
+    } as IMessage];
     const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
     await mountComponent(authHookPatient);
     expect(apiStub).toHaveBeenCalled();

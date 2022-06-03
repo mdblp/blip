@@ -69,7 +69,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const [processing, setProcessing] = useState<boolean>(false);
   const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([]);
 
-  const userName = patient ? { firstName: patient.firstName, lastName: patient.lastName } : { firstName: "", lastName: "" };
+  const userName = patient ? { firstName: patient.profile.firstName, lastName: patient.profile.lastName } : { firstName: "", lastName: "" };
   const patientName = t("user-name", userName);
   const teamMembers = patient?.teams;
   const patientTeamStatus = teamMembers?.find(team => team.teamId === selectedTeamId) as PatientTeam;

@@ -42,7 +42,7 @@ import { Team, useTeam } from "../../lib/team";
 import BasicDropdown from "../../components/dropdown/basic-dropdown";
 import TeamInformation from "../../components/team/team-information";
 import TeamMembers from "../../components/team/team-members";
-import { commonTeamStyles } from "../../components/team/common";
+import { commonComponentStyles } from "../../components/common";
 import { useAuth } from "../../lib/auth";
 import TeamAlarms from "../../components/team/team-alarms";
 
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function TeamDetailPage(): JSX.Element {
   const { getTeam, getMedicalTeams } = useTeam();
   const classes = useStyles();
-  const commonTeamClasses = commonTeamStyles();
+  const commonTeamClasses = commonComponentStyles();
   const paramHook = useParams();
   const history = useHistory();
   const authContext = useAuth();

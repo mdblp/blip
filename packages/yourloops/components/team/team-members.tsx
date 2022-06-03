@@ -46,7 +46,7 @@ import MemberRow from "./member-row";
 import { TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import AddMemberDialog from "../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../pages/hcp/types";
-import { commonTeamStyles } from "./common";
+import { commonComponentStyles } from "../common";
 import LeaveTeamButton from "./leave-team-button";
 import { useAuth } from "../../lib/auth";
 import { StyledTableCell } from "../styled-components";
@@ -82,7 +82,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const alert = useAlert();
   const loggedInUserId = authContext.user?.userid as string;
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
-  const commonTeamClasses = commonTeamStyles();
+  const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);
 

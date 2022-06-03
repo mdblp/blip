@@ -39,8 +39,8 @@ import { PatientDashboard } from "../../../../app/components/chart";
 
 const expect = chai.expect;
 
-const PatientInfoWidget = () => <div id="patient-info-widget"/>;
-const ChatWidget = () => <div id="chat-widget"/>;
+const PatientInfoWidget = () => <div id="patient-info-widget" />;
+const ChatWidget = () => <div id="chat-widget" />;
 
 describe("PatientDashboard", () => {
   const bgPrefs = {
@@ -63,7 +63,7 @@ describe("PatientDashboard", () => {
     },
     bgUnits: MGDL_UNITS
   };
-  const date1 = new Date(Date.now() - 60*60*1000);
+  const date1 = new Date(Date.now() - 60 * 60 * 1000);
   const date2 = new Date();
   const smbgs = [
     { type: "smbg", normalTime: date1.toISOString(), epoch: date1.valueOf() },
@@ -103,7 +103,7 @@ describe("PatientDashboard", () => {
     },
     permsOfLoggedInUser: {},
     trackMetric: sinon.stub(),
-    user: { id: "fakeUser"},
+    user: { id: "fakeUser" },
     users: [],
     isUserHCP: false,
     onClickNavigationBack: sinon.stub(),
@@ -113,7 +113,6 @@ describe("PatientDashboard", () => {
     onClickBack: sinon.stub(),
     chatWidget: ChatWidget,
     patientInfoWidget: PatientInfoWidget,
-    patientMonitored: null,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
     epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
@@ -127,7 +126,8 @@ describe("PatientDashboard", () => {
       permissions: {
         note: {},
         view: {}
-      }
+      },
+      metadata: {},
     },
     canPrint: false,
     onClickPrint: sinon.stub(),
@@ -164,7 +164,7 @@ describe("PatientDashboard", () => {
     });
 
     it("should show chat widget when patient is monitored", () => {
-      baseProps.patientMonitored = {userId: "1"};
+      baseProps.patient.monitoring = { enabled: true };
       wrapper = shallow(<PatientDashboard {...baseProps} />);
       expect(wrapper.find(ChatWidget)).to.have.length(1);
     });

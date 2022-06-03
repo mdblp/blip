@@ -179,8 +179,8 @@ function startFetchSummary() {
  * @returns The medical data (TIR/last upload data), or null if theses infos are not available, or undefined, if cancelled
  */
 function addPendingFetch(session: Session, patient: Patient): Promise<MedicalData | null | undefined> {
-  if (patient.medicalData) {
-    return Promise.resolve(patient.medicalData);
+  if (patient.metadata.medicalData) {
+    return Promise.resolve(patient.metadata.medicalData);
   }
 
   return new Promise((resolve: (data: MedicalData | null | undefined) => void, reject: (reason: Error) => void) => {
