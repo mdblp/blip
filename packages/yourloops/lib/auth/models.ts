@@ -29,26 +29,14 @@
 import { ReactNode } from "react";
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
-import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { JwtPayload } from "jwt-decode";
 
 /** Hook internal usage */
 export interface Session {
   user: User;
   sessionToken: string;
   traceToken: string;
-}
-
-export interface JwtShorelinePayload extends JwtPayload {
-  role: "hcp" | "patient" | "caregiver" | "clinic";
-  /** username: an e-mail */
-  name: string;
-  email: string;
-  /** userid */
-  usr: string;
-  /** yes for server token - we will never have that in Blip: always "no" */
-  srv: "yes" | "no";
 }
 
 export interface UpdateUser {
@@ -68,20 +56,10 @@ export interface SignupForm {
   terms: boolean;
 }
 
-export interface AuthAPI {
-  certifyProfessionalAccount: () => Promise<IUser>;
-  refreshToken: (session: Readonly<Session>) => Promise<string>;
-  updatePreferences: (session: Readonly<Session>) => Promise<Preferences>;
-  updateProfile: (session: Readonly<Session>) => Promise<Profile>;
-  updateSettings: (session: Readonly<Session>) => Promise<Settings>;
-  updateUser: (session: Readonly<Session>, updates: UpdateUser) => Promise<void>;
-}
-
 /**
  * The auth provider hook return values.
  */
 export interface AuthContext {
-  certifyProfessionalAccount: () => Promise<void>;
   fetchingUser: boolean;
   flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
   getFlagPatients: () => string[];
@@ -93,7 +71,7 @@ export interface AuthContext {
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   completeSignup: (signupForm: SignupForm) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  updatePassword: (currentPassword: string, password: string) => Promise<void>;
+  updatePassword: (currentPassword: string, password: string) => void;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
   updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;
   updateSettings: (settings: Settings, refresh?: boolean) => Promise<Settings>;
@@ -101,7 +79,6 @@ export interface AuthContext {
 }
 
 export interface AuthProvider {
-  api?: AuthAPI; // Used to test the hook
   children: ReactNode;
   value?: AuthContext; // Used for test components which need this hook
 }
