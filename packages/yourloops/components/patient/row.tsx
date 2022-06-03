@@ -28,6 +28,7 @@
 import React from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
+import moment from "moment-timezone";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import EmailIcon from "@material-ui/icons/Email";
@@ -116,7 +117,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     let patientRemoteMonitoring;
     if (patient.monitoring?.enabled) {
       if (patient.monitoring.monitoringEnd) {
-        patientRemoteMonitoring = `${t("yes")}\n(${t("until")} ${new Date(patient.monitoring.monitoringEnd).toDateString()})`;
+        const enDate = moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat("ll")).toString();
+        patientRemoteMonitoring = `${t("yes")}\n(${t("until")} ${enDate})`;
       } else {
         patientRemoteMonitoring = t("yes");
       }

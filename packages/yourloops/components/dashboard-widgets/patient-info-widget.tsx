@@ -30,13 +30,16 @@ import React, { useState } from "react";
 import moment from "moment-timezone";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import { commonComponentStyles } from "../common";
+
+import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
-import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
 
 import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
@@ -44,35 +47,24 @@ import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-in
 import { useAuth } from "../../lib/auth";
 import { MonitoringStatus } from "../../models/monitoring";
 
-const patientInfoWidgetStyles = makeStyles((theme: Theme) => (
-  {
-    button: {
-      margin: theme.spacing(1),
-    },
-    card: {
-      width: 430,
-    },
-    cardHeader: {
-      textTransform: "uppercase",
-      backgroundColor: "var(--card-header-background-color)",
-    },
-    cardContent: {
-      overflowY: "auto",
-      maxHeight: 800,
-    },
-    sectionContent: {
-      fontSize: "13px",
-      fontWeight: 300,
-      lineHeight: "15px",
-      color: theme.palette.grey[800],
-    },
-    deviceLabels: {
-      paddingLeft: theme.spacing(2),
-    },
-    deviceValues: {
-      overflowWrap: "break-word",
-    },
-  }), { name: "patient-info-widget" });
+const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
+  card: {
+    width: 430,
+  },
+  cardHeader: {
+    textTransform: "uppercase",
+    backgroundColor: "var(--card-header-background-color)",
+  },
+  deviceLabels: {
+    alignSelf: "center",
+  },
+  deviceValues: {
+    overflowWrap: "break-word",
+  },
+  marginLeft: {
+    marginLeft: theme.spacing(2),
+  },
+}), { name: "patient-info-widget" });
 
 export interface PatientInfoWidgetProps {
   patient: Readonly<Patient>,
@@ -81,6 +73,7 @@ export interface PatientInfoWidgetProps {
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const { patient } = props;
   const classes = patientInfoWidgetStyles();
+  const commonStyles = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const trNA = t("N/A");
   const authHook = useAuth();
@@ -88,17 +81,17 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const hbA1c: Settings["a1c"] = patient.settings.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
-  const birthDate = moment.utc(patient.profile.birthdate).format("L");
-  const userName = { firstName: patient.profile.firstName, lastName: patient.profile.lastName };
+  const birthdate = moment.utc(patient.profile.birthdate).format("L");
 
-  const buttonsVisible :{ invite: boolean, cancel: boolean, renewAndRemove: boolean } ={
+  const buttonsVisible: { invite: boolean, cancel: boolean, renewAndRemove: boolean } = {
     invite: false,
     cancel: false,
     renewAndRemove: false,
   };
+
   const patientInfo: Record<string, string> = {
-    patient: `${userName.firstName} ${userName.lastName}`,
-    birthdate: birthDate,
+    patient: patient.profile.fullName,
+    birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
@@ -136,90 +129,87 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         className={classes.cardHeader}
         title={t("patient-info")}
       />
-      <CardContent id="patient-info-content" className={classes.cardContent}>
-        <Grid className={classes.sectionContent} container spacing={1}>
-          {Object.keys(patientInfo).map(
-            (key) =>
-              <React.Fragment key={key}>
-                <Grid item xs={4}>
-                  <div className={`${classes.deviceLabels} device-label`}>
-                    {t(key)}:
-                  </div>
-                </Grid>
-                <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
-                  <Box display="flex" alignItems="center">
-                    <Box id={`patient-info-${key}-value`}>
-                      {patientInfo[key]}
-                    </Box>
-                    {key === "remote-monitoring" && (authHook.user?.isUserCaregiver() || authHook.user?.isUserHcp()) &&
-                      <div>
-                        {buttonsVisible.invite && <Button
+      <CardContent id="patient-info-content">
+        <Grid container spacing={1}>
+          {Object.keys(patientInfo).map((key) =>
+            <React.Fragment key={key}>
+              <Grid item xs={4} className={`${classes.deviceLabels} device-label`}>
+                <Typography variant="caption">
+                  {t(key)}:
+                </Typography>
+              </Grid>
+              <Grid item xs={8} className={`${classes.deviceValues} device-value`}>
+                <Box display="flex" alignItems="center" justifyContent="space-between">
+                  <Typography variant="body2" id={`patient-info-${key}-value`}>
+                    {patientInfo[key]}
+                  </Typography>
+                  {key === "remote-monitoring" && (authHook.user?.isUserCaregiver() || authHook.user?.isUserHcp()) &&
+                    <React.Fragment>
+                      {buttonsVisible.invite &&
+                        <Button
                           id="invite-button-id"
-                          className={classes.button}
+                          className={commonStyles.button}
                           variant="contained"
                           color="primary"
                           disableElevation
                           size="small"
-                          onClick={() => {
-                            setShowInviteRemoteMonitoringDialog(true);
-                          }}>
+                          onClick={() => setShowInviteRemoteMonitoringDialog(true)}
+                        >
                           {t("button-invite")}
                         </Button>
-                        }
-                        {buttonsVisible.cancel &&
+                      }
+                      {buttonsVisible.cancel &&
+                        <Button
+                          id="cancel-invite-button-id"
+                          className={commonStyles.button}
+                          variant="contained"
+                          color="primary"
+                          disableElevation
+                          size="small"
+                          onClick={() => console.log("cancel clicked")}
+                        >
+                          {t("button-cancel")}
+                        </Button>
+                      }
+                      {buttonsVisible.renewAndRemove &&
+                        <Box>
                           <Button
-                            id="cancel-invite-button-id"
-                            className={classes.button}
+                            id="renew-button-id"
+                            className={commonStyles.button}
                             variant="contained"
                             color="primary"
                             disableElevation
                             size="small"
-                            onClick={() => {
-                              console.log("cancel clicked");
-                            }}>
-                            {t("button-cancel")}
+                            onClick={() => console.log("Renew clicked")}
+                          >
+                            {t("renew")}
                           </Button>
-                        }
-                        {buttonsVisible.renewAndRemove &&
-                          <div>
-                            <Button
-                              id="renew-button-id"
-                              className={classes.button}
-                              variant="contained"
-                              color="primary"
-                              disableElevation
-                              size="small"
-                              onClick={() => {
-                                console.log("Renew clicked");
-                              }}>
-                              {t("button-renew")}
-                            </Button>
-                            <Button
-                              id="remove-button-id"
-                              className={classes.button}
-                              variant="contained"
-                              color="primary"
-                              disableElevation
-                              size="small"
-                              onClick={() => {
-                                console.log("Remove clicked");
-                              }}>
-                              {t("button-remove")}
-                            </Button>
-                          </div>
-                        }
-                      </div>
-                    }
-                  </Box>
-                </Grid>
-              </React.Fragment>
+                          <Button
+                            id="remove-button-id"
+                            className={`${commonStyles.button} ${classes.marginLeft}`}
+                            variant="contained"
+                            color="primary"
+                            disableElevation
+                            size="small"
+                            onClick={() => console.log("Remove clicked")}
+                          >
+                            {t("button-remove")}
+                          </Button>
+                        </Box>
+                      }
+                    </React.Fragment>
+                  }
+                </Box>
+              </Grid>
+            </React.Fragment>
           )}
         </Grid>
       </CardContent>
-      {showInviteRemoteMonitoringDialog && <RemoteMonitoringPatientInviteDialog
-        patient={patient}
-        onClose={onCloseInviteRemoteMonitoringDialog}
-      />
+      {showInviteRemoteMonitoringDialog &&
+        <RemoteMonitoringPatientInviteDialog
+          patient={patient}
+          onClose={onCloseInviteRemoteMonitoringDialog}
+        />
       }
     </Card>
   );

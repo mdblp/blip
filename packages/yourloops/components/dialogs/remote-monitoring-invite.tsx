@@ -52,36 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
-  dropdown: {
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-  },
-  fileTextField: {
-    marginRight: theme.spacing(2),
-    width: 240,
-  },
-  fileTextFieldOutlined: {
-    fontSize: 13,
-    color: "var(--text-base-color)",
-  },
-  input: {
-    display: "none",
-  },
-  label: {
-    fontWeight: 600,
-    fontSize: "13px",
-    width: "180px",
-  },
   subCategoryContainer: {
     display: "flex",
     flexDirection: "column",
     width: "50%",
-  },
-  subCategoryTitle: {
-    fontWeight: 600,
-    fontSize: "13px",
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(2),
   },
   title: {
     alignSelf: "center",
@@ -132,7 +106,12 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   };
 
   return (
-    <Dialog fullWidth={true} maxWidth="lg" open={true} onClose={onClose}>
+    <Dialog
+      fullWidth
+      maxWidth="lg"
+      open
+      onClose={onClose}
+    >
       <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
         <Box display="flex">
           <DesktopMacIcon />
@@ -144,6 +123,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
 
       <Box paddingX={4}>
         <PatientInfo patient={patient} />
+
         <Divider variant="middle" className={classes.divider} />
 
         <PatientMonitoringPrescription setPrescriptionInfo={updatePrescriptionInfo} />
@@ -154,20 +134,18 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
           3. {t("attending-physician")} ({t("optional")})
         </Typography>
         <Box display="flex" marginTop={2}>
-          <div className={classes.subCategoryContainer}>
-            <div className={classes.valueSelection}>
+          <Box className={classes.subCategoryContainer}>
+            <Box className={classes.valueSelection}>
               <Typography>{t("attending-physician")}</Typography>
-              <div className={classes.dropdown}>
+              <Box marginX={2}>
                 <TextField
                   variant="outlined"
                   size="small"
-                  onChange={(e) => {
-                    setPhysician(e.target.value);
-                  }}
+                  onChange={(e) => setPhysician(e.target.value)}
                 />
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Box>
       <DialogActions>
