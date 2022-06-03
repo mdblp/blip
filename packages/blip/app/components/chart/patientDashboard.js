@@ -12,7 +12,7 @@ const PatientDashboard = (props) => {
     //eslint-disable-next-line
     patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget, canPrint, onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientMonitored, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
@@ -50,7 +50,9 @@ const PatientDashboard = (props) => {
         trackMetric={trackMetric}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
+        {<PatientInfoWidget
+          patient={patient}
+        />}
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -75,9 +77,9 @@ const PatientDashboard = (props) => {
           loading={loading}
           onSwitchToDaily={onSwitchToDaily}
         />
-        {patientMonitored &&
+        {patient.monitoring?.enabled &&
           <ChatWidget id="dashboard-chat-widget"
-            patientId={patientMonitored.userId} userId={user.userid} teamId={patientMonitored.teamId} userRole={user.role} />
+            patient={patient} userId={user.userid} userRole={user.role} />
         }
       </Box>
     </div>
@@ -89,7 +91,6 @@ PatientDashboard.propTypes = {
   chatWidget: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
-  patientMonitored: PropTypes.object,
   prefixURL: PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,

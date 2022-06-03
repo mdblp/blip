@@ -36,17 +36,15 @@ import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-optio
 import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
-import { PatientMonitored } from "../../yourloops/lib/data/patient"
+import { Patient } from "../../yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
-import { Patient } from "../../yourloops/lib/data/patient";
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
   patient: Patient;
   setPatient: Function;
-  patientMonitored: PatientMonitored | null;
   patients: Patient[];
   userIsHCP: boolean;
   prefixURL: string;

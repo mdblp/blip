@@ -26,8 +26,15 @@
  */
 import { UNITS_TYPE } from "../lib/units/utils";
 
+export enum MonitoringStatus {
+  pending = "pending",
+  accepted = "accepted",
+}
+
 export interface Monitoring {
   enabled: boolean;
+  status?: MonitoringStatus;
+  monitoringEnd?: Date;
   parameters?: {
     bgUnit: UNITS_TYPE;
     lowBg: number;

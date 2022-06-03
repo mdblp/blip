@@ -32,7 +32,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import TuneIcon from "@material-ui/icons/Tune";
 
-import { commonTeamStyles } from "./common";
+import { commonComponentStyles } from "../common";
 import TeamAlarmsContent from "./team-alarms-content";
 import { Team, useTeam } from "../../lib/team";
 import { Monitoring } from "../../models/monitoring";
@@ -44,7 +44,7 @@ interface TeamAlarmsProps {
 
 function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
   const { team } = props;
-  const commonTeamClasses = commonTeamStyles();
+  const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();

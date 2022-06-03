@@ -39,14 +39,7 @@ import { HcpProfession } from "../../models/hcp-profession";
 import { getCurrentLang } from "../language";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
-import {
-  AuthAPI,
-  AuthContext,
-  AuthProvider,
-  JwtShorelinePayload,
-  Session,
-  SignupUser,
-} from "./models";
+import { AuthAPI, AuthContext, AuthProvider, JwtShorelinePayload, Session, SignupUser } from "./models";
 import AuthAPIImpl from "./api";
 import appConfig from "../config";
 import HttpService from "../../services/http";

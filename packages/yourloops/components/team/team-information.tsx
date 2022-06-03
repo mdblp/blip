@@ -41,7 +41,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import { Team, useTeam } from "../../lib/team";
 import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
-import { commonTeamStyles } from "./common";
+import { commonComponentStyles } from "../common";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import LeaveTeamButton from "./leave-team-button";
@@ -88,7 +88,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const loggedInUserId = authContext.user?.userid as string;
   const isUserPatient = authContext.user?.isUserPatient();
   const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
-  const commonTeamClasses = commonTeamStyles();
+  const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;
   const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null);

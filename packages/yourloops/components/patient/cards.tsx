@@ -92,7 +92,7 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   const classes = patientListStyle();
   const authHook = useAuth();
   const teamHook = useTeam();
-  const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.medicalData);
+  const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.metadata.medicalData);
   const paperRef = React.createRef<HTMLDivElement>();
 
   const userId = patient.userid;
@@ -100,7 +100,7 @@ function PatientCard(props: PatientElementCardProps): JSX.Element {
   const { tir, tbr, lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
 
   const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
-  const fullName = t("user-name", { firstName: patient.firstName, lastName: patient.lastName });
+  const fullName = t("user-name", { firstName: patient.profile.firstName, lastName: patient.profile.lastName });
 
   const onClickFlag = (e: React.MouseEvent): void => {
     e.stopPropagation();

@@ -26,35 +26,110 @@
  */
 
 import React from "react";
-import renderer from "react-test-renderer";
 import moment from "moment-timezone";
-import { loggedInUsers } from "../../common";
-import { getTheme } from "../../../components/theme";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { act } from "react-dom/test-utils";
+
 import PatientInfoWidget, { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
+import { createPatient } from "../../common/utils";
+import { render, unmountComponentAtNode } from "react-dom";
+import i18n from "../../../lib/language";
+import * as authHookMock from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
+import User from "../../../lib/auth/user";
+import { Monitoring, MonitoringStatus } from "../../../models/monitoring";
 
+jest.mock("../../../lib/auth");
 describe("PatientInfoWidget", () => {
-  const authPatient = loggedInUsers.patient;
+  const patient = createPatient("fakePatientId", []);
+  let container: HTMLElement | null = null;
 
-  function renderPatientInfoWidget(props: PatientInfoWidgetProps) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <PatientInfoWidget
-          patient={props.patient}
-        />
-      </ThemeProvider>
-    );
+  beforeAll(() => {
+    i18n.changeLanguage("en");
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserCaregiver: () => false, isUserHcp: () => true } as User };
+    });
+  });
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
+    }
+  });
+
+  function mountComponent(props: PatientInfoWidgetProps) {
+    act(() => {
+      render(
+        <AuthContextProvider>
+          <PatientInfoWidget
+            patient={props.patient}
+          />
+        </AuthContextProvider>, container);
+    });
   }
 
   it("should display correct patient information", () => {
-    const props: PatientInfoWidgetProps = { patient: authPatient };
-    const component = renderPatientInfoWidget(props);
-    const birthDate = moment.utc(authPatient.profile.patient.birthday).format("L");
-    const a1cDate = moment.utc(authPatient.settings.a1c.date).format("L");
-    expect(component.root.findByProps({ id: "patient-info-patient-value" }).props.children).toEqual(`${authPatient.firstName} ${authPatient.lastName}`);
-    expect(component.root.findByProps({ id: "patient-info-birthdate-value" }).props.children).toEqual(birthDate);
-    expect(component.root.findByProps({ id: "patient-info-email-value" }).props.children).toEqual(authPatient.username);
-    expect(component.root.findByProps({ id: "patient-info-hba1c-value" }).props.children).toEqual(`${authPatient.settings?.a1c?.value} (${a1cDate})`);
+    mountComponent({ patient });
+    const birthDate = moment.utc(patient.profile.birthdate).format("L");
+    const a1cDate = moment.utc(patient.settings.a1c.date).format("L");
+    expect(document.getElementById("patient-info-patient-value").innerHTML).toEqual(patient.profile.fullName);
+    expect(document.getElementById("patient-info-birthdate-value").innerHTML).toEqual(birthDate);
+    expect(document.getElementById("patient-info-email-value").innerHTML).toEqual(patient.profile.email);
+    expect(document.getElementById("patient-info-hba1c-value").innerHTML).toEqual(`${patient.settings?.a1c?.value} (${a1cDate})`);
+    expect(document.getElementById("patient-info-remote-monitoring-value")).toBeNull();
+    expect(document.getElementById("invite-button-id")).toBeNull();
+    expect(document.getElementById("cancel-invite-button-id")).toBeNull();
+    expect(document.getElementById("renew-button-id")).toBeNull();
+    expect(document.getElementById("remove-button-id")).toBeNull();
+  });
+
+  it("should display cancel invite button when patient is not monitored and status is pending", () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring;
+    mountComponent({ patient });
+    expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
+    expect(document.getElementById("invite-button-id")).toBeNull();
+    expect(document.getElementById("cancel-invite-button-id")).not.toBeNull();
+    expect(document.getElementById("renew-button-id")).toBeNull();
+    expect(document.getElementById("remove-button-id")).toBeNull();
+  });
+
+  it("should display renew and remove button when patient is not monitored and status is accepted", () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.accepted } as Monitoring;
+    mountComponent({ patient });
+    expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
+    expect(document.getElementById("invite-button-id")).toBeNull();
+    expect(document.getElementById("cancel-invite-button-id")).toBeNull();
+    expect(document.getElementById("renew-button-id")).not.toBeNull();
+    expect(document.getElementById("remove-button-id")).not.toBeNull();
+  });
+
+  it("should display invite button when patient is not monitored and status is undefined", () => {
+    patient.monitoring = { enabled: false, status: undefined } as Monitoring;
+    mountComponent({ patient });
+    expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("no");
+    expect(document.getElementById("invite-button-id")).not.toBeNull();
+    expect(document.getElementById("cancel-invite-button-id")).toBeNull();
+    expect(document.getElementById("renew-button-id")).toBeNull();
+    expect(document.getElementById("remove-button-id")).toBeNull();
+  });
+
+  it("should display cancel renew and remove button when patient is monitored", () => {
+    patient.monitoring = { enabled: true, status: undefined } as Monitoring;
+    mountComponent({ patient });
+    expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("yes");
+    expect(document.getElementById("invite-button-id")).toBeNull();
+    expect(document.getElementById("cancel-invite-button-id")).toBeNull();
+    expect(document.getElementById("renew-button-id")).not.toBeNull();
+    expect(document.getElementById("remove-button-id")).not.toBeNull();
   });
 });
 

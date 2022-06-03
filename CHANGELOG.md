@@ -31,6 +31,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1518 Implement drawer filters
 - YLP-1537 Display settings page in a dialog
 - YLP-1541 Plug team alarm configuration to backend
+- YLP-1544 Create dialog to invite patient in remote monitoring team
 - YLP-1547 Rework patient and caregiver list nav bar
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
