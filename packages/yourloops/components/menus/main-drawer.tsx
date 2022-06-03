@@ -38,11 +38,16 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import EmailIcon from "@material-ui/icons/Email";
+import ContactMailIcon from "@material-ui/icons/ContactMail";
 
 import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import PendingIcon from "../icons/PendingIcon";
 import { useTeam } from "../../lib/team";
 import { useAuth } from "../../lib/auth";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
+import { PatientFilterTypes } from "../../models/generic";
 
 interface MainDrawerProps {
   miniVariant?: boolean;
@@ -52,6 +57,10 @@ export const mainDrawerDefaultWidth = "240px";
 export const mainDrawerMiniVariantWidth = "57px";
 
 const styles = makeStyles((theme: Theme) => ({
+  divider: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
   drawer: {
     width: mainDrawerDefaultWidth,
     whiteSpace: "nowrap",
@@ -62,6 +71,14 @@ const styles = makeStyles((theme: Theme) => ({
   },
   drawerBoxShadow: {
     boxShadow: theme.shadows[5],
+  },
+  messagingTitle: {
+    fontWeight: 700,
+    lineHeight: "20px",
+    textTransform: "uppercase",
+  },
+  messagingTitleIcon: {
+    color: theme.palette.grey[600],
   },
   miniDrawer: {
     width: mainDrawerMiniVariantWidth,
@@ -87,8 +104,11 @@ const styles = makeStyles((theme: Theme) => ({
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const {
+    divider,
     drawer,
     drawerPaper,
+    messagingTitle,
+    messagingTitleIcon,
     miniDrawer,
     miniDrawerPaper,
     enterTransition,
@@ -105,6 +125,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
   const numberOfPendingPatients = teamHook.getPendingPatients().length;
   const numberOfDirectSharePatients = teamHook.getDirectSharePatients().length;
+  const numberOfPatientsWithUnreadMessages = teamHook.getUnreadMessagesPatients().length;
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?
@@ -112,10 +133,14 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
-    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberOfPatients})`, filter: "all" },
-    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: "flagged" },
-    { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: "pending" },
-    { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (${numberOfDirectSharePatients})`, filter: "private" },
+    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberOfPatients})`, filter: PatientFilterTypes.all },
+    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: PatientFilterTypes.flagged },
+    { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: PatientFilterTypes.pending },
+    {
+      icon: <MedicalServiceIcon />,
+      text: `${t("private-practice")} (${numberOfDirectSharePatients})`,
+      filter: PatientFilterTypes.private,
+    },
   ];
 
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant]);
@@ -133,7 +158,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       <List>
         {drawerItems.map((item, index) => (
           <Link key={index} to={`/home?filter=${item.filter}`}>
-            <ListItem button >
+            <ListItem button>
               <ListItemIcon>
                 {item.icon}
               </ListItemIcon>
@@ -143,6 +168,34 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </ListItem>
           </Link>
         ))}
+        <Box bgcolor="var(--monitoring-filter-bg-color)">
+          <Divider variant="middle" className={divider} />
+          <ListItem>
+            <ListItemIcon>
+              <ContactMailIcon className={messagingTitleIcon} />
+            </ListItemIcon>
+            <ListItemText>
+              <Box className={messagingTitle}>
+                {t("messaging")}
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <Link to={`/home?filter=${PatientFilterTypes.unread}`}>
+            <ListItem button>
+              <ListItemIcon>
+                <EmailIcon />
+              </ListItemIcon>
+              <ListItemText>
+                <Box display="flex">
+                  {t("unread-messages")}
+                  <Box borderRadius="50%" marginLeft={1} bgcolor="#00A3E2" width="24px" lineHeight="24px" textAlign="center" color="white" fontSize="14px">
+                    {numberOfPatientsWithUnreadMessages}
+                  </Box>
+                </Box>
+              </ListItemText>
+            </ListItem>
+          </Link>
+        </Box>
       </List>
     </Drawer>
   );
