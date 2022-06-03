@@ -63,6 +63,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
     idVerified,
     alarms,
     monitoring,
+    unreadMessages,
   } = iTeamMember;
 
   let teamUser = users.get(userId);
@@ -79,6 +80,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
       idVerified,
       alarms,
       monitoring,
+      unreadMessages,
     };
     users.set(userId, teamUser);
   }
@@ -117,7 +119,6 @@ export async function loadTeams(
 
   const users = new Map<string, TeamUser>();
   const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
-
   const nPatients = apiPatients.length;
   log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
 
@@ -628,7 +629,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
           }
         }
       }
-
       setTeams(teams);
       if (errorMessage !== null) {
         setErrorMessage(null);
