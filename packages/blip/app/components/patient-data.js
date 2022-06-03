@@ -507,7 +507,7 @@ class PatientDataPage extends React.Component {
    * @param {{ start: string; end: string; preset?: string; }} printOptions
    * @returns {Promise<void>}
    */
-  async generatePDF(printOptions) {
+  async generateReport(printOptions) {
     const { patient } = this.props;
     const { tidelineData, bgPrefs } = this.state;
 
@@ -546,6 +546,15 @@ class PatientDataPage extends React.Component {
 
     vizUtils.data.generatePDFStats(pdfData, this.dataUtil);
     return createPrintPDFPackage(pdfData, opts);
+  }
+
+  async generateCSV(printOptions) {
+    const { api, patient } = this.props;
+    const { tidelineData } = this.state;
+
+    const startDate = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf("day").toISOString();
+    const endDate = moment.tz(printOptions.end, tidelineData.getTimezoneAt(printOptions.end)).endOf("day").toISOString();
+    return api.exportData(patient, startDate, endDate);
   }
 
   async handleMessageCreation(message) {
@@ -693,7 +702,7 @@ class PatientDataPage extends React.Component {
   }
 
   /**
-   * @param {{ start: string; end: string; preset?: string; }|undefined} printOptions
+   * @param {{ start: string; end: string; format?: string; preset?: string; }|undefined} printOptions
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
@@ -706,6 +715,15 @@ class PatientDataPage extends React.Component {
         }
       }
     };
+    const openCSVWindow = (csv, userid) => {
+      const url = window.URL.createObjectURL(csv);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = `${userid}.csv`;
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove();
+    };
 
     this.setState({ showPDFPrintOptions: false });
 
@@ -715,23 +733,43 @@ class PatientDataPage extends React.Component {
 
     // Return a promise for the tests
     return new Promise((resolve, reject) => {
+      const { patient } = this.props;
       this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
-      this.generatePDF(printOptions)
-        .then((pdf) => {
-          this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
-          openPDFWindow(pdf);
-          resolve();
-        })
-        .catch((err) => {
-          this.log.error("generatePDF:", err);
-          this.trackMetric("export_data", "save_report", "error");
-          if (_.isFunction(window.onerror)) {
-            window.onerror("print", "patient-data", 0, 0, err);
-          }
-          reject(err);
-        }).finally(() => {
-          this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
-        });
+      if (printOptions.format === "pdf") {
+        this.generateReport(printOptions)
+          .then((pdf) => {
+            this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
+            openPDFWindow(pdf);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
+      } else {
+        this.generateCSV(printOptions)
+          .then((blob) => {
+            this.trackMetric("export_data", "save_report_csv", printOptions.preset ?? "custom");
+            openCSVWindow(blob, patient.userid);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report_csv", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
+      }
     });
   }
 
