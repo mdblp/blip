@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const MGDL_PER_MMOL = 18;
+export const MGDL_PER_MMOL = 18.01577;
 
 export enum UNITS_TYPE {
   MGDL = "mg/dL",
