@@ -488,6 +488,17 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     metrics.send("team_management", "edit_care_team");
   };
 
+  const markPatientMessagesAsRead = (patient: Patient) => {
+    const clonedTeams = teams;
+    clonedTeams.forEach(team => {
+      const patientAsTeamUser = team.members.find(member => member.user.userid === patient.userid);
+      if (patientAsTeamUser) {
+        patientAsTeamUser.user.unreadMessages = 0;
+      }
+    });
+    setTeams(clonedTeams);
+  };
+
   const updateTeamAlerts = async (team: Team): Promise<void> => {
     const session = authHook.session() as Session;
     if (!team.monitoring) {
@@ -686,6 +697,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     computeFlaggedPatients,
     invitePatient,
     inviteMember,
+    markPatientMessagesAsRead,
     createTeam,
     editTeam,
     updateTeamAlerts,

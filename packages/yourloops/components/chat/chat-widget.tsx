@@ -156,12 +156,15 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   useEffect(() => {
     async function fetchMessages() {
       const messages = await getChatMessages(team.teamId, patient.userid);
+      if (patient.metadata.unreadMessagesSent > 0) {
+        teamHook.markPatientMessagesAsRead(patient);
+      }
       setMessages(messages);
-      setNbUnread(messages.filter(m =>!(m.authorId === userId) && !m.destAck).length);
+      setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length);
     }
 
     fetchMessages();
-  }, [userId, authHook, patient.userid, team.teamId]);
+  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook]);
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
     setShowPicker(false);
