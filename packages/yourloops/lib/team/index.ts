@@ -28,7 +28,6 @@
 
 import {
   Team,
-  TeamAPI,
   TeamContext,
   TeamMember,
   TeamProvider,
@@ -48,7 +47,6 @@ import { getDisplayTeamCode } from "./utils";
 
 export {
   Team,
-  TeamAPI,
   TeamUser,
   TeamMember,
   TeamContext,

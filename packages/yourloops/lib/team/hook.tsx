@@ -33,18 +33,18 @@ import bows from "bows";
 import { FilterType, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
-import { ITeam, ITeamMember, TeamMemberRole, TeamType, TypeTeamMemberRole } from "../../models/team";
+import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 
 import { errorTextFromException, fixYLP878Settings } from "../utils";
 import metrics from "../metrics";
 import { Session, useAuth } from "../auth";
 import { notificationConversion, useNotification } from "../notifications";
-import { LoadTeams, Team, TeamAPI, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
+import { LoadTeams, Team, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
 import { DirectShareAPI } from "../share/models";
 import ShareAPIImpl from "../share";
-import TeamAPIImpl from "./api";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
+import TeamApi from "./team-api";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -101,12 +101,7 @@ export function iTeamToTeam(iTeam: ITeam, users: Map<string, TeamUser>): Team {
   return team;
 }
 
-export async function loadTeams(
-  session: Session,
-  // Default API promise calls (here for the unit tests)
-  fetchTeams: TeamAPI["fetchTeams"],
-  fetchPatients: TeamAPI["fetchPatients"]
-): Promise<LoadTeams> {
+export async function loadTeams(session: Session): Promise<LoadTeams> {
   const getFlagPatients = (): string[] => {
     const flagged = session.user.preferences?.patientsStarred;
     if (Array.isArray(flagged)) {
@@ -116,7 +111,7 @@ export async function loadTeams(
   };
 
   const users = new Map<string, TeamUser>();
-  const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
+  const [apiTeams, apiPatients] = await Promise.all([TeamApi.getTeams(), TeamApi.getPatients()]);
 
   const nPatients = apiPatients.length;
   log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
@@ -173,7 +168,7 @@ function getUserByEmail(teams: Team[], email: string): TeamUser | null {
   return null;
 }
 
-function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): TeamContext {
+function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
   // hooks (private or public variables)
   // TODO: Transform the React.useState with React.useReducer
   const authHook = useAuth();
@@ -309,6 +304,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending);
     return typeof tm === "object";
   };
+
   const isOnlyPendingInvitation = (patient: Patient): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
     return typeof tm === "undefined";
@@ -391,7 +387,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const invitePatient = async (team: Team, username: string): Promise<void> => {
-    const apiInvitation = await teamAPI.invitePatient(session, team.id, username);
+    const apiInvitation = await TeamApi.invitePatient({ teamId: team.id, email: username });
     const invitation = notificationConversion(apiInvitation);
     if (invitation === null) {
       // Should not be possible
@@ -419,8 +415,8 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     setTeams(teams);
   };
 
-  const inviteMember = async (team: Team, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
-    const apiInvitation = await teamAPI.inviteMember(session, team.id, username, role);
+  const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
+    const apiInvitation = await TeamApi.inviteMember({ teamId: team.id, email: username, role });
     const invitation = notificationConversion(apiInvitation);
     if (invitation === null) {
       // Should not be possible
@@ -457,7 +453,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       phone: team.phone,
       type: team.type,
     };
-    const iTeam = await teamAPI.createTeam(session, apiTeam);
+    const iTeam = await TeamApi.createTeam(apiTeam);
     const users = getMapUsers();
     const newTeam = iTeamToTeam(iTeam, users);
     teams.push(newTeam);
@@ -466,12 +462,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const editTeam = async (team: Team): Promise<void> => {
-    const session = authHook.session() as Session;
     const apiTeam: ITeam = {
       ...team,
       members: [],
     };
-    await teamAPI.editTeam(session, apiTeam);
+    await TeamApi.editTeam(apiTeam);
     const cachedTeam = teams.find((t: Team) => t.id === team.id);
     if (typeof cachedTeam === "object") {
       cachedTeam.name = team.name;
@@ -488,12 +483,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const updateTeamAlerts = async (team: Team): Promise<void> => {
-    const session = authHook.session() as Session;
     if (!team.monitoring) {
       throw Error("Cannot update team monitoring with undefined");
     }
     try {
-      await teamAPI.updateTeamAlerts(session, team.id, team.monitoring);
+      await TeamApi.updateTeamAlerts(team.id, team.monitoring);
     } catch (error) {
       console.error(error);
       throw Error(`Failed to update team with id ${team.id}`);
@@ -515,13 +509,13 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     }
     log.info("leaveTeam", { ourselve, team });
     if (ourselve.role === TeamMemberRole.patient) {
-      await teamAPI.removePatient(session, team.id, ourselve.user.userid);
+      await TeamApi.removePatient(team.id, ourselve.user.userid);
       metrics.send("team_management", "leave_team");
     } else if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && teamHasOnlyOneMember(team)) {
-      await teamAPI.deleteTeam(session, team.id);
+      await TeamApi.deleteTeam(team.id);
       metrics.send("team_management", "delete_team");
     } else {
-      await teamAPI.leaveTeam(session, team.id);
+      await TeamApi.leaveTeam(session.user.userid, team.id);
       metrics.send("team_management", "leave_team");
     }
     const idx = teams.findIndex((t: Team) => t.id === team.id);
@@ -540,7 +534,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       }
       await notificationHook.cancel(member.invitation);
     } else {
-      await teamAPI.removeMember(session, member.team.id, member.user.userid, member.user.username);
+      await TeamApi.removeMember({
+        teamId: member.team.id,
+        userId: member.user.userid,
+        email: member.user.username,
+      });
     }
     const { team } = member;
     const idx = team.members.findIndex((m: TeamMember) => m.user.userid === member.user.userid);
@@ -562,7 +560,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     if (teamId === "private") {
       await directShareAPI.removeDirectShare(session, patient.userid);
     } else {
-      await teamAPI.removePatient(session, teamId, patient.userid);
+      await TeamApi.removePatient(teamId, patient.userid);
     }
 
     const team = teams.find(team => team.id === teamId);
@@ -581,8 +579,13 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     }
   };
 
-  const changeMemberRole = async (member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void> => {
-    await teamAPI.changeMemberRole(session, member.team.id, member.user.userid, member.user.username, role);
+  const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
+    await TeamApi.changeMemberRole({
+      teamId: member.team.id,
+      userId: member.user.userid,
+      email: member.user.username,
+      role,
+    });
     member.role = role as TeamMemberRole;
     setTeams(teams);
     metrics.send("team_management", "manage_admin_permission", role === "admin" ? "grant" : "revoke");
@@ -596,16 +599,12 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
   };
 
   const getTeamFromCode = async (code: string): Promise<Readonly<Team> | null> => {
-    const iTeam = await teamAPI.getTeamFromCode(session, code);
-    if (iTeam === null) {
-      return null;
-    }
-    const team: Team = { ...iTeam, members: [] };
-    return team;
+    const iTeam = await TeamApi.getTeamFromCode(code);
+    return iTeam ? { ...iTeam, members: [] } : null;
   };
 
   const joinTeam = async (teamId: string): Promise<void> => {
-    await teamAPI.joinTeam(session, teamId);
+    await TeamApi.joinTeam(session.user.userid, teamId);
     refresh(true);
   };
 
@@ -616,46 +615,49 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     log.info("init");
     lock = true;
 
-    loadTeams(session, teamAPI.fetchTeams, teamAPI.fetchPatients).then(({ teams, flaggedNotInResult }: LoadTeams) => {
-      log.debug("Loaded teams: ", teams);
-      for (const invitation of notificationHook.sentInvitations) {
-        const user = getUserByEmail(teams, invitation.email);
-        if (user) {
-          for (const member of user.members) {
-            if (member.status === UserInvitationStatus.pending) {
-              member.invitation = invitation;
+    loadTeams(session)
+      .then(({ teams, flaggedNotInResult }: LoadTeams) => {
+        log.debug("Loaded teams: ", teams);
+        for (const invitation of notificationHook.sentInvitations) {
+          const user = getUserByEmail(teams, invitation.email);
+          if (user) {
+            for (const member of user.members) {
+              if (member.status === UserInvitationStatus.pending) {
+                member.invitation = invitation;
+              }
             }
           }
         }
-      }
 
-      setTeams(teams);
-      if (errorMessage !== null) {
-        setErrorMessage(null);
-      }
+        setTeams(teams);
+        if (errorMessage !== null) {
+          setErrorMessage(null);
+        }
 
-      if (flaggedNotInResult.length > 0) {
-        // For some reason, the flagged list is not accurate - update it
-        log.warn("Missing patients in team list", flaggedNotInResult);
-        const validUserIds = authHook.getFlagPatients().filter((userId: string) => !flaggedNotInResult.includes(userId));
-        authHook.setFlagPatients(validUserIds);
-      }
-    }).catch((reason: unknown) => {
-      log.error(reason);
-      const message = errorTextFromException(reason);
-      if (message !== errorMessage) {
-        setErrorMessage(message);
-      }
-    }).finally(() => {
-      log.debug("Initialized !");
-      setInitialized(true);
-      // Clear the lock
-      lock = false;
-    });
+        if (flaggedNotInResult.length > 0) {
+          // For some reason, the flagged list is not accurate - update it
+          log.warn("Missing patients in team list", flaggedNotInResult);
+          const validUserIds = authHook.getFlagPatients().filter((userId: string) => !flaggedNotInResult.includes(userId));
+          authHook.setFlagPatients(validUserIds);
+        }
+      })
+      .catch((reason: unknown) => {
+        log.error(reason);
+        const message = errorTextFromException(reason);
+        if (message !== errorMessage) {
+          setErrorMessage(message);
+        }
+      })
+      .finally(() => {
+        log.debug("Initialized !");
+        setInitialized(true);
+        // Clear the lock
+        lock = false;
+      });
 
   };
 
-  React.useEffect(initHook, [initialized, errorMessage, teams, session, authHook, notificationHook, teamAPI]);
+  React.useEffect(initHook, [initialized, errorMessage, teams, session, authHook, notificationHook]);
 
   return {
     teams,
@@ -704,8 +706,8 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
  * @param props for team provider & children
  */
 export function TeamContextProvider(props: TeamProvider): JSX.Element {
-  const { children, teamAPI, directShareAPI } = props;
-  const context = TeamContextImpl(teamAPI ?? TeamAPIImpl, directShareAPI ?? ShareAPIImpl); // eslint-disable-line new-cap
+  const { children, directShareAPI } = props;
+  const context = TeamContextImpl(directShareAPI ?? ShareAPIImpl); // eslint-disable-line new-cap
   return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>;
 }
 

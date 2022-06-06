@@ -29,16 +29,8 @@
 import { UserInvitationStatus, PostalAddress, FilterType } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
-import { INotificationAPI } from "../../models/notification";
 import { INotification } from "../notifications";
-import {
-  ITeam,
-  ITeamMember,
-  TeamType,
-  TeamMemberRole,
-  TypeTeamMemberRole,
-} from "../../models/team";
-import { Session } from "../auth";
+import { TeamType, TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { DirectShareAPI } from "../share/models";
 import { Patient, PatientTeam } from "../data/patient";
 import { Monitoring } from "../../models/monitoring";
@@ -73,23 +65,6 @@ export interface Team {
   description?: string;
   members: TeamMember[];
   monitoring?: Monitoring;
-}
-
-export interface TeamAPI {
-  fetchTeams: (session: Session) => Promise<ITeam[]>;
-  fetchPatients: (session: Session) => Promise<ITeamMember[]>;
-  invitePatient: (session: Session, teamId: string, username: string) => Promise<INotificationAPI>;
-  inviteMember: (session: Session, teamId: string, username: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<INotificationAPI>;
-  createTeam: (session: Session, team: Partial<ITeam>) => Promise<ITeam>;
-  editTeam: (session: Session, editedTeam: ITeam) => Promise<void>;
-  updateTeamAlerts: (session: Session, teamId: string, monitoring: Monitoring) => Promise<void>
-  deleteTeam: (session: Session, teamId: string) => Promise<void>;
-  leaveTeam: (session: Session, teamId: string) => Promise<void>;
-  removeMember: (session: Session, teamId: string, userId: string, email: string) => Promise<void>;
-  removePatient: (session: Session, teamId: string, userId: string) => Promise<void>;
-  changeMemberRole: (session: Session, teamId: string, userId: string, email: string, role: Exclude<TypeTeamMemberRole, "patient">) => Promise<void>;
-  getTeamFromCode: (session: Session, code: string) => Promise<ITeam | null>;
-  joinTeam: (session: Session, teamId: string) => Promise<void>;
 }
 
 export interface TeamContext {
@@ -193,30 +168,34 @@ export interface TeamContext {
    * @param teamId A team id
    * @returns {boolean} True if members status is pending in given team
    */
-   isUserInvitationPending: (patient: Patient, teamId: string) => boolean;
+  isUserInvitationPending: (patient: Patient, teamId: string) => boolean;
   /**
    * @param user The user to test
    * @returns {boolean} True if members status is accepted in at least a team
    */
-   isInAtLeastATeam: (patient: Patient) => boolean;
+  isInAtLeastATeam: (patient: Patient) => boolean;
+
   /**
    * Return true if this user is in a specific team
    * @param user The user to test
    * @param teamId A team id
    */
   isInTeam(patient: Patient, teamId: string): boolean;
+
   /**
    * Return the list of patient updated with the flag attribute.
    * @param patients The patients to update
    * @param flaggedPatients The list of patients that the current user has flagged
    */
-  computeFlaggedPatients(patients : Patient[], flaggedPatients: string[]): Patient[];
+  computeFlaggedPatients(patients: Patient[], flaggedPatients: string[]): Patient[];
+
   /**
    * As an HCP invite a patient to a team.
    * @param team The team to invite the patient
    * @param username The patient email
    */
   invitePatient(team: Team, username: string): Promise<void>;
+
   /**
    * As an HCP invite a member (non patient)
    * @param team The team to invite the member
@@ -224,26 +203,31 @@ export interface TeamContext {
    * @param role The member role
    */
   inviteMember(team: Team, username: string, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void>;
+
   /**
    * Create a new team
    * @param team The team to create
    */
   createTeam(team: Partial<Team>): Promise<void>;
+
   /**
    * Change some team infos (name, address...)
    * @param team The updated team
    */
   editTeam(team: Team): Promise<void>;
+
   /**
    * Update team alarm configuration
    * @param team The updated team
    */
   updateTeamAlerts(team: Team): Promise<void>;
+
   /**
    * Leave a team
    * @param team The team to leave
    */
   leaveTeam(team: Team): Promise<void>;
+
   /**
    * Remove a team member from a team
    * @param member The member to remove
@@ -257,18 +241,21 @@ export interface TeamContext {
    * @param teamId id of the team ("private" if it's a private practice)
    */
   removePatient(patient: Patient, member: PatientTeam, teamId: string): Promise<void>;
+
   /**
    * Change a member role
    * @param member The concerned member
    * @param role The new role
    */
   changeMemberRole(member: TeamMember, role: Exclude<TypeTeamMemberRole, "patient">): Promise<void>;
+
   /**
    * Update a patient medical data
    * @param userId Patient's userId
    * @param medicalData The medical data to set
    */
   setPatientMedicalData(userId: string, medicalData: MedicalData | null): void;
+
   /**
    * Retreive a team from it's 9 digit code.
    * Used by patient users to join a team
@@ -282,7 +269,6 @@ export interface TeamContext {
 
 export interface TeamProvider {
   children: React.ReactNode;
-  teamAPI?: TeamAPI;
   directShareAPI?: DirectShareAPI;
 }
 
