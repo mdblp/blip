@@ -63,6 +63,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
     idVerified,
     alarms,
     monitoring,
+    unreadMessages,
   } = iTeamMember;
 
   let teamUser = users.get(userId);
@@ -79,6 +80,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
       idVerified,
       alarms,
       monitoring,
+      unreadMessages,
     };
     users.set(userId, teamUser);
   }
@@ -117,7 +119,6 @@ export async function loadTeams(
 
   const users = new Map<string, TeamUser>();
   const [apiTeams, apiPatients] = await Promise.all([fetchTeams(session), fetchPatients(session)]);
-
   const nPatients = apiPatients.length;
   log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
 
@@ -487,6 +488,17 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     metrics.send("team_management", "edit_care_team");
   };
 
+  const markPatientMessagesAsRead = (patient: Patient) => {
+    const clonedTeams = teams;
+    clonedTeams.forEach(team => {
+      const patientAsTeamUser = team.members.find(member => member.user.userid === patient.userid);
+      if (patientAsTeamUser) {
+        patientAsTeamUser.user.unreadMessages = 0;
+      }
+    });
+    setTeams(clonedTeams);
+  };
+
   const updateTeamAlerts = async (team: Team): Promise<void> => {
     const session = authHook.session() as Session;
     if (!team.monitoring) {
@@ -652,7 +664,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
           }
         }
       }
-
       setTeams(teams);
       if (errorMessage !== null) {
         setErrorMessage(null);
@@ -710,6 +721,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     computeFlaggedPatients,
     invitePatient,
     inviteMember,
+    markPatientMessagesAsRead,
     createTeam,
     editTeam,
     updatePatientAlerts,

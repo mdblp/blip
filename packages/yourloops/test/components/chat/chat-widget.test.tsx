@@ -37,7 +37,6 @@ import { render, unmountComponentAtNode } from "react-dom";
 import * as chatAPI from "../../../lib/chat/api";
 import { Patient, PatientTeam } from "../../../lib/data/patient";
 import * as teamHookMock from "../../../lib/team";
-import { TeamContextProvider } from "../../../lib/team";
 import { IMessage } from "../../../models/chat";
 
 jest.mock("../../../lib/team");
@@ -51,6 +50,7 @@ describe("Chat widget", () => {
   const patient: Patient = {
     userid: "132",
     teams: [patientTeam],
+    metadata : { unreadMessagesSent : 0 },
   } as Patient;
 
   let container: HTMLElement | null = null;
@@ -60,9 +60,7 @@ describe("Chat widget", () => {
       return new Promise((resolve) => {
         render(
           <AuthContextProvider value={authContext}>
-            <TeamContextProvider>
-              <ChatWidget patient={patient} userRole={"patient"} userId={"254"} />
-            </TeamContextProvider>
+            <ChatWidget patient={patient} userRole={"patient"} userId={"254"} />
           </AuthContextProvider>, container, resolve);
       });
     });
