@@ -42,6 +42,9 @@ import { commonComponentStyles } from "../common";
 import { Patient } from "../../lib/data/patient";
 import PatientInfo from "../patient/patient-info";
 import PatientMonitoringPrescription, { PrescriptionInfo } from "../patient/patient-monitoring-prescription";
+import { useNotification } from "../../lib/notifications";
+import { useTeam } from "../../lib/team";
+import { MonitoringStatus } from "../../models/monitoring";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -78,6 +81,8 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   const { patient, onClose } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
+  const notificationHook = useNotification();
+  const teamHook = useTeam();
   const [physician, setPhysician] = useState("");
   let prescriptionInfo: PrescriptionInfo = {
     teamId: undefined,
@@ -87,12 +92,26 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   };
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
-  const onSave = () => {
+  const onSave = async () => {
     console.log(prescriptionInfo.teamId);
     console.log(prescriptionInfo.memberId);
     console.log(prescriptionInfo.file);
     console.log(prescriptionInfo.numberOfMonth);
     console.log(physician);
+    const monitoringEnd = new Date();
+    monitoringEnd.setMonth(monitoringEnd.getMonth() + 3);
+    if (!prescriptionInfo.teamId) {
+      throw Error("Cannot invite patient as remote monitoring team id has not been defined");
+    }
+    await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd);
+    patient.monitoring =
+      {
+        enabled: false,
+        status: MonitoringStatus.pending,
+        monitoringEnd,
+      };
+    teamHook.editPatientRemoteMonitoring(patient);
+    onClose();
   };
 
   const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo) => {

@@ -235,6 +235,10 @@ export interface TeamContext {
    */
   editTeam(team: Team): Promise<void>;
   /**
+   * @param patient the patient to update
+   */
+  editPatientRemoteMonitoring(patient: Patient): void;
+  /**
    * Update team alarm configuration
    * @param team The updated team
    */

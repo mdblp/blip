@@ -30,18 +30,22 @@ import moment from "moment-timezone";
 import { act } from "react-dom/test-utils";
 
 import PatientInfoWidget, { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
-import { createPatient } from "../../common/utils";
+import { buildTeam, buildTeamMember, createPatient } from "../../common/utils";
 import { render, unmountComponentAtNode } from "react-dom";
 import i18n from "../../../lib/language";
 import * as authHookMock from "../../../lib/auth";
 import { AuthContextProvider } from "../../../lib/auth";
+import * as teamHookMock from "../../../lib/team";
 import User from "../../../lib/auth/user";
 import { Monitoring, MonitoringStatus } from "../../../models/monitoring";
 
 jest.mock("../../../lib/auth");
+jest.mock("../../../lib/team");
 describe("PatientInfoWidget", () => {
   const patient = createPatient("fakePatientId", []);
   let container: HTMLElement | null = null;
+  const adminMember = buildTeamMember();
+  const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember]);
 
   beforeAll(() => {
     i18n.changeLanguage("en");
@@ -49,7 +53,13 @@ describe("PatientInfoWidget", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserCaregiver: () => false, isUserHcp: () => true } as User };
+      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, userid: adminMember.user.userid } as User };
+    });
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { getRemoteMonitoringTeams: () => [remoteMonitoringTeam] };
     });
   });
 
