@@ -43,9 +43,6 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     alertColor: {
       color: theme.palette.warning.main,
     },
-    configureIcon: {
-      marginRight: theme.spacing(2),
-    },
     eventCard: {
       width: "400px",
       height: "350px",
@@ -53,6 +50,9 @@ const chatWidgetStyles = makeStyles((theme: Theme) => {
     eventCardHeader: {
       textTransform: "uppercase",
       backgroundColor: "var(--card-header-background-color)",
+    },
+    headerIcon: {
+      display: "flex",
     },
   };
 });
@@ -89,10 +89,14 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   };
 
   return (
-    <Card className={classes.eventCard} id="chat-widget">
+    <Card className={classes.eventCard} id="alarm-card">
       <CardHeader
         id="alarm-card-header-id"
-        avatar={<AnnouncementIcon className={noAlarmActive ? "" : classes.alertColor} />}
+        avatar={
+          <AnnouncementIcon
+            className={noAlarmActive ? "headerIcon" : `${classes.alertColor} ${classes.headerIcon}`}
+          />
+        }
         className={classes.eventCardHeader}
         title={`${t("events")}${numberOfAlarmsLabel}`}
         action={
@@ -100,10 +104,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
             {!loggedInUser?.isUserPatient() &&
               <IconButton id="configure-icon-button-id" aria-label="settings"
                 onClick={() => setShowPatientAlarmDialog(true)}>
-                <TuneIcon className={classes.configureIcon} />
-                <Box fontSize={14} fontWeight={600} color={"var(--text-base-color)"}>
-                  {t("configure")}
-                </Box>
+                <TuneIcon />
               </IconButton>
             }
           </div>
@@ -115,7 +116,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         </Box>
         <Box id="tir-alarm-id" display="flex" fontSize="13px"
           className={timeSpentAwayFromTargetActive ? classes.alertColor : ""}>
-          <div>{t("time-out-of-range-target")}</div>
+          {t("time-out-of-range-target")}
           <Box
             marginLeft="auto"
           >
@@ -124,7 +125,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         </Box>
         <Box id="severe-hypo-alarm-id" display="flex" fontSize="13px"
           className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ""}>
-          <div>{t("alert-hypoglycemic")}</div>
+          {t("alert-hypoglycemic")}
           <Box
             marginLeft="auto"
           >
@@ -133,7 +134,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         </Box>
         <Box id="non-data-transmission-alarm-id" display="flex" fontSize="13px"
           className={nonDataTransmissionActive ? classes.alertColor : ""}>
-          <div>{t("data-not-transferred")}</div>
+          {t("data-not-transferred")}
           <Box marginLeft="auto">{`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
       </Box>

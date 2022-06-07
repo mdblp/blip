@@ -88,7 +88,6 @@
   "chat-messages-header": "Messages",
   "choice-of-healthcare-professional": "Choice of healthcare professional",
   "choice-of-remote-monitoring-team": "Choice of remote monitoring team",
-  "configure": "Configure",
   "confirm-new-password": "Confirm new password",
   "consent-caregiver-privacy-policy": "I have read and accepted YourLoops <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>. Hereby, I consent to the processing of my personal data by Diabeloop so I can benefit from YourLoops services.",
   "consent-caregiver-terms-of-use": "I have read and accepted YourLoops <linkTerms>{{terms}}</linkTerms>. Hereby, I undertake to use YourLoops solely in accordance with these Terms of Use and what is allowed by the law.",
