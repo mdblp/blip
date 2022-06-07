@@ -59,7 +59,7 @@ export const mainDrawerMiniVariantWidth = "57px";
 const styles = makeStyles((theme: Theme) => ({
   countLabel: {
     borderRadius: "50%",
-    marginLeft: theme.spacing(1),
+    marginLeft: "auto",
     backgroundColor: theme.palette.primary.main,
     width: "24px",
     lineHeight: "24px",
@@ -207,9 +207,11 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               <ListItemText>
                 <Box display="flex">
                   {t("unread-messages")}
-                  <Box className={countLabel}>
-                    {numberOfPatientsWithUnreadMessages}
-                  </Box>
+                  {numberOfPatientsWithUnreadMessages > 0 &&
+                    <Box className={countLabel}>
+                      {numberOfPatientsWithUnreadMessages}
+                    </Box>
+                  }
                 </Box>
               </ListItemText>
             </ListItem>
