@@ -31,7 +31,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
-import { FilterType, UserInvitationStatus } from "../../../models/generic";
+import { FilterType, PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
 import { loggedInUsers } from "../../common";
 import { directShareAPI } from "../direct-share/hook";
 import { teamAPI } from "./utils";
@@ -89,20 +89,13 @@ describe("Team hook", () => {
   describe("filterPatients", () => {
     it("should return correct patients when filter is pending", () => {
       const patientsExpected = patients.filter(patient => patient.teams.find(team => team.status === UserInvitationStatus.pending) !== undefined);
-      const patientsReceived = teamHook.filterPatients(FilterType.pending, "", []);
+      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.pending, "", []);
       expect(patientsReceived).toEqual(patientsExpected);
-    });
-
-    it("should return correct patients when filter is a teamId", () => {
-      const teamId = patients[1].teams[0].teamId;
-      const patientExpected = patients.filter(patient => patient.teams.find(team => team.teamId === teamId && team.status !== UserInvitationStatus.pending) !== undefined);
-      const patientsReceived = teamHook.filterPatients(teamId, "", []);
-      expect(patientsReceived).toEqual(patientExpected);
     });
 
     it("should return correct patients when provided a flag list", () => {
       const patientExpected = patients[0];
-      const patientsReceived = teamHook.filterPatients(FilterType.flagged, "", [patientExpected.userid]);
+      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.flagged, "", [patientExpected.userid]);
       expect(patientsReceived).toEqual([patientExpected]);
     });
   });
@@ -114,22 +107,6 @@ describe("Team hook", () => {
       patientsUpdated.forEach(patient => {
         expect(patient.flagged).toBe(flaggedPatientIds.includes(patient.userid));
       });
-    });
-  });
-
-  describe("isUserInvitationPending", () => {
-    it("should return true when team user has a pending status in given team", () => {
-      const teamId = "fakeTeamId";
-      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.pending)]);
-      const res = teamHook.isUserInvitationPending(teamUser, teamId);
-      expect(res).toBe(true);
-    });
-
-    it("should return false when team user does not have a pending status in given team", () => {
-      const teamId = "fakeTeamId";
-      const teamUser = createPatient("id1", [createPatientTeam(teamId, UserInvitationStatus.accepted)]);
-      const res = teamHook.isUserInvitationPending(teamUser, teamId);
-      expect(res).toBe(false);
     });
   });
 

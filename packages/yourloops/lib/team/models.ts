@@ -98,6 +98,7 @@ export interface TeamContext {
   initialized: boolean;
   /** The error message set if there is any error */
   errorMessage: string | null;
+  patientsFilterStats: PatientFilterStats;
   /**
    * Refresh the team list & members.
    *
@@ -142,16 +143,12 @@ export interface TeamContext {
    */
   getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam;
   /**
-   * Return all direct share patients
-   */
-  getDirectSharePatients: () => Readonly<Patient>[];
-  /**
    * Return all patients filtered on the given params
    * @param filterType a FilterType value or a team id
    * @param filter a patient name
    * @param flagged the list of flagged patients
    */
-  filterPatients: (filterType: PatientFilterTypes | string, filter: string, flagged: string[]) => Patient[];
+  filterPatients: (filterType: PatientFilterTypes, filter: string, flagged: string[]) => Patient[];
   /**
    * Return the medical members of a team.
    */
@@ -184,12 +181,6 @@ export interface TeamContext {
    * @returns {boolean} True if all members status is pending
    */
   isOnlyPendingInvitation: (patient: Patient) => boolean;
-  /**
-   * @param user The user to test
-   * @param teamId A team id
-   * @returns {boolean} True if members status is pending in given team
-   */
-   isUserInvitationPending: (patient: Patient, teamId: string) => boolean;
   /**
    * @param user The user to test
    * @returns {boolean} True if members status is accepted in at least a team
@@ -289,4 +280,16 @@ export interface TeamProvider {
 export interface LoadTeams {
   teams: Team[];
   flaggedNotInResult: string[];
+}
+
+export interface PatientFilterStats {
+  all: number,
+  pending: number,
+  directShare: number,
+  unread: number,
+  outOfRange: number,
+  severeHypoglycemia: number,
+  dataNotTransferred: number,
+  remoteMonitored: number,
+  renew: number,
 }
