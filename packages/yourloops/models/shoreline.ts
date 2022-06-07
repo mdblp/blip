@@ -98,7 +98,8 @@ interface IUser {
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
   alarms?: Alarm | null;
-  monitoring?: Monitoring
+  monitoring?: Monitoring;
+  unreadMessages?: number;
 }
 
 export { IUser, Profile, Settings, Preferences, Consent, UserRoles };
