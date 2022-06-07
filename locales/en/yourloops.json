@@ -214,7 +214,6 @@
   "new-care-team": "New care team",
   "new-password": "New password",
   "no": "No",
-  "no-on-going-alarm": "No on going alarm",
   "no-password": "Missing password",
   "not-logged-in": "You are not logged in",
   "notification-caregiver-invitation-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",

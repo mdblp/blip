@@ -29,7 +29,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Box, CardHeader, IconButton, Typography } from "@material-ui/core";
+import { Box, CardHeader, IconButton } from "@material-ui/core";
 import TuneIcon from "@material-ui/icons/Tune";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 
@@ -92,7 +92,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
     <Card className={classes.eventCard} id="chat-widget">
       <CardHeader
         id="alarm-card-header-id"
-        avatar={<AnnouncementIcon className={classes.alertColor} />}
+        avatar={<AnnouncementIcon className={noAlarmActive ? "" : classes.alertColor} />}
         className={classes.eventCardHeader}
         title={`${t("events")}${numberOfAlarmsLabel}`}
         action={
@@ -113,35 +113,29 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         <Box fontSize="16px" marginBottom={1} fontWeight={600} className={classes.alertColor}>
           {t("current-events")}
         </Box>
-        {timeSpentAwayFromTargetActive &&
-          <Box id="tir-alarm-id" display="flex" fontSize="13px" className={classes.alertColor}>
-            <div>{t("time-out-of-range-target")}</div>
-            <Box
-              marginLeft="auto"
-            >
-              {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
-            </Box>
+        <Box id="tir-alarm-id" display="flex" fontSize="13px"
+          className={timeSpentAwayFromTargetActive ? classes.alertColor : ""}>
+          <div>{t("time-out-of-range-target")}</div>
+          <Box
+            marginLeft="auto"
+          >
+            {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
           </Box>
-        }
-        {frequencyOfSevereHypoglycemiaActive &&
-          <Box id="severe-hypo-alarm-id" display="flex" fontSize="13px" className={classes.alertColor}>
-            <div>{t("alert-hypoglycemic")}</div>
-            <Box
-              marginLeft="auto"
-            >
-              {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
-            </Box>
+        </Box>
+        <Box id="severe-hypo-alarm-id" display="flex" fontSize="13px"
+          className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ""}>
+          <div>{t("alert-hypoglycemic")}</div>
+          <Box
+            marginLeft="auto"
+          >
+            {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           </Box>
-        }
-        {nonDataTransmissionActive &&
-          <Box id="non-data-transmission-alarm-id" display="flex" fontSize="13px" className={classes.alertColor}>
-            <div>{t("data-not-transferred")}</div>
-            <Box marginLeft="auto">{`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}</Box>
-          </Box>
-        }
-        {noAlarmActive &&
-          <Typography id="no-alarm-active-label-id">{t("no-on-going-alarm")}</Typography>
-        }
+        </Box>
+        <Box id="non-data-transmission-alarm-id" display="flex" fontSize="13px"
+          className={nonDataTransmissionActive ? classes.alertColor : ""}>
+          <div>{t("data-not-transferred")}</div>
+          <Box marginLeft="auto">{`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}</Box>
+        </Box>
       </Box>
       {showPatientAlarmDialog &&
         <PatientAlarmDialog patient={patient} onClose={onClosePatientAlarmDialog} />

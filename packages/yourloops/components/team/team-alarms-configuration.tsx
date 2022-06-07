@@ -38,11 +38,11 @@ import { Monitoring } from "../../models/monitoring";
 import { useAlert } from "../utils/snackbar";
 import AlarmsContent from "../alarm/alarms-content";
 
-interface TeamAlarmsProps {
+interface TeamAlarmsConfigurationProps {
   team: Team,
 }
 
-function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
+function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
   const { team } = props;
   const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
@@ -86,4 +86,4 @@ function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
   );
 }
 
-export default TeamAlarms;
+export default TeamAlarmsConfiguration;

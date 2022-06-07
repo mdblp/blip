@@ -112,65 +112,6 @@ describe("AlarmCard", () => {
     expect(document.getElementById("alarm-card-header-id").querySelector(".MuiCardHeader-title").innerHTML).toEqual("events (+2)");
   });
 
-  it("should display tir alarm", () => {
-    const alarms: Alarm = {
-      timeSpentAwayFromTargetRate: 0,
-      timeSpentAwayFromTargetActive: true,
-      frequencyOfSevereHypoglycemiaRate: 5,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 10,
-      nonDataTransmissionActive: false,
-    };
-    const patientWithAlarms = createPatient("fakePatientId", [], alarms);
-    mountComponent({ patient: patientWithAlarms });
-    expect(document.getElementById("tir-alarm-id")).not.toBeNull();
-    expect(document.getElementById("severe-hypo-alarm-id")).toBeNull();
-    expect(document.getElementById("non-data-transmission-alarm-id")).toBeNull();
-    expect(document.getElementById("no-alarm-active-label-id")).toBeNull();
-  });
-
-  it("should display severe hypo alarm", () => {
-    const alarms: Alarm = {
-      timeSpentAwayFromTargetRate: 0,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 5,
-      frequencyOfSevereHypoglycemiaActive: true,
-      nonDataTransmissionRate: 10,
-      nonDataTransmissionActive: false,
-    };
-    const patientWithAlarms = createPatient("fakePatientId", [], alarms);
-    mountComponent({ patient: patientWithAlarms });
-    expect(document.getElementById("tir-alarm-id")).toBeNull();
-    expect(document.getElementById("severe-hypo-alarm-id")).not.toBeNull();
-    expect(document.getElementById("non-data-transmission-alarm-id")).toBeNull();
-    expect(document.getElementById("no-alarm-active-label-id")).toBeNull();
-  });
-
-  it("should display non data transmission alarm", () => {
-    const alarms: Alarm = {
-      timeSpentAwayFromTargetRate: 0,
-      timeSpentAwayFromTargetActive: false,
-      frequencyOfSevereHypoglycemiaRate: 5,
-      frequencyOfSevereHypoglycemiaActive: false,
-      nonDataTransmissionRate: 10,
-      nonDataTransmissionActive: true,
-    };
-    const patientWithAlarms = createPatient("fakePatientId", [], alarms);
-    mountComponent({ patient: patientWithAlarms });
-    expect(document.getElementById("tir-alarm-id")).toBeNull();
-    expect(document.getElementById("severe-hypo-alarm-id")).toBeNull();
-    expect(document.getElementById("non-data-transmission-alarm-id")).not.toBeNull();
-    expect(document.getElementById("no-alarm-active-label-id")).toBeNull();
-  });
-
-  it("should display no alarm active label", () => {
-    mountComponent();
-    expect(document.getElementById("tir-alarm-id")).toBeNull();
-    expect(document.getElementById("severe-hypo-alarm-id")).toBeNull();
-    expect(document.getElementById("non-data-transmission-alarm-id")).toBeNull();
-    expect(document.getElementById("no-alarm-active-label-id")).not.toBeNull();
-  });
-
   it("should open dialog when clicking on configure button and close it when clicking on cancel", () => {
     const alarm: Alarm = {
       timeSpentAwayFromTargetRate: 10,

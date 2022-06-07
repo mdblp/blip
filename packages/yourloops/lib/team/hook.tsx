@@ -510,13 +510,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       console.error(error);
       throw Error(`Failed to update team with id ${team.id}`);
     }
-    const cachedTeam = teams.find(t => t.id === team.id);
-    if (cachedTeam) {
-      cachedTeam.monitoring = team.monitoring;
-      setTeams(teams);
-    } else {
-      throw Error(`Could not find team with id ${team.id}`);
-    }
+    refresh(true);
   };
 
   const updatePatientAlerts = async (patient: Patient): Promise<void> => {
@@ -534,13 +528,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       console.error(error);
       throw Error(`Failed to update patient with id ${patient.userid}`);
     }
-    const teamMembers = team.members;
-    const cachedMember = teamMembers.find(member => member.user.userid === patient.userid);
-    if (!cachedMember) {
-      throw Error("Cannot find patient in members list");
-    }
-    cachedMember.user.monitoring = patient.monitoring;
-    setTeams(teams);
+    refresh(true);
   };
 
   const leaveTeam = async (team: Team): Promise<void> => {

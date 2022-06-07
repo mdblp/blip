@@ -44,7 +44,7 @@ import TeamInformation from "../../components/team/team-information";
 import TeamMembers from "../../components/team/team-members";
 import { commonComponentStyles } from "../../components/common";
 import { useAuth } from "../../lib/auth";
-import TeamAlarms from "../../components/team/team-alarms";
+import TeamAlarmsConfiguration from "../../components/team/team-alarms-configuration";
 
 const useStyles = makeStyles((theme: Theme) => ({
   activeLink: {
@@ -228,7 +228,7 @@ function TeamDetailPage(): JSX.Element {
                           data-link="configuration"
                           className={classes.refElement}
                         >
-                          <TeamAlarms team={dropdownData.selectedTeam} />
+                          <TeamAlarmsConfiguration team={dropdownData.selectedTeam} />
                         </div>
                       </div>
                     }

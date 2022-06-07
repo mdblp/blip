@@ -108,7 +108,7 @@ export const MAX_VERY_LOW_BG = 90;
 export const MIN_LOW_BG = 50;
 export const MAX_LOW_BG = 100;
 export const PERCENTAGES = [...new Array(21)]
-  .map((_each, index) => `${index * 5}%`);
+  .map((_each, index) => `${index * 5}%`).slice(1, 21);
 
 function AlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   const { monitoring, saveInProgress, showCancelButton, onSave, onClose } = props;
@@ -369,7 +369,7 @@ function AlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
               <BasicDropdown
                 id={"non-data"}
                 defaultValue={`${nonDataTxThreshold.value}%` ?? ""}
-                values={PERCENTAGES.slice(0, 11)}
+                values={PERCENTAGES.slice(0, 10)}
                 error={nonDataTxThreshold.error}
                 onSelect={(value) => onBasicDropdownSelect(value, setNonDataTxThreshold)}
               />
