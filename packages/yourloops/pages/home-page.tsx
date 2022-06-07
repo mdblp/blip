@@ -186,7 +186,7 @@ function HomePage(): JSX.Element {
       />
       <Grid container direction="row" justifyContent="center" alignItems="center"
         style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-        <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
+        <Alert severity="info">{t("secondary-bar-period-text")}</Alert>
       </Grid>
       <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />
