@@ -27,6 +27,7 @@
 
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import moment from "moment-timezone";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -98,8 +99,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
     console.log(prescriptionInfo.file);
     console.log(prescriptionInfo.numberOfMonth);
     console.log(physician);
-    const monitoringEnd = new Date();
-    monitoringEnd.setMonth(monitoringEnd.getMonth() + prescriptionInfo.numberOfMonth);
+    const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, "M").toDate();
     if (!prescriptionInfo.teamId) {
       throw Error("Cannot invite patient as remote monitoring team id has not been defined");
     }
