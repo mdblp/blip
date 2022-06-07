@@ -34,6 +34,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1541 Plug team alarm configuration to backend
 - YLP-1544 Create dialog to invite patient in remote monitoring team
 - YLP-1547 Rework patient and caregiver list nav bar
+- YLP-1583 Add message column in patient list
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
