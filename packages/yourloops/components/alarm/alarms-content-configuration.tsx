@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface TeamAlarmsContentProps {
+export interface AlarmsContentConfigurationProps {
   monitoring?: Monitoring;
   saveInProgress: boolean;
   showCancelButton?: boolean;
@@ -110,7 +110,7 @@ export const MAX_LOW_BG = 100;
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21);
 
-function AlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
+function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, saveInProgress, showCancelButton, onSave, onClose } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
@@ -405,4 +405,4 @@ function AlarmsContent(props: TeamAlarmsContentProps): JSX.Element {
   );
 }
 
-export default AlarmsContent;
+export default AlarmsContentConfiguration;

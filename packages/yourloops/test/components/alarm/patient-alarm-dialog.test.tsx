@@ -38,7 +38,7 @@ import { ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";
 import PatientAlarmDialog from "../../../components/alarm/patient-alarm-dialog";
 import { UNITS_TYPE } from "../../../lib/units/utils";
-import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from "../../../components/alarm/alarms-content";
+import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from "../../../components/alarm/alarms-content-configuration";
 
 jest.mock("../../../lib/team");
 describe("PatientAlarmDialog", () => {

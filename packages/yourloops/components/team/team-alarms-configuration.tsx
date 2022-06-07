@@ -36,7 +36,7 @@ import { commonComponentStyles } from "../common";
 import { Team, useTeam } from "../../lib/team";
 import { Monitoring } from "../../models/monitoring";
 import { useAlert } from "../utils/snackbar";
-import AlarmsContent from "../alarm/alarms-content";
+import AlarmsContentConfiguration from "../alarm/alarms-content-configuration";
 
 interface TeamAlarmsConfigurationProps {
   team: Team,
@@ -80,7 +80,7 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
       </div>
 
       <Box paddingX={3}>
-        <AlarmsContent monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
+        <AlarmsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
   );

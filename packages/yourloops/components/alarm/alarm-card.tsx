@@ -38,7 +38,7 @@ import { Patient } from "../../lib/data/patient";
 import PatientAlarmDialog from "./patient-alarm-dialog";
 import { useAuth } from "../../lib/auth";
 
-const chatWidgetStyles = makeStyles((theme: Theme) => {
+const alarmCardStyles = makeStyles((theme: Theme) => {
   return {
     alertColor: {
       color: theme.palette.warning.main,
@@ -67,15 +67,15 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   const { patient } = props;
   const authHook = useAuth();
   const loggedInUser = authHook.user;
-  const classes = chatWidgetStyles();
+  const classes = alarmCardStyles();
   const [showPatientAlarmDialog, setShowPatientAlarmDialog] = useState(false);
   const timeSpentAwayFromTargetActive = patient.metadata.alarm.timeSpentAwayFromTargetActive;
   const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive;
   const nonDataTransmissionActive = patient.metadata.alarm.nonDataTransmissionActive;
-  const noAlarmActive = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive;
+  const noActiveAlarm = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive;
 
   const buildNumberOfAlarmsLabel = () => {
-    if (noAlarmActive) {
+    if (noActiveAlarm) {
       return "";
     }
     const number = [timeSpentAwayFromTargetActive, frequencyOfSevereHypoglycemiaActive, nonDataTransmissionActive].filter(value => value).length;
@@ -94,7 +94,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         id="alarm-card-header-id"
         avatar={
           <AnnouncementIcon
-            className={noAlarmActive ? "headerIcon" : `${classes.alertColor} ${classes.headerIcon}`}
+            className={noActiveAlarm ? "headerIcon" : `${classes.alertColor} ${classes.headerIcon}`}
           />
         }
         className={classes.eventCardHeader}
@@ -111,11 +111,11 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         }
       />
       <Box marginTop={2} marginLeft={1} marginRight={1}>
-        <Box fontSize="16px" marginBottom={1} fontWeight={600} className={noAlarmActive ? "" : classes.alertColor}>
+        <Box fontSize="16px" marginBottom={1} fontWeight={600} className={noActiveAlarm ? "" : classes.alertColor}>
           {t("current-events")}
         </Box>
         <Box
-          id="tir-alarm-id"
+          id="time-away-target-alarm-id"
           display="flex"
           fontSize="13px"
           className={timeSpentAwayFromTargetActive ? classes.alertColor : ""}

@@ -34,12 +34,12 @@ import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import { getTheme } from "../../../components/theme";
 import { triggerMouseEvent } from "../../common/utils";
 import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
-import AlarmsContent, {
+import AlarmsContentConfiguration, {
   MIN_HIGH_BG,
   MIN_LOW_BG,
   MIN_VERY_LOW_BG,
-  TeamAlarmsContentProps,
-} from "../../../components/alarm/alarms-content";
+  AlarmsContentConfigurationProps,
+} from "../../../components/alarm/alarms-content-configuration";
 
 function checkSaveButtonDisabled() {
   const saveButton = document.getElementById("save-button-id");
@@ -77,9 +77,9 @@ describe("AlarmsContent", () => {
     }
   });
 
-  function getTeamAlarmsContentJSX(props: TeamAlarmsContentProps) {
+  function getTeamAlarmsContentJSX(props: AlarmsContentConfigurationProps) {
     return <ThemeProvider theme={getTheme()}>
-      <AlarmsContent
+      <AlarmsContentConfiguration
         monitoring={props.monitoring}
         onSave={props.onSave}
         saveInProgress={props.saveInProgress}
@@ -87,7 +87,7 @@ describe("AlarmsContent", () => {
     </ThemeProvider>;
   }
 
-  function renderTeamAlarmsContent(props: TeamAlarmsContentProps = { monitoring, onSave, saveInProgress: false }) {
+  function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = { monitoring, onSave, saveInProgress: false }) {
     act(() => {
       ReactDOM.render(getTeamAlarmsContentJSX(props), container);
     });

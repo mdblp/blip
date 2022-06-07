@@ -40,7 +40,7 @@ import { Monitoring } from "../../models/monitoring";
 import { useAlert } from "../utils/snackbar";
 import { Patient } from "../../lib/data/patient";
 import { commonComponentStyles } from "../common";
-import AlarmsContent from "./alarms-content";
+import AlarmsContentConfiguration from "./alarms-content-configuration";
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -97,7 +97,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
         </DialogTitle>
 
         <Box paddingX={3} marginBottom={2}>
-          <AlarmsContent monitoring={patient.monitoring} showCancelButton={true} onSave={save} saveInProgress={saveInProgress} onClose={onClose}/>
+          <AlarmsContentConfiguration monitoring={patient.monitoring} showCancelButton={true} onSave={save} saveInProgress={saveInProgress} onClose={onClose}/>
         </Box>
       </div>
     </Dialog>
