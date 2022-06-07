@@ -330,14 +330,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return typeof tm === "object";
   };
 
-  const getPendingPatients = (): Patient[] => {
-    return getPatients().filter((patient) => isInvitationPending(patient));
-  };
-
-  const getUnreadMessagesPatients = (): Patient[] => {
-    return getPatients().filter((patient) => patient.metadata.unreadMessagesSent > 0);
-  };
-
   const getDirectSharePatients = (): Patient[] => {
     return getPatients().filter((patient) => patient.teams.find(team => team.teamId === "private"));
   };
@@ -694,8 +686,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     filterPatients,
     getMedicalMembers,
     getNumMedicalMembers,
-    getPendingPatients,
-    getUnreadMessagesPatients,
     getDirectSharePatients,
     getPatientRemoteMonitoringTeam,
     teamHasOnlyOneMember,

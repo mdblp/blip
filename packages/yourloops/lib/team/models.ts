@@ -142,14 +142,6 @@ export interface TeamContext {
    */
   getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam;
   /**
-   * Return all pending patients
-   */
-  getPendingPatients: () => Readonly<Patient>[];
-  /**
-   * Return all patient with unread messages
-   */
-  getUnreadMessagesPatients: () => Readonly<Patient>[];
-  /**
    * Return all direct share patients
    */
   getDirectSharePatients: () => Readonly<Patient>[];

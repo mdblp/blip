@@ -134,9 +134,9 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const authHook = useAuth();
   const numberOfPatients = teamHook.getPatients().length;
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
-  const numberOfPendingPatients = teamHook.getPendingPatients().length;
+  const numberOfPendingPatients = teamHook.filterPatients(PatientFilterTypes.pending, "", []).length;
   const numberOfDirectSharePatients = teamHook.getDirectSharePatients().length;
-  const numberOfPatientsWithUnreadMessages = teamHook.getUnreadMessagesPatients().length;
+  const numberOfPatientsWithUnreadMessages = teamHook.filterPatients(PatientFilterTypes.unread, "", []).length;
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?
