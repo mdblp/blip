@@ -111,11 +111,15 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         }
       />
       <Box marginTop={2} marginLeft={1} marginRight={1}>
-        <Box fontSize="16px" marginBottom={1} fontWeight={600} className={classes.alertColor}>
+        <Box fontSize="16px" marginBottom={1} fontWeight={600} className={noAlarmActive ? "" : classes.alertColor}>
           {t("current-events")}
         </Box>
-        <Box id="tir-alarm-id" display="flex" fontSize="13px"
-          className={timeSpentAwayFromTargetActive ? classes.alertColor : ""}>
+        <Box
+          id="tir-alarm-id"
+          display="flex"
+          fontSize="13px"
+          className={timeSpentAwayFromTargetActive ? classes.alertColor : ""}
+        >
           {t("time-out-of-range-target")}
           <Box
             marginLeft="auto"
@@ -123,8 +127,12 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
             {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
           </Box>
         </Box>
-        <Box id="severe-hypo-alarm-id" display="flex" fontSize="13px"
-          className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ""}>
+        <Box
+          id="severe-hypo-alarm-id"
+          display="flex"
+          fontSize="13px"
+          className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ""}
+        >
           {t("alert-hypoglycemic")}
           <Box
             marginLeft="auto"
@@ -132,8 +140,11 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
             {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
           </Box>
         </Box>
-        <Box id="non-data-transmission-alarm-id" display="flex" fontSize="13px"
-          className={nonDataTransmissionActive ? classes.alertColor : ""}>
+        <Box
+          id="non-data-transmission-alarm-id"
+          display="flex" fontSize="13px"
+          className={nonDataTransmissionActive ? classes.alertColor : ""}
+        >
           {t("data-not-transferred")}
           <Box marginLeft="auto">{`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
