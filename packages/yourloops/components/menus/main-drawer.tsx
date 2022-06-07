@@ -57,6 +57,16 @@ export const mainDrawerDefaultWidth = "240px";
 export const mainDrawerMiniVariantWidth = "57px";
 
 const styles = makeStyles((theme: Theme) => ({
+  countLabel: {
+    borderRadius: "50%",
+    marginLeft: theme.spacing(1),
+    backgroundColor: theme.palette.primary.main,
+    width: "24px",
+    lineHeight: "24px",
+    textAlign: "center",
+    color: "white",
+    fontSize: "14px",
+  },
   divider: {
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2),
@@ -104,6 +114,7 @@ const styles = makeStyles((theme: Theme) => ({
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const {
+    countLabel,
     divider,
     drawer,
     drawerPaper,
@@ -133,8 +144,16 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
-    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberOfPatients})`, filter: PatientFilterTypes.all },
-    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: PatientFilterTypes.flagged },
+    {
+      icon: <SupervisedUserCircleIcon />,
+      text: `${t("all-patients")} (${numberOfPatients})`,
+      filter: PatientFilterTypes.all,
+    },
+    {
+      icon: <FlagOutlinedIcon />,
+      text: `${t("flagged")} (${numberOfFlaggedPatients})`,
+      filter: PatientFilterTypes.flagged,
+    },
     { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: PatientFilterTypes.pending },
     {
       icon: <MedicalServiceIcon />,
@@ -188,7 +207,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               <ListItemText>
                 <Box display="flex">
                   {t("unread-messages")}
-                  <Box borderRadius="50%" marginLeft={1} bgcolor="#00A3E2" width="24px" lineHeight="24px" textAlign="center" color="white" fontSize="14px">
+                  <Box className={countLabel}>
                     {numberOfPatientsWithUnreadMessages}
                   </Box>
                 </Box>
