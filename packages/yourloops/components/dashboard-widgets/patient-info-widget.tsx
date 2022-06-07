@@ -92,7 +92,11 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const birthdate = moment.utc(patient.profile.birthdate).format("L");
 
   const isLoggedInUserHcpAdmin = () => {
-    return authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.userid)) !== undefined;
+    return authHook.user?.isUserHcp() &&
+      teamHook.getRemoteMonitoringTeams()
+        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.userid)
+          && team.members.find(member => member.user.userid === patient.userid)
+        );
   };
 
   const showMonitoringButtonAction = isLoggedInUserHcpAdmin();

@@ -45,7 +45,8 @@ describe("PatientInfoWidget", () => {
   const patient = createPatient("fakePatientId", []);
   let container: HTMLElement | null = null;
   const adminMember = buildTeamMember();
-  const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember]);
+  const patientMember = buildTeamMember("fakeTeamId", patient.userid);
+  const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember, patientMember]);
 
   beforeAll(() => {
     i18n.changeLanguage("en");

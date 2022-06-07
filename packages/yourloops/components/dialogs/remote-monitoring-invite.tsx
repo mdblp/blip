@@ -99,7 +99,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
     console.log(prescriptionInfo.numberOfMonth);
     console.log(physician);
     const monitoringEnd = new Date();
-    monitoringEnd.setMonth(monitoringEnd.getMonth() + 3);
+    monitoringEnd.setMonth(monitoringEnd.getMonth() + prescriptionInfo.numberOfMonth);
     if (!prescriptionInfo.teamId) {
       throw Error("Cannot invite patient as remote monitoring team id has not been defined");
     }
