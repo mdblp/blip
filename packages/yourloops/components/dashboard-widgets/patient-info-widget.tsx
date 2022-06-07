@@ -194,7 +194,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           size="small"
                           onClick={() => setShowConfirmDialog(true)}
                         >
-                          {t("button-cancel")}
+                          {t("cancel-invite")}
                         </Button>
                       }
                       {buttonsVisible.renewAndRemove &&

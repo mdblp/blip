@@ -76,6 +76,7 @@
   "button-team-leave": "Leave team",
   "button-validate": "Validate",
   "browse": "Browse",
+  "cancel-invite": "Cancel invite",
   "cancel-remote-monitoring-invite": "Cancel the remote monitoring invite?",
   "cancel-remote-monitoring-invite-confirm": "Please, confirm that you want to cancel the monitoring invite for the user {{fullName}}",
   "care-team-membership": "Teams I belong to:",
