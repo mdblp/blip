@@ -73,7 +73,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     teamHook: TeamContext,
     flagged: string[],
     filter: string,
-    filterType: PatientFilterTypes | string,
+    filterType: PatientFilterTypes,
     orderBy: PatientTableSortFields,
     order: SortDirection
   ) => {
