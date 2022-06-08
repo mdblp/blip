@@ -117,7 +117,7 @@ describe("Profile", () => {
   it("should display referring doctor if user is a patient", async () => {
     const session = loggedInUsers.patientSession;
     await mountProfilePage(session);
-    const referringDoctorInput = container.querySelector("#profile-textfield-referringDoctor") as HTMLInputElement;
+    const referringDoctorInput = container.querySelector("#profile-textfield-referring-doctor") as HTMLInputElement;
     expect(referringDoctorInput?.value).toBe(session.user.profile?.patient?.referringDoctor);
   });
 
@@ -132,7 +132,7 @@ describe("Profile", () => {
     const session = loggedInUsers.patientSession;
     session.user.settings.country = "FR";
     await mountProfilePage(session);
-    const insInput = container.querySelector("#profile-textfield-referringDoctor") as HTMLInputElement;
+    const insInput = container.querySelector("#profile-textfield-referring-doctor") as HTMLInputElement;
     expect(insInput?.value).toBe(session.user.profile?.patient?.ins);
   });
 

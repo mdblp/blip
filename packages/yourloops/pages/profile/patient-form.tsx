@@ -103,8 +103,8 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         </Select>
       </FormControl>
        <TextField
-        id="profile-textfield-referringDoctor"
-        label={t("referringDoctor")}
+        id="profile-textfield-referring-doctor"
+        label={t("referring-doctor")}
         value={referringDoctor}
         onChange={event => setReferringDoctor(event.target.value)}
         className={classes.formInput}
