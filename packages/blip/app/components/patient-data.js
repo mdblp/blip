@@ -22,16 +22,16 @@ import bows from "bows";
 import moment from "moment-timezone";
 import i18next from "i18next";
 import clsx from "clsx";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
-import { TidelineData, nurseShark, MS_IN_DAY, MGDL_UNITS } from "tideline";
-import { utils as vizUtils, components as vizComponents, createPrintPDFPackage } from "tidepool-viz";
+import { MGDL_UNITS, MS_IN_DAY, nurseShark, TidelineData } from "tideline";
+import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from "tidepool-viz";
 
 import config from "../config";
 import personUtils from "../core/personutils";
 import utils from "../core/utils";
 import ApiUtils from "../core/api-utils";
-import { Header, Daily, Trends, PatientDashboard } from "./chart";
+import { Daily, Header, PatientDashboard, Trends } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
 
@@ -340,7 +340,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, api } = this.props;
+    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, alarmCard, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -375,6 +375,7 @@ class PatientDataPage extends React.Component {
             trackMetric={this.trackMetric}
             patientInfoWidget={patientInfoWidget}
             chatWidget={chatWidget}
+            alarmCard={alarmCard}
             onSwitchToTrends={this.handleSwitchToTrends}
             onSwitchToDaily={this.handleSwitchToDaily}
             onSwitchPatient={this.handleSwitchPatient}
@@ -991,6 +992,7 @@ class PatientDataPage extends React.Component {
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,

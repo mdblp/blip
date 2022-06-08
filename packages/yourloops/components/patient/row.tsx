@@ -37,6 +37,7 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
+import { Box, Typography } from "@material-ui/core";
 
 import IconActionButton from "../buttons/icon-action";
 import { FilterType } from "../../models/generic";
@@ -48,7 +49,6 @@ import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
-import { Box, Typography } from "@material-ui/core";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
 
 const patientListStyle = makeStyles(
@@ -131,12 +131,11 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses;
     let dataNotTransferredRateClasses = mediumCellWithClasses;
     if (isUserHcp) {
-      const dataNotTransferredActive = patient.metadata.alarm?.nonDataTransmissionRate ?? false;
       const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
       patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`;
       timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
       frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
-      dataNotTransferredRateClasses = dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      dataNotTransferredRateClasses = nonDataTransmissionActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
     }
     return {
       patientSystem: patient.settings.system ?? trNA,

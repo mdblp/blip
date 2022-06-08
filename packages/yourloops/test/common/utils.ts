@@ -117,9 +117,9 @@ export const createPatient = (
     nonDataTransmissionActive: false,
   },
   fullName = "fakePatientFullName",
-  monitoring: Monitoring = null,
-  system: string = null,
-  flagged: boolean = null
+  monitoring: Monitoring | undefined = undefined,
+  system: string | undefined = undefined,
+  flagged: boolean | undefined = undefined
 ): Patient => {
   return {
     metadata: {
@@ -136,7 +136,7 @@ export const createPatient = (
       email: "fakeUsername",
     },
     settings: {
-      a1c: { date : new Date().toDateString(), value : "fakeA1cValue" },
+      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
       system: system,
     },
     teams: teams,
@@ -160,7 +160,7 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
 export const createTeamUser = (
   id: string,
   members: TeamMember[],
-  profile: Profile = null,
+  profile: Profile | undefined = undefined,
   alarms: Alarm = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: true,
@@ -212,7 +212,7 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
 export function buildTeamMember(
   teamId = "fakeTeamId",
   userId = "fakeUserId",
-  invitation: INotification = null,
+  invitation: INotification | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
   username = "fake@username.com",
   fullName = "fake full name",
