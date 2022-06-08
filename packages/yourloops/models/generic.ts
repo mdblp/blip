@@ -24,6 +24,13 @@ enum FilterType {
   pending = "pending",
   private = "private",
 }
+enum PatientFilterTypes {
+  all = "all",
+  flagged = "flagged",
+  pending = "pending",
+  private = "private",
+  unread = "unread-messages",
+}
 enum SortDirection {
   asc = "asc",
   desc = "desc",
@@ -83,4 +90,5 @@ export {
   PatientTableSortFields,
   UserInvitationStatus,
   MS_IN_DAY,
+  PatientFilterTypes,
 };
