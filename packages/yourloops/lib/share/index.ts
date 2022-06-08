@@ -27,20 +27,12 @@
  */
 
 import { ShareUser } from "./models";
-import API from "./api";
 import { useSharedUser, sharedUserReducer, sharedUserInitialState, SharedUserContextProvider } from "./reducer";
-
-const { addDirectShare, getDirectShares, removeDirectShare } = API;
 
 export {
   ShareUser,
-  addDirectShare,
-  getDirectShares,
-  removeDirectShare,
   useSharedUser,
   sharedUserInitialState,
   sharedUserReducer,
   SharedUserContextProvider,
 };
-
-export default API;
