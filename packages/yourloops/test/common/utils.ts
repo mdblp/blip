@@ -107,7 +107,7 @@ export const createPatient = (
       email: "fakeUsername",
     },
     settings: {
-      a1c: { date : new Date().toDateString(), value : "fakeA1cValue" },
+      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
       system: system,
     },
     teams: teams,
@@ -115,10 +115,11 @@ export const createPatient = (
   };
 };
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = "fakeTeamName"): PatientTeam => {
   return {
     teamId: id,
     status,
+    teamName,
   } as PatientTeam;
 };
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {

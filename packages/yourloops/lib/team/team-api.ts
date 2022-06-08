@@ -180,9 +180,9 @@ export default class TeamApi {
   }
 
   static async joinTeam(teamId: string, userId: string): Promise<void> {
-    await HttpService.put<void, string>({
+    await HttpService.put<void, { userId: string }>({
       url: `/crew/v0/teams/${teamId}/patients`,
-      payload: userId,
+      payload: { userId },
     });
   }
 }
