@@ -27,3 +27,10 @@ export function checkPasswordStrength(password: string): CheckPasswordStrengthRe
   }
   return { onError, helperText, score };
 }
+
+
+export const genderLabels = (): Record<string, string> => ({
+  "M": t("male"),
+  "F": t("female"),
+  "": ""
+})
