@@ -142,10 +142,10 @@ export default class TeamApi {
   }
 
   static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
-    // TODO old API was incorrect, no delete with body parameters, need to be adapted
-    //  see YLP-1592 (https://diabeloop.atlassian.net/browse/YLP-1592)
-    console.log(email);
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/members/${userId}` });
+    await HttpService.delete({
+      url: `confirm/send/team/leave/${teamId}/${userId}`,
+      config: { params: { email } },
+    });
   }
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
