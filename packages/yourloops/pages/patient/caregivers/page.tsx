@@ -40,11 +40,11 @@ import { useAuth } from "../../../lib/auth";
 import metrics from "../../../lib/metrics";
 import { setPageTitle } from "../../../lib/utils";
 import { useNotification, NotificationType } from "../../../lib/notifications";
-import { ShareUser } from "../../../lib/share";
+import { ShareUser } from "../../../lib/share/models";
 import { useAlert } from "../../../components/utils/snackbar";
 import { AddDialogContentProps, RemoveDialogContentProps } from "./types";
 import SecondaryBar from "./secondary-bar";
-import AddCaregiveDialog from "./add-dialog";
+import AddCaregiverDialog from "./add-dialog";
 import RemoveCaregiverDialog from "./remove-dialog";
 import CaregiverTable from "./table";
 import DirectShareApi from "../../../lib/share/direct-share-api";
@@ -172,7 +172,7 @@ function PatientCaregiversPage(): JSX.Element {
         <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
       </Container>
 
-      <AddCaregiveDialog actions={caregiverToAdd} />
+      <AddCaregiverDialog actions={caregiverToAdd} />
       <RemoveCaregiverDialog actions={caregiverToRemove} />
     </React.Fragment>
   );
