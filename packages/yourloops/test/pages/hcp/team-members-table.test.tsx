@@ -32,31 +32,29 @@ import renderer from "react-test-renderer";
 
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { loadTeams, Team, TeamContextProvider } from "../../../lib/team";
+import { loadTeams, Team, TeamContextProvider, useTeam } from "../../../lib/team";
 import TeamMembers, { MembersTableBody, TeamMembersProps } from "../../../pages/hcp/team-members-table";
 
-import { loggedInUsers } from "../../common";
+import { loggedInUsers, teams } from "../../common";
 import { TeamMemberRole } from "../../../models/team";
-import Adapter from "enzyme-adapter-react-16";
 import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
-import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
+import { buildInvite, buildTeam, buildTeamMember, triggerMouseEvent } from "../../common/utils";
 import { UserInvitationStatus } from "../../../models/generic";
+import * as teamHookMock from "../../../lib/team";
+import { render, unmountComponentAtNode } from "react-dom";
+import { act } from "react-dom/test-utils";
 
+jest.mock("../../../lib/team");
 describe("Team member table", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-  const apiTimeout = 50;
-  const defaultProps: TeamMembersProps = {
-    team: {} as Team,
-    onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
-    onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
-  };
-  let teams: Team[] = [];
-  let component: ReactWrapper | null = null;
-  const mountOptions: MountRendererProps = {
-    attachTo: null,
-  };
+
+  const onShowRemoveTeamMemberDialog = jest.fn();
+  const onSwitchAdminRole = jest.fn();
+
+  let container: HTMLElement | null = null;
+  let team: Team;
   const teamId = "fakeTeamId";
 
   const teamAdmin = buildTeamMember(
@@ -69,57 +67,62 @@ describe("Team member table", () => {
     UserInvitationStatus.accepted
   );
 
-  function TestTeamMembersComponent(props: TeamMembersProps): JSX.Element {
+  function DummyComponent(): JSX.Element {
+    const { teams } = useTeam();
+    team = teams[1];
     return (
-      <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider teamAPI={teamAPI}>
-          <TeamMembers {...props} />
-        </TeamContextProvider>
-      </AuthContextProvider>
+      <TeamMembers
+        team={team}
+        onShowRemoveTeamMemberDialog={onShowRemoveTeamMemberDialog}
+        onSwitchAdminRole={onSwitchAdminRole}
+      />
     );
   }
 
-  beforeAll(async () => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-    mountOptions.attachTo = document.getElementById("app");
-    if (mountOptions.attachTo === null) {
-      mountOptions.attachTo = document.createElement("div");
-      mountOptions.attachTo.id = "app";
-      document.body.appendChild(mountOptions.attachTo);
+  function mountTeamMembersComponent(openTable = false): void {
+    act(() => render(
+      <AuthContextProvider value={authHookHcp}>
+        <DummyComponent />
+      </AuthContextProvider>, container)
+    );
+    if (openTable) {
+      const header = document.querySelector(`#team-members-list-${team.id}-header`);
+      triggerMouseEvent("click", header);
     }
-    const result = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
-    teams = result.teams;
-    defaultProps.team = teams[1];
+  }
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
   });
 
-  afterAll(() => {
-    const { attachTo } = mountOptions;
-    if (attachTo instanceof HTMLElement) {
-      document.body.removeChild(attachTo);
-    }
+  beforeAll(() => {
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return {
+        teams,
+        getNumMedicalMembers: () => 2,
+        isUserAdministrator: () => true,
+        isUserTheOnlyAdministrator: () => true,
+        getMedicalMembers: (): [] => [],
+      };
+    });
   });
 
   afterEach(() => {
-    if (component !== null) {
-      component.unmount();
-      component.detach();
-      component = null;
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
     }
-    (defaultProps.onShowRemoveTeamMemberDialog as jest.Mock).mockReset();
-    (defaultProps.onSwitchAdminRole as jest.Mock).mockReset();
-    resetTeamAPIStubs();
   });
-
-  async function displayDefaultTable(): Promise<ReactWrapper> {
-    component = mount(<TestTeamMembersComponent {...defaultProps} />, mountOptions);
-    component.find(`#team-members-list-${defaultProps.team.id}-header`).last().simulate("click");
-    component.update();
-    await waitTimeout(apiTimeout);
-    return component;
-  }
+  //
+  // async function displayDefaultTable(): Promise<ReactWrapper> {
+  //   component = mount(<TestTeamMembersComponent {...defaultProps} />, mountOptions);
+  //   component.find(`#team-members-list-${team.id}-header`).last().simulate("click");
+  //   component.update();
+  //   await waitTimeout(apiTimeout);
+  //   return component;
+  // }
 
   it("should display a collapse accordion by default", async () => {
     component = mount(<TestTeamMembersComponent {...defaultProps} />, mountOptions);
@@ -135,7 +138,7 @@ describe("Team member table", () => {
 
   it("should display all the team members", async () => {
     component = await displayDefaultTable();
-    const teamId = defaultProps.team.id;
+    const teamId = team.id;
     const { members } = defaultProps.team;
     expect(members.length).toBeGreaterThan(0);
     for (const member of members) {
@@ -149,9 +152,7 @@ describe("Team member table", () => {
     function renderMemberTableBody(props: TeamMembersProps) {
       return renderer.create(
         <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider teamAPI={teamAPI}>
-            <MembersTableBody {...props} />
-          </TeamContextProvider>
+          <MembersTableBody {...props} />
         </AuthContextProvider>
       );
     }
@@ -173,7 +174,7 @@ describe("Team member table", () => {
     it("should disable the remove button for pending member that was not invited by the current user", () => {
       const memberWithWrongInvite = buildTeamMember(teamId, "fakeUserId", buildInvite("wrongTeamId"));
       const props = {
-        team: buildTeam(teamId,[memberWithWrongInvite, teamAdmin]),
+        team: buildTeam(teamId, [memberWithWrongInvite, teamAdmin]),
         onShowRemoveTeamMemberDialog: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
         onSwitchAdminRole: jest.fn().mockReturnValue(waitTimeout(apiTimeout)),
       };
@@ -203,7 +204,7 @@ describe("Team member table", () => {
     it("should display the remove button for others team members", async () => {
       component = await displayDefaultTable();
 
-      const teamId = defaultProps.team.id;
+      const teamId = team.id;
       const { members } = defaultProps.team;
       expect(members.length).toBeGreaterThan(0);
       for (const member of members) {
@@ -221,7 +222,7 @@ describe("Team member table", () => {
     it("should call onSwitchAdminRole when clicking on the checkbox", async () => {
       component = await displayDefaultTable();
 
-      const teamId = defaultProps.team.id;
+      const teamId = team.id;
       const member = teams[1].members[0];
       const memberId = member.user.userid;
       const event = { target: { name: memberId, checked: true } };
@@ -237,7 +238,7 @@ describe("Team member table", () => {
 
     it("should call onShowRemoveTeamMemberDialog when clicking on the button", async () => {
       component = await displayDefaultTable();
-      const teamId = defaultProps.team.id;
+      const teamId = team.id;
       const member = teams[1].members[1];
       const memberId = member.user.userid;
       component.find(`#team-members-list-${teamId}-row-${memberId}-action-remove`).last().simulate("click");

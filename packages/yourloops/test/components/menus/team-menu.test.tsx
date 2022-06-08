@@ -64,7 +64,7 @@ describe("Team Menu", () => {
           <Router history={history}>
             <AuthContextProvider value={context}>
               <NotificationContextProvider value={stubNotificationContextValue}>
-                <TeamContextProvider teamAPI={teamAPI}>
+                <TeamContextProvider>
                   <TeamMenu />
                 </TeamContextProvider>
               </NotificationContextProvider>
