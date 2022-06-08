@@ -97,9 +97,9 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
           value={sex}
           onChange={event => setSex(event.target.value as string)}
         >
-          <MenuItem value={""} aria-label={t("none")}>{t("none")}</MenuItem>
-          <MenuItem value={"M"} aria-label={t("male")}>{t("male")}</MenuItem>
-          <MenuItem value={"F"} aria-label={t("female")}>{t("female")}</MenuItem>
+          <MenuItem value="" aria-label={t("none")}>{t("none")}</MenuItem>
+          <MenuItem value="M" aria-label={t("male")}>{t("male")}</MenuItem>
+          <MenuItem value="F" aria-label={t("female")}>{t("female")}</MenuItem>
         </Select>
       </FormControl>
       <TextField
