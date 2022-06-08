@@ -293,7 +293,6 @@
   "signup-steppers-step-unknown": "Unknown step",
   "signup-steppers-step1": "Consent",
   "signup-steppers-step2": "Create profile",
-  "since": "Since",
   "system": "System",
   "team": "Team",
   "team-add-member-dialog-checkbox-admin": "Define as administrator",
@@ -364,5 +363,6 @@
   "user-name": "{{firstName}} {{lastName}}",
   "welcome-message": "Welcome to Yourloops. Please login or register",
   "yes": "Yes",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "events-configuration": "Events configuration"
 }
