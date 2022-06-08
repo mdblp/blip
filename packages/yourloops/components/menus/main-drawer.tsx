@@ -77,7 +77,7 @@ const styles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.palette.warning.main,
   },
   monitoringFilters: {
-    marginTop: 35,
+    marginTop: 20,
   },
   divider: {
     marginBottom: theme.spacing(2),
@@ -148,6 +148,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const authHook = useAuth();
   const patientFiltersStats = teamHook.patientsFilterStats;
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
+  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.userid));
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?
@@ -223,101 +224,103 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </ListItem>
           </Link>
         ))}
-        <Box bgcolor="var(--monitoring-filter-bg-color)" className={monitoringFilters}>
-          <ListItem>
-            <ListItemIcon>
-              <DesktopMacIcon className={monitoringTitleIcon} />
-            </ListItemIcon>
-            <ListItemText>
-              <Box className={messagingTitle}>
-                {t("remote-monitoring")}
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}>
-            <ListItem button>
+        {loggedUserIsHcpInMonitoring &&
+          <Box bgcolor="var(--monitoring-filter-bg-color)" className={monitoringFilters}>
+            <ListItem>
               <ListItemIcon>
-                <SupervisedUserCircleIcon />
+                <DesktopMacIcon className={monitoringTitleIcon} />
               </ListItemIcon>
               <ListItemText>
-                <Box display="flex">
-                  {t("monitored-patients")} ({patientFiltersStats.remoteMonitored})
+                <Box className={messagingTitle}>
+                  {t("remote-monitoring")}
                 </Box>
               </ListItemText>
             </ListItem>
-          </Link>
-          <Link to={`/home?filter=${PatientFilterTypes.renew}`}>
-            <ListItem button>
-              <ListItemIcon>
-                <HistoryIcon />
-              </ListItemIcon>
-              <ListItemText>
-                <Box display="flex">
-                  {t("incoming-renewal")}
-                  <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                    {patientFiltersStats.renew}
-                  </Box>
-                </Box>
-              </ListItemText>
-            </ListItem>
-          </Link>
-          <Divider variant="middle" className={divider} />
-          <ListItem>
-            <ListItemIcon>
-              <FeedbackIcon className={monitoringTitleIcon} />
-            </ListItemIcon>
-            <ListItemText>
-              <Box className={messagingTitle}>
-                {t("events")}
-              </Box>
-            </ListItemText>
-          </ListItem>
-          {drawerEventsItems.map((item, index) => (
-            <Link key={index} to={`/home?filter=${item.filter}`}>
+            <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}>
               <ListItem button>
                 <ListItemIcon>
-                  {item.icon}
+                  <SupervisedUserCircleIcon />
                 </ListItemIcon>
                 <ListItemText>
                   <Box display="flex">
-                    {item.text}
+                    {t("monitored-patients")} ({patientFiltersStats.remoteMonitored})
+                  </Box>
+                </ListItemText>
+              </ListItem>
+            </Link>
+            <Link to={`/home?filter=${PatientFilterTypes.renew}`}>
+              <ListItem button>
+                <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Box display="flex">
+                    {t("incoming-renewal")}
                     <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                      {item.count}
+                      {patientFiltersStats.renew}
                     </Box>
                   </Box>
                 </ListItemText>
               </ListItem>
             </Link>
-          ))}
-          <Divider variant="middle" className={divider} />
-          <ListItem>
-            <ListItemIcon>
-              <ContactMailIcon className={monitoringTitleIcon} />
-            </ListItemIcon>
-            <ListItemText>
-              <Box className={messagingTitle}>
-                {t("messaging")}
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <Link to={`/home?filter=${PatientFilterTypes.unread}`}>
-            <ListItem button>
+            <Divider variant="middle" className={divider} />
+            <ListItem>
               <ListItemIcon>
-                <EmailIcon />
+                <FeedbackIcon className={monitoringTitleIcon} />
               </ListItemIcon>
               <ListItemText>
-                <Box display="flex">
-                  {t("unread-messages")}
-                  {patientFiltersStats.unread > 0 &&
-                    <Box className={countLabel}>
-                      {patientFiltersStats.unread}
-                    </Box>
-                  }
+                <Box className={messagingTitle}>
+                  {t("events")}
                 </Box>
               </ListItemText>
             </ListItem>
-          </Link>
-        </Box>
+            {drawerEventsItems.map((item, index) => (
+              <Link key={index} to={`/home?filter=${item.filter}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Box display="flex">
+                      {item.text}
+                      <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
+                        {item.count}
+                      </Box>
+                    </Box>
+                  </ListItemText>
+                </ListItem>
+              </Link>
+            ))}
+            <Divider variant="middle" className={divider} />
+            <ListItem>
+              <ListItemIcon>
+                <ContactMailIcon className={monitoringTitleIcon} />
+              </ListItemIcon>
+              <ListItemText>
+                <Box className={messagingTitle}>
+                  {t("messaging")}
+                </Box>
+              </ListItemText>
+            </ListItem>
+            <Link to={`/home?filter=${PatientFilterTypes.unread}`}>
+              <ListItem button>
+                <ListItemIcon>
+                  <EmailIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Box display="flex">
+                    {t("unread-messages")}
+                    {patientFiltersStats.unread > 0 &&
+                      <Box className={countLabel}>
+                        {patientFiltersStats.unread}
+                      </Box>
+                    }
+                  </Box>
+                </ListItemText>
+              </ListItem>
+            </Link>
+          </Box>
+        }
       </List>
     </Drawer>
   );

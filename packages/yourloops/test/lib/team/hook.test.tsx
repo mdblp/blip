@@ -31,7 +31,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
-import { FilterType, PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
+import { PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
 import { loggedInUsers } from "../../common";
 import { directShareAPI } from "../direct-share/hook";
 import { teamAPI } from "./utils";
