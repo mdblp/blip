@@ -35,6 +35,7 @@ export enum APINotificationType {
   medicalTeamPatientInvitation = "medicalteam_patient_invitation",
   medicalTeamDoAdmin = "medicalteam_do_admin",
   medicalTeamRemoveMember = "medicalteam_remove",
+  medicalTeamMonitoringInvitation = "medicalteam_monitoring_invitation",
 }
 
 export interface INotificationAPI {

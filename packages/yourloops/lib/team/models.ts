@@ -222,6 +222,10 @@ export interface TeamContext {
    */
   editTeam(team: Team): Promise<void>;
   /**
+   * @param patient the patient to update
+   */
+  editPatientRemoteMonitoring(patient: Patient): void;
+  /**
    * @param patient The patient to update
    */
   markPatientMessagesAsRead(patient: Patient): void;

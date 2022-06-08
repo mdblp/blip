@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-1260 Verify password leak on signup or password change
+- YLP-1291 A monitoring team can flag a patient under remote monitoring
 - YLP-1340 Remote monitoring left menu for an HCP user
 - YLP-1367 The medical data can be exported as csv file
 - YLP-1369 HCP can send private messages for this team

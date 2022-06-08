@@ -216,6 +216,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
                   variant="contained"
                   color="primary"
                   size="small"
+                  component="span"
                   className={commonClasses.button}
                 >
                   {t("browse")}
