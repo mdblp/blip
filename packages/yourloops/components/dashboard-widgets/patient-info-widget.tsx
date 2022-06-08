@@ -117,7 +117,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   };
 
   const computePatientInformation = () => {
-    patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""]
+    patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
     patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
 
 

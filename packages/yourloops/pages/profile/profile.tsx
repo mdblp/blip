@@ -163,7 +163,7 @@ const ProfilePage = (): JSX.Element => {
     ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !==15,
   }), [
     firstName, lastName, role, hcpProfession, password.length, passwordConfirmationError,
-    passwordConfirmation.length, currentPassword.length, birthDate, ins.length, ssn.length
+    passwordConfirmation.length, currentPassword.length, birthDate, ins.length, ssn.length,
   ]);
 
   const getUpdatedPreferences = (): Preferences => {
@@ -183,10 +183,10 @@ const ProfilePage = (): JSX.Element => {
         updatedProfile.patient = {};
       }
       updatedProfile.patient.birthday = birthDate;
-      updatedProfile.patient.birthPlace =  birthPlace;
+      updatedProfile.patient.birthPlace = birthPlace;
       updatedProfile.patient.ins = ins;
-      updatedProfile.patient.sex =  sex;
-      updatedProfile.patient.ssn =  ssn;
+      updatedProfile.patient.sex = sex;
+      updatedProfile.patient.ssn = ssn;
       updatedProfile.patient.referringDoctor = referringDoctor;
     }
     if (user.isUserHcp()) {

@@ -62,14 +62,14 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { user, classes, errors,
     birthDate, birthPlace, ins, sex, ssn, referringDoctor,
-    setBirthDate, setBirthPlace, setIns, setSex, setSsn, setReferringDoctor
+    setBirthDate, setBirthPlace, setIns, setSex, setSsn, setReferringDoctor,
   } = props;
 
   const browserTimezone = React.useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, []);
 
   const a1cDate = user.settings?.a1c?.date;
   const a1cValue = user.settings?.a1c?.value;
-  const country = user.settings?.country ?? ""
+  const country = user.settings?.country ?? "";
   return (
     <React.Fragment>
       <TextField
@@ -87,7 +87,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
         value={birthPlace}
         onChange={event => setBirthPlace(event.target.value)}
         className={classes.formInput}
-        inputProps={{maxlength: "50"}}
+        inputProps={{ maxlength: "50" }}
       />
       <FormControl className={`${props.classes.formInput}`}>
         <InputLabel id="profile-select-gender-label" htmlFor="profile-select-gender">{t("gender")}</InputLabel>
@@ -102,13 +102,13 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
           <MenuItem value={"F"} aria-label={t("female")}>{t("female")}</MenuItem>
         </Select>
       </FormControl>
-       <TextField
+      <TextField
         id="profile-textfield-referring-doctor"
         label={t("referring-doctor")}
         value={referringDoctor}
         onChange={event => setReferringDoctor(event.target.value)}
         className={classes.formInput}
-        inputProps={{maxlength: "50"}}
+        inputProps={{ maxlength: "50" }}
       />
       {country === "FR" &&
       <>
@@ -118,7 +118,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
           value={ins}
           onChange={event => setIns(event.target.value)}
           className={classes.formInput}
-          inputProps={{maxlength: "15"}}
+          inputProps={{ maxlength: "15" }}
           error={errors.ins}
           helperText={errors.ins && t("field-with-exactly-15-characters")}
         />
@@ -128,7 +128,7 @@ function PatientProfileForm(props: PatientProfileFormProps): JSX.Element {
           value={ssn}
           onChange={event => setSsn(event.target.value)}
           className={classes.formInput}
-          inputProps={{maxlength: "15"}}
+          inputProps={{ maxlength: "15" }}
           error={errors.ssn}
           helperText={errors.ssn && t("field-with-exactly-15-characters")}
         />
