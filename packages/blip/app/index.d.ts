@@ -39,6 +39,7 @@ import MessageNote from "../../yourloops/models/message";
 import { Patient } from "../../yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
+import AlarmCard from "../../yourloops/components/alarm/alarm-card";
 
 interface BlipProperties {
   config: AppConfig;
@@ -54,6 +55,7 @@ interface BlipProperties {
   dialogPDFOptions: typeof DialogPDFOptions;
   patientInfoWidget: typeof PatientInfoWidget;
   chatWidget: typeof ChatWidget;
+  alarmCard: typeof AlarmCard;
 }
 
 // FIXME: For some reason, the yourloops auth hook
