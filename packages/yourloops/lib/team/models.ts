@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress, FilterType } from "../../models/generic";
+import { UserInvitationStatus, PostalAddress, PatientFilterTypes } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
@@ -142,10 +142,6 @@ export interface TeamContext {
    */
   getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam;
   /**
-   * Return all pending patients
-   */
-  getPendingPatients: () => Readonly<Patient>[];
-  /**
    * Return all direct share patients
    */
   getDirectSharePatients: () => Readonly<Patient>[];
@@ -155,7 +151,7 @@ export interface TeamContext {
    * @param filter a patient name
    * @param flagged the list of flagged patients
    */
-  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Patient[];
+  filterPatients: (filterType: PatientFilterTypes | string, filter: string, flagged: string[]) => Patient[];
   /**
    * Return the medical members of a team.
    */
@@ -234,6 +230,10 @@ export interface TeamContext {
    * @param team The updated team
    */
   editTeam(team: Team): Promise<void>;
+  /**
+   * @param patient the patient to update
+   */
+  editPatientRemoteMonitoring(patient: Patient): void;
   /**
    * @param patient The patient to update
    */

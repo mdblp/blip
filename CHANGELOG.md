@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-1260 Verify password leak on signup or password change
+- YLP-1291 A monitoring team can flag a patient under remote monitoring
 - YLP-1367 The medical data can be exported as csv file
 - YLP-1369 HCP can send private messages for this team
 - YLP-1370 HCP and patient can communicate through messaging system
@@ -35,6 +36,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1544 Create dialog to invite patient in remote monitoring team
 - YLP-1547 Rework patient and caregiver list nav bar
 - YLP-1583 Add message column in patient list
+- YLP-1585 Add messages filter in left drawer
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs

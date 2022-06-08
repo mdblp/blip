@@ -30,7 +30,7 @@ import React from "react";
 import _ from "lodash";
 import bows from "bows";
 
-import { FilterType, UserInvitationStatus } from "../../models/generic";
+import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType, TypeTeamMemberRole } from "../../models/team";
@@ -281,6 +281,15 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return res;
   };
 
+  const editPatientRemoteMonitoring = (patient: Patient) => {
+    const user = getUser(patient.userid);
+    if (!user) {
+      throw Error("Cannot update user monitoring as user was not found");
+    }
+    user.monitoring = patient.monitoring;
+    setTeams(teams);
+  };
+
   const getMedicalMembers = (team: Team): TeamMember[] => {
     return team.members.filter((member) => member.role !== TeamMemberRole.patient);
   };
@@ -330,21 +339,17 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return typeof tm === "object";
   };
 
-  const getPendingPatients = (): Patient[] => {
-    return getPatients().filter((patient) => isInvitationPending(patient));
-  };
-
   const getDirectSharePatients = (): Patient[] => {
     return getPatients().filter((patient) => patient.teams.find(team => team.teamId === "private"));
   };
 
-  const filterPatients = (filterType: FilterType | string, filter: string, flaggedPatients: string[]): Patient[] => {
+  const filterPatients = (filterType: PatientFilterTypes | string, filter: string, flaggedPatients: string[]): Patient[] => {
     const allPatients = getPatients();
     let patients: Patient[];
-    if (!(filterType in FilterType)) {
+    if (!(filterType in PatientFilterTypes)) {
       //filterType is a team id, retrieve all patients not pending in given team
       patients = allPatients.filter((patient) => !isUserInvitationPending(patient, filterType));
-    } else if (filterType === FilterType.pending) {
+    } else if (filterType === PatientFilterTypes.pending) {
       patients = allPatients.filter((patient) => isInvitationPending(patient));
     } else {
       patients = allPatients.filter((patient) => !isOnlyPendingInvitation(patient));
@@ -355,11 +360,16 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       const searchText = filter.toLocaleLowerCase();
       patients = patients.filter((patient: Patient): boolean => {
         switch (filterType) {
-        case FilterType.all:
-        case FilterType.pending:
+        case PatientFilterTypes.all:
+        case PatientFilterTypes.pending:
           break;
-        case FilterType.flagged:
+        case PatientFilterTypes.flagged:
           if (!flaggedPatients.includes(patient.userid)) {
+            return false;
+          }
+          break;
+        case PatientFilterTypes.unread:
+          if (patient.metadata.unreadMessagesSent <= 0) {
             return false;
           }
           break;
@@ -377,9 +387,11 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
         const lastName = patient.profile.lastName ?? "";
         return lastName.toLocaleLowerCase().includes(searchText);
       });
-    } else if (filterType === FilterType.flagged) {
+    } else if (filterType === PatientFilterTypes.flagged) {
       patients = patients.filter(patient => flaggedPatients.includes(patient.userid));
-    } else if (filterType !== FilterType.all && filterType !== FilterType.pending) {
+    } else if (filterType === PatientFilterTypes.unread) {
+      patients = patients.filter(patient => patient.metadata.unreadMessagesSent > 0);
+    } else if (filterType !== PatientFilterTypes.all && filterType !== PatientFilterTypes.pending) {
       patients = patients.filter(patient => isInTeam(patient, filterType));
     }
     return patients;
@@ -683,7 +695,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     filterPatients,
     getMedicalMembers,
     getNumMedicalMembers,
-    getPendingPatients,
     getDirectSharePatients,
     getPatientRemoteMonitoringTeam,
     teamHasOnlyOneMember,
@@ -700,6 +711,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     markPatientMessagesAsRead,
     createTeam,
     editTeam,
+    editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,
     removeMember,
