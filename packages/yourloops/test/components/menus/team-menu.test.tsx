@@ -56,7 +56,7 @@ describe("Team Menu", () => {
 
   function mountComponent(): void {
     act(() => {
-      return render(
+      render(
         <Router history={history}>
           <TeamMenu />
         </Router>, container);

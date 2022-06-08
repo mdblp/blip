@@ -39,7 +39,6 @@ import {
 
 import {
   TeamContextProvider,
-  loadTeams,
   useTeam,
 } from "./hook";
 
@@ -52,7 +51,6 @@ export {
   TeamContext,
   TeamProvider,
   TeamContextProvider,
-  loadTeams,
   useTeam,
   getDisplayTeamCode,
   TEAM_CODE_LENGTH,
