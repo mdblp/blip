@@ -72,7 +72,7 @@ describe("Patient secondary bar", () => {
   it("should be able to render", async () => {
     component = mount(
       <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider teamAPI={teamAPI}>
+        <TeamContextProvider>
           <PatientsSecondaryBar {...defaultProps} />
         </TeamContextProvider>
       </AuthContextProvider>

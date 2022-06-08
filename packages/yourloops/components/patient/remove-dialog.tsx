@@ -71,8 +71,8 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
 
   const userName = patient ? { firstName: patient.profile.firstName, lastName: patient.profile.lastName } : { firstName: "", lastName: "" };
   const patientName = t("user-name", userName);
-  const teamMembers = patient?.teams;
-  const patientTeamStatus = teamMembers?.find(team => team.teamId === selectedTeamId) as PatientTeam;
+  const patientTeams = patient?.teams;
+  const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId) as PatientTeam;
 
   const getSuccessAlertMessage = () => {
     if (patientTeamStatus.status === UserInvitationStatus.pending) {
@@ -105,16 +105,16 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   };
 
   useEffect(() => {
-    if (teamMembers) {
-      if (teamMembers?.length === 1) {
-        setSelectedTeamId(teamMembers[0].teamId);
-        setSortedTeams([teamMembers[0]]);
+    if (patientTeams) {
+      if (patientTeams?.length === 1) {
+        setSelectedTeamId(patientTeams[0].teamId);
+        setSortedTeams([patientTeams[0]]);
         return;
       }
 
       // Sorting teams in alphabetical order if there are several
-      if (teamMembers?.length > 1) {
-        const teams = teamMembers;
+      if (patientTeams?.length > 1) {
+        const teams = patientTeams;
 
         setSortedTeams(teams.sort((a,b) => +a.teamName - +b.teamName));
 
@@ -126,7 +126,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         });
       }
     }
-  }, [teamMembers]);
+  }, [patientTeams]);
 
 
   return (

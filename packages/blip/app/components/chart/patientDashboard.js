@@ -10,7 +10,20 @@ import "./patientDashboardVars.css";
 const PatientDashboard = (props) => {
   const {
     //eslint-disable-next-line
-    patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget, canPrint, onClickPrint,
+    patient,
+    user,
+    prefixURL,
+    profileDialog,
+    bgPrefs,
+    loading,
+    chartPrefs,
+    dataUtil,
+    epochLocation,
+    msRange,
+    chatWidget: ChatWidget,
+    alarmCard: AlarmCard,
+    canPrint,
+    onClickPrint,
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props;
@@ -78,6 +91,9 @@ const PatientDashboard = (props) => {
           onSwitchToDaily={onSwitchToDaily}
         />
         {patient.monitoring?.enabled &&
+          <AlarmCard patient={patient} />
+        }
+        {patient.monitoring?.enabled &&
           <ChatWidget id="dashboard-chat-widget"
             patient={patient} userId={user.userid} userRole={user.role} />
         }
@@ -89,6 +105,7 @@ const PatientDashboard = (props) => {
 PatientDashboard.propTypes = {
   user: PropTypes.object,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   prefixURL: PropTypes.string,

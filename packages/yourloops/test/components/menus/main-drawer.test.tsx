@@ -49,7 +49,7 @@ describe("Main Drawer", () => {
         render(
           <BrowserRouter>
             <AuthContextProvider value={authHookHcp}>
-              <TeamContextProvider teamAPI={teamAPI}>
+              <TeamContextProvider>
                 <MainDrawer miniVariant={miniVariant} />
               </TeamContextProvider>
             </AuthContextProvider>

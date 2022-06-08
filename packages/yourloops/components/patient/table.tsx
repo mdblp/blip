@@ -186,7 +186,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t("system")}
                 </TableSortLabel>
               </StyledTableCell>
-              { isUserHcp &&
+              {isUserHcp &&
                 <StyledTableCell
                   id="patients-list-header-remote-monitoring"
                   className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
@@ -272,6 +272,10 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   {t("last-data-update")}
                 </TableSortLabel>
               </StyledTableCell>
+              <StyledTableCell
+                id="patients-list-message-icon"
+                className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}
+              />
             </TableRow>
           </TableHead>
           <TableBody>

@@ -26,11 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import _ from "lodash";
 import bows from "bows";
+import moment from "moment-timezone";
 
-import { FilterType, UserInvitationStatus } from "../../models/generic";
+import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
@@ -62,6 +63,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
     idVerified,
     alarms,
     monitoring,
+    unreadMessages,
   } = iTeamMember;
 
   let teamUser = users.get(userId);
@@ -78,6 +80,7 @@ export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map
       idVerified,
       alarms,
       monitoring,
+      unreadMessages,
     };
     users.set(userId, teamUser);
   }
@@ -176,6 +179,51 @@ function TeamContextImpl(): TeamContext {
   const [initialized, setInitialized] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
+  const getPatientsAsTeamUsers = useCallback(() => {
+    const patients = new Map<string, TeamUser>();
+    const nTeams = teams.length;
+    for (let i = 0; i < nTeams; i++) {
+      const team = teams[i];
+      const members = team.members;
+      const nMembers = members.length;
+      for (let j = 0; j < nMembers; j++) {
+        const member = members[j];
+        if (member.role === TeamMemberRole.patient && !patients.has(member.user.userid)) {
+          patients.set(member.user.userid, member.user);
+        }
+      }
+    }
+    return Array.from(patients.values());
+  }, [teams]);
+
+  const getPatients = useCallback(() => {
+    const teamUsers = getPatientsAsTeamUsers();
+    return teamUsers.map(teamUser => mapTeamUserToPatient(teamUser));
+  }, [getPatientsAsTeamUsers]);
+
+
+  const isInvitationPending = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending);
+    return typeof tm === "object";
+  };
+
+  const buildPatientFiltersStats = useCallback(() => {
+    const patients = getPatients();
+    return {
+      all: patients.length,
+      pending: patients.filter((patient) => isInvitationPending(patient)).length,
+      directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === "private")).length,
+      unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
+      outOfRange: patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive).length,
+      severeHypoglycemia: patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive).length,
+      dataNotTransferred: patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive).length,
+      remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
+      renew: patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, "d").toDate().getTime() < 0).length,
+    };
+  }, [getPatients]);
+
+  const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats]);
+
   const session = authHook.session();
   if (session === null) {
     throw new Error("TeamHook need a logged-in user");
@@ -241,28 +289,6 @@ function TeamContextImpl(): TeamContext {
     return teams.filter(team => team.monitoring?.enabled);
   };
 
-  const getPatientsAsTeamUsers = (): TeamUser[] => {
-    const patients = new Map<string, TeamUser>();
-    const nTeams = teams.length;
-    for (let i = 0; i < nTeams; i++) {
-      const team = teams[i];
-      const members = team.members;
-      const nMembers = members.length;
-      for (let j = 0; j < nMembers; j++) {
-        const member = members[j];
-        if (member.role === TeamMemberRole.patient && !patients.has(member.user.userid)) {
-          patients.set(member.user.userid, member.user);
-        }
-      }
-    }
-    return Array.from(patients.values());
-  };
-
-  const getPatients = (): Patient[] => {
-    const teamUsers = getPatientsAsTeamUsers();
-    return teamUsers.map(teamUser => mapTeamUserToPatient(teamUser));
-  };
-
   const getPatientRemoteMonitoringTeam = (patient: Patient): PatientTeam => {
     if (!patient.monitoring) {
       throw Error("Cannot get patient remote monitoring team as patient is not remote monitored");
@@ -272,6 +298,15 @@ function TeamContextImpl(): TeamContext {
       throw Error("Could not find team to which patient is remote monitored");
     }
     return res;
+  };
+
+  const editPatientRemoteMonitoring = (patient: Patient) => {
+    const user = getUser(patient.userid);
+    if (!user) {
+      throw Error("Cannot update user monitoring as user was not found");
+    }
+    user.monitoring = patient.monitoring;
+    setTeams(teams);
   };
 
   const getMedicalMembers = (team: Team): TeamMember[] => {
@@ -299,19 +334,9 @@ function TeamContextImpl(): TeamContext {
     return admins.length === 1 && admins[0].user.userid === userId;
   };
 
-  const isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending);
-    return typeof tm === "object";
-  };
-
   const isOnlyPendingInvitation = (patient: Patient): boolean => {
     const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
     return typeof tm === "undefined";
-  };
-
-  const isUserInvitationPending = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId && team.status === UserInvitationStatus.pending);
-    return !!tm;
   };
 
   const isInAtLeastATeam = (patient: Patient): boolean => {
@@ -324,46 +349,43 @@ function TeamContextImpl(): TeamContext {
     return typeof tm === "object";
   };
 
-  const getPendingPatients = (): Patient[] => {
-    return getPatients().filter((patient) => isInvitationPending(patient));
-  };
 
-  const getDirectSharePatients = (): Patient[] => {
-    return getPatients().filter((patient) => patient.teams.find(team => team.teamId === "private"));
-  };
-
-  const filterPatients = (filterType: FilterType | string, filter: string, flaggedPatients: string[]): Patient[] => {
-    const allPatients = getPatients();
-    let patients: Patient[];
-    if (!(filterType in FilterType)) {
-      //filterType is a team id, retrieve all patients not pending in given team
-      patients = allPatients.filter((patient) => !isUserInvitationPending(patient, filterType));
-    } else if (filterType === FilterType.pending) {
-      patients = allPatients.filter((patient) => isInvitationPending(patient));
-    } else {
-      patients = allPatients.filter((patient) => !isOnlyPendingInvitation(patient));
+  const extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
+    const twoWeeksFromNow = new Date();
+    switch (filterType) {
+    case PatientFilterTypes.all:
+      return patients.filter((patient) => !isOnlyPendingInvitation(patient));
+    case PatientFilterTypes.pending:
+      return patients.filter((patient) => isInvitationPending(patient));
+    case PatientFilterTypes.flagged:
+      return patients.filter(patient => flaggedPatients.includes(patient.userid));
+    case PatientFilterTypes.unread:
+      return patients.filter(patient => patient.metadata.unreadMessagesSent > 0);
+    case PatientFilterTypes.outOfRange:
+      return patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive);
+    case PatientFilterTypes.severeHypoglycemia:
+      return patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive);
+    case PatientFilterTypes.dataNotTransferred:
+      return patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive);
+    case PatientFilterTypes.remoteMonitored:
+      return patients.filter(patient => patient.monitoring?.enabled);
+    case PatientFilterTypes.private:
+      return patients.filter(patient => isInTeam(patient, filterType));
+    case PatientFilterTypes.renew:
+      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+      return patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0);
+    default:
+      return patients;
     }
+  };
 
-    const searchByName = filter.length > 0;
+  const filterPatients = (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]): Patient[] => {
+    const allPatients = getPatients();
+    let patients = extractPatients(allPatients, filterType, flaggedPatients);
+    const searchByName = search.length > 0;
     if (searchByName) {
-      const searchText = filter.toLocaleLowerCase();
+      const searchText = search.toLocaleLowerCase();
       patients = patients.filter((patient: Patient): boolean => {
-        switch (filterType) {
-        case FilterType.all:
-        case FilterType.pending:
-          break;
-        case FilterType.flagged:
-          if (!flaggedPatients.includes(patient.userid)) {
-            return false;
-          }
-          break;
-        default:
-          if (!isInTeam(patient, filterType)) {
-            return false;
-          }
-          break;
-        }
-
         const firstName = patient.profile.firstName ?? "";
         if (firstName.toLocaleLowerCase().includes(searchText)) {
           return true;
@@ -371,10 +393,6 @@ function TeamContextImpl(): TeamContext {
         const lastName = patient.profile.lastName ?? "";
         return lastName.toLocaleLowerCase().includes(searchText);
       });
-    } else if (filterType === FilterType.flagged) {
-      patients = patients.filter(patient => flaggedPatients.includes(patient.userid));
-    } else if (filterType !== FilterType.all && filterType !== FilterType.pending) {
-      patients = patients.filter(patient => isInTeam(patient, filterType));
     }
     return patients;
   };
@@ -481,6 +499,17 @@ function TeamContextImpl(): TeamContext {
     metrics.send("team_management", "edit_care_team");
   };
 
+  const markPatientMessagesAsRead = (patient: Patient) => {
+    const clonedTeams = teams;
+    clonedTeams.forEach(team => {
+      const patientAsTeamUser = team.members.find(member => member.user.userid === patient.userid);
+      if (patientAsTeamUser) {
+        patientAsTeamUser.user.unreadMessages = 0;
+      }
+    });
+    setTeams(clonedTeams);
+  };
+
   const updateTeamAlerts = async (team: Team): Promise<void> => {
     if (!team.monitoring) {
       throw Error("Cannot update team monitoring with undefined");
@@ -491,13 +520,24 @@ function TeamContextImpl(): TeamContext {
       console.error(error);
       throw Error(`Failed to update team with id ${team.id}`);
     }
-    const cachedTeam = teams.find(t => t.id === team.id);
-    if (cachedTeam) {
-      cachedTeam.monitoring = team.monitoring;
-      setTeams(teams);
-    } else {
-      throw Error(`Could not find team with id ${team.id}`);
+    refresh(true);
+  };
+
+  const updatePatientAlerts = async (patient: Patient): Promise<void> => {
+    if (!patient.monitoring) {
+      throw Error("Cannot update patient monitoring with undefined");
     }
+    const team = teams.find(t => t.monitoring?.enabled === true && t.members.find(member => member.user.userid === patient.userid));
+    if (!team) {
+      throw Error("Cannot find monitoring team in which patient is");
+    }
+    try {
+      await TeamApi.updatePatientAlerts(team.id, patient.userid, patient.monitoring);
+    } catch (error) {
+      console.error(error);
+      throw Error(`Failed to update patient with id ${patient.userid}`);
+    }
+    refresh(true);
   };
 
   const leaveTeam = async (team: Team): Promise<void> => {
@@ -662,6 +702,7 @@ function TeamContextImpl(): TeamContext {
     teams,
     initialized,
     errorMessage,
+    patientsFilterStats,
     refresh,
     getTeam,
     getUser,
@@ -673,22 +714,22 @@ function TeamContextImpl(): TeamContext {
     filterPatients,
     getMedicalMembers,
     getNumMedicalMembers,
-    getPendingPatients,
-    getDirectSharePatients,
     getPatientRemoteMonitoringTeam,
     teamHasOnlyOneMember,
     isUserAdministrator,
     isUserTheOnlyAdministrator,
     isInvitationPending,
     isOnlyPendingInvitation,
-    isUserInvitationPending,
     isInAtLeastATeam,
     isInTeam,
     computeFlaggedPatients,
     invitePatient,
     inviteMember,
+    markPatientMessagesAsRead,
     createTeam,
     editTeam,
+    updatePatientAlerts,
+    editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,
     removeMember,

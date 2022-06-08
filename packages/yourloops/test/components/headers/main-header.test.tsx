@@ -59,7 +59,7 @@ describe("Main Header", () => {
         render(
           <Router history={history}>
             <AuthContextProvider value={authContext}>
-              <TeamContextProvider teamAPI={teamAPI}>
+              <TeamContextProvider>
                 <NotificationContextProvider api={notificationAPIStub}>
                   <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
                 </NotificationContextProvider>

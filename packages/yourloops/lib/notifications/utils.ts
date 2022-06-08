@@ -47,6 +47,9 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
   case APINotificationType.medicalTeamProInvitation:
     type = NotificationType.careTeamProInvitation;
     break;
+  case APINotificationType.medicalTeamMonitoringInvitation:
+    type = NotificationType.careTeamMonitoringInvitation;
+    break;
   case APINotificationType.medicalTeamDoAdmin:
     type = NotificationType.careTeamDoAdmin;
     // break; // TODO medicalTeamDoAdmin

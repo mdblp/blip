@@ -31,11 +31,13 @@ import { useTranslation } from "react-i18next";
 import moment from "moment-timezone";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
+import EmailIcon from "@material-ui/icons/Email";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import FlagIcon from "@material-ui/icons/Flag";
 import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
+import { Box, Typography } from "@material-ui/core";
 
 import IconActionButton from "../buttons/icon-action";
 import { FilterType } from "../../models/generic";
@@ -47,7 +49,6 @@ import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
-import { Box, Typography } from "@material-ui/core";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
 
 const patientListStyle = makeStyles(
@@ -60,7 +61,7 @@ const patientListStyle = makeStyles(
         marginLeft: theme.spacing(2),
         verticalAlign: "bottom",
       },
-      flag: {
+      coloredIcon: {
         color: theme.palette.primary.main,
       },
       icon: {
@@ -130,12 +131,11 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses;
     let dataNotTransferredRateClasses = mediumCellWithClasses;
     if (isUserHcp) {
-      const dataNotTransferredActive = patient.metadata.alarm?.nonDataTransmissionRate ?? false;
       const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
       patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`;
       timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
       frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
-      dataNotTransferredRateClasses = dataNotTransferredActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      dataNotTransferredRateClasses = nonDataTransmissionActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
     }
     return {
       patientSystem: patient.settings.system ?? trNA,
@@ -258,7 +258,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
             id={`${rowId}-icon-button-flag`}
             onClick={onClickFlag}
-            className={`${!isFlagged ? classes.flag : ""} ${classes.icon} patient-flag-button`}
+            className={`${!isFlagged ? classes.coloredIcon : ""} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
       <StyledTableCell
@@ -305,6 +305,11 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}
+      </StyledTableCell>
+      <StyledTableCell id={`${rowId}-messages`}>
+        {patient.metadata.unreadMessagesSent > 0 &&
+          <EmailIcon className={classes.coloredIcon} />
+        }
       </StyledTableCell>
     </StyledTableRow>
   );

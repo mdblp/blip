@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-1260 Verify password leak on signup or password change
+- YLP-1291 A monitoring team can flag a patient under remote monitoring
+- YLP-1340 Remote monitoring left menu for an HCP user
 - YLP-1367 The medical data can be exported as csv file
 - YLP-1369 HCP can send private messages for this team
 - YLP-1370 HCP and patient can communicate through messaging system
@@ -18,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1462 Create Patient statistics card for dashboard
 - YLP-1463 create Patient information card for dashboard
 - YLP-1465 create Device usage card for dashboard
+- YLP-1466 Create alarm card
 - YLP-1469 Update footer with "Accompanying documents" dropdown
 - YLP-1475 Implement the team details page for patients
 - YLP-1476 Remove care teams page
@@ -34,11 +37,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-1541 Plug team alarm configuration to backend
 - YLP-1544 Create dialog to invite patient in remote monitoring team
 - YLP-1547 Rework patient and caregiver list nav bar
+- YLP-1583 Add message column in patient list
+- YLP-1585 Add messages filter in left drawer
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 - YLP-1345 Correct blip pdf export to display japanese chars
+- YLP-1350 Auth API refactoring
 - YLP-1353 Share API refactoring
 - YLP-1354 Team API refactoring
 - YLP-1383 Rework app routing

@@ -314,6 +314,7 @@ describe("Patient utils", () => {
           alarm: teamUser.alarms,
           flagged: undefined,
           medicalData: null,
+          unreadMessagesSent: 0,
         },
         monitoring: undefined,
         profile: {

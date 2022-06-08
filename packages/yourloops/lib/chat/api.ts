@@ -45,7 +45,7 @@ export async function sendChatMessage(teamId: string, patientId: string, text: s
   const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
   const response = await HttpService.post<boolean, string>({
     url,
-    payload: JSON.stringify({ text , private: isPrivate }) ,
+    payload: JSON.stringify({ text, private: isPrivate }),
   });
 
   if (response.status !== 200) {

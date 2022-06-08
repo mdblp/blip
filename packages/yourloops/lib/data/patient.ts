@@ -60,6 +60,7 @@ interface PatientMetadata {
   flagged?: boolean;
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
+  unreadMessagesSent: number;
 }
 
 interface Patient {

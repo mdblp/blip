@@ -127,6 +127,13 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
       </Trans>
     );
     break;
+  case NotificationType.careTeamMonitoringInvitation:
+    notificationText = (
+      <Trans t={t} i18nKey="notification-patient-remote-monitoring" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        {t("invite-join-monitoring-team")} <strong>{careteam}</strong>.
+      </Trans>
+    );
+    break;
   default:
     notificationText = <i>Invalid invitation type</i>;
   }
