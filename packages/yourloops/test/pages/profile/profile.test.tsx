@@ -39,6 +39,7 @@ import ProfilePage from "../../../pages/profile";
 import { Preferences, Profile, Settings } from "../../../models/shoreline";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { genderLabels } from "../../../lib/auth/helpers";
 
 describe("Profile", () => {
   let container: HTMLElement | null = null;
@@ -110,8 +111,8 @@ describe("Profile", () => {
   it("should display gender if user is a patient", async () => {
     const session = loggedInUsers.patientSession;
     await mountProfilePage(session);
-    const genderSelect = container.querySelector("#profile-select-gender") as HTMLInputElement;
-    expect(genderSelect?.value).toBe(session.user.profile?.patient?.sex);
+    const genderValue = container.querySelector("#profile-select-gender").innerHTML;
+    expect(genderValue).toBe(genderLabels()[session.user.profile?.patient?.sex]);
   });
 
   it("should display referring doctor if user is a patient", async () => {
@@ -132,7 +133,7 @@ describe("Profile", () => {
     const session = loggedInUsers.patientSession;
     session.user.settings.country = "FR";
     await mountProfilePage(session);
-    const insInput = container.querySelector("#profile-textfield-referring-doctor") as HTMLInputElement;
+    const insInput = container.querySelector("#profile-textfield-ins") as HTMLInputElement;
     expect(insInput?.value).toBe(session.user.profile?.patient?.ins);
   });
 
@@ -148,7 +149,7 @@ describe("Profile", () => {
     session.user.settings.country = "FR";
     await mountProfilePage(session);
     const ssnInput = container.querySelector("#profile-textfield-ssn") as HTMLInputElement;
-    expect(ssnInput?.value).toBe(session.user.profile?.patient?.ins);
+    expect(ssnInput?.value).toBe(session.user.profile?.patient?.ssn);
   });
 
   it("should not display profession if user is a patient", async () => {

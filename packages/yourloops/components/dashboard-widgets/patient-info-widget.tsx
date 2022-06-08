@@ -116,10 +116,10 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
 
-  const computePatientInformation = () => {
-    patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
-    patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
+  patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
 
+  const computePatientInformation = () => {
+    patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
 
     const displayInviteButton = patient.monitoring?.enabled === false
       && patient.monitoring.status !== MonitoringStatus.pending
