@@ -100,6 +100,57 @@ describe("Profile", () => {
     expect(birthDateInput?.value).toBe(session.user.profile?.patient?.birthday);
   });
 
+  it("should display birthplace if user is a patient", async () => {
+    const session = loggedInUsers.patientSession;
+    await mountProfilePage(session);
+    const birthPlaceInput = container.querySelector("#profile-textfield-birthplace") as HTMLInputElement;
+    expect(birthPlaceInput?.value).toBe(session.user.profile?.patient?.birthPlace);
+  });
+
+  it("should display gender if user is a patient", async () => {
+    const session = loggedInUsers.patientSession;
+    await mountProfilePage(session);
+    const genderSelect = container.querySelector("#profile-select-gender") as HTMLInputElement;
+    expect(genderSelect?.value).toBe(session.user.profile?.patient?.sex);
+  });
+
+  it("should display referring doctor if user is a patient", async () => {
+    const session = loggedInUsers.patientSession;
+    await mountProfilePage(session);
+    const referringDoctorInput = container.querySelector("#profile-textfield-referringDoctor") as HTMLInputElement;
+    expect(referringDoctorInput?.value).toBe(session.user.profile?.patient?.referringDoctor);
+  });
+
+  it("should not display INS if user is not a french patient", async () => {
+    const session = loggedInUsers.patientSession;
+    await mountProfilePage(session);
+    const insInput = container.querySelector("#profile-textfield-ins") as HTMLInputElement;
+    expect(insInput).toBeNull();
+  });
+
+  it("should display INS if user is a french patient", async () => {
+    const session = loggedInUsers.patientSession;
+    session.user.settings.country = "FR";
+    await mountProfilePage(session);
+    const insInput = container.querySelector("#profile-textfield-referringDoctor") as HTMLInputElement;
+    expect(insInput?.value).toBe(session.user.profile?.patient?.ins);
+  });
+
+  it("should not display SSN if user is not a french patient", async () => {
+    const session = loggedInUsers.patientSession;
+    await mountProfilePage(session);
+    const ssnInput = container.querySelector("#profile-textfield-ssn") as HTMLInputElement;
+    expect(ssnInput).toBeNull();
+  });
+
+  it("should display SSN if user is a french patient", async () => {
+    const session = loggedInUsers.patientSession;
+    session.user.settings.country = "FR";
+    await mountProfilePage(session);
+    const ssnInput = container.querySelector("#profile-textfield-ssn") as HTMLInputElement;
+    expect(ssnInput?.value).toBe(session.user.profile?.patient?.ins);
+  });
+
   it("should not display profession if user is a patient", async () => {
     const session = loggedInUsers.patientSession;
     await mountProfilePage(session);
