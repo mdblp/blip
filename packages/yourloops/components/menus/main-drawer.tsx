@@ -256,9 +256,11 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 <ListItemText>
                   <Box display="flex">
                     {t("incoming-renewal")}
-                    <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                      {patientFiltersStats.renew}
-                    </Box>
+                    {patientFiltersStats.renew > 0 &&
+                      <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
+                        {patientFiltersStats.renew}
+                      </Box>
+                    }
                   </Box>
                 </ListItemText>
               </ListItem>
@@ -283,9 +285,11 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                   <ListItemText>
                     <Box display="flex">
                       {item.text}
-                      <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
-                        {item.count}
-                      </Box>
+                      {item.count > 0 &&
+                        <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
+                          {item.count}
+                        </Box>
+                      }
                     </Box>
                   </ListItemText>
                 </ListItem>
