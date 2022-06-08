@@ -126,6 +126,13 @@ export default class TeamApi {
     });
   }
 
+  static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
+    await HttpService.put<void, Monitoring>({
+      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
+      payload: monitoring,
+    });
+  }
+
   static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
       url: `/crew/v0/teams/${teamId}`,

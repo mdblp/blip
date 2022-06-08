@@ -525,7 +525,6 @@ function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
   };
 
   const updatePatientAlerts = async (patient: Patient): Promise<void> => {
-    const session = authHook.session() as Session;
     if (!patient.monitoring) {
       throw Error("Cannot update patient monitoring with undefined");
     }
@@ -534,7 +533,7 @@ function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
       throw Error("Cannot find monitoring team in which patient is");
     }
     try {
-      await teamAPI.updatePatientAlerts(session, team.id, patient.userid, patient.monitoring);
+      await TeamApi.updatePatientAlerts(team.id, patient.userid, patient.monitoring);
     } catch (error) {
       console.error(error);
       throw Error(`Failed to update patient with id ${patient.userid}`);

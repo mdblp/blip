@@ -1,15 +1,17 @@
 import { Preferences, Profile, Settings } from "../../models/shoreline";
 import HttpService from "../../services/http";
 import { HttpHeaderKeys } from "../../models/api";
+import User from "./user";
 
 export default class UserApi {
-  static async getShorelineAccessToken(email: string): Promise<string> {
+  static async getShorelineAccessToken(email: string): Promise<{ token: string, id: string }> {
     try {
-      const { headers } = await HttpService.post({ url: `auth/hack/user/${email}` });
-      return headers[HttpHeaderKeys.sessionToken];
+      const { headers, data } = await HttpService.post<User, void>({ url: `auth/hack/user/${email}` });
+      console.log(data);
+      return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid };
     } catch (err) {
       console.log("This profile doesn't exists");
-      return "no-token";
+      throw "unknown user";
     }
   }
 
