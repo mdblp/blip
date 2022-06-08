@@ -281,6 +281,15 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     return res;
   };
 
+  const editPatientRemoteMonitoring = (patient: Patient) => {
+    const user = getUser(patient.userid);
+    if (!user) {
+      throw Error("Cannot update user monitoring as user was not found");
+    }
+    user.monitoring = patient.monitoring;
+    setTeams(teams);
+  };
+
   const getMedicalMembers = (team: Team): TeamMember[] => {
     return team.members.filter((member) => member.role !== TeamMemberRole.patient);
   };
@@ -702,6 +711,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     markPatientMessagesAsRead,
     createTeam,
     editTeam,
+    editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,
     removeMember,
