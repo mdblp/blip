@@ -29,6 +29,7 @@
 import React, { useCallback, useMemo } from "react";
 import _ from "lodash";
 import bows from "bows";
+import moment from "moment-timezone";
 
 import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
@@ -213,8 +214,6 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
 
   const buildPatientFiltersStats = useCallback(() => {
     const patients = getPatients();
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
     return {
       all: patients.length,
       pending: patients.filter((patient) => isInvitationPending(patient)).length,
@@ -224,7 +223,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
       severeHypoglycemia: patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive).length,
       dataNotTransferred: patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive).length,
       remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0).length,
+      renew: patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, "d").toDate().getTime() < 0).length,
     };
   }, [getPatients]);
 
