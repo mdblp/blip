@@ -125,10 +125,32 @@ function acceptInvitation(session: Readonly<Session>, notification: INotificatio
   case NotificationType.careTeamPatientInvitation:
     confirmURL = new URL("/confirm/accept/team/invite", appConfig.API_HOST);
     return updateInvitation(session, confirmURL, notification.id);
+  case NotificationType.careTeamMonitoringInvitation:
+    confirmURL = new URL(`/confirm/accept/team/monitoring/${notification.target?.id}/${session.user.userid}`, appConfig.API_HOST);
+    return updateInvitation(session, confirmURL, notification.id);
   default:
     log.info("TODO accept", notification);
     return Promise.reject(new Error(`Unknown notification ${notification.type}`));
   }
+}
+
+async function cancelRemoteMonitoringInvite(session: Session, teamId: string, userId: string): Promise<void> {
+  const confirmURL = new URL(`/confirm/dismiss/team/monitoring/${teamId}/${userId}`, appConfig.API_HOST).toString();
+  const response = await fetch(confirmURL, {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+    },
+    cache: "no-cache",
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
 }
 
 function declineInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
@@ -138,8 +160,7 @@ function declineInvitation(session: Readonly<Session>, notification: INotificati
     confirmURL = new URL(`/confirm/dismiss/invite/${session.user.userid}/${notification.creatorId}`, appConfig.API_HOST);
     return updateInvitation(session, confirmURL, notification.id);
   case NotificationType.careTeamProInvitation:
-  case NotificationType.careTeamPatientInvitation:
-  {
+  case NotificationType.careTeamPatientInvitation: {
     const teamId = notification.target?.id;
     if (typeof teamId !== "string") {
       return Promise.reject(new Error("Invalid target team id"));
@@ -147,6 +168,11 @@ function declineInvitation(session: Readonly<Session>, notification: INotificati
     confirmURL = new URL(`/confirm/dismiss/team/invite/${teamId}`, appConfig.API_HOST);
     return updateInvitation(session, confirmURL, notification.id);
   }
+  case NotificationType.careTeamMonitoringInvitation:
+    if (!notification.target) {
+      throw Error("Cannot decline notification as team id is not specified");
+    }
+    return cancelRemoteMonitoringInvite(session, notification.target?.id, session.user.userid);
   default:
     log.info("TODO accept", notification);
     return Promise.reject(new Error(`Unknown notification ${notification.type}`));
@@ -195,11 +221,34 @@ async function cancelInvitation(session: Readonly<Session>, notification: INotif
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
+async function inviteToRemoteMonitoring(session: Session, teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
+  const confirmURL = new URL(`/confirm/send/team/monitoring/${teamId}/${userId}`, appConfig.API_HOST).toString();
+
+  const response = await fetch(confirmURL, {
+    method: "POST",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
+      [HttpHeaderKeys.sessionToken]: session.sessionToken,
+      [HttpHeaderKeys.traceToken]: session.traceToken,
+    },
+    cache: "no-cache",
+    body: JSON.stringify({ monitoringEnd: monitoringEnd.toJSON() }),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
 const notificationAPI: NotificationAPI = {
   getReceivedInvitations,
   getSentInvitations,
   acceptInvitation,
   declineInvitation,
   cancelInvitation,
+  inviteToRemoteMonitoring,
+  cancelRemoteMonitoringInvite,
 };
 export default notificationAPI;

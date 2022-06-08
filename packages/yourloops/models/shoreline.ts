@@ -31,6 +31,7 @@ import { LanguageCodes } from "./locales";
 import { MedicalData } from "./device-data";
 import { HcpProfession } from "./hcp-profession";
 import { Alarm } from "./alarm";
+import { Monitoring } from "./monitoring";
 
 enum UserRoles {
   hcp = "hcp",
@@ -97,7 +98,8 @@ interface IUser {
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null;
   alarms?: Alarm | null;
-  monitoring?: { enabled: boolean}
+  monitoring?: Monitoring;
+  unreadMessages?: number;
 }
 
 export { IUser, Profile, Settings, Preferences, Consent, UserRoles };

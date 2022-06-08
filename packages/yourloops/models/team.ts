@@ -53,7 +53,8 @@ export interface ITeamMember {
   preferences?: Preferences | null;
   idVerified: boolean;
   alarms?: Alarm;
-  monitoring?: { enabled: boolean}
+  monitoring?: Monitoring;
+  unreadMessages?: number;
 }
 
 /**

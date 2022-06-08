@@ -31,59 +31,77 @@ import { useTranslation } from "react-i18next";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import TuneIcon from "@material-ui/icons/Tune";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles } from "@material-ui/core/styles";
 
-import { commonComponentStyles } from "../common";
-import TeamAlarmsContent from "./team-alarms-content";
-import { Team, useTeam } from "../../lib/team";
+import { useTeam } from "../../lib/team";
 import { Monitoring } from "../../models/monitoring";
 import { useAlert } from "../utils/snackbar";
+import { Patient } from "../../lib/data/patient";
+import { commonComponentStyles } from "../common";
+import AlarmsContentConfiguration from "./alarms-content-configuration";
 
-interface TeamAlarmsProps {
-  team: Team,
+const useStyles = makeStyles(() => ({
+  title: {
+    alignSelf: "center",
+  },
+}));
+
+
+interface PatientAlarmDialogProps {
+  patient: Patient,
+  onClose: () => void
 }
 
-function TeamAlarms(props: TeamAlarmsProps): JSX.Element {
-  const { team } = props;
-  const commonTeamClasses = commonComponentStyles();
+function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
+  const { patient, onClose } = props;
+  const commonClasses = commonComponentStyles();
+  const classes = useStyles();
   const { t } = useTranslation("yourloops");
   const teamHook = useTeam();
   const alert = useAlert();
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
 
-  if (!team.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`);
+  if (!patient?.monitoring?.enabled) {
+    throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`);
   }
 
   const save = async (monitoring: Monitoring) => {
-    team.monitoring = monitoring;
+    patient.monitoring = monitoring;
     setSaveInProgress(true);
     try {
-      await teamHook.updateTeamAlerts(team);
-      alert.success(t("team-update-success"));
+      await teamHook.updatePatientAlerts(patient);
+      alert.success(t("patient-update-success"));
+      setSaveInProgress(false);
+      onClose();
     } catch (error) {
       console.error(error);
-      alert.error(t("team-update-error"));
-    } finally {
+      alert.error(t("patient-update-error"));
       setSaveInProgress(false);
     }
   };
 
   return (
-    <div className={commonTeamClasses.root}>
-      <div className={commonTeamClasses.categoryHeader}>
-        <div>
-          <TuneIcon />
-          <Typography className={commonTeamClasses.title}>
-            {t("events-configuration")}
-          </Typography>
-        </div>
-      </div>
+    <Dialog id="patient-alarm-dialog-id" fullWidth={true} maxWidth="lg" open={true} onClose={onClose}>
+      <div className={commonClasses.root}>
+        <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
+          <div className={commonClasses.categoryHeader}>
+            <div>
+              <TuneIcon />
+              <Typography className={commonClasses.title}>
+                {t("events-configuration")}
+              </Typography>
+            </div>
+          </div>
+        </DialogTitle>
 
-      <Box paddingX={3}>
-        <TeamAlarmsContent monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
-      </Box>
-    </div>
+        <Box paddingX={3} marginBottom={2}>
+          <AlarmsContentConfiguration monitoring={patient.monitoring} showCancelButton={true} onSave={save} saveInProgress={saveInProgress} onClose={onClose}/>
+        </Box>
+      </div>
+    </Dialog>
   );
 }
 
-export default TeamAlarms;
+export default PatientAlarmDialog;

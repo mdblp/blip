@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, PatientTableSortFields, SortDirection } from "../../models/generic";
+import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from "../../models/generic";
 import { Patient } from "../../lib/data/patient";
 
 export interface PatientTableCardCommonProps {
@@ -45,7 +45,7 @@ export interface PatientTableProps extends PatientTableCardCommonProps {
 
 export interface PatientListProps {
   filter: string;
-  filterType: FilterType | string;
+  filterType: PatientFilterTypes;
 }
 
 export interface PatientElementProps {

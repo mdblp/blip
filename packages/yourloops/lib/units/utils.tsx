@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const MMOLL_PER_MGDL = 0.0555;
+export const MGDL_PER_MMOL = 18.01577;
 
 export enum UNITS_TYPE {
   MGDL = "mg/dL",
@@ -44,9 +44,9 @@ export function convertBG(value: number, currentUnit: UNITS_TYPE): number {
   }
   switch (currentUnit) {
   case UNITS_TYPE.MGDL:
-    return value * MMOLL_PER_MGDL;
+    return value / MGDL_PER_MMOL;
   case UNITS_TYPE.MMOLL:
-    return value / MMOLL_PER_MGDL;
+    return value * MGDL_PER_MMOL;
   default:
     throw new Error("Invalid parameter unit");
   }
