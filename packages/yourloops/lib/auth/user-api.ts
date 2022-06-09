@@ -7,7 +7,6 @@ export default class UserApi {
   static async getShorelineAccessToken(email: string): Promise<{ token: string, id: string }> {
     try {
       const { headers, data } = await HttpService.post<User, void>({ url: `auth/hack/user/${email}` });
-      console.log(data);
       return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid };
     } catch (err) {
       console.log("This profile doesn't exists");

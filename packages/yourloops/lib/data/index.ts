@@ -34,17 +34,10 @@ import {
   useData,
 } from "./hook";
 
-import {
-  addPendingFetch,
-  removePendingFetch,
-} from "./fetch-summaries";
-
 export {
   DataContext,
   DataProvider,
   DefaultDataContext,
   DataContextProvider,
   useData,
-  addPendingFetch,
-  removePendingFetch,
 };

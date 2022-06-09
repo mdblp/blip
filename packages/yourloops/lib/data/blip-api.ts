@@ -36,17 +36,8 @@ import { t as translate } from "../language";
 import metrics from "../metrics";
 
 import { GetPatientDataOptions } from "./models";
-import {
-  editMessage as apiEditMessage,
-  getMessages as apiGetMessages,
-  getMessageThread as apiGetMessageThread,
-  getPatientData as apiGetPatientData,
-  getPatientDataRange as apiGetPatientDataRange,
-  replyMessageThread as apiReplyMessageThread,
-  startMessageThread as apiStartMessageThread,
-  exportData as apiExportData,
-} from "./api";
 import { Patient } from "./patient";
+import DataApi from "./data-api";
 
 /**
  * Wrapper for blip v1 to be able to call the API
@@ -74,7 +65,7 @@ class BlipApi {
     this.log.debug("getPatientDataRange", { userId: patient.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiGetPatientDataRange(session, patient.userid);
+      return DataApi.getPatientDataRange(patient.userid);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -84,7 +75,7 @@ class BlipApi {
     const session = this.authHook.session();
     if (session !== null) {
       metrics.startTimer("load_data");
-      return apiGetPatientData(session, patient, options).then((r) => {
+      return DataApi.getPatientData(patient, options).then((r) => {
         metrics.endTimer("load_data");
         return Promise.resolve(r);
       }).catch((r) => {
@@ -99,7 +90,7 @@ class BlipApi {
     this.log.debug("getMessages", { userId: patient.userid, options });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiGetMessages(session, patient, options);
+      return DataApi.getMessages(patient, options);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -108,7 +99,7 @@ class BlipApi {
     this.log.debug("getMessageThread", { messageId });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiGetMessageThread(session, messageId);
+      return DataApi.getMessageThread(messageId);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -117,7 +108,7 @@ class BlipApi {
     this.log.debug("startMessageThread", { userId: message.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiStartMessageThread(session, message);
+      return DataApi.postMessageThread(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -126,7 +117,7 @@ class BlipApi {
     this.log.debug("replyMessageThread", { userId: message.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiReplyMessageThread(session, message);
+      return DataApi.postMessageThread(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -135,7 +126,7 @@ class BlipApi {
     this.log.debug("editMessage", { userId: message.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiEditMessage(session, message);
+      return DataApi.editMessage(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }
@@ -144,7 +135,7 @@ class BlipApi {
     this.log.debug("exportData", { userId: patient.userid });
     const session = this.authHook.session();
     if (session !== null) {
-      return apiExportData(session, patient.userid, startDate, endDate);
+      return DataApi.exportData(session.user, patient.userid, startDate, endDate);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

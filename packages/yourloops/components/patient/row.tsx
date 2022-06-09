@@ -26,7 +26,6 @@
  */
 
 import React from "react";
-import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import moment from "moment-timezone";
 
@@ -45,7 +44,6 @@ import { MedicalData } from "../../models/device-data";
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
 import { useTeam } from "../../lib/team";
-import { addPendingFetch, removePendingFetch } from "../../lib/data";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
@@ -99,7 +97,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const patientIsMonitored = patient.monitoring !== null;
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
-  const [medicalData, setMedicalData] = React.useState<MedicalData | null | undefined>(patient.metadata.medicalData);
+  const medicalData: MedicalData | null | undefined = patient.metadata.medicalData;
   const [tooltipText, setTooltipText] = React.useState<string>("");
   const rowRef = React.createRef<HTMLTableRowElement>();
 
@@ -178,8 +176,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
   const rowId = `patients-list-row-${userId.replace(/@/g, "_")}`;
-  const session = authHook.session();
-  const isPendingInvitation = teamHook.isOnlyPendingInvitation(patient);
   const hasPendingInvitation = teamHook.isInvitationPending(patient);
   const isAlreadyInATeam = teamHook.isInAtLeastATeam(patient);
 
@@ -191,43 +187,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     const userFullNameHtmlElement = document.getElementById(`${rowId}-patient-full-name-value`);
     setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? patientFullName : "");
   }, [patientFullName, rowId]);
-
-  React.useEffect(() => {
-    const observedElement = rowRef.current;
-    if (session && observedElement && !medicalData && !isPendingInvitation) {
-      /** If unmounted, we want to discard the result, react don't like to update an unmounted component */
-      let componentMounted = true;
-      const observer = new IntersectionObserver((entries) => {
-        const rowDisplayed = entries[0];
-        if (rowDisplayed.intersectionRatio > 0) {
-          // Displayed: queue the fetch
-          addPendingFetch(session, patient).then((md) => {
-            if (typeof md !== "undefined") {
-              teamHook.setPatientMedicalData(patient.userid, md);
-              if (componentMounted) setMedicalData(md);
-            }
-          }).catch(() => {
-            teamHook.setPatientMedicalData(patient.userid, null);
-            if (componentMounted) setMedicalData(null);
-          });
-        } else {
-          // No longer displayed, cancel the fetch
-          removePendingFetch(patient);
-        }
-      });
-
-      observer.observe(observedElement);
-
-      return (): void => {
-        // Effect callback -> cancel subscriptions to the observer
-        // and the API fetch
-        observer.disconnect();
-        removePendingFetch(patient);
-        componentMounted = false;
-      };
-    }
-    return _.noop;
-  }, [medicalData, patient, session, isPendingInvitation, teamHook, rowRef]);
 
   return (
     <StyledTableRow
