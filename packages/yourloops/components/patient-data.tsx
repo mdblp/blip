@@ -48,6 +48,7 @@ import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
 import { Patient } from "../lib/data/patient";
 import { makeStyles } from "@material-ui/core";
+import AlarmCard from "./alarm/alarm-card";
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -154,6 +155,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogPDFOptions={DialogPDFOptions}
         patientInfoWidget={PatientInfoWidget}
         chatWidget={ChatWidget}
+        alarmCard={AlarmCard}
       />
     </Container>
   );

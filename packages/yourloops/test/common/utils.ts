@@ -88,9 +88,9 @@ export const createPatient = (
     nonDataTransmissionActive: false,
   },
   fullName = "fakePatientFullName",
-  monitoring: Monitoring = null,
-  system: string = null,
-  flagged: boolean = null
+  monitoring: Monitoring | undefined = undefined,
+  system: string | undefined = undefined,
+  flagged: boolean | undefined = undefined
 ): Patient => {
   return {
     metadata: {
@@ -107,7 +107,7 @@ export const createPatient = (
       email: "fakeUsername",
     },
     settings: {
-      a1c: { date : new Date().toDateString(), value : "fakeA1cValue" },
+      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
       system: system,
     },
     teams: teams,
@@ -115,10 +115,11 @@ export const createPatient = (
   };
 };
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = "fakeTeamName"): PatientTeam => {
   return {
     teamId: id,
     status,
+    teamName,
   } as PatientTeam;
 };
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
@@ -131,7 +132,7 @@ export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSeve
 export const createTeamUser = (
   id: string,
   members: TeamMember[],
-  profile: Profile = null,
+  profile: Profile | undefined = undefined,
   alarms: Alarm = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: true,
@@ -183,21 +184,28 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
 export function buildTeamMember(
   teamId = "fakeTeamId",
   userId = "fakeUserId",
-  invitation: INotification = null,
+  invitation: INotification | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
   username = "fake@username.com",
   fullName = "fake full name",
-  status = UserInvitationStatus.pending
+  status = UserInvitationStatus.pending,
+  userRole: UserRoles = UserRoles.hcp,
 ): TeamMember {
   return {
     team: { id: teamId } as Team,
     role,
     status,
     user: {
-      role: UserRoles.hcp,
+      role: userRole,
       userid: userId,
       username,
-      members: [],
+      members: [
+        {
+          invitation: {} as INotification,
+          status,
+          team: { id: teamId, code: "fakeCode", name: "fakeTeamName" },
+        } as TeamMember,
+      ],
       profile: {
         fullName,
       },

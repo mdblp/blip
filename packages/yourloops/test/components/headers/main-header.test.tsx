@@ -37,7 +37,6 @@ import { INotification, NotificationContextProvider, NotificationType } from "..
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { notificationAPIStub } from "../../lib/notifications/utils";
 import { TeamContextProvider } from "../../../lib/team";
-import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
@@ -59,7 +58,7 @@ describe("Main Header", () => {
         render(
           <Router history={history}>
             <AuthContextProvider value={authContext}>
-              <TeamContextProvider teamAPI={teamAPI}>
+              <TeamContextProvider>
                 <NotificationContextProvider api={notificationAPIStub}>
                   <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
                 </NotificationContextProvider>

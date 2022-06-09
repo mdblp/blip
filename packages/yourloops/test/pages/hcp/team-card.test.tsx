@@ -27,114 +27,123 @@
  */
 
 import React from "react";
-import Adapter from "enzyme-adapter-react-16";
 
-import enzyme, { mount, shallow, ReactWrapper, ShallowWrapper } from "enzyme";
 import { UserInvitationStatus } from "../../../models/generic";
 import { TeamMemberRole } from "../../../models/team";
-import { Team, loadTeams } from "../../../lib/team";
-import TeamCard, { TeamCardProps } from "../../../pages/hcp/team-card";
-import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
-import { loggedInUsers } from "../../common";
+import { Team, useTeam } from "../../../lib/team";
+import TeamCard from "../../../pages/hcp/team-card";
+import { teams } from "../../common";
 import { TeamInfo } from "../../../components/team/team-card";
+import * as teamHookMock from "../../../lib/team";
+import { triggerMouseEvent } from "../../common/utils";
+import { act } from "react-dom/test-utils";
+import { render, unmountComponentAtNode } from "react-dom";
 
+jest.mock("../../../lib/team");
 describe("Team card", () => {
-  const authHcp = loggedInUsers.hcpSession;
-  let teams: Team[] = [];
-  const defaultProps: TeamCardProps = {
-    team: {} as Team,
-    memberRole: TeamMemberRole.admin,
-    memberStatus: UserInvitationStatus.accepted,
-    onShowAddMemberDialog: jest.fn(),
-    onShowEditTeamDialog: jest.fn(),
-    onShowLeaveTeamDialog: jest.fn(),
-  };
+  const onShowAddMemberDialog = jest.fn();
+  const onShowEditTeamDialog = jest.fn();
+  const onShowLeaveTeamDialog = jest.fn();
 
-  let component: ReactWrapper | ShallowWrapper | null = null;
+  let container: HTMLElement | null = null;
+  let team: Team;
 
-  const resetSpys = () => {
-    resetTeamAPIStubs();
-    (defaultProps.onShowEditTeamDialog as jest.Mock).mockReset();
-    (defaultProps.onShowLeaveTeamDialog as jest.Mock).mockReset();
-    (defaultProps.onShowAddMemberDialog as jest.Mock).mockReset();
-  };
+  function DummyComponent({ teamIndex }: { teamIndex: number }): JSX.Element {
+    const { teams } = useTeam();
+    team = teams[teamIndex];
+    return (
+      <TeamCard
+        team={team}
+        memberRole={TeamMemberRole.admin}
+        memberStatus={UserInvitationStatus.accepted}
+        onShowEditTeamDialog={onShowEditTeamDialog}
+        onShowLeaveTeamDialog={onShowLeaveTeamDialog}
+        onShowAddMemberDialog={onShowAddMemberDialog}
+      />
+    );
+  }
 
-  beforeAll(async () => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
+  function mountTeamCardComponent(teamIndex = 0): void {
+    act(() => render(<DummyComponent teamIndex={teamIndex} />, container));
+  }
+
+  function mountTeamInfoComponent(value?: string): void {
+    act(() => render(
+      <TeamInfo id="test" label="label" value={value} icon={<div id="icon" />} />, container)
+    );
+  }
+
+  beforeAll(() => {
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { teams };
     });
-    resetSpys();
-    const result = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
-    teams = result.teams;
-    defaultProps.team = teams[1];
+  });
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
   });
 
   afterEach(() => {
-    if (component !== null) {
-      component.unmount();
-      component = null;
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
     }
-    resetSpys();
   });
 
   it("should be able to render", () => {
-    component = mount(<TeamCard {...defaultProps} />);
-    expect(component.find(`#team-card-${defaultProps.team.id}-actions`).length).toBe(1);
-    expect(component.find(`#team-card-${defaultProps.team.id}-name`).length).toBe(1);
-    expect(component.find(`#team-card-${defaultProps.team.id}-infos`).length).toBe(1);
+    mountTeamCardComponent();
+    expect(document.querySelectorAll(`#team-card-${team.id}-actions`).length).toBe(1);
+    expect(document.querySelectorAll(`#team-card-${team.id}-name`).length).toBe(1);
+    expect(document.querySelectorAll(`#team-card-${team.id}-infos`).length).toBe(1);
   });
 
   it("should render the 2nd addr line if present", () => {
-    component = mount(<TeamCard {...defaultProps} />);
-    expect(component.find(`#team-card-info-${defaultProps.team.id}-address-value`).find("br").length).toBe(2);
+    mountTeamCardComponent();
+    expect(document.querySelectorAll(`#team-card-info-${team.id}-address-value br`).length).toBe(2);
   });
 
   it("should not render the 2nd addr line if not present", () => {
-    const props: TeamCardProps = {
-      ...defaultProps,
-      team: teams[2],
-    };
-    component = mount(<TeamCard {...props} />);
-    expect(component.find(`#team-card-info-${props.team.id}-address-value`).find("br").length).toBe(1);
+    mountTeamCardComponent(2);
+    expect(document.querySelectorAll(`#team-card-info-${team.id}-address-value br`).length).toBe(1);
   });
 
   it("should call onShowAddMemberDialog prop function when clicking on the button", () => {
-    component = shallow(<TeamCard {...defaultProps} />);
-    const btn = component.find(`#team-card-${defaultProps.team.id}-button-add-member`);
-    expect(btn.length).toBe(1);
-    btn.at(0).simulate("click");
-    expect(defaultProps.onShowAddMemberDialog).toHaveBeenCalledTimes(1);
+    mountTeamCardComponent();
+    const btn = document.querySelector(`#team-card-${team.id}-button-add-member`);
+    expect(btn).toBeDefined();
+    act(() => triggerMouseEvent("click", btn));
+    expect(onShowAddMemberDialog).toHaveBeenCalledTimes(1);
   });
 
   it("should call onShowEditTeamDialog prop function when clicking on the button", () => {
-    component = shallow(<TeamCard {...defaultProps} />);
-    const btn = component.find(`#team-card-${defaultProps.team.id}-button-edit`);
-    expect(btn.length).toBe(1);
-    btn.at(0).simulate("click");
-    expect(defaultProps.onShowEditTeamDialog).toHaveBeenCalledTimes(1);
+    mountTeamCardComponent();
+    const btn = document.querySelector(`#team-card-${team.id}-button-edit`);
+    expect(btn).toBeDefined();
+    act(() => triggerMouseEvent("click", btn));
+    expect(onShowEditTeamDialog).toHaveBeenCalledTimes(1);
   });
 
   it("should call onShowLeaveTeamDialog prop function when clicking on the button", () => {
-    component = shallow(<TeamCard {...defaultProps} />);
-    const btn = component.find(`#team-card-${defaultProps.team.id}-button-leave-team`);
-    expect(btn.length).toBe(1);
-    btn.at(0).simulate("click");
-    expect(defaultProps.onShowLeaveTeamDialog).toHaveBeenCalledTimes(1);
+    mountTeamCardComponent();
+    const btn = document.querySelector(`#team-card-${team.id}-button-leave-team`);
+    expect(btn).toBeDefined();
+    act(() => triggerMouseEvent("click", btn));
+    expect(onShowLeaveTeamDialog).toHaveBeenCalledTimes(1);
   });
 
   describe("Info", () => {
     it("should be able to render", () => {
-      component = shallow(<TeamInfo id="test" label="label" value="value" icon={<div id="icon" />} />);
-      expect(component.find("#team-card-info-test-label").length).toBe(1);
-      expect(component.find("#icon").length).toBe(1);
+      mountTeamInfoComponent("value");
+      expect(document.querySelectorAll("#team-card-info-test-label").length).toBe(1);
+      expect(document.querySelectorAll("#icon").length).toBe(1);
     });
 
     it("should not render if value is not net", () => {
-      component = shallow(<TeamInfo id="test" label="label" value={null} icon={<div id="icon" />} />);
-      expect(component.find("#team-card-info-test-label").length).toBe(0);
-      expect(component.find("#icon").length).toBe(0);
-      expect(component.html()).toBeNull();
+      mountTeamInfoComponent();
+      expect(document.querySelectorAll("#team-card-info-test-label").length).toBe(0);
+      expect(document.querySelectorAll("#icon").length).toBe(0);
     });
   });
 });

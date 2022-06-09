@@ -219,15 +219,22 @@ export function AuthContextImpl(): AuthContext {
 
       // Temporary here waiting all backend services be compatible with Auth0
       // see https://diabeloop.atlassian.net/browse/YLP-1553
-      const sessionToken = await UserApi.getShorelineAccessToken(user.username);
-      HttpService.shorelineAccessToken = sessionToken;
+      let sessionToken: string | null = null;
+      try {
+        const { token, id } = await UserApi.getShorelineAccessToken(user.username);
+        HttpService.shorelineAccessToken = token;
+        user.userid = id;
+        sessionToken = token;
+      } catch (err) {
+        console.log(err);
+      }
 
       user.profile = await UserApi.getProfile(user.userid);
       user.preferences = await UserApi.getPreferences(user.userid);
       user.settings = await UserApi.getSettings(user.userid);
 
       setUser(user);
-      setSessionToken(sessionToken);
+      setSessionToken(sessionToken || "no-token");
       setTraceToken(uuidv4());
     } catch (err) {
       console.error(err);

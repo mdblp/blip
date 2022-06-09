@@ -71,6 +71,7 @@ function ReduxProvider(props) {
         dialogPDFOptions={props.dialogPDFOptions}
         patientInfoWidget={props.patientInfoWidget}
         chatWidget={props.chatWidget}
+        alarmCard={props.alarmCard}
       />
     </Provider>
   );
@@ -89,6 +90,7 @@ ReduxProvider.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 /**
@@ -97,7 +99,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, patientInfoWidget } = props;
+      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget } = props;
       updateConfig(config);
 
       return (
@@ -114,6 +116,7 @@ function Blip(props) {
           dialogPDFOptions={dialogPDFOptions}
           patientInfoWidget={patientInfoWidget}
           chatWidget={chatWidget}
+          alarmCard={alarmCard}
         />
       );
     } catch (err) {
@@ -139,6 +142,7 @@ Blip.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 export { cleanStore };
