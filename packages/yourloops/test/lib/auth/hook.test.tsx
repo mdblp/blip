@@ -381,7 +381,6 @@ describe("Auth hook", () => {
         await authContext.flagPatient(userId);
       });
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(UserApi.updatePreferences).toHaveBeenCalledWith(auth0UserId, expect.anything());
       expect(authContext.user.preferences.patientsStarred).toEqual([userId]);
     });
     it("should un-flag a flagged patient", async () => {
@@ -394,7 +393,6 @@ describe("Auth hook", () => {
         await authContext.flagPatient(userId);
       });
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(UserApi.updatePreferences).toHaveBeenCalledWith(auth0UserId, expect.anything());
       expect(authContext.user.preferences.patientsStarred).toEqual([otherUserId]);
     });
 
@@ -411,14 +409,12 @@ describe("Auth hook", () => {
         await authContext.flagPatient(userId1);
       });
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(UserApi.updatePreferences).toHaveBeenCalledWith(auth0UserId, expect.anything());
 
 
       await act(async () => {
         await authContext.flagPatient(userId2);
       });
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(2);
-      expect(UserApi.updatePreferences).toHaveBeenCalledWith(auth0UserId, expect.anything());
       expect(authContext.getFlagPatients()).toEqual([userId1, userId2]);
     });
 
@@ -438,7 +434,6 @@ describe("Auth hook", () => {
       await authContext.setFlagPatients([userId]);
       const after = authContext.getFlagPatients();
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(UserApi.updatePreferences).toHaveBeenCalledWith(auth0UserId, expect.anything());
       expect(after).toEqual([userId]);
     });
   });

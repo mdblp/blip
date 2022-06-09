@@ -26,8 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TEAM_CODE_LENGTH } from "./models";
+import { LoadTeams, Team, TEAM_CODE_LENGTH, TeamUser } from "./models";
+import { Session } from "../auth";
+import TeamApi from "./team-api";
+import { ITeam, TeamType } from "../../models/team";
+import { iMemberToMember, iTeamToTeam } from "./hook";
+import bows from "bows";
 
+const log = bows("TeamUtils");
 /**
  * Get the team code for display - Can be use with partial code.
  * @param code 9 digit string team code
@@ -44,4 +50,63 @@ export function getDisplayTeamCode(code: string): string {
     }
   }
   return displayCode;
+}
+
+export default class TeamUtils {
+
+  static async loadTeams(session: Session): Promise<LoadTeams> {
+    const getFlagPatients = (): string[] => {
+      const flagged = session.user.preferences?.patientsStarred;
+      if (Array.isArray(flagged)) {
+        return Array.from(flagged);
+      }
+      return [];
+    };
+
+    const users = new Map<string, TeamUser>();
+    const [apiTeams, apiPatients] = await Promise.all([TeamApi.getTeams(), TeamApi.getPatients()]);
+
+    const nPatients = apiPatients.length;
+    log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
+
+    const privateTeam: Team = {
+      code: TeamType.private,
+      id: TeamType.private,
+      members: [],
+      name: TeamType.private,
+      owner: session.user.userid,
+      type: TeamType.private,
+    };
+
+    const teams: Team[] = [privateTeam];
+    apiTeams.forEach((apiTeam: ITeam) => {
+      const team = iTeamToTeam(apiTeam, users);
+      teams.push(team);
+    });
+
+    const flaggedNotInResult = getFlagPatients();
+
+    // Merge patients
+    for (let i = 0; i < nPatients; i++) {
+      const apiPatient = apiPatients[i];
+      const userId = apiPatient.userId;
+
+      if (flaggedNotInResult.includes(userId)) {
+        flaggedNotInResult.splice(flaggedNotInResult.indexOf(userId), 1);
+      }
+
+      let team = teams.find((t) => t.id === apiPatient.teamId);
+      if (typeof team === "undefined") {
+        log.error(`Missing teamId ${apiPatient.teamId} for patient member`, apiPatient);
+        // Use the private team
+        team = privateTeam;
+      }
+
+      iMemberToMember(apiPatient, team, users);
+    }
+
+    // End, cleanup to help the garbage collector
+    users.clear();
+    return { teams, flaggedNotInResult };
+  }
 }

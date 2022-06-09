@@ -44,7 +44,7 @@ import { REGEX_EMAIL } from "../../lib/utils";
 
 import { AddMemberDialogContentProps } from "./types";
 
-interface AddMemberDialogProps {
+export interface AddMemberDialogProps {
   addMember: null | AddMemberDialogContentProps;
 }
 

@@ -234,7 +234,7 @@ export function AuthContextImpl(): AuthContext {
       user.settings = await UserApi.getSettings(user.userid);
 
       setUser(user);
-      setSessionToken(sessionToken);
+      setSessionToken(sessionToken || "no-token");
       setTraceToken(uuidv4());
     } catch (err) {
       console.error(err);

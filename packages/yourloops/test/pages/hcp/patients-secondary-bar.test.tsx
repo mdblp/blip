@@ -29,7 +29,6 @@
 import React from "react";
 import enzyme, { mount, ReactWrapper } from "enzyme";
 
-import { FilterType } from "../../../models/generic";
 import { waitTimeout } from "../../../lib/utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { TeamContextProvider } from "../../../lib/team";
@@ -37,7 +36,7 @@ import PatientsSecondaryBar, { PatientListBarProps } from "../../../components/p
 
 import Adapter from "enzyme-adapter-react-16";
 import { loggedInUsers } from "../../common";
-import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import { resetTeamAPIStubs } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Patient secondary bar", () => {
@@ -46,9 +45,7 @@ describe("Patient secondary bar", () => {
   const apiTimeout = 50;
   const defaultProps: PatientListBarProps = {
     filter: "",
-    filterType: FilterType.all,
     onFilter: jest.fn(),
-    onFilterType: jest.fn(),
     onInvitePatient: jest.fn(),
   };
 
@@ -72,7 +69,7 @@ describe("Patient secondary bar", () => {
   it("should be able to render", async () => {
     component = mount(
       <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider teamAPI={teamAPI}>
+        <TeamContextProvider>
           <PatientsSecondaryBar {...defaultProps} />
         </TeamContextProvider>
       </AuthContextProvider>
