@@ -40,20 +40,18 @@ import {
   RemoteMonitoringNotification,
 } from "./models";
 import { notificationConversion } from "./utils";
-import HttpService from "../../services/http";
+import HttpService, { StatusErrorMessage } from "../../services/http";
 
 const log = bows("Notification API");
 
 async function getInvitations(_session: Readonly<Session>, url: string): Promise<INotification[]> {
 
-  const response = await HttpService.get<INotificationAPI[]>({ url });
-  // an equivalent to ok
-  if (response.status >= 200 && response.status <= 299) {
-    //const notificationsFromAPI = await response.json() as INotificationAPI[];
-    if (Array.isArray(response.data)) {
+  try {
+    const { data } = await HttpService.get<INotificationAPI[]>({ url });
+    if (Array.isArray(data)) {
       // TODO remove me when all notifications types are supported
       const notifications: INotification[] = [];
-      for (const nfa of response.data) {
+      for (const nfa of data) {
         const notification = notificationConversion(nfa);
         if (notification) {
           notifications.push(notification);
@@ -64,12 +62,16 @@ async function getInvitations(_session: Readonly<Session>, url: string): Promise
       // return notificationsFromAPI.map(notificationConversion);
     }
     return Promise.reject(new Error("Invalid response from API"));
-  } else if (response.status === HttpStatus.StatusNotFound) {
-    log.info("No new notification for the current user");
-    return Promise.resolve([]);
+  } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === StatusErrorMessage.NotFound) {
+        log.info("No new notification for the current user");
+        return Promise.resolve([]);
+      }
+    }
+    throw error;
   }
 
-  return Promise.reject(new Error(response.statusText));
 }
 
 /**
@@ -93,18 +95,10 @@ function getSentInvitations(session: Readonly<Session>): Promise<INotification[]
 }
 
 async function updateInvitation(_session: Readonly<Session>, url: string, key: string): Promise<void> {
-
-  const response = await HttpService.put<string, AcceptedNotification>({
+  await HttpService.put<string, AcceptedNotification>({
     url: url.toString(),
-    payload: { key : key },
+    payload: { key: key },
   });
-
-  if (response.status >= 200 && response.status <= 299) {
-    log.info("updateInvitation response:", await response.statusText);
-    return Promise.resolve();
-  }
-
-  return Promise.reject(response.statusText);
 }
 
 function acceptInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
@@ -127,7 +121,6 @@ function acceptInvitation(session: Readonly<Session>, notification: INotificatio
 }
 
 async function cancelRemoteMonitoringInvite(_session: Session, teamId: string, userId: string): Promise<void> {
-
   const response = await HttpService.put<string, string>({
     url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}`,
   });
@@ -200,8 +193,12 @@ async function cancelInvitation(_session: Readonly<Session>, notification: INoti
   return Promise.reject(response.statusText);
 }
 
-async function inviteToRemoteMonitoring(_session: Session, teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
-
+async function inviteToRemoteMonitoring(
+  _session: Session,
+  teamId: string,
+  userId: string,
+  monitoringEnd: Date
+): Promise<void> {
   const response = await HttpService.post<string, RemoteMonitoringNotification>({
     url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
     payload: { monitoringEnd: monitoringEnd.toJSON() },

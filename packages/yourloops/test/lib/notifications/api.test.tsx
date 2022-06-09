@@ -31,6 +31,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import HttpStatus from "../../../lib/http-status-codes";
+import { StatusErrorMessage } from "../../../services/http";
 import { APINotificationType, INotificationAPI } from "../../../models/notification";
 import { INotification, NotificationType } from "../../../lib/notifications";
 import api from "../../../lib/notifications/api";
@@ -77,16 +78,9 @@ describe("Notification API", () => {
     });
 
     it("should return an empty array, if there is no invitation", async () => {
-      const jsonResponse = jest.fn().mockResolvedValue([]);
-      const resolveOK: Response = {
-        status: HttpStatus.StatusNotFound,
-        ok: false,
-        statusText: "NotFound",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.get.mockResolvedValue(resolveOK);
+      mockedAxios.get.mockImplementation(() => {
+        throw new Error(StatusErrorMessage.NotFound);
+      });
 
       const result = await api.getReceivedInvitations(session);
       expect(result).toEqual([]);
@@ -174,16 +168,10 @@ describe("Notification API", () => {
     });
 
     it("should return an empty array, if there is no invitation", async () => {
-      const jsonResponse = jest.fn().mockResolvedValue([]);
-      const resolveOK: Response = {
-        status: HttpStatus.StatusNotFound,
-        ok: false,
-        statusText: "NotFound",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.get.mockResolvedValue(resolveOK);
+      mockedAxios.get.mockImplementation(() => {
+        throw new Error(StatusErrorMessage.NotFound);
+      });
+      //mockedAxios.get.mockResolvedValue(resolveOK);
 
       const result = await api.getSentInvitations(session);
 
@@ -246,14 +234,9 @@ describe("Notification API", () => {
 
   describe("acceptInvitation", () => {
     it("should throw an error if the invitation type is invalid", async () => {
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-      } as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error();
+      });
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
       const session = loggedInUsers.hcpSession;
@@ -279,14 +262,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-      } as unknown as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error();
+      });
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -349,14 +327,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-      } as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error();
+      });
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -428,17 +401,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (careTeamPatientInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamPatientInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
-
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error("careTeamPatientInvitations");
+      });
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -548,16 +513,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("directInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error("directInvitation");
+      });
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
@@ -656,16 +614,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error("CareteamProInvitation");
+      });
 
       const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
@@ -772,16 +723,9 @@ describe("Notification API", () => {
     });
 
     it("should throw an error if the reply is not ok (careTeamPatientInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamPatientInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.put.mockResolvedValue(resolveError);
+      mockedAxios.put.mockImplementation(() => {
+        throw new Error("careteamPatienInvitation");
+      });
 
       const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
