@@ -97,7 +97,10 @@ describe("Auth hook", () => {
       },
       logout: jest.fn(),
     });
-    jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve(loggedInUsers.hcpSession.sessionToken));
+    jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve({
+      token: loggedInUsers.hcpSession.sessionToken,
+      id: loggedInUsers.hcpSession.user.userid,
+    }));
     jest.spyOn(UserApi, "getProfile").mockResolvedValue(Promise.resolve({
       firstName: "John",
       lastName: "Doe",
