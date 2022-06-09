@@ -115,10 +115,11 @@ export const createPatient = (
   };
 };
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = "fakeTeamName"): PatientTeam => {
   return {
     teamId: id,
     status,
+    teamName,
   } as PatientTeam;
 };
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
@@ -187,17 +188,24 @@ export function buildTeamMember(
   role: TeamMemberRole = TeamMemberRole.admin,
   username = "fake@username.com",
   fullName = "fake full name",
-  status = UserInvitationStatus.pending
+  status = UserInvitationStatus.pending,
+  userRole: UserRoles = UserRoles.hcp,
 ): TeamMember {
   return {
     team: { id: teamId } as Team,
     role,
     status,
     user: {
-      role: UserRoles.hcp,
+      role: userRole,
       userid: userId,
       username,
-      members: [],
+      members: [
+        {
+          invitation: {} as INotification,
+          status,
+          team: { id: teamId, code: "fakeCode", name: "fakeTeamName" },
+        } as TeamMember,
+      ],
       profile: {
         fullName,
       },

@@ -26,10 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TeamAPI } from "../../../lib/team";
 import { emptyTeam3, members, patients, teams } from "../../common";
 
-export const teamAPI: TeamAPI = {
+export const teamAPI = {
   fetchTeams: jest.fn().mockResolvedValue(teams),
   fetchPatients: jest.fn().mockResolvedValue(patients),
   changeMemberRole: jest.fn().mockReturnValue(() => Promise.resolve()),

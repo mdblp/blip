@@ -38,7 +38,6 @@ import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import "../../intersectionObserverMock";
 
 import PatientTable from "../../../components/patient/table";
-import { teamAPI } from "../../lib/team/utils";
 import { loggedInUsers } from "../../common";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
@@ -46,9 +45,11 @@ import { TablePagination, ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";
 import renderer from "react-test-renderer";
 import PatientRow from "../../../components/patient/row";
-import { createPatient, createPatientTeam } from "../../common/utils";
+import { buildTeam, buildTeamMember, createPatient, createPatientTeam } from "../../common/utils";
 import { Patient } from "../../../lib/data/patient";
+import * as teamHookMock from "../../../lib/team";
 
+jest.mock("../../../lib/team");
 describe("Patient list table", () => {
   const authHcp = loggedInUsers.hcpSession;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
@@ -71,6 +72,21 @@ describe("Patient list table", () => {
   const allPatients = [patient1, patient2, patient3, patient4, patient5, patient6, patient7, patient8, patient9, patient10, patient11];
 
   let container: HTMLElement | null = null;
+
+  beforeAll(() => {
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return {
+        teams: [buildTeam("123456789", [buildTeamMember()])],
+        getPatients: () => allPatients,
+        isOnlyPendingInvitation: () => true,
+        isInvitationPending: () => true,
+        isInAtLeastATeam: () => true,
+      };
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -113,7 +129,7 @@ describe("Patient list table", () => {
         render(
           <AuthContextProvider value={authHookHcp}>
             <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider teamAPI={teamAPI}>
+              <TeamContextProvider>
                 <PatientTableComponent />
               </TeamContextProvider>
             </NotificationContextProvider>
@@ -126,7 +142,7 @@ describe("Patient list table", () => {
     return renderer.create(
       <ThemeProvider theme={getTheme()}>
         <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider teamAPI={teamAPI}>
+          <TeamContextProvider>
             <PatientTable
               patients={patients}
               flagged={[]}
