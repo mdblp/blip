@@ -27,9 +27,6 @@
  */
 
 import { v4 as uuidv4 } from "uuid";
-import jwtDecode from "jwt-decode";
-
-import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../lib/data/patient";
@@ -61,32 +58,6 @@ export const createSessionToken = (user: User, dur = defaultTokenDuration): stri
     role: user.role,
     usr: user.userid,
     email: user.username,
-    dur,
-    iat,
-    exp: iat + dur,
-    jti: uuidv4(),
-  };
-  const encoder = new TextEncoder();
-  let utf8 = encoder.encode(JSON.stringify(header));
-  const b64Header = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  utf8 = encoder.encode(JSON.stringify(payload));
-  const b64Payload = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  return `${b64Header}.${b64Payload}.`;
-};
-
-export const refreshToken = (token: string): string => {
-  const decoded = jwtDecode<JwtShorelinePayload>(token);
-  const header = {
-    alg: "none",
-    typ: "JWT",
-  };
-  const dur = defaultTokenDuration;
-  const iat = Math.round(Date.now() / 1000);
-  const payload = {
-    svr: "no",
-    role: decoded.role,
-    usr: decoded.usr,
-    email: decoded.email,
     dur,
     iat,
     exp: iat + dur,
