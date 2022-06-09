@@ -45,6 +45,7 @@ import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
 import TeamApi from "./team-api";
 import TeamUtils from "./utils";
+import DirectShareApi from "../share/direct-share-api";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);

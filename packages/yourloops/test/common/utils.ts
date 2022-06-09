@@ -97,6 +97,7 @@ export const createPatient = (
       alarm: alarm,
       flagged: flagged,
       medicalData: null,
+      unreadMessagesSent: 0,
     },
     monitoring,
     profile: {

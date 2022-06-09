@@ -80,26 +80,24 @@ describe("TeamEditDialog", () => {
     }
   });
 
-  async function mountComponent(props: TeamEditModalProps = defaultProps): Promise<void> {
-    await act(() => {
-      return new Promise((resolve) => {
-        render(<TeamEditDialog teamToEdit={props.teamToEdit} />, container, resolve);
-      });
+  function mountComponent(props: TeamEditModalProps = defaultProps): void {
+    act(() => {
+      render(<TeamEditDialog teamToEdit={props.teamToEdit} />, container);
     });
   }
 
-  it("should be closed if teamToEdit is null", async () => {
-    await mountComponent({ teamToEdit: null });
+  it("should be closed if teamToEdit is null", () => {
+    mountComponent({ teamToEdit: null });
     expect(document.getElementById("team-edit-dialog")).toBeNull();
   });
 
-  it("should not be closed if teamToEdit exists", async () => {
-    await mountComponent();
+  it("should not be closed if teamToEdit exists", () => {
+    mountComponent();
     expect(document.getElementById("team-edit-dialog")).not.toBeNull();
   });
 
-  it("should fill fields when editing a team", async () => {
-    await mountComponent();
+  it("should fill fields when editing a team", () => {
+    mountComponent();
     textFieldIds.forEach((id: string, index: number) => {
       const field: HTMLInputElement = document.getElementById(id) as HTMLInputElement;
       expect(field.value).toBe(_.get(defaultProps.teamToEdit.team, textFieldTeamPath[index]));
@@ -107,16 +105,16 @@ describe("TeamEditDialog", () => {
     expect((document.getElementById("team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBeFalsy();
   });
 
-  it("should have empty fields when creating a new team", async () => {
-    await mountComponent({ teamToEdit: { team: null, onSaveTeam: jest.fn() } });
+  it("should have empty fields when creating a new team", () => {
+    mountComponent({ teamToEdit: { team: null, onSaveTeam: jest.fn() } });
     textFieldIds.forEach((id: string) => {
       const field: HTMLInputElement = document.getElementById(id) as HTMLInputElement;
       expect(field.value).toBe("");
     });
   });
 
-  it("should not allow to validate if a require info is missing", async () => {
-    await mountComponent();
+  it("should not allow to validate if a require info is missing", () => {
+    mountComponent();
     const event = {
       target: {
         name: "name",
@@ -128,8 +126,8 @@ describe("TeamEditDialog", () => {
     expect((document.getElementById("team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBeTruthy();
   });
 
-  it("should call the onSaveTeam callback method with null if cancel", async () => {
-    await mountComponent();
+  it("should call the onSaveTeam callback method with null if cancel", () => {
+    mountComponent();
     const closeButton = document.getElementById("team-edit-dialog-button-close");
     triggerMouseEvent("click", closeButton);
 
@@ -137,8 +135,8 @@ describe("TeamEditDialog", () => {
     expect((defaultProps.teamToEdit.onSaveTeam as jest.Mock)).toHaveBeenCalledWith(null);
   });
 
-  it("should call the onSaveTeam callback method with the changes if validated", async () => {
-    await mountComponent();
+  it("should call the onSaveTeam callback method with the changes if validated", () => {
+    mountComponent();
     const event = {
       target: {
         name: "name",
