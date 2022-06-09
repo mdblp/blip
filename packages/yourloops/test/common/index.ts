@@ -36,7 +36,7 @@ import { createSessionToken } from "./utils";
 import { HcpProfession } from "../../models/hcp-profession";
 import { Alarm } from "../../models/alarm";
 
-export { createSessionToken, refreshToken } from "./utils";
+export { createSessionToken } from "./utils";
 
 const newUserHCP = new User({
   userid: "123456789",
@@ -95,14 +95,6 @@ export const loggedInUsers = {
   patient: userPatient,
   caregiver: userCaregiver,
   newHcp: newUserHCP,
-  get newHcpSession(): Session {
-    const user = new User(newUserHCP);
-    return {
-      user,
-      sessionToken: createSessionToken(user),
-      traceToken: uuidv4(),
-    };
-  },
   get hcpSession(): Session {
     const user = new User(userHCP);
     return {

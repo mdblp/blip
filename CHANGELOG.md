@@ -44,6 +44,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 - YLP-1345 Correct blip pdf export to display japanese chars
+- YLP-1350 Auth API refactoring
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
 - YLP-1506 Skip flaky test
