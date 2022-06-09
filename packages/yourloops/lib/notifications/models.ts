@@ -95,3 +95,7 @@ export interface NotificationProvider {
   /** Used for test components which need this hook */
   value?: NotificationContext;
 }
+
+export interface RemoteMonitoringNotification {
+  monitoringEnd: string;
+}

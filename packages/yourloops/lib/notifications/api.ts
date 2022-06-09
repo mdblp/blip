@@ -28,35 +28,26 @@
 
 import bows from "bows";
 
-import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import HttpStatus from "../http-status-codes";
-import appConfig from "../config";
 import { Session } from "../auth/models";
-import { errorFromHttpStatus } from "../utils";
 
 import { INotificationAPI } from "../../models/notification";
-import { INotification, NotificationAPI, NotificationType } from "./models";
+import { INotification, NotificationAPI, NotificationType, RemoteMonitoringNotification } from "./models";
 import { notificationConversion } from "./utils";
+import HttpService from "../../services/http";
 
 const log = bows("Notification API");
 
-async function getInvitations(session: Readonly<Session>, url: URL): Promise<INotification[]> {
-  const response = await fetch(url.toString(), {
-    method: "GET",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-    },
-    cache: "no-cache",
-  });
+async function getInvitations(_session: Readonly<Session>, url: string): Promise<INotification[]> {
 
-  if (response.ok) {
-    const notificationsFromAPI = await response.json() as INotificationAPI[];
-    if (Array.isArray(notificationsFromAPI)) {
+  const response = await HttpService.get<INotificationAPI[]>({ url });
+  // an equivalent to ok
+  if (response.status >= 200 && response.status <= 299) {
+    //const notificationsFromAPI = await response.json() as INotificationAPI[];
+    if (Array.isArray(response.data)) {
       // TODO remove me when all notifications types are supported
       const notifications: INotification[] = [];
-      for (const nfa of notificationsFromAPI) {
+      for (const nfa of response.data) {
         const notification = notificationConversion(nfa);
         if (notification) {
           notifications.push(notification);
@@ -72,7 +63,7 @@ async function getInvitations(session: Readonly<Session>, url: URL): Promise<INo
     return Promise.resolve([]);
   }
 
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
 /**
@@ -81,7 +72,7 @@ async function getInvitations(session: Readonly<Session>, url: URL): Promise<INo
  * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
  */
 function getReceivedInvitations(session: Readonly<Session>): Promise<INotification[]> {
-  const confirmURL = new URL(`/confirm/invitations/${session.user.userid}`, appConfig.API_HOST);
+  const confirmURL = `/confirm/invitations/${session.user.userid}`;
   return getInvitations(session, confirmURL);
 }
 
@@ -91,42 +82,37 @@ function getReceivedInvitations(session: Readonly<Session>): Promise<INotificati
  * @return {Promise<INotification[]>} Return the logged-in user or a promise rejection.
  */
 function getSentInvitations(session: Readonly<Session>): Promise<INotification[]> {
-  const confirmURL = new URL(`/confirm/invite/${session.user.userid}`, appConfig.API_HOST);
+  const confirmURL = `/confirm/invite/${session.user.userid}`;
   return getInvitations(session, confirmURL);
 }
 
-async function updateInvitation(session: Readonly<Session>, url: URL, key: string): Promise<void> {
-  const response = await fetch(url.toString(), {
-    method: "PUT",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-    },
-    cache: "no-cache",
-    body: JSON.stringify({ key }),
+async function updateInvitation(_session: Readonly<Session>, url: string, key: string): Promise<void> {
+
+  const response = await HttpService.put<string, string>({
+    url: url.toString(),
+    payload: key,
   });
 
-  if (response.ok) {
-    log.info("updateInvitation response:", await response.text());
+  if (response.status >= 200 && response.status <= 299) {
+    log.info("updateInvitation response:", await response.statusText);
     return Promise.resolve();
   }
 
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
 function acceptInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
-  let confirmURL: URL;
+  let confirmURL: string;
   switch (notification.type) {
   case NotificationType.directInvitation:
-    confirmURL = new URL(`/confirm/accept/invite/${session.user.userid}/${notification.creatorId}`, appConfig.API_HOST);
+    confirmURL = `/confirm/accept/invite/${session.user.userid}/${notification.creatorId}`;
     return updateInvitation(session, confirmURL, notification.id);
   case NotificationType.careTeamProInvitation:
   case NotificationType.careTeamPatientInvitation:
-    confirmURL = new URL("/confirm/accept/team/invite", appConfig.API_HOST);
+    confirmURL = "/confirm/accept/team/invite";
     return updateInvitation(session, confirmURL, notification.id);
   case NotificationType.careTeamMonitoringInvitation:
-    confirmURL = new URL(`/confirm/accept/team/monitoring/${notification.target?.id}/${session.user.userid}`, appConfig.API_HOST);
+    confirmURL = `/confirm/accept/team/monitoring/${notification.target?.id}/${session.user.userid}`;
     return updateInvitation(session, confirmURL, notification.id);
   default:
     log.info("TODO accept", notification);
@@ -134,30 +120,24 @@ function acceptInvitation(session: Readonly<Session>, notification: INotificatio
   }
 }
 
-async function cancelRemoteMonitoringInvite(session: Session, teamId: string, userId: string): Promise<void> {
-  const confirmURL = new URL(`/confirm/dismiss/team/monitoring/${teamId}/${userId}`, appConfig.API_HOST).toString();
-  const response = await fetch(confirmURL, {
-    method: "PUT",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-    },
-    cache: "no-cache",
+async function cancelRemoteMonitoringInvite(_session: Session, teamId: string, userId: string): Promise<void> {
+
+  const response = await HttpService.put<string, string>({
+    url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}`,
   });
 
-  if (response.ok) {
+  if (response.status >= 200 && response.status <= 299) {
     return Promise.resolve();
   }
 
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
 function declineInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
-  let confirmURL: URL;
+  let confirmURL: string;
   switch (notification.type) {
   case NotificationType.directInvitation:
-    confirmURL = new URL(`/confirm/dismiss/invite/${session.user.userid}/${notification.creatorId}`, appConfig.API_HOST);
+    confirmURL = `/confirm/dismiss/invite/${session.user.userid}/${notification.creatorId}`;
     return updateInvitation(session, confirmURL, notification.id);
   case NotificationType.careTeamProInvitation:
   case NotificationType.careTeamPatientInvitation: {
@@ -165,7 +145,7 @@ function declineInvitation(session: Readonly<Session>, notification: INotificati
     if (typeof teamId !== "string") {
       return Promise.reject(new Error("Invalid target team id"));
     }
-    confirmURL = new URL(`/confirm/dismiss/team/invite/${teamId}`, appConfig.API_HOST);
+    confirmURL = `/confirm/dismiss/team/invite/${teamId}`;
     return updateInvitation(session, confirmURL, notification.id);
   }
   case NotificationType.careTeamMonitoringInvitation:
@@ -179,8 +159,7 @@ function declineInvitation(session: Readonly<Session>, notification: INotificati
   }
 }
 
-async function cancelInvitation(session: Readonly<Session>, notification: INotification): Promise<void> {
-  const confirmURL = new URL("/confirm/cancel/invite", appConfig.API_HOST);
+async function cancelInvitation(_session: Readonly<Session>, notification: INotification): Promise<void> {
   const body: Partial<INotificationAPI> = {
     key: notification.id,
   };
@@ -202,44 +181,31 @@ async function cancelInvitation(session: Readonly<Session>, notification: INotif
     throw new Error("Invalid notification type");
   }
 
-  const response = await fetch(confirmURL.toString(), {
-    method: "POST",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-    },
-    cache: "no-cache",
-    body: JSON.stringify(body),
+  const response = await HttpService.post<string, Partial<INotificationAPI>>({
+    url: "/confirm/cancel/invite",
+    payload: body,
   });
 
-  if (response.ok || response.status === HttpStatus.StatusNotFound) {
-    log.info("cancelInvitation response:", await response.text());
+  if (response.status === 200 || response.status === HttpStatus.StatusNotFound) {
+    log.info("cancelInvitation response:", await response.statusText);
     return Promise.resolve();
   }
 
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
-async function inviteToRemoteMonitoring(session: Session, teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
-  const confirmURL = new URL(`/confirm/send/team/monitoring/${teamId}/${userId}`, appConfig.API_HOST).toString();
+async function inviteToRemoteMonitoring(_session: Session, teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
 
-  const response = await fetch(confirmURL, {
-    method: "POST",
-    headers: {
-      [HttpHeaderKeys.contentType]: HttpHeaderValues.json,
-      [HttpHeaderKeys.sessionToken]: session.sessionToken,
-      [HttpHeaderKeys.traceToken]: session.traceToken,
-    },
-    cache: "no-cache",
-    body: JSON.stringify({ monitoringEnd: monitoringEnd.toJSON() }),
+  const response = await HttpService.post<string, RemoteMonitoringNotification>({
+    url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
+    payload: { monitoringEnd: monitoringEnd.toJSON() },
   });
 
-  if (response.ok) {
+  if (response.status >= 200 && response.status <= 299) {
     return Promise.resolve();
   }
 
-  return Promise.reject(errorFromHttpStatus(response, log));
+  return Promise.reject(response.statusText);
 }
 
 const notificationAPI: NotificationAPI = {
