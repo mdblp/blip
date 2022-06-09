@@ -49,9 +49,10 @@ import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
 import { TeamEditModalContentProps } from "../../pages/hcp/types";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
-import { getDirectShares, ShareUser } from "../../lib/share";
+import { ShareUser } from "../../lib/share/models";
 import AddTeamDialog from "../../pages/patient/teams/add-dialog";
 import { errorTextFromException } from "../../lib/utils";
+import DirectShareApi from "../../lib/share/direct-share-api";
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
@@ -100,7 +101,7 @@ function TeamMenu(): JSX.Element {
     (async () => {
       if (!caregivers && session) {
         try {
-          setCaregivers(await getDirectShares(session));
+          setCaregivers(await DirectShareApi.getDirectShares());
         } catch (error) {
           setCaregivers([]);
         }

@@ -28,7 +28,7 @@
 
 import _ from "lodash";
 import React from "react";
-import { useTranslation, Trans } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -58,7 +58,7 @@ interface LocalesCountries {
   };
 }
 
-interface TeamEditModalProps {
+export interface TeamEditModalProps {
   teamToEdit: TeamEditModalContentProps | null;
 }
 
@@ -100,15 +100,14 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
   const [modalOpened, setModalOpened] = React.useState(false);
-  const [teamName, setTeamName] = React.useState("");
-  const [teamPhone, setTeamPhone] = React.useState("");
-  const [teamEmail, setTeamEmail] = React.useState("");
-  const [addrLine1, setAddrLine1] = React.useState("");
-  const [addrLine2, setAddrLine2] = React.useState("");
-  const [addrZipCode, setAddrZipCode] = React.useState("");
-  const [addrCity, setAddrCity] = React.useState("");
-  const [addrCountry, setAddrCountry] = React.useState(auth.user?.settings?.country ?? "FR");
-
+  const [teamName, setTeamName] = React.useState(team?.name ?? "");
+  const [teamPhone, setTeamPhone] = React.useState(team?.phone ?? "");
+  const [teamEmail, setTeamEmail] = React.useState(team?.email ?? "");
+  const [addrLine1, setAddrLine1] = React.useState(team?.address?.line1 ?? "");
+  const [addrLine2, setAddrLine2] = React.useState(team?.address?.line2 ?? "");
+  const [addrZipCode, setAddrZipCode] = React.useState(team?.address?.zip ?? "");
+  const [addrCity, setAddrCity] = React.useState(team?.address?.city ?? "");
+  const [addrCountry, setAddrCountry] = React.useState(team?.address?.country ?? auth.user?.settings?.country ?? "FR");
   const countries: LocalesCountries = locales.countries;
   const optionsCountries: JSX.Element[] = [];
   for (const entry in countries) {
@@ -195,26 +194,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
 
   React.useEffect((): void => {
     setModalOpened(teamToEdit !== null);
-    if (team) {
-      setAddrCity(team.address?.city ?? "");
-      setAddrCountry(team.address?.country ?? auth.user?.settings?.country ?? "FR");
-      setAddrLine1(team.address?.line1 ?? "");
-      setAddrLine2(team.address?.line2 ?? "");
-      setAddrZipCode(team.address?.zip ?? "");
-      setTeamEmail(team.email ?? "");
-      setTeamName(team.name ?? "");
-      setTeamPhone(team.phone ?? "");
-    } else {
-      setAddrCity("");
-      setAddrCountry(auth.user?.settings?.country ?? "FR");
-      setAddrLine1("");
-      setAddrLine2("");
-      setAddrZipCode("");
-      setTeamEmail("");
-      setTeamName("");
-      setTeamPhone("");
-    }
-  }, [teamToEdit, team, auth]);
+  }, [teamToEdit]);
 
   let ariaModal = "";
   let modalTitle = "";

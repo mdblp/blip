@@ -29,7 +29,6 @@
 import { UserInvitationStatus } from "../../models/generic";
 import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
 import { INotification } from "../notifications";
-import { Session } from "../auth";
 
 interface DirectShareUser {
   userId: string;
@@ -43,7 +42,6 @@ interface DirectShareUser {
 export interface DirectShareAPI {
   viewer?: DirectShareUser;
   patient?: DirectShareUser;
-  removeDirectShare: (session: Session, userId: string) => Promise<void>
 }
 
 export interface ShareUser {

@@ -40,9 +40,7 @@ import { errorTextFromException, fixYLP878Settings } from "../utils";
 import metrics from "../metrics";
 import { Session, useAuth } from "../auth";
 import { notificationConversion, useNotification } from "../notifications";
-import { LoadTeams, Team, TeamContext, TeamMember, TeamProvider, TeamUser } from "./models";
-import { DirectShareAPI } from "../share/models";
-import ShareAPIImpl from "../share";
+import { LoadTeams, Team, TeamContext, TeamMember, TeamUser } from "./models";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
 import TeamApi from "./team-api";
@@ -116,7 +114,7 @@ function getUserByEmail(teams: Team[], email: string): TeamUser | null {
   return null;
 }
 
-function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
+function TeamContextImpl(): TeamContext {
   // hooks (private or public variables)
   // TODO: Transform the React.useState with React.useReducer
   const authHook = useAuth();
@@ -543,7 +541,7 @@ function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
       await notificationHook.cancel(member.invitation);
     }
     if (teamId === "private") {
-      await directShareAPI.removeDirectShare(session, patient.userid);
+      await DirectShareApi.removeDirectShare(patient.userid, session.user.userid);
     } else {
       await TeamApi.removePatient(teamId, patient.userid);
     }
@@ -691,9 +689,8 @@ function TeamContextImpl(directShareAPI: DirectShareAPI): TeamContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useTeam().
  * @param props for team provider & children
  */
-export function TeamContextProvider(props: TeamProvider): JSX.Element {
-  const { children, directShareAPI } = props;
-  const context = TeamContextImpl(directShareAPI ?? ShareAPIImpl); // eslint-disable-line new-cap
+export function TeamContextProvider({ children }: { children: JSX.Element }): JSX.Element {
+  const context = TeamContextImpl(); // eslint-disable-line new-cap
   return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>;
 }
 

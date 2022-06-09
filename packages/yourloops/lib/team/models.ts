@@ -164,7 +164,7 @@ export interface TeamContext {
 
   /**
    * Return true if this user is in a specific team
-   * @param user The user to test
+   * @param patient The patient to test
    * @param teamId A team id
    */
   isInTeam(patient: Patient, teamId: string): boolean;

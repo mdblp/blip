@@ -32,27 +32,22 @@ import * as auth0Mock from "@auth0/auth0-react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import * as authHookMock from "../../lib/auth";
-import { AuthContextProvider } from "../../lib/auth";
 import { MainLobby } from "../../app/main-lobby";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
 import { ConsentPage, LoginPage } from "../../pages/login";
-import * as shareLib from "../../lib/share";
 import CompleteSignUpPage from "../../pages/signup/complete-signup-page";
 import User from "../../lib/auth/user";
 import PatientConsentPage from "../../pages/patient/patient-consent";
+import DirectShareApi from "../../lib/share/direct-share-api";
 
 jest.mock("../../lib/auth");
-jest.mock("../../lib/share");
 jest.mock("@auth0/auth0-react");
-
 describe("Main lobby", () => {
   function renderMainLayout(history: MemoryHistory) {
     return renderer.create(
       <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
         <Router history={history}>
-          <AuthContextProvider>
-            <MainLobby />
-          </AuthContextProvider>
+          <MainLobby />
         </Router>
       </Auth0Provider>
     );
@@ -75,7 +70,7 @@ describe("Main lobby", () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });

@@ -45,7 +45,7 @@ import { INotification, NotificationType } from "../../lib/notifications/models"
 import { errorTextFromException, getUserFirstName, getUserLastName } from "../../lib/utils";
 import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team/hook";
-import { useSharedUser } from "../../lib/share";
+import { useSharedUser } from "../../lib/share/reducer";
 import metrics from "../../lib/metrics";
 import { useAlert } from "../../components/utils/snackbar";
 import AddTeamDialog from "../../pages/patient/teams/add-dialog";

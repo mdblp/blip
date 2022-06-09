@@ -28,34 +28,30 @@
 
 import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
-import { act, Simulate } from "react-dom/test-utils";
+import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 
 import { PatientTableSortFields, SortDirection, UserInvitationStatus } from "../../../models/generic";
-import { TeamContextProvider, useTeam } from "../../../lib/team";
-import { NotificationContextProvider } from "../../../lib/notifications";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
+import * as authHookMock from "../../../lib/auth";
+import { Session } from "../../../lib/auth";
+import * as teamHookMock from "../../../lib/team";
 
 import "../../intersectionObserverMock";
 
 import PatientTable from "../../../components/patient/table";
-import { loggedInUsers } from "../../common";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
-import { TablePagination, ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";
-import renderer from "react-test-renderer";
-import PatientRow from "../../../components/patient/row";
-import { buildTeam, buildTeamMember, createPatient, createPatientTeam } from "../../common/utils";
-import { Patient } from "../../../lib/data/patient";
-import * as teamHookMock from "../../../lib/team";
+import { createPatient, createPatientTeam } from "../../common/utils";
+import User from "../../../lib/auth/user";
 
+jest.mock("../../../lib/auth");
 jest.mock("../../../lib/team");
 describe("Patient list table", () => {
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const clickPatientStub = jest.fn();
   const clickFlagPatientStub = jest.fn();
-  const clickRemovePatientStub = jest.fn();
+  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
+  const isOnlyPendingInvitationMock = jest.fn().mockReturnValue(false);
+  const isInvitationPendingMock = jest.fn().mockReturnValue(false);
+  const isInAtLeastATeamMock = jest.fn().mockReturnValue(true);
 
   const team1Id = "team1Id";
   const patient1 = createPatient("id1", [createPatientTeam(team1Id, UserInvitationStatus.accepted)]);
@@ -74,16 +70,20 @@ describe("Patient list table", () => {
   let container: HTMLElement | null = null;
 
   beforeAll(() => {
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
+      return { session: () => session };
+    });
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        teams: [buildTeam("123456789", [buildTeamMember()])],
-        getPatients: () => allPatients,
-        isOnlyPendingInvitation: () => true,
-        isInvitationPending: () => true,
-        isInAtLeastATeam: () => true,
+        isOnlyPendingInvitation: isOnlyPendingInvitationMock,
+        isInvitationPending: isInvitationPendingMock,
+        isInAtLeastATeam: isInAtLeastATeamMock,
       };
     });
   });
@@ -91,9 +91,6 @@ describe("Patient list table", () => {
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
-    clickPatientStub.mockReset();
-    clickFlagPatientStub.mockReset();
-    clickRemovePatientStub.mockReset();
   });
 
   afterEach(() => {
@@ -105,13 +102,10 @@ describe("Patient list table", () => {
   });
 
   const PatientTableComponent = (): JSX.Element => {
-    const team = useTeam();
-    const patients = team.getPatients();
-
     return (
       <ThemeProvider theme={getTheme()}>
         <PatientTable
-          patients={patients}
+          patients={allPatients}
           flagged={[]}
           order={SortDirection.asc}
           orderBy={PatientTableSortFields.patientFullName}
@@ -123,62 +117,33 @@ describe("Patient list table", () => {
     );
   };
 
-  async function mountComponent(): Promise<void> {
-    await act(() => {
-      return new Promise((resolve) => {
-        render(
-          <AuthContextProvider value={authHookHcp}>
-            <NotificationContextProvider value={stubNotificationContextValue}>
-              <TeamContextProvider>
-                <PatientTableComponent />
-              </TeamContextProvider>
-            </NotificationContextProvider>
-          </AuthContextProvider>, container, resolve);
-      });
+  function mountComponent(): void {
+    act(() => {
+      render(<PatientTableComponent />, container);
     });
   }
 
-  function renderPatientTable(patients: Patient[]) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider>
-            <PatientTable
-              patients={patients}
-              flagged={[]}
-              order={SortDirection.asc}
-              orderBy={PatientTableSortFields.patientFullName}
-              onClickPatient={clickPatientStub}
-              onFlagPatient={clickFlagPatientStub}
-              onSortList={jest.fn()}
-            />
-          </TeamContextProvider>
-        </AuthContextProvider>
-      </ThemeProvider>
-    );
-  }
-
-  it("should be able to render", async () => {
-    await mountComponent();
+  it("should be able to render", () => {
+    mountComponent();
     const table = document.getElementById("patients-list-table");
     expect(table).not.toBeNull();
   });
 
-  it("should fetch and display patients", async () => {
-    await mountComponent();
+  it("should fetch and display patients", () => {
+    mountComponent();
     const rows = document.querySelectorAll(".patients-list-row");
     expect(rows.length).not.toBeNull();
   });
 
-  it("should call onClickPatient method when clicking on a row", async () => {
-    await mountComponent();
+  it("should call onClickPatient method when clicking on a row", () => {
+    mountComponent();
     const firstRow = document.querySelector(".patients-list-row");
     Simulate.click(firstRow);
     expect(clickPatientStub).toHaveBeenCalledTimes(1);
   });
 
-  it("should call onFlagPatient method when clicking on a flag", async () => {
-    await mountComponent();
+  it("should call onFlagPatient method when clicking on a flag", () => {
+    mountComponent();
     const firstRow = document.querySelector(".patients-list-row");
     const flagButton = firstRow.querySelector(".patient-flag-button");
     Simulate.click(flagButton);
@@ -186,16 +151,16 @@ describe("Patient list table", () => {
   });
 
   it("should display only 10 patients when number pagination is by 10", () => {
-    const component = renderPatientTable(allPatients);
-    const patientRows = component.root.findAllByType(PatientRow);
+    mountComponent();
+    const patientRows = container.querySelectorAll("#patient-table-body-id > tr");
     expect(patientRows).toHaveLength(10);
   });
 
   it("should display all patients when number pagination is by 100", () => {
-    const component = renderPatientTable(allPatients);
-    const tablePagination = component.root.findByType(TablePagination);
-    tablePagination.props.onRowsPerPageChange({ target: { value: "100" } });
-    const patientRows = component.root.findAllByType(PatientRow);
+    mountComponent();
+    const tablePagination: HTMLInputElement = container.querySelector("#patient-table-pagination-id input");
+    Simulate.change(tablePagination, { target: { value: 100 } } as unknown as SyntheticEventData);
+    const patientRows = container.querySelectorAll("#patient-table-body-id > tr");
     expect(patientRows).toHaveLength(allPatients.length);
   });
 });

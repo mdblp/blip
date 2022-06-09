@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ShareUser } from "../../../lib/share";
+import { ShareUser } from "../../../lib/share/models";
 
 export interface AddDialogContentProps {
   onDialogResult: (email: string | null) => void;

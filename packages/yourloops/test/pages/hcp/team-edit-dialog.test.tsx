@@ -29,17 +29,30 @@
 import _ from "lodash";
 import React from "react";
 
-import { Team, TeamMember, useTeam } from "../../../lib/team";
-import TeamEditDialog from "../../../pages/hcp/team-edit-dialog";
-import { teams } from "../../common";
-import * as teamHookMock from "../../../lib/team";
-import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
+import { Team, TeamMember } from "../../../lib/team";
+import TeamEditDialog, { TeamEditModalProps } from "../../../pages/hcp/team-edit-dialog";
 import { render, unmountComponentAtNode } from "react-dom";
+import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { triggerMouseEvent } from "../../common/utils";
 
-jest.mock("../../../lib/team");
-describe("Team edit dialog", () => {
-  const onSaveTeam = jest.fn();
+describe("TeamEditDialog", () => {
+  const defaultProps: TeamEditModalProps = {
+    teamToEdit: {
+      team: {
+        name: "fakeTeamName",
+        phone: "fakeTeamPhone",
+        email: "fake@team.email",
+        address: {
+          line1: "fakeLine1",
+          line2: "fakeLine2",
+          zip: "fakeZip",
+          city: "fakeCity",
+          country: "FR",
+        },
+      } as Team,
+      onSaveTeam: jest.fn(),
+    },
+  };
   const textFieldIds = [
     "team-edit-dialog-field-name",
     "team-edit-dialog-field-line1",
@@ -53,26 +66,6 @@ describe("Team edit dialog", () => {
   const textFieldTeamPath = ["name", "address.line1", "address.line2", "address.zip", "address.city", "phone", "email"];
 
   let container: HTMLElement | null = null;
-  let team: Team;
-
-
-  function DummyComponent({ noTeamToEdit, nullTeam }: { noTeamToEdit: true, nullTeam: true }): JSX.Element {
-    const { teams } = useTeam();
-    team = teams[0];
-    return (<TeamEditDialog teamToEdit={noTeamToEdit ? null : { team: nullTeam ? null : team, onSaveTeam }} />);
-  }
-
-  function mountComponent(args?: { noTeamToEdit?: true, nullTeam?: true }): void {
-    act(() => render(
-      <DummyComponent noTeamToEdit={args?.noTeamToEdit} nullTeam={args?.nullTeam} />, container)
-    );
-  }
-
-  beforeAll(() => {
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { teams };
-    });
-  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -87,67 +80,82 @@ describe("Team edit dialog", () => {
     }
   });
 
-  it("should be closed if teamToEdit is null", () => {
-    mountComponent({ noTeamToEdit: true });
-    expect(document.querySelector("#team-edit-dialog")).toBeNull();
-  });
-
-  it("should not be closed if teamToEdit exists", () => {
-    mountComponent();
-    expect(document.querySelector("#team-edit-dialog")).not.toBeNull();
-  });
-
-  it("should mockReset() fields when editing a team", () => {
-    mountComponent();
-    textFieldIds.forEach((id: string, index: number) => {
-      if (!document) throw new Error("silent typescript");
-      const field = document.querySelector(`#${id}`) as HTMLInputElement;
-      expect(field.value).toBe(_.get(team, textFieldTeamPath[index], "wrong value"));
+  async function mountComponent(props: TeamEditModalProps = defaultProps): Promise<void> {
+    await act(() => {
+      return new Promise((resolve) => {
+        render(<TeamEditDialog teamToEdit={props.teamToEdit} />, container, resolve);
+      });
     });
-    expect((document.querySelector("#team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBe(false);
+  }
+
+  it("should be closed if teamToEdit is null", async () => {
+    await mountComponent({ teamToEdit: null });
+    expect(document.getElementById("team-edit-dialog")).toBeNull();
   });
 
-  it("should have empty fields when creating a new team", () => {
-    mountComponent({ nullTeam: true });
+  it("should not be closed if teamToEdit exists", async () => {
+    await mountComponent();
+    expect(document.getElementById("team-edit-dialog")).not.toBeNull();
+  });
+
+  it("should fill fields when editing a team", async () => {
+    await mountComponent();
+    textFieldIds.forEach((id: string, index: number) => {
+      const field: HTMLInputElement = document.getElementById(id) as HTMLInputElement;
+      expect(field.value).toBe(_.get(defaultProps.teamToEdit.team, textFieldTeamPath[index]));
+    });
+    expect((document.getElementById("team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBeFalsy();
+  });
+
+  it("should have empty fields when creating a new team", async () => {
+    await mountComponent({ teamToEdit: { team: null, onSaveTeam: jest.fn() } });
     textFieldIds.forEach((id: string) => {
-      if (document === null) throw new Error("silent typescript");
-      const field = document.querySelector(`#${id}`) as HTMLInputElement;
+      const field: HTMLInputElement = document.getElementById(id) as HTMLInputElement;
       expect(field.value).toBe("");
     });
   });
 
-  it("should not allow to validate if a require info is missing", () => {
-    mountComponent();
-    const input = document.querySelector("#team-edit-dialog-field-name");
-    Simulate.change(input, { target: { name: "name", value: "" } } as unknown as SyntheticEventData);
-    expect((document.querySelector("#team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBe(true);
+  it("should not allow to validate if a require info is missing", async () => {
+    await mountComponent();
+    const event = {
+      target: {
+        name: "name",
+        value: "",
+      },
+    };
+    const nameInput = document.getElementById("team-edit-dialog-field-name");
+    Simulate.change(nameInput, event as unknown as SyntheticEventData);
+    expect((document.getElementById("team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBeTruthy();
   });
 
-  it("should call the onSaveTeam callback method with null if cancel", () => {
-    mountComponent();
-    const button = document.querySelector("#team-edit-dialog-button-close") as HTMLButtonElement;
-    triggerMouseEvent("click", button);
-    expect(onSaveTeam).toHaveBeenCalledTimes(1);
-    expect(onSaveTeam).toHaveBeenCalledWith(null);
+  it("should call the onSaveTeam callback method with null if cancel", async () => {
+    await mountComponent();
+    const closeButton = document.getElementById("team-edit-dialog-button-close");
+    triggerMouseEvent("click", closeButton);
+
+    expect((defaultProps.teamToEdit.onSaveTeam as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect((defaultProps.teamToEdit.onSaveTeam as jest.Mock)).toHaveBeenCalledWith(null);
   });
 
-  it("should call the onSaveTeam callback method with the changes if validated", () => {
-    mountComponent();
+  it("should call the onSaveTeam callback method with the changes if validated", async () => {
+    await mountComponent();
     const event = {
       target: {
         name: "name",
         value: "Updated name",
       },
     };
-    const updatedTeam = { ...team, members: [] as TeamMember[], name: event.target.value };
-    const input = document.querySelector("#team-edit-dialog-field-name");
-    Simulate.change(input, { target: event.target } as unknown as SyntheticEventData);
-    expect((document.querySelector("#team-edit-dialog-button-validate") as HTMLButtonElement).disabled).toBe(false);
-    const button = document.querySelector("#team-edit-dialog-button-validate") as HTMLButtonElement;
-    triggerMouseEvent("click", button);
+    const updatedTeam = { ...defaultProps.teamToEdit.team, members: [] as TeamMember[], name: event.target.value };
 
-    expect(onSaveTeam).toHaveBeenCalledTimes(1);
-    expect(onSaveTeam).toHaveBeenCalledWith(updatedTeam);
+    const nameInput = document.getElementById("team-edit-dialog-field-name");
+    Simulate.change(nameInput, event as unknown as SyntheticEventData);
+    const saveButton = document.getElementById("team-edit-dialog-button-validate") as HTMLButtonElement;
+    expect(saveButton.disabled).toBeFalsy();
+
+    triggerMouseEvent("click", saveButton);
+    const spy = defaultProps.teamToEdit.onSaveTeam as jest.Mock;
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(updatedTeam);
   });
 });
 

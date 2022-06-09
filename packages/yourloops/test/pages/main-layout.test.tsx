@@ -37,9 +37,7 @@ import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLayout } from "../../pages/main-layout";
 import PatientDataPage from "../../components/patient-data";
 import HomePage from "../../pages/home-page";
-import * as shareLib from "../../lib/share";
-
-jest.mock("../../lib/share");
+import DirectShareApi from "../../lib/share/direct-share-api";
 
 jest.mock("@auth0/auth0-react");
 
@@ -64,7 +62,7 @@ describe("Main layout", () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
   });
 
   beforeEach(() => {

@@ -47,7 +47,7 @@ import IconActionButton from "../../../components/buttons/icon-action";
 import CertifiedProfessionalIcon from "../../../components/icons/certified-professional-icon";
 
 import { UserInvitationStatus } from "../../../models/generic";
-import { ShareUser } from "../../../lib/share";
+import { ShareUser } from "../../../lib/share/models";
 
 import { getUserFirstName, getUserLastName } from "../../../lib/utils";
 import { SortFields, SortDirection } from "./types";
