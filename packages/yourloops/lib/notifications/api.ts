@@ -32,7 +32,13 @@ import HttpStatus from "../http-status-codes";
 import { Session } from "../auth/models";
 
 import { INotificationAPI } from "../../models/notification";
-import { INotification, NotificationAPI, NotificationType, RemoteMonitoringNotification } from "./models";
+import {
+  AcceptedNotification,
+  INotification,
+  NotificationAPI,
+  NotificationType,
+  RemoteMonitoringNotification,
+} from "./models";
 import { notificationConversion } from "./utils";
 import HttpService from "../../services/http";
 
@@ -63,7 +69,7 @@ async function getInvitations(_session: Readonly<Session>, url: string): Promise
     return Promise.resolve([]);
   }
 
-  return Promise.reject(response.statusText);
+  return Promise.reject(new Error(response.statusText));
 }
 
 /**
@@ -88,9 +94,9 @@ function getSentInvitations(session: Readonly<Session>): Promise<INotification[]
 
 async function updateInvitation(_session: Readonly<Session>, url: string, key: string): Promise<void> {
 
-  const response = await HttpService.put<string, string>({
+  const response = await HttpService.put<string, AcceptedNotification>({
     url: url.toString(),
-    payload: key,
+    payload: { key : key },
   });
 
   if (response.status >= 200 && response.status <= 299) {

@@ -99,3 +99,7 @@ export interface NotificationProvider {
 export interface RemoteMonitoringNotification {
   monitoringEnd: string;
 }
+
+export interface AcceptedNotification {
+  key: string;
+}
