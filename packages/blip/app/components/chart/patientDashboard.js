@@ -6,7 +6,6 @@ import PatientStatistics from "./patientStatistics";
 import Header from "./header";
 import DeviceUsage from "./deviceUsage";
 import "./patientDashboardVars.css";
-import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
 
 const PatientDashboard = (props) => {
   const {
@@ -23,6 +22,7 @@ const PatientDashboard = (props) => {
     msRange,
     chatWidget: ChatWidget,
     alarmCard: AlarmCard,
+    medicalFilesWidget: MedicalFilesWidget,
     canPrint,
     onClickPrint,
     //eslint-disable-next-line
@@ -65,11 +65,10 @@ const PatientDashboard = (props) => {
       />
       <Box id="patient-dashboard-content">
         {<PatientInfoWidget patient={patient} />}
-        {patientMonitored &&
+        {patient.monitoring?.enabled &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"
-            patientId={patientMonitored.userId}
-            teamId={patientMonitored.teamId}
+            patient={patient}
             userRole={user.role}
           />
         }
@@ -117,6 +116,7 @@ PatientDashboard.propTypes = {
   user: PropTypes.object,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
+  medicalFilesWidget: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   prefixURL: PropTypes.string,

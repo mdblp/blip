@@ -42,6 +42,7 @@ const expect = chai.expect;
 const PatientInfoWidget = () => <div id="patient-info-widget" />;
 const ChatWidget = () => <div id="chat-widget" />;
 const AlarmCard = () => <div id="alarm-card" />;
+const MedicalFilesWidget = () => <div id="medical-files" />;
 
 describe("PatientDashboard", () => {
   const bgPrefs = {
@@ -114,6 +115,7 @@ describe("PatientDashboard", () => {
     onClickBack: sinon.stub(),
     chatWidget: ChatWidget,
     alarmCard: AlarmCard,
+    medicalFilesWidget: MedicalFilesWidget,
     patientInfoWidget: PatientInfoWidget,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
