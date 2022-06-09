@@ -49,7 +49,7 @@ import { MedicalRecord } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import MedicalRecordEditDialog from "../../dialogs/medical-record-edit-dialog";
 import MedicalRecordDeleteDialog from "../../dialogs/medical-record-delete-dialog";
-import { MedicalFilesWidgetProps } from "./medical-files-widget";
+import { CategoryProps } from "./medical-files-widget";
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -69,7 +69,7 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.Element {
+export default function MedicalRecordList(props: CategoryProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
   const { teamId, patientId } = props;
@@ -79,6 +79,7 @@ export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.E
   const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined);
   const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined);
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
+  const [readonly, setReadonly] = useState<boolean>(false);
 
   const closeMedicalRecordEditDialog = () => {
     setHoveredItem(undefined);
@@ -94,6 +95,7 @@ export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.E
 
   const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
     setMedicalRecordToEdit(medicalRecord);
+    setReadonly(false);
     setIsEditDialogOpen(true);
   };
 
@@ -103,8 +105,9 @@ export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.E
   };
 
   const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
-    // TODO add PDF generation
-    console.log(`click medical record ${medicalRecord.id}`);
+    setMedicalRecordToEdit(medicalRecord);
+    setReadonly(true);
+    setIsEditDialogOpen(true);
   };
 
   const updateMedicalRecordList = (payload: MedicalRecord) => {
@@ -195,6 +198,7 @@ export default function MedicalRecordList(props: MedicalFilesWidgetProps): JSX.E
         <MedicalRecordEditDialog
           {...props}
           medicalRecord={medicalRecordToEdit}
+          readonly={readonly}
           onClose={closeMedicalRecordEditDialog}
           onSaved={updateMedicalRecordList}
         />

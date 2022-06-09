@@ -37,7 +37,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
-import { Prescription } from "../../../lib/medical-files/model";
+import { WeeklyReport } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
 
@@ -62,38 +62,39 @@ const useStyle = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function PrescriptionList({ teamId, patientId }: CategoryProps): JSX.Element {
+export default function WeeklyReportList({ teamId, patientId }: CategoryProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([]);
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     (async () => {
-      setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId));
+      setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId));
+      console.log(await MedicalFilesApi.getWeeklyReport(patientId, teamId, "a35a73e7-3666-4b80-9cac-d7c4d83a4a4f"));
     })();
   }, [patientId, teamId]);
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
-        {t("prescriptions")}
+        {t("weekly-reports")}
       </Typography>
       <List className={classes.list}>
-        {prescriptions.map((prescription, index) => (
+        {weeklyReports.map((weeklyReport, index) => (
           <ListItem
             dense
             divider
             key={index}
-            className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? "selected" : ""}`}
-            onMouseOver={() => setHoveredItem(prescription.id)}
+            className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? "selected" : ""}`}
+            onMouseOver={() => setHoveredItem(weeklyReport.id)}
             onMouseOut={() => setHoveredItem(undefined)}
           >
             <ListItemIcon>
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("prescription-pdf")}{prescription.uploadedAt.toLocaleDateString()}
+              {t("weekly-report-pdf")}{new Date(weeklyReport.creationDate).toLocaleDateString()}
             </ListItemText>
           </ListItem>
         ))}

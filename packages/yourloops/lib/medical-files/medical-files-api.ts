@@ -23,13 +23,29 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { MedicalRecord, NewMedicalRecord, Prescription } from "./model";
+import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from "./model";
 import HttpService from "../../services/http";
 
 export default class MedicalFilesApi {
   static async getPrescriptions(patientId: string, teamId: string): Promise<Prescription[]> {
     const { data } = await HttpService.get<Prescription[]>({
       url: "cargo/v0/prescriptions",
+      config: { params: { teamId, patientId } },
+    });
+    return data;
+  }
+
+  static async getWeeklyReports(patientId: string, teamId: string): Promise<WeeklyReport[]> {
+    const { data } = await HttpService.get<WeeklyReport[]>({
+      url: "cargo/v0/weekly-reports",
+      config: { params: { teamId, patientId } },
+    });
+    return data;
+  }
+
+  static async getWeeklyReport(patientId: string, teamId: string, weeklyReportId: string): Promise<WeeklyReport> {
+    const { data } = await HttpService.get<WeeklyReport>({
+      url: `/cargo/v0/weekly-reports/${weeklyReportId}`,
       config: { params: { teamId, patientId } },
     });
     return data;

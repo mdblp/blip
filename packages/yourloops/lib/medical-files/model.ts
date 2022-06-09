@@ -24,6 +24,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { Monitoring } from "../../models/monitoring";
+import { Alarm } from "../../models/alarm";
 
 export interface Prescription {
   id: string;
@@ -45,5 +47,14 @@ export interface NewMedicalRecord {
 export interface MedicalRecord extends NewMedicalRecord {
   id: string;
   authorId: string;
+  creationDate: string;
+}
+
+export interface WeeklyReport {
+  id: string;
+  patientId: string;
+  teamId: string;
+  params: Monitoring;
+  alarms: Alarm;
   creationDate: string;
 }

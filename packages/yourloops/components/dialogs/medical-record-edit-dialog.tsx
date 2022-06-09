@@ -42,13 +42,14 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { MedicalRecord } from "../../lib/medical-files/model";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
-import { MedicalFilesWidgetProps } from "../dashboard-widgets/medical-files/medical-files-widget";
+import { CategoryProps } from "../dashboard-widgets/medical-files/medical-files-widget";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 import { useAlert } from "../utils/snackbar";
 
-interface Props extends MedicalFilesWidgetProps {
+interface Props extends CategoryProps {
   onClose: () => void;
   onSaved: (payload: MedicalRecord) => void;
+  readonly: boolean;
   medicalRecord?: MedicalRecord;
 }
 
@@ -74,7 +75,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
   const { title, textArea, divider } = classes();
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
-  const { onClose, onSaved, medicalRecord, teamId, patientId } = props;
+  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props;
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || "");
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || "");
@@ -147,6 +148,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
           multiline
           rows={4}
           variant="outlined"
+          disabled={readonly}
           onChange={(event) => setDiagnosis(event.target.value)}
         />
 
@@ -162,6 +164,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
           multiline
           rows={4}
           variant="outlined"
+          disabled={readonly}
           onChange={(event) => setProgressionProposal(event.target.value)}
         />
 
@@ -177,6 +180,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
           multiline
           rows={4}
           variant="outlined"
+          disabled={readonly}
           onChange={(event) => setTrainingSubject(event.target.value)}
         />
       </DialogContent>
@@ -193,7 +197,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
             variant="contained"
             color="primary"
             disableElevation
-            disabled={inProgress || !diagnosis && !trainingSubject && !progressionProposal}
+            disabled={readonly || inProgress || !diagnosis && !trainingSubject && !progressionProposal}
             onClick={saveMedicalRecord}
           >
             {t("save")}

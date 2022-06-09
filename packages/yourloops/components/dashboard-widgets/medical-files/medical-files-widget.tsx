@@ -35,6 +35,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import MedicalRecordList from "./medical-record-list";
 import PrescriptionList from "./prescription-list";
+import { Patient } from "../../../lib/data/patient";
+import { useTeam } from "../../../lib/team";
+import WeeklyReportList from "./weekly-report-list";
 
 const useStyle = makeStyles(() => ({
   cardContent: {
@@ -52,14 +55,26 @@ const useStyle = makeStyles(() => ({
 }));
 
 export interface MedicalFilesWidgetProps {
-  patientId: string;
-  teamId: string;
+  patient: Patient;
   userRole: string;
+}
+
+export interface CategoryProps {
+  teamId: string;
+  patientId: string;
 }
 
 export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
+  const { getRemoteMonitoringTeams } = useTeam();
+  const { patient } = props;
+
+  const team = getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === patient.userid));
+
+  if (!team) {
+    throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`);
+  }
 
   return (
     <React.Fragment>
@@ -71,8 +86,9 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
           title={`${t("medical-files")}`}
         />
         <CardContent className={classes.cardContent}>
-          <PrescriptionList {...props} />
-          <MedicalRecordList {...props} />
+          <PrescriptionList teamId={team.id} patientId={patient.userid} />
+          <WeeklyReportList teamId={team.id} patientId={patient.userid} />
+          <MedicalRecordList teamId={team.id} patientId={patient.userid} />
         </CardContent>
       </Card>
     </React.Fragment>
