@@ -35,7 +35,7 @@ import { APINotificationType, INotificationAPI } from "../../../models/notificat
 import { INotification, NotificationType } from "../../../lib/notifications";
 import api from "../../../lib/notifications/api";
 import { loggedInUsers } from "../../common";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 // Mock jest and set the type
 jest.mock("axios");
@@ -113,15 +113,13 @@ describe("Notification API", () => {
           email: loggedInUsers.patient.username,
         },
       ];
-      //const jsonResponse = jest.fn().mockResolvedValue(apiNotifications);
-      const resolveOK: AxiosResponse = {
+      const resolveOK: AxiosResponse<INotificationAPI[]> = {
+        headers: {},
+        config: {},
         status: HttpStatus.StatusOK,
-        ok: true,
         statusText: "OK",
-        type: "basic",
-        redirected: false,
         data: apiNotifications,
-      } as AxiosResponse;
+      };
       mockedAxios.get.mockResolvedValue(resolveOK);
 
       const result = await api.getReceivedInvitations(session);
