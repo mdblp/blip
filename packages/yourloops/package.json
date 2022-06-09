@@ -21,7 +21,7 @@
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack --mode=development",
     "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack-dev-server --cache --color --port 3001 --host 0.0.0.0",
-    "test": "jest --config=test/jest.config.js pages/"
+    "test": "jest --config=test/jest.config.js pages/hcp/"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.1.0",
