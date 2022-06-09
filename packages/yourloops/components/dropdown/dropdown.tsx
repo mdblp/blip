@@ -26,7 +26,6 @@
  */
 
 import React from "react";
-import { useTranslation } from "react-i18next";
 
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -36,9 +35,8 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 export interface BasicDropdownProps {
   id: string;
-  defaultValue: string;
-  values: string[];
-  error?: boolean;
+  defaultKey?: string;
+  values: Map<string, string>; //Map<key, value>
   onSelect: (value: string) => void;
 }
 
@@ -52,28 +50,14 @@ const styles = makeStyles((theme: Theme) => ({
       border: "none",
     },
   },
-  error: {
-    border: `1px solid ${theme.palette.error.main}`,
-  },
 }));
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 
-function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultValue, values, id, error } = props;
-  const { t } = useTranslation("yourloops");
+function Dropdown(props: BasicDropdownProps): JSX.Element {
+  const { onSelect, defaultKey, values, id } = props;
   const classes = styles();
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue);
+  const [selectedValue, setSelectedValue] = React.useState(defaultKey ? values.get(defaultKey) : "");
 
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const value = event.target.value as string;
@@ -89,16 +73,14 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       variant="outlined"
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}
-      MenuProps={MenuProps}
-      classes={error ? { root: classes.error } : undefined}
     >
-      {values.map(item => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
-          {t(item)}
+      {Array.from(values.entries()).map(value => (
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${value[0]}`} key={value[0]} value={value[0]}>
+          {value[1]}
         </MenuItem>
       ))}
     </Select>
   );
 }
 
-export default BasicDropdown;
+export default Dropdown;

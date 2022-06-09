@@ -39,7 +39,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 
-import { FilterType, PatientTableSortFields, SortDirection } from "../../models/generic";
+import { PatientFilterTypes, PatientTableSortFields, SortDirection } from "../../models/generic";
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
 import { errorTextFromException, setPageTitle } from "../../lib/utils";
@@ -73,7 +73,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     teamHook: TeamContext,
     flagged: string[],
     filter: string,
-    filterType: FilterType | string,
+    filterType: PatientFilterTypes,
     orderBy: PatientTableSortFields,
     order: SortDirection
   ) => {

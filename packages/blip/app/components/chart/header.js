@@ -149,7 +149,7 @@ class TidelineHeader extends React.Component {
                 >
                   {
                     this.props.patients.map((patient, i) => {
-                      return (<MenuItem key={i} value={patient.userid}>{patient.fullName}</MenuItem>);
+                      return (<MenuItem key={i} value={patient.userid}>{patient.profile.fullName}</MenuItem>);
                     })
                   }
                 </Select>

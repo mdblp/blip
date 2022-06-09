@@ -34,6 +34,7 @@ import { MedicalData } from "../../models/device-data";
 import { MedicalTableValues } from "./models";
 import { TeamMember, TeamUser } from "../../lib/team";
 import { Patient, PatientTeam } from "../../lib/data/patient";
+import { Alarm } from "../../models/alarm";
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = "N/A"): MedicalTableValues => {
   let tir = "-";
@@ -150,36 +151,36 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
 
   switch (orderBy) {
   case PatientTableSortFields.alertTimeTarget:
-    aValue = a.alarm.timeSpentAwayFromTargetRate;
-    bValue = b.alarm.timeSpentAwayFromTargetRate;
+    aValue = a.metadata.alarm.timeSpentAwayFromTargetRate;
+    bValue = b.metadata.alarm.timeSpentAwayFromTargetRate;
     break;
   case PatientTableSortFields.alertHypoglycemic:
-    aValue = a.alarm.frequencyOfSevereHypoglycemiaRate;
-    bValue = b.alarm.frequencyOfSevereHypoglycemiaRate;
+    aValue = a.metadata.alarm.frequencyOfSevereHypoglycemiaRate;
+    bValue = b.metadata.alarm.frequencyOfSevereHypoglycemiaRate;
     break;
   case PatientTableSortFields.dataNotTransferred:
-    aValue = a.alarm.nonDataTransmissionRate;
-    bValue = b.alarm.nonDataTransmissionRate;
+    aValue = a.metadata.alarm.nonDataTransmissionRate;
+    bValue = b.metadata.alarm.nonDataTransmissionRate;
     break;
   case PatientTableSortFields.flag:
-    aValue = a.flagged;
-    bValue = b.flagged;
+    aValue = a.metadata.flagged;
+    bValue = b.metadata.flagged;
     break;
   case PatientTableSortFields.ldu:
-    aValue = getMedicalValues(a.medicalData).lastUploadEpoch;
-    bValue = getMedicalValues(b.medicalData).lastUploadEpoch;
+    aValue = getMedicalValues(a.metadata.medicalData).lastUploadEpoch;
+    bValue = getMedicalValues(b.metadata.medicalData).lastUploadEpoch;
     break;
   case PatientTableSortFields.patientFullName:
-    aValue = a.fullName;
-    bValue = b.fullName;
+    aValue = a.profile.fullName;
+    bValue = b.profile.fullName;
     break;
   case PatientTableSortFields.remoteMonitoring:
-    aValue = a.remoteMonitoring;
-    bValue = b.remoteMonitoring;
+    aValue = a.monitoring?.monitoringEnd;
+    bValue = b.monitoring?.monitoringEnd;
     break;
   case PatientTableSortFields.system:
-    aValue = a.system;
-    bValue = b.system;
+    aValue = a.settings.system;
+    bValue = b.settings.system;
     break;
   }
   return compareValues(aValue, bValue);
@@ -196,23 +197,27 @@ export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
 };
 
 export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
-  if (!teamUser.alarms) {
-    throw Error(`The patient with id ${teamUser.userid} has no defined alarms`);
-  }
-  if (!teamUser.monitoring) {
-    throw Error(`The patient with id ${teamUser.userid} has no information regarding its monitoring`);
-  }
+  const birthdate = teamUser.profile?.patient?.birthday;
   return {
-    alarm: teamUser.alarms,
-    firstName: teamUser.profile?.firstName,
-    flagged: undefined,
-    fullName: teamUser.profile?.fullName ?? teamUser.username,
-    lastName: teamUser.profile?.lastName,
-    medicalData: null,
-    remoteMonitoring: teamUser.monitoring.enabled ? new Date() : undefined,
-    system: "DBLG1",
+    metadata: {
+      alarm: teamUser.alarms ?? {} as Alarm,
+      flagged: undefined,
+      medicalData: null,
+      unreadMessagesSent: teamUser.unreadMessages ?? 0,
+    },
+    monitoring: teamUser.monitoring,
+    profile: {
+      birthdate: birthdate ? new Date(birthdate) : undefined,
+      firstName: teamUser.profile?.firstName,
+      fullName: teamUser.profile?.fullName ?? teamUser.username,
+      lastName: teamUser.profile?.lastName,
+      email: teamUser.username,
+    },
+    settings: {
+      a1c: teamUser.settings?.a1c,
+      system: "DBLG1",
+    },
     teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
     userid: teamUser.userid,
-    username: teamUser.username,
   };
 };

@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress, FilterType } from "../../models/generic";
+import { UserInvitationStatus, PostalAddress, PatientFilterTypes } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
@@ -83,6 +83,7 @@ export interface TeamAPI {
   createTeam: (session: Session, team: Partial<ITeam>) => Promise<ITeam>;
   editTeam: (session: Session, editedTeam: ITeam) => Promise<void>;
   updateTeamAlerts: (session: Session, teamId: string, monitoring: Monitoring) => Promise<void>
+  updatePatientAlerts: (session: Session, teamId: string, patientId: string, monitoring: Monitoring) => Promise<void>
   deleteTeam: (session: Session, teamId: string) => Promise<void>;
   leaveTeam: (session: Session, teamId: string) => Promise<void>;
   removeMember: (session: Session, teamId: string, userId: string, email: string) => Promise<void>;
@@ -98,6 +99,7 @@ export interface TeamContext {
   initialized: boolean;
   /** The error message set if there is any error */
   errorMessage: string | null;
+  patientsFilterStats: PatientFilterStats;
   /**
    * Refresh the team list & members.
    *
@@ -108,6 +110,10 @@ export interface TeamContext {
    * Return the medical teams only
    */
   getMedicalTeams: () => Readonly<Team>[];
+  /**
+   * Return the remote monitoring teams only
+   */
+  getRemoteMonitoringTeams: () => Readonly<Team>[];
   /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
@@ -134,20 +140,16 @@ export interface TeamContext {
    */
   getPatients: () => Readonly<Patient>[];
   /**
-   * Return all pending patients
+   * Return the remote monitoring team the patient is in
    */
-  getPendingPatients: () => Readonly<Patient>[];
-  /**
-   * Return all direct share patients
-   */
-  getDirectSharePatients: () => Readonly<Patient>[];
+  getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam;
   /**
    * Return all patients filtered on the given params
    * @param filterType a FilterType value or a team id
    * @param filter a patient name
    * @param flagged the list of flagged patients
    */
-  filterPatients: (filterType: FilterType | string, filter: string, flagged: string[]) => Patient[];
+  filterPatients: (filterType: PatientFilterTypes, filter: string, flagged: string[]) => Patient[];
   /**
    * Return the medical members of a team.
    */
@@ -180,12 +182,6 @@ export interface TeamContext {
    * @returns {boolean} True if all members status is pending
    */
   isOnlyPendingInvitation: (patient: Patient) => boolean;
-  /**
-   * @param user The user to test
-   * @param teamId A team id
-   * @returns {boolean} True if members status is pending in given team
-   */
-   isUserInvitationPending: (patient: Patient, teamId: string) => boolean;
   /**
    * @param user The user to test
    * @returns {boolean} True if members status is accepted in at least a team
@@ -227,10 +223,23 @@ export interface TeamContext {
    */
   editTeam(team: Team): Promise<void>;
   /**
+   * @param patient the patient to update
+   */
+  editPatientRemoteMonitoring(patient: Patient): void;
+  /**
+   * @param patient The patient to update
+   */
+  markPatientMessagesAsRead(patient: Patient): void;
+  /**
    * Update team alarm configuration
    * @param team The updated team
    */
   updateTeamAlerts(team: Team): Promise<void>;
+  /**
+   * Update team alarm configuration
+   * @param team The updated team
+   */
+  updatePatientAlerts(patient: Patient): Promise<void>;
   /**
    * Leave a team
    * @param team The team to leave
@@ -281,4 +290,16 @@ export interface TeamProvider {
 export interface LoadTeams {
   teams: Team[];
   flaggedNotInResult: string[];
+}
+
+export interface PatientFilterStats {
+  all: number,
+  pending: number,
+  directShare: number,
+  unread: number,
+  outOfRange: number,
+  severeHypoglycemia: number,
+  dataNotTransferred: number,
+  remoteMonitored: number,
+  renew: number,
 }

@@ -32,32 +32,44 @@ import { INotification } from "../notifications";
 import { Monitoring } from "../../models/monitoring";
 
 interface PatientTeam {
-  code : string,
-  invitation?: INotification
-  status: UserInvitationStatus,
-  teamId : string,
-  teamName : string,
+  code: string;
+  invitation?: INotification;
+  status: UserInvitationStatus;
+  teamId: string;
+  teamName: string;
+}
+
+interface PatientProfile {
+  birthdate?: Date;
+  firstName?: string;
+  fullName: string;
+  lastName?: string;
+  email: string;
+}
+
+interface PatientSettings {
+  a1c?: {
+    date: string;
+    value: string;
+  };
+  system?: string;
+}
+
+interface PatientMetadata {
+  alarm: Alarm;
+  flagged?: boolean;
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null;
+  unreadMessagesSent: number;
 }
 
 interface Patient {
-  alarm: Alarm;
-  firstName?: string;
-  flagged?: boolean,
-  fullName: string;
-  lastName?: string;
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  remoteMonitoring? : Date;
-  system? : string;
-  teams : PatientTeam[];
-  readonly userid: string;
-  readonly username: string;
-}
-
-interface PatientMonitored {
-  readonly userId: string;
-  readonly teamId: string;
+  profile: PatientProfile;
+  settings: PatientSettings;
+  metadata: PatientMetadata;
   monitoring?: Monitoring;
+  teams: PatientTeam[];
+  readonly userid: string;
 }
 
-export { Patient, PatientTeam , PatientMonitored };
+export { Patient, PatientTeam };

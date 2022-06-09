@@ -42,6 +42,8 @@ import { IMessage } from "../../models/chat";
 import { Button, CardHeader, Tab, Tabs, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { UserRoles } from "../../models/shoreline";
+import { Patient } from "../../lib/data/patient";
+import { useTeam } from "../../lib/team";
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -121,17 +123,17 @@ export interface Message {
 }
 
 export interface ChatWidgetProps {
-  patientId: string;
-  teamId: string;
+  patient: Patient;
   userId: string;
   userRole: string;
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { t } = useTranslation("yourloops");
-  const { patientId, userId, teamId, userRole } = props;
+  const { patient, userId, userRole } = props;
   const classes = chatWidgetStyles();
   const authHook = useAuth();
+  const teamHook = useTeam();
   const [showPicker, setShowPicker] = useState(false);
   const [privateMessage, setPrivateMessage] = useState(false);
   const [inputText, setInputText] = useState("");
@@ -140,6 +142,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0);
   const content = useRef<HTMLDivElement>(null);
   const inputRow = useRef<HTMLDivElement>(null);
+  const team = teamHook.getPatientRemoteMonitoringTeam(patient);
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
@@ -152,13 +155,16 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages() {
-      const messages = await getChatMessages(teamId, patientId);
+      const messages = await getChatMessages(team.teamId, patient.userid);
+      if (patient.metadata.unreadMessagesSent > 0) {
+        teamHook.markPatientMessagesAsRead(patient);
+      }
       setMessages(messages);
-      setNbUnread(messages.filter(m =>!(m.authorId === userId) && !m.destAck).length);
+      setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length);
     }
 
     fetchMessages();
-  }, [userId, patientId, teamId, authHook]);
+  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook]);
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
     setShowPicker(false);
@@ -174,8 +180,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   const sendMessage = async () => {
-    await sendChatMessage(teamId, patientId, inputText, privateMessage);
-    const messages = await getChatMessages(teamId, patientId);
+    await sendChatMessage(team.teamId, patient.userid, inputText, privateMessage);
+    const messages = await getChatMessages(team.teamId, patient.userid);
     setMessages(messages);
     setInputText("");
     resetInputSize();

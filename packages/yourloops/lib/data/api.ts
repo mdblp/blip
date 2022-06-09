@@ -41,6 +41,7 @@ import { errorFromHttpStatus } from "../utils";
 import { Session } from "../auth";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";
 import { Patient } from "./patient";
+import { Units } from "../../models/generic";
 
 const log = bows("data-api");
 
@@ -288,6 +289,34 @@ export async function editMessage(session: Session, message: MessageNote): Promi
 
   if (response.ok) {
     return Promise.resolve();
+  }
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+/**
+ * Export data from export service
+ * @param auth
+ * @param userid
+ * @param startDate formatted as ISO string
+ * @param endDate formatted as ISO string
+ */
+export async function exportData(auth: Readonly<Session>, userid: string, start: string, end: string): Promise<Blob> {
+  const units = auth.user.settings?.units ?? Units.gram;
+  const exportURL = new URL(`/export/${userid}?bgUnits=${encodeURIComponent(units.toString())}&startDate=${encodeURIComponent(start)}&endDate=${encodeURIComponent(end)}`, appConfig.API_HOST);
+
+  const response = await fetch(exportURL.toString(), {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.csv,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+  });
+
+  if (response.ok) {
+    const blob = await response.blob();
+    return Promise.resolve(blob);
   }
   return Promise.reject(errorFromHttpStatus(response, log));
 }

@@ -11,9 +11,22 @@ import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-f
 const PatientDashboard = (props) => {
   const {
     //eslint-disable-next-line
-    patient, user, prefixURL, profileDialog, bgPrefs, loading, chartPrefs, dataUtil, epochLocation, msRange, chatWidget: ChatWidget, canPrint, onClickPrint,
+    patient,
+    user,
+    prefixURL,
+    profileDialog,
+    bgPrefs,
+    loading,
+    chartPrefs,
+    dataUtil,
+    epochLocation,
+    msRange,
+    chatWidget: ChatWidget,
+    alarmCard: AlarmCard,
+    canPrint,
+    onClickPrint,
     //eslint-disable-next-line
-    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientMonitored, patientInfoWidget: PatientInfoWidget
+    timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
   } = props;
   const getEndpoints = () => {
     const start = moment.utc(epochLocation - msRange).toISOString();
@@ -51,7 +64,7 @@ const PatientDashboard = (props) => {
         trackMetric={trackMetric}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget patient={patient} patientMonitored={patientMonitored} />}
+        {<PatientInfoWidget patient={patient} />}
         {patientMonitored &&
           <MedicalFilesWidget
             id="dashboard-medical-files-widget"
@@ -84,12 +97,14 @@ const PatientDashboard = (props) => {
           loading={loading}
           onSwitchToDaily={onSwitchToDaily}
         />
-        {patientMonitored &&
+        {patient.monitoring?.enabled &&
+          <AlarmCard patient={patient} />
+        }
+        {patient.monitoring?.enabled &&
           <ChatWidget
             id="dashboard-chat-widget"
-            patientId={patientMonitored.userId}
+            patient={patient}
             userId={user.userid}
-            teamId={patientMonitored.teamId}
             userRole={user.role}
           />
         }
@@ -101,9 +116,9 @@ const PatientDashboard = (props) => {
 PatientDashboard.propTypes = {
   user: PropTypes.object,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
-  patientMonitored: PropTypes.object,
   prefixURL: PropTypes.string,
   profileDialog: PropTypes.func,
   bgPrefs: PropTypes.object.isRequired,

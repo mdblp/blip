@@ -60,7 +60,6 @@ function ReduxProvider(props) {
         api={props.api}
         store={store}
         patient={props.patient}
-        patientMonitored={props.patientMonitored}
         setPatient={props.setPatient}
         patients={props.patients}
         userIsHCP={props.userIsHCP}
@@ -72,6 +71,7 @@ function ReduxProvider(props) {
         dialogPDFOptions={props.dialogPDFOptions}
         patientInfoWidget={props.patientInfoWidget}
         chatWidget={props.chatWidget}
+        alarmCard={props.alarmCard}
       />
     </Provider>
   );
@@ -80,7 +80,6 @@ function ReduxProvider(props) {
 ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  patientMonitored: PropTypes.object,
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
@@ -91,6 +90,7 @@ ReduxProvider.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 /**
@@ -99,7 +99,7 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, patientMonitored, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, patientInfoWidget } = props;
+      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget } = props;
       updateConfig(config);
 
       return (
@@ -110,13 +110,13 @@ function Blip(props) {
           setPatient={setPatient}
           userIsHCP={userIsHCP}
           profileDialog={profileDialog}
-          patientMonitored={patientMonitored}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
           patientInfoWidget={patientInfoWidget}
           chatWidget={chatWidget}
+          alarmCard={alarmCard}
         />
       );
     } catch (err) {
@@ -132,7 +132,6 @@ Blip.propTypes = {
   config: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  patientMonitored: PropTypes.object,
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,
   userIsHCP: PropTypes.bool.isRequired,
@@ -143,6 +142,7 @@ Blip.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 export { cleanStore };

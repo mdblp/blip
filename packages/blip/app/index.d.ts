@@ -36,17 +36,17 @@ import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-optio
 import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
 import { PatientDatum, PatientData } from "yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
-import { PatientMonitored, Patient } from "yourloops/lib/data/patient";
-import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "yourloops/lib/data/models";
+import { Patient } from "../../yourloops/lib/data/patient";
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
 import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
+import AlarmCard from "../../yourloops/components/alarm/alarm-card";
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
   patient: Patient;
   setPatient: Function;
-  patientMonitored: PatientMonitored | null;
   patients: Patient[];
   userIsHCP: boolean;
   prefixURL: string;
@@ -57,6 +57,7 @@ interface BlipProperties {
   patientInfoWidget: typeof PatientInfoWidget;
   chatWidget: typeof ChatWidget;
   medicalFilesWidget: typeof MedicalFilesWidget;
+  alarmCard: typeof AlarmCard;
 }
 
 // FIXME: For some reason, the yourloops auth hook

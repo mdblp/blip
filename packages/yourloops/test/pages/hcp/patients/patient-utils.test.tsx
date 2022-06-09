@@ -35,6 +35,7 @@ import { PatientTableSortFields, UserInvitationStatus } from "../../../../models
 import { Patient, PatientTeam } from "../../../../lib/data/patient";
 import { INotification } from "../../../../lib/notifications";
 import { Profile } from "../../../../models/shoreline";
+import { Monitoring } from "../../../../models/monitoring";
 
 describe("Patient utils", () => {
 
@@ -137,37 +138,39 @@ describe("Patient utils", () => {
     describe("remoteMonitoring", () => {
       const smallerDate = new Date();
       const biggerDate = new Date(smallerDate.getUTCFullYear(), smallerDate.getMonth() + 1);
+      const firstRemoteMonitoringEnding = { monitoringEnd: smallerDate } as Monitoring;
+      const lastRemoteMonitoringEnding = { monitoringEnd: biggerDate } as Monitoring;
 
       it("should return negative number when first patient has a more recent date", () => {
-        const patient1 = createPatient("fakePatient1Id", [], null, "", smallerDate);
-        const patient2 = createPatient("fakePatient2Id", [], null, "", biggerDate);
+        const patient1 = createPatient("fakePatient1Id", [], null, "", firstRemoteMonitoringEnding);
+        const patient2 = createPatient("fakePatient2Id", [], null, "", lastRemoteMonitoringEnding);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
         expect(res).toBeLessThan(0);
       });
 
       it("should return positive number when second patient has a more recent date", () => {
-        const patient1 = createPatient("fakePatient1Id", [], null, "", biggerDate);
-        const patient2 = createPatient("fakePatient2Id", [], null, "", smallerDate);
+        const patient1 = createPatient("fakePatient1Id", [], null, "", lastRemoteMonitoringEnding);
+        const patient2 = createPatient("fakePatient2Id", [], null, "", firstRemoteMonitoringEnding);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
         expect(res).toBeGreaterThan(0);
       });
 
       it("should return 0 when patients have same date", () => {
-        const patient1 = createPatient("fakePatient1Id", [], null, "", smallerDate);
-        const patient2 = createPatient("fakePatient2Id", [], null, "", smallerDate);
+        const patient1 = createPatient("fakePatient1Id", [], null, "", firstRemoteMonitoringEnding);
+        const patient2 = createPatient("fakePatient2Id", [], null, "", firstRemoteMonitoringEnding);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
         expect(res).toBe(0);
       });
 
       it("should return positive number when first patient has no remote monitoring", () => {
         const patient1 = createPatient("fakePatient1Id", [], null, "");
-        const patient2 = createPatient("fakePatient2Id", [], null, "", smallerDate);
+        const patient2 = createPatient("fakePatient2Id", [], null, "", firstRemoteMonitoringEnding);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
         expect(res).toBeGreaterThan(0);
       });
 
       it("should return negative number when second patient has no remote monitoring", () => {
-        const patient1 = createPatient("fakePatient1Id", [], null, "", smallerDate);
+        const patient1 = createPatient("fakePatient1Id", [], null, "", firstRemoteMonitoringEnding);
         const patient2 = createPatient("fakePatient2Id", [], null, "");
         const res = comparePatients(patient1, patient2, PatientTableSortFields.remoteMonitoring);
         expect(res).toBeLessThan(0);
@@ -207,7 +210,7 @@ describe("Patient utils", () => {
       });
 
       it("should return positive number when first patient has no system name", () => {
-        const patient1 = createPatient("fakePatient1Id", [], null, "" );
+        const patient1 = createPatient("fakePatient1Id", [], null, "");
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, smallerSystemName);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.system);
         expect(res).toBeGreaterThan(0);
@@ -264,7 +267,7 @@ describe("Patient utils", () => {
       });
 
       it("should return positive number when second patient is flagged", () => {
-        const patient1 = createPatient("fakePatient1Id", [], );
+        const patient1 = createPatient("fakePatient1Id", [],);
         const patient2 = createPatient("fakePatient2Id", [], null, "", null, null, true);
         const res = comparePatients(patient1, patient2, PatientTableSortFields.patientFullName);
         expect(res).toBeGreaterThan(0);
@@ -283,9 +286,9 @@ describe("Patient utils", () => {
 
     it("should map correctly", () => {
       const member = createTeamMember("fakeTeamMember", "teamName", "fakeTeamCode", UserInvitationStatus.accepted);
-      member.invitation = { id : "invitationId" } as INotification;
-      const patientTeam : PatientTeam = {
-        code : member.team.code,
+      member.invitation = { id: "invitationId" } as INotification;
+      const patientTeam: PatientTeam = {
+        code: member.team.code,
         invitation: member.invitation,
         status: member.status,
         teamId: member.team.id,
@@ -299,28 +302,37 @@ describe("Patient utils", () => {
   describe("mapTeamUserToPatient", () => {
 
     it("should map correctly", () => {
-      const profile : Profile = {
-        fullName : "fake full name",
+      const profile: Profile = {
+        fullName: "fake full name",
         firstName: "fake full",
         lastName: "name",
       };
       const member = createTeamMember("fakeTeamMember", "teamName", "fakeTeamCode", UserInvitationStatus.accepted);
       const teamUser = createTeamUser("fakeTeamMember", [member], profile);
-      const patient : Patient = {
-        alarm: teamUser.alarms,
-        firstName: profile.firstName,
-        flagged: undefined,
-        fullName: profile.fullName,
-        lastName: profile.lastName,
-        medicalData: null,
-        remoteMonitoring: undefined,
-        system: "DBLG1",
+      const patient: Patient = {
+        metadata: {
+          alarm: teamUser.alarms,
+          flagged: undefined,
+          medicalData: null,
+          unreadMessagesSent: 0,
+        },
+        monitoring: undefined,
+        profile: {
+          birthdate: undefined,
+          firstName: profile.firstName,
+          fullName: profile.fullName,
+          lastName: profile.lastName,
+          email: teamUser.username,
+        },
+        settings: {
+          a1c: undefined,
+          system: "DBLG1",
+        },
         teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
         userid: teamUser.userid,
-        username: teamUser.username,
       };
       const res = mapTeamUserToPatient(teamUser);
-      patient.remoteMonitoring = res.remoteMonitoring;
+      patient.monitoring = res.monitoring;
       expect(res).toStrictEqual(patient);
     });
   });

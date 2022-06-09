@@ -36,7 +36,7 @@ import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 
-import { FilterType } from "../models/generic";
+import { PatientFilterTypes } from "../models/generic";
 import metrics from "../lib/metrics";
 import { useAlert } from "../components/utils/snackbar";
 import { errorTextFromException, setPageTitle } from "../lib/utils";
@@ -67,7 +67,7 @@ function HomePage(): JSX.Element {
   const [teamCodeToDisplay, setTeamCodeToDisplay] = React.useState<Team | null>(null);
   const [patientToRemove, setPatientToRemove] = React.useState<Patient | null>(null);
 
-  const filterType = useMemo(() => new URLSearchParams(search).get("filter") as FilterType ?? FilterType.all, [search]);
+  const filterType = useMemo(() => new URLSearchParams(search).get("filter") as PatientFilterTypes ?? PatientFilterTypes.all, [search]);
 
   const handleRefresh = async (force = false) => {
     log.debug("handleRefresh:", { force });
@@ -186,7 +186,7 @@ function HomePage(): JSX.Element {
       />
       <Grid container direction="row" justifyContent="center" alignItems="center"
         style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-        <Alert severity="info">{t("alert-patient-list-data-computed")}</Alert>
+        <Alert severity="info">{t("secondary-bar-period-text")}</Alert>
       </Grid>
       <PatientList filter={filter} filterType={filterType} />
       <AddPatientDialog actions={patientToAdd} />

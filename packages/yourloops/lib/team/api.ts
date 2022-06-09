@@ -31,12 +31,11 @@ import bows from "bows";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { UserRoles } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
-import { TeamType, ITeam, ITeamMember, TypeTeamMemberRole } from "../../models/team";
+import { ITeam, ITeamMember, TeamType, TypeTeamMemberRole } from "../../models/team";
 import { errorFromHttpStatus } from "../../lib/utils";
 import { Session } from "../auth";
 import appConfig from "../config";
 import { getCurrentLang } from "../language";
-import { PatientMonitored } from "../data/patient";
 import { Monitoring } from "../../models/monitoring";
 
 const log = bows("TeamAPI");
@@ -188,6 +187,26 @@ async function updateTeamAlerts(session: Session, teamId: string, monitoring: Mo
   const { sessionToken, traceToken } = session;
 
   const apiURL = new URL(`/crew/v0/teams/${teamId}/remote-monitoring`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify(monitoring),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+async function updatePatientAlerts(session: Session, teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
+  const { sessionToken, traceToken } = session;
+
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`, appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "PUT",
     headers: {
@@ -390,30 +409,6 @@ async function joinTeam(session: Session, teamId: string): Promise<void> {
   return Promise.reject(errorFromHttpStatus(response, log));
 }
 
-async function getMonitoredPatient(session: Session, patientId?: string): Promise<PatientMonitored|null> {
-  const { sessionToken, traceToken, user } = session;
-  log.info("getMonitoredPatient()");
-  const requestedPatientId = patientId? patientId : user.userid;
-
-  const apiURL = new URL(`crew/v0/patients/${requestedPatientId}/monitoring`, appConfig.API_HOST);
-  const response = await fetch(apiURL.toString(), {
-    method: "GET",
-    headers: {
-      [HttpHeaderKeys.traceToken]: traceToken,
-      [HttpHeaderKeys.sessionToken]: sessionToken,
-    },
-  });
-
-  if (response.ok) {
-    return response.json() as Promise<PatientMonitored>;
-  }
-  if (response.status === 404) {
-    return null;
-  }
-
-  return Promise.reject(errorFromHttpStatus(response, log));
-}
-
 export default {
   fetchTeams,
   fetchPatients,
@@ -426,8 +421,8 @@ export default {
   removeMember,
   removePatient,
   updateTeamAlerts,
+  updatePatientAlerts,
   changeMemberRole,
   getTeamFromCode,
   joinTeam,
-  getMonitoredPatient,
 };

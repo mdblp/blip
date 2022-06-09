@@ -32,21 +32,21 @@ import { act } from "react-dom/test-utils";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import { getTheme } from "../../../components/theme";
-import TeamAlarmsContent, {
+import { triggerMouseEvent } from "../../common/utils";
+import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
+import AlarmsContentConfiguration, {
   MIN_HIGH_BG,
   MIN_LOW_BG,
   MIN_VERY_LOW_BG,
-  TeamAlarmsContentProps,
-} from "../../../components/team/team-alarms-content";
-import { triggerMouseEvent } from "../../common/utils";
-import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
+  AlarmsContentConfigurationProps,
+} from "../../../components/alarm/alarms-content-configuration";
 
 function checkSaveButtonDisabled() {
   const saveButton = document.getElementById("save-button-id");
   expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
 }
 
-describe("TeamInformation", () => {
+describe("AlarmsContent", () => {
   const onSave = jest.fn();
   const monitoring = {
     enabled: true,
@@ -77,9 +77,9 @@ describe("TeamInformation", () => {
     }
   });
 
-  function getTeamAlarmsContentJSX(props: TeamAlarmsContentProps) {
+  function getTeamAlarmsContentJSX(props: AlarmsContentConfigurationProps) {
     return <ThemeProvider theme={getTheme()}>
-      <TeamAlarmsContent
+      <AlarmsContentConfiguration
         monitoring={props.monitoring}
         onSave={props.onSave}
         saveInProgress={props.saveInProgress}
@@ -87,7 +87,7 @@ describe("TeamInformation", () => {
     </ThemeProvider>;
   }
 
-  function renderTeamAlarmsContent(props: TeamAlarmsContentProps = { monitoring, onSave, saveInProgress: false }) {
+  function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = { monitoring, onSave, saveInProgress: false }) {
     act(() => {
       ReactDOM.render(getTeamAlarmsContentJSX(props), container);
     });
@@ -116,16 +116,17 @@ describe("TeamInformation", () => {
         lowBg: convertBG(MIN_LOW_BG, UNITS_TYPE.MGDL),
         highBg: convertBG(MIN_HIGH_BG, UNITS_TYPE.MGDL),
         outOfRangeThreshold: 5,
-        veryLowBg: convertBG(MIN_VERY_LOW_BG, UNITS_TYPE.MGDL),
+        veryLowBg: convertBG(MIN_VERY_LOW_BG + 1, UNITS_TYPE.MGDL),
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
         reportingPeriod: 7,
       },
     };
-    renderTeamAlarmsContent({ monitoring : monitoringInMMOLL, onSave, saveInProgress: false });
+    monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG +1;
+    renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false });
     expect((document.getElementById("low-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString());
     expect((document.getElementById("high-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString());
-    expect((document.getElementById("very-low-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_VERY_LOW_BG.toString());
+    expect(+(document.getElementById("very-low-bg-text-field-id") as HTMLInputElement).value).toBeCloseTo(MIN_VERY_LOW_BG + 1);
     expect(document.getElementById("basic-dropdown-out-of-range-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`);
     expect(document.getElementById("basic-dropdown-hypo-threshold-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`);
     expect(document.getElementById("basic-dropdown-non-data-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`);
@@ -139,42 +140,42 @@ describe("TeamInformation", () => {
   it("save button should be disabled when low bg value is not in correct range", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.lowBg--;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when high bg value is not in correct range", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.highBg--;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when very low bg value is not in correct range", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.veryLowBg--;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when outOfRangeThreshold is not correct", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.outOfRangeThreshold = 8;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when hypoThreshold is not correct", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.hypoThreshold = 11;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 
   it("save button should be disabled when nonDataTxThreshold is not correct", () => {
     const incorrectMonitoring = monitoring;
     incorrectMonitoring.parameters.nonDataTxThreshold = 150;
-    renderTeamAlarmsContent({ monitoring : incorrectMonitoring, onSave, saveInProgress: false });
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
     checkSaveButtonDisabled();
   });
 

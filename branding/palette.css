@@ -1,6 +1,7 @@
 :root {
   --text-base-color: #444444;
   --footer-background-color: #F5F5F5;
+  --monitoring-filter-bg-color: #FFF9F3;
 }
 
 :root .diabeloop-blue{

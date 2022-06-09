@@ -38,20 +38,51 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import EmailIcon from "@material-ui/icons/Email";
+import ContactMailIcon from "@material-ui/icons/ContactMail";
+import TimelineIcon from "@material-ui/icons/Timeline";
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import FeedbackIcon from "@material-ui/icons/Feedback";
+import SignalWifiOffIcon from "@material-ui/icons/SignalWifiOff";
+import DesktopMacIcon from "@material-ui/icons/DesktopMac";
+import HistoryIcon from "@material-ui/icons/History";
 
 import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import PendingIcon from "../icons/PendingIcon";
 import { useTeam } from "../../lib/team";
 import { useAuth } from "../../lib/auth";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
+import { PatientFilterTypes } from "../../models/generic";
 
 interface MainDrawerProps {
   miniVariant?: boolean;
 }
 
-export const mainDrawerDefaultWidth = "240px";
+export const mainDrawerDefaultWidth = "300px";
 export const mainDrawerMiniVariantWidth = "57px";
 
 const styles = makeStyles((theme: Theme) => ({
+  countLabel: {
+    borderRadius: "50%",
+    marginLeft: "auto",
+    backgroundColor: theme.palette.primary.main,
+    width: "24px",
+    lineHeight: "24px",
+    textAlign: "center",
+    color: "white",
+    fontSize: "14px",
+  },
+  monitoringBackgroundColor: {
+    backgroundColor: theme.palette.warning.main,
+  },
+  monitoringFilters: {
+    marginTop: 20,
+  },
+  divider: {
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
   drawer: {
     width: mainDrawerDefaultWidth,
     whiteSpace: "nowrap",
@@ -62,6 +93,14 @@ const styles = makeStyles((theme: Theme) => ({
   },
   drawerBoxShadow: {
     boxShadow: theme.shadows[5],
+  },
+  messagingTitle: {
+    fontWeight: 700,
+    lineHeight: "20px",
+    textTransform: "uppercase",
+  },
+  monitoringTitleIcon: {
+    color: theme.palette.grey[600],
   },
   miniDrawer: {
     width: mainDrawerMiniVariantWidth,
@@ -87,8 +126,14 @@ const styles = makeStyles((theme: Theme) => ({
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const {
+    countLabel,
+    divider,
     drawer,
     drawerPaper,
+    messagingTitle,
+    monitoringBackgroundColor,
+    monitoringFilters,
+    monitoringTitleIcon,
     miniDrawer,
     miniDrawerPaper,
     enterTransition,
@@ -101,10 +146,9 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const [onHover, setOnHover] = useState<boolean>(false);
   const teamHook = useTeam();
   const authHook = useAuth();
-  const numberOfPatients = teamHook.getPatients().length;
+  const patientFiltersStats = teamHook.patientsFilterStats;
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
-  const numberOfPendingPatients = teamHook.getPendingPatients().length;
-  const numberOfDirectSharePatients = teamHook.getDirectSharePatients().length;
+  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.userid));
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?
@@ -112,10 +156,47 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     `${miniDrawerPaper} ${enterTransition}`;
 
   const drawerItems = [
-    { icon: <SupervisedUserCircleIcon />, text: `${t("all-patients")} (${numberOfPatients})`, filter: "all" },
-    { icon: <FlagOutlinedIcon />, text: `${t("flagged")} (${numberOfFlaggedPatients})`, filter: "flagged" },
-    { icon: <PendingIcon />, text: `${t("pending")} (${numberOfPendingPatients})`, filter: "pending" },
-    { icon: <MedicalServiceIcon />, text: `${t("private-practice")} (${numberOfDirectSharePatients})`, filter: "private" },
+    {
+      icon: <SupervisedUserCircleIcon />,
+      text: `${t("all-patients")} (${patientFiltersStats.all})`,
+      filter: PatientFilterTypes.all,
+    },
+    {
+      icon: <FlagOutlinedIcon />,
+      text: `${t("flagged")} (${numberOfFlaggedPatients})`,
+      filter: PatientFilterTypes.flagged,
+    },
+    {
+      icon: <PendingIcon />,
+      text: `${t("pending")} (${patientFiltersStats.pending})`,
+      filter: PatientFilterTypes.pending,
+    },
+    {
+      icon: <MedicalServiceIcon />,
+      text: `${t("private-practice")} (${patientFiltersStats.directShare})`,
+      filter: PatientFilterTypes.private,
+    },
+  ];
+
+  const drawerEventsItems = [
+    {
+      icon: <HourglassEmptyIcon />,
+      count: patientFiltersStats.outOfRange,
+      text: t("time-away-from-target"),
+      filter: PatientFilterTypes.outOfRange,
+    },
+    {
+      icon: <TimelineIcon />,
+      count: patientFiltersStats.severeHypoglycemia,
+      text: t("alert-hypoglycemic"),
+      filter: PatientFilterTypes.severeHypoglycemia,
+    },
+    {
+      icon: <SignalWifiOffIcon />,
+      count: patientFiltersStats.dataNotTransferred,
+      text: t("data-not-transferred"),
+      filter: PatientFilterTypes.dataNotTransferred,
+    },
   ];
 
   useEffect(() => setFullDrawer(!miniVariant), [miniVariant]);
@@ -126,14 +207,14 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
-      onMouseEnter={() => setOnHover(true)}
-      onMouseLeave={() => setOnHover(false)}
+      onMouseEnter={() => miniVariant ? setOnHover(true) : undefined}
+      onMouseLeave={() => miniVariant ? setOnHover(false) : undefined}
     >
       <Toolbar />
       <List>
         {drawerItems.map((item, index) => (
           <Link key={index} to={`/home?filter=${item.filter}`}>
-            <ListItem button >
+            <ListItem button>
               <ListItemIcon>
                 {item.icon}
               </ListItemIcon>
@@ -143,6 +224,107 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </ListItem>
           </Link>
         ))}
+        {loggedUserIsHcpInMonitoring &&
+          <Box bgcolor="var(--monitoring-filter-bg-color)" className={monitoringFilters}>
+            <ListItem>
+              <ListItemIcon>
+                <DesktopMacIcon className={monitoringTitleIcon} />
+              </ListItemIcon>
+              <ListItemText>
+                <Box className={messagingTitle}>
+                  {t("remote-monitoring")}
+                </Box>
+              </ListItemText>
+            </ListItem>
+            <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}>
+              <ListItem button>
+                <ListItemIcon>
+                  <SupervisedUserCircleIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Box display="flex">
+                    {t("monitored-patients")} ({patientFiltersStats.remoteMonitored})
+                  </Box>
+                </ListItemText>
+              </ListItem>
+            </Link>
+            <Link to={`/home?filter=${PatientFilterTypes.renew}`}>
+              <ListItem button>
+                <ListItemIcon>
+                  <HistoryIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Box display="flex">
+                    {t("incoming-renewal")}
+                    {patientFiltersStats.renew > 0 &&
+                      <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
+                        {patientFiltersStats.renew}
+                      </Box>
+                    }
+                  </Box>
+                </ListItemText>
+              </ListItem>
+            </Link>
+            <Divider variant="middle" className={divider} />
+            <ListItem>
+              <ListItemIcon>
+                <FeedbackIcon className={monitoringTitleIcon} />
+              </ListItemIcon>
+              <ListItemText>
+                <Box className={messagingTitle}>
+                  {t("events")}
+                </Box>
+              </ListItemText>
+            </ListItem>
+            {drawerEventsItems.map((item, index) => (
+              <Link key={index} to={`/home?filter=${item.filter}`}>
+                <ListItem button>
+                  <ListItemIcon>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Box display="flex">
+                      {item.text}
+                      {item.count > 0 &&
+                        <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
+                          {item.count}
+                        </Box>
+                      }
+                    </Box>
+                  </ListItemText>
+                </ListItem>
+              </Link>
+            ))}
+            <Divider variant="middle" className={divider} />
+            <ListItem>
+              <ListItemIcon>
+                <ContactMailIcon className={monitoringTitleIcon} />
+              </ListItemIcon>
+              <ListItemText>
+                <Box className={messagingTitle}>
+                  {t("messaging")}
+                </Box>
+              </ListItemText>
+            </ListItem>
+            <Link to={`/home?filter=${PatientFilterTypes.unread}`}>
+              <ListItem button>
+                <ListItemIcon>
+                  <EmailIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  <Box display="flex">
+                    {t("unread-messages")}
+                    {patientFiltersStats.unread > 0 &&
+                      <Box className={countLabel}>
+                        {patientFiltersStats.unread}
+                      </Box>
+                    }
+                  </Box>
+                </ListItemText>
+              </ListItem>
+            </Link>
+          </Box>
+        }
       </List>
     </Drawer>
   );

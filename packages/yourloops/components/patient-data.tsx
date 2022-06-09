@@ -28,7 +28,6 @@
 
 import React from "react";
 import bows from "bows";
-import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -36,14 +35,11 @@ import { makeStyles } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
-
-import { UserRoles } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
 import { setPageTitle } from "../lib/utils";
-import TeamAPIImpl from "../lib/team/api";
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
@@ -51,9 +47,9 @@ import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
+import { Patient } from "../lib/data/patient";
+import AlarmCard from "./alarm/alarm-card";
 import MedicalFilesWidget from "./dashboard-widgets/medical-files/medical-files-widget";
-import { PatientMonitored, Patient } from "../lib/data/patient";
-import { mapTeamUserToPatient } from "./patient/utils";
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -89,11 +85,9 @@ function PatientDataPage(): JSX.Element | null {
   const dataHook = useData();
   const classes = patientDataStyles();
 
-
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
   const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
-  const [patientMonitored, setPatientMonitored] = React.useState<PatientMonitored | null>(null);
 
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
@@ -111,55 +105,32 @@ function PatientDataPage(): JSX.Element | null {
     }
 
     setPatients(teamHook.getPatients());
-
-    if (userIsPatient && !_.isNil(authUser)) {
-      const patientToSet = teamHook.getPatient(authUser.userid);
-      if (patientToSet) {
-        setPatient(patientToSet);
-      } else {
-        log.error("Patient not found");
-        setError("Patient not found");
-      }
+    let patientId = paramPatientId ?? userId;
+    if (userIsPatient && authUser) {
+      patientId = authUser.userid;
+    }
+    if (!patientId) {
+      log.error("Invalid patient Id");
+      setError("Invalid patient Id");
+      return;
+    }
+    const patientToSet = teamHook.getPatient(patientId);
+    if (patientToSet) {
+      setPatient(patientToSet);
     } else {
-      const patientId = paramPatientId ?? userId;
-      if (!patientId) {
-        log.error("Invalid patient Id", patientId);
-        setError("Invalid patient Id");
-        return;
-      }
-
-      const user = teamHook.getUser(patientId);
-      if (!user || user.role !== UserRoles.patient) {
-        log.error("Patient not found");
-        setError("Patient not found");
-      } else {
-        setPatient(mapTeamUserToPatient(user));
-      }
+      log.error("Patient not found");
+      setError("Patient not found");
     }
   }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
 
-  const fetchPatientMonitored = React.useCallback(async (patientID: string)=>{
-    const session = authHook.session();
-    if (session) {
-      const monitoredPatient = await TeamAPIImpl.getMonitoredPatient(session, patientID);
-      setPatientMonitored(monitoredPatient);
-    }
-  },[authHook]);
-
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t("user-name", patient.lastName), "PatientName");
+      setPageTitle(t("user-name", patient.profile.lastName), "PatientName");
     } else {
       setPageTitle();
     }
 
-    if (patient) {
-      fetchPatientMonitored(patient.userid).catch(console.error);
-    } else {
-      setPatientMonitored(null);
-    }
-
-  }, [userId, patient, t, fetchPatientMonitored]);
+  }, [userId, patient, t]);
 
   if (error) {
     return <PatientDataPageError msg={error} />;
@@ -175,7 +146,6 @@ function PatientDataPage(): JSX.Element | null {
         config={appConfig}
         api={blipApi}
         patient={patient}
-        patientMonitored={patientMonitored}
         userIsHCP={!!userIsHCP}
         patients={patients}
         setPatient={setPatient}
@@ -186,6 +156,7 @@ function PatientDataPage(): JSX.Element | null {
         dialogPDFOptions={DialogPDFOptions}
         patientInfoWidget={PatientInfoWidget}
         chatWidget={ChatWidget}
+        alarmCard={AlarmCard}
         medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>
