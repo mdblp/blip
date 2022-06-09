@@ -35,12 +35,11 @@ import { Team } from "../../../lib/team";
 import TeamMenu from "../../../components/menus/team-menu";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import { createMemoryHistory } from "history";
-import * as shareLib from "../../../lib/share";
 import * as authHookMock from "../../../lib/auth";
 import { Session } from "../../../lib/auth";
 import User from "../../../lib/auth/user";
+import DirectShareApi from "../../../lib/share/direct-share-api";
 
-jest.mock("../../../lib/share");
 jest.mock("../../../lib/team");
 jest.mock("../../../lib/auth");
 describe("Team Menu", () => {
@@ -56,7 +55,7 @@ describe("Team Menu", () => {
 
   function mountComponent(): void {
     act(() => {
-      return render(
+      render(
         <Router history={history}>
           <TeamMenu />
         </Router>, container);
@@ -64,7 +63,7 @@ describe("Team Menu", () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });

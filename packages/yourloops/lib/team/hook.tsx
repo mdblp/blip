@@ -44,7 +44,7 @@ import { LoadTeams, Team, TeamContext, TeamMember, TeamUser } from "./models";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
 import TeamApi from "./team-api";
-import DirectShareApi from "../share/direct-share-api";
+import TeamUtils from "./utils";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
@@ -101,62 +101,6 @@ export function iTeamToTeam(iTeam: ITeam, users: Map<string, TeamUser>): Team {
   // Detect duplicate users, and update the member if needed
   iTeam.members.forEach(iTeamMember => iMemberToMember(iTeamMember, team, users));
   return team;
-}
-
-export async function loadTeams(session: Session): Promise<LoadTeams> {
-  const getFlagPatients = (): string[] => {
-    const flagged = session.user.preferences?.patientsStarred;
-    if (Array.isArray(flagged)) {
-      return Array.from(flagged);
-    }
-    return [];
-  };
-
-  const users = new Map<string, TeamUser>();
-  const [apiTeams, apiPatients] = await Promise.all([TeamApi.getTeams(), TeamApi.getPatients()]);
-
-  const nPatients = apiPatients.length;
-  log.debug("loadTeams", { nPatients, nTeams: apiTeams.length });
-
-  const privateTeam: Team = {
-    code: TeamType.private,
-    id: TeamType.private,
-    members: [],
-    name: TeamType.private,
-    owner: session.user.userid,
-    type: TeamType.private,
-  };
-
-  const teams: Team[] = [privateTeam];
-  apiTeams.forEach((apiTeam: ITeam) => {
-    const team = iTeamToTeam(apiTeam, users);
-    teams.push(team);
-  });
-
-  const flaggedNotInResult = getFlagPatients();
-
-  // Merge patients
-  for (let i = 0; i < nPatients; i++) {
-    const apiPatient = apiPatients[i];
-    const userId = apiPatient.userId;
-
-    if (flaggedNotInResult.includes(userId)) {
-      flaggedNotInResult.splice(flaggedNotInResult.indexOf(userId), 1);
-    }
-
-    let team = teams.find((t) => t.id === apiPatient.teamId);
-    if (typeof team === "undefined") {
-      log.error(`Missing teamId ${apiPatient.teamId} for patient member`, apiPatient);
-      // Use the private team
-      team = privateTeam;
-    }
-
-    iMemberToMember(apiPatient, team, users);
-  }
-
-  // End, cleanup to help the garbage collector
-  users.clear();
-  return { teams, flaggedNotInResult };
 }
 
 function getUserByEmail(teams: Team[], email: string): TeamUser | null {
@@ -399,7 +343,7 @@ function TeamContextImpl(): TeamContext {
 
   const computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
     return patients.map(patient => {
-      return { ...patient, flagged: flaggedPatients.includes(patient.userid) };
+      return { ...patient, metadata : { ...patient.metadata, flagged : flaggedPatients.includes(patient.userid) } };
     });
   };
 
@@ -654,7 +598,7 @@ function TeamContextImpl(): TeamContext {
     log.info("init");
     lock = true;
 
-    loadTeams(session)
+    TeamUtils.loadTeams(session)
       .then(({ teams, flaggedNotInResult }: LoadTeams) => {
         log.debug("Loaded teams: ", teams);
         for (const invitation of notificationHook.sentInvitations) {

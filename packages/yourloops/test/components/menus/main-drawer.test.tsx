@@ -33,7 +33,6 @@ import { BrowserRouter } from "react-router-dom";
 import MainDrawer, { mainDrawerDefaultWidth, mainDrawerMiniVariantWidth } from "../../../components/menus/main-drawer";
 import { triggerMouseEvent } from "../../common/utils";
 import { TeamContextProvider } from "../../../lib/team";
-import { teamAPI } from "../../lib/team/utils";
 import { AuthContext, AuthContextProvider } from "../../../lib/auth";
 import { loggedInUsers } from "../../common";
 import { createAuthHookStubs } from "../../lib/auth/utils";

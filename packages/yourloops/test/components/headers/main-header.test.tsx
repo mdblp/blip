@@ -32,51 +32,79 @@ import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { v4 as uuidv4 } from "uuid";
 
-import { AuthContextProvider, Session } from "../../../lib/auth";
-import { INotification, NotificationContextProvider, NotificationType } from "../../../lib/notifications";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-import { notificationAPIStub } from "../../lib/notifications/utils";
-import { TeamContextProvider } from "../../../lib/team";
-import { teamAPI } from "../../lib/team/utils";
-import { loggedInUsers } from "../../common";
-import { triggerMouseEvent } from "../../common/utils";
+import * as notificationHookMock from "../../../lib/notifications";
+import { INotification, NotificationType } from "../../../lib/notifications";
+import * as authHookMock from "../../../lib/auth";
+import { Session } from "../../../lib/auth";
+import * as teamHookMock from "../../../lib/team";
+import { Team } from "../../../lib/team";
+import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
-import * as shareLib from "../../../lib/share";
+import DirectShareApi from "../../../lib/share/direct-share-api";
+import { Profile, UserRoles } from "../../../models/shoreline";
+import User from "../../../lib/auth/user";
 
-jest.mock("../../../lib/share");
-
+jest.mock("../../../lib/notifications");
+jest.mock("../../../lib/auth");
+jest.mock("../../../lib/team");
 describe("Main Header", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/preferences"] });
-  const { hcpSession } = loggedInUsers;
   const onClickLeftIcon = jest.fn();
+  const notifications: INotification[] = [{
+    metricsType: "join_team",
+    type: NotificationType.careTeamDoAdmin,
+    creator: { userid: "creatorUserId", profile: {} as Profile },
+    creatorId: "creatorId",
+    date: new Date().toISOString(),
+    email: "fake@email.com",
+    id: uuidv4(),
+  }];
+  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
+  const teams: Team[] = [buildTeam("team1Id", []), buildTeam("team1Id", [])];
 
-  async function mountComponent(session: Session, withLeftIcon?: boolean): Promise<void> {
-    const authContext = createAuthHookStubs(session);
-
-    await act(() => {
-      return new Promise((resolve) => {
-        render(
-          <Router history={history}>
-            <AuthContextProvider value={authContext}>
-              <TeamContextProvider>
-                <NotificationContextProvider api={notificationAPIStub}>
-                  <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
-                </NotificationContextProvider>
-              </TeamContextProvider>
-            </AuthContextProvider>
-          </Router>, container, resolve);
-      });
+  function mountComponent(withLeftIcon?: boolean): void {
+    act(() => {
+      render(
+        <Router history={history}>
+          <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
+        </Router>, container);
     });
   }
 
   beforeAll(() => {
-    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
+    (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
+      return {
+        initialized: true,
+        sentInvitations: [],
+        getReceivedInvitations: jest.fn().mockResolvedValue(notifications),
+        receivedInvitations: notifications,
+      };
+    });
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { teams };
+    });
   });
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        session: () => session,
+        user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User,
+      };
+    });
   });
 
   afterEach(() => {
@@ -87,65 +115,66 @@ describe("Main Header", () => {
     }
   });
 
-  it("should redirect to '/' route when clicking on logo", async () => {
-    await mountComponent(hcpSession);
+  it("should redirect to '/' route when clicking on logo", () => {
+    mountComponent();
     const logo = document.getElementById("header-main-logo");
     triggerMouseEvent("click", logo);
     expect(history.location.pathname).toBe("/");
   });
 
-  it("should redirect to '/notifications' route when clicking on notification icon", async () => {
-    await mountComponent(hcpSession);
+  it("should redirect to '/notifications' route when clicking on notification icon", () => {
+    mountComponent();
     const notificationLink = document.getElementById("notification-count-badge");
     triggerMouseEvent("click", notificationLink);
     expect(history.location.pathname).toBe("/notifications");
   });
 
-  it("Should display the number of pending notifications", async () => {
-    const notifications: INotification[] = [{
-      metricsType: "join_team",
-      type: NotificationType.careTeamDoAdmin,
-      creator: { userid: hcpSession.user.userid, profile: hcpSession.user.profile },
-      creatorId: hcpSession.user.userid,
-      date: new Date().toISOString(),
-      email: hcpSession.user.username,
-      id: uuidv4(),
-    }];
-    notificationAPIStub.getReceivedInvitations.mockResolvedValue(notifications);
-    await mountComponent(hcpSession);
+  it("Should display the number of pending notifications", () => {
+    mountComponent();
     const notificationBadge = container.querySelector("#notification-count-badge");
     expect(notificationBadge.textContent).toEqual(notifications.length.toString());
   });
 
-  it("Team Menu should not be rendered for Caregivers", async () => {
-    await mountComponent(loggedInUsers.caregiverSession);
+  it("Team Menu should not be rendered for Caregivers", () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        session: () => session,
+        user: { role: UserRoles.caregiver } as User,
+      };
+    });
+    mountComponent();
     const teamMenu = container.querySelector("#team-menu");
     expect(teamMenu).toBeNull();
   });
 
-  it("Team Menu should be rendered for Hcp", async () => {
-    await mountComponent(hcpSession);
+  it("Team Menu should be rendered for Hcp", () => {
+    mountComponent();
     const teamMenu = container.querySelector("#team-menu");
     expect(teamMenu).toBeTruthy();
   });
 
-  it("Team Menu should be rendered for Patient", async () => {
-    await mountComponent(loggedInUsers.patientSession);
+  it("Team Menu should be rendered for Patient", () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        session: () => session,
+        user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User,
+      };
+    });
+    mountComponent();
     const teamMenu = container.querySelector("#team-menu");
     expect(teamMenu).toBeTruthy();
   });
 
-  it("Should display left menu icon if activated", async () => {
-    await mountComponent(loggedInUsers.patientSession, true);
+  it("Should display left menu icon if activated", () => {
+    mountComponent(true);
     const leftIcon = document.getElementById("left-menu-icon");
     expect(leftIcon).toBeTruthy();
   });
 
-  it("Should call onClickLeftIcon when clicking left menu icon", async () => {
-    await mountComponent(loggedInUsers.patientSession, true);
+  it("Should call onClickLeftIcon when clicking left menu icon", () => {
+    mountComponent(true);
     const leftIcon = document.getElementById("left-menu-icon");
     triggerMouseEvent("click", leftIcon);
     expect(onClickLeftIcon).toBeCalledTimes(1);
   });
 });
-

@@ -188,17 +188,24 @@ export function buildTeamMember(
   role: TeamMemberRole = TeamMemberRole.admin,
   username = "fake@username.com",
   fullName = "fake full name",
-  status = UserInvitationStatus.pending
+  status = UserInvitationStatus.pending,
+  userRole: UserRoles = UserRoles.hcp,
 ): TeamMember {
   return {
     team: { id: teamId } as Team,
     role,
     status,
     user: {
-      role: UserRoles.hcp,
+      role: userRole,
       userid: userId,
       username,
-      members: [],
+      members: [
+        {
+          invitation: {} as INotification,
+          status,
+          team: { id: teamId, code: "fakeCode", name: "fakeTeamName" },
+        } as TeamMember,
+      ],
       profile: {
         fullName,
       },
