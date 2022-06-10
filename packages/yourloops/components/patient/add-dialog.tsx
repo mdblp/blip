@@ -96,7 +96,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const dialogIsOpen = props.actions !== null;
   const buttonAddDisabled = errorMessage !== null || !isValidEmail() || teamId.length < 1;
   const optionsTeamsElements: JSX.Element[] = [
-    <MenuItem id="patient-list-dialog-add-team-option-none" aria-label={t("aria-none")} value="" key="none" />,
+    <MenuItem id="patient-list-dialog-add-team-option-none" aria-label={t("none")} value="" key="none" />,
   ];
   const teams = props.actions?.teams ?? [];
   for (const team of teams) {

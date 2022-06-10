@@ -31,6 +31,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
 import { Patient } from "../../lib/data/patient";
 import { useTranslation } from "react-i18next";
+import { genderLabels } from "../../lib/auth/helpers";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -94,6 +95,14 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
             </Typography>
             <Typography id={`patient-${patient.userid}-email`} className={classes.value}>
               {patient.profile.email}
+            </Typography>
+          </div>
+          <div className={classes.patientInfo}>
+            <Typography className={classes.label}>
+              {t("gender")}
+            </Typography>
+            <Typography id={`patient-${patient.userid}-gender`} className={classes.value}>
+              {genderLabels()[patient.profile.sex ?? ""]}
             </Typography>
           </div>
           <div className={classes.patientInfo}>

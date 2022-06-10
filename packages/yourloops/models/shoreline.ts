@@ -50,8 +50,13 @@ interface Consent {
 
 interface Patient {
   birthday?: string;
+  birthPlace?: string;
   diagnosisDate?: string;
   diagnosisType?: string;
+  ins?: string;
+  sex?: string;
+  ssn?: string;
+  referringDoctor?: string;
 }
 
 interface Profile {
