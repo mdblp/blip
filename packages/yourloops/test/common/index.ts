@@ -80,8 +80,13 @@ const userPatient = new User({
     fullName: "Josephine D.",
     patient: {
       birthday: "1964-12-01",
+      birthPlace: "Anywhere",
       diagnosisDate: "2020-12-02",
       diagnosisType: "1",
+      referringDoctor: "Dr Dre",
+      sex: "M",
+      ins: "123456789012345",
+      ssn: "012345678901234",
     },
   },
   settings: { a1c: { date: "2020-01-01", value: "7.5" } },

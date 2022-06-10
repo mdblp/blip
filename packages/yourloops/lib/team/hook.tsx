@@ -530,7 +530,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     refresh(true);
   };
 
-  const updatePatientAlerts = async (patient: Patient): Promise<void> => {
+  const updatePatientMonitoring = async (patient: Patient): Promise<void> => {
     const session = authHook.session() as Session;
     if (!patient.monitoring) {
       throw Error("Cannot update patient monitoring with undefined");
@@ -727,7 +727,7 @@ function TeamContextImpl(teamAPI: TeamAPI, directShareAPI: DirectShareAPI): Team
     markPatientMessagesAsRead,
     createTeam,
     editTeam,
-    updatePatientAlerts,
+    updatePatientMonitoring,
     editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,

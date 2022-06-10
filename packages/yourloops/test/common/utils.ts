@@ -126,6 +126,7 @@ export const createPatient = (
       alarm: alarm,
       flagged: flagged,
       medicalData: null,
+      unreadMessagesSent: 0,
     },
     monitoring,
     profile: {
@@ -134,6 +135,7 @@ export const createPatient = (
       fullName: fullName,
       lastName: undefined,
       email: "fakeUsername",
+      sex: "M",
     },
     settings: {
       a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
