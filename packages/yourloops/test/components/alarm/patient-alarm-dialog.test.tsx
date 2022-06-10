@@ -112,9 +112,9 @@ describe("PatientAlarmDialog", () => {
   });
 
   it("should execute updatePatientAlerts when clicking on save button", async () => {
-    const updatePatientAlerts = jest.fn();
+    const updatePatientMonitoring = jest.fn();
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updatePatientAlerts };
+      return { updatePatientMonitoring };
     });
     const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
     mountComponent({ patient: patientWithMonitoring });
@@ -123,16 +123,16 @@ describe("PatientAlarmDialog", () => {
       triggerMouseEvent("click", saveButton);
       await new Promise(process.nextTick);
     });
-    expect(updatePatientAlerts).toHaveBeenCalledTimes(1);
+    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it("should execute onClose when updatePatientAlerts throws an error", async () => {
-    const updatePatientAlerts = jest.fn().mockImplementation(() => {
+    const updatePatientMonitoring = jest.fn().mockImplementation(() => {
       throw Error();
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updatePatientAlerts };
+      return { updatePatientMonitoring };
     });
     const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
     mountComponent({ patient: patientWithMonitoring });
@@ -141,7 +141,7 @@ describe("PatientAlarmDialog", () => {
       triggerMouseEvent("click", saveButton);
       await new Promise(process.nextTick);
     });
-    expect(updatePatientAlerts).toHaveBeenCalledTimes(1);
+    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1);
     expect(onClose).not.toHaveBeenCalled();
   });
 

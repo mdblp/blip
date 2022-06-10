@@ -71,7 +71,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
     patient.monitoring = monitoring;
     setSaveInProgress(true);
     try {
-      await teamHook.updatePatientAlerts(patient);
+      await teamHook.updatePatientMonitoring(patient);
       alert.success(t("patient-update-success"));
       setSaveInProgress(false);
       onClose();
