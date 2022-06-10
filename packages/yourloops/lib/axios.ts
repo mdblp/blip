@@ -42,6 +42,7 @@ export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequ
       headers: {
         Authorization: `Bearer ${await HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4(),
+        [HttpHeaderKeys.sessionToken]: HttpService.sessionToken,
       },
     };
   }

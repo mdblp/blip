@@ -32,7 +32,6 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import TrashCanOutlined from "../../icons/TrashCanOutlined";
 
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -49,6 +48,7 @@ import { MedicalRecord } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import MedicalRecordEditDialog from "../../dialogs/medical-record-edit-dialog";
 import MedicalRecordDeleteDialog from "../../dialogs/medical-record-delete-dialog";
+import TrashCanOutlined from "../../icons/TrashCanOutlined";
 import { CategoryProps } from "./medical-files-widget";
 
 const useStyle = makeStyles((theme: Theme) => ({

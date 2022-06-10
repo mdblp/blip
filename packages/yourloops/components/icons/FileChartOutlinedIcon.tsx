@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Rounded Hospital Icon
+ * File Chart Outlined Icon
  *
  * All rights reserved.
  *

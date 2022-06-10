@@ -29,14 +29,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
+import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
 import { Prescription } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
@@ -93,7 +92,7 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("prescription-pdf")}{prescription.uploadedAt.toLocaleDateString()}
+              {t("prescription-pdf", { pdfName: prescription.uploadedAt.toLocaleDateString() })}
             </ListItemText>
           </ListItem>
         ))}

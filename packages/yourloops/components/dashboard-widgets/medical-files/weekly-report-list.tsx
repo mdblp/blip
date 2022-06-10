@@ -29,14 +29,13 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
-import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
-
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
+import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
 import { WeeklyReport } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
@@ -71,7 +70,6 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
   useEffect(() => {
     (async () => {
       setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId));
-      console.log(await MedicalFilesApi.getWeeklyReport(patientId, teamId, "a35a73e7-3666-4b80-9cac-d7c4d83a4a4f"));
     })();
   }, [patientId, teamId]);
 
@@ -94,7 +92,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("weekly-report-pdf")}{new Date(weeklyReport.creationDate).toLocaleDateString()}
+              {t("weekly-report-pdf", { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
             </ListItemText>
           </ListItem>
         ))}

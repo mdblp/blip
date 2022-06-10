@@ -77,20 +77,18 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
   }
 
   return (
-    <React.Fragment>
-      <Card className={classes.medicalFilesWidget} id="medical-files-card">
-        <CardHeader
-          id="medical-files-card-header"
-          avatar={<AssignmentIcon />}
-          className={classes.medicalFilesWidgetHeader}
-          title={`${t("medical-files")}`}
-        />
-        <CardContent className={classes.cardContent}>
-          <PrescriptionList teamId={team.id} patientId={patient.userid} />
-          <WeeklyReportList teamId={team.id} patientId={patient.userid} />
-          <MedicalRecordList teamId={team.id} patientId={patient.userid} />
-        </CardContent>
-      </Card>
-    </React.Fragment>
+    <Card className={classes.medicalFilesWidget} id="medical-files-card">
+      <CardHeader
+        id="medical-files-card-header"
+        avatar={<AssignmentIcon />}
+        className={classes.medicalFilesWidgetHeader}
+        title={`${t("medical-files")}`}
+      />
+      <CardContent className={classes.cardContent}>
+        <PrescriptionList teamId={team.id} patientId={patient.userid} />
+        <WeeklyReportList teamId={team.id} patientId={patient.userid} />
+        <MedicalRecordList teamId={team.id} patientId={patient.userid} />
+      </CardContent>
+    </Card>
   );
 }

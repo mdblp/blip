@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -40,6 +40,7 @@ import Divider from "@material-ui/core/Divider";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+
 import { MedicalRecord } from "../../lib/medical-files/model";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "../dashboard-widgets/medical-files/medical-files-widget";
@@ -81,6 +82,9 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || "");
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || "");
   const [inProgress, setInProgress] = useState<boolean>(false);
+  const disabled = useMemo<boolean>(
+    () => readonly || inProgress || !diagnosis && !trainingSubject && !progressionProposal,
+    [diagnosis, inProgress, progressionProposal, readonly, trainingSubject]);
 
   const saveMedicalRecord = async () => {
     try {
@@ -197,7 +201,7 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
             variant="contained"
             color="primary"
             disableElevation
-            disabled={readonly || inProgress || !diagnosis && !trainingSubject && !progressionProposal}
+            disabled={disabled}
             onClick={saveMedicalRecord}
           >
             {t("save")}

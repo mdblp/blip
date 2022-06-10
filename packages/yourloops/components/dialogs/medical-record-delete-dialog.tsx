@@ -36,6 +36,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
+
 import { makeButtonsStyles } from "../theme";
 import { MedicalRecord } from "../../lib/medical-files/model";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
@@ -87,7 +88,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
 
       <DialogContent>
         <DialogContentText>
-          {t("delete-warning")} {t("medical-record-pdf")}{new Date(medicalRecord.creationDate).toLocaleDateString()} ?
+          {t("delete-warning", { fileName: t("medical-record-pdf", { pdfName: new Date(medicalRecord.creationDate).toLocaleDateString() }) })}
         </DialogContentText>
       </DialogContent>
 

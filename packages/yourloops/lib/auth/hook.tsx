@@ -270,6 +270,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
         if (userId) {
           user.userid = userId;
         }
+        HttpService.sessionToken = sessionToken;
         const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
         setUser(updatedUser);
         setSessionToken(sessionToken);

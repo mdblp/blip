@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Rounded Hospital Icon
+ * Trash Can Outlined Icon
  *
  * All rights reserved.
  *
