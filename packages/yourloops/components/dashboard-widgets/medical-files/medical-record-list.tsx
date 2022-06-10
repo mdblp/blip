@@ -85,6 +85,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     setHoveredItem(undefined);
     setIsEditDialogOpen(false);
     setMedicalRecordToEdit(undefined);
+    setReadonly(false);
   };
 
   const closeMedicalRecordDeleteDialog = () => {
@@ -95,7 +96,6 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
 
   const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
     setMedicalRecordToEdit(medicalRecord);
-    setReadonly(false);
     setIsEditDialogOpen(true);
   };
 
