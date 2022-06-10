@@ -271,6 +271,8 @@
   "remote-monitoring-patient-invite": "Invite patient to remote monitoring team",
   "remote-monitoring-prescription-duration": "Remote monitoring prescription duration",
   "remove-patient": "Patient entfernen",
+  "remove-remote-monitoring": "Remove the user from remote monitoring?",
+  "remove-remote-monitoring-confirm": "Please, confirm that you want to remove the user {{fullName}} from remote monitoring",
   "renew": "Renew",
   "requesting-team": "Requesting team",
   "requesting-team-member": "Requesting team member",
