@@ -40,7 +40,7 @@ import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
 
 import config from "../../lib/config";
-import { useNotification } from "../../lib/notifications";
+import { useNotification } from "../../lib/notifications/hook";
 import { useAuth } from "../../lib/auth";
 import { UserRoles } from "../../models/shoreline";
 import TeamMenu from "../menus/team-menu";

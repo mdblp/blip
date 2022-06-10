@@ -29,7 +29,7 @@ import React from "react";
 
 import { UserRoles } from "../models/shoreline";
 import { useAuth } from "../lib/auth";
-import { NotificationContextProvider } from "../lib/notifications";
+import { NotificationContextProvider } from "../lib/notifications/hook";
 import { TeamContextProvider } from "../lib/team";
 import { DataContextProvider, DefaultDataContext } from "../lib/data/hook";
 import ProfilePage from "./profile";

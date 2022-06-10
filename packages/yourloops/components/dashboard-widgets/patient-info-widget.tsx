@@ -46,7 +46,7 @@ import { Patient } from "../../lib/data/patient";
 import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
 import { useAuth } from "../../lib/auth";
 import { MonitoringStatus } from "../../models/monitoring";
-import { useNotification } from "../../lib/notifications";
+import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import ConfirmDialog from "../dialogs/confirm-dialog";
 import { TeamMemberRole } from "../../models/team";

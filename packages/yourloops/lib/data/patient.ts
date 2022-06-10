@@ -28,7 +28,7 @@
 import { MedicalData } from "../../models/device-data";
 import { Alarm } from "../../models/alarm";
 import { UserInvitationStatus } from "../../models/generic";
-import { INotification } from "../notifications";
+import { INotification } from "../notifications/models";
 import { Monitoring } from "../../models/monitoring";
 
 interface PatientTeam {

@@ -39,7 +39,7 @@ import { UserRoles } from "../../../models/shoreline";
 import { useAuth } from "../../../lib/auth";
 import metrics from "../../../lib/metrics";
 import { setPageTitle } from "../../../lib/utils";
-import { useNotification, NotificationType } from "../../../lib/notifications";
+import { useNotification } from "../../../lib/notifications/hook";
 import { ShareUser } from "../../../lib/share/models";
 import { useAlert } from "../../../components/utils/snackbar";
 import { AddDialogContentProps, RemoveDialogContentProps } from "./types";
@@ -48,6 +48,7 @@ import AddCaregiverDialog from "./add-dialog";
 import RemoveCaregiverDialog from "./remove-dialog";
 import CaregiverTable from "./table";
 import DirectShareApi from "../../../lib/share/direct-share-api";
+import { NotificationType } from "../../../lib/notifications/models";
 
 const log = bows("PatientCaregiversPage");
 

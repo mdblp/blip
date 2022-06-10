@@ -90,16 +90,6 @@ export interface NotificationAPI {
 
 export interface NotificationProvider {
   children: React.ReactNode;
-  /** Used to test the hook */
-  api?: NotificationAPI;
   /** Used for test components which need this hook */
   value?: NotificationContext;
-}
-
-export interface RemoteMonitoringNotification {
-  monitoringEnd: string;
-}
-
-export interface AcceptedNotification {
-  key: string;
 }
