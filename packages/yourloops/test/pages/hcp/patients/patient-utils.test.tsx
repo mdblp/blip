@@ -323,6 +323,7 @@ describe("Patient utils", () => {
           fullName: profile.fullName,
           lastName: profile.lastName,
           email: teamUser.username,
+          sex: undefined,
         },
         settings: {
           a1c: undefined,

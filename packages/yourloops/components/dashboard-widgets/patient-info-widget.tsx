@@ -45,6 +45,7 @@ import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
 import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
 import { useAuth } from "../../lib/auth";
+import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
 import { useNotification } from "../../lib/notifications";
 import { useTeam } from "../../lib/team";
@@ -111,10 +112,13 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
 
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
+    gender: "",
     birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
+
+  patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
 
   const computePatientInformation = () => {
     patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
