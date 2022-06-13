@@ -38,7 +38,7 @@ import Link from "@material-ui/core/Link";
 
 import { UserRoles } from "../../models/shoreline";
 import diabeloopUrl from "../../lib/diabeloop-url";
-import { ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from "./models";
+import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from "./models";
 
 const formStyles = makeStyles(
   (theme: Theme) => {
@@ -149,7 +149,7 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
   );
 }
 
-export function ConsentMonitoringTerms({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
+export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseConsentCheck): JSX.Element {
   const { t, i18n } = useTranslation("yourloops");
   const classes = formStyles();
 
@@ -171,7 +171,7 @@ export function ConsentMonitoringTerms({ id, userRole, style, checked, onChange 
   );
   const labelTerms = (
     <Trans
-      i18nKey={`consent-monitoring-${userRole}-terms-of-use`}
+      i18nKey={"consent-monitoring-terms-of-use"}
       t={t}
       components={{ linkTerms }}
       values={{ terms }}
@@ -277,7 +277,6 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
 
 export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.Element {
   const {
-    userRole,
     id,
     className,
     group,
@@ -294,7 +293,7 @@ export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.El
   return (
     <FormControl id={`${id}-form`} className={className}>
       <FormGroup className={`${classes.formGroup} ${group ?? ""}`}>
-        <ConsentMonitoringTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
+        <ConsentMonitoringTerms id={id} checked={termsAccepted} onChange={handleChange} />
       </FormGroup>
     </FormControl>
   );

@@ -29,12 +29,15 @@
 import * as React from "react";
 import { UserRoles } from "../../models/shoreline";
 
-export interface ConsentCheck {
+export interface BaseConsentCheck {
   id: string;
-  userRole: UserRoles;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   style?: React.CSSProperties;
+}
+
+export interface ConsentCheck extends BaseConsentCheck {
+  userRole: UserRoles;
 }
 
 export interface ConsentFormProps {
@@ -54,7 +57,6 @@ export interface ConsentFormProps {
 }
 
 export interface MonitoringConsentFormProps {
-  userRole: UserRoles;
   id: string;
   /** className for the FormControl */
   className?: string;
