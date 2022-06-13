@@ -27,80 +27,86 @@
  */
 
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "react-dom";
 import { act } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import { waitTimeout } from "../../../lib/utils";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { NotificationContext, INotification } from "../../../lib/notifications/models";
-import { NotificationContextProvider, useNotification, NotificationType } from "../../../lib/notifications";
+import * as authHookMock from "../../../lib/auth/hook";
+import { Session } from "../../../lib/auth";
+import { INotification, NotificationContext, NotificationType } from "../../../lib/notifications/models";
+import { NotificationContextProvider, useNotification } from "../../../lib/notifications/hook";
 import { loggedInUsers } from "../../common";
-import { createAuthHookStubs } from "../auth/utils";
-import { notificationAPIStub, resetNotificationAPIStub } from "./utils";
+import User from "../../../lib/auth/user";
+import NotificationApi from "../../../lib/notifications/notification-api";
 
+jest.mock("../../../lib/auth/hook");
 describe("Notification hook", () => {
 
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
 
   let container: HTMLDivElement | null = null;
   let notifications: NotificationContext | null = null;
+
+  jest.spyOn(NotificationApi, "getReceivedInvitations").mockResolvedValue([]);
+  jest.spyOn(NotificationApi, "getSentInvitations").mockResolvedValue([]);
+  jest.spyOn(NotificationApi, "cancelInvitation").mockResolvedValue();
+  jest.spyOn(NotificationApi, "declineInvitation").mockResolvedValue();
+  jest.spyOn(NotificationApi, "acceptInvitation").mockResolvedValue();
 
   const initNotificationContext = async (): Promise<void> => {
     const DummyComponent = (): JSX.Element => {
       notifications = useNotification();
       return (<div />);
     };
-    act(() => {
-      ReactDOM.render(
+    await act(() => {
+      return new Promise(resolve => render(
         <BrowserRouter>
-          <AuthContextProvider value={authHookHcp}>
-            <NotificationContextProvider api={notificationAPIStub}>
-              <DummyComponent />
-            </NotificationContextProvider>
-          </AuthContextProvider>
-        </BrowserRouter>, container);
+          <NotificationContextProvider>
+            <DummyComponent />
+          </NotificationContextProvider>
+        </BrowserRouter>, container, resolve));
     });
-
-    let i = 0;
-    // Wait max 1s
-    while (i < 100 && !notifications.initialized) {
-      await waitTimeout(10);
-      i++;
-    }
-    expect(notifications.initialized).toBe(true);
   };
+
+  beforeAll(() => {
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { session: () => session };
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
   });
+
   afterEach(() => {
     document.body.removeChild(container);
     container = null;
-    resetNotificationAPIStub();
   });
 
   describe("Initialization", () => {
     it("should initialize", async () => {
       await initNotificationContext();
       expect(notifications.initialized).toBe(true);
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
   describe("Update", () => {
     it("should re-fetch invitations from the api", async () => {
       await initNotificationContext();
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1);
       notifications.update();
       await waitTimeout(100);
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(2);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -124,9 +130,9 @@ describe("Notification hook", () => {
       };
       await notifications.accept(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.acceptInvitation).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.acceptInvitation).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -150,9 +156,9 @@ describe("Notification hook", () => {
       };
       await notifications.decline(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.declineInvitation).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(2);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.declineInvitation).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -176,9 +182,9 @@ describe("Notification hook", () => {
       };
       await notifications.cancel(notification);
       await waitTimeout(100);
-      expect(notificationAPIStub.cancelInvitation).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getReceivedInvitations).toHaveBeenCalledTimes(1);
-      expect(notificationAPIStub.getSentInvitations).toHaveBeenCalledTimes(2);
+      expect(NotificationApi.cancelInvitation).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1);
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2);
     });
   });
 });

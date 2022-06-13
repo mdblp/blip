@@ -39,13 +39,14 @@ import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team"
 import { errorTextFromException, fixYLP878Settings } from "../utils";
 import metrics from "../metrics";
 import { Session, useAuth } from "../auth";
-import { notificationConversion, useNotification } from "../notifications";
+import { useNotification } from "../notifications/hook";
 import { LoadTeams, Team, TeamContext, TeamMember, TeamUser } from "./models";
 import { Patient, PatientTeam } from "../data/patient";
 import { mapTeamUserToPatient } from "../../components/patient/utils";
 import TeamApi from "./team-api";
 import TeamUtils from "./utils";
 import DirectShareApi from "../share/direct-share-api";
+import { notificationConversion } from "../notifications/utils";
 
 const log = bows("TeamHook");
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);

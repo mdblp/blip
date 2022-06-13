@@ -29,7 +29,7 @@
 import { UserInvitationStatus, PostalAddress, PatientFilterTypes } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { IUser } from "../../models/shoreline";
-import { INotification } from "../notifications";
+import { INotification } from "../notifications/models";
 import { TeamType, TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { Patient, PatientTeam } from "../data/patient";
 import { Monitoring } from "../../models/monitoring";
@@ -206,10 +206,12 @@ export interface TeamContext {
    * @param patient the patient to update
    */
   editPatientRemoteMonitoring(patient: Patient): void;
+
   /**
    * @param patient The patient to update
    */
   markPatientMessagesAsRead(patient: Patient): void;
+
   /**
    * Update team alarm configuration
    * @param team The updated team

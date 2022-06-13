@@ -33,34 +33,39 @@ import _ from "lodash";
 
 import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
 import SignUpProfileForm from "../../../pages/signup/signup-profile-form";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { loggedInUsers } from "../../common";
-import { createAuthHookStubs } from "../../lib/auth/utils";
+import * as authHookMock from "../../../lib/auth";
+import User from "../../../lib/auth/user";
+import { UserRoles } from "../../../models/shoreline";
 
+jest.mock("../../../lib/auth");
 describe("Signup profile form", () => {
   let container: HTMLElement | null = null;
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-  const authPatient = loggedInUsers.patientSession;
-  const authHookPatient: AuthContext = createAuthHookStubs(authPatient);
 
-  const mountComponent = async (authContext: AuthContext): Promise<void> => {
-    await act(() => {
-      return new Promise((resolve) => {
-
-        render(
-          <AuthContextProvider value={authContext}>
-            <SignUpFormStateProvider>
-              <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
-            </SignUpFormStateProvider>
-          </AuthContextProvider>, container, resolve);
-      });
+  const mountComponent = (): void => {
+    act(() => {
+      render(
+        <SignUpFormStateProvider>
+          <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
+        </SignUpFormStateProvider>, container);
     });
   };
+
+  beforeAll(() => {
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+        } as User,
+      };
+    });
   });
 
   afterEach(() => {
@@ -71,14 +76,21 @@ describe("Signup profile form", () => {
     }
   });
 
-  it("should not render the drop down list when caregiver", async () => {
-    await mountComponent(authHookPatient);
+  it("should not render the drop down list when caregiver", () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.caregiver,
+        } as User,
+      };
+    });
+    mountComponent();
     const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).toBeNull();
   });
 
-  it("should render the drop down list when HCP", async () => {
-    await mountComponent(authHookHcp);
+  it("should render the drop down list when HCP", () => {
+    mountComponent();
     const dropDownList = document.querySelector("#hcp-profession-selector");
     expect(dropDownList).not.toBeNull();
   });

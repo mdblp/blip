@@ -32,8 +32,7 @@ import { act } from "react-dom/test-utils";
 
 import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
 import { PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
-import * as notificationHookMock from "../../../lib/notifications";
-import { INotification, NotificationType } from "../../../lib/notifications";
+import * as notificationHookMock from "../../../lib/notifications/hook";
 import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
 import { buildTeam, buildTeamMember, createPatient, createPatientTeam } from "../../common/utils";
@@ -43,9 +42,10 @@ import User from "../../../lib/auth/user";
 import { Patient } from "../../../lib/data/patient";
 import TeamUtils from "../../../lib/team/utils";
 import { mapTeamUserToPatient } from "../../../components/patient/utils";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 
 jest.mock("../../../lib/auth");
-jest.mock("../../../lib/notifications");
+jest.mock("../../../lib/notifications/hook");
 describe("Team hook", () => {
   let container: HTMLElement | null = null;
   let teamHook: TeamContext;

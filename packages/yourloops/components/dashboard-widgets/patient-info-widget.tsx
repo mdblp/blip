@@ -47,7 +47,7 @@ import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-in
 import { useAuth } from "../../lib/auth";
 import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
-import { useNotification } from "../../lib/notifications";
+import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import ConfirmDialog from "../dialogs/confirm-dialog";
 import { TeamMemberRole } from "../../models/team";

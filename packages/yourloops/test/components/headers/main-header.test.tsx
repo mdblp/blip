@@ -32,8 +32,7 @@ import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { v4 as uuidv4 } from "uuid";
 
-import * as notificationHookMock from "../../../lib/notifications";
-import { INotification, NotificationType } from "../../../lib/notifications";
+import * as notificationHookMock from "../../../lib/notifications/hook";
 import * as authHookMock from "../../../lib/auth";
 import { Session } from "../../../lib/auth";
 import * as teamHookMock from "../../../lib/team";
@@ -43,8 +42,9 @@ import MainHeader from "../../../components/header-bars/main-header";
 import DirectShareApi from "../../../lib/share/direct-share-api";
 import { Profile, UserRoles } from "../../../models/shoreline";
 import User from "../../../lib/auth/user";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 
-jest.mock("../../../lib/notifications");
+jest.mock("../../../lib/notifications/hook");
 jest.mock("../../../lib/auth");
 jest.mock("../../../lib/team");
 describe("Main Header", () => {
