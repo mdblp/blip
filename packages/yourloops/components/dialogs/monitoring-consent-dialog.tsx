@@ -42,13 +42,14 @@ import { MonitoringConsentForm } from "../consents/form";
 interface MonitoringConsentDialogProps {
   onAccept: () => void;
   onCancel: () => void;
+  teamName: string;
 }
 
 function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Element {
   const theme = useTheme();
   const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
-  const { onAccept, onCancel } = props;
+  const { onAccept, onCancel, teamName } = props;
   const { t } = useTranslation("yourloops");
   const [termsAccepted, setTermsAccepted] = React.useState(false);
 
@@ -75,7 +76,7 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
       fullScreen={isXSBreakpoint}
     >
       <DialogTitle id="monitoring-consent-dialog-title">
-        <strong>{t("modal-monitoring-consent-title")}</strong>
+        <strong>{t("modal-monitoring-consent-title", { careteam: teamName })}</strong>
       </DialogTitle>
       <DialogContent id="monitoring-consequences-dialog-content">
         <MonitoringConsentForm

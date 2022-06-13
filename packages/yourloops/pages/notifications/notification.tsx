@@ -262,8 +262,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             teamName={notification.target.name}
             actions={{ onDialogResult : (teamId) => { closeTeamAcceptDialog(teamId);} }}
           />}
-        {(isAMonitoringInvitation && displayMonitoringTerms) &&
-          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)}/>
+        {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)} teamName={notification.target.name}/>
         }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton

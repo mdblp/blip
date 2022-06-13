@@ -185,6 +185,7 @@
   "modal-add-patient": "New patient",
   "modal-add-patient-warning-line1": "By inviting this patient to share their data with me and their care team, I declare under my professional responsibility that I am part of this patient’s care team and, as such, have the right to access the patient’s personal data according to the applicable regulations.",
   "modal-add-patient-warning-line2": "Read our <linkTerms>{{terms}}</linkTerms> and <linkPrivacyPolicy>{{privacyPolicy}}</linkPrivacyPolicy>.",
+  "modal-monitoring-consent-title": "Join the remote monitoring team {{careteam}}",
   "modal-patient-add-team-failure": "Impossible to add a care team. Please try again later.",
   "modal-patient-add-team-failure-exists": "You already share data with this team.",
   "modal-patient-add-team-info": "You are about to share you data with",
