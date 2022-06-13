@@ -52,3 +52,14 @@ export interface ConsentFormProps {
   // Set to undefined to not display this option
   setFeedbackAccepted?: React.Dispatch<boolean>;
 }
+
+export interface MonitoringConsentFormProps {
+  userRole: UserRoles;
+  id: string;
+  /** className for the FormControl */
+  className?: string;
+  /** className for the FormGroup */
+  group?: string;
+  termsAccepted: boolean;
+  setTermsAccepted: React.Dispatch<boolean>;
+}
