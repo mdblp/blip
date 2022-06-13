@@ -33,16 +33,19 @@ import { v4 as uuidv4 } from "uuid";
 import HttpStatus from "../../../lib/http-status-codes";
 import { StatusErrorMessage } from "../../../services/http";
 import { APINotificationType, INotificationAPI } from "../../../models/notification";
-import { INotification, NotificationType } from "../../../lib/notifications";
-import api from "../../../lib/notifications/api";
 import { loggedInUsers } from "../../common";
 import axios, { AxiosResponse } from "axios";
+import NotificationApi from "../../../lib/notifications/notification-api";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 
 // Mock jest and set the type
 jest.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe("Notification API", () => {
+  const userId = "fakeUserId";
+  const userId2 = "fakeUserId2";
+  const email = "fake@email.com";
 
   afterEach(() => {
     mockedAxios.get.mockReset();
@@ -51,8 +54,7 @@ describe("Notification API", () => {
   });
 
   describe("getReceivedInvitations", () => {
-    const session = loggedInUsers.caregiverSession;
-    const urlArgs = `/confirm/invitations/${session.user.userid}`;
+    const urlArgs = `/confirm/invitations/${userId}`;
 
     it("should throw an error if the response is not ok", async () => {
       const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
@@ -68,7 +70,7 @@ describe("Notification API", () => {
 
       let error: Error | null = null;
       try {
-        await api.getReceivedInvitations(session);
+        await NotificationApi.getReceivedInvitations(userId);
       } catch (reason) {
         error = reason as Error;
       }
@@ -82,7 +84,7 @@ describe("Notification API", () => {
         throw new Error(StatusErrorMessage.NotFound);
       });
 
-      const result = await api.getReceivedInvitations(session);
+      const result = await NotificationApi.getReceivedInvitations(userId);
       expect(result).toEqual([]);
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
       expect(mockedAxios.get).toHaveBeenCalledWith(urlArgs, expect.anything());
@@ -116,7 +118,7 @@ describe("Notification API", () => {
       };
       mockedAxios.get.mockResolvedValue(resolveOK);
 
-      const result = await api.getReceivedInvitations(session);
+      const result = await NotificationApi.getReceivedInvitations(userId);
       const expectedResult: INotification[] = [
         {
           id: apiNotifications[0].key,
@@ -140,8 +142,7 @@ describe("Notification API", () => {
   });
 
   describe("getSentInvitations", () => {
-    const session = loggedInUsers.caregiverSession;
-    const urlArgs = `/confirm/invite/${session.user.userid}`;
+    const urlArgs = `/confirm/invite/${userId}`;
 
     it("should throw an error if the response is not ok", async () => {
       const jsonResponse = jest.fn().mockRejectedValue(new Error("Not a JSON"));
@@ -157,7 +158,7 @@ describe("Notification API", () => {
 
       let error: Error | null = null;
       try {
-        await api.getSentInvitations(session);
+        await NotificationApi.getSentInvitations(userId);
       } catch (reason) {
         error = reason as Error;
       }
@@ -171,9 +172,8 @@ describe("Notification API", () => {
       mockedAxios.get.mockImplementation(() => {
         throw new Error(StatusErrorMessage.NotFound);
       });
-      //mockedAxios.get.mockResolvedValue(resolveOK);
 
-      const result = await api.getSentInvitations(session);
+      const result = await NotificationApi.getSentInvitations(userId);
 
       expect(result).toEqual([]);
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
@@ -185,7 +185,7 @@ describe("Notification API", () => {
         {
           key: uuidv4(),
           type: APINotificationType.careTeamInvitation,
-          creatorId: session.user.userid,
+          creatorId: userId2,
           created: new Date().toISOString(),
           creator: {
             userid: "abcd",
@@ -209,7 +209,7 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.get.mockResolvedValue(resolveOK);
 
-      const result = await api.getSentInvitations(session);
+      const result = await NotificationApi.getSentInvitations(userId);
       const expectedResult: INotification[] = [
         {
           id: apiNotifications[0].key,
@@ -243,16 +243,16 @@ describe("Notification API", () => {
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: session.user.userid, profile: session.user.profile },
-        creatorId: session.user.userid,
+        creator: { userid: userId, profile: session.user.profile },
+        creatorId: userId2,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         id: uuidv4(),
       };
       for (const notificationType of notificationTypes) {
         let err: Error | null = null;
         try {
-          await api.acceptInvitation(session, { ...notification, type: notificationType });
+          await NotificationApi.acceptInvitation(userId, { ...notification, type: notificationType });
         } catch (reason) {
           err = reason as Error;
         }
@@ -266,7 +266,6 @@ describe("Notification API", () => {
         throw new Error();
       });
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -275,15 +274,15 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
-      const expectedArgs = `/confirm/accept/invite/${session.user.userid}/${patient.userid}`;
+      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.userid}`;
       const expectedBody = { key: notification.id };
 
       expect(err).not.toBeNull();
@@ -301,7 +300,6 @@ describe("Notification API", () => {
       } as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -310,18 +308,18 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
       expect(err).toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/accept/invite/${session.user.userid}/${patient.userid}`;
+      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.userid}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, expect.anything());
     });
@@ -331,7 +329,6 @@ describe("Notification API", () => {
         throw new Error();
       });
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -340,7 +337,7 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -349,7 +346,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -371,7 +368,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -380,7 +376,7 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -389,7 +385,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -405,7 +401,6 @@ describe("Notification API", () => {
         throw new Error("careTeamPatientInvitations");
       });
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -414,7 +409,7 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -423,7 +418,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -445,7 +440,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -454,7 +448,7 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -463,7 +457,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.acceptInvitation(session, notification);
+        await NotificationApi.acceptInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -503,7 +497,7 @@ describe("Notification API", () => {
       for (const notificationType of notificationTypes) {
         let err: Error | null = null;
         try {
-          await api.declineInvitation(session, { ...notification, type: notificationType });
+          await NotificationApi.declineInvitation(userId, { ...notification, type: notificationType });
         } catch (reason) {
           err = reason as Error;
         }
@@ -517,7 +511,6 @@ describe("Notification API", () => {
         throw new Error("directInvitation");
       });
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -526,19 +519,19 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
 
       expect(err).not.toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/dismiss/invite/${session.user.userid}/${patient.userid}`;
+      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.userid}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
@@ -554,7 +547,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -563,18 +555,18 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
       expect(err).toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/dismiss/invite/${session.user.userid}/${patient.userid}`;
+      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.userid}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
@@ -591,7 +583,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveError);
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -600,12 +591,12 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -618,7 +609,6 @@ describe("Notification API", () => {
         throw new Error("CareteamProInvitation");
       });
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -627,7 +617,7 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -636,7 +626,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -659,7 +649,6 @@ describe("Notification API", () => {
 
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -668,7 +657,7 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -677,7 +666,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -700,7 +689,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveError);
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -709,12 +697,12 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -727,7 +715,6 @@ describe("Notification API", () => {
         throw new Error("careteamPatienInvitation");
       });
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -736,7 +723,7 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -745,7 +732,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -767,7 +754,6 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -776,7 +762,7 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -785,7 +771,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.declineInvitation(session, notification);
+        await NotificationApi.declineInvitation(userId, notification);
       } catch (reason) {
         err = reason as Error;
       }
@@ -829,51 +815,13 @@ describe("Notification API", () => {
       for (const notificationType of notificationTypes) {
         let err: Error | null = null;
         try {
-          await api.cancelInvitation(session, { ...notification, type: notificationType });
+          await NotificationApi.cancelInvitation({ ...notification, type: notificationType });
         } catch (reason) {
           err = reason as Error;
         }
         expect(err).not.toBeNull();
       }
       expect(mockedAxios.post).toHaveBeenCalledTimes(0);
-    });
-
-    it("should throw an error if the reply is not ok (directInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("directInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.post.mockResolvedValue(resolveError);
-
-
-      const session = loggedInUsers.hcpSession;
-      const patient = loggedInUsers.patient;
-      const notification: INotification = {
-        id: uuidv4(),
-        metricsType: "join_team",
-        type: NotificationType.directInvitation,
-        creator: patient,
-        creatorId: patient.userid,
-        date: new Date().toISOString(),
-        email: session.user.username,
-      };
-
-      let err: Error | null = null;
-      try {
-        await api.cancelInvitation(session, notification);
-      } catch (reason) {
-        err = reason as Error;
-      }
-      expect(err).not.toBeNull();
-      expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-      const expectedArgs = "/confirm/cancel/invite";
-      const expectedBody = { key: notification.id, email: session.user.username };
-      expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
 
     it("should resolve when the reply is ok (directInvitation)", async () => {
@@ -888,7 +836,6 @@ describe("Notification API", () => {
       mockedAxios.post.mockResolvedValue(resolveOK);
 
 
-      const session = loggedInUsers.hcpSession;
       const patient = loggedInUsers.patient;
       const notification: INotification = {
         id: uuidv4(),
@@ -897,19 +844,19 @@ describe("Notification API", () => {
         creator: patient,
         creatorId: patient.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.cancelInvitation(session, notification);
+        await NotificationApi.cancelInvitation(notification);
       } catch (reason) {
         err = reason as Error;
       }
       expect(err).toBeNull();
       expect(mockedAxios.post).toHaveBeenCalledTimes(1);
       const expectedArgs = "/confirm/cancel/invite";
-      const expectedBody = { key: notification.id, email: session.user.username };
+      const expectedBody = { key: notification.id, email };
       expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
 
@@ -926,7 +873,6 @@ describe("Notification API", () => {
       mockedAxios.post.mockResolvedValue(resolveError);
 
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -935,60 +881,18 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
       };
 
       let err: Error | null = null;
       try {
-        await api.cancelInvitation(session, notification);
+        await NotificationApi.cancelInvitation(notification);
       } catch (reason) {
         err = reason as Error;
       }
       expect(err).not.toBeNull();
       expect(mockedAxios.post).toHaveBeenCalledTimes(0);
       expect(mockedAxios.post).toHaveBeenCalledTimes(0);
-    });
-
-    it("should throw an error if the reply is not ok (careTeamProInvitation)", async () => {
-      const jsonResponse = jest.fn().mockRejectedValue(new Error("careTeamProInvitation"));
-      const resolveError: Response = {
-        status: HttpStatus.StatusInternalServerError,
-        ok: false,
-        statusText: "InternalServerError",
-        type: "error",
-        redirected: false,
-        json: jsonResponse,
-      } as unknown as Response;
-      mockedAxios.post.mockResolvedValue(resolveError);
-
-
-      const session = loggedInUsers.hcpSession;
-      const caregiver = loggedInUsers.caregiver;
-      const notification: INotification = {
-        id: uuidv4(),
-        metricsType: "join_team",
-        type: NotificationType.careTeamProInvitation,
-        creator: caregiver,
-        creatorId: caregiver.userid,
-        date: new Date().toISOString(),
-        email: session.user.username,
-        target: {
-          id: uuidv4(),
-          name: "A team",
-        },
-      };
-
-      let err: Error | null = null;
-      try {
-        await api.cancelInvitation(session, notification);
-      } catch (reason) {
-        err = reason as Error;
-      }
-      expect(err).not.toBeNull();
-      expect(mockedAxios.post).toHaveBeenCalledTimes(1);
-      const expectedArgs = "/confirm/cancel/invite";
-      const expectedBody = { key: notification.id, target: notification.target };
-      expect(mockedAxios.post).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
 
     it("should resolve when the reply is ok (careTeamProInvitation)", async () => {
@@ -1003,7 +907,6 @@ describe("Notification API", () => {
 
       mockedAxios.post.mockResolvedValue(resolveOK);
 
-      const session = loggedInUsers.hcpSession;
       const caregiver = loggedInUsers.caregiver;
       const notification: INotification = {
         id: uuidv4(),
@@ -1012,7 +915,7 @@ describe("Notification API", () => {
         creator: caregiver,
         creatorId: caregiver.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email,
         target: {
           id: uuidv4(),
           name: "A team",
@@ -1021,7 +924,7 @@ describe("Notification API", () => {
 
       let err: Error | null = null;
       try {
-        await api.cancelInvitation(session, notification);
+        await NotificationApi.cancelInvitation(notification);
       } catch (reason) {
         err = reason as Error;
       }

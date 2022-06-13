@@ -34,9 +34,9 @@ import { Alarm } from "../../models/alarm";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
 import { Profile, UserRoles } from "../../models/shoreline";
 import { TeamMemberRole, TeamType } from "../../models/team";
-import { INotification, NotificationType } from "../../lib/notifications";
 import { Monitoring } from "../../models/monitoring";
 import { UNITS_TYPE } from "../../lib/units/utils";
+import { INotification, NotificationType } from "../../lib/notifications/models";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;

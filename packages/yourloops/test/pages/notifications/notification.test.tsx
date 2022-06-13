@@ -42,7 +42,7 @@ import { UserRoles } from "../../../models/shoreline";
 import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 import { Notification } from "../../../pages/notifications/notification";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
-import { NotificationContextProvider } from "../../../lib/notifications";
+import { NotificationContextProvider } from "../../../lib/notifications/hook";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
 
 describe("Notification", () => {
