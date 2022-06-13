@@ -46,6 +46,7 @@ import PatientMonitoringPrescription, { PrescriptionInfo } from "../patient/pati
 import { useNotification } from "../../lib/notifications";
 import { useTeam } from "../../lib/team";
 import { MonitoringStatus } from "../../models/monitoring";
+import MedicalFilesApi, { convertFileToBlob } from "../../lib/medical-files/medical-files-api";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -103,6 +104,12 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
     if (!prescriptionInfo.teamId) {
       throw Error("Cannot invite patient as remote monitoring team id has not been defined");
     }
+    if (!prescriptionInfo.memberId) {
+      throw Error("Cannot invite patient as prescriptor id has not been defined");
+    }
+    if (!prescriptionInfo.file) {
+      throw Error("Cannot invite patient as prescription has not been defined");
+    }
     await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd);
     patient.monitoring =
       {
@@ -111,6 +118,14 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
         monitoringEnd,
       };
     teamHook.editPatientRemoteMonitoring(patient);
+    const fileAsBlob = await convertFileToBlob(prescriptionInfo.file);
+    MedicalFilesApi.uploadPrescription(
+      prescriptionInfo.teamId,
+      patient.userid,
+      prescriptionInfo.memberId,
+      prescriptionInfo.numberOfMonth,
+      fileAsBlob,
+    );
     onClose();
   };
 

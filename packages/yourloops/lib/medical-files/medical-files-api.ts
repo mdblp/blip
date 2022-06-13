@@ -35,6 +35,25 @@ export default class MedicalFilesApi {
     return data;
   }
 
+  static async uploadPrescription(teamId: string, patientId: string, prescriptorId: string, initialPeriod: number, file: Blob): Promise<Prescription> {
+    const formData = new FormData();
+    formData.append("patientId", patientId);
+    formData.append("prescriptorId", prescriptorId);
+    formData.append("initialPeriod", initialPeriod.toString());
+    formData.append("teamId", teamId);
+    formData.append("upload", file);
+    const { data } = await HttpService.post<Prescription, FormData>({
+      url: "cargo/v0/prescriptions",
+      payload: formData,
+      config: {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    });
+    return data;
+  }
+
   static async getWeeklyReports(patientId: string, teamId: string): Promise<WeeklyReport[]> {
     const { data } = await HttpService.get<WeeklyReport[]>({
       url: "cargo/v0/weekly-reports",
@@ -87,3 +106,5 @@ export default class MedicalFilesApi {
     await HttpService.delete({ url: `/cargo/v0/medical-records/${medicalRecordId}` });
   }
 }
+
+export const convertFileToBlob = async (file : File) => new Blob([new Uint8Array(await file.arrayBuffer())], { type: file.type });
