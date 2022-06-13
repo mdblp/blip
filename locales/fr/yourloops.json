@@ -110,7 +110,7 @@
   "current-trigger-setting-hypoglycemia": "Paramètre actuel du seuil de déclenchement : 10% du temps en dessous du seuil de 54 mg/dL",
   "current-trigger-setting-tir": "Paramètre actuel du seuil de déclenchement : 40% du temps hors cible (min à 70mg/dL, max à 180mg/dL)",
   "data-not-transferred": "Données non transférées",
-  "data-not-transferred-tooltip": "Par défaut, ce seuil d'alerte est défini à :\n>50% des données de non transmission sur la période donnée.\n\nCette valeur peut être modifiée soit au niveau de tous les patients surveillés à distance, soit patient par patient.",
+  "data-not-transferred-tooltip": "Par défaut, ce seuil d'alerte est défini à :\n>50% des données non transmises sur la période donnée.\n\nCette valeur peut être modifiée soit au niveau de tous les patients surveillés à distance, soit patient par patient.",
   "data-not-transmitted": "Données non transmises",
   "date-picker-days-range": "{{numDays}} jours sélectionnés",
   "date-picker-header-date-format": "MMMM YYYY",
