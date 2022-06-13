@@ -1,7 +1,10 @@
 import { Preferences, Profile, Settings } from "../../models/shoreline";
-import HttpService from "../../services/http";
+import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { HttpHeaderKeys } from "../../models/api";
 import User from "./user";
+import bows from "bows";
+
+const log = bows("User API");
 
 export default class UserApi {
   static async getShorelineAccessToken(email: string): Promise<{ token: string, id: string }> {
@@ -19,8 +22,12 @@ export default class UserApi {
       const { data } = await HttpService.get<Profile>({ url: `/metadata/${userId}/profile` });
       return data;
     } catch (err) {
-      console.log(`No settings for ${userId}`);
-      return undefined;
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No profile for ${userId}`);
+        return undefined;
+      }
+      throw err;
     }
   }
 
@@ -29,8 +36,12 @@ export default class UserApi {
       const { data } = await HttpService.get<Preferences>({ url: `/metadata/${userId}/preferences` });
       return data;
     } catch (err) {
-      console.log(`No settings for ${userId}`);
-      return undefined;
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No preferences for ${userId}`);
+        return undefined;
+      }
+      throw err;
     }
   }
 
@@ -39,8 +50,12 @@ export default class UserApi {
       const { data } = await HttpService.get<Settings>({ url: `/metadata/${userId}/settings` });
       return data;
     } catch (err) {
-      console.log(`No settings for ${userId}`);
-      return undefined;
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No settings for ${userId}`);
+        return undefined;
+      }
+      throw err;
     }
   }
 

@@ -39,7 +39,7 @@ interface ArgsWithPayload<P> extends Args {
   payload?: P;
 }
 
-export enum StatusErrorMessage {
+export enum ErrorMessageStatus {
   NotFound = "404-not-found"
 }
 
@@ -92,7 +92,7 @@ export default class HttpService {
       if (error.response.status >= 400 && error.response.status <= 550) {
         switch (error.response.status) {
         case httpStatus.StatusNotFound:
-          throw Error(StatusErrorMessage.NotFound);
+          throw Error(ErrorMessageStatus.NotFound);
         case httpStatus.StatusInternalServerError:
           throw Error(t("error-http-500"));
         default:

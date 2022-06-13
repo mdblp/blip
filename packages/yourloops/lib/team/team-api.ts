@@ -26,12 +26,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
-import HttpService, { StatusErrorMessage } from "../../services/http";
+import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { INotificationAPI } from "../../models/notification";
 import { UserRoles } from "../../models/shoreline";
 import { HttpHeaderKeys } from "../../models/api";
 import { getCurrentLang } from "../language";
 import { Monitoring } from "../../models/monitoring";
+import bows from "bows";
+
+const log = bows("Team API");
 
 interface InvitePatientArgs {
   teamId: string;
@@ -74,8 +77,12 @@ export default class TeamApi {
       const { data } = await HttpService.get<ITeam[]>({ url: "/v0/my-teams" });
       return data;
     } catch (err) {
-      console.log("no teams");
-      return [];
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info("No teams");
+        return [];
+      }
+      throw err;
     }
   }
 
@@ -84,8 +91,12 @@ export default class TeamApi {
       const { data } = await HttpService.get<ITeamMember[]>({ url: "/v0/my-patients" });
       return data;
     } catch (err) {
-      console.log("no teams");
-      return [];
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info("No patients");
+        return [];
+      }
+      throw err;
     }
   }
 
@@ -179,10 +190,12 @@ export default class TeamApi {
       });
       return data[0];
     } catch (err) {
-      if (err === StatusErrorMessage.NotFound) {
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info("no teams");
         return null;
       }
-      throw Error(err as string);
+      throw err;
     }
   }
 

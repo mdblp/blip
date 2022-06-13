@@ -36,7 +36,7 @@ import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfie
 import EmailOutlinedIcon from "@material-ui/icons/EmailOutlined";
 import Card from "@material-ui/core/Card";
 import ChatMessage from "./chat-message";
-import { getChatMessages, sendChatMessage } from "../../lib/chat/api";
+import ChatApi from "../../lib/chat/api";
 import { useAuth } from "../../lib/auth";
 import { IMessage } from "../../models/chat";
 import { Button, CardHeader, Tab, Tabs, TextField } from "@material-ui/core";
@@ -155,7 +155,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages() {
-      const messages = await getChatMessages(team.teamId, patient.userid);
+      const messages = await ChatApi.getChatMessages(team.teamId, patient.userid);
       if (patient.metadata.unreadMessagesSent > 0) {
         teamHook.markPatientMessagesAsRead(patient);
       }
@@ -180,8 +180,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   };
 
   const sendMessage = async () => {
-    await sendChatMessage(team.teamId, patient.userid, inputText, privateMessage);
-    const messages = await getChatMessages(team.teamId, patient.userid);
+    await ChatApi.sendChatMessage(team.teamId, patient.userid, inputText, privateMessage);
+    const messages = await ChatApi.getChatMessages(team.teamId, patient.userid);
     setMessages(messages);
     setInputText("");
     resetInputSize();

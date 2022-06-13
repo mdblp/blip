@@ -27,7 +27,7 @@
  */
 
 import { sortBy } from "lodash";
-import HttpService from "../../services/http";
+import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { Patient } from "./patient";
 import { GetPatientDataOptions } from "./models";
 import { PatientData } from "../../models/device-data";
@@ -36,6 +36,9 @@ import MessageNote from "../../models/message";
 import User from "../auth/user";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { Units } from "../../models/generic";
+import bows from "bows";
+
+const log = bows("Data API");
 
 export default class DataApi {
   static async getPatientDataRange(patientId: string): Promise<string[] | null> {
@@ -43,8 +46,12 @@ export default class DataApi {
       const { data } = await HttpService.get<string[]>({ url: `/data/v2/range/${patientId}` });
       return data;
     } catch (err) {
-      console.log(err);
-      return null;
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No data for patient ${patientId}`);
+        return null;
+      }
+      throw err;
     }
   }
 
@@ -73,8 +80,12 @@ export default class DataApi {
       });
       return data;
     } catch (err) {
-      console.log(err);
-      return [];
+      const error = err as Error;
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info(`No messages for patient ${patient.userid}`);
+        return [];
+      }
+      throw err;
     }
   }
 

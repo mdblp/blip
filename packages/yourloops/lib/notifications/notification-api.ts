@@ -27,7 +27,7 @@
  */
 import { INotification, NotificationType } from "./models";
 import bows from "bows";
-import HttpService, { StatusErrorMessage } from "../../services/http";
+import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { INotificationAPI } from "../../models/notification";
 import { notificationConversion } from "./utils";
 
@@ -134,7 +134,7 @@ export default class NotificationApi {
       return NotificationApi.convertNotifications(data);
     } catch (err) {
       const error = err as Error;
-      if (error.message === StatusErrorMessage.NotFound) {
+      if (error.message === ErrorMessageStatus.NotFound) {
         log.info("No new notification for the current user");
         return [];
       }
