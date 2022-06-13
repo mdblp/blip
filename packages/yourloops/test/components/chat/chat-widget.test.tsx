@@ -31,11 +31,11 @@ import { act, Simulate } from "react-dom/test-utils";
 
 import ChatWidget from "../../../components/chat/chat-widget";
 import { render, unmountComponentAtNode } from "react-dom";
-import * as chatAPI from "../../../lib/chat/api";
 import { Patient, PatientTeam } from "../../../lib/data/patient";
 import * as teamHookMock from "../../../lib/team";
 import { IMessage } from "../../../models/chat";
 import User from "../../../lib/auth/user";
+import ChatApi from "../../../lib/chat/api";
 
 jest.mock("../../../lib/team");
 describe("Chat widget", () => {
@@ -92,14 +92,14 @@ describe("Chat widget", () => {
   }
 
   it("should render an empty chat widget when no messages for HCP", async () => {
-    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    const apiStub = jest.spyOn(ChatApi, "getChatMessages").mockResolvedValue(Promise.resolve([]));
     await mountComponent();
     expect(apiStub).toHaveBeenCalled();
     expectBaseState();
   });
 
   it("should render an empty chat widget when no messages for patient", async () => {
-    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    const apiStub = jest.spyOn(ChatApi, "getChatMessages").mockResolvedValue(Promise.resolve([]));
     await mountComponent();
     expect(apiStub).toHaveBeenCalled();
     expectBaseState();
@@ -118,7 +118,7 @@ describe("Chat widget", () => {
       user: {} as User,
       private: false,
     } as IMessage];
-    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
+    const apiStub = jest.spyOn(ChatApi, "getChatMessages").mockResolvedValue(Promise.resolve(mockedMessages));
     await mountComponent();
     expect(apiStub).toHaveBeenCalled();
     const messages = container.querySelectorAll(".message");
@@ -126,7 +126,7 @@ describe("Chat widget", () => {
   });
 
   it("should render an emoji picker when clicking on the emoji button and add the clicked emoji in the text input before disappearing", async () => {
-    const apiStub = jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    const apiStub = jest.spyOn(ChatApi, "getChatMessages").mockResolvedValue(Promise.resolve([]));
     await mountComponent();
     expect(apiStub).toHaveBeenCalled();
 
@@ -149,7 +149,7 @@ describe("Chat widget", () => {
   });
 
   it("should send the message when clicking on send button", async () => {
-    jest.spyOn(chatAPI, "getChatMessages").mockResolvedValue(Promise.resolve([]));
+    jest.spyOn(ChatApi, "getChatMessages").mockResolvedValue(Promise.resolve([]));
     await mountComponent();
 
     const textInput = container.querySelector("#standard-multiline-flexible") as HTMLTextAreaElement;
@@ -157,7 +157,7 @@ describe("Chat widget", () => {
     textInput.innerHTML = "Hello";
     Simulate.change(textInput);
 
-    const apiStubSendMessage = jest.spyOn(chatAPI, "sendChatMessage").mockResolvedValue(true);
+    const apiStubSendMessage = jest.spyOn(ChatApi, "sendChatMessage").mockResolvedValue(true);
     const sendButton = container.querySelector("#chat-widget-send-button");
     expect(sendButton).toBeDefined();
     expect(sendButton.getAttribute("disabled")).toBeNull();

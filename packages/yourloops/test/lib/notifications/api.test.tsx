@@ -31,7 +31,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import HttpStatus from "../../../lib/http-status-codes";
-import { StatusErrorMessage } from "../../../services/http";
+import { ErrorMessageStatus } from "../../../services/http";
 import { APINotificationType, INotificationAPI } from "../../../models/notification";
 import { loggedInUsers } from "../../common";
 import axios, { AxiosResponse } from "axios";
@@ -81,7 +81,7 @@ describe("Notification API", () => {
 
     it("should return an empty array, if there is no invitation", async () => {
       mockedAxios.get.mockImplementation(() => {
-        throw new Error(StatusErrorMessage.NotFound);
+        throw new Error(ErrorMessageStatus.NotFound);
       });
 
       const result = await NotificationApi.getReceivedInvitations(userId);
@@ -170,7 +170,7 @@ describe("Notification API", () => {
 
     it("should return an empty array, if there is no invitation", async () => {
       mockedAxios.get.mockImplementation(() => {
-        throw new Error(StatusErrorMessage.NotFound);
+        throw new Error(ErrorMessageStatus.NotFound);
       });
 
       const result = await NotificationApi.getSentInvitations(userId);
