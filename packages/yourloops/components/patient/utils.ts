@@ -208,6 +208,7 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
     monitoring: teamUser.monitoring,
     profile: {
       birthdate: birthdate ? new Date(birthdate) : undefined,
+      sex: teamUser.profile?.patient?.sex,
       firstName: teamUser.profile?.firstName,
       fullName: teamUser.profile?.fullName ?? teamUser.username,
       lastName: teamUser.profile?.lastName,

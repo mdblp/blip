@@ -47,6 +47,11 @@ import PatientProfileForm from "./patient-form";
 
 export interface PersonalInfoFormProps {
   birthDate?: string;
+  birthPlace?: string;
+  ins?: string;
+  sex?: string;
+  ssn?: string;
+  referringDoctor?: string;
   classes: ClassNameMap;
   errors: Errors;
   firstName: string;
@@ -58,6 +63,11 @@ export interface PersonalInfoFormProps {
   setFirstName: (firstName: string) => void;
   setLastName: (lastName: string) => void;
   setHcpProfession: (hcpProfession: HcpProfession) => void;
+  setBirthPlace: (birthPlace: string) => void;
+  setIns: (ins: string) => void;
+  setReferringDoctor: (referringDoctor: string) => void;
+  setSex: (sex: string) => void;
+  setSsn: (ssn: string) => void;
 }
 
 export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
@@ -133,7 +143,17 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
           classes={props.classes}
           errors={props.errors}
           birthDate={props.birthDate}
+          birthPlace={props.birthPlace}
+          ins={props.ins}
+          sex={props.sex}
+          ssn={props.ssn}
+          referringDoctor={props.referringDoctor}
           setBirthDate={props.setBirthDate}
+          setBirthPlace={props.setBirthPlace}
+          setIns={props.setIns}
+          setReferringDoctor={props.setReferringDoctor}
+          setSex={props.setSex}
+          setSsn={props.setSsn}
         />
       }
     </React.Fragment>

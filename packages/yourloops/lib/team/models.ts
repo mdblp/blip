@@ -219,11 +219,10 @@ export interface TeamContext {
   updateTeamAlerts(team: Team): Promise<void>;
 
   /**
-   * Update patient alert configuration
-   * @param patient The updated patient
+   * Update patient monitoring configuration
+   * @param team The updated team
    */
-  updatePatientAlerts(patient: Patient): Promise<void>;
-
+  updatePatientMonitoring(patient: Patient): Promise<void>;
   /**
    * Leave a team
    * @param team The team to leave

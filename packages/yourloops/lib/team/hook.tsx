@@ -469,7 +469,7 @@ function TeamContextImpl(): TeamContext {
     refresh(true);
   };
 
-  const updatePatientAlerts = async (patient: Patient): Promise<void> => {
+  const updatePatientMonitoring = async (patient: Patient): Promise<void> => {
     if (!patient.monitoring) {
       throw Error("Cannot update patient monitoring with undefined");
     }
@@ -674,7 +674,7 @@ function TeamContextImpl(): TeamContext {
     markPatientMessagesAsRead,
     createTeam,
     editTeam,
-    updatePatientAlerts,
+    updatePatientMonitoring,
     editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,

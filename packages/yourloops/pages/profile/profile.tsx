@@ -141,6 +141,11 @@ const ProfilePage = (): JSX.Element => {
   const [passwordConfirmationError, setPasswordConfirmationError] = React.useState<boolean>(false);
   const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram);
   const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? "");
+  const [birthPlace, setBirthPlace] = useState<string>(user.profile?.patient?.birthPlace ?? "");
+  const [sex, setSex] = useState<string>(user.profile?.patient?.sex ?? "");
+  const [ins, setIns] = useState<string>(user.profile?.patient?.ins ?? "");
+  const [ssn, setSsn] = useState<string>(user.profile?.patient?.ssn ?? "");
+  const [referringDoctor, setReferringDoctor] = useState<string>(user.profile?.patient?.referringDoctor ?? "");
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false);
   const [lang, setLang] = useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
   const [hcpProfession, setHcpProfession] = useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
@@ -154,7 +159,12 @@ const ProfilePage = (): JSX.Element => {
     currentPassword: password.length > 0 && currentPassword.length === 0,
     password: passwordConfirmationError && (password.length > 0 || passwordConfirmation.length > 0),
     birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
-  }), [firstName, lastName, role, hcpProfession, password.length, passwordConfirmationError, passwordConfirmation.length, currentPassword.length, birthDate]);
+    ins: role === UserRoles.patient && ins.length > 0 && ins.length !==15,
+    ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !==15,
+  }), [
+    firstName, lastName, role, hcpProfession, password.length, passwordConfirmationError,
+    passwordConfirmation.length, currentPassword.length, birthDate, ins.length, ssn.length,
+  ]);
 
   const getUpdatedPreferences = (): Preferences => {
     const updatedPreferences = _.cloneDeep(user.preferences ?? {}) as Preferences;
@@ -169,7 +179,15 @@ const ProfilePage = (): JSX.Element => {
     updatedProfile.fullName = `${firstName} ${lastName}`;
 
     if (user.isUserPatient()) {
-      _.set(updatedProfile, "patient.birthday", birthDate);
+      if (!updatedProfile.patient) {
+        updatedProfile.patient = {};
+      }
+      updatedProfile.patient.birthday = birthDate;
+      updatedProfile.patient.birthPlace = birthPlace;
+      updatedProfile.patient.ins = ins;
+      updatedProfile.patient.sex = sex;
+      updatedProfile.patient.ssn = ssn;
+      updatedProfile.patient.referringDoctor = referringDoctor;
     }
     if (user.isUserHcp()) {
       updatedProfile.hcpProfession = hcpProfession;
@@ -275,6 +293,11 @@ const ProfilePage = (): JSX.Element => {
 
           <PersonalInfoForm
             birthDate={birthDate}
+            birthPlace={birthPlace}
+            ins={ins}
+            sex={sex}
+            ssn={ssn}
+            referringDoctor={referringDoctor}
             classes={classes}
             errors={errors}
             firstName={firstName}
@@ -283,9 +306,14 @@ const ProfilePage = (): JSX.Element => {
             role={role}
             user={user}
             setBirthDate={setBirthDate}
+            setBirthPlace={setBirthPlace}
             setFirstName={setFirstName}
+            setIns={setIns}
             setLastName={setLastName}
             setHcpProfession={setHcpProfession}
+            setReferringDoctor={setReferringDoctor}
+            setSex={setSex}
+            setSsn={setSsn}
           />
 
           {role !== UserRoles.patient &&

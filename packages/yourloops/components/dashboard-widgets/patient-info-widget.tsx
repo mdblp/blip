@@ -45,6 +45,7 @@ import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
 import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
 import { useAuth } from "../../lib/auth";
+import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
 import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
@@ -84,8 +85,10 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const notificationHook = useNotification();
   const teamHook = useTeam();
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [confirmDialogActionInProgress, setConfirmDialogActionInProgress] = useState(false);
+  const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false);
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
+  const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false);
+  const [confirmDeleteDialogActionInProgress, setConfirmDeleteDialogActionInProgress] = useState(false);
   const hbA1c: Settings["a1c"] = patient.settings.a1c
     ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
     : undefined;
@@ -109,10 +112,13 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
 
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
+    gender: "",
     birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
   };
+
+  patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
 
   const computePatientInformation = () => {
     patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
@@ -134,20 +140,33 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     computePatientInformation();
   }
 
-  const cancelRemoteMonitoringInvite = async () => {
-    setConfirmDialogActionInProgress(true);
+  const removePatientRemoteMonitoring = async (setActionInProgress: React.Dispatch<boolean>, setShow: React.Dispatch<boolean>) => {
+    if (!patient.monitoring) {
+      throw Error("Cannot cancel monitoring invite as patient monitoring is not defined");
+    }
+    try {
+      patient.monitoring = { ...patient.monitoring, status: undefined, monitoringEnd: undefined };
+      await teamHook.updatePatientMonitoring(patient);
+      setActionInProgress(false);
+      setShow(false);
+    } catch (e) {
+      setActionInProgress(false);
+    }
+  };
+
+  const onConfirmCancelInviteDialog = async () => {
+    setConfirmCancelDialogActionInProgress(true);
     try {
       await notificationHook.cancelRemoteMonitoringInvite(teamHook.getPatientRemoteMonitoringTeam(patient).teamId, patient.userid);
-      if (!patient.monitoring) {
-        throw Error("Cannot cancel monitoring invite as patient monitoring is not defined");
-      }
-      patient.monitoring = { ...patient.monitoring, status: undefined, monitoringEnd: undefined };
-      teamHook.editPatientRemoteMonitoring(patient);
-      setConfirmDialogActionInProgress(false);
-      setShowConfirmDialog(false);
     } catch (e) {
-      setConfirmDialogActionInProgress(false);
+      setConfirmCancelDialogActionInProgress(false);
     }
+    await removePatientRemoteMonitoring(setConfirmCancelDialogActionInProgress, setShowConfirmCancelDialog);
+  };
+
+  const onConfirmDeleteDialog = async () => {
+    setConfirmDeleteDialogActionInProgress(true);
+    await removePatientRemoteMonitoring(setConfirmDeleteDialogActionInProgress, setShowConfirmDeleteDialog);
   };
 
   return (
@@ -195,7 +214,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           color="primary"
                           disableElevation
                           size="small"
-                          onClick={() => setShowConfirmDialog(true)}
+                          onClick={() => setShowConfirmCancelDialog(true)}
                         >
                           {t("cancel-invite")}
                         </Button>
@@ -220,7 +239,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             color="primary"
                             disableElevation
                             size="small"
-                            onClick={() => console.log("Remove clicked")}
+                            onClick={() => setShowConfirmDeleteDialog(true)}
                           >
                             {t("button-remove")}
                           </Button>
@@ -240,13 +259,22 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
           onClose={() => setShowInviteRemoteMonitoringDialog(false)}
         />
       }
-      {showConfirmDialog &&
+      {showConfirmCancelDialog &&
         <ConfirmDialog
           title={t("cancel-remote-monitoring-invite")}
           label={t("cancel-remote-monitoring-invite-confirm", { fullName: patient.profile.fullName })}
-          inProgress={confirmDialogActionInProgress}
-          onClose={() => setShowConfirmDialog(false)}
-          onConfirm={cancelRemoteMonitoringInvite}
+          inProgress={confirmCancelDialogActionInProgress}
+          onClose={() => setShowConfirmCancelDialog(false)}
+          onConfirm={onConfirmCancelInviteDialog}
+        />
+      }
+      {showConfirmDeleteDialog &&
+        <ConfirmDialog
+          title={t("remove-remote-monitoring")}
+          label={t("remove-remote-monitoring-confirm", { fullName: patient.profile.fullName })}
+          inProgress={confirmDeleteDialogActionInProgress}
+          onClose={() => setShowConfirmDeleteDialog(false)}
+          onConfirm={onConfirmDeleteDialog}
         />
       }
     </Card>
