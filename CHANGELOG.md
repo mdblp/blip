@@ -40,6 +40,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1585 Add messages filter in left drawer
 - YLP-1594 Implement the delete button for remote monitored patients
 - YLP-1604 Update patient profile with new patient information
+- YLP-1607 Ask patient to consent when he joins the monitoring program
+
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
