@@ -243,13 +243,15 @@ function TeamMenu(): JSX.Element {
                 <GroupOutlinedIcon />
               </ListItemIcon>
               <Typography>
-                {t("my-caregivers")}  ({caregivers?.length})
+                {t("my-caregivers")} ({caregivers?.length})
               </Typography>
             </MenuItem>
           </Box>
         }
       </MenuLayout>
-      <TeamEditDialog teamToEdit={teamCreationDialogData} />
+      {teamCreationDialogData &&
+        <TeamEditDialog teamToEdit={teamCreationDialogData} />
+      }
       {showJoinTeamDialog &&
         <AddTeamDialog
           error={t("error-joining-team")}

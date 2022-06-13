@@ -189,7 +189,9 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
           </div>
         </div>
       </div>
-      <TeamEditDialog teamToEdit={teamToEdit} />
+      {teamToEdit &&
+        <TeamEditDialog teamToEdit={teamToEdit} />
+      }
     </React.Fragment>
   );
 }
