@@ -120,7 +120,7 @@ export default class NotificationApi {
   static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
     await HttpService.post<void, { monitoringEnd: string }>({
       url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-      payload: { monitoringEnd: monitoringEnd.toString() },
+      payload: { monitoringEnd: monitoringEnd.toJSON() },
     });
   }
 
