@@ -27,8 +27,7 @@
  */
 
 import { Session } from "../../../lib/auth";
-import { INotification } from "../../../lib/notifications";
-import { NotificationContext } from "../../../lib/notifications/models";
+import { INotification, NotificationContext } from "../../../lib/notifications/models";
 
 export interface NotificationAPIStub {
   getReceivedInvitations: jest.Mock<Promise<INotification[]>, [Readonly<Session>]>;
@@ -46,18 +45,6 @@ export const notificationAPIStub: NotificationAPIStub = {
   cancelInvitation: jest.fn<Promise<void>, [Readonly<Session>, INotification]>().mockResolvedValue(),
 };
 
-export const resetNotificationAPIStub = (): void => {
-  notificationAPIStub.getReceivedInvitations.mockReset();
-  notificationAPIStub.getReceivedInvitations.mockResolvedValue([]);
-  notificationAPIStub.getSentInvitations.mockReset();
-  notificationAPIStub.getSentInvitations.mockResolvedValue([]);
-  notificationAPIStub.acceptInvitation.mockReset();
-  notificationAPIStub.acceptInvitation.mockResolvedValue();
-  notificationAPIStub.declineInvitation.mockReset();
-  notificationAPIStub.declineInvitation.mockResolvedValue();
-  notificationAPIStub.cancelInvitation.mockReset();
-  notificationAPIStub.cancelInvitation.mockResolvedValue();
-};
 
 const stubNotificationContextValueInternal = {
   accept: jest.fn().mockReturnValue(() => Promise.resolve()),
