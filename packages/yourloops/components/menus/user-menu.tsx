@@ -56,9 +56,6 @@ const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {
     cursor: "pointer",
   },
-  svgIcon: {
-    margin: "inherit",
-  },
   typography: {
     margin: `0 ${theme.spacing(1)}px`,
     overflow: "hidden",
@@ -70,7 +67,7 @@ const classes = makeStyles((theme: Theme) => ({
 function UserMenu(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const { user, logout } = useAuth();
-  const { svgIcon, clickableMenu, typography } = classes();
+  const { clickableMenu, typography } = classes();
   const history = useHistory();
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
@@ -93,11 +90,6 @@ function UserMenu(): JSX.Element {
   };
 
   const closeMenu = () => setAnchorEl(null);
-
-  const onClickCaregivers = () => {
-    history.push("/caregivers");
-    closeMenu();
-  };
 
   const onClickSettings = () => {
     history.push("/preferences");
@@ -159,24 +151,9 @@ function UserMenu(): JSX.Element {
         anchorEl={anchorEl}
         onClose={closeMenu}
       >
-        {user?.role === UserRoles.patient &&
-          <React.Fragment>
-            <MenuItem id="user-menu-caregiver-link-item" onClick={onClickCaregivers}>
-              <ListItemIcon>
-                <RoundedHospitalIcon className={svgIcon} />
-              </ListItemIcon>
-              <Typography>
-                {t("caregivers")}
-              </Typography>
-            </MenuItem>
-            <Box marginY={1}>
-              <Divider variant="middle" />
-            </Box>
-          </React.Fragment>
-        }
         <MenuItem id="user-menu-settings-item" onClick={onClickSettings}>
           <ListItemIcon>
-            <PermContactCalendarIcon className={svgIcon} />
+            <PermContactCalendarIcon />
           </ListItemIcon>
           <Typography>
             {t("profile-settings")}
@@ -185,7 +162,7 @@ function UserMenu(): JSX.Element {
 
         <MenuItem id="contact-menu-item" onClick={onClickSupport}>
           <ListItemIcon>
-            <ContactSupportOutlinedIcon className={svgIcon} />
+            <ContactSupportOutlinedIcon />
           </ListItemIcon>
           <Typography>
             {t("menu-contact-support")}
@@ -198,7 +175,7 @@ function UserMenu(): JSX.Element {
 
         <MenuItem id="user-menu-logout-item" onClick={onClickLogout}>
           <ListItemIcon>
-            <CancelIcon className={svgIcon} />
+            <CancelIcon />
           </ListItemIcon>
           <Typography>
             {t("menu-logout")}

@@ -33,19 +33,29 @@ import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../yourloops/components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-options";
+import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
 import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
+import { Patient } from "../../yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
+import ChatWidget from "../../yourloops/components/chat/chat-widget";
+import AlarmCard from "../../yourloops/components/alarm/alarm-card";
 
 interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
-  patient: IUser;
+  patient: Patient;
+  setPatient: Function;
+  patients: Patient[];
+  userIsHCP: boolean;
   prefixURL: string;
   profileDialog: typeof ProfileDialog;
   dialogDatePicker: typeof DialogDatePicker;
   dialogRangeDatePicker: typeof DialogRangeDatePicker;
   dialogPDFOptions: typeof DialogPDFOptions;
+  patientInfoWidget: typeof PatientInfoWidget;
+  chatWidget: typeof ChatWidget;
+  alarmCard: typeof AlarmCard;
 }
 
 // FIXME: For some reason, the yourloops auth hook
@@ -57,6 +67,7 @@ export {
   DialogDatePicker,
   DialogRangeDatePicker,
   DialogPDFOptions,
+  PatientInfoWidget,
   IUser,
   PatientDatum,
   PatientData,

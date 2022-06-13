@@ -127,6 +127,13 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
       </Trans>
     );
     break;
+  case NotificationType.careTeamMonitoringInvitation:
+    notificationText = (
+      <Trans t={t} i18nKey="notification-patient-remote-monitoring" components={{ strong: <strong /> }} values={values} parent={React.Fragment}>
+        {t("invite-join-monitoring-team")} <strong>{careteam}</strong>.
+      </Trans>
+    );
+    break;
   default:
     notificationText = <i>Invalid invitation type</i>;
   }
@@ -226,7 +233,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   };
 
-  const closeTeamAcceptDialog = (teamId: string | null): void => {
+  const closeTeamAcceptDialog = (teamId?: string): void => {
     setAddTeamDialogVisible(false);
     if (notification.target && teamId && notification.target.id === teamId) {
       acceptInvitation();
@@ -260,9 +267,11 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             id={`notification-button-accept-${id}`}
             color="primary"
             variant="contained"
+            disableElevation
             className={`${classes.buttonAccept} notification-button-accept`}
             disabled={inProgress}
-            onClick={onOpenInvitationDialog}>
+            onClick={onOpenInvitationDialog}
+          >
             {t("button-accept")}
           </Button>
         )}

@@ -28,19 +28,12 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link as RouterLink } from "react-router-dom";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
-
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
-import Typography from "@material-ui/core/Typography";
 
 import AddIcon from "@material-ui/icons/Add";
-import HomeIcon from "@material-ui/icons/Home";
-
-import SecondaryHeaderBar from "../../../components/header-bars/secondary";
+import Box from "@material-ui/core/Box";
 
 interface BarProps {
   /** Add a caregiver */
@@ -50,35 +43,10 @@ interface BarProps {
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
-      toolBarLeft: {
-        [theme.breakpoints.down("sm")]: {
-          order: 1,
-          marginTop: theme.spacing(1),
-          marginBottom: theme.spacing(1),
-        },
-      },
-      toolBarRight: {
+      topBar: {
         display: "flex",
-        [theme.breakpoints.down("sm")]: {
-          order: 2,
-          marginLeft: "auto",
-        },
-        [theme.breakpoints.down("xs")]: {
-          marginTop: theme.spacing(1),
-          marginBottom: theme.spacing(1),
-        },
-      },
-      breadcrumbText: {
-        display: "flex",
-        cursor: "default",
-        color: theme.palette.text.disabled,
-      },
-      breadcrumbLink: {
-        display: "flex",
-        color: theme.palette.text.primary,
-      },
-      homeIcon: {
-        marginRight: "0.5em",
+        flexDirection: "row-reverse",
+        margin: theme.spacing(1),
       },
       buttonAddCaregiver: {
         marginLeft: "auto",
@@ -102,29 +70,19 @@ function SecondaryBar(props: BarProps): JSX.Element {
   };
 
   return (
-    <SecondaryHeaderBar>
-      <div id="patient-navbar-item-left" className={classes.toolBarLeft}>
-        <Breadcrumbs aria-label={t("aria-breadcrumbs")}>
-          <Link component={RouterLink} to="/" className={classes.breadcrumbLink}>
-            <HomeIcon className={classes.homeIcon} />
-            {t("breadcrumb-home")}
-          </Link>
-          <Typography className={classes.breadcrumbText}>{t("caregivers-title")}</Typography>
-        </Breadcrumbs>
-      </div>
-      <div id="patient-navbar-item-middle"></div>
-      <div id="patient-navbar-item-right" className={classes.toolBarRight}>
-        <Button
-          id="patient-navbar-add-caregiver"
-          color="primary"
-          variant="contained"
-          className={classes.buttonAddCaregiver}
-          onClick={handleOpenAddCaregiverDialog}>
-          <AddIcon />
-          <span className={classes.buttonAddCaregiverText}>&nbsp;{t("button-add-caregiver")}</span>
-        </Button>
-      </div>
-    </SecondaryHeaderBar>
+    <div id="patient-navbar-item-right" className={classes.topBar}>
+      <Button
+        id="patient-navbar-add-caregiver"
+        color="primary"
+        variant="contained"
+        disableElevation
+        className={classes.buttonAddCaregiver}
+        onClick={handleOpenAddCaregiverDialog}
+      >
+        <AddIcon />
+        <Box component="span" className={classes.buttonAddCaregiverText}>&nbsp;{t("button-add-caregiver")}</Box>
+      </Button>
+    </div>
   );
 }
 

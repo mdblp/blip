@@ -32,10 +32,14 @@ import jwtDecode from "jwt-decode";
 import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
-import { Patient, PatientTeam } from "../../models/patient";
-import { Alert } from "../../models/alert";
+import { Patient, PatientTeam } from "../../lib/data/patient";
+import { Alarm } from "../../models/alarm";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
-import { Profile } from "../../models/shoreline";
+import { Profile, UserRoles } from "../../models/shoreline";
+import { TeamMemberRole, TeamType } from "../../models/team";
+import { INotification, NotificationType } from "../../lib/notifications";
+import { Monitoring } from "../../models/monitoring";
+import { UNITS_TYPE } from "../../lib/units/utils";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -96,29 +100,50 @@ export const refreshToken = (token: string): string => {
   return `${b64Header}.${b64Payload}.`;
 };
 
-export function triggerMouseClick(domElement: HTMLElement): void {
-  const clickEvent = new MouseEvent("click", { bubbles: true });
+export function triggerMouseEvent(event: string, domElement: Element): void {
+  const clickEvent = new MouseEvent(event, { bubbles: true });
   domElement.dispatchEvent(clickEvent);
 }
 
 export const createPatient = (
   id: string,
   teams: PatientTeam[],
-  alerts: Alert = null,
+  alarm: Alarm = {
+    timeSpentAwayFromTargetRate: 10,
+    timeSpentAwayFromTargetActive: false,
+    frequencyOfSevereHypoglycemiaRate: 20,
+    frequencyOfSevereHypoglycemiaActive: false,
+    nonDataTransmissionRate: 30,
+    nonDataTransmissionActive: false,
+  },
   fullName = "fakePatientFullName",
-  remoteMonitoring: Date = null,
-  system: string = null,
-  flagged: boolean = null
+  monitoring: Monitoring | undefined = undefined,
+  system: string | undefined = undefined,
+  flagged: boolean | undefined = undefined
 ): Patient => {
   return {
-    alerts,
-    fullName,
-    remoteMonitoring,
-    system,
-    teams,
+    metadata: {
+      alarm: alarm,
+      flagged: flagged,
+      medicalData: null,
+      unreadMessagesSent: 0,
+    },
+    monitoring,
+    profile: {
+      birthdate: new Date(),
+      firstName: undefined,
+      fullName: fullName,
+      lastName: undefined,
+      email: "fakeUsername",
+      sex: "M",
+    },
+    settings: {
+      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
+      system: system,
+    },
+    teams: teams,
     userid: id,
-    flagged,
-  } as Patient;
+  };
 };
 
 export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
@@ -127,18 +152,31 @@ export const createPatientTeam = (id: string, status: UserInvitationStatus): Pat
     status,
   } as PatientTeam;
 };
-export const createAlert = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alert => {
+export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
   return {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate,
-  } as Alert;
+  } as Alarm;
 };
 
-export const createTeamUser = (id: string, members: TeamMember[], profile: Profile = null): TeamUser => {
+export const createTeamUser = (
+  id: string,
+  members: TeamMember[],
+  profile: Profile | undefined = undefined,
+  alarms: Alarm = {
+    timeSpentAwayFromTargetRate: 10,
+    timeSpentAwayFromTargetActive: true,
+    frequencyOfSevereHypoglycemiaRate: 10,
+    frequencyOfSevereHypoglycemiaActive: true,
+    nonDataTransmissionRate: 10,
+    nonDataTransmissionActive: true,
+  }): TeamUser => {
   return {
     userid: id,
     members,
     profile,
+    alarms,
+    monitoring: { enabled: false },
   } as TeamUser;
 };
 
@@ -148,3 +186,72 @@ export const createTeamMember = (id: string, name: string, teamCode: string, sta
     status,
   } as TeamMember;
 };
+
+export function buildTeam(id: string, members: TeamMember[]): Team {
+  return {
+    id,
+    name: "fake team name",
+    code: "123456789",
+    owner: "fakeOwner",
+    type: TeamType.medical,
+    members,
+    monitoring: {
+      enabled: true,
+      parameters: {
+        bgUnit: UNITS_TYPE.MGDL,
+        lowBg: 1,
+        highBg: 2,
+        outOfRangeThreshold: 3,
+        veryLowBg: 4,
+        hypoThreshold: 5,
+        nonDataTxThreshold: 6,
+        reportingPeriod: 7,
+      },
+    },
+  };
+}
+
+export function buildTeamMember(
+  teamId = "fakeTeamId",
+  userId = "fakeUserId",
+  invitation: INotification | undefined = undefined,
+  role: TeamMemberRole = TeamMemberRole.admin,
+  username = "fake@username.com",
+  fullName = "fake full name",
+  status = UserInvitationStatus.pending
+): TeamMember {
+  return {
+    team: { id: teamId } as Team,
+    role,
+    status,
+    user: {
+      role: UserRoles.hcp,
+      userid: userId,
+      username,
+      members: [],
+      profile: {
+        fullName,
+      },
+    },
+    invitation,
+  };
+}
+
+export function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId", role = TeamMemberRole.admin): INotification {
+  return {
+    id: "fakeInviteId",
+    type: NotificationType.careTeamProInvitation,
+    metricsType: "join_team",
+    email: "fake@email.com",
+    creatorId: "fakeCreatorId",
+    date: "fakeDate",
+    target: {
+      id: teamId,
+      name: "fakeTeamName",
+    },
+    role,
+    creator: {
+      userid: userId,
+    },
+  };
+}

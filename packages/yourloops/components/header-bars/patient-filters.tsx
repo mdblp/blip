@@ -29,37 +29,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-import FormControl from "@material-ui/core/FormControl";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
-import { MenuProps } from "@material-ui/core/Menu";
-import Select from "@material-ui/core/Select";
 
 import SearchIcon from "@material-ui/icons/Search";
 
-import { FilterType } from "../../models/generic";
-
 export interface PatientFiltersProps {
   filter: string;
-  filterType: FilterType | string;
-  optionsFilterElements: JSX.Element[];
-  /** If true the filter drop down menu is not displayed */
-  noFilter?: boolean;
   onFilter: (text: string) => void;
-  onFilterType: (filterType: FilterType | string) => void;
 }
-
-const selectMenuProps: Partial<MenuProps> = {
-  anchorOrigin: {
-    vertical: "bottom",
-    horizontal: "left",
-  },
-  transformOrigin: {
-    vertical: "top",
-    horizontal: "left",
-  },
-  getContentAnchorEl: null,
-};
 
 const filtersStyles = makeStyles((theme: Theme) => {
   return {
@@ -79,7 +57,8 @@ const filtersStyles = makeStyles((theme: Theme) => {
       },
     },
     inputRoot: {
-      color: "black",
+      color: theme.palette.grey[800],
+      width: "100%",
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
@@ -87,15 +66,12 @@ const filtersStyles = makeStyles((theme: Theme) => {
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // eslint-disable-line no-magic-numbers
       transition: theme.transitions.create("width"),
       width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
     },
     search: {
       "display": "flex",
       "position": "relative",
       "borderRadius": theme.shape.borderRadius,
-      "backgroundColor": theme.palette.common.white,
+      "backgroundColor": theme.palette.grey[100],
       "&:hover": {
         backgroundColor: theme.palette.secondary.dark,
       },
@@ -103,7 +79,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       "marginRight": theme.spacing(2),
       "marginLeft": "auto",
       [theme.breakpoints.up("sm")]: {
-        width: "15em",
+        width: "100%",
       },
       [theme.breakpoints.down("sm")]: {
         "width": "50%",
@@ -127,7 +103,7 @@ const filtersStyles = makeStyles((theme: Theme) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      color: theme.palette.primary.main,
+      color: theme.palette.grey[800],
     },
     selectFilter: {
       flex: "1",
@@ -167,31 +143,14 @@ const filtersStyles = makeStyles((theme: Theme) => {
 function PatientFilters(props: PatientFiltersProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = filtersStyles();
-  const { filter, filterType, optionsFilterElements, noFilter, onFilter, onFilterType } = props;
+  const { filter, onFilter } = props;
 
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     onFilter(e.target.value);
   };
-  const handleFilterCategory = (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>): void => {
-    onFilterType(e.target.value as string);
-  };
 
   return (
     <React.Fragment>
-      {!noFilter &&
-        <FormControl color="primary" className={classes.formControl}>
-          <Select
-            id="select-patient-list-filtertype"
-            value={filterType}
-            onChange={handleFilterCategory}
-            classes={{ root: classes.selectFilterInnerDiv }}
-            className={classes.selectFilter}
-            disableUnderline
-            MenuProps={selectMenuProps}>
-            {optionsFilterElements}
-          </Select>
-        </FormControl>
-      }
       <div className={classes.search}>
         <div className={classes.searchIcon}>
           <SearchIcon />

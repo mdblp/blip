@@ -69,6 +69,7 @@ const ignoredTransKeyInBlipFiles = [
   "${pa.reportedIntensity}-pa",
   "bolus_${bolusType}",
   "params|${parameter.name}",
+  "params|${row.name}"
 ];
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -91,6 +92,7 @@ const ignoredTransKeyForYourLoops = [
   "consent-welcome-message",
   "modal-add-patient-warning-line2",
   "modal-patient-team-privacy-2",
+  "no",
   "notification-caregiver-invitation-by-patient",
   "notification-hcp-invitation-by-team",
   "notification-patient-invitation-by-team",
@@ -109,6 +111,7 @@ const ignoredTransKeyForYourLoops = [
   "consent-hcp-terms-of-use",
   "consent-patient-privacy-policy",
   "consent-patient-terms-of-use",
+  "modal-add-medical-team-code-no-invite",
   "signup-steppers-caregiver-title",
   "signup-steppers-hcp-title",
   "signup-steppers-step1",
@@ -116,6 +119,7 @@ const ignoredTransKeyForYourLoops = [
   "signup-steppers-step3",
   "signup-steppers-step4",
   "team-card-label-address",
+  "until",
   // Errors messages
   "email-not-verified",
   "error-account-lock",
@@ -127,6 +131,11 @@ const ignoredTransKeyForYourLoops = [
   // TODO
   "alert-invitation-patient-failed-already-in-team",
   "alert-invitation-patient-failed-already-invited",
+  "accompanying-documents",
+  "intended-use",
+  "training",
+  "initial-hba1c",
+  "optional",
 ];
 const ignoredTransKeyInYourLoopsFiles = [
   "yourloops|${s}",

@@ -35,7 +35,7 @@ import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 import { Team } from "../../../lib/team";
-import GenericTeamCard from "../../../components/team-card";
+import GenericTeamCard from "../../../components/team/team-card";
 
 export interface TeamCardProps {
   team: Readonly<Team>;

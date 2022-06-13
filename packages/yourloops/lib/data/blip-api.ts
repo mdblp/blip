@@ -31,20 +31,22 @@ import bows from "bows";
 import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { IUser } from "../../models/shoreline";
-import { User, AuthContext } from "../auth";
+import { AuthContext, User } from "../auth";
 import { t as translate } from "../language";
 import metrics from "../metrics";
 
 import { GetPatientDataOptions } from "./models";
 import {
-  getPatientDataRange as apiGetPatientDataRange,
-  getPatientData as apiGetPatientData,
-  startMessageThread as apiStartMessageThread,
-  getMessageThread as apiGetMessageThread,
-  getMessages as apiGetMessages,
-  replyMessageThread as apiReplyMessageThread,
   editMessage as apiEditMessage,
+  getMessages as apiGetMessages,
+  getMessageThread as apiGetMessageThread,
+  getPatientData as apiGetPatientData,
+  getPatientDataRange as apiGetPatientDataRange,
+  replyMessageThread as apiReplyMessageThread,
+  startMessageThread as apiStartMessageThread,
+  exportData as apiExportData,
 } from "./api";
+import { Patient } from "./patient";
 
 /**
  * Wrapper for blip v1 to be able to call the API
@@ -77,7 +79,7 @@ class BlipApi {
     return Promise.reject(new Error(translate("not-logged-in")));
   }
 
-  public getPatientData(patient: IUser, options?: GetPatientDataOptions): Promise<PatientData> {
+  public getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
     this.log.debug("getPatientData", { userId: patient.userid, options });
     const session = this.authHook.session();
     if (session !== null) {
@@ -134,6 +136,15 @@ class BlipApi {
     const session = this.authHook.session();
     if (session !== null) {
       return apiEditMessage(session, message);
+    }
+    return Promise.reject(new Error(translate("not-logged-in")));
+  }
+
+  public exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
+    this.log.debug("exportData", { userId: patient.userid });
+    const session = this.authHook.session();
+    if (session !== null) {
+      return apiExportData(session, patient.userid, startDate, endDate);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

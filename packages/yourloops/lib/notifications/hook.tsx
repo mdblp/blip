@@ -73,6 +73,14 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     setSentInvitations(r);
   };
 
+  const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date): Promise<void> => {
+    await api.inviteToRemoteMonitoring(session, teamId, userId, monitoringEnd);
+  };
+
+  const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
+    await api.cancelRemoteMonitoringInvite(session, teamId, userId);
+  };
+
   const initHook = () => {
     if (initialized || lock) {
       return;
@@ -105,6 +113,8 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     accept,
     decline,
     cancel,
+    inviteRemoteMonitoring,
+    cancelRemoteMonitoringInvite,
   };
 }
 

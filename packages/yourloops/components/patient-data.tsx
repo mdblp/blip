@@ -28,25 +28,35 @@
 
 import React from "react";
 import bows from "bows";
-import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
-
-import { UserRoles, IUser } from "../models/shoreline";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
 import { useData } from "../lib/data";
-import { getUserFirstLastName, setPageTitle } from "../lib/utils";
+import { setPageTitle } from "../lib/utils";
 
 import ProfileDialog from "./dialogs/patient-profile";
 import DialogDatePicker from "./date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "./dialogs/pdf-print-options";
+import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
+import ChatWidget from "./chat/chat-widget";
+import { Patient } from "../lib/data/patient";
+import { makeStyles } from "@material-ui/core";
+import AlarmCard from "./alarm/alarm-card";
+
+const patientDataStyles = makeStyles(() => {
+  return {
+    container: {
+      padding: 0,
+    },
+  };
+});
 
 interface PatientDataParam {
   patientId?: string;
@@ -72,70 +82,80 @@ function PatientDataPage(): JSX.Element | null {
   const authHook = useAuth();
   const teamHook = useTeam();
   const dataHook = useData();
+  const classes = patientDataStyles();
 
-  const [patient, setPatient] = React.useState<Readonly<IUser> | null>(null);
+  const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
+  const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
   const [error, setError] = React.useState<string | null>(null);
 
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
   const authUser = authHook.user;
   const userId = authUser?.userid ?? null;
-  const userIsPatient = authHook.user?.role === UserRoles.patient;
+  const userIsPatient = authHook.user?.isUserPatient();
+  const userIsHCP = authHook.user?.isUserHcp();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
 
-  const initialized = authHook.isAuthHookInitialized && teamHook.initialized && blipApi !== null;
+  const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi;
+
   React.useEffect(() => {
     if (!initialized) {
       return;
     }
 
-    if (userIsPatient && !_.isNil(authUser)) {
-      setPatient(authUser);
-    } else {
-      const patientId = paramPatientId ?? userId;
-      if (patientId === null) {
-        log.error("Invalid patient Id", patientId);
-        setError("Invalid patient Id");
-        return;
-      }
-
-      const user = teamHook.getUser(patientId);
-      if (user === null || user.role !== UserRoles.patient) {
-        log.error("Patient not found");
-        setError("Patient not found");
-      } else {
-        setPatient(user);
-      }
+    setPatients(teamHook.getPatients());
+    let patientId = paramPatientId ?? userId;
+    if (userIsPatient && authUser) {
+      patientId = authUser.userid;
     }
-  }, [initialized, paramPatientId, patient, userId, teamHook, authUser, userIsPatient]);
+    if (!patientId) {
+      log.error("Invalid patient Id");
+      setError("Invalid patient Id");
+      return;
+    }
+    const patientToSet = teamHook.getPatient(patientId);
+    if (patientToSet) {
+      setPatient(patientToSet);
+    } else {
+      log.error("Patient not found");
+      setError("Patient not found");
+    }
+  }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
 
   React.useEffect(() => {
-    if (patient !== null && patient.userid !== userId) {
-      setPageTitle(t("user-name", getUserFirstLastName(patient)), "PatientName");
+    if (patient && patient.userid !== userId) {
+      setPageTitle(t("user-name", patient.profile.lastName), "PatientName");
     } else {
       setPageTitle();
     }
+
   }, [userId, patient, t]);
 
-  if (error !== null) {
+  if (error) {
     return <PatientDataPageError msg={error} />;
   }
 
-  if (blipApi === null || patient === null) {
+  if (!blipApi || !patient) {
     return null;
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container className={classes.container} maxWidth={false}>
       <Blip
         config={appConfig}
         api={blipApi}
         patient={patient}
+        userIsHCP={!!userIsHCP}
+        patients={patients}
+        setPatient={setPatient}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}
         dialogDatePicker={DialogDatePicker}
         dialogRangeDatePicker={DialogRangeDatePicker}
         dialogPDFOptions={DialogPDFOptions}
+        patientInfoWidget={PatientInfoWidget}
+        chatWidget={ChatWidget}
+        alarmCard={AlarmCard}
       />
     </Container>
   );

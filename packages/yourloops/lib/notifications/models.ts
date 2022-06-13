@@ -36,6 +36,7 @@ export enum NotificationType {
   careTeamPatientInvitation,
   careTeamDoAdmin,
   careTeamRemoveMember,
+  careTeamMonitoringInvitation,
 }
 
 export interface INotification {
@@ -71,6 +72,8 @@ export interface NotificationContext {
   accept: (notification: INotification) => Promise<void>;
   decline: (notification: INotification) => Promise<void>;
   cancel: (notification: INotification) => Promise<void>;
+  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date) => Promise<void>;
+  cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>;
 }
 
 export interface NotificationAPI {
@@ -81,6 +84,8 @@ export interface NotificationAPI {
   acceptInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
   declineInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
   cancelInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
+  inviteToRemoteMonitoring: (session: Session, teamId: string, userId: string, monitoringEnd: Date) => Promise<void>;
+  cancelRemoteMonitoringInvite: (session: Session, teamId: string, userId: string) => Promise<void>;
 }
 
 export interface NotificationProvider {

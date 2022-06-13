@@ -331,6 +331,138 @@ describe("Stats", () => {
         });
       });
     });
+
+    context("deviceUsage", () => {
+      beforeEach(() => {
+        wrapper = mount(<Stats {..._.assign({}, baseProps, {
+          chartType: "deviceUsage",
+        })} />);
+      });
+      afterEach(() => {
+        if (wrapper) {
+          wrapper.unmount();
+          wrapper = null;
+        }
+      });
+
+      it("should render without errors when provided all required props", () => {
+        expect(wrapper.find(".Stats")).to.have.length(1);
+        expect(console.error.callCount).to.equal(0);
+      });
+
+      it("should show all expected stats when bgSource prop is `cbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "cbg",
+        });
+        wrapper.update();
+        expect(wrapper.find(".Stats").children()).to.have.length(1);
+
+        const expectedStats = [
+          "sensorUsage",
+        ];
+
+        expectedStats.forEach(statId => {
+          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
+        });
+      });
+
+      it("should show no stats when bgSource prop is `smbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "smbg",
+        });
+        wrapper.update();
+        expect(wrapper.find(".Stats").children()).to.have.length(0);
+      });
+    });
+
+    context("patientStatistics", () => {
+      beforeEach(() => {
+        wrapper = mount(<Stats {..._.assign({}, baseProps, {
+          chartType: "patientStatistics",
+        })} />);
+      });
+      afterEach(() => {
+        if (wrapper) {
+          wrapper.unmount();
+          wrapper = null;
+        }
+      });
+
+      it("should render without errors when provided all required props", () => {
+        expect(wrapper.find(".Stats")).to.have.length(1);
+        expect(console.error.callCount).to.equal(0);
+      });
+
+      it("should show all expected stats when bgSource prop is `cbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "cbg",
+        });
+        wrapper.update();
+
+        expect(wrapper.find(".Stats").children()).to.have.length(4);
+
+        const expectedStats = [
+          "timeInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "carbs",
+        ];
+
+        expectedStats.forEach(statId => {
+          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
+        });
+      });
+
+      it("should render the Time in Auto stat for automated basal devices", () => {
+        wrapper = shallow(<Stats {..._.assign({}, baseProps, {
+          chartType: "patientStatistics",
+          bgSource: "cbg",
+          dataUtil: new DataUtilStub([], {
+            latestPump: {
+              deviceModel: "1780",
+              manufacturer: "medtronic",
+            },
+          }),
+        })} />);
+
+        expect(wrapper.find(".Stats").children()).to.have.length(5);
+
+        const expectedStats = [
+          "timeInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "timeInAuto",
+          "carbs",
+        ];
+
+        expectedStats.forEach(statId => {
+          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
+        });
+
+      });
+
+      it("should show all expected stats when bgSource prop is `smbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "smbg",
+        });
+        wrapper.update();
+        expect(wrapper.find(".Stats").children()).to.have.length(4);
+
+        const expectedStats = [
+          "readingsInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "carbs",
+        ];
+        expectedStats.forEach(statId => {
+          expect(wrapper.find(`#Stat--${statId}`)).to.have.length(1);
+        });
+      });
+    });
   });
 
   describe("getStatsByChartType", () => {
@@ -531,6 +663,124 @@ describe("Stats", () => {
         ];
 
         expect(_.map(stats, "id")).to.have.ordered.members(expectedStats);
+      });
+    });
+
+    context("deviceUsage", () => {
+      beforeEach(() => {
+        wrapper = mount(<Stats {..._.assign({}, baseProps, {
+          chartType: "deviceUsage",
+        })} />);
+        instance = wrapper.instance();
+      });
+      afterEach(() => {
+        if (wrapper) {
+          wrapper.unmount();
+          wrapper = null;
+          instance = null;
+        }
+      });
+
+      it("should show all expected stats when bgSource prop is `cbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "cbg",
+        });
+        wrapper.update();
+        const stats = instance.getStatsByChartType();
+
+        const expectedStats = [
+          "sensorUsage",
+        ];
+
+        expect(_.map(stats, "id")).to.have.ordered.members(expectedStats);
+      });
+
+      it("should show all expected stats when bgSource prop is `smbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "smbg",
+        });
+        wrapper.update();
+        const stats = instance.getStatsByChartType();
+        expect(stats).to.have.length(0);
+      });
+    });
+
+    context("patientStatistics", () => {
+      beforeEach(() => {
+        wrapper = mount(<Stats {..._.assign({}, baseProps, {
+          chartType: "patientStatistics",
+        })} />);
+        instance = wrapper.instance();
+      });
+      afterEach(() => {
+        if (wrapper) {
+          wrapper.unmount();
+          wrapper = null;
+          instance = null;
+        }
+      });
+
+      it("should show all expected stats when bgSource prop is `cbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "cbg",
+        });
+        wrapper.update();
+        const stats = instance.getStatsByChartType();
+
+        const expectedStats = [
+          "timeInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "carbs",
+        ];
+
+        expect(_.map(stats, "id")).to.have.ordered.members(expectedStats);
+      });
+
+      it("should show all expected stats when bgSource prop is `smbg`", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "smbg",
+        });
+        wrapper.update();
+        const stats = instance.getStatsByChartType();
+
+        const expectedStats = [
+          "readingsInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "carbs",
+        ];
+
+        expect(_.map(stats, "id")).to.have.ordered.members(expectedStats);
+      });
+
+      it("should render the Time in Auto stat for automated basal devices", () => {
+        wrapper.setProps({
+          ...wrapper.props(),
+          bgSource: "cbg",
+          dataUtil: new DataUtilStub([], {
+            latestPump: {
+              deviceModel: "1780",
+              manufacturer: "medtronic",
+            },
+          }),
+        });
+        wrapper.update();
+        const stats = instance.getStatsByChartType();
+
+        const expectedStats = [
+          "timeInRange",
+          "averageGlucose",
+          "averageDailyDose",
+          "timeInAuto",
+          "carbs",
+        ];
+
+        expect(_.map(stats, "id")).to.include.members(expectedStats);
       });
     });
   });

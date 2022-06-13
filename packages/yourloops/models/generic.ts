@@ -18,16 +18,32 @@ enum Units {
   mole = "mmol/L",
   gram = "mg/dL",
 }
+
 enum FilterType {
   all = "all",
   flagged = "flagged",
   pending = "pending",
   private = "private",
 }
+
+enum PatientFilterTypes {
+  all = "all",
+  flagged = "flagged",
+  dataNotTransferred = "data-not-transferred",
+  outOfRange = "out-of-range",
+  pending = "pending",
+  private = "private",
+  remoteMonitored = "remote-monitored",
+  renew = "renew",
+  severeHypoglycemia = "severe-hypoglycemia",
+  unread = "unread-messages",
+}
+
 enum SortDirection {
   asc = "asc",
   desc = "desc",
 }
+
 enum SortFields {
   lastname = "lastname",
   firstname = "firstname",
@@ -39,9 +55,11 @@ enum SortFields {
   /** Last upload date */
   upload = "upload",
 }
+
 enum PatientTableSortFields {
   alertHypoglycemic = "alertHypoglycemic",
   alertTimeTarget = "alertTimeTarget",
+  dataNotTransferred = "dataNotTransferred",
   flag = "flag",
   /** Last data update */
   ldu = "ldu",
@@ -49,6 +67,7 @@ enum PatientTableSortFields {
   remoteMonitoring = "remoteMonitoring",
   system = "system",
 }
+
 enum UserInvitationStatus {
   pending = "pending",
   accepted = "accepted",
@@ -82,4 +101,5 @@ export {
   PatientTableSortFields,
   UserInvitationStatus,
   MS_IN_DAY,
+  PatientFilterTypes,
 };

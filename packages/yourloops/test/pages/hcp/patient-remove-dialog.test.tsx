@@ -36,13 +36,13 @@ import { NotificationContextProvider } from "../../../lib/notifications";
 
 import { directShareAPI } from "../../lib/direct-share/hook";
 
-import RemoveDialog from "../../../pages/hcp/patients/remove-dialog";
+import RemoveDialog from "../../../components/patient/remove-dialog";
 import { waitTimeout } from "../../../lib/utils";
 import { loggedInUsers } from "../../common";
 import { teamAPI } from "../../lib/team/utils";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import { stubNotificationContextValue } from "../../lib/notifications/utils";
-import { Patient } from "../../../models/patient";
+import { Patient } from "../../../lib/data/patient";
 
 
 describe("Patient remove dialog", () => {

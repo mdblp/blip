@@ -20,6 +20,8 @@
 
 import { Profile, Settings, Preferences } from "./shoreline";
 import { UserInvitationStatus, PostalAddress } from "./generic";
+import { Alarm } from "./alarm";
+import { Monitoring } from "./monitoring";
 
 export enum TeamType {
   medical = "medical",
@@ -50,6 +52,9 @@ export interface ITeamMember {
   settings?: Settings | null;
   preferences?: Preferences | null;
   idVerified: boolean;
+  alarms?: Alarm;
+  monitoring?: Monitoring;
+  unreadMessages?: number;
 }
 
 /**
@@ -66,4 +71,5 @@ export interface ITeam {
   address?: PostalAddress;
   description?: string;
   members: ITeamMember[];
+  monitoring?: Monitoring;
 }

@@ -129,7 +129,7 @@ export interface TrendsProps {
   onDatetimeLocationChange: OnLocationChange;
   updateChartPrefs: OnUpdateChartPrefs;
   onClickRefresh: () => void;
-  onSwitchToBasics: () => void;
+  onSwitchToDashboard: () => void;
   onSwitchToDaily: (date?: number | string | Date) => void;
   onSwitchToSettings: () => void;
 }

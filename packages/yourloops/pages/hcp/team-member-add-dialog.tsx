@@ -68,14 +68,14 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
   };
 
   const handleClickClose = (): void => {
-    addMember?.onDialogResult({ email: null, role });
+    addMember?.onMemberInvited(null);
     setEMail("");
     setButtonDisabled(true);
     setRole(TeamMemberRole.member);
   };
 
   const handleClickAdd = (): void => {
-    addMember?.onDialogResult({ email, role });
+    addMember?.onMemberInvited({ email, role, team : addMember?.team });
     setEMail("");
     setButtonDisabled(true);
     setRole(TeamMemberRole.member);
@@ -132,10 +132,12 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
         </Button>
         <Button
           id="team-add-member-dialog-button-add"
-          onClick={handleClickAdd}
           color="primary"
           variant="contained"
-          disabled={buttonDisabled}>
+          disableElevation
+          disabled={buttonDisabled}
+          onClick={handleClickAdd}
+        >
           {t("button-invite")}
         </Button>
       </DialogActions>

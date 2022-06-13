@@ -37,9 +37,13 @@
 
 .patient-data-subnav-inner {
   color: @black-80;
-  background-color: var(--color-secondary-main);;
+  background-color: var(--card-header-background-color);
   font-size: 16px;
   padding: 0;
+  margin-bottom: @spacing-medium;
+  box-shadow: 0px 1px 2px #00000029;
+  -moz-box-shadow: 0px 1px 2px #00000029;
+  -webkit-box-shadow: 0px 1px 2px #00000029;
 }
 
 .patient-data-subnav {
@@ -172,13 +176,6 @@ a.js-home {
 .patient-data-subnav-center {
   display: flex;
   justify-content: space-between;
-  padding: @patient-data-subnav-vertical-padding @spacing-small;
-}
-
-.patient-data-subnav-left {
-  display: flex;
-  flex-direction: row;
-  padding: @patient-data-subnav-vertical-padding @spacing-small;
 }
 
 .patient-data-subnav-right {
@@ -416,9 +413,55 @@ a.js-home {
   }
 }
 
+#subnav-hcp-container {
+  display: flex;
+  align-items: center;
+
+  #subnav-arrow-back {
+    color: @black-black;
+  }
+
+  .subnav-icon {
+    margin: @spacing-small;
+  }
+
+  #subnav-patient-list {
+    margin: 0 @spacing-medium;
+    max-width: 150px;
+  }
+}
+
+#subnav-period-label {
+  width: 150px;
+  font-style: italic;
+  text-align: center;
+}
+
+.patient-data-subnav-left {
+  display: flex;
+  align-items: center;
+  padding-left: @spacing-small;
+
+  .subnav-left-container{
+    display: flex;
+    align-items: center;
+    width: 750px;
+  }
+
+  .subnav-tab {
+    min-width: 80px;
+  }
+
+  .dashboard-divider {
+    border-left: 1px solid grey;
+    height: 60px;
+    margin: auto 10px auto 10px;
+  }
+}
+
 @media print {
   .patient-data-subnav-inner {
-    color: gray;
+    color: @grey-card;
     background-color: transparent;
 
     padding: @patient-data-subnav-vertical-padding

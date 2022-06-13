@@ -5,8 +5,41 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 ### Added
 - YLP-1260 Verify password leak on signup or password change
+- YLP-1291 A monitoring team can flag a patient under remote monitoring
+- YLP-1340 Remote monitoring left menu for an HCP user
+- YLP-1367 The medical data can be exported as csv file
+- YLP-1369 HCP can send private messages for this team
+- YLP-1370 HCP and patient can communicate through messaging system
 - YLP-1379 New Header
+- YLP-1410 New left navigation drawer
 - YLP-1411 Implement the Patient list table with the new layout
+- YLP-1415 Implement the team details page
+- YLP-1445 Implement alerts in patients table
+- YLP-1452 Implement Auth0 Login/Logout
+- YLP-1462 Create Patient statistics card for dashboard
+- YLP-1463 create Patient information card for dashboard
+- YLP-1465 create Device usage card for dashboard
+- YLP-1466 Create alarm card
+- YLP-1469 Update footer with "Accompanying documents" dropdown
+- YLP-1475 Implement the team details page for patients
+- YLP-1476 Remove care teams page
+- YLP-1494 Implement patient table for caregiver
+- YLP-1495 Add success/error messages on team details page
+- YLP-1496 Add possibility for a patient to add a caregiver
+- YLP-1497 Change all buttons to a flat design
+- YLP-1500 Patient can join a team from header
+- YLP-1501 Update team details alarms management with new design
+- YLP-1504 Plug team alarms configuration to backend
+- YLP-1511 Display message date, status and the number of unread messages in chat widget
+- YLP-1518 Implement drawer filters
+- YLP-1537 Display settings page in a dialog
+- YLP-1541 Plug team alarm configuration to backend
+- YLP-1544 Create dialog to invite patient in remote monitoring team
+- YLP-1547 Rework patient and caregiver list nav bar
+- YLP-1583 Add message column in patient list
+- YLP-1585 Add messages filter in left drawer
+- YLP-1594 Implement the delete button for remote monitored patients
+- YLP-1604 Update patient profile with new patient information
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
@@ -14,6 +47,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1345 Correct blip pdf export to display japanese chars
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
+- YLP-1506 Skip flaky test
 ### Fixed
 - YLP-1199 Stats in trends view may be wrong
 - YLP-1312 Data loading may be missing some ranges

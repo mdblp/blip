@@ -7,9 +7,9 @@ import * as sinon from "sinon";
 import chai from "chai";
 
 import { MGDL_UNITS } from "tideline";
-import Settings from "../../../../app/components/chart/settings";
+import SettingsDialog from "../../../../app/components/chart/settingsDialog";
 
-describe("Settings", function () {
+describe("SettingsDialog", function () {
   const { expect } = chai;
 
   const bgPrefs = {
@@ -56,7 +56,6 @@ describe("Settings", function () {
     it("should render without problems", function () {
       const props = {
         bgPrefs,
-        chartPrefs: {},
         timePrefs: {
           timezoneAware: false,
           timezoneName: "UTC",
@@ -100,97 +99,35 @@ describe("Settings", function () {
             },
           }] }
         },
-        permsOfLoggedInUser: {
-          view: {},
-          notes: {},
-        },
-        currentPatientInViewId: "",
-        onClickRefresh: sinon.spy(),
-        onClickNoDataRefresh: sinon.spy(),
         onSwitchToDaily: sinon.spy(),
         onSwitchToSettings: sinon.spy(),
-        onSwitchToBasics: sinon.spy(),
+        onSwitchToDashboard: sinon.spy(),
         onSwitchToTrends: sinon.spy(),
         onClickPrint: sinon.spy(),
         trackMetric: sinon.spy(),
-        canPrint: true,
+        open: true,
+        setOpen: sinon.spy(),
       };
 
-      settingsElem = mount(<Provider store={fakeStore}><Settings {...props} /></Provider>);
-      expect(console.error.callCount, console.error.getCalls()).to.equal(0);
-      expect(settingsElem.find("#tidelineMain").exists()).to.be.true;
+      settingsElem = mount(<Provider store={fakeStore}><SettingsDialog {...props} /></Provider>);
+      expect(console.error.callCount).to.equal(0);
+      expect(settingsElem.find("#device-usage-details-dialog").exists()).to.be.true;
     });
 
     it("should render with missing data message when no pumpSettings data supplied", function () {
       const props = {
         bgPrefs,
-        chartPrefs: {},
+        timePrefs: {},
         patientData: {
           grouped: { foo: "bar" }
         },
-        onClickRefresh: sinon.spy(),
-        onClickNoDataRefresh: sinon.spy(),
         onSwitchToDaily: sinon.spy(),
-        onSwitchToSettings: sinon.spy(),
-        onSwitchToBasics: sinon.spy(),
-        onSwitchToTrends: sinon.spy(),
         trackMetric: sinon.spy(),
-        canPrint: true,
+        open: true,
+        setOpen: sinon.spy(),
       };
-      settingsElem = mount(<Settings {...props} />);
+      settingsElem = mount(<SettingsDialog {...props} />);
       expect(settingsElem.find(".patient-data-message").exists()).to.be.true;
-    });
-
-    it("should have a refresh button which should call onClickRefresh when clicked", function () {
-      var props = {
-        bgPrefs,
-        chartPrefs: {},
-        patientData: {
-        },
-        onClickRefresh: sinon.spy(),
-        onClickNoDataRefresh: sinon.spy(),
-        trackMetric: sinon.spy(),
-        canPrint: true,
-      };
-
-      settingsElem = mount(<Settings {...props} />);
-      expect(settingsElem.find(".btn-refresh").exists()).to.be.true;
-
-      expect(props.onClickRefresh.callCount).to.equal(0);
-      settingsElem.find(".btn-refresh").simulate("click");
-      expect(props.onClickRefresh.callCount).to.equal(1);
-    });
-
-    it("should have a disabled print button and spinner when a pdf is not ready to print", function () {
-      var props = {
-        bgPrefs,
-        chartPrefs: {},
-        patientData: {},
-        canPrint: false,
-      };
-
-      settingsElem = mount(<Settings {...props} />);
-      expect(settingsElem.find(".printview-print-icon").exists()).to.be.false;
-    });
-
-    it("should have an enabled print button and icon when a pdf is ready and call onClickPrint when clicked", function () {
-      var props = {
-        bgPrefs,
-        chartPrefs: {},
-        patientData: {},
-        printReady: true,
-        canPrint: true,
-        onClickPrint: sinon.spy(),
-      };
-
-      settingsElem = mount(<Settings {...props} />);
-      expect(settingsElem.find(".patient-data-subnav-active").exists()).to.be.true;
-      expect(settingsElem.find(".printview-print-icon").exists()).to.be.true;
-      expect(settingsElem.find(".print-icon").exists()).to.be.true;
-
-      expect(props.onClickPrint.callCount).to.equal(0);
-      settingsElem.find(".printview-print-icon").simulate("click");
-      expect(props.onClickPrint.callCount).to.equal(1);
     });
   });
 });

@@ -31,11 +31,12 @@ import bows from "bows";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { UserRoles } from "../../models/shoreline";
 import { INotificationAPI } from "../../models/notification";
-import { TeamType, ITeam, ITeamMember, TypeTeamMemberRole } from "../../models/team";
+import { ITeam, ITeamMember, TeamType, TypeTeamMemberRole } from "../../models/team";
 import { errorFromHttpStatus } from "../../lib/utils";
 import { Session } from "../auth";
 import appConfig from "../config";
 import { getCurrentLang } from "../language";
+import { Monitoring } from "../../models/monitoring";
 
 const log = bows("TeamAPI");
 
@@ -43,7 +44,7 @@ async function fetchTeams(session: Session): Promise<ITeam[]> {
   const { sessionToken, traceToken } = session;
   log.info("fetchTeams()");
 
-  const apiURL = new URL("/v0/teams", appConfig.API_HOST);
+  const apiURL = new URL("/v0/my-teams", appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "GET",
     headers: {
@@ -63,7 +64,7 @@ async function fetchPatients(session: Session): Promise<ITeamMember[]> {
   const { sessionToken, traceToken } = session;
   log.info("fetchPatients()");
 
-  const apiURL = new URL("/v0/patients", appConfig.API_HOST);
+  const apiURL = new URL("/v0/my-patients", appConfig.API_HOST);
   const response = await fetch(apiURL.toString(), {
     method: "GET",
     headers: {
@@ -173,6 +174,46 @@ async function editTeam(session: Session, editedTeam: ITeam): Promise<void> {
       [HttpHeaderKeys.sessionToken]: sessionToken,
     },
     body: JSON.stringify(editedTeam),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+async function updateTeamAlerts(session: Session, teamId: string, monitoring: Monitoring): Promise<void> {
+  const { sessionToken, traceToken } = session;
+
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/remote-monitoring`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify(monitoring),
+  });
+
+  if (response.ok) {
+    return Promise.resolve();
+  }
+
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+async function updatePatientAlerts(session: Session, teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
+  const { sessionToken, traceToken } = session;
+
+  const apiURL = new URL(`/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`, appConfig.API_HOST);
+  const response = await fetch(apiURL.toString(), {
+    method: "PUT",
+    headers: {
+      [HttpHeaderKeys.traceToken]: traceToken,
+      [HttpHeaderKeys.sessionToken]: sessionToken,
+    },
+    body: JSON.stringify(monitoring),
   });
 
   if (response.ok) {
@@ -379,6 +420,8 @@ export default {
   leaveTeam,
   removeMember,
   removePatient,
+  updateTeamAlerts,
+  updatePatientAlerts,
   changeMemberRole,
   getTeamFromCode,
   joinTeam,

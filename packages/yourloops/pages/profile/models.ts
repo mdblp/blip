@@ -33,4 +33,6 @@ export interface Errors {
   password: boolean;
   birthDate: boolean;
   hcpProfession: boolean;
+  ins: boolean;
+  ssn: boolean;
 }

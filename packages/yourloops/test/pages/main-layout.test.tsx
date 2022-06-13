@@ -28,14 +28,20 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { BrowserRouter } from "react-router-dom";
+import * as auth0Mock from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLayout } from "../../pages/main-layout";
-import CaregiverPage from "../../pages/caregiver";
-import PatientListPage from "../../pages/hcp/patients/page";
 import PatientDataPage from "../../components/patient-data";
+import HomePage from "../../pages/home-page";
+import * as shareLib from "../../lib/share";
+
+jest.mock("../../lib/share");
+
+jest.mock("@auth0/auth0-react");
 
 describe("Main layout", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -47,23 +53,39 @@ describe("Main layout", () => {
 
   function renderMainPageLayout(authContext: AuthContext) {
     return renderer.create(
-      <BrowserRouter>
-        <AuthContextProvider value={authContext}>
-          <MainLayout />
-        </AuthContextProvider>
-      </BrowserRouter>
+      <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
+        <BrowserRouter>
+          <AuthContextProvider value={authContext}>
+            <MainLayout />
+          </AuthContextProvider>
+        </BrowserRouter>
+      </Auth0Provider>
     );
   }
 
-  it("should render HcpPage when current user has hcp role", () => {
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
+  });
+
+  beforeEach(() => {
+    (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  });
+
+  it("should render HomePage when current user has hcp role", () => {
     const component = renderMainPageLayout(authHookHcp);
-    const hcpPage = component.root.findByType(PatientListPage);
+    const hcpPage = component.root.findByType(HomePage);
     expect(hcpPage).toBeDefined();
   });
 
-  it("should render CaregiverPage when current user has caregiver role", () => {
+  it("should render HomePage when current user has caregiver role", () => {
     const component = renderMainPageLayout(authHookCaregiver);
-    const caregiverPage = component.root.findByType(CaregiverPage);
+    const caregiverPage = component.root.findByType(HomePage);
     expect(caregiverPage).toBeDefined();
   });
 

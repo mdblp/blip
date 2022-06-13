@@ -39,8 +39,8 @@ import StethoscopeIcon from "../../../components/icons/StethoscopeIcon";
 import { AuthContextProvider, Session } from "../../../lib/auth";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import UserMenu from "../../../components/menus/user-menu";
-import { triggerMouseClick } from "../../common/utils";
 import { loggedInUsers } from "../../common";
+import { triggerMouseEvent } from "../../common/utils";
 
 describe("User Menu", () => {
   let container: HTMLElement | null = null;
@@ -50,7 +50,7 @@ describe("User Menu", () => {
 
   function openMenu(): void {
     const userMenu = document.getElementById("user-menu");
-    triggerMouseClick(userMenu);
+    triggerMouseEvent("click", userMenu);
   }
 
   async function mountComponent(session: Session): Promise<void> {
@@ -103,7 +103,7 @@ describe("User Menu", () => {
     await mountComponent(hcpSession);
     openMenu();
     const profileItem = document.getElementById("user-menu-settings-item");
-    triggerMouseClick(profileItem);
+    triggerMouseEvent("click", profileItem);
     expect(history.location.pathname).toBe("/preferences");
   });
 
@@ -111,7 +111,7 @@ describe("User Menu", () => {
     await mountComponent(hcpSession);
     openMenu();
     const logoutItem = document.getElementById("user-menu-logout-item");
-    triggerMouseClick(logoutItem);
+    triggerMouseEvent("click", logoutItem);
     expect(authContext.logout).toBeCalledTimes(1);
   });
 });

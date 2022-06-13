@@ -79,12 +79,10 @@ export interface SignupUser {
 export interface AuthAPI {
   accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
   certifyProfessionalAccount: () => Promise<IUser>;
-  login: (username: string, password: string, traceToken: string) => Promise<Session>;
-  logout: (session: Readonly<Session>) => Promise<void>;
+  getUserInfo: (session: Session) => Promise<User>;
+  getShorelineAccessToken: (email: string) => Promise<[string, string?]>;
   refreshToken: (session: Readonly<Session>) => Promise<string>;
-  requestPasswordReset: (username: string, traceToken: string, language?: string) => Promise<void>;
   resendSignup: (username: string, traceToken: string, language?: string) => Promise<boolean>;
-  resetPassword: (key: string, username: string, password: string, traceToken: string) => Promise<boolean>;
   sendAccountValidation: (session: Readonly<Session>, language?: string) => Promise<boolean>;
   signup: (username: string, password: string, role: UserRoles, traceToken: string) => Promise<Session>;
   updatePreferences: (session: Readonly<Session>) => Promise<Preferences>;
@@ -100,22 +98,15 @@ export interface AuthContext {
   certifyProfessionalAccount: () => Promise<void>;
   flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
   getFlagPatients: () => string[];
-  isAuthHookInitialized: boolean;
-  isAuthInProgress: boolean;
   isLoggedIn: boolean;
-  login: (username: string, password: string, key: string | null) => Promise<User>;
-  logout: (sessionExpired?: boolean) => Promise<void>; // sessionExpired True if the call is performed for a session expired mechanism
+  logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
   resendSignup: (username: string) => Promise<boolean>;
-  resetPassword: (key: string, username: string, password: string) => Promise<boolean>;
-  sendPasswordResetEmail: (username: string, language: string) => Promise<void>;
   session: () => Session | null;
-  sessionToken: string | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   signup: (signup: SignupUser) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  traceToken: string | null;
   updatePassword: (currentPassword: string, password: string) => Promise<void>;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
   updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;

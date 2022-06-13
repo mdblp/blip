@@ -150,6 +150,7 @@ function genContentSecurityPolicy() {
     contentSecurityPolicy.imgSrc.push("https://axeptio.imgix.net", "https://www.google.com");
   }
   contentSecurityPolicy.connectSrc.push("https://api.pwnedpasswords.com");
+  contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}/oauth/token`);
 
   let csp = "";
   for (const cspName in contentSecurityPolicy) {

@@ -33,14 +33,15 @@ import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
 import { ComputedTIR } from "../../models/device-data";
-import { IUser, UserRoles } from "../../models/shoreline";
+import { IUser } from "../../models/shoreline";
 
 import HttpStatus from "../http-status-codes";
 import appConfig from "../config";
-import { t } from "../language";
 import { errorFromHttpStatus } from "../utils";
 import { Session } from "../auth";
-import { GetPatientDataOptionsV0, GetPatientDataOptions } from "./models";
+import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "./models";
+import { Patient } from "./patient";
+import { Units } from "../../models/generic";
 
 const log = bows("data-api");
 
@@ -132,11 +133,8 @@ export async function getPatientDataRange(session: Session, patientId: string): 
  * @param options Options to pas to the API
  * @returns Patient data array
  */
-export async function getPatientData(session: Session, patient: IUser, options?: GetPatientDataOptions): Promise<PatientData> {
+export async function getPatientData(session: Session, patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
   const { sessionToken, traceToken } = session;
-  if (patient.role !== UserRoles.patient) {
-    return Promise.reject(new Error(t("not-a-patient")));
-  }
 
   let endpoint = `/data/v1/data/${patient.userid}`;
   if (appConfig.CBG_BUCKETS_ENABLED) {
@@ -291,6 +289,34 @@ export async function editMessage(session: Session, message: MessageNote): Promi
 
   if (response.ok) {
     return Promise.resolve();
+  }
+  return Promise.reject(errorFromHttpStatus(response, log));
+}
+
+/**
+ * Export data from export service
+ * @param auth
+ * @param userid
+ * @param startDate formatted as ISO string
+ * @param endDate formatted as ISO string
+ */
+export async function exportData(auth: Readonly<Session>, userid: string, start: string, end: string): Promise<Blob> {
+  const units = auth.user.settings?.units ?? Units.gram;
+  const exportURL = new URL(`/export/${userid}?bgUnits=${encodeURIComponent(units.toString())}&startDate=${encodeURIComponent(start)}&endDate=${encodeURIComponent(end)}`, appConfig.API_HOST);
+
+  const response = await fetch(exportURL.toString(), {
+    method: "GET",
+    cache: "no-store",
+    headers: {
+      [HttpHeaderKeys.contentType]: HttpHeaderValues.csv,
+      [HttpHeaderKeys.traceToken]: auth.traceToken,
+      [HttpHeaderKeys.sessionToken]: auth.sessionToken,
+    },
+  });
+
+  if (response.ok) {
+    const blob = await response.blob();
+    return Promise.resolve(blob);
   }
   return Promise.reject(errorFromHttpStatus(response, log));
 }

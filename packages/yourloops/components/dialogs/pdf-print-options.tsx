@@ -41,20 +41,24 @@ import Chip from "@material-ui/core/Chip";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { Radio, RadioGroup } from "@material-ui/core";
 
 import { CalendarOrientation } from "../date-pickers/models";
 import RangeDatePicker from "../date-pickers/range-date-picker";
 
 export type Presets = "1week" | "2weeks" | "4weeks" | "3months";
+export type OutputFormat = "pdf" | "csv";
 export interface PrintPDFOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
   start: string;
   /** Print end date (ISO day ex: 2022-02-10) */
   end: string;
   preset?: Presets;
+  format?: OutputFormat;
 }
 interface DialogPDFOptionsProps {
   open: boolean;
@@ -62,7 +66,9 @@ interface DialogPDFOptionsProps {
   minDate: string;
   /** Newest available date date (ISO day ex: 2022-02-10) */
   maxDate: string;
+  format?: OutputFormat;
   onResult: (options?: PrintPDFOptions) => void;
+  defaultPreset?: Presets;
 }
 const DEFAULT_PRESET: Presets = "4weeks";
 const MAX_SELECTABLE_DAYS = 90;
@@ -117,11 +123,12 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
   if (start.isBefore(minDate)) {
     start = minDate;
   }
-  return { start: start.format("YYYY-MM-DD"), end, preset };
+  const outputFormat : OutputFormat = "pdf";
+  return { start: start.format("YYYY-MM-DD"), end, preset, format: outputFormat };
 }
 
 function DialogPDFOptions(props: DialogPDFOptionsProps) {
-  const { open, onResult } = props;
+  const { open, defaultPreset, onResult } = props;
   const { t } = useTranslation("yourloops");
   const theme = useTheme();
   const matchLandscape = useMediaQuery(theme.breakpoints.up("sm"));
@@ -147,8 +154,8 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   }, [props.minDate, props.maxDate, customStartDate]);
 
   const [openState, setOpenState] = React.useState(false);
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
-
+  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset ? defaultPreset : DEFAULT_PRESET, minDate, maxDate));
+  const [outputFormat, setOutputFormat] = React.useState("pdf");
   const { start, end, displayedDates } = React.useMemo(() => {
     const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true });
     const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true });
@@ -162,12 +169,12 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
     if (open && !openState) {
       setOpenState(true);
-      setPDFOptions(getDatesFromPreset(DEFAULT_PRESET, minDate, maxDate));
+      setPDFOptions(getDatesFromPreset(defaultPreset ? defaultPreset : DEFAULT_PRESET, minDate, maxDate));
     }
     if (!open && openState) {
       setOpenState(false);
     }
-  }, [open, openState, minDate, maxDate]);
+  }, [defaultPreset, open, openState, minDate, maxDate]);
 
   const handleClickPreset = (preset: Presets) => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate));
@@ -177,7 +184,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     if (customStartDate) {
       const startDate = customStartDate.isBefore(d) ? customStartDate.format("YYYY-MM-DD") : d.format("YYYY-MM-DD");
       const endDate = customStartDate.isBefore(d) ? d.format("YYYY-MM-DD") : customStartDate.format("YYYY-MM-DD");
-      setPDFOptions({ start: startDate, end: endDate });
+      setPDFOptions({ start: startDate, end: endDate, format: outputFormat as OutputFormat });
       setCustomStartDate(null);
     } else {
       setCustomStartDate(d);
@@ -185,6 +192,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   };
 
   const presetSelected = pdfOptions.preset;
+  const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
+    pdfOptions.format = event.target.value as OutputFormat;
+    setOutputFormat((event.target as HTMLInputElement).value);
+  };
+
   return (
     <Dialog
       id="dialog-pdf-options"
@@ -265,6 +277,30 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             selection={{ mode: "range", selected: { start, end } }}
           />
         </Box>
+
+        <Box >
+          <Typography variant="body2" className={classes.customRangeText}>{t("dialog-pdf-options-format")}</Typography>
+
+          <RadioGroup
+            id="pdf-options-output-format"
+            value={outputFormat}
+            row
+            onChange={handleOutputFormat}
+          >
+            <FormControlLabel value="pdf"
+              control={
+                <Radio id="dialog-pdf-options-selector-pdf" color="primary"/>
+              }
+              label={t("dialog-pdf-options-output-format-pdf")}
+            />
+            <FormControlLabel
+              value="csv"
+              control={
+                <Radio id="dialog-pdf-options-selector-csv" color="primary"/>
+              }
+              label={t("dialog-pdf-options-output-format-csv")} />
+          </RadioGroup>
+        </Box>
       </DialogContent>
 
       <DialogActions>
@@ -273,10 +309,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         </Button>
         <Button
           id="pdf-options-button-generate"
-          onClick={() => onResult(pdfOptions)}
           disabled={!!customStartDate}
           color="primary"
           variant="contained"
+          disableElevation
+          onClick={() => onResult(pdfOptions)}
         >
           {t("button-generate")}
         </Button>

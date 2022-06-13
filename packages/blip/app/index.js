@@ -56,15 +56,22 @@ function ReduxProvider(props) {
     // @ts-ignore
     <Provider store={store}>
       <PatientData
+        key={props.patient.userid}
         api={props.api}
         store={store}
         patient={props.patient}
+        setPatient={props.setPatient}
+        patients={props.patients}
+        userIsHCP={props.userIsHCP}
         profileDialog={props.profileDialog}
         prefixURL={props.prefixURL}
         history={historyHook}
         dialogDatePicker={props.dialogDatePicker}
         dialogRangeDatePicker={props.dialogRangeDatePicker}
         dialogPDFOptions={props.dialogPDFOptions}
+        patientInfoWidget={props.patientInfoWidget}
+        chatWidget={props.chatWidget}
+        alarmCard={props.alarmCard}
       />
     </Provider>
   );
@@ -73,11 +80,17 @@ function ReduxProvider(props) {
 ReduxProvider.propTypes = {
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  setPatient: PropTypes.func.isRequired,
+  patients: PropTypes.array.isRequired,
+  userIsHCP: PropTypes.bool.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 /**
@@ -86,18 +99,24 @@ ReduxProvider.propTypes = {
 function Blip(props) {
   if (typeof props === "object") {
     try {
-      const { config, api, patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions } = props;
+      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget } = props;
       updateConfig(config);
 
       return (
         <ReduxProvider
           api={api}
           patient={patient}
+          patients={patients}
+          setPatient={setPatient}
+          userIsHCP={userIsHCP}
           profileDialog={profileDialog}
           prefixURL={prefixURL}
           dialogDatePicker={dialogDatePicker}
           dialogRangeDatePicker={dialogRangeDatePicker}
           dialogPDFOptions={dialogPDFOptions}
+          patientInfoWidget={patientInfoWidget}
+          chatWidget={chatWidget}
+          alarmCard={alarmCard}
         />
       );
     } catch (err) {
@@ -113,11 +132,17 @@ Blip.propTypes = {
   config: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
+  setPatient: PropTypes.func.isRequired,
+  patients: PropTypes.array.isRequired,
+  userIsHCP: PropTypes.bool.isRequired,
   profileDialog: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
   dialogRangeDatePicker: PropTypes.func.isRequired,
   dialogPDFOptions: PropTypes.func.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
+  chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
 };
 
 export { cleanStore };

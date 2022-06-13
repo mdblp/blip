@@ -321,6 +321,8 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
+    patients: PropTypes.array.isRequired,
+    userIsHCP: PropTypes.bool.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
     chartPrefs: PropTypes.object.isRequired,
@@ -337,17 +339,18 @@ class Daily extends React.Component {
     onCreateMessage: PropTypes.func.isRequired,
     onShowMessageThread: PropTypes.func.isRequired,
     // navigation handlers
-    onSwitchToBasics: PropTypes.func.isRequired,
+    onSwitchToDashboard: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
     onClickPrint: PropTypes.func.isRequired,
-    onSwitchToSettings: PropTypes.func.isRequired,
     onSwitchToTrends: PropTypes.func.isRequired,
+    onSwitchPatient: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
     updateChartPrefs: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired,
     profileDialog: PropTypes.func,
     dialogDatePicker: PropTypes.func.isRequired,
     prefixURL: PropTypes.string,
+    onClickNavigationBack: PropTypes.func.isRequired,
   };
   static defaultProps = {
     profileDialog: null,
@@ -412,6 +415,8 @@ class Daily extends React.Component {
           profileDialog={this.props.profileDialog}
           chartType={this.chartType}
           patient={this.props.patient}
+          patients={this.props.patients}
+          userIsHCP={this.props.userIsHCP}
           inTransition={inTransition}
           atMostRecent={atMostRecent}
           loading={loading}
@@ -420,15 +425,15 @@ class Daily extends React.Component {
           iconNext
           iconMostRecent
           canPrint={this.props.canPrint}
-          trackMetric={trackMetric}
           onClickBack={this.handlePanBack}
-          onClickBasics={this.props.onSwitchToBasics}
+          onClickDashboard={this.props.onSwitchToDashboard}
           onClickTrends={this.props.onSwitchToTrends}
           onClickMostRecent={this.handleClickMostRecent}
           onClickNext={this.handlePanForward}
           onClickOneDay={this.handleClickOneDay}
-          onClickSettings={this.props.onSwitchToSettings}
           onClickPrint={this.props.onClickPrint}
+          onSwitchPatient={this.props.onSwitchPatient}
+          onClickNavigationBack={this.props.onClickNavigationBack}
         >
           <DailyDatePicker
             dialogDatePicker={dialogDatePicker}

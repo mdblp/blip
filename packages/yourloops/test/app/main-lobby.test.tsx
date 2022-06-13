@@ -28,18 +28,24 @@
 import React from "react";
 import { createMemoryHistory, MemoryHistory } from "history";
 import { Router } from "react-router-dom";
+import * as auth0Mock from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { AuthContext, AuthContextProvider } from "../../lib/auth";
 import { loggedInUsers } from "../common";
 import { createAuthHookStubs } from "../lib/auth/utils";
 import { MainLobby } from "../../app/main-lobby";
 import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { MainLayout } from "../../pages/main-layout";
 import { Consent } from "../../models/shoreline";
 import { ConsentPage, LoginPage } from "../../pages/login";
 import PatientConsentPage from "../../pages/patient/patient-consent";
 import { SignUpPage } from "../../pages/signup";
-import { ConfirmPasswordResetPage, RequestPasswordResetPage } from "../../pages/password-reset";
+import HomePage from "../../pages/home-page";
+import * as shareLib from "../../lib/share";
+
+jest.mock("../../lib/share");
+
+jest.mock("@auth0/auth0-react");
 
 describe("Main lobby", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -59,29 +65,52 @@ describe("Main lobby", () => {
 
   function renderMainLayout(history: MemoryHistory, authContext: AuthContext) {
     return renderer.create(
-      <Router history={history}>
-        <AuthContextProvider value={authContext}>
-          <MainLobby />
-        </AuthContextProvider>
-      </Router>
+      <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
+        <Router history={history}>
+          <AuthContextProvider value={authContext}>
+            <MainLobby />
+          </AuthContextProvider>
+        </Router>
+      </Auth0Provider>
     );
   }
+
+  beforeEach(() => {
+    (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: true,
+      isLoading: false,
+    });
+  });
+
   function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: () => JSX.Element, route: string) {
     const mainPageLayout = currentComponent.root.findByType(expectedComponent);
     expect(mainPageLayout).toBeDefined();
     expect(history.location.pathname).toBe(route);
   }
 
-  it("should render MainPageLayout when user is logged in and route is '/'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/"] });
-    const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainLayout, "/patients");
+  beforeAll(() => {
+    jest.spyOn(shareLib, "getDirectShares").mockResolvedValue([]);
   });
 
-  it("should render MainPageLayout when user is logged in and route is '/login'", () => {
+  it("should display the HomePage when hcp is logged in and route is /home", () => {
+    const history = createMemoryHistory({ initialEntries: ["/home"] });
+    const component = renderMainLayout(history, authHookHcpWithSession);
+    checkRenderAndRoute(component, history, HomePage, "/home");
+  });
+
+  it("should redirect to home page when user is logged in as a hcp and route is '/'", () => {
+    const history = createMemoryHistory({ initialEntries: ["/"] });
+    const component = renderMainLayout(history, authHookHcpWithSession);
+    checkRenderAndRoute(component, history, HomePage, "/home");
+  });
+
+  it("should redirect to home page when user is logged in as a hcp and route is '/login'", () => {
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, authHookHcpWithSession);
-    checkRenderAndRoute(component, history, MainLayout, "/patients");
+    checkRenderAndRoute(component, history, HomePage, "/home");
   });
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {
@@ -97,28 +126,23 @@ describe("Main lobby", () => {
   });
 
   it("should render LoginPage when user is not logged in route is '/login'", () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+    });
     const history = createMemoryHistory({ initialEntries: ["/login"] });
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, LoginPage, "/login");
   });
 
   it("should render SignUpPage when user is not logged in route is '/signup'", () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+    });
     const history = createMemoryHistory({ initialEntries: ["/signup"] });
     const component = renderMainLayout(history, null);
     checkRenderAndRoute(component, history, SignUpPage, "/signup");
   });
-
-  it("should render RequestPasswordResetPage when user is not logged in route is '/request-password-reset'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/request-password-reset"] });
-    const component = renderMainLayout(history, null);
-    checkRenderAndRoute(component, history, RequestPasswordResetPage, "/request-password-reset");
-  });
-
-  it("should render ConfirmPasswordResetPage when user is not logged in route is '/confirm-password-reset'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/confirm-password-reset"] });
-    const component = renderMainLayout(history, null);
-    checkRenderAndRoute(component, history, ConfirmPasswordResetPage, "/confirm-password-reset");
-  });
-
 });
 

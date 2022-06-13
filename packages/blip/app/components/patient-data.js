@@ -22,16 +22,16 @@ import bows from "bows";
 import moment from "moment-timezone";
 import i18next from "i18next";
 import clsx from "clsx";
-import { Switch, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
-import { TidelineData, nurseShark, MS_IN_DAY, MGDL_UNITS } from "tideline";
-import { utils as vizUtils, components as vizComponents, createPrintPDFPackage } from "tidepool-viz";
+import { MGDL_UNITS, MS_IN_DAY, nurseShark, TidelineData } from "tideline";
+import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from "tidepool-viz";
 
 import config from "../config";
 import personUtils from "../core/personutils";
 import utils from "../core/utils";
 import ApiUtils from "../core/api-utils";
-import { Header, Basics, Daily, Trends, Settings } from "./chart";
+import { Daily, Header, PatientDashboard, Trends } from "./chart";
 import Messages from "./messages";
 import { FETCH_PATIENT_DATA_SUCCESS } from "../redux";
 
@@ -60,9 +60,10 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1;
  * @typedef { import("../index").DialogDatePicker } DialogDatePicker
  * @typedef { import("../index").DialogRangeDatePicker } DialogRangeDatePicker
  * @typedef { import("../index").ProfileDialog } ProfileDialog
+ * @typedef { import("../index").PatientInfoWidget } PatientInfoWidget
  * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
  *
- * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog }} PatientDataProps
+ * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
@@ -130,6 +131,7 @@ class PatientDataPage extends React.Component {
           /** To keep the wanted extentSize (num days between endpoints) between charts switch. */
           extentSize: 14,
         },
+        dashboard: {},
         bgLog: {
           bgSource: "smbg",
         },
@@ -142,10 +144,9 @@ class PatientDataPage extends React.Component {
       tidelineData: null,
     };
 
-    this.handleSwitchToBasics = this.handleSwitchToBasics.bind(this);
+    this.handleSwitchToDashboard = this.handleSwitchToDashboard.bind(this);
     this.handleSwitchToDaily = this.handleSwitchToDaily.bind(this);
     this.handleSwitchToTrends = this.handleSwitchToTrends.bind(this);
-    this.handleSwitchToSettings = this.handleSwitchToSettings.bind(this);
     this.handleShowMessageCreation = this.handleShowMessageCreation.bind(this);
     this.handleClickRefresh = this.handleClickRefresh.bind(this);
     this.handleClickNoDataRefresh = this.handleClickNoDataRefresh.bind(this);
@@ -153,6 +154,8 @@ class PatientDataPage extends React.Component {
     this.handleDatetimeLocationChange = this.handleDatetimeLocationChange.bind(this);
     this.handleLoadDataRange = this.handleLoadDataRange.bind(this);
     this.updateChartPrefs = this.updateChartPrefs.bind(this);
+    this.handleSwitchPatient = this.handleSwitchPatient.bind(this);
+    this.handleBackToListButton = this.handleBackToListButton.bind(this);
 
     this.unsubscribeStore = null;
   }
@@ -172,20 +175,17 @@ class PatientDataPage extends React.Component {
     this.handleRefresh().then(() => {
       const locationChart = this.getChartType();
       switch (locationChart) {
-      case "overview":
-        this.handleSwitchToBasics();
-        break;
       case "daily":
         this.handleSwitchToDaily();
-        break;
-      case "settings":
-        this.handleSwitchToSettings();
         break;
       case "trends":
         this.handleSwitchToTrends();
         break;
+      case "dashboard":
+        this.handleSwitchToDashboard();
+        break;
       default:
-        this.handleSwitchToDaily();
+        this.handleSwitchToDashboard();
         break;
       }
     });
@@ -239,7 +239,15 @@ class PatientDataPage extends React.Component {
     if (canPrint && showPDFPrintOptions) {
       const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints();
       start = startDate.format("YYYY-MM-DD");
-      end = endDate.format("YYYY-MM-DD");
+
+      //hack to display the current date selected in print calendar
+      if (chartType === "dashboard") {
+        const timezone = tidelineData.getTimezoneAt(this.state.epochLocation);
+        const mDate = moment.utc(this.state.epochLocation).tz(timezone);
+        end = mDate.format("YYYY-MM-DD");
+      } else {
+        end = endDate.format("YYYY-MM-DD");
+      }
     }
 
     const classes = clsx(
@@ -260,6 +268,7 @@ class PatientDataPage extends React.Component {
             minDate={start}
             maxDate={end}
             onResult={this.handlePrint}
+            defaultPreset={"1week"}
           />
         }
       </div>
@@ -331,7 +340,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker } = this.props;
+    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, alarmCard, api } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -342,32 +351,37 @@ class PatientDataPage extends React.Component {
       msRange,
       tidelineData,
     } = this.state;
+    const user = api.whoami;
 
     return (
       <Switch>
-        <Route path={`${prefixURL}/overview`}>
-          <Basics
-            profileDialog={this.showProfileDialog ? profileDialog : null}
+        <Route path={`${prefixURL}/dashboard`}>
+          <PatientDashboard profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
+            patient={patient}
+            setPatient={setPatient}
+            patients={patients}
+            userIsHCP={userIsHCP}
+            user={user}
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
-            patient={patient}
-            tidelineData={tidelineData}
-            loading={loadingState !== LOADING_STATE_DONE}
-            canPrint={canPrint}
+            epochLocation={epochLocation}
+            msRange={msRange}
             prefixURL={prefixURL}
+            loading={loadingState !== LOADING_STATE_DONE}
+            tidelineData={tidelineData}
             permsOfLoggedInUser={permsOfLoggedInUser}
-            onClickRefresh={this.handleClickRefresh}
-            onClickNoDataRefresh={this.handleClickNoDataRefresh}
-            onSwitchToBasics={this.handleSwitchToBasics}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onClickPrint={this.handleClickPrint}
-            onSwitchToTrends={this.handleSwitchToTrends}
-            onSwitchToSettings={this.handleSwitchToSettings}
             trackMetric={this.trackMetric}
-            updateChartPrefs={this.updateChartPrefs}
-            ref={this.chartRef}
+            patientInfoWidget={patientInfoWidget}
+            chatWidget={chatWidget}
+            alarmCard={alarmCard}
+            onSwitchToTrends={this.handleSwitchToTrends}
+            onSwitchToDaily={this.handleSwitchToDaily}
+            onSwitchPatient={this.handleSwitchPatient}
+            onClickNavigationBack={this.handleBackToListButton}
+            canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
           />
         </Route>
         <Route path={`${prefixURL}/daily`}>
@@ -379,24 +393,28 @@ class PatientDataPage extends React.Component {
             dataUtil={this.dataUtil}
             timePrefs={this.state.timePrefs}
             patient={patient}
+            setPatient={setPatient}
+            patients={patients}
+            userIsHCP={userIsHCP}
             tidelineData={tidelineData}
             epochLocation={epochLocation}
             msRange={msRange}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
             prefixURL={prefixURL}
             onClickRefresh={this.handleClickRefresh}
             onCreateMessage={this.handleShowMessageCreation}
             onShowMessageThread={this.handleShowMessageThread.bind(this)}
-            onSwitchToBasics={this.handleSwitchToBasics}
+            onSwitchToDashboard={this.handleSwitchToDashboard}
             onSwitchToDaily={this.handleSwitchToDaily}
-            onClickPrint={this.handleClickPrint}
             onSwitchToTrends={this.handleSwitchToTrends}
-            onSwitchToSettings={this.handleSwitchToSettings}
             onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
             updateChartPrefs={this.updateChartPrefs}
             ref={this.chartRef}
+            onSwitchPatient={this.handleSwitchPatient}
+            onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
         <Route path={`${prefixURL}/trends`}>
@@ -410,40 +428,26 @@ class PatientDataPage extends React.Component {
             epochLocation={epochLocation}
             msRange={msRange}
             patient={patient}
+            setPatient={setPatient}
+            patients={patients}
+            userIsHCP={userIsHCP}
             tidelineData={tidelineData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
+            onClickPrint={this.handleClickPrint}
             prefixURL={prefixURL}
             onClickRefresh={this.handleClickRefresh}
-            onSwitchToBasics={this.handleSwitchToBasics}
+            onSwitchToDashboard={this.handleSwitchToDashboard}
             onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchToSettings={this.handleSwitchToSettings}
             onDatetimeLocationChange={this.handleDatetimeLocationChange}
             trackMetric={this.trackMetric}
             updateChartPrefs={this.updateChartPrefs}
             trendsState={chartStates.trends}
+            onSwitchPatient={this.handleSwitchPatient}
+            onClickNavigationBack={this.handleBackToListButton}
           />
         </Route>
-        <Route path={`${prefixURL}/settings`}>
-          <Settings
-            bgPrefs={this.state.bgPrefs}
-            chartPrefs={this.state.chartPrefs}
-            currentPatientInViewId={patient.userid}
-            timePrefs={this.state.timePrefs}
-            patient={patient}
-            patientData={tidelineData}
-            canPrint={canPrint}
-            prefixURL={prefixURL}
-            onClickRefresh={this.handleClickRefresh}
-            onClickNoDataRefresh={this.handleClickNoDataRefresh}
-            onSwitchToBasics={this.handleSwitchToBasics}
-            onSwitchToDaily={this.handleSwitchToDaily}
-            onSwitchToTrends={this.handleSwitchToTrends}
-            onSwitchToSettings={this.handleSwitchToSettings}
-            onClickPrint={this.handleClickPrint}
-            trackMetric={this.trackMetric}
-          />
-        </Route>
+        <Redirect to="/" />
       </Switch>
     );
   }
@@ -492,8 +496,8 @@ class PatientDataPage extends React.Component {
       return "daily";
     case `${prefixURL}/trends`:
       return "trends";
-    case `${prefixURL}/settings`:
-      return "settings";
+    case `${prefixURL}/dashboard`:
+      return "dashboard";
     }
     return null;
   }
@@ -503,7 +507,7 @@ class PatientDataPage extends React.Component {
    * @param {{ start: string; end: string; preset?: string; }} printOptions
    * @returns {Promise<void>}
    */
-  async generatePDF(printOptions) {
+  async generateReport(printOptions) {
     const { patient } = this.props;
     const { tidelineData, bgPrefs } = this.state;
 
@@ -542,6 +546,15 @@ class PatientDataPage extends React.Component {
 
     vizUtils.data.generatePDFStats(pdfData, this.dataUtil);
     return createPrintPDFPackage(pdfData, opts);
+  }
+
+  async generateCSV(printOptions) {
+    const { api, patient } = this.props;
+    const { tidelineData } = this.state;
+
+    const startDate = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf("day").toISOString();
+    const endDate = moment.tz(printOptions.end, tidelineData.getTimezoneAt(printOptions.end)).endOf("day").toISOString();
+    return api.exportData(patient, startDate, endDate);
   }
 
   async handleMessageCreation(message) {
@@ -609,21 +622,6 @@ class PatientDataPage extends React.Component {
     this.setState({ createMessageDatetime: null, messageThread: null });
   }
 
-  handleSwitchToBasics(e) {
-    const { prefixURL, history } = this.props;
-    const fromChart = this.getChartType();
-    const toChart = "overview";
-    if (e) {
-      e.preventDefault();
-    }
-
-    this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
-    if (fromChart !== toChart) {
-      history.push(`${prefixURL}/${toChart}`);
-      this.trackMetric("data_visualization", "click_view", toChart);
-    }
-  }
-
   /**
    *
    * @param {moment.Moment | Date | number | null} datetime The day to display
@@ -653,6 +651,15 @@ class PatientDataPage extends React.Component {
     });
   }
 
+  handleSwitchPatient(newPatient) {
+    this.props.setPatient(newPatient);
+  }
+
+  handleBackToListButton() {
+    const { history } = this.props;
+    history.push("/home");
+  }
+
   handleSwitchToTrends(e) {
     const { prefixURL, history } = this.props;
     const fromChart = this.getChartType();
@@ -668,13 +675,20 @@ class PatientDataPage extends React.Component {
     }
   }
 
-  handleSwitchToSettings(e) {
+  handleSwitchToDashboard(e) {
     const { prefixURL, history } = this.props;
     const fromChart = this.getChartType();
-    const toChart = "settings";
+    const toChart = "dashboard";
     if (e) {
       e.preventDefault();
     }
+
+    this.dataUtil.chartPrefs = this.state.chartPrefs[toChart];
+    // Default one week data period for dashboard (now() - 7 days)
+    this.setState({
+      epochLocation: new Date().valueOf(),
+      msRange: MS_IN_DAY * 7,
+    });
     if (fromChart !== toChart) {
       history.push(`${prefixURL}/${toChart}`);
       this.trackMetric("data_visualization", "click_view", toChart);
@@ -688,7 +702,7 @@ class PatientDataPage extends React.Component {
   }
 
   /**
-   * @param {{ start: string; end: string; preset?: string; }|undefined} printOptions
+   * @param {{ start: string; end: string; format?: string; preset?: string; }|undefined} printOptions
    * @returns {Promise<void>}
    */
   handlePrint = (printOptions) => {
@@ -701,6 +715,15 @@ class PatientDataPage extends React.Component {
         }
       }
     };
+    const openCSVWindow = (csv, userid) => {
+      const url = window.URL.createObjectURL(csv);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = `${userid}.csv`;
+      document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+      a.click();
+      a.remove();
+    };
 
     this.setState({ showPDFPrintOptions: false });
 
@@ -710,23 +733,43 @@ class PatientDataPage extends React.Component {
 
     // Return a promise for the tests
     return new Promise((resolve, reject) => {
+      const { patient } = this.props;
       this.setState({ canPrint: false, loadingState: LOADING_STATE_EARLIER_FETCH });
-      this.generatePDF(printOptions)
-        .then((pdf) => {
-          this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
-          openPDFWindow(pdf);
-          resolve();
-        })
-        .catch((err) => {
-          this.log.error("generatePDF:", err);
-          this.trackMetric("export_data", "save_report", "error");
-          if (_.isFunction(window.onerror)) {
-            window.onerror("print", "patient-data", 0, 0, err);
-          }
-          reject(err);
-        }).finally(() => {
-          this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
-        });
+      if (printOptions.format === "pdf") {
+        this.generateReport(printOptions)
+          .then((pdf) => {
+            this.trackMetric("export_data", "save_report", printOptions.preset ?? "custom");
+            openPDFWindow(pdf);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
+      } else {
+        this.generateCSV(printOptions)
+          .then((blob) => {
+            this.trackMetric("export_data", "save_report_csv", printOptions.preset ?? "custom");
+            openCSVWindow(blob, patient.userid);
+            resolve();
+          })
+          .catch((err) => {
+            this.log.error("generateReport:", err);
+            this.trackMetric("export_data", "save_report_csv", "error");
+            if (_.isFunction(window.onerror)) {
+              window.onerror("print", "patient-data", 0, 0, err);
+            }
+            reject(err);
+          }).finally(() => {
+            this.setState({ canPrint: true, loadingState: LOADING_STATE_DONE });
+          });
+      }
     });
   }
 
@@ -770,14 +813,6 @@ class PatientDataPage extends React.Component {
     if (!Number.isFinite(epochLocation) || !Number.isFinite(msRange)) {
       throw new Error("handleDatetimeLocationChange: invalid parameters");
     }
-
-    // this.log.debug("handleDatetimeLocationChange()", {
-    //   chartType,
-    //   epochLocation,
-    //   msRange,
-    //   date: moment.utc(epochLocation).toISOString(),
-    //   rangeDays: msRange/MS_IN_DAY,
-    // });
 
     const msDiff = chartType === "daily" ? msRange : Math.round(msRange / 2);
     let start = moment.utc(epochLocation - msDiff).startOf("day");
@@ -864,7 +899,6 @@ class PatientDataPage extends React.Component {
       epochLocation: 0,
       msRange: 0,
       tidelineData: null,
-      canPrint: false,
     });
 
     try {
@@ -957,7 +991,12 @@ class PatientDataPage extends React.Component {
 
 PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
+  chatWidget: PropTypes.func.isRequired,
+  alarmCard: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
+  setPatient: PropTypes.func.isRequired,
+  patients: PropTypes.array.isRequired,
+  userIsHCP: PropTypes.bool.isRequired,
   store: PropTypes.object.isRequired,
   profileDialog: PropTypes.func.isRequired,
   dialogDatePicker: PropTypes.func.isRequired,
@@ -965,6 +1004,7 @@ PatientDataPage.propTypes = {
   dialogPDFOptions: PropTypes.func.isRequired,
   prefixURL: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
+  patientInfoWidget: PropTypes.func.isRequired,
 };
 
 export default PatientDataPage;

@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * HCP patient list bar tests
  *
  * All rights reserved.
  *
@@ -26,80 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import enzyme, { mount } from "enzyme";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import React from "react";
-import { unmountComponentAtNode } from "react-dom";
-
+import renderer from "react-test-renderer";
 import BasicDropdown, { BasicDropdownProps } from "../../../components/dropdown/basic-dropdown";
-import Adapter from "enzyme-adapter-react-16";
+import { getTheme } from "../../../components/theme";
 
 describe("BasicDropdown", () => {
 
-  let container: HTMLElement | null = null;
   const spyOnSelect = jest.fn();
 
-  const Dropdown = (props: { content: BasicDropdownProps<string> }): JSX.Element => {
-    return (
-      <BasicDropdown
-        id={props.content.id}
-        onSelect={props.content.onSelect}
-        defaultValue={props.content.defaultValue}
-        disabledValues={props.content.disabledValues}
-        values={props.content.values}
-        inputTranslationKey={props.content.inputTranslationKey}
-        errorTranslationKey={props.content.errorTranslationKey}
-      />
+  function renderBasicDropdown(props: BasicDropdownProps) {
+    return renderer.create(
+      <ThemeProvider theme={getTheme()}>
+        <BasicDropdown
+          id={props.id}
+          onSelect={props.onSelect}
+          defaultValue={props.defaultValue}
+          values={props.values}
+        />
+      </ThemeProvider>
     );
-  };
+  }
 
-  const fakeDropdown = (props: BasicDropdownProps<string>): JSX.Element => {
-    return (
-      <Dropdown content={props} />
-    );
-  };
-
-  beforeAll(() => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterAll(() => {
-    if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
-    }
-  });
-
-  it("should enable accept button when an option is selected", () => {
+  it("should call onSelect spy when an option is selected", () => {
     const defaultValue = "defaultValue";
-    const disabledValue = "disabledValue";
     const valueToSelect = "valueToSelect";
     const id = "id";
-    const errorTranslationKey = "errorTranslationKey";
-    const inputTranslationKey = "inputTranslationKey";
-    const values = [defaultValue, disabledValue, valueToSelect];
-    const props: BasicDropdownProps<string> = {
+    const values = [defaultValue, valueToSelect];
+    const props: BasicDropdownProps = {
       onSelect: spyOnSelect,
       defaultValue: defaultValue,
-      disabledValues: [disabledValue],
       values,
       id,
-      errorTranslationKey,
-      inputTranslationKey,
     };
-    const wrapper = mount(fakeDropdown(props));
-    wrapper.find("input.MuiSelect-nativeInput").simulate("change", {
-      target: {
-        name: `dropdown-${id}`,
-        value: valueToSelect,
-      },
-    });
-    expect(spyOnSelect).toHaveBeenCalledTimes(1);
+    const component = renderBasicDropdown(props);
+    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } });
+    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect);
   });
 });
 
