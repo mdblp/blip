@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Switch role from caregiver to HCP dialog - Accept terms
+ * Copyright (c) 2022, Diabeloop
+ * Accept monitoring invite terms
  *
  * All rights reserved.
  *
@@ -37,7 +37,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { UserRoles } from "../../models/shoreline";
 import { MonitoringConsentForm } from "../consents/form";
 
 interface MonitoringConsentDialogProps {
@@ -81,7 +80,6 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
       <DialogContent id="monitoring-consequences-dialog-content">
         <MonitoringConsentForm
           id="monitoring-consequences-dialog"
-          userRole={UserRoles.patient}
           termsAccepted={termsAccepted}
           setTermsAccepted={setTermsAccepted}
         />
