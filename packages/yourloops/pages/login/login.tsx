@@ -57,9 +57,13 @@ const loginStyle = makeStyles((theme: Theme) => {
 }, { name: "login-page-styles" });
 
 function Login(): JSX.Element {
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, error, logout } = useAuth0();
   const { t } = useTranslation("yourloops");
   const { cardContent, card, cardActions } = loginStyle();
+
+  const onClickLogout = async () => {
+    await logout({ returnTo: window.location.origin });
+  };
 
   return (
     <Container maxWidth="sm">
@@ -72,9 +76,15 @@ function Login(): JSX.Element {
           />
         </CardMedia>
         <CardContent className={cardContent}>
-          <Typography variant="h6">
-            {t("welcome-message")}
-          </Typography>
+          {error ?
+            <Typography variant="h6">
+              {t("valid-email-alert")}
+            </Typography>
+            :
+            <Typography variant="h6">
+              {t("welcome-message")}
+            </Typography>
+          }
         </CardContent>
         <CardActions className={cardActions}>
           <Button
@@ -86,6 +96,16 @@ function Login(): JSX.Element {
           >
             {t("login")}
           </Button>
+          {error &&
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={onClickLogout}
+            >
+              {t("logout")}
+            </Button>
+          }
         </CardActions>
       </Card>
     </Container>
