@@ -204,7 +204,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           size="small"
                           onClick={() => setShowInviteRemoteMonitoringDialog(true)}
                         >
-                          {t("button-invite")}
+                          {t("invite")}
                         </Button>
                       }
                       {buttonsVisible.cancel &&
