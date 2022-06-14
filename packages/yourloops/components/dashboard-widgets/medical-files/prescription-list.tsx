@@ -92,7 +92,7 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("prescription-pdf", { pdfName: prescription.uploadedAt.toLocaleDateString() })}
+              {t("prescription-pdf", { pdfName: new Date(prescription.uploadedAt).toLocaleDateString() })}
             </ListItemText>
           </ListItem>
         ))}
