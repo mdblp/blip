@@ -105,7 +105,7 @@
   "Derived from _**{{total}}**_ carb entries.": "Derived from _**{{total}}**_ carb entries, including rescue carbs.",
   "Derived from _**{{total}}**_ {{smbgLabel}} readings.": "Derived from _**{{total}}**_ {{smbgLabel}} readings.",
   "Device": "DBL",
-  "Duration": "期間",
+  "Duration": "Duration",
   "Edit": "編集",
   "Entered at": "入力日時",
   "Events": "Events",
