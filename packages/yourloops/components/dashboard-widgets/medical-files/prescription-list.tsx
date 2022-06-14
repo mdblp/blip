@@ -39,6 +39,7 @@ import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
 import { Prescription } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
+import { useAlert } from "../../utils/snackbar";
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -64,6 +65,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 export default function PrescriptionList({ teamId, patientId }: CategoryProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
+  const alert = useAlert();
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
 
@@ -81,6 +83,9 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
       link.setAttribute("download", prescription.name); //or any other extension
       document.body.appendChild(link);
       link.click();
+    }).catch(error => {
+      console.error(error);
+      alert.error(t("download-prescription-error"));
     });
   };
 
