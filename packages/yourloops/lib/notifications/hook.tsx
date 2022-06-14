@@ -73,8 +73,8 @@ function NotificationContextImpl(): NotificationContext {
     setSentInvitations(r);
   };
 
-  const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date): Promise<void> => {
-    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd);
+  const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> => {
+    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor);
   };
 
   const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
