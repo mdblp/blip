@@ -43,7 +43,7 @@ import { commonComponentStyles } from "../common";
 import { Patient } from "../../lib/data/patient";
 import PatientInfo from "../patient/patient-info";
 import PatientMonitoringPrescription, { PrescriptionInfo } from "../patient/patient-monitoring-prescription";
-import { useNotification } from "../../lib/notifications";
+import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import { MonitoringStatus } from "../../models/monitoring";
 

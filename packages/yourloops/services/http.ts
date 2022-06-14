@@ -39,8 +39,13 @@ interface ArgsWithPayload<P> extends Args {
   payload?: P;
 }
 
+export enum ErrorMessageStatus {
+  NotFound = "404-not-found"
+}
+
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>;
+  static shorelineAccessToken: string;
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
     HttpService.retrieveAccessToken = accessTokenMethod;
@@ -86,6 +91,8 @@ export default class HttpService {
     if (error.response) {
       if (error.response.status >= 400 && error.response.status <= 550) {
         switch (error.response.status) {
+        case httpStatus.StatusNotFound:
+          throw Error(ErrorMessageStatus.NotFound);
         case httpStatus.StatusInternalServerError:
           throw Error(t("error-http-500"));
         default:

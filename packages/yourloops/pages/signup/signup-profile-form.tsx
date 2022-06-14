@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React, { useState } from "react";
 import _ from "lodash";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -39,38 +39,35 @@ import Select from "@material-ui/core/Select";
 import TextField from "@material-ui/core/TextField";
 
 import metrics from "../../lib/metrics";
-import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
+import { FormValuesType, useSignUpFormState } from "./signup-formstate-context";
 import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
 import { HcpProfessionList } from "../../models/hcp-profession";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
+import { useAlert } from "../../components/utils/snackbar";
+import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
 
 interface Errors {
   firstName: boolean;
   lastName: boolean;
   country: boolean;
   hcpProfession: boolean;
-  phone: boolean;
 }
 
-const formStyle = makeStyles((theme: Theme) => {
-  return {
-    TextField: {
-      textAlign: "start",
-    },
-    Checkbox: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    backButton: {
-      marginRight: theme.spacing(2),
-    },
-  };
-});
+const formStyle = makeStyles((theme: Theme) => ({
+  backButton: {
+    marginRight: theme.spacing(2),
+  },
+}));
 
 /**
  * SignUpProfileForm Form
  */
 function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
+  const { user, completeSignup } = useAuth();
+  const userRole = user?.role as UserRoles;
+  const alert = useAlert();
   const { t } = useTranslation("yourloops");
   const { state, dispatch } = useSignUpFormState();
   const { handleBack, handleNext } = props;
@@ -79,9 +76,9 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     lastName: false,
     country: false,
     hcpProfession: false,
-    phone: false,
   };
-  const [errors, setErrors] = React.useState<Errors>(defaultErr);
+  const [errors, setErrors] = useState<Errors>(defaultErr);
+  const [saving, setSaving] = useState<boolean>(false);
 
   const classes = formStyle();
 
@@ -111,33 +108,33 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
   };
 
   const validateFirstName = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profileFirstname.trim());
+    const err = !state.formValues?.profileFirstname.trim();
     setErrors({ ...errors, firstName: err });
     return !err;
   };
 
   const validateLastName = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profileLastname.trim());
+    const err = !state.formValues?.profileLastname.trim();
     setErrors({ ...errors, lastName: err });
     return !err;
   };
 
   const validateCountry = (): boolean => {
-    const err = _.isEmpty(state.formValues?.profileCountry);
+    const err = !state.formValues?.profileCountry;
     setErrors({ ...errors, country: err });
     return !err;
   };
 
   const validateHcpProfession = (): boolean => {
     let err = false;
-    if (state.formValues?.accountRole === "hcp") {
-      err = _.isEmpty(state.formValues?.hcpProfession);
+    if (userRole === UserRoles.hcp) {
+      err = !state.formValues?.hcpProfession;
       setErrors({ ...errors, hcpProfession: err });
     }
     return !err;
   };
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     if (
       validateFirstName() &&
@@ -145,8 +142,15 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       validateCountry() &&
       validateHcpProfession()
     ) {
-      handleNext();
-      metrics.send("registration", "create_profile", state.formValues.accountRole);
+      try {
+        setSaving(true);
+        await completeSignup(state.formValues);
+        metrics.send("registration", "create_profile", userRole);
+        handleNext();
+      } catch (err) {
+        alert.error(t("profile-update-failed"));
+        setSaving(false);
+      }
     }
   };
 
@@ -158,7 +162,6 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     >
       <TextField
         id="firstname"
-        className={classes.TextField}
         margin="normal"
         label={t("firstname")}
         variant="outlined"
@@ -171,7 +174,6 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       />
       <TextField
         id="lastname"
-        className={classes.TextField}
         margin="normal"
         label={t("lastname")}
         variant="outlined"
@@ -184,7 +186,6 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       />
       <FormControl
         variant="outlined"
-        className={classes.TextField}
         margin="normal"
         required
         error={errors.country}
@@ -208,10 +209,9 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           ))}
         </Select>
       </FormControl>
-      {state.formValues?.accountRole === "hcp" &&
+      {userRole === UserRoles.hcp &&
         <FormControl
           variant="outlined"
-          className={classes.TextField}
           margin="normal"
           required
           error={errors.hcpProfession}
@@ -250,15 +250,18 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         >
           {t("signup-steppers-back")}
         </Button>
-        <Button
-          id="button-signup-steppers-next"
-          variant="contained"
-          color="primary"
-          disableElevation
-          onClick={onNext}
-        >
-          {t("signup-steppers-next")}
-        </Button>
+        <ProgressIconButtonWrapper inProgress={saving}>
+          <Button
+            id="button-signup-steppers-next"
+            variant="contained"
+            color="primary"
+            disableElevation
+            disabled={_.some(errors) || saving}
+            onClick={onFinishSignup}
+          >
+            {t("signup-steppers-create-account")}
+          </Button>
+        </ProgressIconButtonWrapper>
       </Box>
     </Box>
   );

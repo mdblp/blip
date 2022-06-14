@@ -27,10 +27,9 @@
  */
 
 import {
-  AuthAPI,
   AuthContext,
   Session,
-  SignupUser,
+  SignupForm,
 } from "./models";
 
 import {
@@ -42,11 +41,10 @@ import User from "./user";
 import SessionTimeout from "./session-timeout";
 
 export {
-  AuthAPI,
   AuthContext,
   Session,
   User,
-  SignupUser,
+  SignupForm,
   AuthContextProvider,
   SessionTimeout,
   useAuth,

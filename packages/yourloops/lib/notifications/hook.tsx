@@ -27,9 +27,9 @@
 
 import React from "react";
 import bows from "bows";
-import NotifAPIImpl from "./api";
-import { INotification, NotificationAPI, NotificationContext, NotificationProvider } from "./models";
+import { INotification, NotificationContext, NotificationProvider } from "./models";
 import { useAuth } from "../auth/hook";
+import NotificationApi from "./notification-api";
 
 const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
 const log = bows("NotificationHook");
@@ -37,7 +37,7 @@ const log = bows("NotificationHook");
 /** hackish way to prevent 2 or more consecutive loading */
 let lock = false;
 
-function NotificationContextImpl(api: NotificationAPI): NotificationContext {
+function NotificationContextImpl(): NotificationContext {
   const authHook = useAuth();
   const [receivedInvitations, setReceivedInvitations] = React.useState<INotification[]>([]);
   const [sentInvitations, setSentInvitations] = React.useState<INotification[]>([]);
@@ -54,31 +54,31 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
 
   const accept = async (notification: INotification): Promise<void> => {
     log.info("Accept invitation", notification);
-    await api.acceptInvitation(session, notification);
-    const r = await api.getReceivedInvitations(session);
+    await NotificationApi.acceptInvitation(session.user.userid, notification);
+    const r = await NotificationApi.getReceivedInvitations(session.user.userid);
     setReceivedInvitations(r);
   };
 
   const decline = async (notification: INotification): Promise<void> => {
     log.info("Decline invitation", notification);
-    await api.declineInvitation(session, notification);
-    const r = await api.getReceivedInvitations(session);
+    await NotificationApi.declineInvitation(session.user.userid, notification);
+    const r = await NotificationApi.getReceivedInvitations(session.user.userid);
     setReceivedInvitations(r);
   };
 
   const cancel = async (notification: INotification): Promise<void> => {
     log.info("Cancel invitation", notification);
-    await api.cancelInvitation(session, notification);
-    const r = await api.getSentInvitations(session);
+    await NotificationApi.cancelInvitation(notification);
+    const r = await NotificationApi.getSentInvitations(session.user.userid);
     setSentInvitations(r);
   };
 
   const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date): Promise<void> => {
-    await api.inviteToRemoteMonitoring(session, teamId, userId, monitoringEnd);
+    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd);
   };
 
   const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
-    await api.cancelRemoteMonitoringInvite(session, teamId, userId);
+    await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId);
   };
 
   const initHook = () => {
@@ -90,8 +90,8 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     lock = true;
 
     Promise.all([
-      api.getReceivedInvitations(session),
-      api.getSentInvitations(session),
+      NotificationApi.getReceivedInvitations(session.user.userid),
+      NotificationApi.getSentInvitations(session.user.userid),
     ]).then((result: [INotification[], INotification[]]) => {
       setReceivedInvitations(result[0]);
       setSentInvitations(result[1]);
@@ -103,7 +103,7 @@ function NotificationContextImpl(api: NotificationAPI): NotificationContext {
     });
   };
 
-  React.useEffect(initHook, [session, initialized, api]);
+  React.useEffect(initHook, [session, initialized]);
 
   return {
     initialized,
@@ -128,8 +128,8 @@ export function useNotification(): NotificationContext {
  *
  */
 export function NotificationContextProvider(props: NotificationProvider): JSX.Element {
-  const { children, api, value } = props;
-  const notifValue = value ?? NotificationContextImpl(api ?? NotifAPIImpl); // eslint-disable-line new-cap
+  const { children, value } = props;
+  const notifValue = value ?? NotificationContextImpl(); // eslint-disable-line new-cap
   return (
     <ReactNotificationContext.Provider value={notifValue}>
       {children}

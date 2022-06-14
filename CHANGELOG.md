@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1415 Implement the team details page
 - YLP-1445 Implement alerts in patients table
 - YLP-1452 Implement Auth0 Login/Logout
+- YLP-1453 Implement Auth0 Signup
 - YLP-1462 Create Patient statistics card for dashboard
 - YLP-1463 create Patient information card for dashboard
 - YLP-1465 create Device usage card for dashboard
@@ -47,6 +48,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 - YLP-1345 Correct blip pdf export to display japanese chars
+- YLP-1350 Auth API refactoring
+- YLP-1353 Share API refactoring
+- YLP-1354 Team API refactoring
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
 - YLP-1506 Skip flaky test

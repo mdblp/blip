@@ -101,14 +101,6 @@ class User implements IUser {
   }
 
   /**
-   * Check If the user should accept is consent at a first login.
-   * @description the first login is determined by null consents object
-   */
-  shouldAcceptConsent(): boolean {
-    return !(this.profile?.termsOfUse?.isAccepted === true && this.profile.privacyPolicy?.isAccepted === true);
-  }
-
-  /**
    * Check If the user should update their Hcp Profession at login.
    * @description the first login is determined by null consents object
    */
@@ -129,40 +121,51 @@ class User implements IUser {
   }
 
   /**
-   * Check If the user should renew is consent.
-   */
-  shouldRenewConsent(): boolean {
-    if (this.profile?.termsOfUse === undefined || this.profile.termsOfUse === null) {
-      return true;
-    }
-
-    if (this.profile.privacyPolicy === undefined || this.profile.privacyPolicy === null) {
-      return true;
-    }
-
-    return (
-      this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy)
-    );
-  }
-
-  /**
-   * Check the given consent against the lastest consent publication date
-   * @param consent
-   * @returns true if the lastest consent date is greater than the given consent
+   * Check the given consent against the latest consent publication date
+   * @param consent {Consent}
+   * @returns true if the latest consent date is greater than the given consent
    */
   checkConsent(consent: Consent): boolean {
-    if (typeof consent.acceptanceTimestamp === "string") {
+    if (consent.acceptanceTimestamp) {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
       const acceptDate = new Date(consent.acceptanceTimestamp);
       if (!Number.isFinite(acceptDate.getTime())) {
         // if acceptDate is not a valid formatted date string, get user to re-accept terms
         return true;
       }
-
       return this.latestConsentChangeDate >= acceptDate;
     }
-
     return true;
+  }
+
+  /**
+   * Check If the user should accept his consent at a first login.
+   * @description the first login is determined by null consents object
+   */
+  shouldAcceptConsent(): boolean {
+    return !(this.profile?.termsOfUse?.isAccepted && this.profile.privacyPolicy?.isAccepted);
+  }
+
+  /**
+   * Check If the user should renew his consent.
+   */
+  shouldRenewConsent(): boolean {
+    if (!this.profile?.termsOfUse || !this.profile.privacyPolicy) {
+      return true;
+    }
+    return (this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy));
+  }
+
+  isFirstLogin(): boolean {
+    return !this.profile;
+  }
+
+  hasToAcceptNewConsent(): boolean {
+    return this.isUserPatient() && !this.isFirstLogin() && this.shouldAcceptConsent();
+  }
+
+  hasToRenewConsent(): boolean {
+    return !this.isFirstLogin() && this.shouldRenewConsent();
   }
 
   getParsedFrProId(): string | null {
