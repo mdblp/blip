@@ -119,7 +119,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
       };
     teamHook.editPatientRemoteMonitoring(patient);
     const fileAsBlob = await convertFileToBlob(prescriptionInfo.file);
-    MedicalFilesApi.uploadPrescription(
+    await MedicalFilesApi.uploadPrescription(
       prescriptionInfo.teamId,
       patient.userid,
       prescriptionInfo.memberId,
