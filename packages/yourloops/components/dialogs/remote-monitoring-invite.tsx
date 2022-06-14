@@ -85,7 +85,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   const { t } = useTranslation("yourloops");
   const notificationHook = useNotification();
   const teamHook = useTeam();
-  const [physician, setPhysician] = useState("");
+  const [physician, setPhysician] = useState<string | undefined>(undefined);
   let prescriptionInfo: PrescriptionInfo = {
     teamId: undefined,
     memberId: undefined,
@@ -95,11 +95,6 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
   const onSave = async () => {
-    console.log(prescriptionInfo.teamId);
-    console.log(prescriptionInfo.memberId);
-    console.log(prescriptionInfo.file);
-    console.log(prescriptionInfo.numberOfMonth);
-    console.log(physician);
     const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, "M").toDate();
     if (!prescriptionInfo.teamId) {
       throw Error("Cannot invite patient as remote monitoring team id has not been defined");
@@ -110,7 +105,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
     if (!prescriptionInfo.file) {
       throw Error("Cannot invite patient as prescription has not been defined");
     }
-    await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd);
+    await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd, physician);
     patient.monitoring =
       {
         enabled: false,

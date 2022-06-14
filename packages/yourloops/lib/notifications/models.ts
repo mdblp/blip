@@ -72,7 +72,7 @@ export interface NotificationContext {
   accept: (notification: INotification) => Promise<void>;
   decline: (notification: INotification) => Promise<void>;
   cancel: (notification: INotification) => Promise<void>;
-  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date) => Promise<void>;
+  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>;
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>;
 }
 

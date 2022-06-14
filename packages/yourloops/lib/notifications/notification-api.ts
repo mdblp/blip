@@ -117,10 +117,10 @@ export default class NotificationApi {
     return NotificationApi.getInvitations(`/confirm/invite/${userId}`);
   }
 
-  static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date): Promise<void> {
-    await HttpService.post<void, { monitoringEnd: string }>({
+  static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> {
+    await HttpService.post<void, { monitoringEnd: string, referringDoctor? : string }>({
       url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-      payload: { monitoringEnd: monitoringEnd.toJSON() },
+      payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor },
     });
   }
 
