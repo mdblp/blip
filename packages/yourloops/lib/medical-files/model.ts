@@ -29,6 +29,7 @@ import { Alarm } from "../../models/alarm";
 
 export interface Prescription {
   id: string;
+  name: string;
   patientId: string;
   teamId: string;
   prescriptorId: string;
