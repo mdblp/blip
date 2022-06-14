@@ -32,36 +32,50 @@ import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { BrowserRouter } from "react-router-dom";
 
 import { Units } from "../../../models/generic";
-import { AuthContextProvider, Session } from "../../../lib/auth";
 import { loggedInUsers } from "../../common";
-import { NotificationContextProvider } from "../../../lib/notifications";
 import ProfilePage from "../../../pages/profile";
-import { Preferences, Profile, Settings } from "../../../models/shoreline";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import { Profile, UserRoles } from "../../../models/shoreline";
+import * as authHookMock from "../../../lib/auth";
+import User from "../../../lib/auth/user";
+import { HcpProfession } from "../../../models/hcp-profession";
 import { genderLabels } from "../../../lib/auth/helpers";
+
+jest.mock("../../../lib/auth");
 
 describe("Profile", () => {
   let container: HTMLElement | null = null;
-  let updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
-  let updateProfile: jest.Mock<Promise<Profile>, [Profile, boolean | undefined]>;
-  let updateSettings: jest.Mock<Promise<Settings>, [Settings, boolean | undefined]>;
+  const setUserMock= jest.fn();
+  const userId = "fakeUserId";
 
-  async function mountProfilePage(session: Session): Promise<void> {
-    const context = createAuthHookStubs(session);
-    updatePreferences = context.updatePreferences;
-    updateProfile = context.updateProfile;
-    updateSettings = context.updateSettings;
+  const patientUser = new User({
+    userid: "a0a0a0b0",
+    username: "josephine.dupuis@example.com",
+    role: UserRoles.patient,
+    preferences: { displayLanguageCode: "fr" },
+    profile: {
+      firstName: "Josephine",
+      lastName: "Dupuis",
+      fullName: "Josephine D.",
+      patient: {
+        birthday: "1964-12-01",
+        birthPlace: "Anywhere",
+        diagnosisDate: "2020-12-02",
+        diagnosisType: "1",
+        referringDoctor: "Dr Dre",
+        sex: "M",
+        ins: "123456789012345",
+        ssn: "012345678901234",
+      },
+    },
+    settings: { a1c: { date: "2020-01-01", value: "7.5" } },
+  });
 
+  async function mountProfilePage(): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
         render(
           <BrowserRouter>
-            <AuthContextProvider value={context}>
-              <NotificationContextProvider value={stubNotificationContextValue}>
-                <ProfilePage/>
-              </NotificationContextProvider>
-            </AuthContextProvider>
+            <ProfilePage />
           </BrowserRouter>, container, resolve);
       });
     });
@@ -80,8 +94,23 @@ describe("Profile", () => {
     }
   });
 
+  beforeAll(() => {
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+          isUserPatient: () => false,
+          isUserHcp: () => true,
+        } as User,
+      };
+    });
+  });
+
   it("should be able to render", async () => {
-    await mountProfilePage(loggedInUsers.hcpSession);
+    await mountProfilePage();
     expect(container.querySelector("#profile-textfield-firstname").id).toBe("profile-textfield-firstname");
     expect(container.querySelector("#profile-button-save").id).toBe("profile-button-save");
   });
@@ -89,118 +118,266 @@ describe("Profile", () => {
   it("should display mg/dL Units by default if not specified", async () => {
     const session = loggedInUsers.hcpSession;
     delete session.user?.settings?.units?.bg;
-    await mountProfilePage(session);
+    await mountProfilePage();
     const selectValue = container.querySelector("#profile-units-selector").innerHTML;
     expect(selectValue).toBe(Units.gram);
   });
 
   it("should display birthdate if user is a patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    const birthday = "1964-12-01";
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.patient,
+          isUserPatient: () => true,
+          isUserHcp: () => false,
+          profile: { patient: { birthday } } as Profile,
+        } as User,
+      };
+    });
+    await mountProfilePage();
     const birthDateInput = container.querySelector("#profile-textfield-birthdate") as HTMLInputElement;
-    expect(birthDateInput?.value).toBe(session.user.profile?.patient?.birthday);
+    expect(birthDateInput?.value).toBe(birthday);
   });
 
   it("should display birthplace if user is a patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: patientUser,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const birthPlaceInput = container.querySelector("#profile-textfield-birthplace") as HTMLInputElement;
-    expect(birthPlaceInput?.value).toBe(session.user.profile?.patient?.birthPlace);
+    expect(birthPlaceInput?.value).toBe(patientUser.profile?.patient?.birthPlace);
   });
 
   it("should display gender if user is a patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: patientUser,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const genderValue = container.querySelector("#profile-select-gender").innerHTML;
-    expect(genderValue).toBe(genderLabels()[session.user.profile?.patient?.sex]);
+    expect(genderValue).toBe(genderLabels()[patientUser.profile?.patient?.sex]);
   });
 
   it("should display referring doctor if user is a patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: patientUser,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const referringDoctorInput = container.querySelector("#profile-textfield-referring-doctor") as HTMLInputElement;
-    expect(referringDoctorInput?.value).toBe(session.user.profile?.patient?.referringDoctor);
+    expect(referringDoctorInput?.value).toBe(patientUser.profile?.patient?.referringDoctor);
   });
 
   it("should not display INS if user is not a french patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: patientUser,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const insInput = container.querySelector("#profile-textfield-ins") as HTMLInputElement;
     expect(insInput).toBeNull();
   });
 
   it("should display INS if user is a french patient", async () => {
-    const session = loggedInUsers.patientSession;
-    session.user.settings.country = "FR";
-    await mountProfilePage(session);
+    const user = new User({
+      userid: "a0a0a0b0",
+      username: "josephine.dupuis@example.com",
+      role: UserRoles.patient,
+      preferences: { displayLanguageCode: "fr" },
+      profile: {
+        firstName: "Josephine",
+        lastName: "Dupuis",
+        fullName: "Josephine D.",
+        patient: {
+          birthday: "1964-12-01",
+          birthPlace: "Anywhere",
+          diagnosisDate: "2020-12-02",
+          diagnosisType: "1",
+          referringDoctor: "Dr Dre",
+          sex: "M",
+          ins: "123456789012345",
+          ssn: "012345678901234",
+        },
+      },
+      settings: { a1c: { date: "2020-01-01", value: "7.5" }, country : "FR" },
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const insInput = container.querySelector("#profile-textfield-ins") as HTMLInputElement;
-    expect(insInput?.value).toBe(session.user.profile?.patient?.ins);
+    expect(insInput?.value).toBe(user.profile?.patient?.ins);
   });
 
   it("should not display SSN if user is not a french patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: patientUser,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const ssnInput = container.querySelector("#profile-textfield-ssn") as HTMLInputElement;
     expect(ssnInput).toBeNull();
   });
 
   it("should display SSN if user is a french patient", async () => {
-    const session = loggedInUsers.patientSession;
-    session.user.settings.country = "FR";
-    await mountProfilePage(session);
+    const user = new User({
+      userid: "a0a0a0b0",
+      username: "josephine.dupuis@example.com",
+      role: UserRoles.patient,
+      preferences: { displayLanguageCode: "fr" },
+      profile: {
+        firstName: "Josephine",
+        lastName: "Dupuis",
+        fullName: "Josephine D.",
+        patient: {
+          birthday: "1964-12-01",
+          birthPlace: "Anywhere",
+          diagnosisDate: "2020-12-02",
+          diagnosisType: "1",
+          referringDoctor: "Dr Dre",
+          sex: "M",
+          ins: "123456789012345",
+          ssn: "012345678901234",
+        },
+      },
+      settings: { a1c: { date: "2020-01-01", value: "7.5" }, country : "FR" },
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const ssnInput = container.querySelector("#profile-textfield-ssn") as HTMLInputElement;
-    expect(ssnInput?.value).toBe(session.user.profile?.patient?.ssn);
+    expect(ssnInput?.value).toBe(user.profile?.patient?.ssn);
   });
 
   it("should not display profession if user is a patient", async () => {
-    const session = loggedInUsers.patientSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.patient,
+          isUserPatient: () => true,
+          isUserHcp: () => false,
+        } as User,
+      };
+    });
+    await mountProfilePage();
     const hcpProfessionSelectInput = container.querySelector("#profile-hcp-profession-selector + input");
     expect(hcpProfessionSelectInput).toBeNull();
   });
 
   it("should not display pro sante connect button if user is not a french hcp", async () => {
-    const session = loggedInUsers.hcpSession;
-    session.user.settings.country = "EN";
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+          isUserPatient: () => false,
+          isUserHcp: () => true,
+          settings: { country: "EN" },
+        } as User,
+      };
+    });
+    await mountProfilePage();
     const proSanteConnectButton = container.querySelector("#pro-sante-connect-button");
     expect(proSanteConnectButton).toBeNull();
   });
 
   it("should display pro sante connect button if user is a french hcp and his account is not certified", async () => {
-    const session = loggedInUsers.hcpSession;
-    session.user.frProId = undefined;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+          isUserPatient: () => false,
+          isUserHcp: () => true,
+          settings: { country: "FR" },
+          frProId: undefined,
+        } as User,
+      };
+    });
+    await mountProfilePage();
     const proSanteConnectButton = container.querySelector("#pro-sante-connect-button");
     expect(proSanteConnectButton).not.toBeNull();
   });
 
   it("should display eCPS number if user is a french hcp and his account is certified", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+          isUserPatient: () => false,
+          isUserHcp: () => true,
+          settings: { country: "FR" },
+          emailVerified: true,
+          frProId: "ANS20211229094028",
+          getParsedFrProId: () => "",
+          userid: userId,
+        } as User,
+      };
+    });
+    await mountProfilePage();
     const textField = container.querySelector("#professional-account-number-text-field");
+    const certifiedIcon = container.querySelector(`#certified-professional-icon-${userId}`);
+    expect(certifiedIcon).not.toBeNull();
     expect(textField).not.toBeNull();
   });
 
-  it("should display certified icon if user is a french hcp and his account is certified", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
-    const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
-    expect(certifiedIcon).not.toBeNull();
-  });
-
   it("should not display certified icon if user is a french hcp and his account is not certified", async () => {
-    const session = loggedInUsers.hcpSession;
-    session.user.frProId = undefined;
-    await mountProfilePage(session);
-    const certifiedIcon = container.querySelector(`#certified-professional-icon-${session.user.userid}`);
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: {
+          role: UserRoles.hcp,
+          isUserPatient: () => false,
+          isUserHcp: () => true,
+          settings: { country: "FR" },
+          emailVerified: false,
+          frProId: undefined,
+          getParsedFrProId: () => "",
+          userid: userId,
+        } as User,
+      };
+    });
+    await mountProfilePage();
+    const certifiedIcon = container.querySelector(`#certified-professional-icon-${userId}`);
     expect(certifiedIcon).toBeNull();
   });
 
   it("should update settings when saving after changing units", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
-
+    const updateSettings = jest.fn();
+    const user = new User({
+      userid: "a0000000",
+      username: "john.doe@example.com",
+      role: UserRoles.hcp,
+      emailVerified: true,
+      frProId: "ANS20211229094028",
+      profile: { firstName: "John", lastName: "Doe", fullName: "John Doe", hcpProfession: HcpProfession.diabeto },
+      preferences: { displayLanguageCode: "en" },
+      settings: { units: { bg: Units.gram }, country: "FR" },
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user,
+        updateSettings,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const unitSelectInput = container?.querySelector("#profile-units-selector + input");
 
@@ -212,8 +389,25 @@ describe("Profile", () => {
   });
 
   it("should update preferences when saving after changing language", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
+    const updatePreferences = jest.fn();
+    const user = new User({
+      userid: "a0000000",
+      username: "john.doe@example.com",
+      role: UserRoles.hcp,
+      emailVerified: true,
+      frProId: "ANS20211229094028",
+      profile: { firstName: "John", lastName: "Doe", fullName: "John Doe", hcpProfession: HcpProfession.diabeto },
+      preferences: { displayLanguageCode: "en" },
+      settings: { units: { bg: Units.gram }, country: "FR" },
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user,
+        updatePreferences,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
 
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const languageSelectInput = container.querySelector("#profile-locale-selector + input");
@@ -226,8 +420,25 @@ describe("Profile", () => {
   });
 
   it("should update profile when saving after changing firstname", async () => {
-    const session = loggedInUsers.hcpSession;
-    await mountProfilePage(session);
+    const updateProfile = jest.fn();
+    const user = new User({
+      userid: "a0000000",
+      username: "john.doe@example.com",
+      role: UserRoles.hcp,
+      emailVerified: true,
+      frProId: "ANS20211229094028",
+      profile: { firstName: "John", lastName: "Doe", fullName: "John Doe", hcpProfession: HcpProfession.diabeto },
+      preferences: { displayLanguageCode: "en" },
+      settings: { units: { bg: Units.gram }, country: "FR" },
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user,
+        updateProfile,
+        setUser: setUserMock,
+      };
+    });
+    await mountProfilePage();
 
     const saveButton: HTMLButtonElement = container.querySelector("#profile-button-save");
     const firstnameInput: HTMLInputElement = container.querySelector("#profile-textfield-firstname");

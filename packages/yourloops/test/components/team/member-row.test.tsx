@@ -28,7 +28,6 @@
 import React from "react";
 import renderer, { act } from "react-test-renderer";
 import MemberRow, { TeamMembersProps } from "../../../components/team/member-row";
-import { teamAPI } from "../../lib/team/utils";
 import { TeamContextProvider } from "../../../lib/team";
 import { TeamMemberRole } from "../../../models/team";
 import { UserInvitationStatus } from "../../../models/generic";
@@ -38,6 +37,7 @@ import { createAuthHookStubs } from "../../lib/auth/utils";
 import { getTheme } from "../../../components/theme";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
+import TeamApi from "../../../lib/team/team-api";
 
 describe("MemberRow", () => {
   const authHcp = loggedInUsers.hcpSession;
@@ -48,7 +48,7 @@ describe("MemberRow", () => {
     return renderer.create(
       <ThemeProvider theme={getTheme()}>
         <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider teamAPI={teamAPI}>
+          <TeamContextProvider>
             <MemberRow
               team={props.team}
               teamMember={props.teamMember}
@@ -166,6 +166,7 @@ describe("MemberRow", () => {
   });
 
   it("should switch user role to admin when ticking checkbox", async () => {
+    jest.spyOn(TeamApi, "changeMemberRole").mockResolvedValue();
     const teamId = "teamId";
     const teamMember = buildTeamMember(
       teamId,
@@ -197,7 +198,7 @@ describe("MemberRow", () => {
       component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.onChange({ target: { checked: true } });
       await new Promise(process.nextTick);
     });
-    expect(teamAPI.changeMemberRole).toHaveBeenCalled();
+    expect(TeamApi.changeMemberRole).toHaveBeenCalledTimes(1);
   });
 });
 

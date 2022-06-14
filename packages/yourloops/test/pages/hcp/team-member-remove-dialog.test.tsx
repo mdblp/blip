@@ -26,93 +26,76 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { act } from "react-dom/test-utils";
+import { render, unmountComponentAtNode } from "react-dom";
 import React from "react";
-import enzyme, { mount, ReactWrapper } from "enzyme";
 
-import { waitTimeout } from "../../../lib/utils";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { TeamMember, TeamContextProvider } from "../../../lib/team";
-import { loadTeams } from "../../../lib/team/hook";
+import { Team, TeamMember, TeamUser } from "../../../lib/team";
 import RemoveMemberDialog, { RemoveMemberDialogProps } from "../../../pages/hcp/team-member-remove-dialog";
-import { RemoveMemberDialogContentProps } from "../../../pages/hcp/types";
+import { Profile } from "../../../models/shoreline";
+import { triggerMouseEvent } from "../../common/utils";
 
-import Adapter from "enzyme-adapter-react-16";
-import { loggedInUsers } from "../../common";
-import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-
-describe("Team member remove dialog", () => {
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-  const apiTimeout = 50;
-  const defaultProps: RemoveMemberDialogContentProps = {
-    member: {} as TeamMember,
-    onDialogResult: jest.fn(),
+describe("RemoveMemberDialog", () => {
+  let container: HTMLElement | null = null;
+  const user: TeamUser = { profile: { firstName: "fakeFirstName", lastName: "fakeLastName" } as Profile } as TeamUser;
+  const onDialogResult = jest.fn();
+  const defaultProps: RemoveMemberDialogProps = {
+    userToBeRemoved: {
+      member: {
+        team: { name: "fakeTeamName" } as Team,
+        user,
+      } as TeamMember,
+      onDialogResult,
+    },
   };
 
-  let component: ReactWrapper | null = null;
-
-  function TestComponent(props: RemoveMemberDialogProps): JSX.Element {
-    return (
-      <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider teamAPI={teamAPI}>
-          <RemoveMemberDialog userToBeRemoved={props.userToBeRemoved} />
-        </TeamContextProvider>
-      </AuthContextProvider>
-    );
+  function mountComponent(props: RemoveMemberDialogProps = defaultProps): void {
+    act(() => {
+      return render(
+        <RemoveMemberDialog userToBeRemoved={props.userToBeRemoved} />, container);
+    });
   }
 
-  beforeAll(async () => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-    const { teams } = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
-    defaultProps.member = teams[1].members[0];
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
   });
+
   afterEach(() => {
-    if (component !== null) {
-      component.unmount();
-      component = null;
+    if (container) {
+      unmountComponentAtNode(container);
+      container.remove();
+      container = null;
     }
-    (defaultProps.onDialogResult as jest.Mock).mockReset();
-    resetTeamAPIStubs();
   });
 
-  it("should be closed if addMember is null", async () => {
-    component = mount(<TestComponent userToBeRemoved={null} />);
-    await waitTimeout(apiTimeout);
-    expect(component.exists("#team-members-dialog-rmmember")).toBe(true);
-    expect(component.html().length).toBe(0);
+  it("should be closed if addMember is null", () => {
+    mountComponent({ userToBeRemoved: null });
+    expect(document.getElementById("team-members-dialog-rmmember")).toBeNull();
   });
 
-  it("should not be closed if addMember exists", async () => {
-    component = mount(<TestComponent userToBeRemoved={defaultProps} />);
-    await waitTimeout(apiTimeout);
-    expect(component.exists("#team-members-dialog-rmmember")).toBe(true);
-    expect(component.html().length).toBeGreaterThan(0);
-    const { user } = defaultProps.member;
-    const question = component.find("#team-members-dialog-rmmember-question").last();
-    expect(question.text()).toBe(
+  it("should not be closed if addMember exists", () => {
+    mountComponent();
+    expect(document.getElementById("team-members-dialog-rmmember")).not.toBeNull();
+    const question = document.getElementById("team-members-dialog-rmmember-question");
+    expect(question.innerHTML).toBe(
       `Are you sure you want to remove ${user.profile?.firstName} ${user.profile?.lastName} from this medical team?`
     );
   });
 
-  it("should return false if the user click on the cancel button", async () => {
-    component = mount(<TestComponent userToBeRemoved={defaultProps} />);
-    component.find("#team-members-dialog-rmmember-button-cancel").last().simulate("click");
-    await waitTimeout(apiTimeout);
-    const spy = defaultProps.onDialogResult as jest.Mock;
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(false);
+  it("should return false if the user click on the cancel button", () => {
+    mountComponent();
+    const cancelButton = document.getElementById("team-members-dialog-rmmember-button-cancel");
+    triggerMouseEvent("click", cancelButton);
+    expect(onDialogResult).toHaveBeenCalledTimes(1);
+    expect(onDialogResult).toHaveBeenCalledWith(false);
   });
 
-  it("should return true if the user click on the OK button", async () => {
-    component = mount(<TestComponent userToBeRemoved={defaultProps} />);
-    component.find("#team-members-dialog-rmmember-button-remove").last().simulate("click");
-    await waitTimeout(apiTimeout);
-    const spy = defaultProps.onDialogResult as jest.Mock;
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith(true);
+  it("should return true if the user click on the OK button", () => {
+    mountComponent();
+    const cancelButton = document.getElementById("team-members-dialog-rmmember-button-remove");
+    triggerMouseEvent("click", cancelButton);
+    expect(onDialogResult).toHaveBeenCalledTimes(1);
+    expect(onDialogResult).toHaveBeenCalledWith(true);
   });
 });

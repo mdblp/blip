@@ -36,6 +36,8 @@ import metrics from "../../lib/metrics";
 import { ConsentForm } from "../../components/consents";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
+import { useAuth } from "../../lib/auth";
+import { UserRoles } from "../../models/shoreline";
 
 const useStyles = makeStyles((theme: Theme) => ({
   backButton: {
@@ -44,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
+  const { user } = useAuth();
+  const userRole = user?.role as UserRoles;
   const { t } = useTranslation("yourloops");
   const classes = useStyles();
   const { handleBack, handleNext } = props;
@@ -67,7 +71,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
   const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
     handleNext();
-    metrics.send("registration", "accept_terms", state.formValues.accountRole);
+    metrics.send("registration", "accept_terms", userRole);
   };
 
   return (
@@ -78,7 +82,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
     >
       <ConsentForm
         id="signup"
-        userRole={state.formValues.accountRole}
+        userRole={userRole}
         policyAccepted={state.formValues.privacyPolicy}
         setPolicyAccepted={setPolicyAccepted}
         termsAccepted={state.formValues.terms}

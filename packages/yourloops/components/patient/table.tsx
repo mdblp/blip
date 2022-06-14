@@ -278,7 +278,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
               />
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody id="patient-table-body-id">
             {patientsToDisplay.map(
               (patient: Patient): JSX.Element => (
                 <PatientRow
@@ -295,6 +295,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
         </Table>
       </TableContainer>
       <TablePagination
+        id="patient-table-pagination-id"
         component="div"
         count={patients.length}
         page={page}

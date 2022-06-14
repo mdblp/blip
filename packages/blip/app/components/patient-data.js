@@ -718,7 +718,7 @@ class PatientDataPage extends React.Component {
       }
     };
     const openCSVWindow = (csv, userid) => {
-      const url = window.URL.createObjectURL(csv);
+      const url = window.URL.createObjectURL(new Blob([...csv], { type: "application/zip" }));
       var a = document.createElement("a");
       a.href = url;
       a.download = `${userid}.csv`;

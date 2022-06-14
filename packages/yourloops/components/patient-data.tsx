@@ -38,7 +38,7 @@ import Blip from "blip";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
-import { useData } from "../lib/data";
+import { useData } from "../lib/data/hook";
 import { setPageTitle } from "../lib/utils";
 
 import ProfileDialog from "./dialogs/patient-profile";

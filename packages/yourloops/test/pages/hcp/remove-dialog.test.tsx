@@ -30,53 +30,27 @@ import React from "react";
 import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 import { render, unmountComponentAtNode } from "react-dom";
 
-import { TeamContextProvider, useTeam } from "../../../lib/team";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { NotificationContextProvider } from "../../../lib/notifications";
-
-import { directShareAPI } from "../../lib/direct-share/hook";
-
 import RemoveDialog from "../../../components/patient/remove-dialog";
 import { waitTimeout } from "../../../lib/utils";
-import { loggedInUsers } from "../../common";
-import { teamAPI } from "../../lib/team/utils";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
-import { Patient } from "../../../lib/data/patient";
+import { Patient, PatientTeam } from "../../../lib/data/patient";
+import { createPatient, createPatientTeam } from "../../common/utils";
+import { UserInvitationStatus } from "../../../models/generic";
+import * as teamHookMock from "../../../lib/team";
 
-
-describe("Patient remove dialog", () => {
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
+jest.mock("../../../lib/team");
+describe("RemoveDialog", () => {
   let container: HTMLElement | null = null;
   let patient: Patient | undefined;
-
   const onCloseStub = jest.fn();
 
-  const RemoveDialogComponent = (props: { dialogOpened: boolean }): JSX.Element => {
-    const team = useTeam();
-    patient = team.getPatients()[0];
-
-    return (
-      <RemoveDialog
-        isOpen={props.dialogOpened}
-        onClose={onCloseStub}
-        patient={patient}
-      />
-    );
-  };
-
-  async function mountComponent(props: { dialogOpened: boolean }): Promise<void> {
-    await act(() => {
-      return new Promise(resolve => render(
-        <AuthContextProvider value={authHookHcp}>
-          <NotificationContextProvider value={stubNotificationContextValue}>
-            <TeamContextProvider teamAPI={teamAPI} directShareAPI={directShareAPI}>
-              <RemoveDialogComponent {...props} />
-            </TeamContextProvider>
-          </NotificationContextProvider>
-        </AuthContextProvider>, container, resolve)
-      );
+  function mountComponent(props: { dialogOpened: boolean }): void {
+    act(() => {
+      return render(
+        <RemoveDialog
+          isOpen={props.dialogOpened}
+          onClose={onCloseStub}
+          patient={patient}
+        />, container);
     });
   }
 
@@ -94,30 +68,44 @@ describe("Patient remove dialog", () => {
     }
   });
 
-  it("should be closed if isOpen is false", async () => {
-    await mountComponent({ dialogOpened: false });
+  beforeAll(() => {
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { removePatient: jest.fn() };
+    });
+  });
+
+  it("should be closed if isOpen is false", () => {
+    mountComponent({ dialogOpened: false });
     const dialog = document.getElementById("remove-hcp-patient-dialog");
     expect(dialog).toBeNull();
   });
 
-  it("should be opened if isOpen is true", async () => {
-    await mountComponent({ dialogOpened: true });
+  it("should be opened if isOpen is true", () => {
+    mountComponent({ dialogOpened: true });
     const dialog = document.getElementById("remove-hcp-patient-dialog");
     expect(dialog).not.toBeNull();
   });
 
-  it("should not allow to validate if no team is selected", async () => {
-    await mountComponent({ dialogOpened: true });
+  it("should not allow to validate if no team is selected", () => {
+    mountComponent({ dialogOpened: true });
     const validateButton: HTMLButtonElement = document.querySelector("#remove-patient-dialog-validate-button");
     expect(validateButton.disabled).toBe(true);
   });
 
   it("should be able to remove patient after selecting a team", async () => {
-    await mountComponent({ dialogOpened: true });
+    const patientTeams: PatientTeam[] = [
+      createPatientTeam("fakePatientTeam1Id", UserInvitationStatus.accepted, "team1"),
+      createPatientTeam("fakePatientTeam2Id", UserInvitationStatus.accepted, "team2"),
+    ];
+    patient = createPatient("fakePatientId", patientTeams);
+    mountComponent({ dialogOpened: true });
     const validateButton: HTMLButtonElement = document.querySelector("#remove-patient-dialog-validate-button");
     const teamSelect = document.querySelector("#patient-team-selector + input");
 
-    Simulate.change(teamSelect, { target: { value: "private" } } as unknown as SyntheticEventData);
+    Simulate.change(teamSelect, { target: { value: patientTeams[0].teamId } } as unknown as SyntheticEventData);
     expect(validateButton.disabled).toBe(false);
 
     Simulate.click(validateButton);
