@@ -87,6 +87,14 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
             className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? "selected" : ""}`}
             onMouseOver={() => setHoveredItem(prescription.id)}
             onMouseOut={() => setHoveredItem(undefined)}
+            onClick={() => MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then((data) => {
+              const url = window.URL.createObjectURL(new Blob([data]));
+              const link = document.createElement("a");
+              link.href = url;
+              link.setAttribute("download", prescription.name); //or any other extension
+              document.body.appendChild(link);
+              link.click();
+            })}
           >
             <ListItemIcon>
               <FileChartOutlinedIcon />

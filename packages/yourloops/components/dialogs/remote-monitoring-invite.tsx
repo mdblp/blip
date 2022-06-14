@@ -46,7 +46,7 @@ import PatientMonitoringPrescription, { PrescriptionInfo } from "../patient/pati
 import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import { MonitoringStatus } from "../../models/monitoring";
-import MedicalFilesApi, { convertFileToBlob } from "../../lib/medical-files/medical-files-api";
+import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -113,13 +113,12 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
         monitoringEnd,
       };
     teamHook.editPatientRemoteMonitoring(patient);
-    const fileAsBlob = await convertFileToBlob(prescriptionInfo.file);
     await MedicalFilesApi.uploadPrescription(
       prescriptionInfo.teamId,
       patient.userid,
       prescriptionInfo.memberId,
       prescriptionInfo.numberOfMonth,
-      fileAsBlob,
+      prescriptionInfo.file,
     );
     onClose();
   };
