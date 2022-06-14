@@ -73,14 +73,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface RemoteMonitoringPatientInviteDialogProps {
+export interface RemoteMonitoringPatientDialogProps {
   patient: Patient,
-  onClose: () => void
+  action: string,
+  onClose: () => void,
 }
 
-function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInviteDialogProps): JSX.Element {
+function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps): JSX.Element {
   const commonClasses = commonComponentStyles();
-  const { patient, onClose } = props;
+  const { patient, action, onClose } = props;
   const classes = useStyles();
   const { t } = useTranslation("yourloops");
   const notificationHook = useNotification();
@@ -142,11 +143,11 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
       open
       onClose={onClose}
     >
-      <DialogTitle id="remote-monitoring-dialog-invite-title" className={classes.title}>
+      <DialogTitle id="remote-monitoring-dialog-title" className={classes.title}>
         <Box display="flex">
           <DesktopMacIcon />
           <Typography className={commonClasses.title}>
-            {t("remote-monitoring-patient-invite")}
+            {t(action)} {t("remote-monitoring-patient-dialog-title")}
           </Typography>
         </Box>
       </DialogTitle>
@@ -156,7 +157,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
 
         <Divider variant="middle" className={classes.divider} />
 
-        <PatientMonitoringPrescription defaultTeamId={teamId} setPrescriptionInfo={updatePrescriptionInfo} />
+        <PatientMonitoringPrescription action={action} defaultTeamId={teamId} setPrescriptionInfo={updatePrescriptionInfo} />
 
         <Divider variant="middle" className={classes.divider} />
 
@@ -198,4 +199,4 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   );
 }
 
-export default RemoteMonitoringPatientInviteDialog;
+export default RemoteMonitoringPatientDialog;

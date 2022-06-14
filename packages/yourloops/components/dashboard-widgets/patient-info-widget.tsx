@@ -43,7 +43,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
-import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
+import RemoteMonitoringPatientDialog from "../dialogs/remote-monitoring-dialog";
 import { useAuth } from "../../lib/auth";
 import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
@@ -255,14 +255,16 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         </Grid>
       </CardContent>
       {showInviteRemoteMonitoringDialog &&
-        <RemoteMonitoringPatientInviteDialog
+        <RemoteMonitoringPatientDialog
           patient={patient}
+          action="invite"
           onClose={() => setShowInviteRemoteMonitoringDialog(false)}
         />
       }
       {showRenewRemoteMonitoringDialog &&
-        <RemoteMonitoringPatientInviteDialog
+        <RemoteMonitoringPatientDialog
           patient={patient}
+          action="renew"
           onClose={() => setShowRenewRemoteMonitoringDialog(false)}
         />
       }

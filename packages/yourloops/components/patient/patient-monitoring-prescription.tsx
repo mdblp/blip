@@ -90,11 +90,12 @@ export interface PrescriptionInfo {
 
 export interface PatientInfoProps {
   defaultTeamId: string | undefined;
+  action: string;
   setPrescriptionInfo: (prescriptionInfo: PrescriptionInfo) => void;
 }
 
 function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
-  const { defaultTeamId, setPrescriptionInfo } = props;
+  const { defaultTeamId, action, setPrescriptionInfo } = props;
   const classes = useStyles();
   const commonClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
@@ -109,6 +110,8 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
   const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
+  // only set team Id for a renew
+  const defaultKey = action.toLocaleLowerCase() === "renew" ? defaultTeamId: undefined;
 
 
   useEffect(() => {
@@ -143,8 +146,8 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   };
 
   useEffect(() => {
+    console.log("action", action);
     if (defaultTeamId !== undefined) {
-      console.log("init defialt membership");
       selectTeam(defaultTeamId);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,7 +178,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
             <div className={classes.dropdown}>
               <Dropdown
                 id={"team-basic-dropdown"}
-                defaultKey={defaultTeamId}
+                defaultKey={defaultKey}
                 values={teamsMap}
                 onSelect={selectTeam}
               />
