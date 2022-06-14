@@ -133,6 +133,7 @@
   "dialog-pdf-options-output-format-csv": "CSV",
   "dialog-pdf-options-output-format-pdf": "PDF",
   "dialog-pdf-options-presets": "Choisissez une période fixe",
+  "download-prescription-error": "Cannot download the prescription",
   "edit": "Editer",
   "edit-information": "Modifier les informations",
   "email": "Email",
