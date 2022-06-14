@@ -146,7 +146,7 @@ export default class TeamApi {
 
   static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
-      url: `/crew/v0/teams/${teamId}`,
+      url: `/crew/v0/teams/${teamId}/remote-monitoring`,
       payload: monitoring,
     });
   }
