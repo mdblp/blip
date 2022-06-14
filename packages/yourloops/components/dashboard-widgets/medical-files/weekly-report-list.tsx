@@ -39,6 +39,7 @@ import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
 import { WeeklyReport } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
+import WeeklyReportDialog from "../../dialogs/weekly-report-dialog";
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -65,6 +66,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
   const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([]);
+  const [displayWeeklyReportDetails, setDisplayWeeklyReportDetails] = useState<WeeklyReport | undefined>(undefined);
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -87,6 +89,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
             className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? "selected" : ""}`}
             onMouseOver={() => setHoveredItem(weeklyReport.id)}
             onMouseOut={() => setHoveredItem(undefined)}
+            onClick={() => setDisplayWeeklyReportDetails(weeklyReport)}
           >
             <ListItemIcon>
               <FileChartOutlinedIcon />
@@ -97,6 +100,13 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
           </ListItem>
         ))}
       </List>
+
+      {displayWeeklyReportDetails !== undefined &&
+        <WeeklyReportDialog
+          weeklyReport={displayWeeklyReportDetails}
+          onClose={() => setDisplayWeeklyReportDetails(undefined)}
+        />
+      }
     </React.Fragment>
   );
 }
