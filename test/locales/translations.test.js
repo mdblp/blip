@@ -111,6 +111,7 @@ const ignoredTransKeyForYourLoops = [
   "consent-hcp-terms-of-use",
   "consent-patient-privacy-policy",
   "consent-patient-terms-of-use",
+  "consent-monitoring-terms-of-use",
   "modal-add-medical-team-code-no-invite",
   "signup-steppers-caregiver-title",
   "signup-steppers-hcp-title",

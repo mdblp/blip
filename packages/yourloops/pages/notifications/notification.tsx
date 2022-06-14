@@ -49,6 +49,7 @@ import { useSharedUser } from "../../lib/share";
 import metrics from "../../lib/metrics";
 import { useAlert } from "../../components/utils/snackbar";
 import AddTeamDialog from "../../pages/patient/teams/add-dialog";
+import MonitoringConsentDialog from "../../components/dialogs/monitoring-consent-dialog";
 
 interface NotificationSpanProps {
   id: string;
@@ -190,6 +191,8 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const { id } = notification;
   const [addTeamDialogVisible, setAddTeamDialogVisible] = React.useState(false);
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation;
+  const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation;
+  const [displayMonitoringTerms, setDisplayMonitoringTerms] = React.useState(false);
 
   if (isACareTeamPatientInvitation && !notification.target) {
     throw Error("Cannot accept team invite because notification is missing the team id info");
@@ -215,9 +218,16 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   const onOpenInvitationDialog = () => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true);
+    } else if (isAMonitoringInvitation) {
+      setDisplayMonitoringTerms(true);
     } else {
       acceptInvitation();
     }
+  };
+
+  const acceptTerms = () => {
+    setDisplayMonitoringTerms(false);
+    acceptInvitation();
   };
 
   const onDecline = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
@@ -252,6 +262,9 @@ export const Notification = (props: NotificationProps): JSX.Element => {
             teamName={notification.target.name}
             actions={{ onDialogResult : (teamId) => { closeTeamAcceptDialog(teamId);} }}
           />}
+        {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
+          <MonitoringConsentDialog onAccept={acceptTerms} onCancel={() => setDisplayMonitoringTerms(false)} teamName={notification.target.name}/>
+        }
         {props.userRole === UserRoles.caregiver && notification.type === NotificationType.careTeamProInvitation ? (
           <IconButton
             id={`notification-help-${id}-button`}
