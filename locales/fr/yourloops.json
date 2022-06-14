@@ -123,6 +123,7 @@
   "date-picker-toolbar-to": "à",
   "default": "Valeur par défaut: {{value}}",
   "default-min-max": "Par défaut : min à 70mg/dL et max à 180mg/dL",
+  "default-values": "Default values",
   "delete": "Delete",
   "delete-medical-report": "Delete medical report",
   "delete-warning": "Are you sure you want to delete {{ fileName }}?",
