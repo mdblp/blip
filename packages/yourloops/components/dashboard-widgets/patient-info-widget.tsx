@@ -85,6 +85,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const notificationHook = useNotification();
   const teamHook = useTeam();
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
+  const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false);
   const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false);
   const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
   const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false);
@@ -228,7 +229,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             color="primary"
                             disableElevation
                             size="small"
-                            onClick={() => console.log("Renew clicked")}
+                            onClick={() => setShowRenewRemoteMonitoringDialog(true)}
                           >
                             {t("renew")}
                           </Button>
@@ -257,6 +258,12 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         <RemoteMonitoringPatientInviteDialog
           patient={patient}
           onClose={() => setShowInviteRemoteMonitoringDialog(false)}
+        />
+      }
+      {showRenewRemoteMonitoringDialog &&
+        <RemoteMonitoringPatientInviteDialog
+          patient={patient}
+          onClose={() => setShowRenewRemoteMonitoringDialog(false)}
         />
       }
       {showConfirmCancelDialog &&

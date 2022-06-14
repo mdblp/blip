@@ -85,6 +85,8 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
   const { t } = useTranslation("yourloops");
   const notificationHook = useNotification();
   const teamHook = useTeam();
+  const patientTeam = teamHook.getPatientRemoteMonitoringTeam(patient);
+  const [teamId] = useState<string | undefined>(patientTeam.teamId);
   const [physician, setPhysician] = useState<string | undefined>(undefined);
   let prescriptionInfo: PrescriptionInfo = {
     teamId: undefined,
@@ -154,7 +156,7 @@ function RemoteMonitoringPatientInviteDialog(props: RemoteMonitoringPatientInvit
 
         <Divider variant="middle" className={classes.divider} />
 
-        <PatientMonitoringPrescription setPrescriptionInfo={updatePrescriptionInfo} />
+        <PatientMonitoringPrescription defaultTeamId={teamId} setPrescriptionInfo={updatePrescriptionInfo} />
 
         <Divider variant="middle" className={classes.divider} />
 

@@ -89,11 +89,12 @@ export interface PrescriptionInfo {
 }
 
 export interface PatientInfoProps {
+  defaultTeamId: string | undefined;
   setPrescriptionInfo: (prescriptionInfo: PrescriptionInfo) => void;
 }
 
 function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
-  const { setPrescriptionInfo } = props;
+  const { defaultTeamId, setPrescriptionInfo } = props;
   const classes = useStyles();
   const commonClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
@@ -105,10 +106,10 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [prescription, setPrescription] = useState<File | undefined>(undefined);
   const [numberOfMonthSelected, setNumberOfMonthSelected] = useState(3);
-
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
   const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
+
 
   useEffect(() => {
     const prescriptionInfo: PrescriptionInfo = {
@@ -141,6 +142,15 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     setMembersMap(membersHasMap);
   };
 
+  useEffect(() => {
+    if (defaultTeamId !== undefined) {
+      console.log("init defialt membership");
+      selectTeam(defaultTeamId);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -165,6 +175,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
             <div className={classes.dropdown}>
               <Dropdown
                 id={"team-basic-dropdown"}
+                defaultKey={defaultTeamId}
                 values={teamsMap}
                 onSelect={selectTeam}
               />
