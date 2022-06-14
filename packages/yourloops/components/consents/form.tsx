@@ -38,7 +38,7 @@ import Link from "@material-ui/core/Link";
 
 import { UserRoles } from "../../models/shoreline";
 import diabeloopUrl from "../../lib/diabeloop-url";
-import { ConsentCheck, ConsentFormProps } from "./models";
+import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from "./models";
 
 const formStyles = makeStyles(
   (theme: Theme) => {
@@ -149,6 +149,48 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
   );
 }
 
+export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseConsentCheck): JSX.Element {
+  const { t, i18n } = useTranslation("yourloops");
+  const classes = formStyles();
+
+  const checkboxTerms = (
+    <Checkbox
+      id={`${id}-checkbox-terms`}
+      className={classes.checkbox}
+      checked={checked}
+      onChange={onChange}
+      name="terms"
+      color="primary"
+    />
+  );
+  const terms = t("terms-of-use");
+  const linkTerms = (
+    <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
+      {terms}
+    </Link>
+  );
+  const labelTerms = (
+    <Trans
+      i18nKey={"consent-monitoring-terms-of-use"}
+      t={t}
+      components={{ linkTerms }}
+      values={{ terms }}
+      parent={React.Fragment}>
+      I have read and accepted YourLoops {terms}.
+    </Trans>
+  );
+
+  return (
+    <FormControlLabel
+      id={`${id}-label-terms`}
+      control={checkboxTerms}
+      label={labelTerms}
+      style={style}
+      className={classes.formControlLabel}
+    />
+  );
+}
+
 export function ConsentFeedback({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = formStyles();
@@ -228,6 +270,30 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
         <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
         <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
         {formControlFeedback}
+      </FormGroup>
+    </FormControl>
+  );
+}
+
+export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.Element {
+  const {
+    id,
+    className,
+    group,
+    termsAccepted,
+    setTermsAccepted,
+  } = props;
+
+  const classes = formStyles();
+
+  const handleChange = () => {
+    setTermsAccepted(!termsAccepted);
+  };
+
+  return (
+    <FormControl id={`${id}-form`} className={className}>
+      <FormGroup className={`${classes.formGroup} ${group ?? ""}`}>
+        <ConsentMonitoringTerms id={id} checked={termsAccepted} onChange={handleChange} />
       </FormGroup>
     </FormControl>
   );

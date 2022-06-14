@@ -29,12 +29,15 @@
 import * as React from "react";
 import { UserRoles } from "../../models/shoreline";
 
-export interface ConsentCheck {
+export interface BaseConsentCheck {
   id: string;
-  userRole: UserRoles;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   style?: React.CSSProperties;
+}
+
+export interface ConsentCheck extends BaseConsentCheck {
+  userRole: UserRoles;
 }
 
 export interface ConsentFormProps {
@@ -51,4 +54,14 @@ export interface ConsentFormProps {
   feedbackAccepted?: boolean;
   // Set to undefined to not display this option
   setFeedbackAccepted?: React.Dispatch<boolean>;
+}
+
+export interface MonitoringConsentFormProps {
+  id: string;
+  /** className for the FormControl */
+  className?: string;
+  /** className for the FormGroup */
+  group?: string;
+  termsAccepted: boolean;
+  setTermsAccepted: React.Dispatch<boolean>;
 }
