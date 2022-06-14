@@ -44,6 +44,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1596 Referring doctor must be saved into backend when inviting a user to remote monitoring team
 - YLP-1604 Update patient profile with new patient information
 - YLP-1607 Ask patient to consent when he joins the monitoring program
+- YLP-1609 Add button to reset patient monitoring parameters
 
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
