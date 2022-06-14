@@ -40,6 +40,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1583 Add message column in patient list
 - YLP-1585 Add messages filter in left drawer
 - YLP-1594 Implement the delete button for remote monitored patients
+- YLP-1595 Plug prescription upload to backend
 - YLP-1604 Update patient profile with new patient information
 - YLP-1607 Ask patient to consent when he joins the monitoring program
 

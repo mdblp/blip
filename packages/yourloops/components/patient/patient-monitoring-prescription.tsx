@@ -206,7 +206,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
               />
               <input
                 id="upload-file-input-id"
-                accept="image/*,application/pdf"
+                accept="image/jpeg,image/png,application/pdf"
                 className={classes.input}
                 onChange={handleFileSelected}
                 type="file"
