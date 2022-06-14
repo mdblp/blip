@@ -88,7 +88,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const teamHook = useTeam();
   const patientTeam = teamHook.getPatientRemoteMonitoringTeam(patient);
   const [teamId] = useState<string | undefined>(patientTeam.teamId);
-  const [physician, setPhysician] = useState<string | undefined>(undefined);
+  const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor);
   let prescriptionInfo: PrescriptionInfo = {
     teamId: undefined,
     memberId: undefined,
