@@ -298,6 +298,7 @@
   "remote-monitoring": "Remote monitoring",
   "remote-monitoring-patient-invite": "Invite patient to remote monitoring team",
   "remote-monitoring-prescription-duration": "Remote monitoring prescription duration",
+  "remove-member-failed": "Impossible to remove member. Please try again later.",
   "remove-patient": "Remove patient",
   "remove-remote-monitoring": "Remove the user from remote monitoring?",
   "remove-remote-monitoring-confirm": "Please, confirm that you want to remove the user {{fullName}} from remote monitoring",
