@@ -120,7 +120,7 @@ export default class TeamApi {
 
   static async createTeam(team: Partial<ITeam>): Promise<ITeam> {
     const { name, address, phone } = team;
-    if (!!name || !address || !!phone) {
+    if (!name || !address || !phone) {
       throw Error("Missing some mandatory parameters name, address or phone");
     }
     const { data } = await HttpService.post<ITeam, Partial<ITeam>>({
