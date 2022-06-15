@@ -105,6 +105,7 @@
   "continue": "Continue",
   "cookies-management": "Verwaltung von Cookies",
   "cookies-policy": "Cookies Richtlinie",
+  "created-at": "Created at",
   "current-events": "Aktuelle Ereignisse",
   "current-password": "Aktuelles Passwort",
   "current-trigger-setting-data": "Aktuelle Trigger-Einstellung: 40% der Daten im Zeitraum nicht übermittelt",
@@ -144,6 +145,7 @@
   "event-trigger-threshold": "Ereignis-Trigger-Schwellenwert",
   "events": "Ereignisse",
   "events-configuration": "Ereigniskonfiguration",
+  "events-list": "Events list",
   "female": "Female",
   "field-with-exactly-15-characters": "This field must be exactly 15 characters long",
   "file-uploaded-pdf-jpeg-png": "Datei hochgeladen (PDF, JPEG, PNG)",
@@ -236,6 +238,8 @@
   "modal-team-code-descr-placeholder-2": "Diese Identifizierungscode kann jederzeit in den Informationen zum Team unter „Meine Teams“ eingesehen werden.",
   "modal-team-edit-title": "Team bearbeiten",
   "monitored-patients": "Betreute Patienten",
+  "monitoring-period": "Monitoring period",
+  "monitoring-team": "Monitoring team",
   "month": "Monat",
   "my-caregivers": "Meine Betreuer",
   "my-credentials": "Meine Anmeldeinformationen",
@@ -387,5 +391,6 @@
   "welcome-message": "Willkommen bei Yourloops. Bitte anmelden oder registrieren",
   "write-medical-record": "Write medical record",
   "yes": "Ja",
-  "yesterday": "Gestern"
+  "yesterday": "Gestern",
+  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes."
 }
