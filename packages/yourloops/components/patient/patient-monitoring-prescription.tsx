@@ -41,6 +41,7 @@ import Dropdown from "../dropdown/dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserRoles } from "../../models/shoreline";
 import { commonComponentStyles } from "../common";
+import { RemoteMonitoringDialogAction } from "components/dialogs/remote-monitoring-dialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -90,7 +91,7 @@ export interface PrescriptionInfo {
 
 export interface PatientInfoProps {
   defaultTeamId?: string;
-  action: string;
+  action: RemoteMonitoringDialogAction;
   setPrescriptionInfo: (prescriptionInfo: PrescriptionInfo) => void;
 }
 
@@ -111,7 +112,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
   // only set team Id for a renew
-  const defaultKey = action.toLocaleLowerCase() === "renew" ? defaultTeamId: undefined;
+  const defaultKey = action === RemoteMonitoringDialogAction.renew ? defaultTeamId: undefined;
 
 
   useEffect(() => {
