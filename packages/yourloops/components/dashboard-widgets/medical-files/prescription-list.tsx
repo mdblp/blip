@@ -39,6 +39,7 @@ import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
 import { Prescription } from "../../../lib/medical-files/model";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import { CategoryProps } from "./medical-files-widget";
+import { useAlert } from "../../utils/snackbar";
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -64,6 +65,7 @@ const useStyle = makeStyles((theme: Theme) => ({
 export default function PrescriptionList({ teamId, patientId }: CategoryProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
+  const alert = useAlert();
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
 
@@ -72,6 +74,20 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
       setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId));
     })();
   }, [patientId, teamId]);
+
+  const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription) => {
+    MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then(data => {
+      const url = window.URL.createObjectURL(new Blob([data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", prescription.name); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+    }).catch(error => {
+      console.error(error);
+      alert.error(t("download-prescription-error"));
+    });
+  };
 
   return (
     <React.Fragment>
@@ -87,6 +103,7 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
             className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? "selected" : ""}`}
             onMouseOver={() => setHoveredItem(prescription.id)}
             onMouseOut={() => setHoveredItem(undefined)}
+            onClick={() => {downloadPrescription(patientId, teamId, prescription);}}
           >
             <ListItemIcon>
               <FileChartOutlinedIcon />

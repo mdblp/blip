@@ -35,7 +35,15 @@ export default class MedicalFilesApi {
     return data;
   }
 
-  static async uploadPrescription(teamId: string, patientId: string, prescriptorId: string, initialPeriod: number, file: Blob): Promise<Prescription> {
+  static async getPrescription(patientId: string, teamId: string, prescriptionId: string): Promise<Blob> {
+    const { data } = await HttpService.get<Blob>({
+      url: `/cargo/v0/prescriptions/${prescriptionId}`,
+      config: { params: { teamId, patientId }, responseType: "blob" },
+    });
+    return data;
+  }
+
+  static async uploadPrescription(teamId: string, patientId: string, prescriptorId: string, initialPeriod: number, file: File): Promise<Prescription> {
     const formData = new FormData();
     formData.append("patientId", patientId);
     formData.append("prescriptorId", prescriptorId);
@@ -106,5 +114,3 @@ export default class MedicalFilesApi {
     await HttpService.delete({ url: `/cargo/v0/medical-records/${medicalRecordId}` });
   }
 }
-
-export const convertFileToBlob = async (file : File) => new Blob([new Uint8Array(await file.arrayBuffer())], { type: file.type });

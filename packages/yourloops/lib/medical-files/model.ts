@@ -29,6 +29,7 @@ import { UNITS_TYPE } from "../units/utils";
 
 export interface Prescription {
   id: string;
+  name: string;
   patientId: string;
   teamId: string;
   prescriptorId: string;

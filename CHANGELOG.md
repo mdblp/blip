@@ -45,6 +45,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-1604 Update patient profile with new patient information
 - YLP-1607 Ask patient to consent when he joins the monitoring program
 - YLP-1609 Add button to reset patient monitoring parameters
+- YLP-1612 Display an alert if account is not validated
+- YLP-1613 Add icon button to remove team member
+- YLP-1615 Download a prescription
 - YLP-1616 Display details of a weekly report in modal
 
 ### Engineering Use

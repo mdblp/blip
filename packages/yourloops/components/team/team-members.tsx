@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   tableCellIcon: {
     width: "67px",
   },
+  tableHeaderDelete: {
+    width: "56px",
+    padding: 0,
+  },
 }));
 
 interface TeamMembersProps {
@@ -178,6 +182,12 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
                   >
                     {t("admin")}
                   </StyledTableCell>
+                  {isUserAdmin &&
+                    <StyledTableCell
+                      id="team-members-delete"
+                      className={classes.tableHeaderDelete}
+                    />
+                  }
                 </TableRow>
               </TableHead>
               <TableBody>
