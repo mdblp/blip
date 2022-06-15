@@ -61,10 +61,14 @@ const classes = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(1),
     },
   },
+  explanatoryText: {
+    marginTop: theme.spacing(3),
+    fontStyle: "italic",
+  },
 }));
 
 export default function WeeklyReportDialog(props: Props): JSX.Element {
-  const { title, divider } = classes();
+  const { title, divider, explanatoryText } = classes();
   const { t } = useTranslation("yourloops");
   const { onClose, weeklyReport } = props;
   const teamHook = useTeam();
@@ -115,7 +119,7 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           {t("monitoring-period")}: {startDatePeriod.toLocaleDateString()} - {endDatePeriod.toLocaleDateString()}
         </DialogContentText>
         <Divider className={divider} />
-        <Typography variant="h4">
+        <Typography variant="h4" align="center">
           {t("events-list")}
         </Typography>
         <DialogContentText color="textPrimary" variant="h6">
@@ -145,6 +149,10 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
         </DialogContentText>
         <DialogContentText color="textPrimary">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.nonDataTxThreshold}%`}
+        </DialogContentText>
+
+        <DialogContentText color="textPrimary" className={explanatoryText}>
+          {t("yourloops-explanatory-text")}
         </DialogContentText>
       </DialogContent>
 

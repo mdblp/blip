@@ -389,5 +389,6 @@
   "welcome-message": "Welcome to Yourloops. Please login or register",
   "write-medical-record": "Write medical record",
   "yes": "Yes",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "yourloops-explanatory-text": "YourLoops is a CE marked class IIa medical device, legally manufactured by Diabeloop SA, intended to be used by patients and healthcare teams to access and follow data of people with diabetes."
 }
