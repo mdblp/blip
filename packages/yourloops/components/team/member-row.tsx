@@ -31,7 +31,7 @@ import { useTranslation } from "react-i18next";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Checkbox from "@material-ui/core/Checkbox";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
 
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserInvitationStatus } from "../../models/generic";
@@ -40,7 +40,8 @@ import { useAuth } from "../../lib/auth";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
 import { errorTextFromException } from "../../lib/utils";
 import { useAlert } from "../utils/snackbar";
-import IconButton from "@material-ui/core/IconButton";
+import PersonRemoveIcon from "../icons/PersonRemoveIcon";
+import ConfirmDialog from "../dialogs/confirm-dialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxTableCellBody: {
@@ -85,6 +86,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const alert = useAlert();
   const { t } = useTranslation("yourloops");
   const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false);
+  const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false);
   const currentUserId = teamMember.user.userid;
   const loggedInUserId = authContext.user?.userid as string;
   const loggedInUserIsAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
@@ -93,7 +95,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending
     || (loggedInUserId === currentUserId && teamHook.isUserTheOnlyAdministrator(team, loggedInUserId))
     || userUpdateInProgress;
-  const removeMemberDisabled = !loggedInUserIsAdmin || currentUserIsPending || userUpdateInProgress || loggedInUserId === currentUserId;
+  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId;
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked;
@@ -115,8 +117,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     try {
       await teamHook.removeMember(teamMember);
     } catch (reason: unknown) {
-      const errorMessage = errorTextFromException(reason);
-      alert.error(t("remove-member-failed", { errorMessage }));
+      alert.error(t("remove-member-failed"));
     } finally {
       setUserUpdateInProgress(false);
     }
@@ -179,13 +180,22 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             <IconButton
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
-              onClick={() => deleteMember()}
+              onClick={() => setShowConfirmRemoveDialog(true)}
             >
-              <DeleteIcon />
+              <PersonRemoveIcon />
             </IconButton>
           </StyledTableCell>
         }
       </StyledTableRow>
+      {showConfirmRemoveDialog &&
+        <ConfirmDialog
+          title={t("remove-member-from-team")}
+          label={t("remove-member-confirm", { fullName: teamMember.user.profile?.fullName, teamName: team.name })}
+          inProgress={userUpdateInProgress}
+          onClose={() => setShowConfirmRemoveDialog(false)}
+          onConfirm={deleteMember}
+        />
+      }
     </React.Fragment>
   );
 }
