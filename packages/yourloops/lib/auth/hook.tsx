@@ -221,7 +221,7 @@ export function AuthContextImpl(): AuthContext {
       // see https://diabeloop.atlassian.net/browse/YLP-1553
       let sessionToken: string | null = null;
       try {
-        const { token, id } = await UserApi.getShorelineAccessToken(user.username);
+        const { token, id } = await UserApi.getShorelineAccessToken();
         HttpService.shorelineAccessToken = token;
         user.userid = id;
         sessionToken = token;
