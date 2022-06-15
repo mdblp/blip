@@ -47,6 +47,7 @@ import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import { MonitoringStatus } from "../../models/monitoring";
 import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
+import { useAlert } from "../utils/snackbar";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -91,6 +92,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const { t } = useTranslation("yourloops");
   const notificationHook = useNotification();
   const teamHook = useTeam();
+  const alert = useAlert();
   const patientTeam = teamHook.getPatientRemoteMonitoringTeam(patient);
   const [teamId] = useState<string | undefined>(patientTeam.teamId);
   const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor);
@@ -103,32 +105,59 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
   const onSave = async () => {
-    const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, "M").toDate();
-    if (!prescriptionInfo.teamId) {
-      throw Error("Cannot invite patient as remote monitoring team id has not been defined");
+    try {
+      setSaveButtonDisabled(true);
+      const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, "M").toDate();
+      if (!prescriptionInfo.teamId) {
+        throw Error("Cannot invite patient as remote monitoring team id has not been defined");
+      }
+      if (!prescriptionInfo.memberId) {
+        throw Error("Cannot invite patient as prescriptor id has not been defined");
+      }
+      if (!prescriptionInfo.file) {
+        // missing trad...
+        throw Error("Cannot invite patient as prescription has not been defined");
+      }
+      switch (action) {
+      case RemoteMonitoringDialogAction.invite:
+        patient.monitoring =
+        {
+          enabled: false,
+          status: MonitoringStatus.pending,
+          monitoringEnd,
+        };
+        await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd, physician);
+        break;
+      case RemoteMonitoringDialogAction.renew:
+        // enable and status are required
+        patient.monitoring =
+        {
+          enabled: true,
+          status: MonitoringStatus.accepted,
+          monitoringEnd,
+          parameters: patient.monitoring?.parameters,
+        };
+        await teamHook.updatePatientMonitoring(patient);
+        break;
+      default:
+        break;
+      }
+
+
+      teamHook.editPatientRemoteMonitoring(patient);
+      await MedicalFilesApi.uploadPrescription(
+        prescriptionInfo.teamId,
+        patient.userid,
+        prescriptionInfo.memberId,
+        prescriptionInfo.numberOfMonth,
+        prescriptionInfo.file,
+      );
+      onClose();
+    } catch (error) {
+      setSaveButtonDisabled(false);
+      alert.error(t("error-http-500"));
     }
-    if (!prescriptionInfo.memberId) {
-      throw Error("Cannot invite patient as prescriptor id has not been defined");
-    }
-    if (!prescriptionInfo.file) {
-      throw Error("Cannot invite patient as prescription has not been defined");
-    }
-    await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd, physician);
-    patient.monitoring =
-      {
-        enabled: false,
-        status: MonitoringStatus.pending,
-        monitoringEnd,
-      };
-    teamHook.editPatientRemoteMonitoring(patient);
-    await MedicalFilesApi.uploadPrescription(
-      prescriptionInfo.teamId,
-      patient.userid,
-      prescriptionInfo.memberId,
-      prescriptionInfo.numberOfMonth,
-      prescriptionInfo.file,
-    );
-    onClose();
+
   };
 
   const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo) => {
