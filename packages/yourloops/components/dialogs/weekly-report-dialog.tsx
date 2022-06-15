@@ -161,7 +161,7 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           disableElevation
           onClick={onClose}
         >
-          {t("close")}
+          {t("button-close")}
         </Button>
       </DialogActions>
     </Dialog>
