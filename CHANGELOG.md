@@ -48,6 +48,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1612 Display an alert if account is not validated
 - YLP-1613 Add icon button to remove team member
 - YLP-1615 Download a prescription
+- YLP-1616 Display details of a weekly report in modal
 
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
