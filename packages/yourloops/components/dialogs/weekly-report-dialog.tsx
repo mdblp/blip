@@ -42,6 +42,7 @@ import Typography from "@material-ui/core/Typography";
 import { WeeklyReport } from "../../lib/medical-files/model";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Divider from "@material-ui/core/Divider";
+import { useTeam } from "../../lib/team";
 
 interface Props {
   onClose: () => void;
@@ -66,8 +67,11 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
   const { title, divider } = classes();
   const { t } = useTranslation("yourloops");
   const { onClose, weeklyReport } = props;
-
-  console.log(weeklyReport);
+  const teamHook = useTeam();
+  const patient = teamHook.getPatient(weeklyReport.patientId);
+  const endDatePeriod = new Date(weeklyReport.creationDate);
+  const startDatePeriod = new Date(weeklyReport.creationDate);
+  startDatePeriod.setDate(startDatePeriod.getDate() - 7);
 
   return (
     <Dialog
@@ -80,35 +84,35 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
         <Box className={title}>
           <DescriptionOutlinedIcon />
           <Typography variant="h5">
-            {t("weekly-report-modal-title")}
+            {t("weekly-report-pdf", { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
           </Typography>
         </Box>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText color="textPrimary">
-          {t("firstname")} : toto
+          {t("firstname")} : {patient?.profile.firstName}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("lastname")} : delaplage
+          {t("lastname")} : {patient?.profile.lastName}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("birthdate")} : 28/12/1990
+          {t("birthdate")} : {patient?.profile.birthdate?.toLocaleDateString()}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("gender")} : male
+          {t("gender")} : {patient?.profile.sex}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("email")} : toto@test.fr
+          {t("email")} : {patient?.profile.email}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("monitoring-team")} : monitoring team
+          {t("monitoring-team")} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("created-at")} : 22/05/5478
+          {t("created-at")} : {endDatePeriod.toLocaleDateString()}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("monitoring-period")} : 22/05/2022 - 22/08/2022
+          {t("monitoring-period")}: {startDatePeriod.toLocaleDateString()} - {endDatePeriod.toLocaleDateString()}
         </DialogContentText>
         <Divider className={divider} />
         <Typography variant="h4">
@@ -118,17 +122,16 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           {t("time-out-of-range-target")} : {`${Math.round(weeklyReport.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("glycemic-target")} : {weeklyReport.parameters.lowBg} - {weeklyReport.parameters.highBg}
+          {t("glycemic-target")} : {`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
         <DialogContentText color="textPrimary">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.outOfRangeThreshold}%`}
         </DialogContentText>
-
         <DialogContentText color="textPrimary" variant="h6">
           {t("severe-hypoglycemia")} : {`${Math.round(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("severe-hypoglycemia-bellow")} : {weeklyReport.parameters.veryLowBg} - {weeklyReport.parameters.highBg}
+          {t("severe-hypoglycemia-below")} : {`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
         <DialogContentText color="textPrimary">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.hypoThreshold}%`}
