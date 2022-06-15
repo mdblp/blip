@@ -101,7 +101,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
         ))}
       </List>
 
-      {displayWeeklyReportDetails !== undefined &&
+      {displayWeeklyReportDetails &&
         <WeeklyReportDialog
           weeklyReport={displayWeeklyReportDetails}
           onClose={() => setDisplayWeeklyReportDetails(undefined)}

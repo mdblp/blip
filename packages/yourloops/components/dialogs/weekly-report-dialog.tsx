@@ -27,10 +27,10 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import moment from "moment-timezone";
+
 import { makeStyles, Theme } from "@material-ui/core/styles";
-
 import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
-
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -38,10 +38,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
-
-import { WeeklyReport } from "../../lib/medical-files/model";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Divider from "@material-ui/core/Divider";
+
+import { WeeklyReport } from "../../lib/medical-files/model";
 import { useTeam } from "../../lib/team";
 
 interface Props {
@@ -101,7 +101,7 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           {t("lastname")} : {patient?.profile.lastName}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("birthdate")} : {patient?.profile.birthdate?.toLocaleDateString()}
+          {t("birthdate")} : {moment.utc(patient?.profile.birthdate).format(moment.localeData().longDateFormat("ll")).toString()}
         </DialogContentText>
         <DialogContentText color="textPrimary">
           {t("gender")} : {patient?.profile.sex}
@@ -113,10 +113,10 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           {t("monitoring-team")} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("created-at")} : {endDatePeriod.toLocaleDateString()}
+          {t("created-at")} : {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()}
         </DialogContentText>
         <DialogContentText color="textPrimary">
-          {t("monitoring-period")}: {startDatePeriod.toLocaleDateString()} - {endDatePeriod.toLocaleDateString()}
+          {t("monitoring-period")}: {moment.utc(startDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()} - {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()}
         </DialogContentText>
         <Divider className={divider} />
         <Typography variant="h4" align="center">
