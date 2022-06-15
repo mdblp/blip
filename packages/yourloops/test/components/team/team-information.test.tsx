@@ -132,11 +132,12 @@ describe("TeamInformation", () => {
     expect(document.getElementById("edit-team-button")).toBeNull();
   });
 
-  // TODO test for a monitoring team and a non monitoring team since monitoring team cannot be leaved
-  // it("should display button to leave team when user is patient", () => {
-  //   renderTeamInformation();
-  //   expect(document.getElementById("leave-team-button")).not.toBeNull();
-  // });
+  it("should display button to leave team when user is patient and team is not a monitoring team", () => {
+    const teamWithNoMonitoring = buildTeam(teamId, [], );
+    teamWithNoMonitoring.monitoring = undefined;
+    renderTeamInformation({ team: teamWithNoMonitoring, refreshParent: refresh });
+    expect(document.getElementById("leave-team-button")).not.toBeNull();
+  });
 
   it("should not display button to leave team when user is not patient", () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
