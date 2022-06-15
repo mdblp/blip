@@ -73,9 +73,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export enum RemoteMonitoringDialogAction {
+  invite = "invite",
+  renew = "renew",
+}
+
 export interface RemoteMonitoringPatientDialogProps {
   patient: Patient,
-  action: string,
+  action: RemoteMonitoringDialogAction,
   onClose: () => void,
 }
 
@@ -147,7 +152,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
         <Box display="flex">
           <DesktopMacIcon />
           <Typography className={commonClasses.title}>
-            {t(action)} {t("remote-monitoring-patient-dialog-title")}
+            {t("remote-monitoring-patient-dialog-title", { action: t(action) })}
           </Typography>
         </Box>
       </DialogTitle>
@@ -170,6 +175,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
               <Typography>{t("attending-physician")}</Typography>
               <Box marginX={2}>
                 <TextField
+                  defaultValue={physician}
                   variant="outlined"
                   size="small"
                   onChange={(e) => setPhysician(e.target.value)}

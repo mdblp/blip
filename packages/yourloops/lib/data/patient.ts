@@ -45,7 +45,7 @@ interface PatientProfile {
   fullName: string;
   lastName?: string;
   email: string;
-  sex?: string;
+  sex: string;
   referringDoctor?: string;
 }
 

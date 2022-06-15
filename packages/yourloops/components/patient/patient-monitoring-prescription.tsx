@@ -89,7 +89,7 @@ export interface PrescriptionInfo {
 }
 
 export interface PatientInfoProps {
-  defaultTeamId: string | undefined;
+  defaultTeamId?: string;
   action: string;
   setPrescriptionInfo: (prescriptionInfo: PrescriptionInfo) => void;
 }
@@ -146,7 +146,6 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   };
 
   useEffect(() => {
-    console.log("action", action);
     if (defaultTeamId !== undefined) {
       selectTeam(defaultTeamId);
     }

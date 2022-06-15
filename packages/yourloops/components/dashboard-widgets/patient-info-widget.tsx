@@ -43,7 +43,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
-import RemoteMonitoringPatientDialog from "../dialogs/remote-monitoring-dialog";
+import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 import { useAuth } from "../../lib/auth";
 import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
@@ -113,7 +113,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
 
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
-    gender: "",
+    gender: patient.profile.sex,
     birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
@@ -257,14 +257,14 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       {showInviteRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
-          action="invite"
+          action={RemoteMonitoringDialogAction.invite}
           onClose={() => setShowInviteRemoteMonitoringDialog(false)}
         />
       }
       {showRenewRemoteMonitoringDialog &&
         <RemoteMonitoringPatientDialog
           patient={patient}
-          action="renew"
+          action={RemoteMonitoringDialogAction.renew}
           onClose={() => setShowRenewRemoteMonitoringDialog(false)}
         />
       }
