@@ -41,7 +41,7 @@ import Dropdown from "../dropdown/dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserRoles } from "../../models/shoreline";
 import { commonComponentStyles } from "../common";
-import { RemoteMonitoringDialogAction } from "components/dialogs/remote-monitoring-dialog";
+import { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
