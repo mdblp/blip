@@ -119,18 +119,6 @@ export function AuthContextImpl(): AuthContext {
     return settings;
   };
 
-
-  // TODO need to use Auth0 Api to change password
-  //  see YLP-1524 (https://diabeloop.atlassian.net/browse/YLP-1524)
-  const updatePassword = (currentPassword: string, password: string): void => {
-    console.log(currentPassword, password);
-    const authInfo = getAuthInfos();
-    if (authInfo.user.isUserPatient()) {
-      throw new Error("invalid-user-role");
-    }
-    throw new Error("can't update password at the moment");
-  };
-
   const flagPatient = async (userId: string): Promise<void> => {
     log.info("flagPatient", userId);
     const authInfo = getAuthInfos();
@@ -298,7 +286,6 @@ export function AuthContextImpl(): AuthContext {
     updateProfile,
     updatePreferences,
     updateSettings,
-    updatePassword,
     logout,
     completeSignup,
     flagPatient,

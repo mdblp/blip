@@ -49,7 +49,6 @@ import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
 import { useAuth, User } from "../../lib/auth";
 import metrics from "../../lib/metrics";
 import { useAlert } from "../../components/utils/snackbar";
-import CredentialsForm from "./credentials-form";
 import PersonalInfoForm from "./personal-info-form";
 import PreferencesForm from "./preferences-form";
 import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
@@ -122,7 +121,6 @@ const ProfilePage = (): JSX.Element => {
     updatePreferences,
     updateProfile,
     updateSettings,
-    updatePassword,
   } = useAuth();
 
   if (!user) {
@@ -134,11 +132,6 @@ const ProfilePage = (): JSX.Element => {
 
   const [firstName, setFirstName] = useState<string>(user.firstName);
   const [lastName, setLastName] = useState<string>(user.lastName);
-  const [currentPassword, setCurrentPassword] = useState<string>("");
-  const [refreshKey, setRefreshKey] = React.useState<number>(0);
-  const [password, setPassword] = useState<string>("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
-  const [passwordConfirmationError, setPasswordConfirmationError] = React.useState<boolean>(false);
   const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram);
   const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? "");
   const [birthPlace, setBirthPlace] = useState<string>(user.profile?.patient?.birthPlace ?? "");
@@ -156,15 +149,10 @@ const ProfilePage = (): JSX.Element => {
     firstName: !firstName,
     lastName: !lastName,
     hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
-    currentPassword: password.length > 0 && currentPassword.length === 0,
-    password: passwordConfirmationError && (password.length > 0 || passwordConfirmation.length > 0),
     birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
-    ins: role === UserRoles.patient && ins.length > 0 && ins.length !==15,
-    ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !==15,
-  }), [
-    firstName, lastName, role, hcpProfession, password.length, passwordConfirmationError,
-    passwordConfirmation.length, currentPassword.length, birthDate, ins.length, ssn.length,
-  ]);
+    ins: role === UserRoles.patient && ins.length > 0 && ins.length !== 15,
+    ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !== 15,
+  }), [firstName, lastName, role, hcpProfession, birthDate, ins.length, ssn.length]);
 
   const getUpdatedPreferences = (): Preferences => {
     const updatedPreferences = _.cloneDeep(user.preferences ?? {}) as Preferences;
@@ -218,9 +206,8 @@ const ProfilePage = (): JSX.Element => {
   const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences());
   const profileChanged = !_.isEqual(user.profile, getUpdatedProfile());
   const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
-  const passwordChanged = password !== "" || passwordConfirmation !== "";
   const isAnyError = useMemo(() => _.some(errors), [errors]);
-  const canSave = (preferencesChanged || profileChanged || settingsChanged || passwordChanged) && !isAnyError && !saving;
+  const canSave = (preferencesChanged || profileChanged || settingsChanged) && !isAnyError && !saving;
 
   const onSave = async (): Promise<void> => {
     let preferences: Preferences | null = null;
@@ -240,14 +227,6 @@ const ProfilePage = (): JSX.Element => {
       if (settingsChanged) {
         settings = await updateSettings(getUpdatedSettings(), false);
         updatedUser.settings = settings;
-      }
-
-      if (role !== UserRoles.patient && passwordChanged) {
-        // TODO need to use Auth0 Api to change password
-        //  see YLP-1524 (https://diabeloop.atlassian.net/browse/YLP-1524)
-        await updatePassword(currentPassword, password);
-        setRefreshKey(refreshKey + 1);
-        setPasswordConfirmationError(false);
       }
 
       if (preferencesChanged) {
@@ -316,20 +295,6 @@ const ProfilePage = (): JSX.Element => {
             setSsn={setSsn}
           />
 
-          {role !== UserRoles.patient &&
-            <CredentialsForm
-              key={`authenticationForm-${refreshKey}`}
-              user={user}
-              classes={classes}
-              errors={errors}
-              currentPassword={currentPassword}
-              setCurrentPassword={setCurrentPassword}
-              setPassword={setPassword}
-              setPasswordConfirmation={setPasswordConfirmation}
-              setPasswordConfirmationError={setPasswordConfirmationError}
-            />
-          }
-
           <PreferencesForm
             classes={classes}
             feedbackAccepted={feedbackAccepted}
@@ -364,7 +329,11 @@ const ProfilePage = (): JSX.Element => {
             </ProgressIconButtonWrapper>
           </Box>
 
-          {UserRoles.caregiver === role &&
+          {/** TODO role changing was performed with a call to shoreline.
+           *    Now it has to be done with Auth0 since role is a part of auth0 user metadata.
+           *    see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
+           **/}
+          {UserRoles.caregiver === role && false &&
             <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
               {t("modal-switch-hcp-title")}
             </Link>
