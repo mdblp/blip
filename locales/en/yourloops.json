@@ -100,6 +100,7 @@
   "consent-patient-terms-of-use": "I have read and accepted YourLoops <linkTerms>{{terms}}</linkTerms>.",
   "consent-renew-message": "The Terms of Use and/or Privacy Policy have changed since your last visit. Please review them before proceeding.",
   "consent-welcome-message": "Welcome to YourLoops! Please read and accept the terms of use and privacy policy before using the service.",
+  "contact": "Contact",
   "continue": "Continue",
   "cookies-management": "Cookies management",
   "cookies-policy": "Cookies policy",
