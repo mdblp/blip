@@ -71,7 +71,6 @@ export interface AuthContext {
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   completeSignup: (signupForm: SignupForm) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  updatePassword: (currentPassword: string, password: string) => void;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
   updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;
   updateSettings: (settings: Settings, refresh?: boolean) => Promise<Settings>;

@@ -29,8 +29,6 @@
 export interface Errors {
   firstName: boolean;
   lastName: boolean;
-  currentPassword: boolean;
-  password: boolean;
   birthDate: boolean;
   hcpProfession: boolean;
   ins: boolean;

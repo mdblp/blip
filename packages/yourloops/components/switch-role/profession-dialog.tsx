@@ -70,7 +70,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
           <BasicDropdownWithValidation
             onSelect={setHcpProfession}
             defaultValue={HcpProfession.empty}
-            disabledValues={[HcpProfession.empty]}
+            disabledValues={[]}
             values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
             id="profession"
             inputTranslationKey="hcp-profession"
