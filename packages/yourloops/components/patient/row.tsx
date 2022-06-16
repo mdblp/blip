@@ -94,7 +94,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const authHook = useAuth();
   const teamHook = useTeam();
   const isUserHcp = authHook.user?.isUserHcp();
-  const patientIsMonitored = patient.monitoring !== null;
+  const patientIsMonitored = patient.monitoring !== null && patient.monitoring?.enabled;
   const classes = patientListStyle();
   const patientListCommonClasses = patientListCommonStyle();
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData;
@@ -109,9 +109,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const computeRowInformation = () => {
     const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`;
     const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`;
-    const timeSpentAwayFromTargetActive = patient.metadata.alarm?.timeSpentAwayFromTargetActive ?? false;
-    const frequencyOfSevereHypoglycemiaActive = patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ?? false;
-    const nonDataTransmissionActive = patient.metadata.alarm?.nonDataTransmissionActive ?? false;
+    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false;
+    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ? patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive : false;
+    const nonDataTransmissionActive = patientIsMonitored && patient.metadata.alarm?.nonDataTransmissionActive ? patient.metadata.alarm?.nonDataTransmissionActive : false;
     let patientRemoteMonitoring;
     if (patient.monitoring?.enabled) {
       if (patient.monitoring.monitoringEnd) {
