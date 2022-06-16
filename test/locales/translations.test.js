@@ -118,18 +118,9 @@ const ignoredTransKeyForYourLoops = [
   "signup-steppers-hcp-title",
   "signup-steppers-step1",
   "signup-steppers-step2",
-  "signup-steppers-step3",
-  "signup-steppers-step4",
   "team-card-label-address",
   "until",
-  // Errors messages
-  "email-not-verified",
-  "error-account-lock",
   // Others
-  "password-request-reset-instructions",
-  "password-request-reset-title",
-  "password-reset-success",
-  "password-reset-success-title",
   // TODO
   "alert-invitation-patient-failed-already-in-team",
   "alert-invitation-patient-failed-already-invited",
