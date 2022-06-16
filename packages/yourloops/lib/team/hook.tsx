@@ -153,10 +153,15 @@ function TeamContextImpl(): TeamContext {
     return typeof tm === "object";
   };
 
+  const isOnlyPendingInvitation = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
+    return typeof tm === "undefined";
+  };
+
   const buildPatientFiltersStats = useCallback(() => {
     const patients = getPatients();
     return {
-      all: patients.length,
+      all: patients.filter((patient) => !isOnlyPendingInvitation(patient)).length,
       pending: patients.filter((patient) => isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === "private")).length,
       unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
@@ -278,11 +283,6 @@ function TeamContextImpl(): TeamContext {
   const isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
     const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted);
     return admins.length === 1 && admins[0].user.userid === userId;
-  };
-
-  const isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
-    return typeof tm === "undefined";
   };
 
   const isInAtLeastATeam = (patient: Patient): boolean => {
