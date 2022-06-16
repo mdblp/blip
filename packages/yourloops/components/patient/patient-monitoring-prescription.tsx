@@ -179,6 +179,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
               <Dropdown
                 id={"team-basic-dropdown"}
                 defaultKey={defaultKey}
+                disabled={action === RemoteMonitoringDialogAction.renew}
                 values={teamsMap}
                 onSelect={selectTeam}
               />
