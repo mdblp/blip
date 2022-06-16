@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## Unreleased
+## 3.0.0 - 2022-06-16
 ### Added
 - YLP-1260 Verify password leak on signup or password change
 - YLP-1291 A monitoring team can flag a patient under remote monitoring
