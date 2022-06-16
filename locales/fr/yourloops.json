@@ -102,6 +102,7 @@
   "consent-patient-terms-of-use": "J'ai lu et accepté les <linkTerms>{{terms}}</linkTerms> de YourLoops.",
   "consent-renew-message": "Les conditions d'utilisation et la politique de confidentialité ont changé depuis votre dernière visite. Veuillez les revoir avant de continuer.",
   "consent-welcome-message": "Bienvenue sur YourLoops! Veuillez lire et accepter nos conditions d'utilisation et la politique de confidentialité avant d'utiliser le service.",
+  "contact": "Contact",
   "continue": "Continue",
   "cookies-management": "Gestion des cookies",
   "cookies-policy": "Politique de Cookies",
