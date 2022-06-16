@@ -38,13 +38,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-
-import {
-  STORAGE_KEY_SESSION_TOKEN,
-  STORAGE_KEY_TRACE_TOKEN,
-  STORAGE_KEY_USER,
-} from "../lib/auth/models";
-
 import metrics from "../lib/metrics";
 
 interface OnErrorProps {
@@ -75,12 +68,8 @@ function OnError(props: OnErrorProps): JSX.Element {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleOK = () => {
-    // Logout the user
-    sessionStorage.removeItem(STORAGE_KEY_SESSION_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_TRACE_TOKEN);
-    sessionStorage.removeItem(STORAGE_KEY_USER);
     // Then reload the page
-    window.location.reload();
+    window.location.replace("/");
   };
 
   const handleShowMore = () => {
@@ -106,7 +95,7 @@ function OnError(props: OnErrorProps): JSX.Element {
   }
 
   return (
-    <Dialog id="dialog-app-crash" open={true} fullScreen={fullScreen} fullWidth={true} maxWidth="sm">
+    <Dialog id="dialog-app-crash" open fullScreen={fullScreen} fullWidth maxWidth="sm">
       <DialogTitle id="dialog-app-crash-title">{t("app-crash-title")}</DialogTitle>
       <DialogContent>
         <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">{t("app-crash-text")}</DialogContentText>

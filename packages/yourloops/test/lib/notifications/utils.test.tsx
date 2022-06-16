@@ -28,8 +28,8 @@
 
 import { TeamMemberRole } from "../../../models/team";
 import { INotificationAPI, APINotificationType } from "../../../models/notification";
-import { INotification, NotificationType } from "../../../lib/notifications";
 import { notificationConversion } from "../../../lib/notifications/utils";
+import { INotification, NotificationType } from "../../../lib/notifications/models";
 
 describe("Notification utils", () => {
 

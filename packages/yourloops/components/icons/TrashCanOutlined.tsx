@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
+ * Trash Can Outlined Icon
  *
  * All rights reserved.
  *
@@ -26,44 +27,15 @@
  */
 
 import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "@testing-library/react-hooks/dom";
-import _ from "lodash";
 
-import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
-import SignupAccountForm from "../../../pages/signup/signup-account-form";
+import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 
-describe("Signup account form", () => {
-  let container: HTMLElement | null = null;
+const TrashCanOutlined = (props: SvgIconProps): JSX.Element => {
+  return (
+    <SvgIcon xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24" {...props}>
+      <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+    </SvgIcon>
+  );
+};
 
-  const mountComponent = async (): Promise<void> => {
-    await act(() => {
-      return new Promise((resolve) => {
-        render(
-          <SignUpFormStateProvider>
-            <SignupAccountForm handleBack={_.noop} handleNext={_.noop} />
-          </SignUpFormStateProvider>, container, resolve);
-      });
-    });
-  };
-
-  beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
-    }
-  });
-
-  it("should render the warning message for account deletion (YLP-1147)", async () => {
-    await mountComponent();
-    const warningMessage = document.querySelector("#signup-account-deletion-warning");
-    expect(warningMessage).not.toBeNull();
-  });
-});
-
+export default TrashCanOutlined;

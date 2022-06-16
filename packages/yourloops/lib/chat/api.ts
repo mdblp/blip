@@ -29,27 +29,17 @@
 import { IMessage } from "../../models/chat";
 import HttpService from "../../services/http";
 
-export async function getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
-  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
-  const response = await HttpService.get<IMessage[]>({
-    url,
-  });
-
-  if (response.status === 200) {
-    return response.data;
+export default class ChatApi {
+  static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
+    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` });
+    return data;
   }
-  return Promise.reject(response.statusText);
-}
 
-export async function sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
-  const url = `chat/v1/messages/teams/${teamId}/patients/${patientId}`;
-  const response = await HttpService.post<boolean, string>({
-    url,
-    payload: JSON.stringify({ text, private: isPrivate }),
-  });
-
-  if (response.status !== 200) {
-    return Promise.reject(response.statusText);
+  static async sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
+    await HttpService.post<boolean, { text: string, private: boolean }>({
+      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
+      payload: { text, private: isPrivate },
+    });
+    return true;
   }
-  return true;
 }

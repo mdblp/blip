@@ -32,8 +32,6 @@ import bows from "bows";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -45,7 +43,6 @@ import { useAuth } from "../../lib/auth";
 import { errorTextFromException, setPageTitle } from "../../lib/utils";
 import { TeamContext, useTeam } from "../../lib/team";
 import PatientsTable from "./table";
-import PatientsCards from "./cards";
 import { Patient } from "../../lib/data/patient";
 import { PatientListProps } from "./models";
 import { comparePatients } from "./utils";
@@ -59,8 +56,6 @@ function PatientList(props: PatientListProps): JSX.Element {
   const { filter, filterType } = props;
   const historyHook = useHistory();
   const { t } = useTranslation("yourloops");
-  const theme = useTheme();
-  const matchesMediaSizeSmall = useMediaQuery(theme.breakpoints.down("sm"));
   const authHook = useAuth();
   const teamHook = useTeam();
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -157,8 +152,10 @@ function PatientList(props: PatientListProps): JSX.Element {
 
   if (loading) {
     return (
-      <CircularProgress disableShrink
-        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }} />
+      <CircularProgress
+        disableShrink
+        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }}
+      />
     );
   }
 
@@ -181,31 +178,18 @@ function PatientList(props: PatientListProps): JSX.Element {
     );
   }
   return (
-    <React.Fragment>
-      {matchesMediaSizeSmall ? (
-        <Container id="patient-list-container">
-          <PatientsCards
-            patients={patients}
-            flagged={flagged}
-            onClickPatient={handleSelectPatient}
-            onFlagPatient={handleFlagPatient}
-          />
-        </Container>
-      ) : (
-        <Container id="patient-list-container" maxWidth={false}>
-          <PatientsTable
-            patients={patients}
-            flagged={flagged}
-            order={order}
-            orderBy={orderBy}
-            filter={filterType}
-            onClickPatient={handleSelectPatient}
-            onFlagPatient={handleFlagPatient}
-            onSortList={handleSortList}
-          />
-        </Container>)
-      }
-    </React.Fragment>
+    <Container id="patient-list-container" maxWidth={false}>
+      <PatientsTable
+        patients={patients}
+        flagged={flagged}
+        order={order}
+        orderBy={orderBy}
+        filter={filterType}
+        onClickPatient={handleSelectPatient}
+        onFlagPatient={handleFlagPatient}
+        onSortList={handleSortList}
+      />
+    </Container>
   );
 }
 

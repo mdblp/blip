@@ -39,14 +39,16 @@ import { UserRoles } from "../../../models/shoreline";
 import { useAuth } from "../../../lib/auth";
 import metrics from "../../../lib/metrics";
 import { setPageTitle } from "../../../lib/utils";
-import { useNotification, NotificationType } from "../../../lib/notifications";
-import { ShareUser, addDirectShare, getDirectShares, removeDirectShare } from "../../../lib/share";
+import { useNotification } from "../../../lib/notifications/hook";
+import { ShareUser } from "../../../lib/share/models";
 import { useAlert } from "../../../components/utils/snackbar";
 import { AddDialogContentProps, RemoveDialogContentProps } from "./types";
 import SecondaryBar from "./secondary-bar";
-import AddCaregiveDialog from "./add-dialog";
+import AddCaregiverDialog from "./add-dialog";
 import RemoveCaregiverDialog from "./remove-dialog";
 import CaregiverTable from "./table";
+import DirectShareApi from "../../../lib/share/direct-share-api";
+import { NotificationType } from "../../../lib/notifications/models";
 
 const log = bows("PatientCaregiversPage");
 
@@ -76,7 +78,7 @@ function PatientCaregiversPage(): JSX.Element {
 
     if (email !== null && session !== null) {
       try {
-        await addDirectShare(session, email);
+        await DirectShareApi.addDirectShare(session.user.userid, email);
         alert.success(t("alert-invitation-sent-success"));
         metrics.send("invitation", "send_invitation", "caregiver");
         // Refresh the notifications list
@@ -105,7 +107,7 @@ function PatientCaregiversPage(): JSX.Element {
         if (us.status === UserInvitationStatus.pending && typeof us.invitation === "object") {
           await notificationHook.cancel(us.invitation);
         } else {
-          await removeDirectShare(session, us.user.userid);
+          await DirectShareApi.removeDirectShare(session.user.userid, us.user.userid);
         }
         alert.success(t("modal-patient-remove-caregiver-success"));
         setCaregivers(null); // Refresh the list
@@ -138,7 +140,7 @@ function PatientCaregiversPage(): JSX.Element {
         }
       };
 
-      getDirectShares(session).then((value) => {
+      DirectShareApi.getDirectShares().then((value) => {
         addPendingInvitation(value);
         setCaregivers(value);
       }).catch((reason: unknown) => {
@@ -171,7 +173,7 @@ function PatientCaregiversPage(): JSX.Element {
         <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
       </Container>
 
-      <AddCaregiveDialog actions={caregiverToAdd} />
+      <AddCaregiverDialog actions={caregiverToAdd} />
       <RemoveCaregiverDialog actions={caregiverToRemove} />
     </React.Fragment>
   );

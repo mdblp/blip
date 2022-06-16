@@ -26,19 +26,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AppConfig } from "../../yourloops/models/config";
-import { IUser } from "../../yourloops/models/shoreline";
+import { AppConfig } from "yourloops/models/config";
+import { IUser } from "yourloops/models/shoreline";
 import BlipApi from "../../yourloops/lib/data/blip-api";
 import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../yourloops/components/date-pickers/dialog-range-date-picker";
 import DialogPDFOptions from "../../yourloops/components/dialogs/pdf-print-options";
 import PatientInfoWidget from "../../yourloops/components/dashboard-widgets/patient-info-widget";
-import { PatientDatum, PatientData } from "../../yourloops/models/device-data";
+import { PatientDatum, PatientData } from "yourloops/models/device-data";
 import MessageNote from "../../yourloops/models/message";
 import { Patient } from "../../yourloops/lib/data/patient";
 import { GetPatientDataOptions, GetPatientDataOptionsV0 } from "../../yourloops/lib/data/models";
 import ChatWidget from "../../yourloops/components/chat/chat-widget";
+import MedicalFilesWidget from "yourloops/components/dashboard-widgets/medical-files/medical-files-widget";
 import AlarmCard from "../../yourloops/components/alarm/alarm-card";
 
 interface BlipProperties {
@@ -55,6 +56,7 @@ interface BlipProperties {
   dialogPDFOptions: typeof DialogPDFOptions;
   patientInfoWidget: typeof PatientInfoWidget;
   chatWidget: typeof ChatWidget;
+  medicalFilesWidget: typeof MedicalFilesWidget;
   alarmCard: typeof AlarmCard;
 }
 

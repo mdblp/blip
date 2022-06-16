@@ -27,103 +27,79 @@
  */
 
 import React from "react";
-import enzyme, { mount, ReactWrapper } from "enzyme";
 
 import { Team } from "../../../lib/team";
-import { loadTeams } from "../../../lib/team/hook";
-import AddMemberDialog from "../../../pages/hcp/team-member-add-dialog";
+import AddMemberDialog, { AddMemberDialogProps } from "../../../pages/hcp/team-member-add-dialog";
 import { AddMemberDialogContentProps } from "../../../pages/hcp/types";
-import Adapter from "enzyme-adapter-react-16";
-import { loggedInUsers } from "../../common";
-import { resetTeamAPIStubs, teamAPI } from "../../lib/team/utils";
+import ReactDOM from "react-dom";
+import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
+import { triggerMouseEvent } from "../../common/utils";
+import { TeamMemberRole } from "../../../models/team";
 
-describe("Team member add dialog", () => {
+describe("AddMemberDialog", () => {
 
-  const authHcp = loggedInUsers.hcpSession;
-  const defaultProps: AddMemberDialogContentProps = {
+  const addMember: AddMemberDialogContentProps = {
     team: {} as Team,
     onMemberInvited: jest.fn(),
   };
 
-  let component: ReactWrapper | null = null;
+  let container: HTMLDivElement | null = null;
 
-  beforeAll(async () => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-    const { teams } = await loadTeams(authHcp, teamAPI.fetchTeams, teamAPI.fetchPatients);
-    defaultProps.team = teams[1];
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
   });
 
   afterEach(() => {
-    if (component !== null) {
-      component.unmount();
-      component = null;
+    if (container) {
+      ReactDOM.unmountComponentAtNode(container);
+      document.body.removeChild(container);
+      container = null;
     }
-    (defaultProps.onMemberInvited as jest.Mock).mockReset();
-    resetTeamAPIStubs();
   });
 
+  function renderComponent(props: AddMemberDialogProps) {
+    act(() => {
+      ReactDOM.render(<AddMemberDialog addMember={props.addMember} />, container);
+    });
+  }
+
   it("should be closed if addMember is null", () => {
-    component = mount(<AddMemberDialog addMember={null} />);
-    expect(component.exists("#team-add-member-dialog")).toBe(true);
-    expect(component.html().length).toBe(0);
+    renderComponent({ addMember: null });
+    expect(document.getElementById("team-add-member-dialog-title")).toBeNull();
   });
 
   it("should not be closed if addMember exists", () => {
-    component = mount(<AddMemberDialog addMember={defaultProps} />);
-    expect(component.exists("#team-add-member-dialog")).toBe(true);
-    expect(component.html().length).toBeGreaterThan(0);
-    expect(component.find("#team-add-member-dialog-title-team-name").text()).toBe(defaultProps.team.name);
+    renderComponent({ addMember });
+    expect(document.getElementById("team-add-member-dialog-title")).not.toBeNull();
   });
 
   it("should return an empty email if cancel", () => {
-    component = mount(<AddMemberDialog addMember={defaultProps} />);
-    const event = {
-      target: {
-        name: "email",
-        value: "test@example.com",
-      },
-    };
-    component.find("input").find("#team-add-member-dialog-field-email").at(0).simulate("change", event);
-    expect(
-      component.find("#team-add-member-dialog-button-add").at(0).prop("disabled")
-    ).toBe(false);
-    component.find("#team-add-member-dialog-button-cancel").at(0).simulate("click");
-    const spy = defaultProps.onMemberInvited as jest.Mock;
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toEqual(null);
+    renderComponent({ addMember });
+    const email = "test@example.com";
+    expect((document.getElementById("team-add-member-dialog-button-add") as HTMLButtonElement).disabled).toBeTruthy();
+    const emailInput = document.getElementById("team-add-member-dialog-field-email") as HTMLInputElement;
+    Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData);
+    expect((document.getElementById("team-add-member-dialog-button-add") as HTMLButtonElement).disabled).toBeFalsy();
+    const cancelButton = document.getElementById("team-add-member-dialog-button-cancel");
+    triggerMouseEvent("click", cancelButton);
+    expect(addMember.onMemberInvited).toHaveBeenCalledTimes(1);
+    expect(addMember.onMemberInvited).toHaveBeenCalledWith(null);
   });
 
   it("should return the email if validated", () => {
-    component = mount(<AddMemberDialog addMember={defaultProps} />);
-    const changeEmailEvent = {
-      target: {
-        name: "email",
-        value: "test@example.com",
-      },
-    };
-    const changeRoleEvent = {
-      target: {
-        name: "role",
-        checked: true,
-      },
-    };
-    component.find("input").find("#team-add-member-dialog-field-email").last().simulate("change", changeEmailEvent);
-    expect(
-      component.find("#team-add-member-dialog-button-add").last().prop("disabled")
-    ).toBe(false);
-
-    component.find("#team-add-member-dialog-checkbox-admin").last().simulate("change", changeRoleEvent, true);
-    component.find("#team-add-member-dialog-button-add").last().simulate("click");
-
-    const spy = defaultProps.onMemberInvited as jest.Mock;
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0].length).toBe(1);
-    const argReveived = spy.mock.calls[0][0];
-    expect(argReveived).toHaveProperty("email", changeEmailEvent.target.value);
-    expect(argReveived).toHaveProperty("role", "admin");
+    renderComponent({ addMember });
+    const email = "test@example.com";
+    expect((document.getElementById("team-add-member-dialog-button-add") as HTMLButtonElement).disabled).toBeTruthy();
+    const emailInput = document.getElementById("team-add-member-dialog-field-email") as HTMLInputElement;
+    const adminCheckbox = document.getElementById("team-add-member-dialog-checkbox-admin");
+    Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData);
+    triggerMouseEvent("click", adminCheckbox);
+    expect((document.getElementById("team-add-member-dialog-button-add") as HTMLButtonElement).disabled).toBeFalsy();
+    const addButton = document.getElementById("team-add-member-dialog-button-add");
+    triggerMouseEvent("click", addButton);
+    expect(addMember.onMemberInvited).toHaveBeenCalledTimes(1);
+    expect(addMember.onMemberInvited).toHaveBeenCalledWith({ email, role: TeamMemberRole.admin, team: addMember.team });
   });
 });
 

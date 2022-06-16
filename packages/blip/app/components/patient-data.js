@@ -340,7 +340,7 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, alarmCard, api } = this.props;
+    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, alarmCard, api, medicalFilesWidget } = this.props;
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -356,7 +356,8 @@ class PatientDataPage extends React.Component {
     return (
       <Switch>
         <Route path={`${prefixURL}/dashboard`}>
-          <PatientDashboard profileDialog={this.showProfileDialog ? profileDialog : null}
+          <PatientDashboard
+            profileDialog={this.showProfileDialog ? profileDialog : null}
             bgPrefs={this.state.bgPrefs}
             chartPrefs={chartPrefs}
             patient={patient}
@@ -376,6 +377,7 @@ class PatientDataPage extends React.Component {
             patientInfoWidget={patientInfoWidget}
             chatWidget={chatWidget}
             alarmCard={alarmCard}
+            medicalFilesWidget={medicalFilesWidget}
             onSwitchToTrends={this.handleSwitchToTrends}
             onSwitchToDaily={this.handleSwitchToDaily}
             onSwitchPatient={this.handleSwitchPatient}
@@ -716,7 +718,7 @@ class PatientDataPage extends React.Component {
       }
     };
     const openCSVWindow = (csv, userid) => {
-      const url = window.URL.createObjectURL(csv);
+      const url = window.URL.createObjectURL(new Blob([...csv], { type: "application/zip" }));
       var a = document.createElement("a");
       a.href = url;
       a.download = `${userid}.csv`;
@@ -993,6 +995,7 @@ PatientDataPage.propTypes = {
   api: PropTypes.object.isRequired,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
+  medicalFilesWidget: PropTypes.func.isRequired,
   patient: PropTypes.object.isRequired,
   setPatient: PropTypes.func.isRequired,
   patients: PropTypes.array.isRequired,

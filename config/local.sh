@@ -7,8 +7,6 @@ export PORT='3001'
 export BRANDING='diabeloop_blue'
 export PWD_MIN_LENGTH='10'
 export PWD_MAX_LENGTH='72'
-export MAX_FAILED_LOGIN_ATTEMPTS='5'
-export DELAY_BEFORE_NEXT_LOGIN_ATTEMPT='1'
 export LATEST_TERMS='1970-01-01'
 
 # External services:

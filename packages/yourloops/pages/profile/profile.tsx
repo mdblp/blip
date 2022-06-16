@@ -243,6 +243,8 @@ const ProfilePage = (): JSX.Element => {
       }
 
       if (role !== UserRoles.patient && passwordChanged) {
+        // TODO need to use Auth0 Api to change password
+        //  see YLP-1524 (https://diabeloop.atlassian.net/browse/YLP-1524)
         await updatePassword(currentPassword, password);
         setRefreshKey(refreshKey + 1);
         setPasswordConfirmationError(false);

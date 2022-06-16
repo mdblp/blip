@@ -1,5 +1,6 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2022, Diabeloop
+ * File Chart Outlined Icon
  *
  * All rights reserved.
  *
@@ -25,6 +26,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import SignUpPage from "./signup";
-import SignUpStepper from "./signup-stepper";
-export { SignUpPage, SignUpStepper };
+import React from "react";
+
+import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
+
+const FileChartOutlinedIcon = (props: SvgIconProps): JSX.Element => {
+  return (
+    <SvgIcon xmlns="http://www.w3.org/2000/svg" enableBackground="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24" {...props}>
+      <path fill="currentColor" d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2M18 20H6V4H13V9H18V20M9 13V19H7V13H9M15 15V19H17V15H15M11 11V19H13V11H11Z" />
+    </SvgIcon>
+  );
+};
+
+export default FileChartOutlinedIcon;

@@ -134,7 +134,7 @@ const footerStyle = makeStyles((theme: Theme) => {
     },
     icon: {
       alignSelf: "center",
-      color: "#808080",
+      color: theme.palette.grey[600],
       marginRight: "18px",
       width: "20px",
       marginBottom: "3px",
@@ -240,13 +240,13 @@ function Footer(): JSX.Element {
             </Box>
             <Box id="footer-accompanying-documents-box" className={classes.firstLineElement}>
               <HelpOutlinedIcon className={classes.icon} />
-              <DocumentSelect/>
+              <DocumentSelect />
             </Box>
           </Box>
         ) : (
           <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
             <HelpOutlinedIcon className={classes.icon} />
-            <DocumentSelect user={user}/>
+            <DocumentSelect user={user} />
             <Box className={classes.separator}>|</Box>
           </Box>
         )}
@@ -273,7 +273,8 @@ function Footer(): JSX.Element {
           {t("terms-of-use")}
         </Link>
         <Box className={classes.separator}>|</Box>
-        <Link id="footer-link-cookies-management"
+        <Link
+          id="footer-link-cookies-management"
           className={`${classes.link} ${classes.cookiesManagement}`}
           onClick={handleShowCookieBanner}
         >
@@ -289,6 +290,15 @@ function Footer(): JSX.Element {
           className={classes.link}
         >
           {t("cookies-policy")}
+        </Link>
+        <Box className={classes.separator}>|</Box>
+        <Link
+          id="footer-link-contact-mailto"
+          href="mailto:yourloops@diabeloop.com"
+          onClick={metricsPdfDocument("yourloops-mailto-contact")}
+          className={classes.link}
+        >
+          {t("contact")}
         </Link>
       </Box>
       <Box className={`${classes.sideBox} ${classes.rightBox}`}>
@@ -313,8 +323,12 @@ function Footer(): JSX.Element {
           </Tooltip>
           <span className={classes.bySpan}>by </span>
         </Box>
-        <Link id="footer-link-url-diabeloop" className={classes.diabeloopLink} target="_blank"
-          href={diabeloopUrls.SupportUrl} rel="nofollow">
+        <Link
+          id="footer-link-url-diabeloop"
+          className={classes.diabeloopLink}
+          target="_blank"
+          href={diabeloopUrls.SupportUrl} rel="nofollow"
+        >
           <img src={diabeloopLogo} alt={t("alt-img-logo")} className={`${classes.svg} ${classes.diabeloopLogo}`} />
           <img src={diabeloopLabel} alt={t("alt-img-logo")} className={classes.svg} />
         </Link>

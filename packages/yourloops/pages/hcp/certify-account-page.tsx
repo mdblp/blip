@@ -30,13 +30,11 @@ import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { errorTextFromException } from "../../lib/utils";
-import { useAuth } from "../../lib/auth";
 import { useAlert } from "../../components/utils/snackbar";
 import LoadingBackdrop from "../../components/utils/loading-backdrop";
 
 function CertifyAccountPage(): JSX.Element {
   const { search } = useLocation();
-  const { certifyProfessionalAccount } = useAuth();
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
   const history = useHistory();
@@ -46,7 +44,7 @@ function CertifyAccountPage(): JSX.Element {
   const frProId = new URLSearchParams(search).get("frproid");
   const error = new URLSearchParams(search).get("error");
 
-  const certify = async () => {
+  const certify = () => {
     try {
       setProcessing(true);
       if (error) {
@@ -54,7 +52,8 @@ function CertifyAccountPage(): JSX.Element {
         return;
       }
       if (sourceUrl === "psc" && frProId) {
-        await certifyProfessionalAccount();
+        // TODO need to adapt eCPS certification with auth0
+        //  see YLP-1591 (https://diabeloop.atlassian.net/browse/YLP-1591)
         alert.success(t("certify-professional-account-done"));
       }
     } catch (err) {

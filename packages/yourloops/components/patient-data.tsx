@@ -31,13 +31,14 @@ import bows from "bows";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import { makeStyles } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 
 import Blip from "blip";
 import appConfig from "../lib/config";
 import { useAuth } from "../lib/auth";
 import { useTeam } from "../lib/team";
-import { useData } from "../lib/data";
+import { useData } from "../lib/data/hook";
 import { setPageTitle } from "../lib/utils";
 
 import ProfileDialog from "./dialogs/patient-profile";
@@ -47,8 +48,8 @@ import DialogPDFOptions from "./dialogs/pdf-print-options";
 import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
 import ChatWidget from "./chat/chat-widget";
 import { Patient } from "../lib/data/patient";
-import { makeStyles } from "@material-ui/core";
 import AlarmCard from "./alarm/alarm-card";
+import MedicalFilesWidget from "./dashboard-widgets/medical-files/medical-files-widget";
 
 const patientDataStyles = makeStyles(() => {
   return {
@@ -156,6 +157,7 @@ function PatientDataPage(): JSX.Element | null {
         patientInfoWidget={PatientInfoWidget}
         chatWidget={ChatWidget}
         alarmCard={AlarmCard}
+        medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>
   );

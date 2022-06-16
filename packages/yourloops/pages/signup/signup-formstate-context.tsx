@@ -29,9 +29,8 @@ import React from "react";
 import _ from "lodash";
 
 import { HcpProfession } from "../../models/hcp-profession";
-import { UserRoles } from "../../models/shoreline";
 import { getCurrentLang } from "../../lib/language";
-import { SignupUser as IFormValues } from "../../lib/auth";
+import { SignupForm as IFormValues } from "../../lib/auth";
 
 export type FormValuesType = keyof IFormValues;
 
@@ -59,13 +58,9 @@ export interface ISignUpDispatch {
 
 export const initialState: SignUpFormState = {
   formValues: {
-    accountUsername: "",
-    accountPassword: "",
     profileFirstname: "",
     profileLastname: "",
-    accountRole: UserRoles.unset,
     profileCountry: "", // how to do better ?
-    profilePhone: "",
     hcpProfession: HcpProfession.empty,
     preferencesLanguage: getCurrentLang(),
     terms: false,

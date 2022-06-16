@@ -28,10 +28,8 @@
 
 import {
   Team,
-  TeamAPI,
   TeamContext,
   TeamMember,
-  TeamProvider,
   TeamUser,
   TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
@@ -40,7 +38,6 @@ import {
 
 import {
   TeamContextProvider,
-  loadTeams,
   useTeam,
 } from "./hook";
 
@@ -48,13 +45,10 @@ import { getDisplayTeamCode } from "./utils";
 
 export {
   Team,
-  TeamAPI,
   TeamUser,
   TeamMember,
   TeamContext,
-  TeamProvider,
   TeamContextProvider,
-  loadTeams,
   useTeam,
   getDisplayTeamCode,
   TEAM_CODE_LENGTH,

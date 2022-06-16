@@ -72,7 +72,7 @@ export interface NotificationContext {
   accept: (notification: INotification) => Promise<void>;
   decline: (notification: INotification) => Promise<void>;
   cancel: (notification: INotification) => Promise<void>;
-  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date) => Promise<void>;
+  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>;
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>;
 }
 
@@ -90,8 +90,6 @@ export interface NotificationAPI {
 
 export interface NotificationProvider {
   children: React.ReactNode;
-  /** Used to test the hook */
-  api?: NotificationAPI;
   /** Used for test components which need this hook */
   value?: NotificationContext;
 }

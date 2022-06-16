@@ -39,6 +39,8 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 import { convertBG, UNITS_TYPE } from "../../lib/units/utils";
+import { useTeam } from "../../lib/team";
+import { Patient } from "../../lib/data/patient";
 
 const useStyles = makeStyles((theme: Theme) => ({
   cancelButton: {
@@ -91,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface AlarmsContentConfigurationProps {
   monitoring?: Monitoring;
   saveInProgress: boolean;
-  showCancelButton?: boolean;
+  patient?: Patient;
   onClose?: () => void;
   onSave: (monitoring: Monitoring) => void;
 }
@@ -111,8 +113,9 @@ export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21);
 
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
-  const { monitoring, saveInProgress, showCancelButton, onSave, onClose } = props;
+  const { monitoring, saveInProgress, patient, onSave, onClose } = props;
   const classes = useStyles();
+  const teamHook = useTeam();
   const { t } = useTranslation("yourloops");
 
   if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
@@ -187,6 +190,27 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     });
   };
 
+  const resetToTeamDefaultValues = () => {
+    if (!patient) {
+      throw Error("This action cannot be done if the patient is undefined");
+    }
+    const monitoredTeam = teamHook.getPatientRemoteMonitoringTeam(patient);
+    const team = teamHook.getTeam(monitoredTeam.teamId);
+    if (!team) {
+      throw Error(`Cannot find team with id ${monitoredTeam.teamId}`);
+    }
+    const defaultMonitoring = team.monitoring;
+    if (!defaultMonitoring || !defaultMonitoring.parameters) {
+      throw Error("The given team has no monitoring values");
+    }
+    setHighBg({ ...highBg, value: defaultMonitoring.parameters.highBg });
+    setVeryLowBg({ ...veryLowBg, value: defaultMonitoring.parameters.veryLowBg });
+    setLowBg({ ...lowBg, value: defaultMonitoring.parameters.lowBg });
+    setNonDataTxThreshold({ ...nonDataTxThreshold, value: defaultMonitoring.parameters.nonDataTxThreshold });
+    setOutOfRangeThreshold({ ...outOfRangeThreshold, value: defaultMonitoring.parameters.outOfRangeThreshold });
+    setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold });
+  };
+
   const save = () => {
     if (
       lowBg.value !== undefined
@@ -232,7 +256,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
         1. {t("time-away-from-target")}
       </Typography>
       <Typography variant="caption" className={classes.categoryInfo}>
-        {t("current-trigger-setting-tir")}
+        {t("current-trigger-setting-tir", { tir: outOfRangeThreshold.value, lowBg: lowBg.value, highBg: highBg.value })}
       </Typography>
       <Box display="flex" marginTop={2}>
         <div className={classes.subCategoryContainer}>
@@ -244,7 +268,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               <Typography>{t("minimum")}</Typography>
               <TextField
                 id="low-bg-text-field-id"
-                defaultValue={lowBg.value}
+                value={lowBg.value}
                 error={lowBg.error}
                 type="number"
                 className={classes.textField}
@@ -263,7 +287,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography>{t("maximum")}</Typography>
             <TextField
               id="high-bg-text-field-id"
-              defaultValue={highBg.value}
+              value={highBg.value}
               error={highBg.error}
               type="number"
               className={classes.textField}
@@ -279,7 +303,9 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             />
             <Typography>{t("mg/dL")}</Typography>
           </div>
-          <Typography className={classes.defaultLabel}>{t("default-min-max")}</Typography>
+          {!patient &&
+            <Typography className={classes.defaultLabel}>{t("default-min-max")}</Typography>
+          }
         </div>
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>B. {t("event-trigger-threshold")}</Typography>
@@ -287,7 +313,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography>{t("time-spent-off-target")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id={"out-of-range"}
+                key={`out-of-range-${outOfRangeThreshold.value}`}
+                id="out-of-range"
                 defaultValue={`${outOfRangeThreshold.value}%` ?? ""}
                 values={PERCENTAGES}
                 error={outOfRangeThreshold.error}
@@ -295,7 +322,9 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               />
             </div>
           </div>
-          <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          {!patient &&
+            <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          }
         </div>
       </Box>
 
@@ -305,16 +334,19 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
         2. {t("severe-hypoglycemia")}
       </Typography>
       <Typography variant="caption" className={classes.categoryInfo}>
-        {t("current-trigger-setting-hypoglycemia")}
+        {t("current-trigger-setting-hypoglycemia", { hypoThreshold: hypoThreshold.value, veryLowBg: veryLowBg.value })}
       </Typography>
       <Box display="flex" marginTop={2}>
         <div className={classes.subCategoryContainer}>
-          <Typography className={classes.subCategoryTitle}>A. {t("severe-hypoglycemia-threshold")}:</Typography>
+          <Typography className={classes.subCategoryTitle}>A. {t("severe-hypoglycemia-threshold", {
+            hypoThreshold: hypoThreshold.value,
+            veryLowBg: veryLowBg.value,
+          })}:</Typography>
           <div className={classes.valueSelection}>
             <Typography>{t("severe-hypoglycemia-below")}</Typography>
             <TextField
               id="very-low-bg-text-field-id"
-              defaultValue={veryLowBg.value}
+              value={veryLowBg.value}
               error={veryLowBg.error}
               type="number"
               className={classes.textField}
@@ -330,7 +362,9 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             />
             <Typography>{t("mg/dL")}</Typography>
           </div>
-          <Typography className={classes.defaultLabel}>{t("default", { value: "50mg/dL" })}</Typography>
+          {!patient &&
+            <Typography className={classes.defaultLabel}>{t("default", { value: "54mg/dL" })}</Typography>
+          }
         </div>
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>
@@ -340,7 +374,8 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography>{t("time-spent-severe-hypoglycemia")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id={"hypo-threshold"}
+                key={`hypo-threshold-${hypoThreshold.value}`}
+                id="hypo-threshold"
                 defaultValue={`${hypoThreshold.value}%` ?? ""}
                 values={PERCENTAGES}
                 error={hypoThreshold.error}
@@ -348,7 +383,9 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               />
             </div>
           </div>
-          <Typography className={classes.defaultLabel}>{t("default", { value: "5%" })}</Typography>
+          {!patient &&
+            <Typography className={classes.defaultLabel}>{t("default", { value: "5%" })}</Typography>
+          }
         </div>
       </Box>
 
@@ -358,7 +395,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
         3. {t("data-not-transmitted")}
       </Typography>
       <Typography variant="caption" className={classes.categoryInfo}>
-        {t("current-trigger-setting-data")}
+        {t("current-trigger-setting-data", { nonDataThreshold: nonDataTxThreshold.value })}
       </Typography>
       <Box display="flex" marginTop={2}>
         <div className={classes.subCategoryContainer}>
@@ -367,6 +404,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
             <Typography>{t("time-spent-without-uploaded-data")}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
+                key={`tir-dropdown-${nonDataTxThreshold.value}`}
                 id={"non-data"}
                 defaultValue={`${nonDataTxThreshold.value}%` ?? ""}
                 values={PERCENTAGES.slice(0, 10)}
@@ -375,31 +413,48 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               />
             </div>
           </div>
-          <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          {!patient &&
+            <Typography className={classes.defaultLabel}>{t("default", { value: "50%" })}</Typography>
+          }
         </div>
       </Box>
-      <Box display="flex" justifyContent="end">
-        {showCancelButton &&
-          <Button
-            id="cancel-button-id"
-            className={classes.cancelButton}
-            onClick={onClose}
-          >
-            {t("button-cancel")}
-          </Button>
-        }
-        <ProgressIconButtonWrapper inProgress={saveInProgress}>
-          <Button
-            id="save-button-id"
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={saveButtonDisabled}
-            onClick={save}
-          >
-            {t("button-save")}
-          </Button>
-        </ProgressIconButtonWrapper>
+      <Box display="flex" justifyContent="space-between" marginTop={2}>
+        <Box>
+          {patient &&
+            <Button
+              id="default-values-button-id"
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={resetToTeamDefaultValues}
+            >
+              {t("default-values")}
+            </Button>
+          }
+        </Box>
+        <Box display="flex">
+          {patient &&
+            <Button
+              id="cancel-button-id"
+              className={classes.cancelButton}
+              onClick={onClose}
+            >
+              {t("button-cancel")}
+            </Button>
+          }
+          <ProgressIconButtonWrapper inProgress={saveInProgress}>
+            <Button
+              id="save-button-id"
+              variant="contained"
+              color="primary"
+              disableElevation
+              disabled={saveButtonDisabled}
+              onClick={save}
+            >
+              {t("button-save")}
+            </Button>
+          </ProgressIconButtonWrapper>
+        </Box>
       </Box>
     </React.Fragment>
   );

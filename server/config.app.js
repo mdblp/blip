@@ -75,8 +75,6 @@ const config = {
   BRANDING: stringOption(process.env.BRANDING, "diabeloop_blue"),
   METRICS_SERVICE: stringOption(process.env.METRICS_SERVICE, "disabled"),
   STONLY_WID: stringOption(process.env.STONLY_WID, "disabled"),
-  MAX_FAILED_LOGIN_ATTEMPTS: integerFromText(process.env.MAX_FAILED_LOGIN_ATTEMPTS, 5),
-  DELAY_BEFORE_NEXT_LOGIN_ATTEMPT: integerFromText(process.env.DELAY_BEFORE_NEXT_LOGIN_ATTEMPT, 10),
   COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, "disabled"),
   YLP820_BASAL_TIME: integerFromText(process.env.YLP820_BASAL_TIME, 5000),
   CBG_BUCKETS_ENABLED: booleanFromText(process.env.CBG_BUCKETS_ENABLED, true),

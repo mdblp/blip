@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Direct patient / caregivers share
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +24,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { Alarm } from "../../models/alarm";
+import { UNITS_TYPE } from "../units/utils";
 
-import { ShareUser } from "./models";
-import API from "./api";
-import { useSharedUser, sharedUserReducer, sharedUserInitialState, SharedUserContextProvider } from "./reducer";
+export interface Prescription {
+  id: string;
+  name: string;
+  patientId: string;
+  teamId: string;
+  prescriptorId: string;
+  link: string;
+  uploadedAt: Date;
+}
 
-const { addDirectShare, getDirectShares, removeDirectShare } = API;
+export interface NewMedicalRecord {
+  patientId: string;
+  teamId: string;
+  diagnosis: string;
+  progressionProposal: string;
+  trainingSubject: string
+}
 
-export {
-  ShareUser,
-  addDirectShare,
-  getDirectShares,
-  removeDirectShare,
-  useSharedUser,
-  sharedUserInitialState,
-  sharedUserReducer,
-  SharedUserContextProvider,
-};
+export interface MedicalRecord extends NewMedicalRecord {
+  id: string;
+  authorId: string;
+  creationDate: string;
+}
 
-export default API;
+export interface WeeklyReport {
+  id: string;
+  patientId: string;
+  teamId: string;
+  parameters: {
+    bgUnit: UNITS_TYPE;
+    lowBg: number;
+    highBg: number;
+    outOfRangeThreshold: number;
+    veryLowBg: number;
+    hypoThreshold: number;
+    nonDataTxThreshold: number;
+    reportingPeriod: number;
+  }
+  alarms: Alarm;
+  creationDate: string;
+}

@@ -43,11 +43,11 @@ import Typography from "@material-ui/core/Typography";
 
 import { Settings } from "../../models/shoreline";
 import { Patient } from "../../lib/data/patient";
-import RemoteMonitoringPatientInviteDialog from "../dialogs/remote-monitoring-invite";
+import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 import { useAuth } from "../../lib/auth";
 import { genderLabels } from "../../lib/auth/helpers";
 import { MonitoringStatus } from "../../models/monitoring";
-import { useNotification } from "../../lib/notifications";
+import { useNotification } from "../../lib/notifications/hook";
 import { useTeam } from "../../lib/team";
 import ConfirmDialog from "../dialogs/confirm-dialog";
 import { TeamMemberRole } from "../../models/team";
@@ -85,6 +85,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const notificationHook = useNotification();
   const teamHook = useTeam();
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
+  const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false);
   const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false);
   const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
   const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false);
@@ -112,7 +113,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
 
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
-    gender: "",
+    gender: patient.profile.sex,
     birthdate,
     email: patient.profile.email,
     hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
@@ -203,7 +204,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           size="small"
                           onClick={() => setShowInviteRemoteMonitoringDialog(true)}
                         >
-                          {t("button-invite")}
+                          {t("invite")}
                         </Button>
                       }
                       {buttonsVisible.cancel &&
@@ -228,7 +229,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             color="primary"
                             disableElevation
                             size="small"
-                            onClick={() => console.log("Renew clicked")}
+                            onClick={() => setShowRenewRemoteMonitoringDialog(true)}
                           >
                             {t("renew")}
                           </Button>
@@ -254,9 +255,17 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         </Grid>
       </CardContent>
       {showInviteRemoteMonitoringDialog &&
-        <RemoteMonitoringPatientInviteDialog
+        <RemoteMonitoringPatientDialog
           patient={patient}
+          action={RemoteMonitoringDialogAction.invite}
           onClose={() => setShowInviteRemoteMonitoringDialog(false)}
+        />
+      }
+      {showRenewRemoteMonitoringDialog &&
+        <RemoteMonitoringPatientDialog
+          patient={patient}
+          action={RemoteMonitoringDialogAction.renew}
+          onClose={() => setShowRenewRemoteMonitoringDialog(false)}
         />
       }
       {showConfirmCancelDialog &&

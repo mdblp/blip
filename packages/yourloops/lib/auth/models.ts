@@ -29,9 +29,8 @@
 import { ReactNode } from "react";
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
-import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { JwtPayload } from "jwt-decode";
 
 /** Hook internal usage */
 export interface Session {
@@ -40,31 +39,13 @@ export interface Session {
   traceToken: string;
 }
 
-export interface JwtShorelinePayload extends JwtPayload {
-  role: "hcp" | "patient" | "caregiver" | "clinic";
-  /** username: an e-mail */
-  name: string;
-  email: string;
-  /** userid */
-  usr: string;
-  /** yes for server token - we will never have that in Blip: always "no" */
-  srv: "yes" | "no";
-}
-
-export const STORAGE_KEY_SESSION_TOKEN = "session-token";
-export const STORAGE_KEY_TRACE_TOKEN = "trace-token";
-export const STORAGE_KEY_USER = "logged-in-user";
-
 export interface UpdateUser {
   roles?: UserRoles[];
   password?: string;
   currentPassword?: string;
 }
 
-export interface SignupUser {
-  accountUsername: string;
-  accountPassword: string;
-  accountRole: UserRoles;
+export interface SignupForm {
   feedback: boolean; // Consent to be contacted by Diabeloop
   hcpProfession: HcpProfession;
   preferencesLanguage: LanguageCodes;
@@ -72,42 +53,25 @@ export interface SignupUser {
   profileCountry: string;
   profileFirstname: string;
   profileLastname: string;
-  profilePhone: string;
   terms: boolean;
-}
-
-export interface AuthAPI {
-  accountConfirmed: (key: string, traceToken: string) => Promise<boolean>;
-  certifyProfessionalAccount: () => Promise<IUser>;
-  getUserInfo: (session: Session) => Promise<User>;
-  getShorelineAccessToken: (email: string) => Promise<[string, string?]>;
-  refreshToken: (session: Readonly<Session>) => Promise<string>;
-  resendSignup: (username: string, traceToken: string, language?: string) => Promise<boolean>;
-  sendAccountValidation: (session: Readonly<Session>, language?: string) => Promise<boolean>;
-  signup: (username: string, password: string, role: UserRoles, traceToken: string) => Promise<Session>;
-  updatePreferences: (session: Readonly<Session>) => Promise<Preferences>;
-  updateProfile: (session: Readonly<Session>) => Promise<Profile>;
-  updateSettings: (session: Readonly<Session>) => Promise<Settings>;
-  updateUser: (session: Readonly<Session>, updates: UpdateUser) => Promise<void>;
 }
 
 /**
  * The auth provider hook return values.
  */
 export interface AuthContext {
-  certifyProfessionalAccount: () => Promise<void>;
+  fetchingUser: boolean;
   flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
   getFlagPatients: () => string[];
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
-  resendSignup: (username: string) => Promise<boolean>;
   session: () => Session | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
-  signup: (signup: SignupUser) => Promise<void>;
+  completeSignup: (signupForm: SignupForm) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  updatePassword: (currentPassword: string, password: string) => Promise<void>;
+  updatePassword: (currentPassword: string, password: string) => void;
   updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
   updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;
   updateSettings: (settings: Settings, refresh?: boolean) => Promise<Settings>;
@@ -115,7 +79,6 @@ export interface AuthContext {
 }
 
 export interface AuthProvider {
-  api?: AuthAPI; // Used to test the hook
   children: ReactNode;
   value?: AuthContext; // Used for test components which need this hook
 }

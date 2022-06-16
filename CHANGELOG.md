@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1415 Implement the team details page
 - YLP-1445 Implement alerts in patients table
 - YLP-1452 Implement Auth0 Login/Logout
+- YLP-1453 Implement Auth0 Signup
 - YLP-1462 Create Patient statistics card for dashboard
 - YLP-1463 create Patient information card for dashboard
 - YLP-1465 create Device usage card for dashboard
@@ -39,12 +40,25 @@ It is based on Tidepool Blip 1.27.
 - YLP-1583 Add message column in patient list
 - YLP-1585 Add messages filter in left drawer
 - YLP-1594 Implement the delete button for remote monitored patients
+- YLP-1595 Plug prescription upload to backend
+- YLP-1596 Referring doctor must be saved into backend when inviting a user to remote monitoring team
+- YLP-1597 add renew dialog for a patient under remote monitoring 
 - YLP-1604 Update patient profile with new patient information
+- YLP-1607 Ask patient to consent when he joins the monitoring program
+- YLP-1609 Add button to reset patient monitoring parameters
+- YLP-1612 Display an alert if account is not validated
+- YLP-1613 Add icon button to remove team member
+- YLP-1615 Download a prescription
+- YLP-1616 Display details of a weekly report in modal
+
 ### Engineering Use
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding
 - YLP-1345 Correct blip pdf export to display japanese chars
+- YLP-1350 Auth API refactoring
+- YLP-1353 Share API refactoring
+- YLP-1354 Team API refactoring
 - YLP-1383 Rework app routing
 - YLP-1447 Skip flaky test
 - YLP-1506 Skip flaky test

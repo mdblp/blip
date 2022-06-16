@@ -132,8 +132,10 @@ describe("TeamInformation", () => {
     expect(document.getElementById("edit-team-button")).toBeNull();
   });
 
-  it("should display button to leave team when user is patient", () => {
-    renderTeamInformation();
+  it("should display button to leave team when user is patient and team is not a monitoring team", () => {
+    const teamWithNoMonitoring = buildTeam(teamId, [], );
+    teamWithNoMonitoring.monitoring = undefined;
+    renderTeamInformation({ team: teamWithNoMonitoring, refreshParent: refresh });
     expect(document.getElementById("leave-team-button")).not.toBeNull();
   });
 

@@ -97,7 +97,12 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
         </DialogTitle>
 
         <Box paddingX={3} marginBottom={2}>
-          <AlarmsContentConfiguration monitoring={patient.monitoring} showCancelButton={true} onSave={save} saveInProgress={saveInProgress} onClose={onClose}/>
+          <AlarmsContentConfiguration
+            monitoring={patient.monitoring}
+            patient={patient}
+            onSave={save}
+            saveInProgress={saveInProgress}
+            onClose={onClose} />
         </Box>
       </div>
     </Dialog>

@@ -22,6 +22,7 @@ const PatientDashboard = (props) => {
     msRange,
     chatWidget: ChatWidget,
     alarmCard: AlarmCard,
+    medicalFilesWidget: MedicalFilesWidget,
     canPrint,
     onClickPrint,
     //eslint-disable-next-line
@@ -63,9 +64,14 @@ const PatientDashboard = (props) => {
         trackMetric={trackMetric}
       />
       <Box id="patient-dashboard-content">
-        {<PatientInfoWidget
-          patient={patient}
-        />}
+        {<PatientInfoWidget patient={patient} />}
+        {patient.monitoring?.enabled &&
+          <MedicalFilesWidget
+            id="dashboard-medical-files-widget"
+            patient={patient}
+            userRole={user.role}
+          />
+        }
         <PatientStatistics
           id="dashboard-patient-statistics"
           bgPrefs={bgPrefs}
@@ -94,8 +100,12 @@ const PatientDashboard = (props) => {
           <AlarmCard patient={patient} />
         }
         {patient.monitoring?.enabled &&
-          <ChatWidget id="dashboard-chat-widget"
-            patient={patient} userId={user.userid} userRole={user.role} />
+          <ChatWidget
+            id="dashboard-chat-widget"
+            patient={patient}
+            userId={user.userid}
+            userRole={user.role}
+          />
         }
       </Box>
     </div>
@@ -106,6 +116,7 @@ PatientDashboard.propTypes = {
   user: PropTypes.object,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
+  medicalFilesWidget: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   patient: PropTypes.object,
   prefixURL: PropTypes.string,

@@ -27,9 +27,6 @@
  */
 
 import { v4 as uuidv4 } from "uuid";
-import jwtDecode from "jwt-decode";
-
-import { JwtShorelinePayload } from "../../lib/auth/models";
 import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../lib/data/patient";
@@ -37,9 +34,9 @@ import { Alarm } from "../../models/alarm";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
 import { Profile, UserRoles } from "../../models/shoreline";
 import { TeamMemberRole, TeamType } from "../../models/team";
-import { INotification, NotificationType } from "../../lib/notifications";
 import { Monitoring } from "../../models/monitoring";
 import { UNITS_TYPE } from "../../lib/units/utils";
+import { INotification, NotificationType } from "../../lib/notifications/models";
 
 // eslint-disable-next-line no-magic-numbers
 const defaultTokenDuration = 60 * 60;
@@ -61,32 +58,6 @@ export const createSessionToken = (user: User, dur = defaultTokenDuration): stri
     role: user.role,
     usr: user.userid,
     email: user.username,
-    dur,
-    iat,
-    exp: iat + dur,
-    jti: uuidv4(),
-  };
-  const encoder = new TextEncoder();
-  let utf8 = encoder.encode(JSON.stringify(header));
-  const b64Header = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  utf8 = encoder.encode(JSON.stringify(payload));
-  const b64Payload = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  return `${b64Header}.${b64Payload}.`;
-};
-
-export const refreshToken = (token: string): string => {
-  const decoded = jwtDecode<JwtShorelinePayload>(token);
-  const header = {
-    alg: "none",
-    typ: "JWT",
-  };
-  const dur = defaultTokenDuration;
-  const iat = Math.round(Date.now() / 1000);
-  const payload = {
-    svr: "no",
-    role: decoded.role,
-    usr: decoded.usr,
-    email: decoded.email,
     dur,
     iat,
     exp: iat + dur,
@@ -146,10 +117,11 @@ export const createPatient = (
   };
 };
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = "fakeTeamName"): PatientTeam => {
   return {
     teamId: id,
     status,
+    teamName,
   } as PatientTeam;
 };
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
@@ -218,17 +190,24 @@ export function buildTeamMember(
   role: TeamMemberRole = TeamMemberRole.admin,
   username = "fake@username.com",
   fullName = "fake full name",
-  status = UserInvitationStatus.pending
+  status = UserInvitationStatus.pending,
+  userRole: UserRoles = UserRoles.hcp,
 ): TeamMember {
   return {
     team: { id: teamId } as Team,
     role,
     status,
     user: {
-      role: UserRoles.hcp,
+      role: userRole,
       userid: userId,
       username,
-      members: [],
+      members: [
+        {
+          invitation: {} as INotification,
+          status,
+          team: { id: teamId, code: "fakeCode", name: "fakeTeamName" },
+        } as TeamMember,
+      ],
       profile: {
         fullName,
       },

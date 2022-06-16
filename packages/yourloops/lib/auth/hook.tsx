@@ -29,36 +29,48 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import bows from "bows";
 import _ from "lodash";
-import jwtDecode from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
 import { HcpProfession } from "../../models/hcp-profession";
-import { getCurrentLang } from "../language";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
-import { AuthAPI, AuthContext, AuthProvider, JwtShorelinePayload, Session, SignupUser } from "./models";
-import AuthAPIImpl from "./api";
+import {
+  AuthContext,
+  AuthProvider,
+  Session,
+  SignupForm,
+} from "./models";
 import appConfig from "../config";
 import HttpService from "../../services/http";
+import UserApi from "./user-api";
 
 const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
 
-export function AuthContextImpl(api: AuthAPI): AuthContext {
+export function AuthContextImpl(): AuthContext {
   const { logout: auth0logout, user: auth0user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const { t } = useTranslation("yourloops");
+
   const [traceToken, setTraceToken] = useState<string | null>(null);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [fetchingUser, setFetchingUser] = useState<boolean>(false);
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
   const session = useCallback(
     (): Session | null => sessionToken && traceToken && user ? { sessionToken, traceToken, user } : null,
     [sessionToken, traceToken, user]
   );
+
+  const getUser = (): User => {
+    if (!user) {
+      throw Error("user not logged in");
+    }
+    return user;
+  };
 
   const getAuthInfos = (): Session => {
     const s = session();
@@ -73,7 +85,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("updatePreferences", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.preferences = preferences;
-    const updatedPreferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
+    const updatedPreferences = await UserApi.updatePreferences(getUser().userid, preferences);
     if (refresh) {
       updatedUser.preferences = updatedPreferences;
       setUser(updatedUser);
@@ -86,7 +98,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("updateProfile", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.profile = profile;
-    const updatedProfile = await api.updateProfile({ ...authInfo, user: updatedUser });
+    const updatedProfile = await UserApi.updateProfile(getUser().userid, profile);
     if (refresh) {
       updatedUser.profile = updatedProfile;
       setUser(updatedUser);
@@ -99,7 +111,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("updateSettings", authInfo.user.userid);
     const updatedUser = new User(authInfo.user);
     updatedUser.settings = settings;
-    const updatedSettings = await api.updateSettings({ ...authInfo, user: updatedUser });
+    const updatedSettings = await UserApi.updateSettings(getUser().userid, settings);
     if (refresh) {
       updatedUser.settings = updatedSettings;
       setUser(updatedUser);
@@ -107,63 +119,23 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     return settings;
   };
 
-  const updatePassword = async (currentPassword: string, password: string): Promise<void> => {
+
+  // TODO need to use Auth0 Api to change password
+  //  see YLP-1524 (https://diabeloop.atlassian.net/browse/YLP-1524)
+  const updatePassword = (currentPassword: string, password: string): void => {
+    console.log(currentPassword, password);
     const authInfo = getAuthInfos();
     if (authInfo.user.isUserPatient()) {
       throw new Error("invalid-user-role");
     }
-
-    return api.updateUser(authInfo, { currentPassword, password });
-  };
-
-  const signup = async (signup: SignupUser): Promise<void> => {
-    log.info("signup", signup.accountUsername);
-    const now = new Date().toISOString();
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    const auth = await api.signup(
-      signup.accountUsername,
-      signup.accountPassword,
-      signup.accountRole,
-      traceToken
-    );
-
-    auth.user.profile = {
-      fullName: `${signup.profileFirstname} ${signup.profileLastname}`,
-      firstName: signup.profileFirstname,
-      lastName: signup.profileLastname,
-      termsOfUse: { acceptanceTimestamp: now, isAccepted: signup.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signup.privacyPolicy },
-      contactConsent: { acceptanceTimestamp: now, isAccepted: signup.feedback },
-      hcpProfession: signup.hcpProfession,
-    };
-    auth.user.settings = { country: signup.profileCountry };
-    auth.user.preferences = { displayLanguageCode: signup.preferencesLanguage };
-
-    // Cannot Use Promise.All as Backend do not handle parallel call correctly
-    await api.updateProfile(auth);
-    await api.updateSettings(auth);
-    await api.updatePreferences(auth);
-
-    // send confirmation signup mail
-    await api.sendAccountValidation(auth, signup.preferencesLanguage);
-
-    log.info("signup done", auth);
-  };
-
-  const resendSignup = (username: string): Promise<boolean> => {
-    if (traceToken === null) {
-      throw new Error("not-yet-initialized");
-    }
-    return api.resendSignup(username, traceToken, getCurrentLang());
+    throw new Error("can't update password at the moment");
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
     log.info("flagPatient", userId);
     const authInfo = getAuthInfos();
     const updatedUser = new User(authInfo.user);
-    if (_.isNil(updatedUser.preferences)) {
+    if (!updatedUser.preferences) {
       updatedUser.preferences = {};
     }
     if (!Array.isArray(updatedUser.preferences.patientsStarred)) {
@@ -174,7 +146,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     } else {
       updatedUser.preferences.patientsStarred.push(userId);
     }
-    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
+    updatedUser.preferences = await UserApi.updatePreferences(getUser().userid, updatedUser.preferences);
     setUser(updatedUser);
   };
 
@@ -182,11 +154,11 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     log.info("setFlagPatients", userIds);
     const authInfo = getAuthInfos();
     const updatedUser = new User(authInfo.user);
-    if (_.isNil(updatedUser.preferences)) {
+    if (!updatedUser.preferences) {
       updatedUser.preferences = {};
     }
     updatedUser.preferences.patientsStarred = userIds;
-    updatedUser.preferences = await api.updatePreferences({ ...authInfo, user: updatedUser });
+    updatedUser.preferences = await UserApi.updatePreferences(getUser().userid, updatedUser.preferences);
     setUser(updatedUser);
   };
 
@@ -204,9 +176,10 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
       throw new Error("invalid-user-role");
     }
 
-    // Call first Update user as it is the most important call
-    // if it failed, for now we don't have compensation transaction that revert db change
-    await api.updateUser(authInfo, { roles: [UserRoles.hcp] });
+    /** TODO role changing was performed with a call to shoreline.
+     *   Now it has to be done with Auth0 since role is a part of auth0 user metadata.
+     *   see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
+     **/
 
     const now = new Date().toISOString();
     const updatedProfile = _.cloneDeep(authInfo.user.profile ?? {}) as Profile;
@@ -214,37 +187,15 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true };
     updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent };
     updatedProfile.hcpProfession = hcpProfession;
-    const profile = await updateProfile(updatedProfile, false);
-
-    // Ask for a new token with the updated role
-    const newToken = await api.refreshToken(authInfo);
-    const tokenInfos = jwtDecode<JwtShorelinePayload>(newToken);
-    // Check we have the new role
-    if (tokenInfos.role !== UserRoles.hcp) {
-      throw new Error("Role change is not effective");
-    }
+    await updateProfile(updatedProfile, false);
     // Refresh our data:
     const updatedUser = new User(authInfo.user);
     updatedUser.role = UserRoles.hcp;
-    updatedUser.profile = profile;
-    setSessionToken(newToken);
+    updatedUser.profile = updatedProfile;
     setUser(updatedUser);
   };
 
-  const certifyProfessionalAccount = async (): Promise<void> => {
-    if (!user) {
-      throw Error("User not logged in");
-    }
-    const { frProId } = await api.certifyProfessionalAccount();
-    user.frProId = frProId;
-    setUser(user);
-  };
-
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
-
-  /*******************************************************/
-  /****** AUTH 0 HACK FOR LOGIN/LOGOUT AND SIGNUP *******/
-  /*****************************************************/
 
   const mapAuth0UserToIUser = useMemo<IUser>(() => {
     let user = {};
@@ -255,7 +206,7 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
         role: auth0user["http://your-loops.com/roles"][0],
         userid: id,
         emailVerified: auth0user.email_verified,
-        username: auth0user.email || "",
+        username: auth0user.email,
       };
     }
     return user as IUser;
@@ -263,22 +214,34 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
 
   const getUserInfo = useCallback(async () => {
     try {
-      if (auth0user) {
-        const user = new User(mapAuth0UserToIUser);
-        const [sessionToken, userId] = await api.getShorelineAccessToken(auth0user.email as string);
-        const traceToken = uuidv4();
-        if (userId) {
-          user.userid = userId;
-        }
-        const updatedUser = await api.getUserInfo({ user, sessionToken, traceToken });
-        setUser(updatedUser);
-        setSessionToken(sessionToken);
-        setTraceToken(traceToken);
+      setFetchingUser(true);
+      const user = new User(mapAuth0UserToIUser);
+
+      // Temporary here waiting all backend services be compatible with Auth0
+      // see https://diabeloop.atlassian.net/browse/YLP-1553
+      let sessionToken: string | null = null;
+      try {
+        const { token, id } = await UserApi.getShorelineAccessToken();
+        HttpService.shorelineAccessToken = token;
+        user.userid = id;
+        sessionToken = token;
+      } catch (err) {
+        console.log(err);
       }
+
+      user.profile = await UserApi.getProfile(user.userid);
+      user.preferences = await UserApi.getPreferences(user.userid);
+      user.settings = await UserApi.getSettings(user.userid);
+
+      setUser(user);
+      setSessionToken(sessionToken || "no-token");
+      setTraceToken(uuidv4());
     } catch (err) {
-      log.error(err);
+      console.error(err);
+    } finally {
+      setFetchingUser(false);
     }
-  }, [api, auth0user, mapAuth0UserToIUser]);
+  }, [mapAuth0UserToIUser]);
 
   const logout = async (): Promise<void> => {
     try {
@@ -292,10 +255,33 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     }
   };
 
+  const completeSignup = async (signupForm: SignupForm): Promise<void> => {
+    const now = new Date().toISOString();
+    const profile: Profile = {
+      fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
+      firstName: signupForm.profileFirstname,
+      lastName: signupForm.profileLastname,
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy },
+      contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
+      hcpProfession: signupForm.hcpProfession,
+    };
+    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage };
+    const settings: Settings = { country: signupForm.profileCountry };
+
+    const user = getUser();
+    await UserApi.updateProfile(user.userid, profile);
+    await UserApi.updatePreferences(user.userid, preferences);
+    await UserApi.updateSettings(user.userid, settings);
+    user.preferences = preferences;
+    user.profile = profile;
+    user.settings = settings;
+  };
+
   useEffect(() => {
-    const getAccessToken = async () => getAccessTokenSilently();
     (async () => {
       if (isAuthenticated && !user) {
+        const getAccessToken = async () => getAccessTokenSilently();
         HttpService.setGetAccessTokenMethod(getAccessToken);
         await getUserInfo();
       }
@@ -306,16 +292,15 @@ export function AuthContextImpl(api: AuthAPI): AuthContext {
     user,
     isLoggedIn,
     session,
+    fetchingUser,
     setUser,
-    certifyProfessionalAccount,
     redirectToProfessionalAccountLogin,
     updateProfile,
     updatePreferences,
     updateSettings,
     updatePassword,
     logout,
-    signup,
-    resendSignup,
+    completeSignup,
     flagPatient,
     setFlagPatients,
     getFlagPatients,
@@ -334,8 +319,8 @@ export function useAuth(): AuthContext {
  * @param props for auth provider & children
  */
 export function AuthContextProvider(props: AuthProvider): JSX.Element {
-  const { children, api, value } = props;
-  const authValue = value ?? AuthContextImpl(api ?? AuthAPIImpl); // eslint-disable-line new-cap
+  const { children, value } = props;
+  const authValue = value ?? AuthContextImpl(); // eslint-disable-line new-cap
 
   return <ReactAuthContext.Provider value={authValue}>{children}</ReactAuthContext.Provider>;
 }

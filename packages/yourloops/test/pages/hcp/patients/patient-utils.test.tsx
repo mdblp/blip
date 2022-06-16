@@ -33,7 +33,7 @@ import {
 } from "../../../../components/patient/utils";
 import { PatientTableSortFields, UserInvitationStatus } from "../../../../models/generic";
 import { Patient, PatientTeam } from "../../../../lib/data/patient";
-import { INotification } from "../../../../lib/notifications";
+import { INotification } from "../../../../lib/notifications/models";
 import { Profile } from "../../../../models/shoreline";
 import { Monitoring } from "../../../../models/monitoring";
 
@@ -323,7 +323,9 @@ describe("Patient utils", () => {
           fullName: profile.fullName,
           lastName: profile.lastName,
           email: teamUser.username,
-          sex: undefined,
+          referringDoctor: undefined,
+
+          sex: "",
         },
         settings: {
           a1c: undefined,

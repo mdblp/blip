@@ -40,10 +40,15 @@ export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequ
     config = {
       ...config,
       headers: {
+        ...config.headers,
         Authorization: `Bearer ${await HttpService.getAccessToken()}`,
         [HttpHeaderKeys.traceToken]: uuidv4(),
       },
     };
+
+    if (HttpService.shorelineAccessToken && config.headers) {
+      config.headers[HttpHeaderKeys.sessionToken] = HttpService.shorelineAccessToken;
+    }
   }
   return config;
 };
