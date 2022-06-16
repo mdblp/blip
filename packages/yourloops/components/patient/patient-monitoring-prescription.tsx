@@ -41,6 +41,7 @@ import Dropdown from "../dropdown/dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
 import { UserRoles } from "../../models/shoreline";
 import { commonComponentStyles } from "../common";
+import { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   categoryTitle: {
@@ -89,11 +90,13 @@ export interface PrescriptionInfo {
 }
 
 export interface PatientInfoProps {
+  defaultTeamId?: string;
+  action: RemoteMonitoringDialogAction;
   setPrescriptionInfo: (prescriptionInfo: PrescriptionInfo) => void;
 }
 
 function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
-  const { setPrescriptionInfo } = props;
+  const { defaultTeamId, action, setPrescriptionInfo } = props;
   const classes = useStyles();
   const commonClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
@@ -105,10 +108,12 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [prescription, setPrescription] = useState<File | undefined>(undefined);
   const [numberOfMonthSelected, setNumberOfMonthSelected] = useState(3);
-
   const teams = useMemo<Team[]>(() => teamHook.getRemoteMonitoringTeams(), [teamHook]);
   const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
+  // only set team Id for a renew
+  const defaultKey = action === RemoteMonitoringDialogAction.renew ? defaultTeamId: undefined;
+
 
   useEffect(() => {
     const prescriptionInfo: PrescriptionInfo = {
@@ -141,6 +146,14 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     setMembersMap(membersHasMap);
   };
 
+  useEffect(() => {
+    if (defaultTeamId !== undefined) {
+      selectTeam(defaultTeamId);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -165,6 +178,8 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
             <div className={classes.dropdown}>
               <Dropdown
                 id={"team-basic-dropdown"}
+                defaultKey={defaultKey}
+                disabled={action === RemoteMonitoringDialogAction.renew}
                 values={teamsMap}
                 onSelect={selectTeam}
               />

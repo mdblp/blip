@@ -36,6 +36,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 export interface BasicDropdownProps {
   id: string;
   defaultKey?: string;
+  disabled?: boolean;
   values: Map<string, string>; //Map<key, value>
   onSelect: (value: string) => void;
 }
@@ -54,10 +55,9 @@ const styles = makeStyles((theme: Theme) => ({
 
 
 function Dropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultKey, values, id } = props;
+  const { onSelect, defaultKey, values, id, disabled } = props;
   const classes = styles();
-  const [selectedValue, setSelectedValue] = React.useState(defaultKey ? values.get(defaultKey) : "");
-
+  const [selectedValue, setSelectedValue] = React.useState(defaultKey ? defaultKey : "");
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const value = event.target.value as string;
@@ -71,6 +71,7 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
       value={selectedValue}
       className={classes.select}
       variant="outlined"
+      disabled={disabled}
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}
     >
