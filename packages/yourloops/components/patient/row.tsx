@@ -43,11 +43,11 @@ import { FilterType } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
-import { useTeam } from "../../lib/team";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
+import TeamUtils from "../../lib/team/utils";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -92,7 +92,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const trNA = t("N/A");
   const authHook = useAuth();
-  const teamHook = useTeam();
   const isUserHcp = authHook.user?.isUserHcp();
   const patientIsMonitored = patient.monitoring !== null && patient.monitoring?.enabled;
   const classes = patientListStyle();
@@ -176,8 +175,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
   const rowId = `patients-list-row-${userId.replace(/@/g, "_")}`;
-  const hasPendingInvitation = teamHook.isInvitationPending(patient);
-  const isAlreadyInATeam = teamHook.isInAtLeastATeam(patient);
+  const hasPendingInvitation = TeamUtils.isInvitationPending(patient);
+  const isAlreadyInATeam = TeamUtils.isInAtLeastATeam(patient);
 
   const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
     return element ? element.offsetWidth < element.scrollWidth : undefined;

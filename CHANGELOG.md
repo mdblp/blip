@@ -2,6 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## Unreleased
+
+### Engineering use
+- YLP-1626 Refactor team hook to only keep functions impacting the state
+
 ## 3.0.0 - 2022-06-16
 ### Added
 - YLP-1260 Verify password leak on signup or password change

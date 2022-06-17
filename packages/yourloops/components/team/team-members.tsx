@@ -52,6 +52,7 @@ import { useAuth } from "../../lib/auth";
 import { StyledTableCell } from "../styled-components";
 import { useAlert } from "../utils/snackbar";
 import { errorTextFromException } from "../../lib/utils";
+import TeamUtils from "../../lib/team/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   addTeamMemberButton: {
@@ -85,7 +86,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const authContext = useAuth();
   const alert = useAlert();
   const loggedInUserId = authContext.user?.userid as string;
-  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
+  const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null);

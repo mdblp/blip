@@ -46,6 +46,7 @@ import PatientsTable from "./table";
 import { Patient } from "../../lib/data/patient";
 import { PatientListProps } from "./models";
 import { comparePatients } from "./utils";
+import TeamUtils from "../../lib/team/utils";
 
 const log = bows("PatientListPage");
 
@@ -73,7 +74,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     order: SortDirection
   ) => {
     let filteredPatients = teamHook.filterPatients(filterType, filter, flagged);
-    filteredPatients = teamHook.computeFlaggedPatients(filteredPatients, flagged);
+    filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged);
     // Sort the patients
     filteredPatients.sort((a: Patient, b: Patient): number => {
       const c = comparePatients(a, b, orderBy);

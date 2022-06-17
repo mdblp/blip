@@ -34,9 +34,9 @@ import moment from "moment-timezone";
 import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import { UserRoles } from "../../models/shoreline";
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
+import { ITeam, TeamMemberRole, TeamType } from "../../models/team";
 
-import { errorTextFromException, fixYLP878Settings } from "../utils";
+import { errorTextFromException } from "../utils";
 import metrics from "../metrics";
 import { Session, useAuth } from "../auth";
 import { useNotification } from "../notifications/hook";
@@ -53,68 +53,6 @@ const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext);
 /** hackish way to prevent 2 or more consecutive loading */
 let lock = false;
 
-export function iMemberToMember(iTeamMember: ITeamMember, team: Team, users: Map<string, TeamUser>): TeamMember {
-  const {
-    userId,
-    invitationStatus,
-    role,
-    email,
-    preferences,
-    profile,
-    settings,
-    idVerified,
-    alarms,
-    monitoring,
-    unreadMessages,
-  } = iTeamMember;
-
-  let teamUser = users.get(userId);
-  if (!teamUser) {
-    teamUser = {
-      role: role === TeamMemberRole.patient ? UserRoles.patient : UserRoles.hcp,
-      userid: userId,
-      username: email,
-      emails: [email],
-      preferences,
-      profile,
-      settings: fixYLP878Settings(settings),
-      members: [],
-      idVerified,
-      alarms,
-      monitoring,
-      unreadMessages,
-    };
-    users.set(userId, teamUser);
-  }
-
-  const teamMember: TeamMember = {
-    team,
-    role,
-    status: invitationStatus,
-    user: teamUser,
-  };
-  teamUser.members.push(teamMember);
-  team.members.push(teamMember);
-  return teamMember;
-}
-
-export function iTeamToTeam(iTeam: ITeam, users: Map<string, TeamUser>): Team {
-  const team: Team = { ...iTeam, members: [] };
-  // Detect duplicate users, and update the member if needed
-  iTeam.members.forEach(iTeamMember => iMemberToMember(iTeamMember, team, users));
-  return team;
-}
-
-function getUserByEmail(teams: Team[], email: string): TeamUser | null {
-  for (const team of teams) {
-    for (const member of team.members) {
-      if (member.user.username === email) {
-        return member.user;
-      }
-    }
-  }
-  return null;
-}
 
 function TeamContextImpl(): TeamContext {
   // hooks (private or public variables)
@@ -148,21 +86,11 @@ function TeamContextImpl(): TeamContext {
   }, [getPatientsAsTeamUsers]);
 
 
-  const isInvitationPending = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending);
-    return typeof tm === "object";
-  };
-
-  const isOnlyPendingInvitation = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending);
-    return typeof tm === "undefined";
-  };
-
   const buildPatientFiltersStats = useCallback(() => {
     const patients = getPatients();
     return {
-      all: patients.filter((patient) => !isOnlyPendingInvitation(patient)).length,
-      pending: patients.filter((patient) => isInvitationPending(patient)).length,
+      all: patients.filter((patient) => !TeamUtils.isOnlyPendingInvitation(patient)).length,
+      pending: patients.filter((patient) => TeamUtils.isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === "private")).length,
       unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
       outOfRange: patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive).length,
@@ -260,74 +188,9 @@ function TeamContextImpl(): TeamContext {
     setTeams(teams);
   };
 
-  const getMedicalMembers = (team: Team): TeamMember[] => {
-    return team.members.filter((member) => member.role !== TeamMemberRole.patient);
-  };
-
-  const getNumMedicalMembers = (team: Team): number => {
-    return team.members.reduce<number>((num, member) => {
-      return member.role === TeamMemberRole.patient ? num : num + 1;
-    }, 0);
-  };
-
-  const teamHasOnlyOneMember = (team: Team): boolean => {
-    const numMembers = team.members.reduce((p, t) => t.role === TeamMemberRole.patient ? p : p + 1, 0);
-    return numMembers < 2;
-  };
-
-  const isUserAdministrator = (team: Team, userId: string): boolean => {
-    const result = team.members.find((member) => member.role === TeamMemberRole.admin && member.user.userid === userId);
-    return typeof result === "object";
-  };
-
-  const isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
-    const admins = team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted);
-    return admins.length === 1 && admins[0].user.userid === userId;
-  };
-
-  const isInAtLeastATeam = (patient: Patient): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted);
-    return !!tm;
-  };
-
-  const isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId);
-    return typeof tm === "object";
-  };
-
-
-  const extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
-    const twoWeeksFromNow = new Date();
-    switch (filterType) {
-    case PatientFilterTypes.all:
-      return patients.filter((patient) => !isOnlyPendingInvitation(patient));
-    case PatientFilterTypes.pending:
-      return patients.filter((patient) => isInvitationPending(patient));
-    case PatientFilterTypes.flagged:
-      return patients.filter(patient => flaggedPatients.includes(patient.userid));
-    case PatientFilterTypes.unread:
-      return patients.filter(patient => patient.metadata.unreadMessagesSent > 0);
-    case PatientFilterTypes.outOfRange:
-      return patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive);
-    case PatientFilterTypes.severeHypoglycemia:
-      return patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive);
-    case PatientFilterTypes.dataNotTransferred:
-      return patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive);
-    case PatientFilterTypes.remoteMonitored:
-      return patients.filter(patient => patient.monitoring?.enabled);
-    case PatientFilterTypes.private:
-      return patients.filter(patient => isInTeam(patient, filterType));
-    case PatientFilterTypes.renew:
-      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
-      return patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0);
-    default:
-      return patients;
-    }
-  };
-
   const filterPatients = (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]): Patient[] => {
     const allPatients = getPatients();
-    let patients = extractPatients(allPatients, filterType, flaggedPatients);
+    let patients = TeamUtils.extractPatients(allPatients, filterType, flaggedPatients);
     const searchByName = search.length > 0;
     if (searchByName) {
       const searchText = search.toLocaleLowerCase();
@@ -343,12 +206,6 @@ function TeamContextImpl(): TeamContext {
     return patients;
   };
 
-  const computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
-    return patients.map(patient => {
-      return { ...patient, metadata : { ...patient.metadata, flagged : flaggedPatients.includes(patient.userid) } };
-    });
-  };
-
   const invitePatient = async (team: Team, username: string): Promise<void> => {
     const apiInvitation = await TeamApi.invitePatient({ teamId: team.id, email: username });
     const invitation = notificationConversion(apiInvitation);
@@ -356,7 +213,7 @@ function TeamContextImpl(): TeamContext {
       // Should not be possible
       throw new Error("Invalid invitation type");
     }
-    let user = getUserByEmail(teams, invitation.email);
+    let user = TeamUtils.getUserByEmail(teams, invitation.email);
     if (user === null) {
       user = {
         userid: invitation.id,
@@ -385,7 +242,7 @@ function TeamContextImpl(): TeamContext {
       // Should not be possible
       throw new Error("Invalid invitation type");
     }
-    let user = getUserByEmail(teams, invitation.email);
+    let user = TeamUtils.getUserByEmail(teams, invitation.email);
     if (user === null) {
       user = {
         userid: invitation.id,
@@ -418,7 +275,7 @@ function TeamContextImpl(): TeamContext {
     };
     const iTeam = await TeamApi.createTeam(apiTeam);
     const users = getMapUsers();
-    const newTeam = iTeamToTeam(iTeam, users);
+    const newTeam = TeamUtils.iTeamToTeam(iTeam, users);
     teams.push(newTeam);
     setTeams(teams);
     metrics.send("team_management", "create_care_team", _.isEmpty(team.email) ? "email_not_filled" : "email_filled");
@@ -496,7 +353,7 @@ function TeamContextImpl(): TeamContext {
     if (ourselve.role === TeamMemberRole.patient) {
       await TeamApi.removePatient(team.id, ourselve.user.userid);
       metrics.send("team_management", "leave_team");
-    } else if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && teamHasOnlyOneMember(team)) {
+    } else if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
       await TeamApi.deleteTeam(team.id);
       metrics.send("team_management", "delete_team");
     } else {
@@ -604,7 +461,7 @@ function TeamContextImpl(): TeamContext {
       .then(({ teams, flaggedNotInResult }: LoadTeams) => {
         log.debug("Loaded teams: ", teams);
         for (const invitation of notificationHook.sentInvitations) {
-          const user = getUserByEmail(teams, invitation.email);
+          const user = TeamUtils.getUserByEmail(teams, invitation.email);
           if (user) {
             for (const member of user.members) {
               if (member.status === UserInvitationStatus.pending) {
@@ -658,17 +515,7 @@ function TeamContextImpl(): TeamContext {
     getPatientsAsTeamUsers,
     getPatients,
     filterPatients,
-    getMedicalMembers,
-    getNumMedicalMembers,
     getPatientRemoteMonitoringTeam,
-    teamHasOnlyOneMember,
-    isUserAdministrator,
-    isUserTheOnlyAdministrator,
-    isInvitationPending,
-    isOnlyPendingInvitation,
-    isInAtLeastATeam,
-    isInTeam,
-    computeFlaggedPatients,
     invitePatient,
     inviteMember,
     markPatientMessagesAsRead,
