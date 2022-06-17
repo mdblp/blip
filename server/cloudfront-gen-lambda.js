@@ -60,7 +60,7 @@ const contentSecurityPolicy = {
   imgSrc: ["'self'", "data:"], // 'strict-dynamic' is problematic on google
   fontSrc: ["'self'", "data:"],
   connectSrc: ["'self'", "data:", "{{ API_HOST }}"],
-  frameSrc: [],
+  frameSrc: ["'self'", "https://yourloops-itg.eu.auth0.com"],
   objectSrc: [],
 };
 
