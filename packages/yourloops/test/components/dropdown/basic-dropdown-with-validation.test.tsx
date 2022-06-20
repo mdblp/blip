@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, getByTestId, render } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 
 import BasicDropdownWithValidation, {
@@ -73,10 +73,10 @@ describe("BasicDropdownWithValidation", () => {
       errorTranslationKey,
       inputTranslationKey,
     };
-    const { container } = render(fakeDropdown(props));
-    const dropdownSelect = getByTestId(container, `dropdown-${id}-selector-input-props`);
-    fireEvent.change(dropdownSelect, { target: { value: valueToSelect } });
-
+    render(fakeDropdown(props));
+    fireEvent.mouseDown(screen.getByRole("button"));
+    const menuItems = within(screen.getByRole("listbox"));
+    fireEvent.click(menuItems.getByText(valueToSelect));
     expect(spyOnSelect).toHaveBeenCalledTimes(1);
   });
 });
