@@ -38,13 +38,12 @@ const log = bows("NotificationHook");
 let lock = false;
 
 function NotificationContextImpl(): NotificationContext {
-  const authHook = useAuth();
+  const { user } = useAuth();
   const [receivedInvitations, setReceivedInvitations] = React.useState<INotification[]>([]);
   const [sentInvitations, setSentInvitations] = React.useState<INotification[]>([]);
   const [initialized, setInitialized] = React.useState(false);
-  const session = authHook.session();
 
-  if (session === null) {
+  if (!user) {
     throw new Error("User must be logged-in to use the Notification hook");
   }
 
@@ -54,22 +53,22 @@ function NotificationContextImpl(): NotificationContext {
 
   const accept = async (notification: INotification): Promise<void> => {
     log.info("Accept invitation", notification);
-    await NotificationApi.acceptInvitation(session.user.userid, notification);
-    const r = await NotificationApi.getReceivedInvitations(session.user.userid);
+    await NotificationApi.acceptInvitation(user.userid, notification);
+    const r = await NotificationApi.getReceivedInvitations(user.userid);
     setReceivedInvitations(r);
   };
 
   const decline = async (notification: INotification): Promise<void> => {
     log.info("Decline invitation", notification);
-    await NotificationApi.declineInvitation(session.user.userid, notification);
-    const r = await NotificationApi.getReceivedInvitations(session.user.userid);
+    await NotificationApi.declineInvitation(user.userid, notification);
+    const r = await NotificationApi.getReceivedInvitations(user.userid);
     setReceivedInvitations(r);
   };
 
   const cancel = async (notification: INotification): Promise<void> => {
     log.info("Cancel invitation", notification);
     await NotificationApi.cancelInvitation(notification);
-    const r = await NotificationApi.getSentInvitations(session.user.userid);
+    const r = await NotificationApi.getSentInvitations(user.userid);
     setSentInvitations(r);
   };
 
@@ -90,8 +89,8 @@ function NotificationContextImpl(): NotificationContext {
     lock = true;
 
     Promise.all([
-      NotificationApi.getReceivedInvitations(session.user.userid),
-      NotificationApi.getSentInvitations(session.user.userid),
+      NotificationApi.getReceivedInvitations(user.userid),
+      NotificationApi.getSentInvitations(user.userid),
     ]).then((result: [INotification[], INotification[]]) => {
       setReceivedInvitations(result[0]);
       setSentInvitations(result[1]);
@@ -103,7 +102,7 @@ function NotificationContextImpl(): NotificationContext {
     });
   };
 
-  React.useEffect(initHook, [session, initialized]);
+  React.useEffect(initHook, [user, initialized]);
 
   return {
     initialized,
