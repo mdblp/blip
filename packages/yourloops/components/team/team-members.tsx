@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface TeamMembersProps {
+export interface TeamMembersProps {
   team: Team;
   refreshParent: () => void;
 }
@@ -138,6 +138,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             <LeaveTeamButton team={team} />
             {isUserAdmin &&
               <Button
+                name="add-member"
                 className={`${commonTeamClasses.button} ${classes.addTeamMemberButton}`}
                 variant="contained"
                 color="primary"
