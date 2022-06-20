@@ -25,16 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import enzyme, { mount } from "enzyme";
+import { fireEvent, getByTestId, render } from "@testing-library/react";
 import React from "react";
-import { unmountComponentAtNode } from "react-dom";
 
-import BasicDropdownWithValidation, { BasicDropdownWithValidationProps } from "../../../components/dropdown/basic-dropdown-with-validation";
-import Adapter from "enzyme-adapter-react-16";
+import BasicDropdownWithValidation, {
+  BasicDropdownWithValidationProps,
+} from "../../../components/dropdown/basic-dropdown-with-validation";
 
 describe("BasicDropdownWithValidation", () => {
 
-  let container: HTMLElement | null = null;
   const spyOnSelect = jest.fn();
 
   const Dropdown = (props: { content: BasicDropdownWithValidationProps<string> }): JSX.Element => {
@@ -57,23 +56,6 @@ describe("BasicDropdownWithValidation", () => {
     );
   };
 
-  beforeAll(() => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-
-  afterAll(() => {
-    if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
-    }
-  });
-
   it("should call onSelect spy when an option is selected", () => {
     const defaultValue = "defaultValue";
     const disabledValue = "disabledValue";
@@ -91,13 +73,10 @@ describe("BasicDropdownWithValidation", () => {
       errorTranslationKey,
       inputTranslationKey,
     };
-    const wrapper = mount(fakeDropdown(props));
-    wrapper.find("input.MuiSelect-nativeInput").simulate("change", {
-      target: {
-        name: `dropdown-${id}`,
-        value: valueToSelect,
-      },
-    });
+    const { container } = render(fakeDropdown(props));
+    const fruit = getByTestId(container, `dropdown-${id}-selector-input-props`);
+    fireEvent.change(fruit, { target: { value: valueToSelect } });
+
     expect(spyOnSelect).toHaveBeenCalledTimes(1);
   });
 });
