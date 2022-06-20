@@ -31,16 +31,14 @@ import { act } from "react-dom/test-utils";
 
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
-import * as teamHookMock from "../../../lib/team";
-import { TeamContextProvider } from "../../../lib/team";
 import * as authHookMock from "../../../lib/auth";
 import { AuthContextProvider } from "../../../lib/auth";
 import { getTheme } from "../../../components/theme";
 import TeamInformation, { TeamInformationProps } from "../../../components/team/team-information";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import User from "../../../lib/auth/user";
+import TeamUtils from "../../../lib/team/utils";
 
-jest.mock("../../../lib/team");
 jest.mock("../../../lib/auth");
 describe("TeamInformation", () => {
   const refresh = jest.fn();
@@ -65,14 +63,13 @@ describe("TeamInformation", () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user : { isUserPatient : () => true } as User };
     });
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { isUserAdministrator: jest.fn().mockReturnValue(true) };
-    });
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
     container = document.createElement("div");
     document.body.appendChild(container);
+  });
+
+  beforeAll(() => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
   });
 
   afterEach(() => {
@@ -86,12 +83,10 @@ describe("TeamInformation", () => {
   function getTeamInformationJSX(props: TeamInformationProps) {
     return <ThemeProvider theme={getTheme()}>
       <AuthContextProvider>
-        <TeamContextProvider>
-          <TeamInformation
-            team={props.team}
-            refreshParent={props.refreshParent}
-          />
-        </TeamContextProvider>
+        <TeamInformation
+          team={props.team}
+          refreshParent={props.refreshParent}
+        />
       </AuthContextProvider>
     </ThemeProvider>;
   }
@@ -125,9 +120,7 @@ describe("TeamInformation", () => {
   });
 
   it("should not display button to edit team when user is not admin", () => {
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { isUserAdministrator: jest.fn().mockReturnValue(false) };
-    });
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValueOnce(false);
     renderTeamInformation();
     expect(document.getElementById("edit-team-button")).toBeNull();
   });
