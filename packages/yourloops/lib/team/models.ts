@@ -123,57 +123,6 @@ export interface TeamContext {
    * @param flagged the list of flagged patients
    */
   filterPatients: (filterType: PatientFilterTypes, filter: string, flagged: string[]) => Patient[];
-  /**
-   * Return the medical members of a team.
-   */
-  getMedicalMembers: (team: Team) => Readonly<TeamMember>[];
-  /**
-   * Return the number of medical members
-   */
-  getNumMedicalMembers: (team: Team) => number;
-  /**
-   * Return true if the team has only one member
-   */
-  teamHasOnlyOneMember: (team: Team) => boolean;
-  /**
-   * Return true if the userId is an administrator of this team.
-   * @param userId The user id to test
-   */
-  isUserAdministrator: (team: Team, userId: string) => boolean;
-  /**
-   * Return true if the userId is the only administrator of this team.
-   * @param userId The user id to test
-   */
-  isUserTheOnlyAdministrator: (team: Team, userId: string) => boolean;
-  /**
-   * @param user The user to test
-   * @returns true is the user has an invitation pending on one team
-   */
-  isInvitationPending: (patient: Patient) => boolean;
-  /**
-   * @param user The user to test
-   * @returns {boolean} True if all members status is pending
-   */
-  isOnlyPendingInvitation: (patient: Patient) => boolean;
-  /**
-   * @param user The user to test
-   * @returns {boolean} True if members status is accepted in at least a team
-   */
-  isInAtLeastATeam: (patient: Patient) => boolean;
-
-  /**
-   * Return true if this user is in a specific team
-   * @param patient The patient to test
-   * @param teamId A team id
-   */
-  isInTeam(patient: Patient, teamId: string): boolean;
-
-  /**
-   * Return the list of patient updated with the flag attribute.
-   * @param patients The patients to update
-   * @param flaggedPatients The list of patients that the current user has flagged
-   */
-  computeFlaggedPatients(patients: Patient[], flaggedPatients: string[]): Patient[];
 
   /**
    * As an HCP invite a patient to a team.

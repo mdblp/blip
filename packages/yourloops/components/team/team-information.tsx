@@ -45,6 +45,7 @@ import { commonComponentStyles } from "../common";
 import { useAlert } from "../utils/snackbar";
 import { useAuth } from "../../lib/auth";
 import LeaveTeamButton from "./leave-team-button";
+import TeamUtils from "../../lib/team/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
@@ -87,7 +88,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const authContext = useAuth();
   const loggedInUserId = authContext.user?.userid as string;
   const isUserPatient = authContext.user?.isUserPatient();
-  const isUserAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
+  const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;

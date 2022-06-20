@@ -38,10 +38,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { Team, useTeam } from "../../lib/team";
+import { Team } from "../../lib/team";
 import { useAuth } from "../../lib/auth";
 import { makeButtonsStyles } from "../../components/theme";
 import { TeamLeaveDialogContentProps } from "./types";
+import TeamUtils from "../../lib/team/utils";
 
 interface LeaveTeamDialogProps {
   teamToLeave: TeamLeaveDialogContentProps | null;
@@ -234,15 +235,14 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
 
   const auth = useAuth();
   const { t } = useTranslation("yourloops");
-  const teamHook = useTeam();
 
   let teamName = "";
   let onlyMember = false;
   let userIsTheOnlyAdministrator = false;
   if (team !== null) {
     teamName = team.name;
-    onlyMember = teamHook.getNumMedicalMembers(team) < 2;
-    userIsTheOnlyAdministrator = teamHook.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
+    onlyMember = TeamUtils.getNumMedicalMembers(team) < 2;
+    userIsTheOnlyAdministrator = TeamUtils.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
   }
 
   const ariaTitle = t("aria-team-leave-dialog-title");

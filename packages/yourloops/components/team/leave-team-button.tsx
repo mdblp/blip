@@ -36,6 +36,7 @@ import { commonComponentStyles } from "../common";
 import { useAlert } from "../utils/snackbar";
 import { useHistory } from "react-router-dom";
 import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
+import TeamUtils from "../../lib/team/utils";
 
 export interface TeamInformationProps {
   team: Team;
@@ -55,7 +56,7 @@ function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
       const onlyMember = !((team.members.length ?? 0) > 1);
       try {
         await teamHook.leaveTeam(team);
-        const message = teamHook.teamHasOnlyOneMember(team)
+        const message = TeamUtils.teamHasOnlyOneMember(team)
           ? t("team-page-success-deleted")
           : t("team-page-leave-success");
         alert.success(message);
