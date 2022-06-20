@@ -74,8 +74,8 @@ describe("BasicDropdownWithValidation", () => {
       inputTranslationKey,
     };
     const { container } = render(fakeDropdown(props));
-    const fruit = getByTestId(container, `dropdown-${id}-selector-input-props`);
-    fireEvent.change(fruit, { target: { value: valueToSelect } });
+    const dropdownSelect = getByTestId(container, `dropdown-${id}-selector-input-props`);
+    fireEvent.change(dropdownSelect, { target: { value: valueToSelect } });
 
     expect(spyOnSelect).toHaveBeenCalledTimes(1);
   });
