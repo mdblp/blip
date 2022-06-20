@@ -120,7 +120,7 @@ describe("FocusedRangeLabels", () => {
         const keys = ["tenthQuantile", "min"];
         const labels = wrapper.find(formatClassesAsSelector(styles.number));
         expect(labels).to.have.length(2);
-        labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+        labels.forEach((label, i) => {
           expect(label.text()).to.equal(String(focusedSlice.data[keys[i]]));
         });
       });
@@ -149,7 +149,7 @@ describe("FocusedRangeLabels", () => {
         const keys = ["firstQuartile", "tenthQuantile"];
         const labels = wrapper.find(formatClassesAsSelector(styles.number));
         expect(labels).to.have.length(2);
-        labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+        labels.forEach((label, i) => {
           expect(label.text()).to.equal(String(focusedSlice.data[keys[i]]));
         });
       });
@@ -178,7 +178,7 @@ describe("FocusedRangeLabels", () => {
         const keys = ["thirdQuartile", "firstQuartile"];
         const labels = wrapper.find(formatClassesAsSelector(styles.number));
         expect(labels).to.have.length(2);
-        labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+        labels.forEach((label, i) => {
           expect(label.text()).to.equal(String(focusedSlice.data[keys[i]]));
         });
       });
@@ -207,7 +207,7 @@ describe("FocusedRangeLabels", () => {
         const keys = ["ninetiethQuantile", "thirdQuartile"];
         const labels = wrapper.find(formatClassesAsSelector(styles.number));
         expect(labels).to.have.length(2);
-        labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+        labels.forEach((label, i) => {
           expect(label.text()).to.equal(String(focusedSlice.data[keys[i]]));
         });
       });
@@ -236,7 +236,7 @@ describe("FocusedRangeLabels", () => {
         const keys = ["max", "ninetiethQuantile"];
         const labels = wrapper.find(formatClassesAsSelector(styles.number));
         expect(labels).to.have.length(2);
-        labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+        labels.forEach((label, i) => {
           expect(label.text()).to.equal(String(focusedSlice.data[keys[i]]));
         });
       });
@@ -285,7 +285,7 @@ describe("FocusedRangeLabels", () => {
       const keys = ["max", "mean", "min"];
       const labels = wrapper.find(formatClassesAsSelector(styles.number));
       expect(labels).to.have.length(3);
-      labels.forEach((label, i) => { // eslint-disable-line lodash/prefer-lodash-method
+      labels.forEach((label, i) => {
         expect(label.text().search(String(focusedRange.data[keys[i]]))).to.not.equal(-1);
       });
     });

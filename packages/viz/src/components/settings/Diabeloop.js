@@ -63,7 +63,6 @@ function renderDiabeloopParameters(parametersByLevel) {
     },
   ];
 
-  // eslint-disable-next-line lodash/prefer-lodash-method
   parametersByLevel.forEach((parameters, level) => {
     const title = {
       label: {

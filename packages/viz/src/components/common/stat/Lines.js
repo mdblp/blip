@@ -14,7 +14,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-// @ts-ignore
 import styles from "./Stat.css";
 
 /**

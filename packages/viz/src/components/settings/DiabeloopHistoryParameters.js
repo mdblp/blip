@@ -10,7 +10,6 @@ import Table from "./common/Table";
 
 import { getLongDayHourFormat } from "../../utils/datetime";
 
-// @ts-ignore
 import styles from "./Diabeloop.css";
 
 const t = i18next.t.bind(i18next);

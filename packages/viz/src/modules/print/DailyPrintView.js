@@ -15,8 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-/* eslint-disable lodash/prefer-lodash-method */
-
 import _ from "lodash";
 import i18next from "i18next";
 import { range } from "d3-array";

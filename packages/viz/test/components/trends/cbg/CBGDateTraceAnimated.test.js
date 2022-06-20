@@ -96,7 +96,7 @@ describe("CBGDateTraceAnimated", () => {
     it("should render each circle centered on (scaled) `msPer24` and `value`", () => {
       const circles = wrapper.find("circle");
       const { data } = props;
-      circles.forEach((circle, i) => { // eslint-disable-line lodash/prefer-lodash-method
+      circles.forEach((circle, i) => {
         expect(circle.prop("cx")).to.equal(xScale(data[i].msPer24));
         expect(circle.prop("cy")).to.equal(yScale(data[i].value));
       });

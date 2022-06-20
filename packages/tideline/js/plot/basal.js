@@ -85,7 +85,6 @@ function plotBasal(pool, opts = defaults) {
 
       const basalSegmentGroups = basalSegments.enter()
         .append("g")
-        // @ts-ignore
         .attr({
           class: "d3-basal-group",
           id: (d) => `basal_group_${d.id}`,

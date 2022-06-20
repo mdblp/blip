@@ -14,7 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-/* eslint-disable lodash/prefer-matches */
 /**
  * @typedef {'basal'|'bolus'|'cbg'|'smbg'|'deviceEvent'|'wizard'|'upload'|'pumpSettings'|'physicalActivity'|'message'|'fill'} DatumType
  * @typedef {{ type: string, id: string; time?: string, normalTime: string, normalEnd?: string, subType?: string, epoch: number, epochEnd?: number, guessedTimezone?: boolean, timezone: string, displayOffset: number;localDate?:string;isoWeekday?:string;}} Datum
@@ -766,7 +765,6 @@ TidelineData.prototype.setEvents = function setEvents(filter = {}, order = ["inp
   _.forEach(sourceEvents, function (value, key) {
     events[key] = _.orderBy(value, order, ["desc"]);
   });
-  // eslint-disable-next-line lodash/prop-shorthand
   return _.map(events, (v) => v[0]);
 };
 

@@ -412,6 +412,7 @@ var datetimeWrapper = function() {
         }
         // there's a whole bunch of timezones listed as "Etc/GMT+1"
         // that clutter things up a lot...
+        // eslint-disable-next-line no-empty
         else if (tzNames[i].search("GMT") !== -1) {}
         else {
           timezones.theRest.push(timezone);

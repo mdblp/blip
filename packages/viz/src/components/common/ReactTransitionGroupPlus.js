@@ -1,3 +1,4 @@
+/* eslint-disable react/no-string-refs */
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.

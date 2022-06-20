@@ -93,7 +93,6 @@ describe("Background", () => {
       const threeHrLines = withLinesWrapper.find(formatClassesAsSelector(styles.threeHrLine));
       expect(threeHrLines).to.have.length(7);
       // Enzyme forEach cannot be replaced by _.forEach
-      // eslint-disable-next-line lodash/prefer-lodash-method
       threeHrLines.forEach((line, i) => {
         expect(line.is("line")).to.be.true;
         expect(line.prop("x1")).to.equal(xScale((i + 1) * (TWENTY_FOUR_HRS / 8)));

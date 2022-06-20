@@ -1,3 +1,5 @@
+/* eslint-disable react/no-string-refs */
+/* eslint-disable react/no-find-dom-node */
 import _ from "lodash";
 import PropTypes from "prop-types";
 import React from "react";

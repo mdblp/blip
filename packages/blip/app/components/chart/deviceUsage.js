@@ -111,8 +111,7 @@ const getLabel = (row, t) => {
   case "deleted":
     return `${currentLabel} (${fCurrentValue} -> ${t("deleted")})`;
   case "updated":
-    const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
-    return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`;
+    return `${currentLabel} (${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit} -> ${fCurrentValue})`;
   default:
     return `${currentLabel} X (${fCurrentValue})`;
   }

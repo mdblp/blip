@@ -1,4 +1,3 @@
-// @ts-nocheck
 window.zESettings = {
   webWidget: {
     authenticate: {

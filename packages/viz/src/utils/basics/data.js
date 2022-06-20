@@ -284,7 +284,6 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
   dataObj.byLocalDate = dataObj.cf.dimension(getLocalDate);
   const classifier = classifiers[type];
 
-  // eslint-disable-next-line lodash/prefer-lodash-method
   const dataByLocalDate = dataObj.byLocalDate.group().reduce(
     reduceAddMaker(classifier),
     reduceRemoveMaker(classifier),

@@ -14,8 +14,6 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-// @ts-nocheck
-
 import i18next from "i18next";
 import _ from "lodash";
 

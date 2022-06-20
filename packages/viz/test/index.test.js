@@ -61,6 +61,5 @@ enzyme.configure({
 // Return key if no translation is present
 i18next.init(i18nOptions).finally(() => {
   const context = require.context(".", true, /\.js$/); // Load .js files in /test
-  // eslint-disable-next-line lodash/prefer-lodash-method
   context.keys().forEach(context);
 });

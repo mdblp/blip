@@ -53,7 +53,6 @@ function ReduxProvider(props) {
   const store = initStore();
   const historyHook = useHistory();
   return (
-    // @ts-ignore
     <Provider store={store}>
       <PatientData
         key={props.patient.userid}

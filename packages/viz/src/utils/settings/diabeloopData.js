@@ -39,7 +39,6 @@ function getTimePrefs(timezone = "UTC") {
 export function getParametersByLevel(parameters) {
   const mapParams = new Map();
 
-  // eslint-disable-next-line lodash/prefer-lodash-method
   if (Array.isArray(parameters)) {
     parameters.forEach((parameter) => {
       if (!mapParams.has(parameter.level)) {
@@ -89,7 +88,6 @@ export function diabeloopText(device, parametersByLevel, displayDeviceDate) {
       t("Unit")
     ]];
 
-    // eslint-disable-next-line lodash/prefer-lodash-method
     parameters.forEach((parameter) => {
       tableRows.push([parameter.name, parameter.value, parameter.unit]);
     });

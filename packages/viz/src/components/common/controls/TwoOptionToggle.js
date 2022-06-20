@@ -69,7 +69,7 @@ export const Toggle = (props) => {
   return (
     <div
       className={disabled ? styles.disabled : styles.toggle}
-      onClick={disabled ? () => {} : toggleFn}
+      onClick={disabled ? undefined : toggleFn}
     >
       <div className={styles.track} />
       <div className={leftOptionActive ? styles.leftThumb : styles.rightThumb} />

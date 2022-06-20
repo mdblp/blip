@@ -4,8 +4,6 @@
  * updated according to https://github.com/esayemm/connect-with-transition-group/pull/2
  */
 
-/* eslint-disable func-names, lodash/prefer-lodash-method, no-param-reassign */
-
 /**
  * Must have called react-redux/connect with the 'withRef' flag
  * ex:

@@ -39,7 +39,6 @@ const defaultConfig = {
 /** @typedef {typeof defaultConfig} AppConfig */
 
 /** @type {AppConfig} */
-// @ts-ignore
 const appConfig = _.clone(defaultConfig);
 
 /**
