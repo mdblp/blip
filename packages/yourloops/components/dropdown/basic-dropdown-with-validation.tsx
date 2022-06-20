@@ -77,6 +77,7 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
           id={`dropdown-${id}-selector`}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
+          inputProps={{ "id": `dropdown-${id}-selector-input-props`, "data-testid": `dropdown-${id}-selector-input-props` }}
           onChange={createHandleSelectChange(setSelectedValue)}>
           {values.map(item => (
             <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
