@@ -96,13 +96,13 @@ export const loggedInUsers = {
   patient: userPatient,
   caregiver: userCaregiver,
   newHcp: newUserHCP,
-  get hcpSession(): User {
+  get hcpUser(): User {
     return new User(userHCP);
   },
-  get patientSession(): User {
+  get patientUser(): User {
     return new User(userPatient);
   },
-  get caregiverSession(): User {
+  get caregiverUser(): User {
     return new User(userCaregiver);
   },
 };

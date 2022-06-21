@@ -40,7 +40,7 @@ import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
 import TeamApi from "../../../lib/team/team-api";
 
 describe("MemberRow", () => {
-  const authHcp = loggedInUsers.hcpSession;
+  const authHcp = loggedInUsers.hcpUser;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const refreshParent = jest.fn();
 

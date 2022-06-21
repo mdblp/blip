@@ -116,7 +116,7 @@ describe("Profile", () => {
   });
 
   it("should display mg/dL Units by default if not specified", async () => {
-    const user = loggedInUsers.hcpSession;
+    const user = loggedInUsers.hcpUser;
     delete user.settings?.units?.bg;
     await mountProfilePage();
     const selectValue = container.querySelector("#profile-units-selector").innerHTML;

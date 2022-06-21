@@ -48,9 +48,9 @@ import User from "../../../lib/auth/user";
 jest.mock("@auth0/auth0-react");
 
 describe("Auth hook", () => {
-  const authPatient = loggedInUsers.patientSession;
-  const authCaregiver = loggedInUsers.caregiverSession;
-  const authHcp = loggedInUsers.hcpSession;
+  const authPatient = loggedInUsers.patientUser;
+  const authCaregiver = loggedInUsers.caregiverUser;
+  const authHcp = loggedInUsers.hcpUser;
 
   /* eslint-disable new-cap */
   const ReactAuthContext = React.createContext({} as AuthContext);
@@ -101,7 +101,7 @@ describe("Auth hook", () => {
     });
     jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve({
       token: "session-token",
-      id: loggedInUsers.hcpSession.userid,
+      id: loggedInUsers.hcpUser.userid,
     }));
     jest.spyOn(UserApi, "getProfile").mockResolvedValue(Promise.resolve({
       firstName: "John",
@@ -116,9 +116,9 @@ describe("Auth hook", () => {
   afterEach(() => {
     document.body.removeChild(container);
     container = null;
-    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpSession);
-    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverSession);
-    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientSession);
+    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpUser);
+    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverUser);
+    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientUser);
     authContext = null;
   });
 

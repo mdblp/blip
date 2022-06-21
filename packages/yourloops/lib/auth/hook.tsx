@@ -62,10 +62,11 @@ export function AuthContextImpl(): AuthContext {
   };
 
   const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
-    log.info("updatePreferences", getUser().userid);
-    const updatedUser = new User(getUser());
+    const user = getUser();
+    log.info("updatePreferences", user.userid);
+    const updatedUser = new User(user);
     updatedUser.preferences = preferences;
-    const updatedPreferences = await UserApi.updatePreferences(getUser().userid, preferences);
+    const updatedPreferences = await UserApi.updatePreferences(user.userid, preferences);
     if (refresh) {
       updatedUser.preferences = updatedPreferences;
       setUser(updatedUser);
@@ -74,10 +75,11 @@ export function AuthContextImpl(): AuthContext {
   };
 
   const updateProfile = async (profile: Profile, refresh = true): Promise<Profile> => {
-    log.info("updateProfile", getUser().userid);
-    const updatedUser = new User(getUser());
+    const user = getUser();
+    log.info("updateProfile", user.userid);
+    const updatedUser = new User(user);
     updatedUser.profile = profile;
-    const updatedProfile = await UserApi.updateProfile(getUser().userid, profile);
+    const updatedProfile = await UserApi.updateProfile(user.userid, profile);
     if (refresh) {
       updatedUser.profile = updatedProfile;
       setUser(updatedUser);
@@ -86,10 +88,11 @@ export function AuthContextImpl(): AuthContext {
   };
 
   const updateSettings = async (settings: Settings, refresh = true): Promise<Settings> => {
-    log.info("updateSettings", getUser().userid);
-    const updatedUser = new User(getUser());
+    const user = getUser();
+    log.info("updateSettings", user.userid);
+    const updatedUser = new User(user);
     updatedUser.settings = settings;
-    const updatedSettings = await UserApi.updateSettings(getUser().userid, settings);
+    const updatedSettings = await UserApi.updateSettings(user.userid, settings);
     if (refresh) {
       updatedUser.settings = updatedSettings;
       setUser(updatedUser);
@@ -98,9 +101,10 @@ export function AuthContextImpl(): AuthContext {
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
+    const user = getUser();
     log.info("flagPatient", userId);
 
-    const updatedUser = new User(getUser());
+    const updatedUser = new User(user);
     if (!updatedUser.preferences) {
       updatedUser.preferences = {};
     }
@@ -112,18 +116,19 @@ export function AuthContextImpl(): AuthContext {
     } else {
       updatedUser.preferences.patientsStarred.push(userId);
     }
-    updatedUser.preferences = await UserApi.updatePreferences(getUser().userid, updatedUser.preferences);
+    updatedUser.preferences = await UserApi.updatePreferences(user.userid, updatedUser.preferences);
     setUser(updatedUser);
   };
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
+    const user = getUser();
     log.info("setFlagPatients", userIds);
-    const updatedUser = new User(getUser());
+    const updatedUser = new User(user);
     if (!updatedUser.preferences) {
       updatedUser.preferences = {};
     }
     updatedUser.preferences.patientsStarred = userIds;
-    updatedUser.preferences = await UserApi.updatePreferences(getUser().userid, updatedUser.preferences);
+    updatedUser.preferences = await UserApi.updatePreferences(user.userid, updatedUser.preferences);
     setUser(updatedUser);
   };
 
@@ -136,8 +141,9 @@ export function AuthContextImpl(): AuthContext {
   };
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
+    const user = getUser();
 
-    if (getUser().role !== UserRoles.caregiver) {
+    if (user.role !== UserRoles.caregiver) {
       throw new Error("invalid-user-role");
     }
 
@@ -147,14 +153,14 @@ export function AuthContextImpl(): AuthContext {
      **/
 
     const now = new Date().toISOString();
-    const updatedProfile = _.cloneDeep(getUser().profile ?? {}) as Profile;
+    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
     updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: true };
     updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true };
     updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent };
     updatedProfile.hcpProfession = hcpProfession;
     await updateProfile(updatedProfile, false);
     // Refresh our data:
-    const updatedUser = new User(getUser());
+    const updatedUser = new User(user);
     updatedUser.role = UserRoles.hcp;
     updatedUser.profile = updatedProfile;
     setUser(updatedUser);
@@ -230,12 +236,13 @@ export function AuthContextImpl(): AuthContext {
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage };
     const settings: Settings = { country: signupForm.profileCountry };
 
-    await UserApi.updateProfile(getUser().userid, profile);
-    await UserApi.updatePreferences(getUser().userid, preferences);
-    await UserApi.updateSettings(getUser().userid, settings);
-    getUser().preferences = preferences;
-    getUser().profile = profile;
-    getUser().settings = settings;
+    const user = getUser();
+    await UserApi.updateProfile(user.userid, profile);
+    await UserApi.updatePreferences(user.userid, preferences);
+    await UserApi.updateSettings(user.userid, settings);
+    user.preferences = preferences;
+    user.profile = profile;
+    user.settings = settings;
   };
 
   useEffect(() => {

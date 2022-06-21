@@ -46,8 +46,8 @@ import User from "../../../lib/auth/user";
 describe("User Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
-  const { hcpSession, caregiverSession, patientSession } = loggedInUsers;
-  let authContext = createAuthHookStubs(hcpSession);
+  const { hcpUser, caregiverUser, patientUser } = loggedInUsers;
+  let authContext = createAuthHookStubs(hcpUser);
 
   function openMenu(): void {
     const userMenu = document.getElementById("user-menu");
@@ -83,25 +83,25 @@ describe("User Menu", () => {
   });
 
   it("should display the hcp icon", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />));
   });
 
   it("should display the caregiver icon", async () => {
-    await mountComponent(caregiverSession);
+    await mountComponent(caregiverUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />));
   });
 
   it("should display the patient icon", async () => {
-    await mountComponent(patientSession);
+    await mountComponent(patientUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />));
   });
 
   it("should redirect to '/preferences' route when clicking on profile link", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     openMenu();
     const profileItem = document.getElementById("user-menu-settings-item");
     triggerMouseEvent("click", profileItem);
@@ -109,7 +109,7 @@ describe("User Menu", () => {
   });
 
   it("should logout the user when clicking on logout item", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     openMenu();
     const logoutItem = document.getElementById("user-menu-logout-item");
     triggerMouseEvent("click", logoutItem);

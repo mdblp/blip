@@ -40,7 +40,7 @@ import { AuthContextStubs, createAuthHookStubs, resetAuthHookStubs } from "./uti
 describe("Session timeout", () => {
 
   const sessionTimeoutDelay = 100;
-  const authHookHcpStubs = createAuthHookStubs(loggedInUsers.hcpSession);
+  const authHookHcpStubs = createAuthHookStubs(loggedInUsers.hcpUser);
   let container: HTMLDivElement | null = null;
 
   function TestSessionTimeoutComponent(props: { hookStubs: AuthContextStubs }): JSX.Element {
@@ -79,7 +79,7 @@ describe("Session timeout", () => {
       document.body.removeChild(container);
       container = null;
     }
-    resetAuthHookStubs(authHookHcpStubs, loggedInUsers.hcpSession);
+    resetAuthHookStubs(authHookHcpStubs, loggedInUsers.hcpUser);
   });
 
   it.skip("should do nothing if isAuthInProgress is true", async () => {

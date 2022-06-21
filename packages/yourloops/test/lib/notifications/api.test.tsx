@@ -239,7 +239,7 @@ describe("Notification API", () => {
       });
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const user = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
@@ -484,7 +484,7 @@ describe("Notification API", () => {
       mockedAxios.put.mockResolvedValue(resolveError);
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const user = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
@@ -802,7 +802,7 @@ describe("Notification API", () => {
         NotificationType.careTeamRemoveMember,
         NotificationType.careTeamPatientInvitation,
       ];
-      const user = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
