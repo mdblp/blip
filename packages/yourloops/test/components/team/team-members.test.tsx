@@ -26,12 +26,20 @@
  */
 
 import React from "react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
+import * as teamHookMock from "../../../lib/team";
 import { buildTeam, buildTeamMember } from "../../common/utils";
 import TeamUtils from "../../../lib/team/utils";
-import { fireEvent, render, screen, within } from "@testing-library/react";
 import TeamMembers, { TeamMembersProps } from "../../../components/team/team-members";
+import { TeamMemberRole } from "../../../models/team";
+import { UserRoles } from "../../../models/shoreline";
+import { UserInvitationStatus } from "../../../models/generic";
+import * as alertHookMock from "../../../components/utils/snackbar";
 
+jest.mock("../../../components/utils/snackbar");
+jest.mock("../../../lib/team");
 describe("TeamMembers", () => {
   const refresh = jest.fn();
 
@@ -41,8 +49,37 @@ describe("TeamMembers", () => {
     buildTeamMember(teamId, "userId2"),
     buildTeamMember(teamId, "userId3"),
     buildTeamMember(teamId, "userId4"),
+    buildTeamMember(
+      teamId,
+      "patientUserId",
+      undefined,
+      TeamMemberRole.patient,
+      "fakePatient",
+      "patientFullName",
+      UserInvitationStatus.accepted,
+      UserRoles.patient
+    ),
   ];
   const team = buildTeam(teamId, members);
+  const nbNonPatientTeamMembers = 4;
+  const inviteMemberMock = jest.fn();
+  const successMock = jest.fn();
+  const errorMock = jest.fn();
+
+  beforeAll(() => {
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { inviteMember: inviteMemberMock, getTeam: jest.fn().mockReturnValue(team) };
+    });
+    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
+      return { success: successMock, error: errorMock };
+    });
+  });
 
   beforeEach(() => {
     jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
@@ -74,6 +111,41 @@ describe("TeamMembers", () => {
     expect(screen.queryByRole("dialog")).not.toBeNull();
   });
 
+  it("should call teamHook when inviting a member and succeed", async () => {
+    const email = "fake@email.com";
+    render(getTeamMembersJSX());
+    const addMemberButton = screen.getByRole("button", { name: /add-member/i });
+    fireEvent.click(addMemberButton);
+    const inviteMemberDialog = within(screen.queryByRole("dialog"));
+    const emailInput = inviteMemberDialog.getByRole("textbox", { name: /email/ });
+    await userEvent.type(emailInput, email);
+    const adminCheckbox = inviteMemberDialog.getByRole("checkbox");
+    fireEvent.click(adminCheckbox);
+    const inviteButton = inviteMemberDialog.getByRole("button", { name: /button-invite/ });
+    await act(async () => {
+      fireEvent.click(inviteButton);
+      await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin));
+      await waitFor(() => expect(successMock).toHaveBeenCalledWith("team-page-success-invite-hcp"));
+    });
+  });
+
+  it("should call teamHook when inviting a member and fail when an error is thrown", async () => {
+    const email = "fake@email.com";
+    inviteMemberMock.mockRejectedValueOnce(Error("This is a mock error thrown on purpose"));
+    render(getTeamMembersJSX());
+    const addMemberButton = screen.getByRole("button", { name: /add-member/i });
+    fireEvent.click(addMemberButton);
+    const inviteMemberDialog = within(screen.queryByRole("dialog"));
+    const emailInput = inviteMemberDialog.getByRole("textbox", { name: /email/ });
+    await userEvent.type(emailInput, email);
+    const inviteButton = inviteMemberDialog.getByRole("button", { name: /button-invite/ });
+    await act(async () => {
+      fireEvent.click(inviteButton);
+      await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member));
+      await waitFor(() => expect(errorMock).toHaveBeenCalledWith("team-page-failed-invite-hcp"));
+    });
+  });
+
   it("should hide the delete member table header when logged in user is not admin", () => {
     jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(false);
     render(getTeamMembersJSX());
@@ -95,7 +167,7 @@ describe("TeamMembers", () => {
     render(getTeamMembersJSX());
     const tableHeaders = screen.getAllByRole("rowgroup")[1];
     const columns = within(tableHeaders).getAllByRole("row");
-    expect(columns).toHaveLength(members.length);
+    expect(columns).toHaveLength(nbNonPatientTeamMembers);
   });
 });
 
