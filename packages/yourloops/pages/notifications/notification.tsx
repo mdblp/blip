@@ -145,13 +145,12 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
 const NotificationIcon = ({ id, type, className }: { id: string; type: NotificationType; className: string }): JSX.Element => {
   switch (type) {
   case NotificationType.directInvitation:
-    return <PersonIcon id={`person-icon-${id}`} className={className} />;
-  case NotificationType.careTeamProInvitation:
-    return <GroupIcon id={`group-icon-${id}`} className={className} />;
+    return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />;
   case NotificationType.careTeamPatientInvitation:
-    return <MedicalServiceIcon id={`medical-service-icon-${id}`} className={className} />;
+    return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon" className={className} />;
+  case NotificationType.careTeamProInvitation:
   default:
-    return <GroupIcon id={`group-icon-${id}`} className={className} />;
+    return <GroupIcon id={`group-icon-${id}`} titleAccess="default-icon" className={className} />;
   }
 };
 

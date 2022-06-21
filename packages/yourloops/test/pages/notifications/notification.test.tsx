@@ -29,7 +29,7 @@
 import React from "react";
 import moment from "moment-timezone";
 import _ from "lodash";
-import { getByText, render } from "@testing-library/react";
+import { getByText, render, screen } from "@testing-library/react";
 
 import { UserRoles } from "../../../models/shoreline";
 import { Notification } from "../../../pages/notifications/notification";
@@ -137,27 +137,27 @@ describe("Notification", () => {
 
     describe("getIconToDisplay", () => {
       it("should display a PersonIcon", () => {
-        const { container } = render(fakeNotification());
+        render(fakeNotification());
 
-        expect(container.querySelector(`#person-icon-${notif.id}`)).not.toBeNull();
-        expect(container.querySelector(`#group-icon-${notif.id}`)).toBeNull();
-        expect(container.querySelector(`#medical-service-icon-${notif.id}`)).toBeNull();
+        expect(screen.queryByTitle("direct-invitation-icon")).not.toBeNull();
+        expect(screen.queryByTitle("default-icon")).toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
       it("should display a GroupIcon", () => {
-        const { container } = render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
+        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
 
-        expect(container.querySelector(`#person-icon-${teamNotif.id}`)).toBeNull();
-        expect(container.querySelector(`#group-icon-${teamNotif.id}`)).not.toBeNull();
-        expect(container.querySelector(`#medical-service-icon-${teamNotif.id}`)).toBeNull();
+        expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
+        expect(screen.queryByTitle("default-icon")).not.toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
       it("should display a MedicalServiceIcon", () => {
-        const { container } = render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
+        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
 
-        expect(container.querySelector(`#person-icon-${teamNotif.id}`)).toBeNull();
-        expect(container.querySelector(`#group-icon-${teamNotif.id}`)).toBeNull();
-        expect(container.querySelector(`#medical-service-icon-${teamNotif.id}`)).not.toBeNull();
+        expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
+        expect(screen.queryByTitle("default-icon")).toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).not.toBeNull();
       });
     });
 
