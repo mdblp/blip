@@ -148,7 +148,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.iconCell}
         >
           {currentUserIsPending &&
-            <AccessTimeIcon id={`${rowId}-pending-icon`} className={classes.icon} />
+            <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-user-icon" className={classes.icon} />
           }
         </StyledTableCell>
         <StyledTableCell
@@ -181,6 +181,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             <IconButton
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
+              aria-label="remove-member-button"
               onClick={() => setShowConfirmRemoveDialog(true)}
             >
               <PersonRemoveIcon />
