@@ -56,12 +56,6 @@ export interface PatientElementProps {
   onFlagPatient: (userId: string) => Promise<void>;
 }
 
-export interface PatientElementCardProps extends PatientElementProps {
-  trTIR: string;
-  trTBR: string;
-  trUpload: string;
-}
-
 export interface MedicalTableValues {
   /** Value as a string for easy display */
   tir: string;
