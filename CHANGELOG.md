@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-1626 Refactor team hook to only keep functions impacting the state
 - YLP-1631 Install react testing library
+- YLP-1634 Fix missing UTs
 
 ## 3.0.0 - 2022-06-16
 ### Added

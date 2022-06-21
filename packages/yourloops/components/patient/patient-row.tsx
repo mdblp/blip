@@ -209,11 +209,18 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             placement="bottom"
           >
             <Box display="flex">
-              <AccessTimeIcon id={`${rowId}-pendingicon`} className={classes.icon} />
+              <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-icon" className={classes.icon} />
             </Box>
           </Tooltip>) :
           (<IconActionButton
-            icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
+            icon={isFlagged ? <FlagIcon
+              titleAccess="flag-icon-active"
+              id={`${rowId}-flagged`}
+            />
+              : <FlagOutlineIcon
+                titleAccess="flag-icon-inactive"
+                id={`${rowId}-un-flagged`}
+              />}
             id={`${rowId}-icon-button-flag`}
             onClick={onClickFlag}
             className={`${!isFlagged ? classes.coloredIcon : ""} ${classes.icon} patient-flag-button`}
@@ -242,31 +249,31 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         className={timeSpentAwayFromTargetRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && timeSpentAwayFromTargetActive &&
+          <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
+          <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && nonDataTransmissionActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && nonDataTransmissionActive &&
+          <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-messages`}>
-        {patient.metadata.unreadMessagesSent > 0 &&
-          <EmailIcon className={classes.coloredIcon} />
+        {patientIsMonitored && patient.metadata.unreadMessagesSent > 0 &&
+          <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
         }
       </StyledTableCell>
     </StyledTableRow>

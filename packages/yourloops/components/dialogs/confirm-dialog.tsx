@@ -35,7 +35,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from "@material-ui/core/Typography";
 import { makeButtonsStyles } from "../theme";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
@@ -62,9 +61,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
       onClose={onClose}
     >
       <DialogTitle>
-        <Typography variant="h5">
-          {title}
-        </Typography>
+        {title}
       </DialogTitle>
 
       <DialogContent>
