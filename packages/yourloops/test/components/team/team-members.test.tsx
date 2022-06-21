@@ -95,18 +95,18 @@ describe("TeamMembers", () => {
   it("should hide add member button when logged in user is not admin", () => {
     jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(false);
     render(getTeamMembersJSX());
-    expect(screen.queryByRole("button", { name: /add-member/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: "button-team-add-member" })).toBeNull();
   });
 
   it("should show add member button when logged in user is admin", () => {
     render(getTeamMembersJSX());
-    expect(screen.queryByRole("button", { name: /add-member/i })).not.toBeNull();
+    expect(screen.queryByRole("button", { name: "button-team-add-member" })).not.toBeNull();
   });
 
   it("should open the invite member dialog when clicking on the add member button", () => {
     render(getTeamMembersJSX());
     expect(screen.queryByRole("dialog")).toBeNull();
-    const addMemberButton = screen.getByRole("button", { name: /add-member/i });
+    const addMemberButton = screen.getByRole("button", { name: "button-team-add-member" });
     fireEvent.click(addMemberButton);
     expect(screen.queryByRole("dialog")).not.toBeNull();
   });
@@ -114,14 +114,14 @@ describe("TeamMembers", () => {
   it("should call teamHook when inviting a member and succeed", async () => {
     const email = "fake@email.com";
     render(getTeamMembersJSX());
-    const addMemberButton = screen.getByRole("button", { name: /add-member/i });
+    const addMemberButton = screen.getByRole("button", { name: "button-team-add-member" });
     fireEvent.click(addMemberButton);
     const inviteMemberDialog = within(screen.queryByRole("dialog"));
-    const emailInput = inviteMemberDialog.getByRole("textbox", { name: /email/ });
+    const emailInput = inviteMemberDialog.getByRole("textbox", { name: "email" });
     await userEvent.type(emailInput, email);
     const adminCheckbox = inviteMemberDialog.getByRole("checkbox");
     fireEvent.click(adminCheckbox);
-    const inviteButton = inviteMemberDialog.getByRole("button", { name: /button-invite/ });
+    const inviteButton = inviteMemberDialog.getByRole("button", { name: "button-invite" });
     await act(async () => {
       fireEvent.click(inviteButton);
       await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin));
@@ -133,12 +133,12 @@ describe("TeamMembers", () => {
     const email = "fake@email.com";
     inviteMemberMock.mockRejectedValueOnce(Error("This is a mock error thrown on purpose"));
     render(getTeamMembersJSX());
-    const addMemberButton = screen.getByRole("button", { name: /add-member/i });
+    const addMemberButton = screen.getByRole("button", { name: "button-team-add-member" });
     fireEvent.click(addMemberButton);
     const inviteMemberDialog = within(screen.queryByRole("dialog"));
-    const emailInput = inviteMemberDialog.getByRole("textbox", { name: /email/ });
+    const emailInput = inviteMemberDialog.getByRole("textbox", { name: "email" });
     await userEvent.type(emailInput, email);
-    const inviteButton = inviteMemberDialog.getByRole("button", { name: /button-invite/ });
+    const inviteButton = inviteMemberDialog.getByRole("button", { name: "button-invite" });
     await act(async () => {
       fireEvent.click(inviteButton);
       await waitFor(() => expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member));
