@@ -28,7 +28,6 @@
 
 import {
   AuthContext,
-  Session,
   SignupForm,
 } from "./models";
 
@@ -42,7 +41,6 @@ import SessionTimeout from "./session-timeout";
 
 export {
   AuthContext,
-  Session,
   User,
   SignupForm,
   AuthContextProvider,

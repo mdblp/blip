@@ -36,11 +36,12 @@ import FaceIcon from "@material-ui/icons/Face";
 import RoundedHospitalIcon from "../../../components/icons/RoundedHospitalIcon";
 import StethoscopeIcon from "../../../components/icons/StethoscopeIcon";
 
-import { AuthContextProvider, Session } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import UserMenu from "../../../components/menus/user-menu";
 import { loggedInUsers } from "../../common";
 import { triggerMouseEvent } from "../../common/utils";
+import User from "../../../lib/auth/user";
 
 describe("User Menu", () => {
   let container: HTMLElement | null = null;
@@ -53,8 +54,8 @@ describe("User Menu", () => {
     triggerMouseEvent("click", userMenu);
   }
 
-  async function mountComponent(session: Session): Promise<void> {
-    authContext = createAuthHookStubs(session);
+  async function mountComponent(user: User): Promise<void> {
+    authContext = createAuthHookStubs(user);
 
     await act(() => {
       return new Promise((resolve) => {

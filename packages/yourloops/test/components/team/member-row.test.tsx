@@ -143,8 +143,8 @@ describe("MemberRow", () => {
     );
     const loggedInUser = buildTeamMember(
       teamId,
-      authHcp.user.userid,
-      buildInvite(teamId, authHcp.user.userid, TeamMemberRole.admin),
+      authHcp.userid,
+      buildInvite(teamId, authHcp.userid, TeamMemberRole.admin),
       TeamMemberRole.admin,
       "fake@admin.com",
       "fake admin full name",
@@ -179,8 +179,8 @@ describe("MemberRow", () => {
     );
     const loggedInUser = buildTeamMember(
       teamId,
-      authHcp.user.userid,
-      buildInvite(teamId, authHcp.user.userid, TeamMemberRole.admin),
+      authHcp.userid,
+      buildInvite(teamId, authHcp.userid, TeamMemberRole.admin),
       TeamMemberRole.admin,
       "fake@admin.com",
       "fake admin full name",
