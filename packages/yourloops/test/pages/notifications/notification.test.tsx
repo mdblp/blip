@@ -136,7 +136,7 @@ describe("Notification", () => {
     });
 
     describe("getIconToDisplay", () => {
-      it("should display a PersonIcon", () => {
+      it("should display a correct icon when invitation type is a direct invitation", () => {
         render(fakeNotification());
 
         expect(screen.queryByTitle("direct-invitation-icon")).not.toBeNull();
@@ -144,7 +144,7 @@ describe("Notification", () => {
         expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
-      it("should display a GroupIcon", () => {
+      it("should display a correct icon when invitation type is a care team pro invitation", () => {
         render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
 
         expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
@@ -152,7 +152,7 @@ describe("Notification", () => {
         expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
-      it("should display a MedicalServiceIcon", () => {
+      it("should display a correct icon when invitation type is a care team patient invitation", () => {
         render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
 
         expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
