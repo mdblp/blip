@@ -70,8 +70,6 @@ module.exports = {
       COOKIE_BANNER_CLIENT_ID: "",
       DEV: false,
       ECPS_ENABLED: true,
-      PWD_MIN_LENGTH: 0,
-      SESSION_TIMEOUT: 0,
       YLP820_BASAL_TIME: 0,
       VERSION: "1.0.0",
       API_HOST: "http://localhost:8009",
