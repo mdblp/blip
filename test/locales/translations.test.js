@@ -112,6 +112,7 @@ const ignoredTransKeyForYourLoops = [
   "consent-patient-privacy-policy",
   "consent-patient-terms-of-use",
   "consent-monitoring-terms-of-use",
+  "not-logged-in",
   "modal-add-medical-team-code-no-invite",
   "severe-hypoglycemia-threshold",
   "signup-steppers-caregiver-title",
