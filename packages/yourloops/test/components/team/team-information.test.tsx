@@ -32,16 +32,23 @@ import { act } from "react-dom/test-utils";
 import ThemeProvider from "@material-ui/styles/ThemeProvider";
 
 import * as authHookMock from "../../../lib/auth";
-import { AuthContextProvider } from "../../../lib/auth";
 import { getTheme } from "../../../components/theme";
 import TeamInformation, { TeamInformationProps } from "../../../components/team/team-information";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import User from "../../../lib/auth/user";
 import TeamUtils from "../../../lib/team/utils";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import * as teamHookMock from "../../../lib/team";
+import * as alertHookMock from "../../../components/utils/snackbar";
 
 jest.mock("../../../lib/auth");
+jest.mock("../../../lib/team");
+jest.mock("../../../components/utils/snackbar");
 describe("TeamInformation", () => {
   const refresh = jest.fn();
+  const editTeamMock = jest.fn();
+  const successMock = jest.fn();
+  const errorMock = jest.fn();
 
   const teamId = "teamId";
   const team = buildTeam(teamId, []);
@@ -51,17 +58,17 @@ describe("TeamInformation", () => {
     line2: "line 2",
     zip: "08130",
     city: "Vouilly",
-    country: "France",
+    country: "FR",
   };
 
   let container: HTMLDivElement | null = null;
 
   beforeEach(() => {
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user : { isUserPatient : () => true } as User };
+      return { user: { isUserPatient: () => true } as User };
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { editTeam: editTeamMock };
     });
     jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
     container = document.createElement("div");
@@ -70,6 +77,18 @@ describe("TeamInformation", () => {
 
   beforeAll(() => {
     jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
+    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
+      return { error: errorMock, success: successMock };
+    });
   });
 
   afterEach(() => {
@@ -80,14 +99,24 @@ describe("TeamInformation", () => {
     }
   });
 
-  function getTeamInformationJSX(props: TeamInformationProps) {
+  async function editTeamInfo() {
+    const editInfoButton = screen.getByRole("button", { name: "edit-information" });
+    await act(async () => {
+      fireEvent.click(editInfoButton);
+      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
+      const editTeamDialog = within(screen.getByRole("dialog"));
+      const editTeamButton = editTeamDialog.getByRole("button", { name: "button-save" });
+      fireEvent.click(editTeamButton);
+      await waitFor(() => expect(editTeamMock).toHaveBeenCalledWith(team));
+    });
+  }
+
+  function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }) {
     return <ThemeProvider theme={getTheme()}>
-      <AuthContextProvider>
-        <TeamInformation
-          team={props.team}
-          refreshParent={props.refreshParent}
-        />
-      </AuthContextProvider>
+      <TeamInformation
+        team={props.team}
+        refreshParent={props.refreshParent}
+      />
     </ThemeProvider>;
   }
 
@@ -126,7 +155,7 @@ describe("TeamInformation", () => {
   });
 
   it("should display button to leave team when user is patient and team is not a monitoring team", () => {
-    const teamWithNoMonitoring = buildTeam(teamId, [], );
+    const teamWithNoMonitoring = buildTeam(teamId, []);
     teamWithNoMonitoring.monitoring = undefined;
     renderTeamInformation({ team: teamWithNoMonitoring, refreshParent: refresh });
     expect(document.getElementById("leave-team-button")).not.toBeNull();
@@ -134,10 +163,24 @@ describe("TeamInformation", () => {
 
   it("should not display button to leave team when user is not patient", () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user : { isUserPatient : () => false } as User };
+      return { user: { isUserPatient: () => false } as User };
     });
     renderTeamInformation();
     expect(document.getElementById("leave-team-button")).toBeNull();
+  });
+
+  it("should save edited team", async () => {
+    render(getTeamInformationJSX());
+    await editTeamInfo();
+    expect(refresh).toHaveBeenCalled();
+    expect(successMock).toHaveBeenCalledWith("team-page-success-edit");
+  });
+
+  it("should show error message when team edit failed", async () => {
+    editTeamMock.mockRejectedValue(Error("This error has been thrown by a mock on purpose"));
+    render(getTeamInformationJSX());
+    await editTeamInfo();
+    expect(errorMock).toHaveBeenCalledWith("team-page-failed-edit");
   });
 });
 

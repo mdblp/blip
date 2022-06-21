@@ -165,6 +165,7 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
     name: "fake team name",
     code: "123456789",
     owner: "fakeOwner",
+    email: "fale@email.com",
     type: TeamType.medical,
     members,
     monitoring: {
