@@ -55,11 +55,6 @@ export interface AddMemberDialogContentProps {
   onMemberInvited: (result: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => void;
 }
 
-export interface RemoveMemberDialogContentProps {
-  member: Readonly<TeamMember>;
-  onDialogResult: (result: boolean) => void;
-}
-
 export interface TeamEditModalContentProps {
   team: Readonly<Team> | null;
   /** Promise callback for the modal. null means cancel edit */

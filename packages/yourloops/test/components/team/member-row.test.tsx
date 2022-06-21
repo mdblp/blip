@@ -26,179 +26,254 @@
  */
 
 import React from "react";
-import renderer, { act } from "react-test-renderer";
+import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+
+import * as teamHookMock from "../../../lib/team";
 import MemberRow, { TeamMembersProps } from "../../../components/team/member-row";
-import { TeamContextProvider } from "../../../lib/team";
 import { TeamMemberRole } from "../../../models/team";
 import { UserInvitationStatus } from "../../../models/generic";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { loggedInUsers } from "../../common";
-import { createAuthHookStubs } from "../../lib/auth/utils";
 import { getTheme } from "../../../components/theme";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
 import { buildInvite, buildTeam, buildTeamMember } from "../../common/utils";
 import TeamApi from "../../../lib/team/team-api";
+import TeamUtils from "../../../lib/team/utils";
+import * as alertHookMock from "../../../components/utils/snackbar";
 
+jest.mock("../../../lib/team");
+jest.mock("../../../components/utils/snackbar");
 describe("MemberRow", () => {
-  const authHcp = loggedInUsers.hcpUser;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
   const refreshParent = jest.fn();
+  const loggedInUserId = "loggedInUserId";
+  const changeMemberRoleMock = jest.fn();
+  const removeMemberMock = jest.fn();
+  const errorMock = jest.fn();
+  let props: TeamMembersProps = {} as TeamMembersProps;
 
-  function renderMemberRow(props: TeamMembersProps) {
-    return renderer.create(
-      <ThemeProvider theme={getTheme()}>
-        <AuthContextProvider value={authHookHcp}>
-          <TeamContextProvider>
-            <MemberRow
-              team={props.team}
-              teamMember={props.teamMember}
-              refreshParent={props.refreshParent}
-            />
-          </TeamContextProvider>
-        </AuthContextProvider>
-      </ThemeProvider>
-    );
+  const teamId = "teamId";
+  const teamMember = buildTeamMember(
+    teamId,
+    "fakeUserId",
+    buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
+    TeamMemberRole.member,
+    "fake@username.com",
+    "fake full name",
+    UserInvitationStatus.accepted
+  );
+
+  const loggedInUserAdmin = buildTeamMember(
+    teamId,
+    loggedInUserId,
+    buildInvite(teamId, loggedInUserId, TeamMemberRole.admin),
+    TeamMemberRole.admin,
+    "fake@admin.com",
+    "fake admin full name",
+    UserInvitationStatus.accepted
+  );
+
+  const pendingTeamMember = buildTeamMember(
+    teamId,
+    "fakeUserId",
+    buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
+    TeamMemberRole.member,
+    "fake@username.com",
+    "fake full name",
+    UserInvitationStatus.pending
+  );
+
+  const pendingAdminTeamMember = buildTeamMember(teamId, "fakeUserId", buildInvite());
+  const adminTeamMember = buildTeamMember(
+    teamId,
+    "fakeUserId",
+    buildInvite(),
+    TeamMemberRole.admin,
+    "fake@username.com",
+    "fake full name",
+    UserInvitationStatus.accepted);
+
+  beforeAll(() => {
+    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+      return { changeMemberRole: changeMemberRoleMock, removeMember: removeMemberMock };
+    });
+    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
+      return { error: errorMock };
+    });
+  });
+
+  async function clickRemoveMemberButton() {
+    const removeMemberButton = screen.getByRole("button", { name: "remove-member-button" });
+    await act(async () => {
+      fireEvent.click(removeMemberButton);
+      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
+      const confirmDialog = within(screen.getByRole("dialog"));
+      const confirmButton = confirmDialog.getByRole("button", { name: "confirm" });
+      fireEvent.click(confirmButton);
+      await waitFor(() => expect(removeMemberMock).toHaveBeenCalledWith(teamMember));
+      expect(refreshParent).toHaveBeenCalled();
+    });
+  }
+
+  function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
+    return <ThemeProvider theme={getTheme()}>
+      <Table>
+        <TableBody>
+          <MemberRow
+            team={memberProps.team}
+            teamMember={memberProps.teamMember}
+            refreshParent={memberProps.refreshParent}
+          />
+        </TableBody>
+      </Table>
+    </ThemeProvider>;
   }
 
   it("should display correct information when user is a pending admin", () => {
-    const teamId = "teamId";
-    const teamMember = buildTeamMember(teamId, "fakeUserId", buildInvite());
-    const team = buildTeam(teamId, [teamMember]);
-    const id = teamMember.user.userid;
-    const props: TeamMembersProps = {
+    const team = buildTeam(teamId, [pendingAdminTeamMember]);
+    props = {
       team,
-      teamMember,
+      teamMember: pendingAdminTeamMember,
       refreshParent,
     };
-    const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual("--");
-    expect(component.root.findByProps({ id: `${id}-pending-icon` })).not.toBeNull();
-    expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeTruthy();
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.disabled).toBeTruthy();
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    expect(cells).toHaveLength(4);
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(cells[0].innerHTML).toEqual("--");
+    expect(screen.queryByTitle("pending-user-icon")).not.toBeNull();
+    expect(cells[2].innerHTML).toEqual(teamMember.user.username);
+    expect(roleCheckbox.checked).toBeTruthy();
+    expect(roleCheckbox.disabled).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
   it("should display correct information when user is a pending non admin", () => {
-    const teamId = "teamId";
-    const teamMember = buildTeamMember(
-      teamId,
-      "fakeUserId",
-      buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
-      TeamMemberRole.member,
-      "fake@username.com",
-      "fake full name",
-      UserInvitationStatus.pending
-    );
-    const team = buildTeam(teamId, [teamMember]);
-    const id = teamMember.user.userid;
-    const props: TeamMembersProps = {
+    const team = buildTeam(teamId, [pendingTeamMember]);
+    props = {
       team,
-      teamMember,
+      teamMember: pendingTeamMember,
       refreshParent,
     };
-    const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual("--");
-    expect(component.root.findByProps({ id: `${id}-pending-icon` })).not.toBeNull();
-    expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeFalsy();
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.disabled).toBeTruthy();
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(roleCheckbox.checked).toBeFalsy();
+    expect(roleCheckbox.disabled).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
   it("should display correct information when user is a not pending and not admin", () => {
-    const teamId = "teamId";
-    const teamMember = buildTeamMember(
-      teamId,
-      "fakeUserId",
-      buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
-      TeamMemberRole.member,
-      "fake@username.com",
-      "fake full name",
-      UserInvitationStatus.accepted
-    );
     const team = buildTeam(teamId, [teamMember]);
-    const id = teamMember.user.userid;
-    const props: TeamMembersProps = {
+    props = {
       team,
       teamMember,
       refreshParent,
     };
-    const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
-    expect(component.root.findAllByProps({ id: `${id}-pending-icon` })).toHaveLength(0);
-    expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeFalsy();
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.disabled).toBeTruthy();
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    expect(cells).toHaveLength(4);
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName);
+    expect(screen.queryByTitle("pending-user-icon")).toBeNull();
+    expect(cells[2].innerHTML).toEqual(teamMember.user.username);
+    expect(roleCheckbox.checked).toBeFalsy();
+    expect(roleCheckbox.disabled).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
-  it("should enable role checkbox when current user is admin is not the only team member", () => {
-    const teamId = "teamId";
-    const teamMember = buildTeamMember(
-      teamId,
-      "fakeUserId",
-      buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
-      TeamMemberRole.member,
-      "fake@username.com",
-      "fake full name",
-      UserInvitationStatus.accepted
-    );
-    const loggedInUser = buildTeamMember(
-      teamId,
-      authHcp.userid,
-      buildInvite(teamId, authHcp.userid, TeamMemberRole.admin),
-      TeamMemberRole.admin,
-      "fake@admin.com",
-      "fake admin full name",
-      UserInvitationStatus.accepted
-    );
-    const team = buildTeam(teamId, [teamMember, loggedInUser]);
-    const id = teamMember.user.userid;
-    const props: TeamMembersProps = {
+  it("should enable role checkbox when current user is admin and is not the only team member", () => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValueOnce(true).mockReturnValueOnce(false);
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin]);
+    props = {
       team,
       teamMember,
       refreshParent,
     };
-    const component = renderMemberRow(props);
-    expect(component.root.findByProps({ id: `${id}-member-full-name` }).props.children).toEqual(teamMember.user.profile.fullName);
-    expect(component.root.findAllByProps({ id: `${id}-pending-icon` })).toHaveLength(0);
-    expect(component.root.findByProps({ id: `${id}-member-email` }).props.children).toEqual(teamMember.user.username);
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.checked).toBeFalsy();
-    expect(component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.disabled).toBeFalsy();
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    expect(cells).toHaveLength(5);
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName);
+    expect(screen.queryByTitle("pending-user-icon")).toBeNull();
+    expect(cells[2].innerHTML).toEqual(teamMember.user.username);
+    expect(roleCheckbox.checked).toBeFalsy();
+    expect(roleCheckbox.disabled).toBeFalsy();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).not.toBeNull();
   });
 
-  it("should switch user role to admin when ticking checkbox", async () => {
+  it("should switch user role to member when ticking checkbox", async () => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
     jest.spyOn(TeamApi, "changeMemberRole").mockResolvedValue();
-    const teamId = "teamId";
-    const teamMember = buildTeamMember(
-      teamId,
-      "fakeUserId",
-      buildInvite(teamId, "fakeUserId", TeamMemberRole.member),
-      TeamMemberRole.member,
-      "fake@username.com",
-      "fake full name",
-      UserInvitationStatus.accepted
-    );
-    const loggedInUser = buildTeamMember(
-      teamId,
-      authHcp.userid,
-      buildInvite(teamId, authHcp.userid, TeamMemberRole.admin),
-      TeamMemberRole.admin,
-      "fake@admin.com",
-      "fake admin full name",
-      UserInvitationStatus.accepted
-    );
-    const team = buildTeam(teamId, [teamMember, loggedInUser]);
-    const id = teamMember.user.userid;
-    const props: TeamMembersProps = {
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin]);
+    props = {
       team,
       teamMember,
       refreshParent,
     };
-    const component = renderMemberRow(props);
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(roleCheckbox.checked).toBeTruthy();
     await act(async () => {
-      component.root.findByProps({ id: `members-row-${id}-role-checkbox` }).props.onChange({ target: { checked: true } });
-      await new Promise(process.nextTick);
+      fireEvent.click(roleCheckbox);
+      await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member));
+      expect(refreshParent).toHaveBeenCalled();
     });
-    expect(TeamApi.changeMemberRole).toHaveBeenCalledTimes(1);
+  });
+
+  it("should try to switch user role to admin when ticking checkbox and fail when throwing an error", async () => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(false);
+    jest.spyOn(TeamApi, "changeMemberRole").mockResolvedValue();
+    changeMemberRoleMock.mockRejectedValue(Error("This error has been thrown by a mock on purpose"));
+    const team = buildTeam(teamId, [adminTeamMember, loggedInUserAdmin]);
+    props = {
+      team,
+      teamMember: adminTeamMember,
+      refreshParent,
+    };
+    render(getMemberRowJSX());
+    const cells = screen.getAllByRole("cell");
+    const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
+    expect(roleCheckbox.checked).toBeFalsy();
+    await act(async () => {
+      fireEvent.click(roleCheckbox);
+      await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin));
+      expect(refreshParent).toHaveBeenCalled();
+      expect(errorMock).toHaveBeenCalledWith("team-page-failed-update-role");
+    });
+  });
+
+  it("should remove member when clicking on remove member icon", async () => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin]);
+    props = {
+      team,
+      teamMember,
+      refreshParent,
+    };
+    render(getMemberRowJSX());
+    await clickRemoveMemberButton();
+    expect(errorMock).toHaveBeenCalledTimes(0);
+  });
+
+  it("should try to remove member when clicking on remove member icon and fail when an error is thrown", async () => {
+    jest.spyOn(TeamUtils, "isUserAdministrator").mockReturnValue(true);
+    removeMemberMock.mockRejectedValue(Error("This error has been thrown by a mock on purpose"));
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin]);
+    props = {
+      team,
+      teamMember,
+      refreshParent,
+    };
+    render(getMemberRowJSX());
+    await clickRemoveMemberButton();
+    expect(errorMock).toHaveBeenCalledWith("remove-member-failed");
   });
 });
 
