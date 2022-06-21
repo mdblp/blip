@@ -38,11 +38,11 @@ import { useHistory } from "react-router-dom";
 import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
 import TeamUtils from "../../lib/team/utils";
 
-export interface TeamInformationProps {
+export interface LeaveTeamButtonProps {
   team: Team;
 }
 
-function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
+function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props;
   const teamHook = useTeam();
   const alert = useAlert();
@@ -53,7 +53,6 @@ function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
 
   const onTeamLeft = async (hasLeft: boolean) => {
     if (hasLeft) {
-      const onlyMember = !((team.members.length ?? 0) > 1);
       try {
         await teamHook.leaveTeam(team);
         const message = TeamUtils.teamHasOnlyOneMember(team)
@@ -62,7 +61,7 @@ function LeaveTeamButton(props: TeamInformationProps): JSX.Element {
         alert.success(message);
         historyHook.push("/");
       } catch (reason: unknown) {
-        const message = onlyMember
+        const message = TeamUtils.teamHasOnlyOneMember(team)
           ? t("team-page-failure-deleted")
           : t("team-page-failed-leave");
         alert.error(message);
