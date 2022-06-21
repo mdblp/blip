@@ -108,12 +108,12 @@ describe("MemberRow", () => {
   });
 
   async function clickRemoveMemberButton() {
-    const removeMemberButton = screen.getByRole("button", { name: /remove-member-button/ });
+    const removeMemberButton = screen.getByRole("button", { name: "remove-member-button" });
     await act(async () => {
       fireEvent.click(removeMemberButton);
       await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
       const confirmDialog = within(screen.getByRole("dialog"));
-      const confirmButton = confirmDialog.getByRole("button", { name: /confirm/ });
+      const confirmButton = confirmDialog.getByRole("button", { name: "confirm" });
       fireEvent.click(confirmButton);
       await waitFor(() => expect(removeMemberMock).toHaveBeenCalledWith(teamMember));
       expect(refreshParent).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe("MemberRow", () => {
     expect(cells[2].innerHTML).toEqual(teamMember.user.username);
     expect(roleCheckbox.checked).toBeTruthy();
     expect(roleCheckbox.disabled).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /remove-member-button/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
   it("should display correct information when user is a pending non admin", () => {
@@ -165,7 +165,7 @@ describe("MemberRow", () => {
     const roleCheckbox = within(cells[3]).getByRole("checkbox") as HTMLInputElement;
     expect(roleCheckbox.checked).toBeFalsy();
     expect(roleCheckbox.disabled).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /remove-member-button/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
   it("should display correct information when user is a not pending and not admin", () => {
@@ -184,7 +184,7 @@ describe("MemberRow", () => {
     expect(cells[2].innerHTML).toEqual(teamMember.user.username);
     expect(roleCheckbox.checked).toBeFalsy();
     expect(roleCheckbox.disabled).toBeTruthy();
-    expect(screen.queryByRole("button", { name: /remove-member-button/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).toBeNull();
   });
 
   it("should enable role checkbox when current user is admin and is not the only team member", () => {
@@ -204,7 +204,7 @@ describe("MemberRow", () => {
     expect(cells[2].innerHTML).toEqual(teamMember.user.username);
     expect(roleCheckbox.checked).toBeFalsy();
     expect(roleCheckbox.disabled).toBeFalsy();
-    expect(screen.queryByRole("button", { name: /remove-member-button/ })).not.toBeNull();
+    expect(screen.queryByRole("button", { name: "remove-member-button" })).not.toBeNull();
   });
 
   it("should switch user role to member when ticking checkbox", async () => {
