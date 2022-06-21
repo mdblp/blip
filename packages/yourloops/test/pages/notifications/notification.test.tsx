@@ -27,24 +27,16 @@
  */
 
 import React from "react";
-import enzyme, { mount, shallow } from "enzyme";
 import moment from "moment-timezone";
 import _ from "lodash";
-import { render, unmountComponentAtNode } from "react-dom";
-import Adapter from "enzyme-adapter-react-16";
-import { act } from "react-dom/test-utils";
-
-import GroupIcon from "@material-ui/icons/Group";
-import PersonIcon from "@material-ui/icons/Person";
-import HelpIcon from "@material-ui/icons/Help";
+import { getByText, render, screen } from "@testing-library/react";
 
 import { UserRoles } from "../../../models/shoreline";
-import MedicalServiceIcon from "../../../components/icons/MedicalServiceIcon";
 import { Notification } from "../../../pages/notifications/notification";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
-import { NotificationContextProvider } from "../../../lib/notifications/hook";
-import { stubNotificationContextValue } from "../../lib/notifications/utils";
+import * as notificationHookMock from "../../../lib/notifications/hook";
 
+jest.mock("../../../lib/notifications/hook");
 describe("Notification", () => {
   const notif: INotification = {
     id: "11",
@@ -93,51 +85,27 @@ describe("Notification", () => {
     />
   );
 
-  beforeAll(() => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-  });
-
   describe("wrapped notification", () => {
 
-    it("should be exported as a function", () => {
-      expect(typeof Notification).toBe("function");
-    });
-
-    it("should render", () => {
-      const wrapper = shallow(fakeNotification());
-
-      expect(wrapper.find("div").length).toBeTruthy();
-    });
-
-    it("should display the user firstname and lastname", () => {
-      const wrapper = mount(fakeNotification());
-      expect(wrapper.text().includes("Jeanne Dubois")).toBe(true);
-    });
-
-    it("should display direct share", () => {
-      const wrapper = mount(fakeNotification());
-
-      expect(
-        wrapper.text().includes("wants to share their diabetes data with you")
-      ).toBe(true);
+    it("should display the correct label", () => {
+      const { container } = render(fakeNotification());
+      expect(getByText(container, "Jeanne Dubois wants to share their diabetes data with you.")).not.toBeNull();
     });
 
     it("should display medical team join invitation for a member", () => {
-      const wrapper = mount(
+      const { container } = render(
         fakeNotification({
           ...notif,
           type: NotificationType.careTeamProInvitation,
           target: { id: "0", name: "target" },
         })
       );
-      expect(wrapper.text().includes("invites you to join")).toBe(true);
+      expect(getByText(container, "Jeanne Dubois invites you to join", { exact : false })).not.toBeNull();
+      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).toBeNull();
     });
 
     it("should display medical team join invitation with more info button for a member having a caregiver role", () => {
-      const wrapper = mount(
+      const { container } = render(
         fakeNotification({
           ...notif,
           type: NotificationType.careTeamProInvitation,
@@ -147,12 +115,12 @@ describe("Notification", () => {
         )
       );
 
-      expect(wrapper.text().includes(" invites you to join")).toBe(true);
-      expect(wrapper.find(HelpIcon).length).toBe(1);
+      expect(getByText(container, "Jeanne Dubois invites you to join", { exact : false })).not.toBeNull();
+      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).not.toBeNull();
     });
 
     it("should display medical team join invitation for a patient", () => {
-      const wrapper = mount(
+      const { container } = render(
         fakeNotification({
           ...notif,
           type: NotificationType.careTeamPatientInvitation,
@@ -162,62 +130,57 @@ describe("Notification", () => {
         )
       );
 
-      expect(
-        wrapper
-          .text()
-          .includes(
-            "You're invited to share your diabetes data with grenoble DIAB service"
-          )
-      ).toBe(true);
-      expect(wrapper.find(HelpIcon).length).toBe(0);
+      expect(getByText(container, "You're invited to share your diabetes data with", { exact : false })).not.toBeNull();
+      expect(getByText(container, "grenoble DIAB service", { exact : false })).not.toBeNull();
+      expect(container.querySelector(`#notification-help-${notif.id}-icon`)).toBeNull();
     });
 
     describe("getIconToDisplay", () => {
-      it("should display a PersonIcon", () => {
-        const wrapper = mount(fakeNotification());
+      it("should display a correct icon when invitation type is a direct invitation", () => {
+        render(fakeNotification());
 
-        expect(wrapper.find(PersonIcon).length).toBe(1);
-        expect(wrapper.find(GroupIcon).length).toBe(0);
-        expect(wrapper.find(MedicalServiceIcon).length).toBe(0);
+        expect(screen.queryByTitle("direct-invitation-icon")).not.toBeNull();
+        expect(screen.queryByTitle("default-icon")).toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
-      it("should display a GroupIcon", () => {
-        const wrapper = mount(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
+      it("should display a correct icon when invitation type is a care team pro invitation", () => {
+        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }));
 
-        expect(wrapper.find(PersonIcon).length).toBe(0);
-        expect(wrapper.find(GroupIcon).length).toBe(1);
-        expect(wrapper.find(MedicalServiceIcon).length).toBe(0);
+        expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
+        expect(screen.queryByTitle("default-icon")).not.toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).toBeNull();
       });
 
-      it("should display a MedicalServiceIcon", () => {
-        const wrapper = mount(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
+      it("should display a correct icon when invitation type is a care team patient invitation", () => {
+        render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }));
 
-        expect(wrapper.find(PersonIcon).length).toBe(0);
-        expect(wrapper.find(GroupIcon).length).toBe(0);
-        expect(wrapper.find(MedicalServiceIcon).length).toBe(1);
+        expect(screen.queryByTitle("direct-invitation-icon")).toBeNull();
+        expect(screen.queryByTitle("default-icon")).toBeNull();
+        expect(screen.queryByTitle("care-team-invitation-icon")).not.toBeNull();
       });
     });
 
     describe("getDateToDisplay", () => {
       it("should display the given date", () => {
-        const wrapper = mount(fakeNotification());
+        const { container } = render(fakeNotification());
         const expectedDate = moment.utc(notif.date).utc().format("L");
 
-        expect(wrapper.text().includes(expectedDate)).toBe(true);
+        expect(getByText(container, expectedDate)).not.toBeNull();
       });
 
       it("should display today", () => {
-        const wrapper = mount(fakeNotification({ ...notif, date: new Date().toISOString() }));
+        const { container } = render(fakeNotification({ ...notif, date: new Date().toISOString() }));
 
-        expect(wrapper.text().includes("today")).toBe(true);
+        expect(getByText(container, "today")).not.toBeNull();
       });
 
       it("should display yesterday", () => {
         // eslint-disable-next-line no-magic-numbers
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        const wrapper = mount(fakeNotification({ ...notif, date: yesterday }));
+        const { container } = render(fakeNotification({ ...notif, date: yesterday }));
 
-        expect(wrapper.text().includes("yesterday")).toBe(true);
+        expect(getByText(container, "yesterday")).not.toBeNull();
       });
     });
   });
@@ -236,38 +199,19 @@ describe("Notification", () => {
       );
     };
 
-    async function mountComponent(notif: INotification): Promise<void> {
-      await act(() => {
-        return new Promise((resolve) => {
-          render(
-            <NotificationContextProvider value={stubNotificationContextValue}>
-              <NotificationComponent notif={notif} />
-            </NotificationContextProvider>, container, resolve);
-        });
-      });
-    }
-
     beforeEach(() => {
       container = document.createElement("div");
       document.body.appendChild(container);
     });
 
-    afterEach(() => {
-      if (container) {
-        unmountComponentAtNode(container);
-        container.remove();
-        container = null;
-      }
-    });
-
-    it("should be able to render", async () => {
-      await mountComponent(notif);
+    it("should be able to render", () => {
+      render(<NotificationComponent notif={notif} />);
       const component = document.getElementById(`notification-line-${notif.id}`);
       expect(component).not.toBeNull();
     });
 
-    it("should show team code dialog when accepting team invitation", async () => {
-      await mountComponent(teamNotif);
+    it("should show team code dialog when accepting team invitation", () => {
+      render(<NotificationComponent notif={teamNotif} />);
       const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${teamNotif.id}`) as HTMLButtonElement;
       acceptButton.click();
       const dialog = document.getElementById("team-add-dialog-title");
@@ -275,8 +219,16 @@ describe("Notification", () => {
     });
 
 
-    it("should not show team code dialog when accepting non team invitation", async () => {
-      await mountComponent(notif);
+    it("should not show team code dialog when accepting non team invitation", () => {
+      (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+        return children;
+      });
+      (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
+        return {
+          update: jest.fn(),
+        };
+      });
+      render(<NotificationComponent notif={notif} />);
       const acceptButton: HTMLButtonElement = document.getElementById(`notification-button-accept-${notif.id}`) as HTMLButtonElement;
       acceptButton.click();
       const dialog = document.getElementById("team-add-dialog-title");

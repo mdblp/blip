@@ -27,56 +27,22 @@
  */
 
 import React from "react";
-import enzyme, { mount, ReactWrapper } from "enzyme";
+import { render } from "@testing-library/react";
 
-import { waitTimeout } from "../../../lib/utils";
-import { AuthContext, AuthContextProvider } from "../../../lib/auth";
-import { TeamContextProvider } from "../../../lib/team";
 import PatientsSecondaryBar, { PatientListBarProps } from "../../../components/patient/secondary-bar";
 
-import Adapter from "enzyme-adapter-react-16";
-import { loggedInUsers } from "../../common";
-import { resetTeamAPIStubs } from "../../lib/team/utils";
-import { createAuthHookStubs } from "../../lib/auth/utils";
-
 describe("Patient secondary bar", () => {
-  const authHcp = loggedInUsers.hcpSession;
-  const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
-  const apiTimeout = 50;
   const defaultProps: PatientListBarProps = {
     filter: "",
     onFilter: jest.fn(),
     onInvitePatient: jest.fn(),
   };
 
-  let component: ReactWrapper | null = null;
-
-  afterEach(() => {
-    if (component !== null) {
-      component.unmount();
-      component = null;
-    }
-    resetTeamAPIStubs();
-  });
-
-  beforeAll(() => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-  });
-
-  it("should be able to render", async () => {
-    component = mount(
-      <AuthContextProvider value={authHookHcp}>
-        <TeamContextProvider>
-          <PatientsSecondaryBar {...defaultProps} />
-        </TeamContextProvider>
-      </AuthContextProvider>
+  it("should be able to render", () => {
+    const { container } = render(
+      <PatientsSecondaryBar {...defaultProps} />
     );
-    // component.update();
-    await waitTimeout(apiTimeout);
-    expect(component.find("#patients-list-toolbar-item-left").length).toBe(1);
+    expect(container.querySelector("#patients-list-toolbar-item-left")).not.toBeNull();
   });
 });
 

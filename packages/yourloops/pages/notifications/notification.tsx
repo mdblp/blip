@@ -145,13 +145,12 @@ const NotificationSpan = ({ t, notification, className, id }: NotificationSpanPr
 const NotificationIcon = ({ id, type, className }: { id: string; type: NotificationType; className: string }): JSX.Element => {
   switch (type) {
   case NotificationType.directInvitation:
-    return <PersonIcon id={id} className={className} />;
-  case NotificationType.careTeamProInvitation:
-    return <GroupIcon id={id} className={className} />;
+    return <PersonIcon id={`person-icon-${id}`} titleAccess="direct-invitation-icon" className={className} />;
   case NotificationType.careTeamPatientInvitation:
-    return <MedicalServiceIcon id={id} className={className} />;
+    return <MedicalServiceIcon id={`medical-service-icon-${id}`} titleAccess="care-team-invitation-icon" className={className} />;
+  case NotificationType.careTeamProInvitation:
   default:
-    return <GroupIcon id={id} className={className} />;
+    return <GroupIcon id={`group-icon-${id}`} titleAccess="default-icon" className={className} />;
   }
 };
 
@@ -252,7 +251,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
 
   return (
     <div id={`notification-line-${id}`} className={`${classes.container} notification-line`} data-notificationid={id}>
-      <NotificationIcon id={`notification-icon-${id}`} className="notification-icon" type={notification.type} />
+      <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} t={t} notification={notification} className={`${classes.notificationSpan} notification-text`} />
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
