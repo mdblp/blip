@@ -41,6 +41,8 @@ import DirectShareApi from "../../../lib/share/direct-share-api";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as alertHookMock from "../../../components/utils/snackbar";
+import { ShareUser } from "../../../lib/share/models";
+import { UserInvitationStatus } from "../../../models/generic";
 
 jest.mock("../../../lib/team");
 jest.mock("../../../lib/auth");
@@ -57,6 +59,11 @@ describe("Team Menu", () => {
   const teamZip = "fakeTeamZip";
   const teamCity = "fakeTeamCity";
   const teamCode = "123456788";
+
+  const caregivers: ShareUser[] = [
+    { user: {} as User, status: UserInvitationStatus.accepted },
+    { user: {} as User, status: UserInvitationStatus.accepted },
+  ];
 
   const createTeamMock = jest.fn();
   const joinTeamMock = jest.fn();
@@ -82,7 +89,7 @@ describe("Team Menu", () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue(caregivers);
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;
     });
@@ -186,7 +193,7 @@ describe("Team Menu", () => {
     });
     expect(createTeamMock).toHaveBeenCalled();
     expect(successMock).toHaveBeenCalledWith("team-page-success-create");
-  });
+  }, 10000);
 
   it("should not create new team when clicking on new care team button and then cancel", async () => {
     await act(async () => {
@@ -196,7 +203,7 @@ describe("Team Menu", () => {
     });
     expect(createTeamMock).toHaveBeenCalledTimes(0);
     expect(successMock).toHaveBeenCalledTimes(0);
-  });
+  }, 10000);
 
   it("should fail when trying to create a new team but an error happens", async () => {
     createTeamMock.mockRejectedValue(new Error("This error was thrown by a mock on purpose"));
@@ -207,7 +214,7 @@ describe("Team Menu", () => {
     });
     expect(createTeamMock).toHaveBeenCalled();
     expect(errorMock).toHaveBeenCalledWith("team-page-failed-create");
-  });
+  }, 10000);
 
   it("should create new team when clicking on join care team button", async () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
@@ -251,5 +258,20 @@ describe("Team Menu", () => {
     });
     expect(joinTeamMock).toHaveBeenCalledTimes(0);
     expect(successMock).toHaveBeenCalledTimes(0);
+  });
+
+  it("should redirect to caregiver list when clicking on my caregivers", async () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
+    });
+    await act(async () => {
+      render(getTeamMenuJSX());
+      await waitFor(() => expect(screen.queryByRole("button")).not.toBeNull());
+      fireEvent.click(screen.getByRole("button"));
+      expect(screen.queryByText("my-caregivers")).not.toBeNull();
+      const redirectToCaregiversButton = screen.getByRole("menuitem", { name: /my-caregivers/ });
+      fireEvent.click(redirectToCaregiversButton);
+    });
+    expect(history.location.pathname).toBe("/caregivers");
   });
 });
