@@ -51,14 +51,6 @@ describe("Team Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
   const teams: Team[] = [buildTeam("team1Id", []), buildTeam("team2Id", [])];
-  const teamName = "fakeTeamName";
-  const teamEmail = "fake@team.email";
-  const teamPhone = "01 23 45 69 87";
-  const teamAddr1 = "fakeTeamAdr1";
-  const teamAddr2 = "fakeTeamAdr2";
-  const teamZip = "fakeTeamZip";
-  const teamCity = "fakeTeamCity";
-  const teamCode = "123456788";
 
   const caregivers: ShareUser[] = [
     { user: {} as User, status: UserInvitationStatus.accepted },
@@ -133,13 +125,13 @@ describe("Team Menu", () => {
       fireEvent.click(screen.getByText("new-care-team"));
       await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
       const creationTeamDialog = within(screen.getByRole("dialog"));
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-name" }), teamName);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line1" }), teamAddr1);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line2" }), teamAddr2);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-zip" }), teamZip);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-city" }), teamCity);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "phone-number" }), teamPhone);
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "email" }), teamEmail);
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-name" }), "fakeTeamName");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line1" }), "fakeTeamAdr1");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line2" }), "fakeTeamAdr2");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-zip" }), "fakeTeamZip");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-city" }), "fakeTeamCity");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "phone-number" }), "01 23 45 69 87");
+      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "email" }), "fake@team.email");
     });
   }
 
@@ -150,7 +142,7 @@ describe("Team Menu", () => {
       fireEvent.click(screen.getByText("join-care-team"));
       await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
       const joinTeamDialog = within(screen.getByRole("dialog"));
-      await userEvent.type(joinTeamDialog.getByRole("textbox", { name: "modal-add-medical-team-code-no-invite" }), teamCode);
+      await userEvent.type(joinTeamDialog.getByRole("textbox", { name: "modal-add-medical-team-code-no-invite" }), "123456788");
     });
   }
 
@@ -268,7 +260,7 @@ describe("Team Menu", () => {
       render(getTeamMenuJSX());
       await waitFor(() => expect(screen.queryByRole("button")).not.toBeNull());
       fireEvent.click(screen.getByRole("button"));
-      expect(screen.queryByText("my-caregivers")).not.toBeNull();
+      await waitFor(() => expect(screen.queryByText("my-caregivers (2)")).not.toBeNull());
       const redirectToCaregiversButton = screen.getByRole("menuitem", { name: /my-caregivers/ });
       fireEvent.click(redirectToCaregiversButton);
     });
