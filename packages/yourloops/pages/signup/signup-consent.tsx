@@ -37,7 +37,7 @@ import { ConsentForm } from "../../components/consents";
 import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
 import SignUpFormProps from "./signup-form-props";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 
 const useStyles = makeStyles((theme: Theme) => ({
   backButton: {

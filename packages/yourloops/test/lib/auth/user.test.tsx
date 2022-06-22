@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import config from "../../../lib/config";
 import User from "../../../lib/auth/user";
 

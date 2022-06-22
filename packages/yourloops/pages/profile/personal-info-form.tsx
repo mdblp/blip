@@ -38,7 +38,7 @@ import TextField from "@material-ui/core/TextField";
 import appConfig from "../../lib/config";
 import { useAuth, User } from "../../lib/auth";
 import { Errors } from "./models";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
 import BasicDropdownWithValidation from "../../components/dropdown/basic-dropdown-with-validation";
 import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";

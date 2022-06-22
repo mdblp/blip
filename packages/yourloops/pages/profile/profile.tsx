@@ -43,7 +43,7 @@ import { Errors } from "./models";
 import { Units } from "../../models/generic";
 import { HcpProfession } from "../../models/hcp-profession";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { Preferences, Profile, Settings, UserRoles } from "../../models/user";
 import { getCurrentLang } from "../../lib/language";
 import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
 import { useAuth, User } from "../../lib/auth";

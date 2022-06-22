@@ -30,7 +30,7 @@ import { LoadTeams, Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from "./model
 import TeamApi from "./team-api";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import bows from "bows";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { fixYLP878Settings } from "../utils";
 import { Patient, PatientTeam } from "../data/patient";
 import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";

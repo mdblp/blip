@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences, Profile, Settings } from "../../../models/shoreline";
+import { Preferences, Profile, Settings } from "../../../models/user";
 import UserApi from "../../../lib/auth/user-api";
 import HttpService from "../../../services/http";
 import { AxiosResponse } from "axios";

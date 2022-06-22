@@ -39,7 +39,7 @@ import Select from "@material-ui/core/Select";
 
 import { availableLanguageCodes, getLangName } from "../../lib/language";
 import { ConsentFeedback } from "../../components/consents";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { Units } from "../../models/generic";
 import { LanguageCodes } from "../../models/locales";
 

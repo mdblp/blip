@@ -29,7 +29,7 @@
 import _ from "lodash";
 
 import { Units } from "../models/generic";
-import { IUser, Settings } from "../models/shoreline";
+import { IUser, Settings } from "../models/user";
 import { t } from "./language";
 import metrics from "./metrics";
 

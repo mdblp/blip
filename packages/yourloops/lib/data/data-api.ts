@@ -31,7 +31,7 @@ import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { Patient } from "./patient";
 import { GetPatientDataOptions } from "./models";
 import { PatientData } from "../../models/device-data";
-import { IUser } from "../../models/shoreline";
+import { IUser } from "../../models/user";
 import MessageNote from "../../models/message";
 import User from "../auth/user";
 import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";

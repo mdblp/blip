@@ -27,7 +27,7 @@
 
 import _ from "lodash";
 import { MedicalData } from "../../models/device-data";
-import { Consent, IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { Consent, IUser, Preferences, Profile, Settings, UserRoles } from "../../models/user";
 import config from "../config";
 
 class User implements IUser {

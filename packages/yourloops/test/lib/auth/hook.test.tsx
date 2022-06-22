@@ -34,7 +34,7 @@ import _ from "lodash";
 import * as auth0Mock from "@auth0/auth0-react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
-import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
+import { Preferences, Profile, Settings, UserRoles } from "../../../models/user";
 import config from "../../../lib/config";
 import { AuthContext } from "../../../lib/auth";
 import { AuthContextImpl } from "../../../lib/auth/hook";

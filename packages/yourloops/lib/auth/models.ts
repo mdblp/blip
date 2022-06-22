@@ -29,7 +29,7 @@
 import { ReactNode } from "react";
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings } from "../../models/shoreline";
+import { Preferences, Profile, Settings } from "../../models/user";
 import { HcpProfession } from "../../models/hcp-profession";
 
 export interface SignupForm {

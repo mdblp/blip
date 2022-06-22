@@ -29,7 +29,7 @@ import { DirectShareAPI, ShareUser } from "./models";
 import HttpService from "../../services/http";
 import { UserInvitationStatus } from "../../models/generic";
 import { fixYLP878Settings } from "../utils";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { HttpHeaderKeys } from "../../models/api";
 import { getCurrentLang } from "../language";
 
