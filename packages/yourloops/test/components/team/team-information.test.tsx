@@ -111,7 +111,7 @@ describe("TeamInformation", () => {
     });
   }
 
-  function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }) {
+  function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }): JSX.Element {
     return <ThemeProvider theme={getTheme()}>
       <TeamInformation
         team={props.team}

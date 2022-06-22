@@ -61,8 +61,7 @@ describe("TeamDetailsPage", () => {
   const teams = [team1, team2];
   const getTeamMock = jest.fn().mockReturnValue(team1);
   const getMedicalTeamsMock = jest.fn().mockReturnValue(teams);
-  const initialRoute = "/fakeRoute";
-  const history = createMemoryHistory({ initialEntries: [initialRoute] });
+  const history = createMemoryHistory({ initialEntries: ["/fakeRoute"] });
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
@@ -82,7 +81,7 @@ describe("TeamDetailsPage", () => {
     });
   });
 
-  function getTeamDetailsPageJSX() {
+  function getTeamDetailsPageJSX(): JSX.Element {
     return <Router history={history}>
       <ThemeProvider theme={getTheme()}>
         <TeamDetailsPage />
