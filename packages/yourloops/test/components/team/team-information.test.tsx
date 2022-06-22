@@ -176,6 +176,20 @@ describe("TeamInformation", () => {
     expect(successMock).toHaveBeenCalledWith("team-page-success-edit");
   });
 
+  it("should not save edited team when user clicked on cancel", async () => {
+    render(getTeamInformationJSX());
+    const editInfoButton = screen.getByRole("button", { name: "edit-information" });
+    await act(async () => {
+      fireEvent.click(editInfoButton);
+      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
+      const editTeamDialog = within(screen.getByRole("dialog"));
+      const editTeamButton = editTeamDialog.getByRole("button", { name: "button-cancel" });
+      fireEvent.click(editTeamButton);
+      await waitFor(() => expect(editTeamMock).toHaveBeenCalledTimes(0));
+    });
+    expect(refresh).toHaveBeenCalledTimes(0);
+  });
+
   it("should show error message when team edit failed", async () => {
     editTeamMock.mockRejectedValue(Error("This error has been thrown by a mock on purpose"));
     render(getTeamInformationJSX());
