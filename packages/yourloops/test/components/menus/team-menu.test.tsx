@@ -36,8 +36,6 @@ import TeamMenu from "../../../components/menus/team-menu";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import { createMemoryHistory } from "history";
 import * as authHookMock from "../../../lib/auth";
-import { Session } from "../../../lib/auth";
-import User from "../../../lib/auth/user";
 import DirectShareApi from "../../../lib/share/direct-share-api";
 
 jest.mock("../../../lib/team");
@@ -46,7 +44,6 @@ describe("Team Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
   const teams: Team[] = [buildTeam("team1Id", []), buildTeam("team1Id", [])];
-  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
 
   function openMenu(): void {
     const teamMenu = document.getElementById("team-menu");
@@ -74,9 +71,7 @@ describe("Team Menu", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        session: () => session,
-      };
+      return {};
     });
   });
 

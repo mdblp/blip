@@ -37,8 +37,6 @@ import { TeamMemberRole } from "../../../models/team";
 import { UserRoles } from "../../../models/shoreline";
 import { buildTeam, buildTeamMember } from "../../common/utils";
 import * as authHookMock from "../../../lib/auth";
-import { Session } from "../../../lib/auth";
-import User from "../../../lib/auth/user";
 import TeamUtils from "../../../lib/team/utils";
 import { mapTeamUserToPatient } from "../../../components/patient/utils";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
@@ -48,7 +46,6 @@ jest.mock("../../../lib/notifications/hook");
 describe("Team hook", () => {
   let container: HTMLElement | null = null;
   let teamHook: TeamContext;
-  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
   const memberPatientAccepted1 = buildTeamMember("team1Id", "memberPatientAccepted1", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.accepted, UserRoles.patient);
   const memberPatientPending1 = buildTeamMember("team1Id", "memberPatientPending1", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient);
   const memberPatientPending2 = buildTeamMember("team1Id", "memberPatientPending2", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient);
@@ -77,7 +74,7 @@ describe("Team hook", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { session: () => session };
+      return { user: {} };
     });
     (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;

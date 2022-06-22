@@ -60,6 +60,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1626 Patients not monitored should not have any alarms
 
 ### Engineering Use
+- YLP-1233 Remove session object
 - YLP-1256 Split Profile component into smaller subcomponents
 - YLP-1319 Switch-roles dialogs CSS not consistent with other dialogs
 - YLP-1320 Dynamic branding

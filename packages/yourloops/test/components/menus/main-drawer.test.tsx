@@ -39,7 +39,7 @@ import { createAuthHookStubs } from "../../lib/auth/utils";
 
 describe("Main Drawer", () => {
   let container: HTMLElement | null = null;
-  const authHcp = loggedInUsers.hcpSession;
+  const authHcp = loggedInUsers.hcpUser;
   const authHookHcp: AuthContext = createAuthHookStubs(authHcp);
 
   async function mountComponent(miniVariant = true): Promise<void> {

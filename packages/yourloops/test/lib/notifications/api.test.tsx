@@ -239,11 +239,11 @@ describe("Notification API", () => {
       });
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const session = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: userId, profile: session.user.profile },
+        creator: { userid: userId, profile: user.profile },
         creatorId: userId2,
         date: new Date().toISOString(),
         email,
@@ -484,14 +484,14 @@ describe("Notification API", () => {
       mockedAxios.put.mockResolvedValue(resolveError);
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const session = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: session.user.userid, profile: session.user.profile },
-        creatorId: session.user.userid,
+        creator: { userid: user.userid, profile: user.profile },
+        creatorId: user.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email: user.username,
         id: uuidv4(),
       };
       for (const notificationType of notificationTypes) {
@@ -802,14 +802,14 @@ describe("Notification API", () => {
         NotificationType.careTeamRemoveMember,
         NotificationType.careTeamPatientInvitation,
       ];
-      const session = loggedInUsers.hcpSession;
+      const user = loggedInUsers.hcpUser;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: session.user.userid, profile: session.user.profile },
-        creatorId: session.user.userid,
+        creator: { userid: user.userid, profile: user.profile },
+        creatorId: user.userid,
         date: new Date().toISOString(),
-        email: session.user.username,
+        email: user.username,
         id: uuidv4(),
       };
       for (const notificationType of notificationTypes) {

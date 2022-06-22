@@ -63,8 +63,8 @@ class BlipApi {
 
   public getPatientDataRange(patient: IUser): Promise<string[] | null> {
     this.log.debug("getPatientDataRange", { userId: patient.userid });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.getPatientDataRange(patient.userid);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -72,8 +72,8 @@ class BlipApi {
 
   public getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
     this.log.debug("getPatientData", { userId: patient.userid, options });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       metrics.startTimer("load_data");
       return DataApi.getPatientData(patient, options).then((r) => {
         metrics.endTimer("load_data");
@@ -88,8 +88,8 @@ class BlipApi {
 
   public getMessages(patient: IUser, options?: GetPatientDataOptions): Promise<MessageNote[]> {
     this.log.debug("getMessages", { userId: patient.userid, options });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.getMessages(patient, options);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -97,8 +97,8 @@ class BlipApi {
 
   public getMessageThread(messageId: string): Promise<MessageNote[]> {
     this.log.debug("getMessageThread", { messageId });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.getMessageThread(messageId);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -106,8 +106,8 @@ class BlipApi {
 
   public startMessageThread(message: MessageNote): Promise<string> {
     this.log.debug("startMessageThread", { userId: message.userid });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.postMessageThread(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -115,8 +115,8 @@ class BlipApi {
 
   public replyMessageThread(message: MessageNote): Promise<string> {
     this.log.debug("replyMessageThread", { userId: message.userid });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.postMessageThread(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -124,8 +124,8 @@ class BlipApi {
 
   public editMessage(message: MessageNote): Promise<void> {
     this.log.debug("editMessage", { userId: message.userid });
-    const session = this.authHook.session();
-    if (session !== null) {
+    const user = this.authHook.user;
+    if (user) {
       return DataApi.editMessage(message);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
@@ -133,9 +133,9 @@ class BlipApi {
 
   public exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
     this.log.debug("exportData", { userId: patient.userid });
-    const session = this.authHook.session();
-    if (session !== null) {
-      return DataApi.exportData(session.user, patient.userid, startDate, endDate);
+    const user = this.authHook.user;
+    if (user) {
+      return DataApi.exportData(user, patient.userid, startDate, endDate);
     }
     return Promise.reject(new Error(translate("not-logged-in")));
   }

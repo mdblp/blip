@@ -28,7 +28,6 @@
 
 import {
   AuthContext,
-  Session,
   SignupForm,
 } from "./models";
 
@@ -41,7 +40,6 @@ import User from "./user";
 
 export {
   AuthContext,
-  Session,
   User,
   SignupForm,
   AuthContextProvider,

@@ -27,7 +27,6 @@
  */
 
 import { LoadTeams, Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from "./models";
-import { Session } from "../auth";
 import TeamApi from "./team-api";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import bows from "bows";
@@ -35,6 +34,7 @@ import { UserRoles } from "../../models/shoreline";
 import { fixYLP878Settings } from "../utils";
 import { Patient, PatientTeam } from "../data/patient";
 import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
+import User from "../auth/user";
 
 const log = bows("TeamUtils");
 
@@ -197,9 +197,9 @@ export default class TeamUtils {
     return null;
   }
 
-  static async loadTeams(session: Session): Promise<LoadTeams> {
+  static async loadTeams(user: User): Promise<LoadTeams> {
     const getFlagPatients = (): string[] => {
-      const flagged = session.user.preferences?.patientsStarred;
+      const flagged = user.preferences?.patientsStarred;
       if (Array.isArray(flagged)) {
         return Array.from(flagged);
       }
@@ -217,7 +217,7 @@ export default class TeamUtils {
       id: TeamType.private,
       members: [],
       name: TeamType.private,
-      owner: session.user.userid,
+      owner: user.userid,
       type: TeamType.private,
     };
 

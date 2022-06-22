@@ -43,25 +43,24 @@ import TeamDetailPage from "./team/team-details-page";
 import HomePage from "./home-page";
 
 export function MainLayout(): JSX.Element {
-  const authHook = useAuth();
-  const session = authHook.session();
+  const { user } = useAuth();
 
   const getHomePage = (): JSX.Element => {
-    switch (session?.user.role) {
+    switch (user?.role) {
     case UserRoles.hcp:
     case UserRoles.caregiver:
       return <HomePage />;
     case UserRoles.patient:
       return <PatientDataPage />;
     default:
-      console.error(`no route found for role ${session?.user.role}`);
+      console.error(`no route found for role ${user?.role}`);
       return <Redirect to="/not-found" />;
     }
   };
 
   return (
     <React.Fragment>
-      {session &&
+      {user &&
         <NotificationContextProvider>
           <TeamContextProvider>
             <DataContextProvider context={DefaultDataContext}>
@@ -73,7 +72,7 @@ export function MainLayout(): JSX.Element {
                     {getHomePage()}
                   </Route>
 
-                  {session.user.isUserHcp() &&
+                  {user.isUserHcp() &&
                     <Switch>
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
                       <Route exact path="/certify" component={CertifyAccountPage} />
@@ -83,7 +82,7 @@ export function MainLayout(): JSX.Element {
                     </Switch>
                   }
 
-                  {session.user.isUserCaregiver() &&
+                  {user.isUserCaregiver() &&
                       <Switch>
                         <Route path="/patient/:patientId" component={PatientDataPage} />
                         <Redirect exact from="/" to="/home" />
@@ -91,7 +90,7 @@ export function MainLayout(): JSX.Element {
                       </Switch>
                   }
 
-                  {session.user.isUserPatient() &&
+                  {user.isUserPatient() &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
                       <Route exact path="/teams/:teamId" component={TeamDetailPage} />
