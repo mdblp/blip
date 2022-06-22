@@ -116,8 +116,8 @@ describe("Profile", () => {
   });
 
   it("should display mg/dL Units by default if not specified", async () => {
-    const session = loggedInUsers.hcpSession;
-    delete session.user?.settings?.units?.bg;
+    const user = loggedInUsers.hcpUser;
+    delete user.settings?.units?.bg;
     await mountProfilePage();
     const selectValue = container.querySelector("#profile-units-selector").innerHTML;
     expect(selectValue).toBe(Units.gram);

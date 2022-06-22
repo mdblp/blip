@@ -26,8 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { v4 as uuidv4 } from "uuid";
-import { User } from "../../lib/auth";
 import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../lib/data/patient";
 import { Alarm } from "../../models/alarm";
@@ -37,39 +35,6 @@ import { TeamMemberRole, TeamType } from "../../models/team";
 import { Monitoring } from "../../models/monitoring";
 import { UNITS_TYPE } from "../../lib/units/utils";
 import { INotification, NotificationType } from "../../lib/notifications/models";
-
-// eslint-disable-next-line no-magic-numbers
-const defaultTokenDuration = 60 * 60;
-
-/**
- * Create valid JWT for the specified user
- * @param user The user
- * @param dur Token duration
- * @returns An unsigned JWT
- */
-export const createSessionToken = (user: User, dur = defaultTokenDuration): string => {
-  const header = {
-    alg: "none",
-    typ: "JWT",
-  };
-  const iat = Math.round(Date.now() / 1000);
-  const payload = {
-    svr: "no",
-    role: user.role,
-    usr: user.userid,
-    email: user.username,
-    dur,
-    iat,
-    exp: iat + dur,
-    jti: uuidv4(),
-  };
-  const encoder = new TextEncoder();
-  let utf8 = encoder.encode(JSON.stringify(header));
-  const b64Header = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  utf8 = encoder.encode(JSON.stringify(payload));
-  const b64Payload = btoa(String.fromCharCode.apply(null, utf8 as unknown as number[]));
-  return `${b64Header}.${b64Payload}.`;
-};
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true });
