@@ -5,8 +5,6 @@ export PORT='3001'
 
 # Diabeloop specific
 export BRANDING='diabeloop_blue'
-export PWD_MIN_LENGTH='10'
-export PWD_MAX_LENGTH='72'
 export LATEST_TERMS='1970-01-01'
 
 # External services:

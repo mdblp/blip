@@ -34,9 +34,6 @@ export interface AppConfig {
   DEV: boolean;
   TEST: boolean;
   LATEST_TERMS?: string;
-  PWD_MIN_LENGTH: number;
-  PWD_MAX_LENGTH?: number;
-  ABOUT_MAX_LENGTH?: number;
   SUPPORT_WEB_ADDRESS?: string;
   ASSETS_URL?: string | null;
   METRICS_SERVICE?: string | null;
