@@ -26,12 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-
 import { TidelineData } from "tideline";
 import { Datum } from "tideline/js/tidelinedata";
 import { utils as vizUtils } from "tidepool-viz";
-import { IUser } from "../../../../yourloops/models/shoreline";
+import { IUser } from "../../../../yourloops/models/user";
 import ProfileDialog from "../../../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../../../yourloops/components/date-pickers/dialog-date-picker";
 import DialogRangeDatePicker from "../../../../yourloops/components/date-pickers/dialog-range-date-picker";

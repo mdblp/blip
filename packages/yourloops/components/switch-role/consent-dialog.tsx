@@ -37,7 +37,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { ConsentForm } from "../consents";
 import { SwitchRoleConsentDialogProps } from "./models";
 

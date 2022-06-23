@@ -27,7 +27,7 @@
 
 import React from "react";
 
-import { UserRoles } from "../models/shoreline";
+import { UserRoles } from "../models/user";
 import { useAuth } from "../lib/auth";
 import { NotificationContextProvider } from "../lib/notifications/hook";
 import { TeamContextProvider } from "../lib/team";

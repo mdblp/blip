@@ -41,7 +41,7 @@ import { useAuth } from "../../lib/auth";
 import { IMessage } from "../../models/chat";
 import { Button, CardHeader, Tab, Tabs, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { Patient } from "../../lib/data/patient";
 import { useTeam } from "../../lib/team";
 

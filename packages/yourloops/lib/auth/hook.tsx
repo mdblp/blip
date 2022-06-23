@@ -31,7 +31,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/user";
 import { HcpProfession } from "../../models/hcp-profession";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";

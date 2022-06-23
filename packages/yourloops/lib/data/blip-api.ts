@@ -30,7 +30,7 @@ import bows from "bows";
 
 import { PatientData } from "models/device-data";
 import MessageNote from "models/message";
-import { IUser } from "../../models/shoreline";
+import { IUser } from "../../models/user";
 import { AuthContext, User } from "../auth";
 import { t as translate } from "../language";
 import metrics from "../metrics";

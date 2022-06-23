@@ -44,7 +44,7 @@ import { availableCountries } from "../../lib/language";
 import SignUpFormProps from "./signup-form-props";
 import { HcpProfessionList } from "../../models/hcp-profession";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { useAlert } from "../../components/utils/snackbar";
 import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
 

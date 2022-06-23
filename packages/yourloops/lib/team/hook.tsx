@@ -33,7 +33,7 @@ import moment from "moment-timezone";
 
 import { PatientFilterTypes, UserInvitationStatus } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { ITeam, TeamMemberRole, TeamType } from "../../models/team";
 
 import { errorTextFromException } from "../utils";
