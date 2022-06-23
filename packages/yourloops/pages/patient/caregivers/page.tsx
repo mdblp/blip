@@ -35,7 +35,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 
 import { UserInvitationStatus } from "../../../models/generic";
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import { useAuth } from "../../../lib/auth";
 import metrics from "../../../lib/metrics";
 import { setPageTitle } from "../../../lib/utils";

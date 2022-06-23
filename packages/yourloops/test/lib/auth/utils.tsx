@@ -27,7 +27,7 @@
  */
 
 
-import { Preferences, Profile, Settings } from "../../../models/shoreline";
+import { Preferences, Profile, Settings } from "../../../models/user";
 import { SignupForm } from "../../../lib/auth/models";
 import { User } from "../../../lib/auth";
 import { HcpProfession } from "../../../models/hcp-profession";

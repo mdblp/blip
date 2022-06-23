@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## Unreleased
 
 ### Engineering use
+- YLP-1317 Renaming Shoreline model to a generic name
 - YLP-1626 Refactor team hook to only keep functions impacting the state
 - YLP-1631 Install react testing library
 - YLP-1634 Fix missing UTs

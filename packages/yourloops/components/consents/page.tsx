@@ -42,7 +42,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import { HistoryState } from "../../models/generic";
-import { Profile } from "../../models/shoreline";
+import { Profile } from "../../models/user";
 import { useAuth } from "../../lib/auth";
 import ConsentForm from "./form";
 import appConfig from "../../lib/config";

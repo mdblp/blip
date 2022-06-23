@@ -31,7 +31,7 @@ import moment from "moment-timezone";
 import _ from "lodash";
 import { getByText, render, screen } from "@testing-library/react";
 
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import { Notification } from "../../../pages/notifications/notification";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
 import * as notificationHookMock from "../../../lib/notifications/hook";

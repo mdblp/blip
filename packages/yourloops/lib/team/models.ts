@@ -28,7 +28,7 @@
 
 import { UserInvitationStatus, PostalAddress, PatientFilterTypes } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
-import { IUser } from "../../models/shoreline";
+import { IUser } from "../../models/user";
 import { INotification } from "../notifications/models";
 import { TeamType, TeamMemberRole, TypeTeamMemberRole } from "../../models/team";
 import { Patient, PatientTeam } from "../data/patient";

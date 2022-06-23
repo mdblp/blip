@@ -39,7 +39,7 @@ import { Team } from "../../../lib/team";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
 import DirectShareApi from "../../../lib/share/direct-share-api";
-import { Profile, UserRoles } from "../../../models/shoreline";
+import { Profile, UserRoles } from "../../../models/user";
 import User from "../../../lib/auth/user";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
 

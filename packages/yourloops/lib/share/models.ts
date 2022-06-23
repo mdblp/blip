@@ -27,7 +27,7 @@
  */
 
 import { UserInvitationStatus } from "../../models/generic";
-import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings } from "../../models/user";
 import { INotification } from "../notifications/models";
 
 interface DirectShareUser {

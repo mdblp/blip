@@ -29,7 +29,7 @@
 
 import { User } from "../../lib/auth";
 import { Units, UserInvitationStatus } from "../../models/generic";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import { HcpProfession } from "../../models/hcp-profession";
 import { Alarm } from "../../models/alarm";

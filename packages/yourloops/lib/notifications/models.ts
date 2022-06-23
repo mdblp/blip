@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Profile } from "../../models/shoreline";
+import { Profile } from "../../models/user";
 import { TeamMemberRole } from "../../models/team";
 
 export enum NotificationType {

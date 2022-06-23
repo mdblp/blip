@@ -42,7 +42,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import config from "../../lib/config";
 import { useNotification } from "../../lib/notifications/hook";
 import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import TeamMenu from "../menus/team-menu";
 import UserMenu from "../menus/user-menu";
 

@@ -35,7 +35,7 @@ import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-
 import SignUpProfileForm from "../../../pages/signup/signup-profile-form";
 import * as authHookMock from "../../../lib/auth";
 import User from "../../../lib/auth/user";
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 
 jest.mock("../../../lib/auth");
 describe("Signup profile form", () => {

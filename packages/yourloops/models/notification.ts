@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Profile } from "./shoreline";
+import { Profile } from "./user";
 import { TeamMemberRole } from "./team";
 
 export enum APINotificationType {

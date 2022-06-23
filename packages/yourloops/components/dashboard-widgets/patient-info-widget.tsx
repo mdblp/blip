@@ -41,7 +41,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { Settings } from "../../models/shoreline";
+import { Settings } from "../../models/user";
 import { Patient } from "../../lib/data/patient";
 import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 import { useAuth } from "../../lib/auth";

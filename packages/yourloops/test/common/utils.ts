@@ -30,7 +30,7 @@ import { UserInvitationStatus } from "../../models/generic";
 import { Patient, PatientTeam } from "../../lib/data/patient";
 import { Alarm } from "../../models/alarm";
 import { Team, TeamMember, TeamUser } from "../../lib/team";
-import { Profile, UserRoles } from "../../models/shoreline";
+import { Profile, UserRoles } from "../../models/user";
 import { TeamMemberRole, TeamType } from "../../models/team";
 import { Monitoring } from "../../models/monitoring";
 import { UNITS_TYPE } from "../../lib/units/utils";

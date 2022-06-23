@@ -18,7 +18,7 @@
  * TODO: Review me when we have the team API
  */
 
-import { Profile, Settings, Preferences } from "./shoreline";
+import { Profile, Settings, Preferences } from "./user";
 import { UserInvitationStatus, PostalAddress } from "./generic";
 import { Alarm } from "./alarm";
 import { Monitoring } from "./monitoring";

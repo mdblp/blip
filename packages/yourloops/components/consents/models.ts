@@ -27,7 +27,7 @@
  */
 
 import * as React from "react";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 
 export interface BaseConsentCheck {
   id: string;

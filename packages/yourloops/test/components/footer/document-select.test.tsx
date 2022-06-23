@@ -36,7 +36,7 @@ import DocumentSelect, {
   TRAINING,
 } from "../../../components/footer/document-select";
 import diabeloopUrls from "../../../lib/diabeloop-url";
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import User from "../../../lib/auth/user";
 
 describe("DocumentSelect", () => {

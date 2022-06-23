@@ -34,7 +34,7 @@ import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../
 import { PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
 import * as notificationHookMock from "../../../lib/notifications/hook";
 import { TeamMemberRole } from "../../../models/team";
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import { buildTeam, buildTeamMember } from "../../common/utils";
 import * as authHookMock from "../../../lib/auth";
 import TeamUtils from "../../../lib/team/utils";
