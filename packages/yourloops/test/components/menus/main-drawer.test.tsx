@@ -166,8 +166,8 @@ describe("Main Drawer", () => {
     await checkFilterAction(PatientFilterTypes.pending.toString(), PatientFilterTypes.pending.toString(), patientsFilterStats.pending);
   });
 
-  it("should display correct filter value for pending patients and redirect to proper url", async () => {
-    await checkFilterAction(PatientFilterTypes.private.toString(), PatientFilterTypes.private.toString(), patientsFilterStats.directShare);
+  it("should display correct filter value for private patients and redirect to proper url", async () => {
+    await checkFilterAction("private-practice", PatientFilterTypes.private.toString(), patientsFilterStats.directShare);
   });
 
   it("should display correct filter value for monitored patient sand redirect to proper url", async () => {
