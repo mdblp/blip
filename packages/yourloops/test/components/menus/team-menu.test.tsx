@@ -38,12 +38,26 @@ import { createMemoryHistory } from "history";
 import * as authHookMock from "../../../lib/auth";
 import { User } from "../../../lib/auth";
 import DirectShareApi from "../../../lib/share/direct-share-api";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import * as alertHookMock from "../../../components/utils/snackbar";
 import { ShareUser } from "../../../lib/share/models";
 import { UserInvitationStatus } from "../../../models/generic";
+import { AddTeamDialogProps } from "../../../pages/patient/teams/add-dialog";
+import { TeamEditModalProps } from "../../../pages/hcp/team-edit-dialog";
 
+/* eslint-disable react/display-name */
+jest.mock("../../../pages/patient/teams/add-dialog", () => (props: AddTeamDialogProps) => {
+  return <>
+    <button onClick={() => props.actions?.onDialogResult("fakeTeamId")}>mock-join</button>
+    <button onClick={() => props.actions?.onDialogResult(null)}>mock-cancel</button>
+  </>;
+});
+jest.mock("../../../pages/hcp/team-edit-dialog", () => (props: TeamEditModalProps) => {
+  return <>
+    <button onClick={() => props.teamToEdit?.onSaveTeam(null)}>mock-cancel</button>
+    <button onClick={() => props.teamToEdit?.onSaveTeam({} as Team)}>mock-edit</button>
+  </>;
+});
 jest.mock("../../../lib/team");
 jest.mock("../../../lib/auth");
 jest.mock("../../../components/utils/snackbar");
@@ -59,7 +73,6 @@ describe("Team Menu", () => {
 
   const createTeamMock = jest.fn();
   const joinTeamMock = jest.fn();
-  const getTeamFromCodeMock = jest.fn();
   const successMock = jest.fn();
   const errorMock = jest.fn();
 
@@ -86,7 +99,7 @@ describe("Team Menu", () => {
       return children;
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { teams, createTeam: createTeamMock, joinTeam: joinTeamMock, getTeamFromCode: getTeamFromCodeMock };
+      return { teams, createTeam: createTeamMock, joinTeam: joinTeamMock };
     });
     (teamHookMock.getDisplayTeamCode as jest.Mock).mockImplementation(() => {
       return "123-456-788";
@@ -118,41 +131,27 @@ describe("Team Menu", () => {
     }
   });
 
-  async function fillTeamCreationDialog() {
-    await act(async () => {
-      await waitFor(() => expect(screen.queryByRole("button")).not.toBeNull());
-      fireEvent.click(screen.getByRole("button"));
-      fireEvent.click(screen.getByText("new-care-team"));
-      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
-      const creationTeamDialog = within(screen.getByRole("dialog"));
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-name" }), "fakeTeamName");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line1" }), "fakeTeamAdr1");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-line2" }), "fakeTeamAdr2");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-zip" }), "fakeTeamZip");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "team-edit-dialog-placeholder-addr-city" }), "fakeTeamCity");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "phone-number" }), "01 23 45 69 87");
-      await userEvent.type(creationTeamDialog.getByRole("textbox", { name: "email" }), "fake@team.email");
+  async function fillJoinTeamDialog(buttonName: string) {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
     });
-  }
-
-  async function fillJoinTeamDialog() {
     await act(async () => {
+      render(getTeamMenuJSX());
       await waitFor(() => expect(screen.queryByRole("button")).not.toBeNull());
       fireEvent.click(screen.getByRole("button"));
       fireEvent.click(screen.getByText("join-care-team"));
-      await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeNull());
-      const joinTeamDialog = within(screen.getByRole("dialog"));
-      await userEvent.type(joinTeamDialog.getByRole("textbox", { name: "modal-add-medical-team-code-no-invite" }), "123456788");
+      fireEvent.click(screen.getByRole("button", { name: buttonName }));
     });
   }
 
-  async function confirmJoinTeam() {
-    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "button-add-team" }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "button-add-medical-team" })).not.toBeNull());
-    const privacyCheckbox = screen.getByRole("checkbox");
-    fireEvent.click(privacyCheckbox);
-    const confirmAddMedicalTeamButton = screen.getByRole("button", { name: "button-add-medical-team" });
-    fireEvent.click(confirmAddMedicalTeamButton);
+  async function fillEditTeamDialog(buttonName: string) {
+    await act(async () => {
+      render(getTeamMenuJSX());
+      await waitFor(() => expect(screen.queryByRole("button")).not.toBeNull());
+      fireEvent.click(screen.getByRole("button"));
+      fireEvent.click(screen.getByText("new-care-team"));
+      fireEvent.click(screen.getByRole("button", { name: buttonName }));
+    });
   }
 
   it("should display number of teams user belongs to", () => {
@@ -178,76 +177,39 @@ describe("Team Menu", () => {
   });
 
   it("should create new team when clicking on new care team button", async () => {
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillTeamCreationDialog();
-      fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "button-create-team" }));
-    });
+    await fillEditTeamDialog("mock-edit");
     expect(createTeamMock).toHaveBeenCalled();
     expect(successMock).toHaveBeenCalledWith("team-page-success-create");
-  }, 10000);
+  });
 
   it("should not create new team when clicking on new care team button and then cancel", async () => {
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillTeamCreationDialog();
-      fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "button-cancel" }));
-    });
+    await fillEditTeamDialog("mock-cancel");
     expect(createTeamMock).toHaveBeenCalledTimes(0);
     expect(successMock).toHaveBeenCalledTimes(0);
-  }, 10000);
+  });
 
   it("should fail when trying to create a new team but an error happens", async () => {
     createTeamMock.mockRejectedValue(new Error("This error was thrown by a mock on purpose"));
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillTeamCreationDialog();
-      fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "button-create-team" }));
-    });
+    await fillEditTeamDialog("mock-edit");
     expect(createTeamMock).toHaveBeenCalled();
     expect(errorMock).toHaveBeenCalledWith("team-page-failed-create");
-  }, 10000);
+  });
 
   it("should create new team when clicking on join care team button", async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
-    });
-    getTeamFromCodeMock.mockResolvedValue(teams[0]);
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillJoinTeamDialog();
-      await confirmJoinTeam();
-    });
+    await fillJoinTeamDialog("mock-join");
     expect(joinTeamMock).toHaveBeenCalled();
     expect(successMock).toHaveBeenCalledWith("modal-patient-add-team-success");
   });
 
   it("should not create new team when clicking on join care team button and it fails", async () => {
     joinTeamMock.mockRejectedValue(Error("This error was thrown by a mock on purpose"));
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
-    });
-    getTeamFromCodeMock.mockResolvedValue(teams[0]);
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillJoinTeamDialog();
-      await confirmJoinTeam();
-    });
+    await fillJoinTeamDialog("mock-join");
     expect(joinTeamMock).toHaveBeenCalled();
     expect(errorMock).toHaveBeenCalledWith("modal-patient-add-team-failure");
   });
 
-  it("should not new team when clicking on join care team button and then cancel", async () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
-    });
-    getTeamFromCodeMock.mockResolvedValue(teams[0]);
-    await act(async () => {
-      render(getTeamMenuJSX());
-      await fillJoinTeamDialog();
-      fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "button-add-team" }));
-      await waitFor(() => expect(screen.getByRole("button", { name: "button-cancel" })).not.toBeNull());
-    });
+  it("should not join new team when clicking on join care team button and then cancel", async () => {
+    await fillJoinTeamDialog("mock-cancel");
     expect(joinTeamMock).toHaveBeenCalledTimes(0);
     expect(successMock).toHaveBeenCalledTimes(0);
   });
