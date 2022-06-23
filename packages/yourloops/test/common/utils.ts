@@ -74,7 +74,7 @@ export const createPatient = (
       sex: "M",
     },
     settings: {
-      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
+      a1c: { date: new Date().toJSON(), value: "fakeA1cValue" },
       system: system,
     },
     teams: teams,
