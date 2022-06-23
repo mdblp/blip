@@ -46,13 +46,13 @@ import FeedbackIcon from "@material-ui/icons/Feedback";
 import SignalWifiOffIcon from "@material-ui/icons/SignalWifiOff";
 import DesktopMacIcon from "@material-ui/icons/DesktopMac";
 import HistoryIcon from "@material-ui/icons/History";
+import Divider from "@material-ui/core/Divider";
+import Box from "@material-ui/core/Box";
 
 import MedicalServiceIcon from "../icons/MedicalServiceIcon";
 import PendingIcon from "../icons/PendingIcon";
 import { useTeam } from "../../lib/team";
 import { useAuth } from "../../lib/auth";
-import Divider from "@material-ui/core/Divider";
-import Box from "@material-ui/core/Box";
 import { PatientFilterTypes } from "../../models/generic";
 
 interface MainDrawerProps {
@@ -213,7 +213,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       <Toolbar />
       <List>
         {drawerItems.map((item, index) => (
-          <Link key={index} to={`/home?filter=${item.filter}`}>
+          <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
             <ListItem button>
               <ListItemIcon>
                 {item.icon}
@@ -236,7 +236,8 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </Box>
               </ListItemText>
             </ListItem>
-            <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}>
+            <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}
+              aria-label={PatientFilterTypes.remoteMonitored}>
               <ListItem button>
                 <ListItemIcon>
                   <SupervisedUserCircleIcon />
@@ -248,7 +249,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </ListItemText>
               </ListItem>
             </Link>
-            <Link to={`/home?filter=${PatientFilterTypes.renew}`}>
+            <Link to={`/home?filter=${PatientFilterTypes.renew}`} aria-label={PatientFilterTypes.renew}>
               <ListItem button>
                 <ListItemIcon>
                   <HistoryIcon />
@@ -277,7 +278,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemText>
             </ListItem>
             {drawerEventsItems.map((item, index) => (
-              <Link key={index} to={`/home?filter=${item.filter}`}>
+              <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
                 <ListItem button>
                   <ListItemIcon>
                     {item.icon}
@@ -306,7 +307,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </Box>
               </ListItemText>
             </ListItem>
-            <Link to={`/home?filter=${PatientFilterTypes.unread}`}>
+            <Link to={`/home?filter=${PatientFilterTypes.unread}`} aria-label={PatientFilterTypes.unread}>
               <ListItem button>
                 <ListItemIcon>
                   <EmailIcon />

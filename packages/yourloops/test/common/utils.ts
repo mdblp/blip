@@ -124,12 +124,13 @@ export const createTeamMember = (id: string, name: string, teamCode: string, sta
   } as TeamMember;
 };
 
-export function buildTeam(id: string, members: TeamMember[]): Team {
+export function buildTeam(id: string, members: TeamMember[], name = "fake team name"): Team {
   return {
     id,
-    name: "fake team name",
+    name,
     code: "123456789",
     owner: "fakeOwner",
+    email: "fale@email.com",
     type: TeamType.medical,
     members,
     monitoring: {
@@ -138,10 +139,10 @@ export function buildTeam(id: string, members: TeamMember[]): Team {
         bgUnit: UNITS_TYPE.MGDL,
         lowBg: 1,
         highBg: 2,
-        outOfRangeThreshold: 3,
+        outOfRangeThreshold: 10,
         veryLowBg: 4,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 6,
+        hypoThreshold: 15,
+        nonDataTxThreshold: 20,
         reportingPeriod: 7,
       },
     },

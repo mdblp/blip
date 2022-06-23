@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function TeamDetailPage(): JSX.Element {
+function TeamDetailsPage(): JSX.Element {
   const { getTeam, getMedicalTeams } = useTeam();
   const classes = useStyles();
   const commonTeamClasses = commonComponentStyles();
@@ -101,7 +101,7 @@ function TeamDetailPage(): JSX.Element {
   const authContext = useAuth();
   const { t } = useTranslation("yourloops");
   const { teamId } = paramHook as { teamId: string };
-  const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] } | null>(
+  const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] }>(
     { selectedTeam: null, teamNames: [] }
   );
   const [activeLink, setActiveLink] = useState<string>("information");
@@ -137,32 +137,33 @@ function TeamDetailPage(): JSX.Element {
   };
 
   const isMonitoringEnabled = () => {
-    return dropdownData && dropdownData.selectedTeam && dropdownData.selectedTeam.monitoring && dropdownData.selectedTeam.monitoring.enabled;
+    return dropdownData.selectedTeam && dropdownData.selectedTeam.monitoring && dropdownData.selectedTeam.monitoring.enabled;
   };
 
   return (
     <React.Fragment>
-      {dropdownData?.selectedTeam &&
-        <div>
+      {dropdownData.selectedTeam &&
+        <div role="main">
           <Box display="flex" alignItems="center">
-            <IconButton className={classes.disableRipple} onClick={redirectToDashboard}>
+            <IconButton className={classes.disableRipple} aria-label="back-button" onClick={redirectToDashboard}>
               <ArrowBackIcon />
             </IconButton>
             <GroupOutlinedIcon />
             <Box marginLeft={0.5} marginRight={2}>{t("team")}</Box>
             <BasicDropdown
               key={dropdownData.selectedTeam.name}
-              id={"team-basic-dropdown"}
+              id="team-basic-dropdown"
               defaultValue={dropdownData.selectedTeam.name}
               values={dropdownData.teamNames}
               onSelect={redirectToTeam}
             />
           </Box>
-          <Box display="flex" justifyContent={isUserHcp}>
+          <Box display="flex">
             {isUserHcp &&
-              <div className={classes.drawer}>
+              <div className={classes.drawer} role="navigation">
                 <div
                   role="link"
+                  aria-label="information"
                   className={`${classes.drawerTitle} ${activeLink === "information" ? classes.activeLink : ""}`}
                   tabIndex={0}
                   onKeyDown={() => scrollTo(teamInformation)}
@@ -175,6 +176,7 @@ function TeamDetailPage(): JSX.Element {
                 </div>
                 <div
                   role="link"
+                  aria-label="members"
                   className={`${classes.drawerTitle} ${activeLink === "members" ? classes.activeLink : ""}`}
                   tabIndex={0}
                   onClick={() => scrollTo(teamMembers)}
@@ -188,6 +190,7 @@ function TeamDetailPage(): JSX.Element {
                 {isMonitoringEnabled() &&
                   <div
                     role="link"
+                    aria-label="alarms"
                     className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
                     tabIndex={0}
                     onClick={() => scrollTo(teamAlarms)}
@@ -204,6 +207,8 @@ function TeamDetailPage(): JSX.Element {
             <Box display="flex" justifyContent="center" margin="auto">
               <div className={classes.teamDetails}>
                 <div
+                  role="region"
+                  aria-label="information"
                   ref={teamInformation}
                   data-link="information"
                   className={`${classes.teamInformation} ${classes.refElement}`}
@@ -215,6 +220,8 @@ function TeamDetailPage(): JSX.Element {
                     <div className={classes.separator} />
                     <div
                       ref={teamMembers}
+                      role="region"
+                      aria-label="members"
                       data-link="members"
                       className={classes.refElement}
                     >
@@ -225,6 +232,8 @@ function TeamDetailPage(): JSX.Element {
                         <div className={classes.separator} />
                         <div
                           ref={teamAlarms}
+                          role="region"
+                          aria-label="alarms"
                           data-link="configuration"
                           className={classes.refElement}
                         >
@@ -243,4 +252,4 @@ function TeamDetailPage(): JSX.Element {
   );
 }
 
-export default TeamDetailPage;
+export default TeamDetailsPage;

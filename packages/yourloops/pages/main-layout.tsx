@@ -39,7 +39,7 @@ import CertifyAccountPage from "./hcp/certify-account-page";
 import CaregiversPage from "./patient/caregivers/page";
 import PatientDataPage from "../components/patient-data";
 import DashboardLayout from "../components/layouts/dashboard-layout";
-import TeamDetailPage from "./team/team-details-page";
+import TeamDetailsPage from "./team/team-details-page";
 import HomePage from "./home-page";
 
 export function MainLayout(): JSX.Element {
@@ -74,7 +74,7 @@ export function MainLayout(): JSX.Element {
 
                   {user.isUserHcp() &&
                     <Switch>
-                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
                       <Route exact path="/certify" component={CertifyAccountPage} />
                       <Route path="/patient/:patientId" component={PatientDataPage} />
                       <Redirect exact from="/" to="/home" />
@@ -93,7 +93,7 @@ export function MainLayout(): JSX.Element {
                   {user.isUserPatient() &&
                     <Switch>
                       <Route exact path="/caregivers" component={CaregiversPage} />
-                      <Route exact path="/teams/:teamId" component={TeamDetailPage} />
+                      <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
                       <Redirect exact from="/" to="/dashboard" />
                       <Route path="/" component={PatientDataPage} />
                     </Switch>

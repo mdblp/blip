@@ -158,6 +158,7 @@ function TeamMenu(): JSX.Element {
       <Box
         id="team-menu"
         display="flex"
+        role="button"
         alignItems="center"
         className={clickableMenu}
         onClick={event => setAnchorEl(event.currentTarget)}

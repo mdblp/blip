@@ -38,7 +38,7 @@ import { Monitoring } from "../../models/monitoring";
 import { useAlert } from "../utils/snackbar";
 import AlarmsContentConfiguration from "../alarm/alarms-content-configuration";
 
-interface TeamAlarmsConfigurationProps {
+export interface TeamAlarmsConfigurationProps {
   team: Team,
 }
 
