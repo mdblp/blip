@@ -242,7 +242,7 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   if (team !== null) {
     teamName = team.name;
     onlyMember = TeamUtils.getNumMedicalMembers(team) < 2;
-    userIsTheOnlyAdministrator = TeamUtils.isUserTheOnlyAdministrator(team, auth.user?.userid as string);
+    userIsTheOnlyAdministrator = TeamUtils.isUserTheOnlyAdministrator(team, auth.user?.id as string);
   }
 
   const ariaTitle = t("aria-team-leave-dialog-title");

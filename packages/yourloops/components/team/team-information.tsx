@@ -86,7 +86,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const alert = useAlert();
   const classes = useStyles();
   const authContext = useAuth();
-  const loggedInUserId = authContext.user?.userid as string;
+  const loggedInUserId = authContext.user?.id as string;
   const isUserPatient = authContext.user?.isUserPatient();
   const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonComponentStyles();

@@ -89,7 +89,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false);
   const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false);
   const currentUserId = teamMember.user.userid;
-  const loggedInUserId = authContext.user?.userid as string;
+  const loggedInUserId = authContext.user?.id as string;
   const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
   const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId);
   const currentUserIsPending = teamMember.status === UserInvitationStatus.pending;

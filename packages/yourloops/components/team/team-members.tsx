@@ -85,7 +85,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const classes = useStyles();
   const authContext = useAuth();
   const alert = useAlert();
-  const loggedInUserId = authContext.user?.userid as string;
+  const loggedInUserId = authContext.user?.id as string;
   const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
   const commonTeamClasses = commonComponentStyles();
   const { t } = useTranslation("yourloops");

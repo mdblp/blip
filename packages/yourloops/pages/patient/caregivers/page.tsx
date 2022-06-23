@@ -77,7 +77,7 @@ function PatientCaregiversPage(): JSX.Element {
 
     if (email && user) {
       try {
-        await DirectShareApi.addDirectShare(user.userid, email);
+        await DirectShareApi.addDirectShare(user.id, email);
         alert.success(t("alert-invitation-sent-success"));
         metrics.send("invitation", "send_invitation", "caregiver");
         // Refresh the notifications list
@@ -106,7 +106,7 @@ function PatientCaregiversPage(): JSX.Element {
         if (us.status === UserInvitationStatus.pending && typeof us.invitation === "object") {
           await notificationHook.cancel(us.invitation);
         } else {
-          await DirectShareApi.removeDirectShare(user.userid, us.user.userid);
+          await DirectShareApi.removeDirectShare(user.id, us.user.userid);
         }
         alert.success(t("modal-patient-remove-caregiver-success"));
         setCaregivers(null); // Refresh the list

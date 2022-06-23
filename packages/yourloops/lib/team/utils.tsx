@@ -217,7 +217,7 @@ export default class TeamUtils {
       id: TeamType.private,
       members: [],
       name: TeamType.private,
-      owner: user.userid,
+      owner: user.id,
       type: TeamType.private,
     };
 

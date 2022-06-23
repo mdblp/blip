@@ -58,7 +58,7 @@ class BlipApi {
   }
 
   public get whoami(): User | null {
-    return this.authHook.user !== null ? new User(this.authHook.user) : null;
+    return this.authHook.user ?? null;
   }
 
   public getPatientDataRange(patient: IUser): Promise<string[] | null> {

@@ -54,12 +54,11 @@ export interface AuthContext {
   logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
-  setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   completeSignup: (signupForm: SignupForm) => Promise<void>;
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  updatePreferences: (preferences: Preferences, refresh?: boolean) => Promise<Preferences>;
-  updateProfile: (profile: Profile, refresh?: boolean) => Promise<Profile>;
-  updateSettings: (settings: Settings, refresh?: boolean) => Promise<Settings>;
+  updatePreferences: (preferences: Preferences) => Promise<void>;
+  updateProfile: (profile: Profile) => Promise<void>;
+  updateSettings: (settings: Settings) => Promise<void>;
   user: Readonly<User> | null;
 }
 

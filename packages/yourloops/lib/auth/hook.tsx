@@ -31,7 +31,7 @@ import bows from "bows";
 import _ from "lodash";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { IUser, Preferences, Profile, Settings, UserRoles } from "../../models/user";
+import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from "../../models/user";
 import { HcpProfession } from "../../models/hcp-profession";
 import { zendeskLogout } from "../zendesk";
 import User from "./user";
@@ -61,83 +61,58 @@ export function AuthContextImpl(): AuthContext {
     return user;
   };
 
-  const updatePreferences = async (preferences: Preferences, refresh = true): Promise<Preferences> => {
+  const updatePreferences = async (preferences: Preferences): Promise<void> => {
     const user = getUser();
-    log.info("updatePreferences", user.userid);
-    const updatedUser = new User(user);
-    updatedUser.preferences = preferences;
-    const updatedPreferences = await UserApi.updatePreferences(user.userid, preferences);
-    if (refresh) {
-      updatedUser.preferences = updatedPreferences;
-      setUser(updatedUser);
-    }
-    return updatedPreferences;
+    user.preferences = await UserApi.updatePreferences(user.id, preferences);
+    setUser(user);
   };
 
-  const updateProfile = async (profile: Profile, refresh = true): Promise<Profile> => {
+  const updateProfile = async (profile: Profile): Promise<void> => {
     const user = getUser();
-    log.info("updateProfile", user.userid);
-    const updatedUser = new User(user);
-    updatedUser.profile = profile;
-    const updatedProfile = await UserApi.updateProfile(user.userid, profile);
-    if (refresh) {
-      updatedUser.profile = updatedProfile;
-      setUser(updatedUser);
-    }
-    return updatedProfile;
+    user.profile = await UserApi.updateProfile(user.id, profile);
+    setUser(user);
   };
 
-  const updateSettings = async (settings: Settings, refresh = true): Promise<Settings> => {
+  const updateSettings = async (settings: Settings): Promise<void> => {
     const user = getUser();
-    log.info("updateSettings", user.userid);
-    const updatedUser = new User(user);
-    updatedUser.settings = settings;
-    const updatedSettings = await UserApi.updateSettings(user.userid, settings);
-    if (refresh) {
-      updatedUser.settings = updatedSettings;
-      setUser(updatedUser);
-    }
-    return settings;
+    user.settings = await UserApi.updateSettings(user.id, settings);
+    setUser(user);
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
     const user = getUser();
-    log.info("flagPatient", userId);
 
-    const updatedUser = new User(user);
-    if (!updatedUser.preferences) {
-      updatedUser.preferences = {};
+    if (!user.preferences) {
+      user.preferences = {};
     }
-    if (!Array.isArray(updatedUser.preferences.patientsStarred)) {
-      updatedUser.preferences.patientsStarred = [userId];
-    } else if (updatedUser.preferences.patientsStarred.includes(userId)) {
-      const patientsStarred = updatedUser.preferences.patientsStarred.filter((id: string) => id !== userId);
-      updatedUser.preferences.patientsStarred = patientsStarred;
+
+    const flaggedPatients = user.preferences?.patientsStarred;
+    if (flaggedPatients) {
+      if (flaggedPatients.includes(userId)) {
+        user.preferences.patientsStarred = flaggedPatients.filter((id: string) => id !== userId);
+      } else {
+        user.preferences.patientsStarred?.push(userId);
+      }
     } else {
-      updatedUser.preferences.patientsStarred.push(userId);
+      user.preferences.patientsStarred = [userId];
     }
-    updatedUser.preferences = await UserApi.updatePreferences(user.userid, updatedUser.preferences);
-    setUser(updatedUser);
+
+    user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
+    setUser(user);
   };
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
     const user = getUser();
-    log.info("setFlagPatients", userIds);
-    const updatedUser = new User(user);
-    if (!updatedUser.preferences) {
-      updatedUser.preferences = {};
+    if (!user.preferences) {
+      user.preferences = {};
     }
-    updatedUser.preferences.patientsStarred = userIds;
-    updatedUser.preferences = await UserApi.updatePreferences(user.userid, updatedUser.preferences);
-    setUser(updatedUser);
+    user.preferences.patientsStarred = userIds;
+    user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
+    setUser(user);
   };
 
   const getFlagPatients = (): string[] => {
-    const flagged = user?.preferences?.patientsStarred;
-    if (Array.isArray(flagged)) {
-      return Array.from(flagged);
-    }
-    return [];
+    return user?.preferences?.patientsStarred ?? [];
   };
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
@@ -158,57 +133,40 @@ export function AuthContextImpl(): AuthContext {
     updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true };
     updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent };
     updatedProfile.hcpProfession = hcpProfession;
-    await updateProfile(updatedProfile, false);
+    await updateProfile(updatedProfile);
     // Refresh our data:
-    const updatedUser = new User(user);
-    updatedUser.role = UserRoles.hcp;
-    updatedUser.profile = updatedProfile;
-    setUser(updatedUser);
+    user.role = UserRoles.hcp;
+    user.profile = updatedProfile;
+    setUser(user);
   };
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
 
-  const mapAuth0UserToIUser = useMemo<IUser>(() => {
-    let user = {};
-    if (auth0user && auth0user.sub) {
-      const parsedSub = auth0user.sub.split("|");
-      const id = parsedSub[1];
-      user = {
-        role: auth0user["http://your-loops.com/roles"][0],
-        userid: id,
-        emailVerified: auth0user.email_verified,
-        username: auth0user.email,
-      };
-    }
-    return user as IUser;
-  }, [auth0user]);
-
   const getUserInfo = useCallback(async () => {
     try {
       setFetchingUser(true);
-      const user = new User(mapAuth0UserToIUser);
+      const user = new User(auth0user as AuthenticatedUser);
 
       // Temporary here waiting all backend services be compatible with Auth0
       // see https://diabeloop.atlassian.net/browse/YLP-1553
       try {
         const { token, id } = await UserApi.getShorelineAccessToken();
         HttpService.shorelineAccessToken = token;
-        user.userid = id;
+        user.id = id;
       } catch (err) {
         console.log(err);
       }
 
-      user.profile = await UserApi.getProfile(user.userid);
-      user.preferences = await UserApi.getPreferences(user.userid);
-      user.settings = await UserApi.getSettings(user.userid);
-
+      user.profile = await UserApi.getProfile(user.id);
+      user.preferences = await UserApi.getPreferences(user.id);
+      user.settings = await UserApi.getSettings(user.id);
       setUser(user);
     } catch (err) {
       console.error(err);
     } finally {
       setFetchingUser(false);
     }
-  }, [mapAuth0UserToIUser]);
+  }, [auth0user]);
 
   const logout = async (): Promise<void> => {
     try {
@@ -237,9 +195,9 @@ export function AuthContextImpl(): AuthContext {
     const settings: Settings = { country: signupForm.profileCountry };
 
     const user = getUser();
-    await UserApi.updateProfile(user.userid, profile);
-    await UserApi.updatePreferences(user.userid, preferences);
-    await UserApi.updateSettings(user.userid, settings);
+    await UserApi.updateProfile(user.id, profile);
+    await UserApi.updatePreferences(user.id, preferences);
+    await UserApi.updateSettings(user.id, settings);
     user.preferences = preferences;
     user.profile = profile;
     user.settings = settings;
@@ -259,7 +217,6 @@ export function AuthContextImpl(): AuthContext {
     user,
     isLoggedIn,
     fetchingUser,
-    setUser,
     redirectToProfessionalAccountLogin,
     updateProfile,
     updatePreferences,
