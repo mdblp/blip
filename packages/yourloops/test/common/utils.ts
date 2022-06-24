@@ -42,8 +42,8 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 }
 
 export const createPatient = (
-  id: string,
-  teams: PatientTeam[],
+  id = "fakePatientId",
+  teams: PatientTeam[] = [],
   alarm: Alarm = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: false,

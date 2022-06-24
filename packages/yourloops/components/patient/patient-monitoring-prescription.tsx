@@ -112,7 +112,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
   const teamsMap: Map<string, string> = new Map<string, string>();
   teams.forEach(team => teamsMap.set(team.id, team.name));
   // only set team Id for a renew
-  const defaultKey = action === RemoteMonitoringDialogAction.renew ? defaultTeamId: undefined;
+  const defaultKey = action === RemoteMonitoringDialogAction.renew ? defaultTeamId : undefined;
 
 
   useEffect(() => {
@@ -122,7 +122,9 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
       file: prescription,
       numberOfMonth: numberOfMonthSelected,
     };
-    setPrescriptionInfo(prescriptionInfo);
+    if (prescriptionInfo.teamId && prescriptionInfo.memberId && prescriptionInfo.file && prescriptionInfo.numberOfMonth) {
+      setPrescriptionInfo(prescriptionInfo);
+    }
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo]);
 
   const selectMember = (userId: string) => {
@@ -150,7 +152,7 @@ function PatientMonitoringPrescription(props: PatientInfoProps): JSX.Element {
     if (defaultTeamId !== undefined) {
       selectTeam(defaultTeamId);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
