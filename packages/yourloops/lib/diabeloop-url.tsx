@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import config from "./config";
-import { UserRoles } from "../models/shoreline";
+import { UserRoles } from "../models/user";
 
 /**
  * Class containing all URLs related to Diableloop

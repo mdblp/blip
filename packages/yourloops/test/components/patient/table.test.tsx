@@ -32,7 +32,6 @@ import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
 
 import { PatientTableSortFields, SortDirection, UserInvitationStatus } from "../../../models/generic";
 import * as authHookMock from "../../../lib/auth";
-import { Session } from "../../../lib/auth";
 import * as teamHookMock from "../../../lib/team";
 
 import "../../intersectionObserverMock";
@@ -41,14 +40,12 @@ import PatientTable from "../../../components/patient/table";
 import { ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";
 import { createPatient, createPatientTeam } from "../../common/utils";
-import User from "../../../lib/auth/user";
 
 jest.mock("../../../lib/auth");
 jest.mock("../../../lib/team");
 describe("Patient list table", () => {
   const clickPatientStub = jest.fn();
   const clickFlagPatientStub = jest.fn();
-  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
   const isOnlyPendingInvitationMock = jest.fn().mockReturnValue(false);
   const isInvitationPendingMock = jest.fn().mockReturnValue(false);
   const isInAtLeastATeamMock = jest.fn().mockReturnValue(true);
@@ -74,7 +71,7 @@ describe("Patient list table", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
-      return { session: () => session };
+      return {};
     });
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;

@@ -81,10 +81,9 @@ function TeamMenu(): JSX.Element {
   const { teams, createTeam, joinTeam } = useTeam();
   const history = useHistory();
   const alert = useAlert();
-  const authHook = useAuth();
-  const session = authHook.session();
-  const isUserHcp = authHook.user?.isUserHcp();
-  const isUserPatient = authHook.user?.isUserPatient();
+  const { user } = useAuth();
+  const isUserHcp = user?.isUserHcp();
+  const isUserPatient = user?.isUserPatient();
   const theme = useTheme();
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
 
@@ -99,7 +98,7 @@ function TeamMenu(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!caregivers && session) {
+      if (!caregivers && user) {
         try {
           setCaregivers(await DirectShareApi.getDirectShares());
         } catch (error) {
@@ -107,7 +106,7 @@ function TeamMenu(): JSX.Element {
         }
       }
     })();
-  }, [caregivers, session]);
+  }, [caregivers, user]);
 
   const redirectToTeamDetails = (teamId: string) => {
     history.push(`/teams/${teamId}`);
@@ -159,6 +158,7 @@ function TeamMenu(): JSX.Element {
       <Box
         id="team-menu"
         display="flex"
+        role="button"
         alignItems="center"
         className={clickableMenu}
         onClick={event => setAnchorEl(event.currentTarget)}

@@ -34,17 +34,13 @@ import { v4 as uuidv4 } from "uuid";
 
 import { waitTimeout } from "../../../lib/utils";
 import * as authHookMock from "../../../lib/auth/hook";
-import { Session } from "../../../lib/auth";
 import { INotification, NotificationContext, NotificationType } from "../../../lib/notifications/models";
 import { NotificationContextProvider, useNotification } from "../../../lib/notifications/hook";
 import { loggedInUsers } from "../../common";
-import User from "../../../lib/auth/user";
 import NotificationApi from "../../../lib/notifications/notification-api";
 
 jest.mock("../../../lib/auth/hook");
 describe("Notification hook", () => {
-
-  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
 
   let container: HTMLDivElement | null = null;
   let notifications: NotificationContext | null = null;
@@ -75,7 +71,7 @@ describe("Notification hook", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { session: () => session };
+      return { user: {} };
     });
   });
 

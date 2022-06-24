@@ -37,7 +37,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { IUser } from "../../models/shoreline";
+import { IUser } from "../../models/user";
 import { getUserFirstLastName } from "../../lib/utils";
 import { makeButtonsStyles } from "../theme";
 

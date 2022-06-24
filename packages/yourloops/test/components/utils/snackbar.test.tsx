@@ -27,12 +27,11 @@
  */
 
 import React from "react";
-import enzyme, { shallow } from "enzyme";
 
 import { renderHook, act } from "@testing-library/react-hooks/dom";
 
 import { SnackbarContext, Snackbar, DefaultSnackbarContext } from "../../../components/utils/snackbar";
-import Adapter from "enzyme-adapter-react-16";
+import { render } from "@testing-library/react";
 
 describe("Snackbar", () => {
 
@@ -49,13 +48,6 @@ describe("Snackbar", () => {
     ...spies,
     alerts: [],
   };
-
-  beforeAll(() => {
-    enzyme.configure({
-      adapter: new Adapter(),
-      disableLifecycleMethods: true,
-    });
-  });
 
   beforeEach(() => {
     spies.error.mockReset();
@@ -74,9 +66,7 @@ describe("Snackbar", () => {
   });
 
   it("hook should return the needed functions", () => {
-    // eslint-disable-next-line new-cap
     const hook = renderHook(DefaultSnackbarContext);
-
     expect(hook.result.current.error).toBeInstanceOf(Function);
     expect(hook.result.current.warning).toBeInstanceOf(Function);
     expect(hook.result.current.info).toBeInstanceOf(Function);
@@ -88,14 +78,12 @@ describe("Snackbar", () => {
   });
 
   it("should render the alert if any", () => {
-    // eslint-disable-next-line new-cap
     const hook = renderHook(DefaultSnackbarContext);
     act(() => {
       hook.result.current.info("test");
     });
-    const wrapper = shallow(<Snackbar {...hook.result.current} />);
-    wrapper.update();
-    expect(wrapper.exists("#alert-message")).toBe(true);
+    const { container } = render(<Snackbar {...hook.result.current} />);
+    expect(container.querySelector("#alert-message")).not.toBeNull();
   });
 });
 

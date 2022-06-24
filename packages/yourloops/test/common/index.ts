@@ -26,17 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { v4 as uuidv4 } from "uuid";
 
-import { Session, User } from "../../lib/auth";
+import { User } from "../../lib/auth";
 import { Units, UserInvitationStatus } from "../../models/generic";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
-import { createSessionToken } from "./utils";
 import { HcpProfession } from "../../models/hcp-profession";
 import { Alarm } from "../../models/alarm";
-
-export { createSessionToken } from "./utils";
 
 const newUserHCP = new User({
   userid: "123456789",
@@ -93,36 +89,21 @@ const userPatient = new User({
 });
 
 /**
- * Logged in users for test, choose one suitable
+ * Logged-in users for test, choose one suitable
  */
 export const loggedInUsers = {
   hcp: userHCP,
   patient: userPatient,
   caregiver: userCaregiver,
   newHcp: newUserHCP,
-  get hcpSession(): Session {
-    const user = new User(userHCP);
-    return {
-      user,
-      sessionToken: createSessionToken(user),
-      traceToken: uuidv4(),
-    };
+  get hcpUser(): User {
+    return new User(userHCP);
   },
-  get patientSession(): Session {
-    const user = new User(userPatient);
-    return {
-      user,
-      sessionToken: createSessionToken(user),
-      traceToken: uuidv4(),
-    };
+  get patientUser(): User {
+    return new User(userPatient);
   },
-  get caregiverSession(): Session {
-    const user = new User(userCaregiver);
-    return {
-      user,
-      sessionToken: createSessionToken(user),
-      traceToken: uuidv4(),
-    };
+  get caregiverUser(): User {
+    return new User(userCaregiver);
   },
 };
 

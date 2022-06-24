@@ -35,7 +35,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Container from "@material-ui/core/Container";
 
 import { UserInvitationStatus } from "../../../models/generic";
-import { UserRoles } from "../../../models/shoreline";
+import { UserRoles } from "../../../models/user";
 import { useAuth } from "../../../lib/auth";
 import metrics from "../../../lib/metrics";
 import { setPageTitle } from "../../../lib/utils";
@@ -58,12 +58,11 @@ const log = bows("PatientCaregiversPage");
 function PatientCaregiversPage(): JSX.Element {
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
-  const authHook = useAuth();
+  const { user } = useAuth();
   const notificationHook = useNotification();
   const [ caregiverToAdd, setCaregiverToAdd ] = React.useState<AddDialogContentProps | null>(null);
   const [ caregiverToRemove, setCaregiverToRemove ] = React.useState<RemoveDialogContentProps | null>(null);
   const [ caregivers, setCaregivers ] = React.useState<ShareUser[] | null>(null);
-  const session = authHook.session();
   const { sentInvitations, initialized: haveNotifications } = notificationHook;
 
   const handleShowAddCaregiverDialog = async (): Promise<void> => {
@@ -76,9 +75,9 @@ function PatientCaregiversPage(): JSX.Element {
     const email = await getCaregiverEmail();
     setCaregiverToAdd(null); // Close the dialog
 
-    if (email !== null && session !== null) {
+    if (email && user) {
       try {
-        await DirectShareApi.addDirectShare(session.user.userid, email);
+        await DirectShareApi.addDirectShare(user.userid, email);
         alert.success(t("alert-invitation-sent-success"));
         metrics.send("invitation", "send_invitation", "caregiver");
         // Refresh the notifications list
@@ -102,12 +101,12 @@ function PatientCaregiversPage(): JSX.Element {
     const consent = await getConsent();
     setCaregiverToRemove(null); // Close the dialog
 
-    if (consent && session !== null) {
+    if (consent && user) {
       try {
         if (us.status === UserInvitationStatus.pending && typeof us.invitation === "object") {
           await notificationHook.cancel(us.invitation);
         } else {
-          await DirectShareApi.removeDirectShare(session.user.userid, us.user.userid);
+          await DirectShareApi.removeDirectShare(user.userid, us.user.userid);
         }
         alert.success(t("modal-patient-remove-caregiver-success"));
         setCaregivers(null); // Refresh the list
@@ -119,7 +118,7 @@ function PatientCaregiversPage(): JSX.Element {
   };
 
   React.useEffect(() => {
-    if (caregivers === null && session !== null && haveNotifications) {
+    if (!caregivers && user && haveNotifications) {
       // Load caregivers
       const addPendingInvitation = (target: ShareUser[]) => {
         for (const invitation of sentInvitations) {
@@ -150,7 +149,7 @@ function PatientCaregiversPage(): JSX.Element {
         setCaregivers(value);
       });
     }
-  }, [caregivers, session, haveNotifications, sentInvitations]);
+  }, [caregivers, user, haveNotifications, sentInvitations]);
 
   React.useEffect(() => {
     setPageTitle(t("caregivers-title"));

@@ -34,13 +34,12 @@ import { v4 as uuidv4 } from "uuid";
 
 import * as notificationHookMock from "../../../lib/notifications/hook";
 import * as authHookMock from "../../../lib/auth";
-import { Session } from "../../../lib/auth";
 import * as teamHookMock from "../../../lib/team";
 import { Team } from "../../../lib/team";
 import { buildTeam, triggerMouseEvent } from "../../common/utils";
 import MainHeader from "../../../components/header-bars/main-header";
 import DirectShareApi from "../../../lib/share/direct-share-api";
-import { Profile, UserRoles } from "../../../models/shoreline";
+import { Profile, UserRoles } from "../../../models/user";
 import User from "../../../lib/auth/user";
 import { INotification, NotificationType } from "../../../lib/notifications/models";
 
@@ -60,7 +59,6 @@ describe("Main Header", () => {
     email: "fake@email.com",
     id: uuidv4(),
   }];
-  const session: Session = { user: {} as User, sessionToken: "fakeSessionToken", traceToken: "fakeTraceToken" };
   const teams: Team[] = [buildTeam("team1Id", []), buildTeam("team1Id", [])];
 
   function mountComponent(withLeftIcon?: boolean): void {
@@ -101,7 +99,6 @@ describe("Main Header", () => {
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        session: () => session,
         user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User,
       };
     });
@@ -138,7 +135,6 @@ describe("Main Header", () => {
   it("Team Menu should not be rendered for Caregivers", () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        session: () => session,
         user: { role: UserRoles.caregiver } as User,
       };
     });
@@ -156,7 +152,6 @@ describe("Main Header", () => {
   it("Team Menu should be rendered for Patient", () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        session: () => session,
         user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User,
       };
     });

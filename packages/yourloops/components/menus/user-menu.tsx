@@ -45,7 +45,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { useAuth } from "../../lib/auth";
 import RoundedHospitalIcon from "../icons/RoundedHospitalIcon";
 import config from "../../lib/config";

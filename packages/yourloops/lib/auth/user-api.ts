@@ -1,4 +1,4 @@
-import { IUser, Preferences, Profile, Settings } from "../../models/shoreline";
+import { IUser, Preferences, Profile, Settings } from "../../models/user";
 import HttpService, { ErrorMessageStatus } from "../../services/http";
 import { HttpHeaderKeys } from "../../models/api";
 import bows from "bows";

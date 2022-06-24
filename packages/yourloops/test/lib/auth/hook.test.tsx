@@ -34,7 +34,7 @@ import _ from "lodash";
 import * as auth0Mock from "@auth0/auth0-react";
 import { Auth0Provider } from "@auth0/auth0-react";
 
-import { Preferences, Profile, Settings, UserRoles } from "../../../models/shoreline";
+import { Preferences, Profile, Settings, UserRoles } from "../../../models/user";
 import config from "../../../lib/config";
 import { AuthContext } from "../../../lib/auth";
 import { AuthContextImpl } from "../../../lib/auth/hook";
@@ -48,9 +48,9 @@ import User from "../../../lib/auth/user";
 jest.mock("@auth0/auth0-react");
 
 describe("Auth hook", () => {
-  const authPatient = loggedInUsers.patientSession;
-  const authCaregiver = loggedInUsers.caregiverSession;
-  const authHcp = loggedInUsers.hcpSession;
+  const authPatient = loggedInUsers.patientUser;
+  const authCaregiver = loggedInUsers.caregiverUser;
+  const authHcp = loggedInUsers.hcpUser;
 
   /* eslint-disable new-cap */
   const ReactAuthContext = React.createContext({} as AuthContext);
@@ -100,8 +100,8 @@ describe("Auth hook", () => {
       logout: jest.fn(),
     });
     jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve({
-      token: loggedInUsers.hcpSession.sessionToken,
-      id: loggedInUsers.hcpSession.user.userid,
+      token: "session-token",
+      id: loggedInUsers.hcpUser.userid,
     }));
     jest.spyOn(UserApi, "getProfile").mockResolvedValue(Promise.resolve({
       firstName: "John",
@@ -116,9 +116,9 @@ describe("Auth hook", () => {
   afterEach(() => {
     document.body.removeChild(container);
     container = null;
-    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpSession);
-    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverSession);
-    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientSession);
+    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpUser);
+    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverUser);
+    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientUser);
     authContext = null;
   });
 
@@ -147,7 +147,7 @@ describe("Auth hook", () => {
 
     it("should logout the logged-in user", async () => {
       await initAuthContext();
-      expect(authContext.session()).not.toBeNull();
+      expect(authContext.user).not.toBeNull();
       expect(authContext.isLoggedIn).toBe(true);
 
       await authContext.logout();
@@ -256,32 +256,6 @@ describe("Auth hook", () => {
       expect(authContext.user.settings).toEqual(updatedSettings);
     });
 
-    it("updatePassword should not call the API if the user is not logged in", async () => {
-      unAuthenticateUser();
-      authApiHcpStubs.updateUser.mockResolvedValue();
-      await initAuthContext();
-      expect(authContext.user).toBeNull();
-
-      let error: Error | null = null;
-      try {
-        await authContext.updatePassword("abcd", "1234");
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(0);
-      expect(error).not.toBeNull();
-      expect(authContext.user).toBeNull();
-    });
-
-    it.skip("updatePassword should call the API with the good parameters", async () => {
-      authApiHcpStubs.updateUser.mockResolvedValue();
-      await initAuthContext();
-      expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
-
-      await authContext.updatePassword("abcd", "1234");
-      expect(authApiHcpStubs.updateUser).toHaveBeenCalledTimes(1);
-    });
-
     it("switchRoleToHCP should not call updateProfile if updateUser failed", async () => {
       jest.spyOn(UserApi, "updateProfile").mockRejectedValue(_.noop);
       await initAuthContext();
@@ -351,7 +325,7 @@ describe("Auth hook", () => {
         isAccepted: false,
       };
       authApiCaregiverStubs.updateProfile.mockResolvedValue({
-        ...authCaregiver.user.profile,
+        ...authCaregiver.profile,
         termsOfUse: accepts,
         privacyPolicy: accepts,
         contactConsent: decline,
@@ -375,7 +349,7 @@ describe("Auth hook", () => {
     it("should flag a un-flagged patient", async () => {
       const userId = uuidv4();
       jest.spyOn(UserApi, "updatePreferences").mockResolvedValue({ patientsStarred: [userId] });
-      delete authHcp.user.preferences;
+      delete authHcp.preferences;
       await initAuthContext();
       await act(async () => {
         await authContext.flagPatient(userId);
@@ -386,7 +360,7 @@ describe("Auth hook", () => {
     it("should un-flag a flagged patient", async () => {
       const userId = uuidv4();
       const otherUserId = uuidv4();
-      authHcp.user.preferences = { patientsStarred: [userId, otherUserId] };
+      authHcp.preferences = { patientsStarred: [userId, otherUserId] };
       jest.spyOn(UserApi, "updatePreferences").mockResolvedValue({ patientsStarred: [otherUserId] });
       await initAuthContext();
       await act(async () => {
@@ -424,7 +398,7 @@ describe("Auth hook", () => {
         displayLanguageCode: "fr",
         patientsStarred: [userId],
       });
-      authHcp.user.preferences.patientsStarred = ["old"];
+      authHcp.preferences.patientsStarred = ["old"];
       jest.spyOn(UserApi, "getPreferences").mockResolvedValue(Promise.resolve({
         displayLanguageCode: "en",
         patientsStarred: ["old"],

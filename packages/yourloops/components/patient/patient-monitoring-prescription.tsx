@@ -39,7 +39,7 @@ import Typography from "@material-ui/core/Typography";
 import BasicDropdown from "../dropdown/basic-dropdown";
 import Dropdown from "../dropdown/dropdown";
 import { Team, TeamMember, useTeam } from "../../lib/team";
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import { commonComponentStyles } from "../common";
 import { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
 

@@ -36,25 +36,26 @@ import FaceIcon from "@material-ui/icons/Face";
 import RoundedHospitalIcon from "../../../components/icons/RoundedHospitalIcon";
 import StethoscopeIcon from "../../../components/icons/StethoscopeIcon";
 
-import { AuthContextProvider, Session } from "../../../lib/auth";
+import { AuthContextProvider } from "../../../lib/auth";
 import { createAuthHookStubs } from "../../lib/auth/utils";
 import UserMenu from "../../../components/menus/user-menu";
 import { loggedInUsers } from "../../common";
 import { triggerMouseEvent } from "../../common/utils";
+import User from "../../../lib/auth/user";
 
 describe("User Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
-  const { hcpSession, caregiverSession, patientSession } = loggedInUsers;
-  let authContext = createAuthHookStubs(hcpSession);
+  const { hcpUser, caregiverUser, patientUser } = loggedInUsers;
+  let authContext = createAuthHookStubs(hcpUser);
 
   function openMenu(): void {
     const userMenu = document.getElementById("user-menu");
     triggerMouseEvent("click", userMenu);
   }
 
-  async function mountComponent(session: Session): Promise<void> {
-    authContext = createAuthHookStubs(session);
+  async function mountComponent(user: User): Promise<void> {
+    authContext = createAuthHookStubs(user);
 
     await act(() => {
       return new Promise((resolve) => {
@@ -82,25 +83,25 @@ describe("User Menu", () => {
   });
 
   it("should display the hcp icon", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />));
   });
 
   it("should display the caregiver icon", async () => {
-    await mountComponent(caregiverSession);
+    await mountComponent(caregiverUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />));
   });
 
   it("should display the patient icon", async () => {
-    await mountComponent(patientSession);
+    await mountComponent(patientUser);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />));
   });
 
   it("should redirect to '/preferences' route when clicking on profile link", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     openMenu();
     const profileItem = document.getElementById("user-menu-settings-item");
     triggerMouseEvent("click", profileItem);
@@ -108,7 +109,7 @@ describe("User Menu", () => {
   });
 
   it("should logout the user when clicking on logout item", async () => {
-    await mountComponent(hcpSession);
+    await mountComponent(hcpUser);
     openMenu();
     const logoutItem = document.getElementById("user-menu-logout-item");
     triggerMouseEvent("click", logoutItem);

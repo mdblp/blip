@@ -42,6 +42,7 @@ import { errorTextFromException } from "../../lib/utils";
 import { useAlert } from "../utils/snackbar";
 import PersonRemoveIcon from "../icons/PersonRemoveIcon";
 import ConfirmDialog from "../dialogs/confirm-dialog";
+import TeamUtils from "../../lib/team/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxTableCellBody: {
@@ -89,11 +90,11 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false);
   const currentUserId = teamMember.user.userid;
   const loggedInUserId = authContext.user?.userid as string;
-  const loggedInUserIsAdmin = teamHook.isUserAdministrator(team, loggedInUserId);
-  const currentUserIsAdmin = teamHook.isUserAdministrator(team, currentUserId);
+  const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
+  const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId);
   const currentUserIsPending = teamMember.status === UserInvitationStatus.pending;
   const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending
-    || (loggedInUserId === currentUserId && teamHook.isUserTheOnlyAdministrator(team, loggedInUserId))
+    || (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId))
     || userUpdateInProgress;
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId;
 
@@ -147,7 +148,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.iconCell}
         >
           {currentUserIsPending &&
-            <AccessTimeIcon id={`${rowId}-pending-icon`} className={classes.icon} />
+            <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-user-icon" className={classes.icon} />
           }
         </StyledTableCell>
         <StyledTableCell
@@ -180,6 +181,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             <IconButton
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
+              aria-label="remove-member-button"
               onClick={() => setShowConfirmRemoveDialog(true)}
             >
               <PersonRemoveIcon />

@@ -26,8 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Session } from "../../lib/auth/models";
-import { Profile } from "../../models/shoreline";
+import { Profile } from "../../models/user";
 import { TeamMemberRole } from "../../models/team";
 
 export enum NotificationType {
@@ -74,18 +73,6 @@ export interface NotificationContext {
   cancel: (notification: INotification) => Promise<void>;
   inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>;
   cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>;
-}
-
-export interface NotificationAPI {
-  /** Fetch the invitation we received */
-  getReceivedInvitations: (session: Readonly<Session>) => Promise<INotification[]>;
-  /** Fetch the invitations we have sent */
-  getSentInvitations: (session: Readonly<Session>) => Promise<INotification[]>;
-  acceptInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
-  declineInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
-  cancelInvitation: (session: Readonly<Session>, notification: INotification) => Promise<void>;
-  inviteToRemoteMonitoring: (session: Session, teamId: string, userId: string, monitoringEnd: Date) => Promise<void>;
-  cancelRemoteMonitoringInvite: (session: Session, teamId: string, userId: string) => Promise<void>;
 }
 
 export interface NotificationProvider {

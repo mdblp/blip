@@ -43,11 +43,11 @@ import { FilterType } from "../../models/generic";
 import { MedicalData } from "../../models/device-data";
 import metrics from "../../lib/metrics";
 import { useAuth } from "../../lib/auth";
-import { useTeam } from "../../lib/team";
 import { PatientElementProps } from "./models";
 import { getMedicalValues } from "./utils";
 import { patientListCommonStyle } from "./table";
 import { StyledTableCell, StyledTableRow } from "../styled-components";
+import TeamUtils from "../../lib/team/utils";
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
@@ -92,7 +92,6 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const trNA = t("N/A");
   const authHook = useAuth();
-  const teamHook = useTeam();
   const isUserHcp = authHook.user?.isUserHcp();
   const patientIsMonitored = patient.monitoring !== null && patient.monitoring?.enabled;
   const classes = patientListStyle();
@@ -176,8 +175,8 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
   const rowId = `patients-list-row-${userId.replace(/@/g, "_")}`;
-  const hasPendingInvitation = teamHook.isInvitationPending(patient);
-  const isAlreadyInATeam = teamHook.isInAtLeastATeam(patient);
+  const hasPendingInvitation = TeamUtils.isInvitationPending(patient);
+  const isAlreadyInATeam = TeamUtils.isInAtLeastATeam(patient);
 
   const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
     return element ? element.offsetWidth < element.scrollWidth : undefined;
@@ -210,11 +209,18 @@ function PatientRow(props: PatientElementProps): JSX.Element {
             placement="bottom"
           >
             <Box display="flex">
-              <AccessTimeIcon id={`${rowId}-pendingicon`} className={classes.icon} />
+              <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-icon" className={classes.icon} />
             </Box>
           </Tooltip>) :
           (<IconActionButton
-            icon={isFlagged ? <FlagIcon id={`${rowId}-flagged`} /> : <FlagOutlineIcon id={`${rowId}-un-flagged`} />}
+            icon={isFlagged ? <FlagIcon
+              titleAccess="flag-icon-active"
+              id={`${rowId}-flagged`}
+            />
+              : <FlagOutlineIcon
+                titleAccess="flag-icon-inactive"
+                id={`${rowId}-un-flagged`}
+              />}
             id={`${rowId}-icon-button-flag`}
             onClick={onClickFlag}
             className={`${!isFlagged ? classes.coloredIcon : ""} ${classes.icon} patient-flag-button`}
@@ -243,31 +249,31 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         className={timeSpentAwayFromTargetRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.timeSpentAwayFromTargetRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && timeSpentAwayFromTargetActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && timeSpentAwayFromTargetActive &&
+          <AnnouncementIcon titleAccess="time-away-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-hypo-frequency-rate`}
         className={frequencyOfSevereHypoglycemiaRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && frequencyOfSevereHypoglycemiaActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && frequencyOfSevereHypoglycemiaActive &&
+          <AnnouncementIcon titleAccess="severe-hypo-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell
         id={`${rowId}-data-not-transferred`}
         className={dataNotTransferredRateClasses}
       >
         {`${Math.round(patient.metadata.alarm.nonDataTransmissionRate * 10) / 10}%`}
-        {isUserHcp && patientIsMonitored && nonDataTransmissionActive &&
-          <AnnouncementIcon className={classes.alertIcon} />}
+        {isUserHcp && nonDataTransmissionActive &&
+          <AnnouncementIcon titleAccess="no-data-alert-icon" className={classes.alertIcon} />}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-ldu`} className={classes.typography}>
         {lastUpload}
       </StyledTableCell>
       <StyledTableCell id={`${rowId}-messages`}>
-        {patient.metadata.unreadMessagesSent > 0 &&
-          <EmailIcon className={classes.coloredIcon} />
+        {patientIsMonitored && patient.metadata.unreadMessagesSent > 0 &&
+          <EmailIcon titleAccess="unread-messages-icon" className={classes.coloredIcon} />
         }
       </StyledTableCell>
     </StyledTableRow>

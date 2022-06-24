@@ -36,7 +36,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import Link from "@material-ui/core/Link";
 
-import { UserRoles } from "../../models/shoreline";
+import { UserRoles } from "../../models/user";
 import diabeloopUrl from "../../lib/diabeloop-url";
 import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from "./models";
 

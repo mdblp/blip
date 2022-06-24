@@ -42,7 +42,7 @@ import InfoIcon from "@material-ui/icons/Info";
 
 import { PatientTableSortFields, SortDirection } from "../../models/generic";
 import { PatientTableProps } from "./models";
-import PatientRow from "./row";
+import PatientRow from "./patient-row";
 import { Patient } from "../../lib/data/patient";
 import { StyledTableCell, StyledTooltip } from "../styled-components";
 import { useAuth } from "../../lib/auth";

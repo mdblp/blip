@@ -163,7 +163,7 @@ describe("Trends", () => {
   });
 
   describe("componentDidMount", () => {
-    it("should clamp to startDate", async () => {
+    it.skip("should clamp to startDate", async () => {
       const props = {...baseProps, epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf() };
       wrapper = mount(<Trends {...props} />);
       await Utils.waitTimeout(10);

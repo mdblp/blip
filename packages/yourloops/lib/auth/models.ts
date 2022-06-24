@@ -29,21 +29,8 @@
 import { ReactNode } from "react";
 import User from "./user";
 import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings, UserRoles } from "../../models/shoreline";
+import { Preferences, Profile, Settings } from "../../models/user";
 import { HcpProfession } from "../../models/hcp-profession";
-
-/** Hook internal usage */
-export interface Session {
-  user: User;
-  sessionToken: string;
-  traceToken: string;
-}
-
-export interface UpdateUser {
-  roles?: UserRoles[];
-  password?: string;
-  currentPassword?: string;
-}
 
 export interface SignupForm {
   feedback: boolean; // Consent to be contacted by Diabeloop
@@ -66,7 +53,6 @@ export interface AuthContext {
   isLoggedIn: boolean;
   logout: () => Promise<void>;
   redirectToProfessionalAccountLogin: () => void;
-  session: () => Session | null;
   setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
   setUser: (user: User) => void; // Change the hook user, and update the storage. No API change!
   completeSignup: (signupForm: SignupForm) => Promise<void>;

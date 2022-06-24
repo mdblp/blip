@@ -34,7 +34,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Units } from "../../../models/generic";
 import { loggedInUsers } from "../../common";
 import ProfilePage from "../../../pages/profile";
-import { Profile, UserRoles } from "../../../models/shoreline";
+import { Profile, UserRoles } from "../../../models/user";
 import * as authHookMock from "../../../lib/auth";
 import User from "../../../lib/auth/user";
 import { HcpProfession } from "../../../models/hcp-profession";
@@ -116,8 +116,8 @@ describe("Profile", () => {
   });
 
   it("should display mg/dL Units by default if not specified", async () => {
-    const session = loggedInUsers.hcpSession;
-    delete session.user?.settings?.units?.bg;
+    const user = loggedInUsers.hcpUser;
+    delete user.settings?.units?.bg;
     await mountProfilePage();
     const selectValue = container.querySelector("#profile-units-selector").innerHTML;
     expect(selectValue).toBe(Units.gram);
