@@ -13,10 +13,10 @@ import config from "../config";
 export default class User {
   readonly email: string;
   readonly emailVerified: boolean;
-  readonly frProId?: string;
   readonly latestConsentChangeDate: Date;
   readonly username: string;
   id: string;
+  frProId?: string;
   role: UserRoles;
   medicalData?: MedicalData;
   preferences?: Preferences;

@@ -109,14 +109,14 @@ describe("Notification hook", () => {
   describe("Accept", () => {
     it("should call the api to accept the invitation and refresh", async () => {
       await initNotificationContext();
-      const currentUser = loggedInUsers.hcp;
-      const caregiver = loggedInUsers.caregiver;
+      const currentUser = loggedInUsers.getHcp();
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {
@@ -135,14 +135,14 @@ describe("Notification hook", () => {
   describe("Decline", () => {
     it("should call the api to decline the invitation and refresh", async () => {
       await initNotificationContext();
-      const currentUser = loggedInUsers.hcp;
-      const caregiver = loggedInUsers.caregiver;
+      const currentUser = loggedInUsers.getHcp();
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {
@@ -161,14 +161,14 @@ describe("Notification hook", () => {
   describe("Cancel", () => {
     it("should call the api to decline the invitation and refresh", async () => {
       await initNotificationContext();
-      const currentUser = loggedInUsers.hcp;
-      const caregiver = loggedInUsers.caregiver;
+      const currentUser = loggedInUsers.getHcp();
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {

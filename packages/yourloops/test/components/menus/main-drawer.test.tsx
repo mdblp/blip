@@ -86,7 +86,7 @@ describe("Main Drawer", () => {
       return { patientsFilterStats, getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock };
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true, userid: userId } as User, getFlagPatients: getFlagPatientsMock };
+      return { user: { isUserHcp: () => true, id: userId } as User, getFlagPatients: getFlagPatientsMock };
     });
   });
 

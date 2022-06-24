@@ -55,7 +55,7 @@ describe("PatientInfoWidget", () => {
       return children;
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, userid: adminMember.user.userid } as User };
+      return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.user.userid } as User };
     });
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children;

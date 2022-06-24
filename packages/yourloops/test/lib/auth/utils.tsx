@@ -79,9 +79,9 @@ export interface AuthContextStubs {
   completeSignup: jest.Mock<Promise<void>, [SignupForm]>;
   switchRoleToHCP: jest.Mock<Promise<void>, [boolean, HcpProfession]>;
   updatePassword: jest.Mock<Promise<void>, [string, string]>;
-  updatePreferences: jest.Mock<Promise<Preferences>, [Preferences, boolean | undefined]>;
-  updateProfile: jest.Mock<Promise<Profile>, [Profile, boolean | undefined]>;
-  updateSettings: jest.Mock<Promise<Settings>, [Settings, boolean | undefined]>;
+  updatePreferences: jest.Mock<Promise<void>, [Preferences]>;
+  updateProfile: jest.Mock<Promise<void>, [Profile]>;
+  updateSettings: jest.Mock<Promise<void>, [Settings]>;
   user: Readonly<User> | null;
 }
 
@@ -101,9 +101,9 @@ export const createAuthHookStubs = (user?: User): AuthContextStubs => ({
   completeSignup: jest.fn<Promise<void>, [SignupForm]>().mockResolvedValue(),
   switchRoleToHCP: jest.fn<Promise<void>, [boolean, HcpProfession]>().mockResolvedValue(),
   updatePassword: jest.fn<Promise<void>, [string, string]>().mockResolvedValue(),
-  updatePreferences: jest.fn<Promise<Preferences>, [Preferences, boolean | undefined]>().mockResolvedValue(user.preferences),
-  updateProfile: jest.fn<Promise<Profile>, [Profile, boolean | undefined]>().mockResolvedValue(user.profile),
-  updateSettings: jest.fn<Promise<Settings>, [Settings, boolean | undefined]>().mockResolvedValue(user.settings),
+  updatePreferences: jest.fn<Promise<void>, [Preferences]>().mockResolvedValue(),
+  updateProfile: jest.fn<Promise<void>, [Profile]>().mockResolvedValue(),
+  updateSettings: jest.fn<Promise<void>, [Settings]>().mockResolvedValue(),
   user: user ?? null,
 });
 
