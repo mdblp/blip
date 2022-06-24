@@ -175,7 +175,7 @@ describe("RemoteMonitoringPatientDialog", () => {
     checkFunctionCalledOnSaveError();
   });
 
-  it("clicking on save should show error when patient monitoring information could not be edited in cas of a renewal", async () => {
+  it("clicking on save should show error when patient monitoring information could not be edited in case of a renewal", async () => {
     jest.spyOn(MedicalFilesApi, "uploadPrescription").mockRejectedValueOnce(Error("This error was thrown by a mock on purpose"));
     setPrescriptionAndSave(renewProps);
     expect(updatePatientMonitoringMock).toHaveBeenCalled();
