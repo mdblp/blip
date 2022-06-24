@@ -60,7 +60,7 @@ const contentSecurityPolicy = {
   imgSrc: ["'self'", "data:"], // 'strict-dynamic' is problematic on google
   fontSrc: ["'self'", "data:"],
   connectSrc: ["'self'", "data:", "{{ API_HOST }}"],
-  frameSrc: ["'self'", "https://yourloops-itg.eu.auth0.com"],
+  frameSrc: [],
   objectSrc: [],
 };
 
@@ -150,6 +150,7 @@ function genContentSecurityPolicy() {
     contentSecurityPolicy.imgSrc.push("https://axeptio.imgix.net", "https://www.google.com");
   }
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`);
+  contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`);
 
   let csp = "";
   for (const cspName in contentSecurityPolicy) {
