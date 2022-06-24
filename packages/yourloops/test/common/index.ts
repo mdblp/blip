@@ -77,8 +77,7 @@ const getPatient = (): User => {
     sub: "auth0|a0a0a0b0",
     [UserMetadata.Roles]: [UserRoles.patient],
   });
-  patient.preferences = { displayLanguageCode: "fr" };
-  patient.settings = { a1c: { date: "2020-01-01", value: "7.5" } };
+  patient.settings ={ a1c: { date: "2020-01-01", value: "7.5" }, country : "FR" };
   patient.profile = {
     firstName: "Josephine",
     lastName: "Dupuis",
@@ -94,6 +93,7 @@ const getPatient = (): User => {
       ssn: "012345678901234",
     },
   };
+  patient.preferences = { displayLanguageCode: "fr" };
   return patient;
 };
 
