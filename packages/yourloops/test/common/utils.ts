@@ -124,7 +124,7 @@ export const createTeamMember = (id: string, name: string, teamCode: string, sta
   } as TeamMember;
 };
 
-export function buildTeam(id: string, members: TeamMember[], name = "fake team name"): Team {
+export function buildTeam(id= "fakeTeamId", members: TeamMember[] = [], name = "fake team name"): Team {
   return {
     id,
     name,

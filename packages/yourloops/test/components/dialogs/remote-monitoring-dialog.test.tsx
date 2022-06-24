@@ -35,7 +35,7 @@ import RemoteMonitoringPatientDialog, {
   RemoteMonitoringPatientDialogProps,
 } from "../../../components/dialogs/remote-monitoring-dialog";
 import { createPatient } from "../../common/utils";
-import { PatientInfoProps, PrescriptionInfo } from "../../../components/patient/patient-monitoring-prescription";
+import { PatientMonitoringPrescriptionProps, PrescriptionInfo } from "../../../components/patient/patient-monitoring-prescription";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { PatientTeam } from "../../../lib/data/patient";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
@@ -50,7 +50,7 @@ const mockCorrectPrescription: PrescriptionInfo = {
 };
 
 // eslint-disable-next-line react/display-name
-jest.mock("../../../components/patient/patient-monitoring-prescription", () => (props: PatientInfoProps) => {
+jest.mock("../../../components/patient/patient-monitoring-prescription", () => (props: PatientMonitoringPrescriptionProps) => {
   return <button onClick={() => props.setPrescriptionInfo(mockCorrectPrescription)}>set-correct-prescription</button>;
 });
 jest.mock("../../../components/utils/snackbar");
