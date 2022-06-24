@@ -47,7 +47,6 @@ describe("Notification API", () => {
   const userId2 = "fakeUserId2";
   const email = "fake@email.com";
   const hcp = loggedInUsers.getHcp();
-  const caregiver = loggedInUsers.getCaregiver();
   const patient = loggedInUsers.getPatient();
 
   afterEach(() => {
