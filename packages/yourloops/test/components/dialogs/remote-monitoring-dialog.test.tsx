@@ -103,13 +103,6 @@ describe("RemoteMonitoringPatientDialog", () => {
     return <RemoteMonitoringPatientDialog {...props} />;
   }
 
-  it("should enabled save button only when prescription fields are filled", async () => {
-    render(getRemoteMonitoringPatientDialogJSX());
-    const saveButton: HTMLButtonElement = screen.getByRole("button", { name: "button-save" });
-    fireEvent.click(screen.getByRole("button", { name: "set-correct-prescription" }));
-    await waitFor(() => expect(saveButton.disabled).toBeFalsy());
-  });
-
   function setPrescriptionAndSave(props: RemoteMonitoringPatientDialogProps = {
     patient,
     action: RemoteMonitoringDialogAction.invite,
@@ -127,6 +120,13 @@ describe("RemoteMonitoringPatientDialog", () => {
     expect(errorMock).toHaveBeenCalledWith("error-http-500");
     expect(((screen.getByRole("button", { name: "button-save" })) as HTMLButtonElement).disabled).toBeFalsy();
   }
+
+  it("should enabled save button only when prescription fields are filled", async () => {
+    render(getRemoteMonitoringPatientDialogJSX());
+    const saveButton: HTMLButtonElement = screen.getByRole("button", { name: "button-save" });
+    fireEvent.click(screen.getByRole("button", { name: "set-correct-prescription" }));
+    await waitFor(() => expect(saveButton.disabled).toBeFalsy());
+  });
 
   it("clicking on save should invite patient to remote monitoring", async () => {
     jest.spyOn(MedicalFilesApi, "uploadPrescription").mockResolvedValue({} as Prescription);
