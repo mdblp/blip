@@ -61,22 +61,26 @@ export function AuthContextImpl(): AuthContext {
     return user;
   };
 
+  const refreshUser = (): void => {
+    setUser(_.cloneDeep(user));
+  };
+
   const updatePreferences = async (preferences: Preferences): Promise<void> => {
     const user = getUser();
     user.preferences = await UserApi.updatePreferences(user.id, preferences);
-    setUser(user);
+    refreshUser();
   };
 
   const updateProfile = async (profile: Profile): Promise<void> => {
     const user = getUser();
     user.profile = await UserApi.updateProfile(user.id, profile);
-    setUser(user);
+    refreshUser();
   };
 
   const updateSettings = async (settings: Settings): Promise<void> => {
     const user = getUser();
     user.settings = await UserApi.updateSettings(user.id, settings);
-    setUser(user);
+    refreshUser();
   };
 
   const flagPatient = async (userId: string): Promise<void> => {
@@ -98,7 +102,7 @@ export function AuthContextImpl(): AuthContext {
     }
 
     user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
-    setUser(user);
+    refreshUser();
   };
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
@@ -108,7 +112,7 @@ export function AuthContextImpl(): AuthContext {
     }
     user.preferences.patientsStarred = userIds;
     user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
-    setUser(user);
+    refreshUser();
   };
 
   const getFlagPatients = (): string[] => {
@@ -137,7 +141,7 @@ export function AuthContextImpl(): AuthContext {
     // Refresh our data:
     user.role = UserRoles.hcp;
     user.profile = updatedProfile;
-    setUser(user);
+    refreshUser();
   };
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
