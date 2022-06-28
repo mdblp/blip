@@ -42,8 +42,8 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 }
 
 export const createPatient = (
-  id: string,
-  teams: PatientTeam[],
+  id = "fakePatientId",
+  teams: PatientTeam[] = [],
   alarm: Alarm = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: false,
@@ -74,7 +74,7 @@ export const createPatient = (
       sex: "M",
     },
     settings: {
-      a1c: { date: new Date().toDateString(), value: "fakeA1cValue" },
+      a1c: { date: new Date().toJSON(), value: "fakeA1cValue" },
       system: system,
     },
     teams: teams,
@@ -124,7 +124,7 @@ export const createTeamMember = (id: string, name: string, teamCode: string, sta
   } as TeamMember;
 };
 
-export function buildTeam(id: string, members: TeamMember[], name = "fake team name"): Team {
+export function buildTeam(id= "fakeTeamId", members: TeamMember[] = [], name = "fake team name"): Team {
   return {
     id,
     name,

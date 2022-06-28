@@ -81,46 +81,46 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
       </Typography>
       <Box display="flex" marginTop={2}>
         <div className={classes.body}>
-          <div className={classes.patientInfo}>
+          <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
               {t("patient")}
             </Typography>
             <Typography id={`patient-${patient.userid}-full-name`} className={classes.value}>
               {patient.profile.fullName}
             </Typography>
-          </div>
-          <div className={classes.patientInfo}>
+          </Box>
+          <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
               {t("email")}
             </Typography>
             <Typography id={`patient-${patient.userid}-email`} className={classes.value}>
               {patient.profile.email}
             </Typography>
-          </div>
-          <div className={classes.patientInfo}>
+          </Box>
+          <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
               {t("gender")}
             </Typography>
             <Typography id={`patient-${patient.userid}-gender`} className={classes.value}>
               {genderLabels()[patient.profile.sex ?? ""]}
             </Typography>
-          </div>
-          <div className={classes.patientInfo}>
+          </Box>
+          <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
               {t("birthdate")}
             </Typography>
             <Typography id={`patient-${patient.userid}-birthdate`} className={classes.value}>
               {patient.profile.birthdate?.toDateString()}
             </Typography>
-          </div>
-          <div className={classes.patientInfo}>
+          </Box>
+          <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
               {t("initial-hba1c")}
             </Typography>
             <Typography id={`patient-${patient.userid}-a1c`} className={classes.value}>
               {patient.settings.a1c?.value ?? trNA}
             </Typography>
-          </div>
+          </Box>
         </div>
       </Box>
     </>

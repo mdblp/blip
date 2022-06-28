@@ -38,7 +38,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeButtonsStyles } from "../theme";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
-interface ConfirmDialogProps {
+export interface ConfirmDialogProps {
   title: string;
   label: string;
   inProgress?: boolean;
