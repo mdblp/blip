@@ -93,56 +93,47 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   const notificationHook = useNotification();
   const teamHook = useTeam();
   const alert = useAlert();
-  const patientTeam = teamHook.getPatientRemoteMonitoringTeam(patient);
-  const [teamId] = useState<string | undefined>(patientTeam.teamId);
+  const [teamId] = useState<string | undefined>(action === RemoteMonitoringDialogAction.renew ? teamHook.getPatientRemoteMonitoringTeam(patient).teamId : undefined);
   const [physician, setPhysician] = useState<string | undefined>(patient.profile?.referringDoctor);
-  let prescriptionInfo: PrescriptionInfo = {
+  const [prescriptionInfo, setPrescriptionInfo] = useState<PrescriptionInfo>({
     teamId: undefined,
     memberId: undefined,
     file: undefined,
     numberOfMonth: 3,
-  };
+  });
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
 
   const onSave = async () => {
     try {
       setSaveButtonDisabled(true);
       const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, "M").toDate();
-      if (!prescriptionInfo.teamId) {
-        throw Error("Cannot invite patient as remote monitoring team id has not been defined");
-      }
-      if (!prescriptionInfo.memberId) {
-        throw Error("Cannot invite patient as prescriptor id has not been defined");
-      }
-      if (!prescriptionInfo.file) {
-        // missing trad...
-        throw Error("Cannot invite patient as prescription has not been defined");
+      if (!prescriptionInfo.teamId || !prescriptionInfo.memberId || !prescriptionInfo.file) {
+        throw Error("Cannot invite patient as prescription fields have not all be filled");
       }
       switch (action) {
       case RemoteMonitoringDialogAction.invite:
         patient.monitoring =
-        {
-          enabled: false,
-          status: MonitoringStatus.pending,
-          monitoringEnd,
-        };
+            {
+              enabled: false,
+              status: MonitoringStatus.pending,
+              monitoringEnd,
+            };
         await notificationHook.inviteRemoteMonitoring(prescriptionInfo.teamId, patient.userid, monitoringEnd, physician);
         break;
       case RemoteMonitoringDialogAction.renew:
         // enable and status are required
         patient.monitoring =
-        {
-          enabled: true,
-          status: MonitoringStatus.accepted,
-          monitoringEnd,
-          parameters: patient.monitoring?.parameters,
-        };
+            {
+              enabled: true,
+              status: MonitoringStatus.accepted,
+              monitoringEnd,
+              parameters: patient.monitoring?.parameters,
+            };
         await teamHook.updatePatientMonitoring(patient);
         break;
       default:
         break;
       }
-
 
       teamHook.editPatientRemoteMonitoring(patient);
       await MedicalFilesApi.uploadPrescription(
@@ -157,17 +148,21 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       setSaveButtonDisabled(false);
       alert.error(t("error-http-500"));
     }
-
   };
 
   const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo) => {
-    prescriptionInfo = {
-      teamId: prescriptionInformation.teamId,
-      memberId: prescriptionInformation.memberId,
-      file: prescriptionInformation.file,
-      numberOfMonth: prescriptionInformation.numberOfMonth,
-    };
-    setSaveButtonDisabled(!prescriptionInfo.teamId || !prescriptionInfo.memberId || !prescriptionInfo.file || !prescriptionInfo.numberOfMonth);
+    if (prescriptionInformation.teamId !== prescriptionInfo.teamId
+      || prescriptionInformation.memberId !== prescriptionInfo.memberId
+      || prescriptionInformation.file !== prescriptionInfo.file
+      || prescriptionInformation.numberOfMonth !== prescriptionInfo.numberOfMonth) {
+      setPrescriptionInfo({
+        teamId: prescriptionInformation.teamId,
+        memberId: prescriptionInformation.memberId,
+        file: prescriptionInformation.file,
+        numberOfMonth: prescriptionInformation.numberOfMonth,
+      });
+      setSaveButtonDisabled(false);
+    }
   };
 
   return (
@@ -191,7 +186,11 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
 
         <Divider variant="middle" className={classes.divider} />
 
-        <PatientMonitoringPrescription action={action} defaultTeamId={teamId} setPrescriptionInfo={updatePrescriptionInfo} />
+        <PatientMonitoringPrescription
+          action={action}
+          defaultTeamId={teamId}
+          setPrescriptionInfo={updatePrescriptionInfo}
+        />
 
         <Divider variant="middle" className={classes.divider} />
 

@@ -31,23 +31,40 @@ import { act } from "react-dom/test-utils";
 
 import PatientInfoWidget, { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
 import { buildTeam, buildTeamMember, createPatient } from "../../common/utils";
-import { render, unmountComponentAtNode } from "react-dom";
+import ReactDOM, { unmountComponentAtNode } from "react-dom";
 import i18n from "../../../lib/language";
 import * as authHookMock from "../../../lib/auth";
-import { AuthContextProvider } from "../../../lib/auth";
 import * as teamHookMock from "../../../lib/team";
+import * as notificationsHookMock from "../../../lib/notifications/hook";
 import User from "../../../lib/auth/user";
 import { genderLabels } from "../../../lib/auth/helpers";
 import { Monitoring, MonitoringStatus } from "../../../models/monitoring";
+import * as RemoteMonitoringPatientDialogMock from "../../../components/dialogs/remote-monitoring-dialog";
+import { RemoteMonitoringPatientDialogProps } from "../../../components/dialogs/remote-monitoring-dialog";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { ConfirmDialogProps } from "../../../components/dialogs/confirm-dialog";
+import { PatientTeam } from "../../../lib/data/patient";
 
+/* eslint-disable-next-line react/display-name */
+jest.mock("../../../components/dialogs/confirm-dialog", () => (props: ConfirmDialogProps) => {
+  return (<>
+    <button onClick={props.onConfirm}>confirm-mock</button>
+    <button onClick={props.onClose}>close-mock</button>
+  </>);
+});
+jest.mock("../../../components/dialogs/remote-monitoring-dialog");
 jest.mock("../../../lib/auth");
 jest.mock("../../../lib/team");
+jest.mock("../../../lib/notifications/hook");
 describe("PatientInfoWidget", () => {
   const patient = createPatient("fakePatientId", []);
   let container: HTMLElement | null = null;
   const adminMember = buildTeamMember();
   const patientMember = buildTeamMember("fakeTeamId", patient.userid);
   const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember, patientMember]);
+  const cancelRemoteMonitoringInviteMock = jest.fn();
+  const updatePatientMonitoringMock = jest.fn();
+  const getPatientRemoteMonitoringTeamMock = jest.fn().mockReturnValue({ teamId: "fakeTeamId" } as PatientTeam);
 
   beforeAll(() => {
     i18n.changeLanguage("en");
@@ -61,7 +78,20 @@ describe("PatientInfoWidget", () => {
       return children;
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { getRemoteMonitoringTeams: () => [remoteMonitoringTeam] };
+      return {
+        getRemoteMonitoringTeams: () => [remoteMonitoringTeam],
+        getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
+        updatePatientMonitoring: updatePatientMonitoringMock,
+      };
+    });
+    (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {
+      return <button onClick={props.onClose}>save-mock</button>;
+    });
+    (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+      return children;
+    });
+    (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
+      return { cancelRemoteMonitoringInvite: cancelRemoteMonitoringInviteMock };
     });
   });
 
@@ -78,15 +108,21 @@ describe("PatientInfoWidget", () => {
     }
   });
 
+  function getPatientInfoWidgetJSX(props: PatientInfoWidgetProps = { patient }): JSX.Element {
+    return <PatientInfoWidget patient={props.patient} />;
+  }
+
   function mountComponent(props: PatientInfoWidgetProps = { patient }) {
     act(() => {
-      render(
-        <AuthContextProvider>
-          <PatientInfoWidget
-            patient={props.patient}
-          />
-        </AuthContextProvider>, container);
+      ReactDOM.render(getPatientInfoWidgetJSX(props), container);
     });
+  }
+
+  async function clickOnActionButtonAndSave(buttonName: string) {
+    render(getPatientInfoWidgetJSX());
+    fireEvent.click(screen.getByRole("button", { name: buttonName }));
+    fireEvent.click(screen.getByRole("button", { name: "save-mock" }));
+    await waitFor(() => expect(screen.queryByRole("button", { name: "save-mock" })).toBeNull());
   }
 
   it("should display correct patient information", () => {
@@ -136,7 +172,7 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("remove-button-id")).toBeNull();
   });
 
-  it("should display cancel renew and remove button when patient is monitored", () => {
+  it("should display renew and remove button when patient is monitored", () => {
     patient.monitoring = { enabled: true, status: undefined } as Monitoring;
     mountComponent();
     expect(document.getElementById("patient-info-remote-monitoring-value").innerHTML).toEqual("yes");
@@ -144,6 +180,53 @@ describe("PatientInfoWidget", () => {
     expect(document.getElementById("cancel-invite-button-id")).toBeNull();
     expect(document.getElementById("renew-button-id")).not.toBeNull();
     expect(document.getElementById("remove-button-id")).not.toBeNull();
+  });
+
+  it("should open dialog to invite patient when clicking on invite button and close it when saving", async () => {
+    patient.monitoring = { enabled: false, status: undefined } as Monitoring;
+    await clickOnActionButtonAndSave("invite");
+  });
+
+  it("should open dialog to renew patient when clicking on renew button and close it when saving", async () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.accepted } as Monitoring;
+    await clickOnActionButtonAndSave("renew");
+  });
+
+  it("should open dialog to confirm when clicking on cancel invite button and cancel the invite when clicking on confirm", async () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring;
+    render(getPatientInfoWidgetJSX());
+    fireEvent.click(screen.getByRole("button", { name: "cancel-invite" }));
+    fireEvent.click(screen.getByRole("button", { name: "confirm-mock" }));
+    expect(cancelRemoteMonitoringInviteMock).toHaveBeenCalled();
+    await waitFor(() => expect(updatePatientMonitoringMock).toHaveBeenCalled());
+    expect(screen.queryByRole("button", { name: "confirm-mock" })).toBeNull();
+  });
+
+  it("should open dialog to confirm when clicking on cancel invite button and not cancel the invite when clicking on close", async () => {
+    patient.monitoring = { enabled: false, status: MonitoringStatus.pending } as Monitoring;
+    render(getPatientInfoWidgetJSX());
+    fireEvent.click(screen.getByRole("button", { name: "cancel-invite" }));
+    fireEvent.click(screen.getByRole("button", { name: "close-mock" }));
+    expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole("button", { name: "close-mock" })).toBeNull());
+  });
+
+  it("should open dialog to confirm when clicking on delete button and edit the patient remote monitoring when clicking on confirm", async () => {
+    patient.monitoring = { enabled: true, status: undefined } as Monitoring;
+    render(getPatientInfoWidgetJSX());
+    fireEvent.click(screen.getByRole("button", { name: "button-remove" }));
+    fireEvent.click(screen.getByRole("button", { name: "confirm-mock" }));
+    expect(updatePatientMonitoringMock).toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole("button", { name: "confirm-mock" })).toBeNull());
+  });
+
+  it("should open dialog to confirm when clicking on delete button and not edit the patient remote monitoring when clicking on close", async () => {
+    patient.monitoring = { enabled: true, status: undefined } as Monitoring;
+    render(getPatientInfoWidgetJSX());
+    fireEvent.click(screen.getByRole("button", { name: "button-remove" }));
+    fireEvent.click(screen.getByRole("button", { name: "close-mock" }));
+    expect(cancelRemoteMonitoringInviteMock).not.toHaveBeenCalled();
+    await waitFor(() => expect(screen.queryByRole("button", { name: "close-mock" })).toBeNull());
   });
 });
 
