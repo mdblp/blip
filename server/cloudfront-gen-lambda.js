@@ -150,6 +150,7 @@ function genContentSecurityPolicy() {
     contentSecurityPolicy.imgSrc.push("https://axeptio.imgix.net", "https://www.google.com");
   }
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`);
+  contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`);
 
   let csp = "";
   for (const cspName in contentSecurityPolicy) {
