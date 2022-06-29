@@ -94,10 +94,10 @@ describe("Metrics", () => {
   });
 
   it("should set the userId", () => {
-    const user = loggedInUsers.caregiver;
+    const user = loggedInUsers.getCaregiver();
     metrics.setUser(user);
     expect(window._paq).toEqual([
-      ["setUserId", user.userid],
+      ["setUserId", user.id],
       ["setCustomVariable", 1, "UserRole", user.role, "page"],
       ["trackEvent", "registration", "login", user.role],
     ]);

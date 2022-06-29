@@ -344,7 +344,7 @@ function TeamContextImpl(): TeamContext {
   };
 
   const leaveTeam = async (team: Team): Promise<void> => {
-    const ourselve = team.members.find((member) => member.user.userid === user.userid);
+    const ourselve = team.members.find((member) => member.user.userid === user.id);
     if (_.isNil(ourselve)) {
       throw new Error("We are not a member of the team!");
     }
@@ -356,7 +356,7 @@ function TeamContextImpl(): TeamContext {
       await TeamApi.deleteTeam(team.id);
       metrics.send("team_management", "delete_team");
     } else {
-      await TeamApi.leaveTeam(user.userid, team.id);
+      await TeamApi.leaveTeam(user.id, team.id);
       metrics.send("team_management", "leave_team");
     }
     const idx = teams.findIndex((t: Team) => t.id === team.id);
@@ -399,7 +399,7 @@ function TeamContextImpl(): TeamContext {
       await notificationHook.cancel(member.invitation);
     }
     if (teamId === "private") {
-      await DirectShareApi.removeDirectShare(patient.userid, user.userid);
+      await DirectShareApi.removeDirectShare(patient.userid, user.id);
     } else {
       await TeamApi.removePatient(teamId, patient.userid);
     }
@@ -445,7 +445,7 @@ function TeamContextImpl(): TeamContext {
   };
 
   const joinTeam = async (teamId: string): Promise<void> => {
-    await TeamApi.joinTeam(user.userid, teamId);
+    await TeamApi.joinTeam(user.id, teamId);
     refresh(true);
   };
 

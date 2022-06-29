@@ -26,27 +26,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserRoles } from "../../../models/user";
+import { UserMetadata, UserRoles } from "../../../models/user";
 import config from "../../../lib/config";
 import User from "../../../lib/auth/user";
 
 
 describe("User", () => {
+  let user: User;
 
   beforeAll(() => {
     config.LATEST_TERMS = "2021-01-01";
   });
 
+  beforeEach(() => {
+    user = new User({
+      sub: "auth0|abcd",
+      email: "text@example.com",
+      [UserMetadata.Roles]: [UserRoles.unverified],
+      emailVerified: true,
+    });
+  });
+
+  afterEach(() => {
+    user = null;
+  });
+
   it("should create the user", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
-    expect(user.userid).toBe("abcd");
+    expect(user.id).toBe("abcd");
     expect(user.username).toBe("text@example.com");
     expect(user.latestConsentChangeDate).toBeInstanceOf(Date);
     expect(user.latestConsentChangeDate.toISOString()).toBe("2021-01-01T00:00:00.000Z");
   });
 
   it("getFirstName", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
     expect(user.firstName).toBe("");
     user.profile = {
       fullName: "Hello",
@@ -58,7 +70,6 @@ describe("User", () => {
 
 
   it("getLastName", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
     expect(user.lastName).toBe("text@example.com");
     user.profile = {
       fullName: "Hello World",
@@ -74,12 +85,7 @@ describe("User", () => {
   });
 
   it("getFullName", () => {
-    const user = new User({
-      userid: "abcd",
-      username: "Barack.Afritt@test.com",
-      role: UserRoles.unverified,
-    });
-    expect(user.fullName).toBe("Barack.Afritt@test.com");
+    expect(user.fullName).toBe("text@example.com");
     user.profile = {
       fullName: "Barack Afritt",
     };
@@ -87,7 +93,6 @@ describe("User", () => {
   });
 
   it("shouldAcceptConsent", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
     expect(user.shouldAcceptConsent()).toBe(true);
     user.profile = {
       fullName: "Test Example",
@@ -107,7 +112,6 @@ describe("User", () => {
   });
 
   it("shouldRenewConsent", () => {
-    const user = new User({ userid: "abcd", username: "text@example.com", role: UserRoles.unverified });
     expect(user.shouldRenewConsent()).toBe(true);
     user.profile = {
       fullName: "Test Example",
@@ -133,15 +137,13 @@ describe("User", () => {
   });
 
   it("getParsedFrProId should return null when user frProId is null", () => {
-    const user = new User({ frProId: null } as User);
     const res = user.getParsedFrProId();
     expect(res).toBeNull();
   });
 
   it("getParsedFrProId should return correct result when user frProId is not null", () => {
     const expectedRes = "value";
-    const frProId = `key:uid:${expectedRes}`;
-    const user = new User({ frProId } as User);
+    user.frProId = `key:uid:${expectedRes}`;
     const actualRes = user.getParsedFrProId();
     expect(actualRes).toBe(expectedRes);
   });

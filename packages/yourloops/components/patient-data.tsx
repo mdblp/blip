@@ -92,7 +92,7 @@ function PatientDataPage(): JSX.Element | null {
   const { blipApi } = dataHook;
   const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
   const authUser = authHook.user;
-  const userId = authUser?.userid ?? null;
+  const userId = authUser?.id ?? null;
   const userIsPatient = authHook.user?.isUserPatient();
   const userIsHCP = authHook.user?.isUserHcp();
   const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
@@ -107,7 +107,7 @@ function PatientDataPage(): JSX.Element | null {
     setPatients(teamHook.getPatients());
     let patientId = paramPatientId ?? userId;
     if (userIsPatient && authUser) {
-      patientId = authUser.userid;
+      patientId = authUser.id;
     }
     if (!patientId) {
       log.error("Invalid patient Id");

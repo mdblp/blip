@@ -48,9 +48,9 @@ import User from "../../../lib/auth/user";
 jest.mock("@auth0/auth0-react");
 
 describe("Auth hook", () => {
-  const authPatient = loggedInUsers.patientUser;
-  const authCaregiver = loggedInUsers.caregiverUser;
-  const authHcp = loggedInUsers.hcpUser;
+  const authPatient = loggedInUsers.getPatient();
+  const authCaregiver = loggedInUsers.getCaregiver();
+  const authHcp = loggedInUsers.getHcp();
 
   /* eslint-disable new-cap */
   const ReactAuthContext = React.createContext({} as AuthContext);
@@ -77,12 +77,6 @@ describe("Auth hook", () => {
     expect(authContext).not.toBeNull();
   };
 
-  const unAuthenticateUser = () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-    });
-  };
-
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -101,7 +95,7 @@ describe("Auth hook", () => {
     });
     jest.spyOn(UserApi, "getShorelineAccessToken").mockResolvedValue(Promise.resolve({
       token: "session-token",
-      id: loggedInUsers.hcpUser.userid,
+      id: loggedInUsers.getHcp().id,
     }));
     jest.spyOn(UserApi, "getProfile").mockResolvedValue(Promise.resolve({
       firstName: "John",
@@ -116,9 +110,9 @@ describe("Auth hook", () => {
   afterEach(() => {
     document.body.removeChild(container);
     container = null;
-    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.hcpUser);
-    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.caregiverUser);
-    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.patientUser);
+    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.getHcp());
+    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.getCaregiver());
+    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.getPatient());
     authContext = null;
   });
 
@@ -158,101 +152,41 @@ describe("Auth hook", () => {
   describe("Updates", () => {
     const updatedPreferences: Preferences = { displayLanguageCode: "fr" };
     const updatedProfile: Profile = {
-      ...loggedInUsers.hcp.profile,
+      ...loggedInUsers.getHcp().profile,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true },
     };
-    const updatedSettings: Settings = { ...loggedInUsers.hcp.settings, country: "FR" };
+    const updatedSettings: Settings = { ...loggedInUsers.getHcp().settings, country: "FR" };
     jest.spyOn(UserApi, "updateProfile").mockResolvedValue(Promise.resolve(updatedProfile));
     jest.spyOn(UserApi, "updatePreferences").mockResolvedValue(Promise.resolve(updatedPreferences));
     jest.spyOn(UserApi, "updateSettings").mockResolvedValue(Promise.resolve(updatedSettings));
-
-    it("updatePreferences should not call the API if the user is not logged in", async () => {
-      unAuthenticateUser();
-      authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
-      await initAuthContext();
-      expect(authContext.user).toBeNull();
-
-      let error: Error | null = null;
-      let result: Preferences | null = null;
-      try {
-        result = await authContext.updatePreferences({ ...updatedPreferences });
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.updatePreferences).toHaveBeenCalledTimes(0);
-      expect(result).toBeNull();
-      expect(error).not.toBeNull();
-      expect(authContext.user).toBeNull();
-    });
 
     it("updatePreferences should call the API with the good parameters", async () => {
       authApiHcpStubs.updatePreferences.mockResolvedValue(updatedPreferences);
       await initAuthContext();
       expect(authContext.user.preferences).toEqual({ displayLanguageCode: "en" });
 
-      const result = await authContext.updatePreferences({ ...updatedPreferences });
+      await authContext.updatePreferences({ ...updatedPreferences });
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(updatedPreferences);
       expect(authContext.user.preferences).toEqual(updatedPreferences);
-    });
-
-    it("updateProfile should not call the API if the user is not logged in", async () => {
-      unAuthenticateUser();
-      authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
-      await initAuthContext();
-      expect(authContext.user).toBeNull();
-
-      let error: Error | null = null;
-      let result: Profile | null = null;
-      try {
-        result = await authContext.updateProfile({ ...updatedProfile });
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.updateProfile).toHaveBeenCalledTimes(0);
-      expect(result).toBeNull();
-      expect(error).not.toBeNull();
-      expect(authContext.user).toBeNull();
     });
 
     it("updateProfile should call the API with the good parameters", async () => {
       authApiHcpStubs.updateProfile.mockResolvedValue(updatedProfile);
       await initAuthContext();
-      expect(authContext.user.profile).toEqual(loggedInUsers.hcp.profile);
+      expect(authContext.user.profile).toEqual(loggedInUsers.getHcp().profile);
 
-      const result = await authContext.updateProfile({ ...updatedProfile });
+      await authContext.updateProfile({ ...updatedProfile });
       expect(UserApi.updateProfile).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(updatedProfile);
       expect(authContext.user.profile).toEqual(updatedProfile);
-    });
-
-    it("updateSettings should not call the API if the user is not logged in", async () => {
-      unAuthenticateUser();
-      authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
-      await initAuthContext();
-      expect(authContext.user).toBeNull();
-
-      let error: Error | null = null;
-      let result: Settings | null = null;
-      try {
-        result = await authContext.updateSettings({ ...updatedSettings });
-      } catch (reason) {
-        error = reason;
-      }
-      expect(authApiHcpStubs.updateSettings).toHaveBeenCalledTimes(0);
-      expect(result).toBeNull();
-      expect(error).not.toBeNull();
-      expect(authContext.user).toBeNull();
     });
 
     it("updateSettings should call the API with the good parameters", async () => {
       authApiHcpStubs.updateSettings.mockResolvedValue(updatedSettings);
       await initAuthContext();
-      expect(authContext.user.settings).toEqual(loggedInUsers.hcp.settings);
+      expect(authContext.user.settings).toEqual(loggedInUsers.getHcp().settings);
 
-      const result = await authContext.updateSettings({ ...updatedSettings });
+      await authContext.updateSettings({ ...updatedSettings });
       expect(UserApi.updateSettings).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(updatedSettings);
       expect(authContext.user.settings).toEqual(updatedSettings);
     });
 

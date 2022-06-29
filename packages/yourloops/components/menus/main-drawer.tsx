@@ -148,7 +148,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const authHook = useAuth();
   const patientFiltersStats = teamHook.patientsFilterStats;
   const numberOfFlaggedPatients = authHook.getFlagPatients().length;
-  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.userid));
+  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id));
 
   const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
   const paperClass = fullDrawer || onHover ?

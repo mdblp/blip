@@ -98,7 +98,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const isLoggedInUserHcpAdmin = () => {
     return authHook.user?.isUserHcp() &&
       teamHook.getRemoteMonitoringTeams()
-        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.userid)
+        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.id)
           && team.members.find(member => member.user.userid === patient.userid)
         );
   };

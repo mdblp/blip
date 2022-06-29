@@ -27,7 +27,7 @@
  */
 
 import { AppConfig } from "yourloops/models/config";
-import { IUser } from "yourloops/models/shoreline";
+import { IUser } from "yourloops/models/user";
 import BlipApi from "../../yourloops/lib/data/blip-api";
 import ProfileDialog from "../../yourloops/components/dialogs/patient-profile";
 import DialogDatePicker from "../../yourloops/components/date-pickers/dialog-date-picker";

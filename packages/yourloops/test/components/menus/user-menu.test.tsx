@@ -46,8 +46,10 @@ import User from "../../../lib/auth/user";
 describe("User Menu", () => {
   let container: HTMLElement | null = null;
   const history = createMemoryHistory({ initialEntries: ["/"] });
-  const { hcpUser, caregiverUser, patientUser } = loggedInUsers;
-  let authContext = createAuthHookStubs(hcpUser);
+  const hcp = loggedInUsers.getHcp();
+  const caregiver = loggedInUsers.getCaregiver();
+  const patient = loggedInUsers.getPatient();
+  let authContext = createAuthHookStubs(hcp);
 
   function openMenu(): void {
     const userMenu = document.getElementById("user-menu");
@@ -83,25 +85,25 @@ describe("User Menu", () => {
   });
 
   it("should display the hcp icon", async () => {
-    await mountComponent(hcpUser);
+    await mountComponent(hcp);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />));
   });
 
   it("should display the caregiver icon", async () => {
-    await mountComponent(caregiverUser);
+    await mountComponent(caregiver);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />));
   });
 
   it("should display the patient icon", async () => {
-    await mountComponent(patientUser);
+    await mountComponent(patient);
     const roleIcon = document.querySelector("#user-role-icon");
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />));
   });
 
   it("should redirect to '/preferences' route when clicking on profile link", async () => {
-    await mountComponent(hcpUser);
+    await mountComponent(hcp);
     openMenu();
     const profileItem = document.getElementById("user-menu-settings-item");
     triggerMouseEvent("click", profileItem);
@@ -109,7 +111,7 @@ describe("User Menu", () => {
   });
 
   it("should logout the user when clicking on logout item", async () => {
-    await mountComponent(hcpUser);
+    await mountComponent(hcp);
     openMenu();
     const logoutItem = document.getElementById("user-menu-logout-item");
     triggerMouseEvent("click", logoutItem);

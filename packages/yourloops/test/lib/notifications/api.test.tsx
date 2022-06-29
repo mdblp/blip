@@ -46,6 +46,8 @@ describe("Notification API", () => {
   const userId = "fakeUserId";
   const userId2 = "fakeUserId2";
   const email = "fake@email.com";
+  const hcp = loggedInUsers.getHcp();
+  const patient = loggedInUsers.getPatient();
 
   afterEach(() => {
     mockedAxios.get.mockReset();
@@ -106,7 +108,7 @@ describe("Notification API", () => {
             },
           },
           shortKey: "abcdef",
-          email: loggedInUsers.patient.username,
+          email: patient.username,
         },
       ];
       const resolveOK: AxiosResponse<INotificationAPI[]> = {
@@ -239,7 +241,7 @@ describe("Notification API", () => {
       });
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const user = loggedInUsers.hcpUser;
+      const user = hcp;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
@@ -266,13 +268,13 @@ describe("Notification API", () => {
         throw new Error();
       });
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.directInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -282,7 +284,7 @@ describe("Notification API", () => {
       } catch (reason) {
         err = reason as Error;
       }
-      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.userid}`;
+      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.id}`;
       const expectedBody = { key: notification.id };
 
       expect(err).not.toBeNull();
@@ -300,13 +302,13 @@ describe("Notification API", () => {
       } as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.directInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -319,7 +321,7 @@ describe("Notification API", () => {
       }
       expect(err).toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.userid}`;
+      const expectedArgs = `/confirm/accept/invite/${userId}/${patient.id}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, expect.anything());
     });
@@ -329,13 +331,13 @@ describe("Notification API", () => {
         throw new Error();
       });
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -368,13 +370,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -401,13 +403,13 @@ describe("Notification API", () => {
         throw new Error("careTeamPatientInvitations");
       });
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamPatientInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -440,13 +442,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamPatientInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -484,12 +486,12 @@ describe("Notification API", () => {
       mockedAxios.put.mockResolvedValue(resolveError);
 
       const notificationTypes = [NotificationType.careTeamDoAdmin, NotificationType.careTeamRemoveMember];
-      const user = loggedInUsers.hcpUser;
+      const user = hcp;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: user.userid, profile: user.profile },
-        creatorId: user.userid,
+        creator: { userid: user.id, profile: user.profile },
+        creatorId: user.id,
         date: new Date().toISOString(),
         email: user.username,
         id: uuidv4(),
@@ -511,13 +513,13 @@ describe("Notification API", () => {
         throw new Error("directInvitation");
       });
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.directInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -531,7 +533,7 @@ describe("Notification API", () => {
 
       expect(err).not.toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.userid}`;
+      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.id}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
@@ -547,13 +549,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.directInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -566,7 +568,7 @@ describe("Notification API", () => {
       }
       expect(err).toBeNull();
       expect(mockedAxios.put).toHaveBeenCalledTimes(1);
-      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.userid}`;
+      const expectedArgs = `/confirm/dismiss/invite/${userId}/${patient.id}`;
       const expectedBody = { key: notification.id };
       expect(mockedAxios.put).toHaveBeenCalledWith(expectedArgs, expectedBody, {});
     });
@@ -583,13 +585,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveError);
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
       };
@@ -609,13 +611,13 @@ describe("Notification API", () => {
         throw new Error("CareteamProInvitation");
       });
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -649,13 +651,13 @@ describe("Notification API", () => {
 
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -689,13 +691,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveError);
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamPatientInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -715,13 +717,13 @@ describe("Notification API", () => {
         throw new Error("careteamPatienInvitation");
       });
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamPatientInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -754,13 +756,13 @@ describe("Notification API", () => {
       } as unknown as Response;
       mockedAxios.put.mockResolvedValue(resolveOK);
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamPatientInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
         target: {
@@ -802,12 +804,12 @@ describe("Notification API", () => {
         NotificationType.careTeamRemoveMember,
         NotificationType.careTeamPatientInvitation,
       ];
-      const user = loggedInUsers.hcpUser;
+      const user = hcp;
       const notification: INotification = {
         metricsType: "join_team",
         type: NotificationType.careTeamDoAdmin,
-        creator: { userid: user.userid, profile: user.profile },
-        creatorId: user.userid,
+        creator: { userid: user.id, profile: user.profile },
+        creatorId: user.id,
         date: new Date().toISOString(),
         email: user.username,
         id: uuidv4(),
@@ -836,13 +838,13 @@ describe("Notification API", () => {
       mockedAxios.post.mockResolvedValue(resolveOK);
 
 
-      const patient = loggedInUsers.patient;
+      const patient = loggedInUsers.getPatient();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "share_data",
         type: NotificationType.directInvitation,
         creator: patient,
-        creatorId: patient.userid,
+        creatorId: patient.id,
         date: new Date().toISOString(),
         email,
       };
@@ -873,13 +875,13 @@ describe("Notification API", () => {
       mockedAxios.post.mockResolvedValue(resolveError);
 
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
       };
@@ -907,13 +909,13 @@ describe("Notification API", () => {
 
       mockedAxios.post.mockResolvedValue(resolveOK);
 
-      const caregiver = loggedInUsers.caregiver;
+      const caregiver = loggedInUsers.getCaregiver();
       const notification: INotification = {
         id: uuidv4(),
         metricsType: "join_team",
         type: NotificationType.careTeamProInvitation,
         creator: caregiver,
-        creatorId: caregiver.userid,
+        creatorId: caregiver.id,
         date: new Date().toISOString(),
         email,
         target: {

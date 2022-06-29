@@ -53,22 +53,22 @@ function NotificationContextImpl(): NotificationContext {
 
   const accept = async (notification: INotification): Promise<void> => {
     log.info("Accept invitation", notification);
-    await NotificationApi.acceptInvitation(user.userid, notification);
-    const r = await NotificationApi.getReceivedInvitations(user.userid);
+    await NotificationApi.acceptInvitation(user.id, notification);
+    const r = await NotificationApi.getReceivedInvitations(user.id);
     setReceivedInvitations(r);
   };
 
   const decline = async (notification: INotification): Promise<void> => {
     log.info("Decline invitation", notification);
-    await NotificationApi.declineInvitation(user.userid, notification);
-    const r = await NotificationApi.getReceivedInvitations(user.userid);
+    await NotificationApi.declineInvitation(user.id, notification);
+    const r = await NotificationApi.getReceivedInvitations(user.id);
     setReceivedInvitations(r);
   };
 
   const cancel = async (notification: INotification): Promise<void> => {
     log.info("Cancel invitation", notification);
     await NotificationApi.cancelInvitation(notification);
-    const r = await NotificationApi.getSentInvitations(user.userid);
+    const r = await NotificationApi.getSentInvitations(user.id);
     setSentInvitations(r);
   };
 
@@ -89,8 +89,8 @@ function NotificationContextImpl(): NotificationContext {
     lock = true;
 
     Promise.all([
-      NotificationApi.getReceivedInvitations(user.userid),
-      NotificationApi.getSentInvitations(user.userid),
+      NotificationApi.getReceivedInvitations(user.id),
+      NotificationApi.getSentInvitations(user.id),
     ]).then((result: [INotification[], INotification[]]) => {
       setReceivedInvitations(result[0]);
       setSentInvitations(result[1]);

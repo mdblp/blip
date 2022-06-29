@@ -29,48 +29,56 @@
 
 import { User } from "../../lib/auth";
 import { Units, UserInvitationStatus } from "../../models/generic";
-import { UserRoles } from "../../models/user";
+import { UserMetadata, UserRoles } from "../../models/user";
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
 import { HcpProfession } from "../../models/hcp-profession";
 import { Alarm } from "../../models/alarm";
 
-const newUserHCP = new User({
-  userid: "123456789",
-  username: "ace@ventura.com",
-  emailVerified: true,
-  role: UserRoles.hcp,
-  profile: undefined,
-  settings: undefined,
-  preferences: undefined,
-});
+const getNewHcp = (): User => {
+  return new User({
+    email: "john.doe@example.com",
+    emailVerified: true,
+    sub: "auth0|123456789",
+    [UserMetadata.Roles]: [UserRoles.hcp],
+  });
+};
 
-const userCaregiver = new User({
-  userid: "b0000000",
-  username: "caregiver@example.com",
-  role: UserRoles.caregiver,
-  emailVerified: true,
-  preferences: { displayLanguageCode: "de" },
-  profile: { firstName: "Caregiver", lastName: "Example", fullName: "Caregiver Example" },
-  settings: { country: "DE", units: { bg: Units.mole } },
-});
+const getHcp = (): User => {
+  const hcp = new User({
+    email: "john.doe@example.com",
+    emailVerified: true,
+    sub: "auth0|a0000000",
+    [UserMetadata.Roles]: [UserRoles.hcp],
+  });
+  hcp.frProId = "ANS20211229094028";
+  hcp.profile = { firstName: "John", lastName: "Doe", fullName: "John Doe", hcpProfession: HcpProfession.diabeto };
+  hcp.preferences = { displayLanguageCode: "en" };
+  hcp.settings = { units: { bg: Units.gram }, country: "FR" };
+  return hcp;
+};
 
-const userHCP: User = new User({
-  userid: "a0000000",
-  username: "john.doe@example.com",
-  role: UserRoles.hcp,
-  emailVerified: true,
-  frProId: "ANS20211229094028",
-  profile: { firstName: "John", lastName: "Doe", fullName: "John Doe", hcpProfession: HcpProfession.diabeto },
-  preferences: { displayLanguageCode: "en" },
-  settings: { units: { bg: Units.gram }, country: "FR" },
-});
+const getCaregiver = (): User => {
+  const caregiver = new User({
+    email: "caregiver@example.com",
+    emailVerified: true,
+    sub: "auth0|b0000000",
+    [UserMetadata.Roles]: [UserRoles.caregiver],
+  });
+  caregiver.profile = { firstName: "Caregiver", lastName: "Example", fullName: "Caregiver Example" };
+  caregiver.preferences = { displayLanguageCode: "de" };
+  caregiver.settings = { country: "DE", units: { bg: Units.mole } };
+  return caregiver;
+};
 
-const userPatient = new User({
-  userid: "a0a0a0b0",
-  username: "josephine.dupuis@example.com",
-  role: UserRoles.patient,
-  preferences: { displayLanguageCode: "fr" },
-  profile: {
+const getPatient = (): User => {
+  const patient = new User({
+    email: "josephine.dupuis@example.com",
+    emailVerified: true,
+    sub: "auth0|a0a0a0b0",
+    [UserMetadata.Roles]: [UserRoles.patient],
+  });
+  patient.settings ={ a1c: { date: "2020-01-01", value: "7.5" }, country : "FR" };
+  patient.profile = {
     firstName: "Josephine",
     lastName: "Dupuis",
     fullName: "Josephine D.",
@@ -84,29 +92,18 @@ const userPatient = new User({
       ins: "123456789012345",
       ssn: "012345678901234",
     },
-  },
-  settings: { a1c: { date: "2020-01-01", value: "7.5" } },
-});
+  };
+  patient.preferences = { displayLanguageCode: "fr" };
+  return patient;
+};
 
 /**
  * Logged-in users for test, choose one suitable
  */
-export const loggedInUsers = {
-  hcp: userHCP,
-  patient: userPatient,
-  caregiver: userCaregiver,
-  newHcp: newUserHCP,
-  get hcpUser(): User {
-    return new User(userHCP);
-  },
-  get patientUser(): User {
-    return new User(userPatient);
-  },
-  get caregiverUser(): User {
-    return new User(userCaregiver);
-  },
-};
+export const loggedInUsers = { getHcp, getPatient, getCaregiver, getNewHcp };
 
+const hcp = getHcp();
+const patient = getPatient();
 /**
  * An example list of teams for the unit tests
  */
@@ -130,13 +127,13 @@ export const teams: ITeam[] = [
     members: [
       {
         teamId: "team-0",
-        userId: loggedInUsers.hcp.userid,
+        userId: hcp.id,
         role: TeamMemberRole.admin,
         invitationStatus: UserInvitationStatus.accepted,
-        email: loggedInUsers.hcp.username,
-        preferences: loggedInUsers.hcp.preferences,
-        profile: loggedInUsers.hcp.profile,
-        settings: loggedInUsers.hcp.settings,
+        email: hcp.username,
+        preferences: hcp.preferences,
+        profile: hcp.profile,
+        settings: hcp.settings,
         idVerified: true,
       },
       {
@@ -179,13 +176,13 @@ export const teams: ITeam[] = [
     members: [
       {
         teamId: "team-1",
-        userId: loggedInUsers.hcp.userid,
+        userId: hcp.id,
         role: TeamMemberRole.member,
         invitationStatus: UserInvitationStatus.accepted,
-        email: loggedInUsers.hcp.username,
-        preferences: loggedInUsers.hcp.preferences,
-        profile: loggedInUsers.hcp.profile,
-        settings: loggedInUsers.hcp.settings,
+        email: hcp.username,
+        preferences: hcp.preferences,
+        profile: hcp.profile,
+        settings: hcp.settings,
         idVerified: true,
       },
       {
@@ -212,18 +209,18 @@ export const teams: ITeam[] = [
       zip: "00000",
       country: "FR",
     },
-    owner: loggedInUsers.hcp.userid,
+    owner: hcp.id,
     type: TeamType.medical,
     members: [
       {
         teamId: "team-2-empty",
-        userId: loggedInUsers.hcp.userid,
+        userId: hcp.id,
         role: TeamMemberRole.admin,
         invitationStatus: UserInvitationStatus.accepted,
-        email: loggedInUsers.hcp.username,
-        preferences: loggedInUsers.hcp.preferences,
-        profile: loggedInUsers.hcp.profile,
-        settings: loggedInUsers.hcp.settings,
+        email: hcp.username,
+        preferences: hcp.preferences,
+        profile: hcp.profile,
+        settings: hcp.settings,
         idVerified: true,
       },
     ],
@@ -273,11 +270,11 @@ export const patients: ITeamMember[] = [
     invitationStatus: UserInvitationStatus.accepted,
     role: TeamMemberRole.patient,
     teamId: "team-0",
-    userId: userPatient.userid,
-    email: userPatient.username,
-    preferences: userPatient.preferences,
-    profile: userPatient.profile,
-    settings: userPatient.settings,
+    userId: patient.id,
+    email: patient.username,
+    preferences: patient.preferences,
+    profile: patient.profile,
+    settings: patient.settings,
     idVerified: false,
     alarms,
     monitoring: { enabled: false },
@@ -286,11 +283,11 @@ export const patients: ITeamMember[] = [
     invitationStatus: UserInvitationStatus.accepted,
     role: TeamMemberRole.patient,
     teamId: "team-1",
-    userId: userPatient.userid,
-    email: userPatient.username,
-    preferences: userPatient.preferences,
-    profile: userPatient.profile,
-    settings: userPatient.settings,
+    userId: patient.id,
+    email: patient.username,
+    preferences: patient.preferences,
+    profile: patient.profile,
+    settings: patient.settings,
     idVerified: false,
     alarms,
     monitoring: { enabled: false },

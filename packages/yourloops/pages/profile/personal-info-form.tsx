@@ -79,7 +79,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
       <Box className={props.classes.categoryLabel}>
         <AccountCircle color="primary" style={{ margin: "0" }} />
         <strong className={props.classes.uppercase}>{t("personal-information")}</strong>
-        {props.user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${props.user.userid}`} />}
+        {props.user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${props.user.id}`} />}
       </Box>
 
       <Box className={props.classes.inputContainer}>

@@ -107,4 +107,16 @@ interface IUser {
   unreadMessages?: number;
 }
 
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles };
+enum UserMetadata {
+  Roles = "http://your-loops.com/roles",
+}
+
+interface AuthenticatedUser {
+  [UserMetadata.Roles]: string[];
+  email: string;
+  emailVerified: boolean;
+  sub: string;
+}
+
+
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser };

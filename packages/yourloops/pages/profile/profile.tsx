@@ -46,7 +46,7 @@ import { LanguageCodes } from "../../models/locales";
 import { Preferences, Profile, Settings, UserRoles } from "../../models/user";
 import { getCurrentLang } from "../../lib/language";
 import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
-import { useAuth, User } from "../../lib/auth";
+import { useAuth } from "../../lib/auth";
 import metrics from "../../lib/metrics";
 import { useAlert } from "../../components/utils/snackbar";
 import PersonalInfoForm from "./personal-info-form";
@@ -117,7 +117,6 @@ const ProfilePage = (): JSX.Element => {
   const alert = useAlert();
   const {
     user,
-    setUser,
     updatePreferences,
     updateProfile,
     updateSettings,
@@ -209,42 +208,49 @@ const ProfilePage = (): JSX.Element => {
   const isAnyError = useMemo(() => _.some(errors), [errors]);
   const canSave = (preferencesChanged || profileChanged || settingsChanged) && !isAnyError && !saving;
 
-  const onSave = async (): Promise<void> => {
-    let preferences: Preferences | null = null;
-    let profile: Profile | null = null;
-    let settings: Settings | null = null;
-
-    const updatedUser = new User(user);
-
+  const saveProfile = async () => {
     try {
-      setSaving(true);
-
-      if (profileChanged) {
-        profile = await updateProfile(getUpdatedProfile(), false);
-        updatedUser.profile = profile;
-      }
-
-      if (settingsChanged) {
-        settings = await updateSettings(getUpdatedSettings(), false);
-        updatedUser.settings = settings;
-      }
-
-      if (preferencesChanged) {
-        preferences = await updatePreferences(getUpdatedPreferences(), false);
-        updatedUser.preferences = preferences;
-        if (lang !== getCurrentLang()) {
-          i18n.changeLanguage(lang);
-        }
-      }
-
-      alert.success(t("profile-updated"));
+      await updateProfile(getUpdatedProfile());
     } catch (err) {
-      log.error("Updating:", err);
+      log.error("Updating profile:", err);
       alert.error(t("profile-update-failed"));
-    } finally {
-      setUser(updatedUser);
-      setSaving(false);
     }
+  };
+
+  const saveSettings = async () => {
+    try {
+      await updateSettings(getUpdatedSettings());
+    } catch (err) {
+      log.error("Updating settings:", err);
+      alert.error(t("profile-update-failed"));
+    }
+  };
+
+  const savePreferences = async () => {
+    try {
+      await updatePreferences(getUpdatedPreferences());
+    } catch (err) {
+      log.error("Updating preferences:", err);
+      alert.error(t("profile-update-failed"));
+    }
+  };
+
+  const onSave = async (): Promise<void> => {
+    setSaving(true);
+    if (profileChanged) {
+      await saveProfile();
+    }
+    if (settingsChanged) {
+      await saveSettings();
+    }
+    if (preferencesChanged) {
+      await savePreferences();
+      if (lang !== getCurrentLang()) {
+        i18n.changeLanguage(lang);
+      }
+    }
+    alert.success(t("profile-updated"));
+    setSaving(false);
   };
 
   useEffect(() => setPageTitle(t("account-preferences")), [lang, t]);
