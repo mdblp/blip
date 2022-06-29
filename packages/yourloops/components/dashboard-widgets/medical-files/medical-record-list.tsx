@@ -45,6 +45,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 
 import { MedicalRecord } from "../../../lib/medical-files/model";
+import { useAuth, User } from "../../../lib/auth";
 import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
 import MedicalRecordEditDialog from "../../dialogs/medical-record-edit-dialog";
 import MedicalRecordDeleteDialog from "../../dialogs/medical-record-delete-dialog";
@@ -73,6 +74,8 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
   const { t } = useTranslation("yourloops");
   const classes = useStyle();
   const { teamId, patientId } = props;
+  const authHook = useAuth();
+  const user = authHook.user as User;
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -152,7 +155,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
             <ListItemText>
               {t("medical-record-pdf")}{new Date(medicalRecord.creationDate).toLocaleDateString()}
             </ListItemText>
-            {medicalRecord.id === hoveredItem &&
+            {user.isUserHcp() && medicalRecord.id === hoveredItem &&
               <ListItemSecondaryAction>
                 <Tooltip title={t("edit") as string}>
                   <IconButton
@@ -182,17 +185,19 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
         ))}
       </List>
 
-      <Box display="flex" justifyContent="end" marginTop={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          startIcon={<NoteAddIcon />}
-          onClick={() => setIsEditDialogOpen(true)}
-        >
-          {t("new")}
-        </Button>
-      </Box>
+      {user.isUserHcp() &&
+        <Box display="flex" justifyContent="end" marginTop={2}>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            startIcon={<NoteAddIcon />}
+            onClick={() => setIsEditDialogOpen(true)}
+          >
+            {t("new")}
+          </Button>
+        </Box>
+      }
 
       {isEditDialogOpen &&
         <MedicalRecordEditDialog

@@ -9,6 +9,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-1631 Install react testing library
 - YLP-1634 Fix missing UTs
 - YLP-1635 Modify CSP to enable refresh once logged in
+### Fixed
+- YLP-1645 A patient can create, edit and delete a medical record
 
 ## 3.0.0 - 2022-06-16
 ### Added
