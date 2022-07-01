@@ -35,7 +35,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Typography from "@material-ui/core/Typography";
 
 import { makeButtonsStyles } from "../theme";
 import { MedicalRecord } from "../../lib/medical-files/model";
@@ -80,9 +79,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        <Typography variant="h5">
-          {t("delete-medical-report")}
-        </Typography>
+        {t("delete-medical-report")}
       </DialogTitle>
 
       <DialogContent>

@@ -152,6 +152,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           variant="outlined"
           disabled={readonly}
+          data-testid="diagnosis"
           onChange={(event) => setDiagnosis(event.target.value)}
         />
 
@@ -168,6 +169,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           variant="outlined"
           disabled={readonly}
+          data-testid="progression-proposal"
           onChange={(event) => setProgressionProposal(event.target.value)}
         />
 
@@ -184,6 +186,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           rows={4}
           variant="outlined"
           disabled={readonly}
+          data-testid="training-subject"
           onChange={(event) => setTrainingSubject(event.target.value)}
         />
       </DialogContent>
