@@ -56,7 +56,6 @@ const useStyle = makeStyles(() => ({
 
 export interface MedicalFilesWidgetProps {
   patient: Patient;
-  userRole: string;
 }
 
 export interface CategoryProps {

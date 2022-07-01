@@ -120,11 +120,13 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     } else {
       medicalRecords.push(payload);
     }
+    closeMedicalRecordEditDialog();
   };
 
   const removeMedicalRecordFromList = (medicalRecordId: string) => {
     const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId);
     medicalRecords.splice(index, 1);
+    closeMedicalRecordDeleteDialog();
   };
 
   useEffect(() => {
@@ -144,6 +146,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
             dense
             divider
             key={index}
+            aria-label={`record-${medicalRecord.id}`}
             className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? "selected" : ""}`}
             onClick={() => onClickMedicalRecord(medicalRecord)}
             onMouseOver={() => setHoveredItem(medicalRecord.id)}
@@ -163,6 +166,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
                     size="small"
                     disableRipple
                     disableFocusRipple
+                    aria-label="edit-button"
                     onClick={() => onEditMedicalRecord(medicalRecord)}
                   >
                     <CreateOutlinedIcon />
@@ -174,6 +178,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
                     size="small"
                     disableRipple
                     disableFocusRipple
+                    aria-label="delete-button"
                     onClick={() => onDeleteMedicalRecord(medicalRecord)}
                   >
                     <TrashCanOutlined />

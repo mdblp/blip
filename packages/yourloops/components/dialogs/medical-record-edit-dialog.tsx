@@ -47,7 +47,7 @@ import { CategoryProps } from "../dashboard-widgets/medical-files/medical-files-
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 import { useAlert } from "../utils/snackbar";
 
-interface Props extends CategoryProps {
+export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void;
   onSaved: (payload: MedicalRecord) => void;
   readonly: boolean;
@@ -72,7 +72,7 @@ const classes = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MedicalRecordEditDialog(props: Props): JSX.Element {
+export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
   const { title, textArea, divider } = classes();
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
@@ -106,10 +106,9 @@ export default function MedicalRecordEditDialog(props: Props): JSX.Element {
           trainingSubject,
         });
       }
-      onSaved(payload);
       setInProgress(false);
       alert.success(t("medical-record-save-success"));
-      onClose();
+      onSaved(payload);
     } catch (err) {
       console.log(err);
       setInProgress(false);

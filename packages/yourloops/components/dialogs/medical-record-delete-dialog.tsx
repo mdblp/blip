@@ -43,7 +43,7 @@ import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
 import { useAlert } from "../utils/snackbar";
 import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
 
-interface Props {
+export interface MedicalRecordDeleteDialogProps {
   onClose: () => void;
   onDelete: (medicalRecordId: string) => void;
   medicalRecord: MedicalRecord;
@@ -51,7 +51,7 @@ interface Props {
 
 const buttons = makeStyles(makeButtonsStyles);
 
-export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: Props): JSX.Element {
+export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: MedicalRecordDeleteDialogProps): JSX.Element {
   const { alertActionButton } = buttons();
   const { t } = useTranslation("yourloops");
   const alert = useAlert();
@@ -62,10 +62,9 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
     try {
       setInProgress(true);
       await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id);
-      onDelete(medicalRecord.id);
       setInProgress(false);
       alert.success(t("medical-record-delete-success"));
-      onClose();
+      onDelete(medicalRecord.id);
     } catch (err) {
       console.log(err);
       setInProgress(false);
