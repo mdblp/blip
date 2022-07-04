@@ -123,13 +123,14 @@ app.foo = {
 
 ## Linting
 
-The app is ruled by [eslint](https://eslint.org/) to keep code style consistent. It has an [editorconfig](https://editorconfig.org/) file which defines some common rules to correctly configure IDE formatting.  
+The app is ruled by [eslint](https://eslint.org/) to keep code style consistent. It has an [editorconfig](https://editorconfig.org/) file which defines some common rules to correctly configure IDE formatting.
 How to enable it :
 - VS code : download and install the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) plugin
 - Webstorm : enable the EditorConfig support into Settings / Code style
 
 ## Running the tests
 
+This section does not apply to test defined in package "yourloops". More information about "yourloops" tests can be found at `/packages/yourloops/README.md`.
 We use [Mocha](https://mochajs.org/) with [Chai](http://chaijs.com/) for our test framework inside [Karma](https://karma-runner.github.io/) as our test runner, as well as [Sinon.JS](http://sinonjs.org/) and [Sinon-Chai](https://github.com/domenic/sinon-chai) for spies and stubs. Our tests currently run on Google Chrome or Firefox (if not using WSL).
 
 To run the unit tests, use:
