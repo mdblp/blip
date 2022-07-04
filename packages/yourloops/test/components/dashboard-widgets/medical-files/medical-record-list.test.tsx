@@ -26,7 +26,7 @@
  */
 
 import React from "react";
-import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { buildTeam, buildTeamMember, createPatient } from "../../../common/utils";
 import { CategoryProps } from "../../../../components/dashboard-widgets/medical-files/medical-files-widget";
 import MedicalRecordList from "../../../../components/dashboard-widgets/medical-files/medical-record-list";
@@ -56,7 +56,7 @@ jest.mock("../../../../components/dialogs/medical-record-delete-dialog", () => (
   );
 });
 
-describe("Medical Records", () => {
+describe("Medical Record list", () => {
   const patient = createPatient("fakePatientId", []);
   const adminMember = buildTeamMember();
   const patientMember = buildTeamMember("fakeTeamId", patient.userid);
@@ -113,94 +113,76 @@ describe("Medical Records", () => {
 
   it("should render an empty list if no medical records are saved", async () => {
     getMedicalRecordsSpy().mockResolvedValueOnce([]);
-    await act(async () => {
-      await renderComponent();
-      checkListLength(0);
-    });
+    await renderComponent();
+    checkListLength(0);
   });
 
-  it("should render an empty list if no medical records are saved", async () => {
-    await act(async () => {
-      await renderComponent();
-      checkListLength(2);
-    });
+  it("should render a list if some medical records are saved", async () => {
+    await renderComponent();
+    checkListLength(2);
   });
 
   it("should not render create, edit and delete button if the user is a patient", async () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserHcp: () => false, isUserPatient: () => true } as User };
     });
-    await act(async () => {
-      await renderComponent();
-      expect(screen.queryByRole("button", { name: "new" })).toBeNull();
-      const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
-      fireEvent.mouseOver(listItem);
-      expect(within(listItem).queryByRole("button", { name: "edit-button" })).toBeNull();
-      expect(within(listItem).queryByRole("button", { name: "delete-button" })).toBeNull();
-    });
+    await renderComponent();
+    expect(screen.queryByRole("button", { name: "new" })).toBeNull();
+    const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
+    fireEvent.mouseOver(listItem);
+    expect(within(listItem).queryByRole("button", { name: "edit-button" })).toBeNull();
+    expect(within(listItem).queryByRole("button", { name: "delete-button" })).toBeNull();
   });
 
   it("should create a new medical record", async () => {
-    await act(async () => {
-      await renderComponent();
-      const newButton = screen.getByRole("button", { name: "new" });
-      expect(newButton).toBeDefined();
-      fireEvent.click(newButton);
-      fireEvent.click(screen.getByRole("button", { name: "mock-save-button" }));
-      await waitFor(() => checkListLength(3));
-    });
-  }, 60000);
+    await renderComponent();
+    const newButton = screen.getByRole("button", { name: "new" });
+    expect(newButton).toBeDefined();
+    fireEvent.click(newButton);
+    fireEvent.click(screen.getByRole("button", { name: "mock-save-button" }));
+    await waitFor(() => checkListLength(3));
+  });
 
   it("should open edit modal when clicking on edit button", async () => {
-    await act(async () => {
-      await renderComponent();
-      const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
-      fireEvent.mouseOver(listItem);
-      fireEvent.click(screen.getByRole("button", { name: "edit-button" }));
-      expect(screen.queryByLabelText("mock-edit-dialog")).not.toBeNull();
-    });
+    await renderComponent();
+    const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
+    fireEvent.mouseOver(listItem);
+    fireEvent.click(screen.getByRole("button", { name: "edit-button" }));
+    expect(screen.queryByLabelText("mock-edit-dialog")).not.toBeNull();
   });
 
   it("should close the edit dialog when clicking on cancel button", async () => {
-    await act(async () => {
-      await renderComponent();
-      const newButton = screen.getByRole("button", { name: "new" });
-      expect(newButton).toBeDefined();
-      fireEvent.click(newButton);
-      fireEvent.click(screen.getByRole("button", { name: "mock-cancel-button" }));
-      expect(screen.queryByLabelText("mock-edit-dialog")).toBeNull();
-    });
+    await renderComponent();
+    const newButton = screen.getByRole("button", { name: "new" });
+    expect(newButton).toBeDefined();
+    fireEvent.click(newButton);
+    fireEvent.click(screen.getByRole("button", { name: "mock-cancel-button" }));
+    expect(screen.queryByLabelText("mock-edit-dialog")).toBeNull();
   });
 
   it("should delete a medical record", async () => {
-    await act(async () => {
-      await renderComponent();
-      const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
-      fireEvent.mouseOver(listItem);
-      fireEvent.click(screen.getByRole("button", { name: "delete-button" }));
-      expect(screen.queryByLabelText("mock-delete-dialog")).not.toBeNull();
-      fireEvent.click(screen.getByRole("button", { name: "mock-delete-button" }));
-      await waitFor(() => checkListLength(1));
-    });
-  }, 60000);
+    await renderComponent();
+    const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
+    fireEvent.mouseOver(listItem);
+    fireEvent.click(screen.getByRole("button", { name: "delete-button" }));
+    expect(screen.queryByLabelText("mock-delete-dialog")).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "mock-delete-button" }));
+    await waitFor(() => checkListLength(1));
+  });
 
   it("should close the delete dialog when clicking on cancel button", async () => {
-    await act(async () => {
-      await renderComponent();
-      const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
-      fireEvent.mouseOver(listItem);
-      fireEvent.click(screen.getByRole("button", { name: "delete-button" }));
-      fireEvent.click(screen.getByRole("button", { name: "mock-cancel-button" }));
-      expect(screen.queryByLabelText("mock-delete-dialog")).toBeNull();
-    });
+    await renderComponent();
+    const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
+    fireEvent.mouseOver(listItem);
+    fireEvent.click(screen.getByRole("button", { name: "delete-button" }));
+    fireEvent.click(screen.getByRole("button", { name: "mock-cancel-button" }));
+    expect(screen.queryByLabelText("mock-delete-dialog")).toBeNull();
   });
 
   it("should open the edit dialog when clicking on a list item", async () => {
-    await act(async () => {
-      await renderComponent();
-      const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
-      fireEvent.click(listItem);
-      expect(screen.queryByLabelText("mock-edit-dialog")).not.toBeNull();
-    });
+    await renderComponent();
+    const listItem = screen.getByRole("listitem", { name: "record-fakeId" });
+    fireEvent.click(listItem);
+    expect(screen.queryByLabelText("mock-edit-dialog")).not.toBeNull();
   });
 });

@@ -58,7 +58,7 @@ describe("Medical record delete dialog", () => {
   });
 
   it("should delete medical record when clicking delete button", async () => {
-    await render(getDialogJSX());
+    render(getDialogJSX());
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
     await waitFor(() => expect(deleteMedicalRecordSpy).toHaveBeenCalled());
     expect(successMock).toHaveBeenCalledWith("medical-record-delete-success");
@@ -68,14 +68,14 @@ describe("Medical record delete dialog", () => {
   it("should display error message if delete failed", async () => {
     const deleteMedicalRecordSpy = jest.spyOn(MedicalFilesApi, "deleteMedicalRecord")
       .mockImplementationOnce(() => Promise.reject(Error("delete-failed")));
-    await render(getDialogJSX());
+    render(getDialogJSX());
     fireEvent.click(screen.getByRole("button", { name: "delete" }));
     await waitFor(() => expect(deleteMedicalRecordSpy).toHaveBeenCalled());
     expect(errorMock).toHaveBeenCalledWith("medical-record-delete-failed");
   });
 
-  it("should close dialog when clicking cancel button", async () => {
-    await render(getDialogJSX());
+  it("should close dialog when clicking cancel button", () => {
+    render(getDialogJSX());
     fireEvent.click(screen.getByRole("button", { name: "cancel" }));
     expect(onClose).toHaveBeenCalled();
   });
