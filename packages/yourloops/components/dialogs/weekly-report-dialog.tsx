@@ -44,7 +44,7 @@ import Divider from "@material-ui/core/Divider";
 import { WeeklyReport } from "../../lib/medical-files/model";
 import { useTeam } from "../../lib/team";
 
-interface Props {
+export interface WeeklyReportDialogProps {
   onClose: () => void;
   weeklyReport: WeeklyReport;
 }
@@ -67,7 +67,7 @@ const classes = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function WeeklyReportDialog(props: Props): JSX.Element {
+export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.Element {
   const { title, divider, explanatoryText } = classes();
   const { t } = useTranslation("yourloops");
   const { onClose, weeklyReport } = props;
@@ -82,6 +82,7 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
       open
       fullWidth
       maxWidth="md"
+      aria-label="weekly-report-dialog"
       onClose={onClose}
     >
       <DialogTitle>

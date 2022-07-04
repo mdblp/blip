@@ -26,44 +26,60 @@
  */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { buildTeam, buildTeamMember, createPatient } from "../../../common/utils";
-import MedicalFilesWidget from "../../../../components/dashboard-widgets/medical-files/medical-files-widget";
+import { fireEvent, render, screen } from "@testing-library/react";
+import WeeklyReportDialog from "../../../../components/dialogs/weekly-report-dialog";
+import { WeeklyReport } from "../../../../lib/medical-files/model";
 import * as teamHookMock from "../../../../lib/team";
-import * as authHookMock from "../../../../lib/auth";
-import User from "../../../../lib/auth/user";
+import { createPatient, createPatientTeam } from "../../../common/utils";
+import { UserInvitationStatus } from "../../../../models/generic";
+import { UNITS_TYPE } from "../../../../lib/units/utils";
+import { Alarm } from "../../../../models/alarm";
+
 
 jest.mock("../../../../lib/team");
-jest.mock("../../../../lib/auth");
-describe("Medical Files Widget", () => {
-  const patient = createPatient("fakePatientId", []);
-  const adminMember = buildTeamMember();
-  const patientMember = buildTeamMember("fakeTeamId", patient.userid);
-  const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember, patientMember]);
-  const getRemoteMonitoringTeamsMock = jest.fn().mockReturnValue([]);
+describe("Weekly report dialog", () => {
+  const teamId = "teamId";
+  const patientId = "patientId";
+  const patient = createPatient(patientId, [createPatientTeam(teamId, UserInvitationStatus.accepted)]);
+  const onClose = jest.fn();
+  const weeklyReport: WeeklyReport = {
+    id: "fakeId",
+    patientId,
+    teamId,
+    parameters: {
+      bgUnit: UNITS_TYPE.MGDL,
+      lowBg: 1,
+      highBg: 2,
+      outOfRangeThreshold: 3,
+      veryLowBg: 4,
+      hypoThreshold: 5,
+      nonDataTxThreshold: 6,
+      reportingPeriod: 7,
+    },
+    alarms: {} as Alarm,
+    creationDate: "2022-02-02",
+  };
 
-  function getMedicalFilesWidgetJSX() {
-    return <MedicalFilesWidget patient={patient} />;
+  function renderComponent() {
+    render(<WeeklyReportDialog onClose={onClose} weeklyReport={weeklyReport} />);
   }
 
+
   beforeAll(() => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User };
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return {
-        getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock,
-      };
+      return { getPatient: () => patient };
     });
   });
 
-  it("should throw an error if no monitoring team is found", () => {
-    expect(() => render(getMedicalFilesWidgetJSX())).toThrow();
+  it("should render dialog", () => {
+    renderComponent();
+    expect(screen.getByLabelText("weekly-report-dialog")).not.toBeNull();
   });
 
-  it("should display widget for the selected monitored team", () => {
-    getRemoteMonitoringTeamsMock.mockReturnValueOnce([remoteMonitoringTeam]);
-    render(getMedicalFilesWidgetJSX());
-    expect(screen.getByText("medical-files")).not.toBeNull();
+  it("should call onClose method when clicking on close button", () => {
+    renderComponent();
+    fireEvent.click(screen.getByRole("button", { name: "button-close" }));
+    expect(onClose).toHaveBeenCalled();
   });
 });
+
