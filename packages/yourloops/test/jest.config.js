@@ -20,7 +20,14 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
+  collectCoverageFrom: [
+    "<rootDir>/../app/**/**.ts*",
+    "<rootDir>/../components/**/**.ts*",
+    "<rootDir>/../lib/**/**.ts*",
+    "<rootDir>/../models/**/**.ts*",
+    "<rootDir>/../pages/**/**.ts*",
+    "<rootDir>/../services/**/**.ts*"
+  ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -147,7 +154,7 @@ module.exports = {
   setupFiles: ["<rootDir>/beforeEach.js"],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ["<rootDir>/setup.js"],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
