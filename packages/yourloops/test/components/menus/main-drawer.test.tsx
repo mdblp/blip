@@ -111,7 +111,7 @@ describe("Main Drawer", () => {
   async function checkFilterAction(filterLabel: string, urlFilterName: string, filterNumber?: number) {
     render(getMainDrawerJSX());
     const buttonName = filterNumber ? `${filterLabel} (${filterNumber})` : filterLabel;
-    await waitFor(() => expect(screen.queryByRole("button", { name: buttonName })).not.toBeNull());
+    await waitFor(() => expect(screen.queryByRole("button", { name: buttonName })).toBeInTheDocument());
     const link = await screen.findByRole("link", { name: urlFilterName });
     fireEvent.click(link);
     await waitFor(() => expect(`${history.location.pathname}${history.location.search}`).toBe(`/home?filter=${urlFilterName}`));
