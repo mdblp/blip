@@ -76,9 +76,12 @@ describe("Prescription list", () => {
   });
 
   it("should download prescriptions as a pdf when clicking on a list item", async () => {
+    const createObjectURLMock = jest.fn().mockReturnValue("fake/url");
+    window.URL.createObjectURL = createObjectURLMock;
     await renderComponent();
     const listItem = screen.getByRole("listitem", { name: "prescription-fakeId" });
     fireEvent.click(listItem);
     expect(getPrescriptionSpy()).toHaveBeenCalled();
+    await waitFor(() => expect(createObjectURLMock).toHaveBeenCalled());
   });
 });

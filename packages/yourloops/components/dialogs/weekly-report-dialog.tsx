@@ -27,7 +27,6 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import moment from "moment-timezone";
 
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
@@ -43,6 +42,7 @@ import Divider from "@material-ui/core/Divider";
 
 import { WeeklyReport } from "../../lib/medical-files/model";
 import { useTeam } from "../../lib/team";
+import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from "../../lib/utils";
 
 export interface WeeklyReportDialogProps {
   onClose: () => void;
@@ -95,60 +95,60 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="firstname">
           {t("firstname")} : {patient?.profile.firstName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="lastname">
           {t("lastname")} : {patient?.profile.lastName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t("birthdate")} : {moment.utc(patient?.profile.birthdate).format(moment.localeData().longDateFormat("ll")).toString()}
+        <DialogContentText color="textPrimary" aria-label="birthdate">
+          {t("birthdate")} : {formatDateWithMomentLongFormat(patient?.profile.birthdate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="gender">
           {t("gender")} : {patient?.profile.sex}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="email">
           {t("email")} : {patient?.profile.email}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="monitoring-team">
           {t("monitoring-team")} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t("created-at")} : {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()}
+        <DialogContentText color="textPrimary" aria-label="created-at">
+          {t("created-at")} : {formatDateWithMomentLongFormat(endDatePeriod)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t("monitoring-period")}: {moment.utc(startDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()} - {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat("ll")).toString()}
+        <DialogContentText color="textPrimary" aria-label="monitoring-period">
+          {t("monitoring-period")}: {formatDateWithMomentLongFormat(startDatePeriod)} - {formatDateWithMomentLongFormat(endDatePeriod)}
         </DialogContentText>
         <Divider className={divider} />
         <Typography variant="h4" align="center">
           {t("events-list")}
         </Typography>
-        <DialogContentText color="textPrimary" variant="h6">
-          {t("time-out-of-range-target")} : {`${Math.round(weeklyReport.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="time-out-of-range-target">
+          {t("time-out-of-range-target")} : {formatAlarmSettingThreshold(weeklyReport.alarms.timeSpentAwayFromTargetRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="glycemic-target">
           {t("glycemic-target")} : {`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="glycemic-target-event-trigger-threshold">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.outOfRangeThreshold}%`}
         </DialogContentText>
-        <DialogContentText color="textPrimary" variant="h6">
-          {t("severe-hypoglycemia")} : {`${Math.round(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="severe-hypoglycemia">
+          {t("severe-hypoglycemia")} : {formatAlarmSettingThreshold(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="severe-hypoglycemia-below">
           {t("severe-hypoglycemia-below")} : {`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="severe-hypoglycemia-event-trigger-threshold">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.hypoThreshold}%`}
         </DialogContentText>
 
-        <DialogContentText color="textPrimary" variant="h6">
-          {t("data-not-transmitted")} : {`${Math.round(weeklyReport.alarms.nonDataTransmissionRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="data-not-transmitted">
+          {t("data-not-transmitted")} : {formatAlarmSettingThreshold(weeklyReport.alarms.nonDataTransmissionRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="current-trigger-setting-data">
           {t("current-trigger-setting-data", { nonDataThreshold: weeklyReport.parameters.nonDataTxThreshold })}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText color="textPrimary" aria-label="data-not-transmitted-event-trigger-threshold">
           {t("event-trigger-threshold")} : {`${weeklyReport.parameters.nonDataTxThreshold}%`}
         </DialogContentText>
 
