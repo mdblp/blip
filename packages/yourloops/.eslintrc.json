@@ -1,0 +1,58 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "jest": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "standard-with-typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": [
+        "./test/**/*.*"
+      ],
+      "rules": {
+        "@typescript-eslint/promise-function-async": ["off"]
+      }
+    }
+  ],
+  "rules": {
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "space-before-function-paren": "off",
+    "@typescript-eslint/space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
+    "multiline-ternary": "off",
+    "@typescript-eslint/no-misused-promises": ["error", {"checksVoidReturn": false}],
+    "@typescript-eslint/consistent-type-assertions": ["off"],
+    "@typescript-eslint/no-floating-promises": ["off"],
+
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "quotes": "off",
+    "@typescript-eslint/quotes": ["off"],
+    "semi": "off",
+    "@typescript-eslint/semi": ["off"],
+    "comma-dangle": "off"
+  }
+}
