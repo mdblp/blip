@@ -25,54 +25,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import Button from "@material-ui/core/Button";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import Button from '@material-ui/core/Button'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
-import { Team, useTeam } from "../../lib/team";
-import { TeamLeaveDialogContentProps } from "../../pages/hcp/types";
-import { commonComponentStyles } from "../common";
-import { useAlert } from "../utils/snackbar";
-import { useHistory } from "react-router-dom";
-import LeaveTeamDialog from "../../pages/hcp/team-leave-dialog";
-import TeamUtils from "../../lib/team/utils";
+import { Team, useTeam } from '../../lib/team'
+import { TeamLeaveDialogContentProps } from '../../pages/hcp/types'
+import { commonComponentStyles } from '../common'
+import { useAlert } from '../utils/snackbar'
+import { useHistory } from 'react-router-dom'
+import LeaveTeamDialog from '../../pages/hcp/team-leave-dialog'
+import TeamUtils from '../../lib/team/utils'
 
 export interface LeaveTeamButtonProps {
-  team: Team;
+  team: Team
 }
 
 function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
-  const { team } = props;
-  const teamHook = useTeam();
-  const alert = useAlert();
-  const historyHook = useHistory();
-  const commonTeamClasses = commonComponentStyles();
-  const { t } = useTranslation("yourloops");
-  const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null);
+  const { team } = props
+  const teamHook = useTeam()
+  const alert = useAlert()
+  const historyHook = useHistory()
+  const commonTeamClasses = commonComponentStyles()
+  const { t } = useTranslation('yourloops')
+  const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null)
 
   const onTeamLeft = async (hasLeft: boolean) => {
     if (hasLeft) {
       try {
-        await teamHook.leaveTeam(team);
+        await teamHook.leaveTeam(team)
         const message = TeamUtils.teamHasOnlyOneMember(team)
-          ? t("team-page-success-deleted")
-          : t("team-page-leave-success");
-        alert.success(message);
-        historyHook.push("/");
+          ? t('team-page-success-deleted')
+          : t('team-page-leave-success')
+        alert.success(message)
+        historyHook.push('/')
       } catch (reason: unknown) {
         const message = TeamUtils.teamHasOnlyOneMember(team)
-          ? t("team-page-failure-deleted")
-          : t("team-page-failed-leave");
-        alert.error(message);
+          ? t('team-page-failure-deleted')
+          : t('team-page-failed-leave')
+        alert.error(message)
       }
     }
-    setTeamToLeave(null);
-  };
+    setTeamToLeave(null)
+  }
 
   const openLeaveTeamDialog = () => {
-    setTeamToLeave({ team, onDialogResult: onTeamLeft });
-  };
+    setTeamToLeave({ team, onDialogResult: onTeamLeft })
+  }
 
   return (
     <React.Fragment>
@@ -83,11 +83,11 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
         disableElevation
         onClick={openLeaveTeamDialog}
       >
-        <ExitToAppIcon className={commonTeamClasses.icon} />{t("button-team-leave")}
+        <ExitToAppIcon className={commonTeamClasses.icon} />{t('button-team-leave')}
       </Button>
       <LeaveTeamDialog teamToLeave={teamToLeave} />
     </React.Fragment>
-  );
+  )
 }
 
-export default LeaveTeamButton;
+export default LeaveTeamButton

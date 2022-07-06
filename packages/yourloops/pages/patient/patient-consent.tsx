@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import { ConsentPage as Consent } from "../../components/consents";
+import { ConsentPage as Consent } from '../../components/consents'
 
 /**
  * Patient Consent Page
  */
 function PatientConsentPage(): JSX.Element {
-  return <Consent messageKey="consent-welcome-message" />;
+  return <Consent messageKey="consent-welcome-message" />
 }
 
-export default PatientConsentPage;
+export default PatientConsentPage

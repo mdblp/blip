@@ -26,29 +26,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Dayjs } from "dayjs";
+import React from 'react'
+import { Dayjs } from 'dayjs'
 
 import {
   ChangeMonthDirection,
   CalendarChangeMonth,
   CalendarMode,
-  TRANSITION_DURATION,
-} from "./models";
+  TRANSITION_DURATION
+} from './models'
 
 interface ChangeMonthProps {
-  mode: CalendarMode;
-  currentMonth: Dayjs;
-  setCurrentMonth: (month: Dayjs) => void;
-  minDate: Dayjs;
-  maxDate: Dayjs;
+  mode: CalendarMode
+  currentMonth: Dayjs
+  setCurrentMonth: (month: Dayjs) => void
+  minDate: Dayjs
+  maxDate: Dayjs
 }
 
 type ChangeMonthState = [
   CalendarChangeMonth | null,
   (() => void) | undefined,
   (() => void) | undefined,
-];
+]
 
 /**
 * Used to compare if month are before/after
@@ -56,44 +56,44 @@ type ChangeMonthState = [
 * @returns a number representing only year & month
 */
 export function toYearMonth(d: Dayjs): number {
-  return d.year() * 100 + d.month();
+  return d.year() * 100 + d.month()
 }
 
 export function useChangeMonthState(props: ChangeMonthProps): ChangeMonthState {
-  const { mode, currentMonth, minDate, maxDate, setCurrentMonth } = props;
-  const [changingMonth, setChangingMonth] = React.useState<CalendarChangeMonth | null>(null);
+  const { mode, currentMonth, minDate, maxDate, setCurrentMonth } = props
+  const [changingMonth, setChangingMonth] = React.useState<CalendarChangeMonth | null>(null)
 
-  const prevMonth = currentMonth.subtract(1, "month");
-  const minMonth = toYearMonth(minDate);
-  const maxMonth = toYearMonth(maxDate);
+  const prevMonth = currentMonth.subtract(1, 'month')
+  const minMonth = toYearMonth(minDate)
+  const maxMonth = toYearMonth(maxDate)
 
   const changeCurrentMonth = (toMonth: Dayjs, direction: ChangeMonthDirection) => {
-    const transitionTimeoutThreshold = 150;
-    let timeoutTransition = 0;
+    const transitionTimeoutThreshold = 150
+    let timeoutTransition = 0
     const onAnimationEnd = () => {
       if (timeoutTransition > 0) {
-        window.clearTimeout(timeoutTransition);
-        timeoutTransition = 0;
-        setCurrentMonth(toMonth);
-        setChangingMonth(null);
+        window.clearTimeout(timeoutTransition)
+        timeoutTransition = 0
+        setCurrentMonth(toMonth)
+        setChangingMonth(null)
       }
-    };
-    timeoutTransition = window.setTimeout(onAnimationEnd, TRANSITION_DURATION + transitionTimeoutThreshold);
+    }
+    timeoutTransition = window.setTimeout(onAnimationEnd, TRANSITION_DURATION + transitionTimeoutThreshold)
     setChangingMonth({
       direction,
       toMonth,
-      onAnimationEnd,
-    });
-  };
+      onAnimationEnd
+    })
+  }
 
-  const canGoPrevMonth = minMonth < toYearMonth(mode === "range" ? prevMonth : currentMonth);
+  const canGoPrevMonth = minMonth < toYearMonth(mode === 'range' ? prevMonth : currentMonth)
   const handlePrevMonth = canGoPrevMonth ? (): void => {
-    changeCurrentMonth(prevMonth, "left");
-  } : undefined;
-  const canGoNextMonth = maxMonth > toYearMonth(currentMonth);
+    changeCurrentMonth(prevMonth, 'left')
+  } : undefined
+  const canGoNextMonth = maxMonth > toYearMonth(currentMonth)
   const handleNextMonth = canGoNextMonth ? (): void => {
-    changeCurrentMonth(currentMonth.add(1, "month"), "right");
-  } : undefined;
+    changeCurrentMonth(currentMonth.add(1, 'month'), 'right')
+  } : undefined
 
-  return [changingMonth, handlePrevMonth, handleNextMonth];
+  return [changingMonth, handlePrevMonth, handleNextMonth]
 }

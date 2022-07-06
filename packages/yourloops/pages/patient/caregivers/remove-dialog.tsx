@@ -26,63 +26,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { makeButtonsStyles } from "../../../components/theme";
+import { makeButtonsStyles } from '../../../components/theme'
 
-import { getUserFirstLastName } from "../../../lib/utils";
-import { RemoveDialogContentProps } from "./types";
+import { getUserFirstLastName } from '../../../lib/utils'
+import { RemoveDialogContentProps } from './types'
 
 export interface RemoveDialogProps {
-  actions: RemoveDialogContentProps | null;
+  actions: RemoveDialogContentProps | null
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-buttons" });
+const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
 
 /**
  * Remove a caregiver dialog / modale
  */
 function RemoveDialog(props: RemoveDialogProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const buttonsClasses = makeButtonsClasses();
+  const { t } = useTranslation('yourloops')
+  const buttonsClasses = makeButtonsClasses()
 
   const handleClose = () => {
-    props.actions?.onDialogResult(false);
-  };
+    props.actions?.onDialogResult(false)
+  }
   const handleRemoveCaregiver = () => {
-    props.actions?.onDialogResult(true);
-  };
+    props.actions?.onDialogResult(true)
+  }
 
-  const dialogIsOpen = props.actions !== null;
-  const userName = props.actions !== null ? getUserFirstLastName(props.actions.caregiver.user) : { firstName: "", lastName: "" };
-  const name = t("user-name", userName);
+  const dialogIsOpen = props.actions !== null
+  const userName = props.actions !== null ? getUserFirstLastName(props.actions.caregiver.user) : { firstName: '', lastName: '' }
+  const name = t('user-name', userName)
 
   return (
     <Dialog
       id="patient-remove-caregiver-dialog"
       open={dialogIsOpen}
-      aria-labelledby={t("modal-patient-remove-caregiver-title")}
+      aria-labelledby={t('modal-patient-remove-caregiver-title')}
       onClose={handleClose}
     >
       <DialogTitle id="patient-remove-caregiver-dialog-title">
-        <strong>{t("modal-patient-remove-caregiver-title")}</strong>
+        <strong>{t('modal-patient-remove-caregiver-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t("modal-remove-caregiver-question", { name })}
+          {t('modal-remove-caregiver-question', { name })}
         </DialogContentText>
         <DialogContentText>
-          {t("modal-patient-remove-caregiver-info-2")}
+          {t('modal-patient-remove-caregiver-info-2')}
         </DialogContentText>
       </DialogContent>
 
@@ -91,7 +91,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
           id="patient-remove-caregiver-dialog-button-cancel"
           onClick={handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="patient-remove-caregiver-dialog-button-remove"
@@ -100,11 +100,11 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
           disableElevation
           onClick={handleRemoveCaregiver}
         >
-          {t("modal-patient-remove-caregiver-remove")}
+          {t('modal-patient-remove-caregiver-remove')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default RemoveDialog;
+export default RemoveDialog

@@ -25,108 +25,108 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useState } from "react";
-import _ from "lodash";
-import bows from "bows";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import React, { useMemo, useState } from 'react'
+import _ from 'lodash'
+import bows from 'bows'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import CardContent from "@material-ui/core/CardContent";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardMedia from '@material-ui/core/CardMedia'
+import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
+import CardContent from '@material-ui/core/CardContent'
 
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
-import { HistoryState } from "../../models/generic";
-import { Profile } from "../../models/user";
-import { useAuth } from "../../lib/auth";
-import ConsentForm from "./form";
-import appConfig from "../../lib/config";
+import { HistoryState } from '../../models/generic'
+import { Profile } from '../../models/user'
+import { useAuth } from '../../lib/auth'
+import ConsentForm from './form'
+import appConfig from '../../lib/config'
 
 interface ConsentProps {
-  messageKey: string;
+  messageKey: string
 }
 
 const style = makeStyles((theme: Theme) => {
   return {
     mainContainer: {
-      margin: "auto",
-      [theme.breakpoints.down("xs")]: {
+      margin: 'auto',
+      [theme.breakpoints.down('xs')]: {
         margin: 0,
-        padding: 0,
-      },
+        padding: 0
+      }
     },
     card: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      textAlign: "center",
-      padding: theme.spacing(4),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      textAlign: 'center',
+      padding: theme.spacing(4)
     },
     cardContent: {
       marginLeft: theme.spacing(2),
       marginRight: theme.spacing(2),
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(0),
-        marginRight: theme.spacing(0),
-      },
+        marginRight: theme.spacing(0)
+      }
     },
     buttons: {
-      display: "flex",
-      justifyContent: "space-around",
+      display: 'flex',
+      justifyContent: 'space-around',
       marginTop: theme.spacing(2),
-      [theme.breakpoints.down("sm")]: {
-        justifyContent: "space-between",
-      },
-    },
-  };
-}, { name: "ylp-component-consent" });
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'space-between'
+      }
+    }
+  }
+}, { name: 'ylp-component-consent' })
 
 /**
  * Renew consents page
  */
 function Page(props: ConsentProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const historyHook = useHistory<HistoryState>();
-  const auth = useAuth();
-  const classes = style();
-  const [policyAccepted, setPolicyAccepted] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted);
-  const log = useMemo(() => bows("consent"), []);
-  const fromPath = useMemo(() => historyHook.location.state?.from?.pathname, [historyHook]);
+  const { t } = useTranslation('yourloops')
+  const historyHook = useHistory<HistoryState>()
+  const auth = useAuth()
+  const classes = style()
+  const [policyAccepted, setPolicyAccepted] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted)
+  const log = useMemo(() => bows('consent'), [])
+  const fromPath = useMemo(() => historyHook.location.state?.from?.pathname, [historyHook])
 
-  const user = auth.user;
+  const user = auth.user
 
   if (user) {
-    const consentsChecked = policyAccepted && termsAccepted;
+    const consentsChecked = policyAccepted && termsAccepted
     // Ask for feedback only if the user is an HCP, and didn't have previously
     // see that option (e.g. Account created before it was implemented)
-    const showFeedback = user.isUserHcp() && !user.profile?.contactConsent;
+    const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
 
     const onDecline = () => {
-      auth.logout().catch((reason) => console.error("logout", reason));
-    };
+      auth.logout().catch((reason) => console.error('logout', reason))
+    }
 
     const onConfirm = () => {
       // api call
-      const now = new Date().toISOString();
-      const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
-      updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted };
-      updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted };
+      const now = new Date().toISOString()
+      const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
+      updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted }
+      updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted }
       if (showFeedback) {
-        updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted };
+        updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted }
       }
       auth.updateProfile(updatedProfile).catch((reason: unknown) => {
-        log.error(reason);
+        log.error(reason)
       }).finally(() => {
-        historyHook.push(fromPath ?? "/");
-      });
-    };
+        historyHook.push(fromPath ?? '/')
+      })
+    }
 
     return (
       <Container maxWidth="sm" className={classes.mainContainer}>
@@ -135,23 +135,23 @@ function Page(props: ConsentProps): JSX.Element {
           spacing={0}
           alignItems="center"
           justify="center"
-          style={{ minHeight: "100vh" }}>
+          style={{ minHeight: '100vh' }}>
           <Grid item xs={12}>
             <Card className={classes.card}>
               <CardMedia
                 style={{
-                  display: "flex",
-                  paddingTop: "1em",
-                  paddingBottom: "1em",
+                  display: 'flex',
+                  paddingTop: '1em',
+                  paddingBottom: '1em'
                 }}>
                 <img
                   src={`/branding_${appConfig.BRANDING}_logo.svg`}
                   style={{
-                    height: "60px",
-                    marginLeft: "auto",
-                    marginRight: "auto",
+                    height: '60px',
+                    marginLeft: 'auto',
+                    marginRight: 'auto'
                   }}
-                  alt={t("alt-img-logo")}
+                  alt={t('alt-img-logo')}
                 />
               </CardMedia>
               <CardContent className={classes.cardContent}>
@@ -160,9 +160,9 @@ function Page(props: ConsentProps): JSX.Element {
                 </Typography>
                 <form
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
                   }}
                   noValidate
                   autoComplete="off">
@@ -181,7 +181,7 @@ function Page(props: ConsentProps): JSX.Element {
                       id="consent-button-decline"
                       onClick={onDecline}
                     >
-                      {t("button-decline")}
+                      {t('button-decline')}
                     </Button>
                     <Button
                       id="consent-button-confirm"
@@ -191,7 +191,7 @@ function Page(props: ConsentProps): JSX.Element {
                       disabled={!consentsChecked}
                       onClick={onConfirm}
                     >
-                      {t("button-accept")}
+                      {t('button-accept')}
                     </Button>
                   </div>
                 </form>
@@ -200,9 +200,9 @@ function Page(props: ConsentProps): JSX.Element {
           </Grid>
         </Grid>
       </Container>
-    );
+    )
   }
-  return <React.Fragment />;
+  return <React.Fragment />
 }
 
-export default Page;
+export default Page

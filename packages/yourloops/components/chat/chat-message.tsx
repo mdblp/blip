@@ -26,143 +26,141 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Face from "@material-ui/icons/Face";
-import { useTranslation } from "react-i18next";
-import { CheckSharp } from "@material-ui/icons";
-import green from "@material-ui/core/colors/green";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Face from '@material-ui/icons/Face'
+import { useTranslation } from 'react-i18next'
+import { CheckSharp } from '@material-ui/icons'
+import green from '@material-ui/core/colors/green'
 
 export interface ChatMessageProps {
-  text: string;
-  author: string;
-  privateMsg: boolean;
-  isMine: boolean;
-  timestamp: string;
-  ack: boolean;
+  text: string
+  author: string
+  privateMsg: boolean
+  isMine: boolean
+  timestamp: string
+  ack: boolean
 }
 
 const chatMessageStyles = makeStyles((theme: Theme) => {
   return {
     chatMessageContainer: {
-      fontFamily: "Roboto",
-      color: "white",
-      width: "90%",
-      display: "flex",
-      position: "relative",
+      fontFamily: 'Roboto',
+      color: 'white',
+      width: '90%',
+      display: 'flex',
+      position: 'relative',
       padding: theme.spacing(1),
       marginTop: theme.spacing(1),
-      whiteSpace: "pre-line",
-      flexDirection: "column",
+      whiteSpace: 'pre-line',
+      flexDirection: 'column'
     },
     left: {
-      "borderRadius": "0px 12px 12px 12px",
-      "backgroundColor": theme.palette.primary.main,
-      "&::before": {
+      borderRadius: '0px 12px 12px 12px',
+      backgroundColor: theme.palette.primary.main,
+      '&::before': {
         content: "''",
         width: 0,
         height: 0,
         borderTop: `20px solid ${theme.palette.primary.main}`,
-        borderLeft: "20px solid transparent",
-        position: "absolute",
+        borderLeft: '20px solid transparent',
+        position: 'absolute',
         top: 0,
-        left: -8,
+        left: -8
       },
-      "&.private": {
-        "backgroundColor": "var(--chat-widget-private-msg-not-mine)",
-        "&::before": {
-          borderTop: "20px solid var(--chat-widget-private-msg-not-mine)",
-        },
-      },
+      '&.private': {
+        backgroundColor: 'var(--chat-widget-private-msg-not-mine)',
+        '&::before': {
+          borderTop: '20px solid var(--chat-widget-private-msg-not-mine)'
+        }
+      }
     },
     right: {
-      "marginLeft": "auto",
-      "borderRadius": "12px 0px 12px 12px",
-      "backgroundColor": theme.palette.primary.dark,
-      "&::after": {
+      marginLeft: 'auto',
+      borderRadius: '12px 0px 12px 12px',
+      backgroundColor: theme.palette.primary.dark,
+      '&::after': {
         content: "''",
         width: 0,
         height: 0,
         borderTop: `20px solid ${theme.palette.primary.dark}`,
-        borderRight: "20px solid transparent",
-        position: "absolute",
+        borderRight: '20px solid transparent',
+        position: 'absolute',
         top: 0,
-        right: -8,
+        right: -8
       },
-      "&.private": {
-        "backgroundColor": "var(--chat-widget-private-msg-mine)",
-        "&::after": {
-          borderTop: "20px solid var(--chat-widget-private-msg-mine)",
-        },
-      },
+      '&.private': {
+        backgroundColor: 'var(--chat-widget-private-msg-mine)',
+        '&::after': {
+          borderTop: '20px solid var(--chat-widget-private-msg-mine)'
+        }
+      }
     },
     chatMessageHeader: {
       zIndex: 2,
-      display: "flex",
-      alignItems: "center",
-      marginBottom: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      marginBottom: theme.spacing(1)
     },
     chatMessageFooter: {
-      display: "flex",
-      justifyContent: "flex-end",
-      alignItems: "center",
-      fontSize: "0.75em",
+      display: 'flex',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      fontSize: '0.75em'
     },
     chatMessageCheckMarkAck: {
-      color: green.A200,
+      color: green.A200
     },
     chatMessageCheckMarkNack: {
-      color: theme.palette.grey[400],
+      color: theme.palette.grey[400]
     },
     chatMessageCheckMark: {
       width: 20,
-      fontSize: "0.85rem",
+      fontSize: '0.85rem'
     },
     chatMessageSecondCheckMark: {
-      position: "relative",
-      left: -15,
+      position: 'relative',
+      left: -15
     },
     chatMessageNew: {
-      "backgroundColor": theme.palette.common.white,
-      "borderRadius": 12,
-      "paddingLeft": theme.spacing(1),
-      "paddingRight": theme.spacing(1),
-      "marginLeft": theme.spacing(1),
-      "color": theme.palette.primary.main,
-      "&.private": {
-        color:"var(--chat-widget-private-msg-mine)",
-      },
-    },
-  };
-}, { name: "ylp-chat-message" });
-
-
+      backgroundColor: theme.palette.common.white,
+      borderRadius: 12,
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      color: theme.palette.primary.main,
+      '&.private': {
+        color: 'var(--chat-widget-private-msg-mine)'
+      }
+    }
+  }
+}, { name: 'ylp-chat-message' })
 
 function ChatMessage(props: ChatMessageProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { text, author, privateMsg, isMine, timestamp, ack } = props;
-  const classes = chatMessageStyles();
-  const messageContainerType = isMine ? classes.right : classes.left;
-  const privateMessage = privateMsg ? "private" : "";
-  const isNew = !isMine && !ack;
-  const messageAck = ack ? classes.chatMessageCheckMarkAck : classes.chatMessageCheckMarkNack;
-  const displayDate = new Date(timestamp);
-  const displayDateMn = ("0" + displayDate.getMinutes()).slice(-2);
+  const { t } = useTranslation('yourloops')
+  const { text, author, privateMsg, isMine, timestamp, ack } = props
+  const classes = chatMessageStyles()
+  const messageContainerType = isMine ? classes.right : classes.left
+  const privateMessage = privateMsg ? 'private' : ''
+  const isNew = !isMine && !ack
+  const messageAck = ack ? classes.chatMessageCheckMarkAck : classes.chatMessageCheckMarkNack
+  const displayDate = new Date(timestamp)
+  const displayDateMn = (`0${displayDate.getMinutes()}`).slice(-2)
 
   const isToday = (someDate: Date) => {
-    const today = new Date();
+    const today = new Date()
     return someDate.getDate() === today.getDate() &&
       someDate.getMonth() === today.getMonth() &&
-      someDate.getFullYear() === today.getFullYear();
-  };
+      someDate.getFullYear() === today.getFullYear()
+  }
 
   const isYesterday = (someDate: Date) => {
-    const today = new Date();
-    return someDate.getDate() === today.getDate() -1 &&
+    const today = new Date()
+    return someDate.getDate() === today.getDate() - 1 &&
       someDate.getMonth() === today.getMonth() &&
-      someDate.getFullYear() === today.getFullYear();
-  };
+      someDate.getFullYear() === today.getFullYear()
+  }
 
   return (
     <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
@@ -178,7 +176,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
       </div>
       <div className={classes.chatMessageFooter}>
         <div>
-          { isToday(displayDate) ? t("today") : (isYesterday(displayDate) ? t("yesterday") : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDateMn}`}
+          { isToday(displayDate) ? t('today') : (isYesterday(displayDate) ? t('yesterday') : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDateMn}`}
         </div>
         {isNew ? <div className={`${classes.chatMessageNew} ${privateMessage}`}>Nouveau</div>
           : <div className={messageAck}>
@@ -189,7 +187,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
       </div>
 
     </div>
-  );
+  )
 }
 
-export default ChatMessage;
+export default ChatMessage

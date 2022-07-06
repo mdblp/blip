@@ -25,60 +25,60 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useTranslation } from "react-i18next";
-import diabeloopUrls from "../../lib/diabeloop-url";
-import User from "../../lib/auth/user";
+import React from 'react'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
+import diabeloopUrls from '../../lib/diabeloop-url'
+import User from '../../lib/auth/user'
 
 const documentSelectStyle = makeStyles((theme: Theme) => {
   return {
     select: {
-      fontSize: "12px",
-      color: theme.palette.grey[600],
-    },
-  };
-});
+      fontSize: '12px',
+      color: theme.palette.grey[600]
+    }
+  }
+})
 
 export interface DocumentSelectProps {
-  user?: User,
+  user?: User
 }
 
-export const ACCOMPANYING_DOCUMENTS = "accompanying-documents";
-export const INTENDED_USE = "intended-use";
-export const TRAINING = "training";
+export const ACCOMPANYING_DOCUMENTS = 'accompanying-documents'
+export const INTENDED_USE = 'intended-use'
+export const TRAINING = 'training'
 
 function DocumentSelect(props: DocumentSelectProps): JSX.Element {
-  const { user } = props;
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = documentSelectStyle();
-  const selectedValue = t(ACCOMPANYING_DOCUMENTS);
-  const intendedUse = t(INTENDED_USE);
-  const training = t(TRAINING);
+  const { user } = props
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = documentSelectStyle()
+  const selectedValue = t(ACCOMPANYING_DOCUMENTS)
+  const intendedUse = t(INTENDED_USE)
+  const training = t(TRAINING)
 
-  const values = [selectedValue, intendedUse, training];
+  const values = [selectedValue, intendedUse, training]
 
   const getUrl = (documentName: string) => {
     switch (documentName) {
-    case intendedUse:
-      return diabeloopUrls.getIntendedUseUrL(i18n.language);
-    case training:
-      return diabeloopUrls.getTrainingUrl(i18n.language, user?.role);
-    default:
-      return null;
+      case intendedUse:
+        return diabeloopUrls.getIntendedUseUrL(i18n.language)
+      case training:
+        return diabeloopUrls.getTrainingUrl(i18n.language, user?.role)
+      default:
+        return null
     }
-  };
+  }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = event.target.value as string;
-    const url = getUrl(selectedValue);
+    const selectedValue = event.target.value as string
+    const url = getUrl(selectedValue)
     if (url) {
-      window.open(url);
+      window.open(url)
     }
-  };
+  }
 
   return (
     <Select
@@ -87,8 +87,8 @@ function DocumentSelect(props: DocumentSelectProps): JSX.Element {
       value={selectedValue}
       inputProps={{
         classes: {
-          select: classes.select,
-        },
+          select: classes.select
+        }
       }}
       IconComponent={ArrowDropDownIcon}
       onChange={handleChange}
@@ -99,7 +99,7 @@ function DocumentSelect(props: DocumentSelectProps): JSX.Element {
         </MenuItem>
       ))}
     </Select>
-  );
+  )
 }
 
-export default DocumentSelect;
+export default DocumentSelect

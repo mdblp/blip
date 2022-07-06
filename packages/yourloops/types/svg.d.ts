@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- declare module "*.svg" {
-  const value: string;
-  export default value;
+declare module '*.svg' {
+  const value: string
+  export default value
 }

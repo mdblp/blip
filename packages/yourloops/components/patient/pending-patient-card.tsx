@@ -26,54 +26,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import _ from "lodash";
+import React from 'react'
+import _ from 'lodash'
 
-import { makeStyles } from "@material-ui/core/styles";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
+import { makeStyles } from '@material-ui/core/styles'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import Link from '@material-ui/core/Link'
+import Paper from '@material-ui/core/Paper'
 
-import IconActionButton from "../buttons/icon-action";
-import PersonRemoveIcon from "../icons/PersonRemoveIcon";
-import { Patient } from "../../lib/data/patient";
+import IconActionButton from '../buttons/icon-action'
+import PersonRemoveIcon from '../icons/PersonRemoveIcon'
+import { Patient } from '../../lib/data/patient'
 
 interface PendingPatientCardProps {
-  patient: Patient;
+  patient: Patient
 }
 
 const style = makeStyles(theme => ({
   container: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     marginBottom: theme.spacing(2),
     padding: theme.spacing(2),
-    paddingRight: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5)
   },
   pendingIconContainer: {
-    display: "flex",
-    marginRight: theme.spacing(2),
+    display: 'flex',
+    marginRight: theme.spacing(2)
   },
   fullWidth: {
-    width: "100%",
-  },
-}));
+    width: '100%'
+  }
+}))
 
 /**
  * TODO Temporary here to disable remove patient functionality until Yourloops new certification
  * see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
  */
-const removeButtonEnabled = false;
+const removeButtonEnabled = false
 
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
-  const { patient } = props;
-  const classes = style();
-  const email = _.get(patient, "emails[0]", patient.profile.email);
-  const patientId = patient.userid;
+  const { patient } = props
+  const classes = style()
+  const email = _.get(patient, 'emails[0]', patient.profile.email)
+  const patientId = patient.userid
 
   const handleOnClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+    e.stopPropagation()
+  }
 
   return (
     <Paper
@@ -102,7 +102,7 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
         />
       }
     </Paper>
-  );
+  )
 }
 
-export default PendingPatientCard;
+export default PendingPatientCard

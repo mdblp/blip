@@ -25,38 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import { UserRoles } from "../models/user";
-import { useAuth } from "../lib/auth";
-import { NotificationContextProvider } from "../lib/notifications/hook";
-import { TeamContextProvider } from "../lib/team";
-import { DataContextProvider, DefaultDataContext } from "../lib/data/hook";
-import ProfilePage from "./profile";
-import { Redirect, Route, Switch } from "react-router-dom";
-import NotificationsPage from "./notifications";
-import CertifyAccountPage from "./hcp/certify-account-page";
-import CaregiversPage from "./patient/caregivers/page";
-import PatientDataPage from "../components/patient-data";
-import DashboardLayout from "../components/layouts/dashboard-layout";
-import TeamDetailsPage from "./team/team-details-page";
-import HomePage from "./home-page";
+import { UserRoles } from '../models/user'
+import { useAuth } from '../lib/auth'
+import { NotificationContextProvider } from '../lib/notifications/hook'
+import { TeamContextProvider } from '../lib/team'
+import { DataContextProvider, DefaultDataContext } from '../lib/data/hook'
+import ProfilePage from './profile'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import NotificationsPage from './notifications'
+import CertifyAccountPage from './hcp/certify-account-page'
+import CaregiversPage from './patient/caregivers/page'
+import PatientDataPage from '../components/patient-data'
+import DashboardLayout from '../components/layouts/dashboard-layout'
+import TeamDetailsPage from './team/team-details-page'
+import HomePage from './home-page'
 
 export function MainLayout(): JSX.Element {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const getHomePage = (): JSX.Element => {
     switch (user?.role) {
-    case UserRoles.hcp:
-    case UserRoles.caregiver:
-      return <HomePage />;
-    case UserRoles.patient:
-      return <PatientDataPage />;
-    default:
-      console.error(`no route found for role ${user?.role}`);
-      return <Redirect to="/not-found" />;
+      case UserRoles.hcp:
+      case UserRoles.caregiver:
+        return <HomePage />
+      case UserRoles.patient:
+        return <PatientDataPage />
+      default:
+        console.error(`no route found for role ${user?.role}`)
+        return <Redirect to="/not-found" />
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -105,5 +105,5 @@ export function MainLayout(): JSX.Element {
         </NotificationContextProvider>
       }
     </React.Fragment>
-  );
+  )
 }

@@ -26,123 +26,123 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useEffect, useState } from "react";
-import _ from "lodash";
-import bows from "bows";
-import { Link as LinkRedirect } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React, { useMemo, useEffect, useState } from 'react'
+import _ from 'lodash'
+import bows from 'bows'
+import { Link as LinkRedirect } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Link from "@material-ui/core/Link";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Link from '@material-ui/core/Link'
 
-import { Errors } from "./models";
-import { Units } from "../../models/generic";
-import { HcpProfession } from "../../models/hcp-profession";
-import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings, UserRoles } from "../../models/user";
-import { getCurrentLang } from "../../lib/language";
-import { REGEX_BIRTHDATE, setPageTitle } from "../../lib/utils";
-import { useAuth } from "../../lib/auth";
-import metrics from "../../lib/metrics";
-import { useAlert } from "../../components/utils/snackbar";
-import PersonalInfoForm from "./personal-info-form";
-import PreferencesForm from "./preferences-form";
-import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
-import SwitchRoleDialogs from "../../components/switch-role";
+import { Errors } from './models'
+import { Units } from '../../models/generic'
+import { HcpProfession } from '../../models/hcp-profession'
+import { LanguageCodes } from '../../models/locales'
+import { Preferences, Profile, Settings, UserRoles } from '../../models/user'
+import { getCurrentLang } from '../../lib/language'
+import { REGEX_BIRTHDATE, setPageTitle } from '../../lib/utils'
+import { useAuth } from '../../lib/auth'
+import metrics from '../../lib/metrics'
+import { useAlert } from '../../components/utils/snackbar'
+import PersonalInfoForm from './personal-info-form'
+import PreferencesForm from './preferences-form'
+import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
+import SwitchRoleDialogs from '../../components/switch-role'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
-      marginLeft: theme.spacing(2),
+      marginLeft: theme.spacing(2)
     },
     cancelLink: {
-      textDecoration: "unset",
+      textDecoration: 'unset'
     },
     formInput: {
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(2)
     },
     title: {
       color: theme.palette.primary.main,
-      textAlign: "center",
-      width: "100%",
+      textAlign: 'center',
+      width: '100%'
     },
     container: {
-      backgroundColor: "white",
-      marginTop: "32px",
+      backgroundColor: 'white',
+      marginTop: '32px',
       padding: 0,
-      [theme.breakpoints.up("sm")]: {
-        border: "solid",
-        borderRadius: "15px",
+      [theme.breakpoints.up('sm')]: {
+        border: 'solid',
+        borderRadius: '15px',
         borderColor: theme.palette.grey[300],
-        borderWidth: "1px",
-        padding: "0 64px",
-      },
+        borderWidth: '1px',
+        padding: '0 64px'
+      }
     },
     uppercase: {
-      textTransform: "uppercase",
+      textTransform: 'uppercase'
     },
     halfWide: {
-      [theme.breakpoints.up("sm")]: {
-        width: "calc(50% - 16px)",
-      },
+      [theme.breakpoints.up('sm')]: {
+        width: 'calc(50% - 16px)'
+      }
     },
     inputContainer: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      [theme.breakpoints.only("xs")]: {
-        flexDirection: "column",
-      },
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      [theme.breakpoints.only('xs')]: {
+        flexDirection: 'column'
+      }
     },
     categoryLabel: {
-      "display": "flex",
-      "alignItems": "center",
-      "marginTop": theme.spacing(5),
-      "& > :nth-child(2)": {
-        marginLeft: theme.spacing(1),
-      },
-    },
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: theme.spacing(5),
+      '& > :nth-child(2)': {
+        marginLeft: theme.spacing(1)
+      }
+    }
   })
-);
+)
 
-const log = bows("ProfilePage");
+const log = bows('ProfilePage')
 
 const ProfilePage = (): JSX.Element => {
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = useStyles();
-  const alert = useAlert();
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = useStyles()
+  const alert = useAlert()
   const {
     user,
     updatePreferences,
     updateProfile,
-    updateSettings,
-  } = useAuth();
+    updateSettings
+  } = useAuth()
 
   if (!user) {
-    throw new Error("User must be logged-in");
+    throw new Error('User must be logged-in')
   }
 
-  const role = user.role;
-  const showFeedback = role === UserRoles.hcp;
+  const role = user.role
+  const showFeedback = role === UserRoles.hcp
 
-  const [firstName, setFirstName] = useState<string>(user.firstName);
-  const [lastName, setLastName] = useState<string>(user.lastName);
-  const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram);
-  const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? "");
-  const [birthPlace, setBirthPlace] = useState<string>(user.profile?.patient?.birthPlace ?? "");
-  const [sex, setSex] = useState<string>(user.profile?.patient?.sex ?? "");
-  const [ins, setIns] = useState<string>(user.profile?.patient?.ins ?? "");
-  const [ssn, setSsn] = useState<string>(user.profile?.patient?.ssn ?? "");
-  const [referringDoctor, setReferringDoctor] = useState<string>(user.profile?.patient?.referringDoctor ?? "");
-  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false);
-  const [lang, setLang] = useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang());
-  const [hcpProfession, setHcpProfession] = useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty);
-  const [feedbackAccepted, setFeedbackAccepted] = useState<boolean>(!!user?.profile?.contactConsent?.isAccepted);
-  const [saving, setSaving] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>(user.firstName)
+  const [lastName, setLastName] = useState<string>(user.lastName)
+  const [unit, setUnit] = useState<Units>(user.settings?.units?.bg ?? Units.gram)
+  const [birthDate, setBirthDate] = useState<string>(user.profile?.patient?.birthday ?? '')
+  const [birthPlace, setBirthPlace] = useState<string>(user.profile?.patient?.birthPlace ?? '')
+  const [sex, setSex] = useState<string>(user.profile?.patient?.sex ?? '')
+  const [ins, setIns] = useState<string>(user.profile?.patient?.ins ?? '')
+  const [ssn, setSsn] = useState<string>(user.profile?.patient?.ssn ?? '')
+  const [referringDoctor, setReferringDoctor] = useState<string>(user.profile?.patient?.referringDoctor ?? '')
+  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
+  const [lang, setLang] = useState<LanguageCodes>(user.preferences?.displayLanguageCode ?? getCurrentLang())
+  const [hcpProfession, setHcpProfession] = useState<HcpProfession>(user.profile?.hcpProfession ?? HcpProfession.empty)
+  const [feedbackAccepted, setFeedbackAccepted] = useState<boolean>(!!user?.profile?.contactConsent?.isAccepted)
+  const [saving, setSaving] = useState<boolean>(false)
 
   const errors: Errors = useMemo(() => ({
     firstName: !firstName,
@@ -150,130 +150,130 @@ const ProfilePage = (): JSX.Element => {
     hcpProfession: role === UserRoles.hcp && hcpProfession === HcpProfession.empty,
     birthDate: role === UserRoles.patient && !REGEX_BIRTHDATE.test(birthDate),
     ins: role === UserRoles.patient && ins.length > 0 && ins.length !== 15,
-    ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !== 15,
-  }), [firstName, lastName, role, hcpProfession, birthDate, ins.length, ssn.length]);
+    ssn: role === UserRoles.patient && ssn.length > 0 && ssn.length !== 15
+  }), [firstName, lastName, role, hcpProfession, birthDate, ins.length, ssn.length])
 
   const getUpdatedPreferences = (): Preferences => {
-    const updatedPreferences = _.cloneDeep(user.preferences ?? {}) as Preferences;
-    updatedPreferences.displayLanguageCode = lang;
-    return updatedPreferences;
-  };
+    const updatedPreferences = _.cloneDeep(user.preferences ?? {})
+    updatedPreferences.displayLanguageCode = lang
+    return updatedPreferences
+  }
 
   const getUpdatedProfile = (): Profile => {
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
-    updatedProfile.firstName = firstName;
-    updatedProfile.lastName = lastName;
-    updatedProfile.fullName = `${firstName} ${lastName}`;
+    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
+    updatedProfile.firstName = firstName
+    updatedProfile.lastName = lastName
+    updatedProfile.fullName = `${firstName} ${lastName}`
 
     if (user.isUserPatient()) {
       if (!updatedProfile.patient) {
-        updatedProfile.patient = {};
+        updatedProfile.patient = {}
       }
-      updatedProfile.patient.birthday = birthDate;
-      updatedProfile.patient.birthPlace = birthPlace;
-      updatedProfile.patient.ins = ins;
-      updatedProfile.patient.sex = sex;
-      updatedProfile.patient.ssn = ssn;
-      updatedProfile.patient.referringDoctor = referringDoctor;
+      updatedProfile.patient.birthday = birthDate
+      updatedProfile.patient.birthPlace = birthPlace
+      updatedProfile.patient.ins = ins
+      updatedProfile.patient.sex = sex
+      updatedProfile.patient.ssn = ssn
+      updatedProfile.patient.referringDoctor = referringDoctor
     }
     if (user.isUserHcp()) {
-      updatedProfile.hcpProfession = hcpProfession;
+      updatedProfile.hcpProfession = hcpProfession
     }
     if (showFeedback && !!user?.profile?.contactConsent?.isAccepted !== feedbackAccepted) {
       updatedProfile.contactConsent = {
         isAccepted: feedbackAccepted,
-        acceptanceTimestamp: new Date().toISOString(),
-      };
+        acceptanceTimestamp: new Date().toISOString()
+      }
     }
 
-    return updatedProfile;
-  };
+    return updatedProfile
+  }
 
   const getUpdatedSettings = (): Settings => {
-    const updatedSettings = _.cloneDeep(user.settings ?? {}) as Settings;
-    _.set(updatedSettings, "units.bg", unit);
-    return updatedSettings;
-  };
+    const updatedSettings = _.cloneDeep(user.settings ?? {})
+    _.set(updatedSettings, 'units.bg', unit)
+    return updatedSettings
+  }
 
   const handleSwitchRoleOpen = () => {
-    setSwitchRoleOpen(true);
-    metrics.send("switch_account", "display_switch_preferences");
-  };
+    setSwitchRoleOpen(true)
+    metrics.send('switch_account', 'display_switch_preferences')
+  }
 
-  const handleSwitchRoleCancel = () => setSwitchRoleOpen(false);
+  const handleSwitchRoleCancel = () => setSwitchRoleOpen(false)
 
-  const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences());
-  const profileChanged = !_.isEqual(user.profile, getUpdatedProfile());
-  const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings());
-  const isAnyError = useMemo(() => _.some(errors), [errors]);
-  const canSave = (preferencesChanged || profileChanged || settingsChanged) && !isAnyError && !saving;
+  const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences())
+  const profileChanged = !_.isEqual(user.profile, getUpdatedProfile())
+  const settingsChanged = !_.isEqual(user.settings, getUpdatedSettings())
+  const isAnyError = useMemo(() => _.some(errors), [errors])
+  const canSave = (preferencesChanged || profileChanged || settingsChanged) && !isAnyError && !saving
 
   const saveProfile = async () => {
     try {
-      await updateProfile(getUpdatedProfile());
+      await updateProfile(getUpdatedProfile())
     } catch (err) {
-      log.error("Updating profile:", err);
-      alert.error(t("profile-update-failed"));
+      log.error('Updating profile:', err)
+      alert.error(t('profile-update-failed'))
     }
-  };
+  }
 
   const saveSettings = async () => {
     try {
-      await updateSettings(getUpdatedSettings());
+      await updateSettings(getUpdatedSettings())
     } catch (err) {
-      log.error("Updating settings:", err);
-      alert.error(t("profile-update-failed"));
+      log.error('Updating settings:', err)
+      alert.error(t('profile-update-failed'))
     }
-  };
+  }
 
   const savePreferences = async () => {
     try {
-      await updatePreferences(getUpdatedPreferences());
+      await updatePreferences(getUpdatedPreferences())
     } catch (err) {
-      log.error("Updating preferences:", err);
-      alert.error(t("profile-update-failed"));
+      log.error('Updating preferences:', err)
+      alert.error(t('profile-update-failed'))
     }
-  };
+  }
 
   const onSave = async (): Promise<void> => {
-    setSaving(true);
+    setSaving(true)
     if (profileChanged) {
-      await saveProfile();
+      await saveProfile()
     }
     if (settingsChanged) {
-      await saveSettings();
+      await saveSettings()
     }
     if (preferencesChanged) {
-      await savePreferences();
+      await savePreferences()
       if (lang !== getCurrentLang()) {
-        i18n.changeLanguage(lang);
+        i18n.changeLanguage(lang)
       }
     }
-    alert.success(t("profile-updated"));
-    setSaving(false);
-  };
+    alert.success(t('profile-updated'))
+    setSaving(false)
+  }
 
-  useEffect(() => setPageTitle(t("account-preferences")), [lang, t]);
+  useEffect(() => setPageTitle(t('account-preferences')), [lang, t])
 
   useEffect(() => {
     // ISO date format is required from the user: It's not a very user-friendly format in all countries, We should change it
     if (role === UserRoles.patient && !!birthDate) {
-      let birthday = birthDate;
-      if (birthday.length > 0 && birthday.indexOf("T") > 0) {
-        birthday = birthday.split("T")[0];
+      let birthday = birthDate
+      if (birthday.length > 0 && birthday.indexOf('T') > 0) {
+        birthday = birthday.split('T')[0]
       }
-      REGEX_BIRTHDATE.test(birthday) ? setBirthDate(birthday) : setBirthDate("");
+      REGEX_BIRTHDATE.test(birthday) ? setBirthDate(birthday) : setBirthDate('')
     }
     // No deps here, because we want the effect only when the component is mounting
     // If we set the deps, the patient won't be able to change its birthday.
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <React.Fragment>
       <Container className={classes.container} maxWidth="sm">
         <Box display="flex" flexDirection="column" margin={2}>
           <DialogTitle className={classes.title} id="profile-title">
-            {t("account-preferences")}
+            {t('account-preferences')}
           </DialogTitle>
 
           <PersonalInfoForm
@@ -317,7 +317,7 @@ const ProfilePage = (): JSX.Element => {
               <Button
                 id="profile-button-cancel"
               >
-                {t("button-cancel")}
+                {t('button-cancel')}
               </Button>
             </LinkRedirect>
             <ProgressIconButtonWrapper inProgress={saving}>
@@ -330,7 +330,7 @@ const ProfilePage = (): JSX.Element => {
                 className={classes.button}
                 onClick={onSave}
               >
-                {t("button-save")}
+                {t('button-save')}
               </Button>
             </ProgressIconButtonWrapper>
           </Box>
@@ -341,14 +341,14 @@ const ProfilePage = (): JSX.Element => {
            **/}
           {UserRoles.caregiver === role && false &&
             <Link id="profile-link-switch-role" component="button" onClick={handleSwitchRoleOpen}>
-              {t("modal-switch-hcp-title")}
+              {t('modal-switch-hcp-title')}
             </Link>
           }
         </Box>
       </Container>
       <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage

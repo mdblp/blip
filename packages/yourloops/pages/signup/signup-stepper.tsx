@@ -25,66 +25,66 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Typography from "@material-ui/core/Typography";
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step'
+import StepLabel from '@material-ui/core/StepLabel'
+import Typography from '@material-ui/core/Typography'
 
-import SignUpProfileForm from "./signup-profile-form";
-import SignUpConsent from "./signup-consent";
-import { useSignUpFormState } from "./signup-formstate-context";
-import { useAuth } from "../../lib/auth";
+import SignUpProfileForm from './signup-profile-form'
+import SignUpConsent from './signup-consent'
+import { useSignUpFormState } from './signup-formstate-context'
+import { useAuth } from '../../lib/auth'
 
 export default function SignUpStepper(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { dispatch } = useSignUpFormState();
-  const { logout } = useAuth();
-  const history = useHistory();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const { t } = useTranslation('yourloops')
+  const { dispatch } = useSignUpFormState()
+  const { logout } = useAuth()
+  const history = useHistory()
+  const [activeStep, setActiveStep] = React.useState(0)
   const steps = [
-    "signup-steppers-step1",
-    "signup-steppers-step2",
-  ];
+    'signup-steppers-step1',
+    'signup-steppers-step2'
+  ]
 
   const handleNext = (): void => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
 
   const handleBack = async () => {
     if (activeStep > 0) {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+      setActiveStep((prevActiveStep) => prevActiveStep - 1)
     } else {
-      await logout();
+      await logout()
     }
-  };
+  }
 
   const redirectToHome = () => {
-    dispatch({ type: "RESET_FORMVALUES" });
-    history.replace("/");
-  };
+    dispatch({ type: 'RESET_FORMVALUES' })
+    history.replace('/')
+  }
 
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return (<SignUpConsent handleBack={handleBack} handleNext={handleNext} />);
+        return (<SignUpConsent handleBack={handleBack} handleNext={handleNext} />)
       case 1:
-        return (<SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />);
+        return (<SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />)
       default:
-        return t("signup-steppers-step-unknown");
+        return t('signup-steppers-step-unknown')
     }
-  };
+  }
 
   return (
     <React.Fragment>
       <Box marginX="auto" marginY={3} textAlign="center" maxWidth="60%">
         <Typography variant="h5">
-          {t("account-creation-finalization")}
+          {t('account-creation-finalization')}
         </Typography>
       </Box>
       <Stepper
@@ -93,25 +93,25 @@ export default function SignUpStepper(): JSX.Element {
         alternativeLabel
       >
         {steps.map((label) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: { optional?: React.ReactNode } = {};
+          const stepProps: { completed?: boolean } = {}
+          const labelProps: { optional?: React.ReactNode } = {}
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{t(label)}</StepLabel>
             </Step>
-          );
+          )
         })}
       </Stepper>
       {activeStep === steps.length ? (
         <Box paddingX={4} paddingY={2} textAlign="left">
           <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
-            {t("account-creation-finalized")}
+            {t('account-creation-finalized')}
           </Typography>
           <Typography gutterBottom>
-            {t("account-created-info-1")}.
+            {t('account-created-info-1')}.
           </Typography>
           <Typography gutterBottom>
-            {t("account-created-info-2")}.
+            {t('account-created-info-2')}.
           </Typography>
           <Box
             id="signup-consent-button-group"
@@ -127,7 +127,7 @@ export default function SignUpStepper(): JSX.Element {
               disableElevation
               onClick={redirectToHome}
             >
-              {t("continue")}
+              {t('continue')}
             </Button>
           </Box>
         </Box>
@@ -135,6 +135,5 @@ export default function SignUpStepper(): JSX.Element {
         <div>{getStepContent(activeStep)}</div>
       )}
     </React.Fragment>
-  );
+  )
 }
-

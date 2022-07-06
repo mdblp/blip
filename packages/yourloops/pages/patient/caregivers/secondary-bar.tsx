@@ -26,48 +26,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import AddIcon from "@material-ui/icons/Add";
-import Box from "@material-ui/core/Box";
+import AddIcon from '@material-ui/icons/Add'
+import Box from '@material-ui/core/Box'
 
 interface BarProps {
   /** Add a caregiver */
-  onShowAddCaregiverDialog: () => Promise<void>;
+  onShowAddCaregiverDialog: () => Promise<void>
 }
 
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
       topBar: {
-        display: "flex",
-        flexDirection: "row-reverse",
-        margin: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        margin: theme.spacing(1)
       },
       buttonAddCaregiver: {
-        marginLeft: "auto",
+        marginLeft: 'auto'
       },
       buttonAddCaregiverText: {
-        [theme.breakpoints.down("xs")]: {
-          display: "none",
-        },
-      },
-    };
+        [theme.breakpoints.down('xs')]: {
+          display: 'none'
+        }
+      }
+    }
   },
-  { name: "ylp-patient-caregivers-secondary-bar" }
-);
+  { name: 'ylp-patient-caregivers-secondary-bar' }
+)
 
 function SecondaryBar(props: BarProps): JSX.Element {
-  const classes = pageBarStyles();
-  const { t } = useTranslation("yourloops");
+  const classes = pageBarStyles()
+  const { t } = useTranslation('yourloops')
 
-  const handleOpenAddCaregiverDialog = (): Promise<void> => {
-    return props.onShowAddCaregiverDialog();
-  };
+  const handleOpenAddCaregiverDialog = async (): Promise<void> => {
+    return await props.onShowAddCaregiverDialog()
+  }
 
   return (
     <div id="patient-navbar-item-right" className={classes.topBar}>
@@ -80,10 +80,10 @@ function SecondaryBar(props: BarProps): JSX.Element {
         onClick={handleOpenAddCaregiverDialog}
       >
         <AddIcon />
-        <Box component="span" className={classes.buttonAddCaregiverText}>&nbsp;{t("button-add-caregiver")}</Box>
+        <Box component="span" className={classes.buttonAddCaregiverText}>&nbsp;{t('button-add-caregiver')}</Box>
       </Button>
     </div>
-  );
+  )
 }
 
-export default SecondaryBar;
+export default SecondaryBar

@@ -26,78 +26,78 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import _ from "lodash";
-import bows from "bows";
+import React from 'react'
+import _ from 'lodash'
+import bows from 'bows'
 
-import SnackbarUI from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
+import SnackbarUI from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 
 export enum AlertSeverity {
-  error = "error",
-  warning = "warning",
-  info = "info",
-  success = "success",
+  error = 'error',
+  warning = 'warning',
+  info = 'info',
+  success = 'success',
 }
 
 interface AlertOptions {
   /** Custom action (usually a button) */
-  action?: JSX.Element | null;
+  action?: JSX.Element | null
   /** Replace previous alerts */
-  replace?: boolean;
+  replace?: boolean
   /** Alter id */
-  id?: string;
+  id?: string
   /** Infinite timeout: Prevent this alert to automatically disappear */
-  infiniteTimeout?: boolean;
+  infiniteTimeout?: boolean
   /** Close alert callback */
-  onClose?: () => void;
+  onClose?: () => void
 }
 
 export interface ApiAlert {
-  message: string;
-  severity: AlertSeverity;
-  options: AlertOptions;
+  message: string
+  severity: AlertSeverity
+  options: AlertOptions
 }
 
 export interface SnackbarContext {
   /** Add a new snackbar alert, return the alert id */
-  error: (message: string, options?: AlertOptions) => string;
-  warning: (message: string, options?: AlertOptions) => string;
-  info: (message: string, options?: AlertOptions) => string;
-  success: (message: string, options?: AlertOptions) => string;
+  error: (message: string, options?: AlertOptions) => string
+  warning: (message: string, options?: AlertOptions) => string
+  info: (message: string, options?: AlertOptions) => string
+  success: (message: string, options?: AlertOptions) => string
   /** Return true if the alert id exists */
-  has: (id: string) => boolean;
+  has: (id: string) => boolean
   /** Remove an alert with it's id */
-  remove: (id: string) => void;
-  clear: () => void;
-  alerts: Readonly<ApiAlert[]>;
+  remove: (id: string) => void
+  clear: () => void
+  alerts: Readonly<ApiAlert[]>
 }
 
 export interface SnackbarProvider {
-  children: React.ReactNode;
-  context: () => SnackbarContext;
+  children: React.ReactNode
+  context: () => SnackbarContext
 }
 
-const defaultAlertTimeout = 6000;
-const defaultAlertTimeoutWithMoreThanOneAlert = 1000;
-const alterTimeoutWithAction = 12000;
-const log = bows("Snackbar");
+const defaultAlertTimeout = 6000
+const defaultAlertTimeoutWithMoreThanOneAlert = 1000
+const alterTimeoutWithAction = 12000
+const log = bows('Snackbar')
 
 function getAlertTimeout(numAlerts: number, options?: AlertOptions): number | null {
   if (options?.infiniteTimeout) {
-    return null;
+    return null
   }
   if (numAlerts > 1) {
-    return defaultAlertTimeoutWithMoreThanOneAlert;
+    return defaultAlertTimeoutWithMoreThanOneAlert
   }
   if (_.isNil(options?.action)) {
-    return defaultAlertTimeout;
+    return defaultAlertTimeout
   }
-  return alterTimeoutWithAction;
+  return alterTimeoutWithAction
 }
 
 export function DefaultSnackbarContext(): SnackbarContext {
-  const [alerts, setAlerts] = React.useState<ApiAlert[]>([]);
+  const [alerts, setAlerts] = React.useState<ApiAlert[]>([])
 
   const addAlert = (severity: AlertSeverity, message: string, options?: AlertOptions): string => {
     const opts: AlertOptions = {
@@ -105,63 +105,63 @@ export function DefaultSnackbarContext(): SnackbarContext {
       id: options?.id ?? _.uniqueId(),
       replace: options?.replace,
       infiniteTimeout: options?.infiniteTimeout,
-      onClose: options?.onClose,
-    };
-    const alert: ApiAlert = { severity, message, options: opts };
-    if (options?.replace) {
-      setAlerts([alert]);
-    } else {
-      const a = Array.from(alerts);
-      a.push(alert);
-      setAlerts(a);
+      onClose: options?.onClose
     }
-    log.debug("addAlert", alert);
-    return opts.id as string;
-  };
+    const alert: ApiAlert = { severity, message, options: opts }
+    if (options?.replace) {
+      setAlerts([alert])
+    } else {
+      const a = Array.from(alerts)
+      a.push(alert)
+      setAlerts(a)
+    }
+    log.debug('addAlert', alert)
+    return opts.id
+  }
   const error = (message: string, options?: AlertOptions): string => {
-    return addAlert(AlertSeverity.error, message, options);
-  };
+    return addAlert(AlertSeverity.error, message, options)
+  }
   const warning = (message: string, options?: AlertOptions): string => {
-    return addAlert(AlertSeverity.warning, message, options);
-  };
+    return addAlert(AlertSeverity.warning, message, options)
+  }
   const info = (message: string, options?: AlertOptions): string => {
-    return addAlert(AlertSeverity.info, message, options);
-  };
+    return addAlert(AlertSeverity.info, message, options)
+  }
   const success = (message: string, options?: AlertOptions): string => {
-    return addAlert(AlertSeverity.success, message, options);
-  };
+    return addAlert(AlertSeverity.success, message, options)
+  }
   const has = (id: string): boolean => {
-    return alerts.find((alert) => alert.options.id === id) !== undefined;
-  };
+    return alerts.find((alert) => alert.options.id === id) !== undefined
+  }
   const remove = (id: string): void => {
-    log.debug("removeAlert", id);
-    setAlerts(alerts.filter((a) => a.options?.id !== id));
-  };
+    log.debug('removeAlert', id)
+    setAlerts(alerts.filter((a) => a.options?.id !== id))
+  }
   const clear = (): void => {
-    log.debug("clearAlerts", alerts);
-    setAlerts([]);
-  };
+    log.debug('clearAlerts', alerts)
+    setAlerts([])
+  }
 
-  return { error, warning, info, success, remove, clear, has, alerts };
+  return { error, warning, info, success, remove, clear, has, alerts }
 }
 
 export const Snackbar = (props: SnackbarContext): JSX.Element => {
-  const { alerts, remove } = props;
+  const { alerts, remove } = props
   const [currentAlert, onCloseAlert] = React.useMemo(() => {
     if (alerts.length > 0) {
-      const currentAlert = alerts[0];
+      const currentAlert = alerts[0]
       const onCloseAlert = () => {
-        if (typeof currentAlert.options.onClose === "function") {
-          currentAlert.options.onClose();
+        if (typeof currentAlert.options.onClose === 'function') {
+          currentAlert.options.onClose()
         }
-        if (typeof currentAlert.options.id === "string") {
-          remove(currentAlert.options.id);
+        if (typeof currentAlert.options.id === 'string') {
+          remove(currentAlert.options.id)
         }
-      };
-      return [currentAlert, onCloseAlert];
+      }
+      return [currentAlert, onCloseAlert]
     }
-    return [null, _.noop];
-  }, [alerts, remove]);
+    return [null, _.noop]
+  }, [alerts, remove])
 
   const alertUI = React.useMemo(() => {
     if (currentAlert !== null) {
@@ -169,32 +169,32 @@ export const Snackbar = (props: SnackbarContext): JSX.Element => {
         <Alert id="alert-message" onClose={onCloseAlert} severity={currentAlert.severity} action={currentAlert.options.action}>
           {currentAlert.message}
         </Alert>
-      );
+      )
     }
-    return undefined;
-  }, [currentAlert, onCloseAlert]);
+    return undefined
+  }, [currentAlert, onCloseAlert])
 
   return (
     <SnackbarUI open={currentAlert !== null}
       autoHideDuration={getAlertTimeout(alerts.length, currentAlert?.options)}
       onClose={onCloseAlert}
       key={currentAlert?.options.id ?? Number.MAX_SAFE_INTEGER}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}>
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
       {alertUI}
     </SnackbarUI>
-  );
-};
+  )
+}
 
 const ReactSnackbarContext = React.createContext<SnackbarContext>({
-  error: _.constant(""),
-  warning: _.constant(""),
-  info: _.constant(""),
-  success: _.constant(""),
+  error: _.constant(''),
+  warning: _.constant(''),
+  info: _.constant(''),
+  success: _.constant(''),
   has: _.constant(false),
   clear: _.noop,
   remove: _.noop,
-  alerts: [],
-});
+  alerts: []
+})
 
 /**
  * Provider component for useAlert().
@@ -203,14 +203,14 @@ const ReactSnackbarContext = React.createContext<SnackbarContext>({
  * @param props for snackbar provider & children
  */
 export function SnackbarContextProvider(props: SnackbarProvider): JSX.Element {
-  const { context, children } = props;
-  const snackbarContext = context();
+  const { context, children } = props
+  const snackbarContext = context()
   return (
     <ReactSnackbarContext.Provider value={snackbarContext}>
       <Snackbar {...snackbarContext} />
       {children}
     </ReactSnackbarContext.Provider>
-  );
+  )
 }
 
 /**
@@ -219,5 +219,5 @@ export function SnackbarContextProvider(props: SnackbarProvider): JSX.Element {
  * Trigger a re-render when it change.
  */
 export function useAlert(): SnackbarContext {
-  return React.useContext(ReactSnackbarContext);
+  return React.useContext(ReactSnackbarContext)
 }

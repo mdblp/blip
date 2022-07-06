@@ -25,16 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import React from "react";
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import React from 'react'
 
 import BasicDropdownWithValidation, {
-  BasicDropdownWithValidationProps,
-} from "../../../components/dropdown/basic-dropdown-with-validation";
+  BasicDropdownWithValidationProps
+} from '../../../components/dropdown/basic-dropdown-with-validation'
 
-describe("BasicDropdownWithValidation", () => {
-
-  const spyOnSelect = jest.fn();
+describe('BasicDropdownWithValidation', () => {
+  const spyOnSelect = jest.fn()
 
   const Dropdown = (props: { content: BasicDropdownWithValidationProps<string> }): JSX.Element => {
     return (
@@ -47,37 +46,36 @@ describe("BasicDropdownWithValidation", () => {
         inputTranslationKey={props.content.inputTranslationKey}
         errorTranslationKey={props.content.errorTranslationKey}
       />
-    );
-  };
+    )
+  }
 
   const fakeDropdown = (props: BasicDropdownWithValidationProps<string>): JSX.Element => {
     return (
       <Dropdown content={props} />
-    );
-  };
+    )
+  }
 
-  it("should call onSelect spy when an option is selected", () => {
-    const defaultValue = "defaultValue";
-    const disabledValue = "disabledValue";
-    const valueToSelect = "valueToSelect";
-    const id = "id";
-    const errorTranslationKey = "errorTranslationKey";
-    const inputTranslationKey = "inputTranslationKey";
-    const values = [defaultValue, disabledValue, valueToSelect];
+  it('should call onSelect spy when an option is selected', () => {
+    const defaultValue = 'defaultValue'
+    const disabledValue = 'disabledValue'
+    const valueToSelect = 'valueToSelect'
+    const id = 'id'
+    const errorTranslationKey = 'errorTranslationKey'
+    const inputTranslationKey = 'inputTranslationKey'
+    const values = [defaultValue, disabledValue, valueToSelect]
     const props: BasicDropdownWithValidationProps<string> = {
       onSelect: spyOnSelect,
-      defaultValue: defaultValue,
+      defaultValue,
       disabledValues: [disabledValue],
       values,
       id,
       errorTranslationKey,
-      inputTranslationKey,
-    };
-    render(fakeDropdown(props));
-    fireEvent.mouseDown(screen.getByRole("button"));
-    const menuItems = within(screen.getByRole("listbox"));
-    fireEvent.click(menuItems.getByText(valueToSelect));
-    expect(spyOnSelect).toHaveBeenCalledTimes(1);
-  });
-});
-
+      inputTranslationKey
+    }
+    render(fakeDropdown(props))
+    fireEvent.mouseDown(screen.getByRole('button'))
+    const menuItems = within(screen.getByRole('listbox'))
+    fireEvent.click(menuItems.getByText(valueToSelect))
+    expect(spyOnSelect).toHaveBeenCalledTimes(1)
+  })
+})

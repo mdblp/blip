@@ -25,83 +25,82 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import React from 'react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-import * as teamHookMock from "../../../lib/team";
-import { buildTeam, buildTeamMember } from "../../common/utils";
-import * as alertHookMock from "../../../components/utils/snackbar";
+import * as teamHookMock from '../../../lib/team'
+import { buildTeam, buildTeamMember } from '../../common/utils'
+import * as alertHookMock from '../../../components/utils/snackbar'
 import TeamAlarmsConfiguration, {
-  TeamAlarmsConfigurationProps,
-} from "../../../components/team/team-alarms-configuration";
-import { AlarmsContentConfigurationProps } from "../../../components/alarm/alarms-content-configuration";
-import { Monitoring } from "../../../models/monitoring";
+  TeamAlarmsConfigurationProps
+} from '../../../components/team/team-alarms-configuration'
+import { AlarmsContentConfigurationProps } from '../../../components/alarm/alarms-content-configuration'
+import { Monitoring } from '../../../models/monitoring'
 
 // eslint-disable-next-line react/display-name
-jest.mock("../../../components/alarm/alarms-content-configuration", () => (props: AlarmsContentConfigurationProps) => {
-  return <button onClick={() => props.onSave({ enabled : true } as Monitoring)}>save-mock</button>;
-});
-jest.mock("../../../components/utils/snackbar");
-jest.mock("../../../lib/team");
-describe("TeamMembers", () => {
-  const updateTeamAlertsMock = jest.fn();
-  const successMock = jest.fn();
-  const errorMock = jest.fn();
-  const teamId = "teamId";
+jest.mock('../../../components/alarm/alarms-content-configuration', () => (props: AlarmsContentConfigurationProps) => {
+  return <button onClick={() => props.onSave({ enabled: true } as Monitoring)}>save-mock</button>
+})
+jest.mock('../../../components/utils/snackbar')
+jest.mock('../../../lib/team')
+describe('TeamMembers', () => {
+  const updateTeamAlertsMock = jest.fn()
+  const successMock = jest.fn()
+  const errorMock = jest.fn()
+  const teamId = 'teamId'
   const members = [
-    buildTeamMember(teamId, "userId1"),
-    buildTeamMember(teamId, "userId2"),
-  ];
-  const team = buildTeam(teamId, members);
+    buildTeamMember(teamId, 'userId1'),
+    buildTeamMember(teamId, 'userId2')
+  ]
+  const team = buildTeam(teamId, members)
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updateTeamAlerts: updateTeamAlertsMock };
+      return { updateTeamAlerts: updateTeamAlertsMock }
     });
     (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
-      return { success: successMock, error: errorMock };
-    });
-  });
+      return { success: successMock, error: errorMock }
+    })
+  })
 
   function getTeamAlarmConfigurationJSX(props: TeamAlarmsConfigurationProps = { team }) {
     return <TeamAlarmsConfiguration
       team={props.team}
-    />;
+    />
   }
 
-  it("should throw error when given team as no monitoring", () => {
-    const teamNoMonitoring = buildTeam(teamId, members);
-    teamNoMonitoring.monitoring = undefined;
-    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow();
-  });
+  it('should throw error when given team as no monitoring', () => {
+    const teamNoMonitoring = buildTeam(teamId, members)
+    teamNoMonitoring.monitoring = undefined
+    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
+  })
 
-  it("should throw error when given team monitoring is not enabled", () => {
-    const teamNoMonitoring = buildTeam(teamId, members);
-    teamNoMonitoring.monitoring.enabled = false;
-    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow();
-  });
+  it('should throw error when given team monitoring is not enabled', () => {
+    const teamNoMonitoring = buildTeam(teamId, members)
+    teamNoMonitoring.monitoring.enabled = false
+    expect(() => render(getTeamAlarmConfigurationJSX({ team: teamNoMonitoring }))).toThrow()
+  })
 
   function clickOnSaveButton() {
-    render(getTeamAlarmConfigurationJSX({ team }));
-    fireEvent.click(screen.getByRole("button"));
-    expect(updateTeamAlertsMock).toHaveBeenCalled();
+    render(getTeamAlarmConfigurationJSX({ team }))
+    fireEvent.click(screen.getByRole('button'))
+    expect(updateTeamAlertsMock).toHaveBeenCalled()
   }
 
-  it("should update team alerts when saving", async () => {
-    clickOnSaveButton();
-    await waitFor(() => expect(successMock).toHaveBeenCalledWith("team-update-success"));
-  });
+  it('should update team alerts when saving', async () => {
+    clickOnSaveButton()
+    await waitFor(() => expect(successMock).toHaveBeenCalledWith('team-update-success'))
+  })
 
-  it("should not update team alerts when an error happen when saving", async () => {
-    updateTeamAlertsMock.mockRejectedValue(Error("This error was thrown by a mock on purpose"));
-    clickOnSaveButton();
-    await waitFor(() => expect(errorMock).toHaveBeenCalledWith("team-update-error"));
-  });
-});
-
+  it('should not update team alerts when an error happen when saving', async () => {
+    updateTeamAlertsMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+    clickOnSaveButton()
+    await waitFor(() => expect(errorMock).toHaveBeenCalledWith('team-update-error'))
+  })
+})

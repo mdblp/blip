@@ -25,133 +25,133 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 
-import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Badge from "@material-ui/core/Badge";
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Badge from '@material-ui/core/Badge'
+import Box from '@material-ui/core/Box'
+import Divider from '@material-ui/core/Divider'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListSubheader from '@material-ui/core/ListSubheader'
+import MenuItem from '@material-ui/core/MenuItem'
+import Typography from '@material-ui/core/Typography'
 
-import { Team, useTeam } from "../../lib/team";
-import MenuLayout from "../layouts/menu-layout";
-import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
-import { TeamEditModalContentProps } from "../../pages/hcp/types";
-import { useAlert } from "../utils/snackbar";
-import { useAuth } from "../../lib/auth";
-import { ShareUser } from "../../lib/share/models";
-import AddTeamDialog from "../../pages/patient/teams/add-dialog";
-import { errorTextFromException } from "../../lib/utils";
-import DirectShareApi from "../../lib/share/direct-share-api";
+import { Team, useTeam } from '../../lib/team'
+import MenuLayout from '../layouts/menu-layout'
+import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import { TeamEditModalContentProps } from '../../pages/hcp/types'
+import { useAlert } from '../utils/snackbar'
+import { useAuth } from '../../lib/auth'
+import { ShareUser } from '../../lib/share/models'
+import AddTeamDialog from '../../pages/patient/teams/add-dialog'
+import { errorTextFromException } from '../../lib/utils'
+import DirectShareApi from '../../lib/share/direct-share-api'
 
 const classes = makeStyles((theme: Theme) => ({
   teamIcon: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2)
   },
   badge: {
     right: -8,
     color: theme.palette.common.white,
-    backgroundColor: "var(--text-base-color)",
+    backgroundColor: 'var(--text-base-color)'
   },
   clickableMenu: {
-    cursor: "pointer",
+    cursor: 'pointer'
   },
   separator: {
     flexGrow: 1,
     height: 1,
     backgroundColor: theme.palette.divider,
     marginLeft: theme.spacing(1),
-    marginTop: 2,
-  },
-}));
+    marginTop: 2
+  }
+}))
 
 function TeamMenu(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { badge, teamIcon, clickableMenu, separator } = classes();
-  const { teams, createTeam, joinTeam } = useTeam();
-  const history = useHistory();
-  const alert = useAlert();
-  const { user } = useAuth();
-  const isUserHcp = user?.isUserHcp();
-  const isUserPatient = user?.isUserPatient();
-  const theme = useTheme();
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
+  const { t } = useTranslation('yourloops')
+  const { badge, teamIcon, clickableMenu, separator } = classes()
+  const { teams, createTeam, joinTeam } = useTeam()
+  const history = useHistory()
+  const alert = useAlert()
+  const { user } = useAuth()
+  const isUserHcp = user?.isUserHcp()
+  const isUserPatient = user?.isUserPatient()
+  const theme = useTheme()
+  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null);
-  const opened = !!anchorEl;
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
+  const opened = !!anchorEl
 
-  const filteredTeams = teams.filter(team => team.code !== "private");
-  const closeMenu = () => setAnchorEl(null);
-  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null);
-  const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false);
+  const filteredTeams = teams.filter(team => team.code !== 'private')
+  const closeMenu = () => setAnchorEl(null)
+  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
+  const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
 
   useEffect(() => {
     (async () => {
       if (!caregivers && user) {
         try {
-          setCaregivers(await DirectShareApi.getDirectShares());
+          setCaregivers(await DirectShareApi.getDirectShares())
         } catch (error) {
-          setCaregivers([]);
+          setCaregivers([])
         }
       }
-    })();
-  }, [caregivers, user]);
+    })()
+  }, [caregivers, user])
 
   const redirectToTeamDetails = (teamId: string) => {
-    history.push(`/teams/${teamId}`);
-    closeMenu();
-  };
+    history.push(`/teams/${teamId}`)
+    closeMenu()
+  }
 
   const onSaveTeam = async (createdTeam: Partial<Team> | null) => {
     if (createdTeam) {
       try {
-        await createTeam(createdTeam as Team);
-        alert.success(t("team-page-success-create"));
+        await createTeam(createdTeam as Team)
+        alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
-        alert.error(t("team-page-failed-create"));
+        alert.error(t('team-page-failed-create'))
       }
     }
-    setTeamCreationDialogData(null);
-  };
+    setTeamCreationDialogData(null)
+  }
 
   const onTeamAction = () => {
     if (isUserHcp) {
-      setTeamCreationDialogData({ team: null, onSaveTeam });
+      setTeamCreationDialogData({ team: null, onSaveTeam })
     } else if (isUserPatient) {
-      setShowJoinTeamDialog(true);
+      setShowJoinTeamDialog(true)
     }
 
-    closeMenu();
-  };
+    closeMenu()
+  }
 
   const redirectToCaregivers = () => {
-    history.push("/caregivers");
-    closeMenu();
-  };
+    history.push('/caregivers')
+    closeMenu()
+  }
 
   const onJoinTeam = async (teamId?: string) => {
-    setShowJoinTeamDialog(false);
+    setShowJoinTeamDialog(false)
     if (teamId) {
       try {
-        await joinTeam(teamId);
-        alert.success(t("modal-patient-add-team-success"));
+        await joinTeam(teamId)
+        alert.success(t('modal-patient-add-team-success'))
       } catch (reason: unknown) {
-        const errorMessage = errorTextFromException(reason);
-        alert.error(t("modal-patient-add-team-failure", { errorMessage }));
+        const errorMessage = errorTextFromException(reason)
+        alert.error(t('modal-patient-add-team-failure', { errorMessage }))
       }
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -184,30 +184,29 @@ function TeamMenu(): JSX.Element {
         <ListSubheader>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Typography variant="caption">
-              {t("care-team-membership")}
+              {t('care-team-membership')}
             </Typography>
             <div className={separator} />
           </Box>
         </ListSubheader>
 
-        {filteredTeams.length ?
-          filteredTeams.map(team => (
+        {filteredTeams.length
+          ? filteredTeams.map(team => (
             <ListItem
               key={team.id}
               id={`team-menu-list-item-${team.id}`}
               className="team-menu-list-item"
               button
               onClick={() => {
-                redirectToTeamDetails(team.id);
+                redirectToTeamDetails(team.id)
               }}
             >
               <Box marginX={1}>•</Box>
               <Typography>{team.name}</Typography>
             </ListItem>
           ))
-          :
-          <ListItem>
-            <Typography>{t("care-team-no-membership")}</Typography>
+          : <ListItem>
+            <Typography>{t('care-team-no-membership')}</Typography>
           </ListItem>
         }
 
@@ -222,8 +221,8 @@ function TeamMenu(): JSX.Element {
                 <GroupOutlinedIcon />
               </ListItemIcon>
               <Typography>
-                {isUserHcp && t("new-care-team")}
-                {isUserPatient && t("join-care-team")}
+                {isUserHcp && t('new-care-team')}
+                {isUserPatient && t('join-care-team')}
               </Typography>
             </MenuItem>
           </Box>
@@ -233,7 +232,7 @@ function TeamMenu(): JSX.Element {
             <ListSubheader>
               <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="caption">
-                  {t("my-caregivers")}
+                  {t('my-caregivers')}
                 </Typography>
                 <div className={separator} />
               </Box>
@@ -243,7 +242,7 @@ function TeamMenu(): JSX.Element {
                 <GroupOutlinedIcon />
               </ListItemIcon>
               <Typography>
-                {t("my-caregivers")} ({caregivers?.length})
+                {t('my-caregivers')} ({caregivers?.length})
               </Typography>
             </MenuItem>
           </Box>
@@ -254,11 +253,11 @@ function TeamMenu(): JSX.Element {
       }
       {showJoinTeamDialog &&
         <AddTeamDialog
-          error={t("error-joining-team")}
-          actions={{ onDialogResult: (teamId) => onJoinTeam(teamId) }} />
+          error={t('error-joining-team')}
+          actions={{ onDialogResult: async (teamId) => await onJoinTeam(teamId) }} />
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default TeamMenu;
+export default TeamMenu

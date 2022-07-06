@@ -7,25 +7,25 @@
  */
 
 function browserLocale(): string {
-  let lang: string;
+  let lang: string
 
   if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
     // latest versions of Chrome and Firefox set this correctly
-    lang = navigator.languages[0];
+    lang = navigator.languages[0]
   } else if (navigator.userLanguage) {
     // IE only
-    lang = navigator.userLanguage;
+    lang = navigator.userLanguage
   } else {
     // latest versions of Chrome, Firefox, and Safari set this correctly
-    lang = navigator.language;
+    lang = navigator.language
   }
 
   // Keep only the language, not the country information:
-  if (lang.indexOf("-") > 0) {
-    lang = lang.split("-")[0];
+  if (lang.indexOf('-') > 0) {
+    lang = lang.split('-')[0]
   }
 
-  return lang;
+  return lang
 }
 
-export default browserLocale;
+export default browserLocale

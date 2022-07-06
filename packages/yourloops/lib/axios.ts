@@ -26,39 +26,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosRequestConfig } from "axios";
-import { v4 as uuidv4 } from "uuid";
+import axios, { AxiosRequestConfig } from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 
-import { HttpHeaderKeys } from "../models/api";
-import appConfig from "./config";
-import HttpService from "../services/http";
+import { HttpHeaderKeys } from '../models/api'
+import appConfig from './config'
+import HttpService from '../services/http'
 
 export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
   if (config.params?.noHeader) {
-    delete config.params.noHeader;
+    delete config.params.noHeader
   } else {
     config = {
       ...config,
       headers: {
         ...config.headers,
         Authorization: `Bearer ${await HttpService.getAccessToken()}`,
-        [HttpHeaderKeys.traceToken]: uuidv4(),
-      },
-    };
+        [HttpHeaderKeys.traceToken]: uuidv4()
+      }
+    }
 
     if (HttpService.shorelineAccessToken && config.headers) {
-      config.headers[HttpHeaderKeys.sessionToken] = HttpService.shorelineAccessToken;
+      config.headers[HttpHeaderKeys.sessionToken] = HttpService.shorelineAccessToken
     }
   }
-  return config;
-};
+  return config
+}
 
 function initAxios() {
-  axios.defaults.baseURL = appConfig.API_HOST;
+  axios.defaults.baseURL = appConfig.API_HOST
   /**
    * We use axios request interceptor to set the access token into headers each request the app send
    */
-  axios.interceptors.request.use(onFulfilled);
+  axios.interceptors.request.use(onFulfilled)
 }
 
-export default initAxios;
+export default initAxios

@@ -26,53 +26,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { ShareUser } from "./models";
+import React from 'react'
+import { ShareUser } from './models'
 
 export interface SharedUsersContext {
-  sharedUsers: ShareUser[] | null;
-  errorMessage: string | null;
+  sharedUsers: ShareUser[] | null
+  errorMessage: string | null
 }
 
 export type SharedUsersActions =
-  | { type: "reset"; }
-  | { type: "set-users"; sharedUsers: ShareUser[]; }
-  | { type: "set-error"; message: string | null; }
+  | { type: 'reset' }
+  | { type: 'set-users', sharedUsers: ShareUser[] }
+  | { type: 'set-error', message: string | null }
 
-export type SharedUserReducer = (state: SharedUsersContext, action: SharedUsersActions) => SharedUsersContext;
-type SharedUserContext = [SharedUsersContext, React.Dispatch<SharedUsersActions>];
+export type SharedUserReducer = (state: SharedUsersContext, action: SharedUsersActions) => SharedUsersContext
+type SharedUserContext = [SharedUsersContext, React.Dispatch<SharedUsersActions>]
 export interface SharedUsersProvider {
-  value: SharedUserContext;
-  children: React.ReactNode;
+  value: SharedUserContext
+  children: React.ReactNode
 }
-
 
 export const sharedUserInitialState: SharedUsersContext = {
   sharedUsers: null,
-  errorMessage: null,
-};
-export const SharedUsersReactContext = React.createContext<SharedUserContext>([sharedUserInitialState, () => sharedUserInitialState] as SharedUserContext);
+  errorMessage: null
+}
+export const SharedUsersReactContext = React.createContext<SharedUserContext>([sharedUserInitialState, () => sharedUserInitialState] as SharedUserContext)
 
 export const sharedUserReducer: SharedUserReducer = (state: SharedUsersContext, action: SharedUsersActions): SharedUsersContext => {
   switch (action.type) {
-  case "reset":
-    return sharedUserInitialState;
-  case "set-users":
-    return { ...state, sharedUsers: action.sharedUsers };
-  case "set-error":
-    return { ...state, errorMessage: action.message };
+    case 'reset':
+      return sharedUserInitialState
+    case 'set-users':
+      return { ...state, sharedUsers: action.sharedUsers }
+    case 'set-error':
+      return { ...state, errorMessage: action.message }
   }
 
-  return state;
-};
+  return state
+}
 
-export const useSharedUser = (): SharedUserContext => React.useContext(SharedUsersReactContext);
+export const useSharedUser = (): SharedUserContext => React.useContext(SharedUsersReactContext)
 
 export function SharedUserContextProvider(props: SharedUsersProvider): JSX.Element {
-  const { value, children } = props;
+  const { value, children } = props
   return (
     <SharedUsersReactContext.Provider value={value}>
       {children}
     </SharedUsersReactContext.Provider>
-  );
+  )
 }

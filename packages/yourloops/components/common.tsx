@@ -25,36 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
 export const commonComponentStyles = makeStyles((theme: Theme) => ({
   button: {
-    textTransform: "capitalize",
+    textTransform: 'capitalize'
   },
   categoryHeader: {
-    "display": "flex",
-    "justifyContent": "space-between",
-    "alignItems": "center",
-    "marginBottom": theme.spacing(2),
-    "& > div": {
-      display: "flex",
-      alignItems: "center",
-    },
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+    '& > div': {
+      display: 'flex',
+      alignItems: 'center'
+    }
   },
   icon: {
-    marginRight: "15px",
+    marginRight: '15px'
   },
   root: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     marginLeft: theme.spacing(6),
-    marginRight: theme.spacing(6),
+    marginRight: theme.spacing(6)
   },
   title: {
     color: theme.palette.grey[800],
     fontSize: theme.typography.h6.fontSize,
     fontWeight: 600,
     marginLeft: theme.spacing(2),
-    textTransform: "uppercase",
-  },
-}));
+    textTransform: 'uppercase'
+  }
+}))

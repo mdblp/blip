@@ -26,22 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ShareUser } from "../../../lib/share/models";
+import { ShareUser } from '../../../lib/share/models'
 
 export interface AddDialogContentProps {
-  onDialogResult: (email: string | null) => void;
+  onDialogResult: (email: string | null) => void
 }
 
 export interface RemoveDialogContentProps {
-  caregiver: ShareUser;
-  onDialogResult: (remove: boolean) => void;
+  caregiver: ShareUser
+  onDialogResult: (remove: boolean) => void
 }
 
 export enum SortDirection {
-  asc = "asc",
-  desc = "desc",
+  asc = 'asc',
+  desc = 'desc',
 }
 export enum SortFields {
-  lastname = "lastname",
-  firstname = "firstname",
+  lastname = 'lastname',
+  firstname = 'firstname',
 }

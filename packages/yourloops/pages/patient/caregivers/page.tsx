@@ -26,96 +26,96 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import bows from "bows";
-import { useTranslation } from "react-i18next";
-import { v4 as uuidv4 } from "uuid";
+import React from 'react'
+import bows from 'bows'
+import { useTranslation } from 'react-i18next'
+import { v4 as uuidv4 } from 'uuid'
 
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Container from "@material-ui/core/Container";
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
 
-import { UserInvitationStatus } from "../../../models/generic";
-import { UserRoles } from "../../../models/user";
-import { useAuth } from "../../../lib/auth";
-import metrics from "../../../lib/metrics";
-import { setPageTitle } from "../../../lib/utils";
-import { useNotification } from "../../../lib/notifications/hook";
-import { ShareUser } from "../../../lib/share/models";
-import { useAlert } from "../../../components/utils/snackbar";
-import { AddDialogContentProps, RemoveDialogContentProps } from "./types";
-import SecondaryBar from "./secondary-bar";
-import AddCaregiverDialog from "./add-dialog";
-import RemoveCaregiverDialog from "./remove-dialog";
-import CaregiverTable from "./table";
-import DirectShareApi from "../../../lib/share/direct-share-api";
-import { NotificationType } from "../../../lib/notifications/models";
+import { UserInvitationStatus } from '../../../models/generic'
+import { UserRoles } from '../../../models/user'
+import { useAuth } from '../../../lib/auth'
+import metrics from '../../../lib/metrics'
+import { setPageTitle } from '../../../lib/utils'
+import { useNotification } from '../../../lib/notifications/hook'
+import { ShareUser } from '../../../lib/share/models'
+import { useAlert } from '../../../components/utils/snackbar'
+import { AddDialogContentProps, RemoveDialogContentProps } from './types'
+import SecondaryBar from './secondary-bar'
+import AddCaregiverDialog from './add-dialog'
+import RemoveCaregiverDialog from './remove-dialog'
+import CaregiverTable from './table'
+import DirectShareApi from '../../../lib/share/direct-share-api'
+import { NotificationType } from '../../../lib/notifications/models'
 
-const log = bows("PatientCaregiversPage");
+const log = bows('PatientCaregiversPage')
 
 /**
  * Patient caregivers page
  */
 function PatientCaregiversPage(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
-  const { user } = useAuth();
-  const notificationHook = useNotification();
-  const [ caregiverToAdd, setCaregiverToAdd ] = React.useState<AddDialogContentProps | null>(null);
-  const [ caregiverToRemove, setCaregiverToRemove ] = React.useState<RemoveDialogContentProps | null>(null);
-  const [ caregivers, setCaregivers ] = React.useState<ShareUser[] | null>(null);
-  const { sentInvitations, initialized: haveNotifications } = notificationHook;
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const { user } = useAuth()
+  const notificationHook = useNotification()
+  const [caregiverToAdd, setCaregiverToAdd] = React.useState<AddDialogContentProps | null>(null)
+  const [caregiverToRemove, setCaregiverToRemove] = React.useState<RemoveDialogContentProps | null>(null)
+  const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
+  const { sentInvitations, initialized: haveNotifications } = notificationHook
 
   const handleShowAddCaregiverDialog = async (): Promise<void> => {
-    const getCaregiverEmail = (): Promise<string | null> => {
-      return new Promise((resolve: (email: string | null) => void) => {
-        setCaregiverToAdd({ onDialogResult: resolve });
-      });
-    };
+    const getCaregiverEmail = async (): Promise<string | null> => {
+      return await new Promise((resolve: (email: string | null) => void) => {
+        setCaregiverToAdd({ onDialogResult: resolve })
+      })
+    }
 
-    const email = await getCaregiverEmail();
-    setCaregiverToAdd(null); // Close the dialog
+    const email = await getCaregiverEmail()
+    setCaregiverToAdd(null) // Close the dialog
 
     if (email && user) {
       try {
-        await DirectShareApi.addDirectShare(user.id, email);
-        alert.success(t("alert-invitation-sent-success"));
-        metrics.send("invitation", "send_invitation", "caregiver");
+        await DirectShareApi.addDirectShare(user.id, email)
+        alert.success(t('alert-invitation-sent-success'))
+        metrics.send('invitation', 'send_invitation', 'caregiver')
         // Refresh the notifications list
-        notificationHook.update();
+        notificationHook.update()
         // And refresh the list
-        setCaregivers(null);
+        setCaregivers(null)
       } catch (reason) {
-        log.error(reason);
-        alert.error(t("alert-invitation-caregiver-failed"));
+        log.error(reason)
+        alert.error(t('alert-invitation-caregiver-failed'))
       }
     }
-  };
+  }
 
   const handleRemoveCaregiver = async (us: ShareUser): Promise<void> => {
-    const getConsent = (): Promise<boolean> => {
-      return new Promise((resolve: (consent: boolean) => void) => {
-        setCaregiverToRemove({ caregiver: us, onDialogResult: resolve });
-      });
-    };
+    const getConsent = async (): Promise<boolean> => {
+      return await new Promise((resolve: (consent: boolean) => void) => {
+        setCaregiverToRemove({ caregiver: us, onDialogResult: resolve })
+      })
+    }
 
-    const consent = await getConsent();
-    setCaregiverToRemove(null); // Close the dialog
+    const consent = await getConsent()
+    setCaregiverToRemove(null) // Close the dialog
 
     if (consent && user) {
       try {
-        if (us.status === UserInvitationStatus.pending && typeof us.invitation === "object") {
-          await notificationHook.cancel(us.invitation);
+        if (us.status === UserInvitationStatus.pending && typeof us.invitation === 'object') {
+          await notificationHook.cancel(us.invitation)
         } else {
-          await DirectShareApi.removeDirectShare(user.id, us.user.userid);
+          await DirectShareApi.removeDirectShare(user.id, us.user.userid)
         }
-        alert.success(t("modal-patient-remove-caregiver-success"));
-        setCaregivers(null); // Refresh the list
+        alert.success(t('modal-patient-remove-caregiver-success'))
+        setCaregivers(null) // Refresh the list
       } catch (reason) {
-        log.error(reason);
-        alert.error(t("modal-patient-remove-caregiver-failure"));
+        log.error(reason)
+        alert.error(t('modal-patient-remove-caregiver-failure'))
       }
     }
-  };
+  }
 
   React.useEffect(() => {
     if (!caregivers && user && haveNotifications) {
@@ -124,58 +124,58 @@ function PatientCaregiversPage(): JSX.Element {
         for (const invitation of sentInvitations) {
           if (invitation.type === NotificationType.directInvitation) {
             // Create a fake share user
-            log.debug("Found pending direct-share invitation: ", invitation);
+            log.debug('Found pending direct-share invitation: ', invitation)
             const shareUser: ShareUser = {
               invitation,
               status: UserInvitationStatus.pending,
               user: {
                 username: invitation.email,
                 userid: uuidv4(),
-                role: UserRoles.caregiver,
-              },
-            };
-            target.push(shareUser);
+                role: UserRoles.caregiver
+              }
+            }
+            target.push(shareUser)
           }
         }
-      };
+      }
 
       DirectShareApi.getDirectShares().then((value) => {
-        addPendingInvitation(value);
-        setCaregivers(value);
+        addPendingInvitation(value)
+        setCaregivers(value)
       }).catch((reason: unknown) => {
-        log.error(reason);
-        const value: ShareUser[] = [];
-        addPendingInvitation(value);
-        setCaregivers(value);
-      });
+        log.error(reason)
+        const value: ShareUser[] = []
+        addPendingInvitation(value)
+        setCaregivers(value)
+      })
     }
-  }, [caregivers, user, haveNotifications, sentInvitations]);
+  }, [caregivers, user, haveNotifications, sentInvitations])
 
   React.useEffect(() => {
-    setPageTitle(t("caregivers-title"));
-  }, [t]);
+    setPageTitle(t('caregivers-title'))
+  }, [t])
 
   if (caregivers === null) {
     return (
       <CircularProgress
         id="patient-page-loading-progress"
         disableShrink
-        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }}
+        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
       />
-    );
+    )
   }
 
   return (
     <React.Fragment>
       <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
-      <Container maxWidth="lg" style={{ marginTop: "4em", marginBottom: "2em" }}>
+      <Container maxWidth="lg" style={{ marginTop: '4em', marginBottom: '2em' }}>
         <CaregiverTable userShares={caregivers} onRemoveCaregiver={handleRemoveCaregiver} />
       </Container>
 
       <AddCaregiverDialog actions={caregiverToAdd} />
       <RemoveCaregiverDialog actions={caregiverToRemove} />
     </React.Fragment>
-  );
+  )
 }
 
-export default PatientCaregiversPage;
+export default PatientCaregiversPage

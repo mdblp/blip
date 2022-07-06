@@ -25,91 +25,91 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import FolderSharedOutlinedIcon from "@material-ui/icons/FolderSharedOutlined";
-import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
-import LocalPhoneOutlinedIcon from "@material-ui/icons/LocalPhoneOutlined";
-import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
-import EditIcon from "@material-ui/icons/Edit";
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import FolderSharedOutlinedIcon from '@material-ui/icons/FolderSharedOutlined'
+import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined'
+import LocalPhoneOutlinedIcon from '@material-ui/icons/LocalPhoneOutlined'
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined'
+import EditIcon from '@material-ui/icons/Edit'
 
-import { Team, useTeam } from "../../lib/team";
-import TeamEditDialog from "../../pages/hcp/team-edit-dialog";
-import { TeamEditModalContentProps } from "../../pages/hcp/types";
-import { commonComponentStyles } from "../common";
-import { useAlert } from "../utils/snackbar";
-import { useAuth } from "../../lib/auth";
-import LeaveTeamButton from "./leave-team-button";
-import TeamUtils from "../../lib/team/utils";
+import { Team, useTeam } from '../../lib/team'
+import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import { TeamEditModalContentProps } from '../../pages/hcp/types'
+import { commonComponentStyles } from '../common'
+import { useAlert } from '../utils/snackbar'
+import { useAuth } from '../../lib/auth'
+import LeaveTeamButton from './leave-team-button'
+import TeamUtils from '../../lib/team/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     paddingTop: theme.spacing(3),
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
+    paddingRight: theme.spacing(3)
   },
   label: {
     fontWeight: 600,
-    fontSize: "13px",
-    width: "180px",
+    fontSize: '13px',
+    width: '180px'
   },
   value: {
-    fontSize: "13px",
+    fontSize: '13px'
   },
   teamInfo: {
-    "display": "flex",
-    "alignItems": "top",
-    "width": "50%",
-    "marginBottom": theme.spacing(4),
-    "& > div": {
-      display: "flex",
-      alignItems: "center",
-    },
-  },
-}));
+    display: 'flex',
+    alignItems: 'top',
+    width: '50%',
+    marginBottom: theme.spacing(4),
+    '& > div': {
+      display: 'flex',
+      alignItems: 'center'
+    }
+  }
+}))
 
 export interface TeamInformationProps {
-  team: Team;
-  refreshParent: () => void;
+  team: Team
+  refreshParent: () => void
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
-  const { team, refreshParent } = props;
-  const teamHook = useTeam();
-  const alert = useAlert();
-  const classes = useStyles();
-  const authContext = useAuth();
-  const loggedInUserId = authContext.user?.id as string;
-  const isUserPatient = authContext.user?.isUserPatient();
-  const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
-  const commonTeamClasses = commonComponentStyles();
-  const { t } = useTranslation("yourloops");
-  const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`;
-  const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null);
+  const { team, refreshParent } = props
+  const teamHook = useTeam()
+  const alert = useAlert()
+  const classes = useStyles()
+  const authContext = useAuth()
+  const loggedInUserId = authContext.user?.id
+  const isUserPatient = authContext.user?.isUserPatient()
+  const isUserAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
+  const commonTeamClasses = commonComponentStyles()
+  const { t } = useTranslation('yourloops')
+  const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`
+  const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null)
 
   const onSaveTeam = async (editedTeam: Partial<Team> | null) => {
     if (editedTeam) {
       try {
-        await teamHook.editTeam(editedTeam as Team);
-        alert.success(t("team-page-success-edit"));
-        refreshParent();
+        await teamHook.editTeam(editedTeam as Team)
+        alert.success(t('team-page-success-edit'))
+        refreshParent()
       } catch (reason: unknown) {
-        alert.error(t("team-page-failed-edit"));
+        alert.error(t('team-page-failed-edit'))
       }
     }
-    setTeamToEdit(null);
-  };
+    setTeamToEdit(null)
+  }
 
   const editTeam = () => {
-    setTeamToEdit({ team, onSaveTeam });
-  };
+    setTeamToEdit({ team, onSaveTeam })
+  }
 
   return (
     <React.Fragment>
@@ -118,7 +118,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
           <div>
             <InfoOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
-              {t("information")}
+              {t('information')}
             </Typography>
           </div>
           {isUserAdmin &&
@@ -131,7 +131,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               className={commonTeamClasses.button}
             >
               <EditIcon className={commonTeamClasses.icon} />
-              {t("edit-information")}
+              {t('edit-information')}
             </Button>
           }
           {isUserPatient && !team.monitoring &&
@@ -146,7 +146,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             <div>
               <FolderSharedOutlinedIcon className={commonTeamClasses.icon} />
               <Typography className={classes.label}>
-                {t("team-name")}
+                {t('team-name')}
               </Typography>
             </div>
             <Typography id={`team-information-${team.id}-name`} className={classes.value}>
@@ -157,7 +157,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             <div>
               <LocalPhoneOutlinedIcon className={commonTeamClasses.icon} />
               <Typography className={classes.label}>
-                {t("phone-number")}
+                {t('phone-number')}
               </Typography>
             </div>
             <Typography id={`team-information-${team.id}-phone`} className={classes.value}>
@@ -168,7 +168,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             <div>
               <VerifiedUserOutlinedIcon className={commonTeamClasses.icon} />
               <Typography className={classes.label}>
-                {t("identification-code")}
+                {t('identification-code')}
               </Typography>
             </div>
             <Typography id={`team-information-${team.id}-code`} className={classes.value}>
@@ -179,7 +179,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             <div>
               <LocationOnOutlinedIcon className={commonTeamClasses.icon} />
               <Typography className={classes.label}>
-                {t("address")}
+                {t('address')}
               </Typography>
             </div>
             <Typography
@@ -195,7 +195,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
         <TeamEditDialog teamToEdit={teamToEdit} />
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default TeamInformation;
+export default TeamInformation

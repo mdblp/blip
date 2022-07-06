@@ -25,104 +25,104 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import FlagOutlinedIcon from "@material-ui/icons/FlagOutlined";
-import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
-import Drawer from "@material-ui/core/Drawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import EmailIcon from "@material-ui/icons/Email";
-import ContactMailIcon from "@material-ui/icons/ContactMail";
-import TimelineIcon from "@material-ui/icons/Timeline";
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
-import FeedbackIcon from "@material-ui/icons/Feedback";
-import SignalWifiOffIcon from "@material-ui/icons/SignalWifiOff";
-import DesktopMacIcon from "@material-ui/icons/DesktopMac";
-import HistoryIcon from "@material-ui/icons/History";
-import Divider from "@material-ui/core/Divider";
-import Box from "@material-ui/core/Box";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined'
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
+import Drawer from '@material-ui/core/Drawer'
+import Toolbar from '@material-ui/core/Toolbar'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import EmailIcon from '@material-ui/icons/Email'
+import ContactMailIcon from '@material-ui/icons/ContactMail'
+import TimelineIcon from '@material-ui/icons/Timeline'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
+import FeedbackIcon from '@material-ui/icons/Feedback'
+import SignalWifiOffIcon from '@material-ui/icons/SignalWifiOff'
+import DesktopMacIcon from '@material-ui/icons/DesktopMac'
+import HistoryIcon from '@material-ui/icons/History'
+import Divider from '@material-ui/core/Divider'
+import Box from '@material-ui/core/Box'
 
-import MedicalServiceIcon from "../icons/MedicalServiceIcon";
-import PendingIcon from "../icons/PendingIcon";
-import { useTeam } from "../../lib/team";
-import { useAuth } from "../../lib/auth";
-import { PatientFilterTypes } from "../../models/generic";
+import MedicalServiceIcon from '../icons/MedicalServiceIcon'
+import PendingIcon from '../icons/PendingIcon'
+import { useTeam } from '../../lib/team'
+import { useAuth } from '../../lib/auth'
+import { PatientFilterTypes } from '../../models/generic'
 
 interface MainDrawerProps {
-  miniVariant?: boolean;
+  miniVariant?: boolean
 }
 
-export const mainDrawerDefaultWidth = "300px";
-export const mainDrawerMiniVariantWidth = "57px";
+export const mainDrawerDefaultWidth = '300px'
+export const mainDrawerMiniVariantWidth = '57px'
 
 const styles = makeStyles((theme: Theme) => ({
   countLabel: {
-    borderRadius: "50%",
-    marginLeft: "auto",
+    borderRadius: '50%',
+    marginLeft: 'auto',
     backgroundColor: theme.palette.primary.main,
-    width: "24px",
-    lineHeight: "24px",
-    textAlign: "center",
-    color: "white",
-    fontSize: "14px",
+    width: '24px',
+    lineHeight: '24px',
+    textAlign: 'center',
+    color: 'white',
+    fontSize: '14px'
   },
   monitoringBackgroundColor: {
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: theme.palette.warning.main
   },
   monitoringFilters: {
-    marginTop: 20,
+    marginTop: 20
   },
   divider: {
     marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   drawer: {
     width: mainDrawerDefaultWidth,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap'
   },
   drawerPaper: {
     width: mainDrawerDefaultWidth,
-    overflowX: "hidden",
+    overflowX: 'hidden'
   },
   drawerBoxShadow: {
-    boxShadow: theme.shadows[5],
+    boxShadow: theme.shadows[5]
   },
   messagingTitle: {
     fontWeight: 700,
-    lineHeight: "20px",
-    textTransform: "uppercase",
+    lineHeight: '20px',
+    textTransform: 'uppercase'
   },
   monitoringTitleIcon: {
-    color: theme.palette.grey[600],
+    color: theme.palette.grey[600]
   },
   miniDrawer: {
     width: mainDrawerMiniVariantWidth,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap'
   },
   miniDrawerPaper: {
     width: mainDrawerMiniVariantWidth,
-    overflowX: "hidden",
+    overflowX: 'hidden'
   },
   enterTransition: {
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+      duration: theme.transitions.duration.enteringScreen
+    })
   },
   leaveTransition: {
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-}));
+      duration: theme.transitions.duration.leavingScreen
+    })
+  }
+}))
 
 function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   const {
@@ -138,68 +138,68 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     miniDrawerPaper,
     enterTransition,
     leaveTransition,
-    drawerBoxShadow,
-  } = styles();
-  const { t } = useTranslation("yourloops");
+    drawerBoxShadow
+  } = styles()
+  const { t } = useTranslation('yourloops')
 
-  const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant);
-  const [onHover, setOnHover] = useState<boolean>(false);
-  const teamHook = useTeam();
-  const authHook = useAuth();
-  const patientFiltersStats = teamHook.patientsFilterStats;
-  const numberOfFlaggedPatients = authHook.getFlagPatients().length;
-  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id));
+  const [fullDrawer, setFullDrawer] = useState<boolean>(!miniVariant)
+  const [onHover, setOnHover] = useState<boolean>(false)
+  const teamHook = useTeam()
+  const authHook = useAuth()
+  const patientFiltersStats = teamHook.patientsFilterStats
+  const numberOfFlaggedPatients = authHook.getFlagPatients().length
+  const loggedUserIsHcpInMonitoring = authHook.user?.isUserHcp() && teamHook.getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === authHook.user?.id))
 
-  const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`;
-  const paperClass = fullDrawer || onHover ?
-    `${drawerPaper} ${enterTransition} ${onHover && !fullDrawer ? drawerBoxShadow : ""}` :
-    `${miniDrawerPaper} ${enterTransition}`;
+  const drawerClass = fullDrawer ? `${drawer} ${leaveTransition}` : `${miniDrawer} ${leaveTransition}`
+  const paperClass = fullDrawer || onHover
+    ? `${drawerPaper} ${enterTransition} ${onHover && !fullDrawer ? drawerBoxShadow : ''}`
+    : `${miniDrawerPaper} ${enterTransition}`
 
   const drawerItems = [
     {
       icon: <SupervisedUserCircleIcon />,
-      text: `${t("all-patients")} (${patientFiltersStats.all})`,
-      filter: PatientFilterTypes.all,
+      text: `${t('all-patients')} (${patientFiltersStats.all})`,
+      filter: PatientFilterTypes.all
     },
     {
       icon: <FlagOutlinedIcon />,
-      text: `${t("flagged")} (${numberOfFlaggedPatients})`,
-      filter: PatientFilterTypes.flagged,
+      text: `${t('flagged')} (${numberOfFlaggedPatients})`,
+      filter: PatientFilterTypes.flagged
     },
     {
       icon: <PendingIcon />,
-      text: `${t("pending")} (${patientFiltersStats.pending})`,
-      filter: PatientFilterTypes.pending,
+      text: `${t('pending')} (${patientFiltersStats.pending})`,
+      filter: PatientFilterTypes.pending
     },
     {
       icon: <MedicalServiceIcon />,
-      text: `${t("private-practice")} (${patientFiltersStats.directShare})`,
-      filter: PatientFilterTypes.private,
-    },
-  ];
+      text: `${t('private-practice')} (${patientFiltersStats.directShare})`,
+      filter: PatientFilterTypes.private
+    }
+  ]
 
   const drawerEventsItems = [
     {
       icon: <HourglassEmptyIcon />,
       count: patientFiltersStats.outOfRange,
-      text: t("time-away-from-target"),
-      filter: PatientFilterTypes.outOfRange,
+      text: t('time-away-from-target'),
+      filter: PatientFilterTypes.outOfRange
     },
     {
       icon: <TimelineIcon />,
       count: patientFiltersStats.severeHypoglycemia,
-      text: t("alert-hypoglycemic"),
-      filter: PatientFilterTypes.severeHypoglycemia,
+      text: t('alert-hypoglycemic'),
+      filter: PatientFilterTypes.severeHypoglycemia
     },
     {
       icon: <SignalWifiOffIcon />,
       count: patientFiltersStats.dataNotTransferred,
-      text: t("data-not-transferred"),
-      filter: PatientFilterTypes.dataNotTransferred,
-    },
-  ];
+      text: t('data-not-transferred'),
+      filter: PatientFilterTypes.dataNotTransferred
+    }
+  ]
 
-  useEffect(() => setFullDrawer(!miniVariant), [miniVariant]);
+  useEffect(() => setFullDrawer(!miniVariant), [miniVariant])
 
   return (
     <Drawer
@@ -232,7 +232,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemIcon>
               <ListItemText>
                 <Box className={messagingTitle}>
-                  {t("remote-monitoring")}
+                  {t('remote-monitoring')}
                 </Box>
               </ListItemText>
             </ListItem>
@@ -244,7 +244,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </ListItemIcon>
                 <ListItemText>
                   <Box display="flex">
-                    {t("monitored-patients")} ({patientFiltersStats.remoteMonitored})
+                    {t('monitored-patients')} ({patientFiltersStats.remoteMonitored})
                   </Box>
                 </ListItemText>
               </ListItem>
@@ -256,7 +256,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </ListItemIcon>
                 <ListItemText>
                   <Box display="flex">
-                    {t("incoming-renewal")}
+                    {t('incoming-renewal')}
                     {patientFiltersStats.renew > 0 &&
                       <Box className={`${countLabel} ${monitoringBackgroundColor}`}>
                         {patientFiltersStats.renew}
@@ -273,7 +273,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemIcon>
               <ListItemText>
                 <Box className={messagingTitle}>
-                  {t("events")}
+                  {t('events')}
                 </Box>
               </ListItemText>
             </ListItem>
@@ -303,7 +303,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemIcon>
               <ListItemText>
                 <Box className={messagingTitle}>
-                  {t("messaging")}
+                  {t('messaging')}
                 </Box>
               </ListItemText>
             </ListItem>
@@ -314,7 +314,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
                 </ListItemIcon>
                 <ListItemText>
                   <Box display="flex">
-                    {t("unread-messages")}
+                    {t('unread-messages')}
                     {patientFiltersStats.unread > 0 &&
                       <Box className={countLabel}>
                         {patientFiltersStats.unread}
@@ -328,8 +328,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
         }
       </List>
     </Drawer>
-  );
+  )
 }
 
-export default MainDrawer;
-
+export default MainDrawer

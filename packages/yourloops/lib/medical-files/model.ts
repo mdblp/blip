@@ -24,47 +24,47 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { Alarm } from "../../models/alarm";
-import { UNITS_TYPE } from "../units/utils";
+import { Alarm } from '../../models/alarm'
+import { UNITS_TYPE } from '../units/utils'
 
 export interface Prescription {
-  id: string;
-  name: string;
-  patientId: string;
-  teamId: string;
-  prescriptorId: string;
-  link: string;
-  uploadedAt: Date;
+  id: string
+  name: string
+  patientId: string
+  teamId: string
+  prescriptorId: string
+  link: string
+  uploadedAt: Date
 }
 
 export interface NewMedicalRecord {
-  patientId: string;
-  teamId: string;
-  diagnosis: string;
-  progressionProposal: string;
+  patientId: string
+  teamId: string
+  diagnosis: string
+  progressionProposal: string
   trainingSubject: string
 }
 
 export interface MedicalRecord extends NewMedicalRecord {
-  id: string;
-  authorId: string;
-  creationDate: string;
+  id: string
+  authorId: string
+  creationDate: string
 }
 
 export interface WeeklyReport {
-  id: string;
-  patientId: string;
-  teamId: string;
+  id: string
+  patientId: string
+  teamId: string
   parameters: {
-    bgUnit: UNITS_TYPE;
-    lowBg: number;
-    highBg: number;
-    outOfRangeThreshold: number;
-    veryLowBg: number;
-    hypoThreshold: number;
-    nonDataTxThreshold: number;
-    reportingPeriod: number;
+    bgUnit: UNITS_TYPE
+    lowBg: number
+    highBg: number
+    outOfRangeThreshold: number
+    veryLowBg: number
+    hypoThreshold: number
+    nonDataTxThreshold: number
+    reportingPeriod: number
   }
-  alarms: Alarm;
-  creationDate: string;
+  alarms: Alarm
+  creationDate: string
 }

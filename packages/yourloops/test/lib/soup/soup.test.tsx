@@ -26,10 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { validate as validateUuid } from "uuid";
+import { validate as validateUuid } from 'uuid'
 
-describe("SOUP", () => {
-  it("UUID soup should be >= v8 with the validate function available", () => {
-    expect(validateUuid).toBeInstanceOf(Function);
-  });
-});
+describe('SOUP', () => {
+  it('UUID soup should be >= v8 with the validate function available', () => {
+    expect(validateUuid).toBeInstanceOf(Function)
+  })
+})

@@ -25,49 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import FormControl from "@material-ui/core/FormControl";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/core/styles";
+import FormControl from '@material-ui/core/FormControl'
+import FormGroup from '@material-ui/core/FormGroup'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import { makeStyles } from '@material-ui/core/styles'
 
-type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
-type SelectChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
-type HandleChange<E> = (event: E) => void;
+type SetState<T> = React.Dispatch<React.SetStateAction<T>>
+type SelectChangeEvent = React.ChangeEvent<{ name?: string, value: unknown }>
+type HandleChange<E> = (event: E) => void
 
 export interface Errors {
-  notAllowedValue: boolean;
+  notAllowedValue: boolean
 }
 
 export interface BasicDropdownWithValidationProps<T> {
-  id: string;
-  defaultValue: string;
-  disabledValues: string[];
-  values: string[];
-  inputTranslationKey: string;
-  errorTranslationKey: string;
-  onSelect: (value: T) => void;
+  id: string
+  defaultValue: string
+  disabledValues: string[]
+  values: string[]
+  inputTranslationKey: string
+  errorTranslationKey: string
+  onSelect: (value: T) => void
 }
 
 const dropdownStyles = makeStyles(() => ({
-  formControl: { display: "flex" },
-}), { name: "component-basic-dropdown-with-validation" });
+  formControl: { display: 'flex' }
+}), { name: 'component-basic-dropdown-with-validation' })
 
 function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<T>): JSX.Element {
-  const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props;
-  const classes = dropdownStyles();
-  const { t } = useTranslation("yourloops");
+  const { onSelect, defaultValue, disabledValues, values, inputTranslationKey, errorTranslationKey, id } = props
+  const classes = dropdownStyles()
+  const { t } = useTranslation('yourloops')
 
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue);
+  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
   const createHandleSelectChange = <K extends string>(setState: SetState<K>): HandleChange<SelectChangeEvent> => (event) => {
-    setState(event.target.value as K);
-    onSelect(event.target.value as T);
-  };
+    setState(event.target.value as K)
+    onSelect(event.target.value as T)
+  }
 
   return (
     <FormControl id={`dropdown-form-${id}`} className={classes.formControl}>
@@ -77,7 +77,7 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
           id={`dropdown-${id}-selector`}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
-          inputProps={{ "id": `dropdown-${id}-selector-input-props`, "data-testid": `dropdown-${id}-selector-input-props` }}
+          inputProps={{ id: `dropdown-${id}-selector-input-props`, 'data-testid': `dropdown-${id}-selector-input-props` }}
           onChange={createHandleSelectChange(setSelectedValue)}>
           {values.map(item => (
             <MenuItem id={`dropdown-${id}-menuitem-${item}`} key={item} value={item}>
@@ -90,7 +90,7 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
         }
       </FormGroup>
     </FormControl>
-  );
+  )
 }
 
-export default BasicDropdownWithValidation;
+export default BasicDropdownWithValidation

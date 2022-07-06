@@ -25,25 +25,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useTheme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import { SwitchRoleConsequencesDialogProps } from "./models";
+import { SwitchRoleConsequencesDialogProps } from './models'
 
 function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps): JSX.Element {
-  const { title, open, onAccept, onCancel } = props;
-  const { t } = useTranslation("yourloops");
-  const theme = useTheme();
-  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
+  const { title, open, onAccept, onCancel } = props
+  const { t } = useTranslation('yourloops')
+  const theme = useTheme()
+  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
   return (
     <Dialog
@@ -59,24 +59,24 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
 
       <DialogContent id="switch-role-consequences-dialog-content">
         <DialogContentText id="modal-switch-hcp-info-1" color="textPrimary">
-          {t("modal-switch-hcp-info")}
+          {t('modal-switch-hcp-info')}
         </DialogContentText>
-        <DialogContentText id="modal-switch-hcp-info-list-3" component={"div"} color="textPrimary">
-          <span id="modal-switch-hcp-info-3">{t("modal-switch-hcp-info-3")}</span>
+        <DialogContentText id="modal-switch-hcp-info-list-3" component={'div'} color="textPrimary">
+          <span id="modal-switch-hcp-info-3">{t('modal-switch-hcp-info-3')}</span>
           <ul>
-            <li id="modal-switch-hcp-list-1">{t("modal-switch-hcp-list-1")}</li>
-            <li id="modal-switch-hcp-list-2">{t("modal-switch-hcp-list-2")}</li>
-            <li id="modal-switch-hcp-list-3">{t("modal-switch-hcp-list-3")}</li>
+            <li id="modal-switch-hcp-list-1">{t('modal-switch-hcp-list-1')}</li>
+            <li id="modal-switch-hcp-list-2">{t('modal-switch-hcp-list-2')}</li>
+            <li id="modal-switch-hcp-list-3">{t('modal-switch-hcp-list-3')}</li>
           </ul>
         </DialogContentText>
         <DialogContentText id="modal-switch-hcp-info-4" color="textPrimary">
-          {t("modal-switch-hcp-info-4")}
+          {t('modal-switch-hcp-info-4')}
         </DialogContentText>
         <DialogContentText id="modal-switch-hcp-info-5" color="textPrimary">
-          {t("modal-switch-hcp-info-5")}
+          {t('modal-switch-hcp-info-5')}
         </DialogContentText>
         <DialogContentText id="modal-switch-hcp-info-2" color="textPrimary">
-          <strong>{t("modal-switch-hcp-info-2")}</strong>
+          <strong>{t('modal-switch-hcp-info-2')}</strong>
         </DialogContentText>
       </DialogContent>
 
@@ -85,7 +85,7 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
           id="switch-role-consequences-dialog-button-cancel"
           onClick={onCancel}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="switch-role-consequences-dialog-button-ok"
@@ -94,11 +94,11 @@ function SwitchRoleConsequencesDialog(props: SwitchRoleConsequencesDialogProps):
           disableElevation
           onClick={onAccept}
         >
-          {t("modal-switch-hcp-action")}
+          {t('modal-switch-hcp-action')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default SwitchRoleConsequencesDialog;
+export default SwitchRoleConsequencesDialog

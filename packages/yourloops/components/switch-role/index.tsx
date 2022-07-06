@@ -26,62 +26,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import bows from "bows";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import bows from 'bows'
 
-import { HcpProfession } from "../../models/hcp-profession";
-import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from "./models";
-import metrics from "../../lib/metrics";
-import { useAuth } from "../../lib/auth";
-import { useAlert } from "../utils/snackbar";
-import SwitchRoleConsequencesDialog from "./consequences-dialog";
-import SwitchRoleConsentDialog from "./consent-dialog";
-import SwitchRoleProfessionDialog from "./profession-dialog";
-import { useHistory } from "react-router-dom";
+import { HcpProfession } from '../../models/hcp-profession'
+import { SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'
+import metrics from '../../lib/metrics'
+import { useAuth } from '../../lib/auth'
+import { useAlert } from '../utils/snackbar'
+import SwitchRoleConsequencesDialog from './consequences-dialog'
+import SwitchRoleConsentDialog from './consent-dialog'
+import SwitchRoleProfessionDialog from './profession-dialog'
+import { useHistory } from 'react-router-dom'
 
-const log = bows("SwitchRoleDialogs");
+const log = bows('SwitchRoleDialogs')
 
 function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { switchRoleToHCP, user } = useAuth();
-  const history = useHistory();
-  const alert = useAlert();
-  const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none);
-  const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false);
+  const { t } = useTranslation('yourloops')
+  const { switchRoleToHCP, user } = useAuth()
+  const history = useHistory()
+  const alert = useAlert()
+  const [switchRoleStep, setSwitchRoleStep] = React.useState<SwitchRoleToHcpSteps>(SwitchRoleToHcpSteps.none)
+  const [feedbackConsent, setFeedbackConsent] = React.useState<boolean>(false)
 
   if (!user) {
-    throw new Error("User must be looged-in");
+    throw new Error('User must be looged-in')
   }
 
-  const role = user.role;
+  const role = user.role
   const handleSwitchRoleToConditions = (): void => {
-    setSwitchRoleStep(SwitchRoleToHcpSteps.consent);
-  };
+    setSwitchRoleStep(SwitchRoleToHcpSteps.consent)
+  }
 
   const handleSwitchRoleToUpdate = async (hcpProfession: HcpProfession): Promise<void> => {
     try {
-      await switchRoleToHCP(feedbackConsent, hcpProfession);
-      metrics.send("switch_account", "accept_terms");
-      history.push("/");
+      await switchRoleToHCP(feedbackConsent, hcpProfession)
+      metrics.send('switch_account', 'accept_terms')
+      history.push('/')
     } catch (reason: unknown) {
-      alert.error(t("modal-switch-hcp-failure"));
-      log.error("switchRoleToHCP", reason);
+      alert.error(t('modal-switch-hcp-failure'))
+      log.error('switchRoleToHCP', reason)
     }
-  };
+  }
 
   const handleSwitchRoleToProfession = (feedback: boolean): void => {
-    setFeedbackConsent(feedback);
-    setSwitchRoleStep(SwitchRoleToHcpSteps.profession);
-  };
+    setFeedbackConsent(feedback)
+    setSwitchRoleStep(SwitchRoleToHcpSteps.profession)
+  }
 
   React.useEffect(() => {
     if (props.open && switchRoleStep === SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.consequences);
+      setSwitchRoleStep(SwitchRoleToHcpSteps.consequences)
     } else if (!props.open && switchRoleStep !== SwitchRoleToHcpSteps.none) {
-      setSwitchRoleStep(SwitchRoleToHcpSteps.none);
+      setSwitchRoleStep(SwitchRoleToHcpSteps.none)
     }
-  }, [props.open, switchRoleStep, role]);
+  }, [props.open, switchRoleStep, role])
 
   return (
     <React.Fragment>
@@ -102,7 +102,7 @@ function SwitchRoleDialogs(props: SwitchRoleDialogsProps): JSX.Element {
         onCancel={props.onCancel}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default SwitchRoleDialogs;
+export default SwitchRoleDialogs

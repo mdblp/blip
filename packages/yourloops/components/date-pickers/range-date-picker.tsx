@@ -26,61 +26,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Dayjs, isDayjs } from "dayjs";
+import React from 'react'
+import { Dayjs, isDayjs } from 'dayjs'
 
 import {
   CalendarOrientation,
   CalendarChangeMonth,
-  CalendarSelectionRange,
-} from "./models";
-import PickerToolbar from "./picker-toolbar";
-import CalendarBox from "./calendar-box";
-import { useChangeMonthState } from "./change-month";
+  CalendarSelectionRange
+} from './models'
+import PickerToolbar from './picker-toolbar'
+import CalendarBox from './calendar-box'
+import { useChangeMonthState } from './change-month'
 
 interface CalendarViewProps {
-  showToolbar?: boolean;
-  selection: CalendarSelectionRange;
-  minDate: Dayjs;
-  maxDate: Dayjs;
-  orientation: CalendarOrientation;
-  onChange: (d: Dayjs) => void;
+  showToolbar?: boolean
+  selection: CalendarSelectionRange
+  minDate: Dayjs
+  maxDate: Dayjs
+  orientation: CalendarOrientation
+  onChange: (d: Dayjs) => void
 }
 
 function RangeDatePicker(props: CalendarViewProps): JSX.Element {
-  const { selection, minDate, maxDate, orientation, onChange } = props;
+  const { selection, minDate, maxDate, orientation, onChange } = props
 
   const [currentMonth, setCurrentMonth] = React.useState<Dayjs>(() => {
-    const lastMonth = selection.selected.end.startOf("month");
-    if (isDayjs(minDate) && lastMonth.subtract(1, "day").isBefore(minDate)) {
+    const lastMonth = selection.selected.end.startOf('month')
+    if (isDayjs(minDate) && lastMonth.subtract(1, 'day').isBefore(minDate)) {
       // Don't display an unselectable month
-      return lastMonth.add(1, "month");
+      return lastMonth.add(1, 'month')
     }
-    return lastMonth;
-  });
+    return lastMonth
+  })
 
   const [changingMonth, handlePrevMonth, handleNextMonth] = useChangeMonthState({
     currentMonth,
     setCurrentMonth,
     minDate,
     maxDate,
-    mode: selection.mode,
-  });
+    mode: selection.mode
+  })
 
   const prevMonth = React.useMemo(() => {
-    return currentMonth.subtract(1, "month");
-  }, [currentMonth]);
+    return currentMonth.subtract(1, 'month')
+  }, [currentMonth])
 
   const changingPrevMonth = React.useMemo<CalendarChangeMonth | null>(() => {
     if (changingMonth) {
       return {
         direction: changingMonth.direction,
         onAnimationEnd: changingMonth.onAnimationEnd,
-        toMonth: changingMonth.toMonth.subtract(1, "month"),
-      };
+        toMonth: changingMonth.toMonth.subtract(1, 'month')
+      }
     }
-    return null;
-  }, [changingMonth]);
+    return null
+  }, [changingMonth])
 
   return (
     <React.Fragment>
@@ -113,7 +113,7 @@ function RangeDatePicker(props: CalendarViewProps): JSX.Element {
         onChange={onChange}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default RangeDatePicker;
+export default RangeDatePicker

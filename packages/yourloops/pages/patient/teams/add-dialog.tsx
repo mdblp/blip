@@ -26,74 +26,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import _ from 'lodash'
+import React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import InputLabel from "@material-ui/core/InputLabel";
-import Link from "@material-ui/core/Link";
-import TextField from "@material-ui/core/TextField";
-import metrics from "../../../lib/metrics";
-import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from "../../../lib/team";
-import diabeloopUrl from "../../../lib/diabeloop-url";
-import { AddTeamDialogContentProps } from "./types";
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Checkbox from '@material-ui/core/Checkbox'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import InputLabel from '@material-ui/core/InputLabel'
+import Link from '@material-ui/core/Link'
+import TextField from '@material-ui/core/TextField'
+import metrics from '../../../lib/metrics'
+import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, Team, useTeam } from '../../../lib/team'
+import diabeloopUrl from '../../../lib/diabeloop-url'
+import { AddTeamDialogContentProps } from './types'
 
 export interface AddTeamDialogProps {
   teamName?: string
   error?: string
-  actions: null | AddTeamDialogContentProps;
+  actions: null | AddTeamDialogContentProps
 }
 
 export interface EnterIdentificationCodeProps {
-  teamName?: string,
-  handleClose: () => void;
-  handleSetIdCode: (code: string) => void;
+  teamName?: string
+  handleClose: () => void
+  handleSetIdCode: (code: string) => void
 }
 
 export interface ConfirmTeamProps {
-  team: Team;
-  handleClose: () => void;
-  handleAccept: () => void;
+  team: Team
+  handleClose: () => void
+  handleAccept: () => void
 }
 
 export interface DisplayErrorMessageProps {
-  id: string;
-  message: string;
-  handleClose: () => void;
+  id: string
+  message: string
+  handleClose: () => void
 }
 
 const addTeamDialogClasses = makeStyles(
   (theme: Theme) => {
     return {
       formControl: {
-        marginBottom: theme.spacing(2),
+        marginBottom: theme.spacing(2)
       },
       divTeamCodeField: {
         marginTop: theme.spacing(2),
-        width: "8em",
+        width: '8em'
       },
       checkboxPrivacy: {
-        marginBottom: "auto",
-      },
-    };
+        marginBottom: 'auto'
+      }
+    }
   },
-  { name: "ylp-patient-join-team-dialog" }
-);
+  { name: 'ylp-patient-join-team-dialog' }
+)
 
 function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation('yourloops')
 
   return (
     <React.Fragment>
@@ -109,53 +109,53 @@ function DisplayErrorMessage(props: DisplayErrorMessageProps): JSX.Element {
           disableElevation
           onClick={props.handleClose}
         >
-          {t("button-ok")}
+          {t('button-ok')}
         </Button>
       </DialogActions>
     </React.Fragment>
-  );
+  )
 }
 
 export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = addTeamDialogClasses();
-  const inputRef = React.createRef<HTMLInputElement>();
-  const [idCode, setIdCode] = React.useState("");
-  const { teamName } = props;
+  const { t } = useTranslation('yourloops')
+  const classes = addTeamDialogClasses()
+  const inputRef = React.createRef<HTMLInputElement>()
+  const [idCode, setIdCode] = React.useState('')
+  const { teamName } = props
 
   const getNumericCode = (value: string): string => {
-    let numericCode = "";
+    let numericCode = ''
     for (let i = 0; i < value.length; i++) {
       if (value[i].match(/^[0-9]$/)) {
-        numericCode += value[i];
+        numericCode += value[i]
       }
     }
-    return numericCode;
-  };
+    return numericCode
+  }
 
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const numericCode = getNumericCode(event.target.value);
-    const displayCode = getDisplayTeamCode(numericCode);
-    setIdCode(displayCode);
-  };
+    const numericCode = getNumericCode(event.target.value)
+    const displayCode = getDisplayTeamCode(numericCode)
+    setIdCode(displayCode)
+  }
 
   const handleClickJoinTeam = () => {
-    props.handleSetIdCode(getNumericCode(idCode));
-  };
+    props.handleSetIdCode(getNumericCode(idCode))
+  }
 
-  const buttonJoinDisabled = idCode.match(REGEX_TEAM_CODE_DISPLAY) === null;
+  const buttonJoinDisabled = idCode.match(REGEX_TEAM_CODE_DISPLAY) === null
 
   React.useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [inputRef]);
+  }, [inputRef])
 
   return (
     <React.Fragment>
       <Box textAlign="center" p={3}>
         <DialogTitle id="team-add-dialog-title">
-          <strong>{teamName ? t("modal-add-medical-specific-team", { careteam: teamName }) : t("modal-add-medical-team")}</strong>
+          <strong>{teamName ? t('modal-add-medical-specific-team', { careteam: teamName }) : t('modal-add-medical-team')}</strong>
         </DialogTitle>
 
         <DialogContent id="team-add-dialog-content">
@@ -165,7 +165,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
               id="team-add-dialog-label-code"
               htmlFor="team-add-dialog-field-code"
             >
-              {teamName ? (t("modal-add-medical-team-code")) : (t("modal-add-medical-team-code-no-invite"))}
+              {teamName ? (t('modal-add-medical-team-code')) : (t('modal-add-medical-team-code-no-invite'))}
             </InputLabel>
             <div id="team-add-dialog-field-code-parent" className={classes.divTeamCodeField}>
               <TextField
@@ -185,7 +185,7 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
           id="team-add-dialog-button-cancel"
           onClick={props.handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="team-add-dialog-button-add-team"
@@ -195,44 +195,44 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
           disableElevation
           onClick={handleClickJoinTeam}
         >
-          {t("button-add-team")}
+          {t('button-add-team')}
         </Button>
       </DialogActions>
     </React.Fragment>
-  );
+  )
 }
 
 export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = addTeamDialogClasses();
-  const [privacyAccepted, setPrivacyAccepted] = React.useState(false);
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = addTeamDialogClasses()
+  const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
 
-  const { address } = props.team;
-  let teamAddress: JSX.Element | null = null;
-  if (typeof address === "object") {
+  const { address } = props.team
+  let teamAddress: JSX.Element | null = null
+  if (typeof address === 'object') {
     teamAddress = (
       <React.Fragment>
         {address.line1}
         <br />
-        {address.line2 ?? ""}
+        {address.line2 ?? ''}
         {_.isEmpty(address.line2) ? null : <br />}
         {address.zip} {address.city}
         <br />
       </React.Fragment>
-    );
+    )
   }
 
   const handleChange = (/* event: React.ChangeEvent<HTMLInputElement> */) => {
-    setPrivacyAccepted(!privacyAccepted);
-  };
+    setPrivacyAccepted(!privacyAccepted)
+  }
 
-  const privacyPolicy = t("privacy-policy");
+  const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
     <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank"
-      rel="noreferrer" onClick={() => metrics.send("pdf_document", "view_document", "privacy_policy")}>
+      rel="noreferrer" onClick={() => metrics.send('pdf_document', 'view_document', 'privacy_policy')}>
       {privacyPolicy}
     </Link>
-  );
+  )
   const checkboxPrivacy = (
     <Checkbox
       id="team-add-dialog-confirm-team-privacy-checkbox-policy"
@@ -242,17 +242,17 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
       color="primary"
       className={classes.checkboxPrivacy}
     />
-  );
+  )
 
   return (
     <React.Fragment>
       <DialogTitle id="team-add-dialog-confirm-title">
-        <strong>{t("modal-patient-share-team-title")}</strong>
+        <strong>{t('modal-patient-share-team-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText id="team-add-dialog-confirm-info" color="textPrimary">
-          {t("modal-patient-add-team-info")}
+          {t('modal-patient-add-team-info')}
         </DialogContentText>
         <DialogContentText id="team-add-dialog-confirm-team-infos" color="textPrimary">
           {props.team.name}
@@ -262,14 +262,14 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
         </DialogContentText>
 
         <DialogContentText id="team-add-dialog-confirm-team-warning" color="textPrimary">
-          <strong>{t("modal-patient-team-warning")}</strong>
+          <strong>{t('modal-patient-team-warning')}</strong>
         </DialogContentText>
 
         <FormControl className={classes.formControl}>
           <FormControlLabel
             id="team-add-dialog-confirm-team-privacy"
             control={checkboxPrivacy}
-            label={t("modal-patient-share-team-privacy")}
+            label={t('modal-patient-share-team-privacy')}
             color="textPrimary"
           />
         </FormControl>
@@ -291,7 +291,7 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
           id="team-add-dialog-confirm-team-button-cancel"
           onClick={props.handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="team-add-dialog-confirm-team-button-add-team"
@@ -301,85 +301,85 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
           disableElevation
           onClick={props.handleAccept}
         >
-          {t("button-add-medical-team")}
+          {t('button-add-medical-team')}
         </Button>
       </DialogActions>
     </React.Fragment>
-  );
+  )
 }
 
 function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const teamHook = useTeam();
-  const [idCode, setIdCode] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [team, setTeam] = React.useState<Team | null>(null);
+  const { t } = useTranslation('yourloops')
+  const teamHook = useTeam()
+  const [idCode, setIdCode] = React.useState('')
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [team, setTeam] = React.useState<Team | null>(null)
 
-  const { actions, teamName, error } = props;
-  const dialogIsOpen = actions !== null;
+  const { actions, teamName, error } = props
+  const dialogIsOpen = actions !== null
 
   const resetDialog = () => {
     setTimeout(() => {
-      setIdCode("");
-      setTeam(null);
-      setErrorMessage(null);
-    }, 100);
-  };
+      setIdCode('')
+      setTeam(null)
+      setErrorMessage(null)
+    }, 100)
+  }
   const handleSetTeamId = (id: string) => {
-    if (id !== "") {
-      const team = teamHook.teams.find((team) => team.code === id);
+    if (id !== '') {
+      const team = teamHook.teams.find((team) => team.code === id)
       if (!_.isNil(team)) {
-        setErrorMessage(t("modal-patient-add-team-failure-exists"));
+        setErrorMessage(t('modal-patient-add-team-failure-exists'))
       }
-      setIdCode(id);
+      setIdCode(id)
     }
-  };
+  }
 
   const handleClose = () => {
-    actions?.onDialogResult(undefined);
-    resetDialog();
-  };
+    actions?.onDialogResult(undefined)
+    resetDialog()
+  }
 
   const handleAccept = () => {
-    actions?.onDialogResult(team?.id ?? undefined);
-    resetDialog();
-  };
+    actions?.onDialogResult(team?.id ?? undefined)
+    resetDialog()
+  }
 
-  let content: JSX.Element;
-  if (idCode === "") {
+  let content: JSX.Element
+  if (idCode === '') {
     content =
-      <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />;
+      <EnterIdentificationCode handleClose={handleClose} teamName={teamName} handleSetIdCode={handleSetTeamId} />
   } else if (errorMessage) {
-    content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />;
+    content = <DisplayErrorMessage id="team-add-dialog" handleClose={handleClose} message={errorMessage} />
   } else if (team === null) {
     content = (
       <DialogContent>
         <CircularProgress id="team-add-dialog-loading-progress" disableShrink />
       </DialogContent>
-    );
+    )
     teamHook
       .getTeamFromCode(idCode)
       .then((team) => {
         if (team === null) {
-          setErrorMessage(error ? error : t("modal-patient-add-team-failure"));
+          setErrorMessage(error || t('modal-patient-add-team-failure'))
         } else {
-          setTeam(team);
+          setTeam(team)
         }
       })
       .catch((reason: unknown) => {
-        console.error(reason);
-        setErrorMessage(error ? error : t("modal-patient-add-team-failure"));
-      });
+        console.error(reason)
+        setErrorMessage(error || t('modal-patient-add-team-failure'))
+      })
   } else {
-    content = <ConfirmTeam team={team} handleClose={handleClose} handleAccept={handleAccept} />;
+    content = <ConfirmTeam team={team} handleClose={handleClose} handleAccept={handleAccept} />
   }
 
   return (
-    <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t("modal-add-medical-team")}
+    <Dialog id="team-add-dialog" open={dialogIsOpen} aria-labelledby={t('modal-add-medical-team')}
       onClose={handleClose}>
       {content}
     </Dialog>
-  );
+  )
 }
 
-export default AddTeamDialog;
+export default AddTeamDialog

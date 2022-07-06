@@ -26,32 +26,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { sortBy } from "lodash";
-import HttpService, { ErrorMessageStatus } from "../../services/http";
-import { Patient } from "./patient";
-import { GetPatientDataOptions } from "./models";
-import { PatientData } from "../../models/device-data";
-import { IUser } from "../../models/user";
-import MessageNote from "../../models/message";
-import User from "../auth/user";
-import { HttpHeaderKeys, HttpHeaderValues } from "../../models/api";
-import { Units } from "../../models/generic";
-import bows from "bows";
+import { sortBy } from 'lodash'
+import HttpService, { ErrorMessageStatus } from '../../services/http'
+import { Patient } from './patient'
+import { GetPatientDataOptions } from './models'
+import { PatientData } from '../../models/device-data'
+import { IUser } from '../../models/user'
+import MessageNote from '../../models/message'
+import User from '../auth/user'
+import { HttpHeaderKeys, HttpHeaderValues } from '../../models/api'
+import { Units } from '../../models/generic'
+import bows from 'bows'
 
-const log = bows("Data API");
+const log = bows('Data API')
 
 export default class DataApi {
   static async getPatientDataRange(patientId: string): Promise<string[] | null> {
     try {
-      const { data } = await HttpService.get<string[]>({ url: `/data/v2/range/${patientId}` });
-      return data;
+      const { data } = await HttpService.get<string[]>({ url: `/data/v2/range/${patientId}` })
+      return data
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info(`No data for patient ${patientId}`);
-        return null;
+        log.info(`No data for patient ${patientId}`)
+        return null
       }
-      throw err;
+      throw err
     }
   }
 
@@ -59,65 +59,65 @@ export default class DataApi {
     const params = {
       starDate: options?.startDate,
       endDate: options?.endDate,
-      withPumpSettings: options?.withPumpSettings ? true : undefined,
-    };
+      withPumpSettings: options?.withPumpSettings ? true : undefined
+    }
     const { data } = await HttpService.get<PatientData>({
       url: `/data/v1/dataV2/${patient.userid}`,
-      config: { params },
-    });
-    return data;
+      config: { params }
+    })
+    return data
   }
 
   static async getMessages(patient: IUser, options?: GetPatientDataOptions): Promise<MessageNote[]> {
     try {
       const params = {
         starttime: options?.startDate,
-        endtime: options?.endDate,
-      };
+        endtime: options?.endDate
+      }
       const { data } = await HttpService.get<MessageNote[]>({
         url: `/message/v1/notes/${patient.userid}`,
-        config: { params },
-      });
-      return data;
+        config: { params }
+      })
+      return data
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info(`No messages for patient ${patient.userid}`);
-        return [];
+        log.info(`No messages for patient ${patient.userid}`)
+        return []
       }
-      throw err;
+      throw err
     }
   }
 
   static async editMessage(message: MessageNote): Promise<void> {
     await HttpService.put<void, MessageNote>({
-      url: "/message/v1/edit",
-      payload: message,
-    });
+      url: '/message/v1/edit',
+      payload: message
+    })
   }
 
   static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<Blob> {
-    const bgUnits = user.settings?.units ?? Units.gram;
+    const bgUnits = user.settings?.units ?? Units.gram
     const { data } = await HttpService.get<Blob>({
       url: `/export/${patientId}`,
       config: {
         headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
-        params: { bgUnits, startDate, endDate },
-      },
-    });
-    return data;
+        params: { bgUnits, startDate, endDate }
+      }
+    })
+    return data
   }
 
   static async getMessageThread(messageId: string): Promise<MessageNote[]> {
-    const { data } = await HttpService.get<MessageNote[]>({ url: `/message/v1/thread/${messageId}` });
-    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp));
+    const { data } = await HttpService.get<MessageNote[]>({ url: `/message/v1/thread/${messageId}` })
+    return sortBy(data, (message: MessageNote) => Date.parse(message.timestamp))
   }
 
   static async postMessageThread(message: MessageNote): Promise<string> {
     const { data } = await HttpService.post<{ id: string }, MessageNote>({
-      url: "/message/v1/send",
-      payload: message,
-    });
-    return data.id;
+      url: '/message/v1/send',
+      payload: message
+    })
+    return data.id
   }
 }

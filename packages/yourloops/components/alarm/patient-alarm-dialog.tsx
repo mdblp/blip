@@ -25,62 +25,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import TuneIcon from "@material-ui/icons/Tune";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles } from "@material-ui/core/styles";
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import TuneIcon from '@material-ui/icons/Tune'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { makeStyles } from '@material-ui/core/styles'
 
-import { useTeam } from "../../lib/team";
-import { Monitoring } from "../../models/monitoring";
-import { useAlert } from "../utils/snackbar";
-import { Patient } from "../../lib/data/patient";
-import { commonComponentStyles } from "../common";
-import AlarmsContentConfiguration from "./alarms-content-configuration";
+import { useTeam } from '../../lib/team'
+import { Monitoring } from '../../models/monitoring'
+import { useAlert } from '../utils/snackbar'
+import { Patient } from '../../lib/data/patient'
+import { commonComponentStyles } from '../common'
+import AlarmsContentConfiguration from './alarms-content-configuration'
 
 const useStyles = makeStyles(() => ({
   title: {
-    alignSelf: "center",
-  },
-}));
-
+    alignSelf: 'center'
+  }
+}))
 
 interface PatientAlarmDialogProps {
-  patient: Patient,
+  patient: Patient
   onClose: () => void
 }
 
 function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
-  const { patient, onClose } = props;
-  const commonClasses = commonComponentStyles();
-  const classes = useStyles();
-  const { t } = useTranslation("yourloops");
-  const teamHook = useTeam();
-  const alert = useAlert();
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+  const { patient, onClose } = props
+  const commonClasses = commonComponentStyles()
+  const classes = useStyles()
+  const { t } = useTranslation('yourloops')
+  const teamHook = useTeam()
+  const alert = useAlert()
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
   if (!patient?.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`);
+    throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`)
   }
 
   const save = async (monitoring: Monitoring) => {
-    patient.monitoring = monitoring;
-    setSaveInProgress(true);
+    patient.monitoring = monitoring
+    setSaveInProgress(true)
     try {
-      await teamHook.updatePatientMonitoring(patient);
-      alert.success(t("patient-update-success"));
-      setSaveInProgress(false);
-      onClose();
+      await teamHook.updatePatientMonitoring(patient)
+      alert.success(t('patient-update-success'))
+      setSaveInProgress(false)
+      onClose()
     } catch (error) {
-      console.error(error);
-      alert.error(t("patient-update-error"));
-      setSaveInProgress(false);
+      console.error(error)
+      alert.error(t('patient-update-error'))
+      setSaveInProgress(false)
     }
-  };
+  }
 
   return (
     <Dialog id="patient-alarm-dialog-id" fullWidth={true} maxWidth="lg" open={true} onClose={onClose}>
@@ -90,7 +89,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
             <div>
               <TuneIcon />
               <Typography className={commonClasses.title}>
-                {t("events-configuration")}
+                {t('events-configuration')}
               </Typography>
             </div>
           </div>
@@ -106,7 +105,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
         </Box>
       </div>
     </Dialog>
-  );
+  )
 }
 
-export default PatientAlarmDialog;
+export default PatientAlarmDialog

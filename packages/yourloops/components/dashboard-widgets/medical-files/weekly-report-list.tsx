@@ -25,60 +25,60 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 
-import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
-import { WeeklyReport } from "../../../lib/medical-files/model";
-import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
-import { CategoryProps } from "./medical-files-widget";
-import WeeklyReportDialog from "../../dialogs/weekly-report-dialog";
+import FileChartOutlinedIcon from '../../icons/FileChartOutlinedIcon'
+import { WeeklyReport } from '../../../lib/medical-files/model'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import { CategoryProps } from './medical-files-widget'
+import WeeklyReportDialog from '../../dialogs/weekly-report-dialog'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
-    fontWeight: 600,
+    fontWeight: 600
   },
   categoryContainer: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   list: {
     maxHeight: 160,
-    overflow: "auto",
+    overflow: 'auto'
   },
   hoveredItem: {
-    "&:hover": {
-      cursor: "pointer",
+    '&:hover': {
+      cursor: 'pointer'
     },
-    "&.selected": {
-      backgroundColor: theme.palette.grey[200],
-    },
-  },
-}));
+    '&.selected': {
+      backgroundColor: theme.palette.grey[200]
+    }
+  }
+}))
 
 export default function WeeklyReportList({ teamId, patientId }: CategoryProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyle();
-  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([]);
-  const [displayWeeklyReportDetails, setDisplayWeeklyReportDetails] = useState<WeeklyReport | undefined>(undefined);
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
+  const { t } = useTranslation('yourloops')
+  const classes = useStyle()
+  const [weeklyReports, setWeeklyReports] = useState<WeeklyReport[]>([])
+  const [displayWeeklyReportDetails, setDisplayWeeklyReportDetails] = useState<WeeklyReport | undefined>(undefined)
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     (async () => {
-      setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId));
-    })();
-  }, [patientId, teamId]);
+      setWeeklyReports(await MedicalFilesApi.getWeeklyReports(patientId, teamId))
+    })()
+  }, [patientId, teamId])
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
-        {t("weekly-reports")}
+        {t('weekly-reports')}
       </Typography>
       <List className={classes.list}>
         {weeklyReports.map((weeklyReport, index) => (
@@ -86,7 +86,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
             dense
             divider
             key={index}
-            className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? "selected" : ""}`}
+            className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? 'selected' : ''}`}
             onMouseOver={() => setHoveredItem(weeklyReport.id)}
             onMouseOut={() => setHoveredItem(undefined)}
             onClick={() => setDisplayWeeklyReportDetails(weeklyReport)}
@@ -95,7 +95,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("weekly-report-pdf", { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
+              {t('weekly-report-pdf', { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
             </ListItemText>
           </ListItem>
         ))}
@@ -108,5 +108,5 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
         />
       }
     </React.Fragment>
-  );
+  )
 }

@@ -26,23 +26,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from "../../models/generic";
-import { Patient, PatientTeam } from "../../lib/data/patient";
-import { Alarm } from "../../models/alarm";
-import { Team, TeamMember, TeamUser } from "../../lib/team";
-import { Profile, UserRoles } from "../../models/user";
-import { TeamMemberRole, TeamType } from "../../models/team";
-import { Monitoring } from "../../models/monitoring";
-import { UNITS_TYPE } from "../../lib/units/utils";
-import { INotification, NotificationType } from "../../lib/notifications/models";
+import { UserInvitationStatus } from '../../models/generic'
+import { Patient, PatientTeam } from '../../lib/data/patient'
+import { Alarm } from '../../models/alarm'
+import { Team, TeamMember, TeamUser } from '../../lib/team'
+import { Profile, UserRoles } from '../../models/user'
+import { TeamMemberRole, TeamType } from '../../models/team'
+import { Monitoring } from '../../models/monitoring'
+import { UNITS_TYPE } from '../../lib/units/utils'
+import { INotification, NotificationType } from '../../lib/notifications/models'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
-  const clickEvent = new MouseEvent(event, { bubbles: true });
-  domElement.dispatchEvent(clickEvent);
+  const clickEvent = new MouseEvent(event, { bubbles: true })
+  domElement.dispatchEvent(clickEvent)
 }
 
 export const createPatient = (
-  id = "fakePatientId",
+  id = 'fakePatientId',
   teams: PatientTeam[] = [],
   alarm: Alarm = {
     timeSpentAwayFromTargetRate: 10,
@@ -50,51 +50,51 @@ export const createPatient = (
     frequencyOfSevereHypoglycemiaRate: 20,
     frequencyOfSevereHypoglycemiaActive: false,
     nonDataTransmissionRate: 30,
-    nonDataTransmissionActive: false,
+    nonDataTransmissionActive: false
   },
-  fullName = "fakePatientFullName",
+  fullName = 'fakePatientFullName',
   monitoring: Monitoring | undefined = undefined,
   system: string | undefined = undefined,
   flagged: boolean | undefined = undefined
 ): Patient => {
   return {
     metadata: {
-      alarm: alarm,
-      flagged: flagged,
+      alarm,
+      flagged,
       medicalData: null,
-      unreadMessagesSent: 0,
+      unreadMessagesSent: 0
     },
     monitoring,
     profile: {
       birthdate: new Date(),
       firstName: undefined,
-      fullName: fullName,
+      fullName,
       lastName: undefined,
-      email: "fakeUsername",
-      sex: "M",
+      email: 'fakeUsername',
+      sex: 'M'
     },
     settings: {
-      a1c: { date: new Date().toJSON(), value: "fakeA1cValue" },
-      system: system,
+      a1c: { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      system
     },
-    teams: teams,
-    userid: id,
-  };
-};
+    teams,
+    userid: id
+  }
+}
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = "fakeTeamName"): PatientTeam => {
+export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = 'fakeTeamName'): PatientTeam => {
   return {
     teamId: id,
     status,
-    teamName,
-  } as PatientTeam;
-};
+    teamName
+  } as PatientTeam
+}
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {
   return {
     timeSpentAwayFromTargetRate,
-    frequencyOfSevereHypoglycemiaRate,
-  } as Alarm;
-};
+    frequencyOfSevereHypoglycemiaRate
+  } as Alarm
+}
 
 export const createTeamUser = (
   id: string,
@@ -106,31 +106,31 @@ export const createTeamUser = (
     frequencyOfSevereHypoglycemiaRate: 10,
     frequencyOfSevereHypoglycemiaActive: true,
     nonDataTransmissionRate: 10,
-    nonDataTransmissionActive: true,
+    nonDataTransmissionActive: true
   }): TeamUser => {
   return {
     userid: id,
     members,
     profile,
     alarms,
-    monitoring: { enabled: false },
-  } as TeamUser;
-};
+    monitoring: { enabled: false }
+  } as TeamUser
+}
 
 export const createTeamMember = (id: string, name: string, teamCode: string, status: UserInvitationStatus): TeamMember => {
   return {
     team: { id, name, code: teamCode } as Team,
-    status,
-  } as TeamMember;
-};
+    status
+  } as TeamMember
+}
 
-export function buildTeam(id= "fakeTeamId", members: TeamMember[] = [], name = "fake team name"): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name'): Team {
   return {
     id,
     name,
-    code: "123456789",
-    owner: "fakeOwner",
-    email: "fale@email.com",
+    code: '123456789',
+    owner: 'fakeOwner',
+    email: 'fale@email.com',
     type: TeamType.medical,
     members,
     monitoring: {
@@ -143,21 +143,21 @@ export function buildTeam(id= "fakeTeamId", members: TeamMember[] = [], name = "
         veryLowBg: 4,
         hypoThreshold: 15,
         nonDataTxThreshold: 20,
-        reportingPeriod: 7,
-      },
-    },
-  };
+        reportingPeriod: 7
+      }
+    }
+  }
 }
 
 export function buildTeamMember(
-  teamId = "fakeTeamId",
-  userId = "fakeUserId",
+  teamId = 'fakeTeamId',
+  userId = 'fakeUserId',
   invitation: INotification | undefined = undefined,
   role: TeamMemberRole = TeamMemberRole.admin,
-  username = "fake@username.com",
-  fullName = "fake full name",
+  username = 'fake@username.com',
+  fullName = 'fake full name',
   status = UserInvitationStatus.pending,
-  userRole: UserRoles = UserRoles.hcp,
+  userRole: UserRoles = UserRoles.hcp
 ): TeamMember {
   return {
     team: { id: teamId } as Team,
@@ -171,32 +171,32 @@ export function buildTeamMember(
         {
           invitation: {} as INotification,
           status,
-          team: { id: teamId, code: "fakeCode", name: "fakeTeamName" },
-        } as TeamMember,
+          team: { id: teamId, code: 'fakeCode', name: 'fakeTeamName' }
+        } as TeamMember
       ],
       profile: {
-        fullName,
-      },
+        fullName
+      }
     },
-    invitation,
-  };
+    invitation
+  }
 }
 
-export function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId", role = TeamMemberRole.admin): INotification {
+export function buildInvite(teamId = 'fakeTeamId', userId = 'fakeUserId', role = TeamMemberRole.admin): INotification {
   return {
-    id: "fakeInviteId",
+    id: 'fakeInviteId',
     type: NotificationType.careTeamProInvitation,
-    metricsType: "join_team",
-    email: "fake@email.com",
-    creatorId: "fakeCreatorId",
-    date: "fakeDate",
+    metricsType: 'join_team',
+    email: 'fake@email.com',
+    creatorId: 'fakeCreatorId',
+    date: 'fakeDate',
     target: {
       id: teamId,
-      name: "fakeTeamName",
+      name: 'fakeTeamName'
     },
     role,
     creator: {
-      userid: userId,
-    },
-  };
+      userid: userId
+    }
+  }
 }

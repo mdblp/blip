@@ -25,80 +25,80 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import AccountCircle from '@material-ui/icons/AccountCircle'
 
-import { ClassNameMap } from "@material-ui/styles/withStyles";
-import Box from "@material-ui/core/Box";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
+import { ClassNameMap } from '@material-ui/styles/withStyles'
+import Box from '@material-ui/core/Box'
+import FormControl from '@material-ui/core/FormControl'
+import TextField from '@material-ui/core/TextField'
 
-import appConfig from "../../lib/config";
-import { useAuth, User } from "../../lib/auth";
-import { Errors } from "./models";
-import { UserRoles } from "../../models/user";
-import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
-import BasicDropdownWithValidation from "../../components/dropdown/basic-dropdown-with-validation";
-import CertifiedProfessionalIcon from "../../components/icons/certified-professional-icon";
-import ProSanteConnectButton from "../../components/buttons/pro-sante-connect-button";
-import PatientProfileForm from "./patient-form";
+import appConfig from '../../lib/config'
+import { useAuth, User } from '../../lib/auth'
+import { Errors } from './models'
+import { UserRoles } from '../../models/user'
+import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
+import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
+import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
+import ProSanteConnectButton from '../../components/buttons/pro-sante-connect-button'
+import PatientProfileForm from './patient-form'
 
 export interface PersonalInfoFormProps {
-  birthDate?: string;
-  birthPlace?: string;
-  ins?: string;
-  sex?: string;
-  ssn?: string;
-  referringDoctor?: string;
-  classes: ClassNameMap;
-  errors: Errors;
-  firstName: string;
-  hcpProfession: HcpProfession;
-  lastName: string;
-  role: UserRoles;
-  user: User;
-  setBirthDate: (birthDate: string) => void;
-  setFirstName: (firstName: string) => void;
-  setLastName: (lastName: string) => void;
-  setHcpProfession: (hcpProfession: HcpProfession) => void;
-  setBirthPlace: (birthPlace: string) => void;
-  setIns: (ins: string) => void;
-  setReferringDoctor: (referringDoctor: string) => void;
-  setSex: (sex: string) => void;
-  setSsn: (ssn: string) => void;
+  birthDate?: string
+  birthPlace?: string
+  ins?: string
+  sex?: string
+  ssn?: string
+  referringDoctor?: string
+  classes: ClassNameMap
+  errors: Errors
+  firstName: string
+  hcpProfession: HcpProfession
+  lastName: string
+  role: UserRoles
+  user: User
+  setBirthDate: (birthDate: string) => void
+  setFirstName: (firstName: string) => void
+  setLastName: (lastName: string) => void
+  setHcpProfession: (hcpProfession: HcpProfession) => void
+  setBirthPlace: (birthPlace: string) => void
+  setIns: (ins: string) => void
+  setReferringDoctor: (referringDoctor: string) => void
+  setSex: (sex: string) => void
+  setSsn: (ssn: string) => void
 }
 
 export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { redirectToProfessionalAccountLogin } = useAuth();
+  const { t } = useTranslation('yourloops')
+  const { redirectToProfessionalAccountLogin } = useAuth()
 
   return (
     <React.Fragment>
       <Box className={props.classes.categoryLabel}>
-        <AccountCircle color="primary" style={{ margin: "0" }} />
-        <strong className={props.classes.uppercase}>{t("personal-information")}</strong>
+        <AccountCircle color="primary" style={{ margin: '0' }} />
+        <strong className={props.classes.uppercase}>{t('personal-information')}</strong>
         {props.user.frProId && <CertifiedProfessionalIcon id={`certified-professional-icon-${props.user.id}`} />}
       </Box>
 
       <Box className={props.classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
-          label={t("firstname")}
+          label={t('firstname')}
           value={props.firstName}
           onChange={event => props.setFirstName(event.target.value)}
           error={props.errors.firstName}
-          helperText={props.errors.firstName && t("required-field")}
+          helperText={props.errors.firstName && t('required-field')}
           className={`${props.classes.formInput} ${props.classes.halfWide}`}
         />
         <TextField
           id="profile-textfield-lastname"
-          label={t("lastname")}
+          label={t('lastname')}
           value={props.lastName}
           onChange={event => props.setLastName(event.target.value)}
           error={props.errors.lastName}
-          helperText={props.errors.lastName && t("required-field")}
+          helperText={props.errors.lastName && t('required-field')}
           className={`${props.classes.formInput} ${props.classes.halfWide}`}
         />
       </Box>
@@ -117,18 +117,17 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
             />
           </Box>
 
-          {appConfig.ECPS_ENABLED && props.user.settings?.country === "FR" &&
+          {appConfig.ECPS_ENABLED && props.user.settings?.country === 'FR' &&
             <React.Fragment>
-              {props.user.frProId ?
-                <TextField
+              {props.user.frProId
+                ? <TextField
                   id="professional-account-number-text-field"
                   value={props.user.getParsedFrProId()}
-                  label={t("professional-account-number")}
+                  label={t('professional-account-number')}
                   disabled
                   className={props.classes.formInput}
                 />
-                :
-                <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
+                : <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
                   <ProSanteConnectButton onClick={redirectToProfessionalAccountLogin} />
                 </FormControl>
               }
@@ -157,7 +156,7 @@ export function PersonalInfoForm(props: PersonalInfoFormProps): JSX.Element {
         />
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default PersonalInfoForm;
+export default PersonalInfoForm

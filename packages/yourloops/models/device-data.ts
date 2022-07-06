@@ -27,56 +27,55 @@
  */
 
 interface PatientDatum {
-  id: string;
+  id: string
   /** Parent upload object id (type="upload") */
-  uploadId: string;
+  uploadId: string
   /** The user id */
-  _userId: string;
+  _userId: string
   /** time ISO string */
-  time: string;
-  timezone?: string;
+  time: string
+  timezone?: string
   /** Data type */
-  type: string;
+  type: string
   /** others properties */
-  [x: string]: unknown;
+  [x: string]: unknown
 }
 
-type PatientData = PatientDatum[];
+type PatientData = PatientDatum[]
 
 interface ComputedTIR {
   count: {
-    high: number;
-    low: number;
-    target: number;
-    veryHigh: number;
-    veryLow: number;
-  },
-  lastCbgTime: string;
+    high: number
+    low: number
+    target: number
+    veryHigh: number
+    veryLow: number
+  }
+  lastCbgTime: string
   lastTime: {
-    high: string | null;
-    low: string | null;
-    target: string | null;
-    veryLow: string | null;
-    veryHigh: string | null;
-  },
+    high: string | null
+    low: string | null
+    target: string | null
+    veryLow: string | null
+    veryHigh: string | null
+  }
   totalTime: {
-    high: number;
-    low: number;
-    target: number;
-    veryHigh: number;
-    veryLow: number;
-  },
-  userId: string;
+    high: number
+    low: number
+    target: number
+    veryHigh: number
+    veryLow: number
+  }
+  userId: string
 }
 
 interface MedicalData {
-  data?: PatientData;
+  data?: PatientData
   range?: {
-    startDate: string;
-    endDate: string;
-  };
-  computedTir?: ComputedTIR;
+    startDate: string
+    endDate: string
+  }
+  computedTir?: ComputedTIR
 }
 
-
-export { PatientDatum, PatientData, ComputedTIR, MedicalData };
+export { PatientDatum, PatientData, ComputedTIR, MedicalData }

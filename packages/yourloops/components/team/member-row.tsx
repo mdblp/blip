@@ -25,105 +25,105 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Checkbox from '@material-ui/core/Checkbox'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import IconButton from '@material-ui/core/IconButton'
 
-import { Team, TeamMember, useTeam } from "../../lib/team";
-import { UserInvitationStatus } from "../../models/generic";
-import { TeamMemberRole } from "../../models/team";
-import { useAuth } from "../../lib/auth";
-import { StyledTableCell, StyledTableRow } from "../styled-components";
-import { errorTextFromException } from "../../lib/utils";
-import { useAlert } from "../utils/snackbar";
-import PersonRemoveIcon from "../icons/PersonRemoveIcon";
-import ConfirmDialog from "../dialogs/confirm-dialog";
-import TeamUtils from "../../lib/team/utils";
+import { Team, TeamMember, useTeam } from '../../lib/team'
+import { UserInvitationStatus } from '../../models/generic'
+import { TeamMemberRole } from '../../models/team'
+import { useAuth } from '../../lib/auth'
+import { StyledTableCell, StyledTableRow } from '../styled-components'
+import { errorTextFromException } from '../../lib/utils'
+import { useAlert } from '../utils/snackbar'
+import PersonRemoveIcon from '../icons/PersonRemoveIcon'
+import ConfirmDialog from '../dialogs/confirm-dialog'
+import TeamUtils from '../../lib/team/utils'
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxTableCellBody: {
-    padding: `0 ${theme.spacing(2)}px !important`,
+    padding: `0 ${theme.spacing(2)}px !important`
   },
   deleteCell: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   icon: {
-    width: "56px",
-    alignItems: "center",
-    justifyContent: "center",
+    width: '56px',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   iconCell: {
-    alignItems: "center",
-    width: "67px",
-    justifyContent: "center",
+    alignItems: 'center',
+    width: '67px',
+    justifyContent: 'center'
   },
   tableRow: {
-    height: "55px",
+    height: '55px'
   },
   typography: {
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    color: theme.palette.common.black,
-  },
-}));
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    color: theme.palette.common.black
+  }
+}))
 
 export interface TeamMembersProps {
-  team: Team;
-  teamMember: TeamMember;
-  refreshParent: () => void;
+  team: Team
+  teamMember: TeamMember
+  refreshParent: () => void
 }
 
 function MemberRow(props: TeamMembersProps): JSX.Element {
-  const { teamMember, team, refreshParent } = props;
-  const classes = useStyles();
-  const rowId = teamMember.user.userid.replace(/@/g, "_");
-  const teamHook = useTeam();
-  const authContext = useAuth();
-  const alert = useAlert();
-  const { t } = useTranslation("yourloops");
-  const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false);
-  const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false);
-  const currentUserId = teamMember.user.userid;
-  const loggedInUserId = authContext.user?.id as string;
-  const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId);
-  const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId);
-  const currentUserIsPending = teamMember.status === UserInvitationStatus.pending;
-  const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending
-    || (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId))
-    || userUpdateInProgress;
-  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId;
+  const { teamMember, team, refreshParent } = props
+  const classes = useStyles()
+  const rowId = teamMember.user.userid.replace(/@/g, '_')
+  const teamHook = useTeam()
+  const authContext = useAuth()
+  const alert = useAlert()
+  const { t } = useTranslation('yourloops')
+  const [userUpdateInProgress, setUserUpdateInProgress] = useState<boolean>(false)
+  const [showConfirmRemoveDialog, setShowConfirmRemoveDialog] = useState(false)
+  const currentUserId = teamMember.user.userid
+  const loggedInUserId = authContext.user?.id
+  const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
+  const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId)
+  const currentUserIsPending = teamMember.status === UserInvitationStatus.pending
+  const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending ||
+    (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
+    userUpdateInProgress
+  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const isAdmin = event.target.checked;
-    setUserUpdateInProgress(true);
+    const isAdmin = event.target.checked
+    setUserUpdateInProgress(true)
 
     try {
-      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member);
+      await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member)
     } catch (reason: unknown) {
-      const errorMessage = errorTextFromException(reason);
-      alert.error(t("team-page-failed-update-role", { errorMessage }));
+      const errorMessage = errorTextFromException(reason)
+      alert.error(t('team-page-failed-update-role', { errorMessage }))
     } finally {
-      setUserUpdateInProgress(false);
+      setUserUpdateInProgress(false)
     }
-    refreshParent();
-  };
+    refreshParent()
+  }
 
   const deleteMember = async (): Promise<void> => {
-    setUserUpdateInProgress(true);
+    setUserUpdateInProgress(true)
     try {
-      await teamHook.removeMember(teamMember);
+      await teamHook.removeMember(teamMember)
     } catch (reason: unknown) {
-      alert.error(t("remove-member-failed"));
+      alert.error(t('remove-member-failed'))
     } finally {
-      setUserUpdateInProgress(false);
+      setUserUpdateInProgress(false)
     }
-    refreshParent();
-  };
+    refreshParent()
+  }
 
   return (
     <React.Fragment>
@@ -137,9 +137,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.typography}
           size="small"
         >
-          {currentUserIsPending ?
-            ("--") :
-            (teamMember.user.profile?.fullName)
+          {currentUserIsPending
+            ? ('--')
+            : (teamMember.user.profile?.fullName)
           }
         </StyledTableCell>
         <StyledTableCell
@@ -191,15 +191,15 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
       </StyledTableRow>
       {showConfirmRemoveDialog &&
         <ConfirmDialog
-          title={t("remove-member-from-team")}
-          label={t("remove-member-confirm", { fullName: teamMember.user.profile?.fullName, teamName: team.name })}
+          title={t('remove-member-from-team')}
+          label={t('remove-member-confirm', { fullName: teamMember.user.profile?.fullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
           onClose={() => setShowConfirmRemoveDialog(false)}
           onConfirm={deleteMember}
         />
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default MemberRow;
+export default MemberRow

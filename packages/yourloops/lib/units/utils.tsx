@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const MGDL_PER_MMOL = 18.01577;
+export const MGDL_PER_MMOL = 18.01577
 
 export enum UNITS_TYPE {
-  MGDL = "mg/dL",
-  MMOLL = "mmol/L",
+  MGDL = 'mg/dL',
+  MMOLL = 'mmol/L',
 }
 
 /**
@@ -40,14 +40,14 @@ export enum UNITS_TYPE {
  */
 export function convertBG(value: number, currentUnit: UNITS_TYPE): number {
   if (value < 0) {
-    throw Error("Invalid glycemia value");
+    throw Error('Invalid glycemia value')
   }
   switch (currentUnit) {
-  case UNITS_TYPE.MGDL:
-    return value / MGDL_PER_MMOL;
-  case UNITS_TYPE.MMOLL:
-    return value * MGDL_PER_MMOL;
-  default:
-    throw new Error("Invalid parameter unit");
+    case UNITS_TYPE.MGDL:
+      return value / MGDL_PER_MMOL
+    case UNITS_TYPE.MMOLL:
+      return value * MGDL_PER_MMOL
+    default:
+      throw new Error('Invalid parameter unit')
   }
 }

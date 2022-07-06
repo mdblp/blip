@@ -26,39 +26,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import { HcpProfession, HcpProfessionList } from "../../../models/hcp-profession";
-import { SwitchRoleProfessionDialogProps } from "../../../components/switch-role/models";
-import SwitchRoleProfessionDialog from "../../../components/switch-role/profession-dialog";
+import { HcpProfession, HcpProfessionList } from '../../../models/hcp-profession'
+import { SwitchRoleProfessionDialogProps } from '../../../components/switch-role/models'
+import SwitchRoleProfessionDialog from '../../../components/switch-role/profession-dialog'
 
-describe("Profession dialog", () => {
-
-  const onAccept = jest.fn();
-  const onCancel = jest.fn();
+describe('Profession dialog', () => {
+  const onAccept = jest.fn()
+  const onCancel = jest.fn()
   const defaultProps: SwitchRoleProfessionDialogProps = {
     open: true,
     onAccept,
-    onCancel,
-  };
+    onCancel
+  }
 
-  let container: HTMLDivElement | null = null;
+  let container: HTMLDivElement | null = null
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
   afterEach(() => {
-    onAccept.mockReset();
-    onCancel.mockReset();
+    onAccept.mockReset()
+    onCancel.mockReset()
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
   function render(props: SwitchRoleProfessionDialogProps) {
     return act(() => {
@@ -66,56 +65,56 @@ describe("Profession dialog", () => {
         ReactDOM.render(
           <SwitchRoleProfessionDialog
             {...props}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
   }
 
-  it("should not render when not opened", async () => {
-    await render({ ...defaultProps, open: false });
-    const component = document.getElementById("switch-role-profession-dialog");
-    expect(component).toBeNull();
-  });
+  it('should not render when not opened', async () => {
+    await render({ ...defaultProps, open: false })
+    const component = document.getElementById('switch-role-profession-dialog')
+    expect(component).toBeNull()
+  })
 
-  it("should be able to render", async () => {
-    await render(defaultProps);
-    const component = document.getElementById("switch-role-profession-dialog");
-    expect(component).not.toBeNull();
-  });
+  it('should be able to render', async () => {
+    await render(defaultProps)
+    const component = document.getElementById('switch-role-profession-dialog')
+    expect(component).not.toBeNull()
+  })
 
-  it("should call onCancel", async () => {
-    await render(defaultProps);
-    const cancelButton = document.getElementById("switch-role-profession-dialog-button-decline");
-    expect(cancelButton).not.toBeNull();
-    cancelButton.click();
-    expect(onCancel).toHaveBeenCalledTimes(1);
-  });
+  it('should call onCancel', async () => {
+    await render(defaultProps)
+    const cancelButton = document.getElementById('switch-role-profession-dialog-button-decline')
+    expect(cancelButton).not.toBeNull()
+    cancelButton.click()
+    expect(onCancel).toHaveBeenCalledTimes(1)
+  })
 
-  it("should not allowed to validate when no profession is selected", async () => {
-    await render(defaultProps);
-    const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
-    expect(okButton).not.toBeNull();
-    expect(okButton.getAttribute("disabled")).not.toBeNull();
-  });
+  it('should not allowed to validate when no profession is selected', async () => {
+    await render(defaultProps)
+    const okButton = document.getElementById('switch-role-profession-dialog-button-validate')
+    expect(okButton).not.toBeNull()
+    expect(okButton.getAttribute('disabled')).not.toBeNull()
+  })
 
-  it("should enable accept button when an option is selected", async () => {
-    await render(defaultProps);
-    const validProfessions = HcpProfessionList.filter(item => item !== HcpProfession.empty);
-    const clickEvent = new MouseEvent("mousedown", { button: 0, buttons: 1, bubbles: true });
-    document.getElementById("dropdown-profession-selector").dispatchEvent(clickEvent);
+  it('should enable accept button when an option is selected', async () => {
+    await render(defaultProps)
+    const validProfessions = HcpProfessionList.filter(item => item !== HcpProfession.empty)
+    const clickEvent = new MouseEvent('mousedown', { button: 0, buttons: 1, bubbles: true })
+    document.getElementById('dropdown-profession-selector').dispatchEvent(clickEvent)
     for (const profession of validProfessions) {
-      const opt = document.getElementById(`dropdown-profession-menuitem-${profession}`);
-      expect(opt).not.toBeNull();
+      const opt = document.getElementById(`dropdown-profession-menuitem-${profession}`)
+      expect(opt).not.toBeNull()
     }
-    const selectedProfession = validProfessions[0];
-    const oneOption = document.getElementById(`dropdown-profession-menuitem-${selectedProfession}`);
-    oneOption.click();
+    const selectedProfession = validProfessions[0]
+    const oneOption = document.getElementById(`dropdown-profession-menuitem-${selectedProfession}`)
+    oneOption.click()
 
-    const okButton = document.getElementById("switch-role-profession-dialog-button-validate");
-    expect(okButton.getAttribute("disabled")).toBeNull();
-    okButton.click();
+    const okButton = document.getElementById('switch-role-profession-dialog-button-validate')
+    expect(okButton.getAttribute('disabled')).toBeNull()
+    okButton.click()
 
-    expect(onAccept).toHaveBeenCalledTimes(1);
-    expect(onAccept.mock.calls[0][0]).toBe(selectedProfession);
-  });
-});
+    expect(onAccept).toHaveBeenCalledTimes(1)
+    expect(onAccept.mock.calls[0][0]).toBe(selectedProfession)
+  })
+})

@@ -25,66 +25,65 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import i18n from "i18next";
-import renderer from "react-test-renderer";
+import React from 'react'
+import i18n from 'i18next'
+import renderer from 'react-test-renderer'
 
 import DocumentSelect, {
   ACCOMPANYING_DOCUMENTS,
   DocumentSelectProps,
   INTENDED_USE,
-  TRAINING,
-} from "../../../components/footer/document-select";
-import diabeloopUrls from "../../../lib/diabeloop-url";
-import { UserRoles } from "../../../models/user";
-import User from "../../../lib/auth/user";
+  TRAINING
+} from '../../../components/footer/document-select'
+import diabeloopUrls from '../../../lib/diabeloop-url'
+import { UserRoles } from '../../../models/user'
+import User from '../../../lib/auth/user'
 
-describe("DocumentSelect", () => {
-  const windowOpenSpy = jest.fn();
-  window.open = windowOpenSpy;
+describe('DocumentSelect', () => {
+  const windowOpenSpy = jest.fn()
+  window.open = windowOpenSpy
 
   function renderDocumentSelect(props: DocumentSelectProps) {
     return renderer.create(
       <DocumentSelect user={props.user} />
-    );
+    )
   }
 
-  it("should display and disable correct values", () => {
-    const component = renderDocumentSelect({ user: null });
-    const select = component.root.findByProps({ id: "document-selector" }).props.children;
-    expect(select.find((element: { key: string; }) => element.key === ACCOMPANYING_DOCUMENTS).props.disabled).toBeTruthy();
-    expect(select.find((element: { key: string; }) => element.key === INTENDED_USE).props.disabled).toBeFalsy();
-    expect(select.find((element: { key: string; }) => element.key === TRAINING).props.disabled).toBeFalsy();
-  });
+  it('should display and disable correct values', () => {
+    const component = renderDocumentSelect({ user: null })
+    const select = component.root.findByProps({ id: 'document-selector' }).props.children
+    expect(select.find((element: { key: string }) => element.key === ACCOMPANYING_DOCUMENTS).props.disabled).toBeTruthy()
+    expect(select.find((element: { key: string }) => element.key === INTENDED_USE).props.disabled).toBeFalsy()
+    expect(select.find((element: { key: string }) => element.key === TRAINING).props.disabled).toBeFalsy()
+  })
 
-  it("should open url for intend use pdf", () => {
-    const component = renderDocumentSelect({ user: null });
-    component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: INTENDED_USE } });
-    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getIntendedUseUrL(i18n.language));
-  });
+  it('should open url for intend use pdf', () => {
+    const component = renderDocumentSelect({ user: null })
+    component.root.findByProps({ id: 'document-selector' }).props.onChange({ target: { value: INTENDED_USE } })
+    expect(window.open).toHaveBeenCalledWith(diabeloopUrls.getIntendedUseUrL(i18n.language))
+  })
 
-  it("should open url for login training pdf when no user is given", () => {
-    const component = renderDocumentSelect({ user: null });
-    component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-login-training.${i18n.language}.pdf`);
-  });
+  it('should open url for login training pdf when no user is given', () => {
+    const component = renderDocumentSelect({ user: null })
+    component.root.findByProps({ id: 'document-selector' }).props.onChange({ target: { value: TRAINING } })
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-login-training.${i18n.language}.pdf`)
+  })
 
-  it("should open url for patient training pdf when user is patient", () => {
-    const component = renderDocumentSelect({ user: { role: UserRoles.patient } as User });
-    component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-patient-training.${i18n.language}.pdf`);
-  });
+  it('should open url for patient training pdf when user is patient', () => {
+    const component = renderDocumentSelect({ user: { role: UserRoles.patient } as User })
+    component.root.findByProps({ id: 'document-selector' }).props.onChange({ target: { value: TRAINING } })
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-patient-training.${i18n.language}.pdf`)
+  })
 
-  it("should open url for caregiver training pdf when user is caregiver", () => {
-    const component = renderDocumentSelect({ user: { role: UserRoles.caregiver } as User });
-    component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-caregiver-training.${i18n.language}.pdf`);
-  });
+  it('should open url for caregiver training pdf when user is caregiver', () => {
+    const component = renderDocumentSelect({ user: { role: UserRoles.caregiver } as User })
+    component.root.findByProps({ id: 'document-selector' }).props.onChange({ target: { value: TRAINING } })
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-caregiver-training.${i18n.language}.pdf`)
+  })
 
-  it("should open url for hcp training pdf when user is hcp", () => {
-    const component = renderDocumentSelect({ user: { role: UserRoles.hcp } as User });
-    component.root.findByProps({ id: "document-selector" }).props.onChange({ target: { value: TRAINING } });
-    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-hcp-training.${i18n.language}.pdf`);
-  });
-});
-
+  it('should open url for hcp training pdf when user is hcp', () => {
+    const component = renderDocumentSelect({ user: { role: UserRoles.hcp } as User })
+    component.root.findByProps({ id: 'document-selector' }).props.onChange({ target: { value: TRAINING } })
+    expect(window.open).toHaveBeenCalledWith(`https://example.com/yourloops-hcp-training.${i18n.language}.pdf`)
+  })
+})

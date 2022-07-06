@@ -28,79 +28,79 @@
 
 /* eslint-disable no-underscore-dangle */
 
-import config from "../../lib/config";
-import metrics from "../../lib/metrics";
-import { isZendeskAllowCookies } from "../../lib/zendesk";
-import initCookiesConcentListener from "../../lib/cookies-manager";
+import config from '../../lib/config'
+import metrics from '../../lib/metrics'
+import { isZendeskAllowCookies } from '../../lib/zendesk'
+import initCookiesConcentListener from '../../lib/cookies-manager'
 
-type AxceptIOCallback = (a: AxeptIO) => void;
+type AxceptIOCallback = (a: AxeptIO) => void
 
-describe("Cookie manager", () => {
-  let sendMetrics: jest.SpyInstance;
-  let loadStonlyWidgetMock: jest.Mock;
+describe('Cookie manager', () => {
+  let sendMetrics: jest.SpyInstance
+  let loadStonlyWidgetMock: jest.Mock
 
   beforeAll(() => {
-    sendMetrics = jest.spyOn(metrics, "send");
-    loadStonlyWidgetMock = jest.fn();
-    window.loadStonlyWidget = loadStonlyWidgetMock;
-  });
+    sendMetrics = jest.spyOn(metrics, 'send')
+    loadStonlyWidgetMock = jest.fn()
+    window.loadStonlyWidget = loadStonlyWidgetMock
+  })
   afterAll(() => {
-    sendMetrics.mockRestore();
-    loadStonlyWidgetMock.mockRestore();
-    delete window.loadStonlyWidget;
-  });
+    sendMetrics.mockRestore()
+    loadStonlyWidgetMock.mockRestore()
+    delete window.loadStonlyWidget
+  })
   afterEach(() => {
-    sendMetrics.mockReset();
-    loadStonlyWidgetMock.mockReset();
-  });
+    sendMetrics.mockReset()
+    loadStonlyWidgetMock.mockReset()
+  })
 
-  it("should do nothing if axeptio is not available", () => {
-    window._axcb = undefined;
-    config.COOKIE_BANNER_CLIENT_ID = "ok";
-    initCookiesConcentListener();
-    expect(sendMetrics).toHaveBeenCalledTimes(0);
-  });
+  it('should do nothing if axeptio is not available', () => {
+    window._axcb = undefined
+    config.COOKIE_BANNER_CLIENT_ID = 'ok'
+    initCookiesConcentListener()
+    expect(sendMetrics).toHaveBeenCalledTimes(0)
+  })
 
-  it("should accept all if axeptio is disabled", () => {
-    config.COOKIE_BANNER_CLIENT_ID = "disabled";
-    initCookiesConcentListener();
-    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(1);
-    expect(sendMetrics).toHaveBeenCalledTimes(1);
-    expect(sendMetrics).toHaveBeenCalledWith("metrics", "enabled");
-    expect(isZendeskAllowCookies()).toBe(true);
-  });
+  it('should accept all if axeptio is disabled', () => {
+    config.COOKIE_BANNER_CLIENT_ID = 'disabled'
+    initCookiesConcentListener()
+    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(1)
+    expect(sendMetrics).toHaveBeenCalledTimes(1)
+    expect(sendMetrics).toHaveBeenCalledWith('metrics', 'enabled')
+    expect(isZendeskAllowCookies()).toBe(true)
+  })
 
-  it("should add the axeptio callback when configuration is set", () => {
-    const pushSpy = jest.fn();
-    window._axcb = { push: pushSpy };
-    config.COOKIE_BANNER_CLIENT_ID = "abcdef";
-    initCookiesConcentListener();
-    expect(pushSpy).toHaveBeenCalledTimes(1);
-  });
+  it('should add the axeptio callback when configuration is set', () => {
+    const pushSpy = jest.fn()
+    window._axcb = { push: pushSpy }
+    config.COOKIE_BANNER_CLIENT_ID = 'abcdef'
+    initCookiesConcentListener()
+    expect(pushSpy).toHaveBeenCalledTimes(1)
+  })
 
-  it("should perform the change on axeptio callback", () => {
-    let callbackFn: AxceptIOCallback | null = null;
+  it('should perform the change on axeptio callback', () => {
+    let callbackFn: AxceptIOCallback | null = null
     const axeptIO: AxeptIO = {
       on: (event: string, callback: (c: CookiesComplete) => void) => {
-        expect(event).toBe("cookies:complete");
-        callback({ matomo: false, stonly: false, zendesk: false });
-      },
-    };
+        expect(event).toBe('cookies:complete')
+        // eslint-disable-next-line n/no-callback-literal
+        callback({ matomo: false, stonly: false, zendesk: false })
+      }
+    }
     window._axcb = {
       push: (f: AxceptIOCallback) => {
-        callbackFn = f;
-      },
-    };
+        callbackFn = f
+      }
+    }
 
-    config.COOKIE_BANNER_CLIENT_ID = "abcdef";
-    initCookiesConcentListener();
+    config.COOKIE_BANNER_CLIENT_ID = 'abcdef'
+    initCookiesConcentListener()
     expect(callbackFn).toBeInstanceOf(Function);
-    (callbackFn as unknown as AxceptIOCallback)(axeptIO);
+    (callbackFn as unknown as AxceptIOCallback)(axeptIO)
 
-    expect(sendMetrics).toHaveBeenCalledTimes(1);
-    expect(sendMetrics).toHaveBeenCalledWith("metrics", "disabled");
-    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(0);
-    expect(isZendeskAllowCookies()).toBe(false);
-  });
-});
-
+    expect(sendMetrics).toHaveBeenCalledTimes(1)
+    expect(sendMetrics).toHaveBeenCalledWith('metrics', 'disabled')
+    expect((window.loadStonlyWidget as jest.Mock)).toHaveBeenCalledTimes(0)
+    expect(isZendeskAllowCookies()).toBe(false)
+  })
+})

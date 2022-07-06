@@ -26,36 +26,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Dayjs } from "dayjs";
-import { makeStyles } from "@material-ui/core/styles";
+import { Dayjs } from 'dayjs'
+import { makeStyles } from '@material-ui/core/styles'
 
-export type CalendarOrientation = "landscape" | "portrait";
-export type CalendarPosition = "first" | "last";
-export type CalendarMode = "single" | "range";
-export type ChangeMonthDirection = "left" | "right";
+export type CalendarOrientation = 'landscape' | 'portrait'
+export type CalendarPosition = 'first' | 'last'
+export type CalendarMode = 'single' | 'range'
+export type ChangeMonthDirection = 'left' | 'right'
 
 export interface CalendarChangeMonth {
-  toMonth: Dayjs;
-  direction: ChangeMonthDirection;
-  onAnimationEnd: () => void;
+  toMonth: Dayjs
+  direction: ChangeMonthDirection
+  onAnimationEnd: () => void
 }
 export interface DateRange {
-  start: Dayjs;
-  end: Dayjs;
+  start: Dayjs
+  end: Dayjs
 }
 export interface CalendarSelection {
-  mode: CalendarMode;
-  selected: Dayjs | DateRange;
+  mode: CalendarMode
+  selected: Dayjs | DateRange
 }
 export interface CalendarSelectionSingle extends CalendarSelection {
-  mode: "single";
-  selected: Dayjs;
+  mode: 'single'
+  selected: Dayjs
 }
 export interface CalendarSelectionRange extends CalendarSelection {
-  mode: "range";
-  selected: DateRange;
-  selectable?: DateRange,
-  maxSelectableDays?: number;
+  mode: 'range'
+  selected: DateRange
+  selectable?: DateRange
+  maxSelectableDays?: number
 }
 // CalendarSelection could be extends to a more random mode, for example:
 // Could be used to compare a few days for example
@@ -64,46 +64,46 @@ export interface CalendarSelectionRange extends CalendarSelection {
 //   selected: Dayjs[];
 // }
 
-export const TRANSITION_DURATION = 300;
+export const TRANSITION_DURATION = 300
 /** Inclusive */
-export const MIN_YEAR = 1900;
+export const MIN_YEAR = 1900
 /** Exclusive */
-export const MAX_YEAR = 2100;
+export const MAX_YEAR = 2100
 
 export const animationStyle = makeStyles(() => {
   const keyFrames = {
-    "@keyframes calendar-translate-ltr": {
+    '@keyframes calendar-translate-ltr': {
       from: {
-        transform: "translateX(0%)",
+        transform: 'translateX(0%)'
       },
       to: {
-        transform: "translateX(100%)",
-      },
+        transform: 'translateX(100%)'
+      }
     },
-    "@keyframes calendar-translate-rtl": {
+    '@keyframes calendar-translate-rtl': {
       from: {
-        transform: "translateX(0%)",
+        transform: 'translateX(0%)'
       },
       to: {
-        transform: "translateX(-100%)",
-      },
-    },
-  };
+        transform: 'translateX(-100%)'
+      }
+    }
+  }
   return {
     ...keyFrames,
     animatedMonthLTR: {
-      animationName: "$calendar-translate-ltr",
+      animationName: '$calendar-translate-ltr',
       animationDuration: `${TRANSITION_DURATION}ms`,
-      animationTimingFunction: "ease-out",
-      animationFillMode: "forwards",
-      animationDelay: "50ms",
+      animationTimingFunction: 'ease-out',
+      animationFillMode: 'forwards',
+      animationDelay: '50ms'
     },
     animatedMonthRTL: {
-      animationName: "$calendar-translate-rtl",
+      animationName: '$calendar-translate-rtl',
       animationDuration: `${TRANSITION_DURATION}ms`,
-      animationTimingFunction: "ease-out",
-      animationFillMode: "forwards",
-      animationDelay: "50ms",
-    },
-  };
-}, { name: "date-pickers-calendar-animation" });
+      animationTimingFunction: 'ease-out',
+      animationFillMode: 'forwards',
+      animationDelay: '50ms'
+    }
+  }
+}, { name: 'date-pickers-calendar-animation' })

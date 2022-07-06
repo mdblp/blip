@@ -26,84 +26,84 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextField from '@material-ui/core/TextField'
 
-import { REGEX_EMAIL } from "../../../lib/utils";
+import { REGEX_EMAIL } from '../../../lib/utils'
 
-import { AddDialogContentProps } from "./types";
+import { AddDialogContentProps } from './types'
 
 export interface AddDialogProps {
-  actions: AddDialogContentProps | null;
+  actions: AddDialogContentProps | null
 }
 
 /**
  * Add a caregiver dialog / modale
  */
 function AddDialog(props: AddDialogProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const [email, setEmail] = React.useState<string>("");
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+  const { t } = useTranslation('yourloops')
+  const [email, setEmail] = React.useState<string>('')
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
-  const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail);
+  const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
   const resetDialog = () => {
     setTimeout(() => {
-      setEmail("");
-      setErrorMessage(null);
-    }, 100);
-  };
+      setEmail('')
+      setErrorMessage(null)
+    }, 100)
+  }
   const handleClose = () => {
-    props.actions?.onDialogResult(null);
-    resetDialog();
-  };
+    props.actions?.onDialogResult(null)
+    resetDialog()
+  }
   const handleClickAdd = () => {
     if (isValidEmail()) {
-      props.actions?.onDialogResult(email);
-      resetDialog();
+      props.actions?.onDialogResult(email)
+      resetDialog()
     } else {
-      setErrorMessage(t("invalid-email"));
+      setErrorMessage(t('invalid-email'))
     }
-  };
+  }
   const handleVerifyEmail = () => {
     if (email.length > 0 && !isValidEmail()) {
-      setErrorMessage(t("invalid-email"));
+      setErrorMessage(t('invalid-email'))
     }
-  };
+  }
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputEmail = event.target.value.trim();
+    const inputEmail = event.target.value.trim()
     if (errorMessage !== null && isValidEmail(inputEmail)) {
-      setErrorMessage(null);
+      setErrorMessage(null)
     }
-    setEmail(inputEmail);
-  };
+    setEmail(inputEmail)
+  }
 
-  const dialogIsOpen = props.actions !== null;
-  const buttonAddDisabled = errorMessage !== null || !isValidEmail();
+  const dialogIsOpen = props.actions !== null
+  const buttonAddDisabled = errorMessage !== null || !isValidEmail()
 
   return (
     <Dialog
       id="patient-add-caregiver-dialog"
       open={dialogIsOpen}
-      aria-labelledby={t("modal-add-caregiver")}
+      aria-labelledby={t('modal-add-caregiver')}
       onClose={handleClose}
       maxWidth="xs"
       fullWidth
     >
       <DialogTitle id="patient-add-caregiver-dialog-title">
-        <strong>{t("modal-add-caregiver")}</strong>
+        <strong>{t('modal-add-caregiver')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <TextField
           id="patient-add-caregiver-dialog-email"
-          label={t("email")}
+          label={t('email')}
           variant="outlined"
           value={email}
           required
@@ -120,7 +120,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           id="patient-add-caregiver-dialog-button-cancel"
           onClick={handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="patient-add-caregiver-dialog-button-add"
@@ -130,11 +130,11 @@ function AddDialog(props: AddDialogProps): JSX.Element {
           disableElevation
           onClick={handleClickAdd}
         >
-          {t("button-invite")}
+          {t('button-invite')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default AddDialog;
+export default AddDialog

@@ -26,51 +26,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { act, Simulate } from "react-dom/test-utils";
-import dayjs from "dayjs";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act, Simulate } from 'react-dom/test-utils'
+import dayjs from 'dayjs'
 
-import { waitTimeout } from "../../../lib/utils";
-import DatePicker from "../../../components/date-pickers/date-picker";
-import initDayJS from "../../../lib/dayjs";
-import i18n from "../../../lib/language";
-import { TRANSITION_DURATION } from "../../../components/date-pickers/models";
+import { waitTimeout } from '../../../lib/utils'
+import DatePicker from '../../../components/date-pickers/date-picker'
+import initDayJS from '../../../lib/dayjs'
+import i18n from '../../../lib/language'
+import { TRANSITION_DURATION } from '../../../components/date-pickers/models'
 
-describe("Date picker", () => {
-
-  const minDate = dayjs("2000-01-01", { utc: true });
-  const maxDate = dayjs("2100-01-01", { utc: true });
-  let container: HTMLDivElement | null = null;
+describe('Date picker', () => {
+  const minDate = dayjs('2000-01-01', { utc: true })
+  const maxDate = dayjs('2100-01-01', { utc: true })
+  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
-    initDayJS();
-    i18n.addResourceBundle("en", "yourloops", {
-      "date-picker-header-date-format": "MMMM YYYY",
-      "date-picker-toolbar-date-format": "ddd, MMM D",
+    initDayJS()
+    i18n.addResourceBundle('en', 'yourloops', {
+      'date-picker-header-date-format': 'MMMM YYYY',
+      'date-picker-toolbar-date-format': 'ddd, MMM D'
     })
-      .init({ react: { useSuspense: true } });
+      .init({ react: { useSuspense: true } })
     window.HTMLElement.prototype.scrollIntoView = () => {
-      //This is a stub
-    };
-  });
+      // This is a stub
+    }
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
-  it("should correctly render a month", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should correctly render a month', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -79,30 +78,30 @@ describe("Date picker", () => {
             orientation="portrait"
             minDate={minDate}
             maxDate={maxDate}
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             onChange={onChange}
             showToolbar
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    let calendarElem = document.getElementById("calendar-box");
-    expect(calendarElem).not.toBeNull();
-    expect(calendarElem.nodeName.toLowerCase()).toBe("div");
+    let calendarElem = document.getElementById('calendar-box')
+    expect(calendarElem).not.toBeNull()
+    expect(calendarElem.nodeName.toLowerCase()).toBe('div')
 
-    calendarElem = document.getElementById("calendar-month");
-    expect(calendarElem).not.toBeNull();
-    expect(calendarElem.nodeName.toLowerCase()).toBe("div");
+    calendarElem = document.getElementById('calendar-month')
+    expect(calendarElem).not.toBeNull()
+    expect(calendarElem.nodeName.toLowerCase()).toBe('div')
 
-    calendarElem = document.getElementById("date-picker-selected-date");
-    expect(calendarElem).not.toBeNull();
-    expect(calendarElem.nodeName.toLowerCase()).toBe("h4");
-    expect(calendarElem.innerHTML).toBe("Tue, Nov 9");
-  });
+    calendarElem = document.getElementById('date-picker-selected-date')
+    expect(calendarElem).not.toBeNull()
+    expect(calendarElem.nodeName.toLowerCase()).toBe('h4')
+    expect(calendarElem.innerHTML).toBe('Tue, Nov 9')
+  })
 
-  it("should correctly change the selected day", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should correctly change the selected day', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -110,68 +109,68 @@ describe("Date picker", () => {
           <DatePicker
             minDate={minDate}
             maxDate={maxDate}
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonAnotherDay = document.getElementById("button-calendar-day-2021-11-15");
-    expect(buttonAnotherDay).not.toBeNull();
-    buttonAnotherDay.click();
+    const buttonAnotherDay = document.getElementById('button-calendar-day-2021-11-15')
+    expect(buttonAnotherDay).not.toBeNull()
+    buttonAnotherDay.click()
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange.mock.calls[0][0].format("YYYY-MM-DD")).toBe("2021-11-15");
-  });
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(onChange.mock.calls[0][0].format('YYYY-MM-DD')).toBe('2021-11-15')
+  })
 
-  it("should not select a date before the minDate", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should not select a date before the minDate', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={today}
             maxDate={maxDate}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const calendarElem = document.getElementById("calendar-month");
-    Simulate.keyUp(calendarElem, { key: "ArrowLeft" });
-    expect(onChange).toHaveBeenCalledTimes(0);
-  });
+    const calendarElem = document.getElementById('calendar-month')
+    Simulate.keyUp(calendarElem, { key: 'ArrowLeft' })
+    expect(onChange).toHaveBeenCalledTimes(0)
+  })
 
-  it("should not select a date after the maxDate", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should not select a date after the maxDate', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
             maxDate={today}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const calendarElem = document.getElementById("calendar-month");
-    Simulate.keyUp(calendarElem, { key: "ArrowRight" });
-    expect(onChange).toHaveBeenCalledTimes(0);
-  });
+    const calendarElem = document.getElementById('calendar-month')
+    Simulate.keyUp(calendarElem, { key: 'ArrowRight' })
+    expect(onChange).toHaveBeenCalledTimes(0)
+  })
 
-  it("should correctly change the current month", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should correctly change the current month', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -179,269 +178,266 @@ describe("Date picker", () => {
           <DatePicker
             minDate={minDate}
             maxDate={maxDate}
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonPrevMonthElem = document.getElementById("calendar-header-button-prev-month");
-    Simulate.keyUp(buttonPrevMonthElem, { key: "Enter" });
+    const buttonPrevMonthElem = document.getElementById('calendar-header-button-prev-month')
+    Simulate.keyUp(buttonPrevMonthElem, { key: 'Enter' })
 
-    const prevMonthElem = document.getElementById("calendar-header-prev-month");
-    expect(prevMonthElem).not.toBeNull();
-    expect(prevMonthElem.innerHTML).toBe("October 2021");
+    const prevMonthElem = document.getElementById('calendar-header-prev-month')
+    expect(prevMonthElem).not.toBeNull()
+    expect(prevMonthElem.innerHTML).toBe('October 2021')
 
-    let buttonLastNovemberDay = document.getElementById("button-calendar-day-2021-11-30");
-    expect(buttonLastNovemberDay).not.toBeNull();
-    expect(buttonLastNovemberDay.innerHTML).toBe("30");
+    let buttonLastNovemberDay = document.getElementById('button-calendar-day-2021-11-30')
+    expect(buttonLastNovemberDay).not.toBeNull()
+    expect(buttonLastNovemberDay.innerHTML).toBe('30')
 
-    let buttonFirstOctoberDay = document.getElementById("button-calendar-day-2021-10-01");
-    expect(buttonFirstOctoberDay).not.toBeNull();
-    expect(buttonFirstOctoberDay.innerHTML).toBe("1");
+    let buttonFirstOctoberDay = document.getElementById('button-calendar-day-2021-10-01')
+    expect(buttonFirstOctoberDay).not.toBeNull()
+    expect(buttonFirstOctoberDay.innerHTML).toBe('1')
 
     // Wait the transition end
-    await waitTimeout(2 * TRANSITION_DURATION);
-    buttonLastNovemberDay = document.getElementById("button-calendar-day-2021-11-30");
-    expect(buttonLastNovemberDay).toBeNull();
-    buttonFirstOctoberDay = document.getElementById("button-calendar-day-2021-10-01");
-    expect(buttonFirstOctoberDay).not.toBeNull();
-  }, TRANSITION_DURATION * 10);
+    await waitTimeout(2 * TRANSITION_DURATION)
+    buttonLastNovemberDay = document.getElementById('button-calendar-day-2021-11-30')
+    expect(buttonLastNovemberDay).toBeNull()
+    buttonFirstOctoberDay = document.getElementById('button-calendar-day-2021-10-01')
+    expect(buttonFirstOctoberDay).not.toBeNull()
+  }, TRANSITION_DURATION * 10)
 
-
-  it("should refuse to change the current month before the minDate", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should refuse to change the current month before the minDate', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
-            minDate={dayjs("2021-11-03")}
+            selection={{ mode: 'single', selected: today }}
+            minDate={dayjs('2021-11-03')}
             maxDate={minDate}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonPrevMonthElem = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonPrevMonthElem.getAttribute("disabled")).not.toBeNull();
-    buttonPrevMonthElem.click();
-    await waitTimeout(1);
+    const buttonPrevMonthElem = document.getElementById('calendar-header-button-prev-month')
+    expect(buttonPrevMonthElem.getAttribute('disabled')).not.toBeNull()
+    buttonPrevMonthElem.click()
+    await waitTimeout(1)
 
-    const prevMonthElem = document.getElementById("calendar-header-prev-month");
-    expect(prevMonthElem).toBeNull();
+    const prevMonthElem = document.getElementById('calendar-header-prev-month')
+    expect(prevMonthElem).toBeNull()
   }
-  );
+  )
 
-  it("should refuse to change the current month after the maxDate", async () => {
-    const today = dayjs("2021-11-09");
-    const onChange = jest.fn();
+  it('should refuse to change the current month after the maxDate', async () => {
+    const today = dayjs('2021-11-09')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
-            maxDate={dayjs("2021-11-20")}
+            maxDate={dayjs('2021-11-20')}
             onChange={onChange}
             orientation="portrait"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    let buttonNextMonthElem = document.getElementById("calendar-header-button-next-month");
-    expect(buttonNextMonthElem).not.toBeNull();
-    expect(buttonNextMonthElem.getAttribute("disabled")).not.toBeNull();
-    buttonNextMonthElem.click();
-    await waitTimeout(1);
+    let buttonNextMonthElem = document.getElementById('calendar-header-button-next-month')
+    expect(buttonNextMonthElem).not.toBeNull()
+    expect(buttonNextMonthElem.getAttribute('disabled')).not.toBeNull()
+    buttonNextMonthElem.click()
+    await waitTimeout(1)
 
-    expect(onChange).toHaveBeenCalledTimes(0);
-    buttonNextMonthElem = document.getElementById("calendar-header-next-month");
-    expect(buttonNextMonthElem).toBeNull();
-  });
+    expect(onChange).toHaveBeenCalledTimes(0)
+    buttonNextMonthElem = document.getElementById('calendar-header-next-month')
+    expect(buttonNextMonthElem).toBeNull()
+  })
 
-  it("should allow to change the current year to a previous year", async () => {
-    const today = dayjs("2021-11-09");
-    const minDate = dayjs("2020-12-03");
-    const maxDate = dayjs("2022-02-05");
-    const onChange = jest.fn();
+  it('should allow to change the current year to a previous year', async () => {
+    const today = dayjs('2021-11-09')
+    const minDate = dayjs('2020-12-03')
+    const maxDate = dayjs('2022-02-05')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
             maxDate={maxDate}
             onChange={onChange}
             showToolbar
             orientation="landscape"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonYear = document.getElementById("date-picker-button-change-year");
-    expect(buttonYear).not.toBeNull();
-    expect(buttonYear.querySelector(".MuiButton-label").innerHTML).toBe("2021");
+    const buttonYear = document.getElementById('date-picker-button-change-year')
+    expect(buttonYear).not.toBeNull()
+    expect(buttonYear.querySelector('.MuiButton-label').innerHTML).toBe('2021')
 
-    buttonYear.click();
-    await waitTimeout(1);
+    buttonYear.click()
+    await waitTimeout(1)
 
-    const yearSelector = document.getElementById("year-selector");
-    expect(yearSelector).not.toBeNull();
-    expect(yearSelector.children.length).toBe(3);
+    const yearSelector = document.getElementById('year-selector')
+    expect(yearSelector).not.toBeNull()
+    expect(yearSelector.children.length).toBe(3)
 
-    let yearElem = document.getElementById("year-2019");
-    expect(yearElem).toBeNull();
+    let yearElem = document.getElementById('year-2019')
+    expect(yearElem).toBeNull()
 
-    yearElem = document.getElementById("year-2020");
-    expect(yearElem).not.toBeNull();
-    expect(yearElem.getAttribute("aria-selected")).toBe("false");
+    yearElem = document.getElementById('year-2020')
+    expect(yearElem).not.toBeNull()
+    expect(yearElem.getAttribute('aria-selected')).toBe('false')
 
-    yearElem = document.getElementById("year-2021");
-    expect(yearElem).not.toBeNull();
-    expect(yearElem.getAttribute("aria-selected")).toBe("true");
+    yearElem = document.getElementById('year-2021')
+    expect(yearElem).not.toBeNull()
+    expect(yearElem.getAttribute('aria-selected')).toBe('true')
 
-    yearElem = document.getElementById("year-2022");
-    expect(yearElem).not.toBeNull();
-    expect(yearElem.getAttribute("aria-selected")).toBe("false");
+    yearElem = document.getElementById('year-2022')
+    expect(yearElem).not.toBeNull()
+    expect(yearElem.getAttribute('aria-selected')).toBe('false')
 
-    yearElem = document.getElementById("year-2023");
-    expect(yearElem).toBeNull();
+    yearElem = document.getElementById('year-2023')
+    expect(yearElem).toBeNull()
 
-    yearElem = document.getElementById("year-2020");
-    yearElem.click();
-    await waitTimeout(1);
+    yearElem = document.getElementById('year-2020')
+    yearElem.click()
+    await waitTimeout(1)
 
-    let prevYearButton = document.getElementById("button-calendar-day-2020-12-03");
-    expect(prevYearButton).not.toBeNull();
-    expect(prevYearButton.getAttribute("disabled")).toBeNull();
+    let prevYearButton = document.getElementById('button-calendar-day-2020-12-03')
+    expect(prevYearButton).not.toBeNull()
+    expect(prevYearButton.getAttribute('disabled')).toBeNull()
 
-    prevYearButton = document.getElementById("button-calendar-day-2020-12-02");
-    expect(prevYearButton).not.toBeNull();
-    expect(prevYearButton.getAttribute("disabled")).not.toBeNull();
-  });
+    prevYearButton = document.getElementById('button-calendar-day-2020-12-02')
+    expect(prevYearButton).not.toBeNull()
+    expect(prevYearButton.getAttribute('disabled')).not.toBeNull()
+  })
 
-  it("should allow to change the current year to a next year", async () => {
-    const today = dayjs("2021-11-09");
-    const minDate = dayjs("2020-12-03");
-    const maxDate = dayjs("2022-02-05");
-    const onChange = jest.fn();
+  it('should allow to change the current year to a next year', async () => {
+    const today = dayjs('2021-11-09')
+    const minDate = dayjs('2020-12-03')
+    const maxDate = dayjs('2022-02-05')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
             maxDate={maxDate}
             onChange={onChange}
             showToolbar
             orientation="landscape"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonYear = document.getElementById("date-picker-button-change-year");
-    expect(buttonYear).not.toBeNull();
-    buttonYear.click();
-    await waitTimeout(1);
+    const buttonYear = document.getElementById('date-picker-button-change-year')
+    expect(buttonYear).not.toBeNull()
+    buttonYear.click()
+    await waitTimeout(1)
 
-    const yearElem = document.getElementById("year-2022");
-    expect(yearElem).not.toBeNull();
-    yearElem.click();
-    await waitTimeout(1);
+    const yearElem = document.getElementById('year-2022')
+    expect(yearElem).not.toBeNull()
+    yearElem.click()
+    await waitTimeout(1)
 
-    let nextYearButton = document.getElementById("button-calendar-day-2022-02-05");
-    expect(nextYearButton).not.toBeNull();
-    expect(nextYearButton.getAttribute("disabled")).toBeNull();
+    let nextYearButton = document.getElementById('button-calendar-day-2022-02-05')
+    expect(nextYearButton).not.toBeNull()
+    expect(nextYearButton.getAttribute('disabled')).toBeNull()
 
-    nextYearButton = document.getElementById("button-calendar-day-2022-02-06");
-    expect(nextYearButton).not.toBeNull();
-    expect(nextYearButton.getAttribute("disabled")).not.toBeNull();
-  });
+    nextYearButton = document.getElementById('button-calendar-day-2022-02-06')
+    expect(nextYearButton).not.toBeNull()
+    expect(nextYearButton.getAttribute('disabled')).not.toBeNull()
+  })
 
-  it("should change to the previous month when using arrow left key on first day of the month", async () => {
-    const today = dayjs("2022-01-01");
-    const onChange = jest.fn();
+  it('should change to the previous month when using arrow left key on first day of the month', async () => {
+    const today = dayjs('2022-01-01')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
             maxDate={maxDate}
             onChange={onChange}
             orientation="landscape"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const currentMonth = document.getElementById("calendar-header-current-month");
-    expect(currentMonth).not.toBeNull();
-    expect(currentMonth.innerHTML).toBe("January 2022");
+    const currentMonth = document.getElementById('calendar-header-current-month')
+    expect(currentMonth).not.toBeNull()
+    expect(currentMonth.innerHTML).toBe('January 2022')
 
-    const calendarElem = document.getElementById("calendar-month");
-    Simulate.keyUp(calendarElem, { key: "ArrowLeft" });
-    expect(onChange).toHaveBeenCalled();
-    const newSelectedDay = onChange.mock.calls[0][0];
-    expect(dayjs.isDayjs(newSelectedDay)).toBe(true);
-    expect(newSelectedDay.format("YYYY-MM-DD")).toBe("2021-12-31");
+    const calendarElem = document.getElementById('calendar-month')
+    Simulate.keyUp(calendarElem, { key: 'ArrowLeft' })
+    expect(onChange).toHaveBeenCalled()
+    const newSelectedDay = onChange.mock.calls[0][0]
+    expect(dayjs.isDayjs(newSelectedDay)).toBe(true)
+    expect(newSelectedDay.format('YYYY-MM-DD')).toBe('2021-12-31')
 
-    expect(document.getElementById("calendar-month-change-month-anim")).not.toBeNull();
+    expect(document.getElementById('calendar-month-change-month-anim')).not.toBeNull()
     // Wait the anim end:
-    while (document.getElementById("calendar-month-change-month-anim") !== null) {
-      await waitTimeout(100);
+    while (document.getElementById('calendar-month-change-month-anim') !== null) {
+      await waitTimeout(100)
     }
-    const newMonth = document.getElementById("calendar-header-current-month");
-    expect(newMonth).not.toBeNull();
-    expect(newMonth.innerHTML).toBe("December 2021");
+    const newMonth = document.getElementById('calendar-header-current-month')
+    expect(newMonth).not.toBeNull()
+    expect(newMonth.innerHTML).toBe('December 2021')
   }
-  );
+  )
 
-  it("should change to the next month when using arrow right key on last day of the month", async () => {
-    const today = dayjs("2021-12-31");
-    const onChange = jest.fn();
+  it('should change to the next month when using arrow right key on last day of the month', async () => {
+    const today = dayjs('2021-12-31')
+    const onChange = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DatePicker
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={minDate}
             maxDate={maxDate}
             onChange={onChange}
             orientation="landscape"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const currentMonth = document.getElementById("calendar-header-current-month");
-    expect(currentMonth).not.toBeNull();
-    expect(currentMonth.innerHTML).toBe("December 2021");
+    const currentMonth = document.getElementById('calendar-header-current-month')
+    expect(currentMonth).not.toBeNull()
+    expect(currentMonth.innerHTML).toBe('December 2021')
 
-    const calendarElem = document.getElementById("calendar-month");
-    Simulate.keyUp(calendarElem, { key: "ArrowRight" });
-    expect(onChange).toHaveBeenCalled();
-    const newSelectedDay = onChange.mock.calls[0][0];
-    expect(dayjs.isDayjs(newSelectedDay)).toBe(true);
-    expect(newSelectedDay.format("YYYY-MM-DD")).toBe("2022-01-01");
+    const calendarElem = document.getElementById('calendar-month')
+    Simulate.keyUp(calendarElem, { key: 'ArrowRight' })
+    expect(onChange).toHaveBeenCalled()
+    const newSelectedDay = onChange.mock.calls[0][0]
+    expect(dayjs.isDayjs(newSelectedDay)).toBe(true)
+    expect(newSelectedDay.format('YYYY-MM-DD')).toBe('2022-01-01')
 
-    expect(document.getElementById("calendar-month-change-month-anim")).not.toBeNull();
+    expect(document.getElementById('calendar-month-change-month-anim')).not.toBeNull()
     // Wait the anim end:
-    while (document.getElementById("calendar-month-change-month-anim") !== null) {
-      await waitTimeout(100);
+    while (document.getElementById('calendar-month-change-month-anim') !== null) {
+      await waitTimeout(100)
     }
-    const newMonth = document.getElementById("calendar-header-current-month");
-    expect(newMonth).not.toBeNull();
-    expect(newMonth.innerHTML).toBe("January 2022");
-  });
-});
-
-
+    const newMonth = document.getElementById('calendar-header-current-month')
+    expect(newMonth).not.toBeNull()
+    expect(newMonth.innerHTML).toBe('January 2022')
+  })
+})

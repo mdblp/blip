@@ -26,55 +26,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import EditIcon from "@material-ui/icons/Edit";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import EditIcon from '@material-ui/icons/Edit'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
 
-import { UserInvitationStatus } from "../../models/generic";
-import { TeamMemberRole } from "../../models/team";
-import { Team } from "../../lib/team";
-import GenericTeamCard from "../../components/team/team-card";
+import { UserInvitationStatus } from '../../models/generic'
+import { TeamMemberRole } from '../../models/team'
+import { Team } from '../../lib/team'
+import GenericTeamCard from '../../components/team/team-card'
 
 export interface TeamCardProps {
-  team: Readonly<Team>;
-  memberRole: TeamMemberRole;
-  memberStatus: UserInvitationStatus;
-  onShowEditTeamDialog: (team: Team | null) => Promise<void>;
-  onShowLeaveTeamDialog: (team: Team) => Promise<boolean>;
-  onShowAddMemberDialog: (team: Team) => void;
-  teamMembers?: JSX.Element;
+  team: Readonly<Team>
+  memberRole: TeamMemberRole
+  memberStatus: UserInvitationStatus
+  onShowEditTeamDialog: (team: Team | null) => Promise<void>
+  onShowLeaveTeamDialog: (team: Team) => Promise<boolean>
+  onShowAddMemberDialog: (team: Team) => void
+  teamMembers?: JSX.Element
 }
 
 export interface TeamInfoProps {
-  id: string;
-  label: string;
-  value?: null | string | JSX.Element;
-  icon: JSX.Element;
+  id: string
+  label: string
+  value?: null | string | JSX.Element
+  icon: JSX.Element
 }
 
 const teamCardStyles = makeStyles((theme: Theme) => {
   return {
     buttonActionFirstRow: {
-      alignSelf: "center",
-      marginRight: "1em",
-      textTransform: "initial",
-      [theme.breakpoints.down("sm")]: {
-        marginRight: 0,
-      },
+      alignSelf: 'center',
+      marginRight: '1em',
+      textTransform: 'initial',
+      [theme.breakpoints.down('sm')]: {
+        marginRight: 0
+      }
     },
     buttonText: {
-      [theme.breakpoints.down("xs")]: {
-        display: "none",
-      },
-    },
-  };
-}, { name: "ylp-team-card-hcp" });
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    }
+  }
+}, { name: 'ylp-team-card-hcp' })
 
 function TeamCard(props: TeamCardProps): JSX.Element {
   const {
@@ -84,34 +84,34 @@ function TeamCard(props: TeamCardProps): JSX.Element {
     onShowEditTeamDialog,
     onShowLeaveTeamDialog,
     onShowAddMemberDialog,
-    teamMembers,
-  } = props;
-  const classes = teamCardStyles();
-  const { t } = useTranslation("yourloops");
-  const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
+    teamMembers
+  } = props
+  const classes = teamCardStyles()
+  const { t } = useTranslation('yourloops')
+  const [buttonsDisabled, setButtonsDisabled] = React.useState(false)
 
-  const { id } = team;
-  const isTeamMemberAdmin = memberRole === TeamMemberRole.admin && memberStatus === UserInvitationStatus.accepted;
+  const { id } = team
+  const isTeamMemberAdmin = memberRole === TeamMemberRole.admin && memberStatus === UserInvitationStatus.accepted
 
   const handleClickLeaveTeam = async (): Promise<void> => {
-    setButtonsDisabled(true);
-    const result = await onShowLeaveTeamDialog(team);
+    setButtonsDisabled(true)
+    const result = await onShowLeaveTeamDialog(team)
     if (!result) {
-      setButtonsDisabled(false);
+      setButtonsDisabled(false)
     }
-  };
+  }
 
   const handleClickEdit = async (): Promise<void> => {
-    setButtonsDisabled(true);
-    await onShowEditTeamDialog(team);
-    setButtonsDisabled(false);
-  };
+    setButtonsDisabled(true)
+    await onShowEditTeamDialog(team)
+    setButtonsDisabled(false)
+  }
 
   const handleClickAddMember = async (): Promise<void> => {
-    setButtonsDisabled(true);
-    await onShowAddMemberDialog(team);
-    setButtonsDisabled(false);
-  };
+    setButtonsDisabled(true)
+    await onShowAddMemberDialog(team)
+    setButtonsDisabled(false)
+  }
 
   return (
     <GenericTeamCard team={team} teamMembers={teamMembers}>
@@ -124,7 +124,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
               startIcon={<EditIcon color="primary" />}
               onClick={handleClickEdit}
               disabled={buttonsDisabled}>
-              <span className={classes.buttonText}>{t("button-team-edit")}</span>
+              <span className={classes.buttonText}>{t('button-team-edit')}</span>
             </Button>
             <Button
               id={`team-card-${id}-button-add-member`}
@@ -132,7 +132,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
               startIcon={<PersonAddIcon color="primary" />}
               onClick={handleClickAddMember}
               disabled={buttonsDisabled}>
-              <span className={classes.buttonText}>{t("button-team-add-member")}</span>
+              <span className={classes.buttonText}>{t('button-team-add-member')}</span>
             </Button>
           </React.Fragment>
         }
@@ -143,10 +143,10 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         startIcon={<ExitToAppIcon color="primary" />}
         onClick={handleClickLeaveTeam}
         disabled={buttonsDisabled}>
-        <span className={classes.buttonText}>{t("button-team-leave")}</span>
+        <span className={classes.buttonText}>{t('button-team-leave')}</span>
       </Button>
     </GenericTeamCard>
-  );
+  )
 }
 
-export default TeamCard;
+export default TeamCard

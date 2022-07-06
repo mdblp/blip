@@ -26,64 +26,64 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import clsx from "clsx";
-import { makeStyles, alpha, Theme } from "@material-ui/core/styles";
-import ButtonBase, { ButtonBaseProps } from "@material-ui/core/ButtonBase";
+import React from 'react'
+import clsx from 'clsx'
+import { makeStyles, alpha, Theme } from '@material-ui/core/styles'
+import ButtonBase, { ButtonBaseProps } from '@material-ui/core/ButtonBase'
 
 interface DayProps extends ButtonBaseProps {
-  day: string;
-  selected?: boolean;
+  day: string
+  selected?: boolean
 }
 
 const dayStyles = makeStyles((theme: Theme) => ({
   root: {
     ...theme.typography.caption,
-    "padding": 0,
-    "backgroundColor": theme.palette.background.paper,
-    "color": theme.palette.text.primary,
-    "&$disabled": {
+    padding: 0,
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    '&$disabled': {
       color: theme.palette.text.secondary,
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent'
     },
-    "&$selected": {
-      "color": theme.palette.primary.contrastText,
-      "backgroundColor": theme.palette.primary.main,
-      "&:hover": {
-        willChange: "background-color",
-        backgroundColor: theme.palette.primary.dark,
+    '&$selected': {
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
+      '&:hover': {
+        willChange: 'background-color',
+        backgroundColor: theme.palette.primary.dark
       },
-      "&$disabled": {
+      '&$disabled': {
         color: theme.palette.text.secondary,
-        backgroundColor: alpha(theme.palette.action.active, theme.palette.action.activatedOpacity),
-      },
+        backgroundColor: alpha(theme.palette.action.active, theme.palette.action.activatedOpacity)
+      }
     },
-    "&:hover": {
-      willChange: "background-color",
-      backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    '&:hover': {
+      willChange: 'background-color',
+      backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity)
     },
-    "transition": theme.transitions.create("background-color", {
+    transition: theme.transitions.create('background-color', {
       duration: theme.transitions.duration.short,
-      easing: theme.transitions.easing.easeOut,
-    }),
+      easing: theme.transitions.easing.easeOut
+    })
   },
   /* Pseudo-class applied to the root element if `disabled={true}`. */
   disabled: {
   },
   /* Pseudo-class applied to the root element if `selected={true}`. */
-  selected: {},
-}), { name: "date-pickers-day" });
+  selected: {}
+}), { name: 'date-pickers-day' })
 
 function Day(props: DayProps): JSX.Element {
-  const classes = dayStyles(props);
+  const classes = dayStyles(props)
   const className = clsx(
     classes.root,
     props.className,
     {
       [classes.selected]: Boolean(props.selected),
-      [classes.disabled]: Boolean(props.disabled),
+      [classes.disabled]: Boolean(props.disabled)
     }
-  );
+  )
 
   return (
     <ButtonBase
@@ -94,7 +94,7 @@ function Day(props: DayProps): JSX.Element {
     >
       {props.day}
     </ButtonBase>
-  );
+  )
 }
 
-export default Day;
+export default Day

@@ -26,97 +26,96 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Units } from "./generic";
-import { LanguageCodes } from "./locales";
-import { MedicalData } from "./device-data";
-import { HcpProfession } from "./hcp-profession";
-import { Alarm } from "./alarm";
-import { Monitoring } from "./monitoring";
+import { Units } from './generic'
+import { LanguageCodes } from './locales'
+import { MedicalData } from './device-data'
+import { HcpProfession } from './hcp-profession'
+import { Alarm } from './alarm'
+import { Monitoring } from './monitoring'
 
 enum UserRoles {
-  hcp = "hcp",
-  caregiver = "caregiver",
-  patient = "patient",
+  hcp = 'hcp',
+  caregiver = 'caregiver',
+  patient = 'patient',
   /** Used only for signup-account-selector */
-  unset = "unset",
+  unset = 'unset',
   /** When the account is created but not yet confirm */
-  unverified = "unverified"
+  unverified = 'unverified'
 }
 
 interface Consent {
-  acceptanceTimestamp?: string;
-  isAccepted?: boolean;
+  acceptanceTimestamp?: string
+  isAccepted?: boolean
 }
 
 interface Patient {
-  birthday?: string;
-  birthPlace?: string;
-  diagnosisDate?: string;
-  diagnosisType?: string;
-  ins?: string;
-  sex?: string;
-  ssn?: string;
-  referringDoctor?: string;
+  birthday?: string
+  birthPlace?: string
+  diagnosisDate?: string
+  diagnosisType?: string
+  ins?: string
+  sex?: string
+  ssn?: string
+  referringDoctor?: string
 }
 
 interface Profile {
-  fullName: string;
-  firstName?: string;
-  lastName?: string;
-  patient?: Patient;
-  termsOfUse?: Consent;
-  privacyPolicy?: Consent;
-  contactConsent?: Consent;
-  hcpProfession?: HcpProfession;
+  fullName: string
+  firstName?: string
+  lastName?: string
+  patient?: Patient
+  termsOfUse?: Consent
+  privacyPolicy?: Consent
+  contactConsent?: Consent
+  hcpProfession?: HcpProfession
 }
 
 interface Settings {
   units?: {
-    bg?: Units;
-  };
-  country?: string;
+    bg?: Units
+  }
+  country?: string
   a1c?: {
-    date: string;
-    value: string;
-  };
+    date: string
+    value: string
+  }
 }
 
 interface Preferences {
-  displayLanguageCode?: LanguageCodes;
-  patientsStarred?: string[];
+  displayLanguageCode?: LanguageCodes
+  patientsStarred?: string[]
 }
 
 interface IUser {
-  emails?: string[];
-  readonly emailVerified?: boolean;
-  frProId?: string;
+  emails?: string[]
+  readonly emailVerified?: boolean
+  frProId?: string
   /** A boolean that indicates if the user has certified another account, like eCPS */
-  readonly idVerified?: boolean;
+  readonly idVerified?: boolean
   /** Main role of the user */
-  readonly role: UserRoles;
-  roles?: UserRoles[];
-  readonly userid: string;
-  readonly username: string;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  preferences?: Preferences | null;
+  readonly role: UserRoles
+  roles?: UserRoles[]
+  readonly userid: string
+  readonly username: string
+  profile?: Profile | null
+  settings?: Settings | null
+  preferences?: Preferences | null
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  alarms?: Alarm | null;
-  monitoring?: Monitoring;
-  unreadMessages?: number;
+  medicalData?: MedicalData | null
+  alarms?: Alarm | null
+  monitoring?: Monitoring
+  unreadMessages?: number
 }
 
 enum UserMetadata {
-  Roles = "http://your-loops.com/roles",
+  Roles = 'http://your-loops.com/roles',
 }
 
 interface AuthenticatedUser {
-  [UserMetadata.Roles]: string[];
-  email: string;
-  emailVerified: boolean;
-  sub: string;
+  [UserMetadata.Roles]: string[]
+  email: string
+  emailVerified: boolean
+  sub: string
 }
 
-
-export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser };
+export { IUser, Profile, Settings, Preferences, Consent, UserRoles, UserMetadata, AuthenticatedUser }

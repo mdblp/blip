@@ -25,45 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/styles";
-import { Theme } from "@material-ui/core/styles";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
 
 export interface BasicDropdownProps {
-  id: string;
-  defaultKey?: string;
-  disabled?: boolean;
-  values: Map<string, string>; //Map<key, value>
-  onSelect: (value: string) => void;
+  id: string
+  defaultKey?: string
+  disabled?: boolean
+  values: Map<string, string> // Map<key, value>
+  onSelect: (value: string) => void
 }
 
 const styles = makeStyles((theme: Theme) => ({
   select: {
-    "backgroundColor": theme.palette.grey[100],
-    "height": "40px",
-    "maxWidth": "200px",
-    "borderRadius": "8px",
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "none",
-    },
-  },
-}));
-
+    backgroundColor: theme.palette.grey[100],
+    height: '40px',
+    maxWidth: '200px',
+    borderRadius: '8px',
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: 'none'
+    }
+  }
+}))
 
 function Dropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultKey, values, id, disabled } = props;
-  const classes = styles();
-  const [selectedValue, setSelectedValue] = React.useState(defaultKey ? defaultKey : "");
+  const { onSelect, defaultKey, values, id, disabled } = props
+  const classes = styles()
+  const [selectedValue, setSelectedValue] = React.useState(defaultKey || '')
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const value = event.target.value as string;
-    setSelectedValue(value);
-    onSelect(value);
-  };
+    const value = event.target.value as string
+    setSelectedValue(value)
+    onSelect(value)
+  }
 
   return (
     <Select
@@ -81,7 +80,7 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
         </MenuItem>
       ))}
     </Select>
-  );
+  )
 }
 
-export default Dropdown;
+export default Dropdown

@@ -25,43 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { useTranslation } from 'react-i18next'
 
 const languageSelectStyle = makeStyles((theme: Theme) => {
   return {
     select: {
-      fontSize: "12px",
-      color: theme.palette.grey[600],
-    },
-  };
-});
+      fontSize: '12px',
+      color: theme.palette.grey[600]
+    }
+  }
+})
 
 function LanguageSelect(): JSX.Element {
-  const { i18n } = useTranslation();
-  const [val, setVal] = React.useState(i18n.language);
-  const classes = languageSelectStyle();
+  const { i18n } = useTranslation()
+  const [val, setVal] = React.useState(i18n.language)
+  const classes = languageSelectStyle()
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const lang = event.target.value as string;
-    i18n.changeLanguage(lang);
-    setVal(lang);
-  };
+    const lang = event.target.value as string
+    i18n.changeLanguage(lang)
+    setVal(lang)
+  }
 
-  const langs = [];
+  const langs = []
   for (const lang in i18n.options.resources) {
     if (Object.prototype.hasOwnProperty.call(i18n.options.resources, lang)) {
-      const language = i18n.options.resources[lang].name;
+      const language = i18n.options.resources[lang].name
       langs.push(
         <MenuItem id={`language-selector-${lang}`} key={lang} value={lang}>
           {language}
         </MenuItem>
-      );
+      )
     }
   }
 
@@ -73,8 +73,8 @@ function LanguageSelect(): JSX.Element {
         disableUnderline
         inputProps={{
           classes: {
-            select: classes.select,
-          },
+            select: classes.select
+          }
         }}
         IconComponent={ArrowDropDownIcon}
         value={val}
@@ -83,7 +83,7 @@ function LanguageSelect(): JSX.Element {
         {langs}
       </Select>
     </FormControl>
-  );
+  )
 }
 
-export default LanguageSelect;
+export default LanguageSelect

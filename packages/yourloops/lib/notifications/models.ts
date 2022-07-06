@@ -26,8 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Profile } from "../../models/user";
-import { TeamMemberRole } from "../../models/team";
+import { Profile } from '../../models/user'
+import { TeamMemberRole } from '../../models/team'
 
 export enum NotificationType {
   directInvitation,
@@ -39,44 +39,44 @@ export enum NotificationType {
 }
 
 export interface INotification {
-  id: string;
-  type: NotificationType;
-  metricsType: "share_data" | "join_team";
+  id: string
+  type: NotificationType
+  metricsType: 'share_data' | 'join_team'
   /** Current user email for received invitation, target user email for sent invitations */
-  email: string;
+  email: string
   /** User who create the invitation == creator.userid? */
-  creatorId: string;
+  creatorId: string
   /** Notification creation date */
-  date: string;
+  date: string
   target?: {
     /** TeamID */
-    id: string;
+    id: string
     /** Team name */
-    name: string;
-  };
+    name: string
+  }
   /** The role we will have in the team */
-  role?: TeamMemberRole;
+  role?: TeamMemberRole
   /** Some information on the user who created this notification */
   creator: {
-    userid: string;
-    profile?: Profile | null;
-  };
+    userid: string
+    profile?: Profile | null
+  }
 }
 
 export interface NotificationContext {
-  initialized: boolean;
-  receivedInvitations: INotification[];
-  sentInvitations: INotification[];
-  update: () => void;
-  accept: (notification: INotification) => Promise<void>;
-  decline: (notification: INotification) => Promise<void>;
-  cancel: (notification: INotification) => Promise<void>;
-  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>;
-  cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>;
+  initialized: boolean
+  receivedInvitations: INotification[]
+  sentInvitations: INotification[]
+  update: () => void
+  accept: (notification: INotification) => Promise<void>
+  decline: (notification: INotification) => Promise<void>
+  cancel: (notification: INotification) => Promise<void>
+  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>
+  cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>
 }
 
 export interface NotificationProvider {
-  children: React.ReactNode;
+  children: React.ReactNode
   /** Used for test components which need this hook */
-  value?: NotificationContext;
+  value?: NotificationContext
 }

@@ -26,94 +26,93 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
+import _ from 'lodash'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import { waitTimeout } from "../../../lib/utils";
-import DialogDatePicker from "../../../components/date-pickers/dialog-date-picker";
-import initDayJS from "../../../lib/dayjs";
-import i18n from "../../../lib/language";
+import { waitTimeout } from '../../../lib/utils'
+import DialogDatePicker from '../../../components/date-pickers/dialog-date-picker'
+import initDayJS from '../../../lib/dayjs'
+import i18n from '../../../lib/language'
 
-describe("Dialog date picker", () => {
-
-  let container: HTMLDivElement | null = null;
+describe('Dialog date picker', () => {
+  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
-    initDayJS();
-    i18n.addResourceBundle("en", "yourloops", {
-      "date-picker-header-date-format": "MMMM YYYY",
-      "date-picker-toolbar-date-format": "ddd, MMM D",
+    initDayJS()
+    i18n.addResourceBundle('en', 'yourloops', {
+      'date-picker-header-date-format': 'MMMM YYYY',
+      'date-picker-toolbar-date-format': 'ddd, MMM D'
     })
-      .init({ react: { useSuspense: true } });
-  });
+      .init({ react: { useSuspense: true } })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
-  it("should render nothing if not open", async () => {
+  it('should render nothing if not open', async () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DialogDatePicker isOpen={false} onResult={_.noop} />, container, resolve);
-      });
-    });
+          <DialogDatePicker isOpen={false} onResult={_.noop} />, container, resolve)
+      })
+    })
 
-    const calendarElem = document.getElementById("calendar-box");
-    expect(calendarElem).toBeNull();
-  });
+    const calendarElem = document.getElementById('calendar-box')
+    expect(calendarElem).toBeNull()
+  })
 
-  it("should call onSelectedDateChange() when the selected date changed", async () => {
-    const onSelectedDateChanged = jest.fn();
+  it('should call onSelectedDateChange() when the selected date changed', async () => {
+    const onSelectedDateChanged = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogDatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}
-            onResult={_.noop} />, container, resolve);
-      });
-    });
+            onResult={_.noop} />, container, resolve)
+      })
+    })
 
-    expect(onSelectedDateChanged).toHaveBeenCalled();
-    expect(onSelectedDateChanged.mock.calls[0][0]).toBe("2022-01-26");
+    expect(onSelectedDateChanged).toHaveBeenCalled()
+    expect(onSelectedDateChanged.mock.calls[0][0]).toBe('2022-01-26')
 
-    const buttonPrevDay = document.getElementById("button-calendar-day-2022-01-25");
-    expect(buttonPrevDay).not.toBeNull();
-    buttonPrevDay.click();
-    await waitTimeout(2);
+    const buttonPrevDay = document.getElementById('button-calendar-day-2022-01-25')
+    expect(buttonPrevDay).not.toBeNull()
+    buttonPrevDay.click()
+    await waitTimeout(2)
 
-    expect(onSelectedDateChanged).toHaveBeenCalledTimes(2);
-    expect(onSelectedDateChanged.mock.calls[1][0]).toBe("2022-01-25");
+    expect(onSelectedDateChanged).toHaveBeenCalledTimes(2)
+    expect(onSelectedDateChanged.mock.calls[1][0]).toBe('2022-01-25')
   }
-  );
+  )
 
-  it("should call the callback function on cancel", async () => {
-    const onResult = jest.fn();
+  it('should call the callback function on cancel', async () => {
+    const onResult = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DialogDatePicker isOpen onResult={onResult} />, container, resolve);
-      });
-    });
+        ReactDOM.render(<DialogDatePicker isOpen onResult={onResult} />, container, resolve)
+      })
+    })
 
-    const buttonCancel = document.getElementById("date-picker-button-cancel");
-    expect(buttonCancel).not.toBeNull();
-    buttonCancel.click();
-    expect(onResult).toHaveBeenCalledTimes(1);
-    expect(onResult.mock.calls[0].length).toBeLessThan(1);
-  });
+    const buttonCancel = document.getElementById('date-picker-button-cancel')
+    expect(buttonCancel).not.toBeNull()
+    buttonCancel.click()
+    expect(onResult).toHaveBeenCalledTimes(1)
+    expect(onResult.mock.calls[0].length).toBeLessThan(1)
+  })
 
-  it("should return the selected date", async () => {
-    const onResult = jest.fn();
+  it('should return the selected date', async () => {
+    const onResult = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
         // Note: wrong date value is intentional
@@ -124,31 +123,30 @@ describe("Dialog date picker", () => {
             date="2021-10-02"
             maxDate="2021-11-26"
             minDate="2021-11-01"
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    let buttonChangeMonth = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonChangeMonth).not.toBeNull();
-    expect(buttonChangeMonth.getAttribute("disabled")).not.toBeNull();
-    buttonChangeMonth = document.getElementById("calendar-header-button-next-month");
-    expect(buttonChangeMonth).not.toBeNull();
-    expect(buttonChangeMonth.getAttribute("disabled")).not.toBeNull();
+    let buttonChangeMonth = document.getElementById('calendar-header-button-prev-month')
+    expect(buttonChangeMonth).not.toBeNull()
+    expect(buttonChangeMonth.getAttribute('disabled')).not.toBeNull()
+    buttonChangeMonth = document.getElementById('calendar-header-button-next-month')
+    expect(buttonChangeMonth).not.toBeNull()
+    expect(buttonChangeMonth.getAttribute('disabled')).not.toBeNull()
 
-    let buttonDay = document.getElementById("button-calendar-day-2021-11-01");
-    expect(buttonDay).not.toBeNull();
-    expect(buttonDay.getAttribute("aria-selected")).toBe("true");
+    let buttonDay = document.getElementById('button-calendar-day-2021-11-01')
+    expect(buttonDay).not.toBeNull()
+    expect(buttonDay.getAttribute('aria-selected')).toBe('true')
 
-    buttonDay = document.getElementById("button-calendar-day-2021-11-10");
-    expect(buttonDay).not.toBeNull();
-    expect(buttonDay.getAttribute("aria-selected")).toBe("false");
-    buttonDay.click();
+    buttonDay = document.getElementById('button-calendar-day-2021-11-10')
+    expect(buttonDay).not.toBeNull()
+    expect(buttonDay.getAttribute('aria-selected')).toBe('false')
+    buttonDay.click()
 
-    const buttonOk = document.getElementById("date-picker-button-ok");
-    buttonOk.click();
+    const buttonOk = document.getElementById('date-picker-button-ok')
+    buttonOk.click()
 
-    expect(onResult).toHaveBeenCalledTimes(1);
-    expect(onResult.mock.calls[0][0]).toBe("2021-11-10");
-  });
-});
-
+    expect(onResult).toHaveBeenCalledTimes(1)
+    expect(onResult.mock.calls[0][0]).toBe('2021-11-10')
+  })
+})

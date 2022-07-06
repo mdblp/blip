@@ -26,11 +26,11 @@
  */
 
 export enum HcpProfession {
-  empty = "",
-  diabeto = "hcp-profession-diabeto",
-  nurse = "hcp-profession-nurse",
-  dietitian = "hcp-profession-dietitian",
-  other = "hcp-profession-other"
+  empty = '',
+  diabeto = 'hcp-profession-diabeto',
+  nurse = 'hcp-profession-nurse',
+  dietitian = 'hcp-profession-dietitian',
+  other = 'hcp-profession-other'
 }
 
-export const HcpProfessionList = Object.values(HcpProfession);
+export const HcpProfessionList = Object.values(HcpProfession)

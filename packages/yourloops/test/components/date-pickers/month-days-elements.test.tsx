@@ -26,40 +26,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
-import dayjs from "dayjs";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act } from 'react-dom/test-utils'
+import dayjs from 'dayjs'
 
-import MonthDayElements from "../../../components/date-pickers/month-days-elements";
-import initDayJS from "../../../lib/dayjs";
+import MonthDayElements from '../../../components/date-pickers/month-days-elements'
+import initDayJS from '../../../lib/dayjs'
 
-describe("Month day element", () => {
-
-  let container: HTMLDivElement | null = null;
+describe('Month day element', () => {
+  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
-    initDayJS();
-  });
+    initDayJS()
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
   afterEach(() => {
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
-  it("should correctly render a month", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const yesterday = today.subtract(1, "day");
-    const tomorrow = today.add(1, "day");
-    const days = today.getWeekArray();
-    const onChange = jest.fn();
+  it('should correctly render a month', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
+    const yesterday = today.subtract(1, 'day')
+    const tomorrow = today.add(1, 'day')
+    const days = today.getWeekArray()
+    const onChange = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
@@ -67,42 +66,40 @@ describe("Month day element", () => {
             daysArray={days}
             currentMonth={today.month()}
             onChange={onChange}
-            selection={{ mode: "single", selected: today }}
+            selection={{ mode: 'single', selected: today }}
             minDate={yesterday}
             maxDate={tomorrow}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const todayElem = document.getElementById("button-calendar-day-2021-11-01");
-    const yesterdayElem = document.getElementById("button-calendar-day-2021-10-31");
-    const tomorrowElem = document.getElementById("button-calendar-day-2021-11-02");
-    const afterTomorrowElem = document.getElementById("button-calendar-day-2021-11-03");
+    const todayElem = document.getElementById('button-calendar-day-2021-11-01')
+    const yesterdayElem = document.getElementById('button-calendar-day-2021-10-31')
+    const tomorrowElem = document.getElementById('button-calendar-day-2021-11-02')
+    const afterTomorrowElem = document.getElementById('button-calendar-day-2021-11-03')
 
-    expect(todayElem).not.toBeNull();
-    expect(todayElem.getAttribute("disabled")).toBeNull();
-    expect(todayElem.getAttribute("aria-selected")).toBe("true");
-    expect(todayElem.className).toContain("date-pickers-day-selected");
-    expect(todayElem.textContent).toBe("1");
-    todayElem.click();
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(today.isSame(onChange.mock.calls[0][0], "day")).toBe(true);
+    expect(todayElem).not.toBeNull()
+    expect(todayElem.getAttribute('disabled')).toBeNull()
+    expect(todayElem.getAttribute('aria-selected')).toBe('true')
+    expect(todayElem.className).toContain('date-pickers-day-selected')
+    expect(todayElem.textContent).toBe('1')
+    todayElem.click()
+    expect(onChange).toHaveBeenCalledTimes(1)
+    expect(today.isSame(onChange.mock.calls[0][0], 'day')).toBe(true)
 
-    expect(yesterdayElem).not.toBeNull();
-    expect(typeof yesterdayElem.getAttribute("disabled")).toBe("string");
-    expect(yesterdayElem.innerHTML).toBe("31");
+    expect(yesterdayElem).not.toBeNull()
+    expect(typeof yesterdayElem.getAttribute('disabled')).toBe('string')
+    expect(yesterdayElem.innerHTML).toBe('31')
 
-    expect(tomorrowElem).not.toBeNull();
-    expect(tomorrowElem.getAttribute("disabled")).toBeNull();
-    expect(tomorrowElem.textContent).toBe("2");
-    tomorrowElem.click();
-    expect(onChange).toHaveBeenCalledTimes(2);
-    expect(tomorrow.isSame(onChange.mock.calls[1][0], "day")).toBe(true);
+    expect(tomorrowElem).not.toBeNull()
+    expect(tomorrowElem.getAttribute('disabled')).toBeNull()
+    expect(tomorrowElem.textContent).toBe('2')
+    tomorrowElem.click()
+    expect(onChange).toHaveBeenCalledTimes(2)
+    expect(tomorrow.isSame(onChange.mock.calls[1][0], 'day')).toBe(true)
 
-    expect(afterTomorrowElem).not.toBeNull();
-    expect(typeof afterTomorrowElem.getAttribute("disabled")).toBe("string");
-    expect(afterTomorrowElem.innerHTML).toBe("3");
-  });
-});
-
-
+    expect(afterTomorrowElem).not.toBeNull()
+    expect(typeof afterTomorrowElem.getAttribute('disabled')).toBe('string')
+    expect(afterTomorrowElem.innerHTML).toBe('3')
+  })
+})

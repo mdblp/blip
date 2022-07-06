@@ -26,22 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { act, Simulate, SyntheticEventData } from "react-dom/test-utils";
-import { render, unmountComponentAtNode } from "react-dom";
+import React from 'react'
+import { act, Simulate, SyntheticEventData } from 'react-dom/test-utils'
+import { render, unmountComponentAtNode } from 'react-dom'
 
-import RemoveDialog from "../../../components/patient/remove-dialog";
-import { waitTimeout } from "../../../lib/utils";
-import { Patient, PatientTeam } from "../../../lib/data/patient";
-import { createPatient, createPatientTeam } from "../../common/utils";
-import { UserInvitationStatus } from "../../../models/generic";
-import * as teamHookMock from "../../../lib/team";
+import RemoveDialog from '../../../components/patient/remove-dialog'
+import { waitTimeout } from '../../../lib/utils'
+import { Patient, PatientTeam } from '../../../lib/data/patient'
+import { createPatient, createPatientTeam } from '../../common/utils'
+import { UserInvitationStatus } from '../../../models/generic'
+import * as teamHookMock from '../../../lib/team'
 
-jest.mock("../../../lib/team");
-describe("RemoveDialog", () => {
-  let container: HTMLElement | null = null;
-  let patient: Patient | undefined;
-  const onCloseStub = jest.fn();
+jest.mock('../../../lib/team')
+describe('RemoveDialog', () => {
+  let container: HTMLElement | null = null
+  let patient: Patient | undefined
+  const onCloseStub = jest.fn()
 
   function mountComponent(props: { dialogOpened: boolean }): void {
     act(() => {
@@ -50,67 +50,66 @@ describe("RemoveDialog", () => {
           isOpen={props.dialogOpened}
           onClose={onCloseStub}
           patient={patient}
-        />, container);
-    });
+        />, container)
+    })
   }
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
-      patient = undefined;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
+      patient = undefined
     }
-  });
+  })
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { removePatient: jest.fn() };
-    });
-  });
+      return { removePatient: jest.fn() }
+    })
+  })
 
-  it("should be closed if isOpen is false", () => {
-    mountComponent({ dialogOpened: false });
-    const dialog = document.getElementById("remove-hcp-patient-dialog");
-    expect(dialog).toBeNull();
-  });
+  it('should be closed if isOpen is false', () => {
+    mountComponent({ dialogOpened: false })
+    const dialog = document.getElementById('remove-hcp-patient-dialog')
+    expect(dialog).toBeNull()
+  })
 
-  it("should be opened if isOpen is true", () => {
-    mountComponent({ dialogOpened: true });
-    const dialog = document.getElementById("remove-hcp-patient-dialog");
-    expect(dialog).not.toBeNull();
-  });
+  it('should be opened if isOpen is true', () => {
+    mountComponent({ dialogOpened: true })
+    const dialog = document.getElementById('remove-hcp-patient-dialog')
+    expect(dialog).not.toBeNull()
+  })
 
-  it("should not allow to validate if no team is selected", () => {
-    mountComponent({ dialogOpened: true });
-    const validateButton: HTMLButtonElement = document.querySelector("#remove-patient-dialog-validate-button");
-    expect(validateButton.disabled).toBe(true);
-  });
+  it('should not allow to validate if no team is selected', () => {
+    mountComponent({ dialogOpened: true })
+    const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
+    expect(validateButton.disabled).toBe(true)
+  })
 
-  it("should be able to remove patient after selecting a team", async () => {
+  it('should be able to remove patient after selecting a team', async () => {
     const patientTeams: PatientTeam[] = [
-      createPatientTeam("fakePatientTeam1Id", UserInvitationStatus.accepted, "team1"),
-      createPatientTeam("fakePatientTeam2Id", UserInvitationStatus.accepted, "team2"),
-    ];
-    patient = createPatient("fakePatientId", patientTeams);
-    mountComponent({ dialogOpened: true });
-    const validateButton: HTMLButtonElement = document.querySelector("#remove-patient-dialog-validate-button");
-    const teamSelect = document.querySelector("#patient-team-selector + input");
+      createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, 'team1'),
+      createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, 'team2')
+    ]
+    patient = createPatient('fakePatientId', patientTeams)
+    mountComponent({ dialogOpened: true })
+    const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
+    const teamSelect = document.querySelector('#patient-team-selector + input')
 
-    Simulate.change(teamSelect, { target: { value: patientTeams[0].teamId } } as unknown as SyntheticEventData);
-    expect(validateButton.disabled).toBe(false);
+    Simulate.change(teamSelect, { target: { value: patientTeams[0].teamId } } as unknown as SyntheticEventData)
+    expect(validateButton.disabled).toBe(false)
 
-    Simulate.click(validateButton);
-    await waitTimeout(1);
-    expect(onCloseStub).toHaveBeenCalledTimes(1);
-  });
-});
-
+    Simulate.click(validateButton)
+    await waitTimeout(1)
+    expect(onCloseStub).toHaveBeenCalledTimes(1)
+  })
+})

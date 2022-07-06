@@ -26,76 +26,72 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Preferences, Profile, Settings } from "../../../models/user";
-import UserApi from "../../../lib/auth/user-api";
-import HttpService from "../../../services/http";
-import { AxiosResponse } from "axios";
+import { Preferences, Profile, Settings } from '../../../models/user'
+import UserApi from '../../../lib/auth/user-api'
+import HttpService from '../../../services/http'
+import { AxiosResponse } from 'axios'
 
-describe("Auth API", () => {
-  const fetchMock = jest.fn();
+describe('Auth API', () => {
+  const fetchMock = jest.fn()
 
   afterEach(() => {
-    fetchMock.mockReset();
-    delete global.fetch;
-  });
+    fetchMock.mockReset()
+    delete global.fetch
+  })
 
-  describe("updateProfile", () => {
-
-    it("should return the updated profile on success", async () => {
+  describe('updateProfile', () => {
+    it('should return the updated profile on success', async () => {
       const profile: Profile = {
-        fullName: "Test Example",
-        firstName: "Text",
-        lastName: "Example",
-      };
-      jest.spyOn(HttpService, "put").mockResolvedValue({ data: profile } as AxiosResponse);
-      const userId = "fakeUserId";
+        fullName: 'Test Example',
+        firstName: 'Text',
+        lastName: 'Example'
+      }
+      jest.spyOn(HttpService, 'put').mockResolvedValue({ data: profile } as AxiosResponse)
+      const userId = 'fakeUserId'
 
-      const updatedProfile = await UserApi.updateProfile(userId, profile);
-      expect(updatedProfile).toEqual(profile);
+      const updatedProfile = await UserApi.updateProfile(userId, profile)
+      expect(updatedProfile).toEqual(profile)
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/metadata/${userId}/profile`,
-        payload: profile,
-      });
-    });
-  });
+        payload: profile
+      })
+    })
+  })
 
-  describe("updatePreferences", () => {
-
-    it("should return the updated preferences on success", async () => {
+  describe('updatePreferences', () => {
+    it('should return the updated preferences on success', async () => {
       const preferences: Preferences = {
-        displayLanguageCode: "de",
-      };
-      const userId = "fakeUserId";
-      jest.spyOn(HttpService, "put").mockResolvedValue({ data: preferences } as AxiosResponse);
+        displayLanguageCode: 'de'
+      }
+      const userId = 'fakeUserId'
+      jest.spyOn(HttpService, 'put').mockResolvedValue({ data: preferences } as AxiosResponse)
 
-      const updatedPreferences = await UserApi.updatePreferences(userId, preferences);
-      expect(updatedPreferences).toEqual(preferences);
+      const updatedPreferences = await UserApi.updatePreferences(userId, preferences)
+      expect(updatedPreferences).toEqual(preferences)
 
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/metadata/${userId}/preferences`,
-        payload: preferences,
-      });
-    });
-  });
+        payload: preferences
+      })
+    })
+  })
 
-  describe("updateSettings", () => {
-
-    it("should return the updated settings on success", async () => {
+  describe('updateSettings', () => {
+    it('should return the updated settings on success', async () => {
       const settings: Settings = {
-        country: "FR",
-      };
-      const userId = "fakeUserId";
-      jest.spyOn(HttpService, "put").mockResolvedValue({ data: settings } as AxiosResponse);
+        country: 'FR'
+      }
+      const userId = 'fakeUserId'
+      jest.spyOn(HttpService, 'put').mockResolvedValue({ data: settings } as AxiosResponse)
 
-      const updatedSettings = await UserApi.updateSettings(userId, settings);
+      const updatedSettings = await UserApi.updateSettings(userId, settings)
 
-      expect(updatedSettings).toEqual(settings);
+      expect(updatedSettings).toEqual(settings)
 
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/metadata/${userId}/settings`,
-        payload: settings,
-      });
-    });
-  });
-});
-
+        payload: settings
+      })
+    })
+  })
+})

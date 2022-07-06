@@ -26,19 +26,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import bows from "bows";
-import metrics from "./metrics";
+import _ from 'lodash'
+import bows from 'bows'
+import metrics from './metrics'
 
-const log = bows("Zendesk");
-const throttleMetricsOpenWidget = _.throttle(metrics.send, 500);
-let allowCookies = false;
+const log = bows('Zendesk')
+const throttleMetricsOpenWidget = _.throttle(metrics.send, 500)
+let allowCookies = false
 
 /**
  * @returns true if zendesk is active
  */
 export function isZendeskActive(): boolean {
-  return typeof window.zE === "function";
+  return typeof window.zE === 'function'
 }
 
 /**
@@ -46,7 +46,7 @@ export function isZendeskActive(): boolean {
  * @returns true if allow cookies
  */
 export function isZendeskAllowCookies(): boolean {
-  return allowCookies;
+  return allowCookies
 }
 
 /**
@@ -56,8 +56,8 @@ export function isZendeskAllowCookies(): boolean {
  */
 export function zendeskLogin(): void {
   if (allowCookies && isZendeskActive()) {
-    log.info("reauthenticate");
-    window.zE("webWidget", "helpCenter:reauthenticate");
+    log.info('reauthenticate')
+    window.zE('webWidget', 'helpCenter:reauthenticate')
   }
 }
 
@@ -66,10 +66,10 @@ export function zendeskLogin(): void {
  */
 export function zendeskLogout(): void {
   if (isZendeskActive()) {
-    log.info("logout");
-    window.zE("webWidget", "logout");
-    window.zE("webWidget", "clear");
-    window.zE("webWidget", "reset");
+    log.info('logout')
+    window.zE('webWidget', 'logout')
+    window.zE('webWidget', 'clear')
+    window.zE('webWidget', 'reset')
   }
 }
 
@@ -77,13 +77,13 @@ export function zendeskLogout(): void {
  * @param allow true if zendesk can use cookies
  */
 export function zendeskAllowCookies(allow: boolean): void {
-  allowCookies = allow;
+  allowCookies = allow
   if (isZendeskActive()) {
-    log.info("Allow cookies");
-    window.zE("webWidget", "updateSettings", { cookies: allow });
+    log.info('Allow cookies')
+    window.zE('webWidget', 'updateSettings', { cookies: allow })
 
     if (!allowCookies) {
-      zendeskLogout();
+      zendeskLogout()
     }
   }
 }
@@ -94,7 +94,7 @@ export function zendeskAllowCookies(allow: boolean): void {
  */
 export function zendeskLocale(lang: string): void {
   if (isZendeskActive()) {
-    window.zE("webWidget", "setLocale", lang);
+    window.zE('webWidget', 'setLocale', lang)
   }
 }
 
@@ -103,8 +103,8 @@ export function zendeskLocale(lang: string): void {
  */
 export function zendeskTrackWidgetOpen(): void {
   if (isZendeskActive()) {
-    window.zE("webWidget:on", "open", () => {
-      throttleMetricsOpenWidget("support", "open_zendesk_widget");
-    });
+    window.zE('webWidget:on', 'open', () => {
+      throttleMetricsOpenWidget('support', 'open_zendesk_widget')
+    })
   }
 }

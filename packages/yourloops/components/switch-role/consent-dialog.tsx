@@ -26,46 +26,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useTheme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import { UserRoles } from "../../models/user";
-import { ConsentForm } from "../consents";
-import { SwitchRoleConsentDialogProps } from "./models";
+import { UserRoles } from '../../models/user'
+import { ConsentForm } from '../consents'
+import { SwitchRoleConsentDialogProps } from './models'
 
 function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Element {
-  const theme = useTheme();
-  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
+  const theme = useTheme()
+  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
-  const { open, onAccept, onCancel } = props;
-  const { t } = useTranslation("yourloops");
-  const [policyAccepted, setPolicyAccepted] = React.useState(false);
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
-  const [feedbackAccepted, setFeedbackAccepted] = React.useState(false);
+  const { open, onAccept, onCancel } = props
+  const { t } = useTranslation('yourloops')
+  const [policyAccepted, setPolicyAccepted] = React.useState(false)
+  const [termsAccepted, setTermsAccepted] = React.useState(false)
+  const [feedbackAccepted, setFeedbackAccepted] = React.useState(false)
 
   const resetForm = () => {
-    setPolicyAccepted(false);
-    setTermsAccepted(false);
-    setFeedbackAccepted(false);
-  };
+    setPolicyAccepted(false)
+    setTermsAccepted(false)
+    setFeedbackAccepted(false)
+  }
 
   const handleAccept = () => {
-    onAccept(feedbackAccepted);
-    resetForm();
-  };
+    onAccept(feedbackAccepted)
+    resetForm()
+  }
 
   const onClose = () => {
-    onCancel();
-    resetForm();
-  };
+    onCancel()
+    resetForm()
+  }
 
   return (
     <Dialog
@@ -76,7 +76,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
       fullScreen={isXSBreakpoint}
     >
       <DialogTitle id="switch-role-consent-dialog-title">
-        <strong>{t("modal-switch-hcp-consent-title")}</strong>
+        <strong>{t('modal-switch-hcp-consent-title')}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
         <ConsentForm
@@ -96,7 +96,7 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
           id="switch-role-consent-dialog-button-decline"
           onClick={onClose}
         >
-          {t("button-decline")}
+          {t('button-decline')}
         </Button>
         <Button
           id="switch-role-consent-dialog-button-accept"
@@ -106,11 +106,11 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
           disabled={!(policyAccepted && termsAccepted)}
           onClick={handleAccept}
         >
-          {t("button-accept")}
+          {t('button-accept')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default SwitchRoleConsentDialog;
+export default SwitchRoleConsentDialog

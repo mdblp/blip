@@ -30,15 +30,15 @@
  * A single message
  */
 interface MessageNote {
-  id?:string;
-  userid: string;
-  groupid: string;
-  messagetext: string;
-  timestamp: string;
-  parentmessage: string;
+  id?: string
+  userid: string
+  groupid: string
+  messagetext: string
+  timestamp: string
+  parentmessage: string
   user: {
-    fullName: string;
+    fullName: string
   }
 }
 
-export default MessageNote;
+export default MessageNote

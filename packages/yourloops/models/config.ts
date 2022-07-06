@@ -27,23 +27,23 @@
  */
 
 export interface AppConfig {
-  VERSION: string;
-  API_HOST: string;
-  BRANDING: string;
-  DOMAIN_NAME?: string;
-  DEV: boolean;
-  TEST: boolean;
-  LATEST_TERMS?: string;
-  SUPPORT_WEB_ADDRESS?: string;
-  ASSETS_URL?: string | null;
-  METRICS_SERVICE?: string | null;
-  TERMS_PRIVACY_DATE?: string;
-  STONLY_WID: string;
-  COOKIE_BANNER_CLIENT_ID: string;
-  SESSION_TIMEOUT: number;
-  YLP820_BASAL_TIME: number;
-  CBG_BUCKETS_ENABLED: boolean;
-  ECPS_ENABLED: boolean;
-  AUTH0_DOMAIN: string;
-  AUTH0_CLIENT_ID: string;
+  VERSION: string
+  API_HOST: string
+  BRANDING: string
+  DOMAIN_NAME?: string
+  DEV: boolean
+  TEST: boolean
+  LATEST_TERMS?: string
+  SUPPORT_WEB_ADDRESS?: string
+  ASSETS_URL?: string | null
+  METRICS_SERVICE?: string | null
+  TERMS_PRIVACY_DATE?: string
+  STONLY_WID: string
+  COOKIE_BANNER_CLIENT_ID: string
+  SESSION_TIMEOUT: number
+  YLP820_BASAL_TIME: number
+  CBG_BUCKETS_ENABLED: boolean
+  ECPS_ENABLED: boolean
+  AUTH0_DOMAIN: string
+  AUTH0_CLIENT_ID: string
 }

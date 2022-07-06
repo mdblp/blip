@@ -26,184 +26,184 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react'
 
-import Picker, { IEmojiData } from "emoji-picker-react";
+import Picker, { IEmojiData } from 'emoji-picker-react'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import SendIcon from "@material-ui/icons/Send";
-import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfiedOutlined";
-import EmailOutlinedIcon from "@material-ui/icons/EmailOutlined";
-import Card from "@material-ui/core/Card";
-import ChatMessage from "./chat-message";
-import ChatApi from "../../lib/chat/api";
-import { useAuth } from "../../lib/auth";
-import { IMessage } from "../../models/chat";
-import { Button, CardHeader, Tab, Tabs, TextField } from "@material-ui/core";
-import { useTranslation } from "react-i18next";
-import { UserRoles } from "../../models/user";
-import { Patient } from "../../lib/data/patient";
-import { useTeam } from "../../lib/team";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import SendIcon from '@material-ui/icons/Send'
+import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfiedOutlined'
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
+import Card from '@material-ui/core/Card'
+import ChatMessage from './chat-message'
+import ChatApi from '../../lib/chat/api'
+import { useAuth } from '../../lib/auth'
+import { IMessage } from '../../models/chat'
+import { Button, CardHeader, Tab, Tabs, TextField } from '@material-ui/core'
+import { useTranslation } from 'react-i18next'
+import { UserRoles } from '../../models/user'
+import { Patient } from '../../lib/data/patient'
+import { useTeam } from '../../lib/team'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
     chatWidget: {
-      width: "400px",
-      height: "450px",
+      width: '400px',
+      height: '450px'
     },
     chatWidgetHeader: {
-      textTransform: "uppercase",
-      backgroundColor: "var(--card-header-background-color)",
+      textTransform: 'uppercase',
+      backgroundColor: 'var(--card-header-background-color)'
     },
     chatWidgetHeaderText: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1)
     },
     iconButton: {
-      "backgroundColor": "white",
-      "border": "none",
-      "& :hover": {
-        cursor: "pointer",
-      },
+      backgroundColor: 'white',
+      border: 'none',
+      '& :hover': {
+        cursor: 'pointer'
+      }
     },
     chatWidgetContent: {
       padding: theme.spacing(2),
       background: theme.palette.common.white,
-      width: "100%",
-      height: "290px",
-      overflowY: "auto",
-      overflowX: "hidden",
+      width: '100%',
+      height: '290px',
+      overflowY: 'auto',
+      overflowX: 'hidden'
     },
     chatWidgetFooter: {
-      borderTop: "1px solid #E9E9E9",
+      borderTop: '1px solid #E9E9E9',
       background: theme.palette.common.white,
-      borderRadius: "0px 0px 12px 12px",
+      borderRadius: '0px 0px 12px 12px',
       paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
+      paddingBottom: theme.spacing(1)
     },
     chatWidgetEmojiPickerContainer: {
-      position: "relative",
-      top: "-250px",
-      zIndex: 3,
+      position: 'relative',
+      top: '-250px',
+      zIndex: 3
     },
     chatWidgetTabs: {
-      minHeight: "0px",
+      minHeight: '0px'
     },
     chatWidgetTab: {
-      minWidth: "0px",
-      minHeight: "0px",
-      padding: "0px",
-      marginLeft: "10px",
-      marginRight: "10px",
-      fontSize: "0.6rem",
-      textTransform: "none",
+      minWidth: '0px',
+      minHeight: '0px',
+      padding: '0px',
+      marginLeft: '10px',
+      marginRight: '10px',
+      fontSize: '0.6rem',
+      textTransform: 'none'
     },
     chatWidgetInputRow: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
       background: theme.palette.common.white,
-      width: "100%",
-      height: "60px",
+      width: '100%',
+      height: '60px'
     },
     chatWidgetHCPToggle: {
-      height: "20px",
+      height: '20px'
     },
     chatWidgetInput: {
-      width: "90%",
-      maxWidth: "90%",
+      width: '90%',
+      maxWidth: '90%'
     },
     icon: {
-      margin: theme.spacing(1),
-    },
-  };
-}, { name: "ylp-chat-widget" });
+      margin: theme.spacing(1)
+    }
+  }
+}, { name: 'ylp-chat-widget' })
 
 export interface Message {
-  text: string,
+  text: string
   isMine: boolean
 }
 
 export interface ChatWidgetProps {
-  patient: Patient;
-  userId: string;
-  userRole: string;
+  patient: Patient
+  userId: string
+  userRole: string
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { patient, userId, userRole } = props;
-  const classes = chatWidgetStyles();
-  const authHook = useAuth();
-  const teamHook = useTeam();
-  const [showPicker, setShowPicker] = useState(false);
-  const [privateMessage, setPrivateMessage] = useState(false);
-  const [inputText, setInputText] = useState("");
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  const [nbUnread, setNbUnread] = useState(0);
-  const [inputTab, setInputTab] = useState(0);
-  const content = useRef<HTMLDivElement>(null);
-  const inputRow = useRef<HTMLDivElement>(null);
-  const team = teamHook.getPatientRemoteMonitoringTeam(patient);
+  const { t } = useTranslation('yourloops')
+  const { patient, userId, userRole } = props
+  const classes = chatWidgetStyles()
+  const authHook = useAuth()
+  const teamHook = useTeam()
+  const [showPicker, setShowPicker] = useState(false)
+  const [privateMessage, setPrivateMessage] = useState(false)
+  const [inputText, setInputText] = useState('')
+  const [messages, setMessages] = useState<IMessage[]>([])
+  const [nbUnread, setNbUnread] = useState(0)
+  const [inputTab, setInputTab] = useState(0)
+  const content = useRef<HTMLDivElement>(null)
+  const inputRow = useRef<HTMLDivElement>(null)
+  const team = teamHook.getPatientRemoteMonitoringTeam(patient)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
-    setInputTab(newValue);
-  };
+    setInputTab(newValue)
+  }
 
   useEffect(() => {
-    content.current?.scroll({ left: 0, top: content.current?.scrollHeight });
-  }, [messages]);
+    content.current?.scroll({ left: 0, top: content.current?.scrollHeight })
+  }, [messages])
 
   useEffect(() => {
     async function fetchMessages() {
-      const messages = await ChatApi.getChatMessages(team.teamId, patient.userid);
+      const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
       if (patient.metadata.unreadMessagesSent > 0) {
-        teamHook.markPatientMessagesAsRead(patient);
+        teamHook.markPatientMessagesAsRead(patient)
       }
-      setMessages(messages);
-      setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length);
+      setMessages(messages)
+      setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length)
     }
 
-    fetchMessages();
-  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook]);
+    fetchMessages()
+  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook])
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
-    setShowPicker(false);
-    setInputText(inputText + emojiObject.emoji);
-  };
+    setShowPicker(false)
+    setInputText(inputText + emojiObject.emoji)
+  }
 
   const resetInputSize = () => {
     if (!content.current || !inputRow.current) {
-      throw new Error("Cannot find elements for resize");
+      throw new Error('Cannot find elements for resize')
     }
-    content.current.style.height = "290px";
-    inputRow.current.style.height = "60px";
-  };
+    content.current.style.height = '290px'
+    inputRow.current.style.height = '60px'
+  }
 
   const sendMessage = async () => {
-    await ChatApi.sendChatMessage(team.teamId, patient.userid, inputText, privateMessage);
-    const messages = await ChatApi.getChatMessages(team.teamId, patient.userid);
-    setMessages(messages);
-    setInputText("");
-    resetInputSize();
-  };
+    await ChatApi.sendChatMessage(team.teamId, patient.userid, inputText, privateMessage)
+    const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
+    setMessages(messages)
+    setInputText('')
+    resetInputSize()
+  }
 
   const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputText(event.target.value);
+    setInputText(event.target.value)
     if (!content.current || !inputRow.current) {
-      throw new Error("Cannot find elements for resize");
+      throw new Error('Cannot find elements for resize')
     }
-    //values for scrollHeight are 24 one line, 44 2 lines and 64 3 lines
-    //we display the scrollbar only when 3 lines are present
+    // values for scrollHeight are 24 one line, 44 2 lines and 64 3 lines
+    // we display the scrollbar only when 3 lines are present
     if (event.target.scrollHeight > 44) {
-      content.current.style.height = "250px";
-      inputRow.current.style.height = "100px";
+      content.current.style.height = '250px'
+      inputRow.current.style.height = '100px'
     } else if (event.target.scrollHeight > 24) {
-      content.current.style.height = "270px";
-      inputRow.current.style.height = "80px";
+      content.current.style.height = '270px'
+      inputRow.current.style.height = '80px'
     } else {
-      resetInputSize();
+      resetInputSize()
     }
-  };
+  }
 
   return (
     <Card className={classes.chatWidget} id="chat-widget">
@@ -211,7 +211,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
         id="chat-widget-header"
         avatar={<EmailOutlinedIcon />}
         className={classes.chatWidgetHeader}
-        title={`${t("chat-messages-header")} ${nbUnread > 0 ? `(+${nbUnread})` : ""}`}
+        title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       />
       <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
         {messages.map(
@@ -227,7 +227,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       </div>
       {showPicker &&
         <div id="chat-widget-emoji-picker" className={classes.chatWidgetEmojiPickerContainer}>
-          <Picker pickerStyle={{ width: "100%" }} onEmojiClick={onEmojiClick} />
+          <Picker pickerStyle={{ width: '100%' }} onEmojiClick={onEmojiClick} />
         </div>
       }
       <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
@@ -236,9 +236,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
                 onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label={t("chat-footer-reply")}
+                <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')}
                   onClick={() => setPrivateMessage(false)} />
-                <Tab className={classes.chatWidgetTab} label={t("chat-footer-private")}
+                <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')}
                   onClick={() => setPrivateMessage(true)} />
               </Tabs>
             </div>
@@ -251,7 +251,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           <TextField
             className={classes.chatWidgetInput}
             id="standard-multiline-flexible"
-            placeholder={t("chat-footer-start-writing")}
+            placeholder={t('chat-footer-start-writing')}
             multiline
             maxRows={3}
             value={inputText}
@@ -267,7 +267,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       </div>
     </Card>
   )
-  ;
 }
 
-export default ChatWidget;
+export default ChatWidget

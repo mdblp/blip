@@ -25,131 +25,131 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { INotification, NotificationType } from "./models";
-import bows from "bows";
-import HttpService, { ErrorMessageStatus } from "../../services/http";
-import { INotificationAPI } from "../../models/notification";
-import { notificationConversion } from "./utils";
+import { INotification, NotificationType } from './models'
+import bows from 'bows'
+import HttpService, { ErrorMessageStatus } from '../../services/http'
+import { INotificationAPI } from '../../models/notification'
+import { notificationConversion } from './utils'
 
-const log = bows("Notification API");
+const log = bows('Notification API')
 
 export default class NotificationApi {
   static async acceptInvitation(userId: string, notification: INotification): Promise<void> {
-    let url: string;
+    let url: string
     switch (notification.type) {
-    case NotificationType.directInvitation:
-      url = `/confirm/accept/invite/${userId}/${notification.creatorId}`;
-      break;
-    case NotificationType.careTeamProInvitation:
-    case NotificationType.careTeamPatientInvitation:
-      url = "/confirm/accept/team/invite";
-      break;
-    case NotificationType.careTeamMonitoringInvitation:
-      url = `/confirm/accept/team/monitoring/${notification.target?.id}/${userId}`;
-      break;
-    default:
-      log.info("Unknown notification", notification);
-      throw Error(`Unknown notification ${notification.type}`);
+      case NotificationType.directInvitation:
+        url = `/confirm/accept/invite/${userId}/${notification.creatorId}`
+        break
+      case NotificationType.careTeamProInvitation:
+      case NotificationType.careTeamPatientInvitation:
+        url = '/confirm/accept/team/invite'
+        break
+      case NotificationType.careTeamMonitoringInvitation:
+        url = `/confirm/accept/team/monitoring/${notification.target?.id}/${userId}`
+        break
+      default:
+        log.info('Unknown notification', notification)
+        throw Error(`Unknown notification ${notification.type}`)
     }
-    return NotificationApi.updateInvitation(url, notification.id);
+    return await NotificationApi.updateInvitation(url, notification.id)
   }
 
   static async cancelInvitation(notification: INotification): Promise<void> {
     const payload: Partial<INotificationAPI> = {
-      key: notification.id,
-    };
+      key: notification.id
+    }
     switch (notification.type) {
-    case NotificationType.careTeamProInvitation:
-    case NotificationType.careTeamPatientInvitation:
-      if (!notification.target) {
-        throw Error("Missing or invalid team ID in notification");
-      }
-      payload.target = notification.target;
-      break;
-    case NotificationType.directInvitation:
-      payload.email = notification.email;
-      break;
-    default:
-      throw new Error("Invalid notification type");
+      case NotificationType.careTeamProInvitation:
+      case NotificationType.careTeamPatientInvitation:
+        if (!notification.target) {
+          throw Error('Missing or invalid team ID in notification')
+        }
+        payload.target = notification.target
+        break
+      case NotificationType.directInvitation:
+        payload.email = notification.email
+        break
+      default:
+        throw new Error('Invalid notification type')
     }
 
     await HttpService.post<string, Partial<INotificationAPI>>({
-      url: "/confirm/cancel/invite",
-      payload,
-    });
+      url: '/confirm/cancel/invite',
+      payload
+    })
   }
 
   static async declineInvitation(userId: string, notification: INotification): Promise<void> {
-    let url: string;
+    let url: string
     switch (notification.type) {
-    case NotificationType.directInvitation:
-      url = `/confirm/dismiss/invite/${userId}/${notification.creatorId}`;
-      break;
-    case NotificationType.careTeamProInvitation:
-    case NotificationType.careTeamPatientInvitation: {
-      if (!notification.target) {
-        throw Error("Invalid target team id");
+      case NotificationType.directInvitation:
+        url = `/confirm/dismiss/invite/${userId}/${notification.creatorId}`
+        break
+      case NotificationType.careTeamProInvitation:
+      case NotificationType.careTeamPatientInvitation: {
+        if (!notification.target) {
+          throw Error('Invalid target team id')
+        }
+        url = `/confirm/dismiss/team/invite/${notification.target?.id}`
+        break
       }
-      url = `/confirm/dismiss/team/invite/${notification.target?.id}`;
-      break;
+      case NotificationType.careTeamMonitoringInvitation:
+        if (!notification.target) {
+          throw Error('Cannot decline notification as team id is not specified')
+        }
+        return await NotificationApi.cancelRemoteMonitoringInvite(userId, notification.target?.id)
+      default:
+        log.info('Unknown notification', notification)
+        throw Error(`Unknown notification ${notification.type}`)
     }
-    case NotificationType.careTeamMonitoringInvitation:
-      if (!notification.target) {
-        throw Error("Cannot decline notification as team id is not specified");
-      }
-      return NotificationApi.cancelRemoteMonitoringInvite(userId, notification.target?.id);
-    default:
-      log.info("Unknown notification", notification);
-      throw Error(`Unknown notification ${notification.type}`);
-    }
-    return NotificationApi.updateInvitation(url, notification.id);
+    return await NotificationApi.updateInvitation(url, notification.id)
   }
 
   static async cancelRemoteMonitoringInvite(teamId: string, userId: string): Promise<void> {
-    await HttpService.put({ url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}` });
+    await HttpService.put({ url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}` })
   }
 
   static async getReceivedInvitations(userId: string): Promise<INotification[]> {
-    return NotificationApi.getInvitations(`/confirm/invitations/${userId}`);
+    return await NotificationApi.getInvitations(`/confirm/invitations/${userId}`)
   }
 
   static async getSentInvitations(userId: string): Promise<INotification[]> {
-    return NotificationApi.getInvitations(`/confirm/invite/${userId}`);
+    return await NotificationApi.getInvitations(`/confirm/invite/${userId}`)
   }
 
   static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> {
-    await HttpService.post<void, { monitoringEnd: string, referringDoctor? : string }>({
+    await HttpService.post<void, { monitoringEnd: string, referringDoctor?: string }>({
       url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-      payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor },
-    });
+      payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor }
+    })
   }
 
   private static async updateInvitation(url: string, key: string): Promise<void> {
-    await HttpService.put<string, { key: string }>({ url, payload: { key } });
+    await HttpService.put<string, { key: string }>({ url, payload: { key } })
   }
 
   private static async getInvitations(url: string): Promise<INotification[]> {
     try {
-      const { data } = await HttpService.get<INotificationAPI[]>({ url });
-      return NotificationApi.convertNotifications(data);
+      const { data } = await HttpService.get<INotificationAPI[]>({ url })
+      return NotificationApi.convertNotifications(data)
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info("No new notification for the current user");
-        return [];
+        log.info('No new notification for the current user')
+        return []
       }
-      throw err;
+      throw err
     }
   }
 
   private static convertNotifications(notificationsFromApi: INotificationAPI[]): INotification[] {
-    const convertedNotifications: INotification[] = [];
+    const convertedNotifications: INotification[] = []
     notificationsFromApi.forEach((notificationFromApi) => {
-      const notification = notificationConversion(notificationFromApi);
+      const notification = notificationConversion(notificationFromApi)
       if (notification) {
-        convertedNotifications.push(notification);
+        convertedNotifications.push(notification)
       }
-    });
-    return convertedNotifications;
+    })
+    return convertedNotifications
   }
 }

@@ -25,91 +25,91 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import React from 'react'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme, ThemeProvider, useTheme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles, Theme, ThemeProvider, useTheme } from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
-import { useAuth } from "../lib/auth";
-import { getTheme } from "../components/theme";
-import { DefaultSnackbarContext, SnackbarContextProvider } from "../components/utils/snackbar";
-import Footer from "../components/footer/footer";
-import PatientConsentPage from "../pages/patient/patient-consent";
-import CompleteSignUpPage from "../pages/signup/complete-signup-page";
-import { ConsentPage, LoginPage } from "../pages/login";
-import { MainLayout } from "../pages/main-layout";
-import InvalidRoute from "../components/invalid-route";
+import { useAuth } from '../lib/auth'
+import { getTheme } from '../components/theme'
+import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
+import Footer from '../components/footer/footer'
+import PatientConsentPage from '../pages/patient/patient-consent'
+import CompleteSignUpPage from '../pages/signup/complete-signup-page'
+import { ConsentPage, LoginPage } from '../pages/login'
+import { MainLayout } from '../pages/main-layout'
+import InvalidRoute from '../components/invalid-route'
 
-const RENEW_CONSENT_PATH = "/renew-consent";
-const NEW_CONSENT_PATH = "/new-consent";
-const COMPLETE_SIGNUP_PATH = "/complete-signup";
-const PUBLIC_ROUTES = ["/login"];
-const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, ...PUBLIC_ROUTES];
+const RENEW_CONSENT_PATH = '/renew-consent'
+const NEW_CONSENT_PATH = '/new-consent'
+const COMPLETE_SIGNUP_PATH = '/complete-signup'
+const PUBLIC_ROUTES = ['/login']
+const EXTERNAL_THEME_ROUTES = [NEW_CONSENT_PATH, RENEW_CONSENT_PATH, COMPLETE_SIGNUP_PATH, ...PUBLIC_ROUTES]
 
 interface StyleProps {
-  color: string;
+  color: string
 }
 
 const routeStyle = makeStyles<Theme, StyleProps>(() => {
   return {
-    "@global": {
+    '@global': {
       body: {
-        backgroundColor: ({ color }) => color,
-      },
+        backgroundColor: ({ color }) => color
+      }
     },
-    "public": {
-      flex: "1 0 auto",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+    public: {
+      flex: '1 0 auto',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
-    "private": {
-      flex: "1 0 auto",
-    },
-  };
-});
+    private: {
+      flex: '1 0 auto'
+    }
+  }
+})
 
 export function MainLobby(): JSX.Element {
-  const { isLoading, isAuthenticated } = useAuth0();
-  const { user, fetchingUser } = useAuth();
-  const location = useLocation();
-  const currentRoute = location.pathname;
-  const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute);
-  const theme = getTheme();
-  const { palette } = useTheme();
+  const { isLoading, isAuthenticated } = useAuth0()
+  const { user, fetchingUser } = useAuth()
+  const location = useLocation()
+  const currentRoute = location.pathname
+  const isCurrentRoutePublic = PUBLIC_ROUTES.includes(currentRoute)
+  const theme = getTheme()
+  const { palette } = useTheme()
   const classes = routeStyle({
-    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper,
-  });
-  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private;
-  const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH;
-  let redirectTo = null;
+    color: EXTERNAL_THEME_ROUTES.includes(currentRoute) ? palette.background.default : palette.background.paper
+  })
+  const style = isCurrentRoutePublic || currentRoute === COMPLETE_SIGNUP_PATH ? classes.public : classes.private
+  const renewConsentPath = currentRoute === RENEW_CONSENT_PATH || currentRoute === NEW_CONSENT_PATH
+  let redirectTo = null
 
   if (!isCurrentRoutePublic && isLoading) {
-    return <React.Fragment />;
+    return <React.Fragment />
   }
 
   const checkRedirect = () => {
     if (isCurrentRoutePublic && isAuthenticated) {
-      redirectTo = "/";
+      redirectTo = '/'
     } else if (!isAuthenticated && !isCurrentRoutePublic) {
-      redirectTo = "/login";
+      redirectTo = '/login'
     } else if (currentRoute !== COMPLETE_SIGNUP_PATH && isAuthenticated && user && user.isFirstLogin()) {
-      redirectTo = "/complete-signup";
+      redirectTo = '/complete-signup'
     } else if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-      redirectTo = "/new-consent";
+      redirectTo = '/new-consent'
     } else if (!renewConsentPath && user && user.hasToRenewConsent()) {
-      redirectTo = "/renew-consent";
+      redirectTo = '/renew-consent'
     }
-  };
+  }
 
-  checkRedirect();
+  checkRedirect()
 
   return (
     <React.Fragment>
-      {redirectTo ? <Redirect to={redirectTo} /> :
-        (!isLoading && !fetchingUser &&
+      {redirectTo ? <Redirect to={redirectTo} />
+        : (!isLoading && !fetchingUser &&
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <SnackbarContextProvider context={DefaultSnackbarContext}>
@@ -126,8 +126,7 @@ export function MainLobby(): JSX.Element {
             </SnackbarContextProvider>
             <Footer />
           </ThemeProvider>
-        )}
+          )}
     </React.Fragment>
-  );
+  )
 }
-
