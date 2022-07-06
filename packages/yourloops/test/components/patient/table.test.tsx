@@ -34,8 +34,6 @@ import { PatientTableSortFields, SortDirection, UserInvitationStatus } from "../
 import * as authHookMock from "../../../lib/auth";
 import * as teamHookMock from "../../../lib/team";
 
-import "../../intersectionObserverMock";
-
 import PatientTable from "../../../components/patient/table";
 import { ThemeProvider } from "@material-ui/core";
 import { getTheme } from "../../../components/theme";

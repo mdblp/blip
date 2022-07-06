@@ -86,6 +86,7 @@ export default function WeeklyReportList({ teamId, patientId }: CategoryProps): 
             dense
             divider
             key={index}
+            aria-label={`weekly-report-${weeklyReport.id}`}
             className={`${classes.hoveredItem} ${weeklyReport.id === hoveredItem ? "selected" : ""}`}
             onMouseOver={() => setHoveredItem(weeklyReport.id)}
             onMouseOut={() => setHoveredItem(undefined)}
