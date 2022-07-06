@@ -64,7 +64,6 @@ function Login(): JSX.Element {
   const onClickLogout = async () => {
     await logout({ returnTo: window.location.origin });
   };
-
   return (
     <Container maxWidth="sm">
       <Card className={card} elevation={4}>
@@ -81,7 +80,7 @@ function Login(): JSX.Element {
               {t("valid-email-alert")}
             </Typography>
             :
-            <Typography variant="h6">
+            <Typography variant="h6" id="welcome-message">
               {t("welcome-message")}
             </Typography>
           }
