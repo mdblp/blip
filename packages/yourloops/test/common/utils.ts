@@ -67,9 +67,9 @@ export const createPatient = (
     monitoring,
     profile: {
       birthdate: new Date(),
-      firstName: undefined,
+      firstName: 'fakeFirstname',
       fullName,
-      lastName: undefined,
+      lastName: 'fakeLastname',
       email: 'fakeUsername',
       sex: 'M'
     },

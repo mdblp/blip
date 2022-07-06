@@ -25,134 +25,135 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import moment from 'moment-timezone'
+import React from "react";
+import { useTranslation } from "react-i18next";
 
-import { makeStyles, Theme } from '@material-ui/core/styles'
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
-import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Typography from '@material-ui/core/Typography'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import Divider from '@material-ui/core/Divider'
+import { makeStyles, Theme } from "@material-ui/core/styles";
+import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Typography from "@material-ui/core/Typography";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import Divider from "@material-ui/core/Divider";
 
-import { WeeklyReport } from '../../lib/medical-files/model'
-import { useTeam } from '../../lib/team'
+import { WeeklyReport } from "../../lib/medical-files/model";
+import { useTeam } from "../../lib/team";
+import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from "../../lib/utils";
 
-interface Props {
-  onClose: () => void
-  weeklyReport: WeeklyReport
+export interface WeeklyReportDialogProps {
+  onClose: () => void;
+  weeklyReport: WeeklyReport;
 }
 
 const classes = makeStyles((theme: Theme) => ({
   divider: {
-    margin: '30px 0 10px 16px'
+    margin: "30px 0 10px 16px",
   },
   title: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '& > svg': {
-      marginRight: theme.spacing(1)
-    }
+    "display": "flex",
+    "alignItems": "center",
+    "justifyContent": "center",
+    "& > svg": {
+      marginRight: theme.spacing(1),
+    },
   },
   explanatoryText: {
     marginTop: theme.spacing(3),
-    fontStyle: 'italic'
-  }
-}))
+    fontStyle: "italic",
+  },
+}));
 
-export default function WeeklyReportDialog(props: Props): JSX.Element {
-  const { title, divider, explanatoryText } = classes()
-  const { t } = useTranslation('yourloops')
-  const { onClose, weeklyReport } = props
-  const teamHook = useTeam()
-  const patient = teamHook.getPatient(weeklyReport.patientId)
-  const endDatePeriod = new Date(weeklyReport.creationDate)
-  const startDatePeriod = new Date(weeklyReport.creationDate)
-  startDatePeriod.setDate(startDatePeriod.getDate() - 7)
+export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.Element {
+  const { title, divider, explanatoryText } = classes();
+  const { t } = useTranslation("yourloops");
+  const { onClose, weeklyReport } = props;
+  const teamHook = useTeam();
+  const patient = teamHook.getPatient(weeklyReport.patientId);
+  const endDatePeriod = new Date(weeklyReport.creationDate);
+  const startDatePeriod = new Date(weeklyReport.creationDate);
+  startDatePeriod.setDate(startDatePeriod.getDate() - 7);
 
   return (
     <Dialog
       open
       fullWidth
       maxWidth="md"
+      aria-label="weekly-report-dialog"
       onClose={onClose}
     >
       <DialogTitle>
         <Box className={title}>
           <DescriptionOutlinedIcon />
           <Typography variant="h5">
-            {t('weekly-report-pdf', { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
+            {t("weekly-report-pdf", { pdfName: new Date(weeklyReport.creationDate).toLocaleDateString() })}
           </Typography>
         </Box>
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText color="textPrimary">
-          {t('firstname')} : {patient?.profile.firstName}
+        <DialogContentText color="textPrimary" aria-label="firstname">
+          {t("firstname")} : {patient?.profile.firstName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('lastname')} : {patient?.profile.lastName}
+        <DialogContentText color="textPrimary" aria-label="lastname">
+          {t("lastname")} : {patient?.profile.lastName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('birthdate')} : {moment.utc(patient?.profile.birthdate).format(moment.localeData().longDateFormat('ll')).toString()}
+        <DialogContentText color="textPrimary" aria-label="birthdate">
+          {t("birthdate")} : {formatDateWithMomentLongFormat(patient?.profile.birthdate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('gender')} : {patient?.profile.sex}
+        <DialogContentText color="textPrimary" aria-label="gender">
+          {t("gender")} : {patient?.profile.sex}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('email')} : {patient?.profile.email}
+        <DialogContentText color="textPrimary" aria-label="email">
+          {t("email")} : {patient?.profile.email}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('monitoring-team')} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
+        <DialogContentText color="textPrimary" aria-label="monitoring-team">
+          {t("monitoring-team")} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('created-at')} : {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat('ll')).toString()}
+        <DialogContentText color="textPrimary" aria-label="created-at">
+          {t("created-at")} : {formatDateWithMomentLongFormat(endDatePeriod)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('monitoring-period')}: {moment.utc(startDatePeriod).format(moment.localeData().longDateFormat('ll')).toString()} - {moment.utc(endDatePeriod).format(moment.localeData().longDateFormat('ll')).toString()}
+        <DialogContentText color="textPrimary" aria-label="monitoring-period">
+          {t("monitoring-period")}: {formatDateWithMomentLongFormat(startDatePeriod)} - {formatDateWithMomentLongFormat(endDatePeriod)}
         </DialogContentText>
         <Divider className={divider} />
         <Typography variant="h4" align="center">
-          {t('events-list')}
+          {t("events-list")}
         </Typography>
-        <DialogContentText color="textPrimary" variant="h6">
-          {t('time-out-of-range-target')} : {`${Math.round(weeklyReport.alarms.timeSpentAwayFromTargetRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="time-out-of-range-target">
+          {t("time-out-of-range-target")} : {formatAlarmSettingThreshold(weeklyReport.alarms.timeSpentAwayFromTargetRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('glycemic-target')} : {`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`}
+        <DialogContentText color="textPrimary" aria-label="glycemic-target">
+          {t("glycemic-target")} : {`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('event-trigger-threshold')} : {`${weeklyReport.parameters.outOfRangeThreshold}%`}
+        <DialogContentText color="textPrimary" aria-label="glycemic-target-event-trigger-threshold">
+          {t("event-trigger-threshold")} : {`${weeklyReport.parameters.outOfRangeThreshold}%`}
         </DialogContentText>
-        <DialogContentText color="textPrimary" variant="h6">
-          {t('severe-hypoglycemia')} : {`${Math.round(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="severe-hypoglycemia">
+          {t("severe-hypoglycemia")} : {formatAlarmSettingThreshold(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('severe-hypoglycemia-below')} : {`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`}
+        <DialogContentText color="textPrimary" aria-label="severe-hypoglycemia-below">
+          {t("severe-hypoglycemia-below")} : {`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('event-trigger-threshold')} : {`${weeklyReport.parameters.hypoThreshold}%`}
+        <DialogContentText color="textPrimary" aria-label="severe-hypoglycemia-event-trigger-threshold">
+          {t("event-trigger-threshold")} : {`${weeklyReport.parameters.hypoThreshold}%`}
         </DialogContentText>
 
-        <DialogContentText color="textPrimary" variant="h6">
-          {t('data-not-transmitted')} : {`${Math.round(weeklyReport.alarms.nonDataTransmissionRate * 10) / 10}%`}
+        <DialogContentText color="textPrimary" variant="h6" aria-label="data-not-transmitted">
+          {t("data-not-transmitted")} : {formatAlarmSettingThreshold(weeklyReport.alarms.nonDataTransmissionRate)}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('current-trigger-setting-data', { nonDataThreshold: weeklyReport.parameters.nonDataTxThreshold })}
+        <DialogContentText color="textPrimary" aria-label="current-trigger-setting-data">
+          {t("current-trigger-setting-data", { nonDataThreshold: weeklyReport.parameters.nonDataTxThreshold })}
         </DialogContentText>
-        <DialogContentText color="textPrimary">
-          {t('event-trigger-threshold')} : {`${weeklyReport.parameters.nonDataTxThreshold}%`}
+        <DialogContentText color="textPrimary" aria-label="data-not-transmitted-event-trigger-threshold">
+          {t("event-trigger-threshold")} : {`${weeklyReport.parameters.nonDataTxThreshold}%`}
         </DialogContentText>
 
         <DialogContentText color="textPrimary" className={explanatoryText}>
-          {t('yourloops-explanatory-text')}
+          {t("yourloops-explanatory-text")}
         </DialogContentText>
       </DialogContent>
 
@@ -161,9 +162,9 @@ export default function WeeklyReportDialog(props: Props): JSX.Element {
           disableElevation
           onClick={onClose}
         >
-          {t('button-close')}
+          {t("button-close")}
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }

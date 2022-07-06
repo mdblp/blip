@@ -34,7 +34,7 @@ export interface Prescription {
   teamId: string
   prescriptorId: string
   link: string
-  uploadedAt: Date
+  uploadedAt: string
 }
 
 export interface NewMedicalRecord {

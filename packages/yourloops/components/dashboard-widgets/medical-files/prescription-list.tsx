@@ -100,6 +100,7 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
             dense
             divider
             key={index}
+            aria-label={`prescription-${prescription.id}`}
             className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? 'selected' : ''}`}
             onMouseOver={() => setHoveredItem(prescription.id)}
             onMouseOut={() => setHoveredItem(undefined)}

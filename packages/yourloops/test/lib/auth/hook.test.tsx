@@ -217,8 +217,8 @@ describe('Auth hook', () => {
       expect(UserApi.updateProfile).toHaveBeenCalledTimes(1)
       expect(updatedUser.profile.termsOfUse.isAccepted).toBe(true)
       expect(updatedUser.profile.privacyPolicy.isAccepted).toBe(true)
-      expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThan(now)
-      expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThan(now)
+      expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
+      expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(updatedUser.role).toBe(UserRoles.hcp)
     })
 
