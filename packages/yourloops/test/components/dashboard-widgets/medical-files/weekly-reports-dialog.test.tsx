@@ -25,26 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
-import WeeklyReportDialog from "../../../../components/dialogs/weekly-report-dialog";
-import { WeeklyReport } from "../../../../lib/medical-files/model";
-import * as teamHookMock from "../../../../lib/team";
-import { createPatient, createPatientTeam } from "../../../common/utils";
-import { UserInvitationStatus } from "../../../../models/generic";
-import { UNITS_TYPE } from "../../../../lib/units/utils";
-import { Alarm } from "../../../../models/alarm";
-import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from "../../../../lib/utils";
+import React from 'react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import WeeklyReportDialog from '../../../../components/dialogs/weekly-report-dialog'
+import { WeeklyReport } from '../../../../lib/medical-files/model'
+import * as teamHookMock from '../../../../lib/team'
+import { createPatient, createPatientTeam } from '../../../common/utils'
+import { UserInvitationStatus } from '../../../../models/generic'
+import { UNITS_TYPE } from '../../../../lib/units/utils'
+import { Alarm } from '../../../../models/alarm'
+import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../../../lib/utils'
 
-
-jest.mock("../../../../lib/team");
-describe("Weekly report dialog", () => {
-  const teamId = "teamId";
-  const patientId = "patientId";
-  const patient = createPatient(patientId, [createPatientTeam(teamId, UserInvitationStatus.accepted)]);
-  const onClose = jest.fn();
+jest.mock('../../../../lib/team')
+describe('Weekly report dialog', () => {
+  const teamId = 'teamId'
+  const patientId = 'patientId'
+  const patient = createPatient(patientId, [createPatientTeam(teamId, UserInvitationStatus.accepted)])
+  const onClose = jest.fn()
   const weeklyReport: WeeklyReport = {
-    id: "fakeId",
+    id: 'fakeId',
     patientId,
     teamId,
     parameters: {
@@ -55,50 +54,49 @@ describe("Weekly report dialog", () => {
       veryLowBg: 4,
       hypoThreshold: 5,
       nonDataTxThreshold: 6,
-      reportingPeriod: 7,
+      reportingPeriod: 7
     },
     alarms: {} as Alarm,
-    creationDate: "2022-02-02",
-  };
+    creationDate: '2022-02-02'
+  }
 
-  const endDatePeriod = new Date(weeklyReport.creationDate);
-  const startDatePeriod = new Date(weeklyReport.creationDate);
-  startDatePeriod.setDate(startDatePeriod.getDate() - 7);
+  const endDatePeriod = new Date(weeklyReport.creationDate)
+  const startDatePeriod = new Date(weeklyReport.creationDate)
+  startDatePeriod.setDate(startDatePeriod.getDate() - 7)
 
   function renderComponent() {
-    return render(<WeeklyReportDialog onClose={onClose} weeklyReport={weeklyReport} />);
+    return render(<WeeklyReportDialog onClose={onClose} weeklyReport={weeklyReport} />)
   }
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { getPatient: () => patient };
-    });
-  });
+      return { getPatient: () => patient }
+    })
+  })
 
-  it("should call onClose method when clicking on close button", () => {
-    renderComponent();
-    fireEvent.click(screen.getByRole("button", { name: "button-close" }));
-    expect(onClose).toHaveBeenCalled();
-  });
+  it('should call onClose method when clicking on close button', () => {
+    renderComponent()
+    fireEvent.click(screen.getByRole('button', { name: 'button-close' }))
+    expect(onClose).toHaveBeenCalled()
+  })
 
-  it("should display right information", () => {
-    renderComponent();
-    expect(screen.getByLabelText("firstname")).toHaveTextContent(patient.profile.firstName);
-    expect(screen.getByLabelText("lastname")).toHaveTextContent(patient.profile.lastName);
-    expect(screen.getByLabelText("birthdate")).toHaveTextContent(formatDateWithMomentLongFormat(patient.profile.birthdate));
-    expect(screen.getByLabelText("gender")).toHaveTextContent(patient.profile.sex);
-    expect(screen.getByLabelText("email")).toHaveTextContent(patient.profile.email);
-    expect(screen.getByLabelText("monitoring-team")).toHaveTextContent("fakeTeamName");
-    expect(screen.getByLabelText("created-at")).toHaveTextContent(formatDateWithMomentLongFormat(endDatePeriod));
-    expect(screen.getByLabelText("monitoring-period")).toHaveTextContent(`${formatDateWithMomentLongFormat(startDatePeriod)} - ${formatDateWithMomentLongFormat(endDatePeriod)}`);
-    expect(screen.getByLabelText("time-out-of-range-target")).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.timeSpentAwayFromTargetRate));
-    expect(screen.getByLabelText("glycemic-target")).toHaveTextContent(`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`);
-    expect(screen.getByLabelText("glycemic-target-event-trigger-threshold")).toHaveTextContent(`${weeklyReport.parameters.outOfRangeThreshold}%`);
-    expect(screen.getByLabelText("severe-hypoglycemia")).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate));
-    expect(screen.getByLabelText("severe-hypoglycemia-below")).toHaveTextContent(`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`);
-    expect(screen.getByLabelText("severe-hypoglycemia-event-trigger-threshold")).toHaveTextContent(`${weeklyReport.parameters.hypoThreshold}%`);
-    expect(screen.getByLabelText("data-not-transmitted")).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.nonDataTransmissionRate));
-    expect(screen.getByLabelText("data-not-transmitted-event-trigger-threshold")).toHaveTextContent(`${weeklyReport.parameters.nonDataTxThreshold}%`);
-  });
-});
-
+  it('should display right information', () => {
+    renderComponent()
+    expect(screen.getByLabelText('firstname')).toHaveTextContent(patient.profile.firstName)
+    expect(screen.getByLabelText('lastname')).toHaveTextContent(patient.profile.lastName)
+    expect(screen.getByLabelText('birthdate')).toHaveTextContent(formatDateWithMomentLongFormat(patient.profile.birthdate))
+    expect(screen.getByLabelText('gender')).toHaveTextContent(patient.profile.sex)
+    expect(screen.getByLabelText('email')).toHaveTextContent(patient.profile.email)
+    expect(screen.getByLabelText('monitoring-team')).toHaveTextContent('fakeTeamName')
+    expect(screen.getByLabelText('created-at')).toHaveTextContent(formatDateWithMomentLongFormat(endDatePeriod))
+    expect(screen.getByLabelText('monitoring-period')).toHaveTextContent(`${formatDateWithMomentLongFormat(startDatePeriod)} - ${formatDateWithMomentLongFormat(endDatePeriod)}`)
+    expect(screen.getByLabelText('time-out-of-range-target')).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.timeSpentAwayFromTargetRate))
+    expect(screen.getByLabelText('glycemic-target')).toHaveTextContent(`${weeklyReport.parameters.lowBg} ${weeklyReport.parameters.bgUnit} - ${weeklyReport.parameters.highBg} ${weeklyReport.parameters.bgUnit}`)
+    expect(screen.getByLabelText('glycemic-target-event-trigger-threshold')).toHaveTextContent(`${weeklyReport.parameters.outOfRangeThreshold}%`)
+    expect(screen.getByLabelText('severe-hypoglycemia')).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.frequencyOfSevereHypoglycemiaRate))
+    expect(screen.getByLabelText('severe-hypoglycemia-below')).toHaveTextContent(`${weeklyReport.parameters.veryLowBg} ${weeklyReport.parameters.bgUnit}`)
+    expect(screen.getByLabelText('severe-hypoglycemia-event-trigger-threshold')).toHaveTextContent(`${weeklyReport.parameters.hypoThreshold}%`)
+    expect(screen.getByLabelText('data-not-transmitted')).toHaveTextContent(formatAlarmSettingThreshold(weeklyReport.alarms.nonDataTransmissionRate))
+    expect(screen.getByLabelText('data-not-transmitted-event-trigger-threshold')).toHaveTextContent(`${weeklyReport.parameters.nonDataTxThreshold}%`)
+  })
+})

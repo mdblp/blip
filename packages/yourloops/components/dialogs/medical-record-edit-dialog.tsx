@@ -48,10 +48,10 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { useAlert } from '../utils/snackbar'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
-  onClose: () => void;
-  onSaved: (payload: MedicalRecord) => void;
-  readonly: boolean;
-  medicalRecord?: MedicalRecord;
+  onClose: () => void
+  onSaved: (payload: MedicalRecord) => void
+  readonly: boolean
+  medicalRecord?: MedicalRecord
 }
 
 const classes = makeStyles((theme: Theme) => ({
@@ -73,17 +73,17 @@ const classes = makeStyles((theme: Theme) => ({
 }))
 
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
-  const { title, textArea, divider } = classes();
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
-  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props;
+  const { title, textArea, divider } = classes()
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props
 
   const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
   const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
   const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
   const [inProgress, setInProgress] = useState<boolean>(false)
   const disabled = useMemo<boolean>(
-    () => readonly || inProgress || !diagnosis && !trainingSubject && !progressionProposal,
+    () => (readonly || inProgress || !diagnosis) && !trainingSubject && !progressionProposal,
     [diagnosis, inProgress, progressionProposal, readonly, trainingSubject])
 
   const saveMedicalRecord = async () => {
@@ -106,9 +106,9 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           trainingSubject
         })
       }
-      setInProgress(false);
-      alert.success(t("medical-record-save-success"));
-      onSaved(payload);
+      setInProgress(false)
+      alert.success(t('medical-record-save-success'))
+      onSaved(payload)
     } catch (err) {
       console.log(err)
       setInProgress(false)

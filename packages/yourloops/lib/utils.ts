@@ -32,7 +32,7 @@ import { Units } from '../models/generic'
 import { IUser, Settings } from '../models/user'
 import { t } from './language'
 import metrics from './metrics'
-import moment from 'moment-timezone';
+import moment from 'moment-timezone'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
@@ -139,11 +139,10 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
   }
 }
 
-
 export function formatDateWithMomentLongFormat(date?: Date): string {
-  return moment.utc(date).format(moment.localeData().longDateFormat("ll")).toString();
+  return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
 export function formatAlarmSettingThreshold(value: number): string {
-  return `${Math.round(value * 10) / 10}%`;
+  return `${Math.round(value * 10) / 10}%`
 }

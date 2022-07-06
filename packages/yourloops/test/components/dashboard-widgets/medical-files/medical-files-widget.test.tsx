@@ -25,45 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { buildTeam, buildTeamMember, createPatient } from "../../../common/utils";
-import MedicalFilesWidget from "../../../../components/dashboard-widgets/medical-files/medical-files-widget";
-import * as teamHookMock from "../../../../lib/team";
-import * as authHookMock from "../../../../lib/auth";
-import User from "../../../../lib/auth/user";
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import { buildTeam, buildTeamMember, createPatient } from '../../../common/utils'
+import MedicalFilesWidget from '../../../../components/dashboard-widgets/medical-files/medical-files-widget'
+import * as teamHookMock from '../../../../lib/team'
+import * as authHookMock from '../../../../lib/auth'
+import User from '../../../../lib/auth/user'
 
-jest.mock("../../../../lib/team");
-jest.mock("../../../../lib/auth");
-describe("Medical Files Widget", () => {
-  const patient = createPatient("fakePatientId", []);
-  const adminMember = buildTeamMember();
-  const patientMember = buildTeamMember("fakeTeamId", patient.userid);
-  const remoteMonitoringTeam = buildTeam("fakeTeamId", [adminMember, patientMember]);
-  const getRemoteMonitoringTeamsMock = jest.fn().mockReturnValue([]);
+jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/auth')
+describe('Medical Files Widget', () => {
+  const patient = createPatient('fakePatientId', [])
+  const adminMember = buildTeamMember()
+  const patientMember = buildTeamMember('fakeTeamId', patient.userid)
+  const remoteMonitoringTeam = buildTeam('fakeTeamId', [adminMember, patientMember])
+  const getRemoteMonitoringTeamsMock = jest.fn().mockReturnValue([])
 
   function getMedicalFilesWidgetJSX() {
-    return <MedicalFilesWidget patient={patient} />;
+    return <MedicalFilesWidget patient={patient} />
   }
 
   beforeAll(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User };
+      return { user: { isUserHcp: () => true } as User }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
-        getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock,
-      };
-    });
-  });
+        getRemoteMonitoringTeams: getRemoteMonitoringTeamsMock
+      }
+    })
+  })
 
-  it("should throw an error if no monitoring team is found", () => {
-    expect(() => render(getMedicalFilesWidgetJSX())).toThrow();
-  });
+  it('should throw an error if no monitoring team is found', () => {
+    expect(() => render(getMedicalFilesWidgetJSX())).toThrow()
+  })
 
-  it("should display widget for the selected monitored team", () => {
-    getRemoteMonitoringTeamsMock.mockReturnValueOnce([remoteMonitoringTeam]);
-    render(getMedicalFilesWidgetJSX());
-    expect(screen.getByText("medical-files")).not.toBeNull();
-  });
-});
+  it('should display widget for the selected monitored team', () => {
+    getRemoteMonitoringTeamsMock.mockReturnValueOnce([remoteMonitoringTeam])
+    render(getMedicalFilesWidgetJSX())
+    expect(screen.getByText('medical-files')).not.toBeNull()
+  })
+})

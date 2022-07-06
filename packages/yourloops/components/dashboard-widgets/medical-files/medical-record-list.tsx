@@ -25,120 +25,120 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
-import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
-import NoteAddIcon from "@material-ui/icons/NoteAdd";
+import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined'
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
+import NoteAddIcon from '@material-ui/icons/NoteAdd'
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Tooltip from '@material-ui/core/Tooltip'
+import Typography from '@material-ui/core/Typography'
 
-import { MedicalRecord } from "../../../lib/medical-files/model";
-import { useAuth, User } from "../../../lib/auth";
-import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
-import MedicalRecordEditDialog from "../../dialogs/medical-record-edit-dialog";
-import MedicalRecordDeleteDialog from "../../dialogs/medical-record-delete-dialog";
-import TrashCanOutlined from "../../icons/TrashCanOutlined";
-import { CategoryProps } from "./medical-files-widget";
+import { MedicalRecord } from '../../../lib/medical-files/model'
+import { useAuth, User } from '../../../lib/auth'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import MedicalRecordEditDialog from '../../dialogs/medical-record-edit-dialog'
+import MedicalRecordDeleteDialog from '../../dialogs/medical-record-delete-dialog'
+import TrashCanOutlined from '../../icons/TrashCanOutlined'
+import { CategoryProps } from './medical-files-widget'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
-    fontWeight: 600,
+    fontWeight: 600
   },
   list: {
     maxHeight: 160,
-    overflow: "auto",
+    overflow: 'auto'
   },
   hoveredItem: {
-    "&:hover": {
-      cursor: "pointer",
+    '&:hover': {
+      cursor: 'pointer'
     },
-    "&.selected": {
-      backgroundColor: theme.palette.grey[200],
-    },
-  },
-}));
+    '&.selected': {
+      backgroundColor: theme.palette.grey[200]
+    }
+  }
+}))
 
 export default function MedicalRecordList(props: CategoryProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyle();
-  const { teamId, patientId } = props;
-  const authHook = useAuth();
-  const user = authHook.user as User;
-  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([]);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
-  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined);
-  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined);
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
-  const [readonly, setReadonly] = useState<boolean>(false);
+  const { t } = useTranslation('yourloops')
+  const classes = useStyle()
+  const { teamId, patientId } = props
+  const authHook = useAuth()
+  const user = authHook.user as User
+  const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false)
+  const [medicalRecordToEdit, setMedicalRecordToEdit] = useState<MedicalRecord | undefined>(undefined)
+  const [medicalRecordToDelete, setMedicalRecordToDelete] = useState<MedicalRecord | undefined>(undefined)
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
+  const [readonly, setReadonly] = useState<boolean>(false)
 
   const closeMedicalRecordEditDialog = () => {
-    setHoveredItem(undefined);
-    setIsEditDialogOpen(false);
-    setMedicalRecordToEdit(undefined);
-    setReadonly(false);
-  };
+    setHoveredItem(undefined)
+    setIsEditDialogOpen(false)
+    setMedicalRecordToEdit(undefined)
+    setReadonly(false)
+  }
 
   const closeMedicalRecordDeleteDialog = () => {
-    setHoveredItem(undefined);
-    setIsDeleteDialogOpen(false);
-    setMedicalRecordToDelete(undefined);
-  };
+    setHoveredItem(undefined)
+    setIsDeleteDialogOpen(false)
+    setMedicalRecordToDelete(undefined)
+  }
 
   const onEditMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setMedicalRecordToEdit(medicalRecord);
-    setIsEditDialogOpen(true);
-  };
+    setMedicalRecordToEdit(medicalRecord)
+    setIsEditDialogOpen(true)
+  }
 
   const onDeleteMedicalRecord = (medicalRecord: MedicalRecord): void => {
-    setMedicalRecordToDelete(medicalRecord);
-    setIsDeleteDialogOpen(true);
-  };
+    setMedicalRecordToDelete(medicalRecord)
+    setIsDeleteDialogOpen(true)
+  }
 
   const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
-    setMedicalRecordToEdit(medicalRecord);
-    setReadonly(true);
-    setIsEditDialogOpen(true);
-  };
+    setMedicalRecordToEdit(medicalRecord)
+    setReadonly(true)
+    setIsEditDialogOpen(true)
+  }
 
   const updateMedicalRecordList = (payload: MedicalRecord) => {
-    const index = medicalRecords.findIndex((mr) => mr.id === payload.id);
+    const index = medicalRecords.findIndex((mr) => mr.id === payload.id)
     if (index > -1) {
-      medicalRecords.splice(index, 1, payload);
+      medicalRecords.splice(index, 1, payload)
     } else {
-      medicalRecords.push(payload);
+      medicalRecords.push(payload)
     }
-    closeMedicalRecordEditDialog();
-  };
+    closeMedicalRecordEditDialog()
+  }
 
   const removeMedicalRecordFromList = (medicalRecordId: string) => {
-    const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId);
-    medicalRecords.splice(index, 1);
-    closeMedicalRecordDeleteDialog();
-  };
+    const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId)
+    medicalRecords.splice(index, 1)
+    closeMedicalRecordDeleteDialog()
+  }
 
   useEffect(() => {
     (async () => {
-      setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId));
-    })();
-  }, [patientId, teamId]);
+      setMedicalRecords(await MedicalFilesApi.getMedicalRecords(patientId, teamId))
+    })()
+  }, [patientId, teamId])
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
-        {t("medical-records")}
+        {t('medical-records')}
       </Typography>
       <List className={classes.list}>
         {medicalRecords.map((medicalRecord, index) => (
@@ -147,7 +147,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
             divider
             key={index}
             aria-label={`record-${medicalRecord.id}`}
-            className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? "selected" : ""}`}
+            className={`${classes.hoveredItem} ${medicalRecord.id === hoveredItem ? 'selected' : ''}`}
             onClick={() => onClickMedicalRecord(medicalRecord)}
             onMouseOver={() => setHoveredItem(medicalRecord.id)}
             onMouseOut={() => setHoveredItem(undefined)}
@@ -156,11 +156,11 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
               <DescriptionOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("medical-record-pdf")}{new Date(medicalRecord.creationDate).toLocaleDateString()}
+              {t('medical-record-pdf')}{new Date(medicalRecord.creationDate).toLocaleDateString()}
             </ListItemText>
             {user.isUserHcp() && medicalRecord.id === hoveredItem &&
               <ListItemSecondaryAction>
-                <Tooltip title={t("edit") as string}>
+                <Tooltip title={t('edit') }>
                   <IconButton
                     edge="end"
                     size="small"
@@ -172,7 +172,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
                     <CreateOutlinedIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title={t("delete") as string}>
+                <Tooltip title={t('delete') }>
                   <IconButton
                     edge="end"
                     size="small"
@@ -199,7 +199,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
             startIcon={<NoteAddIcon />}
             onClick={() => setIsEditDialogOpen(true)}
           >
-            {t("new")}
+            {t('new')}
           </Button>
         </Box>
       }
@@ -222,5 +222,5 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
         />
       }
     </React.Fragment>
-  );
+  )
 }

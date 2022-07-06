@@ -29,12 +29,12 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { makeButtonsStyles } from '../theme'
 import { MedicalRecord } from '../../lib/medical-files/model'
@@ -59,11 +59,11 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
 
   const deleteMedicalRecord = async () => {
     try {
-      setInProgress(true);
-      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id);
-      setInProgress(false);
-      alert.success(t("medical-record-delete-success"));
-      onDelete(medicalRecord.id);
+      setInProgress(true)
+      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id)
+      setInProgress(false)
+      alert.success(t('medical-record-delete-success'))
+      onDelete(medicalRecord.id)
     } catch (err) {
       console.log(err)
       setInProgress(false)
@@ -79,7 +79,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        {t("delete-medical-report")}
+        {t('delete-medical-report')}
       </DialogTitle>
 
       <DialogContent>

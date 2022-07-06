@@ -25,74 +25,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import MedicalFilesApi from "../../../../lib/medical-files/medical-files-api";
-import { WeeklyReport } from "../../../../lib/medical-files/model";
-import * as authHookMock from "../../../../lib/auth";
-import User from "../../../../lib/auth/user";
-import { Alarm } from "../../../../models/alarm";
-import WeeklyReportList from "../../../../components/dashboard-widgets/medical-files/weekly-report-list";
-import { WeeklyReportDialogProps } from "../../../../components/dialogs/weekly-report-dialog";
+import React from 'react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
+import { WeeklyReport } from '../../../../lib/medical-files/model'
+import * as authHookMock from '../../../../lib/auth'
+import User from '../../../../lib/auth/user'
+import { Alarm } from '../../../../models/alarm'
+import WeeklyReportList from '../../../../components/dashboard-widgets/medical-files/weekly-report-list'
+import { WeeklyReportDialogProps } from '../../../../components/dialogs/weekly-report-dialog'
 
-jest.mock("../../../../lib/auth");
+jest.mock('../../../../lib/auth')
 // eslint-disable-next-line react/display-name
-jest.mock("../../../../components/dialogs/weekly-report-dialog", () => (props: WeeklyReportDialogProps) => {
+jest.mock('../../../../components/dialogs/weekly-report-dialog', () => (props: WeeklyReportDialogProps) => {
   return (
     <div aria-label="mock-dialog">
       <button onClick={() => props.onClose()}>mock-close-button</button>
     </div>
-  );
-});
-describe("Weekly report list", () => {
+  )
+})
+describe('Weekly report list', () => {
   const weeklyReport = {
-    id: "fakeId",
-    patientId: "patientId",
-    teamId: "teamId",
+    id: 'fakeId',
+    patientId: 'patientId',
+    teamId: 'teamId',
     parameters: {},
     alarms: {} as Alarm,
-    creationDate: "2022-02-02",
-  } as WeeklyReport;
+    creationDate: '2022-02-02'
+  } as WeeklyReport
 
   const getWeeklyReportsSpy = () => {
-    return jest.spyOn(MedicalFilesApi, "getWeeklyReports").mockResolvedValue([weeklyReport]);
-  };
+    return jest.spyOn(MedicalFilesApi, 'getWeeklyReports').mockResolvedValue([weeklyReport])
+  }
 
   async function renderComponent() {
-    render(<WeeklyReportList teamId="teamId" patientId="patientId" />);
-    await waitFor(() => expect(getWeeklyReportsSpy()).toHaveBeenCalled());
+    render(<WeeklyReportList teamId="teamId" patientId="patientId" />)
+    await waitFor(() => expect(getWeeklyReportsSpy()).toHaveBeenCalled())
   }
 
   beforeEach(() => {
     getWeeklyReportsSpy();
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User };
-    });
-  });
+      return { user: { isUserHcp: () => true } as User }
+    })
+  })
 
-  it("should render an empty list if no weekly report exist", async () => {
-    getWeeklyReportsSpy().mockResolvedValueOnce([]);
-    await renderComponent();
-    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
-  });
+  it('should render an empty list if no weekly report exist', async () => {
+    getWeeklyReportsSpy().mockResolvedValueOnce([])
+    await renderComponent()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+  })
 
-  it("should render a list if some weekly reports exists", async () => {
-    await renderComponent();
-    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
-  });
+  it('should render a list if some weekly reports exists', async () => {
+    await renderComponent()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(1)
+  })
 
-  it("should open modal when clicking on a list item", async () => {
-    await renderComponent();
-    const listItem = screen.getByRole("listitem", { name: "weekly-report-fakeId" });
-    fireEvent.click(listItem);
-    expect(screen.queryByLabelText("mock-dialog")).not.toBeNull();
-  });
+  it('should open modal when clicking on a list item', async () => {
+    await renderComponent()
+    const listItem = screen.getByRole('listitem', { name: 'weekly-report-fakeId' })
+    fireEvent.click(listItem)
+    expect(screen.queryByLabelText('mock-dialog')).not.toBeNull()
+  })
 
-  it("should close modal when clicking on close button", async () => {
-    await renderComponent();
-    const listItem = screen.getByRole("listitem", { name: "weekly-report-fakeId" });
-    fireEvent.click(listItem);
-    fireEvent.click(screen.getByRole("button", { name: "mock-close-button" }));
-    expect(screen.queryByLabelText("mock-dialog")).toBeNull();
-  });
-});
+  it('should close modal when clicking on close button', async () => {
+    await renderComponent()
+    const listItem = screen.getByRole('listitem', { name: 'weekly-report-fakeId' })
+    fireEvent.click(listItem)
+    fireEvent.click(screen.getByRole('button', { name: 'mock-close-button' }))
+    expect(screen.queryByLabelText('mock-dialog')).toBeNull()
+  })
+})

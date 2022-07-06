@@ -172,16 +172,16 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
       }
 
       <div>
-        { text }
+        {text}
       </div>
       <div className={classes.chatMessageFooter}>
         <div>
-          { isToday(displayDate) ? t('today') : (isYesterday(displayDate) ? t('yesterday') : displayDate.toLocaleDateString()) } {`${displayDate.getHours()}:${displayDateMn}`}
+          {isToday(displayDate) ? t('today') : (isYesterday(displayDate) ? t('yesterday') : displayDate.toLocaleDateString())} {`${displayDate.getHours()}:${displayDateMn}`}
         </div>
         {isNew ? <div className={`${classes.chatMessageNew} ${privateMessage}`}>Nouveau</div>
           : <div className={messageAck}>
-            <CheckSharp className={classes.chatMessageCheckMark}/>
-            <CheckSharp className={`${classes.chatMessageCheckMark} ${classes.chatMessageSecondCheckMark}`}/>
+            <CheckSharp className={classes.chatMessageCheckMark} />
+            <CheckSharp className={`${classes.chatMessageCheckMark} ${classes.chatMessageSecondCheckMark}`} />
           </div>
         }
       </div>
