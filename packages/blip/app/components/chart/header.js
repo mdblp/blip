@@ -173,11 +173,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab className={"subnav-tab"} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
+              <Tab id="dashboard-tab" className={"subnav-tab"} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
                 onClick={this.props.onClickDashboard} />
               <div className={"dashboard-divider"}></div>
-              <Tab className={"subnav-tab"} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab className={"subnav-tab"} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+              <Tab id="daily-tab" className={"subnav-tab"} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab id="trends-tab" className={"subnav-tab"} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>

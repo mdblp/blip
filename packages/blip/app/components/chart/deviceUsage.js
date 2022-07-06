@@ -161,7 +161,7 @@ const DeviceUsage = (props) => {
           className={classes.cardHeader}
           title={t("device-usage")}
           action={
-            <IconButton aria-label="settings" onClick={()=>setDialogOpened(true)}>
+            <IconButton id="settings-button" aria-label="settings" onClick={()=>setDialogOpened(true)}>
               <MoreHorizOutlinedIcon />
             </IconButton>
           }
