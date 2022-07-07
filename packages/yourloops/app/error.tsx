@@ -79,7 +79,7 @@ function OnError(props: OnErrorProps): JSX.Element {
   let moreInfos: JSX.Element | null = null
   if (showMore) {
     const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
-    const info = `${props.event.toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
+    const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
     moreInfos = (
       <React.Fragment>
         <DialogContentText style={{ marginTop: '1em', marginBottom: '0px' }} color="textSecondary">{t('app-crash-info')}</DialogContentText>

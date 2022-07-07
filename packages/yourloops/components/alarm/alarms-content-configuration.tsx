@@ -112,24 +112,29 @@ export const MAX_LOW_BG = 100
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
+// eslint-disable-next-line complexity
 function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX.Element {
   const { monitoring, saveInProgress, patient, onSave, onClose } = props
   const classes = useStyles()
   const teamHook = useTeam()
   const { t } = useTranslation('yourloops')
 
-  if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
-    monitoring.parameters = {
-      bgUnit: UNITS_TYPE.MGDL,
-      lowBg: convertBG(monitoring.parameters.lowBg, UNITS_TYPE.MMOLL),
-      highBg: convertBG(monitoring.parameters.highBg, UNITS_TYPE.MMOLL),
-      outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
-      veryLowBg: convertBG(monitoring.parameters.veryLowBg, UNITS_TYPE.MMOLL),
-      hypoThreshold: monitoring.parameters?.hypoThreshold,
-      nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
-      reportingPeriod: monitoring.parameters.reportingPeriod
+  const convertMonitoring = (): void => {
+    if (monitoring?.parameters && monitoring?.parameters?.bgUnit === UNITS_TYPE.MMOLL) {
+      monitoring.parameters = {
+        bgUnit: UNITS_TYPE.MGDL,
+        lowBg: convertBG(monitoring.parameters.lowBg, UNITS_TYPE.MMOLL),
+        highBg: convertBG(monitoring.parameters.highBg, UNITS_TYPE.MMOLL),
+        outOfRangeThreshold: monitoring.parameters.outOfRangeThreshold,
+        veryLowBg: convertBG(monitoring.parameters.veryLowBg, UNITS_TYPE.MMOLL),
+        hypoThreshold: monitoring.parameters?.hypoThreshold,
+        nonDataTxThreshold: monitoring.parameters?.nonDataTxThreshold,
+        reportingPeriod: monitoring.parameters.reportingPeriod
+      }
     }
   }
+
+  convertMonitoring()
 
   const isError = (value: number, lowValue: number, highValue: number): boolean => {
     return !(value >= lowValue && value <= highValue)
@@ -169,12 +174,12 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
 
   const saveButtonDisabled = useMemo(() => {
     return lowBg.error ||
-        highBg.error ||
-        veryLowBg.error ||
-        outOfRangeThreshold.error ||
-        hypoThreshold.error ||
-        nonDataTxThreshold.error ||
-        saveInProgress
+      highBg.error ||
+      veryLowBg.error ||
+      outOfRangeThreshold.error ||
+      hypoThreshold.error ||
+      nonDataTxThreshold.error ||
+      saveInProgress
   },
   [highBg.error, hypoThreshold.error, lowBg.error, nonDataTxThreshold.error, outOfRangeThreshold.error, saveInProgress, veryLowBg.error])
 

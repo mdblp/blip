@@ -137,7 +137,7 @@ function TeamDetailsPage(): JSX.Element {
   }
 
   const isMonitoringEnabled = () => {
-    return dropdownData.selectedTeam && dropdownData.selectedTeam.monitoring && dropdownData.selectedTeam.monitoring.enabled
+    return dropdownData.selectedTeam?.monitoring?.enabled
   }
 
   return (

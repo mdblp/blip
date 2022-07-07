@@ -53,6 +53,7 @@ class BlipApi {
     this.log = bows('BlipAPI')
   }
 
+  // eslint-disable-next-line accessor-pairs
   public set authContext(context: AuthContext) {
     this.authHook = context
   }

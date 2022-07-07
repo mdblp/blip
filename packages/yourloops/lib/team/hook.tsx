@@ -95,7 +95,7 @@ function TeamContextImpl(): TeamContext {
       severeHypoglycemia: patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive).length,
       dataNotTransferred: patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive).length,
       remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
+      renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
     }
   }, [getPatients])
 

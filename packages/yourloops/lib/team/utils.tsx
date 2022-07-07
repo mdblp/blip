@@ -44,10 +44,10 @@ const log = bows('TeamUtils')
  * @returns `123 - 456 - 789`
  */
 export function getDisplayTeamCode(code: string): string {
-  const SEP_POS = [2, 5] // eslint-disable-line no-magic-numbers
+  const SEP_POS = [2, 5]
   let displayCode = ''
   const codeLen = Math.min(code.length, TEAM_CODE_LENGTH)
-  for (let i = 0 | 0; i < codeLen; i++) {
+  for (let i = 0; i < codeLen; i++) {
     displayCode += code[i]
     if (SEP_POS.includes(i) && i + 1 < codeLen) {
       displayCode += ' - '
@@ -86,7 +86,7 @@ export default class TeamUtils {
         return patients.filter(patient => TeamUtils.isInTeam(patient, filterType))
       case PatientFilterTypes.renew:
         twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        return patients.filter(patient => patient.monitoring && patient.monitoring.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
+        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
       default:
         return patients
     }

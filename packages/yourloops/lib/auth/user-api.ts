@@ -12,7 +12,7 @@ export default class UserApi {
       return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid }
     } catch (err) {
       console.log("This profile doesn't exists")
-      throw 'unknown user'
+      throw Error('unknown user')
     }
   }
 

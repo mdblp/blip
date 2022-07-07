@@ -171,7 +171,7 @@ export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
     case 'email':
       infoLabel = t('email')
       elemValue = (
-      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`mailto:${value}`} target="_blank" rel="noreferrer">
+      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`mailto:${value as string}`} target="_blank" rel="noreferrer">
         {value}
       </Link>
       )
@@ -179,7 +179,7 @@ export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
     case 'phone':
       infoLabel = t('phone-number')
       elemValue = (
-      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${value}`} target="_blank" rel="noreferrer">
+      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${value as string}`} target="_blank" rel="noreferrer">
         {value}
       </Link>
       )

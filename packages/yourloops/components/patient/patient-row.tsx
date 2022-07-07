@@ -93,7 +93,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const trNA = t('N/A')
   const authHook = useAuth()
   const isUserHcp = authHook.user?.isUserHcp()
-  const patientIsMonitored = patient.monitoring !== null && patient.monitoring?.enabled
+  const patientIsMonitored = patient.monitoring?.enabled
   const classes = patientListStyle()
   const patientListCommonClasses = patientListCommonStyle()
   const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
