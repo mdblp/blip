@@ -95,11 +95,11 @@ const NotificationsPage = (): JSX.Element => {
     )
   }
 
-  const handleSwitchRoleOpen = () => {
+  const handleSwitchRoleOpen = (): void => {
     metrics.send('switch_account', 'display_switch_notification')
     setSwitchRoleOpen(true)
   }
-  const handleSwitchRoleCancel = () => {
+  const handleSwitchRoleCancel = (): void => {
     setSwitchRoleOpen(false)
   }
 

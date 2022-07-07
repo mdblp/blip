@@ -74,15 +74,15 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const patientTeams = patient?.teams
   const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId)
 
-  const getSuccessAlertMessage = () => {
+  const getSuccessAlertMessage = (): void => {
     if (patientTeamStatus.status === UserInvitationStatus.pending) {
-      return alert.success(t('alert-remove-patient-pending-invitation-success'))
+      alert.success(t('alert-remove-patient-pending-invitation-success'))
     }
     const team = sortedTeams.find(team => team.teamId === selectedTeamId)
     if (team.code === 'private') {
-      return alert.success(t('alert-remove-private-practice-success', { patientName }))
+      alert.success(t('alert-remove-private-practice-success', { patientName }))
     }
-    return alert.success(t('alert-remove-patient-from-team-success', { teamName: team.teamName, patientName }))
+    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.teamName, patientName }))
   }
 
   const handleOnClose = (): void => {

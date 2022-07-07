@@ -103,7 +103,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
   })
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true)
 
-  const onSave = async () => {
+  const onSave = async (): Promise<void> => {
     try {
       setSaveButtonDisabled(true)
       const monitoringEnd = moment.utc(new Date()).add(prescriptionInfo.numberOfMonth, 'M').toDate()
@@ -150,7 +150,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
     }
   }
 
-  const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo) => {
+  const updatePrescriptionInfo = (prescriptionInformation: PrescriptionInfo): void => {
     if (prescriptionInformation.teamId !== prescriptionInfo.teamId ||
       prescriptionInformation.memberId !== prescriptionInfo.memberId ||
       prescriptionInformation.file !== prescriptionInfo.file ||

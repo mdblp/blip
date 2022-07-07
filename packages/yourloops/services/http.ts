@@ -47,11 +47,11 @@ export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
   static shorelineAccessToken: string
 
-  static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
+  static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod
   }
 
-  static async getAccessToken() {
+  static async getAccessToken(): Promise<string> {
     return await HttpService.retrieveAccessToken()
   }
 

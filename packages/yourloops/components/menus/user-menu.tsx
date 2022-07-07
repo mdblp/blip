@@ -89,19 +89,21 @@ function UserMenu(): JSX.Element {
     }
   }
 
-  const closeMenu = () => setAnchorEl(null)
+  const closeMenu = (): void => {
+    setAnchorEl(null)
+  }
 
-  const onClickSettings = () => {
+  const onClickSettings = (): void => {
     history.push('/preferences')
     closeMenu()
   }
 
-  const onClickLogout = async () => {
+  const onClickLogout = async (): Promise<void> => {
     await logout()
     closeMenu()
   }
 
-  const onClickSupport = () => {
+  const onClickSupport = (): void => {
     window.open(config.SUPPORT_WEB_ADDRESS, '_blank')
     closeMenu()
     metrics.send('support', 'click_customer_service')

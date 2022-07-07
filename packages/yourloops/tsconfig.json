@@ -25,9 +25,5 @@
     "noUnusedParameters": true,
   },
   "exclude": ["node_modules"],
-  "include": [
-    "./types/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-  ]
+  "include": ["**/*"]
 }

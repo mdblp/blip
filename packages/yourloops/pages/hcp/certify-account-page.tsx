@@ -44,7 +44,7 @@ function CertifyAccountPage(): JSX.Element {
   const frProId = new URLSearchParams(search).get('frproid')
   const error = new URLSearchParams(search).get('error')
 
-  const certify = () => {
+  const certify = (): void => {
     try {
       setProcessing(true)
       if (error) {

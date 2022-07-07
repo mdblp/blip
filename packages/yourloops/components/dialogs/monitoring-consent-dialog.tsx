@@ -53,16 +53,16 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
   const { t } = useTranslation('yourloops')
   const [termsAccepted, setTermsAccepted] = React.useState(false)
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setTermsAccepted(false)
   }
 
-  const handleAccept = () => {
+  const handleAccept = (): void => {
     onAccept()
     resetForm()
   }
 
-  const onClose = () => {
+  const onClose = (): void => {
     onCancel()
     resetForm()
   }

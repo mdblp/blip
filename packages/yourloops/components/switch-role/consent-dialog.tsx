@@ -51,18 +51,18 @@ function SwitchRoleConsentDialog(props: SwitchRoleConsentDialogProps): JSX.Eleme
   const [termsAccepted, setTermsAccepted] = React.useState(false)
   const [feedbackAccepted, setFeedbackAccepted] = React.useState(false)
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setPolicyAccepted(false)
     setTermsAccepted(false)
     setFeedbackAccepted(false)
   }
 
-  const handleAccept = () => {
+  const handleAccept = (): void => {
     onAccept(feedbackAccepted)
     resetForm()
   }
 
-  const onClose = () => {
+  const onClose = (): void => {
     onCancel()
     resetForm()
   }

@@ -41,7 +41,7 @@ const appElement = document.getElementById('app')
 const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
 
 /** Set one and only one class for the branding in `<div id='app'>` */
-export function initTheme() {
+export function initTheme(): void {
   const classList = document.getElementById('app')?.classList
   classList?.remove(...BRANDING_LIST)
   classList?.add(config.BRANDING.replace('_', '-'))
@@ -115,6 +115,7 @@ export function getTheme(): Theme {
  * @param theme Main theme
  * @returns The styles for buttons
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const makeButtonsStyles = (theme: Theme) => ({
   alertActionButton: {
     color: theme.palette.common.white,

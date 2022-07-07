@@ -123,10 +123,10 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
     }
   }, [isOpen, selected, onSelectedDateChange])
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.onResult()
   }
-  const handleOK = () => {
+  const handleOK = (): void => {
     props.onResult(selected.format('YYYY-MM-DD'))
   }
 

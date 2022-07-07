@@ -120,7 +120,7 @@ function PatientCaregiversPage(): JSX.Element {
   React.useEffect(() => {
     if (!caregivers && user && haveNotifications) {
       // Load caregivers
-      const addPendingInvitation = (target: ShareUser[]) => {
+      const addPendingInvitation = (target: ShareUser[]): void => {
         for (const invitation of sentInvitations) {
           if (invitation.type === NotificationType.directInvitation) {
             // Create a fake share user

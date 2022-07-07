@@ -195,12 +195,12 @@ const ProfilePage = (): JSX.Element => {
     return updatedSettings
   }
 
-  const handleSwitchRoleOpen = () => {
+  const handleSwitchRoleOpen = (): void => {
     setSwitchRoleOpen(true)
     metrics.send('switch_account', 'display_switch_preferences')
   }
 
-  const handleSwitchRoleCancel = () => setSwitchRoleOpen(false)
+  const handleSwitchRoleCancel = (): void => setSwitchRoleOpen(false)
 
   const preferencesChanged = !_.isEqual(user.preferences, getUpdatedPreferences())
   const profileChanged = !_.isEqual(user.profile, getUpdatedProfile())
@@ -208,7 +208,7 @@ const ProfilePage = (): JSX.Element => {
   const isAnyError = useMemo(() => _.some(errors), [errors])
   const canSave = (preferencesChanged || profileChanged || settingsChanged) && !isAnyError && !saving
 
-  const saveProfile = async () => {
+  const saveProfile = async (): Promise<void> => {
     try {
       await updateProfile(getUpdatedProfile())
     } catch (err) {
@@ -217,7 +217,7 @@ const ProfilePage = (): JSX.Element => {
     }
   }
 
-  const saveSettings = async () => {
+  const saveSettings = async (): Promise<void> => {
     try {
       await updateSettings(getUpdatedSettings())
     } catch (err) {
@@ -226,7 +226,7 @@ const ProfilePage = (): JSX.Element => {
     }
   }
 
-  const savePreferences = async () => {
+  const savePreferences = async (): Promise<void> => {
     try {
       await updatePreferences(getUpdatedPreferences())
     } catch (err) {

@@ -108,11 +108,11 @@ function Page(props: ConsentProps): JSX.Element {
     // see that option (e.g. Account created before it was implemented)
     const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
 
-    const onDecline = () => {
+    const onDecline = (): void => {
       auth.logout().catch((reason) => console.error('logout', reason))
     }
 
-    const onConfirm = () => {
+    const onConfirm = (): void => {
       // api call
       const now = new Date().toISOString()
       const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile

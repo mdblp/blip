@@ -67,10 +67,10 @@ export function useChangeMonthState(props: ChangeMonthProps): ChangeMonthState {
   const minMonth = toYearMonth(minDate)
   const maxMonth = toYearMonth(maxDate)
 
-  const changeCurrentMonth = (toMonth: Dayjs, direction: ChangeMonthDirection) => {
+  const changeCurrentMonth = (toMonth: Dayjs, direction: ChangeMonthDirection): void => {
     const transitionTimeoutThreshold = 150
     let timeoutTransition = 0
-    const onAnimationEnd = () => {
+    const onAnimationEnd = (): void => {
       if (timeoutTransition > 0) {
         window.clearTimeout(timeoutTransition)
         timeoutTransition = 0

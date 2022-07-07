@@ -85,7 +85,7 @@ const weekdaysPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
   }
 }
 
-function initDayJS() {
+function initDayJS(): void {
   dayjs.extend(dayjsUTC)
   dayjs.extend(dayjsTimezone)
   dayjs.extend(dayjsLocalizedFormat)

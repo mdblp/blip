@@ -248,10 +248,10 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const ariaTitle = t('aria-team-leave-dialog-title')
   const ariaQuestion = t('aria-team-leave-dialog-question', { teamName })
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     teamToLeave?.onDialogResult(false)
   }
-  const handleLeaveTeam = () => {
+  const handleLeaveTeam = (): void => {
     teamToLeave?.onDialogResult(true)
   }
 

@@ -240,7 +240,7 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
   const classes = formStyles()
   const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRoles.hcp
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const what = event.target.name
     switch (what) {
       case 'policy':
@@ -286,7 +286,7 @@ export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.El
 
   const classes = formStyles()
 
-  const handleChange = () => {
+  const handleChange = (): void => {
     setTermsAccepted(!termsAccepted)
   }
 

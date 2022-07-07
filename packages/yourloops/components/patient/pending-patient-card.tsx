@@ -63,7 +63,7 @@ const style = makeStyles(theme => ({
  * TODO Temporary here to disable remove patient functionality until Yourloops new certification
  * see YLP-370 (https://diabeloop.atlassian.net/browse/YLP-370)
  */
-const removeButtonEnabled = false
+const removeButtonEnabled = true
 
 function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
   const { patient } = props
@@ -71,7 +71,7 @@ function PendingPatientCard(props: PendingPatientCardProps): JSX.Element {
   const email: string = _.get(patient, 'emails[0]', patient.profile.email)
   const patientId = patient.userid
 
-  const handleOnClick = (e: React.MouseEvent) => {
+  const handleOnClick = (e: React.MouseEvent): void => {
     e.stopPropagation()
   }
 

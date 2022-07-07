@@ -84,14 +84,14 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
   const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
   const [readonly, setReadonly] = useState<boolean>(false)
 
-  const closeMedicalRecordEditDialog = () => {
+  const closeMedicalRecordEditDialog = (): void => {
     setHoveredItem(undefined)
     setIsEditDialogOpen(false)
     setMedicalRecordToEdit(undefined)
     setReadonly(false)
   }
 
-  const closeMedicalRecordDeleteDialog = () => {
+  const closeMedicalRecordDeleteDialog = (): void => {
     setHoveredItem(undefined)
     setIsDeleteDialogOpen(false)
     setMedicalRecordToDelete(undefined)
@@ -107,13 +107,13 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     setIsDeleteDialogOpen(true)
   }
 
-  const onClickMedicalRecord = (medicalRecord: MedicalRecord) => {
+  const onClickMedicalRecord = (medicalRecord: MedicalRecord): void => {
     setMedicalRecordToEdit(medicalRecord)
     setReadonly(true)
     setIsEditDialogOpen(true)
   }
 
-  const updateMedicalRecordList = (payload: MedicalRecord) => {
+  const updateMedicalRecordList = (payload: MedicalRecord): void => {
     const index = medicalRecords.findIndex((mr) => mr.id === payload.id)
     if (index > -1) {
       medicalRecords.splice(index, 1, payload)
@@ -123,7 +123,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
     closeMedicalRecordEditDialog()
   }
 
-  const removeMedicalRecordFromList = (medicalRecordId: string) => {
+  const removeMedicalRecordFromList = (medicalRecordId: string): void => {
     const index = medicalRecords.findIndex((mr) => mr.id === medicalRecordId)
     medicalRecords.splice(index, 1)
     closeMedicalRecordDeleteDialog()

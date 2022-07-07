@@ -55,10 +55,10 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const buttonsClasses = makeButtonsClasses()
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     props.actions?.onDialogResult(false)
   }
-  const handleRemoveCaregiver = () => {
+  const handleRemoveCaregiver = (): void => {
     props.actions?.onDialogResult(true)
   }
 

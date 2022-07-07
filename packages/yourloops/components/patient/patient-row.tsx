@@ -49,6 +49,18 @@ import { patientListCommonStyle } from './table'
 import { StyledTableCell, StyledTableRow } from '../styled-components'
 import TeamUtils from '../../lib/team/utils'
 
+interface ComputedRow {
+  patientSystem: string
+  patientRemoteMonitoring: string
+  timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHypoglycemiaActive: boolean
+  nonDataTransmissionActive: boolean
+  patientFullNameClasses: string
+  timeSpentAwayFromTargetRateClasses: string
+  frequencyOfSevereHypoglycemiaRateClasses: string
+  dataNotTransferredRateClasses: string
+}
+
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
@@ -105,7 +117,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
   const isFlagged = flagged.includes(userId)
   const patientFullName = patient.profile.fullName
 
-  const computeRowInformation = () => {
+  const computeRowInformation = (): ComputedRow => {
     const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`
     const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`
     const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false

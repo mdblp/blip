@@ -75,7 +75,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     }
   }
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
     const value = event.target.value as string
     setSelectedValue(value)
     onSelect(value)

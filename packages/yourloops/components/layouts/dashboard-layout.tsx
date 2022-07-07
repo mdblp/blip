@@ -43,7 +43,7 @@ const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
   }
 }))
 
-function DashboardLayout({ children }: { children: JSX.Element }) {
+function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
   const classes = dashboardLayoutStyle()
   const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
   const authHook = useAuth()

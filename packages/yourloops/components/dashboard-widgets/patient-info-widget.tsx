@@ -95,9 +95,9 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     : undefined
   const birthdate = moment.utc(patient.profile.birthdate).format('L')
 
-  const isLoggedInUserHcpAdmin = () => {
+  const isLoggedInUserHcpAdmin = (): boolean => {
     return authHook.user?.isUserHcp() &&
-      teamHook.getRemoteMonitoringTeams()
+      !!teamHook.getRemoteMonitoringTeams()
         .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.id) &&
           team.members.find(member => member.user.userid === patient.userid)
         )
@@ -121,7 +121,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
 
   patientInfo.gender = genderLabels()[patient.profile.sex ?? '']
 
-  const computePatientInformation = () => {
+  const computePatientInformation = (): void => {
     patientInfo['remote-monitoring'] = patient.monitoring?.enabled ? t('yes') : t('no')
 
     const displayInviteButton = !patient.monitoring?.enabled &&
@@ -141,7 +141,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     computePatientInformation()
   }
 
-  const removePatientRemoteMonitoring = async (setActionInProgress: React.Dispatch<boolean>, setShow: React.Dispatch<boolean>) => {
+  const removePatientRemoteMonitoring = async (setActionInProgress: React.Dispatch<boolean>, setShow: React.Dispatch<boolean>): Promise<void> => {
     if (!patient.monitoring) {
       throw Error('Cannot cancel monitoring invite as patient monitoring is not defined')
     }
@@ -155,7 +155,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     }
   }
 
-  const onConfirmCancelInviteDialog = async () => {
+  const onConfirmCancelInviteDialog = async (): Promise<void> => {
     setConfirmCancelDialogActionInProgress(true)
     try {
       await notificationHook.cancelRemoteMonitoringInvite(teamHook.getPatientRemoteMonitoringTeam(patient).teamId, patient.userid)
@@ -165,7 +165,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     await removePatientRemoteMonitoring(setConfirmCancelDialogActionInProgress, setShowConfirmCancelDialog)
   }
 
-  const onConfirmDeleteDialog = async () => {
+  const onConfirmDeleteDialog = async (): Promise<void> => {
     setConfirmDeleteDialogActionInProgress(true)
     await removePatientRemoteMonitoring(setConfirmDeleteDialogActionInProgress, setShowConfirmDeleteDialog)
   }

@@ -52,6 +52,7 @@ import RangeDatePicker from '../date-pickers/range-date-picker'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
 export type OutputFormat = 'pdf' | 'csv'
+
 export interface PrintPDFOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
   start: string
@@ -60,6 +61,7 @@ export interface PrintPDFOptions {
   preset?: Presets
   format?: OutputFormat
 }
+
 interface DialogPDFOptionsProps {
   open: boolean
   /** Oldest available date date (ISO day ex: 2022-02-10) */
@@ -70,6 +72,7 @@ interface DialogPDFOptionsProps {
   onResult: (options?: PrintPDFOptions) => void
   defaultPreset?: Presets
 }
+
 const DEFAULT_PRESET: Presets = '4weeks'
 const MAX_SELECTABLE_DAYS = 90
 
@@ -102,7 +105,7 @@ const printOptionsStyle = makeStyles((theme: Theme) => {
   }
 }, { name: 'dialog-pdf-options' })
 
-function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
+function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs): { start: string, end: string, preset: Presets, format: OutputFormat } {
   const end = maxDate.format('YYYY-MM-DD')
   let start: Dayjs
   switch (preset) {
@@ -127,7 +130,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs) {
   return { start: start.format('YYYY-MM-DD'), end, preset, format: outputFormat }
 }
 
-function DialogPDFOptions(props: DialogPDFOptionsProps) {
+function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
   const { open, defaultPreset, onResult } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
@@ -176,11 +179,11 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
     }
   }, [defaultPreset, open, openState, minDate, maxDate])
 
-  const handleClickPreset = (preset: Presets) => {
+  const handleClickPreset = (preset: Presets): void => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate))
   }
 
-  const handleChangeCustomDate = (d: Dayjs) => {
+  const handleChangeCustomDate = (d: Dayjs): void => {
     if (customStartDate) {
       const startDate = customStartDate.isBefore(d) ? customStartDate.format('YYYY-MM-DD') : d.format('YYYY-MM-DD')
       const endDate = customStartDate.isBefore(d) ? d.format('YYYY-MM-DD') : customStartDate.format('YYYY-MM-DD')
@@ -192,7 +195,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
   }
 
   const presetSelected = pdfOptions.preset
-  const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>): void => {
     pdfOptions.format = event.target.value as OutputFormat
     setOutputFormat((event.target as HTMLInputElement).value)
   }
@@ -211,7 +214,8 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         <Typography variant="h4">{t('pdf-generate-report')}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t('dialog-pdf-options-presets')}</Typography>
-        <Box display="flex" flexDirection="row" flexWrap="wrap" justifyContent={matchLandscape ? 'start' : 'space-between'}>
+        <Box display="flex" flexDirection="row" flexWrap="wrap"
+             justifyContent={matchLandscape ? 'start' : 'space-between'}>
           <Chip
             id="pdf-options-button-one-week"
             variant={presetSelected === '1week' ? 'default' : 'outlined'}
@@ -251,7 +255,8 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
         </Box>
 
         <Box display="flex" mt={2} flexDirection="column">
-          <Typography variant="body2" className={classes.customRangeText}>{t('dialog-pdf-options-custom-range')}</Typography>
+          <Typography variant="body2"
+                      className={classes.customRangeText}>{t('dialog-pdf-options-custom-range')}</Typography>
           <TextField
             id="pdf-options-button-custom-range"
             variant="standard"
@@ -278,7 +283,7 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
           />
         </Box>
 
-        <Box >
+        <Box>
           <Typography variant="body2" className={classes.customRangeText}>{t('dialog-pdf-options-format')}</Typography>
 
           <RadioGroup
@@ -288,15 +293,15 @@ function DialogPDFOptions(props: DialogPDFOptionsProps) {
             onChange={handleOutputFormat}
           >
             <FormControlLabel value="pdf"
-              control={
-                <Radio id="dialog-pdf-options-selector-pdf" color="primary"/>
-              }
-              label={t('dialog-pdf-options-output-format-pdf')}
+                              control={
+                                <Radio id="dialog-pdf-options-selector-pdf" color="primary" />
+                              }
+                              label={t('dialog-pdf-options-output-format-pdf')}
             />
             <FormControlLabel
               value="csv"
               control={
-                <Radio id="dialog-pdf-options-selector-csv" color="primary"/>
+                <Radio id="dialog-pdf-options-selector-csv" color="primary" />
               }
               label={t('dialog-pdf-options-output-format-csv')} />
           </RadioGroup>

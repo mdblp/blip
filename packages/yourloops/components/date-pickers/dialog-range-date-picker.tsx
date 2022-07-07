@@ -146,10 +146,10 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
     }
   }, [isOpen, startDate, endDate, onSelectedDateChange])
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     props.onResult()
   }
-  const handleOK = () => {
+  const handleOK = (): void => {
     props.onResult(selected.start.format('YYYY-MM-DD'), selected.end.format('YYYY-MM-DD'))
   }
 

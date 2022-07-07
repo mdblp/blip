@@ -91,13 +91,13 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const [addMember, setAddMember] = React.useState<AddMemberDialogContentProps | null>(null)
 
-  const getNonPatientMembers = (team?: Team) => {
+  const getNonPatientMembers = (team?: Team): TeamMember[] => {
     return team ? team.members.filter(teamMember => teamMember.role === TeamMemberRole.admin || teamMember.role === TeamMemberRole.member) : []
   }
 
   const [members, setMembers] = React.useState<TeamMember[]>(getNonPatientMembers(team))
 
-  const onMemberInvited = async (member: { email: string, role: Exclude<TypeTeamMemberRole, 'patient'>, team: Team } | null) => {
+  const onMemberInvited = async (member: { email: string, role: Exclude<TypeTeamMemberRole, 'patient'>, team: Team } | null): Promise<void> => {
     if (member) {
       try {
         await teamHook.inviteMember(member.team, member.email, member.role)
@@ -111,7 +111,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     setAddMember(null)
   }
 
-  const openInviteMemberDialog = () => {
+  const openInviteMemberDialog = (): void => {
     setAddMember({ team, onMemberInvited })
   }
 
@@ -119,7 +119,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     setMembers(getNonPatientMembers(team))
   }, [team])
 
-  const refresh = () => {
+  const refresh = (): void => {
     setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined))
     refreshParent()
   }

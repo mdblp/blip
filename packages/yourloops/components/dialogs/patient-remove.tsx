@@ -60,10 +60,10 @@ function RemovePatientDialog(props: RemovePatientDialogProps): JSX.Element {
   const userName = props.actions !== null ? getUserFirstLastName(props.actions.patient) : { firstName: '', lastName: '' }
   const name = t('user-name', userName)
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     props.actions?.onDialogResult(false)
   }
-  const handleClickRemove = () => {
+  const handleClickRemove = (): void => {
     props.actions?.onDialogResult(true)
   }
 

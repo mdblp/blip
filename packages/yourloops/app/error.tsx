@@ -67,12 +67,12 @@ function OnError(props: OnErrorProps): JSX.Element {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleOK = () => {
+  const handleOK = (): void => {
     // Then reload the page
     window.location.replace('/')
   }
 
-  const handleShowMore = () => {
+  const handleShowMore = (): void => {
     setShowMore(true)
   }
 

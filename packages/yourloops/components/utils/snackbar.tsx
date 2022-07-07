@@ -150,7 +150,7 @@ export const Snackbar = (props: SnackbarContext): JSX.Element => {
   const [currentAlert, onCloseAlert] = React.useMemo(() => {
     if (alerts.length > 0) {
       const currentAlert = alerts[0]
-      const onCloseAlert = () => {
+      const onCloseAlert = (): void => {
         if (typeof currentAlert.options.onClose === 'function') {
           currentAlert.options.onClose()
         }

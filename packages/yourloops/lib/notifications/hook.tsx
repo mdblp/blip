@@ -80,7 +80,7 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
   }
 
-  const initHook = () => {
+  const initHook = (): void => {
     if (initialized || lock) {
       return
     }

@@ -52,7 +52,6 @@ import { useLocation } from 'react-router-dom'
 
 const log = bows('PatientListPage')
 
-// eslint-disable-next-line no-magic-numbers
 const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per minute
 
 function HomePage(): JSX.Element {
@@ -69,7 +68,7 @@ function HomePage(): JSX.Element {
 
   const filterType = useMemo(() => new URLSearchParams(search).get('filter') as PatientFilterTypes ?? PatientFilterTypes.all, [search])
 
-  const handleRefresh = async (force = false) => {
+  const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })
     setLoading(true)
     setErrorMessage(null)

@@ -61,7 +61,7 @@ function Login(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { cardContent, card, cardActions } = loginStyle()
 
-  const onClickLogout = async () => {
+  const onClickLogout = async (): Promise<void> => {
     await logout({ returnTo: window.location.origin })
   }
 

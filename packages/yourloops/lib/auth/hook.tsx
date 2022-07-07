@@ -210,7 +210,7 @@ export function AuthContextImpl(): AuthContext {
   useEffect(() => {
     (async () => {
       if (isAuthenticated && !user) {
-        const getAccessToken = async () => await getAccessTokenSilently()
+        const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
         HttpService.setGetAccessTokenMethod(getAccessToken)
         await getUserInfo()
       }

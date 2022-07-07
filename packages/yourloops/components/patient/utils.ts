@@ -120,7 +120,7 @@ export const compareDate = (a: Date, b: Date): number => {
 function compareValues(
   a: string | number | Date | boolean | null | undefined,
   b: string | number | boolean | Date | null | undefined
-) {
+): number {
   if (typeof a === 'string' && typeof b === 'string') {
     return compareString(a, b)
   }

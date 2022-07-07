@@ -146,7 +146,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
     )
   }
 
-  const onPrevButtonEvent = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
+  const onPrevButtonEvent = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>): void => {
     if (!prevButtonDisabled) {
       let validEvent = true
       if (e.type === 'keyup') {
@@ -159,7 +159,7 @@ function CalendarHeader(props: CalendarHeaderProps): JSX.Element {
     }
   }
 
-  const onNextButtonEvent = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
+  const onNextButtonEvent = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>): void => {
     if (!nextButtonDisabled) {
       let validEvent = true
       if (e.type === 'keyup') {

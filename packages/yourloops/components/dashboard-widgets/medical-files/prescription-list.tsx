@@ -75,7 +75,7 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
     })()
   }, [patientId, teamId])
 
-  const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription) => {
+  const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription): void => {
     MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then(data => {
       const url = window.URL.createObjectURL(new Blob([data]))
       const link = document.createElement('a')

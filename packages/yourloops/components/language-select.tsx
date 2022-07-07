@@ -47,7 +47,7 @@ function LanguageSelect(): JSX.Element {
   const [val, setVal] = React.useState(i18n.language)
   const classes = languageSelectStyle()
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
     const lang = event.target.value as string
     i18n.changeLanguage(lang)
     setVal(lang)

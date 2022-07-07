@@ -145,7 +145,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const team = teamHook.getPatientRemoteMonitoringTeam(patient)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {
     setInputTab(newValue)
   }
 
@@ -154,7 +154,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }, [messages])
 
   useEffect(() => {
-    async function fetchMessages() {
+    async function fetchMessages(): Promise<void> {
       const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
       if (patient.metadata.unreadMessagesSent > 0) {
         teamHook.markPatientMessagesAsRead(patient)
@@ -166,12 +166,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     fetchMessages()
   }, [userId, authHook, patient.userid, team.teamId, patient, teamHook])
 
-  const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData) => {
+  const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData): void => {
     setShowPicker(false)
     setInputText(inputText + emojiObject.emoji)
   }
 
-  const resetInputSize = () => {
+  const resetInputSize = (): void => {
     if (!content.current || !inputRow.current) {
       throw new Error('Cannot find elements for resize')
     }
@@ -179,7 +179,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     inputRow.current.style.height = '60px'
   }
 
-  const sendMessage = async () => {
+  const sendMessage = async (): Promise<void> => {
     await ChatApi.sendChatMessage(team.teamId, patient.userid, inputText, privateMessage)
     const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
     setMessages(messages)
@@ -187,7 +187,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     resetInputSize()
   }
 
-  const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const inputHandler = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setInputText(event.target.value)
     if (!content.current || !inputRow.current) {
       throw new Error('Cannot find elements for resize')

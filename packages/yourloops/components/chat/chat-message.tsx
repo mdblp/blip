@@ -148,14 +148,14 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
   const displayDate = new Date(timestamp)
   const displayDateMn = (`0${displayDate.getMinutes()}`).slice(-2)
 
-  const isToday = (someDate: Date) => {
+  const isToday = (someDate: Date): boolean => {
     const today = new Date()
     return someDate.getDate() === today.getDate() &&
       someDate.getMonth() === today.getMonth() &&
       someDate.getFullYear() === today.getFullYear()
   }
 
-  const isYesterday = (someDate: Date) => {
+  const isYesterday = (someDate: Date): boolean => {
     const today = new Date()
     return someDate.getDate() === today.getDate() - 1 &&
       someDate.getMonth() === today.getMonth() &&

@@ -46,11 +46,11 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
 
   const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(HcpProfession.empty)
 
-  const handleAccept = () => {
+  const handleAccept = (): void => {
     onAccept(hcpProfession)
   }
 
-  const onClose = () => {
+  const onClose = (): void => {
     onCancel()
     setHcpProfession(HcpProfession.empty)
   }

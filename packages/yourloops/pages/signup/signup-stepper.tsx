@@ -56,7 +56,7 @@ export default function SignUpStepper(): JSX.Element {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
 
-  const handleBack = async () => {
+  const handleBack = async (): Promise<void> => {
     if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1)
     } else {
@@ -64,12 +64,12 @@ export default function SignUpStepper(): JSX.Element {
     }
   }
 
-  const redirectToHome = () => {
+  const redirectToHome = (): void => {
     dispatch({ type: 'RESET_FORMVALUES' })
     history.replace('/')
   }
 
-  const getStepContent = (step: number) => {
+  const getStepContent = (step: number): JSX.Element | string => {
     switch (step) {
       case 0:
         return (<SignUpConsent handleBack={handleBack} handleNext={handleNext} />)

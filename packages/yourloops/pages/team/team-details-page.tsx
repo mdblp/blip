@@ -111,7 +111,7 @@ function TeamDetailsPage(): JSX.Element {
   const teamMembers = useRef<HTMLDivElement>(null)
   const teamAlarms = useRef<HTMLDivElement>(null)
 
-  const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {
+  const scrollTo = (ref: React.RefObject<HTMLDivElement>): void => {
     setActiveLink(ref.current?.dataset.link)
     ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -127,16 +127,16 @@ function TeamDetailsPage(): JSX.Element {
     refresh()
   }, [refresh])
 
-  const redirectToDashboard = () => {
+  const redirectToDashboard = (): void => {
     history.push('/')
   }
 
-  const redirectToTeam = (selectedTeam: string) => {
+  const redirectToTeam = (selectedTeam: string): void => {
     const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam)
     history.push(`/teams/${teamToRedirectTo?.id}`)
   }
 
-  const isMonitoringEnabled = () => {
+  const isMonitoringEnabled = (): boolean => {
     return dropdownData.selectedTeam?.monitoring?.enabled
   }
 

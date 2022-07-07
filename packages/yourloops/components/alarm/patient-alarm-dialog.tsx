@@ -66,7 +66,7 @@ function PatientAlarmDialog(props: PatientAlarmDialogProps): JSX.Element {
     throw Error(`Cannot show monitoring info of team ${patient.userid} as its monitoring is not enabled`)
   }
 
-  const save = async (monitoring: Monitoring) => {
+  const save = async (monitoring: Monitoring): Promise<void> => {
     patient.monitoring = monitoring
     setSaveInProgress(true)
     try {

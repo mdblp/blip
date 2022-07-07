@@ -86,7 +86,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
     () => (readonly || inProgress || !diagnosis) && !trainingSubject && !progressionProposal,
     [diagnosis, inProgress, progressionProposal, readonly, trainingSubject])
 
-  const saveMedicalRecord = async () => {
+  const saveMedicalRecord = async (): Promise<void> => {
     try {
       setInProgress(true)
       let payload: MedicalRecord

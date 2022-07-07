@@ -54,7 +54,7 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
     throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`)
   }
 
-  const save = async (monitoring: Monitoring) => {
+  const save = async (monitoring: Monitoring): Promise<void> => {
     team.monitoring = monitoring
     setSaveInProgress(true)
     try {

@@ -58,18 +58,18 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
-  const resetDialog = () => {
+  const resetDialog = (): void => {
     setTimeout(() => {
       setEmail('')
       setTeamId('')
       setErrorMessage(null)
     }, 100)
   }
-  const handleClose = () => {
+  const handleClose = (): void => {
     props.actions?.onDialogResult(null)
     resetDialog()
   }
-  const handleClickAdd = () => {
+  const handleClickAdd = (): void => {
     if (isValidEmail() && teamId.length > 0) {
       props.actions?.onDialogResult({ email, teamId })
       resetDialog()
@@ -77,12 +77,12 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       setErrorMessage(t('invalid-email'))
     }
   }
-  const handleVerifyEmail = () => {
+  const handleVerifyEmail = (): void => {
     if (email.length > 0 && !isValidEmail()) {
       setErrorMessage(t('invalid-email'))
     }
   }
-  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputEmail = event.target.value.trim()
     if (errorMessage !== null && isValidEmail(inputEmail)) {
       setErrorMessage(null)

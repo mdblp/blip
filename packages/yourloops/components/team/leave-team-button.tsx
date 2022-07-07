@@ -51,7 +51,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null)
 
-  const onTeamLeft = async (hasLeft: boolean) => {
+  const onTeamLeft = async (hasLeft: boolean): Promise<void> => {
     if (hasLeft) {
       try {
         await teamHook.leaveTeam(team)
@@ -70,7 +70,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
     setTeamToLeave(null)
   }
 
-  const openLeaveTeamDialog = () => {
+  const openLeaveTeamDialog = (): void => {
     setTeamToLeave({ team, onDialogResult: onTeamLeft })
   }
 

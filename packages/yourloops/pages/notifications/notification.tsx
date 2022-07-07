@@ -197,7 +197,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     throw Error('Cannot accept team invite because notification is missing the team id info')
   }
 
-  const acceptInvitation = async () => {
+  const acceptInvitation = async (): Promise<void> => {
     setInProgress(true)
     try {
       await notifications.accept(notification)
@@ -214,7 +214,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   }
 
-  const onOpenInvitationDialog = () => {
+  const onOpenInvitationDialog = (): void => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true)
     } else if (isAMonitoringInvitation) {
@@ -224,12 +224,12 @@ export const Notification = (props: NotificationProps): JSX.Element => {
     }
   }
 
-  const acceptTerms = () => {
+  const acceptTerms = (): void => {
     setDisplayMonitoringTerms(false)
     acceptInvitation()
   }
 
-  const onDecline = async (/* event: React.MouseEvent<HTMLButtonElement, MouseEvent> */) => {
+  const onDecline = async (): Promise<void> => {
     setInProgress(true)
     try {
       await notifications.decline(notification)

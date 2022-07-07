@@ -53,7 +53,7 @@ export const onFulfilled = async (config: AxiosRequestConfig): Promise<AxiosRequ
   return config
 }
 
-function initAxios() {
+function initAxios(): void {
   axios.defaults.baseURL = appConfig.API_HOST
   /**
    * We use axios request interceptor to set the access token into headers each request the app send

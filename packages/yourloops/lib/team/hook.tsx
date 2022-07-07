@@ -177,7 +177,7 @@ function TeamContextImpl(): TeamContext {
     return res
   }
 
-  const editPatientRemoteMonitoring = (patient: Patient) => {
+  const editPatientRemoteMonitoring = (patient: Patient): void => {
     const user = getUser(patient.userid)
     if (!user) {
       throw Error('Cannot update user monitoring as user was not found')
@@ -300,7 +300,7 @@ function TeamContextImpl(): TeamContext {
     metrics.send('team_management', 'edit_care_team')
   }
 
-  const markPatientMessagesAsRead = (patient: Patient) => {
+  const markPatientMessagesAsRead = (patient: Patient): void => {
     const clonedTeams = teams
     clonedTeams.forEach(team => {
       const patientAsTeamUser = team.members.find(member => member.user.userid === patient.userid)
@@ -447,7 +447,7 @@ function TeamContextImpl(): TeamContext {
     refresh(true)
   }
 
-  const initHook = () => {
+  const initHook = (): void => {
     if (initialized || lock || !notificationHook.initialized) {
       return
     }

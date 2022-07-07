@@ -58,7 +58,7 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
   const classes = styles()
   const [selectedValue, setSelectedValue] = React.useState(defaultKey || '')
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
     const value = event.target.value as string
     setSelectedValue(value)
     onSelect(value)

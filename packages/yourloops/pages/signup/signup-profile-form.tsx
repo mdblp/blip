@@ -134,7 +134,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
     return !err
   }
 
-  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
     event.preventDefault()
     if (
       validateFirstName() &&

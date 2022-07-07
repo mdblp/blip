@@ -188,14 +188,14 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     lowValue: number,
     highValue: number,
     setValue: React.Dispatch<ValueErrorPair>
-  ) => {
+  ): void => {
     setValue({
       value,
       error: isError(value, lowValue, highValue)
     })
   }
 
-  const resetToTeamDefaultValues = () => {
+  const resetToTeamDefaultValues = (): void => {
     if (!patient) {
       throw Error('This action cannot be done if the patient is undefined')
     }
@@ -216,7 +216,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     setHypoThreshold({ ...hypoThreshold, value: defaultMonitoring.parameters.hypoThreshold })
   }
 
-  const save = () => {
+  const save = (): void => {
     if (
       lowBg.value !== undefined &&
       highBg.value !== undefined &&
@@ -247,7 +247,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
     }
   }
 
-  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>) => {
+  const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
     const valueAsNumber = +value.slice(0, -1)
     setValue({
       value: valueAsNumber,

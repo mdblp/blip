@@ -74,7 +74,7 @@ function SinglePickerToolbar(props: PickerToolbarProps): JSX.Element {
   const classes = toolbarStyles()
   const { t } = useTranslation('yourloops')
 
-  const onClickYear = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>) => {
+  const onClickYear = (e: React.KeyboardEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement>): void => {
     if (props.onClickYear) {
       let validEvent = true
       if (e.type === 'keyup') {

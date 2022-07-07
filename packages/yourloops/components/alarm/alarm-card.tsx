@@ -73,7 +73,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   const nonDataTransmissionActive = patient.metadata.alarm.nonDataTransmissionActive
   const noActiveAlarm = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
 
-  const buildNumberOfAlarmsLabel = () => {
+  const buildNumberOfAlarmsLabel = (): string => {
     if (noActiveAlarm) {
       return ''
     }
@@ -83,7 +83,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
 
   const numberOfAlarmsLabel = buildNumberOfAlarmsLabel()
 
-  const onClosePatientAlarmDialog = () => {
+  const onClosePatientAlarmDialog = (): void => {
     setShowPatientAlarmDialog(false)
   }
 

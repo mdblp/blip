@@ -46,7 +46,7 @@ function InvalidRoute(props: InvalidRouteProps): JSX.Element {
   const historyHook = useHistory()
   const { defaultURL, message } = props
 
-  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>): void => {
     event.preventDefault()
     historyHook.push(defaultURL ?? '/')
   }

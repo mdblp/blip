@@ -215,7 +215,7 @@ function Footer(): JSX.Element {
   const { user } = useAuth()
   const classes = footerStyle()
 
-  const handleShowCookieBanner = () => {
+  const handleShowCookieBanner = (): void => {
     if (typeof window.openAxeptioCookies === 'function') {
       window.openAxeptioCookies()
     }

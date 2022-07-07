@@ -90,7 +90,7 @@ export function MainLobby(): JSX.Element {
     return <React.Fragment />
   }
 
-  const checkRedirect = () => {
+  const checkRedirect = (): void => {
     if (isCurrentRoutePublic && isAuthenticated) {
       redirectTo = '/'
     } else if (!isAuthenticated && !isCurrentRoutePublic) {

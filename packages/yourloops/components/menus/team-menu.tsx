@@ -92,9 +92,11 @@ function TeamMenu(): JSX.Element {
   const opened = !!anchorEl
 
   const filteredTeams = teams.filter(team => team.code !== 'private')
-  const closeMenu = () => setAnchorEl(null)
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
+  const closeMenu = (): void => {
+    setAnchorEl(null)
+  }
 
   useEffect(() => {
     (async () => {
@@ -108,12 +110,12 @@ function TeamMenu(): JSX.Element {
     })()
   }, [caregivers, user])
 
-  const redirectToTeamDetails = (teamId: string) => {
+  const redirectToTeamDetails = (teamId: string): void => {
     history.push(`/teams/${teamId}`)
     closeMenu()
   }
 
-  const onSaveTeam = async (createdTeam: Partial<Team> | null) => {
+  const onSaveTeam = async (createdTeam: Partial<Team> | null): Promise<void> => {
     if (createdTeam) {
       try {
         await createTeam(createdTeam as Team)
@@ -125,7 +127,7 @@ function TeamMenu(): JSX.Element {
     setTeamCreationDialogData(null)
   }
 
-  const onTeamAction = () => {
+  const onTeamAction = (): void => {
     if (isUserHcp) {
       setTeamCreationDialogData({ team: null, onSaveTeam })
     } else if (isUserPatient) {
@@ -135,12 +137,12 @@ function TeamMenu(): JSX.Element {
     closeMenu()
   }
 
-  const redirectToCaregivers = () => {
+  const redirectToCaregivers = (): void => {
     history.push('/caregivers')
     closeMenu()
   }
 
-  const onJoinTeam = async (teamId?: string) => {
+  const onJoinTeam = async (teamId?: string): Promise<void> => {
     setShowJoinTeamDialog(false)
     if (teamId) {
       try {

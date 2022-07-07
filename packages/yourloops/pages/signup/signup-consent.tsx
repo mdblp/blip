@@ -53,7 +53,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
   const { state, dispatch } = useSignUpFormState()
   const consentsChecked = state.formValues.terms && state.formValues.privacyPolicy
 
-  const handleChange = (checked: boolean, keyField: FormValuesType) => {
+  const handleChange = (checked: boolean, keyField: FormValuesType): void => {
     dispatch({ type: 'EDIT_FORMVALUE', key: keyField, value: checked })
   }
 
@@ -67,7 +67,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
     handleChange(value, 'feedback')
   }
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
     event.preventDefault()
     handleNext()
     metrics.send('registration', 'accept_terms', userRole)

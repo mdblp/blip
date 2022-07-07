@@ -90,7 +90,7 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
     }
   }, [refSelected, selectedYear])
 
-  const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     switch (e.key) {
       case 'Enter':
       case ' ':

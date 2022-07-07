@@ -126,7 +126,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
     }
   }, [selectedMember, selectedTeam, prescription, numberOfMonthSelected, setPrescriptionInfo])
 
-  const selectMember = (userId: string) => {
+  const selectMember = (userId: string): void => {
     const member = selectedTeam?.members.find(member => member.user.userid === userId)
     if (!member) {
       throw new Error(`The selected member with the name ${userId} does not exists`)
@@ -134,7 +134,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
     setSelectedMember(member)
   }
 
-  const selectTeam = (teamId: string) => {
+  const selectTeam = (teamId: string): void => {
     const team = teams.find(team => team.id === teamId)
     if (!team) {
       throw new Error(`The selected team with the name ${teamId} does not exists`)
@@ -161,7 +161,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
     }
   }
 
-  const onMonthDropdownSelect = (value: string) => {
+  const onMonthDropdownSelect = (value: string): void => {
     setNumberOfMonthSelected(+value.charAt(0))
   }
 

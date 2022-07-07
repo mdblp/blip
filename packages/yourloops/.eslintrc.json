@@ -29,26 +29,23 @@
       "version": "detect"
     }
   },
-  "overrides": [
-    {
-      "files": [
-        "./test/**/*.*"
-      ],
-      "rules": {
-        "@typescript-eslint/promise-function-async": "off",
-        "@typescript-eslint/explicit-function-return-type": "off"
-      }
+  "overrides": [{
+    "files": ["./test/**/*.*"],
+    "rules": {
+      "@typescript-eslint/promise-function-async": "off",
+      "@typescript-eslint/explicit-function-return-type": "off"
     }
-  ],
+  }],
   "rules": {
-    "@typescript-eslint/strict-boolean-expressions": "off",
     "space-before-function-paren": "off",
-    "@typescript-eslint/space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
     "multiline-ternary": "off",
-    "@typescript-eslint/no-misused-promises": ["error", {"checksVoidReturn": false}],
+    "no-shadow": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/space-before-function-paren": ["error", { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
+    "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-invalid-void-type": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/no-extraneous-class": "off"
   }
 }

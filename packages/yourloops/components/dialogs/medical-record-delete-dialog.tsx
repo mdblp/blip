@@ -57,7 +57,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
 
   const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const deleteMedicalRecord = async () => {
+  const deleteMedicalRecord = async (): Promise<void> => {
     try {
       setInProgress(true)
       await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id)

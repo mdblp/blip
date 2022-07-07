@@ -72,7 +72,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     filterType: PatientFilterTypes,
     orderBy: PatientTableSortFields,
     order: SortDirection
-  ) => {
+  ): Patient[] => {
     let filteredPatients = teamHook.filterPatients(filterType, filter, flagged)
     filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged)
     // Sort the patients
@@ -87,7 +87,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     return filteredPatients
   }
 
-  const handleRefresh = async (force = false) => {
+  const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })
     setLoading(true)
     setErrorMessage(null)

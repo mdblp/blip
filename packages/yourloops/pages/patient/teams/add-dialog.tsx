@@ -133,13 +133,13 @@ export function EnterIdentificationCode(props: EnterIdentificationCodeProps): JS
     return numericCode
   }
 
-  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const numericCode = getNumericCode(event.target.value)
     const displayCode = getDisplayTeamCode(numericCode)
     setIdCode(displayCode)
   }
 
-  const handleClickJoinTeam = () => {
+  const handleClickJoinTeam = (): void => {
     props.handleSetIdCode(getNumericCode(idCode))
   }
 
@@ -222,7 +222,7 @@ export function ConfirmTeam(props: ConfirmTeamProps): JSX.Element {
     )
   }
 
-  const handleChange = (/* event: React.ChangeEvent<HTMLInputElement> */) => {
+  const handleChange = (): void => {
     setPrivacyAccepted(!privacyAccepted)
   }
 
@@ -318,14 +318,14 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
   const { actions, teamName, error } = props
   const dialogIsOpen = actions !== null
 
-  const resetDialog = () => {
+  const resetDialog = (): void => {
     setTimeout(() => {
       setIdCode('')
       setTeam(null)
       setErrorMessage(null)
     }, 100)
   }
-  const handleSetTeamId = (id: string) => {
+  const handleSetTeamId = (id: string): void => {
     if (id !== '') {
       const team = teamHook.teams.find((team) => team.code === id)
       if (!_.isNil(team)) {
@@ -335,12 +335,12 @@ function AddTeamDialog(props: AddTeamDialogProps): JSX.Element {
     }
   }
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     actions?.onDialogResult(undefined)
     resetDialog()
   }
 
-  const handleAccept = () => {
+  const handleAccept = (): void => {
     actions?.onDialogResult(team?.id ?? undefined)
     resetDialog()
   }

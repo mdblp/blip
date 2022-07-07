@@ -55,10 +55,10 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const dialogIsOpen = !_.isEmpty(teamToLeave?.team)
   const teamName = teamToLeave?.team?.name ?? ''
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     teamToLeave?.onDialogResult(false)
   }
-  const handleLeaveTeam = () => {
+  const handleLeaveTeam = (): void => {
     teamToLeave?.onDialogResult(true)
   }
 

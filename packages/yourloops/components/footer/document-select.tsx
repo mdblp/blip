@@ -61,7 +61,7 @@ function DocumentSelect(props: DocumentSelectProps): JSX.Element {
 
   const values = [selectedValue, intendedUse, training]
 
-  const getUrl = (documentName: string) => {
+  const getUrl = (documentName: string): string | null => {
     switch (documentName) {
       case intendedUse:
         return diabeloopUrls.getIntendedUseUrL(i18n.language)
@@ -72,7 +72,7 @@ function DocumentSelect(props: DocumentSelectProps): JSX.Element {
     }
   }
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
     const selectedValue = event.target.value as string
     const url = getUrl(selectedValue)
     if (url) {

@@ -94,7 +94,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const address = `${team.address?.line1}\n${team.address?.line2}\n${team.address?.zip}\n${team.address?.city}\n${team.address?.country}`
   const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null)
 
-  const onSaveTeam = async (editedTeam: Partial<Team> | null) => {
+  const onSaveTeam = async (editedTeam: Partial<Team> | null): Promise<void> => {
     if (editedTeam) {
       try {
         await teamHook.editTeam(editedTeam as Team)
@@ -107,7 +107,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
     setTeamToEdit(null)
   }
 
-  const editTeam = () => {
+  const editTeam = (): void => {
     setTeamToEdit({ team, onSaveTeam })
   }
 
