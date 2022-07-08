@@ -38,7 +38,7 @@ class PumpSettingsContainer extends React.Component {
       timezoneName: PropTypes.string.isRequired,
     }).isRequired,
     onSwitchToDaily: PropTypes.func,
-  }
+  };
 
   render() {
     const {

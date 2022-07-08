@@ -48,7 +48,7 @@ class CalendarContainer extends React.Component {
    */
   onHover = (date) => {
     this.setState({hoverDate: date});
-  }
+  };
 
   getSelectedSubtotal() {
     var options = this.props.selectorOptions;

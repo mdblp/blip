@@ -20,7 +20,7 @@
     "gen-sitemap": "node server/gen-sitemap-xml.js",
     "gen-lambda": "node server/cloudfront-gen-lambda.js",
     "lint": "npm run lint-blip && npm run lint-yourloops",
-    "lint-blip": "eslint templates server packages/blip packages/sundial packages/tideline packages/viz",
+    "lint-blip": "eslint templates server packages",
     "lint-yourloops": "lerna run --scope=yourloops lint",
     "fix-lint-yourloops": "lerna run --scope=yourloops lint-fix",
     "clean-coverage": "rm -rf coverage reports",

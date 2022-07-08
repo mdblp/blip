@@ -57,7 +57,7 @@ export class CBGSliceSegment extends PureComponent {
     userId: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
     x: PropTypes.number.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);

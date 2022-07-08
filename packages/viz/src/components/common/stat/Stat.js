@@ -169,7 +169,7 @@ class Stat extends React.Component {
         )}
       </div>
     );
-  }
+  };
 
   renderChartSummary = () => {
     const summaryData = this.getFormattedDataByKey("summary");
@@ -206,7 +206,7 @@ class Stat extends React.Component {
         )}
       </div>
     );
-  }
+  };
 
   renderStatUnits() {
     return (
@@ -333,7 +333,7 @@ class Stat extends React.Component {
         </div>
       </div>
     );
-  }
+  };
 
   renderTooltip = () => (
     <div className={styles.StatTooltipWrapper}>
@@ -689,7 +689,7 @@ class Stat extends React.Component {
     }
 
     return chartProps;
-  }
+  };
 
   setChartTitle = (datum = {}) => {
     let tooltipTitleData;
@@ -898,7 +898,7 @@ class Stat extends React.Component {
       value,
       suffix,
     };
-  }
+  };
 
   handleCollapse = () => {
     this.setState(state => ({

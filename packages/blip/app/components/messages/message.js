@@ -92,17 +92,17 @@ class Message extends React.Component {
     }
 
     this.setState(newState);
-  }
+  };
 
   handleAllowEdit = (e) => {
     e.preventDefault();
     this.setState({ editing: true });
-  }
+  };
 
   handleCancelEdit = (e) => {
     e.preventDefault();
     this.setState({ editing: false });
-  }
+  };
 
   renderTitle() {
     const edit = this.renderEditLink();

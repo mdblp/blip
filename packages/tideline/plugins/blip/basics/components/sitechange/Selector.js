@@ -166,7 +166,7 @@ class Selector extends React.Component {
         {this.subAction(latestPump, option.key)}
       </label>
     );
-  }
+  };
 
   subAction(pump, action) {
     const t = i18next.t.bind(i18next);
@@ -216,7 +216,7 @@ class Selector extends React.Component {
 
   handleSelectSubtotal = (selectedSubtotal, optionLabel) => {
     basicsActions.setSiteChangeEvent(this.props.sectionId, selectedSubtotal, optionLabel, this.props.trackMetric, this.props.updateBasicsSettings);
-  }
+  };
 }
 
 Selector.propTypes = {

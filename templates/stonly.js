@@ -1,4 +1,5 @@
 /**Stonly widget loader */
+/* eslint-disable */
 function loadStonlyWidget() {
   window.STONLY_WID = "__STONLY_WID__";
   !(function (s, t, o, n, l, y, w, g) {

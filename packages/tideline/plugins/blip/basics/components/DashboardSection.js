@@ -56,7 +56,7 @@ class DashboardSection extends React.Component {
 
   static defaultProps = {
     updateBasicsSettings: _.noop,
-  }
+  };
 
   render() {
     var dataDisplay;

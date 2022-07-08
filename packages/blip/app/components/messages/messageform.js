@@ -225,7 +225,7 @@ class MessageForm extends React.Component {
       // time: editable.time,
       // date: editable.date,
     });
-  }
+  };
 
   isButtonDisabled() {
     const { formFields } = this.props;

@@ -701,7 +701,7 @@ class PatientDataPage extends React.Component {
     if (this.state.canPrint) {
       this.setState({ showPDFPrintOptions: true });
     }
-  }
+  };
 
   /**
    * @param {{ start: string; end: string; format?: string; preset?: string; }|undefined} printOptions
@@ -773,7 +773,7 @@ class PatientDataPage extends React.Component {
           });
       }
     });
-  }
+  };
 
   handleClickRefresh(/* e */) {
     this.handleRefresh().catch(reason => this.log.error(reason));

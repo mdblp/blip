@@ -22,7 +22,7 @@ module.exports = {
     define: false,
     console: false,
   },
-  ignorePatterns: ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js"],
+  ignorePatterns: ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js", "packages/yourloops"],
   rules: {
     "complexity": ["warn", 15],
     "quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: false }],
@@ -49,6 +49,7 @@ module.exports = {
     "no-multi-spaces": 1,
     "no-redeclare": 1,
     "no-self-assign": 1,
+    "no-loss-of-precision": "off",
     "no-trailing-spaces": "error",
     "no-undef": "error",
     "no-use-before-define": [1, "nofunc"],
