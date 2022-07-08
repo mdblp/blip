@@ -60,7 +60,7 @@ function Login(): JSX.Element {
   const { loginWithRedirect, error, logout } = useAuth0();
   const { t } = useTranslation("yourloops");
   const { cardContent, card, cardActions } = loginStyle();
-
+  console.log(error);
   const onClickLogout = async () => {
     await logout({ returnTo: window.location.origin });
   };
