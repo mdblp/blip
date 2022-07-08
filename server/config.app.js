@@ -80,6 +80,7 @@ const config = {
   DEV: isDev || isTest,
   TEST: isTest,
   AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || "yourloops-dev.eu.auth0.com",
+  AUTH0_ISSUER: process.env.AUTH0_ISSUER || process.env.AUTH0_DOMAIN || "mockauth0:3043",
   AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || "HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
 };
 
