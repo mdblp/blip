@@ -27,7 +27,6 @@
  */
 
 import _ from "lodash";
-import bows from "bows";
 import i18n, { InitOptions, TOptions } from "i18next";
 import dayjs from "dayjs";
 import moment from "moment-timezone";
@@ -39,30 +38,22 @@ import getLocale from "./browser-locale";
 import metrics from "./metrics";
 import { zendeskLocale } from "./zendesk";
 
-const log = bows("i18n");
-
-const availableLanguagesNames = _.map(locales.resources, ({ name }) => name);
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[];
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country;
 });
 
-let language: LanguageCodes = "en";
+let language: LanguageCodes;
 
-async function init(): Promise<void> {
-  language = (localStorage.getItem("lang") ?? getLocale()) as LanguageCodes;
-
-  // Verification to be sure we have the language:
-  if (!availableLanguageCodes.includes(language)) {
-    language = "en";
-  }
-
-  log.info(`Initializing with language ${language}...`);
-
+function refreshLanguage(language: LanguageCodes) {
   zendeskLocale(language);
   dayjs.locale(language);
   moment.locale(language);
   metrics.setLanguage(language);
+}
+
+async function init(): Promise<void> {
+  language = (localStorage.getItem("lang") || getLocale() || "en") as LanguageCodes;
 
   const i18nOptions: InitOptions = {
     fallbackLng: locales.fallback,
@@ -98,20 +89,14 @@ async function init(): Promise<void> {
 
   // Update moment with the right language, for date display
   i18n.on("languageChanged", (lng: LanguageCodes) => {
-    // FIXME Only perform the update when the locale really changed.
-    // For some reason, it is call a lots of times
-    if (typeof lng === "string" && language !== lng && availableLanguageCodes.includes(lng)) {
-      log.debug(`languageChanged from ${language} to ${lng}`);
+    if (language !== lng && availableLanguageCodes.includes(lng)) {
       language = lng;
-      dayjs.locale(language);
-      moment.locale(language);
-      zendeskLocale(language);
-      metrics.setLanguage(language);
-      // Save locale for future load
+      refreshLanguage(language);
       localStorage.setItem("lang", language);
     }
   });
 
+  refreshLanguage(language);
   await i18n.init(i18nOptions);
 }
 
@@ -124,13 +109,7 @@ async function init(): Promise<void> {
  * @example t("translate-{{someone}}", { someone: "me" });
  */
 function t(s: string, p?: TOptions): string {
-  let opts;
-  if (p) {
-    opts = { ns: "yourloops", ...p };
-  } else {
-    opts = { ns: "yourloops" };
-  }
-  return i18n.t(s, opts);
+  return i18n.t(s, { ns: "yourloops", ...p });
 }
 
 const changeLanguage = i18n.changeLanguage.bind(i18n);
@@ -145,7 +124,6 @@ export {
   changeLanguage,
   getCurrentLang,
   getLangName,
-  availableLanguagesNames,
   availableLanguageCodes,
   availableCountries,
 };
