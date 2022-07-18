@@ -1,39 +1,38 @@
-/** @type {Options} */
-module.exports = {
-  root: true,
-  parser: "@babel/eslint-parser",
-  parserOptions: {
-    sourceType: "module",
-    allowImportExportEverywhere: false,
-    requireConfigFile: true,
-    babelOptions: {
-      configFile: "./babel.config.json",
-    },
+{
+  "root": true,
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "requireConfigFile": true,
+    "babelOptions": {
+      "configFile": "./babel.config.json"
+    }
   },
-  env: {
-    es6: true,
-    browser: true,
-    node: true,
-    mocha: true,
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "mocha": true
   },
-  globals: {
-    process: false,
-    require: false,
-    define: false,
-    console: false,
+  "globals": {
+    "process": false,
+    "require": false,
+    "define": false,
+    "console": false
   },
-  ignorePatterns: ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js", "packages/yourloops"],
-  rules: {
+  "ignorePatterns": ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js", "packages/yourloops"],
+  "rules": {
     "complexity": ["warn", 15],
-    "quotes": ["error", "double", { avoidEscape: true, allowTemplateLiterals: false }],
+    "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": false }],
     "quote-props": ["error", "consistent-as-needed"],
     "jsx-quotes": ["error", "prefer-double"],
     "linebreak-style": ["error", "unix"],
     "eol-last": ["error", "always"],
-    "camelcase": ["error", { allow: ["UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillMount"] }],
+    "camelcase": ["error", { "allow": ["UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillMount"] }],
     "eqeqeq": "error",
     "import/no-duplicates": "error",
-    "indent": ["error", 2, { SwitchCase: 0 }],
+    "indent": ["error", 2, { "SwitchCase": 0 }],
     "wrap-iife": [1, "inside"],
     "new-cap": "error",
     "no-bitwise": "warn",
@@ -56,7 +55,7 @@ module.exports = {
     "no-unused-vars": "error",
     "no-unreachable": "error",
     "no-useless-escape": "error",
-    "no-restricted-globals": ["error", { name: "isNaN", message: "Use Number.isNaN instead" }, "NaN", "parseFloat", "parseInt"],
+    "no-restricted-globals": ["error", { "name": "isNaN", "message": "Use Number.isNaN instead" }, "NaN", "parseFloat", "parseInt"],
     "no-else-return": "warn",
     "no-lonely-if": "warn",
     "no-shadow": "warn",
@@ -111,20 +110,19 @@ module.exports = {
     "react/no-string-refs": 1,
     "react/display-name": 1,
     "react/require-render-return": "warn",
-    "react/prop-types": "error",
+    "react/prop-types": "error"
   },
-  plugins: ["react", "jsx-a11y", "moment-utc", "lodash", "import"],
-  extends: [
+  "plugins": ["react", "jsx-a11y", "moment-utc", "lodash", "import"],
+  "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:import/warnings",
-    "plugin:lodash/recommended",
+    "plugin:lodash/recommended"
   ],
-  settings: {
-    react: {
-      pragma: "React",
-      version: "16.13.1",
-    },
-  },
-};
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
