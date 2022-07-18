@@ -42,6 +42,7 @@ const Yourloops = (): JSX.Element => {
   return (
     <Auth0Provider
       domain={appConfig.AUTH0_DOMAIN}
+      issuer={appConfig.AUTH0_ISSUER}
       clientId={appConfig.AUTH0_CLIENT_ID}
       redirectUri={window.location.origin}
       useRefreshTokens

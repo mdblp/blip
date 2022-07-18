@@ -65,6 +65,10 @@ function Login(): JSX.Element {
     await logout({ returnTo: window.location.origin })
   }
 
+  if (error) {
+    console.log(error)
+  }
+
   return (
     <Container maxWidth="sm">
       <Card className={card} elevation={4}>

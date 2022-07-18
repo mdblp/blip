@@ -29,5 +29,6 @@ export COOKIE_BANNER_CLIENT_ID='disabled'
 export TARGET_ENVIRONMENT='dev'
 
 # Auth0 configuration (yourloops-front-dev app)
-export AUTH0_DOMAIN="yourloops-dev.eu.auth0.com"
+export AUTH0_DOMAIN="mockauth0.itg.your-loops.dev"
+export AUTH0_ISSUER="mockauth0:3043"
 export AUTH0_CLIENT_ID="HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
