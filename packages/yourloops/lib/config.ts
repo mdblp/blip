@@ -55,6 +55,7 @@ const defaultConfig: AppConfig = {
   CBG_BUCKETS_ENABLED: true,
   ECPS_ENABLED: true,
   AUTH0_DOMAIN: "",
+  AUTH0_ISSUER: "",
   AUTH0_CLIENT_ID: "",
 };
 const appConfig = _.assign({}, defaultConfig);

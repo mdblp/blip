@@ -45,5 +45,6 @@ export interface AppConfig {
   CBG_BUCKETS_ENABLED: boolean;
   ECPS_ENABLED: boolean;
   AUTH0_DOMAIN: string;
+  AUTH0_ISSUER: string,
   AUTH0_CLIENT_ID: string;
 }
