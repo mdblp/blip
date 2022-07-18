@@ -22,8 +22,8 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "test"],
   "include": ["**/*"]
 }
