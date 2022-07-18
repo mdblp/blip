@@ -26,34 +26,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import i18n, { InitOptions, TOptions } from "i18next";
-import dayjs from "dayjs";
-import moment from "moment-timezone";
-import { initReactI18next } from "react-i18next";
+import _ from 'lodash'
+import i18n, { InitOptions, TOptions } from 'i18next'
+import dayjs from 'dayjs'
+import moment from 'moment-timezone'
+import { initReactI18next } from 'react-i18next'
 
-import locales from "../../../locales/languages.json";
-import { Country, LanguageCodes } from "../models/locales";
-import getLocale from "./browser-locale";
-import metrics from "./metrics";
-import { zendeskLocale } from "./zendesk";
+import locales from '../../../locales/languages.json'
+import { Country, LanguageCodes } from '../models/locales'
+import getLocale from './browser-locale'
+import metrics from './metrics'
+import { zendeskLocale } from './zendesk'
 
-const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[];
+const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
-  return { code: key, name: item.name } as Country;
-});
+  return { code: key, name: item.name } as Country
+})
 
-let language: LanguageCodes;
+let language: LanguageCodes
 
-function refreshLanguage(language: LanguageCodes) {
-  zendeskLocale(language);
-  dayjs.locale(language);
-  moment.locale(language);
-  metrics.setLanguage(language);
+function refreshLanguage(language: LanguageCodes): void {
+  zendeskLocale(language)
+  dayjs.locale(language)
+  moment.locale(language)
+  metrics.setLanguage(language)
 }
 
 async function init(): Promise<void> {
-  language = (localStorage.getItem("lang") || getLocale() || "en") as LanguageCodes;
+  language = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
 
   const i18nOptions: InitOptions = {
     fallbackLng: locales.fallback,
@@ -62,12 +62,12 @@ async function init(): Promise<void> {
     // To allow . in keys
     keySeparator: false,
     // To allow : in keys
-    nsSeparator: "|",
+    nsSeparator: '|',
 
     debug: false,
 
     interpolation: {
-      escapeValue: false, // not needed for react!!
+      escapeValue: false // not needed for react!!
     },
 
     // If the translation is empty, return the key instead
@@ -76,28 +76,28 @@ async function init(): Promise<void> {
     react: {
       wait: true,
       useSuspense: false, // Experimental features that is not yet available in a stable release.
-      transSupportBasicHtmlNodes: true, // allow <br/> and simple html elements in translations
+      transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
     },
     ns: locales.namespaces,
     defaultNS: locales.defaultNS,
     fallbackNS: locales.fallbackNS,
 
-    resources: locales.resources,
-  };
+    resources: locales.resources
+  }
 
-  i18n.use(initReactI18next);
+  i18n.use(initReactI18next)
 
   // Update moment with the right language, for date display
-  i18n.on("languageChanged", (lng: LanguageCodes) => {
+  i18n.on('languageChanged', (lng: LanguageCodes) => {
     if (language !== lng && availableLanguageCodes.includes(lng)) {
-      language = lng;
-      refreshLanguage(language);
-      localStorage.setItem("lang", language);
+      language = lng
+      refreshLanguage(language)
+      localStorage.setItem('lang', language)
     }
-  });
+  })
 
-  refreshLanguage(language);
-  await i18n.init(i18nOptions);
+  refreshLanguage(language)
+  await i18n.init(i18nOptions)
 }
 
 /**
@@ -109,14 +109,14 @@ async function init(): Promise<void> {
  * @example t("translate-{{someone}}", { someone: "me" });
  */
 function t(s: string, p?: TOptions): string {
-  return i18n.t(s, { ns: "yourloops", ...p });
+  return i18n.t(s, { ns: 'yourloops', ...p })
 }
 
-const changeLanguage = i18n.changeLanguage.bind(i18n);
-const getCurrentLang = (): LanguageCodes => language;
+const changeLanguage = i18n.changeLanguage.bind(i18n)
+const getCurrentLang = (): LanguageCodes => language
 const getLangName = (languageCode: LanguageCodes): string => {
-  return _.get(locales, `resources.${languageCode}.name`, "en");
-};
+  return _.get(locales, `resources.${languageCode}.name`, 'en')
+}
 
 export {
   init,
@@ -125,6 +125,6 @@ export {
   getCurrentLang,
   getLangName,
   availableLanguageCodes,
-  availableCountries,
-};
-export default i18n;
+  availableCountries
+}
+export default i18n
