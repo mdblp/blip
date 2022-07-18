@@ -26,7 +26,7 @@
  */
 
 
-export type LanguageCodes = "en" | "de" | "es" | "fr" | "it" | "nl";
+export type LanguageCodes = "en" | "de" | "es" | "fr" | "it" | "nl" | "jp";
 
 export interface Country {
   code: string;

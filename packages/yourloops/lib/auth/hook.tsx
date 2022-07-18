@@ -43,6 +43,7 @@ import {
 import appConfig from "../config";
 import HttpService from "../../services/http";
 import UserApi from "./user-api";
+import { availableLanguageCodes, changeLanguage, getCurrentLang } from "../language";
 
 const ReactAuthContext = createContext({} as AuthContext);
 const log = bows("AuthHook");
@@ -146,6 +147,13 @@ export function AuthContextImpl(): AuthContext {
 
   const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
 
+  const updateUserLanguage = (user: User) => {
+    const languageCode = user.preferences?.displayLanguageCode;
+    if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
+      changeLanguage(languageCode);
+    }
+  };
+
   const getUserInfo = useCallback(async () => {
     try {
       setFetchingUser(true);
@@ -164,6 +172,7 @@ export function AuthContextImpl(): AuthContext {
       user.profile = await UserApi.getProfile(user.id);
       user.preferences = await UserApi.getPreferences(user.id);
       user.settings = await UserApi.getSettings(user.id);
+      updateUserLanguage(user);
       setUser(user);
     } catch (err) {
       console.error(err);
