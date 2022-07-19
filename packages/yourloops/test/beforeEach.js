@@ -1,8 +1,7 @@
-import { init as i18nInit } from "../lib/language";
-
+import { init as i18nInit } from '../lib/language'
 
 i18nInit().then(() => {
-  //nothing to do
+  // nothing to do
 }).catch((reason) => {
-  console.error(reason);
-});
+  console.error(reason)
+})
