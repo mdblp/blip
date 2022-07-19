@@ -103,7 +103,7 @@ const PatientDashboard = (props) => {
           <ChatWidget
             id="dashboard-chat-widget"
             patient={patient}
-            userId={user.userid}
+            userId={user.id}
             userRole={user.role}
           />
         }
