@@ -18,8 +18,7 @@
     "noEmitHelpers": true,
     "noEmitOnError": true,
     "noErrorTruncation": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": true
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": ["node_modules", "test"],
   "include": ["**/*"]
