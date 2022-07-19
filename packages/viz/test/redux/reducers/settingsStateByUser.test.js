@@ -15,105 +15,105 @@
  * == BSD2 LICENSE ==
  */
 
-import { expect } from "chai";
-import mutationTracker from "object-invariant-test-helper";
+import { expect } from 'chai'
+import mutationTracker from 'object-invariant-test-helper'
 
-import * as actionTypes from "../../../src/redux/constants/actionTypes";
-import settingsStateByUser from "../../../src/redux/reducers/settingsStateByUser";
+import * as actionTypes from '../../../src/redux/constants/actionTypes'
+import settingsStateByUser from '../../../src/redux/reducers/settingsStateByUser'
 
-describe("settingsStateByUser", () => {
-  const USER_1 = "a1b2c3";
-  const USER_2 = "d4e5f6";
+describe('settingsStateByUser', () => {
+  const USER_1 = 'a1b2c3'
+  const USER_2 = 'd4e5f6'
 
-  const deviceKey = "acme";
-  const scheduleKey = "weekday";
+  const deviceKey = 'acme'
+  const scheduleKey = 'weekday'
 
-  it("should return the initial state of {}", () => {
-    expect(settingsStateByUser(undefined, {})).to.deep.equal({});
-  });
+  it('should return the initial state of {}', () => {
+    expect(settingsStateByUser(undefined, {})).to.deep.equal({})
+  })
 
-  describe("FETCH_PATIENT_DATA_SUCCESS", () => {
-    it("should set up an empty object for settings state for the user if not in tree", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+  describe('FETCH_PATIENT_DATA_SUCCESS', () => {
+    it('should set up an empty object for settings state for the user if not in tree', () => {
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
         type: actionTypes.FETCH_PATIENT_DATA_SUCCESS,
-        payload: { patientId: USER_2 },
+        payload: { patientId: USER_2 }
       })).to.deep.equal({
         [USER_1]: { [deviceKey]: { illness: false } },
-        [USER_2]: {},
-      });
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
+        [USER_2]: {}
+      })
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
 
-    it("should do nothing if user already in tree", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+    it('should do nothing if user already in tree', () => {
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
         type: actionTypes.FETCH_PATIENT_DATA_SUCCESS,
-        payload: { patientId: USER_1 },
+        payload: { patientId: USER_1 }
       })).to.deep.equal({
-        [USER_1]: { [deviceKey]: { illness: false } },
-      });
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
-  });
+        [USER_1]: { [deviceKey]: { illness: false } }
+      })
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
+  })
 
-  describe("LOGOUT_REQUEST", () => {
-    it("should reset to the initial state of {}", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+  describe('LOGOUT_REQUEST', () => {
+    it('should reset to the initial state of {}', () => {
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
-        type: actionTypes.LOGOUT_REQUEST,
-      })).to.deep.equal({});
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
-  });
+        type: actionTypes.LOGOUT_REQUEST
+      })).to.deep.equal({})
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
+  })
 
-  describe("TOGGLE_SETTINGS_SECTION", () => {
+  describe('TOGGLE_SETTINGS_SECTION', () => {
     it("should add a key that wasn't previously in state", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
         type: actionTypes.TOGGLE_SETTINGS_SECTION,
-        payload: { userId: USER_1, deviceKey, scheduleOrProfileKey: scheduleKey },
+        payload: { userId: USER_1, deviceKey, scheduleOrProfileKey: scheduleKey }
       })).to.deep.equal({
         [USER_1]: { [deviceKey]: {
           illness: false,
-          [scheduleKey]: true,
-        } },
-      });
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
+          [scheduleKey]: true
+        } }
+      })
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
 
-    it("should flip state for a key that was already in state", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+    it('should flip state for a key that was already in state', () => {
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
         type: actionTypes.TOGGLE_SETTINGS_SECTION,
-        payload: { userId: USER_1, deviceKey, scheduleOrProfileKey: "illness" },
+        payload: { userId: USER_1, deviceKey, scheduleOrProfileKey: 'illness' }
       })).to.deep.equal({
         [USER_1]: { [deviceKey]: {
-          illness: true,
-        } },
-      });
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
+          illness: true
+        } }
+      })
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
 
-    it("should add a subtree for a new device without wiping other devices", () => {
-      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } };
-      const tracked = mutationTracker.trackObj(initialState);
+    it('should add a subtree for a new device without wiping other devices', () => {
+      const initialState = { [USER_1]: { [deviceKey]: { illness: false } } }
+      const tracked = mutationTracker.trackObj(initialState)
       expect(settingsStateByUser(initialState, {
         type: actionTypes.TOGGLE_SETTINGS_SECTION,
-        payload: { userId: USER_1, deviceKey: "alphabet", scheduleOrProfileKey: scheduleKey },
+        payload: { userId: USER_1, deviceKey: 'alphabet', scheduleOrProfileKey: scheduleKey }
       })).to.deep.equal({
         [USER_1]: { [deviceKey]: {
-          illness: false,
+          illness: false
         }, alphabet: {
-          [scheduleKey]: true,
-        } },
-      });
-      expect(mutationTracker.hasMutated(tracked)).to.be.false;
-    });
-  });
-});
+          [scheduleKey]: true
+        } }
+      })
+      expect(mutationTracker.hasMutated(tracked)).to.be.false
+    })
+  })
+})

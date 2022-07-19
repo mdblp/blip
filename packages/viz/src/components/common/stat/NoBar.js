@@ -11,21 +11,21 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import styles from "./Stat.css";
+import styles from './Stat.css'
 
 /**
  * Like BgBar without bars
  * @param {{data: {id: string, value: number, valueString: string, units: string, title: string}[], id: string}} props
  */
 function NoBar(props) {
-  const { data, id } = props;
-  const total = data.reduce((p, c) => p + Math.max(c.value, 0), 0);
-  const percent = (v) => Number.isFinite(total) && total > 0 ? Math.round(100 * v / total).toString(10) : "--";
+  const { data, id } = props
+  const total = data.reduce((p, c) => p + Math.max(c.value, 0), 0)
+  const percent = (v) => Number.isFinite(total) && total > 0 ? Math.round(100 * v / total).toString(10) : '--'
 
-  const elements = [];
+  const elements = []
   data.forEach((v) => {
     elements.push(
       <span
@@ -34,17 +34,17 @@ function NoBar(props) {
         className={`${styles.nobarRowTitle} ${styles[`nobar-${id}-${v.id}`]}`}>
         {v.title}
       </span>
-    );
+    )
     elements.push(
       <span
         key={`${v.id}-value`}
         id={`nobar-${id}-${v.id}-value`}
         className={`${styles.nobarRowValue} ${styles[`nobar-${id}-${v.id}`]}`}>
-        { v.value > 0 ? v.valueString : "0" }
+        { v.value > 0 ? v.valueString : '0' }
           &nbsp;
         {v.units}
       </span>
-    );
+    )
     elements.push(
       <div
         key={`${v.id}-percent`}
@@ -53,13 +53,13 @@ function NoBar(props) {
         <span className={styles.nobarPercentValue}>{percent(Math.max(v.value, 0))}</span>
         <span className={styles.nobarPercentUnits}>%</span>
       </div>
-    );
-  });
+    )
+  })
   return (
     <div id={`nobar-${id}`} className={`${styles.nobar} ${styles[`nobar-${id}`]}`}>
       {elements}
     </div>
-  );
+  )
 }
 
 NoBar.propTypes = {
@@ -68,9 +68,9 @@ NoBar.propTypes = {
     value: PropTypes.number.isRequired,
     valueString: PropTypes.string.isRequired,
     units: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired
   })).isRequired,
-  id: PropTypes.string.isRequired,
-};
+  id: PropTypes.string.isRequired
+}
 
-export default NoBar;
+export default NoBar

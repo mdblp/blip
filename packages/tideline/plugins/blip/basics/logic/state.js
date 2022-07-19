@@ -15,59 +15,59 @@
  * == BSD2 LICENSE ==
  */
 
-import i18next from "i18next";
-import _ from "lodash";
-import React from "react";
+import i18next from 'i18next'
+import _ from 'lodash'
+import React from 'react'
 
 import {
   SITE_CHANGE_BY_MANUFACTURER,
   DEFAULT_MANUFACTURER,
   SITE_CHANGE_RESERVOIR,
   SITE_CHANGE_CANNULA,
-  SITE_CHANGE_TUBING,
-} from "./constants";
-import CalendarContainer from "../components/CalendarContainer";
-import SiteChangeSelector from "../components/sitechange/Selector";
-import SiteChange from "../components/chart/SiteChange";
-import InfusionHoverDisplay from "../components/day/hover/InfusionHoverDisplay";
-import togglableState from "../TogglableState";
+  SITE_CHANGE_TUBING
+} from './constants'
+import CalendarContainer from '../components/CalendarContainer'
+import SiteChangeSelector from '../components/sitechange/Selector'
+import SiteChange from '../components/chart/SiteChange'
+import InfusionHoverDisplay from '../components/day/hover/InfusionHoverDisplay'
+import togglableState from '../TogglableState'
 
 function basicsState(source, manufacturer) {
-  const t = i18next.t.bind(i18next);
+  const t = i18next.t.bind(i18next)
   const siteChangesTitle = _.get(
     _.get(SITE_CHANGE_BY_MANUFACTURER, manufacturer, SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
-    "label"
-  );
+    'label'
+  )
 
   return {
     sections: {
       siteChanges: {
         active: true,
         chart: React.createFactory(SiteChange),
-        column: "right",
+        column: 'right',
         container: CalendarContainer,
         hasHover: true,
         hoverDisplay: React.createFactory(InfusionHoverDisplay),
-        id: "siteChanges",
+        id: 'siteChanges',
         index: 1,
-        noDataMessage: "",
+        noDataMessage: '',
         togglable: togglableState.off,
         selector: React.createFactory(SiteChangeSelector),
         selectorOptions: {
-          primary: { key: SITE_CHANGE_RESERVOIR, label: t("Reservoir changes") },
+          primary: { key: SITE_CHANGE_RESERVOIR, label: t('Reservoir changes') },
           rows: [
             [
-              { key: SITE_CHANGE_CANNULA, label: t("Cannula Fills") },
-              { key: SITE_CHANGE_TUBING, label: t("Tube Primes") },
-            ],
-          ],
+              { key: SITE_CHANGE_CANNULA, label: t('Cannula Fills') },
+              { key: SITE_CHANGE_TUBING, label: t('Tube Primes') }
+            ]
+          ]
         },
         settingsTogglable: togglableState.closed,
         title: t(siteChangesTitle),
-        type: SITE_CHANGE_RESERVOIR,
-      },
-    },
-  };
+        type: SITE_CHANGE_RESERVOIR
+      }
+    }
+  }
 }
 
-export default basicsState;
+export default basicsState

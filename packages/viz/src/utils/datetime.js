@@ -39,26 +39,26 @@
  *
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 // using d3-time-format because time is time of data access in
 // user’s browser time, not PwD’s configured timezone
-import { utcFormat, timeFormat } from "d3-time-format";
-import moment from "moment-timezone";
-import i18next from "i18next";
+import { utcFormat, timeFormat } from 'd3-time-format'
+import moment from 'moment-timezone'
+import i18next from 'i18next'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
-export const THIRTY_MINS = 1800000;
-export const ONE_HR = 3600000;
-export const THREE_HRS = 10800000;
-export const TWENTY_FOUR_HRS = 86400000;
+export const THIRTY_MINS = 1800000
+export const ONE_HR = 3600000
+export const THREE_HRS = 10800000
+export const TWENTY_FOUR_HRS = 86400000
 
 /**
  * getHourMinuteFormat
  * @returns string according to translation
  */
 export function getHourMinuteFormat() {
-  return t("h:mm a");
+  return t('h:mm a')
 }
 
 /**
@@ -66,7 +66,7 @@ export function getHourMinuteFormat() {
  * @returns string according to translation
  */
 export function getHourMinuteFormatNoSpace() {
-  return t("h:mma");
+  return t('h:mma')
 }
 
 /**
@@ -74,7 +74,7 @@ export function getHourMinuteFormatNoSpace() {
  * @returns string according to translation
  */
 export function getSimpleHourFormat() {
-  return t("ha");
+  return t('ha')
 }
 
 /**
@@ -82,7 +82,7 @@ export function getSimpleHourFormat() {
  * @returns string according to translation
  */
 export function getDayFormat() {
-  return t("dddd, MMMM D");
+  return t('dddd, MMMM D')
 }
 
 /**
@@ -90,7 +90,7 @@ export function getDayFormat() {
  * @returns string according to translation
  */
 export function getLongDayFormat() {
-  return t("MMM D, YYYY");
+  return t('MMM D, YYYY')
 }
 
 /**
@@ -98,7 +98,7 @@ export function getLongDayFormat() {
  * @returns string according to translation
  */
 export function getSimpleHourFormatSpace() {
-  return t("h a");
+  return t('h a')
 }
 
 /**
@@ -106,7 +106,7 @@ export function getSimpleHourFormatSpace() {
  * @returns string according to translation
  */
 export function getLongFormat() {
-  return t("ddd, MMM D, Y");
+  return t('ddd, MMM D, Y')
 }
 
 /**
@@ -116,7 +116,7 @@ export function getLongFormat() {
  * @returns {string} Format according to translation
  */
 export function getLongDayHourFormat() {
-  return t("MMM D, YYYY h:mm a");
+  return t('MMM D, YYYY h:mm a')
 }
 
 /**
@@ -126,9 +126,9 @@ export function getLongDayHourFormat() {
  * @returns new Date ISO string - the provided datetime + duration
  */
 export function addDuration(startTime, duration) {
-  const dateTime = new Date(startTime);
+  const dateTime = new Date(startTime)
 
-  return new Date(dateTime.valueOf() + duration).toISOString();
+  return new Date(dateTime.valueOf() + duration).toISOString()
 }
 
 /**
@@ -136,7 +136,7 @@ export function addDuration(startTime, duration) {
  * @returns {String} browser-determined timezone name
  */
 export function getBrowserTimezone() {
-  return new Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return new Intl.DateTimeFormat().resolvedOptions().timeZone
 }
 
 /**
@@ -146,10 +146,10 @@ export function getBrowserTimezone() {
  * @return {String} timezoneName from timePrefs, browser, or fallback to 'UTC'
  */
 export function getTimezoneFromTimePrefs(timePrefs) {
-  if (typeof timePrefs === "object" && !_.isEmpty(timePrefs)) {
-    return timePrefs.timezoneName ?? getBrowserTimezone() ?? "UTC";
+  if (typeof timePrefs === 'object' && !_.isEmpty(timePrefs)) {
+    return timePrefs.timezoneName ?? getBrowserTimezone() ?? 'UTC'
   }
-  return "UTC";
+  return 'UTC'
 }
 
 /**
@@ -159,11 +159,11 @@ export function getTimezoneFromTimePrefs(timePrefs) {
  * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
  */
 export function formatBirthdate(patient) {
-  const birthday = _.get(patient, "profile.patient.birthday", "");
+  const birthday = _.get(patient, 'profile.patient.birthday', '')
   if (birthday) {
-    return moment.utc(birthday).format(t("birthday-format"));
+    return moment.utc(birthday).format(t('birthday-format'))
   }
-  return "";
+  return ''
 }
 
 /**
@@ -176,9 +176,9 @@ export function formatBirthdate(patient) {
  */
 export function formatClocktimeFromMsPer24(milliseconds, format = getHourMinuteFormat()) {
   if (!Number.isFinite(milliseconds) || milliseconds < 0 || milliseconds > TWENTY_FOUR_HRS) {
-    throw new Error("First argument must be a value in milliseconds per twenty-four hour day!");
+    throw new Error('First argument must be a value in milliseconds per twenty-four hour day!')
   }
-  return moment.utc(milliseconds).format(format);
+  return moment.utc(milliseconds).format(format)
 }
 
 /**
@@ -186,7 +186,7 @@ export function formatClocktimeFromMsPer24(milliseconds, format = getHourMinuteF
  * @return {String} formatted current date, e.g., 'Jul 4, 2017';
  */
 export function formatCurrentDate() {
-  return timeFormat(t("%b %-d, %Y"))(new Date());
+  return timeFormat(t('%b %-d, %Y'))(new Date())
 }
 
 /**
@@ -196,11 +196,11 @@ export function formatCurrentDate() {
  * @return {String} formatted diagnosis date, e.g., 'Jul 4, 1975'; empty String if none found
  */
 export function formatDiagnosisDate(patient) {
-  const diagnosis = _.get(patient, "profile.patient.diagnosisDate", "");
+  const diagnosis = _.get(patient, 'profile.patient.diagnosisDate', '')
   if (diagnosis) {
-    return utcFormat("%b %-d, %Y")(Date.parse(diagnosis));
+    return utcFormat('%b %-d, %Y')(Date.parse(diagnosis))
   }
-  return "";
+  return ''
 }
 
 /**
@@ -210,17 +210,17 @@ export function formatDiagnosisDate(patient) {
  * @param {string|undefined} format - Optional. The moment format string to parse startDate and endDate with
  * @param {string|undefined} timezone Default to UTC
  */
-export function formatDateRange(startDate, endDate, format = undefined, timezone = "UTC") {
-  const start = moment.tz(startDate, format, timezone);
-  const end = moment.tz(endDate, format, timezone);
+export function formatDateRange(startDate, endDate, format = undefined, timezone = 'UTC') {
+  const start = moment.tz(startDate, format, timezone)
+  const end = moment.tz(endDate, format, timezone)
 
-  const isSameYear = start.isSame(end, "year");
-  const startFormat = isSameYear ? start.format(t("MMM D")) : start.format(t("MMM D, YYYY"));
-  const endFormat = end.format(t("MMM D, YYYY"));
+  const isSameYear = start.isSame(end, 'year')
+  const startFormat = isSameYear ? start.format(t('MMM D')) : start.format(t('MMM D, YYYY'))
+  const endFormat = end.format(t('MMM D, YYYY'))
 
-  const formattedRange = `${startFormat} - ${endFormat}`;
+  const formattedRange = `${startFormat} - ${endFormat}`
 
-  return formattedRange;
+  return formattedRange
 }
 
 /**
@@ -230,74 +230,74 @@ export function formatDateRange(startDate, endDate, format = undefined, timezone
  * @return {string} formatted duration, e.g., '1¼ h'
  */
 export function formatDuration(duration, opts = {}) {
-  const momentDuration = moment.duration(duration);
-  const days = momentDuration.days();
-  const hours = momentDuration.hours();
-  const minutes = momentDuration.minutes();
-  const seconds = momentDuration.seconds();
+  const momentDuration = moment.duration(duration)
+  const days = momentDuration.days()
+  const hours = momentDuration.hours()
+  const minutes = momentDuration.minutes()
+  const seconds = momentDuration.seconds()
 
-  const QUARTER = "¼";
-  const THIRD = "⅓";
-  const HALF = "½";
-  const TWO_THIRDS = "⅔";
-  const THREE_QUARTERS = "¾";
+  const QUARTER = '¼'
+  const THIRD = '⅓'
+  const HALF = '½'
+  const TWO_THIRDS = '⅔'
+  const THREE_QUARTERS = '¾'
 
   if (opts.condensed) {
     const formatted = {
-      days: "",
-      hours: "",
-      minutes: "",
-      seconds: "",
-    };
+      days: '',
+      hours: '',
+      minutes: '',
+      seconds: ''
+    }
 
     if (days + hours + minutes === 0) {
       // Less than a minute
       if (seconds > 0) {
-        formatted.seconds = `${seconds}${t("abbrev_duration_second")}`;
+        formatted.seconds = `${seconds}${t('abbrev_duration_second')}`
       } else {
-        formatted.minutes = `0${t("abbrev_duration_minute_m")}`;
+        formatted.minutes = `0${t('abbrev_duration_minute_m')}`
       }
     } else {
-      let roundedMinutes = seconds >= 30 ? minutes + 1 : minutes;
-      let roundedHours = hours;
-      let roundedDays = days;
+      let roundedMinutes = seconds >= 30 ? minutes + 1 : minutes
+      let roundedHours = hours
+      let roundedDays = days
 
       if (roundedMinutes >= 60) {
-        roundedMinutes = roundedMinutes - 60;
-        roundedHours++;
+        roundedMinutes = roundedMinutes - 60
+        roundedHours++
       }
 
       if (roundedHours >= 24) {
-        roundedHours = roundedHours - 24;
-        roundedDays++;
+        roundedHours = roundedHours - 24
+        roundedDays++
       }
 
-      formatted.days = roundedDays > 0 ? `${roundedDays}${t("abbrev_duration_day")} ` : "";
-      formatted.hours = roundedHours > 0 ? `${roundedHours}${t("abbrev_duration_hour")} ` : "";
-      formatted.minutes = roundedMinutes > 0 ? `${roundedMinutes}${t("abbrev_duration_minute_m")} ` : "";
+      formatted.days = roundedDays > 0 ? `${roundedDays}${t('abbrev_duration_day')} ` : ''
+      formatted.hours = roundedHours > 0 ? `${roundedHours}${t('abbrev_duration_hour')} ` : ''
+      formatted.minutes = roundedMinutes > 0 ? `${roundedMinutes}${t('abbrev_duration_minute_m')} ` : ''
     }
 
-    return `${formatted.days}${formatted.hours}${formatted.minutes}${formatted.seconds}`.trim();
+    return `${formatted.days}${formatted.hours}${formatted.minutes}${formatted.seconds}`.trim()
   } else if (hours > 0) {
-    const suffix = t("abbrev_duration_hour");
+    const suffix = t('abbrev_duration_hour')
     switch (minutes) {
-    case 0:
-      return `${hours} ${suffix}`;
-    case 15:
-      return `${hours}${QUARTER} ${suffix}`;
-    case 20:
-      return `${hours}${THIRD} ${suffix}`;
-    case 30:
-      return `${hours}${HALF} ${suffix}`;
-    case 40:
-      return `${hours}${TWO_THIRDS} ${suffix}`;
-    case 45:
-      return `${hours}${THREE_QUARTERS} ${suffix}`;
-    default:
-      return `${hours} ${suffix} ${minutes} ${t("abbrev_duration_minute")}`;
+      case 0:
+        return `${hours} ${suffix}`
+      case 15:
+        return `${hours}${QUARTER} ${suffix}`
+      case 20:
+        return `${hours}${THIRD} ${suffix}`
+      case 30:
+        return `${hours}${HALF} ${suffix}`
+      case 40:
+        return `${hours}${TWO_THIRDS} ${suffix}`
+      case 45:
+        return `${hours}${THREE_QUARTERS} ${suffix}`
+      default:
+        return `${hours} ${suffix} ${minutes} ${t('abbrev_duration_minute')}`
     }
   } else {
-    return `${minutes} ${t("abbrev_duration_minute")}`;
+    return `${minutes} ${t('abbrev_duration_minute')}`
   }
 }
 
@@ -310,8 +310,8 @@ export function formatDuration(duration, opts = {}) {
  * @return {String} formatted datetime, e.g., 'Sunday, January 1'
  */
 export function formatLocalizedFromUTC(utc, timePrefs, format = getDayFormat()) {
-  const timezone = getTimezoneFromTimePrefs(timePrefs);
-  return moment.utc(utc).tz(timezone).format(format);
+  const timezone = getTimezoneFromTimePrefs(timePrefs)
+  return moment.utc(utc).tz(timezone).format(format)
 }
 
 /**
@@ -322,24 +322,24 @@ export function formatLocalizedFromUTC(utc, timePrefs, format = getDayFormat()) 
  * @return {Number} Integer hammertime (i.e., UTC time in milliseconds)
  */
 export function getHammertimeFromDatumWithTimePrefs(datum, timePrefs) {
-  let hammertime;
+  let hammertime
   if (timePrefs.timezoneAware) {
     if (!_.isUndefined(datum.normalTime)) {
-      hammertime = Date.parse(datum.normalTime);
+      hammertime = Date.parse(datum.normalTime)
     } else {
-      hammertime = null;
+      hammertime = null
     }
   } else if (!_.isUndefined(datum.deviceTime)) {
-    hammertime = Date.parse(datum.deviceTime);
+    hammertime = Date.parse(datum.deviceTime)
   } else {
-    hammertime = null;
+    hammertime = null
   }
   if (_.isNaN(hammertime)) {
     throw new Error(
-      "Check your input datum; could not parse `normalTime` or `deviceTime` with Date.parse."
-    );
+      'Check your input datum; could not parse `normalTime` or `deviceTime` with Date.parse.'
+    )
   }
-  return hammertime;
+  return hammertime
 }
 
 /**
@@ -352,16 +352,16 @@ export function getHammertimeFromDatumWithTimePrefs(datum, timePrefs) {
  */
 export function getLocalizedCeiling(utc, timePrefs) {
   if (utc instanceof Date) {
-    throw new Error("`utc` must be a ISO-formatted String timestamp or integer hammertime!");
+    throw new Error('`utc` must be a ISO-formatted String timestamp or integer hammertime!')
   }
-  const timezone = getTimezoneFromTimePrefs(timePrefs);
+  const timezone = getTimezoneFromTimePrefs(timePrefs)
   const startOfDay = moment.utc(utc)
     .tz(timezone)
-    .startOf("day");
+    .startOf('day')
 
-  const utcHammertime = (typeof utc === "string") ? Date.parse(utc) : utc;
+  const utcHammertime = (typeof utc === 'string') ? Date.parse(utc) : utc
   if (startOfDay.valueOf() === utcHammertime) {
-    return startOfDay.toDate();
+    return startOfDay.toDate()
   }
-  return startOfDay.add(1, "day").toDate();
+  return startOfDay.add(1, 'day').toDate()
 }

@@ -15,10 +15,10 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
+import React from 'react'
 
 function NoChange() {
-  return <div className="NoChange" />;
+  return <div className="NoChange" />
 }
 
-export default NoChange;
+export default NoChange

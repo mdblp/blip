@@ -15,49 +15,49 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { expect } from "chai";
-import { mount } from "enzyme";
+import React from 'react'
+import { expect } from 'chai'
+import { mount } from 'enzyme'
 
-import * as scales from "../../../helpers/scales";
+import * as scales from '../../../helpers/scales'
 const {
   trendsHeight,
   trendsWidth,
-  trendsXScale: xScale,
-} = scales.trends;
-import SVGContainer from "../../../helpers/SVGContainer";
+  trendsXScale: xScale
+} = scales.trends
+import SVGContainer from '../../../helpers/SVGContainer'
 
-import { TWENTY_FOUR_HRS } from "../../../../src/utils/datetime";
+import { TWENTY_FOUR_HRS } from '../../../../src/utils/datetime'
 
-import XAxisLabels from "../../../../src/components/trends/common/XAxisLabels";
+import XAxisLabels from '../../../../src/components/trends/common/XAxisLabels'
 
-describe("XAxisLabels", () => {
-  let wrapper;
+describe('XAxisLabels', () => {
+  let wrapper
   const props = {
     margins: {
       top: 0,
       right: 0,
       bottom: 0,
-      left: 0,
+      left: 0
     },
     xOffset: 0,
-    xScale,
-  };
+    xScale
+  }
 
   before(() => {
     wrapper = mount(
       <SVGContainer dimensions={{ width: trendsWidth, height: trendsHeight }}>
         <XAxisLabels {...props} />
       </SVGContainer>
-    );
-  });
+    )
+  })
 
-  it("should render eight text labels at three hour intervals", () => {
-    const labels = wrapper.find("text");
-    expect(labels).to.have.length(8);
+  it('should render eight text labels at three hour intervals', () => {
+    const labels = wrapper.find('text')
+    expect(labels).to.have.length(8)
     // Enzyme forEach cannot be replaced by _.forEach
     labels.forEach((label, i) => {
-      expect(label.prop("x")).to.equal(xScale(i * (TWENTY_FOUR_HRS / 8)));
-    });
-  });
-});
+      expect(label.prop('x')).to.equal(xScale(i * (TWENTY_FOUR_HRS / 8)))
+    })
+  })
+})

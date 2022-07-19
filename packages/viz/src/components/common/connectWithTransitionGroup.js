@@ -16,34 +16,34 @@
  */
 export default function connectWithTransitionGroup(connect) {
   const willFunctions = [
-    "componentWillAppear",
-    "componentWillEnter",
-    "componentWillLeave",
-  ];
+    'componentWillAppear',
+    'componentWillEnter',
+    'componentWillLeave'
+  ]
 
   const didFunctions = [
-    "componentDidAppear",
-    "componentDidEnter",
-    "componentDidLeave",
-  ];
+    'componentDidAppear',
+    'componentDidEnter',
+    'componentDidLeave'
+  ]
 
   willFunctions.forEach((key) => {
     connect.prototype[key] = function (cb) {
       if (this.wrappedInstance[key]) {
-        this.wrappedInstance[key](cb);
+        this.wrappedInstance[key](cb)
       } else {
-        cb();
+        cb()
       }
-    };
-  });
+    }
+  })
 
   didFunctions.forEach((key) => {
     connect.prototype[key] = function () {
       if (this.wrappedInstance[key]) {
-        this.wrappedInstance[key]();
+        this.wrappedInstance[key]()
       }
-    };
-  });
+    }
+  })
 
-  return connect;
+  return connect
 }

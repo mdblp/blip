@@ -15,24 +15,24 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { delayShowCbgTracesOnFocus } from "../../../redux/actions/thunks";
-import { unfocusTrendsCbgSlice } from "../../../redux/actions/trends";
+import { delayShowCbgTracesOnFocus } from '../../../redux/actions/thunks'
+import { unfocusTrendsCbgSlice } from '../../../redux/actions/trends'
 
 export class CBGSliceSegment extends PureComponent {
   static propTypes = {
     classes: PropTypes.string.isRequired,
     datum: PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired
     }),
     focusSlice: PropTypes.func.isRequired,
     interpolated: PropTypes.shape({
       key: PropTypes.string.isRequired,
-      style: PropTypes.object.isRequired,
+      style: PropTypes.object.isRequired
     }),
     positionData: PropTypes.shape({
       left: PropTypes.number.isRequired,
@@ -45,50 +45,50 @@ export class CBGSliceSegment extends PureComponent {
         ninetiethQuantile: PropTypes.number.isRequired,
         tenthQuantile: PropTypes.number.isRequired,
         thirdQuartile: PropTypes.number.isRequired,
-        topMargin: PropTypes.number.isRequired,
-      }).isRequired,
+        topMargin: PropTypes.number.isRequired
+      }).isRequired
     }),
     segment: PropTypes.shape({
       height: PropTypes.string.isRequired,
       heightKeys: PropTypes.arrayOf(PropTypes.string).isRequired,
-      y: PropTypes.string.isRequired,
+      y: PropTypes.string.isRequired
     }),
     unfocusSlice: PropTypes.func.isRequired,
     userId: PropTypes.string.isRequired,
     width: PropTypes.number.isRequired,
-    x: PropTypes.number.isRequired,
-  };
+    x: PropTypes.number.isRequired
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.handleMouseOut = this.handleMouseOut.bind(this);
-    this.handleMouseOver = this.handleMouseOver.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this)
+    this.handleMouseOver = this.handleMouseOver.bind(this)
   }
 
   handleMouseOut(e) {
     // we don't want to unfocus the slice if the user just rolled over a cbg inside it
-    if (e.relatedTarget && e.relatedTarget.id.search("cbgCircle") !== -1) {
-      return;
+    if (e.relatedTarget && e.relatedTarget.id.search('cbgCircle') !== -1) {
+      return
     }
-    this.props.unfocusSlice(this.props.userId);
+    this.props.unfocusSlice(this.props.userId)
   }
 
   handleMouseOver() {
     const {
-      datum, focusSlice, positionData, segment: { heightKeys: focusedKeys }, userId,
-    } = this.props;
+      datum, focusSlice, positionData, segment: { heightKeys: focusedKeys }, userId
+    } = this.props
 
     focusSlice(
       userId,
       datum,
       positionData,
       focusedKeys,
-    );
+    )
   }
 
   render() {
-    const { classes, datum, interpolated: { key, style }, segment, width, x } = this.props;
+    const { classes, datum, interpolated: { key, style }, segment, width, x } = this.props
     return (
       <rect
         className={classes}
@@ -102,22 +102,22 @@ export class CBGSliceSegment extends PureComponent {
         onMouseOver={this.handleMouseOver}
         onMouseOut={this.handleMouseOut}
       />
-    );
+    )
   }
 }
 
 export function mapStateToProps(state) {
-  const { blip: { currentPatientInViewId } } = state;
+  const { blip: { currentPatientInViewId } } = state
   return {
-    userId: currentPatientInViewId,
-  };
+    userId: currentPatientInViewId
+  }
 }
 
 export function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     focusSlice: delayShowCbgTracesOnFocus,
-    unfocusSlice: unfocusTrendsCbgSlice,
-  }, dispatch);
+    unfocusSlice: unfocusTrendsCbgSlice
+  }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CBGSliceSegment);
+export default connect(mapStateToProps, mapDispatchToProps)(CBGSliceSegment)

@@ -1,19 +1,19 @@
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import _ from "lodash";
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
+import _ from 'lodash'
 
-import colors from "../../../styles/colors.css";
-import styles from "./StatLegend.css";
+import colors from '../../../styles/colors.css'
+import styles from './StatLegend.css'
 
 class StatLegend extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
-      legendTitle: PropTypes.string,
-    })).isRequired,
-  };
+      legendTitle: PropTypes.string
+    })).isRequired
+  }
 
-  static displayName = "StatLegend";
+  static displayName = 'StatLegend'
 
   renderLegendItems = (items) => (
     _.map(items, (item) => (
@@ -27,15 +27,15 @@ class StatLegend extends PureComponent {
         </span>
       </li>
     ))
-  );
+  )
 
   render() {
     return (
       <ul className={styles.StatLegend}>
         {this.renderLegendItems(this.props.items)}
       </ul>
-    );
+    )
   }
 }
 
-export default StatLegend;
+export default StatLegend

@@ -15,48 +15,48 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
-import Tooltip from "../../common/tooltips/Tooltip";
-import { formatBgValue } from "../../../utils/format";
-import { formatClocktimeFromMsPer24 } from "../../../utils/datetime";
+import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import Tooltip from '../../common/tooltips/Tooltip'
+import { formatBgValue } from '../../../utils/format'
+import { formatClocktimeFromMsPer24 } from '../../../utils/datetime'
 
-import styles from "./FocusedRangeLabels.css";
+import styles from './FocusedRangeLabels.css'
 
 const FocusedRangeLabels = (props) => {
-  const { focusedKeys, focusedRange, focusedSlice } = props;
+  const { focusedKeys, focusedRange, focusedSlice } = props
   if (!(focusedRange || (focusedKeys && focusedSlice))) {
-    return null;
+    return null
   }
   // no range labels when focus is the median only on cbg version
   if (focusedKeys && focusedKeys.length === 1) {
-    return null;
+    return null
   }
 
-  const { bgPrefs, dataType } = props;
-  const isCbg = dataType === "cbg";
-  const dataBucket = isCbg ? "focusedSlice" : "focusedRange";
-  const { [dataBucket]: { data, position } } = props;
-  const timeFrom = formatClocktimeFromMsPer24(data.msFrom);
-  const timeTo = formatClocktimeFromMsPer24(data.msTo);
-  const top = isCbg ? focusedKeys[1] : "max";
-  const center = isCbg ? "median" : "mean";
-  const bottom = isCbg ? focusedKeys[0] : "min";
+  const { bgPrefs, dataType } = props
+  const isCbg = dataType === 'cbg'
+  const dataBucket = isCbg ? 'focusedSlice' : 'focusedRange'
+  const { [dataBucket]: { data, position } } = props
+  const timeFrom = formatClocktimeFromMsPer24(data.msFrom)
+  const timeTo = formatClocktimeFromMsPer24(data.msTo)
+  const top = isCbg ? focusedKeys[1] : 'max'
+  const center = isCbg ? 'median' : 'mean'
+  const bottom = isCbg ? focusedKeys[0] : 'min'
   const topPosition = {
     top: position.yPositions[top],
-    left: position.left,
-  };
+    left: position.left
+  }
   const bottomPosition = {
     top: position.yPositions[bottom],
-    left: position.left,
-  };
+    left: position.left
+  }
   const centerPosition = {
     top: position.yPositions[center],
-    left: position.left,
-  };
-  const centerSide = position.tooltipLeft ? "left" : "right";
+    left: position.left
+  }
+  const centerSide = position.tooltipLeft ? 'left' : 'right'
   return (
     <div className={styles.container}>
       {isCbg ? (
@@ -64,7 +64,7 @@ const FocusedRangeLabels = (props) => {
           title={<span className={styles.timeLabel}>{timeFrom} - {timeTo}</span>}
           borderWidth={0}
           position={{ left: position.left, top: position.yPositions.topMargin }}
-          side={"bottom"}
+          side={'bottom'}
           tail={false}
         />
       ) : null}
@@ -74,11 +74,11 @@ const FocusedRangeLabels = (props) => {
             {formatBgValue(data[top], bgPrefs, data.outOfRangeThresholds)}
           </span>
         }
-        backgroundColor={"transparent"}
-        borderColor={"transparent"}
+        backgroundColor={'transparent'}
+        borderColor={'transparent'}
         offset={{ left: 0, top: isCbg ? props.numberOffsets.top : 0 }}
         position={topPosition}
-        side={"top"}
+        side={'top'}
         tail={false}
       />
       {isCbg ? null : (
@@ -100,40 +100,40 @@ const FocusedRangeLabels = (props) => {
             {formatBgValue(data[bottom], bgPrefs, data.outOfRangeThresholds)}
           </span>
         }
-        backgroundColor={"transparent"}
-        borderColor={"transparent"}
+        backgroundColor={'transparent'}
+        borderColor={'transparent'}
         offset={{ left: 0, top: isCbg ? props.numberOffsets.bottom : 0 }}
         position={bottomPosition}
-        side={"bottom"}
+        side={'bottom'}
         tail={false}
       />
     </div>
-  );
-};
+  )
+}
 
 FocusedRangeLabels.defaultProps = {
   numberOffsets: {
     bottom: -5,
     horizontal: 10,
-    top: 5,
-  },
-};
+    top: 5
+  }
+}
 
 FocusedRangeLabels.propTypes = {
   bgPrefs: PropTypes.shape({
-    bgUnits: PropTypes.oneOf([MGDL_UNITS, MMOLL_UNITS]).isRequired,
+    bgUnits: PropTypes.oneOf([MGDL_UNITS, MMOLL_UNITS]).isRequired
     // only the bgUnits required in this component
     // so leaving off specification of bgBounds shape
   }).isRequired,
-  dataType: PropTypes.oneOf(["cbg", "smbg"]).isRequired,
+  dataType: PropTypes.oneOf(['cbg', 'smbg']).isRequired,
   focusedKeys: PropTypes.arrayOf(PropTypes.oneOf([
-    "firstQuartile",
-    "max",
-    "median",
-    "min",
-    "ninetiethQuantile",
-    "tenthQuantile",
-    "thirdQuartile",
+    'firstQuartile',
+    'max',
+    'median',
+    'min',
+    'ninetiethQuantile',
+    'tenthQuantile',
+    'thirdQuartile'
   ])),
   focusedRange: PropTypes.shape({
     data: PropTypes.shape({
@@ -146,8 +146,8 @@ FocusedRangeLabels.propTypes = {
       msTo: PropTypes.number.isRequired,
       outOfRangeThresholds: PropTypes.shape({
         low: PropTypes.number,
-        high: PropTypes.number,
-      }),
+        high: PropTypes.number
+      })
     }).isRequired,
     position: PropTypes.shape({
       left: PropTypes.number.isRequired,
@@ -155,9 +155,9 @@ FocusedRangeLabels.propTypes = {
       yPositions: PropTypes.shape({
         max: PropTypes.number.isRequired,
         mean: PropTypes.number.isRequired,
-        min: PropTypes.number.isRequired,
-      }).isRequired,
-    }).isRequired,
+        min: PropTypes.number.isRequired
+      }).isRequired
+    }).isRequired
   }),
   focusedSlice: PropTypes.shape({
     data: PropTypes.shape({
@@ -172,10 +172,10 @@ FocusedRangeLabels.propTypes = {
       ninetiethQuantile: PropTypes.number.isRequired,
       outOfRangeThresholds: PropTypes.shape({
         low: PropTypes.number,
-        high: PropTypes.number,
+        high: PropTypes.number
       }),
       tenthQuantile: PropTypes.number.isRequired,
-      thirdQuartile: PropTypes.number.isRequired,
+      thirdQuartile: PropTypes.number.isRequired
     }).isRequired,
     position: PropTypes.shape({
       left: PropTypes.number.isRequired,
@@ -188,19 +188,19 @@ FocusedRangeLabels.propTypes = {
         ninetiethQuantile: PropTypes.number.isRequired,
         tenthQuantile: PropTypes.number.isRequired,
         thirdQuartile: PropTypes.number.isRequired,
-        topMargin: PropTypes.number.isRequired,
-      }).isRequired,
-    }).isRequired,
+        topMargin: PropTypes.number.isRequired
+      }).isRequired
+    }).isRequired
   }),
   numberOffsets: PropTypes.shape({
     bottom: PropTypes.number.isRequired,
     horizontal: PropTypes.number.isRequired,
-    top: PropTypes.number.isRequired,
+    top: PropTypes.number.isRequired
   }).isRequired,
   timePrefs: PropTypes.shape({
     timezoneAware: PropTypes.bool.isRequired,
-    timezoneName: PropTypes.string,
-  }).isRequired,
-};
+    timezoneName: PropTypes.string
+  }).isRequired
+}
 
-export default FocusedRangeLabels;
+export default FocusedRangeLabels

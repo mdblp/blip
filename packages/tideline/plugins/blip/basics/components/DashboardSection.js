@@ -15,15 +15,15 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import cx from "classnames";
-import PropTypes from "prop-types";
-import React from "react";
+import _ from 'lodash'
+import cx from 'classnames'
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import basicsActions from "../logic/actions";
-import NoDataContainer from "./NoDataContainer";
+import basicsActions from '../logic/actions'
+import NoDataContainer from './NoDataContainer'
 
-import togglableState from "../TogglableState";
+import togglableState from '../TogglableState'
 
 class DashboardSection extends React.Component {
   static propTypes = {
@@ -37,31 +37,31 @@ class DashboardSection extends React.Component {
     togglable: PropTypes.oneOf([
       togglableState.open,
       togglableState.closed,
-      togglableState.off,
+      togglableState.off
     ]).isRequired,
     section: PropTypes.object.isRequired,
     timezone: PropTypes.string.isRequired,
     title: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.func,
+      PropTypes.func
     ]).isRequired,
     trackMetric: PropTypes.func.isRequired,
     updateBasicsSettings: PropTypes.func,
     settingsTogglable: PropTypes.oneOf([
       togglableState.open,
       togglableState.closed,
-      togglableState.off,
-    ]).isRequired,
-  };
+      togglableState.off
+    ]).isRequired
+  }
 
   static defaultProps = {
-    updateBasicsSettings: _.noop,
-  };
+    updateBasicsSettings: _.noop
+  }
 
   render() {
-    var dataDisplay;
-    var section = this.props.section;
-    if (section.column === "right") {
+    var dataDisplay
+    var section = this.props.section
+    if (section.column === 'right') {
       if (section.active) {
         dataDisplay = (
           <section.container
@@ -84,12 +84,12 @@ class DashboardSection extends React.Component {
             trackMetric={this.props.trackMetric}
             updateBasicsSettings={this.props.updateBasicsSettings}
             title={section.title} />
-        );
+        )
       }
       else {
         dataDisplay = (
           <NoDataContainer message={section.message} moreInfo={section.noDataMessage || null} />
-        );
+        )
       }
     }
     else {
@@ -102,44 +102,44 @@ class DashboardSection extends React.Component {
           days={this.props.days}
           labels={section.labels || {}}
           title={this.props.title} />
-      );
+      )
     }
 
-    var settingsToggle;
+    var settingsToggle
     if (this.props.settingsTogglable !== togglableState.off) {
       settingsToggle = (
         <i className="icon-settings icon--toggle" onClick={this.handleToggleSettings}/>
-      );
+      )
     }
 
     var iconClass = cx({
-      "icon-down": this.props.togglable === togglableState.open,
-      "icon-right": this.props.togglable === togglableState.closed
-    });
+      'icon-down': this.props.togglable === togglableState.open,
+      'icon-right': this.props.togglable === togglableState.closed
+    })
 
     var containerClass = cx({
-      "DashboardSection-container": true
-    });
+      'DashboardSection-container': true
+    })
 
-    var titleContainer;
-    if (this.props.title && typeof this.props.title === "function") {
+    var titleContainer
+    if (this.props.title && typeof this.props.title === 'function') {
       titleContainer = this.props.title({
         data: this.props.data,
         iconClass: iconClass,
         sectionName: this.props.name,
         trackMetric: this.props.trackMetric
-      });
+      })
     } else if (this.props.title) {
       var headerClasses = cx({
-        "SectionHeader--nodata": section.noData,
-        "selectable": this.props.togglable !== togglableState.off
-      });
+        'SectionHeader--nodata': section.noData,
+        'selectable': this.props.togglable !== togglableState.off
+      })
       titleContainer = (
         <h3 className={headerClasses} onClick={this.handleToggleSection}>{this.props.title}
           <i className={iconClass}/>
           {settingsToggle}
         </h3>
-      );
+      )
     }
 
     return (
@@ -151,24 +151,24 @@ class DashboardSection extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   handleToggleSection = (e) => {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
     if (this.props.togglable !== togglableState.off) {
-      basicsActions.toggleSection(this.props.name, this.props.trackMetric);
+      basicsActions.toggleSection(this.props.name, this.props.trackMetric)
     }
-  };
+  }
 
   handleToggleSettings = (e) => {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
-    basicsActions.toggleSectionSettings(this.props.name, this.props.trackMetric);
-  };
+    basicsActions.toggleSectionSettings(this.props.name, this.props.trackMetric)
+  }
 }
 
-export default DashboardSection;
+export default DashboardSection

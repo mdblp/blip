@@ -15,25 +15,25 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
-import React from "react";
-import cx from "classnames";
+import React from 'react'
+import cx from 'classnames'
 
-import styles from "./TwoOptionToggle.css";
+import styles from './TwoOptionToggle.css'
 
 const TwoOptionToggle = (props) => {
-  const { disabled, left, right, toggleFn } = props;
+  const { disabled, left, right, toggleFn } = props
 
   const rightLabelClasses = cx({
     [styles.active]: !disabled && right.state,
-    [styles.label]: true,
-  });
+    [styles.label]: true
+  })
 
   const leftLabelClasses = cx({
     [styles.active]: !disabled && left.state,
-    [styles.label]: true,
-  });
+    [styles.label]: true
+  })
 
   return (
     <div className={styles.container}>
@@ -41,31 +41,31 @@ const TwoOptionToggle = (props) => {
       <Toggle disabled={disabled} leftOptionActive={left.state} toggleFn={toggleFn} />
       <span className={rightLabelClasses}>{right.label}</span>
     </div>
-  );
-};
+  )
+}
 
 TwoOptionToggle.defaultProps = {
-  disabled: false,
-};
+  disabled: false
+}
 
 TwoOptionToggle.propTypes = {
   disabled: PropTypes.bool.isRequired,
   left: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    state: PropTypes.bool.isRequired,
+    state: PropTypes.bool.isRequired
   }).isRequired,
   right: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    state: PropTypes.bool.isRequired,
+    state: PropTypes.bool.isRequired
   }).isRequired,
-  toggleFn: PropTypes.func.isRequired,
-};
+  toggleFn: PropTypes.func.isRequired
+}
 
 
-TwoOptionToggle.displayName = "TwoOptionToggle";
+TwoOptionToggle.displayName = 'TwoOptionToggle'
 
 export const Toggle = (props) => {
-  const { disabled, leftOptionActive, toggleFn } = props;
+  const { disabled, leftOptionActive, toggleFn } = props
   return (
     <div
       className={disabled ? styles.disabled : styles.toggle}
@@ -74,15 +74,15 @@ export const Toggle = (props) => {
       <div className={styles.track} />
       <div className={leftOptionActive ? styles.leftThumb : styles.rightThumb} />
     </div>
-  );
-};
+  )
+}
 
 Toggle.propTypes = {
   disabled: PropTypes.bool.isRequired,
   leftOptionActive: PropTypes.bool.isRequired,
-  toggleFn: PropTypes.func.isRequired,
-};
+  toggleFn: PropTypes.func.isRequired
+}
 
-Toggle.displayName = "Toggle";
+Toggle.displayName = 'Toggle'
 
-export default TwoOptionToggle;
+export default TwoOptionToggle

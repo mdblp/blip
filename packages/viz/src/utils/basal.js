@@ -15,10 +15,10 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import { formatInsulin, formatDecimalNumber } from "./format";
-import { ONE_HR } from "./datetime";
+import { formatInsulin, formatDecimalNumber } from './format'
+import { ONE_HR } from './datetime'
 
 /**
 * getBasalSequences
@@ -28,28 +28,28 @@ import { ONE_HR } from "./datetime";
 *                 of the same subType to be rendered as a unit
 */
 export function getBasalSequences(basals) {
-  const basalSequences = [];
+  const basalSequences = []
   if (!Array.isArray(basals) || basals.length < 1) {
-    return basalSequences;
+    return basalSequences
   }
-  let currentBasal = basals[0];
-  let seq = [basals[0]];
+  let currentBasal = basals[0]
+  let seq = [basals[0]]
 
   for (let idx = 1; idx < basals.length; idx++) {
-    const nextBasal = basals[idx];
-    const basalTypeChange = nextBasal.subType !== currentBasal.subType;
+    const nextBasal = basals[idx]
+    const basalTypeChange = nextBasal.subType !== currentBasal.subType
 
     if (basalTypeChange || currentBasal.discontinuousEnd || nextBasal.rate === 0) {
-      basalSequences.push(seq);
-      seq = [];
+      basalSequences.push(seq)
+      seq = []
     }
 
-    seq.push(nextBasal);
-    currentBasal = nextBasal;
+    seq.push(nextBasal)
+    currentBasal = nextBasal
   }
-  basalSequences.push(seq);
+  basalSequences.push(seq)
 
-  return basalSequences;
+  return basalSequences
 }
 
 /**
@@ -58,13 +58,13 @@ export function getBasalSequences(basals) {
  * @return {string} the path group type
  */
 export function getBasalPathGroupType(datum = {}) {
-  const deliveryType = _.get(datum, "subType", datum.deliveryType);
+  const deliveryType = _.get(datum, 'subType', datum.deliveryType)
   const suppressedDeliveryType = _.get(
     datum.suppressed,
-    "subType",
-    _.get(datum.suppressed, "deliveryType")
-  );
-  return _.includes([deliveryType, suppressedDeliveryType], "automated") ? "automated" : "manual";
+    'subType',
+    _.get(datum.suppressed, 'deliveryType')
+  )
+  return _.includes([deliveryType, suppressedDeliveryType], 'automated') ? 'automated' : 'manual'
 }
 
 /**
@@ -73,18 +73,18 @@ export function getBasalPathGroupType(datum = {}) {
  * @return {Array} groups of alternating 'automated' and 'manual' datums
  */
 export function getBasalPathGroups(basals) {
-  const basalPathGroups = [];
-  let currentPathType;
+  const basalPathGroups = []
+  let currentPathType
   _.forEach(basals, datum => {
-    const pathType = getBasalPathGroupType(datum);
+    const pathType = getBasalPathGroupType(datum)
     if (pathType !== currentPathType) {
-      currentPathType = pathType;
-      basalPathGroups.push([]);
+      currentPathType = pathType
+      basalPathGroups.push([])
     }
-    _.last(basalPathGroups).push(datum);
-  });
+    _.last(basalPathGroups).push(datum)
+  })
 
-  return basalPathGroups;
+  return basalPathGroups
 }
 
 /**
@@ -96,31 +96,31 @@ export function getBasalPathGroups(basals) {
  * @returns {Object} The start and end datetimes and indexes
  */
 export function getEndpoints(data, s, e, optionalExtents = false) {
-  const start = new Date(s);
-  const end = new Date(e);
+  const start = new Date(s)
+  const end = new Date(e)
 
   const startIndex = _.findIndex(
     data,
     segment => (optionalExtents || segment.epoch <= start)
       && (start <= segment.epochEnd)
-  );
+  )
 
   const endIndex = _.findLastIndex(
     data,
     segment => (segment.epoch <= end)
       && (optionalExtents || end <= segment.epochEnd)
-  );
+  )
 
   return {
     start: {
       datetime: start.toISOString(),
-      index: startIndex,
+      index: startIndex
     },
     end: {
       datetime: end.toISOString(),
-      index: endIndex,
-    },
-  };
+      index: endIndex
+    }
+  }
 }
 
 /**
@@ -131,39 +131,39 @@ export function getEndpoints(data, s, e, optionalExtents = false) {
  * @returns {Object} The durations (in ms) keyed by basal group type
  */
 export function getGroupDurations(data, s, e) {
-  const endpoints = getEndpoints(data, s, e, true);
+  const endpoints = getEndpoints(data, s, e, true)
 
   const durations = {
     automated: 0,
-    manual: 0,
-  };
+    manual: 0
+  }
 
   if ((endpoints.start.index >= 0) && (endpoints.end.index >= 0)) {
-    const start = new Date(endpoints.start.datetime);
-    const end = new Date(endpoints.end.datetime);
+    const start = new Date(endpoints.start.datetime)
+    const end = new Date(endpoints.end.datetime)
 
     // handle first segment, which may have started before the start endpoint
-    let segment = data[endpoints.start.index];
-    const initialSegmentDuration = _.min([segment.epochEnd - start, segment.duration]);
-    durations[getBasalPathGroupType(segment)] = initialSegmentDuration;
+    let segment = data[endpoints.start.index]
+    const initialSegmentDuration = _.min([segment.epochEnd - start, segment.duration])
+    durations[getBasalPathGroupType(segment)] = initialSegmentDuration
 
     // add the durations of all subsequent basals, minus the last
-    let i = endpoints.start.index + 1;
+    let i = endpoints.start.index + 1
     while (i < endpoints.end.index) {
-      segment = data[i];
-      durations[getBasalPathGroupType(segment)] += segment.duration;
-      i++;
+      segment = data[i]
+      durations[getBasalPathGroupType(segment)] += segment.duration
+      i++
     }
 
     // handle last segment, which may go past the end endpoint
-    segment = data[endpoints.end.index];
+    segment = data[endpoints.end.index]
     durations[getBasalPathGroupType(segment)] += _.min([
       end - segment.epoch,
-      segment.duration,
-    ]);
+      segment.duration
+    ])
   }
 
-  return durations;
+  return durations
 }
 
 /**
@@ -172,8 +172,8 @@ export function getGroupDurations(data, s, e) {
  * @param {Number} rate Basal rate of segment
  */
 export function getSegmentDose(duration, rate) {
-  const hours = duration / ONE_HR;
-  return Number.parseFloat(formatDecimalNumber(hours * rate, 3));
+  const hours = duration / ONE_HR
+  return Number.parseFloat(formatDecimalNumber(hours * rate, 3))
 }
 
 /**
@@ -183,23 +183,23 @@ export function getSegmentDose(duration, rate) {
  * @return {string} Formatted total insulin dose
  */
 export function getTotalBasalFromEndpoints(data, endpoints) {
-  const start = new Date(endpoints[0]);
-  const end = new Date(endpoints[1]);
-  let dose = 0;
+  const start = new Date(endpoints[0])
+  const end = new Date(endpoints[1])
+  let dose = 0
 
   _.forEach(data, (datum, index) => {
-    let duration = datum.duration;
+    let duration = datum.duration
     if (index === 0) {
       // handle first segment, which may have started before the start endpoint
-      duration = _.min([new Date(datum.normalEnd) - start, datum.duration]);
+      duration = _.min([new Date(datum.normalEnd) - start, datum.duration])
     } else if (index === data.length - 1) {
       // handle last segment, which may go past the end endpoint
-      duration = _.min([end - new Date(datum.normalTime), datum.duration]);
+      duration = _.min([end - new Date(datum.normalTime), datum.duration])
     }
-    dose += getSegmentDose(duration, datum.rate);
-  });
+    dose += getSegmentDose(duration, datum.rate)
+  })
 
-  return formatInsulin(dose);
+  return formatInsulin(dose)
 }
 
 /**
@@ -209,25 +209,25 @@ export function getTotalBasalFromEndpoints(data, endpoints) {
  * @return {Number} Formatted total insulin dose
  */
 export function getBasalGroupDurationsFromEndpoints(data, endpoints) {
-  const start = new Date(endpoints[0]);
-  const end = new Date(endpoints[1]);
+  const start = new Date(endpoints[0])
+  const end = new Date(endpoints[1])
 
   const durations = {
     automated: 0,
-    manual: 0,
-  };
+    manual: 0
+  }
 
   _.forEach(data, (datum, index) => {
-    let duration = datum.duration;
+    let duration = datum.duration
     if (index === 0) {
       // handle first segment, which may have started before the start endpoint
-      duration = _.min([new Date(datum.normalEnd) - start, datum.duration]);
+      duration = _.min([new Date(datum.normalEnd) - start, datum.duration])
     } else if (index === data.length - 1) {
       // handle last segment, which may go past the end endpoint
-      duration = _.min([end - new Date(datum.normalTime), datum.duration]);
+      duration = _.min([end - new Date(datum.normalTime), datum.duration])
     }
-    durations[getBasalPathGroupType(datum)] += duration;
-  });
+    durations[getBasalPathGroupType(datum)] += duration
+  })
 
-  return durations;
+  return durations
 }

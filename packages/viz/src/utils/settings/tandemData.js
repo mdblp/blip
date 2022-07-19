@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import * as data from "./data";
+import * as data from './data'
 
 /**
  * basalSchedules
@@ -23,7 +23,7 @@ import * as data from "./data";
  * @return {Array}              array of basal schedule names
  */
 export function basalSchedules(settings) {
-  return data.getTimedSchedules(settings.basalSchedules);
+  return data.getTimedSchedules(settings.basalSchedules)
 }
 
 /**
@@ -34,7 +34,7 @@ export function basalSchedules(settings) {
  * @return {Object}              filtered meta data
  */
 export function deviceMeta(settings, timePrefs) {
-  return data.getDeviceMeta(settings, timePrefs);
+  return data.getDeviceMeta(settings, timePrefs)
 }
 
 /**
@@ -42,7 +42,7 @@ export function deviceMeta(settings, timePrefs) {
  * @private
  */
 function scheduleLabel(scheduleName, activeScheduleName) {
-  return data.getScheduleLabel(scheduleName, activeScheduleName, "tandem", true);
+  return data.getScheduleLabel(scheduleName, activeScheduleName, 'tandem', true)
 }
 
 /**
@@ -54,7 +54,7 @@ function basalRows(schedule, settings, units) {
     settings,
     schedule,
     units,
-  );
+  )
 }
 
 /**
@@ -63,33 +63,33 @@ function basalRows(schedule, settings, units) {
  */
 function basalColumns(styles = {}, units) {
   return [
-    { key: "start",
-      label: "Start time" },
-    { key: "rate",
+    { key: 'start',
+      label: 'Start time' },
+    { key: 'rate',
       label: {
-        main: "Basal Rates",
-        secondary: "U/hr",
+        main: 'Basal Rates',
+        secondary: 'U/hr'
       },
       className: styles.basalScheduleHeader },
-    { key: "bgTarget",
+    { key: 'bgTarget',
       label: {
-        main: "Target BG",
-        secondary: units,
+        main: 'Target BG',
+        secondary: units
       },
       className: styles.bolusSettingsHeader },
-    { key: "carbRatio",
+    { key: 'carbRatio',
       label: {
-        main: "Carb Ratio",
-        secondary: "g/U",
+        main: 'Carb Ratio',
+        secondary: 'g/U'
       },
       className: styles.bolusSettingsHeader },
-    { key: "insulinSensitivity",
+    { key: 'insulinSensitivity',
       label: {
-        main: "Correction Factor",
-        secondary: `${units}/U`,
+        main: 'Correction Factor',
+        secondary: `${units}/U`
       },
-      className: styles.bolusSettingsHeader },
-  ];
+      className: styles.bolusSettingsHeader }
+  ]
 }
 
 /**
@@ -107,6 +107,6 @@ export function basal(schedule, settings, units, styles = {}) {
     activeAtUpload: (schedule.name === settings.activeSchedule),
     title: scheduleLabel(schedule.name, settings.activeSchedule),
     columns: basalColumns(styles, units),
-    rows: basalRows(schedule, settings, units),
-  };
+    rows: basalRows(schedule, settings, units)
+  }
 }

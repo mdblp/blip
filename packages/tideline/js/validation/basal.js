@@ -15,17 +15,17 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
+import schema from './validator/schematron.js'
 
 const basal = (common) => {
   const basalCommon = {
-    deliveryType: schema().in(["scheduled", "suspend", "temp", "automated"]),
+    deliveryType: schema().in(['scheduled', 'suspend', 'temp', 'automated']),
     deviceTime: schema().ifExists().isDeviceTime(),
     duration: schema().ifExists().number().min(0),
     normalEnd: schema().isISODateTime(),
     epochEnd: schema().number(),
     rate: schema().number().min(0)
-  };
+  }
 
   return schema(
     common,
@@ -33,7 +33,7 @@ const basal = (common) => {
     {
       suppressed: schema().ifExists().object(basalCommon)
     }
-  );
-};
+  )
+}
 
-export default basal;
+export default basal

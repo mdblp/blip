@@ -18,20 +18,20 @@
 // DO NOT PASS GO, DO NOT COLLECT $200
 /* * * * */
 
-const _ = require("lodash");
-const moment = require("moment-timezone");
+const _ = require('lodash')
+const moment = require('moment-timezone')
 
 var datetimeWrapper = function() {
-  var DEFAULT_DISPLAY_MASK = "MMMM D [at] h:mm a";
+  var DEFAULT_DISPLAY_MASK = 'MMMM D [at] h:mm a'
 
   function _applyMask(moment, mask) {
-    return moment.format(mask);
+    return moment.format(mask)
   }
 
-  var timezoneNames = {};
+  var timezoneNames = {}
   moment.tz.names().forEach(function(name) {
-    timezoneNames[name] = true;
-  });
+    timezoneNames[name] = true
+  })
 
   return {
     /*
@@ -44,9 +44,9 @@ var datetimeWrapper = function() {
      */
     applyOffset: function(timestamp, offset) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      return moment.utc(timestamp).add(offset, "minutes").toDate();
+      return moment.utc(timestamp).add(offset, 'minutes').toDate()
     },
     /*
      * Apply a timezone to a timezone-naive timestamp
@@ -58,21 +58,21 @@ var datetimeWrapper = function() {
      */
     applyTimezone: function(timestamp, timezone) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      this.checkTimezoneName(timezone);
+      this.checkTimezoneName(timezone)
       // NB: the result of this method will *not* yield the correct timezone offset from .getTimezoneOffset()
       // that is, the offset corresponding to the passed in timezone
       // because JavaScript Date doesn't do arbitrary timezones, only browser local
       if (_.isNil(timezone)) {
         // some browsers assume no timezone offset means local time and others assume it means UTC
         // we explicitly make them all act like it is UTC
-        return moment.utc(timestamp).toDate();
+        return moment.utc(timestamp).toDate()
       }
       if (timestamp instanceof Date) {
-        return moment.tz(timestamp.toISOString().slice(0,-5), timezone).toDate();
+        return moment.tz(timestamp.toISOString().slice(0,-5), timezone).toDate()
       }
-      return moment.tz(timestamp, timezone).toDate();
+      return moment.tz(timestamp, timezone).toDate()
     },
     /*
      * Apply a timezone and a conversionOffset to a timezone-naive timestamp
@@ -85,23 +85,23 @@ var datetimeWrapper = function() {
      */
     applyTimezoneAndConversionOffset: function(timestamp, timezone, conversionOffset) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      this.checkTimezoneName(timezone);
+      this.checkTimezoneName(timezone)
       // NB: the result of this method will *not* yield the correct timezone offset from .getTimezoneOffset()
       // that is, the offset corresponding to the passed in timezone
       // because JavaScript Date doesn't do arbitrary timezones, only browser local
       if (_.isNil(timezone)) {
         // some browsers assume no timezone offset means local time and others assume it means UTC
         // we explicitly make them all act like it is UTC
-        return moment.utc(timestamp).toDate();
+        return moment.utc(timestamp).toDate()
       }
       if (timestamp instanceof Date) {
         return moment.tz(timestamp.toISOString().slice(0,-5), timezone)
-          .subtract(conversionOffset, "milliseconds").toDate();
+          .subtract(conversionOffset, 'milliseconds').toDate()
       }
       return moment.tz(timestamp, timezone)
-        .subtract(conversionOffset, "milliseconds").toDate();
+        .subtract(conversionOffset, 'milliseconds').toDate()
     },
     /*
      * Construct a Date from canonically-named time fields in the provided object
@@ -111,11 +111,11 @@ var datetimeWrapper = function() {
      */
     buildTimestamp: function(o) {
       // months are (annoyingly) zero-indexed in JavaScript (i.e., January is 0, not 1)
-      var d = Date.UTC(o.year, o.month - 1, o.day, o.hours, o.minutes, o.seconds);
+      var d = Date.UTC(o.year, o.month - 1, o.day, o.hours, o.minutes, o.seconds)
       if (Number.isNaN(d)) {
-        return null;
+        return null
       }
-      return new Date(d);
+      return new Date(d)
     },
     /*
      * Get the ceiling for a date (see D3's time functions)
@@ -127,11 +127,11 @@ var datetimeWrapper = function() {
      * @return {Object} JavaScript Date yielding accurate UTC string from .toISOString()
      */
     ceil: function(time, units, timezone) {
-      this.checkTimezoneName(timezone);
+      this.checkTimezoneName(timezone)
       if (_.isNil(timezone)) {
-        timezone = "UTC";
+        timezone = 'UTC'
       }
-      return moment.utc(time).tz(timezone).startOf(units).add(1, units).toDate();
+      return moment.utc(time).tz(timezone).startOf(units).add(1, units).toDate()
     },
     /*
      * Check a timezone name against moment's database
@@ -142,7 +142,7 @@ var datetimeWrapper = function() {
       // actually want truthiness here; all of null, undefined, and '' should *not* throw Error
       // only check actual strings to see if recognized by moment
       if (timezone && timezoneNames[timezone] !== true) {
-        throw new Error("Unrecognized timezone name!");
+        throw new Error('Unrecognized timezone name!')
       }
     },
     /*
@@ -155,7 +155,7 @@ var datetimeWrapper = function() {
      * @return {string} the difference between the two timestamps (which will be rounded down)
      */
     dateDifference: function(timestampA, timestampB, units) {
-      return moment.utc(timestampA).diff(moment.utc(timestampB), units);
+      return moment.utc(timestampA).diff(moment.utc(timestampB), units)
     },
     /*
      * Apply Tidepool timezoneOffset and conversionOffset to a JavaScript Date
@@ -168,12 +168,12 @@ var datetimeWrapper = function() {
      */
     findTimeFromDeviceTimeAndOffsets: function(dt, timezoneOffset, conversionOffset) {
       if (!dt) {
-        throw new Error("No Date provided as first argument!");
+        throw new Error('No Date provided as first argument!')
       }
       return moment.utc(dt)
-        .subtract(timezoneOffset, "minutes")
-        .subtract(conversionOffset, "milliseconds")
-        .toDate();
+        .subtract(timezoneOffset, 'minutes')
+        .subtract(conversionOffset, 'milliseconds')
+        .toDate()
     },
     /*
      * Get the floor for a date (see D3's time functions)
@@ -185,11 +185,11 @@ var datetimeWrapper = function() {
      * @return {Object} JavaScript Date yielding accurate UTC string from .toISOString()
      */
     floor: function(time, units, timezone) {
-      this.checkTimezoneName(timezone);
+      this.checkTimezoneName(timezone)
       if (_.isNil(timezone)) {
-        timezone = "UTC";
+        timezone = 'UTC'
       }
-      return moment.utc(time).tz(timezone).startOf(units).toDate();
+      return moment.utc(time).tz(timezone).startOf(units).toDate()
     },
     /*
      * Format the input datetime as a deviceTime
@@ -200,10 +200,10 @@ var datetimeWrapper = function() {
      */
     formatDeviceTime: function(dt) {
       if (!dt) {
-        throw new Error("No datetime provided as first argument!");
+        throw new Error('No datetime provided as first argument!')
       }
       // use of .utc() here is for cross-browser consistency
-      return _applyMask(moment.utc(dt), "YYYY-MM-DDTHH:mm:ss");
+      return _applyMask(moment.utc(dt), 'YYYY-MM-DDTHH:mm:ss')
     },
     /*
      * Format the given timestamp for display after applying the given offset
@@ -216,10 +216,10 @@ var datetimeWrapper = function() {
      */
     formatFromOffset: function(timestamp, offset, mask) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      mask = mask || DEFAULT_DISPLAY_MASK;
-      return _applyMask(moment(timestamp).utcOffset(offset), mask);
+      mask = mask || DEFAULT_DISPLAY_MASK
+      return _applyMask(moment(timestamp).utcOffset(offset), mask)
     },
     /*
      * Format the given timestamp or Date obj with moment's "calendar time"
@@ -230,9 +230,9 @@ var datetimeWrapper = function() {
      */
     formatCalendarTime: function(dt) {
       if (!dt) {
-        throw new Error("No datetime provided as first argument!");
+        throw new Error('No datetime provided as first argument!')
       }
-      return moment(dt).calendar();
+      return moment(dt).calendar()
     },
     /*
      * Format the given timestamp for storage
@@ -244,9 +244,9 @@ var datetimeWrapper = function() {
      */
     formatForStorage: function(timestamp, offset) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      return moment(timestamp).utcOffset(offset).format();
+      return moment(timestamp).utcOffset(offset).format()
     },
     /*
      * Format the given timestamp for display in the given named timezone
@@ -259,12 +259,12 @@ var datetimeWrapper = function() {
      */
     formatInTimezone: function(timestamp, timezone, mask) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      this.checkTimezoneName(timezone);
-      timezone = timezone || "";
-      mask = mask || DEFAULT_DISPLAY_MASK;
-      return _applyMask(moment(timestamp).tz(timezone), mask);
+      this.checkTimezoneName(timezone)
+      timezone = timezone || ''
+      mask = mask || DEFAULT_DISPLAY_MASK
+      return _applyMask(moment(timestamp).tz(timezone), mask)
     },
     /*
      * Get a date N days into the future
@@ -272,7 +272,7 @@ var datetimeWrapper = function() {
      * @return {string} an ISO-8601-formatted zulu timestamp N days from now
      */
     futureDate: function(ndays) {
-      return moment().utc().add(ndays, "days").toISOString();
+      return moment().utc().add(ndays, 'days').toISOString()
     },
     /*
      * Get how many milliseconds you are into a day
@@ -284,7 +284,7 @@ var datetimeWrapper = function() {
      */
     getMsFromMidnight: function(dt, offset) {
       if (!dt) {
-        throw new Error("No datetime provided as first argument!");
+        throw new Error('No datetime provided as first argument!')
       }
       // this function is used mainly for deciding when an event matches a device setting
       // since devices report setting start times in milliseconds from midnight, device's local time
@@ -292,13 +292,13 @@ var datetimeWrapper = function() {
       // since we translate device local time into a UTC `time` and a `timezoneOffset` ~from~ UTC
       // we need to translate back to local time then subtract midnight in local time
       // to yield the number of milliseconds from midnight for the event
-      dt = moment(dt);
+      dt = moment(dt)
       if (_.isNil(offset)) {
-        offset = 0;
+        offset = 0
       }
       // we use -offset here because moment deals in offsets that are ~to~ UTC
       // but we store JavaScript Date-style offsets that are ~from~ UTC
-      return dt.utcOffset(offset) - dt.clone().utcOffset(offset).startOf("day");
+      return dt.utcOffset(offset) - dt.clone().utcOffset(offset).startOf('day')
     },
     /*
      * Get the offset from the current date
@@ -306,7 +306,7 @@ var datetimeWrapper = function() {
      * @return {String} number of minutes offset ~from~ UTC
      */
     getOffset: function() {
-      return moment().utcOffset();
+      return moment().utcOffset()
     },
     /*
      * Get the offset from the given date
@@ -315,16 +315,16 @@ var datetimeWrapper = function() {
      */
     getOffsetFromTime: function(timestamp) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
       function containsZone() {
-        var zonePattern = /^([+-][0-2]\d:[0-5]\d)$/;
-        return zonePattern.test(timestamp.slice(-6));
+        var zonePattern = /^([+-][0-2]\d:[0-5]\d)$/
+        return zonePattern.test(timestamp.slice(-6))
       }
       if (containsZone()) {
-        return moment.parseZone(timestamp).utcOffset();
+        return moment.parseZone(timestamp).utcOffset()
       }
-      return moment(timestamp).utcOffset();
+      return moment(timestamp).utcOffset()
     },
     /*
      * Get the offset from the given UTC date plus named timezone
@@ -333,10 +333,10 @@ var datetimeWrapper = function() {
      */
     getOffsetFromZone: function(timestamp, timezone) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      this.checkTimezoneName(timezone);
-      return moment.utc(timestamp).tz(timezone).utcOffset();
+      this.checkTimezoneName(timezone)
+      return moment.utc(timestamp).tz(timezone).utcOffset()
     },
     /*
      * Get all timezone objects
@@ -345,7 +345,7 @@ var datetimeWrapper = function() {
      * in convenient categories for displaying in a searchable dropdown
      */
     getTimezones: function() {
-      var tzNames = moment.tz.names();
+      var tzNames = moment.tz.names()
       var timezones = {
         // main timezones of the U.S. lower 48
         bigFour: [],
@@ -355,70 +355,70 @@ var datetimeWrapper = function() {
         hoisted: [],
         // everywhere else
         theRest: []
-      };
+      }
       var big4 = {
-        "US/Eastern": true,
-        "US/Central": true,
-        "US/Mountain": true,
-        "US/Pacific": true
-      };
+        'US/Eastern': true,
+        'US/Central': true,
+        'US/Mountain': true,
+        'US/Pacific': true
+      }
       var newZealand = {
-        "Pacific/Auckland": true,
-        "Pacific/Chatham": true
-      };
-      var now = new Date().valueOf();
+        'Pacific/Auckland': true,
+        'Pacific/Chatham': true
+      }
+      var now = new Date().valueOf()
       for (var i = 0; i < tzNames.length; ++i) {
-        var zone = moment.tz.zone(tzNames[i]);
+        var zone = moment.tz.zone(tzNames[i])
         // we use the current epoch time to determine the current UTC
         // offset for each timezone (i.e., adjust for DST or not)
         // the offset is part of the `label` attribute
-        var offsetInHours = moment.duration(zone.utcOffset(now), "minutes")
-          .asMilliseconds()/(1000*60*60);
+        var offsetInHours = moment.duration(zone.utcOffset(now), 'minutes')
+          .asMilliseconds()/(1000*60*60)
 
         // because moment signs offsets the opposite way from the ISO 8601 standard
         // the standard is negative for N. American timezones
         // but moment (and JavaScript in general) represent them as positive
         var offsetAsString = offsetInHours > 0 ?
-          "-" + offsetInHours : "+" + Math.abs(offsetInHours);
+          '-' + offsetInHours : '+' + Math.abs(offsetInHours)
 
         var timezone = {
           label: `${tzNames[i]} (UTC${offsetAsString})`,
           value: tzNames[i],
           offset: Number(offsetAsString)
-        };
+        }
 
         if (big4[tzNames[i]]) {
-          timezones.bigFour.push(timezone);
+          timezones.bigFour.push(timezone)
         }
-        else if (tzNames[i].search("US/") === 0) {
-          timezones.unitedStates.push(timezone);
+        else if (tzNames[i].search('US/') === 0) {
+          timezones.unitedStates.push(timezone)
         }
-        else if (tzNames[i].search("Canada/") === 0) {
-          timezones.hoisted.push(timezone);
+        else if (tzNames[i].search('Canada/') === 0) {
+          timezones.hoisted.push(timezone)
         }
-        else if (tzNames[i].search("Europe/") === 0) {
-          timezones.hoisted.push(timezone);
+        else if (tzNames[i].search('Europe/') === 0) {
+          timezones.hoisted.push(timezone)
         }
-        else if (tzNames[i].search("Australia/") === 0) {
-          timezones.hoisted.push(timezone);
+        else if (tzNames[i].search('Australia/') === 0) {
+          timezones.hoisted.push(timezone)
         }
         else if (newZealand[tzNames[i]]) {
-          timezones.hoisted.push(timezone);
+          timezones.hoisted.push(timezone)
         }
         // reformat these a tiny bit so that 'New Zealand' is searchable
-        else if (tzNames[i].search("NZ") === 0) {
-          timezone.label = timezone.label.replace("NZ", "New Zealand");
-          timezones.hoisted.push(timezone);
+        else if (tzNames[i].search('NZ') === 0) {
+          timezone.label = timezone.label.replace('NZ', 'New Zealand')
+          timezones.hoisted.push(timezone)
         }
         // there's a whole bunch of timezones listed as "Etc/GMT+1"
         // that clutter things up a lot...
         // eslint-disable-next-line no-empty
-        else if (tzNames[i].search("GMT") !== -1) {}
+        else if (tzNames[i].search('GMT') !== -1) {}
         else {
-          timezones.theRest.push(timezone);
+          timezones.theRest.push(timezone)
         }
       }
-      return timezones;
+      return timezones
     },
     /*
      * Get the UTC time for a timezone-naive timestamp and timezone
@@ -431,12 +431,12 @@ var datetimeWrapper = function() {
      */
     getUTCFromLocalTimeAndTimezone: function(timestamp, timezone) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
       if (!timezone) {
-        throw new Error("A timezone is required!");
+        throw new Error('A timezone is required!')
       }
-      return moment.tz(timestamp, timezone).valueOf();
+      return moment.tz(timestamp, timezone).valueOf()
     },
     /*
      * Is this an ISO8601-formatted timestamp?
@@ -446,7 +446,7 @@ var datetimeWrapper = function() {
      * @return {Boolean}
      */
     isISODate: function(timestamp) {
-      return (/^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/).test(timestamp);
+      return (/^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/).test(timestamp)
     },
     /*
      * Is this a valid date?
@@ -456,9 +456,9 @@ var datetimeWrapper = function() {
      * @return {Boolean}
      */
     isValidDate: function(timestamp) {
-      var m = moment(timestamp);
+      var m = moment(timestamp)
       // Be careful, if `value` is empty, `m` can be null
-      return m && m.isValid();
+      return m && m.isValid()
     },
     /*
      * Is this a valid date that matches the given date mask
@@ -471,9 +471,9 @@ var datetimeWrapper = function() {
      * @return {Boolean}
      */
     isValidDateForMask: function(timestamp, mask) {
-      var m = moment(timestamp, mask, true);
+      var m = moment(timestamp, mask, true)
       // Be careful, if `value` is empty, `m` can be null
-      return m && m.isValid();
+      return m && m.isValid()
     },
     /*
      * Parse a timestamp string using provided format and (optionally) timezone into a JavaScript Date
@@ -486,15 +486,15 @@ var datetimeWrapper = function() {
      */
     parseFromFormat: function(timestamp, format, timezone) {
       if (!timestamp) {
-        throw new Error("No timestamp provided as first argument!");
+        throw new Error('No timestamp provided as first argument!')
       }
-      this.checkTimezoneName(timezone);
+      this.checkTimezoneName(timezone)
       if (_.isNil(timezone)) {
         // some browsers assume no timezone offset means local time and others assume it means UTC
         // we explicitly make them all act like it is UTC
-        return moment.utc(timestamp, format).toDate();
+        return moment.utc(timestamp, format).toDate()
       }
-      return moment.tz(timestamp, format, timezone).toDate();
+      return moment.tz(timestamp, format, timezone).toDate()
     },
     /*
      * Translate a datetime string from one format mask to another
@@ -507,16 +507,16 @@ var datetimeWrapper = function() {
      */
     translateMask: function(timestr, inputMask, outputMask) {
       if (!timestr) {
-        throw new Error("No datetime provided as first argument!");
+        throw new Error('No datetime provided as first argument!')
       }
-      var res = moment(timestr, inputMask).format(outputMask);
-      if (res !== "Invalid date") {
-        return res;
+      var res = moment(timestr, inputMask).format(outputMask)
+      if (res !== 'Invalid date') {
+        return res
       }
 
-      var e = new Error("Input datetime " + timestr + " did not match input mask " + inputMask);
-      console.error(e);
-      throw e;
+      var e = new Error('Input datetime ' + timestr + ' did not match input mask ' + inputMask)
+      console.error(e)
+      throw e
     },
     /*
      * Get a UTC based string that represents `now`
@@ -524,7 +524,7 @@ var datetimeWrapper = function() {
      * @return {String} an ISO8601-formatted timestamp with the offset from UTC specified
      */
     utcDateString: function() {
-      return moment().format();
+      return moment().format()
     },
     /*
      *== CONSTANTS ==*
@@ -532,7 +532,7 @@ var datetimeWrapper = function() {
     SEC_TO_MSEC: 1000,
     MIN_TO_MSEC: 60 * 1000,
     MIN30_TO_MSEC: 30 * 60 * 1000
-  };
-};
+  }
+}
 
-module.exports = datetimeWrapper();
+module.exports = datetimeWrapper()

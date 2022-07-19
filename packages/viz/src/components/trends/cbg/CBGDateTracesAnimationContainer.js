@@ -15,14 +15,14 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import React from "react";
-import PropTypes from "prop-types";
+import _ from 'lodash'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import CBGDateTraceAnimated from "./CBGDateTraceAnimated";
+import CBGDateTraceAnimated from './CBGDateTraceAnimated'
 
 const CBGDateTracesAnimationContainer = (props) => {
-  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props;
+  const { bgBounds, data, onSelectDate, topMargin, xScale, yScale } = props
   return (
     <g component="g" id="cbgDateTraces">
       {_.map(data, (datum, localDate) => (
@@ -38,22 +38,22 @@ const CBGDateTracesAnimationContainer = (props) => {
         />
       ))}
     </g>
-  );
-};
+  )
+}
 
 CBGDateTracesAnimationContainer.propTypes = {
   bgBounds: PropTypes.shape({
     veryHighThreshold: PropTypes.number.isRequired,
     targetUpperBound: PropTypes.number.isRequired,
     targetLowerBound: PropTypes.number.isRequired,
-    veryLowThreshold: PropTypes.number.isRequired,
+    veryLowThreshold: PropTypes.number.isRequired
   }).isRequired,
   data: PropTypes.object,
   dates: PropTypes.arrayOf(PropTypes.string),
   onSelectDate: PropTypes.func.isRequired,
   topMargin: PropTypes.number.isRequired,
   xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
-};
+  yScale: PropTypes.func.isRequired
+}
 
-export default CBGDateTracesAnimationContainer;
+export default CBGDateTracesAnimationContainer

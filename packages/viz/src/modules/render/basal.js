@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
 /**
  * calculateBasalPath
@@ -31,67 +31,67 @@ export function calculateBasalPath(basalSequence, xScale, yScale, {
   endAtZero,
   flushBottomOffset = 0,
   isFilled,
-  startAtZero,
+  startAtZero
 }) {
-  let path = "";
-  const zeroBasal = yScale.range()[0];
-  const flushWithBottomOfScale = zeroBasal + flushBottomOffset;
+  let path = ''
+  const zeroBasal = yScale.range()[0]
+  const flushWithBottomOfScale = zeroBasal + flushBottomOffset
 
   function handleDiscontinuousEnd(basal) {
-    path += `L ${xScale(basal.utc + basal.duration)},${flushWithBottomOfScale} `;
+    path += `L ${xScale(basal.utc + basal.duration)},${flushWithBottomOfScale} `
   }
 
   function handleDiscontinuousStart(basal) {
-    path += `M ${xScale(basal.utc)},${flushWithBottomOfScale} `;
+    path += `M ${xScale(basal.utc)},${flushWithBottomOfScale} `
   }
 
 
-  const first = basalSequence[0];
-  const startX = xScale(first.utc);
+  const first = basalSequence[0]
+  const startX = xScale(first.utc)
   const startY = _.every(basalSequence, (d) => (d.rate === 0)) ?
     flushWithBottomOfScale :
-    yScale(first.rate);
+    yScale(first.rate)
   if (startAtZero || isFilled) {
-    path += `M ${startX},${zeroBasal} L `;
+    path += `M ${startX},${zeroBasal} L `
   } else {
-    path += "M ";
+    path += 'M '
   }
   path += `${startX},${startY}
-    L ${xScale(first.utc + first.duration)},${startY} `;
+    L ${xScale(first.utc + first.duration)},${startY} `
 
   if (!isFilled && first.discontinuousEnd) {
-    handleDiscontinuousEnd(first);
+    handleDiscontinuousEnd(first)
   }
 
   _.forEach(basalSequence.slice(1), (basal) => {
-    const thisBasalY = (basal.rate > 0) ? yScale(basal.rate) : flushWithBottomOfScale;
+    const thisBasalY = (basal.rate > 0) ? yScale(basal.rate) : flushWithBottomOfScale
     if (!isFilled && basal.discontinuousStart) {
-      handleDiscontinuousStart(basal);
+      handleDiscontinuousStart(basal)
     }
 
     path += `L ${xScale(basal.utc)},${thisBasalY}
-      L ${xScale(basal.utc + basal.duration)},${thisBasalY} `;
+      L ${xScale(basal.utc + basal.duration)},${thisBasalY} `
 
     if (!isFilled && basal.discontinuousEnd) {
-      handleDiscontinuousEnd(basal);
+      handleDiscontinuousEnd(basal)
     }
-  });
+  })
 
-  const last = basalSequence[basalSequence.length - 1];
-  const endX = xScale(last.utc + last.duration);
-  path += `L ${endX},${yScale(last.rate)}`;
+  const last = basalSequence[basalSequence.length - 1]
+  const endX = xScale(last.utc + last.duration)
+  path += `L ${endX},${yScale(last.rate)}`
 
   if (endAtZero || isFilled) {
-    path += ` L ${endX},${zeroBasal}`;
+    path += ` L ${endX},${zeroBasal}`
   }
 
   if (isFilled) {
-    path += " Z";
+    path += ' Z'
   }
 
   // PDFKit will not render path definitions with line breaks properly
   // do NOT forget to remove the newlines!
-  return path.replace(/\n/g, "").replace(/\s\s+/g, " ");
+  return path.replace(/\n/g, '').replace(/\s\s+/g, ' ')
 }
 
 /**
@@ -103,25 +103,25 @@ export function calculateBasalPath(basalSequence, xScale, yScale, {
   * @return {Array} paths - Array of Objects, each specifying component paths to draw a bolus
   */
 export function getBasalSequencePaths(basalSequence, xScale, yScale) {
-  const first = basalSequence[0];
-  const last = basalSequence[basalSequence.length - 1];
-  const paths = [];
-  let type;
+  const first = basalSequence[0]
+  const last = basalSequence[basalSequence.length - 1]
+  const paths = []
+  let type
 
   const types = _.uniq(
     _.reject(
       _.map(
-        basalSequence, "subType"
+        basalSequence, 'subType'
       ),
       (d) => (!_.isString(d))
     )
-  );
+  )
   if (types.length === 0) {
-    throw new Error("Cannot determine `subType` of basal sequence!");
+    throw new Error('Cannot determine `subType` of basal sequence!')
   } else if (types.length > 1) {
-    throw new Error("A basal sequence may contain only *one* `subType` of basal event.");
+    throw new Error('A basal sequence may contain only *one* `subType` of basal event.')
   } else {
-    type = types[0];
+    type = types[0]
   }
 
   if (_.some(basalSequence, (d) => (d.rate > 0))) {
@@ -130,29 +130,29 @@ export function getBasalSequencePaths(basalSequence, xScale, yScale) {
         basalSequence, xScale, yScale, {
           endAtZero: last.discontinuousEnd,
           isFilled: true,
-          startAtZero: first.discontinuousStart,
+          startAtZero: first.discontinuousStart
         },
       ),
       basalType: type,
       key: `basalFill-${first.id}`,
-      renderType: "fill",
-      type: `fill--${type}`,
-    });
+      renderType: 'fill',
+      type: `fill--${type}`
+    })
   }
 
-  const suppresseds = [];
-  let undeliveredType = "border--undelivered";
+  const suppresseds = []
+  let undeliveredType = 'border--undelivered'
   _.forEach(basalSequence, (basal) => {
     if (basal.suppressed) {
-      const suppressed = _.clone(basal.suppressed);
-      if (_.get(suppressed, "subType", suppressed.deliveryType) === "automated") {
-        undeliveredType = "border--undelivered--automated";
+      const suppressed = _.clone(basal.suppressed)
+      if (_.get(suppressed, 'subType', suppressed.deliveryType) === 'automated') {
+        undeliveredType = 'border--undelivered--automated'
         // For automated suppressed delivery, we always render at the baseline
-        suppressed.rate = 0;
+        suppressed.rate = 0
       }
-      suppresseds.push(_.assign({}, suppressed, _.pick(basal, ["duration", "utc"])));
+      suppresseds.push(_.assign({}, suppressed, _.pick(basal, ['duration', 'utc'])))
     }
-  });
+  })
 
   if (!_.isEmpty(suppresseds)) {
     paths.push({
@@ -160,15 +160,15 @@ export function getBasalSequencePaths(basalSequence, xScale, yScale) {
         suppresseds, xScale, yScale, {
           endAtZero: false,
           isFilled: false,
-          startAtZero: false,
+          startAtZero: false
         },
       ),
       basalType: type,
       key: `basalPathUndelivered-${first.id}`,
-      renderType: "stroke",
-      type: undeliveredType,
-    });
+      renderType: 'stroke',
+      type: undeliveredType
+    })
   }
 
-  return paths;
+  return paths
 }

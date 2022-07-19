@@ -15,16 +15,16 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import styles from "./FocusedCBGSliceSegment.css";
+import styles from './FocusedCBGSliceSegment.css'
 
 const FocusedCBGSliceSegment = (props) => {
   if (!props.focusedSlice || !props.focusedSliceKeys) {
-    return null;
+    return null
   }
-  const { focusedSlice: { position }, focusedSliceKeys, sliceWidth } = props;
+  const { focusedSlice: { position }, focusedSliceKeys, sliceWidth } = props
   return (
     <rect
       className={styles.segment}
@@ -33,12 +33,12 @@ const FocusedCBGSliceSegment = (props) => {
       width={sliceWidth - styles.stroke}
       height={position.yPositions[focusedSliceKeys[0]] - position.yPositions[focusedSliceKeys[1]]}
     />
-  );
-};
+  )
+}
 
 FocusedCBGSliceSegment.defaultProps = {
-  sliceWidth: 16,
-};
+  sliceWidth: 16
+}
 
 FocusedCBGSliceSegment.propTypes = {
   focusedSlice: PropTypes.shape({
@@ -49,7 +49,7 @@ FocusedCBGSliceSegment.propTypes = {
       min: PropTypes.number.isRequired,
       ninetiethQuantile: PropTypes.number.isRequired,
       tenthQuantile: PropTypes.number.isRequired,
-      thirdQuartile: PropTypes.number.isRequired,
+      thirdQuartile: PropTypes.number.isRequired
     }).isRequired,
     position: PropTypes.shape({
       left: PropTypes.number.isRequired,
@@ -61,20 +61,20 @@ FocusedCBGSliceSegment.propTypes = {
         min: PropTypes.number.isRequired,
         ninetiethQuantile: PropTypes.number.isRequired,
         tenthQuantile: PropTypes.number.isRequired,
-        thirdQuartile: PropTypes.number.isRequired,
-      }).isRequired,
-    }).isRequired,
+        thirdQuartile: PropTypes.number.isRequired
+      }).isRequired
+    }).isRequired
   }),
   focusedSliceKeys: PropTypes.arrayOf(PropTypes.oneOf([
-    "firstQuartile",
-    "max",
-    "median",
-    "min",
-    "ninetiethQuantile",
-    "tenthQuantile",
-    "thirdQuartile",
+    'firstQuartile',
+    'max',
+    'median',
+    'min',
+    'ninetiethQuantile',
+    'tenthQuantile',
+    'thirdQuartile'
   ])),
-  sliceWidth: PropTypes.number.isRequired,
-};
+  sliceWidth: PropTypes.number.isRequired
+}
 
-export default FocusedCBGSliceSegment;
+export default FocusedCBGSliceSegment

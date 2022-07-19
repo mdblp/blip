@@ -14,12 +14,12 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import _ from "lodash";
-import i18next from "i18next";
-import * as data from "./data";
-import { getPumpVocabularies, AUTOMATED_DELIVERY } from "../constants";
+import _ from 'lodash'
+import i18next from 'i18next'
+import * as data from './data'
+import { getPumpVocabularies, AUTOMATED_DELIVERY } from '../constants'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 /**
  * basalSchedules
@@ -28,7 +28,7 @@ const t = i18next.t.bind(i18next);
  * @return {Array}              array of basal schedule names
  */
 export function basalSchedules(settings) {
-  return data.getScheduleNames(settings.basalSchedules);
+  return data.getScheduleNames(settings.basalSchedules)
 }
 
 /**
@@ -39,7 +39,7 @@ export function basalSchedules(settings) {
  * @return {Object}              filtered meta data
  */
 export function deviceMeta(settings, timePrefs) {
-  return data.getDeviceMeta(settings, timePrefs);
+  return data.getDeviceMeta(settings, timePrefs)
 }
 
 /**
@@ -50,14 +50,14 @@ export function deviceMeta(settings, timePrefs) {
  */
 export function bolusTitle(manufacturer) {
   switch (manufacturer) {
-  case "animas":
-    return t("ezCarb ezBG");
-  case "insulet":
-    return t("Bolus Calculator");
-  case "medtronic":
-    return t("Bolus Wizard");
-  default:
-    return t("Bolus Calculator");
+    case 'animas':
+      return t('ezCarb ezBG')
+    case 'insulet':
+      return t('Bolus Calculator')
+    case 'medtronic':
+      return t('Bolus Wizard')
+    default:
+      return t('Bolus Calculator')
   }
 }
 
@@ -69,16 +69,16 @@ export function bolusTitle(manufacturer) {
  */
 export function deviceName(manufacturer) {
   switch (manufacturer) {
-  case "animas":
-    return "Animas";
-  case "insulet":
-    return "OmniPod";
-  case "medtronic":
-    return "Medtronic";
-  case "diabeloop":
-    return "Diabeloop";
-  default:
-    return t("Unknown");
+    case 'animas':
+      return 'Animas'
+    case 'insulet':
+      return 'OmniPod'
+    case 'medtronic':
+      return 'Medtronic'
+    case 'diabeloop':
+      return 'Diabeloop'
+    default:
+      return t('Unknown')
   }
 }
 
@@ -87,7 +87,7 @@ export function deviceName(manufacturer) {
  * @private
  */
 function scheduleLabel(scheduleName, activeScheduleName, manufacturer, noUnits) {
-  return data.getScheduleLabel(scheduleName, activeScheduleName, manufacturer, noUnits);
+  return data.getScheduleLabel(scheduleName, activeScheduleName, manufacturer, noUnits)
 }
 
 /**
@@ -95,7 +95,7 @@ function scheduleLabel(scheduleName, activeScheduleName, manufacturer, noUnits) 
  * @private
  */
 function basalRows(schedule, settings) {
-  return data.processBasalRateData(settings.basalSchedules[schedule]);
+  return data.processBasalRateData(settings.basalSchedules[schedule])
 }
 
 /**
@@ -103,7 +103,7 @@ function basalRows(schedule, settings) {
  * @private
  */
 function basalColumns() {
-  return data.startTimeAndValue("rate");
+  return data.startTimeAndValue('rate')
 }
 
 /**
@@ -114,11 +114,11 @@ function basalColumns() {
  * @return {Object}                object with basal title, columns and rows
  */
 export function basal(schedule, settings, manufacturer) {
-  const name = settings.basalSchedules[schedule].name;
-  const lookupKey = (manufacturer === "carelink") ? "medtronic" : manufacturer;
+  const name = settings.basalSchedules[schedule].name
+  const lookupKey = (manufacturer === 'carelink') ? 'medtronic' : manufacturer
 
-  const pumpVocabulary = getPumpVocabularies();
-  const isAutomated = _.get(pumpVocabulary, `${data.deviceName(lookupKey)}.${AUTOMATED_DELIVERY}`) === name;
+  const pumpVocabulary = getPumpVocabularies()
+  const isAutomated = _.get(pumpVocabulary, `${data.deviceName(lookupKey)}.${AUTOMATED_DELIVERY}`) === name
 
   return {
     scheduleName: name,
@@ -126,8 +126,8 @@ export function basal(schedule, settings, manufacturer) {
     isAutomated,
     title: scheduleLabel(name, settings.activeSchedule, manufacturer, isAutomated),
     columns: isAutomated ? [] : basalColumns(),
-    rows: isAutomated ? [] : basalRows(schedule, settings),
-  };
+    rows: isAutomated ? [] : basalRows(schedule, settings)
+  }
 }
 
 /**
@@ -136,12 +136,12 @@ export function basal(schedule, settings, manufacturer) {
  */
 function sensitivityTitle(manufacturer) {
   const ISF_BY_MANUFACTURER = {
-    animas: t("ISF"),
-    insulet: t("Correction factor"),
-    medtronic: t("Sensitivity"),
-    diabeloop: t("Sensitivity"),
-  };
-  return ISF_BY_MANUFACTURER[manufacturer];
+    animas: t('ISF'),
+    insulet: t('Correction factor'),
+    medtronic: t('Sensitivity'),
+    diabeloop: t('Sensitivity')
+  }
+  return ISF_BY_MANUFACTURER[manufacturer]
 }
 
 /**
@@ -149,7 +149,7 @@ function sensitivityTitle(manufacturer) {
  * @private
  */
 function sensitivityColumns() {
-  return data.startTimeAndValue("amount");
+  return data.startTimeAndValue('amount')
 }
 
 /**
@@ -160,7 +160,7 @@ function sensitivityRows(settings, units) {
   return data.processSensitivityData(
     settings.insulinSensitivity,
     units,
-  );
+  )
 }
 
 /**
@@ -175,8 +175,8 @@ export function sensitivity(settings, manufacturer, units) {
   return {
     title: sensitivityTitle(manufacturer),
     columns: sensitivityColumns(),
-    rows: sensitivityRows(settings, units),
-  };
+    rows: sensitivityRows(settings, units)
+  }
 }
 
 /**
@@ -185,12 +185,12 @@ export function sensitivity(settings, manufacturer, units) {
  */
 function ratioTitle(manufacturer) {
   const CARB_RATIO_BY_MANUFACTURER = {
-    animas: t("I:C Ratio"),
-    insulet: t("IC ratio"),
-    medtronic: t("Carb Ratios"),
-    diabeloop: t("Carb Ratios"),
-  };
-  return CARB_RATIO_BY_MANUFACTURER[manufacturer];
+    animas: t('I:C Ratio'),
+    insulet: t('IC ratio'),
+    medtronic: t('Carb Ratios'),
+    diabeloop: t('Carb Ratios')
+  }
+  return CARB_RATIO_BY_MANUFACTURER[manufacturer]
 }
 
 /**
@@ -198,7 +198,7 @@ function ratioTitle(manufacturer) {
  * @private
  */
 function ratioColumns() {
-  return data.startTimeAndValue("amount");
+  return data.startTimeAndValue('amount')
 }
 
 /**
@@ -206,7 +206,7 @@ function ratioColumns() {
  * @private
  */
 function ratioRows(settings) {
-  return data.processCarbRatioData(settings.carbRatio);
+  return data.processCarbRatioData(settings.carbRatio)
 }
 
 /**
@@ -220,8 +220,8 @@ export function ratio(settings, manufacturer) {
   return {
     title: ratioTitle(manufacturer),
     columns: ratioColumns(),
-    rows: ratioRows(settings),
-  };
+    rows: ratioRows(settings)
+  }
 }
 
 /**
@@ -230,12 +230,12 @@ export function ratio(settings, manufacturer) {
  */
 function targetTitle(manufacturer) {
   const BG_TARGET_BY_MANUFACTURER = {
-    animas: t("BG Target"),
-    insulet: t("Target BG"),
-    medtronic: t("BG Target"),
-    diabeloop: t("BG Target"),
-  };
-  return BG_TARGET_BY_MANUFACTURER[manufacturer];
+    animas: t('BG Target'),
+    insulet: t('Target BG'),
+    medtronic: t('BG Target'),
+    diabeloop: t('BG Target')
+  }
+  return BG_TARGET_BY_MANUFACTURER[manufacturer]
 }
 
 /**
@@ -245,27 +245,27 @@ function targetTitle(manufacturer) {
 function targetColumns(manufacturer) {
   const BG_TARGET_COLS_BY_MANUFACTURER = {
     animas: [
-      { key: "start", label: t("Start time") },
-      { key: "columnTwo", label: t("Target") },
-      { key: "columnThree", label: t("Range") },
+      { key: 'start', label: t('Start time') },
+      { key: 'columnTwo', label: t('Target') },
+      { key: 'columnThree', label: t('Range') }
     ],
     insulet: [
-      { key: "start", label: t("Start time") },
-      { key: "columnTwo", label: t("Target") },
-      { key: "columnThree", label: t("Correct Above") },
+      { key: 'start', label: t('Start time') },
+      { key: 'columnTwo', label: t('Target') },
+      { key: 'columnThree', label: t('Correct Above') }
     ],
     medtronic: [
-      { key: "start", label: t("Start time") },
-      { key: "columnTwo", label: t("Low") },
-      { key: "columnThree", label: t("High") },
+      { key: 'start', label: t('Start time') },
+      { key: 'columnTwo', label: t('Low') },
+      { key: 'columnThree', label: t('High') }
     ],
     diabeloop: [
-      { key: "start", label: t("Start time") },
-      { key: "columnTwo", label: t("Low") },
-      { key: "columnThree", label: t("High") },
-    ],
-  };
-  return BG_TARGET_COLS_BY_MANUFACTURER[manufacturer];
+      { key: 'start', label: t('Start time') },
+      { key: 'columnTwo', label: t('Low') },
+      { key: 'columnThree', label: t('High') }
+    ]
+  }
+  return BG_TARGET_COLS_BY_MANUFACTURER[manufacturer]
 }
 
 /**
@@ -274,16 +274,16 @@ function targetColumns(manufacturer) {
  */
 function targetRows(settings, units, manufacturer) {
   const BG_TARGET_ACCESSORS_BY_MANUFACTURER = {
-    animas: { columnTwo: "target", columnThree: "range" },
-    insulet: { columnTwo: "target", columnThree: "high" },
-    medtronic: { columnTwo: "low", columnThree: "high" },
-    diabeloop: { columnTwo: "low", columnThree: "high" },
-  };
+    animas: { columnTwo: 'target', columnThree: 'range' },
+    insulet: { columnTwo: 'target', columnThree: 'high' },
+    medtronic: { columnTwo: 'low', columnThree: 'high' },
+    diabeloop: { columnTwo: 'low', columnThree: 'high' }
+  }
   return data.processBgTargetData(
     settings.bgTarget,
     units,
     BG_TARGET_ACCESSORS_BY_MANUFACTURER[manufacturer],
-  );
+  )
 }
 
 /**
@@ -298,6 +298,6 @@ export function target(settings, manufacturer, units) {
   return {
     title: targetTitle(manufacturer),
     columns: targetColumns(manufacturer),
-    rows: targetRows(settings, units, manufacturer),
-  };
+    rows: targetRows(settings, units, manufacturer)
+  }
 }

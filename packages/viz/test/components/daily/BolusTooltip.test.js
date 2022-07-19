@@ -15,246 +15,246 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { mount } from "enzyme";
-import { expect } from "chai";
+import React from 'react'
+import { mount } from 'enzyme'
+import { expect } from 'chai'
 
-import { formatClassesAsSelector } from "../../helpers/cssmodules";
+import { formatClassesAsSelector } from '../../helpers/cssmodules'
 
-import BolusTooltip from "../../../src/components/daily/bolustooltip/BolusTooltip";
-import styles from "../../../src/components/daily/bolustooltip/BolusTooltip.css";
+import BolusTooltip from '../../../src/components/daily/bolustooltip/BolusTooltip'
+import styles from '../../../src/components/daily/bolustooltip/BolusTooltip.css'
 
 const normal = {
-  type: "bolus",
+  type: 'bolus',
   normal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-};
+  normalTime: '2017-11-11T05:45:52.000Z'
+}
 
 const cancelled = {
-  type: "bolus",
+  type: 'bolus',
   normal: 2,
   expectedNormal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-};
+  normalTime: '2017-11-11T05:45:52.000Z'
+}
 
 const immediatelyCancelled = {
-  type: "bolus",
+  type: 'bolus',
   normal: 0,
   expectedNormal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-};
+  normalTime: '2017-11-11T05:45:52.000Z'
+}
 
 const override = {
-  type: "wizard",
+  type: 'wizard',
   bolus: {
-    type: "bolus",
+    type: 'bolus',
     normal: 2,
-    normalTime: "2017-11-11T05:45:52.000Z",
+    normalTime: '2017-11-11T05:45:52.000Z'
   },
   recommended: {
     carb: 0,
-    correction: 0,
-  },
-};
+    correction: 0
+  }
+}
 
 const underride = {
-  type: "wizard",
+  type: 'wizard',
   bolus: {
-    type: "bolus",
+    type: 'bolus',
     normal: 1,
-    normalTime: "2017-11-11T05:45:52.000Z",
+    normalTime: '2017-11-11T05:45:52.000Z'
   },
   recommended: {
     carb: 1,
-    correction: 0.5,
+    correction: 0.5
   },
-  normalTime: "2017-11-11T05:45:52.000Z",
-};
+  normalTime: '2017-11-11T05:45:52.000Z'
+}
 
 const withdblFull = {
-  type: "wizard",
+  type: 'wizard',
   bolus: {
-    type: "bolus",
+    type: 'bolus',
     normal: 5,
-    subType: "normal",
-    normalTime: "2017-11-11T05:45:52.000Z",
-    prescriptor: "hybrid",
+    subType: 'normal',
+    normalTime: '2017-11-11T05:45:52.000Z',
+    prescriptor: 'hybrid'
   },
   recommended: {
     carb: 5,
-    net: 5,
+    net: 5
   },
-  inputTime: "2017-11-11T05:40:00.000Z",
-  normalTime: "2017-11-11T05:40:00.000Z",
+  inputTime: '2017-11-11T05:40:00.000Z',
+  normalTime: '2017-11-11T05:40:00.000Z',
   carbInput: 75,
   inputMeal: {
-    fat: "yes"
-  },
-};
+    fat: 'yes'
+  }
+}
 
 const wizardIobBolus = {
-  type: "wizard",
+  type: 'wizard',
   bolus: {
-    type: "bolus",
+    type: 'bolus',
     normal: 5,
-    subType: "normal",
-    normalTime: "2017-11-11T05:45:52.000Z",
-    prescriptor: "auto",
-    insulinOnBoard: 7.1441917,
+    subType: 'normal',
+    normalTime: '2017-11-11T05:45:52.000Z',
+    prescriptor: 'auto',
+    insulinOnBoard: 7.1441917
   },
   recommended: {
     carb: 5,
-    net: 5,
+    net: 5
   },
   insulinOnBoard: 6.918507,
-  normalTime: "2017-11-11T05:40:00.000Z",
+  normalTime: '2017-11-11T05:40:00.000Z',
   carbInput: 75,
   inputMeal: {
-    fat: "yes"
-  },
-};
+    fat: 'yes'
+  }
+}
 
 const wizardBolusIob = {
-  type: "wizard",
+  type: 'wizard',
   bolus: {
-    type: "bolus",
+    type: 'bolus',
     normal: 5,
-    subType: "normal",
-    normalTime: "2017-11-11T05:45:52.000Z",
-    prescriptor: "hybrid",
-    insulinOnBoard: 7.1441917,
+    subType: 'normal',
+    normalTime: '2017-11-11T05:45:52.000Z',
+    prescriptor: 'hybrid',
+    insulinOnBoard: 7.1441917
   },
   recommended: {
     carb: 5,
-    net: 5,
+    net: 5
   },
-  normalTime: "2017-11-11T05:40:00.000Z",
+  normalTime: '2017-11-11T05:40:00.000Z',
   carbInput: 75,
   inputMeal: {
-    fat: "yes"
-  },
-};
+    fat: 'yes'
+  }
+}
 
 const penBolus = {
-  type: "bolus",
-  subType: "pen",
+  type: 'bolus',
+  subType: 'pen',
   normal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-};
+  normalTime: '2017-11-11T05:45:52.000Z'
+}
 
 const normalPrescriptor = {
-  type: "bolus",
-  subType: "normal",
+  type: 'bolus',
+  subType: 'normal',
   normal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-  prescriptor: "auto",
-};
+  normalTime: '2017-11-11T05:45:52.000Z',
+  prescriptor: 'auto'
+}
 
 const normalNoPrescriptor = {
-  type: "bolus",
-  subType: "normal",
+  type: 'bolus',
+  subType: 'normal',
   normal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-  prescriptor: "manual",
-};
+  normalTime: '2017-11-11T05:45:52.000Z',
+  prescriptor: 'manual'
+}
 
 const normalPrescriptorIob = {
-  type: "bolus",
-  subType: "normal",
+  type: 'bolus',
+  subType: 'normal',
   normal: 5,
-  normalTime: "2017-11-11T05:45:52.000Z",
-  prescriptor: "hybrid",
+  normalTime: '2017-11-11T05:45:52.000Z',
+  prescriptor: 'hybrid',
   insulinOnBoard: 10.1
-};
+}
 
 const props = {
   position: { top: 200, left: 200 },
-  timePrefs: { timezoneAware: false },
-};
+  timePrefs: { timezoneAware: false }
+}
 
-describe("BolusTooltip", () => {
-  it("should render without issue when all properties provided", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={normal} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+describe('BolusTooltip', () => {
+  it('should render without issue when all properties provided', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={normal} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
-  it("should render delivered and subType for pen bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={penBolus} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+  it('should render delivered and subType for pen bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={penBolus} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
-  it("should render delivered, subType and prescriptor for normal bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={normalPrescriptor} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1);
-  });
+  it('should render delivered, subType and prescriptor for normal bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={normalPrescriptor} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1)
+  })
 
-  it("should render delivered, subType and no prescriptor for normal bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={normalNoPrescriptor} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(0);
-  });
+  it('should render delivered, subType and no prescriptor for normal bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={normalNoPrescriptor} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(0)
+  })
 
-  it("should render delivered, subType and prescriptor for normal bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={normalPrescriptorIob} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.iob))).to.have.length(1);
-  });
+  it('should render delivered, subType and prescriptor for normal bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={normalPrescriptorIob} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.iob))).to.have.length(1)
+  })
 
-  it("should render programmed, undelivered and delivered for cancelled bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={cancelled} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.undelivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+  it('should render programmed, undelivered and delivered for cancelled bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={cancelled} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.undelivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
-  it("should render programmed, undelivered and delivered for immediately cancelled bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={immediatelyCancelled} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.undelivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+  it('should render programmed, undelivered and delivered for immediately cancelled bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={immediatelyCancelled} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.undelivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
-  it("should render suggested, override and delivered for override bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={override} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.suggested))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.override))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+  it('should render suggested, override and delivered for override bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={override} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.suggested))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.override))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
-  it("should render suggested, underride and delivered for underride bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={underride} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.suggested))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.override))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-  });
+  it('should render suggested, underride and delivered for underride bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={underride} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.suggested))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.override))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+  })
 
   // eslint-disable-next-line max-len
-  it("should render bolus type, delivered, inputTime, prescriptor and fat meal for normal bolus with wizard", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={withdblFull} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.input))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.fat))).to.have.length(1);
-  });
+  it('should render bolus type, delivered, inputTime, prescriptor and fat meal for normal bolus with wizard', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={withdblFull} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bolus))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.delivered))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.input))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.prescriptor))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.fat))).to.have.length(1)
+  })
 
-  it("should render a wizard with IOB", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={wizardIobBolus} />);
-    expect(wrapper.find("#bolus-tooltip-line-iob"), "#bolus-tooltip-line-iob").to.have.length(1);
-    const iobValue = wrapper.find("#bolus-tooltip-line-iob-value");
-    expect(iobValue, "#bolus-tooltip-line-iob-value").to.have.length(1);
-    expect(iobValue.first().text()).to.eq("6.92");
-  });
+  it('should render a wizard with IOB', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={wizardIobBolus} />)
+    expect(wrapper.find('#bolus-tooltip-line-iob'), '#bolus-tooltip-line-iob').to.have.length(1)
+    const iobValue = wrapper.find('#bolus-tooltip-line-iob-value')
+    expect(iobValue, '#bolus-tooltip-line-iob-value').to.have.length(1)
+    expect(iobValue.first().text()).to.eq('6.92')
+  })
 
-  it("should render a wizard with IOB on the bolus", () => {
-    const wrapper = mount(<BolusTooltip {...props} bolus={wizardBolusIob} />);
-    expect(wrapper.find("#bolus-tooltip-line-iob"), "#bolus-tooltip-line-iob").to.have.length(1);
-    const iobValue = wrapper.find("#bolus-tooltip-line-iob-value");
-    expect(iobValue, "#bolus-tooltip-line-iob-value").to.have.length(1);
-    expect(iobValue.first().text()).to.eq("7.14");
-  });
-});
+  it('should render a wizard with IOB on the bolus', () => {
+    const wrapper = mount(<BolusTooltip {...props} bolus={wizardBolusIob} />)
+    expect(wrapper.find('#bolus-tooltip-line-iob'), '#bolus-tooltip-line-iob').to.have.length(1)
+    const iobValue = wrapper.find('#bolus-tooltip-line-iob-value')
+    expect(iobValue, '#bolus-tooltip-line-iob-value').to.have.length(1)
+    expect(iobValue.first().text()).to.eq('7.14')
+  })
+})

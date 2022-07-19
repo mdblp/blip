@@ -14,46 +14,46 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import _ from "lodash";
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import cx from "classnames";
-import i18next from "i18next";
+import _ from 'lodash'
+import React, { Fragment } from 'react'
+import PropTypes from 'prop-types'
+import cx from 'classnames'
+import i18next from 'i18next'
 
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import Face from "@material-ui/icons/Face";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import AccessTime from "@material-ui/icons/AccessTime";
-import IconButton from "@material-ui/core/IconButton";
-import Dashboard from "@material-ui/icons/Dashboard";
-import Today from "@material-ui/icons/Today";
-import TrendingUp from "@material-ui/icons/TrendingUp";
+import FormControl from '@material-ui/core/FormControl'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import GetAppIcon from '@material-ui/icons/GetApp'
+import Face from '@material-ui/icons/Face'
+import ArrowBack from '@material-ui/icons/ArrowBack'
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import SkipNextIcon from '@material-ui/icons/SkipNext'
+import AccessTime from '@material-ui/icons/AccessTime'
+import IconButton from '@material-ui/core/IconButton'
+import Dashboard from '@material-ui/icons/Dashboard'
+import Today from '@material-ui/icons/Today'
+import TrendingUp from '@material-ui/icons/TrendingUp'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 class TidelineHeader extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = { isDialogOpen: false };
+    super(props)
+    this.state = { isDialogOpen: false }
   }
 
   selectedTab() {
     switch (this.props.chartType) {
     // 1 is the separator, so we're skipping it
-    case "dashboard":
-      return 0;
-    case "daily":
-      return 2;
-    case "trends":
-      return 3;
+      case 'dashboard':
+        return 0
+      case 'daily':
+        return 2
+      case 'trends':
+        return 3
     }
   }
 
@@ -81,54 +81,54 @@ class TidelineHeader extends React.Component {
     onSwitchPatient: PropTypes.func,
     onClickNavigationBack: PropTypes.func,
     printDefaultPeriod: PropTypes.string
-  };
+  }
 
   static defaultProps = {
     inTransition: false,
     atMostRecent: false,
     loading: false,
     canPrint: false,
-    prefixURL: "",
-  };
+    prefixURL: ''
+  }
 
   renderStandard() {
-    const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props;
-    const { children } = this.props;
+    const { canPrint, chartType, atMostRecent, inTransition, loading, prefixURL } = this.props
+    const { children } = this.props
 
-    const printViews = ["dashboard", "daily"];
-    const showPrintLink = _.includes(printViews, chartType);
+    const printViews = ['dashboard', 'daily']
+    const showPrintLink = _.includes(printViews, chartType)
 
-    const mostRecentDisabled = atMostRecent || inTransition || loading;
+    const mostRecentDisabled = atMostRecent || inTransition || loading
     const mostRecentClass = cx({
-      "mui-nav-button": true,
-      "patient-data-subnav-hidden": chartType === "no-data",
-    });
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': chartType === 'no-data'
+    })
 
-    const backDisabled = inTransition || loading;
+    const backDisabled = inTransition || loading
     const backClass = cx({
-      "mui-nav-button": true,
-      "patient-data-subnav-hidden": chartType === "settings" || chartType === "no-data",
-    });
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': chartType === 'settings' || chartType === 'no-data'
+    })
 
-    const nextDisabled = mostRecentDisabled;
+    const nextDisabled = mostRecentDisabled
     const nextClass = cx({
-      "mui-nav-button": true,
-      "patient-data-subnav-hidden": chartType === "settings" || chartType === "no-data",
-    });
+      'mui-nav-button': true,
+      'patient-data-subnav-hidden': chartType === 'settings' || chartType === 'no-data'
+    })
 
-    let printLink = null;
+    let printLink = null
     if (canPrint && showPrintLink) {
       const printLinkClass = cx({
-        "patient-data-subnav-button": true,
-        "printview-print-icon": true,
-      });
+        'patient-data-subnav-button': true,
+        'printview-print-icon': true
+      })
 
       printLink = (
         <button className={printLinkClass} onClick={this.onClickPrint}>
           <GetAppIcon className="print-icon" />
-          {t("pdf-generate-report")}
+          {t('pdf-generate-report')}
         </button>
-      );
+      )
     }
 
     return (
@@ -141,7 +141,7 @@ class TidelineHeader extends React.Component {
                 <ArrowBack id="subnav-arrow-back" onClick={() => this.props.onClickNavigationBack()} />
               </IconButton>
               <Face className="subnav-icon" />
-              <span>{ t("patient") } :</span>
+              <span>{ t('patient') } :</span>
               <FormControl id="subnav-patient-list" variant="outlined">
                 <Select
                   defaultValue={this.props.patient.userid}
@@ -149,23 +149,23 @@ class TidelineHeader extends React.Component {
                 >
                   {
                     this.props.patients.map((patient, i) => {
-                      return (<MenuItem key={i} value={patient.userid}>{patient.profile.fullName}</MenuItem>);
+                      return (<MenuItem key={i} value={patient.userid}>{patient.profile.fullName}</MenuItem>)
                     })
                   }
                 </Select>
               </FormControl>
             </div>
             }
-            {this.props.chartType === "dashboard" &&
+            {this.props.chartType === 'dashboard' &&
             <Fragment>
               <AccessTime className="subnav-icon" />
-              <span id="subnav-period-label">{t("dashboard-header-period-text")}</span>
+              <span id="subnav-period-label">{t('dashboard-header-period-text')}</span>
             </Fragment>
             }
-            {this.props.iconBack ? this.renderNavButton("button-nav-back", backClass, this.props.onClickBack, "back", backDisabled) : null}
+            {this.props.iconBack ? this.renderNavButton('button-nav-back', backClass, this.props.onClickBack, 'back', backDisabled) : null}
             {children}
-            {this.props.iconNext ? this.renderNavButton("button-nav-next", nextClass, this.props.onClickNext, "next", nextDisabled) : null}
-            {this.props.iconMostRecent ? this.renderNavButton("button-nav-mostrecent", mostRecentClass, this.props.onClickMostRecent, "most-recent", mostRecentDisabled) : null}
+            {this.props.iconNext ? this.renderNavButton('button-nav-next', nextClass, this.props.onClickNext, 'next', nextDisabled) : null}
+            {this.props.iconMostRecent ? this.renderNavButton('button-nav-mostrecent', mostRecentClass, this.props.onClickMostRecent, 'most-recent', mostRecentDisabled) : null}
           </div>
           <div>
             <Tabs
@@ -173,11 +173,11 @@ class TidelineHeader extends React.Component {
               textColor="primary"
               indicatorColor="primary"
             >
-              <Tab className={"subnav-tab"} href={`${prefixURL}/dashboard`} label={t("dashboard")} icon={<Dashboard />}
+              <Tab className={'subnav-tab'} href={`${prefixURL}/dashboard`} label={t('dashboard')} icon={<Dashboard />}
                 onClick={this.props.onClickDashboard} />
-              <div className={"dashboard-divider"}></div>
-              <Tab className={"subnav-tab"} href={`${prefixURL}/daily`} label={t("Daily")} icon={<Today />} onClick={this.props.onClickOneDay} />
-              <Tab className={"subnav-tab"} href={`${prefixURL}/trends`} label={t("Trends")} icon={<TrendingUp />}
+              <div className={'dashboard-divider'}></div>
+              <Tab className={'subnav-tab'} href={`${prefixURL}/daily`} label={t('Daily')} icon={<Today />} onClick={this.props.onClickOneDay} />
+              <Tab className={'subnav-tab'} href={`${prefixURL}/trends`} label={t('Trends')} icon={<TrendingUp />}
                 onClick={this.props.onClickTrends} />
             </Tabs>
           </div>
@@ -187,7 +187,7 @@ class TidelineHeader extends React.Component {
           {printLink}
         </div>
       </div>
-    );
+    )
   }
 
   render() {
@@ -195,7 +195,7 @@ class TidelineHeader extends React.Component {
       <div className="patient-data-subnav-outer">
         <div className="patient-data-subnav-inner box-shadow">{this.renderStandard()}</div>
       </div>
-    );
+    )
   }
 
   /**
@@ -213,42 +213,42 @@ class TidelineHeader extends React.Component {
   renderNavButton(id, buttonClass, clickAction, icon, disabled) {
     const nullAction = (e) => {
       if (e) {
-        e.preventDefault();
+        e.preventDefault()
       }
-    };
-    const onClick = this.props.inTransition ? nullAction : clickAction;
+    }
+    const onClick = this.props.inTransition ? nullAction : clickAction
 
     /** @type {JSX.Element|null} */
-    let iconComponent = null;
+    let iconComponent = null
     switch (icon) {
-    case "back":
-      iconComponent = <NavigateBeforeIcon />;
-      break;
-    case "next":
-      iconComponent = <NavigateNextIcon />;
-      break;
-    case "most-recent":
-      iconComponent = <SkipNextIcon />;
-      break;
-    default:
-      console.error("Invalid icon name", icon);
-      break;
+      case 'back':
+        iconComponent = <NavigateBeforeIcon />
+        break
+      case 'next':
+        iconComponent = <NavigateNextIcon />
+        break
+      case 'most-recent':
+        iconComponent = <SkipNextIcon />
+        break
+      default:
+        console.error('Invalid icon name', icon)
+        break
     }
 
     return (
       <IconButton id={id} type="button" className={buttonClass} onClick={onClick} disabled={disabled}>
         {iconComponent}
       </IconButton>
-    );
+    )
   }
 
   /**
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The DOM/React event
    */
   onClickPrint = (event) => {
-    event.preventDefault();
-    this.props.onClickPrint();
-  };
+    event.preventDefault()
+    this.props.onClickPrint()
+  }
 }
 
-export default TidelineHeader;
+export default TidelineHeader

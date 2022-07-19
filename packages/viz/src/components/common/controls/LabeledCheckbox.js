@@ -15,21 +15,21 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
-import React from "react";
+import React from 'react'
 
-import styles from "./LabeledCheckbox.css";
+import styles from './LabeledCheckbox.css'
 
 const LabeledCheckbox = (props) => {
-  const { name, checked, onFn, offFn, label } = props;
+  const { name, checked, onFn, offFn, label } = props
   const handleChange = function handleChange() {
     if (checked) {
-      offFn();
+      offFn()
     } else {
-      onFn();
+      onFn()
     }
-  };
+  }
 
   return (
     <label htmlFor={name} className={styles.label}>
@@ -39,15 +39,15 @@ const LabeledCheckbox = (props) => {
         onChange={handleChange}
       /> {label}
     </label>
-  );
-};
+  )
+}
 
 LabeledCheckbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onFn: PropTypes.func.isRequired,
   offFn: PropTypes.func.isRequired,
   label: PropTypes.node.isRequired,
-  name: PropTypes.string.isRequired,
-};
+  name: PropTypes.string.isRequired
+}
 
-export default LabeledCheckbox;
+export default LabeledCheckbox

@@ -17,43 +17,43 @@
 
 function makeValidator() {
   if (arguments.length === 1) {
-    var element = arguments[0];
+    var element = arguments[0]
     switch (typeof(element)) {
-    case "function":
-      return element;
-    case "object":
-      if (Array.isArray(element)) {
-        var fns = new Array(element.length);
-        for (var i = 0; i < element.length; ++i) {
-          fns[i] = makeValidator(element[i]);
+      case 'function':
+        return element
+      case 'object':
+        if (Array.isArray(element)) {
+          var fns = new Array(element.length)
+          for (var i = 0; i < element.length; ++i) {
+            fns[i] = makeValidator(element[i])
+          }
+
+          return function(e) {
+            for (var i = 0; i < fns.length; ++i) {
+              fns[i](e)
+            }
+          }
         }
+        return makeValidator(Object.keys(element).map(function(key){
+          var fn = makeValidator(element[key])
 
-        return function(e) {
-          for (var i = 0; i < fns.length; ++i) {
-            fns[i](e);
+          return function(e) {
+            try {
+              fn(e[key])
+            } catch (e) {
+              e.message = '.' + key + e.message
+              throw e
+            }
           }
-        };
-      }
-      return makeValidator(Object.keys(element).map(function(key){
-        var fn = makeValidator(element[key]);
-
-        return function(e) {
-          try {
-            fn(e[key]);
-          } catch (e) {
-            e.message = "." + key + e.message;
-            throw e;
-          }
-        };
-      }));
-    default:
-      if (!Array.isArray(element)) {
-        console.log("makeValidator given", element);
-        throw new Error("makeValidator must be given an Object, function, or array");
-      }
+        }))
+      default:
+        if (!Array.isArray(element)) {
+          console.log('makeValidator given', element)
+          throw new Error('makeValidator must be given an Object, function, or array')
+        }
     }
   }
-  return makeValidator(Array.prototype.slice.call(arguments, 0));
+  return makeValidator(Array.prototype.slice.call(arguments, 0))
 }
 
-export default makeValidator;
+export default makeValidator

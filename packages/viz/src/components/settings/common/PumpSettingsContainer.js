@@ -15,30 +15,30 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
-import Diabeloop from "../Diabeloop";
+import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import Diabeloop from '../Diabeloop'
 
 class PumpSettingsContainer extends React.Component {
   static propTypes = {
     bgUnits: PropTypes.oneOf([MGDL_UNITS, MMOLL_UNITS]).isRequired,
     copySettingsClicked: PropTypes.func.isRequired,
     manufacturerKey: PropTypes.oneOf(
-      ["animas", "carelink", "insulet", "medtronic", "tandem", "diabeloop"]
+      ['animas', 'carelink', 'insulet', 'medtronic', 'tandem', 'diabeloop']
     ).isRequired,
     pumpSettings: PropTypes.shape({
       deviceId: PropTypes.string.isRequired,
       deviceTime: PropTypes.string.isRequired,
-      payload: PropTypes.object.isRequired,
+      payload: PropTypes.object.isRequired
     }).isRequired,
     timePrefs: PropTypes.shape({
       timezoneAware: PropTypes.bool.isRequired,
-      timezoneName: PropTypes.string.isRequired,
+      timezoneName: PropTypes.string.isRequired
     }).isRequired,
-    onSwitchToDaily: PropTypes.func,
-  };
+    onSwitchToDaily: PropTypes.func
+  }
 
   render() {
     const {
@@ -46,8 +46,8 @@ class PumpSettingsContainer extends React.Component {
       manufacturerKey,
       pumpSettings,
       timePrefs,
-      onSwitchToDaily,
-    } = this.props;
+      onSwitchToDaily
+    } = this.props
 
     return (
       <Diabeloop
@@ -57,8 +57,8 @@ class PumpSettingsContainer extends React.Component {
         timePrefs={timePrefs}
         handleClickHistory={onSwitchToDaily}
       />
-    );
+    )
   }
 }
 
-export default PumpSettingsContainer;
+export default PumpSettingsContainer

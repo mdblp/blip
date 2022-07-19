@@ -1,23 +1,23 @@
 export const tubingPrimeSelected = {
   settings: {
-    siteChangeSource: "tubingPrime",
-  },
-};
+    siteChangeSource: 'tubingPrime'
+  }
+}
 
 export const cannulaPrimeSelected = {
   settings: {
-    siteChangeSource: "cannulaPrime",
-  },
-};
+    siteChangeSource: 'cannulaPrime'
+  }
+}
 
 export const reservoirChangeSelected = {
   settings: {
-    siteChangeSource: "reservoirChange",
-  },
-};
+    siteChangeSource: 'reservoirChange'
+  }
+}
 
 export const siteChangeSourceUndefined = {
   settings: {
-    siteChangeSource: undefined,
-  },
-};
+    siteChangeSource: undefined
+  }
+}

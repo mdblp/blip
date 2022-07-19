@@ -15,18 +15,18 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
-import { range } from "d3-array";
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
+import { range } from 'd3-array'
 
-import { THIRTY_MINS, TWENTY_FOUR_HRS } from "../../../utils/datetime";
+import { THIRTY_MINS, TWENTY_FOUR_HRS } from '../../../utils/datetime'
 import {
-  findBinForTimeOfDay, findOutOfRangeAnnotations, calculateCbgStatsForBin,
-} from "../../../utils/trends/data";
+  findBinForTimeOfDay, findOutOfRangeAnnotations, calculateCbgStatsForBin
+} from '../../../utils/trends/data'
 
-import CBGMedianAnimated from "./CBGMedianAnimated";
-import CBGSliceAnimated from "./CBGSliceAnimated";
+import CBGMedianAnimated from './CBGMedianAnimated'
+import CBGSliceAnimated from './CBGSliceAnimated'
 
 export default class CBGSlicesContainer extends PureComponent {
   static propTypes = {
@@ -34,7 +34,7 @@ export default class CBGSlicesContainer extends PureComponent {
       veryHighThreshold: PropTypes.number.isRequired,
       targetUpperBound: PropTypes.number.isRequired,
       targetLowerBound: PropTypes.number.isRequired,
-      veryLowThreshold: PropTypes.number.isRequired,
+      veryLowThreshold: PropTypes.number.isRequired
     }).isRequired,
     binSize: PropTypes.number,
     sliceWidth: PropTypes.number,
@@ -42,64 +42,64 @@ export default class CBGSlicesContainer extends PureComponent {
       // here only documenting the properties we actually use rather than the *whole* data model!
       id: PropTypes.string.isRequired,
       msPer24: PropTypes.number.isRequired,
-      value: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired
     })).isRequired,
     displayFlags: PropTypes.shape({
       cbg100Enabled: PropTypes.bool.isRequired,
       cbg80Enabled: PropTypes.bool.isRequired,
       cbg50Enabled: PropTypes.bool.isRequired,
-      cbgMedianEnabled: PropTypes.bool.isRequired,
+      cbgMedianEnabled: PropTypes.bool.isRequired
     }).isRequired,
     showingCbgDateTraces: PropTypes.bool.isRequired,
     tooltipLeftThreshold: PropTypes.number.isRequired,
     topMargin: PropTypes.number.isRequired,
     xScale: PropTypes.func.isRequired,
-    yScale: PropTypes.func.isRequired,
-  };
+    yScale: PropTypes.func.isRequired
+  }
 
   static defaultProps = {
     binSize: THIRTY_MINS,
-    sliceWidth: 16,
-  };
+    sliceWidth: 16
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      mungedData: [],
-    };
+      mungedData: []
+    }
   }
 
   componentDidMount() {
-    const { binSize, data } = this.props;
-    this.setState({ mungedData: this.mungeData(binSize, data) });
+    const { binSize, data } = this.props
+    this.setState({ mungedData: this.mungeData(binSize, data) })
   }
 
   componentDidUpdate(prevProps) {
-    const { binSize, data } = this.props;
+    const { binSize, data } = this.props
     if (binSize !== prevProps.binSize || data !== prevProps.data) {
-      this.setState({ mungedData: this.mungeData(binSize, data) });
+      this.setState({ mungedData: this.mungeData(binSize, data) })
     }
   }
 
   mungeData(binSize, data) {
-    const binned = _.groupBy(data, (d) => (findBinForTimeOfDay(binSize, d.msPer24)));
-    const outOfRanges = findOutOfRangeAnnotations(data);
+    const binned = _.groupBy(data, (d) => (findBinForTimeOfDay(binSize, d.msPer24)))
+    const outOfRanges = findOutOfRangeAnnotations(data)
     // we need *all* possible keys for TransitionMotion to work on enter/exit
     // and the range starts with binSize/2 because the keys are centered in each bin
-    const binKeys = _.map(range(binSize / 2, TWENTY_FOUR_HRS, binSize), (d) => String(d));
+    const binKeys = _.map(range(binSize / 2, TWENTY_FOUR_HRS, binSize), (d) => String(d))
 
-    const valueExtractor = (d) => (d.value);
-    const mungedData = [];
+    const valueExtractor = (d) => (d.value)
+    const mungedData = []
     for (let i = 0; i < binKeys.length; ++i) {
-      const values = _.map(_.get(binned, binKeys[i], []), valueExtractor);
-      mungedData.push(calculateCbgStatsForBin(binKeys[i], binSize, values, outOfRanges));
+      const values = _.map(_.get(binned, binKeys[i], []), valueExtractor)
+      mungedData.push(calculateCbgStatsForBin(binKeys[i], binSize, values, outOfRanges))
     }
-    return mungedData;
+    return mungedData
   }
 
   render() {
-    const { mungedData } = this.state;
-    const { xScale, yScale, sliceWidth } = this.props;
+    const { mungedData } = this.state
+    const { xScale, yScale, sliceWidth } = this.props
 
     return (
       <g id="cbgSlices">
@@ -128,6 +128,6 @@ export default class CBGSlicesContainer extends PureComponent {
           </g>
         ))}
       </g>
-    );
+    )
   }
 }

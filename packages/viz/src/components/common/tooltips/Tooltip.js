@@ -15,111 +15,111 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import _ from "lodash";
-import moment from "moment-timezone";
+import React from 'react'
+import PropTypes from 'prop-types'
+import _ from 'lodash'
+import moment from 'moment-timezone'
 
-import { formatLocalizedFromUTC, getHourMinuteFormat } from "../../../utils/datetime";
-import styles from "./Tooltip.css";
+import { formatLocalizedFromUTC, getHourMinuteFormat } from '../../../utils/datetime'
+import styles from './Tooltip.css'
 
 class Tooltip extends React.PureComponent {
   constructor(props) {
-    super(props);
-    this.state = { offset: { top: 0, left: 0 } };
+    super(props)
+    this.state = { offset: { top: 0, left: 0 } }
 
     this.setElementRef = ref => {
-      this.element = ref;
-    };
+      this.element = ref
+    }
 
     this.setTailElemRef = ref => {
-      this.tailElem = ref;
-    };
+      this.tailElem = ref
+    }
   }
 
   componentDidMount() {
-    this.calculateOffset(this.props);
+    this.calculateOffset(this.props)
 
     // In cases where the tooltip CSS width is not statically set, we may need to re-caculate
     // the offset after updates to get the proper positioning after browser reflow is complete,
     // but before repaint happens. The second call within requestAnimationFrame ensures the tooltip
     // is properly positioned on the first render.
     requestAnimationFrame(() => {
-      this.calculateOffset(this.props);
-    });
+      this.calculateOffset(this.props)
+    })
   }
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps(nextProps) {
-    this.calculateOffset(nextProps);
+    this.calculateOffset(nextProps)
   }
 
   calculateOffset(currentProps) {
     if (this.element) {
-      const { offset: propOffset, side, tail } = currentProps;
-      const offset = {};
-      const tooltipRect = this.element.getBoundingClientRect();
+      const { offset: propOffset, side, tail } = currentProps
+      const offset = {}
+      const tooltipRect = this.element.getBoundingClientRect()
 
       let horizontalOffset = !_.isNil(propOffset.left)
         ? propOffset.left
-        : (propOffset.horizontal || 0);
+        : (propOffset.horizontal || 0)
 
-      if (side === "left") {
-        horizontalOffset = -horizontalOffset;
+      if (side === 'left') {
+        horizontalOffset = -horizontalOffset
       }
 
       if (tail) {
-        const tailRect = this.tailElem.getBoundingClientRect();
+        const tailRect = this.tailElem.getBoundingClientRect()
         const tailCenter = {
           top: tailRect.top + (tailRect.height / 2),
-          left: tailRect.left + (tailRect.width / 2),
-        };
-        offset.top = -tailCenter.top + tooltipRect.top + propOffset.top;
-        offset.left = -tailCenter.left + tooltipRect.left + horizontalOffset;
-      } else {
-        let leftOffset;
-        let topOffset;
-        switch (side) {
-        case "top":
-          leftOffset = -tooltipRect.width / 2;
-          topOffset = -tooltipRect.height;
-          break;
-        case "bottom":
-          leftOffset = -tooltipRect.width / 2;
-          topOffset = 0;
-          break;
-        case "right":
-          leftOffset = 0;
-          topOffset = -tooltipRect.height / 2;
-          break;
-        case "left":
-        default:
-          leftOffset = -tooltipRect.width;
-          topOffset = -tooltipRect.height / 2;
+          left: tailRect.left + (tailRect.width / 2)
         }
-        offset.top = topOffset + propOffset.top;
-        offset.left = leftOffset + horizontalOffset;
+        offset.top = -tailCenter.top + tooltipRect.top + propOffset.top
+        offset.left = -tailCenter.left + tooltipRect.left + horizontalOffset
+      } else {
+        let leftOffset
+        let topOffset
+        switch (side) {
+          case 'top':
+            leftOffset = -tooltipRect.width / 2
+            topOffset = -tooltipRect.height
+            break
+          case 'bottom':
+            leftOffset = -tooltipRect.width / 2
+            topOffset = 0
+            break
+          case 'right':
+            leftOffset = 0
+            topOffset = -tooltipRect.height / 2
+            break
+          case 'left':
+          default:
+            leftOffset = -tooltipRect.width
+            topOffset = -tooltipRect.height / 2
+        }
+        offset.top = topOffset + propOffset.top
+        offset.left = leftOffset + horizontalOffset
       }
 
-      this.setState({ offset });
+      this.setState({ offset })
     }
   }
 
-  renderTail(backgroundColor = "white") {
-    const { tailWidth, tailHeight, borderWidth, borderColor, side } = this.props;
-    const tailSide = (side === "left") ? "right" : "left";
-    const padding = 10;
-    let marginOuterValue;
-    let marginInnerValue;
-    if (tailSide === "left") {
-      marginOuterValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px)`;
-      marginInnerValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px - ${borderWidth + 1}px))`;
+  renderTail(backgroundColor = 'white') {
+    const { tailWidth, tailHeight, borderWidth, borderColor, side } = this.props
+    const tailSide = (side === 'left') ? 'right' : 'left'
+    const padding = 10
+    let marginOuterValue
+    let marginInnerValue
+    if (tailSide === 'left') {
+      marginOuterValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px)`
+      marginInnerValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px - ${borderWidth + 1}px))`
     } else {
-      marginOuterValue = `calc(${padding}px + ${borderWidth}px)`;
-      marginInnerValue = `${padding - 1}px`;
+      marginOuterValue = `calc(${padding}px + ${borderWidth}px)`
+      marginInnerValue = `${padding - 1}px`
     }
-    const borderSide = (tailSide === "left") ? "right" : "left";
-    const tailInnerColor = this.props.tailColor || this.props.backgroundColor || backgroundColor;
+    const borderSide = (tailSide === 'left') ? 'right' : 'left'
+    const tailInnerColor = this.props.tailColor || this.props.backgroundColor || backgroundColor
     // The two child divs form the solid color tail and the border around it by layering
     // on one another offset by the border width adjusted slightly for the angle
     return (
@@ -131,7 +131,7 @@ class Tooltip extends React.PureComponent {
             marginTop: `-${tailHeight}px`,
             marginLeft: marginOuterValue,
             borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-            [`border${_.upperFirst(borderSide)}Color`]: borderColor,
+            [`border${_.upperFirst(borderSide)}Color`]: borderColor
           }}
         />
         {tailInnerColor !== borderColor && (
@@ -142,43 +142,43 @@ class Tooltip extends React.PureComponent {
               marginLeft: marginInnerValue,
               borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
               [`border${_.upperFirst(borderSide)}Color`]:
-                this.props.tailColor || this.props.backgroundColor || backgroundColor,
+                this.props.tailColor || this.props.backgroundColor || backgroundColor
             }}
           />
         )}
       </div>
-    );
+    )
   }
 
   renderTitle() {
-    const { title, dateTitle, tail, content } = this.props;
-    let renderedTitle = null;
-    let renderedDateTitle = null;
-    let tailNode = null;
+    const { title, dateTitle, tail, content } = this.props
+    let renderedTitle = null
+    let renderedDateTitle = null
+    let tailNode = null
     if (tail && content === null) {
-      tailNode = this.renderTail(styles.tooltipTitleBg);
+      tailNode = this.renderTail(styles.tooltipTitleBg)
     }
     if (title) {
-      renderedTitle = <span id="tooltip-daily-title-text">{title}</span>;
+      renderedTitle = <span id="tooltip-daily-title-text">{title}</span>
     }
     if (dateTitle) {
-      let dateValue = null;
-      if (dateTitle.source === "Diabeloop") {
+      let dateValue = null
+      if (dateTitle.source === 'Diabeloop') {
         // For diabeloop device, use the timezone of the object
-        const { timezoneName } = dateTitle.timePrefs;
-        const { timezone: datumTimezone } = dateTitle;
-        const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === "UTC" ? timezoneName : datumTimezone);
-        dateValue = mNormalTime.format(getHourMinuteFormat());
+        const { timezoneName } = dateTitle.timePrefs
+        const { timezone: datumTimezone } = dateTitle
+        const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === 'UTC' ? timezoneName : datumTimezone)
+        dateValue = mNormalTime.format(getHourMinuteFormat())
       } else {
         // eslint-disable-next-line max-len
-        const time = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat());
-        dateValue = time;
+        const time = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())
+        dateValue = time
       }
-      renderedDateTitle = <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>;
+      renderedDateTitle = <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>
     }
 
     if (renderedDateTitle === null && renderedTitle === null) {
-      return null;
+      return null
     }
 
     return (
@@ -189,32 +189,32 @@ class Tooltip extends React.PureComponent {
         </div>
         {tailNode}
       </div>
-    );
+    )
   }
 
   renderContent() {
-    const { tail, content } = this.props;
-    let renderedContent = null;
+    const { tail, content } = this.props
+    let renderedContent = null
     if (content) {
-      let tailNode = null;
+      let tailNode = null
       if (tail) {
-        tailNode = this.renderTail();
+        tailNode = this.renderTail()
       }
       renderedContent = (
         <div id="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
           {tailNode}
         </div>
-      );
+      )
     }
-    return renderedContent;
+    return renderedContent
   }
 
   render() {
-    const { position, backgroundColor, borderColor, borderWidth } = this.props;
-    const { offset } = this.state;
-    const top = position.top + offset.top;
-    const left = position.left + offset.left;
+    const { position, backgroundColor, borderColor, borderWidth } = this.props
+    const { offset } = this.state
+    const top = position.top + offset.top
+    const left = position.left + offset.left
 
     return (
       <div
@@ -225,11 +225,11 @@ class Tooltip extends React.PureComponent {
         {this.renderTitle()}
         {this.renderContent()}
       </div>
-    );
+    )
   }
 }
 
-Tooltip.displayName = "Tooltip";
+Tooltip.displayName = 'Tooltip'
 
 Tooltip.propTypes = {
   title: PropTypes.node,
@@ -239,40 +239,40 @@ Tooltip.propTypes = {
     source: PropTypes.string.isRequired,
     timePrefs: PropTypes.shape({
       timezoneAware: PropTypes.bool.isRequired,
-      timezoneName: PropTypes.string.isRequired,
-    }).isRequired,
+      timezoneName: PropTypes.string.isRequired
+    }).isRequired
   }),
   content: PropTypes.node,
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired
   }).isRequired,
   offset: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number,
-    horizontal: PropTypes.number,
+    horizontal: PropTypes.number
   }).isRequired,
   tail: PropTypes.bool,
-  side: PropTypes.oneOf(["top", "right", "bottom", "left"]).isRequired,
+  side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
   tailWidth: PropTypes.number.isRequired,
   tailHeight: PropTypes.number.isRequired,
   tailColor: PropTypes.string,
   backgroundColor: PropTypes.string,
   borderColor: PropTypes.string.isRequired,
-  borderWidth: PropTypes.number.isRequired,
-};
+  borderWidth: PropTypes.number.isRequired
+}
 
 Tooltip.defaultProps = {
   content: null,
   tail: true,
-  side: "left",
+  side: 'left',
   tailWidth: 7,
   tailHeight: 8,
-  borderColor: "black",
+  borderColor: 'black',
   borderWidth: 2,
   offset: { top: 0, left: 0 },
   title: null,
-  dateTitle: null,
-};
+  dateTitle: null
+}
 
-export default Tooltip;
+export default Tooltip

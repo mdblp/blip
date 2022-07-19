@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
-import React from "react";
-import _ from "lodash";
-import { Point, Rect } from "victory";
-import { Arc } from "victory-core";
-import colors from "../../../styles/colors.css";
-import { classifyBgValue } from "../../../utils/bloodglucose";
+import PropTypes from 'prop-types'
+import React from 'react'
+import _ from 'lodash'
+import { Point, Rect } from 'victory'
+import { Arc } from 'victory-core'
+import colors from '../../../styles/colors.css'
+import { classifyBgValue } from '../../../utils/bloodglucose'
 
 function BgBar(props) {
   const {
@@ -16,37 +16,37 @@ function BgBar(props) {
     index,
     scale = {
       x: _.noop,
-      y: _.noop,
+      y: _.noop
     },
-    width,
-  } = props;
+    width
+  } = props
 
-  const { bgBounds } = bgPrefs;
-  const renderDeviation = _.isObject(datum.deviation);
-  const renderMean = !renderDeviation;
+  const { bgBounds } = bgPrefs
+  const renderDeviation = _.isObject(datum.deviation)
+  const renderMean = !renderDeviation
 
-  const deviation = _.get(datum, "deviation.value", 0);
+  const deviation = _.get(datum, 'deviation.value', 0)
 
-  const widthCorrection = (width - chartLabelWidth) / width;
+  const widthCorrection = (width - chartLabelWidth) / width
   const widths = {
     low: scale.y(bgBounds.targetLowerBound) * widthCorrection,
     target: scale.y(bgBounds.targetUpperBound - bgBounds.targetLowerBound) * widthCorrection,
-    high: scale.y(domain.x[1] - bgBounds.targetUpperBound) * widthCorrection,
-  };
+    high: scale.y(domain.x[1] - bgBounds.targetUpperBound) * widthCorrection
+  }
 
-  const barRadius = barWidth / 2;
+  const barRadius = barWidth / 2
 
-  const yPos = scale.x(index + 1) - (barWidth / 2);
-  const datumY = yPos + (barWidth / 2);
-  const datumX = scale.y(datum.y) * widthCorrection;
+  const yPos = scale.x(index + 1) - (barWidth / 2)
+  const datumY = yPos + (barWidth / 2)
+  const datumX = scale.y(datum.y) * widthCorrection
 
-  const dev1Value = datum.y - deviation;
-  const dev1X = scale.y(datum.y - deviation) * widthCorrection;
+  const dev1Value = datum.y - deviation
+  const dev1X = scale.y(datum.y - deviation) * widthCorrection
 
-  const dev2Value = datum.y + deviation;
-  const dev2X = scale.y(datum.y + deviation) * widthCorrection;
+  const dev2Value = datum.y + deviation
+  const dev2X = scale.y(datum.y + deviation) * widthCorrection
 
-  const isEnabled = renderMean ? datum.y >= 0 : deviation >= 0;
+  const isEnabled = renderMean ? datum.y >= 0 : deviation >= 0
 
   return (
     <g className="bgBar">
@@ -58,9 +58,9 @@ function BgBar(props) {
           startAngle={90}
           endAngle={270}
           style={{
-            stroke: "transparent",
+            stroke: 'transparent',
             fill: isEnabled ? colors.low : colors.statDisabled,
-            fillOpacity: isEnabled ? 0.5 : 1,
+            fillOpacity: isEnabled ? 0.5 : 1
           }}
         />
         <Rect
@@ -70,9 +70,9 @@ function BgBar(props) {
           width={widths.low - barRadius}
           height={barWidth}
           style={{
-            stroke: "transparent",
+            stroke: 'transparent',
             fill: isEnabled ? colors.low : colors.statDisabled,
-            fillOpacity: isEnabled ? 0.5 : 1,
+            fillOpacity: isEnabled ? 0.5 : 1
           }}
         />
         <Rect
@@ -82,9 +82,9 @@ function BgBar(props) {
           width={widths.target}
           height={barWidth}
           style={{
-            stroke: "transparent",
+            stroke: 'transparent',
             fill: isEnabled ? colors.target : colors.statDisabled,
-            fillOpacity: isEnabled ? 0.5 : 1,
+            fillOpacity: isEnabled ? 0.5 : 1
           }}
         />
         <Rect
@@ -94,9 +94,9 @@ function BgBar(props) {
           width={widths.high - barRadius}
           height={barWidth}
           style={{
-            stroke: "transparent",
+            stroke: 'transparent',
             fill: isEnabled ? colors.high : colors.statDisabled,
-            fillOpacity: isEnabled ? 0.5 : 1,
+            fillOpacity: isEnabled ? 0.5 : 1
           }}
         />
         <Arc
@@ -106,9 +106,9 @@ function BgBar(props) {
           startAngle={270}
           endAngle={90}
           style={{
-            stroke: "transparent",
+            stroke: 'transparent',
             fill: isEnabled ? colors.high : colors.statDisabled,
-            fillOpacity: isEnabled ? 0.5 : 1,
+            fillOpacity: isEnabled ? 0.5 : 1
           }}
         />
       </g>
@@ -121,7 +121,7 @@ function BgBar(props) {
             style={{
               fill: colors[classifyBgValue(bgBounds, datum.y)],
               stroke: colors.white,
-              strokeWidth: 2,
+              strokeWidth: 2
             }}
             size={barWidth * 2}
           />
@@ -137,9 +137,9 @@ function BgBar(props) {
             width={4}
             height={barWidth * 4 + 2}
             style={{
-              stroke: "white",
+              stroke: 'white',
               strokeWidth: 2,
-              fill: colors[classifyBgValue(bgBounds, _.max([dev1Value, 0.1]))],
+              fill: colors[classifyBgValue(bgBounds, _.max([dev1Value, 0.1]))]
             }}
           />
 
@@ -150,21 +150,21 @@ function BgBar(props) {
             width={4}
             height={barWidth * 4 + 2}
             style={{
-              stroke: "white",
+              stroke: 'white',
               strokeWidth: 2,
-              fill: colors[classifyBgValue(bgBounds, dev2Value)],
+              fill: colors[classifyBgValue(bgBounds, dev2Value)]
             }}
           />
         </g>
       )}
     </g>
-  );
+  )
 }
 
 BgBar.propTypes = {
   barWidth: PropTypes.number.isRequired,
   bgPrefs: PropTypes.shape({
-    bgBounds: PropTypes.object.isRequired,
+    bgBounds: PropTypes.object.isRequired
   }).isRequired,
   chartLabelWidth: PropTypes.number.isRequired,
   datum: PropTypes.object,
@@ -172,9 +172,9 @@ BgBar.propTypes = {
   index: PropTypes.number,
   scale: PropTypes.shape({
     x: PropTypes.func,
-    y: PropTypes.func,
+    y: PropTypes.func
   }),
-  width: PropTypes.number,
-};
+  width: PropTypes.number
+}
 
-export default BgBar;
+export default BgBar

@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
-import moment from "moment-timezone";
-import Box from "@material-ui/core/Box";
-import PatientStatistics from "./patientStatistics";
-import Header from "./header";
-import DeviceUsage from "./deviceUsage";
-import "./patientDashboardVars.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
+import Box from '@material-ui/core/Box'
+import PatientStatistics from './patientStatistics'
+import Header from './header'
+import DeviceUsage from './deviceUsage'
+import './patientDashboardVars.css'
 
 const PatientDashboard = (props) => {
   const {
@@ -27,29 +27,29 @@ const PatientDashboard = (props) => {
     onClickPrint,
     //eslint-disable-next-line
     timePrefs, tidelineData, permsOfLoggedInUser, trackMetric, onSwitchToTrends, onSwitchToDaily, patients, userIsHCP, onSwitchPatient, onClickNavigationBack, patientInfoWidget: PatientInfoWidget
-  } = props;
+  } = props
   const getEndpoints = () => {
-    const start = moment.utc(epochLocation - msRange).toISOString();
-    const end = moment.utc(epochLocation).toISOString();
-    return [start, end];
-  };
+    const start = moment.utc(epochLocation - msRange).toISOString()
+    const end = moment.utc(epochLocation).toISOString()
+    return [start, end]
+  }
 
   const handleClickDashboard = (e) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const handleClickDaily = (e) => {
-    e.preventDefault();
-    onSwitchToDaily(epochLocation);
-  };
+    e.preventDefault()
+    onSwitchToDaily(epochLocation)
+  }
 
-  const endpoints = getEndpoints();
+  const endpoints = getEndpoints()
   return (
     <div id="patient-dashboard" className="patient-dashboard">
       <Header
         id="dashboard-header"
         profileDialog={profileDialog}
-        chartType={"dashboard"}
+        chartType={'dashboard'}
         patient={patient}
         patients={patients}
         userIsHCP={userIsHCP}
@@ -109,8 +109,8 @@ const PatientDashboard = (props) => {
         }
       </Box>
     </div>
-  );
-};
+  )
+}
 
 PatientDashboard.propTypes = {
   user: PropTypes.object,
@@ -132,7 +132,7 @@ PatientDashboard.propTypes = {
   onSwitchPatient: PropTypes.func.isRequired,
   onClickNavigationBack: PropTypes.func.isRequired,
   canPrint: PropTypes.bool,
-  onClickPrint: PropTypes.func.isRequired,
-};
+  onClickPrint: PropTypes.func.isRequired
+}
 
-export default PatientDashboard;
+export default PatientDashboard

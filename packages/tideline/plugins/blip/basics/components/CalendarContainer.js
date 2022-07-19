@@ -15,29 +15,29 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import cx from "classnames";
-import moment from "moment-timezone";
-import PropTypes from "prop-types";
-import React from "react";
+import _ from 'lodash'
+import cx from 'classnames'
+import moment from 'moment-timezone'
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import { dateTimeFormats } from "../../../../js/data/util/constants";
+import { dateTimeFormats } from '../../../../js/data/util/constants'
 
-import basicsActions from "../logic/actions";
-import { getOptionValue, getPathToSelected } from "./BasicsUtils";
-import ADay from "./day/ADay";
-import HoverDay from "./day/HoverDay";
-import * as constants from "../logic/constants";
-import togglableState from "../TogglableState";
+import basicsActions from '../logic/actions'
+import { getOptionValue, getPathToSelected } from './BasicsUtils'
+import ADay from './day/ADay'
+import HoverDay from './day/HoverDay'
+import * as constants from '../logic/constants'
+import togglableState from '../TogglableState'
 
 class CalendarContainer extends React.Component {
   constructor(props) {
-    super(props);
-    this.getOptionValue = getOptionValue;
-    this.getPathToSelected = getPathToSelected;
+    super(props)
+    this.getOptionValue = getOptionValue
+    this.getPathToSelected = getPathToSelected
     this.state = {
       hoverDate: null
-    };
+    }
   }
 
   /**
@@ -47,49 +47,49 @@ class CalendarContainer extends React.Component {
    * @param  {String} date
    */
   onHover = (date) => {
-    this.setState({hoverDate: date});
-  };
+    this.setState({hoverDate: date})
+  }
 
   getSelectedSubtotal() {
-    var options = this.props.selectorOptions;
+    var options = this.props.selectorOptions
 
     if (options) {
-      return _.get(_.find(_.flatten(options.rows), {selected: true}), "key", options.primary.key);
+      return _.get(_.find(_.flatten(options.rows), {selected: true}), 'key', options.primary.key)
     }
-    return null;
+    return null
   }
 
   UNSAFE_componentWillMount() {
-    var options = this.props.selectorOptions;
-    var data = (this.props.type !== constants.SECTION_TYPE_UNDECLARED) ? this.props.data[this.props.type].summary : null;
+    var options = this.props.selectorOptions
+    var data = (this.props.type !== constants.SECTION_TYPE_UNDECLARED) ? this.props.data[this.props.type].summary : null
 
     if (options) {
-      var rows = _.flatten(options.rows);
-      var selectedOption = _.find(rows, {selected: true}) || options.primary;
+      var rows = _.flatten(options.rows)
+      var selectedOption = _.find(rows, {selected: true}) || options.primary
 
       // If the default selected option has no value, choose the first option that does
       if (selectedOption.path && !this.getOptionValue(selectedOption, data)) {
         selectedOption = _.find(_.reject(_.union(options.primary, rows), { key: selected }), (option) => {
-          return this.getOptionValue(option, data) > 0;
-        });
-        var selected = _.get(selectedOption, "key", null);
-        this.actions.selectSubtotal(this.props.sectionId, selected);
+          return this.getOptionValue(option, data) > 0
+        })
+        var selected = _.get(selectedOption, 'key', null)
+        this.actions.selectSubtotal(this.props.sectionId, selected)
       }
     }
   }
 
   render() {
-    var containerClass = cx("Calendar-container-" + this.props.type, {
-      "Calendar-container": true
-    });
+    var containerClass = cx('Calendar-container-' + this.props.type, {
+      'Calendar-container': true
+    })
 
-    var days = this.renderDays();
-    var dayLabels = this.renderDayLabels();
+    var days = this.renderDays()
+    var dayLabels = this.renderDayLabels()
 
-    var selector = null;
+    var selector = null
 
     if (this.props.selector && this.props.selectorOptions && this.props.settingsTogglable !== togglableState.closed) {
-      selector = this.renderSelector();
+      selector = this.renderSelector()
     }
 
     return (
@@ -106,7 +106,7 @@ class CalendarContainer extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   renderSelector() {
@@ -119,8 +119,8 @@ class CalendarContainer extends React.Component {
       selectorMetaData: this.props.selectorMetaData,
       updateBasicsSettings: this.props.updateBasicsSettings,
       sectionId: this.props.sectionId,
-      trackMetric: this.props.trackMetric,
-    });
+      trackMetric: this.props.trackMetric
+    })
   }
 
   renderDayLabels() {
@@ -128,22 +128,22 @@ class CalendarContainer extends React.Component {
     // Could be subject to change so I thought this was preferred over
     // hard-coding a solution that assumes Monday is the first day
     // of the week.
-    var firstDay = moment.utc(this.props.days[0].date).day();
-    const daysRange = _.range(firstDay, firstDay + 7);
+    var firstDay = moment.utc(this.props.days[0].date).day()
+    const daysRange = _.range(firstDay, firstDay + 7)
     return daysRange.map((dow) => {
-      const day = moment.utc().day(dow).format(dateTimeFormats.DDD_FORMAT);
+      const day = moment.utc().day(dow).format(dateTimeFormats.DDD_FORMAT)
       return (
         <div key={day} className="Calendar-day-label">
           <div className="Calendar-dayofweek">
             {day}
           </div>
         </div>
-      );
-    });
+      )
+    })
   }
 
   renderDays() {
-    var path = this.getPathToSelected();
+    var path = this.getPathToSelected()
 
     return this.props.days.map((day, id) => {
       if (this.props.hasHover && this.state.hoverDate === day.date) {
@@ -162,7 +162,7 @@ class CalendarContainer extends React.Component {
             title={this.props.title}
             trackMetric={this.props.trackMetric}
           />
-        );
+        )
       }
 
       return (
@@ -172,18 +172,18 @@ class CalendarContainer extends React.Component {
           data={path ? this.props.data[this.props.type][path] :
             this.props.data[this.props.type]}
           date={day.date}
-          future={day.type === "future"}
+          future={day.type === 'future'}
           isFirst={id === 0}
-          mostRecent={day.type === "mostRecent"}
+          mostRecent={day.type === 'mostRecent'}
           onHover={this.onHover}
           subtotalType={this.getSelectedSubtotal()}
           type={this.props.type} />
-      );
-    });
+      )
+    })
   }
 }
 
-CalendarContainer.prototype.actions = basicsActions;
+CalendarContainer.prototype.actions = basicsActions
 
 CalendarContainer.propTypes = {
   bgClasses: PropTypes.object.isRequired,
@@ -202,13 +202,13 @@ CalendarContainer.propTypes = {
   settingsTogglable: PropTypes.oneOf([
     togglableState.open,
     togglableState.closed,
-    togglableState.off,
+    togglableState.off
   ]).isRequired,
   timezone: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   trackMetric: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  updateBasicsSettings: PropTypes.func,
-};
+  updateBasicsSettings: PropTypes.func
+}
 
-export default CalendarContainer;
+export default CalendarContainer

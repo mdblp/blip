@@ -42,7 +42,7 @@ import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { useAlert } from '../utils/snackbar'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
-interface MedicalRecordDeleteDialogProps {
+export interface MedicalRecordDeleteDialogProps {
   onClose: () => void
   onDelete: (medicalRecordId: string) => void
   medicalRecord: MedicalRecord

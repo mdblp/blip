@@ -13,33 +13,33 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-const DUMMY_DOMAIN = "example.com";
-const DUMMY_URL = `https://${DUMMY_DOMAIN}/`;
+const DUMMY_DOMAIN = 'example.com'
+const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
 
 const defaultConfig = {
-  VERSION: "0.0.0",
-  UPLOAD_API: "https://tidepool.org/uploader",
+  VERSION: '0.0.0',
+  UPLOAD_API: 'https://tidepool.org/uploader',
   API_HOST: `${window.location.protocol}//${window.location.host}`,
-  LATEST_TERMS: "1970-01-01",
+  LATEST_TERMS: '1970-01-01',
   SUPPORT_WEB_ADDRESS: DUMMY_URL,
   HELP_SCRIPT_URL: null,
   HELP_PAGE_URL: null,
   ASSETS_URL: DUMMY_URL,
-  BRANDING: "tidepool",
-  METRICS_SERVICE: "disabled",
+  BRANDING: 'tidepool',
+  METRICS_SERVICE: 'disabled',
   YLP820_BASAL_TIME: 5000,
   DEV: true,
   TEST: false,
   CBG_BUCKETS_ENABLED: true,
-  ECPS_ENABLED: true,
-};
+  ECPS_ENABLED: true
+}
 
 /** @typedef {typeof defaultConfig} AppConfig */
 
 /** @type {AppConfig} */
-const appConfig = _.clone(defaultConfig);
+const appConfig = _.clone(defaultConfig)
 
 /**
  *
@@ -47,9 +47,9 @@ const appConfig = _.clone(defaultConfig);
  * @returns {AppConfig} The updated config
  */
 function updateConfig(newConfig) {
-  _.assign(appConfig, newConfig);
-  return appConfig;
+  _.assign(appConfig, newConfig)
+  return appConfig
 }
 
-export { DUMMY_URL, updateConfig };
-export default appConfig;
+export { DUMMY_URL, updateConfig }
+export default appConfig

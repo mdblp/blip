@@ -15,10 +15,10 @@
  * == BSD2 LICENSE ==
  */
 
-import i18next from "i18next";
-import moment from "moment-timezone";
+import i18next from 'i18next'
+import moment from 'moment-timezone'
 
-import { MGDL_UNITS, MMOLL_UNITS, MGDL_PER_MMOLL, dateTimeFormats } from "./constants";
+import { MGDL_UNITS, MMOLL_UNITS, MGDL_PER_MMOLL, dateTimeFormats } from './constants'
 
 const format = {
   /**
@@ -30,59 +30,59 @@ const format = {
    */
   convertBG: (value, unit) => {
     if (value < 0) {
-      throw new Error("Invalid glycemia value");
+      throw new Error('Invalid glycemia value')
     }
     switch (unit) {
-    case MGDL_UNITS:
-      return Math.round(10.0 * value / MGDL_PER_MMOLL) / 10;
-    case MMOLL_UNITS:
-      return Math.round(value * MGDL_PER_MMOLL);
-    default:
-      throw new Error("Invalid parameter unit");
+      case MGDL_UNITS:
+        return Math.round(10.0 * value / MGDL_PER_MMOLL) / 10
+      case MMOLL_UNITS:
+        return Math.round(value * MGDL_PER_MMOLL)
+      default:
+        throw new Error('Invalid parameter unit')
     }
   },
 
   tooltipBG: function(d, units) {
     if (d.annotations && Array.isArray(d.annotations) && d.annotations.length > 0) {
-      var annotation = d.annotations[0];
-      if (annotation.code && annotation.code === "bg/out-of-range") {
-        var value = annotation.value;
-        if (value === "low") {
-          d.tooltipText = d.type === "cbg" ? "Lo" : "Low";
+      var annotation = d.annotations[0]
+      if (annotation.code && annotation.code === 'bg/out-of-range') {
+        var value = annotation.value
+        if (value === 'low') {
+          d.tooltipText = d.type === 'cbg' ? 'Lo' : 'Low'
         }
-        else if (value === "high") {
-          d.tooltipText = d.type === "cbg" ? "Hi" : "High";
+        else if (value === 'high') {
+          d.tooltipText = d.type === 'cbg' ? 'Hi' : 'High'
         }
       }
     }
-    return format.tooltipBGValue(d.value, units);
+    return format.tooltipBGValue(d.value, units)
   },
 
   tooltipBGValue: function(value, units) {
-    return units === MGDL_UNITS ? window.d3.format("g")(Math.round(value)) : window.d3.format(".1f")(value);
+    return units === MGDL_UNITS ? window.d3.format('g')(Math.round(value)) : window.d3.format('.1f')(value)
   },
 
   tooltipValue: function(x) {
     if (x === 0) {
-      return "0.0";
+      return '0.0'
     }
 
-    var formatted = window.d3.format(".3f")(x);
+    var formatted = window.d3.format('.3f')(x)
     // remove zero-padding on the right
-    while (formatted[formatted.length - 1] === "0") {
-      formatted = formatted.slice(0, formatted.length - 1);
+    while (formatted[formatted.length - 1] === '0') {
+      formatted = formatted.slice(0, formatted.length - 1)
     }
-    if (formatted[formatted.length - 1] === ".") {
-      formatted = formatted + "0";
+    if (formatted[formatted.length - 1] === '.') {
+      formatted = formatted + '0'
     }
-    return formatted;
+    return formatted
   },
 
   escapeHTMLString: (/** @type {string} */ message) => {
-    const tn = document.createTextNode(message);
-    const d = document.createElement("div");
-    d.appendChild(tn);
-    return d.innerHTML;
+    const tn = document.createTextNode(message)
+    const d = document.createElement('div')
+    d.appendChild(tn)
+    return d.innerHTML
   },
 
   /**
@@ -91,19 +91,19 @@ const format = {
    * @param {number} maxWordLength Maximum words length
    */
   nameForDisplay: (name, maxWordLength = 22) => {
-    let words = null;
-    if (typeof name === "string") {
-      words = name.split(" ");
-    } else if (typeof name?.firstName === "string" && typeof name?.lastName === "string") {
-      words = [name.firstName, name.lastName];
-    } else if (typeof name?.fullName === "string") {
-      words = name.fullName.split(" ");
+    let words = null
+    if (typeof name === 'string') {
+      words = name.split(' ')
+    } else if (typeof name?.firstName === 'string' && typeof name?.lastName === 'string') {
+      words = [name.firstName, name.lastName]
+    } else if (typeof name?.fullName === 'string') {
+      words = name.fullName.split(' ')
     } else {
-      words = i18next.t("Anonymous user").split(" ");
+      words = i18next.t('Anonymous user').split(' ')
     }
 
-    const dName = words.map(part => part.length <= maxWordLength ? part : `${part.substring(0, maxWordLength)}...`).join(" ");
-    return format.escapeHTMLString(dName);
+    const dName = words.map(part => part.length <= maxWordLength ? part : `${part.substring(0, maxWordLength)}...`).join(' ')
+    return format.escapeHTMLString(dName)
   },
 
   /**
@@ -117,32 +117,32 @@ const format = {
    * @return {string} return a string of max length + 3 (for elipsis).
    */
   textPreview: (text, previewLength = 50) => {
-    let returnedText = typeof text === "string" ? text : "";
+    let returnedText = typeof text === 'string' ? text : ''
     if (returnedText.length > previewLength) {
-      const substring = returnedText.substring(0, previewLength);
-      const lastSpaceIndex = substring.lastIndexOf(" ");
-      const end = (lastSpaceIndex > 0) ? lastSpaceIndex : previewLength;
+      const substring = returnedText.substring(0, previewLength)
+      const lastSpaceIndex = substring.lastIndexOf(' ')
+      const end = (lastSpaceIndex > 0) ? lastSpaceIndex : previewLength
 
-      returnedText = substring.substring(0, end) + "...";
+      returnedText = substring.substring(0, end) + '...'
     }
-    return format.escapeHTMLString(returnedText);
+    return format.escapeHTMLString(returnedText)
   },
 
   capitalize: function(s) {
     // transform the first letter of string s to uppercase
-    return s[0].toUpperCase() + s.slice(1);
+    return s[0].toUpperCase() + s.slice(1)
   },
 
   fixFloatingPoint: function(n) {
-    return Number.parseFloat(n.toFixed(3));
+    return Number.parseFloat(n.toFixed(3))
   },
 
   percentage: function(f) {
     if (Number.isNaN(f)) {
-      return "-- %";
+      return '-- %'
     }
 
-    return window.d3.format("%")(f);
+    return window.d3.format('%')(f)
   },
 
   /**
@@ -155,13 +155,13 @@ const format = {
    */
   datestamp: function(time, offset = 0) {
     if (moment.isMoment(time)) {
-      return time.format(dateTimeFormats.MMMM_D_FORMAT);
+      return time.format(dateTimeFormats.MMMM_D_FORMAT)
     }
-    var d = new Date(time);
+    var d = new Date(time)
     if (offset) {
-      d.setUTCMinutes(d.getUTCMinutes() + offset);
+      d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
-    return moment.utc(d).format(dateTimeFormats.MMMM_D_FORMAT);
+    return moment.utc(d).format(dateTimeFormats.MMMM_D_FORMAT)
   },
 
   /**
@@ -174,14 +174,14 @@ const format = {
    */
   timestamp: function(time, offset = 0) {
     if (moment.isMoment(time)) {
-      return time.format(dateTimeFormats.H_MM_A_FORMAT);
+      return time.format(dateTimeFormats.H_MM_A_FORMAT)
     }
-    var d = new Date(time);
-    var f = i18next.t("%-I:%M %p");
+    var d = new Date(time)
+    var f = i18next.t('%-I:%M %p')
     if (offset) {
-      d.setUTCMinutes(d.getUTCMinutes() + offset);
+      d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
-    return window.d3.time.format.utc(f)(d).toLowerCase();
+    return window.d3.time.format.utc(f)(d).toLowerCase()
   },
 
   /**
@@ -193,7 +193,7 @@ const format = {
    */
   timeChangeInfo: function(from, to) {
     if (!to) { // guard statement
-      throw new Error("You have not provided a `to` datetime string");
+      throw new Error('You have not provided a `to` datetime string')
     }
 
     // the "from" and "to" fields of a time change are always timezone-naive
@@ -201,23 +201,23 @@ const format = {
     // but some (versions) of (some) browsers like to coerce timestamps without TZ info into local time
     // and we need to prevent that, so we use moment.utc and then use the UTC
     // variant of all JS Date methods to ensure consistency across browsers
-    var fromDate = from ? moment.utc(from).toDate() : undefined;
-    var toDate = moment.utc(to).toDate();
-    var type = "Time Change";
+    var fromDate = from ? moment.utc(from).toDate() : undefined
+    var toDate = moment.utc(to).toDate()
+    var type = 'Time Change'
 
-    var format = "h:mm a";
+    var format = 'h:mm a'
     if (fromDate && toDate) {
       if (fromDate.getUTCFullYear() !== toDate.getUTCFullYear()) {
-        format = "MMM D, YYYY h:mm a";
+        format = 'MMM D, YYYY h:mm a'
       } else if (
         fromDate.getUTCMonth() !== toDate.getUTCMonth() ||
         fromDate.getUTCDay() !== toDate.getUTCDay()
       ) {
-        format = "MMM D, h:mm a";
+        format = 'MMM D, h:mm a'
       }
 
       if (Math.abs(toDate - fromDate) <= (8*(60*1000))) { // Clock Drift Adjustment if less than 8 minutes
-        type = "Clock Drift Adjustment";
+        type = 'Clock Drift Adjustment'
       }
     }
 
@@ -226,7 +226,7 @@ const format = {
       from: fromDate ? moment.utc(fromDate).format(format): undefined,
       to: moment.utc(toDate).format(format),
       format: format
-    };
+    }
   },
 
   /**
@@ -234,7 +234,7 @@ const format = {
    * @returns {string} The formated DDDD_MMMM_D_FORMAT datetime
    */
   xAxisDayText: function(m) {
-    return m.format(dateTimeFormats.DDDD_MMMM_D_FORMAT);
+    return m.format(dateTimeFormats.DDDD_MMMM_D_FORMAT)
   },
 
   /**
@@ -242,8 +242,8 @@ const format = {
    * @returns {string} The formated H_MM_A_FORMAT datetime
    */
   xAxisTickText: function(m) {
-    return m.format(dateTimeFormats.H_MM_A_FORMAT);
+    return m.format(dateTimeFormats.H_MM_A_FORMAT)
   }
-};
+}
 
-export default format;
+export default format

@@ -15,124 +15,124 @@
  * == BSD2 LICENSE ==
  */
 
-import { expect } from "chai";
+import { expect } from 'chai'
 
-import isTSA from "../../helpers/tidepoolStandardAction";
-import * as actionTypes from "../../../src/redux/constants/actionTypes";
-import * as actions from "../../../src/redux/actions/";
+import isTSA from '../../helpers/tidepoolStandardAction'
+import * as actionTypes from '../../../src/redux/constants/actionTypes'
+import * as actions from '../../../src/redux/actions/'
 
-describe("trends action creators", () => {
-  const userId = "a1b2c3";
+describe('trends action creators', () => {
+  const userId = 'a1b2c3'
 
-  describe("focusTrendsCbgDateTrace", () => {
-    const cbgDatum = {};
-    const cbgPosition = {};
-    const action = actions.focusTrendsCbgDateTrace(userId, cbgDatum, cbgPosition);
+  describe('focusTrendsCbgDateTrace', () => {
+    const cbgDatum = {}
+    const cbgPosition = {}
+    const action = actions.focusTrendsCbgDateTrace(userId, cbgDatum, cbgPosition)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to focus a cbg date trace", () => {
+    it('should create an action to focus a cbg date trace', () => {
       expect(action).to.deep.equal({
         type: actionTypes.FOCUS_TRENDS_CBG_DATE_TRACE,
-        payload: { cbgDatum, cbgPosition, userId },
-      });
-    });
-  });
+        payload: { cbgDatum, cbgPosition, userId }
+      })
+    })
+  })
 
-  describe("focusTrendsCbgSlice", () => {
-    const sliceData = {};
-    const slicePosition = {};
-    const focusedKeys = [];
-    const action = actions.focusTrendsCbgSlice(userId, sliceData, slicePosition, focusedKeys);
+  describe('focusTrendsCbgSlice', () => {
+    const sliceData = {}
+    const slicePosition = {}
+    const focusedKeys = []
+    const action = actions.focusTrendsCbgSlice(userId, sliceData, slicePosition, focusedKeys)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to focus a trends cbg slice", () => {
+    it('should create an action to focus a trends cbg slice', () => {
       expect(action).to.deep.equal({
         type: actionTypes.FOCUS_TRENDS_CBG_SLICE,
-        payload: { sliceData, slicePosition, focusedKeys, userId },
-      });
-    });
-  });
+        payload: { sliceData, slicePosition, focusedKeys, userId }
+      })
+    })
+  })
 
-  describe("showCbgDateTraces", () => {
-    const action = actions.showCbgDateTraces(userId);
+  describe('showCbgDateTraces', () => {
+    const action = actions.showCbgDateTraces(userId)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to toggle cbg traces on for the user", () => {
+    it('should create an action to toggle cbg traces on for the user', () => {
       expect(action).to.deep.equal({
         type: actionTypes.SHOW_CBG_DATE_TRACES,
-        payload: { userId },
-      });
-    });
-  });
+        payload: { userId }
+      })
+    })
+  })
 
-  describe("turnOffCbgRange", () => {
-    const range = "100";
-    const action = actions.turnOffCbgRange(userId, range);
+  describe('turnOffCbgRange', () => {
+    const range = '100'
+    const action = actions.turnOffCbgRange(userId, range)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to turn off cbg range", () => {
+    it('should create an action to turn off cbg range', () => {
       expect(action).to.deep.equal({
         type: actionTypes.TURN_OFF_CBG_RANGE,
-        payload: { userId, range },
-      });
-    });
-  });
+        payload: { userId, range }
+      })
+    })
+  })
 
-  describe("turnOnCbgRange", () => {
-    const range = "100";
-    const action = actions.turnOnCbgRange(userId, range);
+  describe('turnOnCbgRange', () => {
+    const range = '100'
+    const action = actions.turnOnCbgRange(userId, range)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to turn on cbg range", () => {
+    it('should create an action to turn on cbg range', () => {
       expect(action).to.deep.equal({
         type: actionTypes.TURN_ON_CBG_RANGE,
-        payload: { userId, range },
-      });
-    });
-  });
+        payload: { userId, range }
+      })
+    })
+  })
 
-  describe("unfocusTrendsCbgDateTrace", () => {
-    const action = actions.unfocusTrendsCbgDateTrace(userId);
+  describe('unfocusTrendsCbgDateTrace', () => {
+    const action = actions.unfocusTrendsCbgDateTrace(userId)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to unfocus a cbg date trace", () => {
+    it('should create an action to unfocus a cbg date trace', () => {
       expect(action).to.deep.equal({
         type: actionTypes.UNFOCUS_TRENDS_CBG_DATE_TRACE,
-        payload: { userId },
-      });
-    });
-  });
+        payload: { userId }
+      })
+    })
+  })
 
-  describe("unfocusTrendsCbgSlice", () => {
-    const action = actions.unfocusTrendsCbgSlice(userId);
+  describe('unfocusTrendsCbgSlice', () => {
+    const action = actions.unfocusTrendsCbgSlice(userId)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to unfocus (all) trends cbg slices", () => {
+    it('should create an action to unfocus (all) trends cbg slices', () => {
       expect(action).to.deep.equal({
         type: actionTypes.UNFOCUS_TRENDS_CBG_SLICE,
-        payload: { userId },
-      });
-    });
-  });
-});
+        payload: { userId }
+      })
+    })
+  })
+})

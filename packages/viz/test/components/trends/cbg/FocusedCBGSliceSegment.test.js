@@ -15,37 +15,37 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { shallow } from "enzyme";
-import { expect } from "chai";
+import React from 'react'
+import { shallow } from 'enzyme'
+import { expect } from 'chai'
 
-import FocusedCBGSliceSegment from "../../../../src/components/trends/cbg/FocusedCBGSliceSegment";
+import FocusedCBGSliceSegment from '../../../../src/components/trends/cbg/FocusedCBGSliceSegment'
 
-describe("FocusedCBGSliceSegment", () => {
+describe('FocusedCBGSliceSegment', () => {
   const focusedSlice = {
     position: {
       left: 10,
       yPositions: {
         ninetiethQuantile: 90,
-        thirdQuartile: 75,
-      },
-    },
-  };
-  const focusedSliceKeys = ["thirdQuartile", "ninetiethQuantile"];
+        thirdQuartile: 75
+      }
+    }
+  }
+  const focusedSliceKeys = ['thirdQuartile', 'ninetiethQuantile']
 
   it("renders nothing if there's no `focusedSlice` in props", () => {
-    const wrapper = shallow(<FocusedCBGSliceSegment focusedSliceKeys={focusedSliceKeys} />);
-    expect(wrapper.html()).to.be.null;
-  });
+    const wrapper = shallow(<FocusedCBGSliceSegment focusedSliceKeys={focusedSliceKeys} />)
+    expect(wrapper.html()).to.be.null
+  })
 
   it("renders nothing if there's no `focusedSliceKeys` in props", () => {
-    const wrapper = shallow(<FocusedCBGSliceSegment focusedSlice={focusedSlice} />);
-    expect(wrapper.html()).to.be.null;
-  });
+    const wrapper = shallow(<FocusedCBGSliceSegment focusedSlice={focusedSlice} />)
+    expect(wrapper.html()).to.be.null
+  })
 
-  it("renders a single rect when `focusedSlice` and `focusedSliceKeys`", () => {
-    const props = { focusedSlice, focusedSliceKeys };
-    const wrapper = shallow(<FocusedCBGSliceSegment {...props} />);
-    expect(wrapper.find("rect").length).to.equal(1);
-  });
-});
+  it('renders a single rect when `focusedSlice` and `focusedSliceKeys`', () => {
+    const props = { focusedSlice, focusedSliceKeys }
+    const wrapper = shallow(<FocusedCBGSliceSegment {...props} />)
+    expect(wrapper.find('rect').length).to.equal(1)
+  })
+})

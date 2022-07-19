@@ -15,14 +15,14 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import React from "react";
-import PropTypes from "prop-types";
-import cx from "classnames";
-import i18next from "i18next";
+import React from 'react'
+import PropTypes from 'prop-types'
+import cx from 'classnames'
+import i18next from 'i18next'
 
-const t = i18next.t.bind(i18next);
-const domains = ["1 week", "2 weeks", "4 weeks", "3 months"];
-export const weekDays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+const t = i18next.t.bind(i18next)
+const domains = ['1 week', '2 weeks', '4 weeks', '3 months']
+export const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 class DaysGroup extends React.Component {
   static propTypes = {
@@ -30,13 +30,13 @@ class DaysGroup extends React.Component {
     category: PropTypes.string.isRequired,
     days: PropTypes.array.isRequired,
     onClickGroup: PropTypes.func.isRequired
-  };
+  }
 
   render() {
     var groupClass = cx({
       daysGroup: true,
       active: this.props.active
-    }) + " " + this.props.category;
+    }) + ' ' + this.props.category
 
     return (
       <div>
@@ -45,13 +45,13 @@ class DaysGroup extends React.Component {
           checked={this.props.active} />
         {this.props.days}
       </div>
-    );
+    )
 
   }
 
   handleDaysGroupClick = () => {
-    this.props.onClickGroup(this.props.category);
-  };
+    this.props.onClickGroup(this.props.category)
+  }
 }
 
 class TrendsSubNav extends React.Component {
@@ -63,80 +63,80 @@ class TrendsSubNav extends React.Component {
       thursday: PropTypes.bool.isRequired,
       friday: PropTypes.bool.isRequired,
       saturday: PropTypes.bool.isRequired,
-      sunday: PropTypes.bool.isRequired,
+      sunday: PropTypes.bool.isRequired
     }).isRequired,
     extentSize: PropTypes.number.isRequired,
     domainClickHandlers: PropTypes.object.isRequired,
     onClickDay: PropTypes.func.isRequired,
     toggleWeekdays: PropTypes.func.isRequired,
     toggleWeekends: PropTypes.func.isRequired
-  };
+  }
 
   renderDayAbbrev(day) {
     switch (day) {
-    case "monday": return t("M_Monday");
-    case "tuesday": return t("Tu_Tuesday");
-    case "wednesday": return t("W_Wednesday");
-    case "thursday": return t("Th_Thursday");
-    case "friday": return t("F_Friday");
-    case "saturday": return t("Sa_Saturday");
-    case "sunday": return t("Su_Sunday");
-    default: return undefined;
+      case 'monday': return t('M_Monday')
+      case 'tuesday': return t('Tu_Tuesday')
+      case 'wednesday': return t('W_Wednesday')
+      case 'thursday': return t('Th_Thursday')
+      case 'friday': return t('F_Friday')
+      case 'saturday': return t('Sa_Saturday')
+      case 'sunday': return t('Su_Sunday')
+      default: return undefined
     }
   }
 
   extentSizeToDomain(extentSize) {
     switch (extentSize) {
-    case 7: return "1 week";
-    case 14: return "2 weeks";
-    case 28: return "4 weeks";
-    case 90: return "3 months";
-    default: return "custom";
+      case 7: return '1 week'
+      case 14: return '2 weeks'
+      case 28: return '4 weeks'
+      case 90: return '3 months'
+      default: return 'custom'
     }
   }
 
   renderDomain(domain) {
     switch (domain) {
-    case "1 week": return t("preset-dates-range-1week");
-    case "2 weeks": return t("preset-dates-range-2weeks");
-    case "4 weeks": return t("preset-dates-range-4weeks");
-    case "3 months": return t("preset-dates-range-3months");
-    default: return t("custom");
+      case '1 week': return t('preset-dates-range-1week')
+      case '2 weeks': return t('preset-dates-range-2weeks')
+      case '4 weeks': return t('preset-dates-range-4weeks')
+      case '3 months': return t('preset-dates-range-3months')
+      default: return t('custom')
     }
   }
 
   render() {
-    const domainContainer = this.renderDomainContainer();
-    const dayFilters = this.renderDayFilters();
+    const domainContainer = this.renderDomainContainer()
+    const dayFilters = this.renderDayFilters()
 
     return (
       <div id="trendsSubNav">
         {domainContainer}
         {dayFilters}
       </div>
-    );
+    )
 
   }
 
   renderDomainContainer() {
-    const { activeDays, extentSize } = this.props;
-    const domainLinks = [];
+    const { activeDays, extentSize } = this.props
+    const domainLinks = []
     for (let i = 0; i < domains.length; ++i) {
-      domainLinks.push(this.renderDomainLink(domains[i]));
+      domainLinks.push(this.renderDomainLink(domains[i]))
     }
-    let numActiveDays = 0;
+    let numActiveDays = 0
     for (const day in activeDays) {
       if (activeDays[day]) {
-        numActiveDays += 1;
+        numActiveDays += 1
       }
     }
-    const numVisibleDays = (numActiveDays * extentSize) / 7;
-    let visibleDaysText = null;
+    const numVisibleDays = (numActiveDays * extentSize) / 7
+    let visibleDaysText = null
     if (numVisibleDays % 1 !== 0) {
-      visibleDaysText = t("Approx {{numVisibleDays}} days in view", { numVisibleDays: Math.round(numVisibleDays) });
+      visibleDaysText = t('Approx {{numVisibleDays}} days in view', { numVisibleDays: Math.round(numVisibleDays) })
     }
     else {
-      visibleDaysText = t("{{numVisibleDays}} days in view", { numVisibleDays });
+      visibleDaysText = t('{{numVisibleDays}} days in view', { numVisibleDays })
     }
 
     return (
@@ -144,22 +144,22 @@ class TrendsSubNav extends React.Component {
         <div className="domainLinks">{domainLinks}</div>
         <p className="visibleDays">{visibleDaysText}</p>
       </div>
-    );
+    )
   }
 
   renderDomainLink(/** @type {string} */ domain) {
     const domainLinkClass = cx({
-      "btn btn-chart-control": true,
-      "active": domain === this.extentSizeToDomain(this.props.extentSize)
-    });
+      'btn btn-chart-control': true,
+      'active': domain === this.extentSizeToDomain(this.props.extentSize)
+    })
 
     const clickButton = () => {
-      this.props.domainClickHandlers[domain]();
-    };
+      this.props.domainClickHandlers[domain]()
+    }
 
     return (
       <button
-        id={`button-trends-period-${domain.replace(/\s/g, "")}`}
+        id={`button-trends-period-${domain.replace(/\s/g, '')}`}
         className={domainLinkClass}
         key={domain}
         type="button"
@@ -167,68 +167,68 @@ class TrendsSubNav extends React.Component {
 
         {this.renderDomain(domain)}
       </button>
-    );
+    )
   }
 
   renderDayFilters() {
-    const dayLinks = [];
+    const dayLinks = []
     for (let i = 0; i < weekDays.length; ++i) {
-      dayLinks.push(this.renderDay(weekDays[i]));
+      dayLinks.push(this.renderDay(weekDays[i]))
     }
 
     return (
       <div className="daysGroupContainer">
         <DaysGroup
           active={this.areWeekdaysActive()}
-          category={"weekday"}
+          category={'weekday'}
           days={dayLinks.slice(0, 5)}
           onClickGroup={this.handleSelectDaysGroup} />
         <DaysGroup
           active={this.areWeekendsActive()}
-          category={"weekend"}
+          category={'weekend'}
           days={dayLinks.slice(5, 7)}
           onClickGroup={this.handleSelectDaysGroup} />
       </div>
-    );
+    )
   }
 
   renderDay(day) {
     const dayLinkClass = cx({
-      "dayFilter": true,
-      "btn btn-chart-control": true,
-      "active": this.props.activeDays[day],
-      "inactive": !this.props.activeDays[day]
-    }) + " " + day;
+      'dayFilter': true,
+      'btn btn-chart-control': true,
+      'active': this.props.activeDays[day],
+      'inactive': !this.props.activeDays[day]
+    }) + ' ' + day
 
     return (
       <a className={dayLinkClass} key={day} onClick={this.props.onClickDay(day)}>{this.renderDayAbbrev(day)}</a>
-    );
+    )
   }
 
   areWeekdaysActive() {
-    const { activeDays } = this.props;
+    const { activeDays } = this.props
     return activeDays.monday
       && activeDays.tuesday
       && activeDays.wednesday
       && activeDays.thursday
-      && activeDays.friday;
+      && activeDays.friday
   }
 
   areWeekendsActive() {
-    const { activeDays } = this.props;
-    return activeDays.saturday && activeDays.sunday;
+    const { activeDays } = this.props
+    return activeDays.saturday && activeDays.sunday
   }
 
   // handlers
   handleSelectDaysGroup = (category) => {
-    if (category === "weekday") {
-      this.props.toggleWeekdays(this.areWeekdaysActive());
-    } else if (category === "weekend") {
-      this.props.toggleWeekends(this.areWeekendsActive());
+    if (category === 'weekday') {
+      this.props.toggleWeekdays(this.areWeekdaysActive())
+    } else if (category === 'weekend') {
+      this.props.toggleWeekends(this.areWeekendsActive())
     } else {
-      console.error("Invalid category", category);
+      console.error('Invalid category', category)
     }
-  };
+  }
 }
 
-export default TrendsSubNav;
+export default TrendsSubNav

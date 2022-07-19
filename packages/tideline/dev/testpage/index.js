@@ -15,10 +15,10 @@
  * == BSD2 LICENSE ==
  */
 
-import patterns from "./patterns";
-import * as types from "./types";
+import patterns from './patterns'
+import * as types from './types'
 
 export {
   patterns,
-  types,
-};
+  types
+}

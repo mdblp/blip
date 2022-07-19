@@ -15,138 +15,138 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import _ from "lodash";
-import { shallow, mount } from "enzyme";
-import { expect } from "chai";
-import * as sinon from "sinon";
+import React from 'react'
+import _ from 'lodash'
+import { shallow, mount } from 'enzyme'
+import { expect } from 'chai'
+import * as sinon from 'sinon'
 
-import BgSourceToggle from "../../../../app/components/chart/bgSourceToggle";
+import BgSourceToggle from '../../../../app/components/chart/bgSourceToggle'
 
-describe("BgSourceToggle", () => {
+describe('BgSourceToggle', () => {
   const props = {
-    bgSource: "cbg",
+    bgSource: 'cbg',
     bgSources: {
       cbg: true,
-      smbg: true,
+      smbg: true
     },
-    onClickBgSourceToggle: sinon.stub(),
-  };
+    onClickBgSourceToggle: sinon.stub()
+  }
 
-  let wrapper;
+  let wrapper
   beforeEach(() => {
-    wrapper = shallow(<BgSourceToggle {...props} />);
-  });
+    wrapper = shallow(<BgSourceToggle {...props} />)
+  })
 
   afterEach(() => {
-    props.onClickBgSourceToggle.reset();
-  });
+    props.onClickBgSourceToggle.reset()
+  })
 
-  it("should render without errors when provided all required props", () => {
-    sinon.spy(console, "error");
+  it('should render without errors when provided all required props', () => {
+    sinon.spy(console, 'error')
 
-    expect(wrapper.find(".toggle-container")).to.have.length(1);
-    expect(wrapper.find(".toggle-container").children()).to.have.length(1);
-    expect(console.error.callCount).to.equal(0);
-    console.error.restore();
-  });
+    expect(wrapper.find('.toggle-container')).to.have.length(1)
+    expect(wrapper.find('.toggle-container').children()).to.have.length(1)
+    expect(console.error.callCount).to.equal(0)
+    console.error.restore()
+  })
 
-  it("should render toggle if either cbg or smbg sources are available", () => {
+  it('should render toggle if either cbg or smbg sources are available', () => {
     wrapper.setProps(_.assign({}, props, {
       bgSources: {
         cbg: false,
-        smbg: true,
-      },
-    }));
+        smbg: true
+      }
+    }))
 
-    expect(wrapper.find(".toggle-container").children()).to.have.length(1);
+    expect(wrapper.find('.toggle-container').children()).to.have.length(1)
 
     wrapper.setProps(_.assign({}, props, {
       bgSources: {
         cbg: true,
-        smbg: false,
-      },
-    }));
-    expect(wrapper.find(".toggle-container").children()).to.have.length(1);
-  });
+        smbg: false
+      }
+    }))
+    expect(wrapper.find('.toggle-container').children()).to.have.length(1)
+  })
 
-  it("should not render toggle if cbg and smbg sources unavailable", () => {
+  it('should not render toggle if cbg and smbg sources unavailable', () => {
     wrapper.setProps(_.assign({}, props, {
       bgSources: {
         cbg: false,
-        smbg: false,
-      },
-    }));
+        smbg: false
+      }
+    }))
 
-    expect(wrapper.find(".toggle-container").children()).to.have.length(0);
-  });
+    expect(wrapper.find('.toggle-container').children()).to.have.length(0)
+  })
 
-  it("should disable the toggle if either cbg or smbg sources are available", () => {
-    let toggle = () => wrapper.find(".toggle-container").children("TwoOptionToggle");
-    expect(toggle().props().disabled).to.be.false;
+  it('should disable the toggle if either cbg or smbg sources are available', () => {
+    let toggle = () => wrapper.find('.toggle-container').children('TwoOptionToggle')
+    expect(toggle().props().disabled).to.be.false
 
     wrapper.setProps(_.assign({}, props, {
       bgSources: {
         cbg: true,
-        smbg: false,
-      },
-    }));
+        smbg: false
+      }
+    }))
 
 
-    expect(toggle().props().disabled).to.be.true;
+    expect(toggle().props().disabled).to.be.true
 
     wrapper.setProps(_.assign({}, props, {
       bgSources: {
         cbg: false,
-        smbg: true,
-      },
-    }));
+        smbg: true
+      }
+    }))
 
-    expect(toggle().props().disabled).to.be.true;
-  });
+    expect(toggle().props().disabled).to.be.true
+  })
 
-  it("should activate the appropriate source when bgSource prop changes", () => {
-    let toggle = () => wrapper.find(".toggle-container").children("TwoOptionToggle");
+  it('should activate the appropriate source when bgSource prop changes', () => {
+    let toggle = () => wrapper.find('.toggle-container').children('TwoOptionToggle')
 
-    expect(toggle().props().left.label).to.equal("BGM");
-    expect(toggle().props().left.state).to.be.false;
+    expect(toggle().props().left.label).to.equal('BGM')
+    expect(toggle().props().left.state).to.be.false
 
-    expect(toggle().props().right.label).to.equal("CGM");
-    expect(toggle().props().right.state).to.be.true;
-
-    wrapper.setProps(_.assign({}, props, {
-      bgSource: "smbg",
-    }));
-
-    expect(toggle().props().left.label).to.equal("BGM");
-    expect(toggle().props().left.state).to.be.true;
-
-    expect(toggle().props().right.label).to.equal("CGM");
-    expect(toggle().props().right.state).to.be.false;
-  });
-
-  it("should call the click handler with new bgSource prop when clicked", () => {
-    wrapper = mount(<BgSourceToggle {...props} />);
-    let toggle = () => wrapper.find(".toggle-container").children("TwoOptionToggle");
-
-    sinon.assert.callCount(props.onClickBgSourceToggle, 0);
-
-    expect(wrapper.props().bgSource).to.equal("cbg");
-
-    toggle().find("Toggle").simulate("click");
-
-    sinon.assert.callCount(props.onClickBgSourceToggle, 1);
-    sinon.assert.calledWith(props.onClickBgSourceToggle, sinon.match({}), "smbg");
+    expect(toggle().props().right.label).to.equal('CGM')
+    expect(toggle().props().right.state).to.be.true
 
     wrapper.setProps(_.assign({}, props, {
-      bgSource: "smbg",
-    }));
+      bgSource: 'smbg'
+    }))
 
-    expect(wrapper.props().bgSource).to.equal("smbg");
+    expect(toggle().props().left.label).to.equal('BGM')
+    expect(toggle().props().left.state).to.be.true
 
-    toggle().find("Toggle").simulate("click");
+    expect(toggle().props().right.label).to.equal('CGM')
+    expect(toggle().props().right.state).to.be.false
+  })
 
-    sinon.assert.callCount(props.onClickBgSourceToggle, 2);
-    sinon.assert.calledWith(props.onClickBgSourceToggle, sinon.match({}), "cbg");
-  });
-});
+  it('should call the click handler with new bgSource prop when clicked', () => {
+    wrapper = mount(<BgSourceToggle {...props} />)
+    let toggle = () => wrapper.find('.toggle-container').children('TwoOptionToggle')
+
+    sinon.assert.callCount(props.onClickBgSourceToggle, 0)
+
+    expect(wrapper.props().bgSource).to.equal('cbg')
+
+    toggle().find('Toggle').simulate('click')
+
+    sinon.assert.callCount(props.onClickBgSourceToggle, 1)
+    sinon.assert.calledWith(props.onClickBgSourceToggle, sinon.match({}), 'smbg')
+
+    wrapper.setProps(_.assign({}, props, {
+      bgSource: 'smbg'
+    }))
+
+    expect(wrapper.props().bgSource).to.equal('smbg')
+
+    toggle().find('Toggle').simulate('click')
+
+    sinon.assert.callCount(props.onClickBgSourceToggle, 2)
+    sinon.assert.calledWith(props.onClickBgSourceToggle, sinon.match({}), 'cbg')
+  })
+})
