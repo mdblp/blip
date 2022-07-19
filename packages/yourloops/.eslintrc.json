@@ -44,6 +44,7 @@
     "space-before-function-paren": "off",
     "multiline-ternary": "off",
     "no-shadow": "off",
+    "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/space-before-function-paren": ["error", { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
     "@typescript-eslint/no-misused-promises": ["error", { "checksVoidReturn": false }],
