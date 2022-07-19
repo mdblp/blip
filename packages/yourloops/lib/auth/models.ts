@@ -26,43 +26,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ReactNode } from "react";
-import User from "./user";
-import { LanguageCodes } from "../../models/locales";
-import { Preferences, Profile, Settings } from "../../models/user";
-import { HcpProfession } from "../../models/hcp-profession";
+import { ReactNode } from 'react'
+import User from './user'
+import { LanguageCodes } from '../../models/locales'
+import { Preferences, Profile, Settings } from '../../models/user'
+import { HcpProfession } from '../../models/hcp-profession'
 
 export interface SignupForm {
-  feedback: boolean; // Consent to be contacted by Diabeloop
-  hcpProfession: HcpProfession;
-  preferencesLanguage: LanguageCodes;
-  privacyPolicy: boolean;
-  profileCountry: string;
-  profileFirstname: string;
-  profileLastname: string;
-  terms: boolean;
+  feedback: boolean // Consent to be contacted by Diabeloop
+  hcpProfession: HcpProfession
+  preferencesLanguage: LanguageCodes
+  privacyPolicy: boolean
+  profileCountry: string
+  profileFirstname: string
+  profileLastname: string
+  terms: boolean
 }
 
 /**
  * The auth provider hook return values.
  */
 export interface AuthContext {
-  fetchingUser: boolean;
-  flagPatient: (userId: string) => Promise<void>; // Flag or un-flag one patient
-  getFlagPatients: () => string[];
-  isLoggedIn: boolean;
-  logout: () => Promise<void>;
-  redirectToProfessionalAccountLogin: () => void;
-  setFlagPatients: (userIds: string[]) => Promise<void>; // Set the flagged patient
-  completeSignup: (signupForm: SignupForm) => Promise<void>;
-  switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void>; // Switch user role from caregiver to hcp
-  updatePreferences: (preferences: Preferences) => Promise<void>;
-  updateProfile: (profile: Profile) => Promise<void>;
-  updateSettings: (settings: Settings) => Promise<void>;
-  user: Readonly<User> | null;
+  fetchingUser: boolean
+  flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
+  getFlagPatients: () => string[]
+  isLoggedIn: boolean
+  logout: () => Promise<void>
+  redirectToProfessionalAccountLogin: () => void
+  setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
+  completeSignup: (signupForm: SignupForm) => Promise<void>
+  switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
+  updatePreferences: (preferences: Preferences) => Promise<void>
+  updateProfile: (profile: Profile) => Promise<void>
+  updateSettings: (settings: Settings) => Promise<void>
+  user: Readonly<User> | null
 }
 
 export interface AuthProvider {
-  children: ReactNode;
-  value?: AuthContext; // Used for test components which need this hook
+  children: ReactNode
+  value?: AuthContext // Used for test components which need this hook
 }

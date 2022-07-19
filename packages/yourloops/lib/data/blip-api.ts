@@ -26,119 +26,120 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import bows from "bows";
+import bows from 'bows'
 
-import { PatientData } from "models/device-data";
-import MessageNote from "models/message";
-import { IUser } from "../../models/user";
-import { AuthContext, User } from "../auth";
-import { t as translate } from "../language";
-import metrics from "../metrics";
+import { PatientData } from 'models/device-data'
+import MessageNote from 'models/message'
+import { IUser } from '../../models/user'
+import { AuthContext, User } from '../auth'
+import { t as translate } from '../language'
+import metrics from '../metrics'
 
-import { GetPatientDataOptions } from "./models";
-import { Patient } from "./patient";
-import DataApi from "./data-api";
+import { GetPatientDataOptions } from './models'
+import { Patient } from './patient'
+import DataApi from './data-api'
 
 /**
  * Wrapper for blip v1 to be able to call the API
  */
 class BlipApi {
-  private log: Console;
-  private authHook: AuthContext;
-  public metrics: typeof metrics;
+  private readonly log: Console
+  private authHook: AuthContext
+  public metrics: typeof metrics
 
   constructor(authHook: AuthContext) {
-    this.authHook = authHook;
-    this.metrics = metrics;
-    this.log = bows("BlipAPI");
+    this.authHook = authHook
+    this.metrics = metrics
+    this.log = bows('BlipAPI')
   }
 
+  // eslint-disable-next-line accessor-pairs
   public set authContext(context: AuthContext) {
-    this.authHook = context;
+    this.authHook = context
   }
 
   public get whoami(): User | null {
-    return this.authHook.user ?? null;
+    return this.authHook.user ?? null
   }
 
-  public getPatientDataRange(patient: IUser): Promise<string[] | null> {
-    this.log.debug("getPatientDataRange", { userId: patient.userid });
-    const user = this.authHook.user;
+  public async getPatientDataRange(patient: IUser): Promise<string[] | null> {
+    this.log.debug('getPatientDataRange', { userId: patient.userid })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.getPatientDataRange(patient.userid);
+      return await DataApi.getPatientDataRange(patient.userid)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
-    this.log.debug("getPatientData", { userId: patient.userid, options });
-    const user = this.authHook.user;
+  public async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
+    this.log.debug('getPatientData', { userId: patient.userid, options })
+    const user = this.authHook.user
     if (user) {
-      metrics.startTimer("load_data");
-      return DataApi.getPatientData(patient, options).then((r) => {
-        metrics.endTimer("load_data");
-        return Promise.resolve(r);
-      }).catch((r) => {
-        metrics.endTimer("load_data");
-        return Promise.reject(r);
-      });
+      metrics.startTimer('load_data')
+      return await DataApi.getPatientData(patient, options).then(async (r) => {
+        metrics.endTimer('load_data')
+        return await Promise.resolve(r)
+      }).catch(async (r) => {
+        metrics.endTimer('load_data')
+        return await Promise.reject(r)
+      })
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public getMessages(patient: IUser, options?: GetPatientDataOptions): Promise<MessageNote[]> {
-    this.log.debug("getMessages", { userId: patient.userid, options });
-    const user = this.authHook.user;
+  public async getMessages(patient: IUser, options?: GetPatientDataOptions): Promise<MessageNote[]> {
+    this.log.debug('getMessages', { userId: patient.userid, options })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.getMessages(patient, options);
+      return await DataApi.getMessages(patient, options)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public getMessageThread(messageId: string): Promise<MessageNote[]> {
-    this.log.debug("getMessageThread", { messageId });
-    const user = this.authHook.user;
+  public async getMessageThread(messageId: string): Promise<MessageNote[]> {
+    this.log.debug('getMessageThread', { messageId })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.getMessageThread(messageId);
+      return await DataApi.getMessageThread(messageId)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public startMessageThread(message: MessageNote): Promise<string> {
-    this.log.debug("startMessageThread", { userId: message.userid });
-    const user = this.authHook.user;
+  public async startMessageThread(message: MessageNote): Promise<string> {
+    this.log.debug('startMessageThread', { userId: message.userid })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.postMessageThread(message);
+      return await DataApi.postMessageThread(message)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public replyMessageThread(message: MessageNote): Promise<string> {
-    this.log.debug("replyMessageThread", { userId: message.userid });
-    const user = this.authHook.user;
+  public async replyMessageThread(message: MessageNote): Promise<string> {
+    this.log.debug('replyMessageThread', { userId: message.userid })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.postMessageThread(message);
+      return await DataApi.postMessageThread(message)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public editMessage(message: MessageNote): Promise<void> {
-    this.log.debug("editMessage", { userId: message.userid });
-    const user = this.authHook.user;
+  public async editMessage(message: MessageNote): Promise<void> {
+    this.log.debug('editMessage', { userId: message.userid })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.editMessage(message);
+      return await DataApi.editMessage(message)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 
-  public exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
-    this.log.debug("exportData", { userId: patient.userid });
-    const user = this.authHook.user;
+  public async exportData(patient: IUser, startDate: string, endDate: string): Promise<Blob> {
+    this.log.debug('exportData', { userId: patient.userid })
+    const user = this.authHook.user
     if (user) {
-      return DataApi.exportData(user, patient.userid, startDate, endDate);
+      return await DataApi.exportData(user, patient.userid, startDate, endDate)
     }
-    return Promise.reject(new Error(translate("not-logged-in")));
+    return await Promise.reject(new Error(translate('not-logged-in')))
   }
 }
 
-export default BlipApi;
+export default BlipApi

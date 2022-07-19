@@ -26,105 +26,105 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import bows from "bows";
-import _ from "lodash";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import bows from 'bows'
+import _ from 'lodash'
 
-import { useAuth0 } from "@auth0/auth0-react";
-import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from "../../models/user";
-import { HcpProfession } from "../../models/hcp-profession";
-import { zendeskLogout } from "../zendesk";
-import User from "./user";
+import { useAuth0 } from '@auth0/auth0-react'
+import { AuthenticatedUser, Preferences, Profile, Settings, UserRoles } from '../../models/user'
+import { HcpProfession } from '../../models/hcp-profession'
+import { zendeskLogout } from '../zendesk'
+import User from './user'
 import {
   AuthContext,
   AuthProvider,
-  SignupForm,
-} from "./models";
-import appConfig from "../config";
-import HttpService from "../../services/http";
-import UserApi from "./user-api";
-import { availableLanguageCodes, changeLanguage, getCurrentLang } from "../language";
+  SignupForm
+} from './models'
+import appConfig from '../config'
+import HttpService from '../../services/http'
+import UserApi from './user-api'
+import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
 
-const ReactAuthContext = createContext({} as AuthContext);
-const log = bows("AuthHook");
+const ReactAuthContext = createContext({} as AuthContext)
+const log = bows('AuthHook')
 
 export function AuthContextImpl(): AuthContext {
-  const { logout: auth0logout, user: auth0user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [user, setUser] = useState<User | null>(null);
-  const [fetchingUser, setFetchingUser] = useState<boolean>(false);
+  const { logout: auth0logout, user: auth0user, isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const [user, setUser] = useState<User | null>(null)
+  const [fetchingUser, setFetchingUser] = useState<boolean>(false)
 
-  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user]);
+  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
 
   const getUser = (): User => {
     if (!user) {
-      throw Error("user not logged in");
+      throw Error('user not logged in')
     }
-    return user;
-  };
+    return user
+  }
 
   const refreshUser = (): void => {
-    setUser(_.cloneDeep(user));
-  };
+    setUser(_.cloneDeep(user))
+  }
 
   const updatePreferences = async (preferences: Preferences): Promise<void> => {
-    const user = getUser();
-    user.preferences = await UserApi.updatePreferences(user.id, preferences);
-    refreshUser();
-  };
+    const user = getUser()
+    user.preferences = await UserApi.updatePreferences(user.id, preferences)
+    refreshUser()
+  }
 
   const updateProfile = async (profile: Profile): Promise<void> => {
-    const user = getUser();
-    user.profile = await UserApi.updateProfile(user.id, profile);
-    refreshUser();
-  };
+    const user = getUser()
+    user.profile = await UserApi.updateProfile(user.id, profile)
+    refreshUser()
+  }
 
   const updateSettings = async (settings: Settings): Promise<void> => {
-    const user = getUser();
-    user.settings = await UserApi.updateSettings(user.id, settings);
-    refreshUser();
-  };
+    const user = getUser()
+    user.settings = await UserApi.updateSettings(user.id, settings)
+    refreshUser()
+  }
 
   const flagPatient = async (userId: string): Promise<void> => {
-    const user = getUser();
+    const user = getUser()
 
     if (!user.preferences) {
-      user.preferences = {};
+      user.preferences = {}
     }
 
-    const flaggedPatients = user.preferences?.patientsStarred;
+    const flaggedPatients = user.preferences?.patientsStarred
     if (flaggedPatients) {
       if (flaggedPatients.includes(userId)) {
-        user.preferences.patientsStarred = flaggedPatients.filter((id: string) => id !== userId);
+        user.preferences.patientsStarred = flaggedPatients.filter((id: string) => id !== userId)
       } else {
-        user.preferences.patientsStarred?.push(userId);
+        user.preferences.patientsStarred?.push(userId)
       }
     } else {
-      user.preferences.patientsStarred = [userId];
+      user.preferences.patientsStarred = [userId]
     }
 
-    user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
-    refreshUser();
-  };
+    user.preferences = await UserApi.updatePreferences(user.id, user.preferences)
+    refreshUser()
+  }
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
-    const user = getUser();
+    const user = getUser()
     if (!user.preferences) {
-      user.preferences = {};
+      user.preferences = {}
     }
-    user.preferences.patientsStarred = userIds;
-    user.preferences = await UserApi.updatePreferences(user.id, user.preferences);
-    refreshUser();
-  };
+    user.preferences.patientsStarred = userIds
+    user.preferences = await UserApi.updatePreferences(user.id, user.preferences)
+    refreshUser()
+  }
 
   const getFlagPatients = (): string[] => {
-    return user?.preferences?.patientsStarred ?? [];
-  };
+    return user?.preferences?.patientsStarred ?? []
+  }
 
   const switchRoleToHCP = async (feedbackConsent: boolean, hcpProfession: HcpProfession): Promise<void> => {
-    const user = getUser();
+    const user = getUser()
 
     if (user.role !== UserRoles.caregiver) {
-      throw new Error("invalid-user-role");
+      throw new Error('invalid-user-role')
     }
 
     /** TODO role changing was performed with a call to shoreline.
@@ -132,69 +132,69 @@ export function AuthContextImpl(): AuthContext {
      *   see YLP-1590 (https://diabeloop.atlassian.net/browse/YLP-1590)
      **/
 
-    const now = new Date().toISOString();
-    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile;
-    updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: true };
-    updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true };
-    updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent };
-    updatedProfile.hcpProfession = hcpProfession;
-    await updateProfile(updatedProfile);
+    const now = new Date().toISOString()
+    const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
+    updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: true }
+    updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: true }
+    updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackConsent }
+    updatedProfile.hcpProfession = hcpProfession
+    await updateProfile(updatedProfile)
     // Refresh our data:
-    user.role = UserRoles.hcp;
-    user.profile = updatedProfile;
-    refreshUser();
-  };
+    user.role = UserRoles.hcp
+    user.profile = updatedProfile
+    refreshUser()
+  }
 
-  const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`);
+  const redirectToProfessionalAccountLogin = (): void => window.location.assign(`${appConfig.API_HOST}/auth/oauth/login`)
 
-  const updateUserLanguage = (user: User) => {
-    const languageCode = user.preferences?.displayLanguageCode;
+  const updateUserLanguage = (user: User): void => {
+    const languageCode = user.preferences?.displayLanguageCode
     if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
-      changeLanguage(languageCode);
+      changeLanguage(languageCode)
     }
-  };
+  }
 
   const getUserInfo = useCallback(async () => {
     try {
-      setFetchingUser(true);
-      const user = new User(auth0user as AuthenticatedUser);
+      setFetchingUser(true)
+      const user = new User(auth0user as AuthenticatedUser)
 
       // Temporary here waiting all backend services be compatible with Auth0
       // see https://diabeloop.atlassian.net/browse/YLP-1553
       try {
-        const { token, id } = await UserApi.getShorelineAccessToken();
-        HttpService.shorelineAccessToken = token;
-        user.id = id;
+        const { token, id } = await UserApi.getShorelineAccessToken()
+        HttpService.shorelineAccessToken = token
+        user.id = id
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
 
-      user.profile = await UserApi.getProfile(user.id);
-      user.preferences = await UserApi.getPreferences(user.id);
-      user.settings = await UserApi.getSettings(user.id);
-      updateUserLanguage(user);
-      setUser(user);
+      user.profile = await UserApi.getProfile(user.id)
+      user.preferences = await UserApi.getPreferences(user.id)
+      user.settings = await UserApi.getSettings(user.id)
+      updateUserLanguage(user)
+      setUser(user)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     } finally {
-      setFetchingUser(false);
+      setFetchingUser(false)
     }
-  }, [auth0user]);
+  }, [auth0user])
 
   const logout = async (): Promise<void> => {
     try {
       if (window.cleanBlipReduxStore) {
-        window.cleanBlipReduxStore();
+        window.cleanBlipReduxStore()
       }
-      zendeskLogout();
-      await auth0logout({ returnTo: window.location.origin });
+      zendeskLogout()
+      await auth0logout({ returnTo: window.location.origin })
     } catch (err) {
-      log.error("logout", err);
+      log.error('logout', err)
     }
-  };
+  }
 
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
-    const now = new Date().toISOString();
+    const now = new Date().toISOString()
     const profile: Profile = {
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
@@ -202,29 +202,29 @@ export function AuthContextImpl(): AuthContext {
       termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy },
       contactConsent: { acceptanceTimestamp: now, isAccepted: signupForm.feedback },
-      hcpProfession: signupForm.hcpProfession,
-    };
-    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage };
-    const settings: Settings = { country: signupForm.profileCountry };
+      hcpProfession: signupForm.hcpProfession
+    }
+    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
+    const settings: Settings = { country: signupForm.profileCountry }
 
-    const user = getUser();
-    await UserApi.updateProfile(user.id, profile);
-    await UserApi.updatePreferences(user.id, preferences);
-    await UserApi.updateSettings(user.id, settings);
-    user.preferences = preferences;
-    user.profile = profile;
-    user.settings = settings;
-  };
+    const user = getUser()
+    await UserApi.updateProfile(user.id, profile)
+    await UserApi.updatePreferences(user.id, preferences)
+    await UserApi.updateSettings(user.id, settings)
+    user.preferences = preferences
+    user.profile = profile
+    user.settings = settings
+  }
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated && !user) {
-        const getAccessToken = async () => getAccessTokenSilently();
-        HttpService.setGetAccessTokenMethod(getAccessToken);
-        await getUserInfo();
+        const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
+        HttpService.setGetAccessTokenMethod(getAccessToken)
+        await getUserInfo()
       }
-    })();
-  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user]);
+    })()
+  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user])
 
   return {
     user,
@@ -239,14 +239,14 @@ export function AuthContextImpl(): AuthContext {
     flagPatient,
     setFlagPatients,
     getFlagPatients,
-    switchRoleToHCP,
-  };
+    switchRoleToHCP
+  }
 }
 
 // Hook for child components to get the auth object
 // and re-render when it changes.
 export function useAuth(): AuthContext {
-  return useContext(ReactAuthContext);
+  return useContext(ReactAuthContext)
 }
 
 /**
@@ -254,8 +254,8 @@ export function useAuth(): AuthContext {
  * @param props for auth provider & children
  */
 export function AuthContextProvider(props: AuthProvider): JSX.Element {
-  const { children, value } = props;
-  const authValue = value ?? AuthContextImpl(); // eslint-disable-line new-cap
+  const { children, value } = props
+  const authValue = value ?? AuthContextImpl() // eslint-disable-line new-cap
 
-  return <ReactAuthContext.Provider value={authValue}>{children}</ReactAuthContext.Provider>;
+  return <ReactAuthContext.Provider value={authValue}>{children}</ReactAuthContext.Provider>
 }

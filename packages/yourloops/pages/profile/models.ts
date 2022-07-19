@@ -27,10 +27,10 @@
  */
 
 export interface Errors {
-  firstName: boolean;
-  lastName: boolean;
-  birthDate: boolean;
-  hcpProfession: boolean;
-  ins: boolean;
-  ssn: boolean;
+  firstName: boolean
+  lastName: boolean
+  birthDate: boolean
+  hcpProfession: boolean
+  ins: boolean
+  ssn: boolean
 }

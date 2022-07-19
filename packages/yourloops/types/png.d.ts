@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module "*.png" {
-  const value: string;
-  export default value;
+declare module '*.png' {
+  const value: string
+  export default value
 }

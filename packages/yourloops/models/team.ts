@@ -18,58 +18,58 @@
  * TODO: Review me when we have the team API
  */
 
-import { Profile, Settings, Preferences } from "./user";
-import { UserInvitationStatus, PostalAddress } from "./generic";
-import { Alarm } from "./alarm";
-import { Monitoring } from "./monitoring";
+import { Profile, Settings, Preferences } from './user'
+import { UserInvitationStatus, PostalAddress } from './generic'
+import { Alarm } from './alarm'
+import { Monitoring } from './monitoring'
 
 export enum TeamType {
-  medical = "medical",
+  medical = 'medical',
   /** A team for patient: to whom the patient share his data */
-  caregiver = "caregiver",
+  caregiver = 'caregiver',
   /** Virtual team for hcp & caregiver mostly: share 1 to 1 -> which patients share with me */
-  private = "private",
+  private = 'private',
 }
 
 export enum TeamMemberRole {
-  admin = "admin",
-  member = "member",
-  patient = "patient",
+  admin = 'admin',
+  member = 'member',
+  patient = 'patient',
 }
 
-export type TypeTeamMemberRole = keyof typeof TeamMemberRole;
+export type TypeTeamMemberRole = keyof typeof TeamMemberRole
 
 /**
  * Team member (API view)
  */
 export interface ITeamMember {
-  userId: string;
-  teamId: "private" | string;
-  email: string;
-  role: TeamMemberRole;
-  invitationStatus: UserInvitationStatus;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  preferences?: Preferences | null;
-  idVerified: boolean;
-  alarms?: Alarm;
-  monitoring?: Monitoring;
-  unreadMessages?: number;
+  userId: string
+  teamId: 'private' | string
+  email: string
+  role: TeamMemberRole
+  invitationStatus: UserInvitationStatus
+  profile?: Profile | null
+  settings?: Settings | null
+  preferences?: Preferences | null
+  idVerified: boolean
+  alarms?: Alarm
+  monitoring?: Monitoring
+  unreadMessages?: number
 }
 
 /**
  * Team interface (API view)
  */
 export interface ITeam {
-  readonly id: string;
-  name: string;
-  readonly code: string;
-  readonly type: TeamType;
-  readonly owner: string;
-  phone?: string;
-  email?: string;
-  address?: PostalAddress;
-  description?: string;
-  members: ITeamMember[];
-  monitoring?: Monitoring;
+  readonly id: string
+  name: string
+  readonly code: string
+  readonly type: TeamType
+  readonly owner: string
+  phone?: string
+  email?: string
+  address?: PostalAddress
+  description?: string
+  members: ITeamMember[]
+  monitoring?: Monitoring
 }

@@ -26,118 +26,117 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import bows from "bows";
-import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import bows from 'bows'
+import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from "@material-ui/core";
-import Container from "@material-ui/core/Container";
+import { makeStyles } from '@material-ui/core'
+import Container from '@material-ui/core/Container'
 
-import Blip from "blip";
-import appConfig from "../lib/config";
-import { useAuth } from "../lib/auth";
-import { useTeam } from "../lib/team";
-import { useData } from "../lib/data/hook";
-import { setPageTitle } from "../lib/utils";
+import Blip from 'blip'
+import appConfig from '../lib/config'
+import { useAuth } from '../lib/auth'
+import { useTeam } from '../lib/team'
+import { useData } from '../lib/data/hook'
+import { setPageTitle } from '../lib/utils'
 
-import ProfileDialog from "./dialogs/patient-profile";
-import DialogDatePicker from "./date-pickers/dialog-date-picker";
-import DialogRangeDatePicker from "./date-pickers/dialog-range-date-picker";
-import DialogPDFOptions from "./dialogs/pdf-print-options";
-import PatientInfoWidget from "./dashboard-widgets/patient-info-widget";
-import ChatWidget from "./chat/chat-widget";
-import { Patient } from "../lib/data/patient";
-import AlarmCard from "./alarm/alarm-card";
-import MedicalFilesWidget from "./dashboard-widgets/medical-files/medical-files-widget";
+import ProfileDialog from './dialogs/patient-profile'
+import DialogDatePicker from './date-pickers/dialog-date-picker'
+import DialogRangeDatePicker from './date-pickers/dialog-range-date-picker'
+import DialogPDFOptions from './dialogs/pdf-print-options'
+import PatientInfoWidget from './dashboard-widgets/patient-info-widget'
+import ChatWidget from './chat/chat-widget'
+import { Patient } from '../lib/data/patient'
+import AlarmCard from './alarm/alarm-card'
+import MedicalFilesWidget from './dashboard-widgets/medical-files/medical-files-widget'
 
 const patientDataStyles = makeStyles(() => {
   return {
     container: {
-      padding: 0,
-    },
-  };
-});
+      padding: 0
+    }
+  }
+})
 
 interface PatientDataParam {
-  patientId?: string;
+  patientId?: string
 }
 
 interface PatientDataPageErrorProps {
-  msg: string;
+  msg: string
 }
 
-const log = bows("PatientDataPage");
+const log = bows('PatientDataPage')
 
 function PatientDataPageError({ msg }: PatientDataPageErrorProps): JSX.Element {
   return (
     <Container maxWidth="lg">
       <strong>{msg}</strong>
     </Container>
-  );
+  )
 }
 
 function PatientDataPage(): JSX.Element | null {
-  const { t } = useTranslation("yourloops");
-  const paramHook = useParams();
-  const authHook = useAuth();
-  const teamHook = useTeam();
-  const dataHook = useData();
-  const classes = patientDataStyles();
+  const { t } = useTranslation('yourloops')
+  const paramHook = useParams()
+  const authHook = useAuth()
+  const teamHook = useTeam()
+  const dataHook = useData()
+  const classes = patientDataStyles()
 
-  const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null);
-  const [patients, setPatients] = React.useState<Readonly<Patient>[]>([]);
-  const [error, setError] = React.useState<string | null>(null);
+  const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
+  const [patients, setPatients] = React.useState<Array<Readonly<Patient>>>([])
+  const [error, setError] = React.useState<string | null>(null)
 
-  const { blipApi } = dataHook;
-  const { patientId: paramPatientId = null } = paramHook as PatientDataParam;
-  const authUser = authHook.user;
-  const userId = authUser?.id ?? null;
-  const userIsPatient = authHook.user?.isUserPatient();
-  const userIsHCP = authHook.user?.isUserHcp();
-  const prefixURL = userIsPatient ? "" : `/patient/${paramPatientId}`;
+  const { blipApi } = dataHook
+  const { patientId: paramPatientId = null } = paramHook as PatientDataParam
+  const authUser = authHook.user
+  const userId = authUser?.id ?? null
+  const userIsPatient = authHook.user?.isUserPatient()
+  const userIsHCP = authHook.user?.isUserHcp()
+  const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
-  const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi;
+  const initialized = authHook.isLoggedIn && teamHook.initialized && blipApi
 
   React.useEffect(() => {
     if (!initialized) {
-      return;
+      return
     }
 
-    setPatients(teamHook.getPatients());
-    let patientId = paramPatientId ?? userId;
+    setPatients(teamHook.getPatients())
+    let patientId = paramPatientId ?? userId
     if (userIsPatient && authUser) {
-      patientId = authUser.id;
+      patientId = authUser.id
     }
     if (!patientId) {
-      log.error("Invalid patient Id");
-      setError("Invalid patient Id");
-      return;
+      log.error('Invalid patient Id')
+      setError('Invalid patient Id')
+      return
     }
-    const patientToSet = teamHook.getPatient(patientId);
+    const patientToSet = teamHook.getPatient(patientId)
     if (patientToSet) {
-      setPatient(patientToSet);
+      setPatient(patientToSet)
     } else {
-      log.error("Patient not found");
-      setError("Patient not found");
+      log.error('Patient not found')
+      setError('Patient not found')
     }
-  }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient]);
+  }, [initialized, paramPatientId, userId, teamHook, authUser, userIsPatient])
 
   React.useEffect(() => {
     if (patient && patient.userid !== userId) {
-      setPageTitle(t("user-name", patient.profile.lastName), "PatientName");
+      setPageTitle(t('user-name', patient.profile.lastName), 'PatientName')
     } else {
-      setPageTitle();
+      setPageTitle()
     }
-
-  }, [userId, patient, t]);
+  }, [userId, patient, t])
 
   if (error) {
-    return <PatientDataPageError msg={error} />;
+    return <PatientDataPageError msg={error} />
   }
 
   if (!blipApi || !patient) {
-    return null;
+    return null
   }
 
   return (
@@ -160,7 +159,7 @@ function PatientDataPage(): JSX.Element | null {
         medicalFilesWidget={MedicalFilesWidget}
       />
     </Container>
-  );
+  )
 }
 
-export default PatientDataPage;
+export default PatientDataPage

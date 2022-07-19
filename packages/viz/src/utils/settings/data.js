@@ -15,14 +15,14 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import i18next from "i18next";
+import _ from 'lodash'
+import i18next from 'i18next'
 
-import * as datetime from "../datetime";
-import * as format from "../format";
+import * as datetime from '../datetime'
+import * as format from '../format'
 
-const t = i18next.t.bind(i18next);
-const DISPLAY_PRECISION_PLACES = 3;
+const t = i18next.t.bind(i18next)
+const DISPLAY_PRECISION_PLACES = 3
 
 /**
  * noData
@@ -31,7 +31,7 @@ const DISPLAY_PRECISION_PLACES = 3;
  * @return {Boolean}     true if value is defined, not null, not empty string, false otherwise
  */
 export function noData(val) {
-  return _.isNil(val) || (typeof val === "string" && _.isEmpty(val));
+  return _.isNil(val) || (typeof val === 'string' && _.isEmpty(val))
 }
 
 /**
@@ -42,13 +42,13 @@ export function noData(val) {
  */
 export function deviceName(manufacturer) {
   const DEVICE_DISPLAY_NAME_BY_MANUFACTURER = {
-    animas: "Animas",
-    insulet: "OmniPod",
-    medtronic: "Medtronic",
-    tandem: "Tandem",
-    diabeloop: "Diabeloop",
-  };
-  return _.get(DEVICE_DISPLAY_NAME_BY_MANUFACTURER, manufacturer, manufacturer);
+    animas: 'Animas',
+    insulet: 'OmniPod',
+    medtronic: 'Medtronic',
+    tandem: 'Tandem',
+    diabeloop: 'Diabeloop'
+  }
+  return _.get(DEVICE_DISPLAY_NAME_BY_MANUFACTURER, manufacturer, manufacturer)
 }
 
 /**
@@ -61,12 +61,12 @@ export function deviceName(manufacturer) {
 function getBasalRate(scheduleData, startTime) {
   const rate = _.find(scheduleData, (schedule) =>
     schedule.start === startTime
-  ).rate;
+  ).rate
 
   if (noData(rate)) {
-    return "";
+    return ''
   }
-  return format.formatDecimalNumber(rate, DISPLAY_PRECISION_PLACES);
+  return format.formatDecimalNumber(rate, DISPLAY_PRECISION_PLACES)
 }
 
 /**
@@ -81,12 +81,12 @@ function getBasalRate(scheduleData, startTime) {
 function getValue(scheduleData, fieldName, startTime) {
   const val = _.find(scheduleData, (schedule) =>
     schedule.start === startTime
-  )[fieldName];
+  )[fieldName]
 
   if (noData(val)) {
-    return "";
+    return ''
   }
-  return val;
+  return val
 }
 
 /**
@@ -100,11 +100,11 @@ function getValue(scheduleData, fieldName, startTime) {
  * @return {String}              formatted blood glucose value
  */
 function getBloodGlucoseValue(scheduleData, fieldName, startTime, units) {
-  const bgValue = getValue(scheduleData, fieldName, startTime);
+  const bgValue = getValue(scheduleData, fieldName, startTime)
   if (noData(bgValue)) {
-    return "";
+    return ''
   }
-  return format.formatBgValue(bgValue, { bgUnits: units });
+  return format.formatBgValue(bgValue, { bgUnits: units })
 }
 
 /**
@@ -115,7 +115,7 @@ function getBloodGlucoseValue(scheduleData, fieldName, startTime, units) {
  * @return {Array}           array of start times in milliseconds
  */
 function getStarts(timedData) {
-  return _.map(timedData, "start");
+  return _.map(timedData, 'start')
 }
 
 /**
@@ -125,22 +125,22 @@ function getStarts(timedData) {
  * @return {String}              formatted total of basal rates
  */
 export function getTotalBasalRates(scheduleData) {
-  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
-  const DAY_IN_MILLISECONDS = 86400000;
+  const HOUR_IN_MILLISECONDS = 60 * 60 * 1000
+  const DAY_IN_MILLISECONDS = 86400000
 
-  let total = 0;
+  let total = 0
   for (let i = scheduleData.length - 1; i >= 0; i--) {
-    const start = scheduleData[i].start;
-    let finish = DAY_IN_MILLISECONDS;
-    const next = i + 1;
+    const start = scheduleData[i].start
+    let finish = DAY_IN_MILLISECONDS
+    const next = i + 1
     if (next < scheduleData.length) {
-      finish = scheduleData[next].start;
+      finish = scheduleData[next].start
     }
-    const hrs = (finish - start) / HOUR_IN_MILLISECONDS;
-    const amount = Number.parseFloat(scheduleData[i].rate.toFixed(DISPLAY_PRECISION_PLACES)) * hrs;
-    total += Number.parseFloat(amount.toFixed(DISPLAY_PRECISION_PLACES));
+    const hrs = (finish - start) / HOUR_IN_MILLISECONDS
+    const amount = Number.parseFloat(scheduleData[i].rate.toFixed(DISPLAY_PRECISION_PLACES)) * hrs
+    total += Number.parseFloat(amount.toFixed(DISPLAY_PRECISION_PLACES))
   }
-  return format.formatDecimalNumber(total, DISPLAY_PRECISION_PLACES);
+  return format.formatDecimalNumber(total, DISPLAY_PRECISION_PLACES)
 }
 
 /**
@@ -153,16 +153,16 @@ export function getTotalBasalRates(scheduleData) {
  * @return {Object}              object representing basal schedule label
  */
 export function getScheduleLabel(scheduleName, activeName, deviceKey, noUnits) {
-  const CAPITALIZED = ["carelink", "medtronic"];
-  let displayName = scheduleName;
+  const CAPITALIZED = ['carelink', 'medtronic']
+  let displayName = scheduleName
   if (_.includes(CAPITALIZED, deviceKey)) {
-    displayName = _.map(scheduleName.split(" "), (part) => (_.upperFirst(part))).join(" ");
+    displayName = _.map(scheduleName.split(' '), (part) => (_.upperFirst(part))).join(' ')
   }
   return {
     main: displayName,
-    secondary: scheduleName === activeName ? t("Active at upload") : "",
-    units: noUnits ? "" : t("U/hr"),
-  };
+    secondary: scheduleName === activeName ? t('Active at upload') : '',
+    units: noUnits ? '' : t('U/hr')
+  }
 }
 
 /**
@@ -172,7 +172,7 @@ export function getScheduleLabel(scheduleName, activeName, deviceKey, noUnits) {
  * @return {Array}               array of basal schedule names
  */
 export function getScheduleNames(settingsData) {
-  return _.keysIn(settingsData);
+  return _.keysIn(settingsData)
 }
 
 /**
@@ -182,12 +182,12 @@ export function getScheduleNames(settingsData) {
  * @return {Array}              array of {name, position} basal objects
  */
 export function getTimedSchedules(settingsData) {
-  const names = _.map(settingsData, "name");
-  const schedules = [];
+  const names = _.map(settingsData, 'name')
+  const schedules = []
   for (let i = names.length - 1; i >= 0; i--) {
-    schedules.push({ name: names[i], position: i });
+    schedules.push({ name: names[i], position: i })
   }
-  return schedules;
+  return schedules
 }
 
 /**
@@ -198,15 +198,15 @@ export function getTimedSchedules(settingsData) {
  * @return {Object}              filtered meta data
  */
 export function getDeviceMeta(settingsData, timePrefs) {
-  const utc = datetime.getHammertimeFromDatumWithTimePrefs(settingsData, timePrefs);
+  const utc = datetime.getHammertimeFromDatumWithTimePrefs(settingsData, timePrefs)
   const uploadedTime = utc ?
     datetime.formatLocalizedFromUTC(utc, timePrefs, datetime.getLongDayFormat()) :
-    false;
+    false
   return {
-    schedule: settingsData.activeSchedule || t("unknown"),
-    uploaded: uploadedTime || t("unknown"),
-    serial: settingsData.deviceSerialNumber || t("unknown"),
-  };
+    schedule: settingsData.activeSchedule || t('unknown'),
+    uploaded: uploadedTime || t('unknown'),
+    serial: settingsData.deviceSerialNumber || t('unknown')
+  }
 }
 
 /**
@@ -216,14 +216,14 @@ export function getDeviceMeta(settingsData, timePrefs) {
  * @return {Array}               array of formatted schedule entries
  */
 export function processBasalRateData(scheduleData) {
-  const starts = getStarts(scheduleData.value);
-  const noRateData = [{ start: "-", rate: "-" }];
+  const starts = getStarts(scheduleData.value)
+  const noRateData = [{ start: '-', rate: '-' }]
 
   if (starts.length === 0) {
-    return noRateData;
+    return noRateData
   } else if (starts.length === 1) {
     if (Number(getBasalRate(scheduleData.value, starts[0])) === 0) {
-      return noRateData;
+      return noRateData
     }
   }
 
@@ -234,14 +234,14 @@ export function processBasalRateData(scheduleData) {
     rate: getBasalRate(
       scheduleData.value,
       startTime
-    ),
-  }));
+    )
+  }))
 
   data.push({
-    start: "Total",
-    rate: getTotalBasalRates(scheduleData.value),
-  });
-  return data;
+    start: 'Total',
+    rate: getTotalBasalRates(scheduleData.value)
+  })
+  return data
 }
 
 /**
@@ -268,8 +268,8 @@ export function processBgTargetData(targetsData, bgUnits, keys) {
       keys.columnThree,
       startTime,
       bgUnits
-    ),
-  }));
+    )
+  }))
 }
 
 /**
@@ -285,10 +285,10 @@ export function processCarbRatioData(carbRatioData) {
     ),
     amount: getValue(
       carbRatioData,
-      "amount",
+      'amount',
       startTime
-    ),
-  }));
+    )
+  }))
 }
 
 /**
@@ -305,11 +305,11 @@ export function processSensitivityData(sensitivityData, bgUnits) {
     ),
     amount: getBloodGlucoseValue(
       sensitivityData,
-      "amount",
+      'amount',
       startTime,
       bgUnits
-    ),
-  }));
+    )
+  }))
 }
 
 /**
@@ -332,33 +332,33 @@ export function processTimedSettings(pumpSettings, schedule, bgUnits) {
     ),
     bgTarget: getBloodGlucoseValue(
       pumpSettings.bgTargets[schedule.name],
-      "target",
+      'target',
       startTime,
       bgUnits,
     ),
     carbRatio: getValue(
       pumpSettings.carbRatios[schedule.name],
-      "amount",
+      'amount',
       startTime,
     ),
     insulinSensitivity: getBloodGlucoseValue(
       pumpSettings.insulinSensitivities[schedule.name],
-      "amount",
+      'amount',
       startTime,
       bgUnits,
-    ),
-  }));
+    )
+  }))
 
   data.push({
-    start: "Total",
+    start: 'Total',
     rate: getTotalBasalRates(
       pumpSettings.basalSchedules[schedule.position].value,
     ),
-    bgTarget: "",
-    carbRatio: "",
-    insulinSensitivity: "",
-  });
-  return data;
+    bgTarget: '',
+    carbRatio: '',
+    insulinSensitivity: ''
+  })
+  return data
 }
 
 /**
@@ -369,7 +369,7 @@ export function processTimedSettings(pumpSettings, schedule, bgUnits) {
  */
 export function startTimeAndValue(valueKey) {
   return [
-    { key: "start", label: t("Start time") },
-    { key: valueKey, label: t("Value") },
-  ];
+    { key: 'start', label: t('Start time') },
+    { key: valueKey, label: t('Value') }
+  ]
 }

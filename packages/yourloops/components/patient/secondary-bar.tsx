@@ -26,74 +26,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { useAuth } from "../../lib/auth";
-import PatientFilters from "../header-bars/patient-filters";
-import AccessTime from "@material-ui/icons/AccessTime";
-import { Box } from "@material-ui/core";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import { useAuth } from '../../lib/auth'
+import PatientFilters from '../header-bars/patient-filters'
+import AccessTime from '@material-ui/icons/AccessTime'
+import { Box } from '@material-ui/core'
 
 export interface PatientListBarProps {
-  filter: string;
-  onFilter: (text: string) => void;
-  onInvitePatient: () => Promise<void>;
+  filter: string
+  onFilter: (text: string) => void
+  onInvitePatient: () => Promise<void>
 }
 
 const pageBarStyles = makeStyles(
   (theme: Theme) => {
     return {
       topBar: {
-        display: "flex",
-        margin: theme.spacing(1),
+        display: 'flex',
+        margin: theme.spacing(1)
       },
       toolBarLeft: {
-        display: "flex",
-        alignItems: "center",
-        color: theme.palette.grey[800],
+        display: 'flex',
+        alignItems: 'center',
+        color: theme.palette.grey[800]
       },
       toolBarMiddle: {
-        display: "flex",
-        flexDirection: "row",
+        display: 'flex',
+        flexDirection: 'row',
         marginRight: theme.spacing(2),
         marginLeft: theme.spacing(2),
-        flex: "1 1",
+        flex: '1 1'
       },
       buttonAddPatient: {
-        marginLeft: "auto",
+        marginLeft: 'auto'
       },
       buttonAddPatientText: {
-        [theme.breakpoints.down("xs")]: {
-          display: "none",
-        },
+        [theme.breakpoints.down('xs')]: {
+          display: 'none'
+        }
       },
       modalAddPatient: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-    };
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }
   }
-);
+)
 
 function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
-  const { filter, onFilter, onInvitePatient } = props;
-  const { t } = useTranslation("yourloops");
-  const classes = pageBarStyles();
-  const authHook = useAuth();
+  const { filter, onFilter, onInvitePatient } = props
+  const { t } = useTranslation('yourloops')
+  const classes = pageBarStyles()
+  const authHook = useAuth()
 
   const handleOpenModalAddPatient = (): void => {
-    onInvitePatient();
-  };
+    onInvitePatient()
+  }
 
   return (
     <Box className={classes.topBar}>
       <div id="patients-list-toolbar-item-left" className={classes.toolBarLeft}>
         <AccessTime className="subnav-icon" />
-        <span id="subnav-period-label">{t("secondary-bar-period-text")}</span>
+        <span id="subnav-period-label">{t('secondary-bar-period-text')}</span>
       </div>
       <Box id="patients-list-toolbar-item-middle" className={classes.toolBarMiddle}>
         <PatientFilters
@@ -113,12 +113,12 @@ function PatientsSecondaryBar(props: PatientListBarProps): JSX.Element {
             onClick={handleOpenModalAddPatient}
           >
             <PersonAddIcon />
-            <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t("add-patient")}</Box>
+            <Box component="span" className={classes.buttonAddPatientText}>&nbsp;{t('add-patient')}</Box>
           </Button>
         </div>
       }
     </Box>
-  );
+  )
 }
 
-export default PatientsSecondaryBar;
+export default PatientsSecondaryBar

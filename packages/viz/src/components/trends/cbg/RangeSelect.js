@@ -15,64 +15,64 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import i18next from "i18next";
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import i18next from 'i18next'
 
-import * as actions from "../../../redux/actions/";
-import LabeledCheckbox from "../../common/controls/LabeledCheckbox";
+import * as actions from '../../../redux/actions/'
+import LabeledCheckbox from '../../common/controls/LabeledCheckbox'
 
-import styles from "./RangeSelect.css";
+import styles from './RangeSelect.css'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 export const RangeSelect = (props) => (
   <div className={styles.container}>
     <LabeledCheckbox
       checked={props.displayFlags.cbg100Enabled}
       name="hundred"
-      label={t("100% of Readings")}
-      onFn={_.partial(props.turnOnCbgRange, "100")}
-      offFn={_.partial(props.turnOffCbgRange, "100")}
+      label={t('100% of Readings')}
+      onFn={_.partial(props.turnOnCbgRange, '100')}
+      offFn={_.partial(props.turnOffCbgRange, '100')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbg80Enabled}
       name="eighty"
-      label={t("80% of Readings")}
-      onFn={_.partial(props.turnOnCbgRange, "80")}
-      offFn={_.partial(props.turnOffCbgRange, "80")}
+      label={t('80% of Readings')}
+      onFn={_.partial(props.turnOnCbgRange, '80')}
+      offFn={_.partial(props.turnOffCbgRange, '80')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbg50Enabled}
       name="fifty"
-      label={t("50% of Readings")}
-      onFn={_.partial(props.turnOnCbgRange, "50")}
-      offFn={_.partial(props.turnOffCbgRange, "50")}
+      label={t('50% of Readings')}
+      onFn={_.partial(props.turnOnCbgRange, '50')}
+      offFn={_.partial(props.turnOffCbgRange, '50')}
     />
     <LabeledCheckbox
       checked={props.displayFlags.cbgMedianEnabled}
       name="median"
-      label={t("Median")}
-      onFn={_.partial(props.turnOnCbgRange, "median")}
-      offFn={_.partial(props.turnOffCbgRange, "median")}
+      label={t('Median')}
+      onFn={_.partial(props.turnOnCbgRange, 'median')}
+      offFn={_.partial(props.turnOffCbgRange, 'median')}
     />
   </div>
-);
+)
 
 RangeSelect.propTypes = {
   displayFlags: PropTypes.shape({
     cbg100Enabled: PropTypes.bool.isRequired,
     cbg80Enabled: PropTypes.bool.isRequired,
     cbg50Enabled: PropTypes.bool.isRequired,
-    cbgMedianEnabled: PropTypes.bool.isRequired,
+    cbgMedianEnabled: PropTypes.bool.isRequired
   }).isRequired,
   turnOnCbgRange: PropTypes.func.isRequired,
   turnOffCbgRange: PropTypes.func.isRequired,
-  currentPatientInViewId: PropTypes.string.isRequired,
-};
+  currentPatientInViewId: PropTypes.string.isRequired
+}
 
 export function mapDispatchToProps(dispatch, ownProps) {
   return bindActionCreators({
@@ -81,11 +81,11 @@ export function mapDispatchToProps(dispatch, ownProps) {
     ),
     turnOffCbgRange: _.partial(
       actions.turnOffCbgRange, ownProps.currentPatientInViewId
-    ),
-  }, dispatch);
+    )
+  }, dispatch)
 }
 
 export default connect(
   null,
   mapDispatchToProps,
-)(RangeSelect);
+)(RangeSelect)

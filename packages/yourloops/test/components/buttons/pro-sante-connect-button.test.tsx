@@ -26,46 +26,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act, Simulate } from "react-dom/test-utils";
-import ProSanteConnectButton from "../../../components/buttons/pro-sante-connect-button";
+import React from 'react'
+import { render, unmountComponentAtNode } from 'react-dom'
+import { act, Simulate } from 'react-dom/test-utils'
+import ProSanteConnectButton from '../../../components/buttons/pro-sante-connect-button'
 
-describe("Pro sante connect button", () => {
+describe('Pro sante connect button', () => {
+  let container: HTMLElement | null = null
 
-  let container: HTMLElement | null = null;
-
-  const redirect = jest.fn();
+  const redirect = jest.fn()
 
   async function mountComponent(): Promise<void> {
     await act(() => {
       return new Promise((resolve) => {
-        render(<ProSanteConnectButton onClick={redirect} />, container, resolve);
-      });
-    });
+        render(<ProSanteConnectButton onClick={redirect} />, container, resolve)
+      })
+    })
   }
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
   it(
-    "should redirect to eCPS login when a HCP click on Pro sante connect button",
+    'should redirect to eCPS login when a HCP click on Pro sante connect button',
     async () => {
-      await mountComponent();
-      const cpsButton = container.querySelector("#pro-sante-connect-button");
-      Simulate.click(cpsButton);
-      expect(redirect).toHaveBeenCalledTimes(1);
+      await mountComponent()
+      const cpsButton = container.querySelector('#pro-sante-connect-button')
+      Simulate.click(cpsButton)
+      expect(redirect).toHaveBeenCalledTimes(1)
     }
-  );
-});
-
+  )
+})

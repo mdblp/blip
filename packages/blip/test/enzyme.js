@@ -1,10 +1,10 @@
-import enzyme from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import enzyme from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16'
 
 enzyme.configure({
   adapter: new Adapter(),
-  disableLifecycleMethods: true,
-});
+  disableLifecycleMethods: true
+})
 
 // Re-export all enzyme exports
-export * from "enzyme";
+export * from 'enzyme'

@@ -26,43 +26,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { shallow } from "enzyme";
-import * as sinon from "sinon";
-import chai from "chai";
+import React from 'react'
+import { shallow } from 'enzyme'
+import * as sinon from 'sinon'
+import chai from 'chai'
 
-import { MGDL_UNITS , BasicsChart } from "tideline";
+import { MGDL_UNITS , BasicsChart } from 'tideline'
 
-import DataUtilStub from "../../../helpers/DataUtil";
-import DeviceUsage from "../../../../app/components/chart/deviceUsage";
+import DataUtilStub from '../../../helpers/DataUtil'
+import DeviceUsage from '../../../../app/components/chart/deviceUsage'
 
-import Stats from "../../../../app/components/chart/stats";
+import Stats from '../../../../app/components/chart/stats'
 
-const expect = chai.expect;
+const expect = chai.expect
 
-describe("DeviceUsage", () => {
+describe('DeviceUsage', () => {
   const baseProps = {
     bgPrefs: {
       bgClasses: {
-        "very-low": {
+        'very-low': {
           boundary: 60
         },
-        "low": {
+        'low': {
           boundary: 80
         },
-        "target": {
+        'target': {
           boundary: 180
         },
-        "high": {
+        'high': {
           boundary: 200
         },
-        "very-high": {
+        'very-high': {
           boundary: 300
         }
       },
       bgUnits: MGDL_UNITS
     },
-    bgSource: "cbg",
+    bgSource: 'cbg',
     chartPrefs: {
       basics: {},
       daily: {},
@@ -83,20 +83,20 @@ describe("DeviceUsage", () => {
         grouped: true,
         showingLines: false
       },
-      bgLog: {},
+      bgLog: {}
     },
-    chartType: "basics",
+    chartType: 'basics',
     dataUtil: new DataUtilStub(),
     endpoints: [
-      "2018-01-15T00:00:00.000Z",
-      "2018-01-31T00:00:00.000Z",
+      '2018-01-15T00:00:00.000Z',
+      '2018-01-31T00:00:00.000Z'
     ],
     loading: false,
     timePrefs: {
       timezoneAware: false,
-      timezoneName: "UTC",
+      timezoneName: 'UTC'
     },
-    patient:{ userid: "1234" },
+    patient:{ userid: '1234' },
     tidelineData: {
       data: [],
       grouped: {
@@ -104,124 +104,124 @@ describe("DeviceUsage", () => {
         pumpSettings: [{
           payload: {
             device: {
-              manufacturer: "test-device"
+              manufacturer: 'test-device'
             },
             pump: {
-              manufacturer: "test-pump"
+              manufacturer: 'test-pump'
             },
             cgm: {
-              manufacturer: "test-cgm",
-              name: "test-cgmName"
+              manufacturer: 'test-cgm',
+              name: 'test-cgmName'
             },
             history: [
               {
                 parameters:[
                   {
-                    changeType: "added",
+                    changeType: 'added',
                     level:1,
-                    name: "test",
-                    value: "12",
-                    unit: "%",
-                    effectiveDate:"2020-01-01T00:00:00Z"
+                    name: 'test',
+                    value: '12',
+                    unit: '%',
+                    effectiveDate:'2020-01-01T00:00:00Z'
                   }
                 ]
               },
               {
                 parameters:[
                   {
-                    changeType: "updated",
+                    changeType: 'updated',
                     level:1,
-                    name: "test",
-                    value: "10",
-                    unit: "%",
-                    effectiveDate:"2020-01-02T00:00:00Z"
+                    name: 'test',
+                    value: '10',
+                    unit: '%',
+                    effectiveDate:'2020-01-02T00:00:00Z'
                   }
-                ],
-              },
+                ]
+              }
             ]
           }
         }]
       },
       endpoints: [
-        "2018-01-01T00:00:00.000Z",
-        "2021-06-20T00:00:00.000Z"
+        '2018-01-01T00:00:00.000Z',
+        '2021-06-20T00:00:00.000Z'
       ],
-      getTimezoneAt: sinon.stub().returns("UTC"),
+      getTimezoneAt: sinon.stub().returns('UTC')
     },
     permsOfLoggedInUser: {
-      root: true,
+      root: true
     },
     trackMetric: sinon.stub(),
-    onSwitchToDaily: sinon.stub(),
-  };
+    onSwitchToDaily: sinon.stub()
+  }
 
-  let wrapper;
+  let wrapper
 
   beforeEach(() => {
-    baseProps.dataUtil = new DataUtilStub();
-  });
+    baseProps.dataUtil = new DataUtilStub()
+  })
 
-  describe("render", () => {
+  describe('render', () => {
     before(() => {
-      sinon.spy(console, "error");
-      wrapper = shallow(<DeviceUsage {...baseProps} />);
-    });
+      sinon.spy(console, 'error')
+      wrapper = shallow(<DeviceUsage {...baseProps} />)
+    })
 
     after(() => {
-      console.error.restore();
-    });
+      console.error.restore()
+    })
 
-    it("should render without errors when provided all required props", () => {
-      expect(wrapper.find("#device-usage")).to.have.length(1);
-      expect(console.error.callCount).to.equal(0);
-    });
+    it('should render without errors when provided all required props', () => {
+      expect(wrapper.find('#device-usage')).to.have.length(1)
+      expect(console.error.callCount).to.equal(0)
+    })
 
-    it("should show card header", () => {
-      const header = wrapper.find("#device-usage-header");
-      expect(header).to.have.length(1);
-    });
+    it('should show card header', () => {
+      const header = wrapper.find('#device-usage-header')
+      expect(header).to.have.length(1)
+    })
 
-    it("should show card content", () => {
-      expect(wrapper.find("#device-usage-content")).to.have.length(1);
-    });
+    it('should show card content', () => {
+      expect(wrapper.find('#device-usage-content')).to.have.length(1)
+    })
 
-    it("should show devices info", () => {
-      const deviceSection = wrapper.find("#device-usage-device");
-      expect(deviceSection).to.have.length(1);
-      const deviceLabels = wrapper.find(".device-label");
-      expect(deviceLabels).to.have.length(3);
-      expect(deviceLabels.at(0).text()).to.equal("dbl:");
-      expect(deviceLabels.at(1).text()).to.equal("Pump:");
-      expect(deviceLabels.at(2).text()).to.equal("CGM:");
-      const deviceValues = wrapper.find(".device-value");
-      expect(deviceValues).to.have.length(3);
-      expect(deviceValues.at(0).text()).to.equal("test-device");
-      expect(deviceValues.at(1).text()).to.equal("test-pump");
-      expect(deviceValues.at(2).text()).to.equal("test-cgm test-cgmName");
-    });
+    it('should show devices info', () => {
+      const deviceSection = wrapper.find('#device-usage-device')
+      expect(deviceSection).to.have.length(1)
+      const deviceLabels = wrapper.find('.device-label')
+      expect(deviceLabels).to.have.length(3)
+      expect(deviceLabels.at(0).text()).to.equal('dbl:')
+      expect(deviceLabels.at(1).text()).to.equal('Pump:')
+      expect(deviceLabels.at(2).text()).to.equal('CGM:')
+      const deviceValues = wrapper.find('.device-value')
+      expect(deviceValues).to.have.length(3)
+      expect(deviceValues.at(0).text()).to.equal('test-device')
+      expect(deviceValues.at(1).text()).to.equal('test-pump')
+      expect(deviceValues.at(2).text()).to.equal('test-cgm test-cgmName')
+    })
 
-    it("should show parameters updates", () => {
-      const parametersSection = wrapper.find("#device-usage-updates");
-      expect(parametersSection).to.have.length(1);
-      const parameterUpdates = wrapper.find(".parameter-update");
-      expect(parameterUpdates).to.have.length(2);
-      const parameterDates = wrapper.find(".parameter-date");
-      expect(parameterDates).to.have.length(2);
-      expect(parameterDates.at(0).text()).to.equal("Jan 2, 2020 12:00 am");
-      expect(parameterDates.at(1).text()).to.equal("Jan 1, 2020 12:00 am");
-      const parameterChange = wrapper.find(".parameter-value");
-      expect(parameterChange).to.have.length(2);
-      expect(parameterChange.at(0).text()).to.equal("test (12 % -> 10 %)");
-      expect(parameterChange.at(1).text()).to.equal("test (12 %)");
-    });
+    it('should show parameters updates', () => {
+      const parametersSection = wrapper.find('#device-usage-updates')
+      expect(parametersSection).to.have.length(1)
+      const parameterUpdates = wrapper.find('.parameter-update')
+      expect(parameterUpdates).to.have.length(2)
+      const parameterDates = wrapper.find('.parameter-date')
+      expect(parameterDates).to.have.length(2)
+      expect(parameterDates.at(0).text()).to.equal('Jan 2, 2020 12:00 am')
+      expect(parameterDates.at(1).text()).to.equal('Jan 1, 2020 12:00 am')
+      const parameterChange = wrapper.find('.parameter-value')
+      expect(parameterChange).to.have.length(2)
+      expect(parameterChange.at(0).text()).to.equal('test (12 % -> 10 %)')
+      expect(parameterChange.at(1).text()).to.equal('test (12 %)')
+    })
 
-    it("should show sensor usage statistics", () => {
-      expect(wrapper.find(Stats)).to.have.length(1);
-    });
+    it('should show sensor usage statistics', () => {
+      expect(wrapper.find(Stats)).to.have.length(1)
+    })
 
-    it("should show Cartridge changes", () => {
-      expect(wrapper.find(BasicsChart)).to.have.length(1);
-    });
+    it('should show Cartridge changes', () => {
+      expect(wrapper.find(BasicsChart)).to.have.length(1)
+    })
 
-  });
-});
+  })
+})

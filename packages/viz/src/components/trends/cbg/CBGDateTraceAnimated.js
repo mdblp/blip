@@ -15,24 +15,24 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import _ from "lodash";
-import { TweenMax } from "gsap";
+import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import _ from 'lodash'
+import { TweenMax } from 'gsap'
 
-import connectWithTransitionGroup from "../../common/connectWithTransitionGroup";
-import { focusTrendsCbgDateTrace, unfocusTrendsCbgDateTrace } from "../../../redux/actions/trends";
-import { classifyBgValue } from "../../../utils/bloodglucose";
+import connectWithTransitionGroup from '../../common/connectWithTransitionGroup'
+import { focusTrendsCbgDateTrace, unfocusTrendsCbgDateTrace } from '../../../redux/actions/trends'
+import { classifyBgValue } from '../../../utils/bloodglucose'
 
-import styles from "./CBGDateTraceAnimated.css";
+import styles from './CBGDateTraceAnimated.css'
 
 export class CBGDateTraceAnimated extends React.PureComponent {
   static defaultProps = {
     animationDuration: 0.2,
-    cbgRadius: 2.5,
-  };
+    cbgRadius: 2.5
+  }
 
   static propTypes = {
     userId: PropTypes.string.isRequired,
@@ -41,14 +41,14 @@ export class CBGDateTraceAnimated extends React.PureComponent {
       veryHighThreshold: PropTypes.number.isRequired,
       targetUpperBound: PropTypes.number.isRequired,
       targetLowerBound: PropTypes.number.isRequired,
-      veryLowThreshold: PropTypes.number.isRequired,
+      veryLowThreshold: PropTypes.number.isRequired
     }).isRequired,
     cbgRadius: PropTypes.number.isRequired,
     data: PropTypes.arrayOf(PropTypes.shape({
       // here only documenting the properties we actually use rather than the *whole* data model!
       id: PropTypes.string.isRequired,
       msPer24: PropTypes.number.isRequired,
-      value: PropTypes.number.isRequired,
+      value: PropTypes.number.isRequired
     })).isRequired,
     date: PropTypes.string.isRequired,
     focusDateTrace: PropTypes.func.isRequired,
@@ -56,48 +56,48 @@ export class CBGDateTraceAnimated extends React.PureComponent {
     topMargin: PropTypes.number.isRequired,
     unfocusDateTrace: PropTypes.func.isRequired,
     xScale: PropTypes.func.isRequired,
-    yScale: PropTypes.func.isRequired,
-  };
+    yScale: PropTypes.func.isRequired
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.handleMouseOut = this.handleMouseOut.bind(this);
+    this.handleMouseOut = this.handleMouseOut.bind(this)
   }
 
   componentWillEnter(cb) {
-    const { animationDuration, data } = this.props;
-    const targets = _.map(data, (d) => (this[d.id]));
+    const { animationDuration, data } = this.props
+    const targets = _.map(data, (d) => (this[d.id]))
     TweenMax.staggerTo(
       targets, animationDuration, { opacity: 1, onComplete: cb }, animationDuration / targets.length
-    );
+    )
   }
 
   componentWillLeave(cb) {
-    const { animationDuration, data } = this.props;
-    const targets = _.map(data, (d) => (this[d.id]));
+    const { animationDuration, data } = this.props
+    const targets = _.map(data, (d) => (this[d.id]))
     TweenMax.staggerTo(
       targets, animationDuration, { opacity: 0, onComplete: cb }, animationDuration / targets.length
-    );
+    )
   }
 
   handleClick(d) {
-    const { onSelectDate } = this.props;
-    onSelectDate(d.epoch);
+    const { onSelectDate } = this.props
+    onSelectDate(d.epoch)
   }
 
   handleMouseOut() {
-    const { unfocusDateTrace, userId } = this.props;
-    unfocusDateTrace(userId);
+    const { unfocusDateTrace, userId } = this.props
+    unfocusDateTrace(userId)
   }
 
   render() {
-    const { bgBounds, cbgRadius, data, date, topMargin, userId, xScale, yScale } = this.props;
+    const { bgBounds, cbgRadius, data, date, topMargin, userId, xScale, yScale } = this.props
     return (
       <g id={`cbgDateTrace-${date}`}>
         {_.map(data, (d) => (
           <circle
-            className={styles[classifyBgValue(bgBounds, d.value, "fiveWay")]}
+            className={styles[classifyBgValue(bgBounds, d.value, 'fiveWay')]}
             cx={xScale(d.msPer24)}
             cy={yScale(d.value)}
             id={`cbgCircle-${d.id}`}
@@ -108,35 +108,35 @@ export class CBGDateTraceAnimated extends React.PureComponent {
                 left: xScale(d.msPer24),
                 yPositions: {
                   top: yScale(d.value),
-                  topMargin,
-                },
-              });
+                  topMargin
+                }
+              })
             }}
             onMouseOut={this.handleMouseOut}
             opacity={1}
             r={cbgRadius}
-            ref={(node) => { this[d.id] = node; }}
+            ref={(node) => { this[d.id] = node }}
           />
         ))}
       </g>
-    );
+    )
   }
 }
 
 export function mapStateToProps(state) {
-  const { blip: { currentPatientInViewId } } = state;
+  const { blip: { currentPatientInViewId } } = state
   return {
-    userId: currentPatientInViewId,
-  };
+    userId: currentPatientInViewId
+  }
 }
 
 export function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     focusDateTrace: focusTrendsCbgDateTrace,
-    unfocusDateTrace: unfocusTrendsCbgDateTrace,
-  }, dispatch);
+    unfocusDateTrace: unfocusTrendsCbgDateTrace
+  }, dispatch)
 }
 
 export default connectWithTransitionGroup(
   connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })(CBGDateTraceAnimated)
-);
+)

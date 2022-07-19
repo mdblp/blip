@@ -26,75 +26,75 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import moment from "moment-timezone";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import moment from 'moment-timezone'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextField from '@material-ui/core/TextField'
 
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
-import { Units } from "../../models/generic";
-import { Settings, IUser } from "../../models/user";
-import { getUserFirstName, getUserLastName } from "../../lib/utils";
+import { Units } from '../../models/generic'
+import { Settings, IUser } from '../../models/user'
+import { getUserFirstName, getUserLastName } from '../../lib/utils'
 
 interface ProfileDialogProps {
-  user: IUser;
-  isOpen: boolean;
-  handleClose: () => void;
+  user: IUser
+  isOpen: boolean
+  handleClose: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     title: {
-      textAlign: "center",
-      color: theme.palette.primary.main,
+      textAlign: 'center',
+      color: theme.palette.primary.main
     },
     textField: {
-      "marginTop": "1em",
-      "& input:disabled": {
-        backgroundColor: "white",
-        color: theme.palette.grey[800], // eslint-disable-line no-magic-numbers
-      },
+      marginTop: '1em',
+      '& input:disabled': {
+        backgroundColor: 'white',
+        color: theme.palette.grey[800] // eslint-disable-line no-magic-numbers
+      }
     },
     disabled: {
-      "&&:before": {
-        borderBottom: "0.5px solid",
-        color: theme.palette.grey[400], // eslint-disable-line no-magic-numbers
-      },
-    },
+      '&&:before': {
+        borderBottom: '0.5px solid',
+        color: theme.palette.grey[400] // eslint-disable-line no-magic-numbers
+      }
+    }
   })
-);
+)
 
 const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOpen, handleClose }: ProfileDialogProps) => {
-  const { t } = useTranslation("yourloops");
-  const { textField, title, disabled } = useStyles();
+  const { t } = useTranslation('yourloops')
+  const { textField, title, disabled } = useStyles()
 
-  const mail = user?.emails ? user.emails[0] : "";
-  const hbA1c: Settings["a1c"] = user?.settings?.a1c
-    ? { value: user.settings.a1c.value, date: moment.utc(user.settings.a1c.date).format("L") }
-    : undefined;
-  const birthDate = moment.utc(user?.profile?.patient?.birthday).format("L");
+  const mail = user?.emails ? user.emails[0] : ''
+  const hbA1c: Settings['a1c'] = user?.settings?.a1c
+    ? { value: user.settings.a1c.value, date: moment.utc(user.settings.a1c.date).format('L') }
+    : undefined
+  const birthDate = moment.utc(user?.profile?.patient?.birthday).format('L')
 
-  const firstName = getUserFirstName(user);
-  const lastName = getUserLastName(user);
+  const firstName = getUserFirstName(user)
+  const lastName = getUserLastName(user)
 
   return (
     <Dialog fullWidth={true} maxWidth="xs" open={isOpen} onClose={handleClose}>
       <DialogTitle className={title} id="patient-dialog-title">
-        {t("patient-profile-title")}
+        {t('patient-profile-title')}
       </DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
           disabled
           id="firstname"
-          label={t("firstname")}
+          label={t('firstname')}
           value={firstName}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -103,7 +103,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="lastname"
-          label={t("lastname")}
+          label={t('lastname')}
           value={lastName}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -112,7 +112,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="birthDate"
-          label={t("birthdate")}
+          label={t('birthdate')}
           value={birthDate}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -121,7 +121,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="mail"
-          label={t("email")}
+          label={t('email')}
           value={mail}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -131,8 +131,8 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
             fullWidth
             disabled
             id="hbA1c"
-            label={t("patient-profile-hba1c", { hba1cDate: hbA1c?.date })}
-            value={hbA1c?.value + "%"}
+            label={t('patient-profile-hba1c', { hba1cDate: hbA1c?.date })}
+            value={hbA1c?.value + '%'}
             className={textField}
             InputProps={{ classes: { disabled } }}
           />
@@ -141,7 +141,7 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
           fullWidth
           disabled
           id="units"
-          label={t("units")}
+          label={t('units')}
           value={user.settings?.units?.bg ?? Units.gram}
           className={textField}
           InputProps={{ classes: { disabled } }}
@@ -149,11 +149,11 @@ const ProfileDialog: React.FunctionComponent<ProfileDialogProps> = ({ user, isOp
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          {t("button-close")}
+          {t('button-close')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ProfileDialog;
+export default ProfileDialog

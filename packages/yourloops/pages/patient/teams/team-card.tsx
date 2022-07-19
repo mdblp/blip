@@ -26,59 +26,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
-import { Team } from "../../../lib/team";
-import GenericTeamCard from "../../../components/team/team-card";
+import { Team } from '../../../lib/team'
+import GenericTeamCard from '../../../components/team/team-card'
 
 export interface TeamCardProps {
-  team: Readonly<Team>;
-  onShowLeaveTeamDialog: (team: Team) => Promise<boolean>;
+  team: Readonly<Team>
+  onShowLeaveTeamDialog: (team: Team) => Promise<boolean>
 }
 
 export interface TeamInfoProps {
-  id: string;
-  label: string;
-  value?: null | string | JSX.Element;
-  icon: JSX.Element;
+  id: string
+  label: string
+  value?: null | string | JSX.Element
+  icon: JSX.Element
 }
 
 const teamCardStyles = makeStyles((theme: Theme) => {
   return {
     buttonActionFirstRow: {
-      alignSelf: "center",
-      marginRight: "1em",
-      textTransform: "initial",
+      alignSelf: 'center',
+      marginRight: '1em',
+      textTransform: 'initial'
     },
     buttonText: {
-      [theme.breakpoints.down("xs")]: {
-        display: "none",
-      },
-    },
-  };
-});
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    }
+  }
+})
 
 function TeamCard(props: TeamCardProps): JSX.Element {
-  const { team, onShowLeaveTeamDialog } = props;
-  const classes = teamCardStyles();
-  const { t } = useTranslation("yourloops");
-  const [buttonsDisabled, setButtonsDisabled] = React.useState(false);
+  const { team, onShowLeaveTeamDialog } = props
+  const classes = teamCardStyles()
+  const { t } = useTranslation('yourloops')
+  const [buttonsDisabled, setButtonsDisabled] = React.useState(false)
 
   const handleClickLeaveTeam = async (): Promise<void> => {
-    setButtonsDisabled(true);
-    const result = await onShowLeaveTeamDialog(team);
+    setButtonsDisabled(true)
+    const result = await onShowLeaveTeamDialog(team)
     if (!result) {
-      setButtonsDisabled(false);
+      setButtonsDisabled(false)
     }
-  };
+  }
 
-  const { id } = team;
+  const { id } = team
   return (
     <GenericTeamCard team={team}>
       <Button
@@ -87,10 +87,10 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         startIcon={<ExitToAppIcon color="primary" />}
         onClick={handleClickLeaveTeam}
         disabled={buttonsDisabled}>
-        <span className={classes.buttonText}>{t("button-remove")}</span>
+        <span className={classes.buttonText}>{t('button-remove')}</span>
       </Button>
     </GenericTeamCard>
-  );
+  )
 }
 
-export default TeamCard;
+export default TeamCard

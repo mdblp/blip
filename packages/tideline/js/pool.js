@@ -15,9 +15,9 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import legendDefs from "./plot/util/legend";
+import legendDefs from './plot/util/legend'
 
 /**
  * @typedef {import('./tidelinedata').default} TidelineData
@@ -37,54 +37,54 @@ import legendDefs from "./plot/util/legend";
  * @param {OneDay} container OneDay container
  */
 function Pool(container) {
-  const d3 = window.d3;
+  const d3 = window.d3
 
-  const minHeight = 20;
-  const maxHeight = 300;
+  const minHeight = 20
+  const maxHeight = 300
 
-  let mainSVG = d3.select("#" + container.id());
-  let id = "";
-  let yPosition = 0;
-  let gutterWeight = 0;
+  let mainSVG = d3.select('#' + container.id())
+  let id = ''
+  let yPosition = 0
+  let gutterWeight = 0
   /** @type {Labels} Chart name for the user */
-  let labels = null;
+  let labels = null
   /** @type {Legends} */
-  let legends = null;
-  let heightRatio = 0;
-  let hidden = false;
-  let group = null;
+  let legends = null
+  let heightRatio = 0
+  let hidden = false
+  let group = null
 
-  let height = minHeight;
+  let height = minHeight
   /** @type {ScaleContinuousNumeric} */
-  let xScale = null;
-  let yScale = null;
+  let xScale = null
+  let yScale = null
   /** @type {Axis} */
-  let yAxis = null;
+  let yAxis = null
   /** @type {PlotType[]} */
-  let plotTypes = [];
-  let annotations = null;
-  let tooltips = null;
+  let plotTypes = []
+  let annotations = null
+  let tooltips = null
   /** @type {AxisScaleFunc} */
-  let defaultAxisScaleFn = null;
+  let defaultAxisScaleFn = null
 
   this.destroy = function() {
     plotTypes.forEach((plotType) => {
-      if (typeof plotType.plot.destroy === "function") {
-        plotType.plot.destroy();
+      if (typeof plotType.plot.destroy === 'function') {
+        plotType.plot.destroy()
       }
-    });
-    mainSVG = null;
-    labels = null;
-    legends = null;
-    group = null;
-    xScale = null;
-    yScale = null;
-    yAxis = null;
-    plotTypes = null;
-    annotations = null;
-    tooltips = null;
-    container = null;
-  };
+    })
+    mainSVG = null
+    labels = null
+    legends = null
+    group = null
+    xScale = null
+    yScale = null
+    yAxis = null
+    plotTypes = null
+    annotations = null
+    tooltips = null
+    container = null
+  }
 
   /**
    * Render the daily view elements
@@ -93,193 +93,193 @@ function Pool(container) {
    */
   this.render = function(poolData, updateScale = false) {
     if (updateScale && _.isFunction(defaultAxisScaleFn)) {
-      const axisScale = defaultAxisScaleFn(container.tidelineData, this);
-      yScale = axisScale.scale;
-      yAxis = axisScale.axis;
+      const axisScale = defaultAxisScaleFn(container.tidelineData, this)
+      yScale = axisScale.scale
+      yAxis = axisScale.axis
     }
 
     plotTypes.forEach((plotType) => {
-      const { type, name } = plotType;
+      const { type, name } = plotType
       if (type in container.dataFill) {
-        const data = _.filter(poolData, { type });
-        const dataGroup = group.selectAll(`#${id}_${name}`).data([data]);
-        dataGroup.enter().append("g").attr("id", `${id}_${name}`);
-        dataGroup.call(plotType.plot);
+        const data = _.filter(poolData, { type })
+        const dataGroup = group.selectAll(`#${id}_${name}`).data([data])
+        dataGroup.enter().append('g').attr('id', `${id}_${name}`)
+        dataGroup.call(plotType.plot)
       } else {
-        console.warn(`Pool: ${type} not in dataFill`, { type, name, dataFill: container.dataFill });
+        console.warn(`Pool: ${type} not in dataFill`, { type, name, dataFill: container.dataFill })
       }
-    });
+    })
 
-    this.drawAxes();
-    this.updateAxes();
-    this.drawLabel();
-    this.drawLegend();
-  };
+    this.drawAxes()
+    this.updateAxes()
+    this.drawLabel()
+    this.drawLegend()
+  }
 
   this.clear = function() {
     plotTypes.forEach(({ type, name }) => {
       if (container.dataFill[type]) {
-        group.select(`#${id}_${name}`).remove();
+        group.select(`#${id}_${name}`).remove()
       }
-    });
-    group.select(`#${id}_guidelines`).remove();
-  };
+    })
+    group.select(`#${id}_guidelines`).remove()
+  }
 
   // non-chainable methods
   this.pan = function(translateX) {
     plotTypes.forEach(({ pan, name }) => {
       if (pan) {
-        mainSVG.select(`#${id}_${name}`).attr("transform", `translate(${translateX},0)`);
+        mainSVG.select(`#${id}_${name}`).attr('transform', `translate(${translateX},0)`)
       }
-    });
-  };
+    })
+  }
 
   // getters only
   this.group = function() {
-    return group;
-  };
+    return group
+  }
 
   this.parent = function() {
-    return mainSVG;
-  };
+    return mainSVG
+  }
 
   this.width = function() {
-    return container.width() - container.axisGutter();
-  };
+    return container.width() - container.axisGutter()
+  }
 
   // only once methods
   this.drawLabel = _.once(function() {
     if (!Array.isArray(labels) || labels.length < 1) {
-      return;
+      return
     }
 
-    const x = container.axisGutter().toString(10);
+    const x = container.axisGutter().toString(10)
     labels.forEach((label, labelIndex) => {
-      const y = (yPosition - label.baseline).toString(10);
-      const labelGroup = mainSVG.select("#tidelineLabels").append("text");
+      const y = (yPosition - label.baseline).toString(10)
+      const labelGroup = mainSVG.select('#tidelineLabels').append('text')
       labelGroup.attr({
         id: `${id}_label_${labelIndex}`,
-        class: "d3-pool-label",
+        class: 'd3-pool-label',
         transform: `translate(${x},${y})`
-      });
+      })
       label.spans.forEach((tspan, spanIndex) => {
-        labelGroup.append("tspan")
-          .attr("class", tspan.className)
-          .attr("id", `${id}_label_${labelIndex}_span_${spanIndex}`)
-          .text(tspan.text);
-      });
-    });
-  });
+        labelGroup.append('tspan')
+          .attr('class', tspan.className)
+          .attr('id', `${id}_label_${labelIndex}_span_${spanIndex}`)
+          .text(tspan.text)
+      })
+    })
+  })
 
   this.drawLegend = _.once(function() {
     if (!Array.isArray(legends) || legends.length < 1) {
-      return;
+      return
     }
     legends.forEach((legend) => {
-      const x = (this.width() + container.axisGutter()).toString(10);
-      const y = (yPosition - legend.baseline).toString(10);
-      const legendGroup = mainSVG.select("#tidelineLabels")
-        .append("g")
+      const x = (this.width() + container.axisGutter()).toString(10)
+      const y = (yPosition - legend.baseline).toString(10)
+      const legendGroup = mainSVG.select('#tidelineLabels')
+        .append('g')
         .attr({
           id: `${id}_legend_${legend.name}`,
-          transform: `translate(${x},${y})`,
-        });
-      legendDefs.draw(legendGroup, legend.name);
-    });
-  });
+          transform: `translate(${x},${y})`
+        })
+      legendDefs.draw(legendGroup, legend.name)
+    })
+  })
 
   this.drawAxes = _.once(function() {
     if (yAxis) {
-      const axisGroup = mainSVG.select("#tidelineYAxes");
-      axisGroup.append("g")
-        .attr("class", "d3-y d3-axis")
-        .attr("id", `pool-${id}-yAxis`)
-        .attr("transform", "translate(" + (container.axisGutter() - 1) + "," + yPosition + ")");
+      const axisGroup = mainSVG.select('#tidelineYAxes')
+      axisGroup.append('g')
+        .attr('class', 'd3-y d3-axis')
+        .attr('id', `pool-${id}-yAxis`)
+        .attr('transform', 'translate(' + (container.axisGutter() - 1) + ',' + yPosition + ')')
     }
-  });
+  })
 
   this.updateAxes = function() {
     if (yAxis) {
-      const axisGroup = mainSVG.select("#tidelineYAxes");
-      axisGroup.select(`#pool-${id}-yAxis`).call(yAxis);
+      const axisGroup = mainSVG.select('#tidelineYAxes')
+      axisGroup.select(`#pool-${id}-yAxis`).call(yAxis)
     }
-    return this;
-  };
+    return this
+  }
 
   // getters & setters
   this.id = function(x, selection) {
-    if (!arguments.length) return id;
-    id = x;
-    group = selection.append("g").attr("id", id);
-    return this;
-  };
+    if (!arguments.length) return id
+    id = x
+    group = selection.append('g').attr('id', id)
+    return this
+  }
 
   this.labels = function(/** @type {Labels} */ l) {
-    if (!arguments.length) return labels;
-    labels = l;
-    return this;
-  };
+    if (!arguments.length) return labels
+    labels = l
+    return this
+  }
 
   this.legends = function(a) {
-    if (!arguments.length) return legends;
-    legends = a;
-    return this;
-  };
+    if (!arguments.length) return legends
+    legends = a
+    return this
+  }
 
   this.heightRatio = function(x) {
-    if (!arguments.length) return heightRatio;
-    heightRatio = x;
-    return this;
-  };
+    if (!arguments.length) return heightRatio
+    heightRatio = x
+    return this
+  }
 
   this.height = function(x) {
-    if (!arguments.length) return height;
-    x = x * this.heightRatio();
+    if (!arguments.length) return height
+    x = x * this.heightRatio()
     if (x <= maxHeight) {
       if (x >= minHeight) {
-        height = x;
+        height = x
       }
       else {
-        height = minHeight;
+        height = minHeight
       }
     }
     else {
-      height = maxHeight;
+      height = maxHeight
     }
-    return this;
-  };
+    return this
+  }
 
   this.gutterWeight = function(x) {
-    if (!arguments.length) return gutterWeight;
-    gutterWeight = x;
-    return this;
-  };
+    if (!arguments.length) return gutterWeight
+    gutterWeight = x
+    return this
+  }
 
   this.hidden = function(x) {
-    if (!arguments.length) return hidden;
+    if (!arguments.length) return hidden
     if (x === true) {
-      hidden = true;
+      hidden = true
     }
-    return this;
-  };
+    return this
+  }
 
   this.yPosition = function(x) {
-    if (!arguments.length) return yPosition;
-    yPosition = x;
-    return this;
-  };
+    if (!arguments.length) return yPosition
+    yPosition = x
+    return this
+  }
 
   this.annotations = function(f) {
-    if (!arguments.length) return annotations;
-    annotations = f;
-    return this;
-  };
+    if (!arguments.length) return annotations
+    annotations = f
+    return this
+  }
 
   this.tooltips = function(f) {
-    if (!arguments.length) return tooltips;
-    tooltips = f;
-    return this;
-  };
+    if (!arguments.length) return tooltips
+    tooltips = f
+    return this
+  }
 
   /**
    * @param {ScaleContinuousNumeric} scale
@@ -287,10 +287,10 @@ function Pool(container) {
    */
   this.xScale = (scale = null) => {
     if (scale !== null) {
-      xScale = scale;
+      xScale = scale
     }
-    return xScale;
-  };
+    return xScale
+  }
 
   /**
    * Default pool scaling. Most (all) of them have only
@@ -299,10 +299,10 @@ function Pool(container) {
    */
   this.yScale = () => {
     if (yScale === null) {
-      throw new Error(`yScale === null (${id})`);
+      throw new Error(`yScale === null (${id})`)
     }
-    return yScale;
-  };
+    return yScale
+  }
 
   /**
    * @param {AxisScaleFunc} fn
@@ -310,13 +310,13 @@ function Pool(container) {
    */
   this.axisScaleFn = function(fn = null) {
     if (fn !== null) {
-      defaultAxisScaleFn = fn;
-      const axisScale = fn(container.tidelineData, this);
-      yScale = axisScale.scale;
-      yAxis = axisScale.axis;
+      defaultAxisScaleFn = fn
+      const axisScale = fn(container.tidelineData, this)
+      yScale = axisScale.scale
+      yAxis = axisScale.axis
     }
-    return defaultAxisScaleFn;
-  };
+    return defaultAxisScaleFn
+  }
 
   /**
    * @param {{ type: string; name?: string; dataFill?: boolean; pan?: boolean;}} plotOptions
@@ -328,36 +328,36 @@ function Pool(container) {
       type,
       name: name ?? type,
       plot: plotFunction,
-      pan,
-    });
+      pan
+    })
     if (dataFill) {
-      container.dataFill[type] = true;
+      container.dataFill[type] = true
     }
-  };
+  }
 
   this.highlight = function(background, opts) {
     opts = _.defaults(opts || {}, {
       subdueOpacity: 0.6
-    });
+    })
 
     return {
       on: function(el) {
         if(_.isString(background)) {
-          background = mainSVG.selectAll(background);
+          background = mainSVG.selectAll(background)
         }
 
-        background.attr("opacity", opts.subdueOpacity);
-        el.attr("opacity", 1);
+        background.attr('opacity', opts.subdueOpacity)
+        el.attr('opacity', 1)
       },
       off: function() {
         if(_.isString(background)) {
-          background = mainSVG.selectAll(background);
+          background = mainSVG.selectAll(background)
         }
 
-        background.attr("opacity", 1);
+        background.attr('opacity', 1)
       }
-    };
-  };
+    }
+  }
 
   /**
    * Filter for special data. Do like updateRenderedData().
@@ -366,10 +366,10 @@ function Pool(container) {
    * @returns {Datum[]} A filtered array of datum to be displayed
    */
   this.filterDataForRender = function filterDataForRender(data) {
-    return container.filterDataForRender(data);
-  };
+    return container.filterDataForRender(data)
+  }
 
-  return this;
+  return this
 }
 
-export default Pool;
+export default Pool

@@ -29,9 +29,9 @@
  * Signupform interface props
  */
 interface SignUpFormProps {
-  activeStep?: number;
-  handleBack(): void;
-  handleNext(): void;
+  activeStep?: number
+  handleBack: () => void
+  handleNext: () => void
 }
 
-export default SignUpFormProps;
+export default SignUpFormProps

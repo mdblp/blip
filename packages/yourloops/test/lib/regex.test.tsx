@@ -26,52 +26,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-import { REGEX_EMAIL } from "../../lib/utils";
+import { REGEX_EMAIL } from '../../lib/utils'
 
 const validEmails = [
-  "foobar@domain.de",
-  "hello.world@example.com",
-  "compte.aidant+1@example.fr",
-  "hcp-test@example.com",
-  "my123account@domain.fr",
-  "abc@sub.domain.org",
-];
+  'foobar@domain.de',
+  'hello.world@example.com',
+  'compte.aidant+1@example.fr',
+  'hcp-test@example.com',
+  'my123account@domain.fr',
+  'abc@sub.domain.org'
+]
 
 const invalidEmails = [
-  "abcd",
-  "<hello>",
-  "mañana.es",
-  "aaa-ß@example.de",
-  " @example.com",
-  "+@example.com",
-  "+str@example.com",
-  "hello\nworld@test.org",
-  "world@test.org\nworld@test.org",
-  "name@☃-⌘.com",
-  "☃-⌘@domain.com",
-  "pine🍍pple@fruit.com",
-  "toto@ggrd.fr@aaa.de",
-  "<toto@ggrd.fr> v@aaa.de",
-  "a@g",
-  "er y@example.it",
-  "mañana@domain.es",
-  "<name> name@example.com",
-  "name@invalid-dômain.fr",
-  "almost@good.email.es ",
-];
+  'abcd',
+  '<hello>',
+  'mañana.es',
+  'aaa-ß@example.de',
+  ' @example.com',
+  '+@example.com',
+  '+str@example.com',
+  'hello\nworld@test.org',
+  'world@test.org\nworld@test.org',
+  'name@☃-⌘.com',
+  '☃-⌘@domain.com',
+  'pine🍍pple@fruit.com',
+  'toto@ggrd.fr@aaa.de',
+  '<toto@ggrd.fr> v@aaa.de',
+  'a@g',
+  'er y@example.it',
+  'mañana@domain.es',
+  '<name> name@example.com',
+  'name@invalid-dômain.fr',
+  'almost@good.email.es '
+]
 
-describe("Regex", () => {
-  it("email regex should accept a list of valid emails", () => {
+describe('Regex', () => {
+  it('email regex should accept a list of valid emails', () => {
     validEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email)).toBe(true);
-    });
-  });
+      expect(REGEX_EMAIL.test(email)).toBe(true)
+    })
+  })
 
-  it("email regex should refuse a list of invalid emails", () => {
+  it('email regex should refuse a list of invalid emails', () => {
     invalidEmails.forEach((email: string) => {
-      expect(REGEX_EMAIL.test(email)).toBe(false);
-    });
-  });
-});
-
+      expect(REGEX_EMAIL.test(email)).toBe(false)
+    })
+  })
+})

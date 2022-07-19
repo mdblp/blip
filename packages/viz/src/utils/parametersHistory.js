@@ -26,123 +26,123 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import bows from "bows";
-import moment from "moment-timezone";
+import bows from 'bows'
+import moment from 'moment-timezone'
 
-const log = bows("ParametersHistoryUtil");
+const log = bows('ParametersHistoryUtil')
 
 const sortParameter = (a, b) =>
   b.level.toString().localeCompare(a.level.toString())
   || b.name.localeCompare(a.name)
-  || a.effectiveDate.localeCompare(b.effectiveDate);
+  || a.effectiveDate.localeCompare(b.effectiveDate)
 
 
 const setTzDate = (date, timePrefs,) => {
   if (timePrefs.timezoneAware) {
-    return moment.tz(date, timePrefs.timezoneName);
+    return moment.tz(date, timePrefs.timezoneName)
   }
-  return moment.utc(date);
+  return moment.utc(date)
 
-};
+}
 
 const formatParameterDate = (date, timePrefs, dateFormat) => {
-  return setTzDate(date, timePrefs).format(dateFormat);
-};
+  return setTzDate(date, timePrefs).format(dateFormat)
+}
 
 const handleParameterChange = (currentChange, currentParameters, parameter) => {
   switch (currentChange.changeType) {
-  case "added":
-    if (currentParameters.has(parameter.name)) {
+    case 'added':
+      if (currentParameters.has(parameter.name)) {
       // eslint-disable-next-line max-len
-      log.warn(`History: Parameter ${parameter.name} was added, but present in current parameters`);
-    }
-    currentParameters.set(parameter.name, {
-      value: parameter.value,
-      unit: parameter.unit,
-    });
-    break;
-  case "deleted":
-    if (currentParameters.has(parameter.name)) {
-      currentParameters.delete(parameter.name);
-    } else {
+        log.warn(`History: Parameter ${parameter.name} was added, but present in current parameters`)
+      }
+      currentParameters.set(parameter.name, {
+        value: parameter.value,
+        unit: parameter.unit
+      })
+      break
+    case 'deleted':
+      if (currentParameters.has(parameter.name)) {
+        currentParameters.delete(parameter.name)
+      } else {
       // eslint-disable-next-line max-len
-      log.warn(`History: Parameter ${parameter.name} was removed, but not present in current parameters`);
-    }
-    break;
-  case "updated":
-    if (currentParameters.has(parameter.name)) {
-      const currParam = currentParameters.get(parameter.name);
-      currentChange.previousUnit = currParam.unit;
-      currentChange.previousValue = currParam.value;
-    } else {
+        log.warn(`History: Parameter ${parameter.name} was removed, but not present in current parameters`)
+      }
+      break
+    case 'updated':
+      if (currentParameters.has(parameter.name)) {
+        const currParam = currentParameters.get(parameter.name)
+        currentChange.previousUnit = currParam.unit
+        currentChange.previousValue = currParam.value
+      } else {
       // eslint-disable-next-line max-len
-      log.warn(`History: Parameter ${parameter.name} was updated, but not present in current parameters`);
-      currentChange.changeType = "added";
-    }
+        log.warn(`History: Parameter ${parameter.name} was updated, but not present in current parameters`)
+        currentChange.changeType = 'added'
+      }
 
-    currentParameters.set(parameter.name, {
-      value: parameter.value,
-      unit: parameter.unit,
-    });
-    break;
-  default:
-    log.warn(`Unknown change type ${currentChange.changeType}:`, currentChange);
-    break;
+      currentParameters.set(parameter.name, {
+        value: parameter.value,
+        unit: parameter.unit
+      })
+      break
+    default:
+      log.warn(`Unknown change type ${currentChange.changeType}:`, currentChange)
+      break
   }
-};
+}
 
-const getKey = (row) => [row.name,row.effectiveDate, row.value, row.unit].join("|");
+const getKey = (row) => [row.name,row.effectiveDate, row.value, row.unit].join('|')
 
 export default function getParametersChanges(history, timePrefs, dateFormat, includeGroupChange = false) {
-  const rows = [];
+  const rows = []
 
   if (!Array.isArray(history)) {
-    return rows;
+    return rows
   }
 
-  const currentParameters = new Map();
+  const currentParameters = new Map()
 
-  const nHistory = history.length;
+  const nHistory = history.length
   for (let i = 0; i < nHistory; i++) {
-    const parameters = history[i].parameters;
+    const parameters = history[i].parameters
 
     if (!Array.isArray(parameters)) {
-      continue;
+      continue
     }
-    const nParameters = parameters.length;
-    let latestDate = new Date(0);
+    const nParameters = parameters.length
+    let latestDate = new Date(0)
 
     // Compare b->a since there is a reverse order at the end
-    parameters.sort(sortParameter);
+    parameters.sort(sortParameter)
 
     for (let j = 0; j < nParameters; j++) {
-      const parameter = parameters[j];
-      const row = { ...parameter };
-      row.rawData = parameter.name;
-      const changeDate = new Date(parameter.effectiveDate);
+      const parameter = parameters[j]
+      const row = { ...parameter }
+      row.rawData = parameter.name
+      const changeDate = new Date(parameter.effectiveDate)
 
       if (latestDate.getTime() < changeDate.getTime()) {
-        latestDate = changeDate;
+        latestDate = changeDate
       }
-      row.parameterDate = formatParameterDate(changeDate, timePrefs.timezoneName, dateFormat);
+      row.parameterDate = formatParameterDate(changeDate, timePrefs.timezoneName, dateFormat)
 
-      handleParameterChange(row, currentParameters, parameter);
-      row.key = getKey(row);
-      rows.push(row);
+      handleParameterChange(row, currentParameters, parameter)
+      row.key = getKey(row)
+      rows.push(row)
     }
 
     if(includeGroupChange) {
-      const mLatestDate = setTzDate(latestDate, timePrefs);
-      const latestDateFormatted = mLatestDate.format(dateFormat);
+      const mLatestDate = setTzDate(latestDate, timePrefs)
+      const latestDateFormatted = mLatestDate.format(dateFormat)
       rows.push({
         key: `group-${latestDateFormatted}`,
         isSpanned: true,
         spannedContent: latestDateFormatted,
-        mLatestDate,
-      });
+        mLatestDate
+      })
     }
 
   }
 
-  return rows.reverse();
+  return rows.reverse()
 }

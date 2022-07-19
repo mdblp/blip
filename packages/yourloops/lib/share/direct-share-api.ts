@@ -25,36 +25,36 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { DirectShareAPI, ShareUser } from "./models";
-import HttpService from "../../services/http";
-import { UserInvitationStatus } from "../../models/generic";
-import { fixYLP878Settings } from "../utils";
-import { UserRoles } from "../../models/user";
-import { HttpHeaderKeys } from "../../models/api";
-import { getCurrentLang } from "../language";
+import { DirectShareAPI, ShareUser } from './models'
+import HttpService from '../../services/http'
+import { UserInvitationStatus } from '../../models/generic'
+import { fixYLP878Settings } from '../utils'
+import { UserRoles } from '../../models/user'
+import { HttpHeaderKeys } from '../../models/api'
+import { getCurrentLang } from '../language'
 
 export default class DirectShareApi {
   static async addDirectShare(userId: string, email: string): Promise<void> {
     await HttpService.post<void, { email: string }>({
       url: `/confirm/send/invite/${userId}`,
       payload: { email },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
-    });
+      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+    })
   }
 
   static async getDirectShares(): Promise<ShareUser[]> {
-    const { data } = await HttpService.get<DirectShareAPI[]>({ url: "/v0/my-direct-shares" });
-    return DirectShareApi.mapShareUser(data);
+    const { data } = await HttpService.get<DirectShareAPI[]>({ url: '/v0/my-direct-shares' })
+    return DirectShareApi.mapShareUser(data)
   }
 
   static async removeDirectShare(patientId: string, viewerId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/direct-share/${patientId}/${viewerId}` });
+    await HttpService.delete({ url: `/crew/v0/direct-share/${patientId}/${viewerId}` })
   }
 
   private static mapShareUser(directShareApiArray: DirectShareAPI[]): ShareUser[] {
-    const shareUsers: ShareUser[] = [];
+    const shareUsers: ShareUser[] = []
     directShareApiArray.forEach((directShare) => {
-      const directShareUser = directShare.patient ?? directShare.viewer;
+      const directShareUser = directShare.patient ?? directShare.viewer
       if (directShareUser) {
         shareUsers.push({
           status: UserInvitationStatus.accepted,
@@ -66,11 +66,11 @@ export default class DirectShareApi {
             username: directShareUser.email,
             emails: [directShareUser.email],
             role: directShare.viewer ? UserRoles.caregiver : UserRoles.patient,
-            idVerified: directShareUser.idVerified,
-          },
-        });
+            idVerified: directShareUser.idVerified
+          }
+        })
       }
-    });
-    return shareUsers;
+    })
+    return shareUsers
   }
 }

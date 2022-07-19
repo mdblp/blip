@@ -15,81 +15,81 @@
  */
 
 enum Units {
-  mole = "mmol/L",
-  gram = "mg/dL",
+  mole = 'mmol/L',
+  gram = 'mg/dL',
 }
 
 enum FilterType {
-  all = "all",
-  flagged = "flagged",
-  pending = "pending",
-  private = "private",
+  all = 'all',
+  flagged = 'flagged',
+  pending = 'pending',
+  private = 'private',
 }
 
 enum PatientFilterTypes {
-  all = "all",
-  flagged = "flagged",
-  dataNotTransferred = "data-not-transferred",
-  outOfRange = "out-of-range",
-  pending = "pending",
-  private = "private",
-  remoteMonitored = "remote-monitored",
-  renew = "renew",
-  severeHypoglycemia = "severe-hypoglycemia",
-  unread = "unread-messages",
+  all = 'all',
+  flagged = 'flagged',
+  dataNotTransferred = 'data-not-transferred',
+  outOfRange = 'out-of-range',
+  pending = 'pending',
+  private = 'private',
+  remoteMonitored = 'remote-monitored',
+  renew = 'renew',
+  severeHypoglycemia = 'severe-hypoglycemia',
+  unread = 'unread-messages',
 }
 
 enum SortDirection {
-  asc = "asc",
-  desc = "desc",
+  asc = 'asc',
+  desc = 'desc',
 }
 
 enum SortFields {
-  lastname = "lastname",
-  firstname = "firstname",
-  email = "email",
+  lastname = 'lastname',
+  firstname = 'firstname',
+  email = 'email',
   /** Time in range */
-  tir = "tir",
+  tir = 'tir',
   /** Time below range */
-  tbr = "tbr",
+  tbr = 'tbr',
   /** Last upload date */
-  upload = "upload",
+  upload = 'upload',
 }
 
 enum PatientTableSortFields {
-  alertHypoglycemic = "alertHypoglycemic",
-  alertTimeTarget = "alertTimeTarget",
-  dataNotTransferred = "dataNotTransferred",
-  flag = "flag",
+  alertHypoglycemic = 'alertHypoglycemic',
+  alertTimeTarget = 'alertTimeTarget',
+  dataNotTransferred = 'dataNotTransferred',
+  flag = 'flag',
   /** Last data update */
-  ldu = "ldu",
-  patientFullName = "patientFullName",
-  remoteMonitoring = "remoteMonitoring",
-  system = "system",
+  ldu = 'ldu',
+  patientFullName = 'patientFullName',
+  remoteMonitoring = 'remoteMonitoring',
+  system = 'system',
 }
 
 enum UserInvitationStatus {
-  pending = "pending",
-  accepted = "accepted",
-  rejected = "rejected",
+  pending = 'pending',
+  accepted = 'accepted',
+  rejected = 'rejected',
 }
 
 interface PostalAddress {
-  line1: string;
-  line2?: string;
-  zip: string;
-  city: string;
-  country: string;
+  line1: string
+  line2?: string
+  zip: string
+  city: string
+  country: string
 }
 
 interface HistoryState {
   from?: {
-    pathname?: string;
-  };
+    pathname?: string
+  }
 }
 
 /** Number of miliseconds per 24h */
-const MS_IN_DAY = 86400000;
+const MS_IN_DAY = 86400000
 
 export {
   HistoryState,
@@ -101,5 +101,5 @@ export {
   PatientTableSortFields,
   UserInvitationStatus,
   MS_IN_DAY,
-  PatientFilterTypes,
-};
+  PatientFilterTypes
+}

@@ -25,114 +25,126 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import moment from "moment-timezone";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import moment from 'moment-timezone'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import EmailIcon from "@material-ui/icons/Email";
-import Tooltip from "@material-ui/core/Tooltip";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import FlagIcon from "@material-ui/icons/Flag";
-import FlagOutlineIcon from "@material-ui/icons/FlagOutlined";
-import AnnouncementIcon from "@material-ui/icons/Announcement";
-import { Box, Typography } from "@material-ui/core";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import EmailIcon from '@material-ui/icons/Email'
+import Tooltip from '@material-ui/core/Tooltip'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import FlagIcon from '@material-ui/icons/Flag'
+import FlagOutlineIcon from '@material-ui/icons/FlagOutlined'
+import AnnouncementIcon from '@material-ui/icons/Announcement'
+import { Box, Typography } from '@material-ui/core'
 
-import IconActionButton from "../buttons/icon-action";
-import { FilterType } from "../../models/generic";
-import { MedicalData } from "../../models/device-data";
-import metrics from "../../lib/metrics";
-import { useAuth } from "../../lib/auth";
-import { PatientElementProps } from "./models";
-import { getMedicalValues } from "./utils";
-import { patientListCommonStyle } from "./table";
-import { StyledTableCell, StyledTableRow } from "../styled-components";
-import TeamUtils from "../../lib/team/utils";
+import IconActionButton from '../buttons/icon-action'
+import { FilterType } from '../../models/generic'
+import { MedicalData } from '../../models/device-data'
+import metrics from '../../lib/metrics'
+import { useAuth } from '../../lib/auth'
+import { PatientElementProps } from './models'
+import { getMedicalValues } from './utils'
+import { patientListCommonStyle } from './table'
+import { StyledTableCell, StyledTableRow } from '../styled-components'
+import TeamUtils from '../../lib/team/utils'
+
+interface ComputedRow {
+  patientSystem: string
+  patientRemoteMonitoring: string
+  timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHypoglycemiaActive: boolean
+  nonDataTransmissionActive: boolean
+  patientFullNameClasses: string
+  timeSpentAwayFromTargetRateClasses: string
+  frequencyOfSevereHypoglycemiaRateClasses: string
+  dataNotTransferredRateClasses: string
+}
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
       alert: {
-        color: theme.palette.warning.main,
+        color: theme.palette.warning.main
       },
       alertIcon: {
         marginLeft: theme.spacing(2),
-        verticalAlign: "bottom",
+        verticalAlign: 'bottom'
       },
       coloredIcon: {
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.main
       },
       icon: {
-        width: "56px",
-        alignItems: "center",
-        justifyContent: "center",
+        width: '56px',
+        alignItems: 'center',
+        justifyContent: 'center'
       },
       iconCell: {
-        width: "56px",
-        padding: 0,
+        width: '56px',
+        padding: 0
       },
       remoteMonitoringCell: {
-        whiteSpace: "pre-line",
+        whiteSpace: 'pre-line'
       },
       tableRow: {
-        cursor: "pointer",
-        height: "64px",
+        cursor: 'pointer',
+        height: '64px'
       },
       typography: {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-      },
-    };
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+      }
+    }
   },
-  { name: "ylp-hcp-patients-row" }
-);
+  { name: 'ylp-hcp-patients-row' }
+)
 
 function PatientRow(props: PatientElementProps): JSX.Element {
-  const { patient, flagged, filter, onClickPatient, onFlagPatient } = props;
-  const { t } = useTranslation("yourloops");
-  const trNA = t("N/A");
-  const authHook = useAuth();
-  const isUserHcp = authHook.user?.isUserHcp();
-  const patientIsMonitored = patient.monitoring !== null && patient.monitoring?.enabled;
-  const classes = patientListStyle();
-  const patientListCommonClasses = patientListCommonStyle();
-  const medicalData: MedicalData | null | undefined = patient.metadata.medicalData;
-  const [tooltipText, setTooltipText] = React.useState<string>("");
-  const rowRef = React.createRef<HTMLTableRowElement>();
+  const { patient, flagged, filter, onClickPatient, onFlagPatient } = props
+  const { t } = useTranslation('yourloops')
+  const trNA = t('N/A')
+  const authHook = useAuth()
+  const isUserHcp = authHook.user?.isUserHcp()
+  const patientIsMonitored = patient.monitoring?.enabled
+  const classes = patientListStyle()
+  const patientListCommonClasses = patientListCommonStyle()
+  const medicalData: MedicalData | null | undefined = patient.metadata.medicalData
+  const [tooltipText, setTooltipText] = React.useState<string>('')
+  const rowRef = React.createRef<HTMLTableRowElement>()
 
-  const userId = patient.userid;
-  const email = patient.profile.email;
-  const isFlagged = flagged.includes(userId);
-  const patientFullName = patient.profile.fullName;
+  const userId = patient.userid
+  const email = patient.profile.email
+  const isFlagged = flagged.includes(userId)
+  const patientFullName = patient.profile.fullName
 
-  const computeRowInformation = () => {
-    const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`;
-    const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`;
-    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false;
-    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ? patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive : false;
-    const nonDataTransmissionActive = patientIsMonitored && patient.metadata.alarm?.nonDataTransmissionActive ? patient.metadata.alarm?.nonDataTransmissionActive : false;
-    let patientRemoteMonitoring;
+  const computeRowInformation = (): ComputedRow => {
+    const mediumCellWithAlertClasses = `${classes.typography} ${patientListCommonClasses.mediumCell} ${classes.alert}`
+    const mediumCellWithClasses = `${classes.typography} ${patientListCommonClasses.mediumCell}`
+    const timeSpentAwayFromTargetActive = patientIsMonitored && patient.metadata.alarm?.timeSpentAwayFromTargetActive ? patient.metadata.alarm?.timeSpentAwayFromTargetActive : false
+    const frequencyOfSevereHypoglycemiaActive = patientIsMonitored && patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive ? patient.metadata.alarm?.frequencyOfSevereHypoglycemiaActive : false
+    const nonDataTransmissionActive = patientIsMonitored && patient.metadata.alarm?.nonDataTransmissionActive ? patient.metadata.alarm?.nonDataTransmissionActive : false
+    let patientRemoteMonitoring
     if (patient.monitoring?.enabled) {
       if (patient.monitoring.monitoringEnd) {
-        const enDate = moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat("ll")).toString();
-        patientRemoteMonitoring = `${t("yes")}\n(${t("until")} ${enDate})`;
+        const enDate = moment.utc(patient.monitoring.monitoringEnd).format(moment.localeData().longDateFormat('ll')).toString()
+        patientRemoteMonitoring = `${t('yes')}\n(${t('until')} ${enDate})`
       } else {
-        patientRemoteMonitoring = t("yes");
+        patientRemoteMonitoring = t('yes')
       }
     } else {
-      patientRemoteMonitoring = t("no");
+      patientRemoteMonitoring = t('no')
     }
 
-    let patientFullNameClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`;
-    let timeSpentAwayFromTargetRateClasses = mediumCellWithClasses;
-    let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses;
-    let dataNotTransferredRateClasses = mediumCellWithClasses;
+    let patientFullNameClasses = `${classes.typography} ${patientListCommonClasses.largeCell}`
+    let timeSpentAwayFromTargetRateClasses = mediumCellWithClasses
+    let frequencyOfSevereHypoglycemiaRateClasses = mediumCellWithClasses
+    let dataNotTransferredRateClasses = mediumCellWithClasses
     if (isUserHcp) {
-      const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive;
-      patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`;
-      timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
-      frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
-      dataNotTransferredRateClasses = nonDataTransmissionActive ? mediumCellWithAlertClasses : mediumCellWithClasses;
+      const hasAlert = timeSpentAwayFromTargetActive || frequencyOfSevereHypoglycemiaActive || nonDataTransmissionActive
+      patientFullNameClasses = hasAlert ? `${classes.typography} ${classes.alert} ${patientListCommonClasses.largeCell}` : `${classes.typography} ${patientListCommonClasses.largeCell}`
+      timeSpentAwayFromTargetRateClasses = timeSpentAwayFromTargetActive ? mediumCellWithAlertClasses : mediumCellWithClasses
+      frequencyOfSevereHypoglycemiaRateClasses = frequencyOfSevereHypoglycemiaActive ? mediumCellWithAlertClasses : mediumCellWithClasses
+      dataNotTransferredRateClasses = nonDataTransmissionActive ? mediumCellWithAlertClasses : mediumCellWithClasses
     }
     return {
       patientSystem: patient.settings.system ?? trNA,
@@ -143,9 +155,9 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       patientFullNameClasses,
       timeSpentAwayFromTargetRateClasses,
       frequencyOfSevereHypoglycemiaRateClasses,
-      dataNotTransferredRateClasses,
-    };
-  };
+      dataNotTransferredRateClasses
+    }
+  }
 
   const {
     patientSystem,
@@ -156,36 +168,36 @@ function PatientRow(props: PatientElementProps): JSX.Element {
     patientFullNameClasses,
     timeSpentAwayFromTargetRateClasses,
     frequencyOfSevereHypoglycemiaRateClasses,
-    dataNotTransferredRateClasses,
-  } = computeRowInformation();
+    dataNotTransferredRateClasses
+  } = computeRowInformation()
 
   const onClickFlag = (e: React.MouseEvent): void => {
-    e.stopPropagation();
-    onFlagPatient(userId);
-    metrics.send("patient_selection", "flag_patient", isFlagged ? "un-flagged" : "flagged");
-  };
+    e.stopPropagation()
+    onFlagPatient(userId)
+    metrics.send('patient_selection', 'flag_patient', isFlagged ? 'un-flagged' : 'flagged')
+  }
 
   const onRowClick = (): void => {
-    onClickPatient(patient);
-    metrics.send("patient_selection", "select_patient", isFlagged ? "flagged" : "un-flagged");
-  };
+    onClickPatient(patient)
+    metrics.send('patient_selection', 'select_patient', isFlagged ? 'flagged' : 'un-flagged')
+  }
 
-  const { lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA]);
+  const { lastUpload } = React.useMemo(() => getMedicalValues(medicalData, trNA), [medicalData, trNA])
   // Replace the "@" if the userid is the email (status pending)
   // wdio used in the system tests do not accept "@"" in selectors
   // Theses ids should be the same as in pages/caregiver/patients/table.tsx to ease the tests
-  const rowId = `patients-list-row-${userId.replace(/@/g, "_")}`;
-  const hasPendingInvitation = TeamUtils.isInvitationPending(patient);
-  const isAlreadyInATeam = TeamUtils.isInAtLeastATeam(patient);
+  const rowId = `patients-list-row-${userId.replace(/@/g, '_')}`
+  const hasPendingInvitation = TeamUtils.isInvitationPending(patient)
+  const isAlreadyInATeam = TeamUtils.isInAtLeastATeam(patient)
 
   const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
-    return element ? element.offsetWidth < element.scrollWidth : undefined;
-  };
+    return element ? element.offsetWidth < element.scrollWidth : undefined
+  }
 
   React.useEffect(() => {
-    const userFullNameHtmlElement = document.getElementById(`${rowId}-patient-full-name-value`);
-    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? patientFullName : "");
-  }, [patientFullName, rowId]);
+    const userFullNameHtmlElement = document.getElementById(`${rowId}-patient-full-name-value`)
+    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? patientFullName : '')
+  }, [patientFullName, rowId])
 
   return (
     <StyledTableRow
@@ -201,18 +213,18 @@ function PatientRow(props: PatientElementProps): JSX.Element {
       <StyledTableCell
         id={`${rowId}-icon`} className={classes.iconCell}
       >
-        {filter === FilterType.pending && hasPendingInvitation ?
-          (<Tooltip
+        {filter === FilterType.pending && hasPendingInvitation
+          ? (<Tooltip
             id={`${rowId}-tooltip-pending`}
-            title={t("pending-invitation") as string}
-            aria-label={t("pending-invitation")}
+            title={t('pending-invitation') }
+            aria-label={t('pending-invitation')}
             placement="bottom"
           >
             <Box display="flex">
               <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-icon" className={classes.icon} />
             </Box>
-          </Tooltip>) :
-          (<IconActionButton
+          </Tooltip>)
+          : (<IconActionButton
             icon={isFlagged ? <FlagIcon
               titleAccess="flag-icon-active"
               id={`${rowId}-flagged`}
@@ -223,7 +235,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
               />}
             id={`${rowId}-icon-button-flag`}
             onClick={onClickFlag}
-            className={`${!isFlagged ? classes.coloredIcon : ""} ${classes.icon} patient-flag-button`}
+            className={`${!isFlagged ? classes.coloredIcon : ''} ${classes.icon} patient-flag-button`}
           />)}
       </StyledTableCell>
       <StyledTableCell
@@ -277,7 +289,7 @@ function PatientRow(props: PatientElementProps): JSX.Element {
         }
       </StyledTableCell>
     </StyledTableRow>
-  );
+  )
 }
 
-export default PatientRow;
+export default PatientRow

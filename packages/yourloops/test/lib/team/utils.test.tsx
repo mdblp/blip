@@ -25,45 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from "../../../models/generic";
-import { createPatient, createPatientTeam } from "../../common/utils";
-import { Patient } from "../../../lib/data/patient";
-import TeamUtils from "../../../lib/team/utils";
+import { UserInvitationStatus } from '../../../models/generic'
+import { createPatient, createPatientTeam } from '../../common/utils'
+import { Patient } from '../../../lib/data/patient'
+import TeamUtils from '../../../lib/team/utils'
 
-describe("Team utils", () => {
-
-  describe("computeFlaggedPatients", () => {
-    it("should return patients with the correct flagged attribute", () => {
-      const patientFlaggedId = "flaggedPatient";
-      const patients : Patient[] = [createPatient(patientFlaggedId, []),createPatient("fakePatient1", []),createPatient("fakePatient2", [])];
-      const flaggedPatientIds = [patientFlaggedId];
-      const patientsUpdated = TeamUtils.computeFlaggedPatients(patients, flaggedPatientIds);
+describe('Team utils', () => {
+  describe('computeFlaggedPatients', () => {
+    it('should return patients with the correct flagged attribute', () => {
+      const patientFlaggedId = 'flaggedPatient'
+      const patients: Patient[] = [createPatient(patientFlaggedId, []), createPatient('fakePatient1', []), createPatient('fakePatient2', [])]
+      const flaggedPatientIds = [patientFlaggedId]
+      const patientsUpdated = TeamUtils.computeFlaggedPatients(patients, flaggedPatientIds)
       patientsUpdated.forEach(patient => {
-        expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid));
-      });
-    });
-  });
+        expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
+      })
+    })
+  })
 
-  describe("isInAtLeastATeam", () => {
-    it("should return false when team user does not have an accepted status in any team", () => {
+  describe('isInAtLeastATeam', () => {
+    it('should return false when team user does not have an accepted status in any team', () => {
       const members = [
-        createPatientTeam("team1Id", UserInvitationStatus.pending),
-        createPatientTeam("team2Id", UserInvitationStatus.pending),
-      ];
-      const teamUser = createPatient("id1", members);
-      const res = TeamUtils.isInAtLeastATeam(teamUser);
-      expect(res).toBe(false);
-    });
+        createPatientTeam('team1Id', UserInvitationStatus.pending),
+        createPatientTeam('team2Id', UserInvitationStatus.pending)
+      ]
+      const teamUser = createPatient('id1', members)
+      const res = TeamUtils.isInAtLeastATeam(teamUser)
+      expect(res).toBe(false)
+    })
 
-    it("should return true when team user does has an accepted status in a team", () => {
+    it('should return true when team user does has an accepted status in a team', () => {
       const members = [
-        createPatientTeam("team1Id", UserInvitationStatus.pending),
-        createPatientTeam("team2Id", UserInvitationStatus.accepted),
-      ];
-      const teamUser = createPatient("id1", members);
+        createPatientTeam('team1Id', UserInvitationStatus.pending),
+        createPatientTeam('team2Id', UserInvitationStatus.accepted)
+      ]
+      const teamUser = createPatient('id1', members)
 
-      const res = TeamUtils.isInAtLeastATeam(teamUser);
-      expect(res).toBe(true);
-    });
-  });
-});
+      const res = TeamUtils.isInAtLeastATeam(teamUser)
+      expect(res).toBe(true)
+    })
+  })
+})

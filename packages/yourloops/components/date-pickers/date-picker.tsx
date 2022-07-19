@@ -26,69 +26,69 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Dayjs } from "dayjs";
+import React from 'react'
+import { Dayjs } from 'dayjs'
 
 import {
   CalendarOrientation,
-  CalendarSelectionSingle,
-} from "./models";
-import { useChangeMonthState, toYearMonth } from "./change-month";
-import PickerToolbar from "./picker-toolbar";
-import CalendarBox from "./calendar-box";
+  CalendarSelectionSingle
+} from './models'
+import { useChangeMonthState, toYearMonth } from './change-month'
+import PickerToolbar from './picker-toolbar'
+import CalendarBox from './calendar-box'
 
 interface DatePickerProps {
-  showToolbar?: boolean;
-  selection: CalendarSelectionSingle;
-  minDate: Dayjs;
-  maxDate: Dayjs;
-  orientation: CalendarOrientation;
-  onChange: (d: Dayjs) => void;
+  showToolbar?: boolean
+  selection: CalendarSelectionSingle
+  minDate: Dayjs
+  maxDate: Dayjs
+  orientation: CalendarOrientation
+  onChange: (d: Dayjs) => void
 }
 
 /**
  * A single month calendar
  */
 function DatePicker(props: DatePickerProps): JSX.Element {
-  const { selection, minDate, maxDate, orientation, onChange } = props;
+  const { selection, minDate, maxDate, orientation, onChange } = props
 
-  const [selectingYear, setSelectingYear] = React.useState<boolean>(false);
+  const [selectingYear, setSelectingYear] = React.useState<boolean>(false)
 
-  const [currentMonth, setCurrentMonth] = React.useState<Dayjs>(selection.selected.startOf("month"));
+  const [currentMonth, setCurrentMonth] = React.useState<Dayjs>(selection.selected.startOf('month'))
   const [changingMonth, handlePrevMonth, handleNextMonth] = useChangeMonthState({
     currentMonth,
     setCurrentMonth,
     minDate,
     maxDate,
-    mode: selection.mode,
-  });
+    mode: selection.mode
+  })
 
   const handleSelectedYear = selectingYear ? (year: number) => {
-    setSelectingYear(false);
-    let date = selection.selected.set("year", year);
+    setSelectingYear(false)
+    let date = selection.selected.set('year', year)
     if (date.isBefore(minDate)) {
-      date = minDate;
+      date = minDate
     } else if (date.isAfter(maxDate)) {
-      date = maxDate;
+      date = maxDate
     }
-    props.onChange(date);
-    setCurrentMonth(date.startOf("month"));
-  } : undefined;
+    props.onChange(date)
+    setCurrentMonth(date.startOf('month'))
+  } : undefined
 
   const onChangeSelectedDate = (date: Dayjs, updateCurrentMonth?: boolean): void => {
     if (date.isBefore(minDate) || date.isAfter(maxDate)) {
-      return;
+      return
     }
     if (updateCurrentMonth) {
-      const dMonth = toYearMonth(date) - toYearMonth(currentMonth);
+      const dMonth = toYearMonth(date) - toYearMonth(currentMonth)
       if (dMonth > 0 && handleNextMonth) {
-        handleNextMonth();
+        handleNextMonth()
       } else if (dMonth < 0 && handlePrevMonth) {
-        handlePrevMonth();
+        handlePrevMonth()
       }
     }
-    onChange(date);
-  };
+    onChange(date)
+  }
 
   return (
     <React.Fragment>
@@ -110,7 +110,7 @@ function DatePicker(props: DatePickerProps): JSX.Element {
         onSelectYear={handleSelectedYear}
       />
     </React.Fragment>
-  );
+  )
 }
 
-export default DatePicker;
+export default DatePicker

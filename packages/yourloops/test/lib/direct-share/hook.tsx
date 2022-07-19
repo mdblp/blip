@@ -26,12 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DirectShareAPI } from "../../../lib/share/models";
+import { DirectShareAPI } from '../../../lib/share/models'
 
 export const directShareAPI: DirectShareAPI = {
-  removeDirectShare: jest.fn().mockReturnValue(() => Promise.resolve()),
-};
+  removeDirectShare: jest.fn().mockReturnValue(() => Promise.resolve())
+}
 
 export function resetDirectShareAPIStubs(): void {
-  (directShareAPI.removeDirectShare as jest.Mock).mockReset();
+  (directShareAPI.removeDirectShare as jest.Mock).mockReset()
 }

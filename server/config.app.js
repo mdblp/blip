@@ -12,35 +12,34 @@
  * You should have received a copy of the License along with this program; if
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
-/* eslint-disable lodash/prefer-lodash-typecheck */
 
 function booleanFromText(value, defaultValue) {
-  if (value === "true") {
-    return true;
+  if (value === 'true') {
+    return true
   }
 
-  if (value === "false") {
-    return false;
+  if (value === 'false') {
+    return false
   }
 
-  return Boolean(defaultValue);
+  return Boolean(defaultValue)
 }
 
 function integerFromText(value, defaultValue) {
-  let intValue = 0;
-  if (typeof value === "number") {
-    intValue = value;
+  let intValue = 0
+  if (typeof value === 'number') {
+    intValue = value
   } else {
-    intValue = Number.parseInt(value, 10);
+    intValue = Number.parseInt(value, 10)
   }
   if (Number.isNaN(intValue)) {
-    if (typeof(defaultValue) === "number" && !Number.isNaN(defaultValue)) {
-      intValue = defaultValue;
+    if (typeof(defaultValue) === 'number' && !Number.isNaN(defaultValue)) {
+      intValue = defaultValue
     } else {
-      intValue = 0;
+      intValue = 0
     }
   }
-  return intValue;
+  return intValue
 }
 
 /**
@@ -50,38 +49,38 @@ function integerFromText(value, defaultValue) {
  * @returns {string | null}
  */
 function stringOption(value, defaultValue) {
-  if (typeof value === "string" && value !== "disabled") {
-    return value;
+  if (typeof value === 'string' && value !== 'disabled') {
+    return value
   }
-  return defaultValue;
+  return defaultValue
 }
 
-const isDev = (process.env.NODE_ENV === "development");
-const isTest = (process.env.NODE_ENV === "test");
+const isDev = (process.env.NODE_ENV === 'development')
+const isTest = (process.env.NODE_ENV === 'test')
 const config = {
-  TARGET_ENVIRONMENT: stringOption(process.env.TARGET_ENVIRONMENT, "dev"),
-  DOMAIN_NAME: stringOption(process.env.DOMAIN_NAME, "www.preview.your-loops.dev"),
+  TARGET_ENVIRONMENT: stringOption(process.env.TARGET_ENVIRONMENT, 'dev'),
+  DOMAIN_NAME: stringOption(process.env.DOMAIN_NAME, 'www.preview.your-loops.dev'),
   ALLOW_SEARCH_ENGINE_ROBOTS: booleanFromText(process.env.ALLOW_SEARCH_ENGINE_ROBOTS, false),
-  VERSION: stringOption(process.env.APP_VERSION, "0.1.0"),
+  VERSION: stringOption(process.env.APP_VERSION, '0.1.0'),
   API_HOST: stringOption(process.env.API_HOST, null),
-  LATEST_TERMS: stringOption(process.env.LATEST_TERMS, "1970-01-01"),
-  SUPPORT_WEB_ADDRESS: stringOption(process.env.SUPPORT_WEB_ADDRESS, "https://example.com/"),
+  LATEST_TERMS: stringOption(process.env.LATEST_TERMS, '1970-01-01'),
+  SUPPORT_WEB_ADDRESS: stringOption(process.env.SUPPORT_WEB_ADDRESS, 'https://example.com/'),
   HELP_SCRIPT_URL: stringOption(process.env.HELP_SCRIPT_URL, null),
   HELP_PAGE_URL: stringOption(process.env.HELP_PAGE_URL, null),
-  ASSETS_URL: stringOption(process.env.ASSETS_URL, "https://example.com/"),
-  BRANDING: stringOption(process.env.BRANDING, "diabeloop_blue"),
-  METRICS_SERVICE: stringOption(process.env.METRICS_SERVICE, "disabled"),
-  STONLY_WID: stringOption(process.env.STONLY_WID, "disabled"),
-  COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, "disabled"),
+  ASSETS_URL: stringOption(process.env.ASSETS_URL, 'https://example.com/'),
+  BRANDING: stringOption(process.env.BRANDING, 'diabeloop_blue'),
+  METRICS_SERVICE: stringOption(process.env.METRICS_SERVICE, 'disabled'),
+  STONLY_WID: stringOption(process.env.STONLY_WID, 'disabled'),
+  COOKIE_BANNER_CLIENT_ID: stringOption(process.env.COOKIE_BANNER_CLIENT_ID, 'disabled'),
   YLP820_BASAL_TIME: integerFromText(process.env.YLP820_BASAL_TIME, 5000),
   CBG_BUCKETS_ENABLED: booleanFromText(process.env.CBG_BUCKETS_ENABLED, true),
   ECPS_ENABLED: booleanFromText(process.env.ECPS_ENABLED, true),
   SESSION_TIMEOUT: integerFromText(process.env.SESSION_TIMEOUT, 30 * 60 * 1000), // default: 30min
   DEV: isDev || isTest,
   TEST: isTest,
-  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || "yourloops-dev.eu.auth0.com",
+  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || 'yourloops-dev.eu.auth0.com',
   AUTH0_ISSUER: process.env.AUTH0_ISSUER || process.env.AUTH0_DOMAIN,
-  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || "HDp2TbUBxOeR6A9dEfII94HfzmUokQK6"
-};
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || 'HDp2TbUBxOeR6A9dEfII94HfzmUokQK6'
+}
 
-module.exports = config;
+module.exports = config

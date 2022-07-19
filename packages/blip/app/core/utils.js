@@ -17,8 +17,8 @@
 
 const utils = {
   isFirefox: () => {
-    var userAgent = navigator.userAgent.toLowerCase();
-    return userAgent.indexOf("firefox") > -1;
+    var userAgent = navigator.userAgent.toLowerCase()
+    return userAgent.indexOf('firefox') > -1
   },
 
   /**
@@ -28,9 +28,9 @@ const utils = {
    */
   waitTimeout: (timeout) => {
     return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-    });
-  },
-};
+      setTimeout(resolve, timeout)
+    })
+  }
+}
 
-export default utils;
+export default utils

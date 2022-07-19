@@ -26,131 +26,130 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { useTranslation } from "react-i18next";
-import _ from "lodash";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
+import _ from 'lodash'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
-import Divider from "@material-ui/core/Divider";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
-import SettingsDialog from "./settingsDialog";
+import { makeStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableRow from '@material-ui/core/TableRow'
+import Typography from '@material-ui/core/Typography'
+import SettingsDialog from './settingsDialog'
 
-import PhonelinkSetupOutlinedIcon from "@material-ui/icons/PhonelinkSetupOutlined";
-import MoreHorizOutlinedIcon from "@material-ui/icons/MoreHorizOutlined";
+import PhonelinkSetupOutlinedIcon from '@material-ui/icons/PhonelinkSetupOutlined'
+import MoreHorizOutlinedIcon from '@material-ui/icons/MoreHorizOutlined'
 
-import { BasicsChart } from "tideline";
-import Stats from "./stats";
-import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from "tidepool-viz";
+import { BasicsChart } from 'tideline'
+import Stats from './stats'
+import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 430,
+    width: 430
   },
   cardHeader: {
-    textTransform: "uppercase",
-    backgroundColor: "var(--card-header-background-color)",
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
   },
   cardContent: {
-    overflowY: "auto",
-    maxHeight: 800,
+    overflowY: 'auto',
+    maxHeight: 800
   },
   sectionTitles: {
-    fontSize: "var(--section-title-font-size)",
-    fontWeight: "var(--section-title-font-weight)",
-    lineHeight: "var(--section-title-line-height)",
-    margin: "var(--section-title-margin)",
-    color: "var(--section-title-color)"
+    fontSize: 'var(--section-title-font-size)',
+    fontWeight: 'var(--section-title-font-weight)',
+    lineHeight: 'var(--section-title-line-height)',
+    margin: 'var(--section-title-margin)',
+    color: 'var(--section-title-color)'
   },
   sectionContent: {
-    fontSize: "13px",
+    fontSize: '13px',
     fontWeight: 300,
-    lineHeight: "15px",
-    color: "#444444"
+    lineHeight: '15px',
+    color: '#444444'
   },
   deviceLabels: {
-    paddingLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(2)
   },
   tableRows: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.grey[100],
-    },
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.grey[100]
+    }
   },
   tableCell: {
-    padding: theme.spacing(0.2, 0.5),
+    padding: theme.spacing(0.2, 0.5)
   },
   divider: {
     margin: theme.spacing(1, 0),
-    width: "99%",
+    width: '99%'
   },
   parameterChanges: {
-    width: "100%",
+    width: '100%'
   },
   parameterChangesTable: {
-    maxHeight: 200,
-  },
-}));
+    maxHeight: 200
+  }
+}))
 
 const getLabel = (row, t) => {
-  const fCurrentValue = `${formatParameterValue(row.value, row.unit)} ${row.unit}`;
-  const currentLabel = t(`params|${row.name}`);
+  const fCurrentValue = `${formatParameterValue(row.value, row.unit)} ${row.unit}`
+  const currentLabel = t(`params|${row.name}`)
   switch (row.changeType) {
-  case "added":
-    return `${currentLabel} (${fCurrentValue})`;
-  case "deleted":
-    return `${currentLabel} (${fCurrentValue} -> ${t("deleted")})`;
-  case "updated":
-    const fPreviousValue = `${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit}`;
-    return `${currentLabel} (${fPreviousValue} -> ${fCurrentValue})`;
-  default:
-    return `${currentLabel} X (${fCurrentValue})`;
+    case 'added':
+      return `${currentLabel} (${fCurrentValue})`
+    case 'deleted':
+      return `${currentLabel} (${fCurrentValue} -> ${t('deleted')})`
+    case 'updated':
+      return `${currentLabel} (${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit} -> ${fCurrentValue})`
+    default:
+      return `${currentLabel} X (${fCurrentValue})`
   }
-};
+}
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, timePrefs, patient, tidelineData, permsOfLoggedInUser, trackMetric,
     //eslint-disable-next-line
     dataUtil, chartPrefs, endpoints, loading, onSwitchToDaily
-  } = props;
-  const [dialogOpened, setDialogOpened] = React.useState(false);
-  const { t } = useTranslation();
-  const classes = useStyles();
+  } = props
+  const [dialogOpened, setDialogOpened] = React.useState(false)
+  const { t } = useTranslation()
+  const classes = useStyles()
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0];
 
-  const device = mostRecentSettings?.payload?.device ?? {};
-  const pump = mostRecentSettings?.payload?.pump ?? {};
-  const cgm = mostRecentSettings?.payload?.cgm ?? {};
-  const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ["changeDate"]);
+  const device = mostRecentSettings?.payload?.device ?? {}
+  const pump = mostRecentSettings?.payload?.pump ?? {}
+  const cgm = mostRecentSettings?.payload?.cgm ?? {}
+  const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
 
-  const dateFormat = getLongDayHourFormat();
-  const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false);
+  const dateFormat = getLongDayHourFormat()
+  const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
   const deviceData = {
     device: {
-      label: `${t("dbl")}:`,
-      value: device.manufacturer ?? "",
+      label: `${t('dbl')}:`,
+      value: device.manufacturer ?? ''
     },
     pump: {
-      label: `${t("Pump")}:`,
-      value: pump.manufacturer ?? "",
+      label: `${t('Pump')}:`,
+      value: pump.manufacturer ?? ''
     },
     cgm: {
-      label: `${t("CGM")}:`,
-      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : "",
+      label: `${t('CGM')}:`,
+      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
     }
-  };
+  }
 
   return (
     <>
@@ -159,7 +158,7 @@ const DeviceUsage = (props) => {
           id="device-usage-header"
           avatar={<PhonelinkSetupOutlinedIcon/>}
           className={classes.cardHeader}
-          title={t("device-usage")}
+          title={t('device-usage')}
           action={
             <IconButton aria-label="settings" onClick={()=>setDialogOpened(true)}>
               <MoreHorizOutlinedIcon />
@@ -168,7 +167,7 @@ const DeviceUsage = (props) => {
         />
         <CardContent id="device-usage-content" className={classes.cardContent}>
           <Box id="device-usage-device">
-            <Typography className={classes.sectionTitles}>{t("devices")}</Typography>
+            <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
             <Grid className={classes.sectionContent} container spacing={1}>
               {Object.keys(deviceData).map(
                 (key) =>
@@ -187,7 +186,7 @@ const DeviceUsage = (props) => {
           </Box>
           <Divider variant="fullWidth" className={classes.divider}/>
           <Box id="device-usage-updates" className={classes.parameterChanges}>
-            <Typography className={classes.sectionTitles}>{t("last-updates")}</Typography>
+            <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
             <TableContainer className={classes.parameterChangesTable}>
               <Table>
                 <TableBody className={classes.sectionContent}>
@@ -200,12 +199,12 @@ const DeviceUsage = (props) => {
                         data-isodate={row.effectiveDate}
                         className={`${classes.tableRows} parameter-update`}
                       >
-                        {["date", "value"].map((column) => {
+                        {['date', 'value'].map((column) => {
                           return (
                             <TableCell className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`} key={`${column}-${row.key}`}>
-                              {column === "date" ? row.parameterDate : getLabel(row, t)}
+                              {column === 'date' ? row.parameterDate : getLabel(row, t)}
                             </TableCell>
-                          );
+                          )
                         })}
                       </TableRow>
                     )
@@ -248,8 +247,8 @@ const DeviceUsage = (props) => {
         setOpen={setDialogOpened}
       />
     </>
-  );
-};
+  )
+}
 
 DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
@@ -258,7 +257,7 @@ DeviceUsage.propType = {
   tidelineData: PropTypes.object.isRequired,
   permsOfLoggedInUser: PropTypes.object.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  onSwitchToDaily:  PropTypes.func.isRequired,
-};
+  onSwitchToDaily:  PropTypes.func.isRequired
+}
 
-export default DeviceUsage;
+export default DeviceUsage

@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import React from "react";
-import _ from "lodash";
-import { VictoryLabel } from "victory";
+import PropTypes from 'prop-types'
+import React from 'react'
+import _ from 'lodash'
+import { VictoryLabel } from 'victory'
 
 const BgBarLabel = props => {
   const {
@@ -9,14 +9,14 @@ const BgBarLabel = props => {
     domain,
     scale = {
       x: _.noop,
-      y: _.noop,
+      y: _.noop
     },
-    style,
-  } = props;
+    style
+  } = props
 
   const labelStyle = _.assign({}, style, {
-    pointerEvents: "none",
-  });
+    pointerEvents: 'none'
+  })
 
   return (
     <g className="bgBarLabel">
@@ -30,8 +30,8 @@ const BgBarLabel = props => {
         x={scale.y(domain.x[1])}
       />
     </g>
-  );
-};
+  )
+}
 
 BgBarLabel.propTypes = {
   barWidth: PropTypes.number.isRequired,
@@ -41,9 +41,9 @@ BgBarLabel.propTypes = {
   text: PropTypes.func,
   y: PropTypes.number,
   style: PropTypes.object,
-  tooltipText: PropTypes.func,
-};
+  tooltipText: PropTypes.func
+}
 
-BgBarLabel.displayName = "BgBarLabel";
+BgBarLabel.displayName = 'BgBarLabel'
 
-export default BgBarLabel;
+export default BgBarLabel

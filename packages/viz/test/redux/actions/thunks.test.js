@@ -15,78 +15,78 @@
  * == BSD2 LICENSE ==
  */
 
-import configureStore from "redux-mock-store";
-import thunk from "redux-thunk";
-import { expect } from "chai";
-import * as sinon from "sinon";
+import configureStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+import { expect } from 'chai'
+import * as sinon from 'sinon'
 
-const mockStore = configureStore([thunk]);
+const mockStore = configureStore([thunk])
 
-import * as actionTypes from "../../../src/redux/constants/actionTypes";
-import { delayShowCbgTracesOnFocus } from "../../../src/redux/actions/thunks";
+import * as actionTypes from '../../../src/redux/constants/actionTypes'
+import { delayShowCbgTracesOnFocus } from '../../../src/redux/actions/thunks'
 
-describe("thunk action creators", () => {
-  const userId = "a1b2c3";
+describe('thunk action creators', () => {
+  const userId = 'a1b2c3'
 
-  describe("delayShowCbgTracesOnFocus", () => {
-    let clock;
+  describe('delayShowCbgTracesOnFocus', () => {
+    let clock
     beforeEach(() => {
-      clock = sinon.useFakeTimers();
-    });
+      clock = sinon.useFakeTimers()
+    })
 
     afterEach(() => {
-      clock.restore();
-    });
+      clock.restore()
+    })
 
-    describe("when same cbg slice segment is focused after delay", () => {
-      it("should fire FOCUS_TRENDS_CBG_SLICE then SHOW_CBG_DATE_TRACES after a delay", () => {
-        const sliceData = { id: "foo" };
-        const slicePosition = {};
-        const focusedKeys = ["bar", "baz"];
+    describe('when same cbg slice segment is focused after delay', () => {
+      it('should fire FOCUS_TRENDS_CBG_SLICE then SHOW_CBG_DATE_TRACES after a delay', () => {
+        const sliceData = { id: 'foo' }
+        const slicePosition = {}
+        const focusedKeys = ['bar', 'baz']
         const store = mockStore({
           viz: {
             trends: {
-              [userId]: { focusedCbgSlice: { data: sliceData }, focusedCbgSliceKeys: focusedKeys },
-            },
-          },
-        });
-        store.dispatch(delayShowCbgTracesOnFocus(userId, sliceData, slicePosition, focusedKeys));
-        clock.tick(500);
-        const actions = store.getActions();
+              [userId]: { focusedCbgSlice: { data: sliceData }, focusedCbgSliceKeys: focusedKeys }
+            }
+          }
+        })
+        store.dispatch(delayShowCbgTracesOnFocus(userId, sliceData, slicePosition, focusedKeys))
+        clock.tick(500)
+        const actions = store.getActions()
         expect(actions).to.deep.equal([{
           type: actionTypes.FOCUS_TRENDS_CBG_SLICE,
           payload: {
-            userId, sliceData, slicePosition, focusedKeys,
-          },
+            userId, sliceData, slicePosition, focusedKeys
+          }
         }, {
           type: actionTypes.SHOW_CBG_DATE_TRACES,
-          payload: { userId },
-        }]);
-      });
-    });
+          payload: { userId }
+        }])
+      })
+    })
 
-    describe("when original focused cbg slice segment no longer focused after delay", () => {
-      it("should fire FOCUS_TRENDS_CBG_SLICE then SHOW_CBG_DATE_TRACES after a delay", () => {
-        const sliceData = { data: { id: "foo" } };
-        const slicePosition = {};
-        const focusedKeys = ["bar", "baz"];
+    describe('when original focused cbg slice segment no longer focused after delay', () => {
+      it('should fire FOCUS_TRENDS_CBG_SLICE then SHOW_CBG_DATE_TRACES after a delay', () => {
+        const sliceData = { data: { id: 'foo' } }
+        const slicePosition = {}
+        const focusedKeys = ['bar', 'baz']
         const store = mockStore({
           viz: {
             trends: {
-              [userId]: { focusedCbgSlice: sliceData, focusedCbgSliceKeys: ["one", "two"] },
-            },
-          },
-        });
-        store.dispatch(delayShowCbgTracesOnFocus(userId, sliceData, slicePosition, focusedKeys));
-        clock.tick(500);
-        const actions = store.getActions();
+              [userId]: { focusedCbgSlice: sliceData, focusedCbgSliceKeys: ['one', 'two'] }
+            }
+          }
+        })
+        store.dispatch(delayShowCbgTracesOnFocus(userId, sliceData, slicePosition, focusedKeys))
+        clock.tick(500)
+        const actions = store.getActions()
         expect(actions).to.deep.equal([{
           type: actionTypes.FOCUS_TRENDS_CBG_SLICE,
           payload: {
-            userId, sliceData, slicePosition, focusedKeys,
-          },
-        }]);
-      });
-    });
-  });
-});
+            userId, sliceData, slicePosition, focusedKeys
+          }
+        }])
+      })
+    })
+  })
+})

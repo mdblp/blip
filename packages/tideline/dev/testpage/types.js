@@ -15,164 +15,164 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import guid from "./guid";
-import dt from "../../js/data/util/datetime";
+import guid from './guid'
+import dt from '../../js/data/util/datetime'
 
 // constants
-import { MGDL_UNITS, MS_IN_DAY } from "../../js/data/util/constants";
-const APPEND = ".000Z";
-const timezone = "Europe/Paris";
+import { MGDL_UNITS, MS_IN_DAY } from '../../js/data/util/constants'
+const APPEND = '.000Z'
+const timezone = 'Europe/Paris'
 
 const common = {
-  deviceId: "Test Page Data - 123",
-  source: "testpage",
+  deviceId: 'Test Page Data - 123',
+  source: 'testpage',
   conversionOffset: 0,
   asObject: function() {
-    var clone = {}, key;
+    var clone = {}, key
     for (key in this) {
-      if (typeof this[key] !== "function") {
-        clone[key] = this[key];
+      if (typeof this[key] !== 'function') {
+        clone[key] = this[key]
       }
     }
-    return clone;
+    return clone
   },
   makeDeviceTime: function() {
-    return new Date().toISOString().slice(0, -5);
+    return new Date().toISOString().slice(0, -5)
   },
   makeNormalTime: function() {
-    return this.deviceTime + APPEND;
+    return this.deviceTime + APPEND
   },
   makeTime: function() {
-    var d = new Date(this.deviceTime + APPEND);
-    var offsetMinutes = d.getTimezoneOffset();
-    d.setUTCMinutes(d.getUTCMinutes() + offsetMinutes);
-    return d.toISOString();
+    var d = new Date(this.deviceTime + APPEND)
+    var offsetMinutes = d.getTimezoneOffset()
+    d.setUTCMinutes(d.getUTCMinutes() + offsetMinutes)
+    return d.toISOString()
   },
   makeTimezoneOffset: function() {
-    var d = new Date(this.deviceTime + APPEND);
-    var offsetMinutes = d.getTimezoneOffset();
-    return -offsetMinutes;
+    var d = new Date(this.deviceTime + APPEND)
+    var offsetMinutes = d.getTimezoneOffset()
+    return -offsetMinutes
   },
-  makeId: function() { return guid(); }
-};
+  makeId: function() { return guid() }
+}
 
 var Basal = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
-    deliveryType: "scheduled",
+    deliveryType: 'scheduled',
     deviceTime: this.makeDeviceTime(),
     duration: MS_IN_DAY/12,
     rate: 0.5,
-    scheduleName: "standard",
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    scheduleName: 'standard',
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "basal";
+  this.type = 'basal'
 
-  this.deliveryType = opts.deliveryType;
-  this.deviceTime = opts.deviceTime;
-  this.duration = opts.duration;
-  this.rate = opts.rate;
-  this.scheduleName = opts.scheduleName;
+  this.deliveryType = opts.deliveryType
+  this.deviceTime = opts.deviceTime
+  this.duration = opts.duration
+  this.rate = opts.rate
+  this.scheduleName = opts.scheduleName
 
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
-  this.normalEnd = dt.addDuration(this.normalTime, this.duration);
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
+  this.normalEnd = dt.addDuration(this.normalTime, this.duration)
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-Basal.prototype = common;
+Basal.prototype = common
 
 var Bolus = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
     deviceTime: this.makeDeviceTime(),
-    subType: "normal",
+    subType: 'normal',
     value: 5.0,
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "bolus";
-  this.deviceTime = opts.deviceTime;
-  this.subType = opts.subType;
+  this.type = 'bolus'
+  this.deviceTime = opts.deviceTime
+  this.subType = opts.subType
 
-  if (this.subType === "normal") {
-    this.normal = opts.value;
+  if (this.subType === 'normal') {
+    this.normal = opts.value
   }
 
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-Bolus.prototype = common;
+Bolus.prototype = common
 
 var CBG = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
-    deviceId: "DexG4Rec_XXXXXXXXX",
+    deviceId: 'DexG4Rec_XXXXXXXXX',
     deviceTime: this.makeDeviceTime(),
     units: MGDL_UNITS,
     value: 100,
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "cbg";
+  this.type = 'cbg'
 
-  this.deviceId = opts.deviceId;
-  this.deviceTime = opts.deviceTime;
-  this.units = opts.units;
-  this.value = opts.value;
+  this.deviceId = opts.deviceId
+  this.deviceTime = opts.deviceTime
+  this.units = opts.units
+  this.value = opts.value
 
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-CBG.prototype = common;
+CBG.prototype = common
 
 var Message = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
-    messageText: "This is a note.",
+    messageText: 'This is a note.',
     parentMessage: null,
     time: new Date().toISOString(),
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "message";
+  this.type = 'message'
 
-  this.time = opts.time;
-  var dt = new Date(this.time);
-  var offsetMinutes = dt.getTimezoneOffset();
-  dt.setUTCMinutes(dt.getUTCMinutes() - offsetMinutes);
-  this.normalTime = dt.toISOString();
+  this.time = opts.time
+  var dt = new Date(this.time)
+  var offsetMinutes = dt.getTimezoneOffset()
+  dt.setUTCMinutes(dt.getUTCMinutes() - offsetMinutes)
+  this.normalTime = dt.toISOString()
 
-  this.messageText = opts.messageText;
-  this.parentMessage = opts.parentMessage;
-  this.timezone = "UTC";
+  this.messageText = opts.messageText
+  this.parentMessage = opts.parentMessage
+  this.timezone = 'UTC'
 
-  this.id = guid();
-};
+  this.id = guid()
+}
 
 var Settings = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
-    activeSchedule: "standard",
+    activeSchedule: 'standard',
     basalSchedules: [{
-      name: "standard",
+      name: 'standard',
       value: [{
         start: 0,
         rate: 1.0
@@ -193,121 +193,121 @@ var Settings = function(opts) {
       start: 0
     }],
     units: {
-      carb: "grams",
+      carb: 'grams',
       bg: MGDL_UNITS
     },
-    source: "Medtronic",
-    timezone,
-  };
-  _.defaults(opts, defaults);
-
-  this.type = "pumpSettings";
-
-  this.activeSchedule = opts.activeSchedule;
-  this.basalSchedules = opts.basalSchedules;
-  this.bgTarget = opts.bgTarget;
-  this.carbRatio = opts.carbRatio;
-  this.deviceTime = opts.deviceTime;
-  this.insulinSensitivity = opts.insulinSensitivity;
-  this.units = opts.units;
-  this.source = opts.source;
-
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
-
-  this.id = this.makeId();
-  if (opts.payload) {
-    this.payload = opts.payload;
+    source: 'Medtronic',
+    timezone
   }
-};
+  _.defaults(opts, defaults)
 
-Settings.prototype = common;
+  this.type = 'pumpSettings'
+
+  this.activeSchedule = opts.activeSchedule
+  this.basalSchedules = opts.basalSchedules
+  this.bgTarget = opts.bgTarget
+  this.carbRatio = opts.carbRatio
+  this.deviceTime = opts.deviceTime
+  this.insulinSensitivity = opts.insulinSensitivity
+  this.units = opts.units
+  this.source = opts.source
+
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
+
+  this.id = this.makeId()
+  if (opts.payload) {
+    this.payload = opts.payload
+  }
+}
+
+Settings.prototype = common
 
 var SMBG = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
     deviceTime: this.makeDeviceTime(),
     units: MGDL_UNITS,
     value: 100,
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "smbg";
+  this.type = 'smbg'
 
-  this.deviceTime = opts.deviceTime;
-  this.units = opts.units;
-  this.value = opts.value;
+  this.deviceTime = opts.deviceTime
+  this.units = opts.units
+  this.value = opts.value
 
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-SMBG.prototype = common;
+SMBG.prototype = common
 
 var DeviceEvent = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
     deviceTime: this.makeDeviceTime(),
-    units: "mg/dL",
+    units: 'mg/dL',
     value: 100,
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "deviceEvent";
-  this.subType = opts.subType;
+  this.type = 'deviceEvent'
+  this.subType = opts.subType
 
-  this.deviceTime = opts.deviceTime;
+  this.deviceTime = opts.deviceTime
 
-  this.time = this.makeTime();
-  this.createdTime = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
+  this.time = this.makeTime()
+  this.createdTime = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
 
-  this.id = this.makeId();
+  this.id = this.makeId()
   if (opts.inputTime) {
-    this.inputTime = opts.inputTime;
+    this.inputTime = opts.inputTime
   }
   if (opts.eventId) {
-    this.eventId = opts.eventId;
+    this.eventId = opts.eventId
   }
-};
+}
 
-DeviceEvent.prototype = common;
+DeviceEvent.prototype = common
 
 var Upload = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
     deviceTime: this.makeDeviceTime(),
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "upload";
-  this.deviceTags = opts.deviceTags;
-  this.deviceTime = opts.deviceTime;
-  this.deviceModel = opts.deviceModel;
-  this.source = opts.source;
+  this.type = 'upload'
+  this.deviceTags = opts.deviceTags
+  this.deviceTime = opts.deviceTime
+  this.deviceModel = opts.deviceModel
+  this.source = opts.source
 
-  this.time = this.makeTime();
-  this.timezone = opts.timezone;
-  this.normalTime = this.makeNormalTime();
-  this.createdTime = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
+  this.time = this.makeTime()
+  this.timezone = opts.timezone
+  this.normalTime = this.makeNormalTime()
+  this.createdTime = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-Upload.prototype = common;
+Upload.prototype = common
 
 var Wizard = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   if (opts.bolus) {
-    opts.deviceTime = opts.bolus.deviceTime;
+    opts.deviceTime = opts.bolus.deviceTime
   }
   var defaults= {
     bgTarget: {
@@ -319,60 +319,60 @@ var Wizard = function(opts) {
     insulinSensitivity: 50,
     recommended: {},
     value: 5.0,
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "wizard";
+  this.type = 'wizard'
 
-  this.bgTarget = opts.bgTarget;
-  this.bolus = opts.bolus ? opts.bolus : new Bolus({value: opts.value, deviceTime: this.deviceTime});
-  this.deviceTime = opts.deviceTime;
-  this.insulinCarbRatio = opts.insulinCarbRatio;
-  this.insulinSensitivity = opts.insulinSensitivity;
-  this.recommended = opts.recommended;
+  this.bgTarget = opts.bgTarget
+  this.bolus = opts.bolus ? opts.bolus : new Bolus({value: opts.value, deviceTime: this.deviceTime})
+  this.deviceTime = opts.deviceTime
+  this.insulinCarbRatio = opts.insulinCarbRatio
+  this.insulinSensitivity = opts.insulinSensitivity
+  this.recommended = opts.recommended
 
-  this.time = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.normalTime = this.makeNormalTime();
+  this.time = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.normalTime = this.makeNormalTime()
 
-  this.id = this.makeId();
-};
+  this.id = this.makeId()
+}
 
-Wizard.prototype = common;
+Wizard.prototype = common
 
 var PhysicalActivity = function(opts) {
-  opts = opts || {};
+  opts = opts || {}
   var defaults = {
     deviceTime: this.makeDeviceTime(),
-    reportedIntensity: "medium",
+    reportedIntensity: 'medium',
     duration: {
-      units: "minutes",
+      units: 'minutes',
       value: 30.0
     },
-    timezone,
-  };
-  _.defaults(opts, defaults);
+    timezone
+  }
+  _.defaults(opts, defaults)
 
-  this.type = "physicalActivity";
+  this.type = 'physicalActivity'
 
-  this.deviceTime = opts.deviceTime;
-  this.duration = opts.duration;
+  this.deviceTime = opts.deviceTime
+  this.duration = opts.duration
   if (opts.inputTime) {
-    this.inputTime = opts.inputTime;
+    this.inputTime = opts.inputTime
   }
   if (opts.eventId) {
-    this.eventId = opts.eventId;
+    this.eventId = opts.eventId
   }
-  this.reportedIntensity = opts.reportedIntensity;
+  this.reportedIntensity = opts.reportedIntensity
 
-  this.time = this.makeTime();
-  this.createdTime = this.makeTime();
-  this.timezoneOffset = this.makeTimezoneOffset();
-  this.id = this.makeId();
-};
+  this.time = this.makeTime()
+  this.createdTime = this.makeTime()
+  this.timezoneOffset = this.makeTimezoneOffset()
+  this.id = this.makeId()
+}
 
-PhysicalActivity.prototype = common;
+PhysicalActivity.prototype = common
 
 export {
   Basal,
@@ -384,5 +384,5 @@ export {
   SMBG,
   Upload,
   Wizard,
-  PhysicalActivity,
-};
+  PhysicalActivity
+}

@@ -26,20 +26,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { IMessage } from "../../models/chat";
-import HttpService from "../../services/http";
+import { IMessage } from '../../models/chat'
+import HttpService from '../../services/http'
 
 export default class ChatApi {
   static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
-    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` });
-    return data;
+    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` })
+    return data
   }
 
   static async sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
     await HttpService.post<boolean, { text: string, private: boolean }>({
       url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
-      payload: { text, private: isPrivate },
-    });
-    return true;
+      payload: { text, private: isPrivate }
+    })
+    return true
   }
 }

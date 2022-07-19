@@ -25,28 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React from 'react'
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
+import Backdrop from '@material-ui/core/Backdrop'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
-      color: theme.palette.common.white,
-    },
-  }),
-);
+      color: theme.palette.common.white
+    }
+  })
+)
 
 function LoadingBackdrop({ open }: { open: boolean }): JSX.Element {
-  const { backdrop } = useStyles();
+  const { backdrop } = useStyles()
 
   return (
     <Backdrop className={backdrop} open={open}>
       <CircularProgress color="inherit" />
     </Backdrop>
-  );
+  )
 }
 
-export default LoadingBackdrop;
+export default LoadingBackdrop

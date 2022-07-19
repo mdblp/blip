@@ -25,184 +25,184 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from "../../models/team";
-import HttpService, { ErrorMessageStatus } from "../../services/http";
-import { INotificationAPI } from "../../models/notification";
-import { UserRoles } from "../../models/user";
-import { HttpHeaderKeys } from "../../models/api";
-import { getCurrentLang } from "../language";
-import { Monitoring } from "../../models/monitoring";
-import bows from "bows";
+import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
+import HttpService, { ErrorMessageStatus } from '../../services/http'
+import { INotificationAPI } from '../../models/notification'
+import { UserRoles } from '../../models/user'
+import { HttpHeaderKeys } from '../../models/api'
+import { getCurrentLang } from '../language'
+import { Monitoring } from '../../models/monitoring'
+import bows from 'bows'
 
-const log = bows("Team API");
+const log = bows('Team API')
 
 interface InvitePatientArgs {
-  teamId: string;
-  email: string;
+  teamId: string
+  email: string
 }
 
 interface InvitePatientPayload extends InvitePatientArgs {
-  role: UserRoles;
+  role: UserRoles
 }
 
 interface InviteMemberArgs {
-  teamId: string;
-  email: string;
-  role: TeamMemberRole.admin | TeamMemberRole.member;
+  teamId: string
+  email: string
+  role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
-type InviteMemberPayload = InviteMemberArgs;
+type InviteMemberPayload = InviteMemberArgs
 
 interface ChangeMemberRoleArgs extends ChangeMemberRoleFirstPayload {
-  userId: string;
+  userId: string
 }
 
-type ChangeMemberRoleFirstPayload = InviteMemberArgs;
+type ChangeMemberRoleFirstPayload = InviteMemberArgs
 
 interface ChangeMemberRoleSecondPayload {
-  teamId: string;
-  userId: string;
-  role: TeamMemberRole.admin | TeamMemberRole.member;
+  teamId: string
+  userId: string
+  role: TeamMemberRole.admin | TeamMemberRole.member
 }
 
 interface RemoveMemberArgs {
-  teamId: string;
-  userId: string;
-  email: string;
+  teamId: string
+  userId: string
+  email: string
 }
 
 export default class TeamApi {
   static async getTeams(): Promise<ITeam[]> {
     try {
-      const { data } = await HttpService.get<ITeam[]>({ url: "/v0/my-teams" });
-      return data;
+      const { data } = await HttpService.get<ITeam[]>({ url: '/v0/my-teams' })
+      return data
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info("No teams");
-        return [];
+        log.info('No teams')
+        return []
       }
-      throw err;
+      throw err
     }
   }
 
   static async getPatients(): Promise<ITeamMember[]> {
     try {
-      const { data } = await HttpService.get<ITeamMember[]>({ url: "/v0/my-patients" });
-      return data;
+      const { data } = await HttpService.get<ITeamMember[]>({ url: '/v0/my-patients' })
+      return data
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info("No patients");
-        return [];
+        log.info('No patients')
+        return []
       }
-      throw err;
+      throw err
     }
   }
 
   static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {
     const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
-      url: "/confirm/send/team/invite",
+      url: '/confirm/send/team/invite',
       payload: { teamId, email, role: UserRoles.patient },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
-    });
-    return data;
+      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+    })
+    return data
   }
 
   static async inviteMember({ teamId, email, role }: InviteMemberArgs): Promise<INotificationAPI> {
     const { data } = await HttpService.post<INotificationAPI, InviteMemberPayload>({
-      url: "/confirm/send/team/invite",
+      url: '/confirm/send/team/invite',
       payload: { teamId, email, role },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } },
-    });
-    return data;
+      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
+    })
+    return data
   }
 
   static async createTeam(team: Partial<ITeam>): Promise<ITeam> {
-    const { name, address, phone } = team;
+    const { name, address, phone } = team
     if (!name || !address || !phone) {
-      throw Error("Missing some mandatory parameters name, address or phone");
+      throw Error('Missing some mandatory parameters name, address or phone')
     }
     const { data } = await HttpService.post<ITeam, Partial<ITeam>>({
-      url: "/crew/v0/teams",
-      payload: { ...team, type: TeamType.medical },
-    });
-    return data;
+      url: '/crew/v0/teams',
+      payload: { ...team, type: TeamType.medical }
+    })
+    return data
   }
 
   static async editTeam(team: ITeam): Promise<void> {
     await HttpService.put<void, ITeam>({
       url: `/crew/v0/teams/${team.id}`,
-      payload: team,
-    });
+      payload: team
+    })
   }
 
   static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
       url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
-      payload: monitoring,
-    });
+      payload: monitoring
+    })
   }
 
   static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
       url: `/crew/v0/teams/${teamId}/remote-monitoring`,
-      payload: monitoring,
-    });
+      payload: monitoring
+    })
   }
 
   static async deleteTeam(teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}` });
+    await HttpService.delete({ url: `/crew/v0/teams/${teamId}` })
   }
 
   static async leaveTeam(userId: string, teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/members/${userId}` });
+    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/members/${userId}` })
   }
 
   static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
     await HttpService.delete({
       url: `confirm/send/team/leave/${teamId}/${userId}`,
-      config: { params: { email } },
-    });
+      config: { params: { email } }
+    })
   }
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` });
+    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {
     await HttpService.put<void, ChangeMemberRoleFirstPayload>({
       url: `/confirm/send/team/role/${userId}`,
-      payload: { teamId, email, role },
-    });
+      payload: { teamId, email, role }
+    })
 
     await HttpService.put<void, ChangeMemberRoleSecondPayload>({
       url: `/crew/v0/teams/${teamId}/members`,
-      payload: { teamId, userId, role },
-    });
+      payload: { teamId, userId, role }
+    })
   }
 
   static async getTeamFromCode(code: string): Promise<ITeam | null> {
     try {
       const { data } = await HttpService.get<ITeam[]>({
-        url: "/crew/v0/teams",
-        config: { params: { code } },
-      });
-      return data[0];
+        url: '/crew/v0/teams',
+        config: { params: { code } }
+      })
+      return data[0]
     } catch (err) {
-      const error = err as Error;
+      const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
-        log.info("no teams");
-        return null;
+        log.info('no teams')
+        return null
       }
-      throw err;
+      throw err
     }
   }
 
   static async joinTeam(teamId: string, userId: string): Promise<void> {
     await HttpService.put<void, { userId: string }>({
       url: `/crew/v0/teams/${teamId}/patients`,
-      payload: { userId },
-    });
+      payload: { userId }
+    })
   }
 }

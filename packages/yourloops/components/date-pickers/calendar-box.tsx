@@ -28,57 +28,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Dayjs } from "dayjs";
+import React from 'react'
+import { Dayjs } from 'dayjs'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
 import {
   CalendarOrientation,
   CalendarPosition,
   CalendarChangeMonth,
   CalendarSelection,
-  CalendarSelectionSingle,
-} from "./models";
-import Header from "./calendar-header";
-import Calendar from "./calendar";
-import YearSelector from "./year-selector";
+  CalendarSelectionSingle
+} from './models'
+import Header from './calendar-header'
+import Calendar from './calendar'
+import YearSelector from './year-selector'
 
 interface CalendarBoxProps {
-  selection: CalendarSelection;
-  orientation: CalendarOrientation;
-  position?: CalendarPosition;
-  currentMonth: Dayjs;
-  minDate: Dayjs;
-  maxDate: Dayjs;
-  changingMonth?: CalendarChangeMonth | null;
+  selection: CalendarSelection
+  orientation: CalendarOrientation
+  position?: CalendarPosition
+  currentMonth: Dayjs
+  minDate: Dayjs
+  maxDate: Dayjs
+  changingMonth?: CalendarChangeMonth | null
   /** Set to undefined to disabled the prev month button */
-  onPrevMonth?: () => void;
+  onPrevMonth?: () => void
   /** Set to undefined to disabled the next month button */
-  onNextMonth?: () => void;
+  onNextMonth?: () => void
   /** Setting the first or the last date */
-  onChange: (d: Dayjs) => void;
+  onChange: (d: Dayjs) => void
   /** Only with CalendarSelectionSingle */
-  onSelectYear?: (year: number) => void;
+  onSelectYear?: (year: number) => void
 }
 
 const calendarBoxStyles = makeStyles((theme: Theme) => {
   return {
     calendarBox: {
       backgroundColor: theme.palette.background.paper,
-      display: "flex",
-      flexDirection: "column",
-      overflowY: "auto",
-      overflowX: "hidden",
+      display: 'flex',
+      flexDirection: 'column',
+      overflowY: 'auto',
+      overflowX: 'hidden',
       width: 300,
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         width: 250,
-        marginLeft: "auto",
-        marginRight: "auto",
-      },
-    },
-  };
-}, { name: "date-pickers-calendar-views" });
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }
+    }
+  }
+}, { name: 'date-pickers-calendar-views' })
 
 /**
  * Display:
@@ -86,7 +86,7 @@ const calendarBoxStyles = makeStyles((theme: Theme) => {
  * - year selector
  */
 function CalendarBox(props: CalendarBoxProps): JSX.Element {
-  const classes = calendarBoxStyles(props);
+  const classes = calendarBoxStyles(props)
   const {
     selection,
     currentMonth,
@@ -95,22 +95,22 @@ function CalendarBox(props: CalendarBoxProps): JSX.Element {
     position,
     changingMonth,
     onChange,
-    onSelectYear,
-  } = props;
+    onSelectYear
+  } = props
 
-  const id = position ? `calendar-box-${position}` : "calendar-box";
+  const id = position ? `calendar-box-${position}` : 'calendar-box'
 
   return (
     <div id={id} className={classes.calendarBox}>
       {
-        (onSelectYear && selection.mode === "single") ?
-          <YearSelector
+        (onSelectYear && selection.mode === 'single')
+          ? <YearSelector
             selectedYear={(selection as CalendarSelectionSingle).selected.year()}
             onSelectYear={onSelectYear}
             minYear={minDate.year()}
             maxYear={maxDate.year()}
-          /> :
-          <React.Fragment>
+          />
+          : <React.Fragment>
             <Header
               position={position}
               orientation={props.orientation}
@@ -131,7 +131,7 @@ function CalendarBox(props: CalendarBoxProps): JSX.Element {
           </React.Fragment>
       }
     </div>
-  );
+  )
 }
 
-export default CalendarBox;
+export default CalendarBox

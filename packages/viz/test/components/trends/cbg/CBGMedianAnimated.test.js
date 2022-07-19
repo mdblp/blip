@@ -15,26 +15,26 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { TransitionMotion } from "react-motion";
-import { mount } from "enzyme";
-import { expect } from "chai";
+import React from 'react'
+import { TransitionMotion } from 'react-motion'
+import { mount } from 'enzyme'
+import { expect } from 'chai'
 
-import * as scales from "../../../helpers/scales";
+import * as scales from '../../../helpers/scales'
 const {
   trendsHeight,
   trendsWidth,
   trendsXScale: xScale,
-  trendsYScale: yScale,
-} = scales.trends;
-import bgBounds from "../../../helpers/bgBounds";
-import SVGContainer from "../../../helpers/SVGContainer";
+  trendsYScale: yScale
+} = scales.trends
+import bgBounds from '../../../helpers/bgBounds'
+import SVGContainer from '../../../helpers/SVGContainer'
 
-import { CBGMedianAnimated } from "../../../../src/components/trends/cbg/CBGMedianAnimated";
+import { CBGMedianAnimated } from '../../../../src/components/trends/cbg/CBGMedianAnimated'
 
-describe("CBGMedianAnimated", () => {
+describe('CBGMedianAnimated', () => {
   const datum = {
-    id: "2700000",
+    id: '2700000',
     min: 22,
     tenthQuantile: 60,
     firstQuartile: 100,
@@ -44,8 +44,8 @@ describe("CBGMedianAnimated", () => {
     max: 521,
     msX: 2700000,
     msFrom: 1800000,
-    msTo: 3600000,
-  };
+    msTo: 3600000
+  }
   const props = {
     bgBounds,
     datum,
@@ -54,32 +54,32 @@ describe("CBGMedianAnimated", () => {
     showingCbgDateTraces: false,
     sliceWidth: 10,
     xScale,
-    yScale,
-  };
+    yScale
+  }
 
-  describe("when `displayingMedian` is true", () => {
-    let wrapper;
+  describe('when `displayingMedian` is true', () => {
+    let wrapper
     before(() => {
       wrapper = mount(
         <SVGContainer dimensions={{ width: trendsWidth, height: trendsHeight }}>
           <CBGMedianAnimated {...props} />
         </SVGContainer>
-      );
-    });
+      )
+    })
 
-    it("should render a single <rect>", () => {
-      expect(wrapper.find("rect").length).to.equal(1);
-    });
+    it('should render a single <rect>', () => {
+      expect(wrapper.find('rect').length).to.equal(1)
+    })
 
-    it("should vertically center the median <rect> on the value", () => {
-      const median = wrapper.find(CBGMedianAnimated);
-      const sliceWidth = median.prop("sliceWidth");
-      const strokeWidth = sliceWidth / 8;
-      const medianWidth = sliceWidth - strokeWidth;
-      const medianHeight = medianWidth * 0.75;
+    it('should vertically center the median <rect> on the value', () => {
+      const median = wrapper.find(CBGMedianAnimated)
+      const sliceWidth = median.prop('sliceWidth')
+      const strokeWidth = sliceWidth / 8
+      const medianWidth = sliceWidth - strokeWidth
+      const medianHeight = medianWidth * 0.75
 
-      expect(wrapper.find(TransitionMotion).prop("styles")[0].style.median.val)
-        .to.equal(yScale(median.prop("datum").median) - medianHeight / 2);
-    });
-  });
-});
+      expect(wrapper.find(TransitionMotion).prop('styles')[0].style.median.val)
+        .to.equal(yScale(median.prop('datum').median) - medianHeight / 2)
+    })
+  })
+})

@@ -26,36 +26,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { shallow } from "enzyme";
-import * as sinon from "sinon";
-import chai from "chai";
+import React from 'react'
+import { shallow } from 'enzyme'
+import * as sinon from 'sinon'
+import chai from 'chai'
 
-import { MGDL_UNITS } from "tideline";
+import { MGDL_UNITS } from 'tideline'
 
-import DataUtilStub from "../../../helpers/DataUtil";
-import PatientStatistics from "../../../../app/components/chart/patientStatistics";
-import Stats from "../../../../app/components/chart/stats";
+import DataUtilStub from '../../../helpers/DataUtil'
+import PatientStatistics from '../../../../app/components/chart/patientStatistics'
+import Stats from '../../../../app/components/chart/stats'
 
-const expect = chai.expect;
+const expect = chai.expect
 
-describe("PatientStatistics", () => {
+describe('PatientStatistics', () => {
   const baseProps = {
     bgPrefs: {
       bgClasses: {
-        "very-low": {
+        'very-low': {
           boundary: 60
         },
-        "low": {
+        'low': {
           boundary: 80
         },
-        "target": {
+        'target': {
           boundary: 180
         },
-        "high": {
+        'high': {
           boundary: 200
         },
-        "very-high": {
+        'very-high': {
           boundary: 300
         }
       },
@@ -81,50 +81,50 @@ describe("PatientStatistics", () => {
         grouped: true,
         showingLines: false
       },
-      bgLog: {},
+      bgLog: {}
     },
     dataUtil: new DataUtilStub(),
     endpoints: [
-      "2018-01-15T00:00:00.000Z",
-      "2018-01-31T00:00:00.000Z",
+      '2018-01-15T00:00:00.000Z',
+      '2018-01-31T00:00:00.000Z'
     ],
     loading: false
-  };
+  }
 
-  let wrapper;
+  let wrapper
 
   beforeEach(() => {
-    baseProps.dataUtil = new DataUtilStub();
-  });
+    baseProps.dataUtil = new DataUtilStub()
+  })
 
-  describe("render", () => {
+  describe('render', () => {
     before(() => {
-      sinon.spy(console, "error");
-      wrapper = shallow(<PatientStatistics {...baseProps} />);
-    });
+      sinon.spy(console, 'error')
+      wrapper = shallow(<PatientStatistics {...baseProps} />)
+    })
 
     after(() => {
-      console.error.restore();
-    });
+      console.error.restore()
+    })
 
-    it("should render without errors when provided all required props", () => {
-      expect(wrapper.find("#patient-statistics")).to.have.length(1);
-      expect(console.error.callCount).to.equal(0);
-    });
+    it('should render without errors when provided all required props', () => {
+      expect(wrapper.find('#patient-statistics')).to.have.length(1)
+      expect(console.error.callCount).to.equal(0)
+    })
 
-    it("should show card header", () => {
-      const header = wrapper.find("#patient-statistics-header");
-      expect(header).to.have.length(1);
-    });
+    it('should show card header', () => {
+      const header = wrapper.find('#patient-statistics-header')
+      expect(header).to.have.length(1)
+    })
 
-    it("should show card content", () => {
-      expect(wrapper.find("#patient-statistics-content")).to.have.length(1);
-    });
+    it('should show card content', () => {
+      expect(wrapper.find('#patient-statistics-content')).to.have.length(1)
+    })
 
-    it("should show patient statistics", () => {
-      const statsComponent = wrapper.find(Stats);
-      expect(statsComponent).to.have.length(1);
-      expect(statsComponent.prop("chartType")).to.be.equal("patientStatistics");
-    });
-  });
-});
+    it('should show patient statistics', () => {
+      const statsComponent = wrapper.find(Stats)
+      expect(statsComponent).to.have.length(1)
+      expect(statsComponent.prop('chartType')).to.be.equal('patientStatistics')
+    })
+  })
+})

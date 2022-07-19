@@ -26,10 +26,10 @@
  */
 
 export interface Alarm {
-  timeSpentAwayFromTargetRate: number;
-  timeSpentAwayFromTargetActive: boolean;
-  frequencyOfSevereHypoglycemiaRate: number;
-  frequencyOfSevereHypoglycemiaActive: boolean;
-  nonDataTransmissionRate: number;
-  nonDataTransmissionActive: boolean;
+  timeSpentAwayFromTargetRate: number
+  timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHypoglycemiaRate: number
+  frequencyOfSevereHypoglycemiaActive: boolean
+  nonDataTransmissionRate: number
+  nonDataTransmissionActive: boolean
 }

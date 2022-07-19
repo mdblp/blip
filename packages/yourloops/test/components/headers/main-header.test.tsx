@@ -25,151 +25,151 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import { Router } from "react-router-dom";
-import { createMemoryHistory } from "history";
-import { v4 as uuidv4 } from "uuid";
+import React from 'react'
+import { render, unmountComponentAtNode } from 'react-dom'
+import { act } from 'react-dom/test-utils'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { v4 as uuidv4 } from 'uuid'
 
-import * as notificationHookMock from "../../../lib/notifications/hook";
-import * as authHookMock from "../../../lib/auth";
-import * as teamHookMock from "../../../lib/team";
-import { Team } from "../../../lib/team";
-import { buildTeam, triggerMouseEvent } from "../../common/utils";
-import MainHeader from "../../../components/header-bars/main-header";
-import DirectShareApi from "../../../lib/share/direct-share-api";
-import { Profile, UserRoles } from "../../../models/user";
-import User from "../../../lib/auth/user";
-import { INotification, NotificationType } from "../../../lib/notifications/models";
+import * as notificationHookMock from '../../../lib/notifications/hook'
+import * as authHookMock from '../../../lib/auth'
+import * as teamHookMock from '../../../lib/team'
+import { Team } from '../../../lib/team'
+import { buildTeam, triggerMouseEvent } from '../../common/utils'
+import MainHeader from '../../../components/header-bars/main-header'
+import DirectShareApi from '../../../lib/share/direct-share-api'
+import { Profile, UserRoles } from '../../../models/user'
+import User from '../../../lib/auth/user'
+import { INotification, NotificationType } from '../../../lib/notifications/models'
 
-jest.mock("../../../lib/notifications/hook");
-jest.mock("../../../lib/auth");
-jest.mock("../../../lib/team");
-describe("Main Header", () => {
-  let container: HTMLElement | null = null;
-  const history = createMemoryHistory({ initialEntries: ["/preferences"] });
-  const onClickLeftIcon = jest.fn();
+jest.mock('../../../lib/notifications/hook')
+jest.mock('../../../lib/auth')
+jest.mock('../../../lib/team')
+describe('Main Header', () => {
+  let container: HTMLElement | null = null
+  const history = createMemoryHistory({ initialEntries: ['/preferences'] })
+  const onClickLeftIcon = jest.fn()
   const notifications: INotification[] = [{
-    metricsType: "join_team",
+    metricsType: 'join_team',
     type: NotificationType.careTeamDoAdmin,
-    creator: { userid: "creatorUserId", profile: {} as Profile },
-    creatorId: "creatorId",
+    creator: { userid: 'creatorUserId', profile: {} as Profile },
+    creatorId: 'creatorId',
     date: new Date().toISOString(),
-    email: "fake@email.com",
-    id: uuidv4(),
-  }];
-  const teams: Team[] = [buildTeam("team1Id", []), buildTeam("team1Id", [])];
+    email: 'fake@email.com',
+    id: uuidv4()
+  }]
+  const teams: Team[] = [buildTeam('team1Id', []), buildTeam('team1Id', [])]
 
   function mountComponent(withLeftIcon?: boolean): void {
     act(() => {
       render(
         <Router history={history}>
           <MainHeader withShrinkIcon={withLeftIcon} onClickShrinkIcon={onClickLeftIcon} />
-        </Router>, container);
-    });
+        </Router>, container)
+    })
   }
 
   beforeAll(() => {
-    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([]);
     (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return {
         initialized: true,
         sentInvitations: [],
         getReceivedInvitations: jest.fn().mockResolvedValue(notifications),
-        receivedInvitations: notifications,
-      };
+        receivedInvitations: notifications
+      }
     });
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { teams };
-    });
-  });
+      return { teams }
+    })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
+    container = document.createElement('div')
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User,
-      };
-    });
-  });
+        user: { role: UserRoles.hcp, isUserHcp: () => true, isUserPatient: () => false } as User
+      }
+    })
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
   it("should redirect to '/' route when clicking on logo", () => {
-    mountComponent();
-    const logo = document.getElementById("header-main-logo");
-    triggerMouseEvent("click", logo);
-    expect(history.location.pathname).toBe("/");
-  });
+    mountComponent()
+    const logo = document.getElementById('header-main-logo')
+    triggerMouseEvent('click', logo)
+    expect(history.location.pathname).toBe('/')
+  })
 
   it("should redirect to '/notifications' route when clicking on notification icon", () => {
-    mountComponent();
-    const notificationLink = document.getElementById("notification-count-badge");
-    triggerMouseEvent("click", notificationLink);
-    expect(history.location.pathname).toBe("/notifications");
-  });
+    mountComponent()
+    const notificationLink = document.getElementById('notification-count-badge')
+    triggerMouseEvent('click', notificationLink)
+    expect(history.location.pathname).toBe('/notifications')
+  })
 
-  it("Should display the number of pending notifications", () => {
-    mountComponent();
-    const notificationBadge = container.querySelector("#notification-count-badge");
-    expect(notificationBadge.textContent).toEqual(notifications.length.toString());
-  });
+  it('Should display the number of pending notifications', () => {
+    mountComponent()
+    const notificationBadge = container.querySelector('#notification-count-badge')
+    expect(notificationBadge.textContent).toEqual(notifications.length.toString())
+  })
 
-  it("Team Menu should not be rendered for Caregivers", () => {
+  it('Team Menu should not be rendered for Caregivers', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.caregiver } as User,
-      };
-    });
-    mountComponent();
-    const teamMenu = container.querySelector("#team-menu");
-    expect(teamMenu).toBeNull();
-  });
+        user: { role: UserRoles.caregiver } as User
+      }
+    })
+    mountComponent()
+    const teamMenu = container.querySelector('#team-menu')
+    expect(teamMenu).toBeNull()
+  })
 
-  it("Team Menu should be rendered for Hcp", () => {
-    mountComponent();
-    const teamMenu = container.querySelector("#team-menu");
-    expect(teamMenu).toBeTruthy();
-  });
+  it('Team Menu should be rendered for Hcp', () => {
+    mountComponent()
+    const teamMenu = container.querySelector('#team-menu')
+    expect(teamMenu).toBeTruthy()
+  })
 
-  it("Team Menu should be rendered for Patient", () => {
+  it('Team Menu should be rendered for Patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User,
-      };
-    });
-    mountComponent();
-    const teamMenu = container.querySelector("#team-menu");
-    expect(teamMenu).toBeTruthy();
-  });
+        user: { role: UserRoles.patient, isUserHcp: () => false, isUserPatient: () => true } as User
+      }
+    })
+    mountComponent()
+    const teamMenu = container.querySelector('#team-menu')
+    expect(teamMenu).toBeTruthy()
+  })
 
-  it("Should display left menu icon if activated", () => {
-    mountComponent(true);
-    const leftIcon = document.getElementById("left-menu-icon");
-    expect(leftIcon).toBeTruthy();
-  });
+  it('Should display left menu icon if activated', () => {
+    mountComponent(true)
+    const leftIcon = document.getElementById('left-menu-icon')
+    expect(leftIcon).toBeTruthy()
+  })
 
-  it("Should call onClickLeftIcon when clicking left menu icon", () => {
-    mountComponent(true);
-    const leftIcon = document.getElementById("left-menu-icon");
-    triggerMouseEvent("click", leftIcon);
-    expect(onClickLeftIcon).toBeCalledTimes(1);
-  });
-});
+  it('Should call onClickLeftIcon when clicking left menu icon', () => {
+    mountComponent(true)
+    const leftIcon = document.getElementById('left-menu-icon')
+    triggerMouseEvent('click', leftIcon)
+    expect(onClickLeftIcon).toBeCalledTimes(1)
+  })
+})

@@ -13,43 +13,43 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-const allowedKeys = ["type", "error", "payload", "meta"];
+const allowedKeys = ['type', 'error', 'payload', 'meta']
 
 function isAllowedKey(key) {
-  return allowedKeys.indexOf(key) !== -1;
+  return allowedKeys.indexOf(key) !== -1
 }
 
 function isTSA(action) {
-  const actionIsPlainObject = _.isPlainObject(action);
+  const actionIsPlainObject = _.isPlainObject(action)
 
   const actionContainsOnlyAllowedKeys = _.every(
     Object.keys(action),
-    function(key) { return isAllowedKey(key); }
-  );
+    function(key) { return isAllowedKey(key) }
+  )
 
-  const typeIsString = _.isString(action.type);
+  const typeIsString = _.isString(action.type)
 
   // default to true since `error` is optional
-  let errorIsJSError = true;
+  let errorIsJSError = true
   if (action.error) {
-    errorIsJSError = _.isError(action.error);
+    errorIsJSError = _.isError(action.error)
   }
 
   // default to true since `payload` and `meta` are optional
-  let payloadIsPlainObject = true;
+  let payloadIsPlainObject = true
   if (action.payload) {
-    payloadIsPlainObject = _.isPlainObject(action.payload);
+    payloadIsPlainObject = _.isPlainObject(action.payload)
   }
-  let metaIsPlainObject = true;
+  let metaIsPlainObject = true
   if (action.meta) {
-    metaIsPlainObject = _.isPlainObject(action.meta);
+    metaIsPlainObject = _.isPlainObject(action.meta)
   }
 
-  const propertiesAreValid = typeIsString && errorIsJSError && payloadIsPlainObject && metaIsPlainObject;
+  const propertiesAreValid = typeIsString && errorIsJSError && payloadIsPlainObject && metaIsPlainObject
 
-  return actionIsPlainObject && actionContainsOnlyAllowedKeys && propertiesAreValid;
+  return actionIsPlainObject && actionContainsOnlyAllowedKeys && propertiesAreValid
 }
 
-export default isTSA;
+export default isTSA

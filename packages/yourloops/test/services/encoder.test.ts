@@ -25,30 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import EncoderService from "../../services/encoder";
-import { Crypto } from "@peculiar/webcrypto";
+import EncoderService from '../../services/encoder'
+import { Crypto } from '@peculiar/webcrypto'
 
-describe("Encoder service", () => {
-
+describe('Encoder service', () => {
   beforeAll(() => {
-    Object.defineProperty(global.self, "crypto", {
+    Object.defineProperty(global.self, 'crypto', {
       value: {
-        subtle: new Crypto().subtle,
-      },
-    });
-  });
+        subtle: new Crypto().subtle
+      }
+    })
+  })
 
-  describe("encodeSHA1", () => {
-    it("should return correct SHA1 hash", async () => {
-      //given
-      const expected = "8EF80F372246EBBB93B988437EB9B43E7B93DE62";
-      const valueToEncode = "Bienveillant";
+  describe('encodeSHA1', () => {
+    it('should return correct SHA1 hash', async () => {
+      // given
+      const expected = '8EF80F372246EBBB93B988437EB9B43E7B93DE62'
+      const valueToEncode = 'Bienveillant'
 
-      //when
-      const actual = await EncoderService.encodeSHA1(valueToEncode);
+      // when
+      const actual = await EncoderService.encodeSHA1(valueToEncode)
 
-      //then
-      expect(actual).toEqual(expected);
-    });
-  });
-});
+      // then
+      expect(actual).toEqual(expected)
+    })
+  })
+})

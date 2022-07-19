@@ -19,5 +19,5 @@ export default {
   veryHighThreshold: 300,
   targetUpperBound: 180,
   targetLowerBound: 70,
-  veryLowThreshold: 55,
-};
+  veryLowThreshold: 55
+}

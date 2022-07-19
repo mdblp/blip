@@ -25,74 +25,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 
-import FileChartOutlinedIcon from "../../icons/FileChartOutlinedIcon";
-import { Prescription } from "../../../lib/medical-files/model";
-import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
-import { CategoryProps } from "./medical-files-widget";
-import { useAlert } from "../../utils/snackbar";
+import FileChartOutlinedIcon from '../../icons/FileChartOutlinedIcon'
+import { Prescription } from '../../../lib/medical-files/model'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import { CategoryProps } from './medical-files-widget'
+import { useAlert } from '../../utils/snackbar'
 
 const useStyle = makeStyles((theme: Theme) => ({
   categoryTitle: {
-    fontWeight: 600,
+    fontWeight: 600
   },
   categoryContainer: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   list: {
     maxHeight: 160,
-    overflow: "auto",
+    overflow: 'auto'
   },
   hoveredItem: {
-    "&:hover": {
-      cursor: "pointer",
+    '&:hover': {
+      cursor: 'pointer'
     },
-    "&.selected": {
-      backgroundColor: theme.palette.grey[200],
-    },
-  },
-}));
+    '&.selected': {
+      backgroundColor: theme.palette.grey[200]
+    }
+  }
+}))
 
 export default function PrescriptionList({ teamId, patientId }: CategoryProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyle();
-  const alert = useAlert();
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined);
+  const { t } = useTranslation('yourloops')
+  const classes = useStyle()
+  const alert = useAlert()
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
+  const [hoveredItem, setHoveredItem] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     (async () => {
-      setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId));
-    })();
-  }, [patientId, teamId]);
+      setPrescriptions(await MedicalFilesApi.getPrescriptions(patientId, teamId))
+    })()
+  }, [patientId, teamId])
 
-  const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription) => {
+  const downloadPrescription = (patientId: string, teamId: string, prescription: Prescription): void => {
     MedicalFilesApi.getPrescription(patientId, teamId, prescription.id).then(data => {
-      const url = window.URL.createObjectURL(new Blob([data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", prescription.name); //or any other extension
-      document.body.appendChild(link);
-      link.click();
+      const url = window.URL.createObjectURL(new Blob([data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', prescription.name) // or any other extension
+      document.body.appendChild(link)
+      link.click()
     }).catch(error => {
-      console.error(error);
-      alert.error(t("download-prescription-error"));
-    });
-  };
+      console.error(error)
+      alert.error(t('download-prescription-error'))
+    })
+  }
 
   return (
     <React.Fragment>
       <Typography className={classes.categoryTitle}>
-        {t("prescriptions")}
+        {t('prescriptions')}
       </Typography>
       <List className={classes.list}>
         {prescriptions.map((prescription, index) => (
@@ -101,20 +101,20 @@ export default function PrescriptionList({ teamId, patientId }: CategoryProps): 
             divider
             key={index}
             aria-label={`prescription-${prescription.id}`}
-            className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? "selected" : ""}`}
+            className={`${classes.hoveredItem} ${prescription.id === hoveredItem ? 'selected' : ''}`}
             onMouseOver={() => setHoveredItem(prescription.id)}
             onMouseOut={() => setHoveredItem(undefined)}
-            onClick={() => {downloadPrescription(patientId, teamId, prescription);}}
+            onClick={() => { downloadPrescription(patientId, teamId, prescription) }}
           >
             <ListItemIcon>
               <FileChartOutlinedIcon />
             </ListItemIcon>
             <ListItemText>
-              {t("prescription-pdf", { pdfName: new Date(prescription.uploadedAt).toLocaleDateString() })}
+              {t('prescription-pdf', { pdfName: new Date(prescription.uploadedAt).toLocaleDateString() })}
             </ListItemText>
           </ListItem>
         ))}
       </List>
     </React.Fragment>
-  );
+  )
 }

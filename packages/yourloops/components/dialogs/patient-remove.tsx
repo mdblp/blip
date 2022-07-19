@@ -26,59 +26,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { IUser } from "../../models/user";
-import { getUserFirstLastName } from "../../lib/utils";
-import { makeButtonsStyles } from "../theme";
+import { IUser } from '../../models/user'
+import { getUserFirstLastName } from '../../lib/utils'
+import { makeButtonsStyles } from '../theme'
 
 export interface RemovePatientDialogContentProps {
-  patient: IUser;
-  onDialogResult: (confirmed: boolean) => void;
+  patient: IUser
+  onDialogResult: (confirmed: boolean) => void
 }
 
 export interface RemovePatientDialogProps {
-  actions: RemovePatientDialogContentProps | null;
+  actions: RemovePatientDialogContentProps | null
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-remove-patient-dialog-buttons" });
+const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remove-patient-dialog-buttons' })
 
 function RemovePatientDialog(props: RemovePatientDialogProps): JSX.Element {
-  const buttonsClasses = makeButtonsClasses();
-  const { t } = useTranslation("yourloops");
+  const buttonsClasses = makeButtonsClasses()
+  const { t } = useTranslation('yourloops')
 
-  const dialogIsOpen = props.actions !== null;
-  const userName = props.actions !== null ? getUserFirstLastName(props.actions.patient) : { firstName: "", lastName: "" };
-  const name = t("user-name", userName);
+  const dialogIsOpen = props.actions !== null
+  const userName = props.actions !== null ? getUserFirstLastName(props.actions.patient) : { firstName: '', lastName: '' }
+  const name = t('user-name', userName)
 
-  const handleClose = () => {
-    props.actions?.onDialogResult(false);
-  };
-  const handleClickRemove = () => {
-    props.actions?.onDialogResult(true);
-  };
+  const handleClose = (): void => {
+    props.actions?.onDialogResult(false)
+  }
+  const handleClickRemove = (): void => {
+    props.actions?.onDialogResult(true)
+  }
 
   return (
-    <Dialog id="patient-list-dialog-remove" aria-labelledby={t("remove-patient")} open={dialogIsOpen} onClose={handleClose}>
+    <Dialog id="patient-list-dialog-remove" aria-labelledby={t('remove-patient')} open={dialogIsOpen} onClose={handleClose}>
       <DialogTitle id="patient-list-dialog-remove-title">
-        <strong>{t("remove-patient")}</strong>
+        <strong>{t('remove-patient')}</strong>
       </DialogTitle>
 
       <DialogContent id="patient-list-dialog-remove-content">
         <DialogContentText id="patient-list-dialog-remove-question">
-          {t("modal-remove-patient-question", { name })}
+          {t('modal-remove-patient-question', { name })}
         </DialogContentText>
         <DialogContentText id="patient-list-dialog-remove-consequences">
-          {t("modal-remove-patient-info-2")}
+          {t('modal-remove-patient-info-2')}
         </DialogContentText>
       </DialogContent>
 
@@ -87,7 +87,7 @@ function RemovePatientDialog(props: RemovePatientDialogProps): JSX.Element {
           id="patient-list-dialog-remove-button-cancel"
           onClick={handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="patient-list-dialog-remove-button-remove"
@@ -96,11 +96,11 @@ function RemovePatientDialog(props: RemovePatientDialogProps): JSX.Element {
           disableElevation
           onClick={handleClickRemove}
         >
-          {t("remove-patient")}
+          {t('remove-patient')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default RemovePatientDialog;
+export default RemovePatientDialog

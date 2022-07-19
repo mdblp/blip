@@ -26,73 +26,72 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "@testing-library/react-hooks/dom";
-import _ from "lodash";
+import React from 'react'
+import { render, unmountComponentAtNode } from 'react-dom'
+import { act } from '@testing-library/react-hooks/dom'
+import _ from 'lodash'
 
-import { SignUpFormStateProvider } from "../../../pages/signup/signup-formstate-context";
-import SignUpProfileForm from "../../../pages/signup/signup-profile-form";
-import * as authHookMock from "../../../lib/auth";
-import User from "../../../lib/auth/user";
-import { UserRoles } from "../../../models/user";
+import { SignUpFormStateProvider } from '../../../pages/signup/signup-formstate-context'
+import SignUpProfileForm from '../../../pages/signup/signup-profile-form'
+import * as authHookMock from '../../../lib/auth'
+import User from '../../../lib/auth/user'
+import { UserRoles } from '../../../models/user'
 
-jest.mock("../../../lib/auth");
-describe("Signup profile form", () => {
-  let container: HTMLElement | null = null;
+jest.mock('../../../lib/auth')
+describe('Signup profile form', () => {
+  let container: HTMLElement | null = null
 
   const mountComponent = (): void => {
     act(() => {
       render(
         <SignUpFormStateProvider>
           <SignUpProfileForm handleBack={_.noop} handleNext={_.noop} />
-        </SignUpFormStateProvider>, container);
-    });
-  };
+        </SignUpFormStateProvider>, container)
+    })
+  }
 
   beforeAll(() => {
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-  });
+      return children
+    })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
+    container = document.createElement('div')
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRoles.hcp,
-        } as User,
-      };
-    });
-  });
+          role: UserRoles.hcp
+        } as User
+      }
+    })
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
-  it("should not render the drop down list when caregiver", () => {
+  it('should not render the drop down list when caregiver', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
-          role: UserRoles.caregiver,
-        } as User,
-      };
-    });
-    mountComponent();
-    const dropDownList = document.querySelector("#hcp-profession-selector");
-    expect(dropDownList).toBeNull();
-  });
+          role: UserRoles.caregiver
+        } as User
+      }
+    })
+    mountComponent()
+    const dropDownList = document.querySelector('#hcp-profession-selector')
+    expect(dropDownList).toBeNull()
+  })
 
-  it("should render the drop down list when HCP", () => {
-    mountComponent();
-    const dropDownList = document.querySelector("#hcp-profession-selector");
-    expect(dropDownList).not.toBeNull();
-  });
-});
-
+  it('should render the drop down list when HCP', () => {
+    mountComponent()
+    const dropDownList = document.querySelector('#hcp-profession-selector')
+    expect(dropDownList).not.toBeNull()
+  })
+})

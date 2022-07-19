@@ -25,37 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import Container from '@material-ui/core/Container'
+import Grid from '@material-ui/core/Grid'
 
-import SignUpStepper from "./signup-stepper";
-import { SignUpFormStateProvider } from "./signup-formstate-context";
-import appConfig from "../../lib/config";
+import SignUpStepper from './signup-stepper'
+import { SignUpFormStateProvider } from './signup-formstate-context'
+import appConfig from '../../lib/config'
 
 const formStyle = makeStyles((theme: Theme) => ({
   card: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2)
   },
   cardContent: {
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    padding: `0 ${theme.spacing(4)}px`,
+    padding: `0 ${theme.spacing(4)}px`
   },
   logoHeader: {
-    margin: theme.spacing(2),
-  },
-}), { name: "signup-page-styles" });
+    margin: theme.spacing(2)
+  }
+}), { name: 'signup-page-styles' })
 
 function CompleteSignUpPage(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = formStyle();
+  const { t } = useTranslation('yourloops')
+  const classes = formStyle()
 
   return (
     <Container maxWidth="sm">
@@ -64,7 +64,7 @@ function CompleteSignUpPage(): JSX.Element {
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
-                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t("alt-img-logo")} />
+                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} />
               </CardMedia>
               <CardContent className={classes.cardContent}>
                 <SignUpStepper />
@@ -74,7 +74,7 @@ function CompleteSignUpPage(): JSX.Element {
         </Grid>
       </Grid>
     </Container>
-  );
+  )
 }
 
-export default CompleteSignUpPage;
+export default CompleteSignUpPage

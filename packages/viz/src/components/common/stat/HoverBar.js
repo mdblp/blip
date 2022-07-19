@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { Bar, Rect } from "victory";
-import _ from "lodash";
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Bar, Rect } from 'victory'
+import _ from 'lodash'
 
-import colors from "../../../styles/colors.css";
+import colors from '../../../styles/colors.css'
 
 const HoverBar = props => {
   const {
@@ -15,15 +15,15 @@ const HoverBar = props => {
     index,
     scale = {
       x: _.noop,
-      y: _.noop,
+      y: _.noop
     },
     width,
-    y,
-  } = props;
+    y
+  } = props
 
-  const barGridWidth = barWidth / 6;
-  const barGridRadius = _.get(cornerRadius, "top", 2);
-  const widthCorrection = (width - chartLabelWidth) / width;
+  const barGridWidth = barWidth / 6
+  const barGridRadius = _.get(cornerRadius, 'top', 2)
+  const widthCorrection = (width - chartLabelWidth) / width
 
   return (
     <g className="HoverBar">
@@ -37,8 +37,8 @@ const HoverBar = props => {
           width={scale.y(domain.x[1])}
           height={barWidth + barSpacing}
           style={{
-            stroke: "transparent",
-            fill: "transparent",
+            stroke: 'transparent',
+            fill: 'transparent'
           }}
         />
       </g>
@@ -52,8 +52,8 @@ const HoverBar = props => {
           width={scale.y(domain.x[1]) - chartLabelWidth}
           height={barGridWidth}
           style={{
-            stroke: "transparent",
-            fill: colors.axis,
+            stroke: 'transparent',
+            fill: colors.axis
           }}
         />
       </g>
@@ -63,8 +63,8 @@ const HoverBar = props => {
         y={y * widthCorrection}
       />
     </g>
-  );
-};
+  )
+}
 
 HoverBar.propTypes = {
   barSpacing: PropTypes.number.isRequired,
@@ -75,9 +75,9 @@ HoverBar.propTypes = {
   index: PropTypes.number,
   scale: PropTypes.object,
   width: PropTypes.number,
-  y: PropTypes.number,
-};
+  y: PropTypes.number
+}
 
-HoverBar.displayName = "HoverBar";
+HoverBar.displayName = 'HoverBar'
 
-export default HoverBar;
+export default HoverBar

@@ -26,46 +26,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useTheme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import { MonitoringConsentForm } from "../consents/form";
+import { MonitoringConsentForm } from '../consents/form'
 
 interface MonitoringConsentDialogProps {
-  onAccept: () => void;
-  onCancel: () => void;
-  teamName: string;
+  onAccept: () => void
+  onCancel: () => void
+  teamName: string
 }
 
 function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Element {
-  const theme = useTheme();
-  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
+  const theme = useTheme()
+  const isXSBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
-  const { onAccept, onCancel, teamName } = props;
-  const { t } = useTranslation("yourloops");
-  const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const { onAccept, onCancel, teamName } = props
+  const { t } = useTranslation('yourloops')
+  const [termsAccepted, setTermsAccepted] = React.useState(false)
 
-  const resetForm = () => {
-    setTermsAccepted(false);
-  };
+  const resetForm = (): void => {
+    setTermsAccepted(false)
+  }
 
-  const handleAccept = () => {
-    onAccept();
-    resetForm();
-  };
+  const handleAccept = (): void => {
+    onAccept()
+    resetForm()
+  }
 
-  const onClose = () => {
-    onCancel();
-    resetForm();
-  };
+  const onClose = (): void => {
+    onCancel()
+    resetForm()
+  }
 
   return (
     <Dialog
@@ -76,7 +76,7 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
       fullScreen={isXSBreakpoint}
     >
       <DialogTitle id="monitoring-consent-dialog-title">
-        <strong>{t("modal-monitoring-consent-title", { careteam: teamName })}</strong>
+        <strong>{t('modal-monitoring-consent-title', { careteam: teamName })}</strong>
       </DialogTitle>
       <DialogContent id="monitoring-consequences-dialog-content">
         <MonitoringConsentForm
@@ -91,7 +91,7 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
           id="monitoring-consent-dialog-button-decline"
           onClick={onClose}
         >
-          {t("button-decline")}
+          {t('button-decline')}
         </Button>
         <Button
           id="monitoring-consent-dialog-button-accept"
@@ -101,11 +101,11 @@ function MonitoringConsentDialog(props: MonitoringConsentDialogProps): JSX.Eleme
           disabled={!termsAccepted}
           onClick={handleAccept}
         >
-          {t("button-accept")}
+          {t('button-accept')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default MonitoringConsentDialog;
+export default MonitoringConsentDialog

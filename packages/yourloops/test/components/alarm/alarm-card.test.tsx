@@ -25,49 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { act } from "react-dom/test-utils";
-import { render, unmountComponentAtNode } from "react-dom";
+import React from 'react'
+import { act } from 'react-dom/test-utils'
+import { render, unmountComponentAtNode } from 'react-dom'
 
-import { ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from '@material-ui/core'
 
-import { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
-import { createPatient, triggerMouseEvent } from "../../common/utils";
-import i18n from "../../../lib/language";
-import * as authHookMock from "../../../lib/auth";
-import AlarmCard from "../../../components/alarm/alarm-card";
-import User from "../../../lib/auth/user";
-import { Alarm } from "../../../models/alarm";
-import { Monitoring } from "../../../models/monitoring";
-import { getTheme } from "../../../components/theme";
+import { PatientInfoWidgetProps } from '../../../components/dashboard-widgets/patient-info-widget'
+import { createPatient, triggerMouseEvent } from '../../common/utils'
+import i18n from '../../../lib/language'
+import * as authHookMock from '../../../lib/auth'
+import AlarmCard from '../../../components/alarm/alarm-card'
+import User from '../../../lib/auth/user'
+import { Alarm } from '../../../models/alarm'
+import { Monitoring } from '../../../models/monitoring'
+import { getTheme } from '../../../components/theme'
 
-jest.mock("../../../lib/auth");
-describe("AlarmCard", () => {
-  const patient = createPatient("fakePatientId", []);
-  let container: HTMLElement | null = null;
+jest.mock('../../../lib/auth')
+describe('AlarmCard', () => {
+  const patient = createPatient('fakePatientId', [])
+  let container: HTMLElement | null = null
 
   beforeAll(() => {
-    i18n.changeLanguage("en");
+    i18n.changeLanguage('en');
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-  });
+      return children
+    })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
+    container = document.createElement('div')
     document.body.appendChild(container);
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserPatient: () => false } as User };
-    });
-  });
+      return { user: { isUserPatient: () => false } as User }
+    })
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
   function mountComponent(props: PatientInfoWidgetProps = { patient }) {
     act(() => {
@@ -76,63 +76,61 @@ describe("AlarmCard", () => {
           <AlarmCard
             patient={props.patient}
           />
-        </ThemeProvider>, container);
-    });
+        </ThemeProvider>, container)
+    })
   }
 
-  it("should display configure button when logged in user is not a patient", () => {
-    mountComponent();
-    expect(document.getElementById("configure-icon-button-id")).not.toBeNull();
-  });
+  it('should display configure button when logged in user is not a patient', () => {
+    mountComponent()
+    expect(document.getElementById('configure-icon-button-id')).not.toBeNull()
+  })
 
-  it("should not display configure button when logged in user is a patient", () => {
+  it('should not display configure button when logged in user is a patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserPatient: () => true } as User };
-    });
-    mountComponent();
-    expect(document.getElementById("configure-icon-button-id")).toBeNull();
-  });
+      return { user: { isUserPatient: () => true } as User }
+    })
+    mountComponent()
+    expect(document.getElementById('configure-icon-button-id')).toBeNull()
+  })
 
-  it("should display correct title when patient has no alarms", () => {
-    mountComponent();
-    expect(document.getElementById("alarm-card-header-id").querySelector(".MuiCardHeader-title").innerHTML).toEqual("events");
-  });
+  it('should display correct title when patient has no alarms', () => {
+    mountComponent()
+    expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events')
+  })
 
-  it("should display correct title patient has 2 alarms", () => {
+  it('should display correct title patient has 2 alarms', () => {
     const alarms: Alarm = {
       timeSpentAwayFromTargetRate: 0,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 5,
       frequencyOfSevereHypoglycemiaActive: true,
       nonDataTransmissionRate: 10,
-      nonDataTransmissionActive: true,
-    };
-    const patientWithAlarms = createPatient("fakePatientId", [], alarms);
-    mountComponent({ patient: patientWithAlarms });
-    expect(document.getElementById("alarm-card-header-id").querySelector(".MuiCardHeader-title").innerHTML).toEqual("events (+2)");
-  });
+      nonDataTransmissionActive: true
+    }
+    const patientWithAlarms = createPatient('fakePatientId', [], alarms)
+    mountComponent({ patient: patientWithAlarms })
+    expect(document.getElementById('alarm-card-header-id').querySelector('.MuiCardHeader-title').innerHTML).toEqual('events (+2)')
+  })
 
-  it("should open dialog when clicking on configure button and close it when clicking on cancel", () => {
+  it('should open dialog when clicking on configure button and close it when clicking on cancel', () => {
     const alarm: Alarm = {
       timeSpentAwayFromTargetRate: 10,
       timeSpentAwayFromTargetActive: false,
       frequencyOfSevereHypoglycemiaRate: 20,
       frequencyOfSevereHypoglycemiaActive: false,
       nonDataTransmissionRate: 30,
-      nonDataTransmissionActive: false,
-    };
+      nonDataTransmissionActive: false
+    }
     const monitoring: Monitoring = {
-      enabled: true,
-    };
-    const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
-    mountComponent({ patient: patientWithMonitoring });
-    const configureButton = document.getElementById("configure-icon-button-id");
-    triggerMouseEvent("click", configureButton);
-    expect(document.getElementById("patient-alarm-dialog-id")).not.toBeNull();
-    const cancelButton = document.getElementById("cancel-button-id");
-    triggerMouseEvent("click", cancelButton);
-    expect(document.getElementById("patient-alarm-dialog-id")).toBeNull();
-  });
-
-});
-
+      enabled: true
+    }
+    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    mountComponent({ patient: patientWithMonitoring })
+    const configureButton = document.getElementById('configure-icon-button-id')
+    triggerMouseEvent('click', configureButton)
+    expect(document.getElementById('patient-alarm-dialog-id')).not.toBeNull()
+    const cancelButton = document.getElementById('cancel-button-id')
+    triggerMouseEvent('click', cancelButton)
+    expect(document.getElementById('patient-alarm-dialog-id')).toBeNull()
+  })
+})

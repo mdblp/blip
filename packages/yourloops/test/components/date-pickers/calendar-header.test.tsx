@@ -26,45 +26,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
-import dayjs from "dayjs";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act } from 'react-dom/test-utils'
+import dayjs from 'dayjs'
 
-import { CalendarChangeMonth } from "../../../components/date-pickers/models";
-import CalendarHeader from "../../../components/date-pickers/calendar-header";
-import i18n from "../../../lib/language";
+import { CalendarChangeMonth } from '../../../components/date-pickers/models'
+import CalendarHeader from '../../../components/date-pickers/calendar-header'
+import i18n from '../../../lib/language'
 
-
-describe("Calendar header", () => {
-
-  let container: HTMLDivElement | null = null;
+describe('Calendar header', () => {
+  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
-    i18n.addResourceBundle("en", "yourloops", {
-      "date-picker-header-date-format": "MMMM YYYY",
-      "date-picker-toolbar-date-format": "ddd, MMM D",
+    i18n.addResourceBundle('en', 'yourloops', {
+      'date-picker-header-date-format': 'MMMM YYYY',
+      'date-picker-toolbar-date-format': 'ddd, MMM D'
     })
-      .init({ react: { useSuspense: true } });
-  });
+      .init({ react: { useSuspense: true } })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
-  it("should correctly render a month", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = jest.fn();
-    const onNextMonth = jest.fn();
+  it('should correctly render a month', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
+    const onPrevMonth = jest.fn()
+    const onNextMonth = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -74,33 +72,33 @@ describe("Calendar header", () => {
             currentMonth={today}
             onPrevMonth={onPrevMonth}
             onNextMonth={onNextMonth}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    expect(document.getElementById("calendar-header")).not.toBeNull();
+    expect(document.getElementById('calendar-header')).not.toBeNull()
 
-    const buttonPrevMonth = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonPrevMonth).not.toBeNull();
-    expect(buttonPrevMonth.nodeName.toLowerCase()).toBe("button");
-    expect(buttonPrevMonth.getAttribute("disabled")).toBeNull();
-    buttonPrevMonth.click();
-    expect(onPrevMonth).toHaveBeenCalledTimes(1);
+    const buttonPrevMonth = document.getElementById('calendar-header-button-prev-month')
+    expect(buttonPrevMonth).not.toBeNull()
+    expect(buttonPrevMonth.nodeName.toLowerCase()).toBe('button')
+    expect(buttonPrevMonth.getAttribute('disabled')).toBeNull()
+    buttonPrevMonth.click()
+    expect(onPrevMonth).toHaveBeenCalledTimes(1)
 
-    const buttonNextMonth = document.getElementById("calendar-header-button-next-month");
-    expect(buttonNextMonth).not.toBeNull();
-    expect(buttonNextMonth.nodeName.toLowerCase()).toBe("button");
-    expect(buttonNextMonth.getAttribute("disabled")).toBeNull();
-    buttonNextMonth.click();
-    expect(onNextMonth).toHaveBeenCalledTimes(1);
+    const buttonNextMonth = document.getElementById('calendar-header-button-next-month')
+    expect(buttonNextMonth).not.toBeNull()
+    expect(buttonNextMonth.nodeName.toLowerCase()).toBe('button')
+    expect(buttonNextMonth.getAttribute('disabled')).toBeNull()
+    buttonNextMonth.click()
+    expect(onNextMonth).toHaveBeenCalledTimes(1)
 
-    const displayedMonth = document.getElementById("calendar-header-current-month");
-    expect(displayedMonth).not.toBeNull();
-    expect(displayedMonth.innerHTML).toBe("November 2021");
-  });
+    const displayedMonth = document.getElementById('calendar-header-current-month')
+    expect(displayedMonth).not.toBeNull()
+    expect(displayedMonth.innerHTML).toBe('November 2021')
+  })
 
-  it("should correctly restrict prev/next month when disabled", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
+  it('should correctly restrict prev/next month when disabled', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
 
     await act(() => {
       return new Promise((resolve) => {
@@ -108,28 +106,28 @@ describe("Calendar header", () => {
           <CalendarHeader
             orientation="landscape"
             currentMonth={today}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonPrevMonth = document.getElementById("calendar-header-button-prev-month");
-    expect(buttonPrevMonth).not.toBeNull();
-    expect(buttonPrevMonth.getAttribute("disabled")).not.toBeNull();
+    const buttonPrevMonth = document.getElementById('calendar-header-button-prev-month')
+    expect(buttonPrevMonth).not.toBeNull()
+    expect(buttonPrevMonth.getAttribute('disabled')).not.toBeNull()
 
-    const buttonNextMonth = document.getElementById("calendar-header-button-next-month");
-    expect(buttonNextMonth).not.toBeNull();
-    expect(buttonNextMonth.getAttribute("disabled")).not.toBeNull();
-  });
+    const buttonNextMonth = document.getElementById('calendar-header-button-next-month')
+    expect(buttonNextMonth).not.toBeNull()
+    expect(buttonNextMonth.getAttribute('disabled')).not.toBeNull()
+  })
 
-  it("should render the transition when requested", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = jest.fn();
-    const onNextMonth = jest.fn();
+  it('should render the transition when requested', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
+    const onPrevMonth = jest.fn()
+    const onNextMonth = jest.fn()
     const changingMonth: CalendarChangeMonth = {
-      direction: "right",
-      toMonth: today.add(1, "month"),
-      onAnimationEnd: jest.fn(),
-    };
+      direction: 'right',
+      toMonth: today.add(1, 'month'),
+      onAnimationEnd: jest.fn()
+    }
 
     await act(() => {
       return new Promise((resolve) => {
@@ -140,23 +138,23 @@ describe("Calendar header", () => {
             onPrevMonth={onPrevMonth}
             onNextMonth={onNextMonth}
             changingMonth={changingMonth}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const prevMonth = document.getElementById("calendar-header-prev-month");
-    expect(prevMonth).not.toBeNull();
-    expect(prevMonth.innerHTML).toBe("December 2021");
+    const prevMonth = document.getElementById('calendar-header-prev-month')
+    expect(prevMonth).not.toBeNull()
+    expect(prevMonth.innerHTML).toBe('December 2021')
 
-    const nextMonth = document.getElementById("calendar-header-next-month");
-    expect(nextMonth).not.toBeNull();
-    expect(nextMonth.innerHTML).toBe("December 2021");
-  });
+    const nextMonth = document.getElementById('calendar-header-next-month')
+    expect(nextMonth).not.toBeNull()
+    expect(nextMonth.innerHTML).toBe('December 2021')
+  })
 
-  it("should hide the prev-month button when position is last and orientation islandscape", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = jest.fn();
-    const onNextMonth = jest.fn();
+  it('should hide the prev-month button when position is last and orientation islandscape', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
+    const onPrevMonth = jest.fn()
+    const onNextMonth = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -167,20 +165,20 @@ describe("Calendar header", () => {
             currentMonth={today}
             onPrevMonth={onPrevMonth}
             onNextMonth={onNextMonth}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonPrevMonth = document.getElementById("calendar-header-last-button-prev-month");
-    expect(buttonPrevMonth).not.toBeNull();
-    expect(buttonPrevMonth.getAttribute("aria-disabled")).toBe("true");
+    const buttonPrevMonth = document.getElementById('calendar-header-last-button-prev-month')
+    expect(buttonPrevMonth).not.toBeNull()
+    expect(buttonPrevMonth.getAttribute('aria-disabled')).toBe('true')
   }
-  );
+  )
 
-  it("should hide the next-month button when position is first and orientation islandscape", async () => {
-    const today = dayjs("2021-11-01T12:00:00Z"); // Monday
-    const onPrevMonth = jest.fn();
-    const onNextMonth = jest.fn();
+  it('should hide the next-month button when position is first and orientation islandscape', async () => {
+    const today = dayjs('2021-11-01T12:00:00Z') // Monday
+    const onPrevMonth = jest.fn()
+    const onNextMonth = jest.fn()
 
     await act(() => {
       return new Promise((resolve) => {
@@ -191,12 +189,12 @@ describe("Calendar header", () => {
             currentMonth={today}
             onPrevMonth={onPrevMonth}
             onNextMonth={onNextMonth}
-          />, container, resolve);
-      });
-    });
+          />, container, resolve)
+      })
+    })
 
-    const buttonNextMonth = document.getElementById("calendar-header-first-button-next-month");
-    expect(buttonNextMonth).not.toBeNull();
-    expect(buttonNextMonth.getAttribute("aria-disabled")).toBe("true");
-  });
-});
+    const buttonNextMonth = document.getElementById('calendar-header-first-button-next-month')
+    expect(buttonNextMonth).not.toBeNull()
+    expect(buttonNextMonth.getAttribute('aria-disabled')).toBe('true')
+  })
+})

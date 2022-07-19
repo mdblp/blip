@@ -31,11 +31,11 @@
  */
 interface APIErrorResponse {
   /** Response code (HTTP status) */
-  code: number;
+  code: number
   /** Error code */
-  error?: number;
+  error?: number
   /** Reason of the error */
-  reason: string;
+  reason: string
 }
 
-export { APIErrorResponse };
+export { APIErrorResponse }

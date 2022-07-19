@@ -15,37 +15,37 @@
  * == BSD2 LICENSE ==
  */
 
-import { scaleLinear } from "d3-scale";
+import { scaleLinear } from 'd3-scale'
 
-const trendsWidth = 864;
-const trendsHeight = 360;
+const trendsWidth = 864
+const trendsHeight = 360
 
 const trendsXScale = scaleLinear()
   .domain([0, 864e5])
-  .range([0, trendsWidth]);
+  .range([0, trendsWidth])
 
 const trendsYScale = scaleLinear()
   .domain([40, 400])
   .range([trendsHeight, 0])
-  .clamp(true);
+  .clamp(true)
 
-const trends = { trendsWidth, trendsHeight, trendsXScale, trendsYScale };
+const trends = { trendsWidth, trendsHeight, trendsXScale, trendsYScale }
 
-const detailWidth = 864;
-const detailHeight = 100;
+const detailWidth = 864
+const detailHeight = 100
 
 const detailXScale = scaleLinear()
   .domain([0, 864e5])
-  .range([0, detailWidth]);
+  .range([0, detailWidth])
 
 const detailBasalScale = scaleLinear()
   .domain([0, 5])
-  .range([detailHeight, 0]);
+  .range([detailHeight, 0])
 
 const detailBolusScale = scaleLinear()
   .domain([0, 15])
-  .range([detailHeight, 0]);
+  .range([detailHeight, 0])
 
-const detail = { detailWidth, detailHeight, detailXScale, detailBasalScale, detailBolusScale };
+const detail = { detailWidth, detailHeight, detailXScale, detailBasalScale, detailBolusScale }
 
-export { detail, trends };
+export { detail, trends }

@@ -26,64 +26,64 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import httpStatus from "../lib/http-status-codes";
-import { t } from "../lib/language";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
+import httpStatus from '../lib/http-status-codes'
+import { t } from '../lib/language'
 
 interface Args {
-  url: string;
-  config?: AxiosRequestConfig;
+  url: string
+  config?: AxiosRequestConfig
 }
 
 interface ArgsWithPayload<P> extends Args {
-  payload?: P;
+  payload?: P
 }
 
 export enum ErrorMessageStatus {
-  NotFound = "404-not-found"
+  NotFound = '404-not-found'
 }
 
 export default class HttpService {
-  private static retrieveAccessToken: () => Promise<string>;
-  static shorelineAccessToken: string;
+  private static retrieveAccessToken: () => Promise<string>
+  static shorelineAccessToken: string
 
-  static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>) {
-    HttpService.retrieveAccessToken = accessTokenMethod;
+  static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
+    HttpService.retrieveAccessToken = accessTokenMethod
   }
 
-  static getAccessToken() {
-    return HttpService.retrieveAccessToken();
+  static async getAccessToken(): Promise<string> {
+    return await HttpService.retrieveAccessToken()
   }
 
   static async get<T>({ url, config }: Args): Promise<AxiosResponse<T>> {
     try {
-      return await axios.get<T>(url, { ...config });
+      return await axios.get<T>(url, { ...config })
     } catch (error) {
-      throw HttpService.handleError(error as AxiosError);
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
   static async post<R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
     try {
-      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config });
+      return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
-      throw HttpService.handleError(error as AxiosError);
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
   static async put<R, P = undefined>({ url, payload, config }: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
     try {
-      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config });
+      return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
-      throw HttpService.handleError(error as AxiosError);
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
   static async delete({ url, config }: Args): Promise<AxiosResponse> {
     try {
-      return await axios.delete(url, { ...config });
+      return await axios.delete(url, { ...config })
     } catch (error) {
-      throw HttpService.handleError(error as AxiosError);
+      throw HttpService.handleError(error as AxiosError)
     }
   }
 
@@ -91,15 +91,15 @@ export default class HttpService {
     if (error.response) {
       if (error.response.status >= 400 && error.response.status <= 550) {
         switch (error.response.status) {
-        case httpStatus.StatusNotFound:
-          throw Error(ErrorMessageStatus.NotFound);
-        case httpStatus.StatusInternalServerError:
-          throw Error(t("error-http-500"));
-        default:
-          throw Error(t("error-http-40x"));
+          case httpStatus.StatusNotFound:
+            throw Error(ErrorMessageStatus.NotFound)
+          case httpStatus.StatusInternalServerError:
+            throw Error(t('error-http-500'))
+          default:
+            throw Error(t('error-http-40x'))
         }
       }
     }
-    return error;
+    return error
   }
 }

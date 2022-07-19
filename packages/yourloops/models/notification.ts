@@ -26,42 +26,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Profile } from "./user";
-import { TeamMemberRole } from "./team";
+import { Profile } from './user'
+import { TeamMemberRole } from './team'
 
 export enum APINotificationType {
-  careTeamInvitation = "careteam_invitation",
-  medicalTeamProInvitation = "medicalteam_invitation",
-  medicalTeamPatientInvitation = "medicalteam_patient_invitation",
-  medicalTeamDoAdmin = "medicalteam_do_admin",
-  medicalTeamRemoveMember = "medicalteam_remove",
-  medicalTeamMonitoringInvitation = "medicalteam_monitoring_invitation",
+  careTeamInvitation = 'careteam_invitation',
+  medicalTeamProInvitation = 'medicalteam_invitation',
+  medicalTeamPatientInvitation = 'medicalteam_patient_invitation',
+  medicalTeamDoAdmin = 'medicalteam_do_admin',
+  medicalTeamRemoveMember = 'medicalteam_remove',
+  medicalTeamMonitoringInvitation = 'medicalteam_monitoring_invitation',
 }
 
 export interface INotificationAPI {
-  key: string;
-  type: APINotificationType;
+  key: string
+  type: APINotificationType
   /** Current user email */
-  email: string;
+  email: string
   /** User who create the invitation == creator.userid? */
-  creatorId: string;
+  creatorId: string
   /** Undocumented value */
-  context?: null;
+  context?: null
   /** Notification creation date */
-  created: string;
+  created: string
   target?: {
     /** TeamID */
-    id: string;
+    id: string
     /** Team name */
-    name: string;
-  };
+    name: string
+  }
   /** The role we will have in the team */
-  role?: TeamMemberRole;
+  role?: TeamMemberRole
   /** Undocumented value */
-  shortKey: string;
+  shortKey: string
   /** Some information on the user who created this notification */
   creator: {
-    userid: string;
-    profile?: Profile;
-  };
+    userid: string
+    profile?: Profile
+  }
 }

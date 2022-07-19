@@ -15,51 +15,51 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import { assert, expect } from "chai";
+import _ from 'lodash'
+import { assert, expect } from 'chai'
 
-import { MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD } from "../js/data/util/constants";
-import TidelineData from "../js/tidelinedata";
+import { MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS, BG_CLAMP_THRESHOLD } from '../js/data/util/constants'
+import TidelineData from '../js/tidelinedata'
 
 // import types from '../dev/testpage/types';
 
-describe("TidelineData", function() {
-  const bgUnits = MGDL_UNITS;
-  const roundingAllowance = 0.0001;
-  const fixedDate = new Date("2021-02-10T09:00:00Z");
-  const fixedDateIso = fixedDate.toISOString();
-  const fixedDateValue = fixedDate.valueOf();
-  const timezoneName = "Europe/Paris";
+describe('TidelineData', function() {
+  const bgUnits = MGDL_UNITS
+  const roundingAllowance = 0.0001
+  const fixedDate = new Date('2021-02-10T09:00:00Z')
+  const fixedDateIso = fixedDate.toISOString()
+  const fixedDateValue = fixedDate.valueOf()
+  const timezoneName = 'Europe/Paris'
 
   const properties = [
-    "data",
-    "maxDuration",
-    "grouped",
-    "diabetesData",
-    "deviceParameters",
-    "physicalActivities",
-    "zenEvents",
-    "confidentialEvents",
-    "latestPumpManufacturer",
-    "endpoints",
-    "basicsData",
-    "dataByDate",
-    "timezonesList",
-  ];
+    'data',
+    'maxDuration',
+    'grouped',
+    'diabetesData',
+    'deviceParameters',
+    'physicalActivities',
+    'zenEvents',
+    'confidentialEvents',
+    'latestPumpManufacturer',
+    'endpoints',
+    'basicsData',
+    'dataByDate',
+    'timezonesList'
+  ]
 
-  describe("Init", function () {
+  describe('Init', function () {
     const bgClasses = {
-      "very-low": { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance},
-      "low": { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower - roundingAllowance},
-      "target": { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper + roundingAllowance},
-      "high": { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh + roundingAllowance},
-      "very-high": { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
-    };
+      'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow - roundingAllowance},
+      'low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower - roundingAllowance},
+      'target': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper + roundingAllowance},
+      'high': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh + roundingAllowance},
+      'very-high': { boundary: BG_CLAMP_THRESHOLD[bgUnits] }
+    }
     /** @type {TidelineData} */
-    let td = null;
+    let td = null
 
     before(() => {
-      td = new TidelineData();
+      td = new TidelineData()
       // const data = [new types.SMBG()];
       // data[0].units = MMOLL_UNITS;
       // await thisTd.addData(data);
@@ -68,690 +68,690 @@ describe("TidelineData", function() {
       //   new types.CBG(),
       // ];
       // await thisTd.addData(data);
-    });
+    })
 
-    it("should be a function", function() {
-      assert.isFunction(TidelineData);
-    });
+    it('should be a function', function() {
+      assert.isFunction(TidelineData)
+    })
 
-    it("should be a (newable) constructor", function() {
-      expect(td).to.exist;
-    });
+    it('should be a (newable) constructor', function() {
+      expect(td).to.exist
+    })
 
-    it("most properties should be null", () => {
-      const nullProperties = _.difference(properties, ["data", "maxDuration"]);
+    it('most properties should be null', () => {
+      const nullProperties = _.difference(properties, ['data', 'maxDuration'])
       nullProperties.forEach((prop) => {
-        expect(td[prop], prop).to.be.null;
-      });
-    });
+        expect(td[prop], prop).to.be.null
+      })
+    })
 
-    it("should have a `data` attribute that is an array", function() {
-      assert.isArray(td.data);
-    });
+    it('should have a `data` attribute that is an array', function() {
+      assert.isArray(td.data)
+    })
 
-    it("should have a `maxDuration` attribute that is a number equal 0", function() {
-      expect(td.maxDuration).to.be.equal(0);
-    });
+    it('should have a `maxDuration` attribute that is a number equal 0', function() {
+      expect(td.maxDuration).to.be.equal(0)
+    })
 
-    it("should default to mg/dL for `bgUnits` and `bgClasses`", function() {
-      const msg = JSON.stringify({ expected: bgClasses, having: td.bgClasses }, null, 2);
-      expect(td.opts.bgClasses, msg).to.deep.eql(bgClasses);
-      expect(td.opts.bgUnits).to.equal(MGDL_UNITS);
-    });
+    it('should default to mg/dL for `bgUnits` and `bgClasses`', function() {
+      const msg = JSON.stringify({ expected: bgClasses, having: td.bgClasses }, null, 2)
+      expect(td.opts.bgClasses, msg).to.deep.eql(bgClasses)
+      expect(td.opts.bgUnits).to.equal(MGDL_UNITS)
+    })
 
-    it("should transform `bgClasses` when `bgUnits` are mmol/L", async () => {
-      td = new TidelineData({bgUnits: MMOLL_UNITS});
-      expect(td.opts.bgClasses).to.not.eql(bgClasses);
-      expect(td.opts.bgUnits).to.equal(MMOLL_UNITS);
-    });
-  });
+    it('should transform `bgClasses` when `bgUnits` are mmol/L', async () => {
+      td = new TidelineData({bgUnits: MMOLL_UNITS})
+      expect(td.opts.bgClasses).to.not.eql(bgClasses)
+      expect(td.opts.bgUnits).to.equal(MMOLL_UNITS)
+    })
+  })
 
-  describe("normalizeTime", () => {
-    it("should set normalTime and epoch values", () => {
+  describe('normalizeTime', () => {
+    it('should set normalTime and epoch values', () => {
       const dInitial = {
-        type: "upload",
-        time: fixedDateIso,
-      };
+        type: 'upload',
+        time: fixedDateIso
+      }
       const dExpected = {
         ...dInitial,
         normalTime: fixedDateIso,
-        epoch: fixedDateValue,
-      };
-      const dResult = _.clone(dInitial);
-      TidelineData.prototype.normalizeTime(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
+        epoch: fixedDateValue
+      }
+      const dResult = _.clone(dInitial)
+      TidelineData.prototype.normalizeTime(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
 
-    it("should set normalEnd and epochEnd for basal values", () => {
+    it('should set normalEnd and epochEnd for basal values', () => {
       const dInitial = {
-        type: "basal",
+        type: 'basal',
         time: fixedDateIso,
         duration: 5000,
         suppressed: {
-          type: "basal",
-          deliveryType: "temp",
-        },
-      };
+          type: 'basal',
+          deliveryType: 'temp'
+        }
+      }
       const dExpected = {
         ...dInitial,
         normalTime: fixedDateIso,
         normalEnd: new Date(fixedDateValue + dInitial.duration).toISOString(),
         epoch: fixedDateValue,
-        epochEnd: fixedDateValue + dInitial.duration,
-      };
-      delete dExpected.suppressed;
-      const dResult = _.clone(dInitial);
-      TidelineData.prototype.normalizeTime(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
+        epochEnd: fixedDateValue + dInitial.duration
+      }
+      delete dExpected.suppressed
+      const dResult = _.clone(dInitial)
+      TidelineData.prototype.normalizeTime(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
 
-    it("should set normalEnd and epochEnd for deviceEvent/confidential values", () => {
+    it('should set normalEnd and epochEnd for deviceEvent/confidential values', () => {
       const dInitial = {
-        type: "deviceEvent",
-        subType: "confidential",
+        type: 'deviceEvent',
+        subType: 'confidential',
         time: fixedDateIso,
         duration: {
           value: 1,
-          units: "hours",
-        },
-      };
+          units: 'hours'
+        }
+      }
       const dExpected = {
         ...dInitial,
         normalTime: fixedDateIso,
         normalEnd: new Date(fixedDateValue + dInitial.duration.value * 60 * 60 * 1000).toISOString(),
         epoch: fixedDateValue,
-        epochEnd: fixedDateValue + dInitial.duration.value * 60 * 60 * 1000,
-      };
-      const dResult = _.clone(dInitial);
-      TidelineData.prototype.normalizeTime(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
+        epochEnd: fixedDateValue + dInitial.duration.value * 60 * 60 * 1000
+      }
+      const dResult = _.clone(dInitial)
+      TidelineData.prototype.normalizeTime(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
 
-    it("should set normalEnd and epochEnd for deviceEvent/zen values", () => {
+    it('should set normalEnd and epochEnd for deviceEvent/zen values', () => {
       const dInitial = {
-        type: "deviceEvent",
-        subType: "zen",
+        type: 'deviceEvent',
+        subType: 'zen',
         time: fixedDateIso,
         duration: {
           value: 30,
-          units: "minutes",
-        },
-      };
+          units: 'minutes'
+        }
+      }
       const dExpected = {
         ...dInitial,
         normalTime: fixedDateIso,
         normalEnd: new Date(fixedDateValue + dInitial.duration.value * 60 * 1000).toISOString(),
         epoch: fixedDateValue,
-        epochEnd: fixedDateValue + dInitial.duration.value * 60 * 1000,
-      };
-      const dResult = _.clone(dInitial);
-      TidelineData.prototype.normalizeTime(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
-  });
+        epochEnd: fixedDateValue + dInitial.duration.value * 60 * 1000
+      }
+      const dResult = _.clone(dInitial)
+      TidelineData.prototype.normalizeTime(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
+  })
 
 
-  describe("cleanDatum", () => {
+  describe('cleanDatum', () => {
     const dInitial = {
-      id: "abc",
-      type: "cbg",
+      id: 'abc',
+      type: 'cbg',
       time: fixedDateIso,
       deviceTime: fixedDateIso,
-      deviceId:  "ABC",
-      deviceSerialNumber: "ABC",
+      deviceId:  'ABC',
+      deviceSerialNumber: 'ABC',
       timezoneOffset: 0,
       clockDriftOffset: 0,
       conversionOffset: 0,
       createdTime: fixedDateIso,
-      _id: "abc",
-      _userId: "abc",
-      _schemaVersion: 3,
-    };
+      _id: 'abc',
+      _userId: 'abc',
+      _schemaVersion: 3
+    }
 
     /** @type {TidelineData} */
-    let tidelineData = null;
+    let tidelineData = null
 
     before(() => {
-      tidelineData = new TidelineData();
-    });
+      tidelineData = new TidelineData()
+    })
 
-    it("should cleanup unwanted datum fields", () => {
+    it('should cleanup unwanted datum fields', () => {
       const dExpected = {
         id: dInitial.id,
         type: dInitial.type,
-        source: "Diabeloop",
-      };
-      const dResult = _.clone(dInitial);
-      tidelineData.cleanDatum(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
+        source: 'Diabeloop'
+      }
+      const dResult = _.clone(dInitial)
+      tidelineData.cleanDatum(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
 
-    it("should should keep some device information for pumpSettings", () => {
+    it('should should keep some device information for pumpSettings', () => {
       const dExpected = {
         id: dInitial.id,
         deviceTime: dInitial.deviceTime,
         deviceId: dInitial.deviceId,
         deviceSerialNumber: dInitial.deviceSerialNumber,
-        type: "pumpSettings",
-        source: "Diabeloop",
-      };
-      const dResult = _.clone({ ...dInitial, type: "pumpSettings" });
-      tidelineData.cleanDatum(dResult);
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
+        type: 'pumpSettings',
+        source: 'Diabeloop'
+      }
+      const dResult = _.clone({ ...dInitial, type: 'pumpSettings' })
+      tidelineData.cleanDatum(dResult)
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
 
-    it("should add an id if missing", () => {
-      const dResult = _.clone(dInitial);
-      delete dResult.id;
-      tidelineData.cleanDatum(dResult);
-      expect(dResult.id).to.be.a("string").not.empty;
-    });
-  });
+    it('should add an id if missing', () => {
+      const dResult = _.clone(dInitial)
+      delete dResult.id
+      tidelineData.cleanDatum(dResult)
+      expect(dResult.id).to.be.a('string').not.empty
+    })
+  })
 
-  describe("createTimezoneChange", () => {
+  describe('createTimezoneChange', () => {
     /** @type {TidelineData} */
-    let tidelineData = null;
+    let tidelineData = null
 
     before(() => {
-      tidelineData = new TidelineData();
-    });
+      tidelineData = new TidelineData()
+    })
 
-    it("should create a valid deviceEvent/timeChange datum", () => {
+    it('should create a valid deviceEvent/timeChange datum', () => {
       const dExpected = {
         epoch: fixedDateValue,
         normalTime: fixedDateIso,
         timezone: timezoneName,
         displayOffset: -60,
-        type: "deviceEvent",
-        subType: "timeChange",
-        source: "Diabeloop",
+        type: 'deviceEvent',
+        subType: 'timeChange',
+        source: 'Diabeloop',
         from: {
           time: fixedDateIso,
-          timeZoneName: "UTC",
+          timeZoneName: 'UTC'
         },
         to: {
           time: fixedDateIso,
-          timeZoneName: timezoneName,
+          timeZoneName: timezoneName
         },
-        method: "guessed",
-      };
+        method: 'guessed'
+      }
 
-      const dResult = tidelineData.createTimezoneChange("UTC", timezoneName, fixedDateValue);
-      expect(dResult.id).to.be.a("string").not.empty;
-      delete dResult.id;
+      const dResult = tidelineData.createTimezoneChange('UTC', timezoneName, fixedDateValue)
+      expect(dResult.id).to.be.a('string').not.empty
+      delete dResult.id
 
-      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected);
-    });
-  });
+      expect(dResult, JSON.stringify({ dExpected, dResult })).to.be.deep.equal(dExpected)
+    })
+  })
 
 
-  describe("setTimezones", () => {
+  describe('setTimezones', () => {
     /** @type {TidelineData} */
-    let td = null;
+    let td = null
 
     beforeEach(() => {
-      td = new TidelineData({ timePrefs: { timezoneName } });
-    });
+      td = new TidelineData({ timePrefs: { timezoneName } })
+    })
 
-    it("should set timezone/displayOffset/guessedTimezone if missing - using default timezone", () => {
+    it('should set timezone/displayOffset/guessedTimezone if missing - using default timezone', () => {
       const dInitial = {
-        id: "abc",
-        type: "basal",
-        epoch: fixedDateValue,
-      };
+        id: 'abc',
+        type: 'basal',
+        epoch: fixedDateValue
+      }
 
-      td.data = [dInitial];
-      td.setTimezones();
+      td.data = [dInitial]
+      td.setTimezones()
 
-      expect(td.data.length).to.be.equal(1);
-      expect(dInitial.timezone).to.be.equal(timezoneName);
-      expect(dInitial.guessedTimezone).to.be.true;
-      expect(dInitial.displayOffset).to.be.equal(-60);
-    });
+      expect(td.data.length).to.be.equal(1)
+      expect(dInitial.timezone).to.be.equal(timezoneName)
+      expect(dInitial.guessedTimezone).to.be.true
+      expect(dInitial.displayOffset).to.be.equal(-60)
+    })
 
-    it("should set timezone/displayOffset/guessedTimezone if missing - using first valid timezone", () => {
+    it('should set timezone/displayOffset/guessedTimezone if missing - using first valid timezone', () => {
       const dInitial = {
-        id: "abc",
-        type: "cbg",
-        epoch: fixedDateValue,
-      };
+        id: 'abc',
+        type: 'cbg',
+        epoch: fixedDateValue
+      }
 
-      const timezone = "America/Los_Angeles";
-      td.data = [dInitial, {...dInitial, timezone }];
-      td.setTimezones();
+      const timezone = 'America/Los_Angeles'
+      td.data = [dInitial, {...dInitial, timezone }]
+      td.setTimezones()
 
-      expect(td.data.length).to.be.equal(2);
-      expect(td.data[0].timezone).to.be.equal(timezone);
-      expect(td.data[0].guessedTimezone).to.be.true;
-      expect(td.data[0].displayOffset).to.be.equal(480);
-      expect(td.data[1].timezone).to.be.equal(timezone);
-      expect(td.data[1].guessedTimezone).to.be.undefined;
-      expect(td.data[1].displayOffset).to.be.equal(480);
-    });
+      expect(td.data.length).to.be.equal(2)
+      expect(td.data[0].timezone).to.be.equal(timezone)
+      expect(td.data[0].guessedTimezone).to.be.true
+      expect(td.data[0].displayOffset).to.be.equal(480)
+      expect(td.data[1].timezone).to.be.equal(timezone)
+      expect(td.data[1].guessedTimezone).to.be.undefined
+      expect(td.data[1].displayOffset).to.be.equal(480)
+    })
 
-    it("should should set localDate, isoWeekday and msPer24 for cbg", () => {
+    it('should should set localDate, isoWeekday and msPer24 for cbg', () => {
       const dInitial = {
-        id: "abc",
-        type: "cbg",
+        id: 'abc',
+        type: 'cbg',
         epoch: fixedDateValue,
-        timezone: timezoneName,
-      };
+        timezone: timezoneName
+      }
 
-      td.data = [dInitial];
-      td.setTimezones();
+      td.data = [dInitial]
+      td.setTimezones()
 
       td.data.forEach((d) => {
-        expect(d.timezone).to.be.equal(timezoneName);
-        expect(d.guessedTimezone).to.be.undefined;
-        expect(d.displayOffset).to.be.equal(-60);
-        expect(d.localDate).to.be.equal("2021-02-10");
-        expect(d.isoWeekday).to.be.equal("wednesday");
-        expect(d.msPer24).to.be.equal(36000000); // UTC+1 => 10h => 10 * 60 * 60 * 1000
-      });
-    });
+        expect(d.timezone).to.be.equal(timezoneName)
+        expect(d.guessedTimezone).to.be.undefined
+        expect(d.displayOffset).to.be.equal(-60)
+        expect(d.localDate).to.be.equal('2021-02-10')
+        expect(d.isoWeekday).to.be.equal('wednesday')
+        expect(d.msPer24).to.be.equal(36000000) // UTC+1 => 10h => 10 * 60 * 60 * 1000
+      })
+    })
 
-    it("should not generate a deviceEvent/timeChange event when the timezone is the synonym Etc/*", () => {
-      const synonymZone = "Etc/GMT-1";
+    it('should not generate a deviceEvent/timeChange event when the timezone is the synonym Etc/*', () => {
+      const synonymZone = 'Etc/GMT-1'
       const dInitial = {
-        id: "abc",
-        type: "bolus",
+        id: 'abc',
+        type: 'bolus',
         epoch: fixedDateValue,
-        timezone: timezoneName,
-      };
+        timezone: timezoneName
+      }
 
-      td.data = [dInitial, { ...dInitial, timezone: synonymZone }];
-      td.setTimezones();
+      td.data = [dInitial, { ...dInitial, timezone: synonymZone }]
+      td.setTimezones()
 
-      const onErrorMsg = JSON.stringify(td, null, 2);
-      expect(td.data.length, onErrorMsg).to.be.equal(2);
-      expect(td.data[0].timezone, onErrorMsg).to.be.equal(timezoneName);
-      expect(td.data[0].guessedTimezone, onErrorMsg).to.be.undefined;
-      expect(td.data[0].displayOffset, onErrorMsg).to.be.equal(-60);
-      expect(td.data[1].timezone, onErrorMsg).to.be.equal(synonymZone);
-      expect(td.data[1].guessedTimezone, onErrorMsg).to.be.undefined;
-      expect(td.data[1].displayOffset, onErrorMsg).to.be.equal(-60);
+      const onErrorMsg = JSON.stringify(td, null, 2)
+      expect(td.data.length, onErrorMsg).to.be.equal(2)
+      expect(td.data[0].timezone, onErrorMsg).to.be.equal(timezoneName)
+      expect(td.data[0].guessedTimezone, onErrorMsg).to.be.undefined
+      expect(td.data[0].displayOffset, onErrorMsg).to.be.equal(-60)
+      expect(td.data[1].timezone, onErrorMsg).to.be.equal(synonymZone)
+      expect(td.data[1].guessedTimezone, onErrorMsg).to.be.undefined
+      expect(td.data[1].displayOffset, onErrorMsg).to.be.equal(-60)
 
       expect(td.opts.timePrefs, onErrorMsg).to.be.deep.equal({
         timezoneAware: true,
         timezoneName,
-        timezoneOffset: 60,
-      });
-      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }]);
-    });
+        timezoneOffset: 60
+      })
+      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }])
+    })
 
     it('should ignore "UTC", "GMT", "Etc/GMT" timezones', () => {
-      const INVALID_TIMEZONES = ["UTC", "GMT", "Etc/GMT"];
+      const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT']
       const dInitial = {
-        id: "abc",
-        type: "bolus",
+        id: 'abc',
+        type: 'bolus',
         epoch: fixedDateValue,
-        timezone: timezoneName,
-      };
+        timezone: timezoneName
+      }
 
-      td.data.push(dInitial);
+      td.data.push(dInitial)
       INVALID_TIMEZONES.forEach((timezone) => {
-        td.data.push({ ...dInitial, timezone });
-      });
-      td.setTimezones();
+        td.data.push({ ...dInitial, timezone })
+      })
+      td.setTimezones()
 
-      const onErrorMsg = JSON.stringify(td, null, 2);
-      expect(td.data.length, onErrorMsg).to.be.equal(INVALID_TIMEZONES.length + 1);
-      expect(td.data[0].timezone, onErrorMsg).to.be.equal(timezoneName);
-      expect(td.data[0].guessedTimezone, onErrorMsg).to.be.undefined;
-      expect(td.data[0].displayOffset, onErrorMsg).to.be.equal(-60);
+      const onErrorMsg = JSON.stringify(td, null, 2)
+      expect(td.data.length, onErrorMsg).to.be.equal(INVALID_TIMEZONES.length + 1)
+      expect(td.data[0].timezone, onErrorMsg).to.be.equal(timezoneName)
+      expect(td.data[0].guessedTimezone, onErrorMsg).to.be.undefined
+      expect(td.data[0].displayOffset, onErrorMsg).to.be.equal(-60)
       for (let i=1; i<td.data.length; i++) {
-        expect(td.data[1].timezone, onErrorMsg).to.be.equal(timezoneName);
-        expect(td.data[1].guessedTimezone, onErrorMsg).to.be.true;
-        expect(td.data[1].displayOffset, onErrorMsg).to.be.equal(-60);
+        expect(td.data[1].timezone, onErrorMsg).to.be.equal(timezoneName)
+        expect(td.data[1].guessedTimezone, onErrorMsg).to.be.true
+        expect(td.data[1].displayOffset, onErrorMsg).to.be.equal(-60)
       }
 
       expect(td.opts.timePrefs, onErrorMsg).to.be.deep.equal({
         timezoneAware: true,
         timezoneName,
-        timezoneOffset: 60,
-      });
-      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }]);
-    });
+        timezoneOffset: 60
+      })
+      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }])
+    })
 
-    it("should generate a deviceEvent/timeChange on summer/winter time change", () => {
-      const summerTime = new Date("2020-10-25T00:59:00Z");
-      const winterTime = new Date("2020-10-25T01:01:00Z");
+    it('should generate a deviceEvent/timeChange on summer/winter time change', () => {
+      const summerTime = new Date('2020-10-25T00:59:00Z')
+      const winterTime = new Date('2020-10-25T01:01:00Z')
       const dInitial = {
-        id: "abc",
-        type: "bolus",
+        id: 'abc',
+        type: 'bolus',
         epoch: summerTime.valueOf(),
         normalTime: summerTime.toISOString(),
-        timezone: timezoneName,
-      };
+        timezone: timezoneName
+      }
 
       td.data = _.cloneDeep([
         dInitial,
         {
           ...dInitial,
-          type: "wizard",
+          type: 'wizard',
           epoch: winterTime.valueOf(),
           normalTime: winterTime.toISOString()
         }
-      ]);
-      td.setTimezones();
+      ])
+      td.setTimezones()
 
-      const d0 = { ...dInitial, displayOffset: -120 };
+      const d0 = { ...dInitial, displayOffset: -120 }
       const d1 = {
-        type: "deviceEvent",
-        subType: "timeChange",
-        method: "guessed",
-        source: "Diabeloop",
-        normalTime: "2020-10-25T01:00:00.000Z",
+        type: 'deviceEvent',
+        subType: 'timeChange',
+        method: 'guessed',
+        source: 'Diabeloop',
+        normalTime: '2020-10-25T01:00:00.000Z',
         timezone: timezoneName,
         displayOffset: -60,
         epoch: 1603587600000,
         from: {
-          time: "2020-10-25T00:59:59.999Z",
-          timeZoneName: timezoneName,
+          time: '2020-10-25T00:59:59.999Z',
+          timeZoneName: timezoneName
         },
         to: {
-          time: "2020-10-25T01:00:00.000Z",
-          timeZoneName: timezoneName,
-        },
-      };
+          time: '2020-10-25T01:00:00.000Z',
+          timeZoneName: timezoneName
+        }
+      }
       const d2 = {
         ...dInitial,
-        type: "wizard",
+        type: 'wizard',
         displayOffset: -60,
         epoch: winterTime.valueOf(),
         normalTime: winterTime.toISOString()
-      };
-      expect(td.data.length).to.be.equal(3);
+      }
+      expect(td.data.length).to.be.equal(3)
 
-      delete td.data[1].id; // generated, can't be guessed
-      const onErrorMsg = JSON.stringify({ td, d0, d1, d2 }, null, 2);
+      delete td.data[1].id // generated, can't be guessed
+      const onErrorMsg = JSON.stringify({ td, d0, d1, d2 }, null, 2)
 
-      expect(td.data[0], onErrorMsg).to.be.deep.equal(d0);
-      expect(td.data[1], onErrorMsg).to.be.deep.equal(d1);
-      expect(td.data[2], onErrorMsg).to.be.deep.equal(d2);
+      expect(td.data[0], onErrorMsg).to.be.deep.equal(d0)
+      expect(td.data[1], onErrorMsg).to.be.deep.equal(d1)
+      expect(td.data[2], onErrorMsg).to.be.deep.equal(d2)
       expect(td.opts.timePrefs, onErrorMsg).to.be.deep.equal({
         timezoneAware: true,
         timezoneName,
-        timezoneOffset: 60,
-      });
-      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }]);
-    });
-  });
+        timezoneOffset: 60
+      })
+      expect(td.timezonesList, onErrorMsg).to.be.deep.equal([{ time: 0, timezone: timezoneName }])
+    })
+  })
 
-  describe("YLP-820 Adjust the display of temporay basal to workaround handset issue #220", () => {
+  describe('YLP-820 Adjust the display of temporay basal to workaround handset issue #220', () => {
     const basalsData = [
       {
         _active: true,
-        createdTime: "2021-06-03T00:54:07.124Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T02:44:29",
-        id: "dbc8a9e458439d10c60020907dd9cb18",
-        time: "2021-06-03T00:44:29.057Z",
-        timezone: "Europe/Paris",
+        createdTime: '2021-06-03T00:54:07.124Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T02:44:29',
+        id: 'dbc8a9e458439d10c60020907dd9cb18',
+        time: '2021-06-03T00:44:29.057Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "basal",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
-        deliveryType: "automated",
+        type: 'basal',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
+        deliveryType: 'automated',
         duration: 60000,
-        rate: 2.21,
+        rate: 2.21
       },
       {
         _active: true,
-        createdTime: "2021-06-03T00:59:03.862Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T02:44:32",
-        id: "5df42142f60c620d4851ecb836fef2ac",
+        createdTime: '2021-06-03T00:59:03.862Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T02:44:32',
+        id: '5df42142f60c620d4851ecb836fef2ac',
         _schemaVersion: 3,
-        time: "2021-06-03T00:44:32Z",
-        timezone: "Europe/Paris",
+        time: '2021-06-03T00:44:32Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "basal",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
-        deliveryType: "temp",
+        type: 'basal',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
+        deliveryType: 'temp',
         duration: 598378,
-        rate: 2.21,
-      },
-    ];
+        rate: 2.21
+      }
+    ]
 
     /** @type {TidelineData} */
-    let td = null;
+    let td = null
 
     before(() => {
-      td = new TidelineData({ timePrefs: { timezoneName } });
-    });
+      td = new TidelineData({ timePrefs: { timezoneName } })
+    })
 
-    it("should do the adjustment", async () => {
-      await td.addData(_.cloneDeep(basalsData));
-      expect(td.data).to.be.an("array");
-      const basals = td.data.filter((d) => d.type === "basal");
-      expect(basals).to.be.lengthOf(2);
-      expect(basals.find((d) => d.subType === "temp")).to.be.undefined;
-      expect(basals[0], "first auto basal").to.deep.include({
-        id: "dbc8a9e458439d10c60020907dd9cb18",
+    it('should do the adjustment', async () => {
+      await td.addData(_.cloneDeep(basalsData))
+      expect(td.data).to.be.an('array')
+      const basals = td.data.filter((d) => d.type === 'basal')
+      expect(basals).to.be.lengthOf(2)
+      expect(basals.find((d) => d.subType === 'temp')).to.be.undefined
+      expect(basals[0], 'first auto basal').to.deep.include({
+        id: 'dbc8a9e458439d10c60020907dd9cb18',
         duration: 0,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
-      expect(basals[1], "temp basal transformed").to.deep.include({
-        id: "5df42142f60c620d4851ecb836fef2ac",
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
+      expect(basals[1], 'temp basal transformed').to.deep.include({
+        id: '5df42142f60c620d4851ecb836fef2ac',
         duration: 598378,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
-    });
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
+    })
 
-    it("should not change previously updated basal data", async () => {
+    it('should not change previously updated basal data', async () => {
       const newBasal = {
         _active: true,
-        createdTime: "2021-06-03T12:00:00.000Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T12:00:00",
-        id: "abcd",
-        time: "2021-06-03T12:00:00.000Z",
-        timezone: "Europe/Paris",
+        createdTime: '2021-06-03T12:00:00.000Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T12:00:00',
+        id: 'abcd',
+        time: '2021-06-03T12:00:00.000Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "basal",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
-        deliveryType: "temp",
+        type: 'basal',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
+        deliveryType: 'temp',
         duration: 365125,
-        rate: 2.21,
-      };
-      await td.addData([_.clone(newBasal)]);
-      expect(td.data).to.be.an("array");
-      const basals = td.data.filter((d) => d.type === "basal");
-      expect(basals).to.be.lengthOf(3);
-      expect(basals[0], "first auto basal").to.deep.include({
-        id: "dbc8a9e458439d10c60020907dd9cb18",
+        rate: 2.21
+      }
+      await td.addData([_.clone(newBasal)])
+      expect(td.data).to.be.an('array')
+      const basals = td.data.filter((d) => d.type === 'basal')
+      expect(basals).to.be.lengthOf(3)
+      expect(basals[0], 'first auto basal').to.deep.include({
+        id: 'dbc8a9e458439d10c60020907dd9cb18',
         duration: 0,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
-      expect(basals[1], "temp basal transformed").to.deep.include({
-        id: "5df42142f60c620d4851ecb836fef2ac",
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
+      expect(basals[1], 'temp basal transformed').to.deep.include({
+        id: '5df42142f60c620d4851ecb836fef2ac',
         duration: 598378,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
       expect(basals[2]).to.be.deep.include({
         id: newBasal.id,
         duration: newBasal.duration,
         deliveryType: newBasal.deliveryType,
         subType: newBasal.deliveryType,
-        rate: newBasal.rate,
-      });
-    });
+        rate: newBasal.rate
+      })
+    })
 
-    it("should not take temp basal too far appart", async () => {
-      td.data = [];
-      const data = _.cloneDeep(basalsData);
-      data.push({ ...basalsData[1], time: "2021-06-03T00:44:20.000Z", id: "a" });
-      data.push({ ...basalsData[1], time: "2021-06-03T00:44:40.000Z", id: "b" });
-      await td.addData(_.cloneDeep(data));
-      const basals = td.data.filter((d) => d.type === "basal");
-      expect(basals[0], "temp basal A not transformed").to.deep.include({
-        id: "a",
+    it('should not take temp basal too far appart', async () => {
+      td.data = []
+      const data = _.cloneDeep(basalsData)
+      data.push({ ...basalsData[1], time: '2021-06-03T00:44:20.000Z', id: 'a' })
+      data.push({ ...basalsData[1], time: '2021-06-03T00:44:40.000Z', id: 'b' })
+      await td.addData(_.cloneDeep(data))
+      const basals = td.data.filter((d) => d.type === 'basal')
+      expect(basals[0], 'temp basal A not transformed').to.deep.include({
+        id: 'a',
         duration: 598378,
-        deliveryType: "temp",
-        subType: "temp",
-        rate: 2.21,
-      });
-      expect(basals[1], "auto basal").to.deep.include({
-        id: "dbc8a9e458439d10c60020907dd9cb18",
+        deliveryType: 'temp',
+        subType: 'temp',
+        rate: 2.21
+      })
+      expect(basals[1], 'auto basal').to.deep.include({
+        id: 'dbc8a9e458439d10c60020907dd9cb18',
         duration: 0,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
-      expect(basals[2], "temp basal transformed").to.deep.include({
-        id: "5df42142f60c620d4851ecb836fef2ac",
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
+      expect(basals[2], 'temp basal transformed').to.deep.include({
+        id: '5df42142f60c620d4851ecb836fef2ac',
         duration: 598378,
-        deliveryType: "automated",
-        subType: "automated",
-        rate: 2.21,
-      });
-      expect(basals[3], "temp basal B not transformed").to.deep.include({
-        id: "b",
+        deliveryType: 'automated',
+        subType: 'automated',
+        rate: 2.21
+      })
+      expect(basals[3], 'temp basal B not transformed').to.deep.include({
+        id: 'b',
         duration: 598378,
-        deliveryType: "temp",
-        subType: "temp",
-        rate: 2.21,
-      });
-    });
-  });
+        deliveryType: 'temp',
+        subType: 'temp',
+        rate: 2.21
+      })
+    })
+  })
 
-  describe("YLP-1170 Deduplicate Boluses to workaround handset issue DROIDISSUE-269", () => {
+  describe('YLP-1170 Deduplicate Boluses to workaround handset issue DROIDISSUE-269', () => {
     /** @type {TidelineData} */
-    let td = null;
+    let td = null
 
     const bolusData = [
       {
         _active: true,
-        createdTime: "2021-06-03T12:00:00.000Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T12:00:00",
-        id: "abcd",
-        time: "2021-06-03T12:00:00.000Z",
-        timezone: "Europe/Paris",
+        createdTime: '2021-06-03T12:00:00.000Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T12:00:00',
+        id: 'abcd',
+        time: '2021-06-03T12:00:00.000Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "bolus",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
+        type: 'bolus',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
         normal: 1,
         expectedNormal: 1
       },{
         _active: true,
-        createdTime: "2021-06-03T12:00:00.000Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T12:00:00",
-        id: "NormalIsZeroButDuplicated",
-        time: "2021-06-03T12:00:00.000Z",
-        timezone: "Europe/Paris",
+        createdTime: '2021-06-03T12:00:00.000Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T12:00:00',
+        id: 'NormalIsZeroButDuplicated',
+        time: '2021-06-03T12:00:00.000Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "bolus",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
+        type: 'bolus',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
         normal: 0,
         expectedNormal: 1
       },{
         _active: true,
-        createdTime: "2021-06-03T12:00:00.000Z",
-        deviceId: "MobiGo352719110492773",
-        deviceTime: "2021-06-03T12:00:00",
-        id: "NormalIsZero",
-        time: "2021-06-03T12:10:00.000Z",
-        timezone: "Europe/Paris",
+        createdTime: '2021-06-03T12:00:00.000Z',
+        deviceId: 'MobiGo352719110492773',
+        deviceTime: '2021-06-03T12:00:00',
+        id: 'NormalIsZero',
+        time: '2021-06-03T12:10:00.000Z',
+        timezone: 'Europe/Paris',
         timezoneOffset: 120,
-        type: "bolus",
-        uploadId: "dd3b7032e7507332d85babe88d8ac173",
-        _userId: "1740d455c3",
+        type: 'bolus',
+        uploadId: 'dd3b7032e7507332d85babe88d8ac173',
+        _userId: '1740d455c3',
         normal: 0,
         expectedNormal: 1
       }
-    ];
+    ]
 
     before(() => {
-      td = new TidelineData({ timePrefs: { timezoneName } });
-    });
+      td = new TidelineData({ timePrefs: { timezoneName } })
+    })
 
-    it("should get the bolus datum without any duplicates", async () => {
-      await td.addData(_.cloneDeep(bolusData));
-      expect(td.data).to.be.an("array");
-      const boluses = td.data.filter((d) => d.type === "bolus");
-      expect(boluses).to.be.lengthOf(2);
-      const normalisZero = boluses.filter((d) => d.normal === 0);
-      expect(normalisZero).to.be.lengthOf(1);
-      const uniqueByTime = boluses.filter((d) => d.normalTime === "2021-06-03T12:00:00.000Z");
-      expect(uniqueByTime).to.be.lengthOf(1);
-    });
-  });
+    it('should get the bolus datum without any duplicates', async () => {
+      await td.addData(_.cloneDeep(bolusData))
+      expect(td.data).to.be.an('array')
+      const boluses = td.data.filter((d) => d.type === 'bolus')
+      expect(boluses).to.be.lengthOf(2)
+      const normalisZero = boluses.filter((d) => d.normal === 0)
+      expect(normalisZero).to.be.lengthOf(1)
+      const uniqueByTime = boluses.filter((d) => d.normalTime === '2021-06-03T12:00:00.000Z')
+      expect(uniqueByTime).to.be.lengthOf(1)
+    })
+  })
 
-  describe("joinWizardsAndBoluses", () => {
+  describe('joinWizardsAndBoluses', () => {
     const data = [{
-      type: "bolus",
-      id: "abcde",
+      type: 'bolus',
+      id: 'abcde'
     }, {
-      type: "wizard",
-      bolus: "abcde",
-      id: "bcdef",
+      type: 'wizard',
+      bolus: 'abcde',
+      id: 'bcdef'
     }, {
-      type: "bolus",
-      id: "cdefg",
+      type: 'bolus',
+      id: 'cdefg'
     }, {
-      type: "wizard",
-      id: "defgh",
+      type: 'wizard',
+      id: 'defgh'
     }, {
-      type: "wizard",
-      id: "efghi",
-      bolus: "fghij",
+      type: 'wizard',
+      id: 'efghi',
+      bolus: 'fghij'
     }, {
-      type: "bolus",
-      id: "ghijk",
+      type: 'bolus',
+      id: 'ghijk'
     }, {
-      type: "wizard",
-      id: "hijkl"
-    }];
+      type: 'wizard',
+      id: 'hijkl'
+    }]
     /** @type {TidelineData} */
-    let td = null;
+    let td = null
 
     before(() => {
-      td = new TidelineData();
-      td.data = _.cloneDeep(data);
+      td = new TidelineData()
+      td.data = _.cloneDeep(data)
       // Already joined wizard/bolus must not change:
-      const bolus = td.data[5];
-      const wizard = td.data[6];
-      wizard.bolus = bolus;
-      bolus.wizard = wizard;
-      td.joinWizardsAndBoluses();
-      expect(td.data.length).to.be.equal(data.length);
-    });
+      const bolus = td.data[5]
+      const wizard = td.data[6]
+      wizard.bolus = bolus
+      bolus.wizard = wizard
+      td.joinWizardsAndBoluses()
+      expect(td.data.length).to.be.equal(data.length)
+    })
 
     it("should join a bolus and wizard for wizard which includes the bolus's `id` in the `bolus` field", () => {
-      expect(td.data[0].id).to.be.eq(data[0].id);
-      expect(td.data[0].wizard).to.be.an("object");
-      expect(td.data[0].wizard.id).to.be.eq(data[1].id);
-      expect(td.data[1].id).to.be.eq(data[1].id);
-      expect(td.data[1].bolus).to.be.an("object");
-      expect(td.data[1].bolus.id).to.be.eq(data[0].id);
-    });
+      expect(td.data[0].id).to.be.eq(data[0].id)
+      expect(td.data[0].wizard).to.be.an('object')
+      expect(td.data[0].wizard.id).to.be.eq(data[1].id)
+      expect(td.data[1].id).to.be.eq(data[1].id)
+      expect(td.data[1].bolus).to.be.an('object')
+      expect(td.data[1].bolus.id).to.be.eq(data[0].id)
+    })
 
-    it("should not change bolus & wizard if wizard do not have a bolus `id` or if bolus is missing", () => {
+    it('should not change bolus & wizard if wizard do not have a bolus `id` or if bolus is missing', () => {
       for (let i = 2; i < 5; i++) {
-        const datum = data[i];
-        expect(datum).to.be.deep.equal(td.data[i]);
+        const datum = data[i]
+        expect(datum).to.be.deep.equal(td.data[i])
       }
-      const bolus = td.data[5];
-      const wizard = td.data[6];
-      expect(bolus.wizard === wizard).to.be.true;
-      expect(wizard.bolus === bolus).to.be.true;
-    });
-  });
+      const bolus = td.data[5]
+      const wizard = td.data[6]
+      expect(bolus.wizard === wizard).to.be.true
+      expect(wizard.bolus === bolus).to.be.true
+    })
+  })
 
 /*
   it('should contain sorted groups of data by normalTime', async () => {
@@ -1853,4 +1853,4 @@ describe("TidelineData", function() {
     });
   });
   */
-});
+})

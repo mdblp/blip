@@ -15,21 +15,21 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import schema from "./validator/schematron";
-import commonSchema from "./common";
-import basal from "./basal";
-import bolus from "./bolus";
-import bg from "./bg";
-import message from "./message";
-import pumpSettings from "./pumpSettings";
-import upload from "./upload";
-import wizard from "./wizard";
+import schema from './validator/schematron'
+import commonSchema from './common'
+import basal from './basal'
+import bolus from './bolus'
+import bg from './bg'
+import message from './message'
+import pumpSettings from './pumpSettings'
+import upload from './upload'
+import wizard from './wizard'
 
 const getSchemas = () => {
-  const common = commonSchema();
-  const cbg = bg(common);
+  const common = commonSchema()
+  const cbg = bg(common)
   return {
     common,
     basal: basal(common),
@@ -43,32 +43,32 @@ const getSchemas = () => {
     reservoirChange: schema(common),
     smbg: cbg,
     upload: upload(common),
-    wizard: wizard(common),
-  };
-};
+    wizard: wizard(common)
+  }
+}
 
 export function validateOne(datum, result, schemas = getSchemas()) {
-  result = result || {valid: [], invalid: []};
-  const handler = schemas[datum.type];
+  result = result || {valid: [], invalid: []}
+  const handler = schemas[datum.type]
   if (!_.isFunction(handler)) {
-    datum.errorMessage = `No schema defined for data.type[${datum.type}]`;
-    result.invalid.push(datum);
+    datum.errorMessage = `No schema defined for data.type[${datum.type}]`
+    result.invalid.push(datum)
   } else {
     try {
-      handler(datum);
-      result.valid.push(datum);
+      handler(datum)
+      result.valid.push(datum)
     } catch (e) {
-      datum.errorMessage = e.message;
-      result.invalid.push(datum);
+      datum.errorMessage = e.message
+      result.invalid.push(datum)
     }
   }
 }
 
 export function validateAll(data) {
-  const result = {valid: [], invalid: []};
-  const schemas = getSchemas();
+  const result = {valid: [], invalid: []}
+  const schemas = getSchemas()
   for (let i = 0; i < data.length; ++i) {
-    validateOne(data[i], result, schemas);
+    validateOne(data[i], result, schemas)
   }
-  return result;
+  return result
 }

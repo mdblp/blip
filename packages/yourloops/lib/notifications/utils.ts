@@ -26,40 +26,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { INotificationAPI, APINotificationType } from "../../models/notification";
-import { INotification, NotificationType } from "./models";
+import { INotificationAPI, APINotificationType } from '../../models/notification'
+import { INotification, NotificationType } from './models'
 
 /**
  * Convert an API notification to our model
  * @param apin API Notification
  */
 export function notificationConversion(apin: INotificationAPI): INotification | null {
-  let type: NotificationType;
-  let metricsType: "share_data" | "join_team" = "join_team";
+  let type: NotificationType
+  let metricsType: 'share_data' | 'join_team' = 'join_team'
   switch (apin.type) {
-  case APINotificationType.careTeamInvitation:
-    type = NotificationType.directInvitation;
-    metricsType = "share_data";
-    break;
-  case APINotificationType.medicalTeamPatientInvitation:
-    type = NotificationType.careTeamPatientInvitation;
-    break;
-  case APINotificationType.medicalTeamProInvitation:
-    type = NotificationType.careTeamProInvitation;
-    break;
-  case APINotificationType.medicalTeamMonitoringInvitation:
-    type = NotificationType.careTeamMonitoringInvitation;
-    break;
-  case APINotificationType.medicalTeamDoAdmin:
-    type = NotificationType.careTeamDoAdmin;
-    // break; // TODO medicalTeamDoAdmin
-    return null;
-  case APINotificationType.medicalTeamRemoveMember:
-    type = NotificationType.careTeamRemoveMember;
-    // break; // TODO medicalTeamRemoveMember
-    return null;
-  default:
-    throw new Error("Invalid notification type");
+    case APINotificationType.careTeamInvitation:
+      type = NotificationType.directInvitation
+      metricsType = 'share_data'
+      break
+    case APINotificationType.medicalTeamPatientInvitation:
+      type = NotificationType.careTeamPatientInvitation
+      break
+    case APINotificationType.medicalTeamProInvitation:
+      type = NotificationType.careTeamProInvitation
+      break
+    case APINotificationType.medicalTeamMonitoringInvitation:
+      type = NotificationType.careTeamMonitoringInvitation
+      break
+    case APINotificationType.medicalTeamDoAdmin:
+      type = NotificationType.careTeamDoAdmin
+      // break; // TODO medicalTeamDoAdmin
+      return null
+    case APINotificationType.medicalTeamRemoveMember:
+      type = NotificationType.careTeamRemoveMember
+      // break; // TODO medicalTeamRemoveMember
+      return null
+    default:
+      throw new Error('Invalid notification type')
   }
   return {
     id: apin.key,
@@ -70,6 +70,6 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
     metricsType,
     creator: apin.creator,
     role: apin.role,
-    target: apin.target,
-  };
+    target: apin.target
+  }
 }

@@ -25,54 +25,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles } from '@material-ui/core/styles'
 
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import MedicalRecordList from "./medical-record-list";
-import PrescriptionList from "./prescription-list";
-import { Patient } from "../../../lib/data/patient";
-import { useTeam } from "../../../lib/team";
-import WeeklyReportList from "./weekly-report-list";
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import MedicalRecordList from './medical-record-list'
+import PrescriptionList from './prescription-list'
+import { Patient } from '../../../lib/data/patient'
+import { useTeam } from '../../../lib/team'
+import WeeklyReportList from './weekly-report-list'
 
 const useStyle = makeStyles(() => ({
   cardContent: {
     maxHeight: 450,
-    overflow: "auto",
+    overflow: 'auto'
   },
   medicalFilesWidget: {
-    width: "400px",
-    height: "fit-content",
+    width: '400px',
+    height: 'fit-content'
   },
   medicalFilesWidgetHeader: {
-    textTransform: "uppercase",
-    backgroundColor: "var(--card-header-background-color)",
-  },
-}));
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
+  }
+}))
 
 export interface MedicalFilesWidgetProps {
-  patient: Patient;
+  patient: Patient
 }
 
 export interface CategoryProps {
-  teamId: string;
-  patientId: string;
+  teamId: string
+  patientId: string
 }
 
 export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyle();
-  const { getRemoteMonitoringTeams } = useTeam();
-  const { patient } = props;
+  const { t } = useTranslation('yourloops')
+  const classes = useStyle()
+  const { getRemoteMonitoringTeams } = useTeam()
+  const { patient } = props
 
-  const team = getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === patient.userid));
+  const team = getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === patient.userid))
 
   if (!team) {
-    throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`);
+    throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`)
   }
 
   return (
@@ -81,7 +81,7 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
         id="medical-files-card-header"
         avatar={<AssignmentIcon />}
         className={classes.medicalFilesWidgetHeader}
-        title={`${t("medical-files")}`}
+        title={`${t('medical-files')}`}
       />
       <CardContent className={classes.cardContent}>
         <PrescriptionList teamId={team.id} patientId={patient.userid} />
@@ -89,5 +89,5 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
         <MedicalRecordList teamId={team.id} patientId={patient.userid} />
       </CardContent>
     </Card>
-  );
+  )
 }

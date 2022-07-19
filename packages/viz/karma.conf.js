@@ -26,17 +26,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const { updateDefaultConfig, setKarmaConfig } = require("../../karma.common.conf");
-const webpack = require("./webpack.config.js");
+const { updateDefaultConfig, setKarmaConfig } = require('../../karma.common.conf')
+const webpack = require('./webpack.config.js')
 
 const config = {
   files: [
-    "test/index.test.js",
+    'test/index.test.js'
   ],
   preprocessors: {
-    "test/index.test.js": ["webpack", "sourcemap"],
-  },
-};
-updateDefaultConfig("viz", config, webpack);
+    'test/index.test.js': ['webpack', 'sourcemap']
+  }
+}
+updateDefaultConfig('viz', config, webpack)
 
-module.exports = setKarmaConfig;
+module.exports = setKarmaConfig

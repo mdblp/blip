@@ -25,24 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { createMemoryHistory, MemoryHistory } from "history";
-import { Router } from "react-router-dom";
-import * as auth0Mock from "@auth0/auth0-react";
-import { Auth0Provider } from "@auth0/auth0-react";
+import React from 'react'
+import { createMemoryHistory, MemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
+import * as auth0Mock from '@auth0/auth0-react'
+import { Auth0Provider } from '@auth0/auth0-react'
 
-import * as authHookMock from "../../lib/auth";
-import { MainLobby } from "../../app/main-lobby";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
-import { ConsentPage, LoginPage } from "../../pages/login";
-import CompleteSignUpPage from "../../pages/signup/complete-signup-page";
-import User from "../../lib/auth/user";
-import PatientConsentPage from "../../pages/patient/patient-consent";
-import DirectShareApi from "../../lib/share/direct-share-api";
+import * as authHookMock from '../../lib/auth'
+import { MainLobby } from '../../app/main-lobby'
+import renderer, { ReactTestRenderer } from 'react-test-renderer'
+import { ConsentPage, LoginPage } from '../../pages/login'
+import CompleteSignUpPage from '../../pages/signup/complete-signup-page'
+import User from '../../lib/auth/user'
+import PatientConsentPage from '../../pages/patient/patient-consent'
+import DirectShareApi from '../../lib/share/direct-share-api'
 
-jest.mock("../../lib/auth");
-jest.mock("@auth0/auth0-react");
-describe("Main lobby", () => {
+jest.mock('../../lib/auth')
+jest.mock('@auth0/auth0-react')
+describe('Main lobby', () => {
   function renderMainLayout(history: MemoryHistory) {
     return renderer.create(
       <Auth0Provider clientId="__test_client_id__" domain="__test_domain__">
@@ -50,50 +50,50 @@ describe("Main lobby", () => {
           <MainLobby />
         </Router>
       </Auth0Provider>
-    );
+    )
   }
 
   beforeEach(() => {
     (auth0Mock.Auth0Provider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: true,
-      isLoading: false,
-    });
-  });
+      isLoading: false
+    })
+  })
 
   function checkRenderAndRoute(currentComponent: ReactTestRenderer, history: MemoryHistory, expectedComponent: () => JSX.Element, route: string) {
-    const mainPageLayout = currentComponent.root.findByType(expectedComponent);
-    expect(mainPageLayout).toBeDefined();
-    expect(history.location.pathname).toBe(route);
+    const mainPageLayout = currentComponent.root.findByType(expectedComponent)
+    expect(mainPageLayout).toBeDefined()
+    expect(history.location.pathname).toBe(route)
   }
 
   beforeAll(() => {
-    jest.spyOn(DirectShareApi, "getDirectShares").mockResolvedValue([]);
+    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([]);
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-  });
+      return children
+    })
+  })
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {
-    const history = createMemoryHistory({ initialEntries: ["/"] });
+    const history = createMemoryHistory({ initialEntries: ['/'] });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
           hasToAcceptNewConsent: () => false,
           hasToRenewConsent: () => true,
           isFirstLogin: () => false,
-          isUserHcp: () => true,
-        } as User,
-      };
-    });
-    const component = renderMainLayout(history);
-    checkRenderAndRoute(component, history, ConsentPage, "/renew-consent");
-  });
+          isUserHcp: () => true
+        } as User
+      }
+    })
+    const component = renderMainLayout(history)
+    checkRenderAndRoute(component, history, ConsentPage, '/renew-consent')
+  })
 
   it("should render PatientConsentPage when user is logged in and did not consent and route is '/' and role is patient", () => {
-    const history = createMemoryHistory({ initialEntries: ["/"] });
+    const history = createMemoryHistory({ initialEntries: ['/'] });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
@@ -101,51 +101,49 @@ describe("Main lobby", () => {
           hasToRenewConsent: () => false,
           isFirstLogin: () => false,
           isUserHcp: () => false,
-          isUserPatient: () => true,
-        } as User,
-      };
-    });
-    const component = renderMainLayout(history);
-    checkRenderAndRoute(component, history, PatientConsentPage, "/new-consent");
-  });
+          isUserPatient: () => true
+        } as User
+      }
+    })
+    const component = renderMainLayout(history)
+    checkRenderAndRoute(component, history, PatientConsentPage, '/new-consent')
+  })
 
   it("should render LoginPage when user is not logged in route is '/login'", () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
-      isLoading: false,
+      isLoading: false
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
           hasToAcceptNewConsent: () => false,
           hasToRenewConsent: () => false,
-          isFirstLogin: () => false,
-        } as User,
-      };
-    });
-    const history = createMemoryHistory({ initialEntries: ["/login"] });
-    const component = renderMainLayout(history);
-    checkRenderAndRoute(component, history, LoginPage, "/login");
-  });
+          isFirstLogin: () => false
+        } as User
+      }
+    })
+    const history = createMemoryHistory({ initialEntries: ['/login'] })
+    const component = renderMainLayout(history)
+    checkRenderAndRoute(component, history, LoginPage, '/login')
+  })
 
-  it("should render CompleteSignupPage when a new user is logged in and have no profile yet", () => {
+  it('should render CompleteSignupPage when a new user is logged in and have no profile yet', () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: true,
-      isLoading: false,
+      isLoading: false
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
           hasToAcceptNewConsent: () => false,
           hasToRenewConsent: () => false,
-          isFirstLogin: () => true,
-        } as User,
-      };
-    });
-    const history = createMemoryHistory({ initialEntries: ["/complete-signup"] });
-    const component = renderMainLayout(history);
-    checkRenderAndRoute(component, history, CompleteSignUpPage, "/complete-signup");
-  });
-});
-
-
+          isFirstLogin: () => true
+        } as User
+      }
+    })
+    const history = createMemoryHistory({ initialEntries: ['/complete-signup'] })
+    const component = renderMainLayout(history)
+    checkRenderAndRoute(component, history, CompleteSignUpPage, '/complete-signup')
+  })
+})

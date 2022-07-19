@@ -15,30 +15,30 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
-import React from "react";
-import PropTypes from "prop-types";
-import _ from "lodash";
-import i18next from "i18next";
-import bows from "bows";
-import moment from "moment-timezone";
+import React from 'react'
+import PropTypes from 'prop-types'
+import _ from 'lodash'
+import i18next from 'i18next'
+import bows from 'bows'
+import moment from 'moment-timezone'
 
-import { isTimezoneAware, getDisplayTimestamp } from "./messagemixins";
+import { isTimezoneAware, getDisplayTimestamp } from './messagemixins'
 
-const DATE_MASK = "YYYY-MM-DD";
-const TIME_MASK = "HH:mm";
-const t = i18next.t.bind(i18next);
+const DATE_MASK = 'YYYY-MM-DD'
+const TIME_MASK = 'HH:mm'
+const t = i18next.t.bind(i18next)
 
 /**
  * Form for creating new Notes or adding Comments
  */
 class MessageForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.state = this.initialState();
-    this.isTimezoneAware = isTimezoneAware.bind(this);
-    this.getDisplayTimestamp = getDisplayTimestamp.bind(this);
-    this.log = bows("MessageForm UI");
+    this.state = this.initialState()
+    this.isTimezoneAware = isTimezoneAware.bind(this)
+    this.getDisplayTimestamp = getDisplayTimestamp.bind(this)
+    this.log = bows('MessageForm UI')
   }
 
   /**
@@ -47,7 +47,7 @@ class MessageForm extends React.Component {
   initialState() {
     return {
       /** @type {string} The edited message */
-      msg: "",
+      msg: '',
       /** @type {string} ISO date-time string in UTC */
       when: null,
       /** @type {string} The edited date */
@@ -64,46 +64,46 @@ class MessageForm extends React.Component {
       saving: false,
       /** When true, the date & time can be changed: => renderEditableDate() */
       changeDateTime: false,
-      rows: 1,
-    };
+      rows: 1
+    }
   }
 
   componentDidMount() {
     if (this.isExistingNoteEdit()) {
-      this.initEdit();
+      this.initEdit()
     }
   }
 
   getEditableDateAndTime(ts) {
-    const timezone = this.props.timePrefs.timezoneName;
-    const m = moment.utc(ts).tz(timezone);
-    const date = m.format(DATE_MASK);
-    const time = m.format(TIME_MASK);
+    const timezone = this.props.timePrefs.timezoneName
+    const m = moment.utc(ts).tz(timezone)
+    const date = m.format(DATE_MASK)
+    const time = m.format(TIME_MASK)
     // this.log('getEditableDateAndTime', { ts, date, time, m, timezone });
-    return { date, time };
+    return { date, time }
   }
 
   isExistingNoteEdit() {
-    const { formFields } = this.props;
-    return formFields !== null && !_.isEmpty(formFields);
+    const { formFields } = this.props
+    return formFields !== null && !_.isEmpty(formFields)
   }
 
   hasTextToEdit() {
-    return this.isExistingNoteEdit() && _.isString(this.props.formFields.editableText);
+    return this.isExistingNoteEdit() && _.isString(this.props.formFields.editableText)
   }
 
   hasTimestampToEdit() {
-    return this.isExistingNoteEdit() && !_.isEmpty(this.props.formFields.editableTimestamp);
+    return this.isExistingNoteEdit() && !_.isEmpty(this.props.formFields.editableTimestamp)
   }
 
   initEdit() {
-    const { formFields } = this.props;
-    const textToEdit = this.hasTextToEdit();
-    const timestampToEdit = this.hasTimestampToEdit();
+    const { formFields } = this.props
+    const textToEdit = this.hasTextToEdit()
+    const timestampToEdit = this.hasTimestampToEdit()
 
     if (textToEdit && timestampToEdit) {
-      this.log.info("initEdit at", formFields.editableTimestamp);
-      const editable = this.getEditableDateAndTime(formFields.editableTimestamp);
+      this.log.info('initEdit at', formFields.editableTimestamp)
+      const editable = this.getEditableDateAndTime(formFields.editableTimestamp)
       // allow editing of both the note text and timestamp
       this.setState({
         msg: formFields.editableText,
@@ -113,20 +113,20 @@ class MessageForm extends React.Component {
         date: editable.date,
         time: editable.time,
         originalDate: editable.date,
-        originaltime: editable.time,
-      });
+        originaltime: editable.time
+      })
     } else if (textToEdit) {
       // allow editing of the note text only
       this.setState({
         msg: formFields.editableText,
         when: formFields.displayTimestamp,
-        editing: true,
-      });
+        editing: true
+      })
     } else {
-      this.log.error("initEdit: Wrong state", { textToEdit, timestampToEdit, props: { ...this.props }, state: { ...this.state } });
+      this.log.error('initEdit: Wrong state', { textToEdit, timestampToEdit, props: { ...this.props }, state: { ...this.state } })
     }
 
-    this.setState({ rows: 3 });
+    this.setState({ rows: 3 })
   }
 
   /**
@@ -135,16 +135,16 @@ class MessageForm extends React.Component {
    *  - OR if the date has been edited then resolve the date and return
    */
   getUtcTimestamp() {
-    const timezone = this.props.timePrefs.timezoneName;
-    const { when, date, time } = this.state;
+    const timezone = this.props.timePrefs.timezoneName
+    const { when, date, time } = this.state
 
-    let messageTime = when;
+    let messageTime = when
     if (_.isString(date) && _.isString(time)) {
-      const m = moment.tz(`${date}T${time}`, timezone);
-      messageTime = m.toISOString();
+      const m = moment.tz(`${date}T${time}`, timezone)
+      messageTime = m.toISOString()
     }
 
-    return messageTime;
+    return messageTime
   }
 
   /**
@@ -155,8 +155,8 @@ class MessageForm extends React.Component {
    * Always keep the msg state current
    */
   handleMsgChange = (e) => {
-    this.setState({ msg: e.target.value });
-  };
+    this.setState({ msg: e.target.value })
+  }
 
   /**
    * Use the given onCancel handler or just
@@ -164,50 +164,50 @@ class MessageForm extends React.Component {
    */
   handleCancel = (e) => {
     if (this.props.onCancel) {
-      this.props.onCancel(e);
+      this.props.onCancel(e)
     } else {
-      this.log.debug("Cancel edit note");
-      this.setState(this.initialState());
+      this.log.debug('Cancel edit note')
+      this.setState(this.initialState())
     }
-  };
+  }
 
   handleDateChange = (e) => {
-    this.setState({ date: e.target.value });
-  };
+    this.setState({ date: e.target.value })
+  }
 
   handleTimeChange = (e) => {
-    this.setState({ time: e.target.value });
-  };
+    this.setState({ time: e.target.value })
+  }
 
   handleSaving = async (/* e */) => {
-    const { alwaysActiveCommentForm } = this.props;
-    this.log.debug("handleSaving", { ...this.state, alwaysActiveCommentForm });
-    this.setState({ saving: true });
+    const { alwaysActiveCommentForm } = this.props
+    this.log.debug('handleSaving', { ...this.state, alwaysActiveCommentForm })
+    this.setState({ saving: true })
 
     try {
       if (_.isFunction(this.props.onSubmit)) {
-        await this.props.onSubmit({ text: this.state.msg, timestamp: this.getUtcTimestamp() });
+        await this.props.onSubmit({ text: this.state.msg, timestamp: this.getUtcTimestamp() })
       } else {
-        this.log.warn("handleSaving: onSubmit callback is missing");
+        this.log.warn('handleSaving: onSubmit callback is missing')
       }
     } catch (err) {
-      this.log.error("handleSaving(): TODO manage error", err);
+      this.log.error('handleSaving(): TODO manage error', err)
     }
 
     if (alwaysActiveCommentForm) {
       // Only update the state when we are mounted
       // -> After edit a comment
-      this.setState(this.initialState());
+      this.setState(this.initialState())
     }
-  };
+  }
 
   handleFocus = (/* e */) => {
     if (this.isExistingNoteEdit() === false) {
-      this.log("Starting to edit a note");
-      this.setState({ editing: true, when: moment.utc().toISOString() });
+      this.log('Starting to edit a note')
+      this.setState({ editing: true, when: moment.utc().toISOString() })
     }
-    this.setState({ rows: 3 });
-  };
+    this.setState({ rows: 3 })
+  }
 
   /**
    * Split the timestamp into the date and time
@@ -217,47 +217,47 @@ class MessageForm extends React.Component {
    */
   handleShowEditDate = (e) => {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
     // const editable = this.getEditableDateAndTime(this.state.when);
     this.setState({
-      changeDateTime: true,
+      changeDateTime: true
       // time: editable.time,
       // date: editable.date,
-    });
+    })
   }
 
   isButtonDisabled() {
-    const { formFields } = this.props;
-    const { msg, date, time, originalDate, originaltime, changeDateTime } = this.state;
+    const { formFields } = this.props
+    const { msg, date, time, originalDate, originaltime, changeDateTime } = this.state
 
     if (formFields === null) {
-      return _.isEmpty(msg);
+      return _.isEmpty(msg)
     }
 
     if (changeDateTime) {
-      return formFields.editableText === msg && date === originalDate && time === originaltime;
+      return formFields.editableText === msg && date === originalDate && time === originaltime
     }
-    return formFields.editableText === msg;
+    return formFields.editableText === msg
   }
 
   /**
    * Just displays the notes date if it is set
    */
   renderDisplayDate() {
-    const { when } = this.state;
-    const canEditTimestamp = this.hasTimestampToEdit();
-    let displayDate = null;
+    const { when } = this.state
+    const canEditTimestamp = this.hasTimestampToEdit()
+    let displayDate = null
     if (when !== null) {
-      const displayTimestamp = this.getDisplayTimestamp(when);
-      let editLink = null;
+      const displayTimestamp = this.getDisplayTimestamp(when)
+      let editLink = null
 
       if (canEditTimestamp) {
         editLink = (
           <a className="messageform-change-datetime" href="" onClick={this.handleShowEditDate}>
-            {t("Change")}
+            {t('Change')}
           </a>
-        );
+        )
       }
 
       displayDate = (
@@ -265,10 +265,10 @@ class MessageForm extends React.Component {
           {editLink}
           <label className="messageform-datetime-label">{displayTimestamp}</label>
         </div>
-      );
+      )
     }
 
-    return displayDate;
+    return displayDate
   }
 
   /**
@@ -280,17 +280,17 @@ class MessageForm extends React.Component {
         <input type="time" value={this.state.time} className="messageform-time" onChange={this.handleTimeChange} />
         <input type="date" value={this.state.date} className="messageform-date" onChange={this.handleDateChange} />
       </div>
-    );
+    )
   }
 
   renderButtons() {
-    const { saving: isSavingInProgress } = this.state;
+    const { saving: isSavingInProgress } = this.state
 
-    let saveBtnText = null;
+    let saveBtnText = null
     if (isSavingInProgress) {
-      saveBtnText = t("Sending...");
+      saveBtnText = t('Sending...')
     } else {
-      saveBtnText = t("Post_submit");
+      saveBtnText = t('Post_submit')
     }
 
     return (
@@ -300,7 +300,7 @@ class MessageForm extends React.Component {
           disabled={isSavingInProgress}
           className="messageform-button messageform-button-cancel"
           onClick={this.handleCancel}>
-          {t("Cancel")}
+          {t('Cancel')}
         </button>
         <button
           type="button"
@@ -310,11 +310,11 @@ class MessageForm extends React.Component {
           {saveBtnText}
         </button>
       </div>
-    );
+    )
   }
 
   renderTextArea() {
-    const { rows } = this.state;
+    const { rows } = this.state
     return (
       <div className="messageform-textarea-wrapper">
         <textarea
@@ -327,23 +327,23 @@ class MessageForm extends React.Component {
           onChange={this.handleMsgChange}
         />
       </div>
-    );
+    )
   }
 
   render() {
-    const { editing, changeDateTime } = this.state;
-    const textArea = this.renderTextArea();
-    let date = null;
-    let buttons = null;
+    const { editing, changeDateTime } = this.state
+    const textArea = this.renderTextArea()
+    let date = null
+    let buttons = null
 
     if (editing) {
-      buttons = this.renderButtons();
+      buttons = this.renderButtons()
     }
 
     if (changeDateTime) {
-      date = this.renderEditableDate();
+      date = this.renderEditableDate()
     } else {
-      date = this.renderDisplayDate();
+      date = this.renderDisplayDate()
     }
 
     return (
@@ -352,7 +352,7 @@ class MessageForm extends React.Component {
         {textArea}
         {buttons}
       </form>
-    );
+    )
   }
 }
 
@@ -360,22 +360,22 @@ MessageForm.propTypes = {
   formFields: PropTypes.shape({
     editableText: PropTypes.string.isRequired,
     editableTimestamp: PropTypes.string,
-    displayTimestamp: PropTypes.string,
+    displayTimestamp: PropTypes.string
   }),
   messagePrompt: PropTypes.string,
   onCancel: PropTypes.func,
   onSubmit: PropTypes.func,
   alwaysActiveCommentForm: PropTypes.bool,
   timePrefs: PropTypes.shape({
-    timezoneName: PropTypes.string.isRequired,
-  }).isRequired,
-};
+    timezoneName: PropTypes.string.isRequired
+  }).isRequired
+}
 
 MessageForm.defaultProps = {
   formFields: null,
   onCancel: null,
   onSubmit: null,
-  alwaysActiveCommentForm: false,
-};
+  alwaysActiveCommentForm: false
+}
 
-export default MessageForm;
+export default MessageForm

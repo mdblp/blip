@@ -15,44 +15,44 @@
  * == BSD2 LICENSE ==
  */
 
-import categorizer from "../../data/util/categorize";
-import { MGDL_UNITS } from "../../data/util/constants";
+import categorizer from '../../data/util/categorize'
+import { MGDL_UNITS } from '../../data/util/constants'
 
 function bgBoundary(bgClasses, bgUnits = MGDL_UNITS) {
-  var categorizeBg = categorizer(bgClasses, bgUnits);
+  var categorizeBg = categorizer(bgClasses, bgUnits)
   if (Object.keys(bgClasses).length > 3) {
     return function(datum) {
-      var category = categorizeBg(datum);
-      if (category === "verylow") {
-        return "d3-bg-very-low";
+      var category = categorizeBg(datum)
+      if (category === 'verylow') {
+        return 'd3-bg-very-low'
       }
-      else if (category === "low") {
-        return "d3-bg-low";
+      else if (category === 'low') {
+        return 'd3-bg-low'
       }
-      else if (category === "target") {
-        return "d3-bg-target";
+      else if (category === 'target') {
+        return 'd3-bg-target'
       }
-      else if (category === "high") {
-        return "d3-bg-high";
+      else if (category === 'high') {
+        return 'd3-bg-high'
       }
-      else if (category === "veryhigh") {
-        return "d3-bg-very-high";
+      else if (category === 'veryhigh') {
+        return 'd3-bg-very-high'
       }
-    };
+    }
   }
 
   return function(datum) {
-    var category = categorizeBg(datum);
-    if (category === "low" || category === "verylow") {
-      return "d3-bg-low";
+    var category = categorizeBg(datum)
+    if (category === 'low' || category === 'verylow') {
+      return 'd3-bg-low'
     }
-    else if (category === "target") {
-      return "d3-bg-target";
+    else if (category === 'target') {
+      return 'd3-bg-target'
     }
-    else if (category === "high" || category === "veryhigh") {
-      return "d3-bg-high";
+    else if (category === 'high' || category === 'veryhigh') {
+      return 'd3-bg-high'
     }
-  };
+  }
 }
 
-export default bgBoundary;
+export default bgBoundary

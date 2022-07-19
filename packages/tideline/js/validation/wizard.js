@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
+import schema from './validator/schematron.js'
 
 const wizard = (common) => {
   return schema(
@@ -71,7 +71,7 @@ const wizard = (common) => {
       ),
       bolus: schema().ifExists().object()
     }
-  );
-};
+  )
+}
 
-export default wizard;
+export default wizard

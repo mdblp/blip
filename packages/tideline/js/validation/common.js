@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
+import schema from './validator/schematron.js'
 
 const common = () => schema(
   {
@@ -24,8 +24,8 @@ const common = () => schema(
     epoch: schema().number(),
     displayOffset: schema().number(),
     timezone: schema().string(),
-    type: schema().string().in(["basal", "bolus", "cbg", "deviceEvent", "food", "message", "physicalActivity", "pumpSettings", "smbg", "upload", "wizard"])
+    type: schema().string().in(['basal', 'bolus', 'cbg', 'deviceEvent', 'food', 'message', 'physicalActivity', 'pumpSettings', 'smbg', 'upload', 'wizard'])
   }
-);
+)
 
-export default common;
+export default common

@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import { ConsentPage as Consent } from "../../components/consents";
+import { ConsentPage as Consent } from '../../components/consents'
 
 /**
  * Consent Page
  */
 function ConsentPage(): JSX.Element {
-  return <Consent messageKey="consent-renew-message" />;
+  return <Consent messageKey="consent-renew-message" />
 }
 
-export default ConsentPage;
+export default ConsentPage

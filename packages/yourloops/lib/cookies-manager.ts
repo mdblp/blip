@@ -26,50 +26,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import bows from "bows";
+import _ from 'lodash'
+import bows from 'bows'
 
-import config from "./config";
-import metrics from "./metrics";
-import { zendeskAllowCookies, zendeskTrackWidgetOpen } from "./zendesk";
+import config from './config'
+import metrics from './metrics'
+import { zendeskAllowCookies, zendeskTrackWidgetOpen } from './zendesk'
 
-const log = bows("Cookies");
+const log = bows('Cookies')
 
 function acceptCookiesListener(choices: CookiesComplete): void {
-  log.info("User choices:", choices);
+  log.info('User choices:', choices)
 
-  if (choices.matomo === true) {
-    metrics.send("metrics", "enabled");
+  if (choices.matomo) {
+    metrics.send('metrics', 'enabled')
   } else {
-    metrics.send("metrics", "disabled");
+    metrics.send('metrics', 'disabled')
   }
-  if (choices.stonly === true && typeof window.loadStonlyWidget === "function") {
-    window.loadStonlyWidget();
+  if (choices.stonly && typeof window.loadStonlyWidget === 'function') {
+    window.loadStonlyWidget()
   }
-  if (choices.zendesk === true) {
-    zendeskAllowCookies(true);
+  if (choices.zendesk) {
+    zendeskAllowCookies(true)
   } else {
-    zendeskAllowCookies(false);
+    zendeskAllowCookies(false)
   }
 
-  if (choices.matomo === true && choices.zendesk === true) {
-    zendeskTrackWidgetOpen();
+  if (choices.matomo && choices.zendesk) {
+    zendeskTrackWidgetOpen()
   }
 }
 
 function initCookiesConcentListener(): void {
   // eslint-disable-next-line no-underscore-dangle
-  const axeptioCb = window._axcb;
-  log.debug("Waiting for acceptation");
-  if (config.COOKIE_BANNER_CLIENT_ID === "disabled") {
-    acceptCookiesListener({ matomo: true, stonly: true, zendesk: true });
-  } else if (_.isObject(axeptioCb) && _.isFunction(_.get(axeptioCb, "push"))) {
+  const axeptioCb = window._axcb
+  log.debug('Waiting for acceptation')
+  if (config.COOKIE_BANNER_CLIENT_ID === 'disabled') {
+    acceptCookiesListener({ matomo: true, stonly: true, zendesk: true })
+  } else if (_.isObject(axeptioCb) && _.isFunction(_.get(axeptioCb, 'push'))) {
     axeptioCb.push((axeptio: AxeptIO) => {
-      axeptio.on("cookies:complete", acceptCookiesListener);
-    });
+      axeptio.on('cookies:complete', acceptCookiesListener)
+    })
   } else {
-    log.error("axept.io configured, but unavailable");
+    log.error('axept.io configured, but unavailable')
   }
 }
 
-export default initCookiesConcentListener;
+export default initCookiesConcentListener

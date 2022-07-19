@@ -25,63 +25,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import PrescriptionList from "../../../../components/dashboard-widgets/medical-files/prescription-list";
-import MedicalFilesApi from "../../../../lib/medical-files/medical-files-api";
-import { Prescription } from "../../../../lib/medical-files/model";
-import * as authHookMock from "../../../../lib/auth";
-import User from "../../../../lib/auth/user";
+import React from 'react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import PrescriptionList from '../../../../components/dashboard-widgets/medical-files/prescription-list'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
+import { Prescription } from '../../../../lib/medical-files/model'
+import * as authHookMock from '../../../../lib/auth'
+import User from '../../../../lib/auth/user'
 
-jest.mock("../../../../lib/auth");
-describe("Prescription list", () => {
+jest.mock('../../../../lib/auth')
+describe('Prescription list', () => {
   const prescription: Prescription = {
-    id: "fakeId",
-    name: "new prescription",
-    patientId: "patientId",
-    teamId: "teamId",
-    prescriptorId: "prescriptorId",
-    link: "zelda",
-    uploadedAt: "2022-02-02",
-  };
+    id: 'fakeId',
+    name: 'new prescription',
+    patientId: 'patientId',
+    teamId: 'teamId',
+    prescriptorId: 'prescriptorId',
+    link: 'zelda',
+    uploadedAt: '2022-02-02'
+  }
   const getPrescriptionsSpy = () => {
-    return jest.spyOn(MedicalFilesApi, "getPrescriptions").mockResolvedValue([prescription]);
-  };
+    return jest.spyOn(MedicalFilesApi, 'getPrescriptions').mockResolvedValue([prescription])
+  }
   const getPrescriptionSpy = () => {
-    return jest.spyOn(MedicalFilesApi, "getPrescription").mockResolvedValue({} as Blob);
-  };
+    return jest.spyOn(MedicalFilesApi, 'getPrescription').mockResolvedValue({} as Blob)
+  }
 
   async function renderComponent() {
-    render(<PrescriptionList patientId="patientId" teamId="teamId" />);
-    await waitFor(() => expect(getPrescriptionsSpy()).toHaveBeenCalled());
+    render(<PrescriptionList patientId="patientId" teamId="teamId" />)
+    await waitFor(() => expect(getPrescriptionsSpy()).toHaveBeenCalled())
   }
 
   beforeEach(() => {
-    getPrescriptionSpy();
+    getPrescriptionSpy()
     getPrescriptionsSpy();
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { isUserHcp: () => true } as User };
-    });
-  });
+      return { user: { isUserHcp: () => true } as User }
+    })
+  })
 
-  it("should render an empty list if no medical records are saved", async () => {
-    getPrescriptionsSpy().mockResolvedValueOnce([]);
-    await renderComponent();
-    expect(screen.queryAllByRole("listitem")).toHaveLength(0);
-  });
+  it('should render an empty list if no medical records are saved', async () => {
+    getPrescriptionsSpy().mockResolvedValueOnce([])
+    await renderComponent()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(0)
+  })
 
-  it("should render a list if some medical records are saved", async () => {
-    await renderComponent();
-    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
-  });
+  it('should render a list if some medical records are saved', async () => {
+    await renderComponent()
+    expect(screen.queryAllByRole('listitem')).toHaveLength(1)
+  })
 
-  it("should download prescriptions as a pdf when clicking on a list item", async () => {
-    const createObjectURLMock = jest.fn().mockReturnValue("fake/url");
-    window.URL.createObjectURL = createObjectURLMock;
-    await renderComponent();
-    const listItem = screen.getByRole("listitem", { name: "prescription-fakeId" });
-    fireEvent.click(listItem);
-    expect(getPrescriptionSpy()).toHaveBeenCalled();
-    await waitFor(() => expect(createObjectURLMock).toHaveBeenCalled());
-  });
-});
+  it('should download prescriptions as a pdf when clicking on a list item', async () => {
+    const createObjectURLMock = jest.fn().mockReturnValue('fake/url')
+    window.URL.createObjectURL = createObjectURLMock
+    await renderComponent()
+    const listItem = screen.getByRole('listitem', { name: 'prescription-fakeId' })
+    fireEvent.click(listItem)
+    expect(getPrescriptionSpy()).toHaveBeenCalled()
+    await waitFor(() => expect(createObjectURLMock).toHaveBeenCalled())
+  })
+})

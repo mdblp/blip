@@ -26,26 +26,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
+import React from 'react'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
 
 export interface RemoveButtonProps {
-  className?: string;
-  color?: "inherit" | "primary" | "secondary" | "default";
-  component?: React.ElementType;
-  icon: JSX.Element;
-  id?: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  size?: "small" | "medium";
-  tooltip?: string;
-  disabled?: boolean;
+  className?: string
+  color?: 'inherit' | 'primary' | 'secondary' | 'default'
+  component?: React.ElementType
+  icon: JSX.Element
+  id?: string
+  onClick: React.MouseEventHandler<HTMLButtonElement>
+  size?: 'small' | 'medium'
+  tooltip?: string
+  disabled?: boolean
 }
 
 function IconActionButton(props: RemoveButtonProps): JSX.Element {
-  const { id, onClick, className, size, icon, disabled } = props;
-  const color = props.color ?? "primary";
-  const tooltip = props.tooltip ?? "";
+  const { id, onClick, className, size, icon, disabled } = props
+  const color = props.color ?? 'primary'
+  const tooltip = props.tooltip ?? ''
 
   return (
     <Tooltip title={tooltip} aria-label={tooltip} placement="bottom">
@@ -63,7 +63,7 @@ function IconActionButton(props: RemoveButtonProps): JSX.Element {
         </IconButton>
       </div>
     </Tooltip>
-  );
+  )
 }
 
-export default IconActionButton;
+export default IconActionButton

@@ -33,15 +33,15 @@ import {
   TeamUser,
   TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
-  REGEX_TEAM_CODE_DISPLAY,
-} from "./models";
+  REGEX_TEAM_CODE_DISPLAY
+} from './models'
 
 import {
   TeamContextProvider,
-  useTeam,
-} from "./hook";
+  useTeam
+} from './hook'
 
-import { getDisplayTeamCode } from "./utils";
+import { getDisplayTeamCode } from './utils'
 
 export {
   Team,
@@ -53,5 +53,5 @@ export {
   getDisplayTeamCode,
   TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
-  REGEX_TEAM_CODE_DISPLAY,
-};
+  REGEX_TEAM_CODE_DISPLAY
+}

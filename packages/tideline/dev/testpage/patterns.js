@@ -15,280 +15,280 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import * as types from"./types";
-import { Intervaler } from"./utils";
+import * as types from'./types'
+import { Intervaler } from'./utils'
 
-import dt from "../../js/data/util/datetime";
+import dt from '../../js/data/util/datetime'
 
 // constants
-var MS_IN_24HRS = 86400000;
-var APPEND = ".000Z";
+var MS_IN_24HRS = 86400000
+var APPEND = '.000Z'
 
-var CBGMIN = 0.75*288, SMBGMIN = 4;
+var CBGMIN = 0.75*288, SMBGMIN = 4
 
 var naiveTimestamp = function() {
-  return new Date().toISOString().slice(0, -5);
-};
+  return new Date().toISOString().slice(0, -5)
+}
 
 function patterns() {
   return {
     basal: {
       constant: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           rate: 1.0,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var dur = MS_IN_24HRS/4;
-        var basals = [];
-        var next = new Intervaler(opts.start, dur);
+        var dur = MS_IN_24HRS/4
+        var basals = []
+        var next = new Intervaler(opts.start, dur)
         for (var i = 0; i < opts.days * 4; ++i) {
           basals.push(new types.Basal({
             rate: opts.rate,
             duration: MS_IN_24HRS/4,
             deviceTime: next()
-          }));
+          }))
         }
-        return basals;
+        return basals
       }
     },
     bolus: {
       constantFour: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 2.5,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var dur = MS_IN_24HRS/4;
-        var boluses = [];
-        var next = new Intervaler(opts.start, dur);
+        var dur = MS_IN_24HRS/4
+        var boluses = []
+        var next = new Intervaler(opts.start, dur)
         for (var i = 0; i < opts.days * 4; ++i) {
           boluses.push(new types.Bolus({
             value: opts.value,
             deviceTime: next()
-          }));
+          }))
         }
-        return boluses;
+        return boluses
       }
     },
     cbg: {
       constantFull: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp(),
-          deviceId: "Dexcom_XXXXXX",
-        };
-        _.defaults(opts, defaults);
+          deviceId: 'Dexcom_XXXXXX'
+        }
+        _.defaults(opts, defaults)
 
-        var cbgs = [];
-        var next = new Intervaler(opts.start, 1000*60*5);
-        var end = dt.addDuration(dt.addDuration(opts.start + APPEND, MS_IN_24HRS*opts.days), -1000*60*5);
-        var current = opts.start;
+        var cbgs = []
+        var next = new Intervaler(opts.start, 1000*60*5)
+        var end = dt.addDuration(dt.addDuration(opts.start + APPEND, MS_IN_24HRS*opts.days), -1000*60*5)
+        var current = opts.start
         while (current !== end.slice(0, -5)) {
-          current = next();
+          current = next()
           cbgs.push(new types.CBG({
             value: opts.value,
             deviceId: opts.deviceId,
             deviceTime: current
-          }));
+          }))
         }
-        return cbgs;
+        return cbgs
       },
       constantJustEnough: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp(),
           cbgMin: CBGMIN,
-          deviceId: "Dexcom_XXXXXX",
-        };
-        _.defaults(opts, defaults);
+          deviceId: 'Dexcom_XXXXXX'
+        }
+        _.defaults(opts, defaults)
 
-        var cbgs = [];
-        var start = opts.start;
+        var cbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, 1000*60*5);
+          var j = 0
+          var next = new Intervaler(start, 1000*60*5)
           while (j < opts.cbgMin) {
             cbgs.push(new types.CBG({
               value: opts.value,
               deviceId: opts.deviceId,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return cbgs;
+        return cbgs
       },
       constantJustEnoughMmoll: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 8.56,
           start: naiveTimestamp(),
           cbgMin: CBGMIN,
-          deviceId: "Dexcom_XXXXXX",
-        };
-        _.defaults(opts, defaults);
+          deviceId: 'Dexcom_XXXXXX'
+        }
+        _.defaults(opts, defaults)
 
-        var cbgs = [];
-        var start = opts.start;
+        var cbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, 1000*60*5);
+          var j = 0
+          var next = new Intervaler(start, 1000*60*5)
           while (j < opts.cbgMin) {
             cbgs.push(new types.CBG({
               value: opts.value,
               deviceId: opts.deviceId,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return cbgs;
+        return cbgs
       },
       constantInadequate: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp(),
           cbgMin: CBGMIN,
-          deviceId: "Dexcom_XXXXXX",
-        };
-        _.defaults(opts, defaults);
+          deviceId: 'Dexcom_XXXXXX'
+        }
+        _.defaults(opts, defaults)
 
-        var cbgs = [];
-        var start = opts.start;
+        var cbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, 1000*60*5);
+          var j = 0
+          var next = new Intervaler(start, 1000*60*5)
           while (j < (opts.cbgMin - 1)) {
             cbgs.push(new types.CBG({
               value: opts.value,
               deviceId: opts.deviceId,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return cbgs;
+        return cbgs
       }
     },
     smbg: {
       constantFull: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var smbgs = [];
-        var next = new Intervaler(opts.start, MS_IN_24HRS/4);
-        var end = dt.addDuration(opts.start + ".000Z", MS_IN_24HRS*opts.days);
-        var current = opts.start;
+        var smbgs = []
+        var next = new Intervaler(opts.start, MS_IN_24HRS/4)
+        var end = dt.addDuration(opts.start + '.000Z', MS_IN_24HRS*opts.days)
+        var current = opts.start
         while (current !== end.slice(0, -5)) {
-          current = next();
+          current = next()
           smbgs.push(new types.SMBG({
             value: opts.value,
             deviceTime: current
-          }));
+          }))
         }
-        return smbgs;
+        return smbgs
       },
       constantJustEnough: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var smbgs = [];
-        var start = opts.start;
+        var smbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, MS_IN_24HRS/24);
+          var j = 0
+          var next = new Intervaler(start, MS_IN_24HRS/24)
           while (j < SMBGMIN) {
             smbgs.push(new types.SMBG({
               value: opts.value,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return smbgs;
+        return smbgs
       },
       constantJustEnoughMmoll: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 8.56,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var smbgs = [];
-        var start = opts.start;
+        var smbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, MS_IN_24HRS/24);
+          var j = 0
+          var next = new Intervaler(start, MS_IN_24HRS/24)
           while (j < SMBGMIN) {
             smbgs.push(new types.SMBG({
               value: opts.value,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return smbgs;
+        return smbgs
       },
       constantInadequate: function(opts) {
-        opts = opts || {};
+        opts = opts || {}
         var defaults = {
           days: 1,
           value: 100,
           start: naiveTimestamp()
-        };
-        _.defaults(opts, defaults);
+        }
+        _.defaults(opts, defaults)
 
-        var smbgs = [];
-        var start = opts.start;
+        var smbgs = []
+        var start = opts.start
         for (var i = 0; i < opts.days; ++i) {
-          var j = 0;
-          var next = new Intervaler(start, MS_IN_24HRS/24);
+          var j = 0
+          var next = new Intervaler(start, MS_IN_24HRS/24)
           while (j < SMBGMIN - 1) {
             smbgs.push(new types.SMBG({
               value: opts.value,
               deviceTime: next()
-            }));
-            j++;
+            }))
+            j++
           }
-          start = dt.addDuration(start + APPEND, MS_IN_24HRS);
+          start = dt.addDuration(start + APPEND, MS_IN_24HRS)
         }
-        return smbgs;
+        return smbgs
       }
     }
-  };
+  }
 }
 
-export default patterns;
+export default patterns

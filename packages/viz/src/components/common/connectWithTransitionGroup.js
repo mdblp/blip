@@ -4,8 +4,6 @@
  * updated according to https://github.com/esayemm/connect-with-transition-group/pull/2
  */
 
-/* eslint-disable func-names, lodash/prefer-lodash-method, no-param-reassign */
-
 /**
  * Must have called react-redux/connect with the 'withRef' flag
  * ex:
@@ -18,34 +16,34 @@
  */
 export default function connectWithTransitionGroup(connect) {
   const willFunctions = [
-    "componentWillAppear",
-    "componentWillEnter",
-    "componentWillLeave",
-  ];
+    'componentWillAppear',
+    'componentWillEnter',
+    'componentWillLeave'
+  ]
 
   const didFunctions = [
-    "componentDidAppear",
-    "componentDidEnter",
-    "componentDidLeave",
-  ];
+    'componentDidAppear',
+    'componentDidEnter',
+    'componentDidLeave'
+  ]
 
   willFunctions.forEach((key) => {
     connect.prototype[key] = function (cb) {
       if (this.wrappedInstance[key]) {
-        this.wrappedInstance[key](cb);
+        this.wrappedInstance[key](cb)
       } else {
-        cb();
+        cb()
       }
-    };
-  });
+    }
+  })
 
   didFunctions.forEach((key) => {
     connect.prototype[key] = function () {
       if (this.wrappedInstance[key]) {
-        this.wrappedInstance[key]();
+        this.wrappedInstance[key]()
       }
-    };
-  });
+    }
+  })
 
-  return connect;
+  return connect
 }

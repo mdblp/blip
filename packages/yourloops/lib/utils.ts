@@ -26,29 +26,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import { Units } from "../models/generic";
-import { IUser, Settings } from "../models/user";
-import { t } from "./language";
-import metrics from "./metrics";
-import moment from "moment-timezone";
+import { Units } from '../models/generic'
+import { IUser, Settings } from '../models/user'
+import { t } from './language'
+import metrics from './metrics'
+import moment from 'moment-timezone'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
-export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/;
+export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
 
-export const REGEX_BIRTHDATE = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
+export const REGEX_BIRTHDATE = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
 
-export const REGEX_PHONE = /^\+(?:[0-9]\x20?){6,14}[0-9]$/;
+export const REGEX_PHONE = /^\+(?:[0-9]\x20?){6,14}[0-9]$/
 
 /**
  * setTimeout() as promised
  * @param timeout in milliseconds
  */
-export function waitTimeout(timeout: number): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(resolve, timeout);
-  });
+export async function waitTimeout(timeout: number): Promise<void> {
+  return await new Promise((resolve) => {
+    setTimeout(resolve, timeout)
+  })
 }
 
 /**
@@ -58,44 +58,44 @@ export function waitTimeout(timeout: number): Promise<void> {
  */
 export async function defer(fn: () => void, timeout = 1): Promise<void> {
   try {
-    await waitTimeout(timeout);
-    fn();
+    await waitTimeout(timeout)
+    fn()
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }
 
 export function errorTextFromException(reason: unknown): string {
-  let errorMessage: string;
+  let errorMessage: string
   if (reason instanceof Error) {
-    errorMessage = reason.message;
+    errorMessage = reason.message
   } else {
-    const s = String(reason);
-    errorMessage = s.toString();
+    const s = String(reason)
+    errorMessage = s.toString()
   }
-  return errorMessage;
+  return errorMessage
 }
 
 /**
  * Return the user first name
  */
 export function getUserFirstName(user: IUser): string {
-  return user.profile?.firstName ?? "";
+  return user.profile?.firstName ?? ''
 }
 
 /**
  * Return the user last name
  */
 export function getUserLastName(user: IUser): string {
-  return user.profile?.lastName ?? user.profile?.fullName ?? user.username;
+  return user.profile?.lastName ?? user.profile?.fullName ?? user.username
 }
 
 /**
  * @param user The user to have firstName / lastName
  * @returns The object for "user-name" translation string
  */
-export function getUserFirstLastName(user: IUser): { firstName: string, lastName: string; } {
-  return { firstName: getUserFirstName(user), lastName: getUserLastName(user) };
+export function getUserFirstLastName(user: IUser): { firstName: string, lastName: string } {
+  return { firstName: getUserFirstName(user), lastName: getUserLastName(user) }
 }
 
 /**
@@ -106,24 +106,24 @@ export function getUserFirstLastName(user: IUser): { firstName: string, lastName
 export function fixYLP878Settings(settings: Settings | undefined | null): Settings {
   if (_.isNil(settings)) {
     return {
-      country: "FR",
+      country: 'FR',
       units: {
-        bg: Units.gram,
-      },
-    };
+        bg: Units.gram
+      }
+    }
   }
-  let bgUnit = _.get(settings, "bg", settings.units?.bg ?? Units.gram) as Units;
+  let bgUnit = _.get(settings, 'bg', settings.units?.bg ?? Units.gram) as Units
   if (![Units.gram, Units.mole].includes(bgUnit)) {
-    bgUnit = Units.gram;
+    bgUnit = Units.gram
   }
   const newSettings: Settings = {
-    country: settings.country ?? "FR",
-    units: { bg: bgUnit },
-  };
-  if (settings.a1c) {
-    newSettings.a1c = settings.a1c;
+    country: settings.country ?? 'FR',
+    units: { bg: bgUnit }
   }
-  return newSettings;
+  if (settings.a1c) {
+    newSettings.a1c = settings.a1c
+  }
+  return newSettings
 }
 
 /**
@@ -132,18 +132,17 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
  * @param metricsTitle The text for the metrics, to keeps this page title anonymous
  */
 export function setPageTitle(prefix?: string, metricsTitle?: string): void {
-  const title = prefix ? `${prefix} | ${t("brand-name")}` : t("brand-name");
+  const title = prefix ? `${prefix} | ${t('brand-name')}` : t('brand-name')
   if (document.title !== title) {
-    document.title = title;
-    metrics.send("metrics", "setDocumentTitle", metricsTitle ?? title);
+    document.title = title
+    metrics.send('metrics', 'setDocumentTitle', metricsTitle ?? title)
   }
 }
 
-
 export function formatDateWithMomentLongFormat(date?: Date): string {
-  return moment.utc(date).format(moment.localeData().longDateFormat("ll")).toString();
+  return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
 export function formatAlarmSettingThreshold(value: number): string {
-  return `${Math.round(value * 10) / 10}%`;
+  return `${Math.round(value * 10) / 10}%`
 }

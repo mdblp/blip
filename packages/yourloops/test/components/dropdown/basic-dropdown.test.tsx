@@ -25,15 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
-import React from "react";
-import renderer from "react-test-renderer";
-import BasicDropdown, { BasicDropdownProps } from "../../../components/dropdown/basic-dropdown";
-import { getTheme } from "../../../components/theme";
+import ThemeProvider from '@material-ui/styles/ThemeProvider'
+import React from 'react'
+import renderer from 'react-test-renderer'
+import BasicDropdown, { BasicDropdownProps } from '../../../components/dropdown/basic-dropdown'
+import { getTheme } from '../../../components/theme'
 
-describe("BasicDropdown", () => {
-
-  const spyOnSelect = jest.fn();
+describe('BasicDropdown', () => {
+  const spyOnSelect = jest.fn()
 
   function renderBasicDropdown(props: BasicDropdownProps) {
     return renderer.create(
@@ -45,23 +44,22 @@ describe("BasicDropdown", () => {
           values={props.values}
         />
       </ThemeProvider>
-    );
+    )
   }
 
-  it("should call onSelect spy when an option is selected", () => {
-    const defaultValue = "defaultValue";
-    const valueToSelect = "valueToSelect";
-    const id = "id";
-    const values = [defaultValue, valueToSelect];
+  it('should call onSelect spy when an option is selected', () => {
+    const defaultValue = 'defaultValue'
+    const valueToSelect = 'valueToSelect'
+    const id = 'id'
+    const values = [defaultValue, valueToSelect]
     const props: BasicDropdownProps = {
       onSelect: spyOnSelect,
-      defaultValue: defaultValue,
+      defaultValue,
       values,
-      id,
-    };
-    const component = renderBasicDropdown(props);
-    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } });
-    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect);
-  });
-});
-
+      id
+    }
+    const component = renderBasicDropdown(props)
+    component.root.findByProps({ id: `basic-dropdown-${id}-selector` }).props.onChange({ target: { value: valueToSelect } })
+    expect(spyOnSelect).toHaveBeenCalledWith(valueToSelect)
+  })
+})

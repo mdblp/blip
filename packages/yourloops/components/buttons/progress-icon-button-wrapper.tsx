@@ -24,39 +24,39 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 interface Props {
-  children: JSX.Element; // The button element
-  inProgress: boolean;
+  children: JSX.Element // The button element
+  inProgress: boolean
 }
 
 const useStyles = makeStyles(() =>
   ({
     wrapper: {
-      position: "relative",
+      position: 'relative'
     },
     progressButton: {
-      position: "absolute",
-      top: "50%",
-      left: "50%",
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
       marginTop: -12,
-      marginLeft: -12,
-    },
+      marginLeft: -12
+    }
   })
-);
+)
 
 function ProgressIconButtonWrapper({ children, inProgress }: Props): JSX.Element {
-  const { wrapper, progressButton } = useStyles();
+  const { wrapper, progressButton } = useStyles()
 
   return (
     <div className={wrapper}>
       {children}
       {inProgress && <CircularProgress size={24} className={progressButton} />}
     </div>
-  );
+  )
 }
 
-export default ProgressIconButtonWrapper;
+export default ProgressIconButtonWrapper

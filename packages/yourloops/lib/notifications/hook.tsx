@@ -25,84 +25,84 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import bows from "bows";
-import { INotification, NotificationContext, NotificationProvider } from "./models";
-import { useAuth } from "../auth/hook";
-import NotificationApi from "./notification-api";
+import React from 'react'
+import bows from 'bows'
+import { INotification, NotificationContext, NotificationProvider } from './models'
+import { useAuth } from '../auth/hook'
+import NotificationApi from './notification-api'
 
-const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext);
-const log = bows("NotificationHook");
+const ReactNotificationContext = React.createContext<NotificationContext>({} as NotificationContext)
+const log = bows('NotificationHook')
 
 /** hackish way to prevent 2 or more consecutive loading */
-let lock = false;
+let lock = false
 
 function NotificationContextImpl(): NotificationContext {
-  const { user } = useAuth();
-  const [receivedInvitations, setReceivedInvitations] = React.useState<INotification[]>([]);
-  const [sentInvitations, setSentInvitations] = React.useState<INotification[]>([]);
-  const [initialized, setInitialized] = React.useState(false);
+  const { user } = useAuth()
+  const [receivedInvitations, setReceivedInvitations] = React.useState<INotification[]>([])
+  const [sentInvitations, setSentInvitations] = React.useState<INotification[]>([])
+  const [initialized, setInitialized] = React.useState(false)
 
   if (!user) {
-    throw new Error("User must be logged-in to use the Notification hook");
+    throw new Error('User must be logged-in to use the Notification hook')
   }
 
   const update = (): void => {
-    setInitialized(false);
-  };
+    setInitialized(false)
+  }
 
   const accept = async (notification: INotification): Promise<void> => {
-    log.info("Accept invitation", notification);
-    await NotificationApi.acceptInvitation(user.id, notification);
-    const r = await NotificationApi.getReceivedInvitations(user.id);
-    setReceivedInvitations(r);
-  };
+    log.info('Accept invitation', notification)
+    await NotificationApi.acceptInvitation(user.id, notification)
+    const r = await NotificationApi.getReceivedInvitations(user.id)
+    setReceivedInvitations(r)
+  }
 
   const decline = async (notification: INotification): Promise<void> => {
-    log.info("Decline invitation", notification);
-    await NotificationApi.declineInvitation(user.id, notification);
-    const r = await NotificationApi.getReceivedInvitations(user.id);
-    setReceivedInvitations(r);
-  };
+    log.info('Decline invitation', notification)
+    await NotificationApi.declineInvitation(user.id, notification)
+    const r = await NotificationApi.getReceivedInvitations(user.id)
+    setReceivedInvitations(r)
+  }
 
   const cancel = async (notification: INotification): Promise<void> => {
-    log.info("Cancel invitation", notification);
-    await NotificationApi.cancelInvitation(notification);
-    const r = await NotificationApi.getSentInvitations(user.id);
-    setSentInvitations(r);
-  };
+    log.info('Cancel invitation', notification)
+    await NotificationApi.cancelInvitation(notification)
+    const r = await NotificationApi.getSentInvitations(user.id)
+    setSentInvitations(r)
+  }
 
   const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> => {
-    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor);
-  };
+    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
+  }
 
   const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
-    await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId);
-  };
+    await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
+  }
 
-  const initHook = () => {
+  const initHook = (): void => {
     if (initialized || lock) {
-      return;
+      return
     }
 
-    log.info("init");
-    lock = true;
+    log.info('init')
+    lock = true
 
     Promise.all([
       NotificationApi.getReceivedInvitations(user.id),
-      NotificationApi.getSentInvitations(user.id),
+      NotificationApi.getSentInvitations(user.id)
     ]).then((result: [INotification[], INotification[]]) => {
-      setReceivedInvitations(result[0]);
-      setSentInvitations(result[1]);
+      setReceivedInvitations(result[0])
+      setSentInvitations(result[1])
     }).catch((reason: unknown) => {
-      log.error(reason);
+      log.error(reason)
     }).finally(() => {
-      setInitialized(true);
-      lock = false;
-    });
-  };
+      setInitialized(true)
+      lock = false
+    })
+  }
 
-  React.useEffect(initHook, [user, initialized]);
+  React.useEffect(initHook, [user, initialized])
 
   return {
     initialized,
@@ -113,25 +113,25 @@ function NotificationContextImpl(): NotificationContext {
     decline,
     cancel,
     inviteRemoteMonitoring,
-    cancelRemoteMonitoringInvite,
-  };
+    cancelRemoteMonitoringInvite
+  }
 }
 
 // Hook for child components to get the  object
 // and re-render when it changes.
 export function useNotification(): NotificationContext {
-  return React.useContext(ReactNotificationContext);
+  return React.useContext(ReactNotificationContext)
 }
 
 /**
  *
  */
 export function NotificationContextProvider(props: NotificationProvider): JSX.Element {
-  const { children, value } = props;
-  const notifValue = value ?? NotificationContextImpl(); // eslint-disable-line new-cap
+  const { children, value } = props
+  const notifValue = value ?? NotificationContextImpl() // eslint-disable-line new-cap
   return (
     <ReactNotificationContext.Provider value={notifValue}>
       {children}
     </ReactNotificationContext.Provider>
-  );
+  )
 }

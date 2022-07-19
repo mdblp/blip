@@ -25,163 +25,161 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import * as teamHookMock from "../../../lib/team";
-import * as notificationsHookMock from "../../../lib/notifications/hook";
-import * as alertHookMock from "../../../components/utils/snackbar";
+import * as teamHookMock from '../../../lib/team'
+import * as notificationsHookMock from '../../../lib/notifications/hook'
+import * as alertHookMock from '../../../components/utils/snackbar'
 import RemoteMonitoringPatientDialog, {
   RemoteMonitoringDialogAction,
-  RemoteMonitoringPatientDialogProps,
-} from "../../../components/dialogs/remote-monitoring-dialog";
-import { createPatient } from "../../common/utils";
-import { PatientMonitoringPrescriptionProps, PrescriptionInfo } from "../../../components/patient/patient-monitoring-prescription";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { PatientTeam } from "../../../lib/data/patient";
-import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
-import { Prescription } from "../../../lib/medical-files/model";
-
+  RemoteMonitoringPatientDialogProps
+} from '../../../components/dialogs/remote-monitoring-dialog'
+import { createPatient } from '../../common/utils'
+import { PatientMonitoringPrescriptionProps, PrescriptionInfo } from '../../../components/patient/patient-monitoring-prescription'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { PatientTeam } from '../../../lib/data/patient'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
+import { Prescription } from '../../../lib/medical-files/model'
 
 const mockCorrectPrescription: PrescriptionInfo = {
-  teamId: "fakeTeamId",
-  memberId: "fakeMemberId",
+  teamId: 'fakeTeamId',
+  memberId: 'fakeMemberId',
   file: {} as File,
-  numberOfMonth: 1,
-};
+  numberOfMonth: 1
+}
 
 // eslint-disable-next-line react/display-name
-jest.mock("../../../components/patient/patient-monitoring-prescription", () => (props: PatientMonitoringPrescriptionProps) => {
-  return <button onClick={() => props.setPrescriptionInfo(mockCorrectPrescription)}>set-correct-prescription</button>;
-});
-jest.mock("../../../components/utils/snackbar");
-jest.mock("../../../lib/team");
-jest.mock("../../../lib/notifications/hook");
-describe("RemoteMonitoringPatientDialog", () => {
-  const getPatientRemoteMonitoringTeamMock = jest.fn().mockReturnValue({ teamId: "fakeTeamId" } as PatientTeam);
-  const inviteRemoteMonitoringMock = jest.fn();
-  const editPatientRemoteMonitoringMock = jest.fn();
-  const updatePatientMonitoringMock = jest.fn();
-  const errorMock = jest.fn();
-  const onClose = jest.fn();
-  const patient = createPatient();
+jest.mock('../../../components/patient/patient-monitoring-prescription', () => (props: PatientMonitoringPrescriptionProps) => {
+  return <button onClick={() => props.setPrescriptionInfo(mockCorrectPrescription)}>set-correct-prescription</button>
+})
+jest.mock('../../../components/utils/snackbar')
+jest.mock('../../../lib/team')
+jest.mock('../../../lib/notifications/hook')
+describe('RemoteMonitoringPatientDialog', () => {
+  const getPatientRemoteMonitoringTeamMock = jest.fn().mockReturnValue({ teamId: 'fakeTeamId' } as PatientTeam)
+  const inviteRemoteMonitoringMock = jest.fn()
+  const editPatientRemoteMonitoringMock = jest.fn()
+  const updatePatientMonitoringMock = jest.fn()
+  const errorMock = jest.fn()
+  const onClose = jest.fn()
+  const patient = createPatient()
   const renewProps = {
     patient,
     action: RemoteMonitoringDialogAction.renew,
-    onClose,
-  };
+    onClose
+  }
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
         editPatientRemoteMonitoring: editPatientRemoteMonitoringMock,
         getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
-        updatePatientMonitoring: updatePatientMonitoringMock,
-      };
+        updatePatientMonitoring: updatePatientMonitoringMock
+      }
     });
     (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
-      return { error: errorMock };
+      return { error: errorMock }
     });
     (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
-      return { inviteRemoteMonitoring: inviteRemoteMonitoringMock };
-    });
-  });
+      return { inviteRemoteMonitoring: inviteRemoteMonitoringMock }
+    })
+  })
 
   function getRemoteMonitoringPatientDialogJSX(props: RemoteMonitoringPatientDialogProps = {
     patient,
     action: RemoteMonitoringDialogAction.invite,
-    onClose,
+    onClose
   }) {
-    return <RemoteMonitoringPatientDialog {...props} />;
+    return <RemoteMonitoringPatientDialog {...props} />
   }
 
   function setPrescriptionAndSave(props: RemoteMonitoringPatientDialogProps = {
     patient,
     action: RemoteMonitoringDialogAction.invite,
-    onClose,
+    onClose
   }) {
-    render(getRemoteMonitoringPatientDialogJSX(props));
-    fireEvent.click(screen.getByRole("button", { name: "set-correct-prescription" }));
-    const saveButton: HTMLButtonElement = screen.getByRole("button", { name: "button-save" });
-    fireEvent.click(screen.getByRole("button", { name: "button-save" }));
-    expect(saveButton.disabled).toBeTruthy();
+    render(getRemoteMonitoringPatientDialogJSX(props))
+    fireEvent.click(screen.getByRole('button', { name: 'set-correct-prescription' }))
+    const saveButton: HTMLButtonElement = screen.getByRole('button', { name: 'button-save' })
+    fireEvent.click(screen.getByRole('button', { name: 'button-save' }))
+    expect(saveButton.disabled).toBeTruthy()
   }
 
   function checkFunctionCalledOnSaveError() {
-    expect(onClose).not.toHaveBeenCalled();
-    expect(errorMock).toHaveBeenCalledWith("error-http-500");
-    expect(((screen.getByRole("button", { name: "button-save" })) as HTMLButtonElement).disabled).toBeFalsy();
+    expect(onClose).not.toHaveBeenCalled()
+    expect(errorMock).toHaveBeenCalledWith('error-http-500')
+    expect(((screen.getByRole('button', { name: 'button-save' }))).disabled).toBeFalsy()
   }
 
-  it("should enabled save button only when prescription fields are filled", async () => {
-    render(getRemoteMonitoringPatientDialogJSX());
-    const saveButton: HTMLButtonElement = screen.getByRole("button", { name: "button-save" });
-    fireEvent.click(screen.getByRole("button", { name: "set-correct-prescription" }));
-    await waitFor(() => expect(saveButton.disabled).toBeFalsy());
-  });
+  it('should enabled save button only when prescription fields are filled', async () => {
+    render(getRemoteMonitoringPatientDialogJSX())
+    const saveButton: HTMLButtonElement = screen.getByRole('button', { name: 'button-save' })
+    fireEvent.click(screen.getByRole('button', { name: 'set-correct-prescription' }))
+    await waitFor(() => expect(saveButton.disabled).toBeFalsy())
+  })
 
-  it("clicking on save should invite patient to remote monitoring", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockResolvedValue({} as Prescription);
-    setPrescriptionAndSave();
-    expect(inviteRemoteMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled();
-    await waitFor(() => expect(onClose).toHaveBeenCalled());
-  });
+  it('clicking on save should invite patient to remote monitoring', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockResolvedValue({} as Prescription)
+    setPrescriptionAndSave()
+    expect(inviteRemoteMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled()
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+  })
 
-  it("clicking on save should show error when invitation failed to be created", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockResolvedValue({} as Prescription);
-    inviteRemoteMonitoringMock.mockRejectedValueOnce(Error("This error was thrown by a mock on purpose"));
-    setPrescriptionAndSave();
-    expect(inviteRemoteMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).not.toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).not.toHaveBeenCalled();
-    checkFunctionCalledOnSaveError();
-  });
+  it('clicking on save should show error when invitation failed to be created', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockResolvedValue({} as Prescription)
+    inviteRemoteMonitoringMock.mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+    setPrescriptionAndSave()
+    expect(inviteRemoteMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).not.toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).not.toHaveBeenCalled()
+    checkFunctionCalledOnSaveError()
+  })
 
-  it("clicking on save should show error when patient monitoring information could not be edited", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockRejectedValueOnce(Error("This error was thrown by a mock on purpose"));
-    setPrescriptionAndSave();
-    expect(inviteRemoteMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled();
-    checkFunctionCalledOnSaveError();
-  });
+  it('clicking on save should show error when patient monitoring information could not be edited', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+    setPrescriptionAndSave()
+    expect(inviteRemoteMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled()
+    checkFunctionCalledOnSaveError()
+  })
 
-  it("clicking on save should renew patient remote monitoring invitation", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockResolvedValue({} as Prescription);
-    setPrescriptionAndSave(renewProps);
-    expect(updatePatientMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled();
-    await waitFor(() => expect(onClose).toHaveBeenCalled());
-  });
+  it('clicking on save should renew patient remote monitoring invitation', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockResolvedValue({} as Prescription)
+    setPrescriptionAndSave(renewProps)
+    expect(updatePatientMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled()
+    await waitFor(() => expect(onClose).toHaveBeenCalled())
+  })
 
-  it("clicking on save should show error when renew invitation failed to be created", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockResolvedValue({} as Prescription);
-    updatePatientMonitoringMock.mockRejectedValueOnce(Error("This error was thrown by a mock on purpose"));
-    setPrescriptionAndSave(renewProps);
-    expect(updatePatientMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).not.toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).not.toHaveBeenCalled();
-    checkFunctionCalledOnSaveError();
-  });
+  it('clicking on save should show error when renew invitation failed to be created', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockResolvedValue({} as Prescription)
+    updatePatientMonitoringMock.mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+    setPrescriptionAndSave(renewProps)
+    expect(updatePatientMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).not.toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).not.toHaveBeenCalled()
+    checkFunctionCalledOnSaveError()
+  })
 
-  it("clicking on save should show error when patient monitoring information could not be edited in case of a renewal", async () => {
-    jest.spyOn(MedicalFilesApi, "uploadPrescription").mockRejectedValueOnce(Error("This error was thrown by a mock on purpose"));
-    setPrescriptionAndSave(renewProps);
-    expect(updatePatientMonitoringMock).toHaveBeenCalled();
-    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled());
-    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled();
-    checkFunctionCalledOnSaveError();
-  });
-});
-
+  it('clicking on save should show error when patient monitoring information could not be edited in case of a renewal', async () => {
+    jest.spyOn(MedicalFilesApi, 'uploadPrescription').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+    setPrescriptionAndSave(renewProps)
+    expect(updatePatientMonitoringMock).toHaveBeenCalled()
+    await waitFor(() => expect(editPatientRemoteMonitoringMock).toHaveBeenCalled())
+    expect(MedicalFilesApi.uploadPrescription).toHaveBeenCalled()
+    checkFunctionCalledOnSaveError()
+  })
+})

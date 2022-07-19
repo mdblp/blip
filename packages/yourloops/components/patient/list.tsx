@@ -26,44 +26,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import bows from "bows";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import _ from 'lodash'
+import React from 'react'
+import bows from 'bows'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 
-import Alert from "@material-ui/lab/Alert";
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Container from "@material-ui/core/Container";
+import Alert from '@material-ui/lab/Alert'
+import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
 
-import { PatientFilterTypes, PatientTableSortFields, SortDirection } from "../../models/generic";
-import metrics from "../../lib/metrics";
-import { useAuth } from "../../lib/auth";
-import { errorTextFromException, setPageTitle } from "../../lib/utils";
-import { TeamContext, useTeam } from "../../lib/team";
-import PatientsTable from "./table";
-import { Patient } from "../../lib/data/patient";
-import { PatientListProps } from "./models";
-import { comparePatients } from "./utils";
-import TeamUtils from "../../lib/team/utils";
+import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
+import metrics from '../../lib/metrics'
+import { useAuth } from '../../lib/auth'
+import { errorTextFromException, setPageTitle } from '../../lib/utils'
+import { TeamContext, useTeam } from '../../lib/team'
+import PatientsTable from './table'
+import { Patient } from '../../lib/data/patient'
+import { PatientListProps } from './models'
+import { comparePatients } from './utils'
+import TeamUtils from '../../lib/team/utils'
 
-const log = bows("PatientListPage");
+const log = bows('PatientListPage')
 
 // eslint-disable-next-line no-magic-numbers
-const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true });
+const throttleSearchMetrics = _.throttle(metrics.send, 10000, { trailing: true })
 
 function PatientList(props: PatientListProps): JSX.Element {
-  const { filter, filterType } = props;
-  const historyHook = useHistory();
-  const { t } = useTranslation("yourloops");
-  const authHook = useAuth();
-  const teamHook = useTeam();
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-  const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
-  const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName);
-  const flagged = authHook.getFlagPatients();
+  const { filter, filterType } = props
+  const historyHook = useHistory()
+  const { t } = useTranslation('yourloops')
+  const authHook = useAuth()
+  const teamHook = useTeam()
+  const [loading, setLoading] = React.useState<boolean>(true)
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
+  const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
+  const flagged = authHook.getFlagPatients()
 
   const updatePatientList = (
     teamHook: TeamContext,
@@ -72,98 +72,98 @@ function PatientList(props: PatientListProps): JSX.Element {
     filterType: PatientFilterTypes,
     orderBy: PatientTableSortFields,
     order: SortDirection
-  ) => {
-    let filteredPatients = teamHook.filterPatients(filterType, filter, flagged);
-    filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged);
+  ): Patient[] => {
+    let filteredPatients = teamHook.filterPatients(filterType, filter, flagged)
+    filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged)
     // Sort the patients
     filteredPatients.sort((a: Patient, b: Patient): number => {
-      const c = comparePatients(a, b, orderBy);
-      return order === SortDirection.asc ? c : -c;
-    });
-    const searchByName = filter.length > 0;
+      const c = comparePatients(a, b, orderBy)
+      return order === SortDirection.asc ? c : -c
+    })
+    const searchByName = filter.length > 0
     if (searchByName) {
-      throttleSearchMetrics("trackSiteSearch", "patient_name", "hcp", filteredPatients.length);
+      throttleSearchMetrics('trackSiteSearch', 'patient_name', 'hcp', filteredPatients.length)
     }
-    return filteredPatients;
-  };
+    return filteredPatients
+  }
 
-  const handleRefresh = async (force = false) => {
-    log.debug("handleRefresh:", { force });
-    setLoading(true);
-    setErrorMessage(null);
+  const handleRefresh = async (force = false): Promise<void> => {
+    log.debug('handleRefresh:', { force })
+    setLoading(true)
+    setErrorMessage(null)
     try {
-      await teamHook.refresh(force);
+      await teamHook.refresh(force)
     } catch (reason: unknown) {
-      log.error("handleRefresh", reason);
-      const errorMessage = t("error-failed-display-teams", { errorMessage: errorTextFromException(reason) });
-      setErrorMessage(errorMessage);
+      log.error('handleRefresh', reason)
+      const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
+      setErrorMessage(errorMessage)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   const handleSelectPatient = (patient: Patient): void => {
-    metrics.send("patient_selection", "select_patient", flagged.includes(patient.userid) ? "flagged" : "not_flagged");
-    historyHook.push(`/patient/${patient.userid}`);
-  };
+    metrics.send('patient_selection', 'select_patient', flagged.includes(patient.userid) ? 'flagged' : 'not_flagged')
+    historyHook.push(`/patient/${patient.userid}`)
+  }
 
   const handleFlagPatient = async (userId: string): Promise<void> => {
-    metrics.send("patient_selection", "flag_patient", flagged.includes(userId) ? "flagged" : "un-flagged");
-    await authHook.flagPatient(userId);
-  };
+    metrics.send('patient_selection', 'flag_patient', flagged.includes(userId) ? 'flagged' : 'un-flagged')
+    await authHook.flagPatient(userId)
+  }
 
   const handleSortList = (orderBy: PatientTableSortFields, order: SortDirection): void => {
-    metrics.send("patient_selection", "sort_patients", orderBy, order === SortDirection.asc ? 1 : -1);
-    setOrder(order);
-    setOrderBy(orderBy);
-  };
+    metrics.send('patient_selection', 'sort_patients', orderBy, order === SortDirection.asc ? 1 : -1)
+    setOrder(order)
+    setOrderBy(orderBy)
+  }
 
   const patients = React.useMemo(() => {
     if (!teamHook.initialized || errorMessage !== null) {
-      return [];
+      return []
     }
-    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order);
-  }, [teamHook, flagged, filter, filterType, orderBy, order, errorMessage]);
+    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order)
+  }, [teamHook, flagged, filter, filterType, orderBy, order, errorMessage])
 
   React.useEffect(() => {
     if (!teamHook.initialized) {
       if (!loading) {
-        setLoading(true);
+        setLoading(true)
       }
-      return;
+      return
     }
 
     if (teamHook.errorMessage !== null) {
-      const message = t("error-failed-display-teams", { errorMessage: teamHook.errorMessage });
+      const message = t('error-failed-display-teams', { errorMessage: teamHook.errorMessage })
       if (message !== errorMessage) {
-        log.error("errorMessage", message);
-        setErrorMessage(message);
+        log.error('errorMessage', message)
+        setErrorMessage(message)
       }
     } else if (errorMessage !== null) {
-      setErrorMessage(null);
+      setErrorMessage(null)
     }
 
     if (loading) {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading, t]);
+  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
 
   React.useEffect(() => {
-    setPageTitle(t("hcp-tab-patients"));
-  }, [t]);
+    setPageTitle(t('hcp-tab-patients'))
+  }, [t])
 
   if (loading) {
     return (
       <CircularProgress
         disableShrink
-        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }}
+        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
       />
-    );
+    )
   }
 
   if (errorMessage !== null) {
     return (
       <div id="div-api-error-message" className="api-error-message">
-        <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: "1em" }}>
+        <Alert id="alert-api-error-message" severity="error" style={{ marginBottom: '1em' }}>
           {errorMessage}
         </Alert>
         <Button
@@ -171,12 +171,12 @@ function PatientList(props: PatientListProps): JSX.Element {
           variant="contained"
           color="secondary"
           disableElevation
-          onClick={() => handleRefresh(true)}
+          onClick={async () => await handleRefresh(true)}
         >
-          {t("button-refresh-page-on-error")}
+          {t('button-refresh-page-on-error')}
         </Button>
       </div>
-    );
+    )
   }
   return (
     <Container id="patient-list-container" maxWidth={false}>
@@ -191,7 +191,7 @@ function PatientList(props: PatientListProps): JSX.Element {
         onSortList={handleSortList}
       />
     </Container>
-  );
+  )
 }
 
-export default PatientList;
+export default PatientList

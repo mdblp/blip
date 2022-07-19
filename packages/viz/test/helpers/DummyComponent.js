@@ -15,8 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
+import React from 'react'
 
-const DummyComponent = () => (<div className="dummy" />);
+const DummyComponent = () => (<div className="dummy" />)
 
-export default DummyComponent;
+export default DummyComponent

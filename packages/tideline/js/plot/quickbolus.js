@@ -20,15 +20,15 @@
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import utils from "./util/utils";
-import commonbolus from "./util/commonbolus";
-import drawbolus from "./util/drawbolus";
+import utils from './util/utils'
+import commonbolus from './util/commonbolus'
+import drawbolus from './util/drawbolus'
 
 const defaults = {
   width: 12
-};
+}
 
 /**
  * @param {Pool} pool
@@ -36,64 +36,64 @@ const defaults = {
  * @returns
  */
 function plotQuickBolus(pool, opts = defaults) {
-  const d3 = window.d3;
+  const d3 = window.d3
 
-  _.defaults(opts, defaults);
+  _.defaults(opts, defaults)
 
   function bolus(selection) {
-    const drawBolus = drawbolus(pool, { ...opts, yScale: pool.yScale(), xScale: pool.xScale().copy() });
+    const drawBolus = drawbolus(pool, { ...opts, yScale: pool.yScale(), xScale: pool.xScale().copy() })
 
     selection.each(function(data) {
       // filter out boluses with wizard
-      const currentData = _.filter(data, (d) => _.isEmpty(d.wizard));
-      drawBolus.annotations(_.filter(currentData, "annotations"));
+      const currentData = _.filter(data, (d) => _.isEmpty(d.wizard))
+      drawBolus.annotations(_.filter(currentData, 'annotations'))
 
       const boluses = d3.select(this)
-        .selectAll("g.d3-bolus-group")
-        .data(currentData, (d) => d.id);
+        .selectAll('g.d3-bolus-group')
+        .data(currentData, (d) => d.id)
 
       const bolusGroups = boluses.enter()
-        .append("g")
+        .append('g')
         .attr({
-          class: "d3-bolus-group",
+          class: 'd3-bolus-group',
           id: (d) => `bolus_group_${d.id}`
         })
         .sort((a, b) => {
           // sort by size so smaller boluses are drawn last
-          return d3.descending(commonbolus.getMaxValue(a), commonbolus.getMaxValue(b));
-        });
+          return d3.descending(commonbolus.getMaxValue(a), commonbolus.getMaxValue(b))
+        })
 
       const normal = bolusGroups.filter((bolus) => {
-        const d = commonbolus.getDelivered(bolus);
-        return Number.isFinite(d) && d > 0;
-      });
-      drawBolus.bolus(normal);
+        const d = commonbolus.getDelivered(bolus)
+        return Number.isFinite(d) && d > 0
+      })
+      drawBolus.bolus(normal)
 
       // boluses where programmed differs from delivered
       const undelivered = bolusGroups.filter((bolus) => {
-        const d = commonbolus.getDelivered(bolus);
-        const p = commonbolus.getProgrammed(bolus);
-        return Number.isFinite(d) && Number.isFinite(p) && p > d;
-      });
-      drawBolus.undelivered(undelivered);
+        const d = commonbolus.getDelivered(bolus)
+        const p = commonbolus.getProgrammed(bolus)
+        return Number.isFinite(d) && Number.isFinite(p) && p > d
+      })
+      drawBolus.undelivered(undelivered)
 
-      boluses.exit().remove();
+      boluses.exit().remove()
 
-      const highlight = pool.highlight(".d3-wizard-group, .d3-bolus-group", opts);
+      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group', opts)
 
       // tooltips
-      selection.selectAll(".d3-bolus-group").on("mouseover", function(d) {
-        highlight.on(d3.select(this));
-        drawBolus.tooltip.add(d, utils.getTooltipContainer(this));
-      });
-      selection.selectAll(".d3-bolus-group").on("mouseout", function(d) {
-        highlight.off();
-        drawBolus.tooltip.remove(d);
-      });
-    });
+      selection.selectAll('.d3-bolus-group').on('mouseover', function(d) {
+        highlight.on(d3.select(this))
+        drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
+      })
+      selection.selectAll('.d3-bolus-group').on('mouseout', function(d) {
+        highlight.off()
+        drawBolus.tooltip.remove(d)
+      })
+    })
   }
 
-  return bolus;
+  return bolus
 }
 
-export default plotQuickBolus;
+export default plotQuickBolus

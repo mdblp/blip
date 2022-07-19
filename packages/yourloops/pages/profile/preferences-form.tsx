@@ -25,48 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Tune from "@material-ui/icons/Tune";
+import Tune from '@material-ui/icons/Tune'
 
-import { ClassNameMap } from "@material-ui/styles/withStyles";
-import Box from "@material-ui/core/Box";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import { ClassNameMap } from '@material-ui/styles/withStyles'
+import Box from '@material-ui/core/Box'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 
-import { availableLanguageCodes, getLangName } from "../../lib/language";
-import { ConsentFeedback } from "../../components/consents";
-import { UserRoles } from "../../models/user";
-import { Units } from "../../models/generic";
-import { LanguageCodes } from "../../models/locales";
+import { availableLanguageCodes, getLangName } from '../../lib/language'
+import { ConsentFeedback } from '../../components/consents'
+import { UserRoles } from '../../models/user'
+import { Units } from '../../models/generic'
+import { LanguageCodes } from '../../models/locales'
 
 interface PreferencesFormProps {
-  classes: ClassNameMap;
-  feedbackAccepted: boolean;
-  lang: LanguageCodes;
-  role: UserRoles;
-  unit: Units;
-  setFeedbackAccepted: (feedbackAccepted: boolean) => void;
-  setLang: (lang: LanguageCodes) => void;
-  setUnit: (unit: Units) => void;
+  classes: ClassNameMap
+  feedbackAccepted: boolean
+  lang: LanguageCodes
+  role: UserRoles
+  unit: Units
+  setFeedbackAccepted: (feedbackAccepted: boolean) => void
+  setLang: (lang: LanguageCodes) => void
+  setUnit: (unit: Units) => void
 }
 
 function PreferencesForm(props: PreferencesFormProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation('yourloops')
 
   return (
     <React.Fragment>
       <Box className={props.classes.categoryLabel}>
-        <Tune color="primary" style={{ margin: "0" }} />
-        <strong className={props.classes.uppercase}>{t("preferences")}</strong>
+        <Tune color="primary" style={{ margin: '0' }} />
+        <strong className={props.classes.uppercase}>{t('preferences')}</strong>
       </Box>
 
       <Box className={props.classes.inputContainer}>
         <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
-          <InputLabel id="profile-units-input-label">{t("units")}</InputLabel>
+          <InputLabel id="profile-units-input-label">{t('units')}</InputLabel>
           <Select
             disabled={props.role === UserRoles.patient}
             labelId="unit-selector"
@@ -83,7 +83,7 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
           </Select>
         </FormControl>
         <FormControl className={`${props.classes.formInput} ${props.classes.halfWide}`}>
-          <InputLabel id="profile-language-input-label">{t("language")}</InputLabel>
+          <InputLabel id="profile-language-input-label">{t('language')}</InputLabel>
           <Select
             labelId="locale-selector"
             id="profile-locale-selector"
@@ -103,12 +103,12 @@ function PreferencesForm(props: PreferencesFormProps): JSX.Element {
           id="profile"
           userRole={props.role}
           checked={props.feedbackAccepted}
-          style={{ marginLeft: -9, marginRight: 0, marginTop: "1em", marginBottom: 0 }}
+          style={{ marginLeft: -9, marginRight: 0, marginTop: '1em', marginBottom: 0 }}
           onChange={() => props.setFeedbackAccepted(!props.feedbackAccepted)}
         />
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default PreferencesForm;
+export default PreferencesForm

@@ -15,85 +15,85 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import _ from "lodash";
-import i18next from "i18next";
-import { formatInputTime } from "../../../utils/format";
-import Tooltip from "../../common/tooltips/Tooltip";
-import colors from "../../../styles/colors.css";
-import styles from "./PhysicalTooltip.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import _ from 'lodash'
+import i18next from 'i18next'
+import { formatInputTime } from '../../../utils/format'
+import Tooltip from '../../common/tooltips/Tooltip'
+import colors from '../../../styles/colors.css'
+import styles from './PhysicalTooltip.css'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 class PhysicalTooltip extends React.Component {
   getDurationInMinutes() {
     const display = {
-      units: "minutes",
-      value: 0,
-    };
-    const units = this.props.physicalActivity.duration.units;
-    const duration = this.props.physicalActivity.duration.value;
-    switch (units) {
-    case "seconds":
-      display.value = Math.round(duration / 60);
-      break;
-    case "hours":
-      display.value = duration * 60;
-      break;
-    default:
-      display.value = duration;
-      break;
+      units: 'minutes',
+      value: 0
     }
-    return display;
+    const units = this.props.physicalActivity.duration.units
+    const duration = this.props.physicalActivity.duration.value
+    switch (units) {
+      case 'seconds':
+        display.value = Math.round(duration / 60)
+        break
+      case 'hours':
+        display.value = duration * 60
+        break
+      default:
+        display.value = duration
+        break
+    }
+    return display
   }
 
   renderPhysicalActivity(pa) {
-    const { timePrefs } = this.props;
-    const d = this.getDurationInMinutes();
+    const { timePrefs } = this.props
+    const d = this.getDurationInMinutes()
     const rows = [
-      <div key={"title"} className={styles.pa}>
-        <div id="tooltip-physical-activity-title" className={styles.title}>{t("Physical Activity")}</div>
+      <div key={'title'} className={styles.pa}>
+        <div id="tooltip-physical-activity-title" className={styles.title}>{t('Physical Activity')}</div>
       </div>,
-      <div key={"physical"} className={styles.pa}>
-        <div className={styles.label}>{t("Intensity")}</div>
+      <div key={'physical'} className={styles.pa}>
+        <div className={styles.label}>{t('Intensity')}</div>
         <div className={styles.value}>
           {t(`${pa.reportedIntensity}-pa`)}
         </div>
       </div>,
-      <div key={"duration"} className={styles.pa}>
-        <div className={styles.label}>{t("Duration")}</div>
+      <div key={'duration'} className={styles.pa}>
+        <div className={styles.label}>{t('Duration')}</div>
         <div className={styles.value}>{`${d.value} ${t(d.units)}`}</div>
-      </div>,
-    ];
-    const inputTime = [];
+      </div>
+    ]
+    const inputTime = []
     if (pa.inputTime) {
       inputTime.push(
-        <div key={"inputTime"} className={styles.pa}>
+        <div key={'inputTime'} className={styles.pa}>
           <div className={styles.label}>
-            {t("Entered at")}
+            {t('Entered at')}
           </div>
           <div className={styles.value}>
             {formatInputTime(pa.inputTime, timePrefs)}
           </div>
         </div>
-      );
+      )
     }
 
-    return <div className={styles.container}>{rows}{inputTime}</div>;
+    return <div className={styles.container}>{rows}{inputTime}</div>
   }
 
   render() {
-    const { physicalActivity, timePrefs, title } = this.props;
+    const { physicalActivity, timePrefs, title } = this.props
 
-    let dateTitle = null;
+    let dateTitle = null
     if (title === null) {
       dateTitle = {
-        source: _.get(physicalActivity, "source", "Diabeloop"),
+        source: _.get(physicalActivity, 'source', 'Diabeloop'),
         normalTime: physicalActivity.normalTime,
-        timezone: _.get(physicalActivity, "timezone", "UTC"),
-        timePrefs,
-      };
+        timezone: _.get(physicalActivity, 'timezone', 'UTC'),
+        timePrefs
+      }
     }
 
     return (
@@ -103,23 +103,23 @@ class PhysicalTooltip extends React.Component {
         dateTitle={dateTitle}
         content={this.renderPhysicalActivity(physicalActivity)}
       />
-    );
+    )
   }
 }
 
 PhysicalTooltip.propTypes = {
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired
   }).isRequired,
   offset: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number,
-    horizontal: PropTypes.number,
+    horizontal: PropTypes.number
   }),
   title: PropTypes.node,
   tail: PropTypes.bool.isRequired,
-  side: PropTypes.oneOf(["top", "right", "bottom", "left"]).isRequired,
+  side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
   tailColor: PropTypes.string.isRequired,
   tailWidth: PropTypes.number.isRequired,
   tailHeight: PropTypes.number.isRequired,
@@ -131,21 +131,21 @@ PhysicalTooltip.propTypes = {
     reportedIntensity: PropTypes.string.isRequired,
     duration: PropTypes.shape({
       units: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    }).isRequired,
+      value: PropTypes.number.isRequired
+    }).isRequired
   }).isRequired,
-  timePrefs: PropTypes.object.isRequired,
-};
+  timePrefs: PropTypes.object.isRequired
+}
 
 PhysicalTooltip.defaultProps = {
   tail: true,
-  side: "right",
+  side: 'right',
   tailWidth: 9,
   tailHeight: 17,
   tailColor: colors.physicalActivity,
   borderColor: colors.physicalActivity,
   borderWidth: 2,
-  title: null,
-};
+  title: null
+}
 
-export default PhysicalTooltip;
+export default PhysicalTooltip

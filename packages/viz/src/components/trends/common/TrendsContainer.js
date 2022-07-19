@@ -15,23 +15,23 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import bows from "bows";
-import { extent } from "d3-array";
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import _ from 'lodash'
+import bows from 'bows'
+import { extent } from 'd3-array'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
+import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
 
-import * as actions from "../../../redux/actions/";
-import TrendsSVGContainer from "./TrendsSVGContainer";
+import * as actions from '../../../redux/actions/'
+import TrendsSVGContainer from './TrendsSVGContainer'
 
 import {
   MGDL_CLAMP_TOP,
-  MMOLL_CLAMP_TOP,
-} from "../../../utils/constants";
+  MMOLL_CLAMP_TOP
+} from '../../../utils/constants'
 
 export class TrendsContainer extends React.Component {
   static propTypes = {
@@ -44,23 +44,23 @@ export class TrendsContainer extends React.Component {
       thursday: PropTypes.bool.isRequired,
       friday: PropTypes.bool.isRequired,
       saturday: PropTypes.bool.isRequired,
-      sunday: PropTypes.bool.isRequired,
+      sunday: PropTypes.bool.isRequired
     }).isRequired,
     bgPrefs: PropTypes.shape({
       bgBounds: PropTypes.shape({
         veryHighThreshold: PropTypes.number.isRequired,
         targetUpperBound: PropTypes.number.isRequired,
         targetLowerBound: PropTypes.number.isRequired,
-        veryLowThreshold: PropTypes.number.isRequired,
+        veryLowThreshold: PropTypes.number.isRequired
       }).isRequired,
-      bgUnits: PropTypes.oneOf([MGDL_UNITS, MMOLL_UNITS]).isRequired,
+      bgUnits: PropTypes.oneOf([MGDL_UNITS, MMOLL_UNITS]).isRequired
     }).isRequired,
     currentPatientInViewId: PropTypes.string.isRequired,
     extentSize: PropTypes.number.isRequired,
     loading: PropTypes.bool.isRequired,
     yScaleClampTop: PropTypes.shape({
       [MGDL_UNITS]: PropTypes.number.isRequired,
-      [MMOLL_UNITS]: PropTypes.number.isRequired,
+      [MMOLL_UNITS]: PropTypes.number.isRequired
     }).isRequired,
     // data (crossfilter dimensions)
     tidelineData: PropTypes.object.isRequired,
@@ -72,7 +72,7 @@ export class TrendsContainer extends React.Component {
         cbg100Enabled: PropTypes.bool.isRequired,
         cbg80Enabled: PropTypes.bool.isRequired,
         cbg50Enabled: PropTypes.bool.isRequired,
-        cbgMedianEnabled: PropTypes.bool.isRequired,
+        cbgMedianEnabled: PropTypes.bool.isRequired
       }).isRequired,
       focusedCbgSlice: PropTypes.shape({
         data: PropTypes.shape({
@@ -86,7 +86,7 @@ export class TrendsContainer extends React.Component {
           msX: PropTypes.number.isRequired,
           ninetiethQuantile: PropTypes.number.isRequired,
           tenthQuantile: PropTypes.number.isRequired,
-          thirdQuartile: PropTypes.number.isRequired,
+          thirdQuartile: PropTypes.number.isRequired
         }),
         position: PropTypes.shape({
           left: PropTypes.number.isRequired,
@@ -98,35 +98,35 @@ export class TrendsContainer extends React.Component {
             min: PropTypes.number.isRequired,
             ninetiethQuantile: PropTypes.number.isRequired,
             tenthQuantile: PropTypes.number.isRequired,
-            thirdQuartile: PropTypes.number.isRequired,
-          }),
-        }),
+            thirdQuartile: PropTypes.number.isRequired
+          })
+        })
       }),
       focusedCbgSliceKeys: PropTypes.arrayOf(PropTypes.oneOf([
-        "firstQuartile",
-        "max",
-        "median",
-        "min",
-        "ninetiethQuantile",
-        "tenthQuantile",
-        "thirdQuartile",
+        'firstQuartile',
+        'max',
+        'median',
+        'min',
+        'ninetiethQuantile',
+        'tenthQuantile',
+        'thirdQuartile'
       ])),
       focusedSmbg: PropTypes.shape({
         allPositions: PropTypes.arrayOf(PropTypes.shape({
           top: PropTypes.number.isRequired,
-          left: PropTypes.number.isRequired,
+          left: PropTypes.number.isRequired
         })),
         allSmbgsOnDate: PropTypes.arrayOf(PropTypes.shape({
-          value: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired
         })),
         date: PropTypes.string.isRequired,
         datum: PropTypes.shape({
-          value: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired
         }),
         position: PropTypes.shape({
           top: PropTypes.number.isRequired,
-          left: PropTypes.number.isRequired,
-        }),
+          left: PropTypes.number.isRequired
+        })
       }),
       focusedSmbgRangeAvg: PropTypes.shape({
         data: PropTypes.shape({
@@ -136,7 +136,7 @@ export class TrendsContainer extends React.Component {
           min: PropTypes.number.isRequired,
           msX: PropTypes.number.isRequired,
           msFrom: PropTypes.number.isRequired,
-          msTo: PropTypes.number.isRequired,
+          msTo: PropTypes.number.isRequired
         }).isRequired,
         position: PropTypes.shape({
           left: PropTypes.number.isRequired,
@@ -144,35 +144,35 @@ export class TrendsContainer extends React.Component {
           yPositions: PropTypes.shape({
             max: PropTypes.number.isRequired,
             mean: PropTypes.number.isRequired,
-            min: PropTypes.number.isRequired,
-          }).isRequired,
-        }).isRequired,
-      }),
+            min: PropTypes.number.isRequired
+          }).isRequired
+        }).isRequired
+      })
     }).isRequired,
-    unfocusCbgSlice: PropTypes.func.isRequired,
-  };
+    unfocusCbgSlice: PropTypes.func.isRequired
+  }
 
   static defaultProps = {
     yScaleClampTop: {
       [MGDL_UNITS]: MGDL_CLAMP_TOP,
-      [MMOLL_UNITS]: MMOLL_CLAMP_TOP,
-    },
-  };
+      [MMOLL_UNITS]: MMOLL_CLAMP_TOP
+    }
+  }
 
   constructor(props) {
-    super(props);
-    this.log = bows("TrendsContainer");
+    super(props)
+    this.log = bows('TrendsContainer')
     this.state = {
-      yScaleDomain: null,
-    };
+      yScaleDomain: null
+    }
 
     /** Avoid infinite mount data loop */
-    this.mountingData = false;
+    this.mountingData = false
   }
 
   componentDidMount() {
-    this.log.info("componentDidMount");
-    this.mountData();
+    this.log.info('componentDidMount')
+    this.mountData()
   }
 
   /*
@@ -185,55 +185,55 @@ export class TrendsContainer extends React.Component {
    * as a temporary compatibility interface
    */
   componentDidUpdate(prevProps) {
-    const newDataLoaded = (prevProps.loading && !this.props.loading) || !_.isEqual(prevProps.days, this.props.days);
+    const newDataLoaded = (prevProps.loading && !this.props.loading) || !_.isEqual(prevProps.days, this.props.days)
     if (newDataLoaded) {
-      this.mountData();
+      this.mountData()
     }
   }
 
   componentWillUnmount() {
-    this.unfocusCbgSlice();
+    this.unfocusCbgSlice()
   }
 
   unfocusCbgSlice() {
     const {
       currentPatientInViewId,
       trendsState,
-      unfocusCbgSlice,
-    } = this.props;
-    if (_.get(trendsState, "focusedCbgSlice") !== null) {
-      unfocusCbgSlice(currentPatientInViewId);
+      unfocusCbgSlice
+    } = this.props
+    if (_.get(trendsState, 'focusedCbgSlice') !== null) {
+      unfocusCbgSlice(currentPatientInViewId)
     }
   }
 
   mountData() {
     if (this.mountingData) {
-      return;
+      return
     }
-    this.mountingData = true;
+    this.mountingData = true
 
-    const { bgPrefs, yScaleClampTop, tidelineData } = this.props;
-    const { bgBounds, bgUnits } = bgPrefs;
-    const upperBound = yScaleClampTop[bgUnits];
-    const bgDomain = extent(tidelineData.grouped.cbg, d => d.value);
-    const yScaleDomain = [bgDomain[0] ?? 0, upperBound];
+    const { bgPrefs, yScaleClampTop, tidelineData } = this.props
+    const { bgBounds, bgUnits } = bgPrefs
+    const upperBound = yScaleClampTop[bgUnits]
+    const bgDomain = extent(tidelineData.grouped.cbg, d => d.value)
+    const yScaleDomain = [bgDomain[0] ?? 0, upperBound]
     if (bgDomain[0] > bgBounds.veryLowThreshold) {
-      yScaleDomain[0] = bgBounds.veryLowThreshold;
+      yScaleDomain[0] = bgBounds.veryLowThreshold
     }
 
     this.setState({ yScaleDomain }, () => {
-      this.unfocusCbgSlice();
-      this.mountingData = false;
-    });
+      this.unfocusCbgSlice()
+      this.mountingData = false
+    })
   }
 
   render() {
-    const { days, activeDays, bgPrefs, currentCbgData } = this.props;
-    const { yScaleDomain } = this.state;
+    const { days, activeDays, bgPrefs, currentCbgData } = this.props
+    const { yScaleDomain } = this.state
 
     if (!Array.isArray(days) || days.length < 1 || yScaleDomain === null) {
       // Data have not yet been mounted.
-      return null;
+      return null
     }
 
     return (
@@ -245,25 +245,25 @@ export class TrendsContainer extends React.Component {
         focusedSlice={this.props.trendsState.focusedCbgSlice}
         focusedSliceKeys={this.props.trendsState.focusedCbgSliceKeys}
         displayFlags={this.props.trendsState.cbgFlags}
-        showingCbgDateTraces={_.get(this.props, "trendsState.showingCbgDateTraces", false)}
+        showingCbgDateTraces={_.get(this.props, 'trendsState.showingCbgDateTraces', false)}
         onSelectDate={(date) => this.props.onSelectDate(date)}
         yScaleDomain={yScaleDomain}
       />
-    );
+    )
   }
 }
 
 export function mapStateToProps(state, ownProps) {
-  const userId = _.get(ownProps, "currentPatientInViewId");
+  const userId = _.get(ownProps, 'currentPatientInViewId')
   return {
-    trendsState: _.get(state, `viz.trends.${userId}`, {}),
-  };
+    trendsState: _.get(state, `viz.trends.${userId}`, {})
+  }
 }
 
 export function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    unfocusCbgSlice: actions.unfocusTrendsCbgSlice,
-  }, dispatch);
+    unfocusCbgSlice: actions.unfocusTrendsCbgSlice
+  }, dispatch)
 }
 
 export default connect(
@@ -271,4 +271,4 @@ export default connect(
   mapDispatchToProps,
   (stateProps, dispatchProps, ownProps) => (_.assign({}, ownProps, stateProps, dispatchProps)),
   { withRef: true },
-)(TrendsContainer);
+)(TrendsContainer)

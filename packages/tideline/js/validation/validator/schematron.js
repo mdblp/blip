@@ -15,266 +15,266 @@
  * == BSD2 LICENSE ==
  */
 
-import util from "util";
-import _ from "lodash";
+import util from 'util'
+import _ from 'lodash'
 
-import makeValidator from "./validator.js";
+import makeValidator from './validator.js'
 
 export function error() {
-  var args = Array.prototype.slice.call(arguments, 0);
-  args[0] = " " + args[0];
-  throw new Error(util.format.apply(util, args));
+  var args = Array.prototype.slice.call(arguments, 0)
+  args[0] = ' ' + args[0]
+  throw new Error(util.format.apply(util, args))
 }
 
 function matchesRegex(regex) {
   return function(v) {
     if (!regex.test(v)) {
-      error("should match the regex [%s], got [%s]", regex, v);
+      error('should match the regex [%s], got [%s]', regex, v)
     }
-  };
+  }
 }
 
 function typeOf(match) {
   return function(e) {
     if (typeof(e) !== match) {
-      error("should be of type [%s], value was [%s]", match, e);
+      error('should be of type [%s], value was [%s]', match, e)
     }
-  };
+  }
 }
 
-var isAnId = matchesRegex(/^[A-Za-z0-9\-_]+$/);
+var isAnId = matchesRegex(/^[A-Za-z0-9\-_]+$/)
 // localDate is a date in YYYY-MM-DD format
-var isADate = matchesRegex(/^(\d{4}-[01]\d-[0-3]\d)$/);
+var isADate = matchesRegex(/^(\d{4}-[01]\d-[0-3]\d)$/)
 // deviceTime is the raw, non-timezone-aware string
-var isADeviceTime = matchesRegex(/^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d)$/);
-var isoPattern = /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/;
+var isADeviceTime = matchesRegex(/^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d)$/)
+var isoPattern = /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/
 
 function schematron() {
   if (arguments.length > 0) {
-    return makeValidator.call(makeValidator, ...arguments);
+    return makeValidator.call(makeValidator, ...arguments)
   }
 
-  var optional = false;
-  var fns = [];
+  var optional = false
+  var fns = []
 
   return _.assign(
     function(e) {
       if (optional && e === undefined) {
-        return;
+        return
       } else if (!optional && e === undefined) {
-        error("is required");
+        error('is required')
       }
 
       for (var i = 0; i < fns.length; ++i) {
-        fns[i](e);
+        fns[i](e)
       }
     },
     {
       array: function(fn) {
         fns.push(function(e){
           if (!Array.isArray(e)) {
-            error("should be an array, value was [%s]", e);
+            error('should be an array, value was [%s]', e)
           }
 
           for (var i = 0; i < e.length; ++i) {
-            fn(e[i]);
+            fn(e[i])
           }
-        });
+        })
 
-        return this;
+        return this
       },
 
       banned: function() {
-        optional = true;
+        optional = true
 
         fns.push(function(e) {
           if (e !== undefined) {
-            error("should not exist, but found [%s]", e);
+            error('should not exist, but found [%s]', e)
           }
-        });
+        })
 
-        return this;
+        return this
       },
 
       boolean: function() {
-        fns.push(typeOf("boolean"));
+        fns.push(typeOf('boolean'))
 
-        return this;
+        return this
       },
 
       ifExists: function () {
-        optional = true;
-        return this;
+        optional = true
+        return this
       },
 
       in: function (vals) {
-        var obj = {};
+        var obj = {}
         for (var i = 0; i < vals.length; ++i) {
-          obj[vals[i]] = true;
+          obj[vals[i]] = true
         }
 
         fns.push(function (e) {
           if (_.isNil(obj[e])) {
-            error("should be one of %j, got [%s]", vals, e);
+            error('should be one of %j, got [%s]', vals, e)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       isDate: function() {
-        fns.push(isADate);
-        return this;
+        fns.push(isADate)
+        return this
       },
 
       isDeviceTime: function () {
-        fns.push(isADeviceTime);
-        return this;
+        fns.push(isADeviceTime)
+        return this
       },
 
 
       isId: function () {
-        fns.push(isAnId);
-        return this;
+        fns.push(isAnId)
+        return this
       },
 
       isNull: function() {
         fns.push(function(value) {
           if (value !== null) {
-            error("is not null, got [%s]", value);
+            error('is not null, got [%s]', value)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       isISODateTime: function () {
         fns.push(function (value) {
           if (!isoPattern.test(value)) {
-            error("is not an ISODate string, got [%s]", value);
+            error('is not an ISODate string, got [%s]', value)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       minLength: function(length) {
         fns.push(function(e) {
           if (e.length < length) {
-            error("should have a length >= [%s], got [%s]", length, e);
+            error('should have a length >= [%s], got [%s]', length, e)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       max: function (val) {
         fns.push(function (e) {
           if (e > val) {
-            error("should be <= [%s], got [%s]", val, e);
+            error('should be <= [%s], got [%s]', val, e)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       min: function (val) {
         fns.push(function (e) {
           if (e < val) {
-            error("should be >= [%s], got [%s]", val, e);
+            error('should be >= [%s], got [%s]', val, e)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       number: function () {
-        fns.push(typeOf("number"));
-        return this;
+        fns.push(typeOf('number'))
+        return this
       },
 
       object: function() {
-        fns.push(typeOf("object"));
+        fns.push(typeOf('object'))
         if (arguments.length > 0) {
-          fns.push(schematron(arguments[0]));
+          fns.push(schematron(arguments[0]))
         }
 
-        return this;
+        return this
       },
 
       oneOf: function() {
-        var alts = [];
+        var alts = []
         for (var i = 0; i < arguments.length; ++i) {
-          alts.push(arguments[i]);
+          alts.push(arguments[i])
         }
         fns.push(function(e) {
-          var errors = [];
+          var errors = []
           for (var i = 0; i < alts.length; ++i) {
             try {
-              alts[i](e);
+              alts[i](e)
             }
             catch(err) {
-              errors.push(err);
+              errors.push(err)
             }
           }
           if (errors.length > (alts.length - 1)) {
-            error("failed all schemas %j",
-              _.map(errors, "message"),
-              typeof e === "object" ? JSON.stringify(e) : e);
+            error('failed all schemas %j',
+              _.map(errors, 'message'),
+              typeof e === 'object' ? JSON.stringify(e) : e)
           }
-        });
+        })
 
-        return this;
+        return this
       },
 
       positive: function () {
         fns.push(function (e) {
           if (e <= 0) {
-            error("should be > 0, got [%s]", e);
+            error('should be > 0, got [%s]', e)
           }
-        });
-        return this;
+        })
+        return this
       },
 
       regex: function(regex) {
-        fns.push(matchesRegex(regex));
-        return this;
+        fns.push(matchesRegex(regex))
+        return this
       },
 
       string: function() {
-        fns.push(typeOf("string"));
-        return this;
+        fns.push(typeOf('string'))
+        return this
       }
     }
-  );
+  )
 }
 
 schematron.and = function(fields) {
   return function(e){
-    var allNull = true;
-    var allNotNull = true;
+    var allNull = true
+    var allNotNull = true
     for (let i = 0; i < fields.length; ++i) {
       if (_.isNil(e[fields[i]])) {
-        allNotNull = false;
+        allNotNull = false
       } else {
-        allNull = false;
+        allNull = false
       }
     }
 
     if (! (allNull || allNotNull)) {
-      error("Fields in %j must all be present or absent, only value(s) were %j", fields, _.pick(e, fields));
+      error('Fields in %j must all be present or absent, only value(s) were %j', fields, _.pick(e, fields))
     }
-  };
-};
+  }
+}
 
 schematron.with = function(primaryField, fields) {
   if (! Array.isArray(fields)) {
-    fields = [fields];
+    fields = [fields]
   }
 
   return function(e){
     if (e[primaryField]) {
       for (var i = 0; i < fields.length; ++i) {
         if (_.isNil(e[fields[i]])) {
-          error("Field(s) %j are expected when field [%s] exists.  Value(s) were %j", fields, primaryField, _.pick(e, primaryField, fields));
+          error('Field(s) %j are expected when field [%s] exists.  Value(s) were %j', fields, primaryField, _.pick(e, primaryField, fields))
         }
       }
     }
-  };
-};
+  }
+}
 
-export default schematron;
+export default schematron

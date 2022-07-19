@@ -25,51 +25,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { makeButtonsStyles } from "../theme";
-import { MedicalRecord } from "../../lib/medical-files/model";
-import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
-import { useAlert } from "../utils/snackbar";
-import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import { makeButtonsStyles } from '../theme'
+import { MedicalRecord } from '../../lib/medical-files/model'
+import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
+import { useAlert } from '../utils/snackbar'
+import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
 export interface MedicalRecordDeleteDialogProps {
-  onClose: () => void;
-  onDelete: (medicalRecordId: string) => void;
-  medicalRecord: MedicalRecord;
+  onClose: () => void
+  onDelete: (medicalRecordId: string) => void
+  medicalRecord: MedicalRecord
 }
 
-const buttons = makeStyles(makeButtonsStyles);
+const buttons = makeStyles(makeButtonsStyles)
 
 export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDelete }: MedicalRecordDeleteDialogProps): JSX.Element {
-  const { alertActionButton } = buttons();
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
+  const { alertActionButton } = buttons()
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
 
-  const [inProgress, setInProgress] = useState<boolean>(false);
+  const [inProgress, setInProgress] = useState<boolean>(false)
 
-  const deleteMedicalRecord = async () => {
+  const deleteMedicalRecord = async (): Promise<void> => {
     try {
-      setInProgress(true);
-      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id);
-      setInProgress(false);
-      alert.success(t("medical-record-delete-success"));
-      onDelete(medicalRecord.id);
+      setInProgress(true)
+      await MedicalFilesApi.deleteMedicalRecord(medicalRecord.id)
+      setInProgress(false)
+      alert.success(t('medical-record-delete-success'))
+      onDelete(medicalRecord.id)
     } catch (err) {
-      console.log(err);
-      setInProgress(false);
-      alert.error(t("medical-record-delete-failed"));
+      console.log(err)
+      setInProgress(false)
+      alert.error(t('medical-record-delete-failed'))
     }
-  };
+  }
 
   return (
     <Dialog
@@ -79,12 +79,12 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
       onClose={onClose}
     >
       <DialogTitle>
-        {t("delete-medical-report")}
+        {t('delete-medical-report')}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t("delete-warning", { fileName: t("medical-record-pdf", { pdfName: new Date(medicalRecord.creationDate).toLocaleDateString() }) })}
+          {t('delete-warning', { fileName: t('medical-record-pdf', { pdfName: new Date(medicalRecord.creationDate).toLocaleDateString() }) })}
         </DialogContentText>
       </DialogContent>
 
@@ -93,7 +93,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
           disableElevation
           onClick={onClose}
         >
-          {t("cancel")}
+          {t('cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={inProgress}>
           <Button
@@ -103,10 +103,10 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
             className={alertActionButton}
             onClick={deleteMedicalRecord}
           >
-            {t("delete")}
+            {t('delete')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

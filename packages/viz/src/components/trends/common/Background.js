@@ -15,20 +15,20 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import { range } from "d3-array";
-import PropTypes from "prop-types";
-import React from "react";
+import _ from 'lodash'
+import { range } from 'd3-array'
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import * as datetime from "../../../utils/datetime";
+import * as datetime from '../../../utils/datetime'
 
-import styles from "./Background.css";
+import styles from './Background.css'
 
 const Background = (props) => {
-  const { data, margins, svgDimensions, xScale } = props;
+  const { data, margins, svgDimensions, xScale } = props
 
-  const width = svgDimensions.width - margins.left - margins.right;
-  const height = svgDimensions.height - margins.top - margins.bottom;
+  const width = svgDimensions.width - margins.left - margins.right
+  const height = svgDimensions.height - margins.top - margins.bottom
 
   const lines = props.linesAtThreeHrs ? _.map(data, (val, i) => (
     <line
@@ -39,7 +39,7 @@ const Background = (props) => {
       y1={margins.top}
       y2={svgDimensions.height - margins.bottom}
     />
-  )) : null;
+  )) : null
 
   return (
     <g id="background">
@@ -52,13 +52,13 @@ const Background = (props) => {
       />
       {lines}
     </g>
-  );
-};
+  )
+}
 
 Background.defaultProps = {
   data: _.map(range(1, 8), (i) => (i * datetime.THREE_HRS)),
-  linesAtThreeHrs: false,
-};
+  linesAtThreeHrs: false
+}
 
 Background.propTypes = {
   data: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
@@ -67,13 +67,13 @@ Background.propTypes = {
     top: PropTypes.number.isRequired,
     right: PropTypes.number.isRequired,
     bottom: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired
   }).isRequired,
   svgDimensions: PropTypes.shape({
     width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
   }).isRequired,
-  xScale: PropTypes.func.isRequired,
-};
+  xScale: PropTypes.func.isRequired
+}
 
-export default Background;
+export default Background

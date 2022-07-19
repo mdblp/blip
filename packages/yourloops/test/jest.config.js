@@ -21,18 +21,18 @@ module.exports = {
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
-    "<rootDir>/../app/**/**.ts*",
-    "<rootDir>/../components/**/**.ts*",
-    "<rootDir>/../lib/**/**.ts*",
-    "<rootDir>/../models/**/**.ts*",
-    "<rootDir>/../pages/**/**.ts*",
-    "<rootDir>/../services/**/**.ts*"
+    '<rootDir>/../app/**/**.ts*',
+    '<rootDir>/../components/**/**.ts*',
+    '<rootDir>/../lib/**/**.ts*',
+    '<rootDir>/../models/**/**.ts*',
+    '<rootDir>/../pages/**/**.ts*',
+    '<rootDir>/../services/**/**.ts*'
   ],
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
-  displayName: "yourloops",
+  displayName: 'yourloops',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -71,16 +71,16 @@ module.exports = {
   // A set of global variables that need to be available in all test environments
   globals: {
     BUILD_CONFIG: {
-      STONLY_WID: "",
+      STONLY_WID: '',
       TEST: true,
       CBG_BUCKETS_ENABLED: false,
-      COOKIE_BANNER_CLIENT_ID: "",
+      COOKIE_BANNER_CLIENT_ID: '',
       DEV: false,
       ECPS_ENABLED: true,
       YLP820_BASAL_TIME: 0,
-      VERSION: "1.0.0",
-      API_HOST: "http://localhost:8009",
-      BRANDING: "diabeloop/blue"
+      VERSION: '1.0.0',
+      API_HOST: 'http://localhost:8009',
+      BRANDING: 'diabeloop/blue'
     }
   },
 
@@ -105,8 +105,8 @@ module.exports = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   // moduleNameMapper: {},
   moduleNameMapper: {
-    "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>../../../__mocks__/fileMock.js",
-    "\\.(css|less)$": "<rootDir>../../../__mocks__/styleMock.js"
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>../../../__mocks__/fileMock.js',
+    '\\.(css|less)$': '<rootDir>../../../__mocks__/styleMock.js'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -151,10 +151,10 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ["<rootDir>/beforeEach.js"],
+  setupFiles: ['<rootDir>/beforeEach.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ["<rootDir>/setup.js"],
+  setupFilesAfterEnv: ['<rootDir>/setup.js'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -163,7 +163,7 @@ module.exports = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "<rootDir>../../../custom-test-env.js",
+  testEnvironment: '<rootDir>../../../custom-test-env.js',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -173,7 +173,7 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    "<rootDir>/**/*.test.tsx",
+    '<rootDir>/**/*.test.tsx'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -199,7 +199,7 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   // transform: undefined,
   transform: {
-    "^.+\\.(ts|tsx|js|jsx|mjs)$": ["<rootDir>../../../node_modules/babel-jest", { rootMode: "upward" }],
+    '^.+\\.(ts|tsx|js|jsx|mjs)$': ['<rootDir>../../../node_modules/babel-jest', { rootMode: 'upward' }]
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -208,18 +208,18 @@ module.exports = {
   //   "\\.pnp\\.[^\\/]+$"
   // ],
   transformIgnorePatterns: [
-    "/!node_modules\\/lodash-es/",
+    '/!node_modules\\/lodash-es/'
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
 
   // Indicates whether each individual test should be reported during the run
-  verbose: true,
+  verbose: true
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
   // watchPathIgnorePatterns: [],
 
   // Whether to use watchman for file crawling
   // watchman: true,
-};
+}

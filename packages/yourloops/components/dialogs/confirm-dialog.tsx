@@ -25,33 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeButtonsStyles } from "../theme";
-import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { makeButtonsStyles } from '../theme'
+import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
 export interface ConfirmDialogProps {
-  title: string;
-  label: string;
-  inProgress?: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  title: string
+  label: string
+  inProgress?: boolean
+  onClose: () => void
+  onConfirm: () => void
 }
 
-const buttons = makeStyles(makeButtonsStyles);
+const buttons = makeStyles(makeButtonsStyles)
 
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
-  const { title, label, inProgress, onClose, onConfirm } = props;
-  const { alertActionButton } = buttons();
-  const { t } = useTranslation("yourloops");
+  const { title, label, inProgress, onClose, onConfirm } = props
+  const { alertActionButton } = buttons()
+  const { t } = useTranslation('yourloops')
 
   return (
     <Dialog
@@ -75,7 +75,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           disableElevation
           onClick={onClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={inProgress ?? false}>
           <Button
@@ -85,10 +85,10 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
             className={alertActionButton}
             onClick={onConfirm}
           >
-            {t("confirm")}
+            {t('confirm')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

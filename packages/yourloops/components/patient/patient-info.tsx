@@ -26,64 +26,64 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { Box, Typography } from "@material-ui/core";
-import { Patient } from "../../lib/data/patient";
-import { useTranslation } from "react-i18next";
-import { genderLabels } from "../../lib/auth/helpers";
+import React from 'react'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { Box, Typography } from '@material-ui/core'
+import { Patient } from '../../lib/data/patient'
+import { useTranslation } from 'react-i18next'
+import { genderLabels } from '../../lib/auth/helpers'
 
 const useStyles = makeStyles((theme: Theme) => ({
   body: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
+    paddingRight: theme.spacing(3)
   },
   categoryTitle: {
     fontWeight: 600,
-    textTransform: "uppercase",
+    textTransform: 'uppercase'
   },
   label: {
     fontWeight: 600,
-    fontSize: "13px",
-    width: "180px",
+    fontSize: '13px',
+    width: '180px'
   },
   patientInfo: {
-    "display": "flex",
-    "alignItems": "top",
-    "width": "50%",
-    "marginBottom": theme.spacing(1),
-    "& > div": {
-      display: "flex",
-      alignItems: "center",
-    },
+    display: 'flex',
+    alignItems: 'top',
+    width: '50%',
+    marginBottom: theme.spacing(1),
+    '& > div': {
+      display: 'flex',
+      alignItems: 'center'
+    }
   },
   value: {
-    fontSize: "13px",
-  },
-}));
+    fontSize: '13px'
+  }
+}))
 
 export interface PatientInfoProps {
-  patient: Patient,
+  patient: Patient
 }
 
 function PatientInfo(props: PatientInfoProps): JSX.Element {
-  const { patient } = props;
-  const { t } = useTranslation("yourloops");
-  const trNA = t("N/A");
-  const classes = useStyles();
+  const { patient } = props
+  const { t } = useTranslation('yourloops')
+  const trNA = t('N/A')
+  const classes = useStyles()
 
   return (
     <>
       <Typography className={classes.categoryTitle}>
-        1. {t("patient-info-reminder")}
+        1. {t('patient-info-reminder')}
       </Typography>
       <Box display="flex" marginTop={2}>
         <div className={classes.body}>
           <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
-              {t("patient")}
+              {t('patient')}
             </Typography>
             <Typography id={`patient-${patient.userid}-full-name`} className={classes.value}>
               {patient.profile.fullName}
@@ -91,7 +91,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
           </Box>
           <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
-              {t("email")}
+              {t('email')}
             </Typography>
             <Typography id={`patient-${patient.userid}-email`} className={classes.value}>
               {patient.profile.email}
@@ -99,15 +99,15 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
           </Box>
           <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
-              {t("gender")}
+              {t('gender')}
             </Typography>
             <Typography id={`patient-${patient.userid}-gender`} className={classes.value}>
-              {genderLabels()[patient.profile.sex ?? ""]}
+              {genderLabels()[patient.profile.sex ?? '']}
             </Typography>
           </Box>
           <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
-              {t("birthdate")}
+              {t('birthdate')}
             </Typography>
             <Typography id={`patient-${patient.userid}-birthdate`} className={classes.value}>
               {patient.profile.birthdate?.toDateString()}
@@ -115,7 +115,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
           </Box>
           <Box className={classes.patientInfo}>
             <Typography className={classes.label}>
-              {t("initial-hba1c")}
+              {t('initial-hba1c')}
             </Typography>
             <Typography id={`patient-${patient.userid}-a1c`} className={classes.value}>
               {patient.settings.a1c?.value ?? trNA}
@@ -124,7 +124,7 @@ function PatientInfo(props: PatientInfoProps): JSX.Element {
         </div>
       </Box>
     </>
-  );
+  )
 }
 
-export default PatientInfo;
+export default PatientInfo

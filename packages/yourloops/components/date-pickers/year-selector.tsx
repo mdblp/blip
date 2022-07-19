@@ -26,102 +26,102 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import clsx from "clsx";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import React from 'react'
+import clsx from 'clsx'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 
 interface YearSelectorProps {
-  selectedYear: number;
-  minYear: number;
-  maxYear: number;
-  onSelectYear: (year: number) => void;
+  selectedYear: number
+  minYear: number
+  maxYear: number
+  onSelectYear: (year: number) => void
 }
 
 const yearSelectorStyles = makeStyles((theme: Theme) => {
   return {
     root: {
-      cursor: "pointer",
-      overflowY: "auto",
+      cursor: 'pointer',
+      overflowY: 'auto',
       marginRight: theme.spacing(1),
       marginLeft: theme.spacing(1),
       height: 345,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      [theme.breakpoints.down("sm")]: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      [theme.breakpoints.down('sm')]: {
         height: 303,
-        marginLeft: "auto",
-        marginRight: "auto",
-      },
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }
     },
     year: {
-      "textAlign": "center",
-      "&:active, &:hover": {
-        color: theme.palette.primary.main,
-      },
+      textAlign: 'center',
+      '&:active, &:hover': {
+        color: theme.palette.primary.main
+      }
     },
     selectedYear: {
-      fontWeight: "bold", // theme.typography.fontWeightBold,
+      fontWeight: 'bold', // theme.typography.fontWeightBold,
       color: theme.palette.primary.main,
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  };
-}, { name: "date-pickers-year-selector" });
+      marginBottom: theme.spacing(1)
+    }
+  }
+}, { name: 'date-pickers-year-selector' })
 
 function YearSelector(props: YearSelectorProps): JSX.Element {
-  const { minYear } = props;
-  const maxYear = props.maxYear + 1;
-  const classes = yearSelectorStyles();
-  const refSelected = React.useRef<HTMLDivElement>(null);
-  const refSelector = React.useRef<HTMLDivElement>(null);
-  const [selectedYear, setSelectedYear] = React.useState(props.selectedYear);
+  const { minYear } = props
+  const maxYear = props.maxYear + 1
+  const classes = yearSelectorStyles()
+  const refSelected = React.useRef<HTMLDivElement>(null)
+  const refSelector = React.useRef<HTMLDivElement>(null)
+  const [selectedYear, setSelectedYear] = React.useState(props.selectedYear)
 
   React.useEffect(() => {
-    if (refSelector !== null && refSelector.current !== null) {
-      refSelector.current.focus();
+    if (refSelector?.current !== null) {
+      refSelector.current.focus()
     }
-  }, [refSelector]);
+  }, [refSelector])
 
   React.useEffect(() => {
-    if (refSelected !== null && refSelected.current !== null) {
-      refSelected.current.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (refSelected?.current !== null) {
+      refSelected.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
     }
-  }, [refSelected, selectedYear]);
+  }, [refSelected, selectedYear])
 
-  const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const onKeyUp = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     switch (e.key) {
-    case "Enter":
-    case " ":
-      props.onSelectYear(selectedYear);
-      break;
-    case "ArrowUp":
-      e.preventDefault();
-      e.stopPropagation();
-      if (minYear < selectedYear) {
-        setSelectedYear(selectedYear - 1);
-      }
-      break;
-    case "ArrowDown":
-      e.preventDefault();
-      e.stopPropagation();
-      if (selectedYear + 1 < maxYear) {
-        setSelectedYear(selectedYear + 1);
-      }
-      break;
+      case 'Enter':
+      case ' ':
+        props.onSelectYear(selectedYear)
+        break
+      case 'ArrowUp':
+        e.preventDefault()
+        e.stopPropagation()
+        if (minYear < selectedYear) {
+          setSelectedYear(selectedYear - 1)
+        }
+        break
+      case 'ArrowDown':
+        e.preventDefault()
+        e.stopPropagation()
+        if (selectedYear + 1 < maxYear) {
+          setSelectedYear(selectedYear + 1)
+        }
+        break
     }
-  };
+  }
 
-  const years: JSX.Element[] = [];
-  for (let i=minYear; i < maxYear; i++) {
-    const displayedYear = i.toString(10);
-    const isSelectedYear = i === selectedYear;
+  const years: JSX.Element[] = []
+  for (let i = minYear; i < maxYear; i++) {
+    const displayedYear = i.toString(10)
+    const isSelectedYear = i === selectedYear
     years.push(
       <Typography
         key={displayedYear}
         id={`year-${displayedYear}`}
-        variant={isSelectedYear ? "h6" : "subtitle1"}
+        variant={isSelectedYear ? 'h6' : 'subtitle1'}
         component="div"
         className={clsx(classes.year, { [classes.selectedYear]: isSelectedYear })}
         onClick={() => props.onSelectYear(i)}
@@ -131,14 +131,14 @@ function YearSelector(props: YearSelectorProps): JSX.Element {
       >
         {displayedYear}
       </Typography>
-    );
+    )
   }
 
   return (
     <div id="year-selector" className={classes.root} role="listbox" tabIndex={0} onKeyUp={onKeyUp} ref={refSelector}>
       {years}
     </div>
-  );
+  )
 }
 
-export default YearSelector;
+export default YearSelector

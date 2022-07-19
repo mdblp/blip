@@ -26,15 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import { renderHook, act } from "@testing-library/react-hooks/dom";
+import { renderHook, act } from '@testing-library/react-hooks/dom'
 
-import { SnackbarContext, Snackbar, DefaultSnackbarContext } from "../../../components/utils/snackbar";
-import { render } from "@testing-library/react";
+import { SnackbarContext, Snackbar, DefaultSnackbarContext } from '../../../components/utils/snackbar'
+import { render } from '@testing-library/react'
 
-describe("Snackbar", () => {
-
+describe('Snackbar', () => {
   const spies = {
     error: jest.fn(),
     warning: jest.fn(),
@@ -42,48 +41,47 @@ describe("Snackbar", () => {
     success: jest.fn(),
     clear: jest.fn(),
     remove: jest.fn(),
-    has: jest.fn().mockReturnValue(false),
-  };
+    has: jest.fn().mockReturnValue(false)
+  }
   const context: SnackbarContext = {
     ...spies,
-    alerts: [],
-  };
+    alerts: []
+  }
 
   beforeEach(() => {
-    spies.error.mockReset();
-    spies.warning.mockReset();
-    spies.info.mockReset();
-    spies.success.mockReset();
-    spies.clear.mockReset();
-    spies.remove.mockReset();
-    spies.has.mockReset();
-    context.alerts = [];
-  });
+    spies.error.mockReset()
+    spies.warning.mockReset()
+    spies.info.mockReset()
+    spies.success.mockReset()
+    spies.clear.mockReset()
+    spies.remove.mockReset()
+    spies.has.mockReset()
+    context.alerts = []
+  })
 
-  it("should renders without crashing", () => {
-    const { result } = renderHook(() => <Snackbar {...context} />);
-    expect(result).toBeDefined();
-  });
+  it('should renders without crashing', () => {
+    const { result } = renderHook(() => <Snackbar {...context} />)
+    expect(result).toBeDefined()
+  })
 
-  it("hook should return the needed functions", () => {
-    const hook = renderHook(DefaultSnackbarContext);
-    expect(hook.result.current.error).toBeInstanceOf(Function);
-    expect(hook.result.current.warning).toBeInstanceOf(Function);
-    expect(hook.result.current.info).toBeInstanceOf(Function);
-    expect(hook.result.current.success).toBeInstanceOf(Function);
-    expect(hook.result.current.clear).toBeInstanceOf(Function);
-    expect(hook.result.current.remove).toBeInstanceOf(Function);
-    expect(hook.result.current.has).toBeInstanceOf(Function);
-    expect(hook.result.current.alerts).toBeInstanceOf(Array);
-  });
+  it('hook should return the needed functions', () => {
+    const hook = renderHook(DefaultSnackbarContext)
+    expect(hook.result.current.error).toBeInstanceOf(Function)
+    expect(hook.result.current.warning).toBeInstanceOf(Function)
+    expect(hook.result.current.info).toBeInstanceOf(Function)
+    expect(hook.result.current.success).toBeInstanceOf(Function)
+    expect(hook.result.current.clear).toBeInstanceOf(Function)
+    expect(hook.result.current.remove).toBeInstanceOf(Function)
+    expect(hook.result.current.has).toBeInstanceOf(Function)
+    expect(hook.result.current.alerts).toBeInstanceOf(Array)
+  })
 
-  it("should render the alert if any", () => {
-    const hook = renderHook(DefaultSnackbarContext);
+  it('should render the alert if any', () => {
+    const hook = renderHook(DefaultSnackbarContext)
     act(() => {
-      hook.result.current.info("test");
-    });
-    const { container } = render(<Snackbar {...hook.result.current} />);
-    expect(container.querySelector("#alert-message")).not.toBeNull();
-  });
-});
-
+      hook.result.current.info('test')
+    })
+    const { container } = render(<Snackbar {...hook.result.current} />)
+    expect(container.querySelector('#alert-message')).not.toBeNull()
+  })
+})

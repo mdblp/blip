@@ -26,26 +26,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus } from "../../models/generic";
-import { IUser, Preferences, Profile, Settings } from "../../models/user";
-import { INotification } from "../notifications/models";
+import { UserInvitationStatus } from '../../models/generic'
+import { IUser, Preferences, Profile, Settings } from '../../models/user'
+import { INotification } from '../notifications/models'
 
 interface DirectShareUser {
-  userId: string;
-  preferences?: Preferences | null;
-  profile?: Profile | null;
-  settings?: Settings | null;
-  email: string;
-  idVerified: boolean;
+  userId: string
+  preferences?: Preferences | null
+  profile?: Profile | null
+  settings?: Settings | null
+  email: string
+  idVerified: boolean
 }
 
 export interface DirectShareAPI {
-  viewer?: DirectShareUser;
-  patient?: DirectShareUser;
+  viewer?: DirectShareUser
+  patient?: DirectShareUser
 }
 
 export interface ShareUser {
-  user: IUser;
-  invitation?: INotification;
-  status: UserInvitationStatus;
+  user: IUser
+  invitation?: INotification
+  status: UserInvitationStatus
 }

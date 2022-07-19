@@ -25,32 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { act } from "react-dom/test-utils";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import ThemeProvider from '@material-ui/styles/ThemeProvider'
 
-import { getTheme } from "../../../components/theme";
-import { buildTeam, createPatient, triggerMouseEvent } from "../../common/utils";
-import { convertBG, UNITS_TYPE } from "../../../lib/units/utils";
+import { getTheme } from '../../../components/theme'
+import { buildTeam, createPatient, triggerMouseEvent } from '../../common/utils'
+import { convertBG, UNITS_TYPE } from '../../../lib/units/utils'
 import AlarmsContentConfiguration, {
   AlarmsContentConfigurationProps,
   MIN_HIGH_BG,
   MIN_LOW_BG,
-  MIN_VERY_LOW_BG,
-} from "../../../components/alarm/alarms-content-configuration";
-import { fireEvent, render, screen } from "@testing-library/react";
-import * as teamHookMock from "../../../lib/team";
-import { PatientTeam } from "../../../lib/data/patient";
-import { Monitoring } from "../../../models/monitoring";
+  MIN_VERY_LOW_BG
+} from '../../../components/alarm/alarms-content-configuration'
+import { fireEvent, render, screen } from '@testing-library/react'
+import * as teamHookMock from '../../../lib/team'
+import { PatientTeam } from '../../../lib/data/patient'
+import { Monitoring } from '../../../models/monitoring'
 
-
-jest.mock("../../../lib/team");
-describe("AlarmsContentConfiguration", () => {
-  const onSave = jest.fn();
-  const getPatientRemoteMonitoringTeamMock = jest.fn();
-  const getTeamMock = jest.fn();
+jest.mock('../../../lib/team')
+describe('AlarmsContentConfiguration', () => {
+  const onSave = jest.fn()
+  const getPatientRemoteMonitoringTeamMock = jest.fn()
+  const getTeamMock = jest.fn()
   const monitoring = {
     enabled: true,
     parameters: {
@@ -61,14 +60,14 @@ describe("AlarmsContentConfiguration", () => {
       veryLowBg: MIN_VERY_LOW_BG,
       hypoThreshold: 10,
       nonDataTxThreshold: 15,
-      reportingPeriod: 7,
-    },
-  };
-  const patient = createPatient();
-  const teamId = "teamId";
-  const team = buildTeam(teamId);
+      reportingPeriod: 7
+    }
+  }
+  const patient = createPatient()
+  const teamId = 'teamId'
+  const team = buildTeam(teamId)
   team.monitoring = {
-    enabled : true,
+    enabled: true,
     parameters: {
       bgUnit: UNITS_TYPE.MGDL,
       lowBg: 1,
@@ -77,95 +76,95 @@ describe("AlarmsContentConfiguration", () => {
       veryLowBg: 40,
       hypoThreshold: 45,
       nonDataTxThreshold: 50,
-      reportingPeriod: 7,
-    },
-  };
+      reportingPeriod: 7
+    }
+  }
 
-  let container: HTMLDivElement | null = null;
+  let container: HTMLDivElement | null = null
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-      document.body.removeChild(container);
-      container = null;
+      ReactDOM.unmountComponentAtNode(container)
+      document.body.removeChild(container)
+      container = null
     }
-  });
+  })
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
         getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,
-        getTeam: getTeamMock,
-      };
-    });
-  });
+        getTeam: getTeamMock
+      }
+    })
+  })
 
   function getTeamAlarmsContentJSX(props: AlarmsContentConfigurationProps = {
     monitoring,
     onSave,
-    saveInProgress: false,
+    saveInProgress: false
   }) {
     return <ThemeProvider theme={getTheme()}>
       <AlarmsContentConfiguration {...props} />
-    </ThemeProvider>;
+    </ThemeProvider>
   }
 
   function renderTeamAlarmsContent(props: AlarmsContentConfigurationProps = {
     monitoring,
     onSave,
-    saveInProgress: false,
+    saveInProgress: false
   }) {
     act(() => {
-      ReactDOM.render(getTeamAlarmsContentJSX(props), container);
-    });
+      ReactDOM.render(getTeamAlarmsContentJSX(props), container)
+    })
   }
 
   function checkSaveButtonDisabled() {
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy();
+    const saveButton = document.getElementById('save-button-id')
+    expect((saveButton as HTMLButtonElement).disabled).toBeTruthy()
   }
 
   function initRenderingWithPatient() {
-    getPatientRemoteMonitoringTeamMock.mockReturnValue({ teamId } as PatientTeam);
-    getTeamMock.mockReturnValue(team);
-    render(getTeamAlarmsContentJSX({ monitoring, onSave, saveInProgress: false, patient }));
+    getPatientRemoteMonitoringTeamMock.mockReturnValue({ teamId } as PatientTeam)
+    getTeamMock.mockReturnValue(team)
+    render(getTeamAlarmsContentJSX({ monitoring, onSave, saveInProgress: false, patient }))
   }
 
   function checkMonitoringValues(monitoring: Monitoring) {
-    const allInputs = screen.getAllByRole("spinbutton") as HTMLInputElement[];
-    expect(allInputs).toHaveLength(3);
-    expect(allInputs[0].value).toBe(monitoring.parameters.lowBg.toString());
-    expect(allInputs[1].value).toBe(monitoring.parameters.highBg.toString());
-    expect(allInputs[2].value).toBe(monitoring.parameters.veryLowBg.toString());
-    expect(screen.getByRole("button", { name: `${monitoring.parameters.outOfRangeThreshold}%` })).not.toBeNull();
-    expect(screen.getByRole("button", { name: `${monitoring.parameters.hypoThreshold}%` })).not.toBeNull();
-    expect(screen.getByRole("button", { name: `${monitoring.parameters.nonDataTxThreshold}%` })).not.toBeNull();
+    const allInputs = screen.getAllByRole('spinbutton')
+    expect(allInputs).toHaveLength(3)
+    expect(allInputs[0].value).toBe(monitoring.parameters.lowBg.toString())
+    expect(allInputs[1].value).toBe(monitoring.parameters.highBg.toString())
+    expect(allInputs[2].value).toBe(monitoring.parameters.veryLowBg.toString())
+    expect(screen.getByRole('button', { name: `${monitoring.parameters.outOfRangeThreshold}%` })).not.toBeNull()
+    expect(screen.getByRole('button', { name: `${monitoring.parameters.hypoThreshold}%` })).not.toBeNull()
+    expect(screen.getByRole('button', { name: `${monitoring.parameters.nonDataTxThreshold}%` })).not.toBeNull()
   }
 
-  it("should display correct alarm information and execute save function on click", () => {
-    renderTeamAlarmsContent();
-    expect((document.getElementById("low-bg-text-field-id") as HTMLInputElement).value).toEqual(monitoring.parameters.lowBg.toString());
-    expect((document.getElementById("high-bg-text-field-id") as HTMLInputElement).value).toEqual(monitoring.parameters.highBg.toString());
-    expect((document.getElementById("very-low-bg-text-field-id") as HTMLInputElement).value).toEqual(monitoring.parameters.veryLowBg.toString());
-    expect(document.getElementById("basic-dropdown-out-of-range-selector").innerHTML).toEqual(`${monitoring.parameters.outOfRangeThreshold}%`);
-    expect(document.getElementById("basic-dropdown-hypo-threshold-selector").innerHTML).toEqual(`${monitoring.parameters.hypoThreshold}%`);
-    expect(document.getElementById("basic-dropdown-non-data-selector").innerHTML).toEqual(`${monitoring.parameters.nonDataTxThreshold}%`);
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy();
-    triggerMouseEvent("click", saveButton);
-    expect(onSave).toHaveBeenCalledTimes(1);
-    expect(onSave).toHaveBeenCalledWith(monitoring);
-  });
+  it('should display correct alarm information and execute save function on click', () => {
+    renderTeamAlarmsContent()
+    expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.lowBg.toString())
+    expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.highBg.toString())
+    expect((document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toEqual(monitoring.parameters.veryLowBg.toString())
+    expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoring.parameters.outOfRangeThreshold}%`)
+    expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoring.parameters.hypoThreshold}%`)
+    expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoring.parameters.nonDataTxThreshold}%`)
+    const saveButton = document.getElementById('save-button-id')
+    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
+    triggerMouseEvent('click', saveButton)
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onSave).toHaveBeenCalledWith(monitoring)
+  })
 
-  it("should display correct alarm information in mg/dL when given mmol/L", () => {
+  it('should display correct alarm information in mg/dL when given mmol/L', () => {
     const monitoringInMMOLL = {
       enabled: true,
       parameters: {
@@ -176,46 +175,46 @@ describe("AlarmsContentConfiguration", () => {
         veryLowBg: convertBG(MIN_VERY_LOW_BG + 1, UNITS_TYPE.MGDL),
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
-    monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG + 1;
-    renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false });
-    expect((document.getElementById("low-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString());
-    expect((document.getElementById("high-bg-text-field-id") as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString());
-    expect(+(document.getElementById("very-low-bg-text-field-id") as HTMLInputElement).value).toBeCloseTo(MIN_VERY_LOW_BG + 1);
-    expect(document.getElementById("basic-dropdown-out-of-range-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`);
-    expect(document.getElementById("basic-dropdown-hypo-threshold-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`);
-    expect(document.getElementById("basic-dropdown-non-data-selector").innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`);
-    const saveButton = document.getElementById("save-button-id");
-    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy();
-    triggerMouseEvent("click", saveButton);
-    expect(onSave).toHaveBeenCalledTimes(1);
-    expect(onSave).toHaveBeenCalledWith(monitoring);
-  });
+        reportingPeriod: 7
+      }
+    }
+    monitoring.parameters.veryLowBg = MIN_VERY_LOW_BG + 1
+    renderTeamAlarmsContent({ monitoring: monitoringInMMOLL, onSave, saveInProgress: false })
+    expect((document.getElementById('low-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_LOW_BG.toString())
+    expect((document.getElementById('high-bg-text-field-id') as HTMLInputElement).value).toEqual(MIN_HIGH_BG.toString())
+    expect(+(document.getElementById('very-low-bg-text-field-id') as HTMLInputElement).value).toBeCloseTo(MIN_VERY_LOW_BG + 1)
+    expect(document.getElementById('basic-dropdown-out-of-range-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.outOfRangeThreshold}%`)
+    expect(document.getElementById('basic-dropdown-hypo-threshold-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.hypoThreshold}%`)
+    expect(document.getElementById('basic-dropdown-non-data-selector').innerHTML).toEqual(`${monitoringInMMOLL.parameters.nonDataTxThreshold}%`)
+    const saveButton = document.getElementById('save-button-id')
+    expect((saveButton as HTMLButtonElement).disabled).toBeFalsy()
+    triggerMouseEvent('click', saveButton)
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onSave).toHaveBeenCalledWith(monitoring)
+  })
 
-  it("save button should be disabled when low bg value is not in correct range", () => {
-    const incorrectMonitoring = monitoring;
-    incorrectMonitoring.parameters.lowBg--;
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+  it('save button should be disabled when low bg value is not in correct range', () => {
+    const incorrectMonitoring = monitoring
+    incorrectMonitoring.parameters.lowBg--
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when high bg value is not in correct range", () => {
-    const incorrectMonitoring = monitoring;
-    incorrectMonitoring.parameters.highBg--;
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+  it('save button should be disabled when high bg value is not in correct range', () => {
+    const incorrectMonitoring = monitoring
+    incorrectMonitoring.parameters.highBg--
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when very low bg value is not in correct range", () => {
-    const incorrectMonitoring = monitoring;
-    incorrectMonitoring.parameters.veryLowBg--;
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+  it('save button should be disabled when very low bg value is not in correct range', () => {
+    const incorrectMonitoring = monitoring
+    incorrectMonitoring.parameters.veryLowBg--
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when outOfRangeThreshold is not correct", () => {
+  it('save button should be disabled when outOfRangeThreshold is not correct', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
@@ -226,14 +225,14 @@ describe("AlarmsContentConfiguration", () => {
         veryLowBg: MIN_VERY_LOW_BG,
         hypoThreshold: 10,
         nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+        reportingPeriod: 7
+      }
+    }
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when hypoThreshold is not correct", () => {
+  it('save button should be disabled when hypoThreshold is not correct', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
@@ -244,14 +243,14 @@ describe("AlarmsContentConfiguration", () => {
         veryLowBg: MIN_VERY_LOW_BG,
         hypoThreshold: 11,
         nonDataTxThreshold: 15,
-        reportingPeriod: 7,
-      },
-    };
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+        reportingPeriod: 7
+      }
+    }
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when nonDataTxThreshold is not correct", () => {
+  it('save button should be disabled when nonDataTxThreshold is not correct', () => {
     const incorrectMonitoring = {
       enabled: true,
       parameters: {
@@ -262,44 +261,44 @@ describe("AlarmsContentConfiguration", () => {
         veryLowBg: MIN_VERY_LOW_BG,
         hypoThreshold: 10,
         nonDataTxThreshold: 150,
-        reportingPeriod: 7,
-      },
-    };
-    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false });
-    checkSaveButtonDisabled();
-  });
+        reportingPeriod: 7
+      }
+    }
+    renderTeamAlarmsContent({ monitoring: incorrectMonitoring, onSave, saveInProgress: false })
+    checkSaveButtonDisabled()
+  })
 
-  it("save button should be disabled when save in progress is true", () => {
-    renderTeamAlarmsContent({ monitoring, onSave, saveInProgress: true });
-    checkSaveButtonDisabled();
-  });
+  it('save button should be disabled when save in progress is true', () => {
+    renderTeamAlarmsContent({ monitoring, onSave, saveInProgress: true })
+    checkSaveButtonDisabled()
+  })
 
-  it("default values button should not be displayed when no patient has been given as props", () => {
-    render(getTeamAlarmsContentJSX());
-    expect(screen.queryByRole("button", { name : "default-values" })).toBeNull();
-  });
+  it('default values button should not be displayed when no patient has been given as props', () => {
+    render(getTeamAlarmsContentJSX())
+    expect(screen.queryByRole('button', { name: 'default-values' })).toBeNull()
+  })
 
-  it("default values button should be displayed when a patient has been given as props", () => {
-    initRenderingWithPatient();
-    expect(screen.queryByRole("button", { name : "default-values" })).not.toBeNull();
-  });
+  it('default values button should be displayed when a patient has been given as props', () => {
+    initRenderingWithPatient()
+    expect(screen.queryByRole('button', { name: 'default-values' })).not.toBeNull()
+  })
 
-  it("clicking on default values button should set the team values", () => {
-    initRenderingWithPatient();
-    checkMonitoringValues(monitoring);
-    fireEvent.click(screen.getByRole("button", { name: "default-values" }));
-    checkMonitoringValues(team.monitoring);
-  });
+  it('clicking on default values button should set the team values', () => {
+    initRenderingWithPatient()
+    checkMonitoringValues(monitoring)
+    fireEvent.click(screen.getByRole('button', { name: 'default-values' }))
+    checkMonitoringValues(team.monitoring)
+  })
 
-  it("default label should not be displayed when a patient has been given as props", () => {
-    initRenderingWithPatient();
-    expect(screen.queryByText("default-min-max")).toBeNull();
-    expect(screen.queryByText("default")).toBeNull();
-  });
+  it('default label should not be displayed when a patient has been given as props', () => {
+    initRenderingWithPatient()
+    expect(screen.queryByText('default-min-max')).toBeNull()
+    expect(screen.queryByText('default')).toBeNull()
+  })
 
-  it("default label should be displayed when no patient has been given as props", () => {
-    render(getTeamAlarmsContentJSX());
-    expect(screen.queryByText("default-min-max")).not.toBeNull();
-    expect(screen.queryAllByText("default")).toHaveLength(4);
-  });
-});
+  it('default label should be displayed when no patient has been given as props', () => {
+    render(getTeamAlarmsContentJSX())
+    expect(screen.queryByText('default-min-max')).not.toBeNull()
+    expect(screen.queryAllByText('default')).toHaveLength(4)
+  })
+})

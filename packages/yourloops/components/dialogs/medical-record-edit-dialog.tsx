@@ -25,104 +25,104 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import React, { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import DescriptionOutlinedIcon from "@material-ui/icons/DescriptionOutlined";
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Divider from "@material-ui/core/Divider";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 
-import { MedicalRecord } from "../../lib/medical-files/model";
-import MedicalFilesApi from "../../lib/medical-files/medical-files-api";
-import { CategoryProps } from "../dashboard-widgets/medical-files/medical-files-widget";
-import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
-import { useAlert } from "../utils/snackbar";
+import { MedicalRecord } from '../../lib/medical-files/model'
+import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
+import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
+import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
+import { useAlert } from '../utils/snackbar'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
-  onClose: () => void;
-  onSaved: (payload: MedicalRecord) => void;
-  readonly: boolean;
-  medicalRecord?: MedicalRecord;
+  onClose: () => void
+  onSaved: (payload: MedicalRecord) => void
+  readonly: boolean
+  medicalRecord?: MedicalRecord
 }
 
 const classes = makeStyles((theme: Theme) => ({
   divider: {
-    margin: "30px 0 10px 16px",
+    margin: '30px 0 10px 16px'
   },
   title: {
-    "display": "flex",
-    "alignItems": "center",
-    "justifyContent": "center",
-    "& > svg": {
-      marginRight: theme.spacing(1),
-    },
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& > svg': {
+      marginRight: theme.spacing(1)
+    }
   },
   textArea: {
     marginTop: theme.spacing(1),
-    paddingLeft: theme.spacing(2),
-  },
-}));
+    paddingLeft: theme.spacing(2)
+  }
+}))
 
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
-  const { title, textArea, divider } = classes();
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
-  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props;
+  const { title, textArea, divider } = classes()
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props
 
-  const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || "");
-  const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || "");
-  const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || "");
-  const [inProgress, setInProgress] = useState<boolean>(false);
+  const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
+  const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
+  const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
+  const [inProgress, setInProgress] = useState<boolean>(false)
   const disabled = useMemo<boolean>(
-    () => readonly || inProgress || !diagnosis && !trainingSubject && !progressionProposal,
-    [diagnosis, inProgress, progressionProposal, readonly, trainingSubject]);
+    () => (readonly || inProgress || !diagnosis) && !trainingSubject && !progressionProposal,
+    [diagnosis, inProgress, progressionProposal, readonly, trainingSubject])
 
-  const saveMedicalRecord = async () => {
+  const saveMedicalRecord = async (): Promise<void> => {
     try {
-      setInProgress(true);
-      let payload: MedicalRecord;
+      setInProgress(true)
+      let payload: MedicalRecord
       if (medicalRecord) {
         payload = await MedicalFilesApi.updateMedicalRecord({
           ...medicalRecord,
           diagnosis,
           progressionProposal,
-          trainingSubject,
-        });
+          trainingSubject
+        })
       } else {
         payload = await MedicalFilesApi.createMedicalRecord({
           teamId,
           patientId,
           diagnosis,
           progressionProposal,
-          trainingSubject,
-        });
+          trainingSubject
+        })
       }
-      setInProgress(false);
-      alert.success(t("medical-record-save-success"));
-      onSaved(payload);
+      setInProgress(false)
+      alert.success(t('medical-record-save-success'))
+      onSaved(payload)
     } catch (err) {
-      console.log(err);
-      setInProgress(false);
-      alert.error(t("medical-record-save-failed"));
+      console.log(err)
+      setInProgress(false)
+      alert.error(t('medical-record-save-failed'))
     }
-  };
+  }
 
   useEffect(() => {
     return () => {
-      setProgressionProposal("");
-      setDiagnosis("");
-      setTrainingSubject("");
-    };
-  }, []);
+      setProgressionProposal('')
+      setDiagnosis('')
+      setTrainingSubject('')
+    }
+  }, [])
 
   return (
     <Dialog
@@ -135,14 +135,14 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         <Box className={title}>
           <DescriptionOutlinedIcon />
           <Typography variant="h5">
-            {t("write-medical-record")}
+            {t('write-medical-record')}
           </Typography>
         </Box>
       </DialogTitle>
 
       <DialogContent>
         <Typography variant="h6">
-          1. {t("diagnosis")}
+          1. {t('diagnosis')}
         </Typography>
         <TextField
           value={diagnosis}
@@ -159,7 +159,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         <Divider className={divider} />
 
         <Typography variant="h6">
-          2. {t("progression-proposal")}
+          2. {t('progression-proposal')}
         </Typography>
         <TextField
           value={progressionProposal}
@@ -176,7 +176,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         <Divider className={divider} />
 
         <Typography variant="h6">
-          3. {t("training-subject")}
+          3. {t('training-subject')}
         </Typography>
         <TextField
           value={trainingSubject}
@@ -196,7 +196,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
           disableElevation
           onClick={onClose}
         >
-          {t("cancel")}
+          {t('cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={inProgress}>
           <Button
@@ -206,10 +206,10 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
             disabled={disabled}
             onClick={saveMedicalRecord}
           >
-            {t("save")}
+            {t('save')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

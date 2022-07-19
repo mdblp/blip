@@ -15,12 +15,12 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
-import React from "react";
+import React from 'react'
 
 const SVGContainer = (props) => {
-  const { children, dimensions: { width, height } } = props;
+  const { children, dimensions: { width, height } } = props
 
   return (
     <div>
@@ -28,15 +28,15 @@ const SVGContainer = (props) => {
         {children}
       </svg>
     </div>
-  );
-};
+  )
+}
 
 SVGContainer.propTypes = {
   children: PropTypes.object.isRequired,
   dimensions: PropTypes.shape({
     width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-  }).isRequired,
-};
+    height: PropTypes.number.isRequired
+  }).isRequired
+}
 
-export default SVGContainer;
+export default SVGContainer

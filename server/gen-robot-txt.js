@@ -12,15 +12,15 @@
  *
  */
 
-const blipConfig = require("./config.app");
-const { genFromTemplate } = require("./gen-utils");
+const blipConfig = require('./config.app')
+const { genFromTemplate } = require('./gen-utils')
 
-const templateFilename = "robot.txt";
-const outputFilename = "static/robot.txt";
+const templateFilename = 'robot.txt'
+const outputFilename = 'static/robot.txt'
 
 const values = {
   DOMAIN_NAME: blipConfig.DOMAIN_NAME,
-  ALLOW_SEARCH_ENGINE_ROBOTS: blipConfig.ALLOW_SEARCH_ENGINE_ROBOTS,
-};
+  ALLOW_SEARCH_ENGINE_ROBOTS: blipConfig.ALLOW_SEARCH_ENGINE_ROBOTS
+}
 
-genFromTemplate(templateFilename, outputFilename, values).catch((reason) => console.error(reason));
+genFromTemplate(templateFilename, outputFilename, values).catch((reason) => console.error(reason))

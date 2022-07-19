@@ -27,13 +27,13 @@
  */
 
 export enum HttpHeaderKeys {
-  contentType = "Content-Type",
-  sessionToken = "x-tidepool-session-token",
-  traceToken = "x-tidepool-trace-session",
-  language = "x-tidepool-language",
+  contentType = 'Content-Type',
+  sessionToken = 'x-tidepool-session-token',
+  traceToken = 'x-tidepool-trace-session',
+  language = 'x-tidepool-language',
 }
 
 export enum HttpHeaderValues {
-  json = "application/json",
-  csv = "application/csv",
+  json = 'application/json',
+  csv = 'application/csv',
 }

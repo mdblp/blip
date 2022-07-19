@@ -15,33 +15,33 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from "./constants";
+import _ from 'lodash'
+import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from './constants'
 
 function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
-  var classes = _.cloneDeep(bgClasses);
+  var classes = _.cloneDeep(bgClasses)
   var defaults = {
-    "very-low": { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
-    "low": { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
-    "target": { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
-    "high": { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh },
-  };
+    'very-low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryLow },
+    'low': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetLower },
+    'target': { boundary: DEFAULT_BG_BOUNDS[bgUnits].targetUpper },
+    'high': { boundary: DEFAULT_BG_BOUNDS[bgUnits].veryHigh }
+  }
 
-  _.defaults(classes, defaults);
+  _.defaults(classes, defaults)
 
   return function (d) {
-    if (d.value < classes["very-low"].boundary) {
-      return "verylow";
-    } else if (d.value >= classes["very-low"].boundary && d.value < classes.low.boundary) {
-      return "low";
+    if (d.value < classes['very-low'].boundary) {
+      return 'verylow'
+    } else if (d.value >= classes['very-low'].boundary && d.value < classes.low.boundary) {
+      return 'low'
     } else if (d.value >= classes.low.boundary && d.value <= classes.target.boundary) {
-      return "target";
+      return 'target'
     } else if (d.value > classes.target.boundary && d.value <= classes.high.boundary) {
-      return "high";
+      return 'high'
     } else if (d.value > classes.high.boundary) {
-      return "veryhigh";
+      return 'veryhigh'
     }
-  };
+  }
 }
 
-export default categorizer;
+export default categorizer

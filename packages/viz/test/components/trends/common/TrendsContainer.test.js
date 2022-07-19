@@ -15,58 +15,58 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import React from "react";
-import moment from "moment-timezone";
-import { shallow } from "enzyme";
-import * as sinon from "sinon";
-import { expect } from "chai";
+import _ from 'lodash'
+import React from 'react'
+import moment from 'moment-timezone'
+import { shallow } from 'enzyme'
+import * as sinon from 'sinon'
+import { expect } from 'chai'
 
-import { MGDL_UNITS, MMOLL_UNITS, genRandomId } from "tideline";
+import { MGDL_UNITS, MMOLL_UNITS, genRandomId } from 'tideline'
 
 import {
   TrendsContainer,
-  mapStateToProps,
-} from "../../../../src/components/trends/common/TrendsContainer";
-import TrendsSVGContainer from "../../../../src/components/trends/common/TrendsSVGContainer";
+  mapStateToProps
+} from '../../../../src/components/trends/common/TrendsContainer'
+import TrendsSVGContainer from '../../../../src/components/trends/common/TrendsSVGContainer'
 
-describe("TrendsContainer", () => {
-  describe("TrendsContainer (no redux)", () => {
+describe('TrendsContainer', () => {
+  describe('TrendsContainer (no redux)', () => {
 
-    const extentSize = 7;
-    const timezone = "US/Pacific";
+    const extentSize = 7
+    const timezone = 'US/Pacific'
 
     const devices = {
       dexcom: {
-        id: "DexG4Rec_XXXXXXXXX",
-        cgmInDay: 288,
+        id: 'DexG4Rec_XXXXXXXXX',
+        cgmInDay: 288
       },
       libre: {
-        id: "AbbottFreeStyleLibre_XXXXXXXXX",
-        cgmInDay: 96,
-      },
-    };
-    const randomInt = (min, max) => Math.floor(min + Math.random() * (max-min));
-    const justOneDatum = (device = devices.dexcom, type = "cbg") => ([{
+        id: 'AbbottFreeStyleLibre_XXXXXXXXX',
+        cgmInDay: 96
+      }
+    }
+    const randomInt = (min, max) => Math.floor(min + Math.random() * (max-min))
+    const justOneDatum = (device = devices.dexcom, type = 'cbg') => ([{
       id: genRandomId(),
       deviceId: device.id,
       msPer24: randomInt(0, 864e5),
       timezone,
-      localDate: "2022-01-01",
+      localDate: '2022-01-01',
       type,
       value: 100,
-      units: MGDL_UNITS,
-    }]);
+      units: MGDL_UNITS
+    }])
 
     function makeDataStubs(data) {
       return {
         grouped: {
-          cbg: data ?? [],
-        },
-      };
+          cbg: data ?? []
+        }
+      }
     }
 
-    const unfocusCbgSlice = sinon.spy();
+    const unfocusCbgSlice = sinon.spy()
 
     const props = {
       activeDays: {
@@ -76,21 +76,21 @@ describe("TrendsContainer", () => {
         thursday: true,
         friday: true,
         saturday: false,
-        sunday: false,
+        sunday: false
       },
       currentCbgData: [],
-      days: ["2022-01-01"],
-      currentPatientInViewId: "a1b2c3",
+      days: ['2022-01-01'],
+      currentPatientInViewId: 'a1b2c3',
       extentSize,
       loading: false,
       yScaleClampTop: {
         [MGDL_UNITS]: 300,
-        [MMOLL_UNITS]: 25,
+        [MMOLL_UNITS]: 25
       },
       tidelineData: {
         endpoints: [
-          moment.utc("2016-03-01T00:00:00.000Z").toISOString(),
-          moment.utc().endOf("day").add(1, "millisecond").toISOString(),
+          moment.utc('2016-03-01T00:00:00.000Z').toISOString(),
+          moment.utc().endOf('day').add(1, 'millisecond').toISOString()
         ]
       },
       onSelectDate: sinon.stub(),
@@ -99,11 +99,11 @@ describe("TrendsContainer", () => {
           cbg50Enabled: true,
           cbg80Enabled: true,
           cbg100Enabled: true,
-          cbgMedianEnabled: true,
-        },
+          cbgMedianEnabled: true
+        }
       },
-      unfocusCbgSlice,
-    };
+      unfocusCbgSlice
+    }
 
     const mgdl = {
       bgPrefs: {
@@ -112,17 +112,17 @@ describe("TrendsContainer", () => {
           veryHighThreshold: 300,
           targetUpperBound: 180,
           targetLowerBound: 80,
-          veryLowThreshold: 60,
-        },
-      },
-    };
+          veryLowThreshold: 60
+        }
+      }
+    }
 
-    describe("mountData", () => {
-      let wrapper;
+    describe('mountData', () => {
+      let wrapper
 
       before(() => {
-        const dataStubs = makeDataStubs(justOneDatum());
-        props.tidelineData = { ...props.tidelineData, ...dataStubs };
+        const dataStubs = makeDataStubs(justOneDatum())
+        props.tidelineData = { ...props.tidelineData, ...dataStubs }
         // console.info("mountData props", props);
         wrapper = shallow(
           <TrendsContainer
@@ -130,143 +130,143 @@ describe("TrendsContainer", () => {
             {...mgdl}
 
           />, { disableLifecycleMethods: false }
-        );
-      });
+        )
+      })
 
-      it("should set state.yScaleDomain", () => {
-        const { yScaleDomain } = wrapper.state();
-        expect(yScaleDomain).to.be.an("array").lengthOf(2);
-        expect(yScaleDomain).to.be.deep.eq([mgdl.bgPrefs.bgBounds.veryLowThreshold, props.yScaleClampTop[MGDL_UNITS]]);
-      });
-    });
+      it('should set state.yScaleDomain', () => {
+        const { yScaleDomain } = wrapper.state()
+        expect(yScaleDomain).to.be.an('array').lengthOf(2)
+        expect(yScaleDomain).to.be.deep.eq([mgdl.bgPrefs.bgBounds.veryLowThreshold, props.yScaleClampTop[MGDL_UNITS]])
+      })
+    })
 
-    describe("componentDidMount", () => {
-      let mountDataSpy;
-      let wrapper = null;
+    describe('componentDidMount', () => {
+      let mountDataSpy
+      let wrapper = null
 
       before(() => {
-        mountDataSpy = sinon.spy(TrendsContainer.prototype, "mountData");
-      });
+        mountDataSpy = sinon.spy(TrendsContainer.prototype, 'mountData')
+      })
 
       after(() => {
-        mountDataSpy.restore();
-        if (wrapper) wrapper.unmount();
-        wrapper = null;
-      });
+        mountDataSpy.restore()
+        if (wrapper) wrapper.unmount()
+        wrapper = null
+      })
 
-      it("should call the `mountData` method", () => {
+      it('should call the `mountData` method', () => {
         shallow(
           <TrendsContainer
             {...props}
             {...mgdl}
           />, { disableLifecycleMethods: false }
-        );
-        sinon.assert.callCount(mountDataSpy, 1);
-      });
-    });
+        )
+        sinon.assert.callCount(mountDataSpy, 1)
+      })
+    })
 
-    describe("componentDidUpdate", () => {
-      let mountDataSpy;
+    describe('componentDidUpdate', () => {
+      let mountDataSpy
 
       before(() => {
-        mountDataSpy = sinon.spy(TrendsContainer.prototype, "mountData");
-      });
+        mountDataSpy = sinon.spy(TrendsContainer.prototype, 'mountData')
+      })
 
       afterEach(() => {
-        mountDataSpy.resetHistory();
-      });
+        mountDataSpy.resetHistory()
+      })
 
       after(() => {
-        mountDataSpy.restore();
-      });
+        mountDataSpy.restore()
+      })
 
-      it("should call `mountData` if `loading` prop changes from true to false", () => {
+      it('should call `mountData` if `loading` prop changes from true to false', () => {
         const container = shallow(
           <TrendsContainer
             {...props}
             {...mgdl}
           />, { disableLifecycleMethods: false }
-        );
-        mountDataSpy.resetHistory();
-        sinon.assert.callCount(mountDataSpy, 0);
+        )
+        mountDataSpy.resetHistory()
+        sinon.assert.callCount(mountDataSpy, 0)
 
-        container.setProps({ loading: true });
-        sinon.assert.callCount(mountDataSpy, 0);
+        container.setProps({ loading: true })
+        sinon.assert.callCount(mountDataSpy, 0)
 
-        container.setProps({ loading: false });
-        sinon.assert.callCount(mountDataSpy, 1);
-      });
+        container.setProps({ loading: false })
+        sinon.assert.callCount(mountDataSpy, 1)
+      })
 
-      it("should not call `mountData` if `loading` prop does not change from true to false", () => {
+      it('should not call `mountData` if `loading` prop does not change from true to false', () => {
         const container = shallow(
           <TrendsContainer
             {...props}
             {...mgdl}
           />, { disableLifecycleMethods: false }
-        );
-        mountDataSpy.resetHistory();
-        sinon.assert.callCount(mountDataSpy, 0);
+        )
+        mountDataSpy.resetHistory()
+        sinon.assert.callCount(mountDataSpy, 0)
 
-        container.setProps({ loading: false });
-        sinon.assert.callCount(mountDataSpy, 0);
-      });
-    });
+        container.setProps({ loading: false })
+        sinon.assert.callCount(mountDataSpy, 0)
+      })
+    })
 
-    describe("componentWillUnmount", () => {
-      let toBeUnmounted;
+    describe('componentWillUnmount', () => {
+      let toBeUnmounted
 
       beforeEach(() => {
         toBeUnmounted = shallow(
           <TrendsContainer {...props} {...mgdl} />,
           { disableLifecycleMethods: false }
-        );
-      });
+        )
+      })
 
-      describe("when a cbg slice segment is focused", () => {
+      describe('when a cbg slice segment is focused', () => {
         beforeEach(() => {
-          unfocusCbgSlice.resetHistory();
-        });
-        it("should fire unfocusCbgSlice", () => {
-          expect(unfocusCbgSlice.callCount, "unfocusCbgSlice.callCount before").to.equal(0);
+          unfocusCbgSlice.resetHistory()
+        })
+        it('should fire unfocusCbgSlice', () => {
+          expect(unfocusCbgSlice.callCount, 'unfocusCbgSlice.callCount before').to.equal(0)
           toBeUnmounted.setProps({
             trendsState: _.assign({ focusedCbgSlice: {} }, props.trendsState)
-          });
-          toBeUnmounted.unmount();
-          expect(unfocusCbgSlice.callCount, "unfocusCbgSlice.callCount after").to.equal(1);
-          expect(unfocusCbgSlice.args[0][0], "currentPatientInViewId").to.equal(props.currentPatientInViewId);
-        });
-      });
-    });
+          })
+          toBeUnmounted.unmount()
+          expect(unfocusCbgSlice.callCount, 'unfocusCbgSlice.callCount after').to.equal(1)
+          expect(unfocusCbgSlice.args[0][0], 'currentPatientInViewId').to.equal(props.currentPatientInViewId)
+        })
+      })
+    })
 
-    describe("render", () => {
-      it("should render `TrendsSVGContainer`", () => {
-        const dataStubs = makeDataStubs(justOneDatum());
-        props.tidelineData = { ...props.tidelineData, ...dataStubs };
+    describe('render', () => {
+      it('should render `TrendsSVGContainer`', () => {
+        const dataStubs = makeDataStubs(justOneDatum())
+        props.tidelineData = { ...props.tidelineData, ...dataStubs }
         const wrapper = shallow(
           <TrendsContainer {...props} {...mgdl} />,
           { disableLifecycleMethods: false }
-        );
-        expect(wrapper.find(TrendsSVGContainer)).to.have.length(1);
-      });
-    });
-  });
+        )
+        expect(wrapper.find(TrendsSVGContainer)).to.have.length(1)
+      })
+    })
+  })
 
-  describe("mapStateToProps", () => {
-    const userId = "a1b2c3";
+  describe('mapStateToProps', () => {
+    const userId = 'a1b2c3'
     const state = {
       viz: {
         trends: {
           [userId]: {
             oneOption: true,
-            otherOption: false,
-          },
-        },
-      },
-    };
+            otherOption: false
+          }
+        }
+      }
+    }
 
-    it("should map state.viz.trends[currentPatientInViewId] to `trendsState`", () => {
+    it('should map state.viz.trends[currentPatientInViewId] to `trendsState`', () => {
       expect(mapStateToProps(state, { currentPatientInViewId: userId }).trendsState)
-        .to.deep.equal(state.viz.trends[userId]);
-    });
-  });
-});
+        .to.deep.equal(state.viz.trends[userId])
+    })
+  })
+})

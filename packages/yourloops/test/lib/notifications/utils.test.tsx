@@ -26,108 +26,106 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TeamMemberRole } from "../../../models/team";
-import { INotificationAPI, APINotificationType } from "../../../models/notification";
-import { notificationConversion } from "../../../lib/notifications/utils";
-import { INotification, NotificationType } from "../../../lib/notifications/models";
+import { TeamMemberRole } from '../../../models/team'
+import { INotificationAPI, APINotificationType } from '../../../models/notification'
+import { notificationConversion } from '../../../lib/notifications/utils'
+import { INotification, NotificationType } from '../../../lib/notifications/models'
 
-describe("Notification utils", () => {
-
-  describe("notificationConversion", () => {
+describe('Notification utils', () => {
+  describe('notificationConversion', () => {
     const baseAPINotification: INotificationAPI = {
-      key: "abcd",
+      key: 'abcd',
       type: APINotificationType.careTeamInvitation,
       created: new Date().toISOString(),
-      email: "user2@diabeloop.com",
+      email: 'user2@diabeloop.com',
       creator: {
-        userid: "abcdef",
-        profile: { fullName: "The user Two" },
+        userid: 'abcdef',
+        profile: { fullName: 'The user Two' }
       },
-      creatorId: "abcdef",
-      shortKey: "0123456",
+      creatorId: 'abcdef',
+      shortKey: '0123456',
       role: TeamMemberRole.member,
       target: {
-        id: "team-id",
-        name: "The team",
-      },
-    };
+        id: 'team-id',
+        name: 'The team'
+      }
+    }
     const baseNotification: INotification = {
-      id: "abcd",
-      metricsType: "join_team",
+      id: 'abcd',
+      metricsType: 'join_team',
       type: NotificationType.careTeamProInvitation,
       creator: {
-        userid: "abcdef",
-        profile: { fullName: "The user Two" },
+        userid: 'abcdef',
+        profile: { fullName: 'The user Two' }
       },
-      creatorId: "abcdef",
+      creatorId: 'abcdef',
       date: baseAPINotification.created,
-      email: "user2@diabeloop.com",
+      email: 'user2@diabeloop.com',
       role: TeamMemberRole.member,
       target: {
-        id: "team-id",
-        name: "The team",
-      },
-    };
-    it("should throw if the notification type is invalid", () => {
-      const apiNotification = {
-        type: "toto",
-      } as unknown as INotificationAPI;
-
-      let error: Error | null = null;
-      try {
-        notificationConversion(apiNotification);
-      } catch (reason) {
-        error = reason as Error;
+        id: 'team-id',
+        name: 'The team'
       }
-      expect(error).not.toBeNull();
-      expect(error.message).toBe("Invalid notification type");
-    });
+    }
+    it('should throw if the notification type is invalid', () => {
+      const apiNotification = {
+        type: 'toto'
+      } as unknown as INotificationAPI
+
+      let error: Error | null = null
+      try {
+        notificationConversion(apiNotification)
+      } catch (reason) {
+        error = reason as Error
+      }
+      expect(error).not.toBeNull()
+      expect(error.message).toBe('Invalid notification type')
+    })
 
     it("should transform 'careteam_invitation' to 'directInvitation'", () => {
-      baseAPINotification.type = "careteam_invitation" as APINotificationType.careTeamInvitation;
-      baseNotification.type = NotificationType.directInvitation;
-      baseNotification.metricsType = "share_data";
-      const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).toEqual(baseNotification);
-    });
+      baseAPINotification.type = 'careteam_invitation' as APINotificationType.careTeamInvitation
+      baseNotification.type = NotificationType.directInvitation
+      baseNotification.metricsType = 'share_data'
+      const convertedNotification = notificationConversion(baseAPINotification)
+      expect(convertedNotification).toEqual(baseNotification)
+    })
 
     it(
       "should transform 'medicalteam_patient_invitation' to 'careTeamPatientInvitation'",
       () => {
-        baseAPINotification.type = "medicalteam_patient_invitation" as APINotificationType.medicalTeamPatientInvitation;
-        baseNotification.type = NotificationType.careTeamPatientInvitation;
-        baseNotification.metricsType = "join_team";
-        const convertedNotification = notificationConversion(baseAPINotification);
-        expect(convertedNotification).toEqual(baseNotification);
+        baseAPINotification.type = 'medicalteam_patient_invitation' as APINotificationType.medicalTeamPatientInvitation
+        baseNotification.type = NotificationType.careTeamPatientInvitation
+        baseNotification.metricsType = 'join_team'
+        const convertedNotification = notificationConversion(baseAPINotification)
+        expect(convertedNotification).toEqual(baseNotification)
       }
-    );
+    )
 
     it(
       "should transform 'medicalteam_invitation' to 'careTeamProInvitation'",
       () => {
-        baseAPINotification.type = "medicalteam_invitation" as APINotificationType.medicalTeamProInvitation;
-        baseNotification.type = NotificationType.careTeamProInvitation;
-        baseNotification.metricsType = "join_team";
-        const convertedNotification = notificationConversion(baseAPINotification);
-        expect(convertedNotification).toEqual(baseNotification);
+        baseAPINotification.type = 'medicalteam_invitation' as APINotificationType.medicalTeamProInvitation
+        baseNotification.type = NotificationType.careTeamProInvitation
+        baseNotification.metricsType = 'join_team'
+        const convertedNotification = notificationConversion(baseAPINotification)
+        expect(convertedNotification).toEqual(baseNotification)
       }
-    );
+    )
 
     it.skip("should transform 'medicalteam_do_admin' to 'careTeamDoAdmin'", () => {
-      baseAPINotification.type = "medicalteam_do_admin" as APINotificationType.medicalTeamDoAdmin;
-      baseNotification.type = NotificationType.careTeamDoAdmin;
-      baseNotification.metricsType = "join_team";
-      const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).toEqual(baseNotification);
-    });
+      baseAPINotification.type = 'medicalteam_do_admin' as APINotificationType.medicalTeamDoAdmin
+      baseNotification.type = NotificationType.careTeamDoAdmin
+      baseNotification.metricsType = 'join_team'
+      const convertedNotification = notificationConversion(baseAPINotification)
+      expect(convertedNotification).toEqual(baseNotification)
+    })
 
     it.skip("should transform 'medicalteam_remove' to 'careTeamRemoveMember'", () => {
-      baseAPINotification.type = "medicalteam_remove" as APINotificationType.medicalTeamRemoveMember;
-      baseNotification.type = NotificationType.careTeamRemoveMember;
-      baseNotification.metricsType = "join_team";
-      const convertedNotification = notificationConversion(baseAPINotification);
-      expect(convertedNotification).toEqual(baseNotification);
-    });
-  });
-});
-
+      baseAPINotification.type = 'medicalteam_remove' as APINotificationType.medicalTeamRemoveMember
+      baseNotification.type = NotificationType.careTeamRemoveMember
+      baseNotification.metricsType = 'join_team'
+      const convertedNotification = notificationConversion(baseAPINotification)
+      expect(convertedNotification).toEqual(baseNotification)
+    })
+  })
+})

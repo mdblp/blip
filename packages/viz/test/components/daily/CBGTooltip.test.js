@@ -17,124 +17,124 @@
 
 /* eslint-disable max-len */
 
-import React from "react";
-import { expect } from "chai";
-import { mount } from "enzyme";
+import React from 'react'
+import { expect } from 'chai'
+import { mount } from 'enzyme'
 
-import { formatClassesAsSelector } from "../../helpers/cssmodules";
-import colors from "../../../src/styles/colors.css";
+import { formatClassesAsSelector } from '../../helpers/cssmodules'
+import colors from '../../../src/styles/colors.css'
 
-import CBGTooltip from "../../../src/components/daily/cbgtooltip/CBGTooltip";
-import styles from "../../../src/components/daily/cbgtooltip/CBGTooltip.css";
+import CBGTooltip from '../../../src/components/daily/cbgtooltip/CBGTooltip'
+import styles from '../../../src/components/daily/cbgtooltip/CBGTooltip.css'
 
 const bgPrefs = {
   bgClasses: {
-    "very-high": { boundary: 600 },
-    "high": { boundary: 300 },
-    "target": { boundary: 180 },
-    "low": { boundary: 70 },
-    "very-low": { boundary: 54 },
+    'very-high': { boundary: 600 },
+    'high': { boundary: 300 },
+    'target': { boundary: 180 },
+    'low': { boundary: 70 },
+    'very-low': { boundary: 54 }
   },
-  bgUnits: "mg/dL",
-};
+  bgUnits: 'mg/dL'
+}
 
 const target = {
-  type: "cbg",
-  units: "mg/dL",
-  value: 100,
-};
+  type: 'cbg',
+  units: 'mg/dL',
+  value: 100
+}
 
 const low = {
-  type: "cbg",
-  units: "mg/dL",
-  value: 65,
-};
+  type: 'cbg',
+  units: 'mg/dL',
+  value: 65
+}
 
 const high = {
-  type: "cbg",
-  units: "mg/dL",
-  value: 200,
-};
+  type: 'cbg',
+  units: 'mg/dL',
+  value: 200
+}
 
 const veryHigh = {
-  type: "cbg",
-  units: "mg/dL",
+  type: 'cbg',
+  units: 'mg/dL',
   value: 601,
   annotations: [
     {
-      code: "bg/out-of-range",
-      value: "high",
-      threshold: 600,
-    },
-  ],
-};
+      code: 'bg/out-of-range',
+      value: 'high',
+      threshold: 600
+    }
+  ]
+}
 
 const veryLow = {
-  type: "cbg",
-  units: "mg/dL",
+  type: 'cbg',
+  units: 'mg/dL',
   value: 39,
   annotations: [
     {
-      code: "bg/out-of-range",
-      value: "low",
-      threshold: 40,
-    },
-  ],
-};
+      code: 'bg/out-of-range',
+      value: 'low',
+      threshold: 40
+    }
+  ]
+}
 
 const props = {
   position: { top: 200, left: 200 },
   timePrefs: { timezoneAware: false },
-  bgPrefs,
-};
+  bgPrefs
+}
 
-const glucoseValueSelector = `${formatClassesAsSelector(styles.bg)} ${formatClassesAsSelector(styles.value)}`;
+const glucoseValueSelector = `${formatClassesAsSelector(styles.bg)} ${formatClassesAsSelector(styles.value)}`
 
-describe("CBGTooltip", () => {
-  it("should render without issue when all properties provided", () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={target} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.bg))).to.have.length(1);
-  });
+describe('CBGTooltip', () => {
+  it('should render without issue when all properties provided', () => {
+    const wrapper = mount(<CBGTooltip {...props} cbg={target} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.bg))).to.have.length(1)
+  })
 
   it('should render "target" color for target bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={target} />);
-    expect(wrapper.find("Tooltip").instance().props.tailColor).to.equal(colors.target);
-    expect(wrapper.find("Tooltip").instance().props.borderColor).to.equal(colors.target);
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={target} />)
+    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.target)
+    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.target)
+  })
 
   it('should render "high" color for high bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={high} />);
-    expect(wrapper.find("Tooltip").instance().props.tailColor).to.equal(colors.high);
-    expect(wrapper.find("Tooltip").instance().props.borderColor).to.equal(colors.high);
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={high} />)
+    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.high)
+    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.high)
+  })
 
   it('should render "veryHigh" color for high bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryHigh} />);
-    expect(wrapper.find("Tooltip").instance().props.tailColor).to.equal(colors.veryHigh);
-    expect(wrapper.find("Tooltip").instance().props.borderColor).to.equal(colors.veryHigh);
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={veryHigh} />)
+    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryHigh)
+    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryHigh)
+  })
 
   it('should render "low" color for low bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={low} />);
-    expect(wrapper.find("Tooltip").instance().props.tailColor).to.equal(colors.low);
-    expect(wrapper.find("Tooltip").instance().props.borderColor).to.equal(colors.low);
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={low} />)
+    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.low)
+    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.low)
+  })
 
   it('should render "veryLow" color for low bg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryLow} />);
-    expect(wrapper.find("Tooltip").instance().props.tailColor).to.equal(colors.veryLow);
-    expect(wrapper.find("Tooltip").instance().props.borderColor).to.equal(colors.veryLow);
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={veryLow} />)
+    expect(wrapper.find('Tooltip').instance().props.tailColor).to.equal(colors.veryLow)
+    expect(wrapper.find('Tooltip').instance().props.borderColor).to.equal(colors.veryLow)
+  })
 
   it('should render "High" and an annotation for a "very-high" cbg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryHigh} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.annotation))).to.have.length(1);
-    expect(wrapper.find(glucoseValueSelector).text()).to.equal("High");
-  });
+    const wrapper = mount(<CBGTooltip {...props} cbg={veryHigh} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.annotation))).to.have.length(1)
+    expect(wrapper.find(glucoseValueSelector).text()).to.equal('High')
+  })
 
   it('should render "Low" and an annotation for a "very-low" cbg', () => {
-    const wrapper = mount(<CBGTooltip {...props} cbg={veryLow} />);
-    expect(wrapper.find(formatClassesAsSelector(styles.annotation))).to.have.length(1);
-    expect(wrapper.find(glucoseValueSelector).text()).to.equal("Low");
-  });
-});
+    const wrapper = mount(<CBGTooltip {...props} cbg={veryLow} />)
+    expect(wrapper.find(formatClassesAsSelector(styles.annotation))).to.have.length(1)
+    expect(wrapper.find(glucoseValueSelector).text()).to.equal('Low')
+  })
+})
