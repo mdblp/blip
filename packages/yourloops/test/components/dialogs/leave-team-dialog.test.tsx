@@ -45,6 +45,9 @@ describe('Leave team dialog', () => {
   ]
   const team = buildTeam(teamId, members)
   const onDialogResult = jest.fn()
+  const teamLeaveDialogTitleTestId = 'team-leave-dialog-title'
+  const teamLeaveDialogQuestionTestId = 'team-leave-dialog-question'
+  const teamLeaveDialogConsequencesTestId = 'team-leave-dialog-consequences'
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -73,9 +76,9 @@ describe('Leave team dialog', () => {
   it('should not be able to leave team when member is the only administrator', () => {
     jest.spyOn(TeamUtils, 'isUserTheOnlyAdministrator').mockReturnValueOnce(true)
     mountComponent()
-    expect(screen.getByTestId('team-leave-dialog-title').textContent).toEqual('team-leave-dialog-only-admin-title')
-    expect(screen.queryByRole('team-leave-dialog-question')).not.toBeInTheDocument()
-    expect(screen.getByTestId('team-leave-dialog-consequences').textContent).toEqual('team-leave-dialog-only-admin-consequences')
+    expect(screen.getByTestId(teamLeaveDialogTitleTestId).textContent).toEqual('team-leave-dialog-only-admin-title')
+    expect(screen.queryByTestId(teamLeaveDialogQuestionTestId)).not.toBeInTheDocument()
+    expect(screen.getByTestId(teamLeaveDialogConsequencesTestId).textContent).toEqual('team-leave-dialog-only-admin-consequences')
     expect(screen.getByRole('button', { name: 'button-ok' })).toBeInTheDocument()
   })
 
@@ -83,9 +86,9 @@ describe('Leave team dialog', () => {
     jest.spyOn(TeamUtils, 'teamHasOnlyOneMember').mockReturnValueOnce(true)
     jest.spyOn(TeamUtils, 'getNumMedicalMembers').mockReturnValueOnce(1)
     mountComponent()
-    expect(screen.getByTestId('team-leave-dialog-title').textContent).toEqual('team-leave-dialog-and-del-title')
-    expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-and-del-question')
-    expect(screen.getByTestId('team-leave-dialog-consequences').textContent).toEqual('team-leave-dialog-and-del-consequences')
+    expect(screen.getByTestId(teamLeaveDialogTitleTestId).textContent).toEqual('team-leave-dialog-and-del-title')
+    expect(screen.getByTestId(teamLeaveDialogQuestionTestId).textContent).toEqual('team-leave-dialog-and-del-question')
+    expect(screen.getByTestId(teamLeaveDialogConsequencesTestId).textContent).toEqual('team-leave-dialog-and-del-consequences')
     const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave-and-del' })
     confirmButton.click()
     expect(onDialogResult).toBeCalledWith(true)
@@ -99,9 +102,9 @@ describe('Leave team dialog', () => {
       }
     }))
     mountComponent()
-    expect(screen.getByTestId('team-leave-dialog-title').textContent).toEqual('team-leave-dialog-title')
-    expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-question')
-    expect(screen.queryByRole('team-leave-dialog-consequences')).not.toBeInTheDocument()
+    expect(screen.getByTestId(teamLeaveDialogTitleTestId).textContent).toEqual('team-leave-dialog-title')
+    expect(screen.getByTestId(teamLeaveDialogQuestionTestId).textContent).toEqual('team-leave-dialog-question')
+    expect(screen.queryByRole(teamLeaveDialogConsequencesTestId)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })).toBeInTheDocument()
   })
 })
