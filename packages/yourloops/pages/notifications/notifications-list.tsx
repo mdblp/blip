@@ -26,92 +26,92 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Container from "@material-ui/core/Container";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Typography from "@material-ui/core/Typography";
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import Typography from '@material-ui/core/Typography'
 
-import metrics from "../../lib/metrics";
-import { setPageTitle } from "../../lib/utils";
-import { useAuth } from "../../lib/auth";
-import { INotification } from "../../lib/notifications/models";
-import { useNotification } from "../../lib/notifications/hook";
-import SwitchRoleDialogs from "../../components/switch-role";
+import metrics from '../../lib/metrics'
+import { setPageTitle } from '../../lib/utils'
+import { useAuth } from '../../lib/auth'
+import { INotification } from '../../lib/notifications/models'
+import { useNotification } from '../../lib/notifications/hook'
+import SwitchRoleDialogs from '../../components/switch-role'
 
-import { Notification } from "./notification";
+import { Notification } from './notification'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     homeIcon: {
-      marginRight: "0.5em",
+      marginRight: '0.5em'
     },
     breadcrumbLink: {
-      display: "flex",
+      display: 'flex'
     },
     toolBar: {
-      display: "grid",
-      gridTemplateRows: "auto",
-      gridTemplateColumns: "auto auto auto",
-      paddingLeft: "6em",
-      paddingRight: "6em",
+      display: 'grid',
+      gridTemplateRows: 'auto',
+      gridTemplateColumns: 'auto auto auto',
+      paddingLeft: '6em',
+      paddingRight: '6em'
     },
     noNotificationMessage: {
-      textAlign: "center",
-      margin: theme.spacing(4),
-    },
-  }), { name: "ylp-page-notifications-list" }
-);
+      textAlign: 'center',
+      margin: theme.spacing(4)
+    }
+  }), { name: 'ylp-page-notifications-list' }
+)
 
 const NotificationsPage = (): JSX.Element => {
-  const { t } = useTranslation("yourloops");
-  const classes = useStyles();
-  const { user } = useAuth();
-  const notificationsHook = useNotification();
-  const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false);
+  const { t } = useTranslation('yourloops')
+  const classes = useStyles()
+  const { user } = useAuth()
+  const notificationsHook = useNotification()
+  const [switchRoleOpen, setSwitchRoleOpen] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    setPageTitle(t("breadcrumb-notifications"));
-  }, [t]);
+    setPageTitle(t('breadcrumb-notifications'))
+  }, [t])
 
   if (user === null) {
-    throw new Error("Notification require a logged-in user");
+    throw new Error('Notification require a logged-in user')
   }
 
-  const notifications = notificationsHook.receivedInvitations;
-  const loading = !notificationsHook.initialized;
+  const notifications = notificationsHook.receivedInvitations
+  const loading = !notificationsHook.initialized
 
   if (loading) {
     return (
       <CircularProgress
         id="notification-page-loading-progress"
         disableShrink
-        style={{ position: "absolute", top: "calc(50vh - 20px)", left: "calc(50vw - 20px)" }}
+        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
       />
-    );
+    )
   }
 
-  const handleSwitchRoleOpen = () => {
-    metrics.send("switch_account", "display_switch_notification");
-    setSwitchRoleOpen(true);
-  };
-  const handleSwitchRoleCancel = () => {
-    setSwitchRoleOpen(false);
-  };
+  const handleSwitchRoleOpen = (): void => {
+    metrics.send('switch_account', 'display_switch_notification')
+    setSwitchRoleOpen(true)
+  }
+  const handleSwitchRoleCancel = (): void => {
+    setSwitchRoleOpen(false)
+  }
 
   return (
     <React.Fragment>
-      <Container maxWidth="lg" style={{ marginTop: "1em" }}>
+      <Container maxWidth="lg" style={{ marginTop: '1em' }}>
         <List>
           {notifications.length > 0 ? (
             notifications.map((notification: INotification, index: number) => (
               <ListItem
                 key={notification.id}
-                style={{ padding: "8px 0" }}
+                style={{ padding: '8px 0' }}
                 divider={index !== notifications.length - 1}>
                 <Notification
                   notification={notification}
@@ -127,14 +127,14 @@ const NotificationsPage = (): JSX.Element => {
               id="typography-no-pending-invitation-message"
               variant="body2"
               gutterBottom>
-              {t("notification-no-pending-invitation")}
+              {t('notification-no-pending-invitation')}
             </Typography>
           )}
         </List>
         <SwitchRoleDialogs open={switchRoleOpen} onCancel={handleSwitchRoleCancel} />
       </Container>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default NotificationsPage;
+export default NotificationsPage

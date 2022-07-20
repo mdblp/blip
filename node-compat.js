@@ -4,8 +4,6 @@
  * Base on browserify code: MIT License, Copyright (c) 2010 James Halliday
  */
 
-/* eslint-disable prefer-rest-params */
-
 function runTimeout(fun) {
   return setTimeout(fun, 0);
 }
@@ -74,6 +72,7 @@ if (typeof window.process === "undefined") {
     runClearTimeout(timeout);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const noop = () => {};
   const process = {
     title: "browser",
@@ -110,6 +109,5 @@ if (typeof window.process === "undefined") {
     umask: () => 0,
   };
 
-  // @ts-ignore
   window.process = process;
 }

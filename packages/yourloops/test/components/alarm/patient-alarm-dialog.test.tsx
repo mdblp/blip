@@ -25,34 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { act } from "react-dom/test-utils";
+import React from 'react'
+import { act } from 'react-dom/test-utils'
 
-import { PatientInfoWidgetProps } from "../../../components/dashboard-widgets/patient-info-widget";
-import { createPatient, triggerMouseEvent } from "../../common/utils";
-import { render, unmountComponentAtNode } from "react-dom";
-import * as teamHookMock from "../../../lib/team";
-import { Alarm } from "../../../models/alarm";
-import { Monitoring } from "../../../models/monitoring";
-import { ThemeProvider } from "@material-ui/core";
-import { getTheme } from "../../../components/theme";
-import PatientAlarmDialog from "../../../components/alarm/patient-alarm-dialog";
-import { UNITS_TYPE } from "../../../lib/units/utils";
-import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from "../../../components/alarm/alarms-content-configuration";
+import { PatientInfoWidgetProps } from '../../../components/dashboard-widgets/patient-info-widget'
+import { createPatient, triggerMouseEvent } from '../../common/utils'
+import { render, unmountComponentAtNode } from 'react-dom'
+import * as teamHookMock from '../../../lib/team'
+import { Alarm } from '../../../models/alarm'
+import { Monitoring } from '../../../models/monitoring'
+import { ThemeProvider } from '@material-ui/core'
+import { getTheme } from '../../../components/theme'
+import PatientAlarmDialog from '../../../components/alarm/patient-alarm-dialog'
+import { UNITS_TYPE } from '../../../lib/units/utils'
+import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../components/alarm/alarms-content-configuration'
 
-jest.mock("../../../lib/team");
-describe("PatientAlarmDialog", () => {
-  const patient = createPatient("fakePatientId", []);
-  let container: HTMLElement | null = null;
-  const onClose = jest.fn();
+jest.mock('../../../lib/team')
+describe('PatientAlarmDialog', () => {
+  const patient = createPatient('fakePatientId', [])
+  let container: HTMLElement | null = null
+  const onClose = jest.fn()
   const alarm: Alarm = {
     timeSpentAwayFromTargetRate: 10,
     timeSpentAwayFromTargetActive: false,
     frequencyOfSevereHypoglycemiaRate: 20,
     frequencyOfSevereHypoglycemiaActive: false,
     nonDataTransmissionRate: 30,
-    nonDataTransmissionActive: false,
-  };
+    nonDataTransmissionActive: false
+  }
   const monitoring: Monitoring = {
     enabled: true,
     parameters: {
@@ -63,28 +63,28 @@ describe("PatientAlarmDialog", () => {
       veryLowBg: MIN_VERY_LOW_BG,
       hypoThreshold: 25,
       nonDataTxThreshold: 30,
-      reportingPeriod: 15,
-    },
-  };
+      reportingPeriod: 15
+    }
+  }
 
   beforeAll(() => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
-    });
-  });
+      return children
+    })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
   function mountComponent(props: PatientInfoWidgetProps = { patient }) {
     act(() => {
@@ -94,56 +94,54 @@ describe("PatientAlarmDialog", () => {
             patient={props.patient}
             onClose={onClose}
           />
-        </ThemeProvider>, container);
-    });
+        </ThemeProvider>, container)
+    })
   }
 
-  it("should throw error when given patient has no monitoring enabled", () => {
-    const patientNoMonitoring = createPatient("fakePatientId", []);
-    expect(() => mountComponent( { patient : patientNoMonitoring })).toThrow();
-  });
+  it('should throw error when given patient has no monitoring enabled', () => {
+    const patientNoMonitoring = createPatient('fakePatientId', [])
+    expect(() => mountComponent({ patient: patientNoMonitoring })).toThrow()
+  })
 
-  it("should execute close when clicking on cancel button", () => {
-    const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
-    mountComponent({ patient: patientWithMonitoring });
-    const cancelButton = document.getElementById("cancel-button-id");
-    triggerMouseEvent("click", cancelButton);
-    expect(onClose).toHaveBeenCalledTimes(1);
-  });
+  it('should execute close when clicking on cancel button', () => {
+    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    mountComponent({ patient: patientWithMonitoring })
+    const cancelButton = document.getElementById('cancel-button-id')
+    triggerMouseEvent('click', cancelButton)
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
 
-  it("should execute updatePatientAlerts when clicking on save button", async () => {
+  it('should execute updatePatientAlerts when clicking on save button', async () => {
     const updatePatientMonitoring = jest.fn();
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updatePatientMonitoring };
-    });
-    const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
-    mountComponent({ patient: patientWithMonitoring });
-    const saveButton = document.getElementById("save-button-id");
+      return { updatePatientMonitoring }
+    })
+    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    mountComponent({ patient: patientWithMonitoring })
+    const saveButton = document.getElementById('save-button-id')
     await act(async () => {
-      triggerMouseEvent("click", saveButton);
-      await new Promise(process.nextTick);
-    });
-    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1);
-    expect(onClose).toHaveBeenCalledTimes(1);
-  });
+      triggerMouseEvent('click', saveButton)
+      await new Promise(process.nextTick)
+    })
+    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1)
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
 
-  it("should execute onClose when updatePatientAlerts throws an error", async () => {
+  it('should execute onClose when updatePatientAlerts throws an error', async () => {
     const updatePatientMonitoring = jest.fn().mockImplementation(() => {
-      throw Error();
+      throw Error()
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { updatePatientMonitoring };
-    });
-    const patientWithMonitoring = createPatient("fakePatientId", [], alarm, "", monitoring);
-    mountComponent({ patient: patientWithMonitoring });
-    const saveButton = document.getElementById("save-button-id");
+      return { updatePatientMonitoring }
+    })
+    const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
+    mountComponent({ patient: patientWithMonitoring })
+    const saveButton = document.getElementById('save-button-id')
     await act(async () => {
-      triggerMouseEvent("click", saveButton);
-      await new Promise(process.nextTick);
-    });
-    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1);
-    expect(onClose).not.toHaveBeenCalled();
-  });
-
-});
-
+      triggerMouseEvent('click', saveButton)
+      await new Promise(process.nextTick)
+    })
+    expect(updatePatientMonitoring).toHaveBeenCalledTimes(1)
+    expect(onClose).not.toHaveBeenCalled()
+  })
+})

@@ -26,52 +26,52 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import bows from "bows";
+import React from 'react'
+import bows from 'bows'
 
-import { useAuth } from "../auth";
+import { useAuth } from '../auth'
 
-import BlipApi from "./blip-api";
+import BlipApi from './blip-api'
 
 export interface DataContext {
-  blipApi: BlipApi | null;
+  blipApi: BlipApi | null
 }
 
 export interface DataProvider {
-  children: React.ReactNode;
-  context: () => DataContext;
+  children: React.ReactNode
+  context: () => DataContext
 }
 
-const log = bows("DataHook");
+const log = bows('DataHook')
 export function DefaultDataContext(): DataContext {
-  const authHook = useAuth();
-  const [blipApi, setBlipApi] = React.useState<BlipApi | null>(null);
+  const authHook = useAuth()
+  const [blipApi, setBlipApi] = React.useState<BlipApi | null>(null)
 
   React.useEffect(() => {
     if (authHook.isLoggedIn) {
       if (!blipApi) {
-        log.debug("Creating BlipApi");
-        setBlipApi(new BlipApi(authHook));
+        log.debug('Creating BlipApi')
+        setBlipApi(new BlipApi(authHook))
       } else {
-        log.debug("Updating BlipApi");
-        blipApi.authContext = authHook;
+        log.debug('Updating BlipApi')
+        blipApi.authContext = authHook
       }
     }
-  }, [blipApi, authHook]);
+  }, [blipApi, authHook])
 
-  return { blipApi };
+  return { blipApi }
 }
 
-const ReactDataContext = React.createContext<DataContext>({} as DataContext);
+const ReactDataContext = React.createContext<DataContext>({} as DataContext)
 
 /**
  * Provider component that wraps your app and makes auth object available to any child component that calls useData().
  * @param props for data provider & children
  */
 export function DataContextProvider(props: DataProvider): JSX.Element {
-  const { context, children } = props;
-  const dataContext = context();
-  return <ReactDataContext.Provider value={dataContext}>{children}</ReactDataContext.Provider>;
+  const { context, children } = props
+  const dataContext = context()
+  return <ReactDataContext.Provider value={dataContext}>{children}</ReactDataContext.Provider>
 }
 
 /**
@@ -80,5 +80,5 @@ export function DataContextProvider(props: DataProvider): JSX.Element {
  * Trigger a re-render when it change.
  */
 export function useData(): DataContext {
-  return React.useContext(ReactDataContext);
+  return React.useContext(ReactDataContext)
 }

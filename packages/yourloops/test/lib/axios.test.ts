@@ -25,46 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { onFulfilled } from '../../lib/axios'
+import { HttpHeaderKeys } from '../../models/api'
 
-import { onFulfilled } from "../../lib/axios";
-import { HttpHeaderKeys } from "../../models/api";
+describe('Axios service', () => {
+  describe('onFulfilled', () => {
+    it('should return config without added headers', () => {
+      // given
+      const expected = { params: {} }
+      const config = { params: { noHeader: true } }
 
-describe("Axios service", () => {
+      // when
+      const actual = onFulfilled(config)
 
-  describe("onFulfilled", () => {
-    it("should return config without added headers", () => {
-      //given
-      const expected = { params: {} };
-      const config = { params: { noHeader: true } };
+      // then
+      expect(actual).toStrictEqual(expected)
+    })
 
-      //when
-      const actual = onFulfilled(config);
+    it('should return config with header when no param is given', () => {
+      // given
+      // when
+      const actual = onFulfilled({})
 
-      //then
-      expect(actual).toStrictEqual(expected);
-    });
+      // then
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken)
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken)
+    })
 
-    it("should return config with header when no param is given", () => {
-      //given
-      //when
-      const actual = onFulfilled({});
+    it('should return config with added headers', () => {
+      // given
+      const config = { params: { fakeParam: true } }
 
-      //then
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken);
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken);
-    });
+      // when
+      const actual = onFulfilled(config)
 
-    it("should return config with added headers", () => {
-      //given
-      const config = { params: { fakeParam: true } };
-
-      //when
-      const actual = onFulfilled(config);
-
-      //then
-      expect(actual).toMatchObject(config);
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken);
-      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken);
-    });
-  });
-});
+      // then
+      expect(actual).toMatchObject(config)
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.sessionToken)
+      expect(actual.headers).toHaveProperty(HttpHeaderKeys.traceToken)
+    })
+  })
+})

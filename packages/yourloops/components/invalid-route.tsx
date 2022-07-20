@@ -26,43 +26,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid'
 
-import { setPageTitle } from "../lib/utils";
+import { setPageTitle } from '../lib/utils'
 
 interface InvalidRouteProps {
   /** The message to display (default to "page-not-found") */
-  message?: string;
+  message?: string
   /** Redirect URL (default to "/") */
-  defaultURL?: string;
+  defaultURL?: string
 }
 
 function InvalidRoute(props: InvalidRouteProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const historyHook = useHistory();
-  const { defaultURL, message } = props;
+  const { t } = useTranslation('yourloops')
+  const historyHook = useHistory()
+  const { defaultURL, message } = props
 
-  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    historyHook.push(defaultURL ?? "/");
-  };
+  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>): void => {
+    event.preventDefault()
+    historyHook.push(defaultURL ?? '/')
+  }
 
-  setPageTitle();
+  setPageTitle()
 
   return (
     <Grid container direction="column" justify="center" alignItems="center" style={{ flexGrow: 1 }}>
-      <p>{message ?? t("page-not-found")}</p>
+      <p>{message ?? t('page-not-found')}</p>
       <p>
         <a href={defaultURL} onClick={handleRedirect}>
-          {t("breadcrumb-home")}
+          {t('breadcrumb-home')}
         </a>
       </p>
     </Grid>
-  );
+  )
 }
 
-export default InvalidRoute;
+export default InvalidRoute

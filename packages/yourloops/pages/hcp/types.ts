@@ -26,37 +26,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TypeTeamMemberRole } from "../../models/team";
-import { Team, TeamMember } from "../../lib/team";
+import { TypeTeamMemberRole } from '../../models/team'
+import { Team, TeamMember } from '../../lib/team'
 
 export interface AddPatientDialogResult {
-  email: string;
-  teamId: string;
+  email: string
+  teamId: string
 }
 
 export interface AddPatientDialogContentProps {
-  teams: Readonly<Team>[];
-  onDialogResult: (value: AddPatientDialogResult | null) => void;
+  teams: Array<Readonly<Team>>
+  onDialogResult: (value: AddPatientDialogResult | null) => void
 }
 
 export interface SwitchRoleDialogContentProps {
-  member: Readonly<TeamMember>;
-  role: Exclude<TypeTeamMemberRole, "patient">;
-  onDialogResult: (result: boolean) => void;
+  member: Readonly<TeamMember>
+  role: Exclude<TypeTeamMemberRole, 'patient'>
+  onDialogResult: (result: boolean) => void
 }
 
 export interface TeamLeaveDialogContentProps {
-  team: Readonly<Team>;
-  onDialogResult: (result: boolean) => void;
+  team: Readonly<Team>
+  onDialogResult: (result: boolean) => void
 }
 
 export interface AddMemberDialogContentProps {
-  team: Readonly<Team>;
-  onMemberInvited: (result: { email: string; role: Exclude<TypeTeamMemberRole, "patient">, team: Team } | null) => void;
+  team: Readonly<Team>
+  onMemberInvited: (result: { email: string, role: Exclude<TypeTeamMemberRole, 'patient'>, team: Team } | null) => void
 }
 
 export interface TeamEditModalContentProps {
-  team: Readonly<Team> | null;
+  team: Readonly<Team> | null
   /** Promise callback for the modal. null means cancel edit */
-  onSaveTeam: (team: Partial<Team> | null) => void;
+  onSaveTeam: (team: Partial<Team> | null) => void
 }

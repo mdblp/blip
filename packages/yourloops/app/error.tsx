@@ -26,86 +26,86 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import metrics from "../lib/metrics";
+import { useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextField from '@material-ui/core/TextField'
+import metrics from '../lib/metrics'
 
 interface OnErrorProps {
-  event: Event | string;
-  source?: string;
-  lineno?: number;
-  colno?: number;
-  error?: Error;
+  event: Event | string
+  source?: string
+  lineno?: number
+  colno?: number
+  error?: Error
 }
 
 function OnError(props: OnErrorProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const theme = useTheme();
-  const [showMore, setShowMore] = React.useState(false);
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const { t } = useTranslation('yourloops')
+  const theme = useTheme()
+  const [showMore, setShowMore] = React.useState(false)
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
-  const errorMessage = props.error?.message ?? "n/a";
+  const errorMessage = props.error?.message ?? 'n/a'
 
   React.useEffect(() => {
     try {
-      metrics.send("error", "app-crash", errorMessage);
+      metrics.send('error', 'app-crash', errorMessage)
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-    if (typeof window.clearSessionTimeout === "function") {
-      window.clearSessionTimeout();
+    if (typeof window.clearSessionTimeout === 'function') {
+      window.clearSessionTimeout()
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleOK = () => {
+  const handleOK = (): void => {
     // Then reload the page
-    window.location.replace("/");
-  };
+    window.location.replace('/')
+  }
 
-  const handleShowMore = () => {
-    setShowMore(true);
-  };
+  const handleShowMore = (): void => {
+    setShowMore(true)
+  }
 
-  let moreInfos: JSX.Element | null = null;
+  let moreInfos: JSX.Element | null = null
   if (showMore) {
-    const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : "N/A";
-    const info = `${props.event.toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`;
+    const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'N/A'
+    const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
     moreInfos = (
       <React.Fragment>
-        <DialogContentText style={{ marginTop: "1em", marginBottom: "0px" }} color="textSecondary">{t("app-crash-info")}</DialogContentText>
-        <TextField id="dialog-app-crash-technical-info" style={{ width: "100%" }} inputProps={{ color: "grey" }} color="secondary" multiline rows={4} value={info}/>
+        <DialogContentText style={{ marginTop: '1em', marginBottom: '0px' }} color="textSecondary">{t('app-crash-info')}</DialogContentText>
+        <TextField id="dialog-app-crash-technical-info" style={{ width: '100%' }} inputProps={{ color: 'grey' }} color="secondary" multiline rows={4} value={info}/>
       </React.Fragment>
-    );
+    )
   } else {
     moreInfos = (
-      <Button id="dialog-app-button-more-info" variant="text" color="primary" style={{ marginTop: "1em" }} onClick={handleShowMore}>
-        {t("app-crash-button-more-info")}
+      <Button id="dialog-app-button-more-info" variant="text" color="primary" style={{ marginTop: '1em' }} onClick={handleShowMore}>
+        {t('app-crash-button-more-info')}
       </Button>
-    );
+    )
   }
 
   return (
     <Dialog id="dialog-app-crash" open fullScreen={fullScreen} fullWidth maxWidth="sm">
-      <DialogTitle id="dialog-app-crash-title">{t("app-crash-title")}</DialogTitle>
+      <DialogTitle id="dialog-app-crash-title">{t('app-crash-title')}</DialogTitle>
       <DialogContent>
-        <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">{t("app-crash-text")}</DialogContentText>
+        <DialogContentText id="dialog-app-crash-explanation" color="textPrimary">{t('app-crash-text')}</DialogContentText>
         {moreInfos}
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={handleOK}>{t("button-ok")}</Button>
+        <Button color="primary" onClick={handleOK}>{t('button-ok')}</Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default OnError;
+export default OnError

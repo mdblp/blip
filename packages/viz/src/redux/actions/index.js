@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import { delayShowCbgTracesOnFocus } from "./thunks";
+import { delayShowCbgTracesOnFocus } from './thunks'
 import {
   focusTrendsCbgDateTrace,
   focusTrendsCbgSlice,
@@ -23,9 +23,9 @@ import {
   turnOffCbgRange,
   turnOnCbgRange,
   unfocusTrendsCbgDateTrace,
-  unfocusTrendsCbgSlice,
-} from "./trends";
-import { toggleSettingsSection } from "./settings";
+  unfocusTrendsCbgSlice
+} from './trends'
+import { toggleSettingsSection } from './settings'
 
 
 export {
@@ -37,5 +37,5 @@ export {
   turnOnCbgRange,
   unfocusTrendsCbgDateTrace,
   unfocusTrendsCbgSlice,
-  toggleSettingsSection,
-};
+  toggleSettingsSection
+}

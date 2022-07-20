@@ -26,23 +26,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render } from "@testing-library/react";
+import React from 'react'
+import { render } from '@testing-library/react'
 
-import PatientsSecondaryBar, { PatientListBarProps } from "../../../components/patient/secondary-bar";
+import PatientsSecondaryBar, { PatientListBarProps } from '../../../components/patient/secondary-bar'
 
-describe("Patient secondary bar", () => {
+describe('Patient secondary bar', () => {
   const defaultProps: PatientListBarProps = {
-    filter: "",
+    filter: '',
     onFilter: jest.fn(),
-    onInvitePatient: jest.fn(),
-  };
+    onInvitePatient: jest.fn()
+  }
 
-  it("should be able to render", () => {
+  it('should be able to render', () => {
     const { container } = render(
       <PatientsSecondaryBar {...defaultProps} />
-    );
-    expect(container.querySelector("#patients-list-toolbar-item-left")).not.toBeNull();
-  });
-});
-
+    )
+    expect(container.querySelector('#patients-list-toolbar-item-left')).not.toBeNull()
+  })
+})

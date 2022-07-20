@@ -26,57 +26,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { shallow } from "enzyme";
-import moment from "moment-timezone";
-import * as sinon from "sinon";
-import chai from "chai";
+import React from 'react'
+import { shallow } from 'enzyme'
+import moment from 'moment-timezone'
+import * as sinon from 'sinon'
+import chai from 'chai'
 
-import { MGDL_UNITS, MS_IN_DAY } from "tideline";
+import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
 
-import DataUtilStub from "../../../helpers/DataUtil";
-import { PatientDashboard } from "../../../../app/components/chart";
+import DataUtilStub from '../../../helpers/DataUtil'
+import { PatientDashboard } from '../../../../app/components/chart'
 
-const expect = chai.expect;
+const expect = chai.expect
 
-const PatientInfoWidget = () => <div id="patient-info-widget" />;
-const ChatWidget = () => <div id="chat-widget" />;
-const AlarmCard = () => <div id="alarm-card" />;
-const MedicalFilesWidget = () => <div id="medical-files" />;
+const PatientInfoWidget = () => <div id="patient-info-widget" />
+const ChatWidget = () => <div id="chat-widget" />
+const AlarmCard = () => <div id="alarm-card" />
+const MedicalFilesWidget = () => <div id="medical-files" />
 
-describe("PatientDashboard", () => {
+describe('PatientDashboard', () => {
   const bgPrefs = {
     bgClasses: {
-      "very-low": {
+      'very-low': {
         boundary: 60
       },
-      "low": {
+      'low': {
         boundary: 80
       },
-      "target": {
+      'target': {
         boundary: 180
       },
-      "high": {
+      'high': {
         boundary: 200
       },
-      "very-high": {
+      'very-high': {
         boundary: 300
       }
     },
     bgUnits: MGDL_UNITS
-  };
-  const date1 = new Date(Date.now() - 60 * 60 * 1000);
-  const date2 = new Date();
+  }
+  const date1 = new Date(Date.now() - 60 * 60 * 1000)
+  const date2 = new Date()
   const smbgs = [
-    { type: "smbg", normalTime: date1.toISOString(), epoch: date1.valueOf() },
-    { type: "smbg", normalTime: date2.toISOString(), epoch: date2.valueOf() }
-  ];
+    { type: 'smbg', normalTime: date1.toISOString(), epoch: date1.valueOf() },
+    { type: 'smbg', normalTime: date2.toISOString(), epoch: date2.valueOf() }
+  ]
 
   const baseProps = {
     tidelineData: {
       grouped: {
         smbg: smbgs,
-        cbg: [],
+        cbg: []
       },
       data: smbgs,
       basicsData: {
@@ -84,28 +84,28 @@ describe("PatientDashboard", () => {
         dateRange: [date1.toISOString(), date2.toISOString()],
         data: {
           smbg: {
-            data: smbgs,
+            data: smbgs
           },
-          cbg: [],
+          cbg: []
         },
         days: [
           {
-            type: "mostRecent",
-          },
-        ],
-      },
+            type: 'mostRecent'
+          }
+        ]
+      }
     },
     bgPrefs,
     timePrefs: {
       timezoneAware: false,
-      timezoneName: "US/Pacific",
+      timezoneName: 'US/Pacific'
     },
     chartPrefs: {
-      daily: {},
+      daily: {}
     },
     permsOfLoggedInUser: {},
     trackMetric: sinon.stub(),
-    user: { id: "fakeUser" },
+    user: { id: 'fakeUser' },
     users: [],
     isUserHCP: false,
     onClickNavigationBack: sinon.stub(),
@@ -119,67 +119,67 @@ describe("PatientDashboard", () => {
     patientInfoWidget: PatientInfoWidget,
     dataUtil: new DataUtilStub(),
     profileDialog: sinon.stub().returns(<div id="profile-dialog" />),
-    epochLocation: moment.utc("2014-03-13T12:00:00.000Z").valueOf(),
+    epochLocation: moment.utc('2014-03-13T12:00:00.000Z').valueOf(),
     msRange: MS_IN_DAY, // ['2014-03-13T00:00:00.000Z', '2014-03-13T23:59:59.999Z'],
     loading: false,
-    prefixURL: "test",
+    prefixURL: 'test',
     patient: {
       profile: {
-        fullName: "Jane Doe"
+        fullName: 'Jane Doe'
       },
       permissions: {
         note: {},
         view: {}
       },
-      metadata: {},
+      metadata: {}
     },
     canPrint: false,
-    onClickPrint: sinon.stub(),
-  };
+    onClickPrint: sinon.stub()
+  }
 
-  let wrapper;
+  let wrapper
 
   beforeEach(() => {
-    baseProps.dataUtil = new DataUtilStub();
-  });
+    baseProps.dataUtil = new DataUtilStub()
+  })
 
-  describe("render", () => {
+  describe('render', () => {
     before(() => {
-      sinon.spy(console, "error");
-      wrapper = shallow(<PatientDashboard {...baseProps} />);
-    });
+      sinon.spy(console, 'error')
+      wrapper = shallow(<PatientDashboard {...baseProps} />)
+    })
 
     after(() => {
-      console.error.restore();
-    });
+      console.error.restore()
+    })
 
-    it("should render without errors when provided all required props", () => {
-      expect(wrapper.find("#patient-dashboard")).to.have.length(1);
-      expect(console.error.callCount).to.equal(0);
-    });
+    it('should render without errors when provided all required props', () => {
+      expect(wrapper.find('#patient-dashboard')).to.have.length(1)
+      expect(console.error.callCount).to.equal(0)
+    })
 
-    it("should show header", () => {
-      const header = wrapper.find("#dashboard-header");
-      expect(header).to.have.length(1);
-    });
+    it('should show header', () => {
+      const header = wrapper.find('#dashboard-header')
+      expect(header).to.have.length(1)
+    })
 
-    it("should not show chat widget when patient is not monitored", () => {
-      expect(ChatWidget).to.have.length(0);
-    });
+    it('should not show chat widget when patient is not monitored', () => {
+      expect(ChatWidget).to.have.length(0)
+    })
 
-    it("should show chat widget when patient is monitored", () => {
-      baseProps.patient.monitoring = { enabled: true };
-      wrapper = shallow(<PatientDashboard {...baseProps} />);
-      expect(wrapper.find(ChatWidget)).to.have.length(1);
-    });
+    it('should show chat widget when patient is monitored', () => {
+      baseProps.patient.monitoring = { enabled: true }
+      wrapper = shallow(<PatientDashboard {...baseProps} />)
+      expect(wrapper.find(ChatWidget)).to.have.length(1)
+    })
 
-    it("should show patient info widget", () => {
-      expect(wrapper.find(PatientInfoWidget)).to.have.length(1);
-    });
+    it('should show patient info widget', () => {
+      expect(wrapper.find(PatientInfoWidget)).to.have.length(1)
+    })
 
-    it("should show patient statistics", () => {
-      const statisticsWidget = wrapper.find("#dashboard-patient-statistics");
-      expect(statisticsWidget).to.have.length(1);
-    });
-  });
-});
+    it('should show patient statistics', () => {
+      const statisticsWidget = wrapper.find('#dashboard-patient-statistics')
+      expect(statisticsWidget).to.have.length(1)
+    })
+  })
+})

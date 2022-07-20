@@ -13,6 +13,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1634 Fix missing UTs
 - YLP-1645 A patient can create, edit and delete a medical record
 - YLP-1658 Creating a note does not create it at the time selected
+- YLP-1659 Language is not updated with user preferences
 
 ## 3.0.0 - 2022-06-16
 ### Added

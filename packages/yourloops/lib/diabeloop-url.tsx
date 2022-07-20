@@ -25,65 +25,65 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import config from "./config";
-import { UserRoles } from "../models/user";
+import config from './config'
+import { UserRoles } from '../models/user'
 
 /**
  * Class containing all URLs related to Diableloop
  */
 class DiabeloopUrl {
-  private rootPathName: string;
-  private termsUrl: string;
-  private privacyPolicyUrl: string;
-  private cookiesPolicyUrL: string;
-  private supportUrL: string;
+  private readonly rootPathName: string
+  private termsUrl: string
+  private privacyPolicyUrl: string
+  private cookiesPolicyUrL: string
+  private readonly supportUrL: string
 
   constructor() {
-    this.rootPathName = `${config.ASSETS_URL}`;
-    this.termsUrl = `${this.rootPathName}terms.pdf`;
-    this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`;
-    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.pdf`;
-    this.supportUrL = "https://www.diabeloop.com";
+    this.rootPathName = `${config.ASSETS_URL}`
+    this.termsUrl = `${this.rootPathName}terms.pdf`
+    this.privacyPolicyUrl = `${this.rootPathName}data-privacy.pdf`
+    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.pdf`
+    this.supportUrL = 'https://www.diabeloop.com'
   }
 
   get SupportUrl(): string {
-    return this.supportUrL;
+    return this.supportUrL
   }
 
   getTermsUrL(currentLangue: string): string {
-    this.termsUrl = `${this.rootPathName}yourloops-terms-of-use.${currentLangue}.pdf`;
-    return this.termsUrl;
+    this.termsUrl = `${this.rootPathName}yourloops-terms-of-use.${currentLangue}.pdf`
+    return this.termsUrl
   }
 
   getPrivacyPolicyUrL(currentLangue: string): string {
-    this.privacyPolicyUrl = `${this.rootPathName}yourloops-data-privacy.${currentLangue}.pdf`;
-    return this.privacyPolicyUrl;
+    this.privacyPolicyUrl = `${this.rootPathName}yourloops-data-privacy.${currentLangue}.pdf`
+    return this.privacyPolicyUrl
   }
 
   getIntendedUseUrL(currentLangue: string): string {
-    return `${this.rootPathName}intended-use.${currentLangue}.pdf`;
+    return `${this.rootPathName}intended-use.${currentLangue}.pdf`
   }
 
   getTrainingUrl(currentLangue: string, role?: UserRoles): string {
     if (role === UserRoles.patient) {
-      return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`;
+      return `${this.rootPathName}yourloops-patient-training.${currentLangue}.pdf`
     } else if (role === UserRoles.hcp) {
-      return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`;
+      return `${this.rootPathName}yourloops-hcp-training.${currentLangue}.pdf`
     } else if (role === UserRoles.caregiver) {
-      return `${this.rootPathName}yourloops-caregiver-training.${currentLangue}.pdf`;
+      return `${this.rootPathName}yourloops-caregiver-training.${currentLangue}.pdf`
     }
-    return `${this.rootPathName}yourloops-login-training.${currentLangue}.pdf`;
+    return `${this.rootPathName}yourloops-login-training.${currentLangue}.pdf`
   }
 
   getCookiesPolicyUrl(currentLangue: string): string {
-    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.${currentLangue}.pdf`;
-    return this.cookiesPolicyUrL;
+    this.cookiesPolicyUrL = `${this.rootPathName}yourloops-cookiepolicy.${currentLangue}.pdf`
+    return this.cookiesPolicyUrL
   }
 
   getReleaseNotesURL(): string {
-    return `${config.ASSETS_URL}yourloops-release-notes.pdf`;
+    return `${config.ASSETS_URL}yourloops-release-notes.pdf`
   }
 }
 
-const diabeloopUrl = new DiabeloopUrl();
-export default diabeloopUrl;
+const diabeloopUrl = new DiabeloopUrl()
+export default diabeloopUrl

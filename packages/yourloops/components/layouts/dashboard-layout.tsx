@@ -25,31 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
+import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
 
-import MainHeader from "../header-bars/main-header";
-import MainDrawer from "../menus/main-drawer";
-import { useAuth } from "../../lib/auth";
+import MainHeader from '../header-bars/main-header'
+import MainDrawer from '../menus/main-drawer'
+import { useAuth } from '../../lib/auth'
 
 const dashboardLayoutStyle = makeStyles((theme: Theme) => ({
   toolbar: { ...theme.mixins.toolbar },
   container: {
-    padding: "0px",
-  },
-}));
+    padding: '0px'
+  }
+}))
 
-function DashboardLayout({ children }: { children: JSX.Element }) {
-  const classes = dashboardLayoutStyle();
-  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true);
-  const authHook = useAuth();
-  const isUserPatient = authHook.user?.isUserPatient();
+function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
+  const classes = dashboardLayoutStyle()
+  const [drawerMiniVariant, setDrawerMiniVariant] = useState<boolean>(true)
+  const authHook = useAuth()
+  const isUserPatient = authHook.user?.isUserPatient()
 
-  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant);
+  const onClickMainHeaderShrinkIcon = (): void => setDrawerMiniVariant(!drawerMiniVariant)
 
   return (
     <Box display="flex">
@@ -62,7 +62,7 @@ function DashboardLayout({ children }: { children: JSX.Element }) {
         {children}
       </Container>
     </Box>
-  );
+  )
 }
 
-export default DashboardLayout;
+export default DashboardLayout

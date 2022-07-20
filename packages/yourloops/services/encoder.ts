@@ -26,12 +26,11 @@
  */
 
 export default class EncoderService {
-
   static async encodeSHA1(value: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(value);
-    const hashedValueBuffer = await crypto.subtle.digest("SHA-1", data);
-    const hashedValueByteArray = Array.from(new Uint8Array(hashedValueBuffer));
-    return hashedValueByteArray.map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    const encoder = new TextEncoder()
+    const data = encoder.encode(value)
+    const hashedValueBuffer = await crypto.subtle.digest('SHA-1', data)
+    const hashedValueByteArray = Array.from(new Uint8Array(hashedValueBuffer))
+    return hashedValueByteArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase()
   }
 }

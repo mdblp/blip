@@ -15,15 +15,15 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
 import {
   getDelivered,
   getProgrammed,
-  getRecommended,
-} from "./bolus";
+  getRecommended
+} from './bolus'
 
-import { classifyBgValue } from "./bloodglucose.js";
+import { classifyBgValue } from './bloodglucose.js'
 
 /**
  * Classification functions for tagging constious types of data
@@ -33,75 +33,75 @@ import { classifyBgValue } from "./bloodglucose.js";
  * @returns {Object} classifiers - functions keyed by data type
  */
 export default function generateClassifiers(bgPrefs) {
-  const { bgBounds } = bgPrefs;
+  const { bgBounds } = bgPrefs
 
   const classifers = {
     basal: (datum) => {
-      if (_.includes(["scheduled", "automated"], datum.deliveryType)) {
-        return [];
+      if (_.includes(['scheduled', 'automated'], datum.deliveryType)) {
+        return []
       }
 
-      return [datum.deliveryType];
+      return [datum.deliveryType]
     },
 
     bolus: (datum) => {
-      const tags = [];
-      const delivered = getDelivered(datum);
-      const programmed = getProgrammed(datum);
+      const tags = []
+      const delivered = getDelivered(datum)
+      const programmed = getProgrammed(datum)
 
       if (datum.wizard && !_.isEmpty(datum.wizard)) {
-        const recommended = getRecommended(datum.wizard);
-        tags.push("wizard");
+        const recommended = getRecommended(datum.wizard)
+        tags.push('wizard')
         if (!Number.isNaN(recommended)) {
           if (recommended > Math.max(delivered, programmed)) {
-            tags.push("underride");
+            tags.push('underride')
           } else if (Math.max(delivered, programmed) > recommended) {
-            tags.push("override");
+            tags.push('override')
           }
 
           if (datum.wizard.recommended.correction > 0 &&
               datum.wizard.recommended.carb === 0) {
-            tags.push("correction");
+            tags.push('correction')
           }
         }
       } else {
-        tags.push("manual");
+        tags.push('manual')
       }
 
       if (programmed !== delivered) {
-        tags.push("interrupted");
+        tags.push('interrupted')
       }
 
       if (datum.extended > 0) {
-        tags.push("extended");
+        tags.push('extended')
       }
 
-      return tags;
+      return tags
     },
 
     smbg: (datum) => {
-      const tags = [];
-      const bgCategory = classifyBgValue(bgBounds, datum.value, "fiveWay");
+      const tags = []
+      const bgCategory = classifyBgValue(bgBounds, datum.value, 'fiveWay')
 
-      if (datum.subType && datum.subType === "manual") {
-        tags.push(datum.subType);
+      if (datum.subType && datum.subType === 'manual') {
+        tags.push(datum.subType)
       } else {
-        tags.push("meter");
+        tags.push('meter')
       }
 
       switch (bgCategory) {
-      case "veryLow":
-        tags.push("veryLow");
-        break;
-      case "veryHigh":
-        tags.push("veryHigh");
-        break;
-      default:
-        break;
+        case 'veryLow':
+          tags.push('veryLow')
+          break
+        case 'veryHigh':
+          tags.push('veryHigh')
+          break
+        default:
+          break
       }
-      return tags;
-    },
-  };
+      return tags
+    }
+  }
 
-  return classifers;
+  return classifers
 }

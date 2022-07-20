@@ -15,15 +15,15 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import styles from "./TargetRangeLines.css";
+import styles from './TargetRangeLines.css'
 
 const TargetRangeLines = (props) => {
-  const { bgBounds, smbgOpts, xScale, yScale } = props;
-  const x1 = xScale.range()[0] - smbgOpts.maxR;
-  const x2 = xScale.range()[1] + smbgOpts.maxR;
+  const { bgBounds, smbgOpts, xScale, yScale } = props
+  const x1 = xScale.range()[0] - smbgOpts.maxR
+  const x2 = xScale.range()[1] + smbgOpts.maxR
   return (
     <g id="targetRange">
       <line
@@ -43,24 +43,24 @@ const TargetRangeLines = (props) => {
         y2={yScale(bgBounds.targetLowerBound)}
       />
     </g>
-  );
-};
+  )
+}
 
 TargetRangeLines.propTypes = {
   bgBounds: PropTypes.shape({
     veryHighThreshold: PropTypes.number.isRequired,
     targetUpperBound: PropTypes.number.isRequired,
     targetLowerBound: PropTypes.number.isRequired,
-    veryLowThreshold: PropTypes.number.isRequired,
+    veryLowThreshold: PropTypes.number.isRequired
   }),
   smbgOpts: PropTypes.shape({
     maxR: PropTypes.number.isRequired,
-    r: PropTypes.number.isRequired,
+    r: PropTypes.number.isRequired
   }).isRequired,
   xScale: PropTypes.func.isRequired,
-  yScale: PropTypes.func.isRequired,
-};
+  yScale: PropTypes.func.isRequired
+}
 
-TargetRangeLines.displayName = "TargetRangeLines";
+TargetRangeLines.displayName = 'TargetRangeLines'
 
-export default TargetRangeLines;
+export default TargetRangeLines

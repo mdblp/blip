@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { emptyTeam3, members, patients, teams } from "../../common";
+import { emptyTeam3, members, patients, teams } from '../../common'
 
 export const teamAPI = {
   fetchTeams: jest.fn().mockResolvedValue(teams),
@@ -41,22 +41,22 @@ export const teamAPI = {
   removeMember: jest.fn().mockReturnValue(() => Promise.resolve()),
   removePatient: jest.fn().mockReturnValue(() => Promise.resolve()),
   getTeamFromCode: jest.fn().mockResolvedValue(emptyTeam3),
-  joinTeam: jest.fn().mockReturnValue(() => Promise.resolve()),
-};
+  joinTeam: jest.fn().mockReturnValue(() => Promise.resolve())
+}
 
 export function resetTeamAPIStubs(): void {
-  (teamAPI.fetchTeams as jest.Mock).mockReset();
-  (teamAPI.fetchPatients as jest.Mock).mockReset();
-  (teamAPI.changeMemberRole as jest.Mock).mockReset();
-  (teamAPI.createTeam as jest.Mock).mockReset();
-  (teamAPI.editTeam as jest.Mock).mockReset();
-  (teamAPI.inviteMember as jest.Mock).mockReset();
-  (teamAPI.invitePatient as jest.Mock).mockReset();
-  (teamAPI.deleteTeam as jest.Mock).mockReset();
-  (teamAPI.leaveTeam as jest.Mock).mockReset();
-  (teamAPI.removeMember as jest.Mock).mockReset();
-  (teamAPI.removePatient as jest.Mock).mockReset();
+  (teamAPI.fetchTeams).mockReset();
+  (teamAPI.fetchPatients).mockReset();
+  (teamAPI.changeMemberRole).mockReset();
+  (teamAPI.createTeam).mockReset();
+  (teamAPI.editTeam).mockReset();
+  (teamAPI.inviteMember).mockReset();
+  (teamAPI.invitePatient).mockReset();
+  (teamAPI.deleteTeam).mockReset();
+  (teamAPI.leaveTeam).mockReset();
+  (teamAPI.removeMember).mockReset();
+  (teamAPI.removePatient).mockReset();
 
-  (teamAPI.fetchTeams as jest.Mock).mockResolvedValue(teams);
-  (teamAPI.fetchPatients as jest.Mock).mockResolvedValue(patients);
+  (teamAPI.fetchTeams).mockResolvedValue(teams);
+  (teamAPI.fetchPatients).mockResolvedValue(patients)
 }

@@ -15,31 +15,31 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types'
+import React from 'react'
 
 const withDefaultYPosition = (WrappedComponent) => {
   const WithDefault = (props) => {
-    const { bgBounds: { targetLowerBound, targetUpperBound }, yScale } = props;
+    const { bgBounds: { targetLowerBound, targetUpperBound }, yScale } = props
 
     // default Y position is the center of the target range
     // i.e., 100 mg/dL if target range is 80-120 mg/dL
-    const defaultY = yScale(targetUpperBound - (targetUpperBound - targetLowerBound) / 2);
+    const defaultY = yScale(targetUpperBound - (targetUpperBound - targetLowerBound) / 2)
 
     return (
       <WrappedComponent defaultY={defaultY} {...props} />
-    );
-  };
+    )
+  }
 
   WithDefault.propTypes = {
     bgBounds: PropTypes.shape({
       targetLowerBound: PropTypes.number.isRequired,
-      targetUpperBound: PropTypes.number.isRequired,
+      targetUpperBound: PropTypes.number.isRequired
     }).isRequired,
-    yScale: PropTypes.func.isRequired,
-  };
+    yScale: PropTypes.func.isRequired
+  }
 
-  return WithDefault;
-};
+  return WithDefault
+}
 
-export default withDefaultYPosition;
+export default withDefaultYPosition

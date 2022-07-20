@@ -15,20 +15,20 @@
  * == BSD2 LICENSE ==
  */
 
-import textTable from "text-table";
-import i18next from "i18next";
+import textTable from 'text-table'
+import i18next from 'i18next'
 
-import { formatParameterValue } from "../format";
-import * as datetime from "../datetime";
+import { formatParameterValue } from '../format'
+import * as datetime from '../datetime'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
-function getTimePrefs(timezone = "UTC") {
-  let timezoneName = timezone;
-  if (!timezone || timezone === "UTC") {
-    timezoneName = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+function getTimePrefs(timezone = 'UTC') {
+  let timezoneName = timezone
+  if (!timezone || timezone === 'UTC') {
+    timezoneName = new Intl.DateTimeFormat().resolvedOptions().timeZone
   }
-  return { timezoneAware: true, timezoneName };
+  return { timezoneAware: true, timezoneName }
 }
 
 /**
@@ -37,28 +37,27 @@ function getTimePrefs(timezone = "UTC") {
  * @return {Map} parameters by level
  */
 export function getParametersByLevel(parameters) {
-  const mapParams = new Map();
+  const mapParams = new Map()
 
-  // eslint-disable-next-line lodash/prefer-lodash-method
   if (Array.isArray(parameters)) {
     parameters.forEach((parameter) => {
       if (!mapParams.has(parameter.level)) {
-        mapParams.set(parameter.level, []);
+        mapParams.set(parameter.level, [])
       }
 
-      const value = formatParameterValue(parameter.value, parameter.unit);
+      const value = formatParameterValue(parameter.value, parameter.unit)
       const param = {
         rawData: parameter.name,
         name: t(`params|${parameter.name}`),
         value,
         unit: parameter.unit,
-        level: parameter.level,
-      };
-      mapParams.get(parameter.level).push(param);
-    });
+        level: parameter.level
+      }
+      mapParams.get(parameter.level).push(param)
+    })
   }
 
-  return mapParams;
+  return mapParams
 }
 
 /**
@@ -69,37 +68,36 @@ export function getParametersByLevel(parameters) {
  */
 export function diabeloopText(device, parametersByLevel, displayDeviceDate) {
   const deviceRows = [
-    [t("Manufacturer"), device.manufacturer],
-    [t("Identifier"), device.deviceId],
-    [t("IMEI"), device.imei],
-    [t("Software version"), device.swVersion],
-  ];
+    [t('Manufacturer'), device.manufacturer],
+    [t('Identifier'), device.deviceId],
+    [t('IMEI'), device.imei],
+    [t('Software version'), device.swVersion]
+  ]
 
-  let deviceText = `-= ${t("Device")} =-\n`;
+  let deviceText = `-= ${t('Device')} =-\n`
 
-  deviceText += textTable(deviceRows);
+  deviceText += textTable(deviceRows)
 
-  let parametersText = "";
+  let parametersText = ''
   parametersByLevel.forEach((parameters, level) => {
-    let pLevelText = `-= ${t("Parameters level")} ${level} =-\n`;
+    let pLevelText = `-= ${t('Parameters level')} ${level} =-\n`
 
     const tableRows = [[
-      t("Name"),
-      t("Value"),
-      t("Unit")
-    ]];
+      t('Name'),
+      t('Value'),
+      t('Unit')
+    ]]
 
-    // eslint-disable-next-line lodash/prefer-lodash-method
     parameters.forEach((parameter) => {
-      tableRows.push([parameter.name, parameter.value, parameter.unit]);
-    });
+      tableRows.push([parameter.name, parameter.value, parameter.unit])
+    })
 
-    pLevelText += textTable(tableRows, { align: ["l", "r", "l"] });
+    pLevelText += textTable(tableRows, { align: ['l', 'r', 'l'] })
 
-    parametersText = `${parametersText}\n${pLevelText}\n`;
-  });
+    parametersText = `${parametersText}\n${pLevelText}\n`
+  })
 
-  return `${displayDeviceDate}\n\n${deviceText}\n${parametersText}`;
+  return `${displayDeviceDate}\n\n${deviceText}\n${parametersText}`
 }
 
 /**
@@ -109,46 +107,46 @@ export function diabeloopText(device, parametersByLevel, displayDeviceDate) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getDeviceInfosData(device, timezone, date) {
-  const timePrefs = getTimePrefs(timezone);
+  const timePrefs = getTimePrefs(timezone)
   const heading = {
-    text: t("Device"),
+    text: t('Device'),
     subText: `- ${device.name}`,
-    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
-  };
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t('MMM D, YYYY')) : undefined
+  }
 
   const columns = [{
-    id: "label",
+    id: 'label',
     headerFill: false,
     cache: false,
-    align: "left",
-    width: 150,
+    align: 'left',
+    width: 150
   }, {
-    id: "value",
+    id: 'value',
     headerFill: false,
     cache: false,
-    align: "right",
-    width: 150,
-  }];
+    align: 'right',
+    width: 150
+  }]
 
   const rows = [{
-    label: t("Manufacturer"),
-    value: device.manufacturer,
+    label: t('Manufacturer'),
+    value: device.manufacturer
   }, {
-    label: t("Identifier"),
-    value: device.deviceId,
+    label: t('Identifier'),
+    value: device.deviceId
   }, {
-    label: t("IMEI"),
-    value: device.imei,
+    label: t('IMEI'),
+    value: device.imei
   }, {
-    label: t("Software version"),
-    value: device.swVersion,
-  }];
+    label: t('Software version'),
+    value: device.swVersion
+  }]
 
   return {
     heading,
     columns,
-    rows,
-  };
+    rows
+  }
 }
 
 /**
@@ -160,38 +158,38 @@ export function getDeviceInfosData(device, timezone, date) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getDeviceParametersData(parameters, { level, width }, timezone, date) {
-  const timePrefs = getTimePrefs(timezone);
+  const timePrefs = getTimePrefs(timezone)
   const heading = {
-    text: t("Parameters"),
-    subText: level !== 1 ? `- ${t("Advanced")}` : undefined,
-    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
-  };
+    text: t('Parameters'),
+    subText: level !== 1 ? `- ${t('Advanced')}` : undefined,
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t('MMM D, YYYY')) : undefined
+  }
 
   const columns = [{
-    id: "name",
-    header: t("Name"),
+    id: 'name',
+    header: t('Name'),
     cache: false,
-    align: "left",
-    width: (width * 0.7),
+    align: 'left',
+    width: (width * 0.7)
   }, {
-    id: "value",
-    header: t("Value"),
+    id: 'value',
+    header: t('Value'),
     cache: false,
-    align: "right",
-    width: (width * 0.2),
+    align: 'right',
+    width: (width * 0.2)
   }, {
-    id: "unit",
-    header: t("Unit"),
+    id: 'unit',
+    header: t('Unit'),
     cache: false,
-    align: "left",
-    width: (width * 0.1),
-  }];
+    align: 'left',
+    width: (width * 0.1)
+  }]
 
   return {
     heading,
     columns,
-    rows: parameters,
-  };
+    rows: parameters
+  }
 }
 
 /**
@@ -201,46 +199,46 @@ export function getDeviceParametersData(parameters, { level, width }, timezone, 
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getPumpParametersData(pump, timezone, date) {
-  const timePrefs = getTimePrefs(timezone);
+  const timePrefs = getTimePrefs(timezone)
   const heading = {
-    text: t("Pump"),
+    text: t('Pump'),
     subText: `- ${pump.name}`,
-    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
-  };
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t('MMM D, YYYY')) : undefined
+  }
 
   const columns = [{
-    id: "label",
+    id: 'label',
     headerFill: false,
     cache: false,
-    align: "left",
-    width: 150,
+    align: 'left',
+    width: 150
   }, {
-    id: "value",
+    id: 'value',
     headerFill: false,
     cache: false,
-    align: "right",
-    width: 150,
-  }];
+    align: 'right',
+    width: 150
+  }]
 
   const rows = [{
-    label: t("Manufacturer"),
-    value: pump.manufacturer,
+    label: t('Manufacturer'),
+    value: pump.manufacturer
   }, {
-    label: t("Serial Number"),
-    value: pump.serialNumber,
+    label: t('Serial Number'),
+    value: pump.serialNumber
   }, {
-    label: t("Pump version"),
-    value: pump.swVersion,
+    label: t('Pump version'),
+    value: pump.swVersion
   }, {
-    label: t("Pump cartridge expiration date"),
-    value: datetime.formatLocalizedFromUTC(pump.expirationDate, timePrefs, t("MMM D, YYYY"))
-  }];
+    label: t('Pump cartridge expiration date'),
+    value: datetime.formatLocalizedFromUTC(pump.expirationDate, timePrefs, t('MMM D, YYYY'))
+  }]
 
   return {
     heading,
     columns,
-    rows,
-  };
+    rows
+  }
 }
 
 /**
@@ -250,49 +248,49 @@ export function getPumpParametersData(pump, timezone, date) {
  * @param {string|undefined} date When printing PDF, when the cgm data do not match the date print
  */
 export function getCGMParametersData(cgm, timezone, date) {
-  const timePrefs = getTimePrefs(timezone);
+  const timePrefs = getTimePrefs(timezone)
   const heading = {
-    text: t("CGM"),
-    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t("MMM D, YYYY")) : undefined,
-  };
+    text: t('CGM'),
+    note: date ? datetime.formatLocalizedFromUTC(date, timePrefs, t('MMM D, YYYY')) : undefined
+  }
 
   const columns = [{
-    id: "label",
+    id: 'label',
     headerFill: false,
     cache: false,
-    align: "left",
-    width: 150,
+    align: 'left',
+    width: 150
   }, {
-    id: "value",
+    id: 'value',
     headerFill: false,
     cache: false,
-    align: "right",
-    width: 150,
-  }];
+    align: 'right',
+    width: 150
+  }]
 
   const rows = [{
-    label: t("Manufacturer"),
-    value: cgm.manufacturer,
+    label: t('Manufacturer'),
+    value: cgm.manufacturer
   }, {
-    label: t("Product"),
-    value: cgm.name,
+    label: t('Product'),
+    value: cgm.name
   }, {
-    label: t("Cgm sensor expiration date"),
-    value: datetime.formatLocalizedFromUTC(cgm.expirationDate, timePrefs, t("MMM D, YYYY")),
+    label: t('Cgm sensor expiration date'),
+    value: datetime.formatLocalizedFromUTC(cgm.expirationDate, timePrefs, t('MMM D, YYYY'))
   }, {
-    label: t("Cgm transmitter software version"),
-    value: cgm.swVersionTransmitter,
+    label: t('Cgm transmitter software version'),
+    value: cgm.swVersionTransmitter
   }, {
-    label: t("Cgm transmitter id"),
-    value: cgm.transmitterId,
+    label: t('Cgm transmitter id'),
+    value: cgm.transmitterId
   }, {
-    label: t("Cgm transmitter end of life"),
-    value: datetime.formatLocalizedFromUTC(cgm.endOfLifeTransmitterDate, timePrefs, t("MMM D, YYYY"))
-  }];
+    label: t('Cgm transmitter end of life'),
+    value: datetime.formatLocalizedFromUTC(cgm.endOfLifeTransmitterDate, timePrefs, t('MMM D, YYYY'))
+  }]
 
   return {
     heading,
     columns,
-    rows,
-  };
+    rows
+  }
 }

@@ -26,97 +26,96 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
+import React from 'react'
+import { render, unmountComponentAtNode } from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from "../../../lib/team";
-import { PatientFilterTypes, UserInvitationStatus } from "../../../models/generic";
-import * as notificationHookMock from "../../../lib/notifications/hook";
-import { TeamMemberRole } from "../../../models/team";
-import { UserRoles } from "../../../models/user";
-import { buildTeam, buildTeamMember } from "../../common/utils";
-import * as authHookMock from "../../../lib/auth";
-import TeamUtils from "../../../lib/team/utils";
-import { mapTeamUserToPatient } from "../../../components/patient/utils";
-import { INotification, NotificationType } from "../../../lib/notifications/models";
+import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from '../../../lib/team'
+import { PatientFilterTypes, UserInvitationStatus } from '../../../models/generic'
+import * as notificationHookMock from '../../../lib/notifications/hook'
+import { TeamMemberRole } from '../../../models/team'
+import { UserRoles } from '../../../models/user'
+import { buildTeam, buildTeamMember } from '../../common/utils'
+import * as authHookMock from '../../../lib/auth'
+import TeamUtils from '../../../lib/team/utils'
+import { mapTeamUserToPatient } from '../../../components/patient/utils'
+import { INotification, NotificationType } from '../../../lib/notifications/models'
 
-jest.mock("../../../lib/auth");
-jest.mock("../../../lib/notifications/hook");
-describe("Team hook", () => {
-  let container: HTMLElement | null = null;
-  let teamHook: TeamContext;
-  const memberPatientAccepted1 = buildTeamMember("team1Id", "memberPatientAccepted1", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.accepted, UserRoles.patient);
-  const memberPatientPending1 = buildTeamMember("team1Id", "memberPatientPending1", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient);
-  const memberPatientPending2 = buildTeamMember("team1Id", "memberPatientPending2", undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient);
-  const team1 = buildTeam("team1Id", [memberPatientAccepted1, memberPatientPending1]);
-  const team2 = buildTeam("team2Id", [memberPatientPending1, memberPatientPending2]);
-  const team3 = buildTeam("team3Id", []);
-  const team4 = buildTeam("team4Id", []);
-  const teams: Team[] = [team1, team2, team3, team4];
+jest.mock('../../../lib/auth')
+jest.mock('../../../lib/notifications/hook')
+describe('Team hook', () => {
+  let container: HTMLElement | null = null
+  let teamHook: TeamContext
+  const memberPatientAccepted1 = buildTeamMember('team1Id', 'memberPatientAccepted1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.accepted, UserRoles.patient)
+  const memberPatientPending1 = buildTeamMember('team1Id', 'memberPatientPending1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient)
+  const memberPatientPending2 = buildTeamMember('team1Id', 'memberPatientPending2', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient)
+  const team1 = buildTeam('team1Id', [memberPatientAccepted1, memberPatientPending1])
+  const team2 = buildTeam('team2Id', [memberPatientPending1, memberPatientPending2])
+  const team3 = buildTeam('team3Id', [])
+  const team4 = buildTeam('team4Id', [])
+  const teams: Team[] = [team1, team2, team3, team4]
 
   async function mountComponent(): Promise<void> {
     const DummyComponent = (): JSX.Element => {
-      teamHook = useTeam();
-      return (<div />);
-    };
+      teamHook = useTeam()
+      return (<div />)
+    }
     await act(() => {
       return new Promise(resolve => render(
         <TeamContextProvider>
           <DummyComponent />
-        </TeamContextProvider>, container, resolve));
-    });
+        </TeamContextProvider>, container, resolve))
+    })
   }
 
   beforeAll(() => {
-    jest.spyOn(TeamUtils, "loadTeams").mockResolvedValue({ teams, flaggedNotInResult: [] });
+    jest.spyOn(TeamUtils, 'loadTeams').mockResolvedValue({ teams, flaggedNotInResult: [] });
     (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: {} };
+      return { user: {} }
     });
     (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children;
+      return children
     });
     (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return {
         initialized: true,
-        sentInvitations: [],
-      };
-    });
-  });
+        sentInvitations: []
+      }
+    })
+  })
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
-  describe("filterPatients", () => {
-    it("should return correct patients when filter is pending", async () => {
-      await mountComponent();
-      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.pending, "", []);
-      expect(patientsReceived).toEqual([mapTeamUserToPatient(memberPatientPending1.user), mapTeamUserToPatient(memberPatientPending2.user)]);
-    });
+  describe('filterPatients', () => {
+    it('should return correct patients when filter is pending', async () => {
+      await mountComponent()
+      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.pending, '', [])
+      expect(patientsReceived).toEqual([mapTeamUserToPatient(memberPatientPending1.user), mapTeamUserToPatient(memberPatientPending2.user)])
+    })
 
-    it("should return correct patients when provided a flag list", async () => {
-      await mountComponent();
-      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.flagged, "", [memberPatientAccepted1.user.userid]);
-      expect(patientsReceived).toEqual([mapTeamUserToPatient(memberPatientAccepted1.user)]);
-    });
-  });
+    it('should return correct patients when provided a flag list', async () => {
+      await mountComponent()
+      const patientsReceived = teamHook.filterPatients(PatientFilterTypes.flagged, '', [memberPatientAccepted1.user.userid])
+      expect(patientsReceived).toEqual([mapTeamUserToPatient(memberPatientAccepted1.user)])
+    })
+  })
 
-  describe("removeMember", () => {
-
-    function buildTeamMember(teamId = "fakeTeamId", userId = "fakeUserId", invitation: INotification = null): TeamMember {
+  describe('removeMember', () => {
+    function buildTeamMember(teamId = 'fakeTeamId', userId = 'fakeUserId', invitation: INotification = null): TeamMember {
       return {
         team: { id: teamId } as Team,
         role: TeamMemberRole.admin,
@@ -124,46 +123,46 @@ describe("Team hook", () => {
         user: {
           role: UserRoles.hcp,
           userid: userId,
-          username: "fakeUsername",
-          members: [],
+          username: 'fakeUsername',
+          members: []
         },
-        invitation,
-      };
+        invitation
+      }
     }
 
-    function buildInvite(teamId = "fakeTeamId", userId = "fakeUserId"): INotification {
+    function buildInvite(teamId = 'fakeTeamId', userId = 'fakeUserId'): INotification {
       return {
-        id: "fakeInviteId",
+        id: 'fakeInviteId',
         type: NotificationType.careTeamProInvitation,
-        metricsType: "join_team",
-        email: "fake@email.com",
-        creatorId: "fakeCreatorId",
-        date: "fakeDate",
+        metricsType: 'join_team',
+        email: 'fake@email.com',
+        creatorId: 'fakeCreatorId',
+        date: 'fakeDate',
         target: {
           id: teamId,
-          name: "fakeTeamName",
+          name: 'fakeTeamName'
         },
         role: TeamMemberRole.admin,
         creator: {
-          userid: userId,
-        },
-      };
+          userid: userId
+        }
+      }
     }
 
-    it("should throw an error when there is no invitation", () => {
-      mountComponent();
-      const teamMember = buildTeamMember();
+    it('should throw an error when there is no invitation', () => {
+      mountComponent()
+      const teamMember = buildTeamMember()
       expect(async () => {
-        await teamHook.removeMember(teamMember);
-      }).rejects.toThrow();
-    });
+        await teamHook.removeMember(teamMember)
+      }).rejects.toThrow()
+    })
 
-    it("should throw an error when there is no invitation for the member team", () => {
-      mountComponent();
-      const teamMember = buildTeamMember("fakeTeamId", "fakeUserId", buildInvite("wrongTeam"));
+    it('should throw an error when there is no invitation for the member team', () => {
+      mountComponent()
+      const teamMember = buildTeamMember('fakeTeamId', 'fakeUserId', buildInvite('wrongTeam'))
       expect(async () => {
-        await teamHook.removeMember(teamMember);
-      }).rejects.toThrow();
-    });
-  });
-});
+        await teamHook.removeMember(teamMember)
+      }).rejects.toThrow()
+    })
+  })
+})

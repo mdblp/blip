@@ -26,17 +26,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import InputBase from "@material-ui/core/InputBase";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import InputBase from '@material-ui/core/InputBase'
 
-import SearchIcon from "@material-ui/icons/Search";
+import SearchIcon from '@material-ui/icons/Search'
 
 export interface PatientFiltersProps {
-  filter: string;
-  onFilter: (text: string) => void;
+  filter: string
+  onFilter: (text: string) => void
 }
 
 const filtersStyles = makeStyles((theme: Theme) => {
@@ -44,96 +44,96 @@ const filtersStyles = makeStyles((theme: Theme) => {
     formControl: {
       marginRight: theme.spacing(1),
       minWidth: 120,
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         marginRight: theme.spacing(1),
         marginLeft: 0,
-        width: "50%",
+        width: '50%'
       },
-      [theme.breakpoints.down("xs")]: {
-        width: "100%",
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
         marginRight: 0,
         marginBottom: theme.spacing(2),
-        height: "3em",
-      },
+        height: '3em'
+      }
     },
     inputRoot: {
       color: theme.palette.grey[800],
-      width: "100%",
+      width: '100%'
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
       // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`, // eslint-disable-line no-magic-numbers
-      transition: theme.transitions.create("width"),
-      width: "100%",
+      transition: theme.transitions.create('width'),
+      width: '100%'
     },
     search: {
-      "display": "flex",
-      "position": "relative",
-      "borderRadius": theme.shape.borderRadius,
-      "backgroundColor": theme.palette.grey[100],
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.dark,
+      display: 'flex',
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: theme.palette.grey[100],
+      '&:hover': {
+        backgroundColor: theme.palette.secondary.dark
       },
-      "transition": theme.transitions.create("background-color"),
-      "marginRight": theme.spacing(2),
-      "marginLeft": "auto",
-      [theme.breakpoints.up("sm")]: {
-        width: "100%",
+      transition: theme.transitions.create('background-color'),
+      marginRight: theme.spacing(2),
+      marginLeft: 'auto',
+      [theme.breakpoints.up('sm')]: {
+        width: '100%'
       },
-      [theme.breakpoints.down("sm")]: {
-        "width": "50%",
-        "marginRight": 0,
-        "marginLeft": theme.spacing(1),
-        "&:first-child": {
-          width: "100%",
-        },
+      [theme.breakpoints.down('sm')]: {
+        width: '50%',
+        marginRight: 0,
+        marginLeft: theme.spacing(1),
+        '&:first-child': {
+          width: '100%'
+        }
       },
-      [theme.breakpoints.down("xs")]: {
-        width: "100%",
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
         marginLeft: 0,
-        height: "3em",
-      },
+        height: '3em'
+      }
     },
     searchIcon: {
       padding: theme.spacing(0, 2),
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: theme.palette.grey[800],
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: theme.palette.grey[800]
     },
     selectFilter: {
-      flex: "1",
+      flex: '1',
       borderRadius: theme.shape.borderRadius,
       backgroundColor: theme.palette.common.white,
-      [theme.breakpoints.up("sm")]: {
-        width: "15em",
+      [theme.breakpoints.up('sm')]: {
+        width: '15em'
       },
-      [theme.breakpoints.down("sm")]: {
-        width: "initial",
-      },
+      [theme.breakpoints.down('sm')]: {
+        width: 'initial'
+      }
     },
     selectFilterInnerDiv: {
-      "display": "flex",
-      "alignItems": "center",
-      "padding": "0px 0px 0px .5em",
-      "height": "100%",
-      "transition": theme.transitions.create("background-color"),
-      "&:hover": {
-        backgroundColor: theme.palette.secondary.dark,
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0px 0px 0px .5em',
+      height: '100%',
+      transition: theme.transitions.create('background-color'),
+      '&:hover': {
+        backgroundColor: theme.palette.secondary.dark
       },
-      "&:focus": {
-        "backgroundColor": theme.palette.common.white,
-        "&:hover": {
-          backgroundColor: theme.palette.secondary.dark,
-        },
-      },
-    },
-  };
-}, { name: "ylp-secondary-bar-patient-filters" });
+      '&:focus': {
+        backgroundColor: theme.palette.common.white,
+        '&:hover': {
+          backgroundColor: theme.palette.secondary.dark
+        }
+      }
+    }
+  }
+}, { name: 'ylp-secondary-bar-patient-filters' })
 
 /**
  * Patient list filters (HCP / Caregivers) component for secondary header bar
@@ -141,13 +141,13 @@ const filtersStyles = makeStyles((theme: Theme) => {
  * @returns The center element of the secondary header bar
  */
 function PatientFilters(props: PatientFiltersProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = filtersStyles();
-  const { filter, onFilter } = props;
+  const { t } = useTranslation('yourloops')
+  const classes = filtersStyles()
+  const { filter, onFilter } = props
 
   const handleFilterPatients = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    onFilter(e.target.value);
-  };
+    onFilter(e.target.value)
+  }
 
   return (
     <React.Fragment>
@@ -157,15 +157,15 @@ function PatientFilters(props: PatientFiltersProps): JSX.Element {
         </div>
         <InputBase
           id="input-patient-list-search"
-          placeholder={t("placeholder-search")}
+          placeholder={t('placeholder-search')}
           classes={{ root: classes.inputRoot, input: classes.inputInput }}
-          inputProps={{ "aria-label": t("aria-search") }}
+          inputProps={{ 'aria-label': t('aria-search') }}
           value={filter}
           onChange={handleFilterPatients}
         />
       </div>
     </React.Fragment>
-  );
+  )
 }
 
-export default PatientFilters;
+export default PatientFilters

@@ -25,48 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import TuneIcon from "@material-ui/icons/Tune";
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import TuneIcon from '@material-ui/icons/Tune'
 
-import { commonComponentStyles } from "../common";
-import { Team, useTeam } from "../../lib/team";
-import { Monitoring } from "../../models/monitoring";
-import { useAlert } from "../utils/snackbar";
-import AlarmsContentConfiguration from "../alarm/alarms-content-configuration";
+import { commonComponentStyles } from '../common'
+import { Team, useTeam } from '../../lib/team'
+import { Monitoring } from '../../models/monitoring'
+import { useAlert } from '../utils/snackbar'
+import AlarmsContentConfiguration from '../alarm/alarms-content-configuration'
 
 export interface TeamAlarmsConfigurationProps {
-  team: Team,
+  team: Team
 }
 
 function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Element {
-  const { team } = props;
-  const commonTeamClasses = commonComponentStyles();
-  const { t } = useTranslation("yourloops");
-  const teamHook = useTeam();
-  const alert = useAlert();
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false);
+  const { team } = props
+  const commonTeamClasses = commonComponentStyles()
+  const { t } = useTranslation('yourloops')
+  const teamHook = useTeam()
+  const alert = useAlert()
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
   if (!team.monitoring?.enabled) {
-    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`);
+    throw Error(`Cannot show monitoring info of team ${team.id} as its monitoring is not enabled`)
   }
 
-  const save = async (monitoring: Monitoring) => {
-    team.monitoring = monitoring;
-    setSaveInProgress(true);
+  const save = async (monitoring: Monitoring): Promise<void> => {
+    team.monitoring = monitoring
+    setSaveInProgress(true)
     try {
-      await teamHook.updateTeamAlerts(team);
-      alert.success(t("team-update-success"));
+      await teamHook.updateTeamAlerts(team)
+      alert.success(t('team-update-success'))
     } catch (error) {
-      console.error(error);
-      alert.error(t("team-update-error"));
+      console.error(error)
+      alert.error(t('team-update-error'))
     } finally {
-      setSaveInProgress(false);
+      setSaveInProgress(false)
     }
-  };
+  }
 
   return (
     <div className={commonTeamClasses.root}>
@@ -74,7 +74,7 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
         <div>
           <TuneIcon />
           <Typography className={commonTeamClasses.title}>
-            {t("events-configuration")}
+            {t('events-configuration')}
           </Typography>
         </div>
       </div>
@@ -83,7 +83,7 @@ function TeamAlarmsConfiguration(props: TeamAlarmsConfigurationProps): JSX.Eleme
         <AlarmsContentConfiguration monitoring={team.monitoring} onSave={save} saveInProgress={saveInProgress}/>
       </Box>
     </div>
-  );
+  )
 }
 
-export default TeamAlarmsConfiguration;
+export default TeamAlarmsConfiguration

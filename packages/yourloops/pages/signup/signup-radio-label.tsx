@@ -25,18 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import Typography from "@material-ui/core/Typography";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import Typography from '@material-ui/core/Typography'
 
 interface RadioLabelProps {
-  id: string;
-  header: string;
-  body: string;
+  id: string
+  header: string
+  body: string
 }
 
 export default function RadioLabel(props: RadioLabelProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation('yourloops')
 
   return (
     <React.Fragment>
@@ -47,5 +47,5 @@ export default function RadioLabel(props: RadioLabelProps): JSX.Element {
         {t(props.body)}
       </Typography>
     </React.Fragment>
-  );
+  )
 }

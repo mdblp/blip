@@ -1,14 +1,14 @@
-import crossfilter from "crossfilter2";
-import moment from "moment-timezone";
-import _ from "lodash";
-import bows from "bows";
+import crossfilter from 'crossfilter2'
+import moment from 'moment-timezone'
+import _ from 'lodash'
+import bows from 'bows'
 
-import { convertBG, MGDL_UNITS, MMOLL_UNITS, MS_IN_DAY } from "tideline";
-import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from "./basal";
-import { getTotalBolus } from "./bolus";
-import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from "./bloodglucose";
-import { addDuration } from "./datetime";
-import { getLatestPumpUpload } from "./device";
+import { convertBG, MGDL_UNITS, MMOLL_UNITS, MS_IN_DAY } from 'tideline'
+import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from './basal'
+import { getTotalBolus } from './bolus'
+import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
+import { addDuration } from './datetime'
+import { getLatestPumpUpload } from './device'
 
 class DataUtil {
   /**
@@ -16,55 +16,55 @@ class DataUtil {
    * @param {{endpoints?: [string, string]; chartPrefs?: {}; bgPrefs?: {}; timePrefs?: {}}} opts
    */
   constructor(data, opts = {}) {
-    this.log = bows("DataUtil");
+    this.log = bows('DataUtil')
 
-    this.data = crossfilter(data);
-    this._endpoints = opts.endpoints || [];
-    this._chartPrefs = opts.chartPrefs || {};
-    this.bgBounds = reshapeBgClassesToBgBounds(opts.bgPrefs);
-    this.bgUnits = _.get(opts, "bgPrefs.bgUnits");
-    this.days = this.getDayCountFromEndpoints();
-    this.dimension = {};
-    this.filter = {};
+    this.data = crossfilter(data)
+    this._endpoints = opts.endpoints || []
+    this._chartPrefs = opts.chartPrefs || {}
+    this.bgBounds = reshapeBgClassesToBgBounds(opts.bgPrefs)
+    this.bgUnits = _.get(opts, 'bgPrefs.bgUnits')
+    this.days = this.getDayCountFromEndpoints()
+    this.dimension = {}
+    this.filter = {}
 
-    this.buildDimensions();
-    this.buildFilters();
-    this.sort = this.buildSorts();
+    this.buildDimensions()
+    this.buildFilters()
+    this.sort = this.buildSorts()
 
-    this.bgSources = this.getBgSources();
-    this.defaultBgSource = this.getDefaultBgSource();
-    this.latestPump = this.getLatestPump();
+    this.bgSources = this.getBgSources()
+    this.defaultBgSource = this.getDefaultBgSource()
+    this.latestPump = this.getLatestPump()
   }
 
   get bgSource() {
-    return _.get(this._chartPrefs, "bgSource", this.defaultBgSource);
+    return _.get(this._chartPrefs, 'bgSource', this.defaultBgSource)
   }
 
   set chartPrefs(chartPrefs = {}) {
-    this._chartPrefs = chartPrefs;
+    this._chartPrefs = chartPrefs
   }
 
   set endpoints(endpoints = []) {
-    this._endpoints = endpoints;
-    this.days = this.getDayCountFromEndpoints();
+    this._endpoints = endpoints
+    this.days = this.getDayCountFromEndpoints()
   }
 
   set bgPrefs(bgPrefs = {}) {
-    this.bgUnits = bgPrefs.bgUnits;
-    this.bgBounds = reshapeBgClassesToBgBounds(bgPrefs);
+    this.bgUnits = bgPrefs.bgUnits
+    this.bgBounds = reshapeBgClassesToBgBounds(bgPrefs)
 
-    this.log("bgPrefs", { bgBounds: this.bgBounds, bgUnits: this.bgUnits });
+    this.log('bgPrefs', { bgBounds: this.bgBounds, bgUnits: this.bgUnits })
   }
 
   addData(data) {
-    this.data.add(data);
-    this.bgSources = this.getBgSources();
-    this.defaultBgSource = this.getDefaultBgSource();
+    this.data.add(data)
+    this.bgSources = this.getBgSources()
+    this.defaultBgSource = this.getDefaultBgSource()
   }
 
   removeData() {
-    this.clearFilters();
-    this.data.remove();
+    this.clearFilters()
+    this.data.remove()
   }
 
   addBasalOverlappingStart(basalData) {
@@ -72,119 +72,119 @@ class DataUtil {
       // Fetch last basal from previous day
       this.filter.byEndpoints([
         addDuration(this._endpoints[0], -MS_IN_DAY),
-        this._endpoints[0],
-      ]);
+        this._endpoints[0]
+      ])
 
       const previousBasalDatum = this.sort
-        .byDate(this.filter.byType("basal").top(Infinity))
-        .reverse()[0];
+        .byDate(this.filter.byType('basal').top(Infinity))
+        .reverse()[0]
 
       // Add to top of basal data array if it overlaps the start endpoint
       const datumOverlapsStart = previousBasalDatum
         && previousBasalDatum.normalTime < this._endpoints[0]
-        && previousBasalDatum.normalEnd > this._endpoints[0];
+        && previousBasalDatum.normalEnd > this._endpoints[0]
 
       if (datumOverlapsStart) {
-        basalData.unshift(previousBasalDatum);
+        basalData.unshift(previousBasalDatum)
       }
     }
-    return basalData;
+    return basalData
   }
 
   applyDateFilters() {
-    this.filter.byEndpoints(this._endpoints);
+    this.filter.byEndpoints(this._endpoints)
 
-    this.dimension.byDayOfWeek.filterAll();
+    this.dimension.byDayOfWeek.filterAll()
 
-    const daysInRange = this.getDayCountFromEndpoints();
+    const daysInRange = this.getDayCountFromEndpoints()
 
     if (this._chartPrefs.activeDays) {
       const activeDays = _.reduce(this._chartPrefs.activeDays, (result, active, day) => {
         if (active) {
-          result.push(this.getDayIndex(day));
+          result.push(this.getDayIndex(day))
         }
-        return result;
-      }, []);
+        return result
+      }, [])
 
-      this.filter.byActiveDays(activeDays);
+      this.filter.byActiveDays(activeDays)
 
       // here is a more realistic version of calculating days, fixing a bug in stats
-      this.days = 0;
-      let start = moment.utc(this._endpoints[0]);
+      this.days = 0
+      let start = moment.utc(this._endpoints[0])
       for(let i = 1; i <= daysInRange; i++) {
         if (activeDays.includes(start.day())) {
-          this.days += 1;
+          this.days += 1
         }
-        start.add(1, "d");
+        start.add(1, 'd')
       }
     }
   }
 
   buildDimensions = () => {
-    this.dimension.byDate = this.data.dimension(d => d.normalTime);
+    this.dimension.byDate = this.data.dimension(d => d.normalTime)
 
     this.dimension.byDayOfWeek = this.data.dimension(
-      d => moment.tz(d.normalTime, d.timezone ?? "UTC").day()
-    );
+      d => moment.tz(d.normalTime, d.timezone ?? 'UTC').day()
+    )
 
-    this.dimension.byType = this.data.dimension(d => d.type);
-  };
+    this.dimension.byType = this.data.dimension(d => d.type)
+  }
 
   buildFilters = () => {
     this.filter.byActiveDays = activeDays => this.dimension.byDayOfWeek
-      .filterFunction(d => _.includes(activeDays, d));
+      .filterFunction(d => _.includes(activeDays, d))
 
-    this.filter.byEndpoints = endpoints => this.dimension.byDate.filterRange(endpoints);
-    this.filter.byType = type => this.dimension.byType.filterExact(type);
-  };
+    this.filter.byEndpoints = endpoints => this.dimension.byDate.filterRange(endpoints)
+    this.filter.byType = type => this.dimension.byType.filterExact(type)
+  }
 
   buildSorts() {
     return {
       byDate: (/** @type {{epoch: number}[]} */ array) => {
         if (Array.isArray(array)) {
-          array.sort((a, b) => a.epoch - b.epoch);
+          array.sort((a, b) => a.epoch - b.epoch)
         }
-        return array;
-      },
-    };
+        return array
+      }
+    }
   }
 
   clearFilters = () => {
-    this.dimension.byDate.filterAll();
-    this.dimension.byDayOfWeek.filterAll();
-    this.dimension.byType.filterAll();
-  };
+    this.dimension.byDate.filterAll()
+    this.dimension.byDayOfWeek.filterAll()
+    this.dimension.byType.filterAll()
+  }
 
   getAverageGlucoseData = (returnBgData = false) => {
-    this.applyDateFilters();
+    this.applyDateFilters()
 
-    const bgData = this.filter.byType(this.bgSource).top(Infinity);
+    const bgData = this.filter.byType(this.bgSource).top(Infinity)
 
     const data = {
-      averageGlucose: _.meanBy(bgData, "value"),
-      total: bgData.length,
-    };
-
-    if (returnBgData) {
-      data.bgData = bgData;
+      averageGlucose: _.meanBy(bgData, 'value'),
+      total: bgData.length
     }
 
-    return data;
-  };
+    if (returnBgData) {
+      data.bgData = bgData
+    }
+
+    return data
+  }
 
   /**
    * Returns the average glucose data
    * with the average glucose data by date
    */
   getGlucoseDataByDate = () => {
-    const data = this.getAverageGlucoseData(true);
+    const data = this.getAverageGlucoseData(true)
 
-    const bgDataByDate = _.groupBy(data.bgData, "localDate");
+    const bgDataByDate = _.groupBy(data.bgData, 'localDate')
 
-    data.bgDataByDate = bgDataByDate;
+    data.bgDataByDate = bgDataByDate
 
-    return data;
-  };
+    return data
+  }
 
   /**
    * Return the number of days which have at least one bolus or one basal data.
@@ -192,77 +192,77 @@ class DataUtil {
    * @param {Array} basal Array of basal data
    */
   getNumDaysWithInsulin(bolus, basal) {
-    const uDays = []; // Array of unique days (in string...)
+    const uDays = [] // Array of unique days (in string...)
 
     if (!(_.isArray(bolus) && _.isArray(basal))) {
-      this.log.warn("bolus or basal is not an array", bolus, basal);
-      return this.days;
+      this.log.warn('bolus or basal is not an array', bolus, basal)
+      return this.days
     }
 
-    const insulin = _.concat(bolus, basal);
+    const insulin = _.concat(bolus, basal)
 
     _.forEach(insulin, (value) => {
       if (_.isObject(value) && _.isString(value.normalTime) && value.normalTime.length > 10) {
-        const day = value.normalTime.substring(0, 10);
+        const day = value.normalTime.substring(0, 10)
         if (uDays.indexOf(day) < 0) {
-          uDays.push(day);
+          uDays.push(day)
         }
       }
-    });
+    })
 
-    return Math.min(uDays.length, this.days);
+    return Math.min(uDays.length, this.days)
   }
 
   getBasalBolusData() {
-    this.applyDateFilters();
+    this.applyDateFilters()
 
-    const bolusData = this.filter.byType("bolus").top(Infinity);
-    let basalData = this.sort.byDate(this.filter.byType("basal").top(Infinity).reverse());
-    basalData = this.addBasalOverlappingStart(basalData);
+    const bolusData = this.filter.byType('bolus').top(Infinity)
+    let basalData = this.sort.byDate(this.filter.byType('basal').top(Infinity).reverse())
+    basalData = this.addBasalOverlappingStart(basalData)
 
     const basalBolusData = {
       basal: basalData.length
         ? Number.parseFloat(getTotalBasalFromEndpoints(basalData, this._endpoints))
         : Number.NaN,
-      bolus: bolusData.length ? getTotalBolus(bolusData) : Number.NaN,
-    };
-
-    if (this.days > 1) {
-      const nDays = this.getNumDaysWithInsulin(bolusData, basalData);
-      basalBolusData.basal = basalBolusData.basal / nDays;
-      basalBolusData.bolus = basalBolusData.bolus / nDays;
+      bolus: bolusData.length ? getTotalBolus(bolusData) : Number.NaN
     }
 
-    return basalBolusData;
+    if (this.days > 1) {
+      const nDays = this.getNumDaysWithInsulin(bolusData, basalData)
+      basalBolusData.basal = basalBolusData.basal / nDays
+      basalBolusData.bolus = basalBolusData.bolus / nDays
+    }
+
+    return basalBolusData
   }
 
   getBgSources = () => {
-    this.clearFilters();
+    this.clearFilters()
     return {
-      cbg: this.filter.byType("cbg").top(Infinity).length > 0,
-      smbg: this.filter.byType("smbg").top(Infinity).length > 0,
-    };
-  };
+      cbg: this.filter.byType('cbg').top(Infinity).length > 0,
+      smbg: this.filter.byType('smbg').top(Infinity).length > 0
+    }
+  }
 
   getCarbsData = () => {
-    this.applyDateFilters();
+    this.applyDateFilters()
 
-    const wizardData = this.filter.byType("wizard").top(Infinity);
-    const foodData = this.filter.byType("food").top(Infinity);
+    const wizardData = this.filter.byType('wizard').top(Infinity)
+    const foodData = this.filter.byType('food').top(Infinity)
 
     const wizardCarbs = _.reduce(
       wizardData,
-      (result, datum) => result + _.get(datum, "carbInput", 0),
+      (result, datum) => result + _.get(datum, 'carbInput', 0),
       0
-    );
+    )
 
     const foodCarbs = _.reduce(
       foodData,
-      (result, datum) => result + _.get(datum, "nutrition.carbohydrate.net", 0),
+      (result, datum) => result + _.get(datum, 'nutrition.carbohydrate.net', 0),
       0
-    );
+    )
 
-    const totalCarbs = wizardCarbs + foodCarbs;
+    const totalCarbs = wizardCarbs + foodCarbs
 
     return {
       nDays: this.days,
@@ -272,67 +272,67 @@ class DataUtil {
       totalCarbsPerDay: totalCarbs / this.days,
       foodCarbsPerDay: foodCarbs / this.days,
       wizardCarbsPerDay: wizardCarbs / this.days,
-      total: wizardData.length + foodData.length,
-    };
-  };
+      total: wizardData.length + foodData.length
+    }
+  }
 
   getCoefficientOfVariationData = () => {
     const {
       insufficientData,
       coefficientOfVariationByDate,
-      total,
-    } = this.getStandardDevData(true);
+      total
+    } = this.getStandardDevData(true)
 
     if (insufficientData || Object.keys(coefficientOfVariationByDate).length === 0) {
       return {
         insufficientData: true,
         total,
-        coefficientOfVariation: Number.NaN,
-      };
+        coefficientOfVariation: Number.NaN
+      }
     }
     return {
       coefficientOfVariation : _.meanBy(_.map(coefficientOfVariationByDate)),
-      total,
-    };
-  };
+      total
+    }
+  }
 
   getDailyAverageSums = data => {
-    const clone = _.clone(data);
+    const clone = _.clone(data)
 
     _.forEach(clone, (value, key) => {
-      if (key !== "total") {
-        clone[key] = value / this.days;
+      if (key !== 'total') {
+        clone[key] = value / this.days
       }
-    });
+    })
 
-    return clone;
-  };
+    return clone
+  }
 
   getDailyAverageDurations = data => {
-    const clone = _.clone(data);
-    const total = data.total || _.sum(_.values(data));
+    const clone = _.clone(data)
+    const total = data.total || _.sum(_.values(data))
 
     _.forEach(clone, (value, key) => {
-      if (key !== "total") {
-        clone[key] = (value / total) * MS_IN_DAY;
+      if (key !== 'total') {
+        clone[key] = (value / total) * MS_IN_DAY
       }
-    });
+    })
 
-    return clone;
-  };
+    return clone
+  }
 
   getDefaultBgSource = () => {
-    let source;
+    let source
     if (this.bgSources.cbg) {
-      source = "cbg";
+      source = 'cbg'
     } else if (this.bgSources.smbg) {
-      source = "smbg";
+      source = 'smbg'
     }
-    return source;
-  };
+    return source
+  }
 
   getDayCountFromEndpoints = () => moment.utc(this._endpoints[1])
-    .diff(moment.utc(this._endpoints[0])) / MS_IN_DAY;
+    .diff(moment.utc(this._endpoints[0])) / MS_IN_DAY
 
   getDayIndex = day => {
     const dayMap = {
@@ -342,67 +342,67 @@ class DataUtil {
       wednesday: 3,
       thursday: 4,
       friday: 5,
-      saturday: 6,
-    };
+      saturday: 6
+    }
 
-    return dayMap[day];
-  };
+    return dayMap[day]
+  }
 
   getGlucoseManagementIndicatorData = () => {
-    const { averageGlucose, bgData, total } = this.getAverageGlucoseData(true);
+    const { averageGlucose, bgData, total } = this.getAverageGlucoseData(true)
 
     const getTotalCbgDuration = () => _.reduce(
       bgData,
       (result, datum) => {
-        result += cgmSampleFrequency(datum);
-        return result;
+        result += cgmSampleFrequency(datum)
+        return result
       },
       0
-    );
+    )
 
-    const insufficientData = this.bgSource === "smbg"
+    const insufficientData = this.bgSource === 'smbg'
       || this.getDayCountFromEndpoints() < 14
-      || getTotalCbgDuration() < 14 * MS_IN_DAY * 0.7;
+      || getTotalCbgDuration() < 14 * MS_IN_DAY * 0.7
 
     if (insufficientData) {
       return {
         glucoseManagementIndicator: Number.NaN,
-        insufficientData: true,
-      };
+        insufficientData: true
+      }
     }
 
     const meanInMGDL = this.bgUnits === MGDL_UNITS
       ? averageGlucose
-      : convertBG(averageGlucose, MMOLL_UNITS);
+      : convertBG(averageGlucose, MMOLL_UNITS)
 
-    const glucoseManagementIndicator = (3.31 + 0.02392 * meanInMGDL);
+    const glucoseManagementIndicator = (3.31 + 0.02392 * meanInMGDL)
 
     return {
       glucoseManagementIndicator,
-      total,
-    };
-  };
+      total
+    }
+  }
 
   getLatestPump = () => {
-    const uploadData = this.sort.byDate(this.filter.byType("upload").top(Infinity));
-    const latestPumpUpload = getLatestPumpUpload(uploadData);
-    const latestUploadSource = _.get(latestPumpUpload, "source", "").toLowerCase();
+    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
+    const latestPumpUpload = getLatestPumpUpload(uploadData)
+    const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
     return {
-      deviceModel: _.get(latestPumpUpload, "deviceModel", ""),
-      manufacturer: latestUploadSource === "carelink" ? "medtronic" : latestUploadSource,
-    };
-  };
+      deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
+      manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+    }
+  }
 
   getReadingsInRangeData = () => {
-    this.applyDateFilters();
+    this.applyDateFilters()
 
     let smbgData = _.reduce(
-      this.filter.byType("smbg").top(Infinity),
+      this.filter.byType('smbg').top(Infinity),
       (result, datum) => {
-        const classification = classifyBgValue(this.bgBounds, datum.value, "fiveWay");
-        result[classification]++;
-        result.total++;
-        return result;
+        const classification = classifyBgValue(this.bgBounds, datum.value, 'fiveWay')
+        result[classification]++
+        result.total++
+        return result
       },
       {
         veryLow: 0,
@@ -410,63 +410,63 @@ class DataUtil {
         target: 0,
         high: 0,
         veryHigh: 0,
-        total: 0,
+        total: 0
       }
-    );
+    )
 
     if (this.days > 1) {
-      smbgData = this.getDailyAverageSums(smbgData);
+      smbgData = this.getDailyAverageSums(smbgData)
     }
 
-    return smbgData;
-  };
+    return smbgData
+  }
 
   getSensorUsage = () => {
-    this.applyDateFilters();
-    const cbgData = this.filter.byType("cbg").top(Infinity);
+    this.applyDateFilters()
+    const cbgData = this.filter.byType('cbg').top(Infinity)
 
     const duration = _.reduce(
       cbgData,
       (result, datum) => {
-        result += cgmSampleFrequency(datum);
-        return result;
+        result += cgmSampleFrequency(datum)
+        return result
       },
       0
-    );
+    )
 
-    const total = Math.round(this.days * MS_IN_DAY);
+    const total = Math.round(this.days * MS_IN_DAY)
 
     return {
       sensorUsage: duration,
-      total,
-    };
-  };
+      total
+    }
+  }
 
   getStandardDevData = (cvByDate = false) => {
-    const { bgData, averageGlucose, bgDataByDate, total } = this.getGlucoseDataByDate();
+    const { bgData, averageGlucose, bgDataByDate, total } = this.getGlucoseDataByDate()
 
     if (total < 3) {
       return {
         averageGlucose,
         insufficientData: true,
         total,
-        standardDeviation: Number.NaN,
-      };
+        standardDeviation: Number.NaN
+      }
     }
-    const squaredDiffs = _.map(bgData, d => (d.value - averageGlucose) ** 2);
-    const standardDeviation = Math.sqrt(_.sum(squaredDiffs) / (bgData.length - 1));
+    const squaredDiffs = _.map(bgData, d => (d.value - averageGlucose) ** 2)
+    const standardDeviation = Math.sqrt(_.sum(squaredDiffs) / (bgData.length - 1))
 
-    const coefficientOfVariationByDate = {};
+    const coefficientOfVariationByDate = {}
     if (cvByDate) {
       _.forEach(bgDataByDate, (value, key) => {
         // ignore days having less than 3 glycemia values
         if (value.length >= 3) {
-          const avgGlucose = _.meanBy(value, "value");
-          const squaredDiffs = _.map(value, d => (d.value - avgGlucose) ** 2);
-          const standardDeviation = Math.sqrt(_.sum(squaredDiffs) / (value.length - 1));
-          coefficientOfVariationByDate[key] = standardDeviation / avgGlucose * 100;
+          const avgGlucose = _.meanBy(value, 'value')
+          const squaredDiffs = _.map(value, d => (d.value - avgGlucose) ** 2)
+          const standardDeviation = Math.sqrt(_.sum(squaredDiffs) / (value.length - 1))
+          coefficientOfVariationByDate[key] = standardDeviation / avgGlucose * 100
         }
-      });
+      })
     }
 
     return {
@@ -474,46 +474,46 @@ class DataUtil {
       insufficientData: false,
       total,
       standardDeviation,
-      coefficientOfVariationByDate,
-    };
-  };
+      coefficientOfVariationByDate
+    }
+  }
 
   getTimeInAutoData = () => {
-    this.applyDateFilters();
+    this.applyDateFilters()
 
-    let basalData = this.sort.byDate(this.filter.byType("basal").top(Infinity));
-    basalData = this.addBasalOverlappingStart(basalData);
+    let basalData = this.sort.byDate(this.filter.byType('basal').top(Infinity))
+    basalData = this.addBasalOverlappingStart(basalData)
 
     let durations = basalData.length
       ? _.transform(
         getBasalGroupDurationsFromEndpoints(basalData, this._endpoints),
         (result, value, key) => {
-          result[key] = value;
-          return result;
+          result[key] = value
+          return result
         },
         {},
       )
-      : Number.NaN;
+      : Number.NaN
 
     if (this.days > 1 && !_.isNaN(durations)) {
-      durations = this.getDailyAverageDurations(durations);
+      durations = this.getDailyAverageDurations(durations)
     }
 
-    return durations;
-  };
+    return durations
+  }
 
   getTimeInRangeData = () => {
-    this.applyDateFilters();
-    const cbgData = this.filter.byType("cbg").top(Infinity);
+    this.applyDateFilters()
+    const cbgData = this.filter.byType('cbg').top(Infinity)
 
     let durations = _.reduce(
       cbgData,
       (result, datum) => {
-        const classification = classifyBgValue(this.bgBounds, datum.value, "fiveWay");
-        const duration = cgmSampleFrequency(datum);
-        result[classification] += duration;
-        result.total += duration;
-        return result;
+        const classification = classifyBgValue(this.bgBounds, datum.value, 'fiveWay')
+        const duration = cgmSampleFrequency(datum)
+        result[classification] += duration
+        result.total += duration
+        return result
       },
       {
         veryLow: 0,
@@ -521,30 +521,30 @@ class DataUtil {
         target: 0,
         high: 0,
         veryHigh: 0,
-        total: 0,
+        total: 0
       }
-    );
+    )
 
     if (this.days > 1) {
-      durations = this.getDailyAverageDurations(durations);
+      durations = this.getDailyAverageDurations(durations)
     }
 
-    return durations;
-  };
+    return durations
+  }
 
   getTotalInsulinAndWeightData() {
-    const weight = this.getWeight();
-    const { basal, bolus } = this.getBasalBolusData();
+    const weight = this.getWeight()
+    const { basal, bolus } = this.getBasalBolusData()
 
     const totalInsulin = _.reduce([basal, bolus], (result, value) => {
-      const delivered = _.isNaN(value) ? 0 : value || 0;
-      return result + delivered;
-    }, 0);
+      const delivered = _.isNaN(value) ? 0 : value || 0
+      return result + delivered
+    }, 0)
 
     return {
       totalInsulin,
       weight
-    };
+    }
   }
 
   /**
@@ -553,16 +553,16 @@ class DataUtil {
    */
   getWeight() {
     // retrieve lastest pump settings
-    const pumpSettings = _.last(this.filter.byType("pumpSettings").top(Infinity));
-    const parameters = _.get(pumpSettings, "payload.parameters");
-    const weight = _.find(parameters, { name: "WEIGHT" });
+    const pumpSettings = _.last(this.filter.byType('pumpSettings').top(Infinity))
+    const parameters = _.get(pumpSettings, 'payload.parameters')
+    const weight = _.find(parameters, { name: 'WEIGHT' })
 
     if (_.isEmpty(weight)) {
-      return null;
+      return null
     }
 
-    return weight;
+    return weight
   }
 }
 
-export default DataUtil;
+export default DataUtil

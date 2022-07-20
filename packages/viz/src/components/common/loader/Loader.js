@@ -15,32 +15,32 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import cx from "classnames";
-import i18next from "i18next";
+import React from 'react'
+import PropTypes from 'prop-types'
+import cx from 'classnames'
+import i18next from 'i18next'
 
-import styles from "./Loader.css";
+import styles from './Loader.css'
 
 const Loader = (props) => {
-  const t = i18next.t.bind(i18next);
-  const { show, overlay, text } = props;
+  const t = i18next.t.bind(i18next)
+  const { show, overlay, text } = props
 
   const loaderOuterClasses = cx({
     loader: true,
-    [styles.loader]: true,
-  });
+    [styles.loader]: true
+  })
 
   const loaderInnerClasses = cx({
     [styles.loaderDots]: true,
     [styles.hidden]: !show,
-    [styles.overlay]: overlay,
-  });
+    [styles.overlay]: overlay
+  })
 
   const loaderDotClasses = cx({
     [styles.loaderDot]: true,
-    [styles.animating]: show,
-  });
+    [styles.animating]: show
+  })
 
   return (
     <div className={loaderOuterClasses}>
@@ -54,19 +54,19 @@ const Loader = (props) => {
         <div className={styles.loaderText}>{t(text)}</div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 Loader.defaultProps = {
   overlay: false,
   show: true,
-  text: "Loading...",
-};
+  text: 'Loading...'
+}
 
 Loader.propTypes = {
   overlay: PropTypes.bool.isRequired,
   show: PropTypes.bool.isRequired,
-  text: PropTypes.string,
-};
+  text: PropTypes.string
+}
 
-export default Loader;
+export default Loader

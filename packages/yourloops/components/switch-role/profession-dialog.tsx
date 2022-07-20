@@ -26,34 +26,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Box from "@material-ui/core/Box";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Box from '@material-ui/core/Box'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { HcpProfession, HcpProfessionList } from "../../models/hcp-profession";
-import { SwitchRoleProfessionDialogProps } from "./models";
-import BasicDropdownWithValidation from "../dropdown/basic-dropdown-with-validation";
+import { HcpProfession, HcpProfessionList } from '../../models/hcp-profession'
+import { SwitchRoleProfessionDialogProps } from './models'
+import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
 
 function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
-  const { open, onAccept, onCancel } = props;
-  const { t } = useTranslation("yourloops");
+  const { open, onAccept, onCancel } = props
+  const { t } = useTranslation('yourloops')
 
-  const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(HcpProfession.empty);
+  const [hcpProfession, setHcpProfession] = React.useState<HcpProfession>(HcpProfession.empty)
 
-  const handleAccept = () => {
-    onAccept(hcpProfession);
-  };
+  const handleAccept = (): void => {
+    onAccept(hcpProfession)
+  }
 
-  const onClose = () => {
-    onCancel();
-    setHcpProfession(HcpProfession.empty);
-  };
+  const onClose = (): void => {
+    onCancel()
+    setHcpProfession(HcpProfession.empty)
+  }
 
   return (
     <Dialog
@@ -63,7 +63,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
       onClose={onClose}
     >
       <DialogTitle id="patient-add-caregiver-dialog-title">
-        <strong>{t("profession-dialog-title")}</strong>
+        <strong>{t('profession-dialog-title')}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
         <Box>
@@ -84,7 +84,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
           id="switch-role-profession-dialog-button-decline"
           onClick={onClose}
         >
-          {t("button-decline")}
+          {t('button-decline')}
         </Button>
         <Button
           id="switch-role-profession-dialog-button-validate"
@@ -94,11 +94,11 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
           disabled={hcpProfession === HcpProfession.empty}
           onClick={handleAccept}
         >
-          {t("button-validate")}
+          {t('button-validate')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default SwitchRoleProfessionDialog;
+export default SwitchRoleProfessionDialog

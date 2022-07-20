@@ -28,20 +28,20 @@
 
 import {
   AuthContext,
-  SignupForm,
-} from "./models";
+  SignupForm
+} from './models'
 
 import {
   AuthContextProvider,
-  useAuth,
-} from "./hook";
+  useAuth
+} from './hook'
 
-import User from "./user";
+import User from './user'
 
 export {
   AuthContext,
   User,
   SignupForm,
   AuthContextProvider,
-  useAuth,
-};
+  useAuth
+}

@@ -26,53 +26,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import bows from "bows";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import thunkMiddleware from "redux-thunk";
+import _ from 'lodash'
+import bows from 'bows'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
 
-import { reducers as vizReducers } from "tidepool-viz";
+import { reducers as vizReducers } from 'tidepool-viz'
 
 /** Redux action used by viz: Init viz data */
-export const FETCH_PATIENT_DATA_SUCCESS = "FETCH_PATIENT_DATA_SUCCESS";
+export const FETCH_PATIENT_DATA_SUCCESS = 'FETCH_PATIENT_DATA_SUCCESS'
 /** Redux action used by viz: Clean data */
-export const LOGOUT_REQUEST = "LOGOUT_REQUEST";
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST'
 
 
-const log = bows("BlipRedux");
+const log = bows('BlipRedux')
 /** @type {Store} */
-let store = null;
+let store = null
 
 function blipReducer(state, action) {
   if ([FETCH_PATIENT_DATA_SUCCESS, LOGOUT_REQUEST].includes(action.type)) {
-    log.debug(action.type);
+    log.debug(action.type)
   }
 
   if (_.isEmpty(state)) {
     return {
-      currentPatientInViewId: null,
-    };
+      currentPatientInViewId: null
+    }
   }
 
   switch (action.type) {
-  case FETCH_PATIENT_DATA_SUCCESS:
-    state.currentPatientInViewId = action.payload.patientId;
-    break;
-  case LOGOUT_REQUEST:
-    state.currentPatientInViewId = null;
-    break;
+    case FETCH_PATIENT_DATA_SUCCESS:
+      state.currentPatientInViewId = action.payload.patientId
+      break
+    case LOGOUT_REQUEST:
+      state.currentPatientInViewId = null
+      break
   }
 
-  return state;
+  return state
 }
 
 
 export function cleanStore() {
   if (store !== null) {
-    store.dispatch({ type: LOGOUT_REQUEST });
+    store.dispatch({ type: LOGOUT_REQUEST })
   }
-  store = null;
-  delete window.cleanBlipReduxStore;
+  store = null
+  delete window.cleanBlipReduxStore
 }
 
 /**
@@ -82,18 +82,18 @@ export function cleanStore() {
  */
 export function initStore() {
   if (store === null) {
-    log.info("Init Redux store");
+    log.info('Init Redux store')
     // I love redux
     store = applyMiddleware(thunkMiddleware)(createStore)(combineReducers({ viz: vizReducers, blip: blipReducer }), {
       viz: {
-        trends: {},
+        trends: {}
       },
       blip: {
-        currentPatientInViewId: null,
-      },
-    });
-    window.cleanBlipReduxStore = cleanStore;
+        currentPatientInViewId: null
+      }
+    })
+    window.cleanBlipReduxStore = cleanStore
   }
 
-  return store;
+  return store
 }

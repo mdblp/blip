@@ -15,66 +15,66 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import picto from "../../../img/physicalactivity.png";
+import picto from '../../../img/physicalactivity.png'
 
 function drawPhysicalActivity(pool, opts) {
-  const height = pool.height() - 20;
-  const offset = height / 5;
+  const height = pool.height() - 20
+  const offset = height / 5
 
-  const calculateWidth = (d) => opts.xScale(d.epochEnd) - opts.xScale(d.epoch);
-  const xPos = (d) => opts.xScale(d.epoch);
+  const calculateWidth = (d) => opts.xScale(d.epochEnd) - opts.xScale(d.epoch)
+  const xPos = (d) => opts.xScale(d.epoch)
 
   return {
     picto: function (pa) {
-      pa.append("rect").attr({
+      pa.append('rect').attr({
         x: xPos,
         y: _.constant(0),
         width: calculateWidth,
         height: _.constant(offset),
-        class: "d3-rect-pa d3-pa",
-        id: (d) => `pa_img_${d.id}`,
-      });
+        class: 'd3-rect-pa d3-pa',
+        id: (d) => `pa_img_${d.id}`
+      })
 
-      pa.append("image").attr({
-        "x": xPos,
-        "y": _.constant(0),
-        "width": calculateWidth,
-        "height": _.constant(offset),
-        "xlink:href": picto,
-      });
+      pa.append('image').attr({
+        'x': xPos,
+        'y': _.constant(0),
+        'width': calculateWidth,
+        'height': _.constant(offset),
+        'xlink:href': picto
+      })
     },
 
     activity: function (pa) {
-      pa.append("rect").attr({
+      pa.append('rect').attr({
         x: xPos,
         y: _.constant(offset),
         width: calculateWidth,
         height: _.constant(pool.height() - offset),
-        class: "d3-rect-pa d3-pa",
-        id: (d) => `pa_rect_${d.id}`,
-      });
+        class: 'd3-rect-pa d3-pa',
+        id: (d) => `pa_rect_${d.id}`
+      })
     },
 
     tooltip: {
       add: function (d, rect) {
-        if (_.get(opts, "onPhysicalHover", false)) {
+        if (_.get(opts, 'onPhysicalHover', false)) {
           opts.onPhysicalHover({
             data: d,
-            rect: rect,
-          });
+            rect: rect
+          })
         }
       },
       remove: function (d) {
-        if (_.get(opts, "onPhysicalOut", false)) {
+        if (_.get(opts, 'onPhysicalOut', false)) {
           opts.onPhysicalOut({
-            data: d,
-          });
+            data: d
+          })
         }
-      },
-    },
-  };
+      }
+    }
+  }
 }
 
-export default drawPhysicalActivity;
+export default drawPhysicalActivity

@@ -15,49 +15,49 @@
  * == BSD2 LICENSE ==
  */
 
-import i18next from "i18next";
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React from "react";
-import cx from "classnames";
+import i18next from 'i18next'
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
+import cx from 'classnames'
 
-import { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } from "../../logic/constants";
+import { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } from '../../logic/constants'
 
 class Change extends React.Component {
   static propTypes = {
     daysSince: PropTypes.number.isRequired,
     count: PropTypes.number,
     type: PropTypes.string.isRequired,
-    manufacturer: PropTypes.string.isRequired,
-  };
+    manufacturer: PropTypes.string.isRequired
+  }
 
   render() {
-    var daysText = null;
-    var daysSinceNum = null;
+    var daysText = null
+    var daysSinceNum = null
     if (!_.isNaN(this.props.daysSince)){
       daysText = (this.props.daysSince === 1)
-        ? i18next.t("day")
-        : i18next.t("days");
-      daysSinceNum = this.props.daysSince;
+        ? i18next.t('day')
+        : i18next.t('days')
+      daysSinceNum = this.props.daysSince
     }
-    var countElement = null;
+    var countElement = null
 
     if (this.props.count > 1) {
       countElement = <div className="Change-count-text">
         x{this.props.count}
-      </div>;
+      </div>
     }
     const manufacturerClass = _.get(
       _.get(
         SITE_CHANGE_BY_MANUFACTURER,
         this.props.manufacturer,
         SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
-      "class");
+      'class')
 
     var changeClass = cx({
       Change: true,
-      [`${manufacturerClass}`]: (manufacturerClass !== undefined),
-    });
+      [`${manufacturerClass}`]: (manufacturerClass !== undefined)
+    })
 
     return (
       <div className={changeClass}>
@@ -68,8 +68,8 @@ class Change extends React.Component {
         <div className="Change-line-stop"></div>
         {countElement}
       </div>
-    );
+    )
   }
 }
 
-export default Change;
+export default Change

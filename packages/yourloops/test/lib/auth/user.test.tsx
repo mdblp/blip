@@ -26,126 +26,123 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserMetadata, UserRoles } from "../../../models/user";
-import config from "../../../lib/config";
-import User from "../../../lib/auth/user";
+import { UserMetadata, UserRoles } from '../../../models/user'
+import config from '../../../lib/config'
+import User from '../../../lib/auth/user'
 
-
-describe("User", () => {
-  let user: User;
+describe('User', () => {
+  let user: User
 
   beforeAll(() => {
-    config.LATEST_TERMS = "2021-01-01";
-  });
+    config.LATEST_TERMS = '2021-01-01'
+  })
 
   beforeEach(() => {
     user = new User({
-      sub: "auth0|abcd",
-      email: "text@example.com",
+      sub: 'auth0|abcd',
+      email: 'text@example.com',
       [UserMetadata.Roles]: [UserRoles.unverified],
-      emailVerified: true,
-    });
-  });
+      emailVerified: true
+    })
+  })
 
   afterEach(() => {
-    user = null;
-  });
+    user = null
+  })
 
-  it("should create the user", () => {
-    expect(user.id).toBe("abcd");
-    expect(user.username).toBe("text@example.com");
-    expect(user.latestConsentChangeDate).toBeInstanceOf(Date);
-    expect(user.latestConsentChangeDate.toISOString()).toBe("2021-01-01T00:00:00.000Z");
-  });
+  it('should create the user', () => {
+    expect(user.id).toBe('abcd')
+    expect(user.username).toBe('text@example.com')
+    expect(user.latestConsentChangeDate).toBeInstanceOf(Date)
+    expect(user.latestConsentChangeDate.toISOString()).toBe('2021-01-01T00:00:00.000Z')
+  })
 
-  it("getFirstName", () => {
-    expect(user.firstName).toBe("");
+  it('getFirstName', () => {
+    expect(user.firstName).toBe('')
     user.profile = {
-      fullName: "Hello",
-      firstName: "Test",
-      lastName: "Example",
-    };
-    expect(user.firstName).toBe("Test");
-  });
+      fullName: 'Hello',
+      firstName: 'Test',
+      lastName: 'Example'
+    }
+    expect(user.firstName).toBe('Test')
+  })
 
-
-  it("getLastName", () => {
-    expect(user.lastName).toBe("text@example.com");
+  it('getLastName', () => {
+    expect(user.lastName).toBe('text@example.com')
     user.profile = {
-      fullName: "Hello World",
-      firstName: "Test",
-    };
-    expect(user.lastName).toBe("Hello World");
+      fullName: 'Hello World',
+      firstName: 'Test'
+    }
+    expect(user.lastName).toBe('Hello World')
     user.profile = {
-      fullName: "Hello World",
-      firstName: "Test",
-      lastName: "Example",
-    };
-    expect(user.lastName).toBe("Example");
-  });
+      fullName: 'Hello World',
+      firstName: 'Test',
+      lastName: 'Example'
+    }
+    expect(user.lastName).toBe('Example')
+  })
 
-  it("getFullName", () => {
-    expect(user.fullName).toBe("text@example.com");
+  it('getFullName', () => {
+    expect(user.fullName).toBe('text@example.com')
     user.profile = {
-      fullName: "Barack Afritt",
-    };
-    expect(user.fullName).toBe("Barack Afritt");
-  });
+      fullName: 'Barack Afritt'
+    }
+    expect(user.fullName).toBe('Barack Afritt')
+  })
 
-  it("shouldAcceptConsent", () => {
-    expect(user.shouldAcceptConsent()).toBe(true);
+  it('shouldAcceptConsent', () => {
+    expect(user.shouldAcceptConsent()).toBe(true)
     user.profile = {
-      fullName: "Test Example",
-      termsOfUse: {},
-    };
-    expect(user.shouldAcceptConsent()).toBe(true);
-    user.profile.termsOfUse.isAccepted = false;
-    expect(user.shouldAcceptConsent()).toBe(true);
-    user.profile.termsOfUse.isAccepted = true;
-    expect(user.shouldAcceptConsent()).toBe(true);
-    user.profile.privacyPolicy = {};
-    expect(user.shouldAcceptConsent()).toBe(true);
-    user.profile.privacyPolicy.isAccepted = false;
-    expect(user.shouldAcceptConsent()).toBe(true);
-    user.profile.privacyPolicy.isAccepted = true;
-    expect(user.shouldAcceptConsent()).toBe(false);
-  });
+      fullName: 'Test Example',
+      termsOfUse: {}
+    }
+    expect(user.shouldAcceptConsent()).toBe(true)
+    user.profile.termsOfUse.isAccepted = false
+    expect(user.shouldAcceptConsent()).toBe(true)
+    user.profile.termsOfUse.isAccepted = true
+    expect(user.shouldAcceptConsent()).toBe(true)
+    user.profile.privacyPolicy = {}
+    expect(user.shouldAcceptConsent()).toBe(true)
+    user.profile.privacyPolicy.isAccepted = false
+    expect(user.shouldAcceptConsent()).toBe(true)
+    user.profile.privacyPolicy.isAccepted = true
+    expect(user.shouldAcceptConsent()).toBe(false)
+  })
 
-  it("shouldRenewConsent", () => {
-    expect(user.shouldRenewConsent()).toBe(true);
+  it('shouldRenewConsent', () => {
+    expect(user.shouldRenewConsent()).toBe(true)
     user.profile = {
-      fullName: "Test Example",
-    };
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.termsOfUse = null;
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.termsOfUse = {};
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.privacyPolicy = null;
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.privacyPolicy = {};
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.termsOfUse.acceptanceTimestamp = "an invalid string date";
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.termsOfUse.acceptanceTimestamp = "2020-12-01";
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.termsOfUse.acceptanceTimestamp = "2021-01-02";
-    user.profile.privacyPolicy.acceptanceTimestamp = "2020-12-01";
-    expect(user.shouldRenewConsent()).toBe(true);
-    user.profile.privacyPolicy.acceptanceTimestamp = "2021-01-02";
-    expect(user.shouldRenewConsent()).toBe(false);
-  });
+      fullName: 'Test Example'
+    }
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.termsOfUse = null
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.termsOfUse = {}
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.privacyPolicy = null
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.privacyPolicy = {}
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.termsOfUse.acceptanceTimestamp = 'an invalid string date'
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.termsOfUse.acceptanceTimestamp = '2020-12-01'
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.termsOfUse.acceptanceTimestamp = '2021-01-02'
+    user.profile.privacyPolicy.acceptanceTimestamp = '2020-12-01'
+    expect(user.shouldRenewConsent()).toBe(true)
+    user.profile.privacyPolicy.acceptanceTimestamp = '2021-01-02'
+    expect(user.shouldRenewConsent()).toBe(false)
+  })
 
-  it("getParsedFrProId should return null when user frProId is null", () => {
-    const res = user.getParsedFrProId();
-    expect(res).toBeNull();
-  });
+  it('getParsedFrProId should return null when user frProId is null', () => {
+    const res = user.getParsedFrProId()
+    expect(res).toBeNull()
+  })
 
-  it("getParsedFrProId should return correct result when user frProId is not null", () => {
-    const expectedRes = "value";
-    user.frProId = `key:uid:${expectedRes}`;
-    const actualRes = user.getParsedFrProId();
-    expect(actualRes).toBe(expectedRes);
-  });
-});
-
+  it('getParsedFrProId should return correct result when user frProId is not null', () => {
+    const expectedRes = 'value'
+    user.frProId = `key:uid:${expectedRes}`
+    const actualRes = user.getParsedFrProId()
+    expect(actualRes).toBe(expectedRes)
+  })
+})

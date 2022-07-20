@@ -26,48 +26,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { Trans, useTranslation } from "react-i18next";
+import React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import Link from "@material-ui/core/Link";
+import { Theme, makeStyles } from '@material-ui/core/styles'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormGroup from '@material-ui/core/FormGroup'
+import Link from '@material-ui/core/Link'
 
-import { UserRoles } from "../../models/user";
-import diabeloopUrl from "../../lib/diabeloop-url";
-import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from "./models";
+import { UserRoles } from '../../models/user'
+import diabeloopUrl from '../../lib/diabeloop-url'
+import { BaseConsentCheck, ConsentCheck, ConsentFormProps, MonitoringConsentFormProps } from './models'
 
 const formStyles = makeStyles(
   (theme: Theme) => {
     return {
       formControlLabel: {
         color: theme.palette.text.primary,
-        textAlign: "start",
+        textAlign: 'start',
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
+        marginRight: theme.spacing(1)
       },
       formGroup: {
-        textAlign: "left",
+        textAlign: 'left'
       },
       checkbox: {
-        marginBottom: "auto",
+        marginBottom: 'auto'
       },
       labelMandatory: {
-        marginLeft: theme.spacing(1) + 9, // eslint-disable-line no-magic-numbers
-      },
-    };
+        marginLeft: theme.spacing(1) + 9 // eslint-disable-line no-magic-numbers
+      }
+    }
   },
-  { name: "ylp-form-consents" }
-);
+  { name: 'ylp-form-consents' }
+)
 
 export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = formStyles();
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = formStyles()
 
   const checkboxPolicy = (
     <Checkbox
@@ -78,13 +78,13 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
       name="policy"
       color="primary"
     />
-  );
-  const privacyPolicy = t("privacy-policy");
+  )
+  const privacyPolicy = t('privacy-policy')
   const linkPrivacyPolicy = (
     <Link aria-label={privacyPolicy} href={diabeloopUrl.getPrivacyPolicyUrL(i18n.language)} target="_blank" rel="noreferrer">
       {privacyPolicy}
     </Link>
-  );
+  )
   const labelPrivacyPolicy = (
     <Trans
       i18nKey={`consent-${userRole}-privacy-policy`}
@@ -94,7 +94,7 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
       parent={React.Fragment}>
       I have read and accepted YourLoops {privacyPolicy}.
     </Trans>
-  );
+  )
 
   return (
     <FormControlLabel
@@ -104,12 +104,12 @@ export function ConsentPrivacyPolicy({ id, userRole, style, checked, onChange }:
       style={style}
       className={classes.formControlLabel}
     />
-  );
+  )
 }
 
 export function ConsentTerms({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = formStyles();
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = formStyles()
 
   const checkboxTerms = (
     <Checkbox
@@ -120,13 +120,13 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
       name="terms"
       color="primary"
     />
-  );
-  const terms = t("terms-of-use");
+  )
+  const terms = t('terms-of-use')
   const linkTerms = (
     <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
       {terms}
     </Link>
-  );
+  )
   const labelTerms = (
     <Trans
       i18nKey={`consent-${userRole}-terms-of-use`}
@@ -136,7 +136,7 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
       parent={React.Fragment}>
       I have read and accepted YourLoops {terms}.
     </Trans>
-  );
+  )
 
   return (
     <FormControlLabel
@@ -146,12 +146,12 @@ export function ConsentTerms({ id, userRole, style, checked, onChange }: Consent
       style={style}
       className={classes.formControlLabel}
     />
-  );
+  )
 }
 
 export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseConsentCheck): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
-  const classes = formStyles();
+  const { t, i18n } = useTranslation('yourloops')
+  const classes = formStyles()
 
   const checkboxTerms = (
     <Checkbox
@@ -162,23 +162,23 @@ export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseCon
       name="terms"
       color="primary"
     />
-  );
-  const terms = t("terms-of-use");
+  )
+  const terms = t('terms-of-use')
   const linkTerms = (
     <Link aria-label={terms} href={diabeloopUrl.getTermsUrL(i18n.language)} target="_blank" rel="noreferrer">
       {terms}
     </Link>
-  );
+  )
   const labelTerms = (
     <Trans
-      i18nKey={"consent-monitoring-terms-of-use"}
+      i18nKey={'consent-monitoring-terms-of-use'}
       t={t}
       components={{ linkTerms }}
       values={{ terms }}
       parent={React.Fragment}>
       I have read and accepted YourLoops {terms}.
     </Trans>
-  );
+  )
 
   return (
     <FormControlLabel
@@ -188,12 +188,12 @@ export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseCon
       style={style}
       className={classes.formControlLabel}
     />
-  );
+  )
 }
 
 export function ConsentFeedback({ id, userRole, style, checked, onChange }: ConsentCheck): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = formStyles();
+  const { t } = useTranslation('yourloops')
+  const classes = formStyles()
 
   const checkboxFeedback = (
     <Checkbox
@@ -204,13 +204,13 @@ export function ConsentFeedback({ id, userRole, style, checked, onChange }: Cons
       name="feedback"
       color="primary"
     />
-  );
+  )
 
   const labelFeedback = (
     <Trans i18nKey={`consent-${userRole}-feedback`} t={t}>
       I agree to receive information and news from Diabeloop. <i>(optional)</i>
     </Trans>
-  );
+  )
 
   return (
     <FormControlLabel
@@ -220,7 +220,7 @@ export function ConsentFeedback({ id, userRole, style, checked, onChange }: Cons
       style={style}
       className={classes.formControlLabel}
     />
-  );
+  )
 }
 
 function ConsentForm(props: ConsentFormProps): JSX.Element {
@@ -234,45 +234,45 @@ function ConsentForm(props: ConsentFormProps): JSX.Element {
     termsAccepted,
     setTermsAccepted,
     feedbackAccepted,
-    setFeedbackAccepted,
-  } = props;
+    setFeedbackAccepted
+  } = props
 
-  const classes = formStyles();
-  const showFeedback = typeof setFeedbackAccepted === "function" && userRole === UserRoles.hcp;
+  const classes = formStyles()
+  const showFeedback = typeof setFeedbackAccepted === 'function' && userRole === UserRoles.hcp
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const what = event.target.name;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const what = event.target.name
     switch (what) {
-    case "policy":
-      setPolicyAccepted(!policyAccepted);
-      break;
-    case "terms":
-      setTermsAccepted(!termsAccepted);
-      break;
-    case "feedback":
-      if (typeof setFeedbackAccepted === "function") {
-        setFeedbackAccepted(!feedbackAccepted);
-      }
-      break;
-    default:
-      throw new Error("Invalid change type");
+      case 'policy':
+        setPolicyAccepted(!policyAccepted)
+        break
+      case 'terms':
+        setTermsAccepted(!termsAccepted)
+        break
+      case 'feedback':
+        if (typeof setFeedbackAccepted === 'function') {
+          setFeedbackAccepted(!feedbackAccepted)
+        }
+        break
+      default:
+        throw new Error('Invalid change type')
     }
-  };
+  }
 
-  let formControlFeedback: JSX.Element | null = null;
+  let formControlFeedback: JSX.Element | null = null
   if (showFeedback) {
-    formControlFeedback = <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />;
+    formControlFeedback = <ConsentFeedback id={id} userRole={userRole} checked={feedbackAccepted ?? false} onChange={handleChange} />
   }
 
   return (
     <FormControl id={`${id}-form`} className={className}>
-      <FormGroup className={`${classes.formGroup} ${group ?? ""}`}>
+      <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
         <ConsentPrivacyPolicy id={id} userRole={userRole} checked={policyAccepted} onChange={handleChange} />
         <ConsentTerms id={id} userRole={userRole} checked={termsAccepted} onChange={handleChange} />
         {formControlFeedback}
       </FormGroup>
     </FormControl>
-  );
+  )
 }
 
 export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.Element {
@@ -281,22 +281,22 @@ export function MonitoringConsentForm(props: MonitoringConsentFormProps): JSX.El
     className,
     group,
     termsAccepted,
-    setTermsAccepted,
-  } = props;
+    setTermsAccepted
+  } = props
 
-  const classes = formStyles();
+  const classes = formStyles()
 
-  const handleChange = () => {
-    setTermsAccepted(!termsAccepted);
-  };
+  const handleChange = (): void => {
+    setTermsAccepted(!termsAccepted)
+  }
 
   return (
     <FormControl id={`${id}-form`} className={className}>
-      <FormGroup className={`${classes.formGroup} ${group ?? ""}`}>
+      <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
         <ConsentMonitoringTerms id={id} checked={termsAccepted} onChange={handleChange} />
       </FormGroup>
     </FormControl>
-  );
+  )
 }
 
-export default ConsentForm;
+export default ConsentForm

@@ -15,44 +15,44 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { mount } from "enzyme";
-import { expect } from "chai";
+import React from 'react'
+import { mount } from 'enzyme'
+import { expect } from 'chai'
 
-import { formatClassesAsSelector } from "../../../helpers/cssmodules";
+import { formatClassesAsSelector } from '../../../helpers/cssmodules'
 
-import CBGDateTraceLabel from "../../../../src/components/trends/cbg/CBGDateTraceLabel";
-import styles from "../../../../src/components/trends/cbg/CBGDateTraceLabel.css";
+import CBGDateTraceLabel from '../../../../src/components/trends/cbg/CBGDateTraceLabel'
+import styles from '../../../../src/components/trends/cbg/CBGDateTraceLabel.css'
 
-describe("CBGDateTraceLabel", () => {
+describe('CBGDateTraceLabel', () => {
   const props = {
     focusedDateTrace: {
       data: {
-        localDate: "2017-01-01",
+        localDate: '2017-01-01'
       },
       position: {
         left: 10,
         yPositions: {
           top: 100,
-          topMargin: 50,
-        },
-      },
-    },
-  };
+          topMargin: 50
+        }
+      }
+    }
+  }
 
-  describe("with no date trace currently focused", () => {
-    it("should render nothing", () => {
-      const wrapper = mount(<CBGDateTraceLabel focusedDateTrace={null} />);
-      expect(wrapper.html()).to.be.null;
-    });
-  });
+  describe('with no date trace currently focused', () => {
+    it('should render nothing', () => {
+      const wrapper = mount(<CBGDateTraceLabel focusedDateTrace={null} />)
+      expect(wrapper.html()).to.be.null
+    })
+  })
 
-  describe("with a date trace focused", () => {
-    it("should render a date label", () => {
-      const wrapper = mount(<CBGDateTraceLabel {...props} />);
-      const label = wrapper.find(formatClassesAsSelector(styles.dateLabel));
-      expect(label).to.have.length(1);
-      expect(label.text()).to.equal("Sunday, January 1");
-    });
-  });
-});
+  describe('with a date trace focused', () => {
+    it('should render a date label', () => {
+      const wrapper = mount(<CBGDateTraceLabel {...props} />)
+      const label = wrapper.find(formatClassesAsSelector(styles.dateLabel))
+      expect(label).to.have.length(1)
+      expect(label.text()).to.equal('Sunday, January 1')
+    })
+  })
+})

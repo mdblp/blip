@@ -25,102 +25,102 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
 
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import CancelIcon from "@material-ui/icons/Cancel";
-import ContactSupportOutlinedIcon from "@material-ui/icons/ContactSupportOutlined";
-import FaceIcon from "@material-ui/icons/Face";
-import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
-import StethoscopeIcon from "../icons/StethoscopeIcon";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import CancelIcon from '@material-ui/icons/Cancel'
+import ContactSupportOutlinedIcon from '@material-ui/icons/ContactSupportOutlined'
+import FaceIcon from '@material-ui/icons/Face'
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar'
+import StethoscopeIcon from '../icons/StethoscopeIcon'
 
-import { makeStyles, Theme, useTheme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Box from "@material-ui/core/Box";
-import Divider from "@material-ui/core/Divider";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Box from '@material-ui/core/Box'
+import Divider from '@material-ui/core/Divider'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import MenuItem from '@material-ui/core/MenuItem'
+import Typography from '@material-ui/core/Typography'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import { UserRoles } from "../../models/user";
-import { useAuth } from "../../lib/auth";
-import RoundedHospitalIcon from "../icons/RoundedHospitalIcon";
-import config from "../../lib/config";
-import metrics from "../../lib/metrics";
-import MenuLayout from "../layouts/menu-layout";
+import { UserRoles } from '../../models/user'
+import { useAuth } from '../../lib/auth'
+import RoundedHospitalIcon from '../icons/RoundedHospitalIcon'
+import config from '../../lib/config'
+import metrics from '../../lib/metrics'
+import MenuLayout from '../layouts/menu-layout'
 
 const classes = makeStyles((theme: Theme) => ({
   clickableMenu: {
-    cursor: "pointer",
+    cursor: 'pointer'
   },
   typography: {
     margin: `0 ${theme.spacing(1)}px`,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-}));
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
+  }
+}))
 
 function UserMenu(): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const { user, logout } = useAuth();
-  const { clickableMenu, typography } = classes();
-  const history = useHistory();
-  const theme = useTheme();
-  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only("xs"));
-  const [tooltipText, setTooltipText] = useState<string>("");
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const opened = !!anchorEl;
+  const { t } = useTranslation('yourloops')
+  const { user, logout } = useAuth()
+  const { clickableMenu, typography } = classes()
+  const history = useHistory()
+  const theme = useTheme()
+  const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const [tooltipText, setTooltipText] = useState<string>('')
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
+  const opened = !!anchorEl
 
   const getRoleIcon = (): JSX.Element | null => {
     switch (user?.role) {
-    case UserRoles.hcp:
-      return <StethoscopeIcon />;
-    case UserRoles.caregiver:
-      return <RoundedHospitalIcon />;
-    case UserRoles.patient:
-      return <FaceIcon />;
-    default:
-      console.error("Unknown role");
-      return null;
+      case UserRoles.hcp:
+        return <StethoscopeIcon />
+      case UserRoles.caregiver:
+        return <RoundedHospitalIcon />
+      case UserRoles.patient:
+        return <FaceIcon />
+      default:
+        console.error('Unknown role')
+        return null
     }
-  };
+  }
 
-  const closeMenu = () => setAnchorEl(null);
+  const closeMenu = (): void => {
+    setAnchorEl(null)
+  }
 
-  const onClickSettings = () => {
-    history.push("/preferences");
-    closeMenu();
-  };
+  const onClickSettings = (): void => {
+    history.push('/preferences')
+    closeMenu()
+  }
 
-  const onClickLogout = async () => {
-    await logout();
-    closeMenu();
-  };
+  const onClickLogout = async (): Promise<void> => {
+    await logout()
+    closeMenu()
+  }
 
-  const onClickSupport = () => {
-    window.open(config.SUPPORT_WEB_ADDRESS, "_blank");
-    closeMenu();
-    metrics.send("support", "click_customer_service");
-  };
-
+  const onClickSupport = (): void => {
+    window.open(config.SUPPORT_WEB_ADDRESS, '_blank')
+    closeMenu()
+    metrics.send('support', 'click_customer_service')
+  }
 
   /**
    * User full name is hidden with an ellipsis if too long
    * Here we check if the ellipsis is on, if so we add a tooltip on hover to see the entire name.
    */
   const isEllipsisActive = (element: HTMLElement | null): boolean | undefined => {
-    return element ? element.offsetWidth < element.scrollWidth : undefined;
-  };
+    return element ? element.offsetWidth < element.scrollWidth : undefined
+  }
 
   useEffect(() => {
-    const userFullNameHtmlElement = document.getElementById("user-menu-full-name");
-    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? user?.fullName as string : "");
-  }, [user?.fullName]);
-
+    const userFullNameHtmlElement = document.getElementById('user-menu-full-name')
+    setTooltipText(isEllipsisActive(userFullNameHtmlElement) ? user?.fullName : '')
+  }, [user?.fullName])
 
   return (
     <React.Fragment>
@@ -156,7 +156,7 @@ function UserMenu(): JSX.Element {
             <PermContactCalendarIcon />
           </ListItemIcon>
           <Typography>
-            {t("profile-settings")}
+            {t('profile-settings')}
           </Typography>
         </MenuItem>
 
@@ -165,7 +165,7 @@ function UserMenu(): JSX.Element {
             <ContactSupportOutlinedIcon />
           </ListItemIcon>
           <Typography>
-            {t("menu-contact-support")}
+            {t('menu-contact-support')}
           </Typography>
         </MenuItem>
 
@@ -178,12 +178,12 @@ function UserMenu(): JSX.Element {
             <CancelIcon />
           </ListItemIcon>
           <Typography>
-            {t("menu-logout")}
+            {t('menu-logout')}
           </Typography>
         </MenuItem>
       </MenuLayout>
     </React.Fragment>
-  );
+  )
 }
 
-export default UserMenu;
+export default UserMenu

@@ -1,9 +1,9 @@
-import { expect } from "chai";
+import { expect } from 'chai'
 
-import * as propTypes from "../../src/propTypes";
+import * as propTypes from '../../src/propTypes'
 
-describe("common propTypes", () => {
-  it("should export `bgPrefsPropType` definition", () => {
-    expect(propTypes.bgPrefsPropType).to.be.a("function");
-  });
-});
+describe('common propTypes', () => {
+  it('should export `bgPrefsPropType` definition', () => {
+    expect(propTypes.bgPrefsPropType).to.be.a('function')
+  })
+})

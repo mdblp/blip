@@ -15,36 +15,36 @@
  * == BSD2 LICENSE ==
  */
 
-import { MGDL_UNITS, MMOLL_UNITS } from "tideline";
+import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
 
 export const BG_DATA_TYPES = [
-  "cbg",
-  "smbg",
-];
+  'cbg',
+  'smbg'
+]
 
 export const DIABETES_DATA_TYPES = [
   ...BG_DATA_TYPES,
-  "basal",
-  "bolus",
-  "wizard",
-  "food",
-  "physicalActivity",
-];
+  'basal',
+  'bolus',
+  'wizard',
+  'food',
+  'physicalActivity'
+]
 
 export const DEFAULT_BG_TARGETS = {
   [MGDL_UNITS]: {
     low: 70,
-    high: 180,
+    high: 180
   },
   [MMOLL_UNITS]: {
     low: 3.9,
-    high: 10.0,
-  },
-};
+    high: 10.0
+  }
+}
 
 export const DEFAULT_BG_SETTINGS = {
   bgTarget: DEFAULT_BG_TARGETS[MGDL_UNITS],
   units: {
-    bg: MGDL_UNITS,
-  },
-};
+    bg: MGDL_UNITS
+  }
+}

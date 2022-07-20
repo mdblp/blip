@@ -15,30 +15,30 @@
  * == BSD2 LICENSE ==
  */
 
-import { expect } from "chai";
+import { expect } from 'chai'
 
-import isTSA from "../../helpers/tidepoolStandardAction";
+import isTSA from '../../helpers/tidepoolStandardAction'
 
-import * as actionTypes from "../../../src/redux/constants/actionTypes";
-import * as actions from "../../../src/redux/actions/";
+import * as actionTypes from '../../../src/redux/constants/actionTypes'
+import * as actions from '../../../src/redux/actions/'
 
-describe("settings action creators", () => {
-  const userId = "a1b2c3";
+describe('settings action creators', () => {
+  const userId = 'a1b2c3'
 
-  describe("toggleSettingsSection", () => {
-    const deviceKey = "acme";
-    const scheduleOrProfileKey = "weekday";
-    const action = actions.toggleSettingsSection(userId, deviceKey, scheduleOrProfileKey);
+  describe('toggleSettingsSection', () => {
+    const deviceKey = 'acme'
+    const scheduleOrProfileKey = 'weekday'
+    const action = actions.toggleSettingsSection(userId, deviceKey, scheduleOrProfileKey)
 
-    it("should be a TSA", () => {
-      expect(isTSA(action)).to.be.true;
-    });
+    it('should be a TSA', () => {
+      expect(isTSA(action)).to.be.true
+    })
 
-    it("should create an action to toggle the expansion of a settings section", () => {
+    it('should create an action to toggle the expansion of a settings section', () => {
       expect(action).to.deep.equal({
         type: actionTypes.TOGGLE_SETTINGS_SECTION,
-        payload: { deviceKey, scheduleOrProfileKey, userId },
-      });
-    });
-  });
-});
+        payload: { deviceKey, scheduleOrProfileKey, userId }
+      })
+    })
+  })
+})

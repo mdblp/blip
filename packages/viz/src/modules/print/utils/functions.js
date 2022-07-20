@@ -5,14 +5,14 @@
  * @param {ArrayBuffer} buffer image fetch buffer
  */
 function arrayBufferToBase64(buffer) {
-  let binary = "";
-  const bytes = [].slice.call(new Uint8Array(buffer));
+  let binary = ''
+  const bytes = [].slice.call(new Uint8Array(buffer))
 
-  bytes.forEach((b) => binary += String.fromCharCode(b));
+  bytes.forEach((b) => binary += String.fromCharCode(b))
 
-  return window.btoa(binary);
+  return window.btoa(binary)
 }
 
 export {
   arrayBufferToBase64
-};
+}

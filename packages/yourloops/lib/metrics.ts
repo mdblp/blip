@@ -26,45 +26,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import bows from "bows";
+import _ from 'lodash'
+import bows from 'bows'
 
-import config from "./config";
-import User from "./auth/user";
+import config from './config'
+import User from './auth/user'
 
-type VariableScope = "page" | "visit";
+type VariableScope = 'page' | 'visit'
 
-const log = bows("Metrics");
+const log = bows('Metrics')
 const customVariables = {
   page: new Map<string, number>(),
-  visit: new Map<string, number>(),
-};
-let metricsEnabled = false;
-let currentMetricsURL = "/";
+  visit: new Map<string, number>()
+}
+let metricsEnabled = false
+let currentMetricsURL = '/'
 
 const logDisabledMetricsConfiguration = _.once(() => {
-  log.info("Metrics service is disabled by configuration");
-});
+  log.info('Metrics service is disabled by configuration')
+})
 
 const logUnknownMetricsConfiguration = _.once(() => {
-  log.error("Unknown metrics service", config.METRICS_SERVICE);
-});
+  log.error('Unknown metrics service', config.METRICS_SERVICE)
+})
 
 const logWrongMetricsConfiguration = _.once(() => {
-  log.error("Matomo do not seems to be available, wrong configuration");
-});
+  log.error('Matomo do not seems to be available, wrong configuration')
+})
 
 function getVariableId(name: string, scope: VariableScope): {id: number, found: boolean } {
-  let id = 1;
-  let found = false;
+  let id = 1
+  let found = false
   if (customVariables[scope].has(name)) {
-    id = customVariables[scope].get(name) as number;
-    found = true;
+    id = customVariables[scope].get(name)
+    found = true
   } else {
-    const ids = Array.from(customVariables[scope].values());
-    while (ids.includes(id)) id++;
+    const ids = Array.from(customVariables[scope].values())
+    while (ids.includes(id)) id++
   }
-  return { id, found };
+  return { id, found }
 }
 
 /**
@@ -74,82 +74,82 @@ function getVariableId(name: string, scope: VariableScope): {id: number, found: 
 function checkParameters(category: string, action: string, name?: string, value?: number): boolean {
   if (_.isString(category) && _.isString(action)) {
     if ((_.isUndefined(name) || _.isString(name)) && (_.isUndefined(value) || _.isFinite(value))) {
-      return true;
+      return true
     }
   }
-  log.error("Invalid parameters");
-  return false;
+  log.error('Invalid parameters')
+  return false
 }
 
 function sendMatomoMetrics(category: string, action: string, name?: string, value?: number): void {
-  const matomoPaq: unknown[] | undefined = window._paq;
+  const matomoPaq: unknown[] | undefined = window._paq
   if (!_.isObject(matomoPaq)) {
-    logWrongMetricsConfiguration();
-    return;
+    logWrongMetricsConfiguration()
+    return
   }
 
-  if (category === "metrics") {
+  if (category === 'metrics') {
     switch (action) {
-    case "enabled":
-      matomoPaq.push(["setConsentGiven"]);
-      // Do it another time, since only one time seems to not be always enough:
-      matomoPaq.push(["setConsentGiven"]);
-      // Clear the do not track default check
-      matomoPaq.push(["setDoNotTrack", false]);
-      matomoPaq.push(["setDomains", config.DOMAIN_NAME ?? window.location.hostname]);
-      matomoPaq.push(["trackAllContentImpressions"]);
-      matomoPaq.push(["enableLinkTracking"]);
-      break;
-    case "disabled":
-      matomoPaq.push(["forgetConsentGiven"]);
-      matomoPaq.push(["setDoNotTrack", true]);
-      break;
-    case "setCustomUrl":
-      if (_.isString(name)) {
-        matomoPaq.push(["setCustomUrl", name]);
-        currentMetricsURL = name;
-      } else {
-        log.error("setCustomUrl: Missing URL");
-      }
-      break;
-    case "setDocumentTitle":
-      if (_.isString(name)) {
-        matomoPaq.push(["setDocumentTitle", name]);
-      } else {
-        log.error("setDocumentTitle: Missing title");
-      }
-      break;
-    case "trackPageView":
-      matomoPaq.push(["trackPageView"]);
-      break;
-    default:
-      log.error("Invalid action", action);
-      break;
+      case 'enabled':
+        matomoPaq.push(['setConsentGiven'])
+        // Do it another time, since only one time seems to not be always enough:
+        matomoPaq.push(['setConsentGiven'])
+        // Clear the do not track default check
+        matomoPaq.push(['setDoNotTrack', false])
+        matomoPaq.push(['setDomains', config.DOMAIN_NAME ?? window.location.hostname])
+        matomoPaq.push(['trackAllContentImpressions'])
+        matomoPaq.push(['enableLinkTracking'])
+        break
+      case 'disabled':
+        matomoPaq.push(['forgetConsentGiven'])
+        matomoPaq.push(['setDoNotTrack', true])
+        break
+      case 'setCustomUrl':
+        if (_.isString(name)) {
+          matomoPaq.push(['setCustomUrl', name])
+          currentMetricsURL = name
+        } else {
+          log.error('setCustomUrl: Missing URL')
+        }
+        break
+      case 'setDocumentTitle':
+        if (_.isString(name)) {
+          matomoPaq.push(['setDocumentTitle', name])
+        } else {
+          log.error('setDocumentTitle: Missing title')
+        }
+        break
+      case 'trackPageView':
+        matomoPaq.push(['trackPageView'])
+        break
+      default:
+        log.error('Invalid action', action)
+        break
     }
-    return;
+    return
   }
 
-  if (category === "trackSiteSearch") {
-    matomoPaq.push(["trackSiteSearch", action, name, value]);
-    return;
+  if (category === 'trackSiteSearch') {
+    matomoPaq.push(['trackSiteSearch', action, name, value])
+    return
   }
 
   if (!checkParameters(category, action, name, value)) {
-    return;
+    return
   }
 
-  const trackEvent: (string|number)[] = ["trackEvent", category, action];
+  const trackEvent: Array<string | number> = ['trackEvent', category, action]
   if (_.isString(name)) {
-    trackEvent.push(name);
+    trackEvent.push(name)
     if (_.isNumber(value) && _.isFinite(value)) {
       // isFinite() should be enough, but typescript don't recognize it (yet?)
-      trackEvent.push(value);
+      trackEvent.push(value)
     }
   }
-  matomoPaq.push(trackEvent);
+  matomoPaq.push(trackEvent)
 }
 
-const timers = new Map<string, number>();
+const timers = new Map<string, number>()
 const metrics = {
   /**
    * Record something for the tracking metrics
@@ -159,82 +159,82 @@ const metrics = {
    * @param {number} value optional value
    */
   send: (category: string, action: string, name?: string, value?: number): void => {
-    log.info({ category, action, name, value });
+    log.info({ category, action, name, value })
 
-    if (category === "metrics" && (action === "enabled" || action === "disabled")) {
-      metricsEnabled = action === "enabled";
-      log.info("metricsEnabled", metricsEnabled);
+    if (category === 'metrics' && (action === 'enabled' || action === 'disabled')) {
+      metricsEnabled = action === 'enabled'
+      log.info('metricsEnabled', metricsEnabled)
     } else if (!metricsEnabled) {
-      return;
+      return
     }
 
     switch (config.METRICS_SERVICE) {
-    case "matomo":
-      sendMatomoMetrics(category, action, name as string, value);
-      break;
-    case "disabled":
-      logDisabledMetricsConfiguration();
-      break;
-    default:
-      logUnknownMetricsConfiguration();
+      case 'matomo':
+        sendMatomoMetrics(category, action, name, value)
+        break
+      case 'disabled':
+        logDisabledMetricsConfiguration()
+        break
+      default:
+        logUnknownMetricsConfiguration()
     }
   },
-  setVariable: (name: string, value: string, scope: VariableScope = "page"): void => {
-    const matomoPaq: unknown[] | undefined = window._paq;
-    const { id, found } = getVariableId(name, scope);
+  setVariable: (name: string, value: string, scope: VariableScope = 'page'): void => {
+    const matomoPaq: unknown[] | undefined = window._paq
+    const { id, found } = getVariableId(name, scope)
     if (!found) {
-      customVariables[scope].set(name, id);
+      customVariables[scope].set(name, id)
     }
-    if (config.METRICS_SERVICE === "matomo" && _.isObject(matomoPaq)) {
-      matomoPaq.push(["setCustomVariable", id, name, value, scope]);
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['setCustomVariable', id, name, value, scope])
     }
   },
-  deleteVariable: (name: string, scope: VariableScope = "page"): void => {
-    const matomoPaq: unknown[] | undefined = window._paq;
-    const { id, found } = getVariableId(name, scope);
+  deleteVariable: (name: string, scope: VariableScope = 'page'): void => {
+    const matomoPaq: unknown[] | undefined = window._paq
+    const { id, found } = getVariableId(name, scope)
     if (!found) {
-      log.warn(`Variable ${name} / ${scope} do not exists`);
-      return;
+      log.warn(`Variable ${name} / ${scope} do not exists`)
+      return
     }
-    customVariables[scope].delete(name);
-    if (config.METRICS_SERVICE === "matomo" && _.isObject(matomoPaq)) {
-      matomoPaq.push(["deleteCustomVariable", id, scope]);
+    customVariables[scope].delete(name)
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['deleteCustomVariable', id, scope])
     }
   },
   setUser: (user: User): void => {
-    const matomoPaq: unknown[] | undefined = window._paq;
-    if (config.METRICS_SERVICE === "matomo" && _.isObject(matomoPaq)) {
-      matomoPaq.push(["setUserId", user.id]);
-      metrics.setVariable("UserRole", user.role);
-      matomoPaq.push(["trackEvent", "registration", "login", user.role]);
+    const matomoPaq: unknown[] | undefined = window._paq
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['setUserId', user.id])
+      metrics.setVariable('UserRole', user.role)
+      matomoPaq.push(['trackEvent', 'registration', 'login', user.role])
     }
   },
   resetUser: (): void => {
-    const matomoPaq: unknown[] | undefined = window._paq;
-    if (config.METRICS_SERVICE === "matomo" && _.isObject(matomoPaq)) {
-      matomoPaq.push(["trackEvent", "registration", "logout"]);
-      metrics.deleteVariable("UserRole");
-      matomoPaq.push(["resetUserId"]);
-      matomoPaq.push(["deleteCookies"]); // Reset visitor id
+    const matomoPaq: unknown[] | undefined = window._paq
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      matomoPaq.push(['trackEvent', 'registration', 'logout'])
+      metrics.deleteVariable('UserRole')
+      matomoPaq.push(['resetUserId'])
+      matomoPaq.push(['deleteCookies']) // Reset visitor id
     }
   },
   setLanguage: (language: string): void => {
-    const matomoPaq: unknown[] | undefined = window._paq;
-    if (config.METRICS_SERVICE === "matomo" && _.isObject(matomoPaq)) {
-      metrics.setVariable("UserLang", language, "visit");
+    const matomoPaq: unknown[] | undefined = window._paq
+    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+      metrics.setVariable('UserLang', language, 'visit')
     }
   },
   startTimer: (name: string): void => {
-    timers.set(name, Date.now());
+    timers.set(name, Date.now())
   },
   endTimer: (name: string): void => {
-    const startTime = timers.get(name);
+    const startTime = timers.get(name)
     if (_.isNumber(startTime)) {
-      timers.delete(name);
-      const duration = Date.now() - startTime;
-      metrics.send("performance", name, currentMetricsURL, Math.round(duration / 100) / 10);
+      timers.delete(name)
+      const duration = Date.now() - startTime
+      metrics.send('performance', name, currentMetricsURL, Math.round(duration / 100) / 10)
     }
-  },
-};
+  }
+}
 
-export default metrics;
+export default metrics

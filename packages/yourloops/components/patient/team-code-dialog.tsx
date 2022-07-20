@@ -26,61 +26,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { Theme, makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import { Theme, makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 export interface TeamCodeDialogProps {
   /** Team code */
-  code: string;
+  code: string
   /** Team name */
-  name: string;
+  name: string
   /** Close the modal event callback */
-  onClose: () => void;
+  onClose: () => void
 }
 
-const reCode = /^([0-9]{3})([0-9]{3})([0-9]{3})$/;
+const reCode = /^([0-9]{3})([0-9]{3})([0-9]{3})$/
 const dialogClasses = makeStyles(
   (theme: Theme) => {
     return {
       contentCode: {
-        display: "flex",
-        fontSize: "x-large",
+        display: 'flex',
+        fontSize: 'x-large'
       },
       divTeamCode: {
-        marginLeft: "auto",
-        marginRight: "auto",
+        marginLeft: 'auto',
+        marginRight: 'auto',
         backgroundColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
-        paddingLeft: "1rem",
-        paddingRight: "1rem",
-        paddingTop: "0.3rem",
-        paddingBottom: "0.3rem",
+        paddingLeft: '1rem',
+        paddingRight: '1rem',
+        paddingTop: '0.3rem',
+        paddingBottom: '0.3rem',
         borderColor: theme.palette.grey[200], // eslint-disable-line no-magic-numbers
-        borderWidth: "1px",
-        borderRadius: theme.shape.borderRadius,
-      },
-    };
+        borderWidth: '1px',
+        borderRadius: theme.shape.borderRadius
+      }
+    }
   },
-  { name: "ylp-dialog-team-code" }
-);
+  { name: 'ylp-dialog-team-code' }
+)
 
 function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = dialogClasses();
-  const { code, name, onClose } = props;
-  const dialogIsOpen = !!code.match(reCode);
+  const { t } = useTranslation('yourloops')
+  const classes = dialogClasses()
+  const { code, name, onClose } = props
+  const dialogIsOpen = !!code.match(reCode)
 
   return (
     <Dialog
       id="patient-list-dialog-team-code"
-      aria-labelledby={t("identification-code")}
+      aria-labelledby={t('identification-code')}
       open={dialogIsOpen}
       onClose={onClose}
     >
@@ -90,17 +90,17 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
 
       <DialogContent id="patient-list-dialog-team-code-content-placeholder">
         <DialogContentText id="patient-list-dialog-team-code-content-placeholder-1">
-          {t("modal-team-code-descr-placeholder")}
+          {t('modal-team-code-descr-placeholder')}
         </DialogContentText>
         <DialogContentText id="patient-list-dialog-team-code-content-placeholder-2">
-          {t("modal-team-code-descr-placeholder-2")}
+          {t('modal-team-code-descr-placeholder-2')}
         </DialogContentText>
       </DialogContent>
 
       <DialogContent id="patient-list-dialog-team-code-content-code" className={classes.contentCode}>
         {dialogIsOpen &&
           <div className={classes.divTeamCode}>
-            {code.replace(reCode, "$1 - $2 - $3")}
+            {code.replace(reCode, '$1 - $2 - $3')}
           </div>
         }
       </DialogContent>
@@ -110,11 +110,11 @@ function TeamCodeDialog(props: TeamCodeDialogProps): JSX.Element {
           id="patient-list-dialog-team-code-button-ok"
           onClick={onClose}
         >
-          {t("button-ok")}
+          {t('button-ok')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default TeamCodeDialog;
+export default TeamCodeDialog

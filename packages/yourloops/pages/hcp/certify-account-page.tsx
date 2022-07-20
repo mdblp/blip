@@ -25,54 +25,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from 'react'
+import { useLocation, useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import { errorTextFromException } from "../../lib/utils";
-import { useAlert } from "../../components/utils/snackbar";
-import LoadingBackdrop from "../../components/utils/loading-backdrop";
+import { errorTextFromException } from '../../lib/utils'
+import { useAlert } from '../../components/utils/snackbar'
+import LoadingBackdrop from '../../components/utils/loading-backdrop'
 
 function CertifyAccountPage(): JSX.Element {
-  const { search } = useLocation();
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
-  const history = useHistory();
+  const { search } = useLocation()
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const history = useHistory()
 
-  const [processing, setProcessing] = useState(false);
-  const sourceUrl = new URLSearchParams(search).get("source");
-  const frProId = new URLSearchParams(search).get("frproid");
-  const error = new URLSearchParams(search).get("error");
+  const [processing, setProcessing] = useState(false)
+  const sourceUrl = new URLSearchParams(search).get('source')
+  const frProId = new URLSearchParams(search).get('frproid')
+  const error = new URLSearchParams(search).get('error')
 
-  const certify = () => {
+  const certify = (): void => {
     try {
-      setProcessing(true);
+      setProcessing(true)
       if (error) {
-        alert.error(t("error-http-500"));
-        return;
+        alert.error(t('error-http-500'))
+        return
       }
-      if (sourceUrl === "psc" && frProId) {
+      if (sourceUrl === 'psc' && frProId) {
         // TODO need to adapt eCPS certification with auth0
         //  see YLP-1591 (https://diabeloop.atlassian.net/browse/YLP-1591)
-        alert.success(t("certify-professional-account-done"));
+        alert.success(t('certify-professional-account-done'))
       }
     } catch (err) {
-      alert.error(errorTextFromException(err));
+      alert.error(errorTextFromException(err))
     } finally {
-      setProcessing(false);
-      history.push("/preferences");
+      setProcessing(false)
+      history.push('/preferences')
     }
-  };
+  }
 
   useEffect(() => {
-    certify();
+    certify()
     // We just need to call this async function once when the component is mounted, after that there's a redirection
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   return (
     <LoadingBackdrop open={processing} />
-  );
+  )
 }
 
-export default CertifyAccountPage;
+export default CertifyAccountPage

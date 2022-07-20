@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
+import React from 'react'
 
-import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
+import SvgIcon, { SvgIconProps } from '@material-ui/core/SvgIcon'
 
 const PendingIcon = (props: SvgIconProps): JSX.Element => {
   return (
@@ -44,7 +44,7 @@ const PendingIcon = (props: SvgIconProps): JSX.Element => {
         </g>
       </g>
     </SvgIcon>
-  );
-};
+  )
+}
 
-export default PendingIcon;
+export default PendingIcon

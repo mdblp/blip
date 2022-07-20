@@ -15,8 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import i18next from "i18next";
+import _ from 'lodash'
+import i18next from 'i18next'
 
 /**
  * getPatientFullName
@@ -25,5 +25,5 @@ import i18next from "i18next";
  * @return {String} PwD's full name (first & last)
  */
 export function getPatientFullName(patient) {
-  return _.get(patient, "profile.fullName", i18next.t("Anonymous user"));
+  return _.get(patient, 'profile.fullName', i18next.t('Anonymous user'))
 }

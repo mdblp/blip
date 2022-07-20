@@ -15,17 +15,17 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import _ from "lodash";
-import { range } from "d3-array";
+import PropTypes from 'prop-types'
+import React from 'react'
+import _ from 'lodash'
+import { range } from 'd3-array'
 
-import * as datetime from "../../../utils/datetime";
+import * as datetime from '../../../utils/datetime'
 
-import styles from "./XAxisTicks.css";
+import styles from './XAxisTicks.css'
 
 const XAxisTicks = (props) => {
-  const { data, margins, tickLength, xScale } = props;
+  const { data, margins, tickLength, xScale } = props
   return (
     <g id="xAxisTicks">
       {_.map(data, (msInDay) => (
@@ -39,13 +39,13 @@ const XAxisTicks = (props) => {
         />
       ))}
     </g>
-  );
-};
+  )
+}
 
 XAxisTicks.defaultProps = {
   data: _.map(range(0, 9), (i) => (i * datetime.THREE_HRS)),
-  tickLength: 15,
-};
+  tickLength: 15
+}
 
 XAxisTicks.propTypes = {
   data: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
@@ -53,10 +53,10 @@ XAxisTicks.propTypes = {
     top: PropTypes.number.isRequired,
     right: PropTypes.number.isRequired,
     bottom: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired
   }).isRequired,
   tickLength: PropTypes.number.isRequired,
-  xScale: PropTypes.func.isRequired,
-};
+  xScale: PropTypes.func.isRequired
+}
 
-export default XAxisTicks;
+export default XAxisTicks

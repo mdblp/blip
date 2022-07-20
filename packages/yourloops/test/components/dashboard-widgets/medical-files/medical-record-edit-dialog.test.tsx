@@ -25,42 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { MedicalRecord } from "../../../../lib/medical-files/model";
-import MedicalFilesApi from "../../../../lib/medical-files/medical-files-api";
-import * as alertHookMock from "../../../../components/utils/snackbar";
+import React from 'react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { MedicalRecord } from '../../../../lib/medical-files/model'
+import MedicalFilesApi from '../../../../lib/medical-files/medical-files-api'
+import * as alertHookMock from '../../../../components/utils/snackbar'
 import MedicalRecordEditDialog, {
-  MedicalRecordEditDialogProps,
-} from "../../../../components/dialogs/medical-record-edit-dialog";
-import userEvent from "@testing-library/user-event";
+  MedicalRecordEditDialogProps
+} from '../../../../components/dialogs/medical-record-edit-dialog'
+import userEvent from '@testing-library/user-event'
 
-
-jest.mock("../../../../components/utils/snackbar");
-describe("Medical record edit dialog", () => {
-  const updateMedicalRecordSpy = jest.spyOn(MedicalFilesApi, "updateMedicalRecord").mockResolvedValue({} as MedicalRecord);
-  const createMedicalRecordSpy = jest.spyOn(MedicalFilesApi, "createMedicalRecord").mockResolvedValue({} as MedicalRecord);
-  const onClose = jest.fn();
-  const onSaved = jest.fn();
-  const successAlertMock = jest.fn();
-  const errorAlertMock = jest.fn();
-  let medicalRecord: MedicalRecord = undefined;
-  let diagnosisTextArea: HTMLTextAreaElement;
-  let progressionProposalTextArea: HTMLTextAreaElement;
-  let trainingSubjectTextArea: HTMLTextAreaElement;
-  let saveButton: HTMLButtonElement;
+jest.mock('../../../../components/utils/snackbar')
+describe('Medical record edit dialog', () => {
+  const updateMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'updateMedicalRecord').mockResolvedValue({} as MedicalRecord)
+  const createMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'createMedicalRecord').mockResolvedValue({} as MedicalRecord)
+  const onClose = jest.fn()
+  const onSaved = jest.fn()
+  const successAlertMock = jest.fn()
+  const errorAlertMock = jest.fn()
+  let medicalRecord: MedicalRecord
+  let diagnosisTextArea: HTMLTextAreaElement
+  let progressionProposalTextArea: HTMLTextAreaElement
+  let trainingSubjectTextArea: HTMLTextAreaElement
+  let saveButton: HTMLButtonElement
 
   function getMedicalRecord(): MedicalRecord {
     return {
-      id: "fakeId",
-      authorId: "fakeAuthorId",
-      creationDate: "2022-05-23",
-      patientId: "PatientId",
-      teamId: "teamId",
-      diagnosis: "diag1",
-      progressionProposal: "proposal1",
-      trainingSubject: "training1",
-    };
+      id: 'fakeId',
+      authorId: 'fakeAuthorId',
+      creationDate: '2022-05-23',
+      patientId: 'PatientId',
+      teamId: 'teamId',
+      diagnosis: 'diag1',
+      progressionProposal: 'proposal1',
+      trainingSubject: 'training1'
+    }
   }
 
   function getDialogJSX(readonly: boolean): JSX.Element {
@@ -69,79 +68,79 @@ describe("Medical record edit dialog", () => {
       onSaved,
       readonly,
       medicalRecord,
-      teamId: "teamId",
-      patientId: "patientId",
-    };
-    return <MedicalRecordEditDialog {...props} />;
+      teamId: 'teamId',
+      patientId: 'patientId'
+    }
+    return <MedicalRecordEditDialog {...props} />
   }
 
   function mountComponent(readonly = false) {
-    render(getDialogJSX(readonly));
-    diagnosisTextArea = within(screen.getByTestId("diagnosis")).getByRole("textbox");
-    progressionProposalTextArea = within(screen.getByTestId("progression-proposal")).getByRole("textbox");
-    trainingSubjectTextArea = within(screen.getByTestId("training-subject")).getByRole("textbox");
-    saveButton = screen.getByRole("button", { name: "save" });
+    render(getDialogJSX(readonly))
+    diagnosisTextArea = within(screen.getByTestId('diagnosis')).getByRole('textbox')
+    progressionProposalTextArea = within(screen.getByTestId('progression-proposal')).getByRole('textbox')
+    trainingSubjectTextArea = within(screen.getByTestId('training-subject')).getByRole('textbox')
+    saveButton = screen.getByRole('button', { name: 'save' })
   }
 
   beforeAll(() => {
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
-      return { success: successAlertMock, error: errorAlertMock };
-    });
-  });
+      return { success: successAlertMock, error: errorAlertMock }
+    })
+  })
 
-  it("should create a new medical record", async () => {
-    mountComponent();
-    expect(diagnosisTextArea.value).toBe("");
-    expect(progressionProposalTextArea.value).toBe("");
-    expect(trainingSubjectTextArea.value).toBe("");
+  it('should create a new medical record', async () => {
+    mountComponent()
+    expect(diagnosisTextArea.value).toBe('')
+    expect(progressionProposalTextArea.value).toBe('')
+    expect(trainingSubjectTextArea.value).toBe('')
 
-    fireEvent.click(saveButton);
-    expect(updateMedicalRecordSpy).not.toHaveBeenCalled();
-    expect(createMedicalRecordSpy).not.toHaveBeenCalled();
+    fireEvent.click(saveButton)
+    expect(updateMedicalRecordSpy).not.toHaveBeenCalled()
+    expect(createMedicalRecordSpy).not.toHaveBeenCalled()
 
-    await userEvent.type(diagnosisTextArea, "abcd");
-    userEvent.click(saveButton);
-    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled());
-    expect(successAlertMock).toHaveBeenCalledWith("medical-record-save-success");
-    expect(onSaved).toHaveBeenCalled();
-  });
+    await userEvent.type(diagnosisTextArea, 'abcd')
+    userEvent.click(saveButton)
+    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled())
+    expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
+    expect(onSaved).toHaveBeenCalled()
+  })
 
-  it("should display an error if save failed", async () => {
-    createMedicalRecordSpy.mockImplementationOnce(() => Promise.reject(Error("This error was thrown by a mock on purpose")));
-    mountComponent();
+  it('should display an error if save failed', async () => {
+    createMedicalRecordSpy.mockImplementationOnce(() => Promise.reject(Error('This error was thrown by a mock on purpose')))
+    mountComponent()
 
-    await userEvent.type(progressionProposalTextArea, "abcd");
-    await userEvent.type(trainingSubjectTextArea, "efgh");
-    fireEvent.click(saveButton);
-    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled());
-    expect(errorAlertMock).toHaveBeenCalledWith("medical-record-save-failed");
-  });
+    await userEvent.type(progressionProposalTextArea, 'abcd')
+    await userEvent.type(trainingSubjectTextArea, 'efgh')
+    fireEvent.click(saveButton)
+    await waitFor(() => expect(createMedicalRecordSpy).toHaveBeenCalled())
+    expect(errorAlertMock).toHaveBeenCalledWith('medical-record-save-failed')
+  })
 
-  it("should edit and save medical record", async () => {
-    medicalRecord = getMedicalRecord();
-    mountComponent();
-    expect(diagnosisTextArea.value).toBe("diag1");
-    expect(progressionProposalTextArea.value).toBe("proposal1");
-    expect(trainingSubjectTextArea.value).toBe("training1");
+  it('should edit and save medical record', async () => {
+    medicalRecord = getMedicalRecord()
+    mountComponent()
+    expect(diagnosisTextArea.value).toBe('diag1')
+    expect(progressionProposalTextArea.value).toBe('proposal1')
+    expect(trainingSubjectTextArea.value).toBe('training1')
 
-    await userEvent.type(diagnosisTextArea, "diag2");
-    fireEvent.click(saveButton);
-    await waitFor(() => expect(updateMedicalRecordSpy).toHaveBeenCalled());
-    expect(successAlertMock).toHaveBeenCalledWith("medical-record-save-success");
-    expect(onSaved).toHaveBeenCalled();
-  });
+    await userEvent.type(diagnosisTextArea, 'diag2')
+    fireEvent.click(saveButton)
+    await waitFor(() => expect(updateMedicalRecordSpy).toHaveBeenCalled())
+    expect(successAlertMock).toHaveBeenCalledWith('medical-record-save-success')
+    expect(onSaved).toHaveBeenCalled()
+  })
 
-  it("should not be editable when opening with readonly", async () => {
-    medicalRecord = getMedicalRecord();
-    mountComponent(true);
-    await userEvent.type(diagnosisTextArea, "new diag");
-    await userEvent.type(progressionProposalTextArea, "new proposal");
-    await userEvent.type(trainingSubjectTextArea, "new training");
+  it('should not be editable when opening with readonly', async () => {
+    medicalRecord = getMedicalRecord()
+    mountComponent(true)
+    await userEvent.type(diagnosisTextArea, 'new diag')
+    await userEvent.type(progressionProposalTextArea, 'new proposal')
+    await userEvent.type(trainingSubjectTextArea, 'new training')
 
-    expect(diagnosisTextArea.value).toBe("diag1");
-    expect(progressionProposalTextArea.value).toBe("proposal1");
-    expect(trainingSubjectTextArea.value).toBe("training1");
-    fireEvent.click(saveButton);
-    expect(createMedicalRecordSpy).not.toHaveBeenCalled();
-  });
-});
+    expect(diagnosisTextArea.value).toBe('diag1')
+    expect(progressionProposalTextArea.value).toBe('proposal1')
+    expect(trainingSubjectTextArea.value).toBe('training1')
+    fireEvent.click(saveButton)
+    expect(createMedicalRecordSpy).not.toHaveBeenCalled()
+  })
+})

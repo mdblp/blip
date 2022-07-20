@@ -25,61 +25,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles } from "@material-ui/styles";
-import { Theme } from "@material-ui/core/styles";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import { makeStyles } from '@material-ui/styles'
+import { Theme } from '@material-ui/core/styles'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
 
 export interface BasicDropdownProps {
-  id: string;
-  defaultValue: string;
-  values: string[];
-  error?: boolean;
-  onSelect: (value: string) => void;
+  id: string
+  defaultValue: string
+  values: string[]
+  error?: boolean
+  onSelect: (value: string) => void
 }
 
 const styles = makeStyles((theme: Theme) => ({
   select: {
-    "backgroundColor": theme.palette.grey[100],
-    "height": "40px",
-    "maxWidth": "200px",
-    "borderRadius": "8px",
-    "& .MuiOutlinedInput-notchedOutline": {
-      border: "none",
-    },
+    backgroundColor: theme.palette.grey[100],
+    height: '40px',
+    maxWidth: '200px',
+    borderRadius: '8px',
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: 'none'
+    }
   },
   error: {
-    border: `1px solid ${theme.palette.error.main}`,
-  },
-}));
+    border: `1px solid ${theme.palette.error.main}`
+  }
+}))
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
 
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultValue, values, id, error } = props;
-  const { t } = useTranslation("yourloops");
-  const classes = styles();
-  const [selectedValue, setSelectedValue] = React.useState(defaultValue);
+  const { onSelect, defaultValue, values, id, error } = props
+  const { t } = useTranslation('yourloops')
+  const classes = styles()
+  const [selectedValue, setSelectedValue] = React.useState(defaultValue)
 
   const MenuProps = {
     PaperProps: {
       style: {
         maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+        width: 250
+      }
+    }
+  }
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const value = event.target.value as string;
-    setSelectedValue(value);
-    onSelect(value);
-  };
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>): void => {
+    const value = event.target.value as string
+    setSelectedValue(value)
+    onSelect(value)
+  }
 
   return (
     <Select
@@ -98,7 +98,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
         </MenuItem>
       ))}
     </Select>
-  );
+  )
 }
 
-export default BasicDropdown;
+export default BasicDropdown

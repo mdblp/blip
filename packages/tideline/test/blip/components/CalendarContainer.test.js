@@ -15,99 +15,99 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import _ from "lodash";
-import { mount }from "enzyme";
-import * as sinon from "sinon";
+import React from 'react'
+import _ from 'lodash'
+import { mount }from 'enzyme'
+import * as sinon from 'sinon'
 
-import { DEFAULT_BG_BOUNDS, MGDL_UNITS, BG_CLAMP_THRESHOLD } from "../../../js/data/util/constants";
-import CalendarContainer from "../../../plugins/blip/basics/components/CalendarContainer";
+import { DEFAULT_BG_BOUNDS, MGDL_UNITS, BG_CLAMP_THRESHOLD } from '../../../js/data/util/constants'
+import CalendarContainer from '../../../plugins/blip/basics/components/CalendarContainer'
 
-describe("CalendarContainer", () => {
+describe('CalendarContainer', () => {
   const data = {
     basals: {
       summary: {
         basal: {
-          total: 4,
-        },
-      },
-    },
-  };
+          total: 4
+        }
+      }
+    }
+  }
 
   var props = {
     bgClasses: {
-      "very-low": {
-        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+      'very-low': {
+        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow
       },
-      "low": {
-        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+      'low': {
+        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower
       },
-      "target": {
-        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
+      'target': {
+        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper
       },
-      "high": {
-        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
+      'high': {
+        boundary: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
       },
-      "very-high": {
-        boundary: BG_CLAMP_THRESHOLD[MGDL_UNITS],
-      },
+      'very-high': {
+        boundary: BG_CLAMP_THRESHOLD[MGDL_UNITS]
+      }
     },
-    bgUnits: "mg/dL",
+    bgUnits: 'mg/dL',
     data,
     chart: sinon.stub(),
     days: [
       {
-        date: new Date().toISOString(),
-      },
+        date: new Date().toISOString()
+      }
     ],
     hasHover: false,
     onSelectDay: sinon.stub(),
-    sectionId: "basals",
+    sectionId: 'basals',
     settingsTogglable: false,
     selectorOptions: {
       primary: {
-        key: "basal",
-        path: "basal",
-        average: true,
+        key: 'basal',
+        path: 'basal',
+        average: true
       },
       rows: [
         [
           {
-            key: "suspended",
-            path: "basal",
-            average: true,
-          },
-        ],
-      ],
+            key: 'suspended',
+            path: 'basal',
+            average: true
+          }
+        ]
+      ]
     },
-    timezone: "UTC",
-    type: "basals",
-    title: "Basals",
-    trackMetric: sinon.stub(),
-  };
+    timezone: 'UTC',
+    type: 'basals',
+    title: 'Basals',
+    trackMetric: sinon.stub()
+  }
 
-  let wrapper;
-  let selectSubtotalSpy;
+  let wrapper
+  let selectSubtotalSpy
 
   before(() => {
-    selectSubtotalSpy = sinon.stub(CalendarContainer.prototype.actions, "selectSubtotal");
-  });
+    selectSubtotalSpy = sinon.stub(CalendarContainer.prototype.actions, 'selectSubtotal')
+  })
 
   beforeEach(() => {
-    wrapper = mount(<CalendarContainer {...props} />);
-  });
+    wrapper = mount(<CalendarContainer {...props} />)
+  })
 
   afterEach(() => {
-    selectSubtotalSpy.reset();
-  });
+    selectSubtotalSpy.reset()
+  })
 
   after(() => {
-    selectSubtotalSpy.restore();
-  });
+    selectSubtotalSpy.restore()
+  })
 
-  describe("componentWillMount", () => {
-    it("should set an alternative selected option with a value if the current one has no value", () => {
-      sinon.assert.callCount(selectSubtotalSpy, 0);
+  describe('componentWillMount', () => {
+    it('should set an alternative selected option with a value if the current one has no value', () => {
+      sinon.assert.callCount(selectSubtotalSpy, 0)
 
       wrapper.setProps({
         data: _.assign({}, data, {
@@ -116,18 +116,18 @@ describe("CalendarContainer", () => {
               basal: {
                 total: 0,
                 suspended: {
-                  count: 2,
-                },
-              },
-            },
-          },
-        }),
-      });
+                  count: 2
+                }
+              }
+            }
+          }
+        })
+      })
 
-      wrapper.unmount().mount();
+      wrapper.unmount().mount()
 
-      sinon.assert.callCount(selectSubtotalSpy, 1);
-      sinon.assert.calledWith(selectSubtotalSpy, props.sectionId, "suspended");
-    });
-  });
-});
+      sinon.assert.callCount(selectSubtotalSpy, 1)
+      sinon.assert.calledWith(selectSubtotalSpy, props.sectionId, 'suspended')
+    })
+  })
+})

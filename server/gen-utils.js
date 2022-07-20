@@ -11,21 +11,21 @@
  * FOR A PARTICULAR PURPOSE. See the License for more details.
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const _ = require("lodash");
-const handlebars = require("handlebars");
+const fs = require('fs').promises
+const path = require('path')
+const _ = require('lodash')
+const handlebars = require('handlebars')
 
 function getDistDir(defaultDir = `${__dirname}/../dist`) {
-  let dir = null;
+  let dir = null
   if (process.argv.length === 3) {
-    dir = path.resolve(process.argv[2]);
+    dir = path.resolve(process.argv[2])
   } else if (!_.isEmpty(process.env.DIST_DIR)) {
-    dir = path.resolve(process.env.DIST_DIR);
+    dir = path.resolve(process.env.DIST_DIR)
   } else {
-    dir = path.resolve(defaultDir);
+    dir = path.resolve(defaultDir)
   }
-  return dir;
+  return dir
 }
 
 /**
@@ -35,20 +35,20 @@ function getDistDir(defaultDir = `${__dirname}/../dist`) {
  * @param {object} templateValues The values to use for handlebars
  */
 async function genFromTemplate(templateFilename, outputFilename, templateValues) {
-  const resolvedTemplateFilename = path.resolve(`${__dirname}/../templates/${templateFilename}`);
-  console.log(`Loading ${resolvedTemplateFilename}...`);
-  const templateContent = await fs.readFile(resolvedTemplateFilename, { encoding: "utf-8", flag: "r" });
+  const resolvedTemplateFilename = path.resolve(`${__dirname}/../templates/${templateFilename}`)
+  console.log(`Loading ${resolvedTemplateFilename}...`)
+  const templateContent = await fs.readFile(resolvedTemplateFilename, { encoding: 'utf-8', flag: 'r' })
 
-  console.log("Using configuration", templateValues);
-  const templateCompiler = handlebars.compile(templateContent);
+  console.log('Using configuration', templateValues)
+  const templateCompiler = handlebars.compile(templateContent)
 
-  const outputFileContent = templateCompiler(templateValues);
-  const resolvedOutputFilename = `${getDistDir()}/${outputFilename}`;
-  await fs.writeFile(resolvedOutputFilename, outputFileContent, { encoding: "utf-8", flag: "w", mode: 0o644 });
-  console.log(`${resolvedOutputFilename} generated successfully`);
+  const outputFileContent = templateCompiler(templateValues)
+  const resolvedOutputFilename = `${getDistDir()}/${outputFilename}`
+  await fs.writeFile(resolvedOutputFilename, outputFileContent, { encoding: 'utf-8', flag: 'w', mode: 0o644 })
+  console.log(`${resolvedOutputFilename} generated successfully`)
 }
 
 module.exports = {
   getDistDir,
-  genFromTemplate,
-};
+  genFromTemplate
+}

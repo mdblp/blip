@@ -15,18 +15,18 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import i18next from "i18next";
-import Grid from "@material-ui/core/Grid";
-import LockIcon from "@material-ui/icons/LockOutlined";
+import React from 'react'
+import PropTypes from 'prop-types'
+import i18next from 'i18next'
+import Grid from '@material-ui/core/Grid'
+import LockIcon from '@material-ui/icons/LockOutlined'
 
-import colors from "../../../styles/colors.css";
-import styles from "./ConfidentialTooltip.css";
+import colors from '../../../styles/colors.css'
+import styles from './ConfidentialTooltip.css'
 
-import Tooltip from "../../common/tooltips/Tooltip";
+import Tooltip from '../../common/tooltips/Tooltip'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 class ConfidentialTooltip extends React.Component {
 
@@ -35,8 +35,8 @@ class ConfidentialTooltip extends React.Component {
       <Grid item>
         <LockIcon className={styles.icon} />
       </Grid>
-      <Grid item>{t("Confidential mode")}</Grid>
-    </Grid>;
+      <Grid item>{t('Confidential mode')}</Grid>
+    </Grid>
   }
 
   render() {
@@ -47,44 +47,44 @@ class ConfidentialTooltip extends React.Component {
         {...this.props}
         content={this.renderConfidential(/** confidential */)}
       />
-    );
+    )
   }
 }
 
 ConfidentialTooltip.propTypes = {
   position: PropTypes.shape({
     top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    left: PropTypes.number.isRequired
   }).isRequired,
   offset: PropTypes.shape({
     top: PropTypes.number.isRequired,
     left: PropTypes.number,
-    horizontal: PropTypes.number,
+    horizontal: PropTypes.number
   }),
   title: PropTypes.node,
   tail: PropTypes.bool.isRequired,
-  side: PropTypes.oneOf(["top", "right", "bottom", "left"]).isRequired,
+  side: PropTypes.oneOf(['top', 'right', 'bottom', 'left']).isRequired,
   backgroundColor: PropTypes.string,
   borderColor: PropTypes.string.isRequired,
   borderWidth: PropTypes.number.isRequired,
   confidential: PropTypes.shape({
     duration: PropTypes.shape({
       units: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    }).isRequired,
+      value: PropTypes.number.isRequired
+    }).isRequired
   }).isRequired,
-  timePrefs: PropTypes.object.isRequired,
-};
+  timePrefs: PropTypes.object.isRequired
+}
 
 ConfidentialTooltip.defaultProps = {
   tail: true,
-  side: "right",
+  side: 'right',
   tailWidth: 9,
   tailHeight: 17,
   tailColor: colors.confidentialMode,
   borderColor: colors.confidentialMode,
   borderWidth: 2,
-  title: null,
-};
+  title: null
+}
 
-export default ConfidentialTooltip;
+export default ConfidentialTooltip

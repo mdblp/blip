@@ -26,25 +26,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PluginFunc } from "dayjs";
+import { PluginFunc } from 'dayjs'
 
-declare module "dayjs" {
+declare module 'dayjs' {
   interface Dayjs {
     /**
      * Return all the days in a month for a calendar
      */
-    getNestedWeekArray: () => Dayjs[][];
+    getNestedWeekArray: () => Dayjs[][]
     /**
      * Return all the days in a month for a calendar
      */
-    getWeekArray: () => Dayjs[];
+    getWeekArray: () => Dayjs[]
     /**
      * Return the weekdays in an array
      * @example ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
      */
-    getWeekdays: (format?: string) => string[];
+    getWeekdays: (format?: string) => string[]
   }
 }
 
-declare const plugin: PluginFunc;
-export = plugin;
+declare const plugin: PluginFunc
+export = plugin

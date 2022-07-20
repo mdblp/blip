@@ -26,46 +26,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { useAuth0 } from "@auth0/auth0-react";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { useAuth0 } from '@auth0/auth0-react'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
 
-import appConfig from "../../lib/config";
+import appConfig from '../../lib/config'
 
 const loginStyle = makeStyles((theme: Theme) => {
   return {
     card: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(2)
     },
     cardContent: {
-      textAlign: "center",
-      margin: `${theme.spacing(2)}px 0`,
+      textAlign: 'center',
+      margin: `${theme.spacing(2)}px 0`
     },
     cardActions: {
-      justifyContent: "center",
-    },
-  };
-}, { name: "login-page-styles" });
+      justifyContent: 'center'
+    }
+  }
+}, { name: 'login-page-styles' })
 
 function Login(): JSX.Element {
-  const { loginWithRedirect, error, logout } = useAuth0();
-  const { t } = useTranslation("yourloops");
-  const { cardContent, card, cardActions } = loginStyle();
-  if (error) {
-    console.log(error);
+  const { loginWithRedirect, error, logout } = useAuth0()
+  const { t } = useTranslation('yourloops')
+  const { cardContent, card, cardActions } = loginStyle()
+
+  const onClickLogout = async (): Promise<void> => {
+    await logout({ returnTo: window.location.origin })
   }
-  const onClickLogout = async () => {
-    await logout({ returnTo: window.location.origin });
-  };
+
+  if (error) {
+    console.log(error)
+  }
+
   return (
     <Container maxWidth="sm">
       <Card className={card} elevation={4}>
@@ -73,17 +76,16 @@ function Login(): JSX.Element {
           <img
             src={`/branding_${appConfig.BRANDING}_logo.svg`}
             height={35}
-            alt={t("alt-img-logo")}
+            alt={t('alt-img-logo')}
           />
         </CardMedia>
         <CardContent className={cardContent}>
-          {error ?
-            <Typography variant="h6">
-              {t("valid-email-alert")}
+          {error
+            ? <Typography variant="h6">
+              {t('valid-email-alert')}
             </Typography>
-            :
-            <Typography variant="h6" id="welcome-message">
-              {t("welcome-message")}
+            : <Typography variant="h6" id="welcome-message">
+              {t('welcome-message')}
             </Typography>
           }
         </CardContent>
@@ -95,7 +97,7 @@ function Login(): JSX.Element {
             disableElevation
             onClick={loginWithRedirect}
           >
-            {t("login")}
+            {t('login')}
           </Button>
           {error &&
             <Button
@@ -104,13 +106,13 @@ function Login(): JSX.Element {
               disableElevation
               onClick={onClickLogout}
             >
-              {t("logout")}
+              {t('logout')}
             </Button>
           }
         </CardActions>
       </Card>
     </Container>
-  );
+  )
 }
 
-export default Login;
+export default Login

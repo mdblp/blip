@@ -25,47 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import proSanteLogo from "pro-sante-connect.svg";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import proSanteLogo from 'pro-sante-connect.svg'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
 
 interface Props {
-  onClick: () => void;
+  onClick: () => void
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    textAlign: "center",
-    [theme.breakpoints.only("xs")]: {
-      display: "flex",
-      alignItems: "center",
-    },
+    textAlign: 'center',
+    [theme.breakpoints.only('xs')]: {
+      display: 'flex',
+      alignItems: 'center'
+    }
   },
   button: {
-    "width": "90%",
-    "&:hover": {
-      backgroundColor: "transparent",
+    width: '90%',
+    '&:hover': {
+      backgroundColor: 'transparent'
     },
-    [theme.breakpoints.only("xs")]: {
-      width: "70%",
-    },
+    [theme.breakpoints.only('xs')]: {
+      width: '70%'
+    }
   },
   label: {
     fontSize: 12,
-    [theme.breakpoints.only("xs")]: {
+    [theme.breakpoints.only('xs')]: {
       fontWeight: 600,
-      padding: 5,
-    },
-  },
-}));
+      padding: 5
+    }
+  }
+}))
 
 function ProSanteConnectButton({ onClick }: Props): JSX.Element {
-  const { button, label, container } = useStyles();
-  const { t } = useTranslation("yourloops");
+  const { button, label, container } = useStyles()
+  const { t } = useTranslation('yourloops')
 
   return (
     <Box className={container}>
@@ -78,11 +78,11 @@ function ProSanteConnectButton({ onClick }: Props): JSX.Element {
         className={button}
         onClick={onClick}
       >
-        <img src={proSanteLogo} alt={t("alt-img-pro-sante-logo")} />
+        <img src={proSanteLogo} alt={t('alt-img-pro-sante-logo')} />
       </Button>
-      <span className={label}>{t("certify-professional-account")}</span>
+      <span className={label}>{t('certify-professional-account')}</span>
     </Box>
-  );
+  )
 }
 
-export default ProSanteConnectButton;
+export default ProSanteConnectButton

@@ -25,135 +25,135 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from "../../../lib/medical-files/model";
-import HttpService from "../../../services/http";
-import { AxiosResponse } from "axios";
-import MedicalFilesApi from "../../../lib/medical-files/medical-files-api";
+import { MedicalRecord, NewMedicalRecord, Prescription, WeeklyReport } from '../../../lib/medical-files/model'
+import HttpService from '../../../services/http'
+import { AxiosResponse } from 'axios'
+import MedicalFilesApi from '../../../lib/medical-files/medical-files-api'
 
-describe("Medical files API", () => {
-  const patientId = "patientId";
-  const teamId = "teamId";
+describe('Medical files API', () => {
+  const patientId = 'patientId'
+  const teamId = 'teamId'
 
-  it("should get all prescriptions", async () => {
-    const payload: Prescription[] = [{} as Prescription, {} as Prescription];
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const prescriptions = await MedicalFilesApi.getPrescriptions(patientId, teamId);
-    expect(prescriptions).toEqual(payload);
+  it('should get all prescriptions', async () => {
+    const payload: Prescription[] = [{} as Prescription, {} as Prescription]
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const prescriptions = await MedicalFilesApi.getPrescriptions(patientId, teamId)
+    expect(prescriptions).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
-      url: "cargo/v0/prescriptions",
-      config: { params: { teamId, patientId } },
-    });
-  });
+      url: 'cargo/v0/prescriptions',
+      config: { params: { teamId, patientId } }
+    })
+  })
 
-  it("should get a single prescription", async () => {
-    const prescriptionId = "fakeId";
-    const payload: Prescription = { id: prescriptionId } as Prescription;
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const prescription = await MedicalFilesApi.getPrescription(patientId, teamId, prescriptionId);
-    expect(prescription).toEqual(payload);
+  it('should get a single prescription', async () => {
+    const prescriptionId = 'fakeId'
+    const payload: Prescription = { id: prescriptionId } as Prescription
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const prescription = await MedicalFilesApi.getPrescription(patientId, teamId, prescriptionId)
+    expect(prescription).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
       url: `/cargo/v0/prescriptions/${prescriptionId}`,
-      config: { params: { teamId, patientId }, responseType: "blob" },
-    });
-  });
+      config: { params: { teamId, patientId }, responseType: 'blob' }
+    })
+  })
 
-  it("upload a prescription", async () => {
-    const payload: Prescription = { id: "presrId" } as Prescription;
-    const prescriptorId = "prescriptorId";
-    const blob = new Blob(["fake-url.jpeg"], { type: "image/jpeg" });
-    const file = new File([blob], "fake.png", {
+  it('upload a prescription', async () => {
+    const payload: Prescription = { id: 'presrId' } as Prescription
+    const prescriptorId = 'prescriptorId'
+    const blob = new Blob(['fake-url.jpeg'], { type: 'image/jpeg' })
+    const file = new File([blob], 'fake.png', {
       lastModified: new Date().getMilliseconds(),
-      type: "image/jpeg",
-    });
+      type: 'image/jpeg'
+    })
 
-    jest.spyOn(HttpService, "post").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const prescription = await MedicalFilesApi.uploadPrescription(patientId, teamId, prescriptorId, 12, file);
-    expect(prescription).toEqual(payload);
+    jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const prescription = await MedicalFilesApi.uploadPrescription(patientId, teamId, prescriptorId, 12, file)
+    expect(prescription).toEqual(payload)
     expect(HttpService.post).toHaveBeenCalledWith({
-      url: "cargo/v0/prescriptions",
+      url: 'cargo/v0/prescriptions',
       payload: expect.anything(),
       config: {
         headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
-    });
-  });
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    })
+  })
 
-  it("should get weekly reports", async () => {
-    const payload: WeeklyReport[] = [{} as WeeklyReport, {} as WeeklyReport];
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const weeklyReports = await MedicalFilesApi.getWeeklyReports(patientId, teamId);
-    expect(weeklyReports).toEqual(payload);
+  it('should get weekly reports', async () => {
+    const payload: WeeklyReport[] = [{} as WeeklyReport, {} as WeeklyReport]
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const weeklyReports = await MedicalFilesApi.getWeeklyReports(patientId, teamId)
+    expect(weeklyReports).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
-      url: "cargo/v0/weekly-reports",
-      config: { params: { teamId, patientId } },
-    });
-  });
+      url: 'cargo/v0/weekly-reports',
+      config: { params: { teamId, patientId } }
+    })
+  })
 
-  it("should get a single weekly report", async () => {
-    const weeklyReportId = "fakeId";
-    const payload = {} as WeeklyReport;
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const weeklyReport = await MedicalFilesApi.getWeeklyReport(patientId, teamId, weeklyReportId);
-    expect(weeklyReport).toEqual(payload);
+  it('should get a single weekly report', async () => {
+    const weeklyReportId = 'fakeId'
+    const payload = {} as WeeklyReport
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const weeklyReport = await MedicalFilesApi.getWeeklyReport(patientId, teamId, weeklyReportId)
+    expect(weeklyReport).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
       url: `/cargo/v0/weekly-reports/${weeklyReportId}`,
-      config: { params: { teamId, patientId } },
-    });
-  });
+      config: { params: { teamId, patientId } }
+    })
+  })
 
-  it("should get medical records", async () => {
-    const payload: MedicalRecord[] = [{} as MedicalRecord, {} as MedicalRecord];
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const medicalRecords = await MedicalFilesApi.getMedicalRecords(patientId, teamId);
-    expect(medicalRecords).toEqual(payload);
+  it('should get medical records', async () => {
+    const payload: MedicalRecord[] = [{} as MedicalRecord, {} as MedicalRecord]
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const medicalRecords = await MedicalFilesApi.getMedicalRecords(patientId, teamId)
+    expect(medicalRecords).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
-      url: "/cargo/v0/medical-records",
-      config: { params: { teamId, patientId } },
-    });
-  });
+      url: '/cargo/v0/medical-records',
+      config: { params: { teamId, patientId } }
+    })
+  })
 
-  it("should get a single medical record", async () => {
-    const medicalRecordId = "fakeId";
-    const payload = {} as MedicalRecord;
-    jest.spyOn(HttpService, "get").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const medicalRecord = await MedicalFilesApi.getMedicalRecord(patientId, teamId, medicalRecordId);
-    expect(medicalRecord).toEqual(payload);
+  it('should get a single medical record', async () => {
+    const medicalRecordId = 'fakeId'
+    const payload = {} as MedicalRecord
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const medicalRecord = await MedicalFilesApi.getMedicalRecord(patientId, teamId, medicalRecordId)
+    expect(medicalRecord).toEqual(payload)
     expect(HttpService.get).toHaveBeenCalledWith({
       url: `/cargo/v0/medical-records/${medicalRecordId}`,
-      config: { params: { teamId, patientId } },
-    });
-  });
+      config: { params: { teamId, patientId } }
+    })
+  })
 
-  it("should create a medical record", async () => {
-    const payload = {} as NewMedicalRecord;
-    jest.spyOn(HttpService, "post").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload);
-    expect(medicalRecord).toEqual(payload);
+  it('should create a medical record', async () => {
+    const payload = {} as NewMedicalRecord
+    jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload)
+    expect(medicalRecord).toEqual(payload)
     expect(HttpService.post).toHaveBeenCalledWith({
-      url: "/cargo/v0/medical-records",
-      payload,
-    });
-  });
+      url: '/cargo/v0/medical-records',
+      payload
+    })
+  })
 
-  it("should update a medical record", async () => {
-    const payload = {} as MedicalRecord;
-    jest.spyOn(HttpService, "post").mockResolvedValueOnce({ data: payload } as AxiosResponse);
-    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload);
-    expect(medicalRecord).toEqual(payload);
+  it('should update a medical record', async () => {
+    const payload = {} as MedicalRecord
+    jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: payload } as AxiosResponse)
+    const medicalRecord = await MedicalFilesApi.createMedicalRecord(payload)
+    expect(medicalRecord).toEqual(payload)
     expect(HttpService.post).toHaveBeenCalledWith({
-      url: "/cargo/v0/medical-records",
-      payload,
-    });
-  });
+      url: '/cargo/v0/medical-records',
+      payload
+    })
+  })
 
-  it("should delete a medical record", async () => {
-    const medicalRecordId = "fakeId";
-    jest.spyOn(HttpService, "delete").mockResolvedValueOnce(undefined);
-    await MedicalFilesApi.deleteMedicalRecord(medicalRecordId);
+  it('should delete a medical record', async () => {
+    const medicalRecordId = 'fakeId'
+    jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
+    await MedicalFilesApi.deleteMedicalRecord(medicalRecordId)
     expect(HttpService.delete).toHaveBeenCalledWith({
-      url: `/cargo/v0/medical-records/${medicalRecordId}`,
-    });
-  });
-});
+      url: `/cargo/v0/medical-records/${medicalRecordId}`
+    })
+  })
+})

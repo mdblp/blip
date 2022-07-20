@@ -28,39 +28,39 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { AppConfig } from "../models/config";
+import { AppConfig } from '../models/config'
 
 declare global {
   interface CookiesComplete {
-    zendesk?: boolean;
-    matomo?: boolean;
-    stonly?: boolean;
+    zendesk?: boolean
+    matomo?: boolean
+    stonly?: boolean
   }
   interface AxeptIO {
-    on: (event: string, callback: (c: CookiesComplete) => void) => void;
+    on: (event: string, callback: (c: CookiesComplete) => void) => void
   }
 
   // var window: Window & typeof globalThis & ExtendedWindow;
   interface Window {
-    startLoadingTime?: number;
-    _jipt: any; // Zendesk
-    _paq?: (string|number)[][]; // Matomo
-    process: any;
-    config?: AppConfig;
+    startLoadingTime?: number
+    _jipt: any // Zendesk
+    _paq?: Array<Array<string | number>> // Matomo
+    process: any
+    config?: AppConfig
     _axcb?: { // Axeptio
-      push: (f: (a: AxeptIO) => void) => void;
-    };
+      push: (f: (a: AxeptIO) => void) => void
+    }
     /** Display the Axeptio cookie banner */
-    openAxeptioCookies?: () => void;
-    loadStonlyWidget?: () => void;
-    zE: (...args: any) => void; // Zendesk API
-    cleanBlipReduxStore?: () => void;
+    openAxeptioCookies?: () => void
+    loadStonlyWidget?: () => void
+    zE: (...args: any) => void // Zendesk API
+    cleanBlipReduxStore?: () => void
     /** If the application crash, stop the session timeout timers */
-    clearSessionTimeout?: () => void;
+    clearSessionTimeout?: () => void
   }
   interface Navigator {
-    userLanguage?: string;
+    userLanguage?: string
   }
-  const BUILD_CONFIG: string;
-  const BRANDING_LIST: string[];
+  const BUILD_CONFIG: string
+  const BRANDING_LIST: string[]
 }

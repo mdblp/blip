@@ -36,12 +36,12 @@
  *
  */
 
-import _ from "lodash";
-import { format } from "d3-format";
-import i18next from "i18next";
-import { convertBG, MGDL_UNITS, MMOLL_UNITS } from "tideline";
-import { formatLocalizedFromUTC, getHourMinuteFormat } from "./datetime";
-import { BG_HIGH, BG_LOW } from "./constants";
+import _ from 'lodash'
+import { format } from 'd3-format'
+import i18next from 'i18next'
+import { convertBG, MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime'
+import { BG_HIGH, BG_LOW } from './constants'
 
 /**
  * formatBgValue
@@ -53,29 +53,29 @@ import { BG_HIGH, BG_LOW } from "./constants";
  * @return {String} formatted blood glucose value
  */
 export function formatBgValue(val, bgPrefs, outOfRangeThresholds) {
-  const units = _.get(bgPrefs, "bgUnits", MGDL_UNITS);
+  const units = _.get(bgPrefs, 'bgUnits', MGDL_UNITS)
   if (!_.isEmpty(outOfRangeThresholds)) {
-    let lowThreshold = outOfRangeThresholds.low;
-    let highThreshold = outOfRangeThresholds.high;
+    let lowThreshold = outOfRangeThresholds.low
+    let highThreshold = outOfRangeThresholds.high
     if (units === MMOLL_UNITS) {
       if (lowThreshold) {
-        lowThreshold = convertBG(lowThreshold, MGDL_UNITS);
+        lowThreshold = convertBG(lowThreshold, MGDL_UNITS)
       }
       if (highThreshold) {
-        highThreshold = convertBG(highThreshold, MGDL_UNITS);
+        highThreshold = convertBG(highThreshold, MGDL_UNITS)
       }
     }
     if (lowThreshold && val < lowThreshold) {
-      return i18next.t(BG_LOW);
+      return i18next.t(BG_LOW)
     }
     if (highThreshold && val > highThreshold) {
-      return i18next.t(BG_HIGH);
+      return i18next.t(BG_HIGH)
     }
   }
   if (units === MMOLL_UNITS) {
-    return format(".1f")(val);
+    return format('.1f')(val)
   }
-  return format("d")(val);
+  return format('d')(val)
 }
 
 /**
@@ -88,9 +88,9 @@ export function formatBgValue(val, bgPrefs, outOfRangeThresholds) {
  */
 export function formatDecimalNumber(val, places) {
   if (_.isNil(places)) {
-    return format("d")(val);
+    return format('d')(val)
   }
-  return format(`.${places}f`)(val);
+  return format(`.${places}f`)(val)
 }
 
 
@@ -101,13 +101,13 @@ export function formatDecimalNumber(val, places) {
  * @returns {string} numeric value formatted for the precision of insulin dosing
  */
 export function formatInsulin(val) {
-  let decimalLength = 1;
-  const qtyString = val.toString();
-  if (qtyString.indexOf(".") !== -1) {
-    const length = qtyString.split(".")[1].length;
-    decimalLength = _.min([length, 2]);
+  let decimalLength = 1
+  const qtyString = val.toString()
+  if (qtyString.indexOf('.') !== -1) {
+    const length = qtyString.split('.')[1].length
+    decimalLength = _.min([length, 2])
   }
-  return formatDecimalNumber(val, decimalLength);
+  return formatDecimalNumber(val, decimalLength)
 }
 
 /**
@@ -118,9 +118,9 @@ export function formatInsulin(val) {
  */
 export function formatPercentage(val, precision = 0) {
   if (Number.isNaN(val)) {
-    return "--%";
+    return '--%'
   }
-  return format(`.${precision}%`)(val);
+  return format(`.${precision}%`)(val)
 }
 
 /**
@@ -131,7 +131,7 @@ export function formatPercentage(val, precision = 0) {
  * @return {string} The formated time for input time in the terminal
  */
 export function formatInputTime(utcTime, timePrefs) {
-  return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat());
+  return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
 }
 
 /**
@@ -140,7 +140,7 @@ export function formatInputTime(utcTime, timePrefs) {
  * @return {string} formatted decimal value w/o trailing zero-indexes
  */
 export function removeTrailingZeroes(val) {
-  return val.replace(/\.0+$/, "");
+  return val.replace(/\.0+$/, '')
 }
 
 /**
@@ -151,57 +151,57 @@ export function removeTrailingZeroes(val) {
  */
 export function formatParameterValue(value, units) {
   /** @type {number} */
-  let nValue;
+  let nValue
   /** @type {string} */
-  let ret;
-  if (typeof value === "string") {
-    if (_.includes(value, ".")) {
-      nValue = Number.parseFloat(value);
+  let ret
+  if (typeof value === 'string') {
+    if (_.includes(value, '.')) {
+      nValue = Number.parseFloat(value)
     } else {
-      nValue = Number.parseInt(value, 10);
+      nValue = Number.parseInt(value, 10)
     }
-  } else if (typeof value === "number") {
-    nValue = value;
+  } else if (typeof value === 'number') {
+    nValue = value
   }
 
-  let nDecimals = 0;
+  let nDecimals = 0
   switch (units) {
-  case "%": // Percent, thanks captain obvious.
-  case "min": // Minutes
-    break;
-  case "g": // Grams
-  case "kg":
-  case "U": // Insulin dose
-  case MMOLL_UNITS:
-  case MGDL_UNITS:
-    nDecimals = 1;
-    break;
-  case "U/g":
-    nDecimals = 3;
-    break;
-  default:
-    nDecimals = 2;
-    break;
+    case '%': // Percent, thanks captain obvious.
+    case 'min': // Minutes
+      break
+    case 'g': // Grams
+    case 'kg':
+    case 'U': // Insulin dose
+    case MMOLL_UNITS:
+    case MGDL_UNITS:
+      nDecimals = 1
+      break
+    case 'U/g':
+      nDecimals = 3
+      break
+    default:
+      nDecimals = 2
+      break
   }
 
   if (Number.isNaN(nValue)) {
     // Like formatPercentage() but we do not want to pad the '%' character.
-    ret = "--";
+    ret = '--'
   } else if (Number.isInteger(nValue) && nDecimals === 0) {
-    ret = nValue.toString(10);
+    ret = nValue.toString(10)
   } else {
-    const aValue = Math.abs(nValue);
+    const aValue = Math.abs(nValue)
     // I did not use formatDecimalNumber() because some of our parameters are x10e-4,
     // so they are displayed as "0.00"
     if (aValue < Number.EPSILON) {
-      ret = nValue.toFixed(1); // Value ~= 0
+      ret = nValue.toFixed(1) // Value ~= 0
     } else if (aValue < 1e-2 || aValue > 9999) {
-      ret = nValue.toExponential(2);
+      ret = nValue.toExponential(2)
     } else {
-      ret = nValue.toFixed(nDecimals);
+      ret = nValue.toFixed(nDecimals)
     }
   }
 
   // `${value} | ${ret}`; // Debug
-  return ret;
+  return ret
 }

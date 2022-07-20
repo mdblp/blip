@@ -14,31 +14,31 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-import { HcpProfession } from "../../models/hcp-profession";
+import { HcpProfession } from '../../models/hcp-profession'
 
 interface SwitchRoleDialogProps {
-  open: boolean;
+  open: boolean
 }
 
 export interface SwitchRoleConsequencesDialogProps extends SwitchRoleDialogProps {
-  title: string;
-  onAccept: () => void;
-  onCancel: () => void;
+  title: string
+  onAccept: () => void
+  onCancel: () => void
 }
 
 export interface SwitchRoleConsentDialogProps extends SwitchRoleDialogProps {
-  onAccept: (feedback: boolean) => void;
-  onCancel: () => void;
+  onAccept: (feedback: boolean) => void
+  onCancel: () => void
 }
 
 export interface SwitchRoleProfessionDialogProps extends SwitchRoleDialogProps {
-  onAccept: (profession : HcpProfession) => void;
-  onCancel: () => void;
+  onAccept: (profession: HcpProfession) => void
+  onCancel: () => void
 }
 
 export interface SwitchRoleDialogsProps {
-  open: boolean;
-  onCancel: () => void;
+  open: boolean
+  onCancel: () => void
 }
 
 export enum SwitchRoleToHcpSteps {

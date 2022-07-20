@@ -26,11 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import NotificationsPage from "../../../pages/notifications/notifications-list";
+import NotificationsPage from '../../../pages/notifications/notifications-list'
 
-describe("Notification list", () => {
-  it("should be exported as a function", () => {
-    expect(NotificationsPage).toBeInstanceOf(Function);
-  });
-});
-
+describe('Notification list', () => {
+  it('should be exported as a function', () => {
+    expect(NotificationsPage).toBeInstanceOf(Function)
+  })
+})

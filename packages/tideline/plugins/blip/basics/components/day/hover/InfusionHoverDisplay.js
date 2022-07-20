@@ -15,28 +15,28 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import moment from "moment-timezone";
+import PropTypes from 'prop-types'
+import React from 'react'
+import moment from 'moment-timezone'
 
-import format from "../../../../../../js/data/util/format";
+import format from '../../../../../../js/data/util/format'
 
 function InfusionHoverDisplay(props) {
-  var times = props.data.dataByDate[props.date].data;
+  var times = props.data.dataByDate[props.date].data
   var timesList = times.slice(0,3).map(function(time) {
-    return (<li key={time.id}>{format.timestamp(time.normalTime, moment.tz(time.timezone).utcOffset())}</li>);
-  });
+    return (<li key={time.id}>{format.timestamp(time.normalTime, moment.tz(time.timezone).utcOffset())}</li>)
+  })
 
   return (
     <ul className="Calendar-day-reservoirChange-times">
       {timesList}
     </ul>
-  );
+  )
 }
 
 InfusionHoverDisplay.propTypes = {
   data: PropTypes.object,
-  date: PropTypes.string.isRequired,
-};
+  date: PropTypes.string.isRequired
+}
 
-export default InfusionHoverDisplay;
+export default InfusionHoverDisplay

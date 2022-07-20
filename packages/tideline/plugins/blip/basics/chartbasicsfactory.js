@@ -15,21 +15,21 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import i18next from "i18next";
-import PropTypes from "prop-types";
-import React from "react";
-import sizeMe from "react-sizeme";
+import _ from 'lodash'
+import i18next from 'i18next'
+import PropTypes from 'prop-types'
+import React from 'react'
+import sizeMe from 'react-sizeme'
 
-import "./less/basics.less";
+import './less/basics.less'
 
-import basicsState from "./logic/state";
-import basicsActions from "./logic/actions";
-import dataMungerMkr from "./logic/datamunger";
-import { SECTION_TYPE_UNDECLARED } from "./logic/constants";
+import basicsState from './logic/state'
+import basicsActions from './logic/actions'
+import dataMungerMkr from './logic/datamunger'
+import { SECTION_TYPE_UNDECLARED } from './logic/constants'
 
-import Section from "./components/DashboardSection";
-import togglableState from "./TogglableState";
+import Section from './components/DashboardSection'
+import togglableState from './TogglableState'
 
 class BasicsChartNoSize extends React.Component {
   static propTypes = {
@@ -41,93 +41,93 @@ class BasicsChartNoSize extends React.Component {
     permsOfLoggedInUser: PropTypes.object.isRequired,
     size: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
-    trackMetric: PropTypes.func.isRequired,
-  };
+    trackMetric: PropTypes.func.isRequired
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       basicsData: null,
       data: null,
-      sections: null,
-    };
+      sections: null
+    }
   }
 
   componentDidMount() {
-    const { tidelineData, bgClasses, bgUnits, patient, permsOfLoggedInUser } = this.props;
+    const { tidelineData, bgClasses, bgUnits, patient, permsOfLoggedInUser } = this.props
 
     if (!tidelineData.basicsData) {
-      return;
+      return
     }
 
-    const basicsData = _.cloneDeep(tidelineData.basicsData);
-    const dataMunger = dataMungerMkr(bgClasses, bgUnits);
-    const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData);
-    basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections;
+    const basicsData = _.cloneDeep(tidelineData.basicsData)
+    const dataMunger = dataMungerMkr(bgClasses, bgUnits)
+    const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData)
+    basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections
 
-    dataMunger.reduceByDay(basicsData);
+    dataMunger.reduceByDay(basicsData)
 
-    dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient, permsOfLoggedInUser);
+    dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient, permsOfLoggedInUser)
 
-    this.adjustSectionsBasedOnAvailableData(basicsData);
-    basicsActions.bindApp(this);
-    this.setState({ basicsData, sections: basicsData.sections, data: basicsData.data });
+    this.adjustSectionsBasedOnAvailableData(basicsData)
+    basicsActions.bindApp(this)
+    this.setState({ basicsData, sections: basicsData.sections, data: basicsData.data })
   }
 
   componentWillUnmount() {
-    basicsActions.bindApp(null);
+    basicsActions.bindApp(null)
   }
 
   adjustSectionsBasedOnAvailableData(basicsData) {
-    const insulinDataAvailable = this.insulinDataAvailable(basicsData);
-    const noPumpDataMessage = i18next.t("This section requires data from an insulin pump, so there's nothing to display.");
+    const insulinDataAvailable = this.insulinDataAvailable(basicsData)
+    const noPumpDataMessage = i18next.t("This section requires data from an insulin pump, so there's nothing to display.")
 
     if (basicsData.sections.siteChanges.type !== SECTION_TYPE_UNDECLARED) {
       if (!this.hasSectionData(basicsData, basicsData.sections.siteChanges.type)) {
-        basicsData.sections.siteChanges.active = false;
-        basicsData.sections.siteChanges.message = noPumpDataMessage;
-        basicsData.sections.siteChanges.settingsTogglable = togglableState.off;
+        basicsData.sections.siteChanges.active = false
+        basicsData.sections.siteChanges.message = noPumpDataMessage
+        basicsData.sections.siteChanges.settingsTogglable = togglableState.off
         if (!insulinDataAvailable) {
-          basicsData.sections.siteChanges.noDataMessage = null;
+          basicsData.sections.siteChanges.noDataMessage = null
         }
       }
     }
   }
 
   insulinDataAvailable(basicsData) {
-    const { basal, bolus, wizard } = _.get(basicsData, "data", {});
-    return _.get(basal, "data.length", false)
-      || _.get(bolus, "data.length", false)
-      || _.get(wizard, "data.length", false);
+    const { basal, bolus, wizard } = _.get(basicsData, 'data', {})
+    return _.get(basal, 'data.length', false)
+      || _.get(bolus, 'data.length', false)
+      || _.get(wizard, 'data.length', false)
   }
 
   hasSectionData(basicsData, section) {
     // check that section has data within range of current view
-    const data = _.get(basicsData, `data[${section}].data`);
+    const data = _.get(basicsData, `data[${section}].data`)
     if (_.isEmpty(data)) {
-      return false;
+      return false
     }
     return _.some(data, (datum) => {
-      return datum.normalTime >= basicsData.dateRange[0];
-    });
+      return datum.normalTime >= basicsData.dateRange[0]
+    })
   }
 
   render() {
-    const { basicsData } = this.state;
-    return <div id="chart-basics-factory">{basicsData && this.renderColumn("right")}</div>;
+    const { basicsData } = this.state
+    return <div id="chart-basics-factory">{basicsData && this.renderColumn('right')}</div>
   }
 
   renderColumn(columnSide) {
-    const { timePrefs, bgClasses, bgUnits } = this.props;
-    const { basicsData, data, sections: basicsSections } = this.state;
-    const tz = timePrefs.timezoneName;
-    const sections = [];
+    const { timePrefs, bgClasses, bgUnits } = this.props
+    const { basicsData, data, sections: basicsSections } = this.state
+    const tz = timePrefs.timezoneName
+    const sections = []
     for (const key in basicsSections) {
-      const section = _.cloneDeep(basicsSections[key]);
-      section.name = key;
-      sections.push(section);
+      const section = _.cloneDeep(basicsSections[key])
+      section.name = key
+      sections.push(section)
     }
-    const column = _.sortBy(_.filter(sections, { column: columnSide }), "index");
+    const column = _.sortBy(_.filter(sections, { column: columnSide }), 'index')
 
     return _.map(column, (section) => {
       return (
@@ -150,10 +150,10 @@ class BasicsChartNoSize extends React.Component {
           timezone={tz}
           trackMetric={this.props.trackMetric}
         />
-      );
-    });
+      )
+    })
   }
 }
 
-export { BasicsChartNoSize };
-export default sizeMe({ monitorHeight: true })(BasicsChartNoSize);
+export { BasicsChartNoSize }
+export default sizeMe({ monitorHeight: true })(BasicsChartNoSize)

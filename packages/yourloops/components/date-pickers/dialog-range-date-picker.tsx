@@ -26,177 +26,177 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { useTranslation } from "react-i18next";
-import clsx from "clsx";
+import React from 'react'
+import dayjs, { Dayjs } from 'dayjs'
+import { useTranslation } from 'react-i18next'
+import clsx from 'clsx'
 
-import { useTheme, makeStyles, Theme } from "@material-ui/core/styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
+import { useTheme, makeStyles, Theme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
 
-import { CalendarOrientation, DateRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from "./models";
-import RangeDatePicker from "./range-date-picker";
+import { CalendarOrientation, DateRange, CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from './models'
+import RangeDatePicker from './range-date-picker'
 
 interface DatePickerProps {
-  isOpen: boolean;
+  isOpen: boolean
   /** Please use string format `YYYY-MM-DD` if possible */
-  start?: string | number | Dayjs | Date;
+  start?: string | number | Dayjs | Date
   /** Please use string format `YYYY-MM-DD` if possible */
-  end?: string | number | Dayjs | Date;
+  end?: string | number | Dayjs | Date
   /** Please use string format `YYYY-MM-DD` if possible */
-  minDate?: Dayjs | number | string | Date;
+  minDate?: Dayjs | number | string | Date
   /** Please use string format `YYYY-MM-DD` if possible */
-  maxDate?: Dayjs | number | string | Date;
+  maxDate?: Dayjs | number | string | Date
   /** Maximum possible of selected days */
-  maxSelectableDays?: number;
-  showToolbar?: boolean;
-  onResult: (start?: string, end?: string) => void;
-  onSelectedDateChange?: (start?: string, end?: string) => void;
+  maxSelectableDays?: number
+  showToolbar?: boolean
+  onResult: (start?: string, end?: string) => void
+  onSelectedDateChange?: (start?: string, end?: string) => void
 }
 
 const datePickerStyle = makeStyles((theme: Theme) => {
   return {
     dialogPaper: {
       margin: 0,
-      maxWidth: "initial",
-      [theme.breakpoints.down("sm")]: {
-        maxHeight: "100%",
-      },
+      maxWidth: 'initial',
+      [theme.breakpoints.down('sm')]: {
+        maxHeight: '100%'
+      }
     },
     content: {
-      display: "flex",
-      width: "fit-content",
+      display: 'flex',
+      width: 'fit-content',
       margin: 0,
-      padding: "0px !important",
+      padding: '0px !important'
     },
     contentLandscape: {
-      flexDirection: "row",
+      flexDirection: 'row'
     },
     contentPortrait: {
-      flexDirection: "column",
+      flexDirection: 'column'
     },
     divChildren: {
-      cursor: "pointer",
-    },
-  };
-}, { name: "date-picker-days-range" });
+      cursor: 'pointer'
+    }
+  }
+}, { name: 'date-picker-days-range' })
 
-const dummyDate = dayjs();
+const dummyDate = dayjs()
 
 function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const orientation: CalendarOrientation = matches ? "landscape" : "portrait";
-  const classes = datePickerStyle();
-  const { maxSelectableDays, isOpen, onSelectedDateChange } = props;
+  const { t } = useTranslation('yourloops')
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.up('sm'))
+  const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
+  const classes = datePickerStyle()
+  const { maxSelectableDays, isOpen, onSelectedDateChange } = props
 
   const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
     if (!isOpen) {
-      return { startDate: dummyDate, endDate: dummyDate, minDate: dummyDate, maxDate: dummyDate };
+      return { startDate: dummyDate, endDate: dummyDate, minDate: dummyDate, maxDate: dummyDate }
     }
     // It's safe to use the UTC in the calendar
     // - dayjs don't support well the timezone (lost of copy)
     // - We return a day without any timezone, it's up to the caller to do
     //   what it want with it
-    let minDate = props.minDate ? dayjs(props.minDate, { utc: true }).startOf("day") : dayjs(`${MIN_YEAR}-01-01`, { utc: true });
-    let maxDate = props.maxDate ? dayjs(props.maxDate, { utc: true }).endOf("day") : dayjs(`${MAX_YEAR-1}-12-31`, { utc: true });
-    let startDate = props.start ? dayjs(props.start, { utc: true }).startOf("day") : dayjs(new Date(), { utc: true }).startOf("day");
-    let endDate = props.end ? dayjs(props.end, { utc: true }).startOf("day") : dayjs(new Date(), { utc: true }).startOf("day");
+    let minDate = props.minDate ? dayjs(props.minDate, { utc: true }).startOf('day') : dayjs(`${MIN_YEAR}-01-01`, { utc: true })
+    let maxDate = props.maxDate ? dayjs(props.maxDate, { utc: true }).endOf('day') : dayjs(`${MAX_YEAR - 1}-12-31`, { utc: true })
+    let startDate = props.start ? dayjs(props.start, { utc: true }).startOf('day') : dayjs(new Date(), { utc: true }).startOf('day')
+    let endDate = props.end ? dayjs(props.end, { utc: true }).startOf('day') : dayjs(new Date(), { utc: true }).startOf('day')
 
     // Ensure we are coherent, or the rest of the code may not like it
     if (endDate.isBefore(startDate)) {
       // Swap start/end
-      const tmp = startDate;
-      startDate = endDate;
-      endDate = tmp;
+      const tmp = startDate
+      startDate = endDate
+      endDate = tmp
     }
     if (maxDate.isBefore(minDate)) {
       // Swap min/max
-      const tmp = minDate;
-      minDate = maxDate;
-      maxDate = tmp;
+      const tmp = minDate
+      minDate = maxDate
+      maxDate = tmp
     }
     if (startDate.isBefore(minDate)) {
-      startDate = minDate;
+      startDate = minDate
     }
     if (endDate.isAfter(maxDate)) {
-      endDate = maxDate;
+      endDate = maxDate
     }
-    return { startDate, endDate, minDate, maxDate };
-  }, [isOpen, props.start, props.end, props.maxDate, props.minDate]);
+    return { startDate, endDate, minDate, maxDate }
+  }, [isOpen, props.start, props.end, props.maxDate, props.minDate])
 
-  const [nextSelection, setNextSelection] = React.useState<"first" | "last">("first");
-  const [selected, setSelected] = React.useState<DateRange>({ start: startDate, end: endDate });
-  const [selectable, setSelectable] = React.useState<DateRange | undefined>(undefined);
+  const [nextSelection, setNextSelection] = React.useState<'first' | 'last'>('first')
+  const [selected, setSelected] = React.useState<DateRange>({ start: startDate, end: endDate })
+  const [selectable, setSelectable] = React.useState<DateRange | undefined>(undefined)
 
   React.useEffect(() => {
     if (isOpen) {
       // Refresh our states
-      const range: DateRange = { start: startDate, end: endDate };
-      setNextSelection("first");
-      setSelected(range);
+      const range: DateRange = { start: startDate, end: endDate }
+      setNextSelection('first')
+      setSelected(range)
       if (onSelectedDateChange) {
-        onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
+        onSelectedDateChange(range.start.format('YYYY-MM-DD'), range.end.format('YYYY-MM-DD'))
       }
     }
-  }, [isOpen, startDate, endDate, onSelectedDateChange]);
+  }, [isOpen, startDate, endDate, onSelectedDateChange])
 
-  const handleCancel = () => {
-    props.onResult();
-  };
-  const handleOK = () => {
-    props.onResult(selected.start.format("YYYY-MM-DD"), selected.end.format("YYYY-MM-DD"));
-  };
+  const handleCancel = (): void => {
+    props.onResult()
+  }
+  const handleOK = (): void => {
+    props.onResult(selected.start.format('YYYY-MM-DD'), selected.end.format('YYYY-MM-DD'))
+  }
 
   const updateSelectedDate = (date: dayjs.Dayjs): void => {
-    let range: DateRange;
-    if (nextSelection === "first") {
-      setNextSelection("last");
-      range = { start: date, end: date };
+    let range: DateRange
+    if (nextSelection === 'first') {
+      setNextSelection('last')
+      range = { start: date, end: date }
 
-      if (typeof maxSelectableDays === "number" && maxSelectableDays > 0) {
+      if (typeof maxSelectableDays === 'number' && maxSelectableDays > 0) {
         // Substract 1 day to the value, or we will be able to select
         // maxSelectableDays+1 days total
         setSelectable({
-          start: date.subtract(maxSelectableDays - 1, "days"),
-          end: date.add(maxSelectableDays - 1, "days"),
-        });
+          start: date.subtract(maxSelectableDays - 1, 'days'),
+          end: date.add(maxSelectableDays - 1, 'days')
+        })
       }
     } else {
-      setNextSelection("first");
-      if (typeof maxSelectableDays === "number") {
+      setNextSelection('first')
+      if (typeof maxSelectableDays === 'number') {
         // Use minDate/maxDate to do the limits
-        setSelectable(undefined);
+        setSelectable(undefined)
       }
 
       if (date.isAfter(selected.start)) {
-        range = { start: selected.start, end: date };
+        range = { start: selected.start, end: date }
       } else {
-        range = { start: date, end: selected.end };
+        range = { start: date, end: selected.end }
       }
     }
 
-    setSelected(range);
+    setSelected(range)
     if (onSelectedDateChange) {
-      onSelectedDateChange(range.start.format("YYYY-MM-DD"), range.end.format("YYYY-MM-DD"));
+      onSelectedDateChange(range.start.format('YYYY-MM-DD'), range.end.format('YYYY-MM-DD'))
     }
-  };
+  }
 
   const contentClasses = clsx(classes.content, {
-    [classes.contentLandscape]: orientation === "landscape",
-    [classes.contentPortrait]: orientation === "portrait",
-  });
+    [classes.contentLandscape]: orientation === 'landscape',
+    [classes.contentPortrait]: orientation === 'portrait'
+  })
 
   return (
     <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
       <DialogContent id="calendar-view" className={contentClasses}>
         <RangeDatePicker
-          selection={{ mode: "range", selected, selectable, maxSelectableDays } as CalendarSelectionRange}
+          selection={{ mode: 'range', selected, selectable, maxSelectableDays } as CalendarSelectionRange}
           minDate={minDate}
           maxDate={maxDate}
           orientation={orientation}
@@ -206,7 +206,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
       </DialogContent>
       <DialogActions>
         <Button id="date-picker-button-cancel" onClick={handleCancel}>
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="date-picker-button-ok"
@@ -215,11 +215,11 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
           disableElevation
           onClick={handleOK}
         >
-          {t("button-ok")}
+          {t('button-ok')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default DialogRangeDatePicker;
+export default DialogRangeDatePicker

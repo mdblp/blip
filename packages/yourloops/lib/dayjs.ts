@@ -26,13 +26,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import dayjs from 'dayjs'
+import dayjsUTC from 'dayjs/plugin/utc'
+import dayjsTimezone from 'dayjs/plugin/timezone'
+import dayjsLocalizedFormat from 'dayjs/plugin/localizedFormat'
 
-import dayjs from "dayjs";
-import dayjsUTC from "dayjs/plugin/utc";
-import dayjsTimezone from "dayjs/plugin/timezone";
-import dayjsLocalizedFormat from "dayjs/plugin/localizedFormat";
-
-const nbDaysPerWeek = 7;
+const nbDaysPerWeek = 7
 
 /**
  * Custom plugin for day.js to display a calendar.
@@ -42,58 +41,58 @@ const nbDaysPerWeek = 7;
  */
 const weekArrayPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
   c.prototype.getNestedWeekArray = function getNestedWeekArray() {
-    const start = this.startOf("month").startOf("week");
-    const end = this.endOf("month").endOf("week");
+    const start = this.startOf('month').startOf('week')
+    const end = this.endOf('month').endOf('week')
 
-    let count = 0;
-    let current = start;
-    const nestedWeeks: dayjs.Dayjs[][] = [];
+    let count = 0
+    let current = start
+    const nestedWeeks: dayjs.Dayjs[][] = []
 
     while (current.isBefore(end)) {
-      const weekNumber = Math.floor(count / nbDaysPerWeek);
+      const weekNumber = Math.floor(count / nbDaysPerWeek)
       if (nestedWeeks.length <= weekNumber) {
-        nestedWeeks.push([]);
+        nestedWeeks.push([])
       }
-      nestedWeeks[weekNumber].push(current);
+      nestedWeeks[weekNumber].push(current)
 
-      current = current.add(1, "day");
-      count += 1;
+      current = current.add(1, 'day')
+      count += 1
     }
 
-    return nestedWeeks;
-  };
+    return nestedWeeks
+  }
 
   c.prototype.getWeekArray = function getWeekArray() {
-    const start = this.startOf("month").startOf("week");
+    const start = this.startOf('month').startOf('week')
 
-    let current = start;
-    const numDays = 42; // 6 * 7 -> always display 6 weeks in the calendar
-    const weekArray: dayjs.Dayjs[] = [];
-    for (let i=0; i<numDays; i++) {
-      weekArray.push(current);
-      current = current.add(1, "day");
+    let current = start
+    const numDays = 42 // 6 * 7 -> always display 6 weeks in the calendar
+    const weekArray: dayjs.Dayjs[] = []
+    for (let i = 0; i < numDays; i++) {
+      weekArray.push(current)
+      current = current.add(1, 'day')
     }
 
-    return weekArray;
-  };
-};
-
-const weekdaysPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
-  c.prototype.getWeekdays = function getWeekdays(format = "dd") {
-    const start = this.startOf("week");
-    // eslint-disable-next-line no-magic-numbers
-    return [0, 1, 2, 3, 4, 5, 6].map((diff) => start.add(diff, "day").format(format));
-  };
-};
-
-function initDayJS() {
-  dayjs.extend(dayjsUTC);
-  dayjs.extend(dayjsTimezone);
-  dayjs.extend(dayjsLocalizedFormat);
-  dayjs.extend(weekArrayPlugin);
-  dayjs.extend(weekdaysPlugin);
-
-  dayjs.tz.setDefault(dayjs.tz.guess());
+    return weekArray
+  }
 }
 
-export default initDayJS;
+const weekdaysPlugin: dayjs.PluginFunc<void> = (_o, c /*, d */) => {
+  c.prototype.getWeekdays = function getWeekdays(format = 'dd') {
+    const start = this.startOf('week')
+    // eslint-disable-next-line no-magic-numbers
+    return [0, 1, 2, 3, 4, 5, 6].map((diff) => start.add(diff, 'day').format(format))
+  }
+}
+
+function initDayJS(): void {
+  dayjs.extend(dayjsUTC)
+  dayjs.extend(dayjsTimezone)
+  dayjs.extend(dayjsLocalizedFormat)
+  dayjs.extend(weekArrayPlugin)
+  dayjs.extend(weekdaysPlugin)
+
+  dayjs.tz.setDefault(dayjs.tz.guess())
+}
+
+export default initDayJS

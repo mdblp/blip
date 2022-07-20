@@ -15,8 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import * as bolusUtils from "../../utils/bolus";
+import _ from 'lodash'
+import * as bolusUtils from '../../utils/bolus'
 
 /**
  * formatBolusRectPath
@@ -32,7 +32,7 @@ function formatBolusRectPath({ left, right, top, bottom }) {
     L ${left},${top}
     L ${right},${top}
     L ${right},${bottom} Z
-  `;
+  `
 }
 
 /**
@@ -45,17 +45,17 @@ function formatBolusRectPath({ left, right, top, bottom }) {
  * @return {Object} object containing `left`, `right`, `top`, `bottom` edges for a bolus rectangle
  */
 export function getBolusEdges(bolusWidth, bolusCenter, bolusBottom, bolusHeight) {
-  const halfWidth = bolusWidth / 2;
+  const halfWidth = bolusWidth / 2
 
-  const leftX = bolusCenter - halfWidth;
-  const rightX = bolusCenter + halfWidth;
+  const leftX = bolusCenter - halfWidth
+  const rightX = bolusCenter + halfWidth
 
   return {
     left: leftX,
     right: rightX,
     top: bolusHeight,
-    bottom: bolusBottom,
-  };
+    bottom: bolusBottom
+  }
 }
 
 /**
@@ -71,39 +71,39 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
   bolusWidth,
   extendedLineThickness,
   interruptedLineThickness,
-  triangleHeight,
+  triangleHeight
 }) {
-  const bolus = bolusUtils.getBolusFromInsulinEvent(insulinEvent);
-  const paths = [];
+  const bolus = bolusUtils.getBolusFromInsulinEvent(insulinEvent)
+  const paths = []
 
-  const bolusBottom = yScale.range()[0];
-  const bolusCenter = xScale(bolus.utc);
+  const bolusBottom = yScale.range()[0]
+  const bolusCenter = xScale(bolus.utc)
 
   const isNonTrivialUnderride = bolusUtils.isUnderride(insulinEvent) &&
-    bolusUtils.getDelivered(insulinEvent);
+    bolusUtils.getDelivered(insulinEvent)
   const isNonTrivialOverride = bolusUtils.isOverride(insulinEvent) &&
-    bolusUtils.getDelivered(insulinEvent);
+    bolusUtils.getDelivered(insulinEvent)
 
   // the backmost layer is any undelivered bolus insulin
   // (in the case of interruption/cancellation/suspension)
   // this is a (partial) port of tideline's js/plot/util/drawbolus.js: suspended
   if (bolusUtils.isInterruptedBolus(insulinEvent)) {
-    const undeliveredY = yScale(bolusUtils.getMaxValue(insulinEvent));
-    const edges = getBolusEdges(bolusWidth, bolusCenter, bolusBottom, undeliveredY);
-    const { left, right } = edges;
-    const path = formatBolusRectPath(edges);
+    const undeliveredY = yScale(bolusUtils.getMaxValue(insulinEvent))
+    const edges = getBolusEdges(bolusWidth, bolusCenter, bolusBottom, undeliveredY)
+    const { left, right } = edges
+    const path = formatBolusRectPath(edges)
 
     paths.push({
       d: path,
       key: `undelivered-${bolus.id}`,
-      type: "undelivered",
-    });
+      type: 'undelivered'
+    })
 
-    const programmedY = yScale(bolusUtils.getProgrammed(insulinEvent));
-    const deliveredY = yScale(bolusUtils.getDelivered(insulinEvent));
+    const programmedY = yScale(bolusUtils.getProgrammed(insulinEvent))
+    const deliveredY = yScale(bolusUtils.getDelivered(insulinEvent))
     // NB: JFC, Chrome uses a constant offset no matter the stroke-width :(((
     // TODO: test in different browsers and adjust
-    const fractionStroke = 0.5;
+    const fractionStroke = 0.5
 
     // TODO: figure out how to make this agnostic to browser and render target
     paths.push({
@@ -114,53 +114,53 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
         L ${right - fractionStroke},${deliveredY}
       `,
       key: `programmed-${bolus.id}`,
-      type: "programmed",
-    });
+      type: 'programmed'
+    })
   // the rectangle for undelivered includes an underride if the insulinEvent
   // was *both* an underride and interrupted/cancelled/suspended
   } else {
     // this is a (partial) port of tideline's js/plot/util/drawbolus.js: underride
     if (isNonTrivialUnderride) {
-      const recommendedY = yScale(bolusUtils.getRecommended(insulinEvent));
+      const recommendedY = yScale(bolusUtils.getRecommended(insulinEvent))
       const path = formatBolusRectPath(
         getBolusEdges(bolusWidth, bolusCenter, bolusBottom, recommendedY)
-      );
+      )
 
       paths.push({
         d: path,
         key: `underride-${insulinEvent.id}`,
-        type: "underride",
-      });
+        type: 'underride'
+      })
     }
   }
 
   // this is a port of tideline's js/plot/util/drawbolus.js: bolus
   if (bolusUtils.getDelivered(insulinEvent) || bolusUtils.getProgrammed((insulinEvent))) {
-    const maxY = yScale(bolusUtils.getDelivered(insulinEvent));
+    const maxY = yScale(bolusUtils.getDelivered(insulinEvent))
     const path = formatBolusRectPath(
       getBolusEdges(bolusWidth, bolusCenter, bolusBottom, maxY)
-    );
+    )
 
     paths.push({
       d: path,
       key: `delivered-${bolus.id}`,
-      type: "delivered",
-    });
+      type: 'delivered'
+    })
   }
 
   // this is a port of tideline's js/plot/util/drawbolus.js: extended
   // it does the straight part of the "arm" representing the extended part of the bolus
   // and also the triangle at the end of the "arm"
   if (bolusUtils.hasExtended(insulinEvent)) {
-    const extendedVal = bolusUtils.getExtended(insulinEvent);
+    const extendedVal = bolusUtils.getExtended(insulinEvent)
     // yes, 4.5 is a magic number that matches the first tideline implementation
     // the benefit of 4.5 * extendedLineThickness is that
     // it scales with various settings for line thickness, which may vary based on render target
-    const triangleSize = 4.5 * extendedLineThickness;
-    const halfTriangle = triangleSize / 2;
+    const triangleSize = 4.5 * extendedLineThickness
+    const halfTriangle = triangleSize / 2
     const startOfTriangle = xScale(bolus.utc + bolusUtils.getMaxDuration(insulinEvent))
-      - triangleSize;
-    const extendedY = yScale(extendedVal) + (extendedLineThickness / 2);
+      - triangleSize
+    const extendedY = yScale(extendedVal) + (extendedLineThickness / 2)
 
     if (extendedVal > 0) {
       paths.push({
@@ -171,14 +171,14 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
           L ${startOfTriangle + extendedLineThickness},${extendedY + extendedLineThickness / 2} Z
         `,
         key: `extendedPath-${bolus.id}`,
-        type: "extendedPath",
-      });
+        type: 'extendedPath'
+      })
     }
 
-    const interruptedExtended = bolusUtils.isInterruptedBolus(insulinEvent) && extendedVal > 0;
+    const interruptedExtended = bolusUtils.isInterruptedBolus(insulinEvent) && extendedVal > 0
 
     if (interruptedExtended) {
-      const startOfInterrupted = xScale(bolus.utc + bolusUtils.getDuration(insulinEvent));
+      const startOfInterrupted = xScale(bolus.utc + bolusUtils.getDuration(insulinEvent))
 
       paths.push({
         d: `
@@ -188,10 +188,10 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
           L ${startOfTriangle + extendedLineThickness},${extendedY + extendedLineThickness / 2} Z
         `,
         key: `extendedExpectationPath-${bolus.id}`,
-        type: "extendedExpectationPath",
-      });
+        type: 'extendedExpectationPath'
+      })
 
-      const halfInterrupted = interruptedLineThickness / 2;
+      const halfInterrupted = interruptedLineThickness / 2
 
       paths.push({
         d: `
@@ -201,8 +201,8 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
           L ${startOfInterrupted},${extendedY + halfInterrupted} Z
         `,
         key: `extendedInterrupted-${bolus.id}`,
-        type: "extendedInterrupted",
-      });
+        type: 'extendedInterrupted'
+      })
     }
 
     if (extendedVal > 0) {
@@ -213,19 +213,19 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
           L ${startOfTriangle},${extendedY} Z
         `,
         key: `extendedTriangle-${bolus.id}`,
-        type: `extendedTriangle${interruptedExtended ? "Interrupted" : ""}`,
-      });
+        type: `extendedTriangle${interruptedExtended ? 'Interrupted' : ''}`
+      })
     }
   }
 
   // this is a (partial) port of tideline's js/plot/util/drawbolus.js: underride
   // it does the triangle for an underride of a calculator recommendation
   if (isNonTrivialUnderride) {
-    const programmedY = yScale(bolusUtils.getProgrammed(insulinEvent));
+    const programmedY = yScale(bolusUtils.getProgrammed(insulinEvent))
     const edges = getBolusEdges(
       bolusWidth, bolusCenter, bolusBottom, programmedY,
-    );
-    const { left, right } = edges;
+    )
+    const { left, right } = edges
 
     paths.push({
       d: `
@@ -234,18 +234,18 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
         L ${right},${programmedY} Z
       `,
       key: `underrideTriangle-${insulinEvent.id}`,
-      type: "underrideTriangle",
-    });
+      type: 'underrideTriangle'
+    })
   }
 
   // this is a (partial) port of tideline's js/plot/util/drawbolus.js: override
   // it does the triangle for an override of a calculator recommendation
   if (isNonTrivialOverride) {
-    const recommendedY = yScale(bolusUtils.getRecommended(insulinEvent));
+    const recommendedY = yScale(bolusUtils.getRecommended(insulinEvent))
     const edges = getBolusEdges(
       bolusWidth, bolusCenter, bolusBottom, recommendedY,
-    );
-    const { left, right } = edges;
+    )
+    const { left, right } = edges
 
     paths.push({
       d: `
@@ -254,14 +254,14 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
         L ${right},${recommendedY} Z
       `,
       key: `overrideTriangle-${insulinEvent.id}`,
-      type: "overrideTriangle",
-    });
+      type: 'overrideTriangle'
+    })
   }
 
   // the red line indicating interruption/cancellation/suspension appears on top
   // this is a (partial) port of tideline's js/plot/util/drawbolus.js: suspended
   if (bolusUtils.isInterruptedBolus(insulinEvent)) {
-    const bottomOfInterruptedLine = yScale(bolusUtils.getDelivered(insulinEvent));
+    const bottomOfInterruptedLine = yScale(bolusUtils.getDelivered(insulinEvent))
     const path = formatBolusRectPath(
       getBolusEdges(
         bolusWidth,
@@ -269,20 +269,20 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
         bottomOfInterruptedLine,
         bottomOfInterruptedLine + interruptedLineThickness,
       )
-    );
+    )
 
     paths.push({
       d: path,
       key: `interrupted-${bolus.id}`,
-      type: "interrupted",
-    });
+      type: 'interrupted'
+    })
   }
 
   const formattedPaths = _.forEach(paths, (path) => {
-    const pathCopy = path;
-    pathCopy.d = path.d.replace(/\n/g, "").replace(/\s\s+/g, " ");
-    return pathCopy;
-  });
+    const pathCopy = path
+    pathCopy.d = path.d.replace(/\n/g, '').replace(/\s\s+/g, ' ')
+    return pathCopy
+  })
 
-  return formattedPaths;
+  return formattedPaths
 }

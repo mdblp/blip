@@ -26,24 +26,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Tooltip from "@material-ui/core/Tooltip";
+import Box from '@material-ui/core/Box'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import VerifiedUserOutlinedIcon from "@material-ui/icons/VerifiedUserOutlined";
+import VerifiedUserOutlinedIcon from '@material-ui/icons/VerifiedUserOutlined'
 
 function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
-  const { t } = useTranslation("yourloops");
+  const { t } = useTranslation('yourloops')
 
   return (
     <Box id={id} marginLeft={1}>
-      <Tooltip title={t("certified-professional-account") as string} placement="bottom">
+      <Tooltip title={t('certified-professional-account') } placement="bottom">
         <VerifiedUserOutlinedIcon color="primary" fontSize="small" />
       </Tooltip>
     </Box>
-  );
+  )
 }
 
-export default CertifiedProfessionalIcon;
+export default CertifiedProfessionalIcon

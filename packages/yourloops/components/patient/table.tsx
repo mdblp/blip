@@ -26,82 +26,82 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import { TablePagination, Typography } from "@material-ui/core";
-import InfoIcon from "@material-ui/icons/Info";
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import TableBody from '@material-ui/core/TableBody'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import TableSortLabel from '@material-ui/core/TableSortLabel'
+import { TablePagination, Typography } from '@material-ui/core'
+import InfoIcon from '@material-ui/icons/Info'
 
-import { PatientTableSortFields, SortDirection } from "../../models/generic";
-import { PatientTableProps } from "./models";
-import PatientRow from "./patient-row";
-import { Patient } from "../../lib/data/patient";
-import { StyledTableCell, StyledTooltip } from "../styled-components";
-import { useAuth } from "../../lib/auth";
+import { PatientTableSortFields, SortDirection } from '../../models/generic'
+import { PatientTableProps } from './models'
+import PatientRow from './patient-row'
+import { Patient } from '../../lib/data/patient'
+import { StyledTableCell, StyledTooltip } from '../styled-components'
+import { useAuth } from '../../lib/auth'
 
 const patientListStyle = makeStyles(
   (theme: Theme) => {
     return {
       flagSort: {
-        width: "100%",
-        justifyContent: "center",
+        width: '100%',
+        justifyContent: 'center'
       },
       pagination: {
-        "& .MuiTablePagination-spacer": {
-          display: "none",
+        '& .MuiTablePagination-spacer': {
+          display: 'none'
         },
-        "& .MuiTablePagination-caption:last-of-type": {
-          marginLeft: "auto",
-        },
+        '& .MuiTablePagination-caption:last-of-type': {
+          marginLeft: 'auto'
+        }
       },
       infoIcon: {
         marginLeft: theme.spacing(1),
-        marginRight: "2px",
+        marginRight: '2px'
       },
       tableContainer: {
-        boxShadow: theme.shadows[2],
+        boxShadow: theme.shadows[2]
       },
       tableRowHeader: {
         padding: 0,
-        height: "62px",
+        height: '62px'
       },
       tableCellHeader: {
         backgroundColor: theme.palette.common.white,
-        fontSize: "15px",
+        fontSize: '15px',
         fontWeight: 600,
         padding: 0,
-        paddingLeft: "11px",
+        paddingLeft: '11px'
       },
       alertTimeTargetHeader: {
-        maxWidth: "210px",
+        maxWidth: '210px'
       },
       tableHeaderFlag: {
-        width: "56px",
-        padding: 0,
-      },
-    };
+        width: '56px',
+        padding: 0
+      }
+    }
   },
-  { name: "ylp-hcp-patients-table" }
-);
+  { name: 'ylp-hcp-patients-table' }
+)
 export const patientListCommonStyle = makeStyles(() => {
   return {
     largeCell: {
-      maxWidth: "300px",
+      maxWidth: '300px'
     },
     mediumCell: {
-      maxWidth: "200px",
-    },
-  };
+      maxWidth: '200px'
+    }
+  }
 }
-);
+)
 
 function PatientTable(props: PatientTableProps): JSX.Element {
   const {
@@ -112,40 +112,40 @@ function PatientTable(props: PatientTableProps): JSX.Element {
     orderBy,
     onClickPatient,
     onFlagPatient,
-    onSortList,
-  } = props;
-  const { t } = useTranslation("yourloops");
-  const classes = patientListStyle();
-  const patientListCommonClasses = patientListCommonStyle();
-  const authHook = useAuth();
-  const isUserHcp = authHook.user?.isUserHcp();
-  const [page, setPage] = React.useState<number>(0);
-  const [rowPerPage, setRowPerPage] = React.useState<number>(10);
-  const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage);
+    onSortList
+  } = props
+  const { t } = useTranslation('yourloops')
+  const classes = patientListStyle()
+  const patientListCommonClasses = patientListCommonStyle()
+  const authHook = useAuth()
+  const isUserHcp = authHook.user?.isUserHcp()
+  const [page, setPage] = React.useState<number>(0)
+  const [rowPerPage, setRowPerPage] = React.useState<number>(10)
+  const patientsToDisplay = patients.slice(page * rowPerPage, (page + 1) * rowPerPage)
 
   const createSortHandler = (property: PatientTableSortFields): (() => void) => {
     return (/* event: React.MouseEvent */): void => {
-      let newOrder = order;
+      let newOrder = order
       if (property === orderBy) {
-        newOrder = order === SortDirection.asc ? SortDirection.desc : SortDirection.asc;
+        newOrder = order === SortDirection.asc ? SortDirection.desc : SortDirection.asc
       }
-      onSortList(property, newOrder);
-    };
-  };
+      onSortList(property, newOrder)
+    }
+  }
 
-  const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
+  const handleChangePage = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
+    setPage(newPage)
+  }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setRowPerPage(+event.target.value);
-    setPage(0);
-  };
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    setRowPerPage(+event.target.value)
+    setPage(0)
+  }
 
   return (
     <div>
       <TableContainer component={Paper} className={classes.tableContainer}>
-        <Table id="patients-list-table" aria-label={t("aria-table-list-patient")}
+        <Table id="patients-list-table" aria-label={t('aria-table-list-patient')}
           stickyHeader>
           <TableHead>
             <TableRow className={classes.tableRowHeader}>
@@ -154,7 +154,7 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={`${classes.tableCellHeader} ${classes.tableHeaderFlag}`}
               >
                 <TableSortLabel
-                  id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ""}`}
+                  id={`patients-list-header-flag${orderBy === PatientTableSortFields.flag ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.flag}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.flag)}
@@ -167,11 +167,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={`${classes.tableCellHeader} ${patientListCommonClasses.largeCell}`}
               >
                 <TableSortLabel
-                  id={`patients-list-header-full-name-label${orderBy === PatientTableSortFields.patientFullName ? `-${order}` : ""}`}
+                  id={`patients-list-header-full-name-label${orderBy === PatientTableSortFields.patientFullName ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.patientFullName}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.patientFullName)}>
-                  {t("patient")}
+                  {t('patient')}
                 </TableSortLabel>
               </StyledTableCell>
               <StyledTableCell
@@ -179,11 +179,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={classes.tableCellHeader}
               >
                 <TableSortLabel
-                  id={`patients-list-header-system-label${orderBy === PatientTableSortFields.system ? `-${order}` : ""}`}
+                  id={`patients-list-header-system-label${orderBy === PatientTableSortFields.system ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.system}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.system)}>
-                  {t("system")}
+                  {t('system')}
                 </TableSortLabel>
               </StyledTableCell>
               {isUserHcp &&
@@ -192,11 +192,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                   className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
                 >
                   <TableSortLabel
-                    id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ""}`}
+                    id={`patients-list-header-remote-monitoring-label${orderBy === PatientTableSortFields.remoteMonitoring ? `-${order}` : ''}`}
                     active={orderBy === PatientTableSortFields.remoteMonitoring}
                     direction={order}
                     onClick={createSortHandler(PatientTableSortFields.remoteMonitoring)}>
-                    {t("remote-monitoring")}
+                    {t('remote-monitoring')}
                   </TableSortLabel>
                 </StyledTableCell>
               }
@@ -205,14 +205,14 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={`${classes.tableCellHeader} ${classes.alertTimeTargetHeader} ${patientListCommonClasses.mediumCell}`}
               >
                 <TableSortLabel
-                  id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ""}`}
+                  id={`patients-list-header-alert-time-target${orderBy === PatientTableSortFields.alertTimeTarget ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.alertTimeTarget}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.alertTimeTarget)}>
-                  {t("time-out-of-range-target")}
+                  {t('time-out-of-range-target')}
                   <StyledTooltip
                     title={
-                      <Typography color="inherit">{t("time-out-of-range-target-tooltip")}</Typography>
+                      <Typography color="inherit">{t('time-out-of-range-target-tooltip')}</Typography>
                     }
                     arrow
                   >
@@ -225,14 +225,14 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
               >
                 <TableSortLabel
-                  id={`patients-list-header-tir-alert-hypoglycemic${orderBy === PatientTableSortFields.alertHypoglycemic ? `-${order}` : ""}`}
+                  id={`patients-list-header-tir-alert-hypoglycemic${orderBy === PatientTableSortFields.alertHypoglycemic ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.alertHypoglycemic}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.alertHypoglycemic)}>
-                  {t("alert-hypoglycemic")}
+                  {t('alert-hypoglycemic')}
                   <StyledTooltip
                     title={
-                      <Typography color="inherit">{t("hypoglycemia-tooltip")}</Typography>
+                      <Typography color="inherit">{t('hypoglycemia-tooltip')}</Typography>
                     }
                     arrow
                   >
@@ -245,14 +245,14 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={`${classes.tableCellHeader} ${patientListCommonClasses.mediumCell}`}
               >
                 <TableSortLabel
-                  id={`patients-list-header-data-not-transferred${orderBy === PatientTableSortFields.dataNotTransferred ? `-${order}` : ""}`}
+                  id={`patients-list-header-data-not-transferred${orderBy === PatientTableSortFields.dataNotTransferred ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.dataNotTransferred}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.dataNotTransferred)}>
-                  {t("data-not-transferred")}
+                  {t('data-not-transferred')}
                   <StyledTooltip
                     title={
-                      <Typography color="inherit">{t("data-not-transferred-tooltip")}</Typography>
+                      <Typography color="inherit">{t('data-not-transferred-tooltip')}</Typography>
                     }
                     arrow
                   >
@@ -265,11 +265,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
                 className={classes.tableCellHeader}
               >
                 <TableSortLabel
-                  id={`patients-list-header-ldu-label${orderBy === PatientTableSortFields.ldu ? `-${order}` : ""}`}
+                  id={`patients-list-header-ldu-label${orderBy === PatientTableSortFields.ldu ? `-${order}` : ''}`}
                   active={orderBy === PatientTableSortFields.ldu}
                   direction={order}
                   onClick={createSortHandler(PatientTableSortFields.ldu)}>
-                  {t("last-data-update")}
+                  {t('last-data-update')}
                 </TableSortLabel>
               </StyledTableCell>
               <StyledTableCell
@@ -303,11 +303,11 @@ function PatientTable(props: PatientTableProps): JSX.Element {
         rowsPerPage={rowPerPage}
         rowsPerPageOptions={[10, 25, 50, 100]}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        labelRowsPerPage={t("rows-per-page")}
+        labelRowsPerPage={t('rows-per-page')}
         className={classes.pagination}
       />
     </div>
-  );
+  )
 }
 
-export default PatientTable;
+export default PatientTable

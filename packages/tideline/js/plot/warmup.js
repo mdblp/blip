@@ -26,10 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import warmUpDexcom from "warmup-dexcom.svg";
-import utils from "./util/utils";
+import warmUpDexcom from 'warmup-dexcom.svg'
+import utils from './util/utils'
 
 /**
  * @typedef {import("../tidelinedata").default} TidelineData
@@ -44,55 +44,55 @@ import utils from "./util/utils";
  * @returns {(data: Datum[]) => void}
  */
 function plotWarmUp(pool, opts) {
-  const d3 = window.d3;
-  const width = 40;
+  const d3 = window.d3
+  const width = 40
 
   function warmUp(selection) {
-    const offset = pool.height() / 5;
-    const xScale = pool.xScale().copy();
+    const offset = pool.height() / 5
+    const xScale = pool.xScale().copy()
     selection.each(function () {
-      const warmUpEvents = pool.filterDataForRender(opts.tidelineData.warmUpEvents);
+      const warmUpEvents = pool.filterDataForRender(opts.tidelineData.warmUpEvents)
       if (warmUpEvents.length < 1) {
-        d3.select(this).selectAll("g.d3-warmup-group").remove();
-        return;
+        d3.select(this).selectAll('g.d3-warmup-group').remove()
+        return
       }
 
       const allWarmUps = d3
         .select(this)
-        .selectAll("circle.d3-warmup")
-        .data(warmUpEvents, (d) => d.id);
+        .selectAll('circle.d3-warmup')
+        .data(warmUpEvents, (d) => d.id)
 
       const warmUpGroup = allWarmUps
         .enter()
-        .append("g")
+        .append('g')
         .attr({
-          class: "d3-warmup-group",
-          id: (d) => `warmup_group_${d.id}`,
-        });
+          class: 'd3-warmup-group',
+          id: (d) => `warmup_group_${d.id}`
+        })
 
-      warmUpGroup.append("image").attr({
-        "x": (d) => xScale(d.epoch),
-        "y": _.constant(0),
+      warmUpGroup.append('image').attr({
+        'x': (d) => xScale(d.epoch),
+        'y': _.constant(0),
         width,
-        "height": offset,
-        "xlink:href": warmUpDexcom,
-      });
+        'height': offset,
+        'xlink:href': warmUpDexcom
+      })
 
-      allWarmUps.exit().remove();
+      allWarmUps.exit().remove()
 
       // tooltips
-      selection.selectAll(".d3-warmup-group").on("mouseover", function () {
+      selection.selectAll('.d3-warmup-group').on('mouseover', function () {
         opts.onWarmUpHover({
           data: d3.select(this).datum(),
-          rect: utils.getTooltipContainer(this),
-        });
-      });
+          rect: utils.getTooltipContainer(this)
+        })
+      })
 
-      selection.selectAll(".d3-warmup-group").on("mouseout", opts.onWarmUpOut);
-    });
+      selection.selectAll('.d3-warmup-group').on('mouseout', opts.onWarmUpOut)
+    })
   }
 
-  return warmUp;
+  return warmUp
 }
 
-export default plotWarmUp;
+export default plotWarmUp

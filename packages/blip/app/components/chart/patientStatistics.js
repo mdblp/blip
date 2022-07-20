@@ -26,41 +26,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import InsertChartOutlinedIcon from "@material-ui/icons/InsertChartOutlined";
-import { useTranslation } from "react-i18next";
-import Stats from "./stats";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import InsertChartOutlinedIcon from '@material-ui/icons/InsertChartOutlined'
+import { useTranslation } from 'react-i18next'
+import Stats from './stats'
 
 const useStyles = makeStyles(() => ({
   card: {
-    maxWidth: 345,
+    maxWidth: 345
   },
   cardHeader: {
-    textTransform: "uppercase",
-    backgroundColor: "var(--card-header-background-color)",
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
   },
   cardContent: {
-    overflowY: "auto",
-  },
-}));
+    overflowY: 'auto'
+  }
+}))
 
 const PatientStatistics = (props) => {
   //eslint-disable-next-line
   const { bgPrefs, loading, chartPrefs, dataUtil, endpoints } = props;
-  const { t } = useTranslation();
-  const classes = useStyles();
+  const { t } = useTranslation()
+  const classes = useStyles()
   return (
     <Card id="patient-statistics" className={classes.card}>
       <CardHeader
         id="patient-statistics-header"
         avatar={<InsertChartOutlinedIcon/>}
         className={classes.cardHeader}
-        title={t("patient-statistics")}
+        title={t('patient-statistics')}
       />
       <CardContent id="patient-statistics-content" className={classes.cardContent}>
         <Stats
@@ -76,15 +76,15 @@ const PatientStatistics = (props) => {
         />
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
 PatientStatistics.propType = {
   bgPrefs: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   chartPrefs: PropTypes.object.isRequired,
   dataUtil: PropTypes.object.isRequired,
-  endpoints: PropTypes.arrayOf(PropTypes.string),
-};
+  endpoints: PropTypes.arrayOf(PropTypes.string)
+}
 
-export default PatientStatistics;
+export default PatientStatistics

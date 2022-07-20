@@ -25,33 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
+import React from 'react'
+import { render, screen } from '@testing-library/react'
 
-import PatientInfo, { PatientInfoProps } from "../../../components/patient/patient-info";
-import { createPatient } from "../../common/utils";
-import { genderLabels } from "../../../lib/auth/helpers";
+import PatientInfo, { PatientInfoProps } from '../../../components/patient/patient-info'
+import { createPatient } from '../../common/utils'
+import { genderLabels } from '../../../lib/auth/helpers'
 
-describe("PatientInfo", () => {
-  const patient = createPatient();
+describe('PatientInfo', () => {
+  const patient = createPatient()
 
   function getPatientInfoJSX(props: PatientInfoProps = { patient }) {
-    return <PatientInfo {...props} />;
+    return <PatientInfo {...props} />
   }
 
-  it("should display correct information", () => {
-    render(getPatientInfoJSX());
-    expect(screen.getByText("patient")).not.toBeNull();
-    expect(screen.getByText(patient.profile.fullName)).not.toBeNull();
-    expect(screen.getByText("email")).not.toBeNull();
-    expect(screen.getByText(patient.profile.email)).not.toBeNull();
-    expect(screen.getByText("gender")).not.toBeNull();
-    expect(screen.getByText(genderLabels()[patient.profile.sex])).not.toBeNull();
-    expect(screen.getByText("birthdate")).not.toBeNull();
-    expect(screen.getByText(patient.profile.birthdate.toDateString())).not.toBeNull();
-    expect(screen.getByText("initial-hba1c")).not.toBeNull();
-    expect(screen.getByText(patient.settings.a1c?.value)).not.toBeNull();
-  });
-
-});
-
+  it('should display correct information', () => {
+    render(getPatientInfoJSX())
+    expect(screen.getByText('patient')).not.toBeNull()
+    expect(screen.getByText(patient.profile.fullName)).not.toBeNull()
+    expect(screen.getByText('email')).not.toBeNull()
+    expect(screen.getByText(patient.profile.email)).not.toBeNull()
+    expect(screen.getByText('gender')).not.toBeNull()
+    expect(screen.getByText(genderLabels()[patient.profile.sex])).not.toBeNull()
+    expect(screen.getByText('birthdate')).not.toBeNull()
+    expect(screen.getByText(patient.profile.birthdate.toDateString())).not.toBeNull()
+    expect(screen.getByText('initial-hba1c')).not.toBeNull()
+    expect(screen.getByText(patient.settings.a1c?.value)).not.toBeNull()
+  })
+})

@@ -26,47 +26,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from "../../models/generic";
-import { Patient } from "../../lib/data/patient";
+import { FilterType, PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
+import { Patient } from '../../lib/data/patient'
 
 export interface PatientTableCardCommonProps {
-  patients: Patient[];
-  flagged: string[];
-  filter?: FilterType | string;
-  onClickPatient: (user: Patient) => void;
-  onFlagPatient: (userId: string) => Promise<void>;
+  patients: Patient[]
+  flagged: string[]
+  filter?: FilterType | string
+  onClickPatient: (user: Patient) => void
+  onFlagPatient: (userId: string) => Promise<void>
 }
 
 export interface PatientTableProps extends PatientTableCardCommonProps {
-  order: SortDirection;
-  orderBy: PatientTableSortFields;
-  onSortList: (field: PatientTableSortFields, direction: SortDirection) => void;
+  order: SortDirection
+  orderBy: PatientTableSortFields
+  onSortList: (field: PatientTableSortFields, direction: SortDirection) => void
 }
 
 export interface PatientListProps {
-  filter: string;
-  filterType: PatientFilterTypes;
+  filter: string
+  filterType: PatientFilterTypes
 }
 
 export interface PatientElementProps {
-  patient: Patient;
-  flagged: string[];
-  filter?: FilterType | string;
-  onClickPatient: (user: Patient) => void;
-  onFlagPatient: (userId: string) => Promise<void>;
+  patient: Patient
+  flagged: string[]
+  filter?: FilterType | string
+  onClickPatient: (user: Patient) => void
+  onFlagPatient: (userId: string) => Promise<void>
 }
 
 export interface MedicalTableValues {
   /** Value as a string for easy display */
-  tir: string;
+  tir: string
   /** Value as a number for easy compare */
-  tirNumber: number;
+  tirNumber: number
   /** Value as a string for easy display */
-  tbr: string;
+  tbr: string
   /** Value as a number for easy compare */
-  tbrNumber: number;
+  tbrNumber: number
   /** Value as a string for easy display */
-  lastUpload: string;
+  lastUpload: string
   /** Value as a number for easy compare */
-  lastUploadEpoch: number;
+  lastUploadEpoch: number
 }

@@ -15,14 +15,14 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
+import schema from './validator/schematron.js'
 
 const bolus = (common) => {
   const bolusCommon = schema(
     {
-      deviceTime: schema().ifExists().isDeviceTime(),
+      deviceTime: schema().ifExists().isDeviceTime()
     }
-  );
+  )
 
   return schema(schema().oneOf(
     schema(
@@ -35,10 +35,10 @@ const bolus = (common) => {
         extended: schema().banned(),
         expectedExtended: schema().banned(),
         insulinOnBoard: schema().ifExists().number().min(0),
-        prescriptor: schema().ifExists().string().in(["auto", "manual", "hybrid"]),
-        subType: schema().string().in(["normal"])
+        prescriptor: schema().ifExists().string().in(['auto', 'manual', 'hybrid']),
+        subType: schema().string().in(['normal'])
       },
-      schema.with("expectedNormal", "normal")
+      schema.with('expectedNormal', 'normal')
     ),
     schema(
       common,
@@ -50,17 +50,17 @@ const bolus = (common) => {
         expectedExtended: schema().ifExists().number().min(0),
         normal: schema().ifExists().number().min(0),
         expectedNormal: schema().ifExists().number().min(0),
-        subType: schema().string().in(["square", "dual/square"])
+        subType: schema().string().in(['square', 'dual/square'])
       },
-      schema.with("expectedNormal", "normal"),
-      schema.with("expectedExtended", ["extended", "duration", "expectedDuration"])
+      schema.with('expectedNormal', 'normal'),
+      schema.with('expectedExtended', ['extended', 'duration', 'expectedDuration'])
     ),
     schema(
       common,
       bolusCommon,
       {
         normal: schema().number().min(0),
-        subType: schema().string().in(["pen"])
+        subType: schema().string().in(['pen'])
       }
     ),
     schema(
@@ -69,12 +69,12 @@ const bolus = (common) => {
       {
         normal: schema().number().min(0),
         expectedNormal: schema().ifExists().number().min(0),
-        subType: schema().string().in(["biphasic"])
+        subType: schema().string().in(['biphasic'])
       },
-      schema.with("expectedNormal", "normal")
+      schema.with('expectedNormal', 'normal')
     )
   )
-  );
-};
+  )
+}
 
-export default bolus;
+export default bolus

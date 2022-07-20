@@ -46,6 +46,7 @@ interface BlipProperties {
   config: AppConfig;
   api: BlipApi;
   patient: Patient;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setPatient: Function;
   patients: Patient[];
   userIsHCP: boolean;

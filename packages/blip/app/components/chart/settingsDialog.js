@@ -19,65 +19,65 @@
  * @typedef { import("tideline").TidelineData } TidelineData
  */
 
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React from "react";
-import { Trans, useTranslation } from "react-i18next";
-import bows from "bows";
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import bows from 'bows'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles } from '@material-ui/core/styles'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import CloseIcon from '@material-ui/icons/Close'
 
-import * as viz from "tidepool-viz";
+import * as viz from 'tidepool-viz'
 
 
-const PumpSettingsContainer = viz.containers.PumpSettingsContainer;
+const PumpSettingsContainer = viz.containers.PumpSettingsContainer
 
 const useStyles = makeStyles((theme) => ({
   dialogTitle: {
-    textAlign: "center",
-    fontSize: theme.typography.h5,
+    textAlign: 'center',
+    fontSize: theme.typography.h5
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-}));
+    color: theme.palette.grey[500]
+  }
+}))
 
 
 const SettingsDialog = (props) => {
-  const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props;
-  const classes = useStyles();
-  const log = bows("SettingsDialog");
-  const { t } = useTranslation();
+  const {patientData, timePrefs, bgPrefs, onSwitchToDaily, trackMetric, open, setOpen } = props
+  const classes = useStyles()
+  const log = bows('SettingsDialog')
+  const { t } = useTranslation()
   const renderChart = () => {
     /** @type {{patientData: TidelineData}} */
-    const mostRecentSettings = _.last(patientData.grouped.pumpSettings);
-    log.debug("Settings.renderChart()", mostRecentSettings);
+    const mostRecentSettings = _.last(patientData.grouped.pumpSettings)
+    log.debug('Settings.renderChart()', mostRecentSettings)
 
     const handleCopySettings = (success, useClipboardAPI, error ) => {
-      log.info("handleCopySettings", { success, useClipboardAPI, error });
-      trackMetric("export_data", "copy_as_text", "settings");
-    };
+      log.info('handleCopySettings', { success, useClipboardAPI, error })
+      trackMetric('export_data', 'copy_as_text', 'settings')
+    }
 
     return (
       <PumpSettingsContainer
         copySettingsClicked={handleCopySettings}
-        manufacturerKey={_.get(mostRecentSettings, "source", patientData.opts.defaultSource).toLowerCase()}
+        manufacturerKey={_.get(mostRecentSettings, 'source', patientData.opts.defaultSource).toLowerCase()}
         pumpSettings={mostRecentSettings}
         timePrefs={timePrefs}
         onSwitchToDaily={onSwitchToDaily}
         bgUnits={bgPrefs.bgUnits}
       />
-    );
-  };
+    )
+  }
 
   const renderMissingSettingsMessage = () => {
     return (
@@ -86,13 +86,13 @@ const SettingsDialog = (props) => {
           The System Settings view shows your basal rates, carb ratios, sensitivity factors and more, but it looks like your system hasn&apos;t sent data yet.
         </p>
       </Trans>
-    );
-  };
+    )
+  }
 
   const isMissingSettings = () => {
-    const pumpSettings = _.get(patientData, "grouped.pumpSettings", []);
-    return _.isEmpty(pumpSettings);
-  };
+    const pumpSettings = _.get(patientData, 'grouped.pumpSettings', [])
+    return _.isEmpty(pumpSettings)
+  }
 
   return (
     <Dialog
@@ -104,7 +104,7 @@ const SettingsDialog = (props) => {
     >
       <DialogTitle>
         <Typography className={classes.dialogTitle}>
-          <strong>{t("device-usage")}</strong>
+          <strong>{t('device-usage')}</strong>
         </Typography>
         <IconButton id="close-settings-dialog" className={classes.closeButton} onClick={()=>setOpen(false)}>
           <CloseIcon />
@@ -114,8 +114,8 @@ const SettingsDialog = (props) => {
         {isMissingSettings() ? renderMissingSettingsMessage() : renderChart()}
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
 
 SettingsDialog.propTypes = {
@@ -125,6 +125,6 @@ SettingsDialog.propTypes = {
   onSwitchToDaily: PropTypes.func.isRequired,
   trackMetric: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
-};
-export default SettingsDialog;
+  setOpen: PropTypes.func.isRequired
+}
+export default SettingsDialog

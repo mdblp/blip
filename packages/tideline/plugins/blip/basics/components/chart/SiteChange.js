@@ -15,37 +15,37 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import PropTypes from "prop-types";
-import React from "react";
+import _ from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import { SITE_CHANGE_RESERVOIR, DEFAULT_MANUFACTURER, SITE_CHANGE } from "../../logic/constants";
-import Change from "../sitechange/Change";
-import NoChange from "../sitechange/NoChange";
+import { SITE_CHANGE_RESERVOIR, DEFAULT_MANUFACTURER, SITE_CHANGE } from '../../logic/constants'
+import Change from '../sitechange/Change'
+import NoChange from '../sitechange/NoChange'
 
 function SiteChange(props) {
   const getValue = () => {
-    return props.data.infusionSiteHistory[props.date];
-  };
+    return props.data.infusionSiteHistory[props.date]
+  }
 
-  const type = props.subtotalType ?? SITE_CHANGE_RESERVOIR;
-  const value = getValue();
-  const manufacturer = _.get(_.last(value.data), "pump.manufacturer", DEFAULT_MANUFACTURER);
-  value.count = value.count ?? 1; //default value
+  const type = props.subtotalType ?? SITE_CHANGE_RESERVOIR
+  const value = getValue()
+  const manufacturer = _.get(_.last(value.data), 'pump.manufacturer', DEFAULT_MANUFACTURER)
+  value.count = value.count ?? 1 //default value
   // Reservoir Change
   const siteChangeComponent =
     value.type === SITE_CHANGE ? (
       <Change daysSince={value.daysSince} count={value.count} type={type} manufacturer={manufacturer} />
     ) : (
       <NoChange />
-    );
-  return <div className="SiteChange">{siteChangeComponent}</div>;
+    )
+  return <div className="SiteChange">{siteChangeComponent}</div>
 }
 
 SiteChange.propTypes = {
   data: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
-  subtotalType: PropTypes.string,
-};
+  subtotalType: PropTypes.string
+}
 
-export default SiteChange;
+export default SiteChange

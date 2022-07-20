@@ -25,120 +25,120 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useHistory, useParams } from 'react-router-dom'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import Box from "@material-ui/core/Box";
-import DesktopMacIcon from "@material-ui/icons/DesktopMac";
-import GroupOutlinedIcon from "@material-ui/icons/GroupOutlined";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import Box from '@material-ui/core/Box'
+import DesktopMacIcon from '@material-ui/icons/DesktopMac'
+import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
+import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 
-import { Team, useTeam } from "../../lib/team";
-import BasicDropdown from "../../components/dropdown/basic-dropdown";
-import TeamInformation from "../../components/team/team-information";
-import TeamMembers from "../../components/team/team-members";
-import { commonComponentStyles } from "../../components/common";
-import { useAuth } from "../../lib/auth";
-import TeamAlarmsConfiguration from "../../components/team/team-alarms-configuration";
+import { Team, useTeam } from '../../lib/team'
+import BasicDropdown from '../../components/dropdown/basic-dropdown'
+import TeamInformation from '../../components/team/team-information'
+import TeamMembers from '../../components/team/team-members'
+import { commonComponentStyles } from '../../components/common'
+import { useAuth } from '../../lib/auth'
+import TeamAlarmsConfiguration from '../../components/team/team-alarms-configuration'
 
 const useStyles = makeStyles((theme: Theme) => ({
   activeLink: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   disableRipple: {
-    "paddingLeft": 0,
-    "&:hover": {
-      backgroundColor: "transparent",
+    paddingLeft: 0,
+    '&:hover': {
+      backgroundColor: 'transparent'
     },
-    "color": theme.palette.common.black,
+    color: theme.palette.common.black
   },
   drawer: {
-    position: "sticky",
-    height: "200px",
-    top: "80px",
+    position: 'sticky',
+    height: '200px',
+    top: '80px'
   },
   drawerTitle: {
-    "display": "flex",
-    "alignItems": "center",
-    "marginTop": "30px",
-    "&:hover": {
-      cursor: "pointer",
-    },
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '30px',
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
   refElement: {
-    scrollMarginTop: "70px",
+    scrollMarginTop: '70px'
   },
   separator: {
     border: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(6),
-    marginTop: theme.spacing(6),
+    marginTop: theme.spacing(6)
   },
   teamDetails: {
-    maxWidth: "1140px",
-    padding: "0 20px",
+    maxWidth: '1140px',
+    padding: '0 20px'
   },
   teamInformation: {
-    marginTop: "32px",
+    marginTop: '32px'
   },
   title: {
     fontWeight: 600,
-    lineHeight: "20px",
-    textTransform: "uppercase",
-  },
-}));
+    lineHeight: '20px',
+    textTransform: 'uppercase'
+  }
+}))
 
 function TeamDetailsPage(): JSX.Element {
-  const { getTeam, getMedicalTeams } = useTeam();
-  const classes = useStyles();
-  const commonTeamClasses = commonComponentStyles();
-  const paramHook = useParams();
-  const history = useHistory();
-  const authContext = useAuth();
-  const { t } = useTranslation("yourloops");
-  const { teamId } = paramHook as { teamId: string };
+  const { getTeam, getMedicalTeams } = useTeam()
+  const classes = useStyles()
+  const commonTeamClasses = commonComponentStyles()
+  const paramHook = useParams()
+  const history = useHistory()
+  const authContext = useAuth()
+  const { t } = useTranslation('yourloops')
+  const { teamId } = paramHook as { teamId: string }
   const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] }>(
     { selectedTeam: null, teamNames: [] }
-  );
-  const [activeLink, setActiveLink] = useState<string>("information");
-  const isUserHcp = authContext.user?.isUserHcp();
+  )
+  const [activeLink, setActiveLink] = useState<string>('information')
+  const isUserHcp = authContext.user?.isUserHcp()
 
-  const teamInformation = useRef<HTMLDivElement>(null);
-  const teamMembers = useRef<HTMLDivElement>(null);
-  const teamAlarms = useRef<HTMLDivElement>(null);
+  const teamInformation = useRef<HTMLDivElement>(null)
+  const teamMembers = useRef<HTMLDivElement>(null)
+  const teamAlarms = useRef<HTMLDivElement>(null)
 
-  const scrollTo = (ref: React.RefObject<HTMLDivElement>) => {
-    setActiveLink(ref.current?.dataset.link as string);
-    ref.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollTo = (ref: React.RefObject<HTMLDivElement>): void => {
+    setActiveLink(ref.current?.dataset.link)
+    ref.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   const refresh = useCallback(() => {
     setDropdownData({
       selectedTeam: getTeam(teamId) as Team,
-      teamNames: getMedicalTeams().map((team: Team) => team.name),
-    });
-  }, [getTeam, teamId, getMedicalTeams]);
+      teamNames: getMedicalTeams().map((team: Team) => team.name)
+    })
+  }, [getTeam, teamId, getMedicalTeams])
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    refresh()
+  }, [refresh])
 
-  const redirectToDashboard = () => {
-    history.push("/");
-  };
+  const redirectToDashboard = (): void => {
+    history.push('/')
+  }
 
-  const redirectToTeam = (selectedTeam: string) => {
-    const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam);
-    history.push(`/teams/${teamToRedirectTo?.id}`);
-  };
+  const redirectToTeam = (selectedTeam: string): void => {
+    const teamToRedirectTo = getMedicalTeams().find((team: Team) => team.name === selectedTeam)
+    history.push(`/teams/${teamToRedirectTo?.id}`)
+  }
 
-  const isMonitoringEnabled = () => {
-    return dropdownData.selectedTeam && dropdownData.selectedTeam.monitoring && dropdownData.selectedTeam.monitoring.enabled;
-  };
+  const isMonitoringEnabled = (): boolean => {
+    return dropdownData.selectedTeam?.monitoring?.enabled
+  }
 
   return (
     <React.Fragment>
@@ -149,7 +149,7 @@ function TeamDetailsPage(): JSX.Element {
               <ArrowBackIcon />
             </IconButton>
             <GroupOutlinedIcon />
-            <Box marginLeft={0.5} marginRight={2}>{t("team")}</Box>
+            <Box marginLeft={0.5} marginRight={2}>{t('team')}</Box>
             <BasicDropdown
               key={dropdownData.selectedTeam.name}
               id="team-basic-dropdown"
@@ -164,41 +164,41 @@ function TeamDetailsPage(): JSX.Element {
                 <div
                   role="link"
                   aria-label="information"
-                  className={`${classes.drawerTitle} ${activeLink === "information" ? classes.activeLink : ""}`}
+                  className={`${classes.drawerTitle} ${activeLink === 'information' ? classes.activeLink : ''}`}
                   tabIndex={0}
                   onKeyDown={() => scrollTo(teamInformation)}
                   onClick={() => scrollTo(teamInformation)}
                 >
                   <InfoOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("information")}
+                    {t('information')}
                   </Typography>
                 </div>
                 <div
                   role="link"
                   aria-label="members"
-                  className={`${classes.drawerTitle} ${activeLink === "members" ? classes.activeLink : ""}`}
+                  className={`${classes.drawerTitle} ${activeLink === 'members' ? classes.activeLink : ''}`}
                   tabIndex={0}
                   onClick={() => scrollTo(teamMembers)}
                   onKeyDown={() => scrollTo(teamMembers)}
                 >
                   <GroupOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t("members")}
+                    {t('members')}
                   </Typography>
                 </div>
                 {isMonitoringEnabled() &&
                   <div
                     role="link"
                     aria-label="alarms"
-                    className={`${classes.drawerTitle} ${activeLink === "configuration" ? classes.activeLink : ""}`}
+                    className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
                     tabIndex={0}
                     onClick={() => scrollTo(teamAlarms)}
                     onKeyDown={() => scrollTo(teamAlarms)}
                   >
                     <DesktopMacIcon className={commonTeamClasses.icon} />
                     <Typography className={classes.title}>
-                      {t("events-configuration")}
+                      {t('events-configuration')}
                     </Typography>
                   </div>
                 }
@@ -249,7 +249,7 @@ function TeamDetailsPage(): JSX.Element {
         </div>
       }
     </React.Fragment>
-  );
+  )
 }
 
-export default TeamDetailsPage;
+export default TeamDetailsPage

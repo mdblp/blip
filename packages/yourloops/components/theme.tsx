@@ -26,88 +26,88 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createTheme, Theme } from "@material-ui/core/styles";
-import config from "../lib/config";
+import { createTheme, Theme } from '@material-ui/core/styles'
+import config from '../lib/config'
 
-const DEFAULT_PRIMARY_MAIN_COLOR = "#039BE5";
-const DEFAULT_PRIMARY_LIGHT_COLOR = "#4DABF5";
-const DEFAULT_PRIMARY_DARK_COLOR = "#1769AA";
-const DEFAULT_SECONDARY_MAIN_COLOR = "#EDFAFF";
-const DEFAULT_SECONDARY_LIGHT_COLOR = "#F5F9F9";
-const DEFAULT_SECONDARY_DARK_COLOR = "#BBC7CC";
-const DEFAULT_TEXT_BASE_COLOR = "#444444";
+const DEFAULT_PRIMARY_MAIN_COLOR = '#039BE5'
+const DEFAULT_PRIMARY_LIGHT_COLOR = '#4DABF5'
+const DEFAULT_PRIMARY_DARK_COLOR = '#1769AA'
+const DEFAULT_SECONDARY_MAIN_COLOR = '#EDFAFF'
+const DEFAULT_SECONDARY_LIGHT_COLOR = '#F5F9F9'
+const DEFAULT_SECONDARY_DARK_COLOR = '#BBC7CC'
+const DEFAULT_TEXT_BASE_COLOR = '#444444'
 
-const appElement = document.getElementById("app");
-const cssVar = (name: string): string => getComputedStyle(appElement as HTMLElement).getPropertyValue(name).trim();
+const appElement = document.getElementById('app')
+const cssVar = (name: string): string => getComputedStyle(appElement).getPropertyValue(name).trim()
 
 /** Set one and only one class for the branding in `<div id='app'>` */
-export function initTheme() {
-  const classList = document.getElementById("app")?.classList;
-  classList?.remove(...BRANDING_LIST);
-  classList?.add(config.BRANDING.replace("_", "-"));
+export function initTheme(): void {
+  const classList = document.getElementById('app')?.classList
+  classList?.remove(...BRANDING_LIST)
+  classList?.add(config.BRANDING.replace('_', '-'))
 
-  const favIcon = document.getElementById("favicon") as HTMLAnchorElement;
-  favIcon.href = `./branding_${config.BRANDING}_favicon.ico`;
+  const favIcon = document.getElementById('favicon') as HTMLAnchorElement
+  favIcon.href = `./branding_${config.BRANDING}_favicon.ico`
 }
 
 export function getTheme(): Theme {
   return createTheme({
     overrides: {
       MuiCssBaseline: {
-        "@global": {
+        '@global': {
           a: {
-            color: "inherit",
-            textDecoration: "none",
-          },
-        },
+            color: 'inherit',
+            textDecoration: 'none'
+          }
+        }
       },
       MuiButton: {
         root: {
-          fontWeight: 600,
-        },
+          fontWeight: 600
+        }
       },
       MuiDialogActions: {
         spacing: {
-          "padding": 16,
-          "& > :last-child": {
-            marginLeft: 16,
-          },
-        },
+          padding: 16,
+          '& > :last-child': {
+            marginLeft: 16
+          }
+        }
       },
       MuiSvgIcon: {
         root: {
-          margin: 0,
-        },
+          margin: 0
+        }
       },
       MuiListItemIcon: {
         root: {
           minWidth: 40,
-          color: appElement ? cssVar("--text-base-color") : DEFAULT_TEXT_BASE_COLOR,
-        },
+          color: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
+        }
       },
       MuiPaper: {
         rounded: {
-          borderRadius: 12,
-        },
-      },
+          borderRadius: 12
+        }
+      }
     },
     palette: {
-      type: "light",
+      type: 'light',
       text: {
-        primary: appElement ? cssVar("--text-base-color") : DEFAULT_TEXT_BASE_COLOR,
+        primary: appElement ? cssVar('--text-base-color') : DEFAULT_TEXT_BASE_COLOR
       },
       primary: {
-        main: appElement ? cssVar("--color-primary-main") : DEFAULT_PRIMARY_MAIN_COLOR,
-        light: appElement ? cssVar("--color-primary-light") : DEFAULT_PRIMARY_LIGHT_COLOR,
-        dark: appElement ? cssVar("--color-primary-dark") : DEFAULT_PRIMARY_DARK_COLOR,
+        main: appElement ? cssVar('--color-primary-main') : DEFAULT_PRIMARY_MAIN_COLOR,
+        light: appElement ? cssVar('--color-primary-light') : DEFAULT_PRIMARY_LIGHT_COLOR,
+        dark: appElement ? cssVar('--color-primary-dark') : DEFAULT_PRIMARY_DARK_COLOR
       },
       secondary: {
-        main: appElement ? cssVar("--color-secondary-main") : DEFAULT_SECONDARY_MAIN_COLOR,
-        light: appElement ? cssVar("--color-secondary-light") : DEFAULT_SECONDARY_LIGHT_COLOR,
-        dark: appElement ? cssVar("--color-secondary-dark") : DEFAULT_SECONDARY_DARK_COLOR,
-      },
-    },
-  });
+        main: appElement ? cssVar('--color-secondary-main') : DEFAULT_SECONDARY_MAIN_COLOR,
+        light: appElement ? cssVar('--color-secondary-light') : DEFAULT_SECONDARY_LIGHT_COLOR,
+        dark: appElement ? cssVar('--color-secondary-dark') : DEFAULT_SECONDARY_DARK_COLOR
+      }
+    }
+  })
 }
 
 /**
@@ -115,12 +115,13 @@ export function getTheme(): Theme {
  * @param theme Main theme
  * @returns The styles for buttons
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const makeButtonsStyles = (theme: Theme) => ({
   alertActionButton: {
-    "color": theme.palette.common.white,
-    "backgroundColor": theme.palette.error.main,
-    "&:hover": {
-      backgroundColor: theme.palette.error.dark,
-    },
-  },
-});
+    color: theme.palette.common.white,
+    backgroundColor: theme.palette.error.main,
+    '&:hover': {
+      backgroundColor: theme.palette.error.dark
+    }
+  }
+})

@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import moment from "moment-timezone";
+import moment from 'moment-timezone'
 
 /**
  * @typedef {{start: moment.Moment, end: moment.Moment}} DateRange
@@ -43,9 +43,9 @@ class PartialDataLoad {
    */
   constructor(range, initialLoadedRange) {
     /** @type {DateRange} */
-    this.range = range;
+    this.range = range
     /** @type {DateRange[]} */
-    this.loadedRanges = [initialLoadedRange];
+    this.loadedRanges = [initialLoadedRange]
   }
 
   /**
@@ -54,15 +54,15 @@ class PartialDataLoad {
    * @returns {DateRange}
    */
   limitRange(range) {
-    let { start, end } = range;
+    let { start, end } = range
     if (moment.isMoment(start) && moment.isMoment(end)) {
-      start = start.isBefore(this.range.start) ? this.range.start : start;
-      start = start.isAfter(this.range.end) ? this.range.end : start;
-      end = end.isAfter(this.range.end) ? this.range.end : end;
-      end = end.isBefore(this.range.start) ? this.range.start : end;
-      return { start, end };
+      start = start.isBefore(this.range.start) ? this.range.start : start
+      start = start.isAfter(this.range.end) ? this.range.end : start
+      end = end.isAfter(this.range.end) ? this.range.end : end
+      end = end.isBefore(this.range.start) ? this.range.start : end
+      return { start, end }
     }
-    throw new Error("Invalid range parameter");
+    throw new Error('Invalid range parameter')
   }
 
   /**
@@ -71,11 +71,11 @@ class PartialDataLoad {
    */
   getMissingRanges(wantedRange, check = false) {
     /** @type {DateRange[]} */
-    const missingRanges = [];
+    const missingRanges = []
 
-    let { start, end } = this.limitRange(wantedRange);
+    let { start, end } = this.limitRange(wantedRange)
     if (end.isBefore(start)) {
-      throw new Error("Invalid wanted range");
+      throw new Error('Invalid wanted range')
     }
 
     for (const loadedRange of this.loadedRanges) {
@@ -85,34 +85,34 @@ class PartialDataLoad {
           // Completely before our range
           missingRanges.push({
             start,
-            end: end.clone().subtract(1, "day").endOf("day"),
-          });
-          break; // This is all we need
+            end: end.clone().subtract(1, 'day').endOf('day')
+          })
+          break // This is all we need
         } else {
           missingRanges.push({
             start,
-            end: loadedRange.start.clone().subtract(1, "day").endOf("day"),
-          });
+            end: loadedRange.start.clone().subtract(1, 'day').endOf('day')
+          })
           if (loadedRange.end.isBefore(end)) {
-            start = loadedRange.end; // Update start value
+            start = loadedRange.end // Update start value
           } else {
-            break; // This is all we need
+            break // This is all we need
           }
         }
       } else if (start.isBefore(loadedRange.end) && end.isAfter(loadedRange.end)) {
         // start is within the current tested range
-        start = loadedRange.end;
+        start = loadedRange.end
       } else if (end.isSameOrBefore(loadedRange.end)) {
         // Already loaded
-        break;
+        break
       }
     }
 
     if (!check && missingRanges.length > 0) {
-      this.sortAndMergeRanges(wantedRange);
+      this.sortAndMergeRanges(wantedRange)
     }
 
-    return missingRanges;
+    return missingRanges
   }
 
   /**
@@ -124,45 +124,45 @@ class PartialDataLoad {
     // Update our loaded range
     this.loadedRanges.push({
       start: newRange.start.clone(),
-      end: newRange.end.clone(),
-    });
+      end: newRange.end.clone()
+    })
 
-    this.loadedRanges.sort((a, b) => a.start.valueOf() - b.start.valueOf());
+    this.loadedRanges.sort((a, b) => a.start.valueOf() - b.start.valueOf())
 
-    let prevRange = this.loadedRanges[0];
+    let prevRange = this.loadedRanges[0]
     for (let i = 1; i < this.loadedRanges.length; i++) {
-      let currentRange = this.loadedRanges[i];
+      let currentRange = this.loadedRanges[i]
       if (prevRange.end.isSameOrAfter(currentRange.start)) {
         if (prevRange.end.isSameOrBefore(currentRange.end)) {
-          prevRange.end = currentRange.end;
+          prevRange.end = currentRange.end
         }
-        this.loadedRanges[i] = null;
+        this.loadedRanges[i] = null
       }
     }
 
-    this.loadedRanges = this.loadedRanges.filter((v) => v !== null);
+    this.loadedRanges = this.loadedRanges.filter((v) => v !== null)
   }
 
   toDebug() {
-    let ranges = [];
+    let ranges = []
     for (const loadedRange of this.loadedRanges) {
       ranges.push({
         start: loadedRange.start.toISOString(),
-        end: loadedRange.end.toISOString(),
-      });
+        end: loadedRange.end.toISOString()
+      })
     }
     return {
       ranges,
       range: {
         start: this.range.start.toISOString(),
-        end: this.range.end.toISOString(),
+        end: this.range.end.toISOString()
       }
-    };
+    }
   }
 
   toString() {
-    return JSON.stringify(this.toDebug());
+    return JSON.stringify(this.toDebug())
   }
 }
 
-export default PartialDataLoad;
+export default PartialDataLoad

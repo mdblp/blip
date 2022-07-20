@@ -25,54 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 
-import metrics from "../../lib/metrics";
-import { ConsentForm } from "../../components/consents";
-import { useSignUpFormState, FormValuesType } from "./signup-formstate-context";
-import SignUpFormProps from "./signup-form-props";
-import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/user";
+import metrics from '../../lib/metrics'
+import { ConsentForm } from '../../components/consents'
+import { useSignUpFormState, FormValuesType } from './signup-formstate-context'
+import SignUpFormProps from './signup-form-props'
+import { useAuth } from '../../lib/auth'
 
 const useStyles = makeStyles((theme: Theme) => ({
   backButton: {
-    marginRight: theme.spacing(2),
-  },
-}));
+    marginRight: theme.spacing(2)
+  }
+}))
 
 export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
-  const { user } = useAuth();
-  const userRole = user?.role as UserRoles;
-  const { t } = useTranslation("yourloops");
-  const classes = useStyles();
-  const { handleBack, handleNext } = props;
-  const { state, dispatch } = useSignUpFormState();
-  const consentsChecked = state.formValues.terms && state.formValues.privacyPolicy;
+  const { user } = useAuth()
+  const userRole = user?.role
+  const { t } = useTranslation('yourloops')
+  const classes = useStyles()
+  const { handleBack, handleNext } = props
+  const { state, dispatch } = useSignUpFormState()
+  const consentsChecked = state.formValues.terms && state.formValues.privacyPolicy
 
-  const handleChange = (checked: boolean, keyField: FormValuesType) => {
-    dispatch({ type: "EDIT_FORMVALUE", key: keyField, value: checked });
-  };
+  const handleChange = (checked: boolean, keyField: FormValuesType): void => {
+    dispatch({ type: 'EDIT_FORMVALUE', key: keyField, value: checked })
+  }
 
   const setPolicyAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, "privacyPolicy");
-  };
+    handleChange(value, 'privacyPolicy')
+  }
   const setTermsAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, "terms");
-  };
+    handleChange(value, 'terms')
+  }
   const setFeedbackAccepted: React.Dispatch<boolean> = (value: boolean): void => {
-    handleChange(value, "feedback");
-  };
+    handleChange(value, 'feedback')
+  }
 
-  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
-    handleNext();
-    metrics.send("registration", "accept_terms", userRole);
-  };
+  const onNext = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void => {
+    event.preventDefault()
+    handleNext()
+    metrics.send('registration', 'accept_terms', userRole)
+  }
 
   return (
     <Box
@@ -103,7 +102,7 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           disabled={props.activeStep === 0}
           onClick={handleBack}
         >
-          {t("signup-steppers-back")}
+          {t('signup-steppers-back')}
         </Button>
         <Button
           id="button-signup-steppers-next"
@@ -113,9 +112,9 @@ export default function SignUpConsent(props: SignUpFormProps): JSX.Element {
           disabled={!consentsChecked}
           onClick={onNext}
         >
-          {t("signup-steppers-next")}
+          {t('signup-steppers-next')}
         </Button>
       </Box>
     </Box>
-  );
+  )
 }

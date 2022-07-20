@@ -26,168 +26,168 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import _ from 'lodash'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Paper from "@material-ui/core/Paper";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import Paper from '@material-ui/core/Paper'
 
-import EmailIcon from "@material-ui/icons/Email";
-import Link from "@material-ui/core/Link";
-import LocationOnIcon from "@material-ui/icons/LocationOn";
-import PhoneIcon from "@material-ui/icons/Phone";
+import EmailIcon from '@material-ui/icons/Email'
+import Link from '@material-ui/core/Link'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import PhoneIcon from '@material-ui/icons/Phone'
 
-import VerifiedIcon from "../icons/VerifiedIcon";
+import VerifiedIcon from '../icons/VerifiedIcon'
 
-import locales from "../../../../locales/languages.json";
-import { Team, getDisplayTeamCode } from "../../lib/team";
+import locales from '../../../../locales/languages.json'
+import { Team, getDisplayTeamCode } from '../../lib/team'
 
 export interface TeamCardProps {
-  team: Readonly<Team>;
-  children?: JSX.Element | JSX.Element[] | null;
-  teamMembers?: JSX.Element;
+  team: Readonly<Team>
+  children?: JSX.Element | JSX.Element[] | null
+  teamMembers?: JSX.Element
 }
 
 export interface TeamInfoProps {
-  id: string;
-  label: string;
-  value?: null | string | JSX.Element;
-  icon: JSX.Element;
+  id: string
+  label: string
+  value?: null | string | JSX.Element
+  icon: JSX.Element
 }
 
 const teamCardStyles = makeStyles((theme: Theme) => {
   return {
     paper: {
-      display: "flex",
-      flexDirection: "column",
+      display: 'flex',
+      flexDirection: 'column'
     },
     paperRoot: {
-      padding: "1em 3em",
+      padding: '1em 3em'
     },
     firstRow: {
-      display: "flex",
-      flexDirection: "row",
+      display: 'flex',
+      flexDirection: 'row',
       marginBottom: theme.spacing(4),
       marginTop: theme.spacing(2),
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
-        flexWrap: "wrap",
-      },
+        flexWrap: 'wrap'
+      }
     },
     secondRow: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "flex-start",
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
       marginBottom: theme.spacing(2),
-      [theme.breakpoints.down("sm")]: {
-        flexWrap: "wrap",
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap'
       },
-      [theme.breakpoints.down("xs")]: {
-        flexDirection: "column",
-      },
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column'
+      }
     },
     teamName: {
-      minWidth: "8em",
-      marginTop: "auto",
-      marginBottom: "auto",
-      [theme.breakpoints.down("sm")]: {
-        width: "100%",
-        textAlign: "center",
+      minWidth: '8em',
+      marginTop: 'auto',
+      marginBottom: 'auto',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%',
+        textAlign: 'center',
         marginTop: 0,
-        marginBottom: theme.spacing(1),
-      },
+        marginBottom: theme.spacing(1)
+      }
     },
     teamInfoIcon: {
-      fill: "#2e2e2e",
+      fill: '#2e2e2e'
     },
     buttonActionFirstRow: {
-      alignSelf: "center",
-      marginRight: "1em",
-      textTransform: "initial",
+      alignSelf: 'center',
+      marginRight: '1em',
+      textTransform: 'initial'
     },
     divActions: {
-      marginLeft: "2em",
-      display: "flex",
+      marginLeft: '2em',
+      display: 'flex',
       flexGrow: 1,
-      justifyContent: "flex-start",
-      [theme.breakpoints.down("sm")]: {
-        marginLeft: "0px",
-        justifyContent: "center",
-      },
-    },
-  };
-}, { name: "ylp-team-card" });
+      justifyContent: 'flex-start',
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: '0px',
+        justifyContent: 'center'
+      }
+    }
+  }
+}, { name: 'ylp-team-card' })
 
 const teamInfoStyles = makeStyles((theme: Theme) => {
   return {
     card: {
-      display: "flex",
-      flexDirection: "row",
+      display: 'flex',
+      flexDirection: 'row',
       marginRight: theme.spacing(3),
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down('sm')]: {
         marginRight: 0,
-        width: "50%",
+        width: '50%',
         marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
+        marginBottom: theme.spacing(1)
       },
-      [theme.breakpoints.down("xs")]: {
-        width: "100%",
-      },
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     },
     avatar: {
-      backgroundColor: "#e4e4e5",
+      backgroundColor: '#e4e4e5'
     },
     divLabelValue: {
-      display: "flex",
-      flexDirection: "column",
+      display: 'flex',
+      flexDirection: 'column',
       marginLeft: theme.spacing(2),
-      fontSize: theme.typography.fontSize,
+      fontSize: theme.typography.fontSize
     },
     spanValue: {
-      fontWeight: 500,
+      fontWeight: 500
     },
     linkValue: {
       fontWeight: 500,
-      color: theme.palette.text.primary,
-    },
-  };
-}, { name: "ylp-team-card-info" });
+      color: theme.palette.text.primary
+    }
+  }
+}, { name: 'ylp-team-card-info' })
 
 export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
-  const { id, label, value, icon } = props;
-  const classes = teamInfoStyles();
-  const { t } = useTranslation("yourloops");
+  const { id, label, value, icon } = props
+  const classes = teamInfoStyles()
+  const { t } = useTranslation('yourloops')
 
   if (_.isNil(value) || _.isEmpty(value)) {
-    return null;
+    return null
   }
 
-  let infoLabel: string;
-  let elemValue: JSX.Element;
+  let infoLabel: string
+  let elemValue: JSX.Element
   switch (label) {
-  case "email":
-    infoLabel = t("email");
-    elemValue = (
-      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`mailto:${value}`} target="_blank" rel="noreferrer">
+    case 'email':
+      infoLabel = t('email')
+      elemValue = (
+      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`mailto:${value as string}`} target="_blank" rel="noreferrer">
         {value}
       </Link>
-    );
-    break;
-  case "phone":
-    infoLabel = t("phone-number");
-    elemValue = (
-      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${value}`} target="_blank" rel="noreferrer">
+      )
+      break
+    case 'phone':
+      infoLabel = t('phone-number')
+      elemValue = (
+      <Link id={`team-card-info-${id}-${label}-value`} className={classes.linkValue} href={`tel:${value as string}`} target="_blank" rel="noreferrer">
         {value}
       </Link>
-    );
-    break;
-  default:
-    infoLabel = t(`team-card-label-${label}`);
-    elemValue = <span id={`team-card-info-${id}-${label}-value`} className={classes.spanValue}>{value}</span>;
-    break;
+      )
+      break
+    default:
+      infoLabel = t(`team-card-label-${label}`)
+      elemValue = <span id={`team-card-info-${id}-${label}-value`} className={classes.spanValue}>{value}</span>
+      break
   }
 
   return (
@@ -198,19 +198,19 @@ export function TeamInfo(props: TeamInfoProps): JSX.Element | null {
         {elemValue}
       </div>
     </div>
-  );
+  )
 }
 
 function TeamCard(props: TeamCardProps): JSX.Element {
-  const { team, children, teamMembers } = props;
-  const classes = teamCardStyles();
-  const { id } = team;
+  const { team, children, teamMembers } = props
+  const classes = teamCardStyles()
+  const { id } = team
 
-  let address: JSX.Element | null = null;
-  const teamAddress = team.address ?? null;
+  let address: JSX.Element | null = null
+  const teamAddress = team.address ?? null
   if (teamAddress !== null) {
-    const { line1, line2, zip, city, country } = teamAddress;
-    const countryName = _.get(locales, `countries.${country}.name`, country) as string;
+    const { line1, line2, zip, city, country } = teamAddress
+    const countryName = _.get(locales, `countries.${country}.name`, country) as string
     address = (
       <React.Fragment>
         {line1}
@@ -223,10 +223,10 @@ function TeamCard(props: TeamCardProps): JSX.Element {
         <br />
         {`${zip} ${city} ${countryName}`}
       </React.Fragment>
-    );
+    )
   }
 
-  const teamCode = getDisplayTeamCode(team.code);
+  const teamCode = getDisplayTeamCode(team.code)
 
   return (
     <Paper
@@ -252,7 +252,7 @@ function TeamCard(props: TeamCardProps): JSX.Element {
       </div>
       {teamMembers}
     </Paper>
-  );
+  )
 }
 
-export default TeamCard;
+export default TeamCard

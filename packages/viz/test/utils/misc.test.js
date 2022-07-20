@@ -15,22 +15,22 @@
  * == BSD2 LICENSE ==
  */
 
-import { assert, expect } from "chai";
-import { patient, anonymousPatient } from "../../data/patient/profiles";
-import { getPatientFullName } from "../../src/utils/misc";
+import { assert, expect } from 'chai'
+import { patient, anonymousPatient } from '../../data/patient/profiles'
+import { getPatientFullName } from '../../src/utils/misc'
 
-describe("misc utility functions", () => {
-  describe("getPatientFullName", () => {
-    it("should be a function", () => {
-      assert.isFunction(getPatientFullName);
-    });
+describe('misc utility functions', () => {
+  describe('getPatientFullName', () => {
+    it('should be a function', () => {
+      assert.isFunction(getPatientFullName)
+    })
 
-    it("returns patient name", () => {
-      expect(getPatientFullName(patient)).to.equal(patient.profile.fullName);
-    });
+    it('returns patient name', () => {
+      expect(getPatientFullName(patient)).to.equal(patient.profile.fullName)
+    })
 
-    it("returns child name when isOtherPerson", () => {
-      expect(getPatientFullName(anonymousPatient)).to.equal("Anonymous user");
-    });
-  });
-});
+    it('returns child name when isOtherPerson', () => {
+      expect(getPatientFullName(anonymousPatient)).to.equal('Anonymous user')
+    })
+  })
+})

@@ -15,7 +15,7 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
+import schema from './validator/schematron.js'
 
 const message = (common) => {
   return schema(
@@ -24,9 +24,9 @@ const message = (common) => {
       parentMessage: schema().oneOf(
         schema(schema().isNull()),
         schema(schema().isId())
-      ),
+      )
     }
-  );
-};
+  )
+}
 
-export default message;
+export default message

@@ -26,95 +26,94 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "@testing-library/react-hooks/dom";
-import i18n from "i18next";
+import React from 'react'
+import { render, unmountComponentAtNode } from 'react-dom'
+import { act } from '@testing-library/react-hooks/dom'
+import i18n from 'i18next'
 
-import Footer from "../../../components/footer/footer";
-import { AuthContext, useAuth, User } from "../../../lib/auth";
-import diabeloopUrls from "../../../lib/diabeloop-url";
+import Footer from '../../../components/footer/footer'
+import { AuthContext, useAuth, User } from '../../../lib/auth'
+import diabeloopUrls from '../../../lib/diabeloop-url'
 
-describe("Footer", () => {
-  let auth: AuthContext = null;
-  let container: HTMLElement | null = null;
+describe('Footer', () => {
+  let auth: AuthContext = null
+  let container: HTMLElement | null = null
 
   const FooterLinksComponent = (data: { user: User }): JSX.Element => {
-    auth = useAuth();
-    auth.user = data.user;
+    auth = useAuth()
+    auth.user = data.user
 
     return (
       <Footer />
-    );
-  };
+    )
+  }
 
   const mountComponent = async (user?: User): Promise<void> => {
     await act(() => {
       return new Promise((resolve) => {
         render(
-          <FooterLinksComponent user={user} />, container, resolve);
-      });
-    });
-  };
+          <FooterLinksComponent user={user} />, container, resolve)
+      })
+    })
+  }
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
+    container = document.createElement('div')
+    document.body.appendChild(container)
+  })
 
   afterEach(() => {
     if (container) {
-      unmountComponentAtNode(container);
-      container.remove();
-      container = null;
+      unmountComponentAtNode(container)
+      container.remove()
+      container = null
     }
-  });
+  })
 
   function checkLinkHref(linkId: string, expectedUrl: string) {
-    const link = document.getElementById(linkId) as HTMLLinkElement;
-    expect(link.href).toBe(expectedUrl);
+    const link = document.getElementById(linkId) as HTMLLinkElement
+    expect(link.href).toBe(expectedUrl)
   }
 
-  it("should render", async () => {
-    await mountComponent();
-    const component = document.getElementById("footer-links-container");
-    expect(component).not.toBeNull();
-  });
+  it('should render', async () => {
+    await mountComponent()
+    const component = document.getElementById('footer-links-container')
+    expect(component).not.toBeNull()
+  })
 
-  it("should render language selector and accompanying document selector when user is not logged in", async () => {
-    await mountComponent();
-    const languageSelector = document.getElementById("footer-language-box");
-    const documentSelector = document.getElementById("footer-accompanying-documents-box");
-    expect(languageSelector).not.toBeNull();
-    expect(documentSelector).not.toBeNull();
-  });
+  it('should render language selector and accompanying document selector when user is not logged in', async () => {
+    await mountComponent()
+    const languageSelector = document.getElementById('footer-language-box')
+    const documentSelector = document.getElementById('footer-accompanying-documents-box')
+    expect(languageSelector).not.toBeNull()
+    expect(documentSelector).not.toBeNull()
+  })
 
-  it("should not render language selector when user is logged in", async () => {
-    await mountComponent({} as User);
-    const languageSelector = document.getElementById("footer-language-box");
-    const documentSelector = document.getElementById("footer-accompanying-documents-box");
-    expect(languageSelector).toBeNull();
-    expect(documentSelector).not.toBeNull();
-  });
+  it('should not render language selector when user is logged in', async () => {
+    await mountComponent({} as User)
+    const languageSelector = document.getElementById('footer-language-box')
+    const documentSelector = document.getElementById('footer-accompanying-documents-box')
+    expect(languageSelector).toBeNull()
+    expect(documentSelector).not.toBeNull()
+  })
 
-  it("should privacy policy link redirect to correct url", async () => {
-    await mountComponent();
-    checkLinkHref("footer-link-url-privacy-policy", diabeloopUrls.getPrivacyPolicyUrL(i18n.language));
-  });
+  it('should privacy policy link redirect to correct url', async () => {
+    await mountComponent()
+    checkLinkHref('footer-link-url-privacy-policy', diabeloopUrls.getPrivacyPolicyUrL(i18n.language))
+  })
 
-  it("should terms of use link redirect to correct url", async () => {
-    await mountComponent();
-    checkLinkHref("footer-link-url-terms", diabeloopUrls.getTermsUrL(i18n.language));
-  });
+  it('should terms of use link redirect to correct url', async () => {
+    await mountComponent()
+    checkLinkHref('footer-link-url-terms', diabeloopUrls.getTermsUrL(i18n.language))
+  })
 
-  it("should cookies policy link redirect to correct url", async () => {
-    await mountComponent();
-    checkLinkHref("footer-link-url-cookies-policy", diabeloopUrls.getCookiesPolicyUrl(i18n.language));
-  });
+  it('should cookies policy link redirect to correct url', async () => {
+    await mountComponent()
+    checkLinkHref('footer-link-url-cookies-policy', diabeloopUrls.getCookiesPolicyUrl(i18n.language))
+  })
 
-  it("should release notes link redirect to correct url", async () => {
-    await mountComponent();
-    checkLinkHref("footer-link-url-release-notes", diabeloopUrls.getReleaseNotesURL());
-  });
-});
-
+  it('should release notes link redirect to correct url', async () => {
+    await mountComponent()
+    checkLinkHref('footer-link-url-release-notes', diabeloopUrls.getReleaseNotesURL())
+  })
+})

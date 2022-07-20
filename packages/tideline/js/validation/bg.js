@@ -15,8 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-import schema from "./validator/schematron.js";
-import { MGDL_UNITS, MMOLL_UNITS } from "../data/util/constants";
+import schema from './validator/schematron.js'
+import { MGDL_UNITS, MMOLL_UNITS } from '../data/util/constants'
 
 const cbg = (common) => {
   return schema(
@@ -25,9 +25,9 @@ const cbg = (common) => {
       deviceTime: schema().ifExists().isDeviceTime(),
       units: schema().in([MGDL_UNITS, MMOLL_UNITS]),
       value: schema().number().positive(),
-      localDate: schema().ifExists().isDate(),
+      localDate: schema().ifExists().isDate()
     }
-  );
-};
+  )
+}
 
-export default cbg;
+export default cbg

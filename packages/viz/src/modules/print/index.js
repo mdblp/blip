@@ -15,31 +15,31 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import i18next from "i18next";
-import moment from "moment-timezone";
-import PDFDocument from "pdfkit";
-import blobStream from "blob-stream";
-import PrintView from "./PrintView";
-import BasicsPrintView from "./BasicsPrintView";
-import DailyPrintView from "./DailyPrintView";
-import SettingsPrintView from "./SettingsPrintView";
-import { reshapeBgClassesToBgBounds } from "../../utils/bloodglucose";
+import _ from 'lodash'
+import i18next from 'i18next'
+import moment from 'moment-timezone'
+import PDFDocument from 'pdfkit'
+import blobStream from 'blob-stream'
+import PrintView from './PrintView'
+import BasicsPrintView from './BasicsPrintView'
+import DailyPrintView from './DailyPrintView'
+import SettingsPrintView from './SettingsPrintView'
+import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
 
-import { getPatientFullName } from "../../utils/misc";
-import * as constants from "./utils/constants";
-import { arrayBufferToBase64 } from "./utils/functions";
+import { getPatientFullName } from '../../utils/misc'
+import * as constants from './utils/constants'
+import { arrayBufferToBase64 } from './utils/functions'
 
 // TO_DO have a configuration variable to support specific branding or not like done e.g. in Blip
 // branding should make use of artifact.sh to download specific branding artifacts such as images
-import siteChangeCannulaImage from "./images/sitechange-cannula.png";
-import siteChangeReservoirImage from "./images/sitechange-reservoir.png";
-import siteChangeTubingImage from "./images/sitechange-tubing.png";
-import siteChangeReservoirDiabeloopImage from "./images/diabeloop/sitechange-cartridge.png";
-import jaFontRegular from "jaFont-Regular.ttf";
-import jaFontBold from "jaFont-Bold.ttf";
+import siteChangeCannulaImage from './images/sitechange-cannula.png'
+import siteChangeReservoirImage from './images/sitechange-reservoir.png'
+import siteChangeTubingImage from './images/sitechange-tubing.png'
+import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
+import jaFontRegular from 'jaFont-Regular.ttf'
+import jaFontBold from 'jaFont-Bold.ttf'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 // Exporting utils for easy stubbing in tests
 export const utils = {
@@ -49,81 +49,81 @@ export const utils = {
   PrintView,
   BasicsPrintView,
   DailyPrintView,
-  SettingsPrintView,
-};
+  SettingsPrintView
+}
 
 async function loadImages() {
-  const base64Flag = "data:image/jpeg;base64,";
-  let imageStr = "";
+  const base64Flag = 'data:image/jpeg;base64,'
+  let imageStr = ''
 
   if (constants.Images.logo === null) {
-    const response = await fetch(`/branding_${window.config.BRANDING}_pdf-logo.png`);
-    const buffer = await response.arrayBuffer();
-    imageStr = base64Flag + arrayBufferToBase64(buffer);
-    constants.Images.logo = imageStr;
+    const response = await fetch(`/branding_${window.config.BRANDING}_pdf-logo.png`)
+    const buffer = await response.arrayBuffer()
+    imageStr = base64Flag + arrayBufferToBase64(buffer)
+    constants.Images.logo = imageStr
   }
 
   if (constants.Images.siteChangeCannulaImage === null) {
     if (siteChangeCannulaImage.startsWith(base64Flag)) {
-      imageStr = siteChangeCannulaImage;
+      imageStr = siteChangeCannulaImage
     } else {
-      const response = await fetch(siteChangeCannulaImage);
-      const buffer = await response.arrayBuffer();
-      imageStr = base64Flag + arrayBufferToBase64(buffer);
+      const response = await fetch(siteChangeCannulaImage)
+      const buffer = await response.arrayBuffer()
+      imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeCannulaImage = imageStr;
+    constants.Images.siteChangeCannulaImage = imageStr
   }
 
   if (constants.Images.siteChangeReservoirImage === null) {
     if (siteChangeReservoirImage.startsWith(base64Flag)) {
-      imageStr = siteChangeReservoirImage;
+      imageStr = siteChangeReservoirImage
     } else {
-      const response = await fetch(siteChangeReservoirImage);
-      const buffer = await response.arrayBuffer();
-      imageStr = base64Flag + arrayBufferToBase64(buffer);
+      const response = await fetch(siteChangeReservoirImage)
+      const buffer = await response.arrayBuffer()
+      imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirImage = imageStr;
+    constants.Images.siteChangeReservoirImage = imageStr
   }
 
   if (constants.Images.siteChangeTubingImage === null) {
     if (siteChangeTubingImage.startsWith(base64Flag)) {
-      imageStr = siteChangeTubingImage;
+      imageStr = siteChangeTubingImage
     } else {
-      const response = await fetch(siteChangeTubingImage);
-      const buffer = await response.arrayBuffer();
-      imageStr = base64Flag + arrayBufferToBase64(buffer);
+      const response = await fetch(siteChangeTubingImage)
+      const buffer = await response.arrayBuffer()
+      imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeTubingImage = imageStr;
+    constants.Images.siteChangeTubingImage = imageStr
   }
 
   if (constants.Images.siteChangeReservoirDiabeloopImage === null) {
     if (siteChangeReservoirDiabeloopImage.startsWith(base64Flag)) {
-      imageStr = siteChangeReservoirDiabeloopImage;
+      imageStr = siteChangeReservoirDiabeloopImage
     } else {
-      const response = await fetch(siteChangeReservoirDiabeloopImage);
-      const buffer = await response.arrayBuffer();
-      imageStr = base64Flag + arrayBufferToBase64(buffer);
+      const response = await fetch(siteChangeReservoirDiabeloopImage)
+      const buffer = await response.arrayBuffer()
+      imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirDiabeloopImage = imageStr;
+    constants.Images.siteChangeReservoirDiabeloopImage = imageStr
   }
 }
 
 async function loadFonts() {
-  if (i18next.language === "ja") {
+  if (i18next.language === 'ja') {
     if (constants.Fonts.ja.regular === null) {
-      const response = await fetch(jaFontRegular);
+      const response = await fetch(jaFontRegular)
       if (response.ok) {
-        constants.Fonts.ja.regular = await response.arrayBuffer();
+        constants.Fonts.ja.regular = await response.arrayBuffer()
       } else {
-        console.error("Failed to download", response.status, jaFontRegular);
+        console.error('Failed to download', response.status, jaFontRegular)
       }
     }
     if (constants.Fonts.ja.bold === null) {
-      const response = await fetch(jaFontBold);
+      const response = await fetch(jaFontBold)
       if (response.ok) {
-        constants.Fonts.ja.bold = await response.arrayBuffer();
+        constants.Fonts.ja.bold = await response.arrayBuffer()
       } else {
-        console.error("Failed to download", response.status, jaFontBold);
+        console.error('Failed to download', response.status, jaFontBold)
       }
     }
   }
@@ -146,10 +146,10 @@ export function createPrintView(type, data, opts, doc) {
     dpi,
     width,
     height,
-    margins,
-  } = opts;
+    margins
+  } = opts
 
-  let Renderer;
+  let Renderer
   let renderOpts = {
     bgPrefs,
     // TODO: set this up as a Webpack Define plugin to pull from env variable
@@ -163,42 +163,42 @@ export function createPrintView(type, data, opts, doc) {
     patient,
     smallFontSize: constants.SMALL_FONT_SIZE,
     timePrefs,
-    width: width ?? constants.WIDTH,
-  };
-
-  switch (type) {
-  case "daily":
-    Renderer = utils.DailyPrintView;
-
-    renderOpts = _.assign(renderOpts, {
-      chartsPerPage: 3,
-      summaryHeaderFontSize: 10,
-      summaryWidthAsPercentage: 0.18,
-      title: t("Daily Charts"),
-    });
-    break;
-
-  case "basics":
-    Renderer = utils.BasicsPrintView;
-
-    renderOpts = _.assign(renderOpts, {
-      title: t("The Basics"),
-    });
-    break;
-
-  case "settings":
-    Renderer = utils.SettingsPrintView;
-
-    renderOpts = _.assign(renderOpts, {
-      title: t("Pump Settings"),
-    });
-    break;
-
-  default:
-    return null;
+    width: width ?? constants.WIDTH
   }
 
-  return new Renderer(doc, data, renderOpts);
+  switch (type) {
+    case 'daily':
+      Renderer = utils.DailyPrintView
+
+      renderOpts = _.assign(renderOpts, {
+        chartsPerPage: 3,
+        summaryHeaderFontSize: 10,
+        summaryWidthAsPercentage: 0.18,
+        title: t('Daily Charts')
+      })
+      break
+
+    case 'basics':
+      Renderer = utils.BasicsPrintView
+
+      renderOpts = _.assign(renderOpts, {
+        title: t('The Basics')
+      })
+      break
+
+    case 'settings':
+      Renderer = utils.SettingsPrintView
+
+      renderOpts = _.assign(renderOpts, {
+        title: t('Pump Settings')
+      })
+      break
+
+    default:
+      return null
+  }
+
+  return new Renderer(doc, data, renderOpts)
 }
 
 /**
@@ -212,27 +212,27 @@ export function createPrintView(type, data, opts, doc) {
 export function createPrintPDFPackage(data, opts) {
   return new Promise((resolve, reject) => {
     try {
-      const pdfOpts = _.cloneDeep(opts);
-      pdfOpts.bgPrefs.bgBounds = utils.reshapeBgClassesToBgBounds(opts.bgPrefs);
+      const pdfOpts = _.cloneDeep(opts)
+      pdfOpts.bgPrefs.bgBounds = utils.reshapeBgClassesToBgBounds(opts.bgPrefs)
 
       // Paper size A4 -> [595.28, 841.89]
       // see node_modules/pdfkit/js/pdfkit.js:300
       // For USA, it should be set to the default US letter format
       // see packages/viz/src/modules/print/utils/constants.js
-      pdfOpts.dpi = constants.DPI;
-      const margin = constants.DPI / 2;
-      pdfOpts.width = 595.28 - 2 * margin;
-      pdfOpts.height = 841.89 - 2 * margin;
+      pdfOpts.dpi = constants.DPI
+      const margin = constants.DPI / 2
+      pdfOpts.width = 595.28 - 2 * margin
+      pdfOpts.height = 841.89 - 2 * margin
       pdfOpts.margins = {
         left: margin,
         top: margin,
         right: margin,
-        bottom: margin,
-      };
+        bottom: margin
+      }
 
-      const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName);
-      const reportDate = mReportDate.format("YYYY-MM-DD");
-      const patientName = getPatientFullName(opts.patient);
+      const mReportDate = moment.tz(opts.endPDFDate, opts.timePrefs.timezoneName)
+      const reportDate = mReportDate.format('YYYY-MM-DD')
+      const patientName = getPatientFullName(opts.patient)
 
       // NB: if you don't set the `margin` (or `margins` if not all are the same)
       // then when you are using the .text() command a new page will be added if you specify
@@ -244,55 +244,55 @@ export function createPrintPDFPackage(data, opts) {
         displayTitle: `${reportDate} - ${patientName}`,
         lang: i18next.language,
         compress: true,
-        size: "A4",
+        size: 'A4',
         info: {
           Title: `${reportDate} - ${patientName}`,
-          Author: "Diabeloop",
-          ModDate: mReportDate.toDate(),
-        },
-      });
+          Author: 'Diabeloop',
+          ModDate: mReportDate.toDate()
+        }
+      })
 
-      const stream = doc.pipe(utils.blobStream());
+      const stream = doc.pipe(utils.blobStream())
 
       _.forOwn(constants.Fonts, (f) => {
-        if (typeof f.regularName === "string" && f.regular) {
-          doc.registerFont(f.regularName, f.regular);
+        if (typeof f.regularName === 'string' && f.regular) {
+          doc.registerFont(f.regularName, f.regular)
         }
-        if (typeof f.boldName === "string" && f.bold) {
-          doc.registerFont(f.boldName, f.bold);
+        if (typeof f.boldName === 'string' && f.bold) {
+          doc.registerFont(f.boldName, f.bold)
         }
-      });
+      })
 
-      if (data.basics) createPrintView("basics", data.basics, pdfOpts, doc).render();
-      if (data.daily) createPrintView("daily", data.daily, pdfOpts, doc).render();
-      if (data.settings) createPrintView("settings", data.settings, pdfOpts, doc).render();
+      if (data.basics) createPrintView('basics', data.basics, pdfOpts, doc).render()
+      if (data.daily) createPrintView('daily', data.daily, pdfOpts, doc).render()
+      if (data.settings) createPrintView('settings', data.settings, pdfOpts, doc).render()
 
-      PrintView.renderPageNumbers(doc, pdfOpts);
+      PrintView.renderPageNumbers(doc, pdfOpts)
 
-      doc.end();
+      doc.end()
 
-      stream.on("finish", () => {
+      stream.on('finish', () => {
         const pdf = {
           blob: stream.toBlob(),
-          url: stream.toBlobURL("application/pdf"),
-        };
-        return resolve(pdf);
-      });
+          url: stream.toBlobURL('application/pdf')
+        }
+        return resolve(pdf)
+      })
 
-      stream.on("error", (error) => {
-        stream.end();
-        return reject(error);
-      });
+      stream.on('error', (error) => {
+        stream.end()
+        return reject(error)
+      })
     } catch (err) {
-      reject(err);
+      reject(err)
     }
-  });
+  })
 }
 
 async function doPrint(data, opts) {
-  await loadImages();
-  await loadFonts();
-  return createPrintPDFPackage(data, opts);
+  await loadImages()
+  await loadFonts()
+  return createPrintPDFPackage(data, opts)
 }
 
-export default doPrint;
+export default doPrint

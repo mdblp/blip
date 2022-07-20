@@ -24,25 +24,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { UNITS_TYPE } from "../lib/units/utils";
+import { UNITS_TYPE } from '../lib/units/utils'
 
 export enum MonitoringStatus {
-  pending = "pending",
-  accepted = "accepted",
+  pending = 'pending',
+  accepted = 'accepted',
 }
 
 export interface Monitoring {
-  enabled: boolean;
-  status?: MonitoringStatus;
-  monitoringEnd?: Date;
+  enabled: boolean
+  status?: MonitoringStatus
+  monitoringEnd?: Date
   parameters?: {
-    bgUnit: UNITS_TYPE;
-    lowBg: number;
-    highBg: number;
-    outOfRangeThreshold: number;
-    veryLowBg: number;
-    hypoThreshold: number;
-    nonDataTxThreshold: number;
-    reportingPeriod: number;
+    bgUnit: UNITS_TYPE
+    lowBg: number
+    highBg: number
+    outOfRangeThreshold: number
+    veryLowBg: number
+    hypoThreshold: number
+    nonDataTxThreshold: number
+    reportingPeriod: number
   }
 }

@@ -15,24 +15,24 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import table from "text-table";
-import i18next from "i18next";
+import _ from 'lodash'
+import table from 'text-table'
+import i18next from 'i18next'
 
-import * as tandemData from "./tandemData";
-import * as nonTandemData from "./nonTandemData";
+import * as tandemData from './tandemData'
+import * as nonTandemData from './nonTandemData'
 
-import { formatBirthdate, formatCurrentDate, formatDiagnosisDate } from "../datetime";
-import { getPatientFullName } from "../misc";
+import { formatBirthdate, formatCurrentDate, formatDiagnosisDate } from '../datetime'
+import { getPatientFullName } from '../misc'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 /**
  * getItemField
  * @private
  */
 function getItemField(item, field) {
-  return item[field];
+  return item[field]
 }
 
 /**
@@ -43,8 +43,8 @@ function normalizeColumns(columns) {
   return _.map(columns, (column) => ({
     cell: getItemField,
     key: column.key,
-    label: column.label,
-  }));
+    label: column.label
+  }))
 }
 
 /**
@@ -54,7 +54,7 @@ function normalizeColumns(columns) {
 function getRow(normalizedColumns, rowKey, rowData) {
   return _.map(normalizedColumns,
     (column) => column.cell(rowData, column.key)
-  );
+  )
 }
 
 /**
@@ -63,11 +63,11 @@ function getRow(normalizedColumns, rowKey, rowData) {
  */
 function getHeader(normalizedColumns) {
   return _.map(normalizedColumns, (column) => {
-    if (typeof column.label === "object") {
-      return `${column.label.main} ${column.label.secondary}`;
+    if (typeof column.label === 'object') {
+      return `${column.label.main} ${column.label.secondary}`
     }
-    return column.label;
-  });
+    return column.label
+  })
 }
 
 /**
@@ -77,7 +77,7 @@ function getHeader(normalizedColumns) {
 function getRows(rows, columns) {
   return _.map(rows, (row, key) => (
     getRow(normalizeColumns(columns), key, row)
-  ));
+  ))
 }
 
 /**
@@ -85,9 +85,9 @@ function getRows(rows, columns) {
  * @private
  */
 function toTextTable(rows, columns) {
-  const header = [getHeader(normalizeColumns(columns))];
-  const content = getRows(rows, columns);
-  return table(header.concat(content));
+  const header = [getHeader(normalizeColumns(columns))]
+  const content = getRows(rows, columns)
+  return table(header.concat(content))
 }
 
 /**
@@ -95,7 +95,7 @@ function toTextTable(rows, columns) {
  * @private
  */
 function buildTextTable(name, rows, columns) {
-  return `\n${name}\n${toTextTable(rows, columns)}\n`;
+  return `\n${name}\n${toTextTable(rows, columns)}\n`
 }
 
 /**
@@ -103,11 +103,11 @@ function buildTextTable(name, rows, columns) {
  * @private
  */
 function formatTitle(patient) {
-  const exported = t("Exported from Tidepool: {{date}}", { date: formatCurrentDate() });
-  const bday = t("Date of birth: {{date}}", { date: formatBirthdate(patient) });
-  const diagnosis = t("Date of diagnosis: {{date}}", { date: formatDiagnosisDate(patient) });
-  const fullname = getPatientFullName(patient);
-  return `${fullname}\n${bday}\n${diagnosis}\n${exported}\n`;
+  const exported = t('Exported from Tidepool: {{date}}', { date: formatCurrentDate() })
+  const bday = t('Date of birth: {{date}}', { date: formatBirthdate(patient) })
+  const diagnosis = t('Date of diagnosis: {{date}}', { date: formatDiagnosisDate(patient) })
+  const fullname = getPatientFullName(patient)
+  return `${fullname}\n${bday}\n${diagnosis}\n${exported}\n`
 }
 
 /**
@@ -119,38 +119,38 @@ function formatTitle(patient) {
  * @return {String}               non tandem settings as a string table
  */
 export function nonTandemText(patient, settings, units, manufacturer) {
-  let tablesString = formatTitle(patient);
+  let tablesString = formatTitle(patient)
   _.map(nonTandemData.basalSchedules(settings), (schedule) => {
-    const basal = nonTandemData.basal(schedule, settings, manufacturer);
+    const basal = nonTandemData.basal(schedule, settings, manufacturer)
     tablesString += buildTextTable(
       basal.scheduleName,
       basal.rows,
       basal.columns,
-    );
-  });
+    )
+  })
 
-  const sensitivity = nonTandemData.sensitivity(settings, manufacturer, units);
+  const sensitivity = nonTandemData.sensitivity(settings, manufacturer, units)
   tablesString += buildTextTable(
     `${sensitivity.title} ${units}/U`,
     sensitivity.rows,
     sensitivity.columns,
-  );
+  )
 
-  const target = nonTandemData.target(settings, manufacturer, units);
+  const target = nonTandemData.target(settings, manufacturer, units)
   tablesString += buildTextTable(
     `${target.title} ${units}`,
     target.rows,
     target.columns,
-  );
+  )
 
-  const ratio = nonTandemData.ratio(settings, manufacturer);
+  const ratio = nonTandemData.ratio(settings, manufacturer)
   tablesString += buildTextTable(
     `${ratio.title} g/U`,
     ratio.rows,
     ratio.columns,
-  );
+  )
 
-  return tablesString;
+  return tablesString
 }
 
 /**
@@ -163,18 +163,18 @@ export function nonTandemText(patient, settings, units, manufacturer) {
  */
 export function tandemText(patient, settings, units) {
   const styles = {
-    bolusSettingsHeader: "",
-    basalScheduleHeader: "",
-  };
+    bolusSettingsHeader: '',
+    basalScheduleHeader: ''
+  }
 
-  let tablesString = formatTitle(patient);
+  let tablesString = formatTitle(patient)
   _.map(tandemData.basalSchedules(settings), (schedule) => {
-    const basal = tandemData.basal(schedule, settings, units, styles);
+    const basal = tandemData.basal(schedule, settings, units, styles)
     tablesString += buildTextTable(
       basal.scheduleName,
       basal.rows,
       basal.columns,
-    );
-  });
-  return tablesString;
+    )
+  })
+  return tablesString
 }

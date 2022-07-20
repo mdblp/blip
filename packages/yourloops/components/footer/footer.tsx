@@ -26,204 +26,204 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Link from "@material-ui/core/Link";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
-import LanguageIcon from "@material-ui/icons/Language";
-import HelpOutlinedIcon from "@material-ui/icons/HelpOutlined";
+import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
+import Link from '@material-ui/core/Link'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
+import LanguageIcon from '@material-ui/icons/Language'
+import HelpOutlinedIcon from '@material-ui/icons/HelpOutlined'
 
-import LanguageSelector from "../language-select";
-import diabeloopUrls from "../../lib/diabeloop-url";
-import { useAuth } from "../../lib/auth";
-import config from "../../lib/config";
-import metrics from "../../lib/metrics";
-import diabeloopLabel from "diabeloop-label.svg";
-import diabeloopLogo from "diabeloop-logo.svg";
-import DocumentSelect from "./document-select";
+import LanguageSelector from '../language-select'
+import diabeloopUrls from '../../lib/diabeloop-url'
+import { useAuth } from '../../lib/auth'
+import config from '../../lib/config'
+import metrics from '../../lib/metrics'
+import diabeloopLabel from 'diabeloop-label.svg'
+import diabeloopLogo from 'diabeloop-logo.svg'
+import DocumentSelect from './document-select'
 
 const footerStyle = makeStyles((theme: Theme) => {
   return {
     bySpan: {
-      paddingLeft: "12px",
-      paddingRight: "12px",
-      [theme.breakpoints.down("xs")]: {
-        paddingRight: "0",
-      },
+      paddingLeft: '12px',
+      paddingRight: '12px',
+      [theme.breakpoints.down('xs')]: {
+        paddingRight: '0'
+      }
     },
     centerBox: {
-      alignItems: "center",
-      display: "flex",
-      justifyContent: "center",
-      paddingLeft: "15px",
-      paddingRight: "15px",
-      [theme.breakpoints.up("sm")]: {
-        flexWrap: "wrap",
+      alignItems: 'center',
+      display: 'flex',
+      justifyContent: 'center',
+      paddingLeft: '15px',
+      paddingRight: '15px',
+      [theme.breakpoints.up('sm')]: {
+        flexWrap: 'wrap'
       },
-      [theme.breakpoints.down("sm")]: {
-        flexWrap: "wrap",
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap',
         order: 1,
-        textAlign: "center",
-        width: "100%",
+        textAlign: 'center',
+        width: '100%'
       },
-      [theme.breakpoints.down("xs")]: {
-        justifyContent: "space-around",
-        marginLeft: "10px",
-        marginRight: "10px",
-      },
+      [theme.breakpoints.down('xs')]: {
+        justifyContent: 'space-around',
+        marginLeft: '10px',
+        marginRight: '10px'
+      }
     },
     container: {
-      alignItems: "center",
-      backgroundColor: "var(--footer-background-color)",
+      alignItems: 'center',
+      backgroundColor: 'var(--footer-background-color)',
       color: theme.palette.grey[700],
-      display: "flex",
+      display: 'flex',
       flexShrink: 0,
-      fontSize: "12px",
+      fontSize: '12px',
       marginTop: theme.spacing(3),
-      padding: "11px",
-      paddingBottom: "11px",
-      paddingTop: "11px",
+      padding: '11px',
+      paddingBottom: '11px',
+      paddingTop: '11px',
       zIndex: theme.zIndex.drawer + 1,
-      [theme.breakpoints.down("sm")]: {
-        flexWrap: "wrap",
-      },
+      [theme.breakpoints.down('sm')]: {
+        flexWrap: 'wrap'
+      }
     },
     cookiesManagement: {
-      "&:hover": {
-        cursor: "pointer",
-      },
+      '&:hover': {
+        cursor: 'pointer'
+      }
     },
     diabeloopLogo: {
-      paddingRight: "3px",
+      paddingRight: '3px'
     },
     diabeloopLink: {
-      [theme.breakpoints.down("xs")]: {
-        marginTop: "12px",
-      },
+      [theme.breakpoints.down('xs')]: {
+        marginTop: '12px'
+      }
     },
     firstLine: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "6px",
-      width: "100%",
-      [theme.breakpoints.down("sm")]: {
-        marginBottom: "0px",
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: '6px',
+      width: '100%',
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: '0px'
       },
-      [theme.breakpoints.down("xs")]: {
-        flexWrap: "wrap",
-      },
+      [theme.breakpoints.down('xs')]: {
+        flexWrap: 'wrap'
+      }
     },
     firstLineElement: {
-      display: "flex",
-      height: "20px",
-      alignItems: "center",
-      [theme.breakpoints.down("sm")]: {
-        marginTop: "10px",
-        marginBottom: "17px",
+      display: 'flex',
+      height: '20px',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        marginTop: '10px',
+        marginBottom: '17px'
       },
-      [theme.breakpoints.down("xs")]: {
-        marginBottom: "15px",
-        marginTop: "0px",
-        width: "100%",
-        justifyContent: "center",
-      },
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: '15px',
+        marginTop: '0px',
+        width: '100%',
+        justifyContent: 'center'
+      }
     },
     icon: {
-      alignSelf: "center",
+      alignSelf: 'center',
       color: theme.palette.grey[600],
-      marginRight: "18px",
-      width: "20px",
-      marginBottom: "3px",
+      marginRight: '18px',
+      width: '20px',
+      marginBottom: '3px'
     },
     documentBox: {
-      display: "flex",
-      height: "20px",
-      alignItems: "center",
-      [theme.breakpoints.down("xs")]: {
-        marginBottom: "15px",
-        marginTop: "0px",
-        width: "100%",
-        justifyContent: "center",
-      },
+      display: 'flex',
+      height: '20px',
+      alignItems: 'center',
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: '15px',
+        marginTop: '0px',
+        width: '100%',
+        justifyContent: 'center'
+      }
     },
     languageSeparator: {
-      alignSelf: "center",
+      alignSelf: 'center'
     },
     leftBox: {
-      width: "134px",
-      [theme.breakpoints.down("sm")]: {
-        order: 2,
-      },
+      width: '134px',
+      [theme.breakpoints.down('sm')]: {
+        order: 2
+      }
     },
     link: {
       color: theme.palette.grey[600],
       fontWeight: 400,
-      [theme.breakpoints.down("xs")]: {
-        marginBottom: "15px",
-        marginLeft: "0.5rem",
-        marginRight: "0.5rem",
-        textAlign: "center",
-      },
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: '15px',
+        marginLeft: '0.5rem',
+        marginRight: '0.5rem',
+        textAlign: 'center'
+      }
     },
     rightBox: {
-      display: "flex",
-      justifyContent: "right",
-      [theme.breakpoints.down("sm")]: {
-        order: 3,
+      display: 'flex',
+      justifyContent: 'right',
+      [theme.breakpoints.down('sm')]: {
+        order: 3
       },
-      [theme.breakpoints.down("xs")]: {
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "right",
-      },
+      [theme.breakpoints.down('xs')]: {
+        display: 'flex',
+        flexDirection: 'column',
+        textAlign: 'right'
+      }
     },
     separator: {
-      paddingLeft: "15px",
-      paddingRight: "15px",
-      [theme.breakpoints.down("xs")]: {
-        display: "none",
-        visibility: "hidden",
-      },
+      paddingLeft: '15px',
+      paddingRight: '15px',
+      [theme.breakpoints.down('xs')]: {
+        display: 'none',
+        visibility: 'hidden'
+      }
     },
     sideBox: {
-      flex: "1",
+      flex: '1'
     },
     supportButton: {
-      height: "46px",
-      width: "134px",
-      [theme.breakpoints.down("xs")]: {
-        marginTop: "10px",
-      },
+      height: '46px',
+      width: '134px',
+      [theme.breakpoints.down('xs')]: {
+        marginTop: '10px'
+      }
     },
     svg: {
-      height: "12px",
-      verticalAlign: "middle",
-      display: "inline-block",
+      height: '12px',
+      verticalAlign: 'middle',
+      display: 'inline-block'
     },
     versionSpan: {
-      textDecoration: "underline",
-    },
-  };
-}, { name: "footer-component-styles" });
+      textDecoration: 'underline'
+    }
+  }
+}, { name: 'footer-component-styles' })
 
 function Footer(): JSX.Element {
-  const { t, i18n } = useTranslation("yourloops");
-  const { user } = useAuth();
-  const classes = footerStyle();
+  const { t, i18n } = useTranslation('yourloops')
+  const { user } = useAuth()
+  const classes = footerStyle()
 
-  const handleShowCookieBanner = () => {
-    if (typeof window.openAxeptioCookies === "function") {
-      window.openAxeptioCookies();
+  const handleShowCookieBanner = (): void => {
+    if (typeof window.openAxeptioCookies === 'function') {
+      window.openAxeptioCookies()
     }
-  };
+  }
 
   const metricsPdfDocument = (title: string) => {
-    return () => metrics.send("pdf_document", "view_document", title);
-  };
+    return () => metrics.send('pdf_document', 'view_document', title)
+  }
 
   return (
     <Container id="footer-links-container" className={classes.container} maxWidth={false}>
@@ -256,10 +256,10 @@ function Footer(): JSX.Element {
           target="_blank"
           href={diabeloopUrls.getPrivacyPolicyUrL(i18n.language)}
           rel="nofollow"
-          onClick={metricsPdfDocument("privacy_policy")}
+          onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
         >
-          {t("privacy-policy")}
+          {t('privacy-policy')}
         </Link>
         <Box className={classes.separator}>|</Box>
         <Link
@@ -267,10 +267,10 @@ function Footer(): JSX.Element {
           target="_blank"
           href={diabeloopUrls.getTermsUrL(i18n.language)}
           rel="nofollow"
-          onClick={metricsPdfDocument("terms")}
+          onClick={metricsPdfDocument('terms')}
           className={classes.link}
         >
-          {t("terms-of-use")}
+          {t('terms-of-use')}
         </Link>
         <Box className={classes.separator}>|</Box>
         <Link
@@ -278,7 +278,7 @@ function Footer(): JSX.Element {
           className={`${classes.link} ${classes.cookiesManagement}`}
           onClick={handleShowCookieBanner}
         >
-          {t("cookies-management")}
+          {t('cookies-management')}
         </Link>
         <Box className={classes.separator}>|</Box>
         <Link
@@ -286,28 +286,28 @@ function Footer(): JSX.Element {
           target="_blank"
           href={diabeloopUrls.getCookiesPolicyUrl(i18n.language)}
           rel="nofollow"
-          onClick={metricsPdfDocument("yourloops-cookiepolicy")}
+          onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
         >
-          {t("cookies-policy")}
+          {t('cookies-policy')}
         </Link>
         <Box className={classes.separator}>|</Box>
         <Link
           id="footer-link-contact-mailto"
           href="mailto:yourloops@diabeloop.com"
-          onClick={metricsPdfDocument("yourloops-mailto-contact")}
+          onClick={metricsPdfDocument('yourloops-mailto-contact')}
           className={classes.link}
         >
-          {t("contact")}
+          {t('contact')}
         </Link>
       </Box>
       <Box className={`${classes.sideBox} ${classes.rightBox}`}>
         <Box>
-          {t("brand-name")}
+          {t('brand-name')}
           <Tooltip
             id="footer-link-tooltip-app-release-notes"
-            title={t("tooltip-release-notes") as string}
-            aria-label={t("tooltip-release-notes")}
+            title={t('tooltip-release-notes') }
+            aria-label={t('tooltip-release-notes')}
             placement="right-start"
           >
             <Link
@@ -315,7 +315,7 @@ function Footer(): JSX.Element {
               target="_blank"
               href={diabeloopUrls.getReleaseNotesURL()}
               rel="nofollow"
-              onClick={metricsPdfDocument("release_notes")}
+              onClick={metricsPdfDocument('release_notes')}
               className={classes.link}
             >
               <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 10)}</span>
@@ -329,12 +329,12 @@ function Footer(): JSX.Element {
           target="_blank"
           href={diabeloopUrls.SupportUrl} rel="nofollow"
         >
-          <img src={diabeloopLogo} alt={t("alt-img-logo")} className={`${classes.svg} ${classes.diabeloopLogo}`} />
-          <img src={diabeloopLabel} alt={t("alt-img-logo")} className={classes.svg} />
+          <img src={diabeloopLogo} alt={t('alt-img-logo')} className={`${classes.svg} ${classes.diabeloopLogo}`} />
+          <img src={diabeloopLabel} alt={t('alt-img-logo')} className={classes.svg} />
         </Link>
       </Box>
     </Container>
-  );
+  )
 }
 
-export default Footer;
+export default Footer

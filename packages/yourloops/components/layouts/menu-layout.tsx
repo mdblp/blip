@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import Menu, { MenuProps } from "@material-ui/core/Menu";
+import React from 'react'
+import Menu, { MenuProps } from '@material-ui/core/Menu'
 
 interface MenuLayoutProps extends MenuProps {
-  open: boolean;
-  anchorEl: HTMLElement | null;
-  onClose: () => void;
+  open: boolean
+  anchorEl: HTMLElement | null
+  onClose: () => void
 }
 
 function MenuLayout(props: MenuLayoutProps): JSX.Element {
@@ -40,13 +40,13 @@ function MenuLayout(props: MenuLayoutProps): JSX.Element {
       open={props.open}
       anchorEl={props.anchorEl}
       getContentAnchorEl={null}
-      anchorOrigin={props.anchorOrigin || { vertical: "bottom", horizontal: "right" }}
-      transformOrigin={props.transformOrigin || { vertical: -10, horizontal: "right" }}
+      anchorOrigin={props.anchorOrigin || { vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={props.transformOrigin || { vertical: -10, horizontal: 'right' }}
       onClose={props.onClose}
     >
       {props.children}
     </Menu>
-  );
+  )
 }
 
-export default MenuLayout;
+export default MenuLayout

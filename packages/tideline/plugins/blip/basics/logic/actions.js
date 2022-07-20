@@ -15,111 +15,111 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from "lodash";
-import togglableState from "../TogglableState";
+import _ from 'lodash'
+import togglableState from '../TogglableState'
 
 const basicsActions = {
-  app: null,
-};
+  app: null
+}
 
 basicsActions.bindApp = function(app) {
-  this.app = app;
-  return this;
-};
+  this.app = app
+  return this
+}
 
 basicsActions.toggleSection = function(sectionName, metricsFunc) {
-  var sections = _.cloneDeep(this.app.state.sections);
+  var sections = _.cloneDeep(this.app.state.sections)
   if (sections[sectionName].togglable === togglableState.closed) {
-    sections[sectionName].togglable = togglableState.open;
-    metricsFunc(sections[sectionName].id + " was opened");
+    sections[sectionName].togglable = togglableState.open
+    metricsFunc(sections[sectionName].id + ' was opened')
   } else {
-    sections[sectionName].togglable = togglableState.closed;
-    metricsFunc(sections[sectionName].id + " was closed");
+    sections[sectionName].togglable = togglableState.closed
+    metricsFunc(sections[sectionName].id + ' was closed')
   }
-  this.app.setState({sections: sections});
-};
+  this.app.setState({sections: sections})
+}
 
 basicsActions.toggleSectionSettings = function(sectionName, metricsFunc) {
-  var sections = _.cloneDeep(this.app.state.sections);
+  var sections = _.cloneDeep(this.app.state.sections)
   if (sections[sectionName].settingsTogglable === togglableState.closed) {
-    sections[sectionName].settingsTogglable = togglableState.open;
-    metricsFunc(sections[sectionName].id + " settings was opened");
+    sections[sectionName].settingsTogglable = togglableState.open
+    metricsFunc(sections[sectionName].id + ' settings was opened')
   }
   else {
-    sections[sectionName].settingsTogglable = togglableState.closed;
-    metricsFunc(sections[sectionName].id + " settings was closed");
+    sections[sectionName].settingsTogglable = togglableState.closed
+    metricsFunc(sections[sectionName].id + ' settings was closed')
   }
-  this.app.setState({sections: sections});
-};
+  this.app.setState({sections: sections})
+}
 
 basicsActions.setSiteChangeEvent = function(sectionName, selectedKey, selectedLabel, metricsFunc, updateBasicsSettingsFunc) {
-  var sections = _.cloneDeep(this.app.state.sections);
-  var selectorOptions = sections[sectionName].selectorOptions;
-  selectorOptions = clearSelected(selectorOptions);
-  sections[sectionName].selectorOptions = basicsActions.setSelected(selectorOptions, selectedKey);
-  sections.siteChanges.type = selectedKey;
-  sections.siteChanges.hasHover = true;
+  var sections = _.cloneDeep(this.app.state.sections)
+  var selectorOptions = sections[sectionName].selectorOptions
+  selectorOptions = clearSelected(selectorOptions)
+  sections[sectionName].selectorOptions = basicsActions.setSelected(selectorOptions, selectedKey)
+  sections.siteChanges.type = selectedKey
+  sections.siteChanges.hasHover = true
 
-  var canUpdateSettings = _.get(sections, "siteChanges.selectorMetaData.canUpdateSettings");
+  var canUpdateSettings = _.get(sections, 'siteChanges.selectorMetaData.canUpdateSettings')
 
-  metricsFunc("Selected " + selectedLabel, {
-    initiatedBy: canUpdateSettings ? "User" : "Care Team",
-  });
+  metricsFunc('Selected ' + selectedLabel, {
+    initiatedBy: canUpdateSettings ? 'User' : 'Care Team'
+  })
 
   var newSettings = _.assign({}, this.app.props.patient.settings, {
-    siteChangeSource: selectedKey,
-  });
+    siteChangeSource: selectedKey
+  })
 
-  updateBasicsSettingsFunc(this.app.props.patient.userid, newSettings, canUpdateSettings);
+  updateBasicsSettingsFunc(this.app.props.patient.userid, newSettings, canUpdateSettings)
 
-  this.app.setState({sections: sections});
-};
+  this.app.setState({sections: sections})
+}
 
 basicsActions.selectSubtotal = function(sectionName, selectedKey, metricsFunc) {
-  var sections = _.cloneDeep(this.app.state.sections);
-  var selectorOptions = sections[sectionName].selectorOptions;
+  var sections = _.cloneDeep(this.app.state.sections)
+  var selectorOptions = sections[sectionName].selectorOptions
 
   if (metricsFunc) {
-    metricsFunc("filtered on " + selectedKey);
+    metricsFunc('filtered on ' + selectedKey)
   }
 
-  selectorOptions = clearSelected(selectorOptions);
-  sections[sectionName].selectorOptions = basicsActions.setSelected(selectorOptions, selectedKey);
-  this.app.setState({sections: sections});
-};
+  selectorOptions = clearSelected(selectorOptions)
+  sections[sectionName].selectorOptions = basicsActions.setSelected(selectorOptions, selectedKey)
+  this.app.setState({sections: sections})
+}
 
 basicsActions.addToBasicsData = function(key, value) {
-  var newData = this.app.state.data;
-  newData[key] = value;
-  this.app.setState({data: newData});
-};
+  var newData = this.app.state.data
+  newData[key] = value
+  this.app.setState({data: newData})
+}
 
 function clearSelected(opts) {
-  opts.primary = _.omit(opts.primary, "selected");
+  opts.primary = _.omit(opts.primary, 'selected')
   opts.rows = opts.rows.map(function(row) {
     return row.map(function(opt) {
-      return _.omit(opt, "selected");
-    });
-  });
+      return _.omit(opt, 'selected')
+    })
+  })
 
-  return opts;
+  return opts
 }
 
 basicsActions.setSelected = function(opts, selectedKey) {
   if (selectedKey === opts.primary.key) {
-    opts.primary.selected = true;
+    opts.primary.selected = true
   } else {
     opts.rows = opts.rows.map(function(row) {
       return row.map(function(opt) {
         if (opt.key === selectedKey) {
-          opt.selected = true;
+          opt.selected = true
         }
-        return opt;
-      });
-    });
+        return opt
+      })
+    })
   }
 
-  return opts;
-};
+  return opts
+}
 
-export default basicsActions;
+export default basicsActions

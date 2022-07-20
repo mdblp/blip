@@ -25,117 +25,117 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import _ from "lodash";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react'
+import _ from 'lodash'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import TextField from "@material-ui/core/TextField";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
 
-import metrics from "../../lib/metrics";
-import { FormValuesType, useSignUpFormState } from "./signup-formstate-context";
-import { availableCountries } from "../../lib/language";
-import SignUpFormProps from "./signup-form-props";
-import { HcpProfessionList } from "../../models/hcp-profession";
-import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/user";
-import { useAlert } from "../../components/utils/snackbar";
-import ProgressIconButtonWrapper from "../../components/buttons/progress-icon-button-wrapper";
+import metrics from '../../lib/metrics'
+import { FormValuesType, useSignUpFormState } from './signup-formstate-context'
+import { availableCountries } from '../../lib/language'
+import SignUpFormProps from './signup-form-props'
+import { HcpProfessionList } from '../../models/hcp-profession'
+import { useAuth } from '../../lib/auth'
+import { UserRoles } from '../../models/user'
+import { useAlert } from '../../components/utils/snackbar'
+import ProgressIconButtonWrapper from '../../components/buttons/progress-icon-button-wrapper'
 
 interface Errors {
-  firstName: boolean;
-  lastName: boolean;
-  country: boolean;
-  hcpProfession: boolean;
+  firstName: boolean
+  lastName: boolean
+  country: boolean
+  hcpProfession: boolean
 }
 
 const formStyle = makeStyles((theme: Theme) => ({
   backButton: {
-    marginRight: theme.spacing(2),
-  },
-}));
+    marginRight: theme.spacing(2)
+  }
+}))
 
 /**
  * SignUpProfileForm Form
  */
 function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
-  const { user, completeSignup } = useAuth();
-  const userRole = user?.role as UserRoles;
-  const alert = useAlert();
-  const { t } = useTranslation("yourloops");
-  const { state, dispatch } = useSignUpFormState();
-  const { handleBack, handleNext } = props;
+  const { user, completeSignup } = useAuth()
+  const userRole = user?.role
+  const alert = useAlert()
+  const { t } = useTranslation('yourloops')
+  const { state, dispatch } = useSignUpFormState()
+  const { handleBack, handleNext } = props
   const defaultErr = {
     firstName: false,
     lastName: false,
     country: false,
-    hcpProfession: false,
-  };
-  const [errors, setErrors] = useState<Errors>(defaultErr);
-  const [saving, setSaving] = useState<boolean>(false);
+    hcpProfession: false
+  }
+  const [errors, setErrors] = useState<Errors>(defaultErr)
+  const [saving, setSaving] = useState<boolean>(false)
 
-  const classes = formStyle();
+  const classes = formStyle()
 
   const onChange = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     keyField: FormValuesType
   ): void => {
     dispatch({
-      type: "EDIT_FORMVALUE",
+      type: 'EDIT_FORMVALUE',
       key: keyField,
-      value: event.target.value,
-    });
-  };
+      value: event.target.value
+    })
+  }
 
   const onSelectChange = (
     event: React.ChangeEvent<{
-      name?: string | undefined;
-      value: string | unknown;
+      name?: string | undefined
+      value: string | unknown
     }>,
     keyField: FormValuesType
   ): void => {
     dispatch({
-      type: "EDIT_FORMVALUE",
+      type: 'EDIT_FORMVALUE',
       key: keyField,
-      value: event.target.value as string,
-    });
-  };
+      value: event.target.value as string
+    })
+  }
 
   const validateFirstName = (): boolean => {
-    const err = !state.formValues?.profileFirstname.trim();
-    setErrors({ ...errors, firstName: err });
-    return !err;
-  };
+    const err = !state.formValues?.profileFirstname.trim()
+    setErrors({ ...errors, firstName: err })
+    return !err
+  }
 
   const validateLastName = (): boolean => {
-    const err = !state.formValues?.profileLastname.trim();
-    setErrors({ ...errors, lastName: err });
-    return !err;
-  };
+    const err = !state.formValues?.profileLastname.trim()
+    setErrors({ ...errors, lastName: err })
+    return !err
+  }
 
   const validateCountry = (): boolean => {
-    const err = !state.formValues?.profileCountry;
-    setErrors({ ...errors, country: err });
-    return !err;
-  };
+    const err = !state.formValues?.profileCountry
+    setErrors({ ...errors, country: err })
+    return !err
+  }
 
   const validateHcpProfession = (): boolean => {
-    let err = false;
+    let err = false
     if (userRole === UserRoles.hcp) {
-      err = !state.formValues?.hcpProfession;
-      setErrors({ ...errors, hcpProfession: err });
+      err = !state.formValues?.hcpProfession
+      setErrors({ ...errors, hcpProfession: err })
     }
-    return !err;
-  };
+    return !err
+  }
 
-  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
+  const onFinishSignup = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    event.preventDefault()
     if (
       validateFirstName() &&
       validateLastName() &&
@@ -143,16 +143,16 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       validateHcpProfession()
     ) {
       try {
-        setSaving(true);
-        await completeSignup(state.formValues);
-        metrics.send("registration", "create_profile", userRole);
-        handleNext();
+        setSaving(true)
+        await completeSignup(state.formValues)
+        metrics.send('registration', 'create_profile', userRole)
+        handleNext()
       } catch (err) {
-        alert.error(t("profile-update-failed"));
-        setSaving(false);
+        alert.error(t('profile-update-failed'))
+        setSaving(false)
       }
     }
-  };
+  }
 
   return (
     <Box
@@ -163,26 +163,26 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
       <TextField
         id="firstname"
         margin="normal"
-        label={t("firstname")}
+        label={t('firstname')}
         variant="outlined"
         value={state.formValues?.profileFirstname}
         required
         error={errors.firstName}
         onBlur={() => validateFirstName()}
-        onChange={(e) => onChange(e, "profileFirstname")}
-        helperText={errors.firstName && t("required-field")}
+        onChange={(e) => onChange(e, 'profileFirstname')}
+        helperText={errors.firstName && t('required-field')}
       />
       <TextField
         id="lastname"
         margin="normal"
-        label={t("lastname")}
+        label={t('lastname')}
         variant="outlined"
         value={state.formValues?.profileLastname}
         required
         error={errors.lastName}
         onBlur={() => validateLastName()}
-        onChange={(e) => onChange(e, "profileLastname")}
-        helperText={errors.lastName && t("required-field")}
+        onChange={(e) => onChange(e, 'profileLastname')}
+        helperText={errors.lastName && t('required-field')}
       />
       <FormControl
         variant="outlined"
@@ -191,15 +191,15 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
         error={errors.country}
       >
         <InputLabel id="country-selector-input-label">
-          {t("signup-country")}
+          {t('signup-country')}
         </InputLabel>
         <Select
           labelId="country-selector-label"
-          label={t("signup-country")}
+          label={t('signup-country')}
           id="country-selector"
           value={state.formValues?.profileCountry}
           onBlur={() => validateCountry()}
-          onChange={(e) => onSelectChange(e, "profileCountry")}
+          onChange={(e) => onSelectChange(e, 'profileCountry')}
         >
           <MenuItem key="" value="" />
           {availableCountries.map((item) => (
@@ -217,15 +217,15 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           error={errors.hcpProfession}
         >
           <InputLabel id="hcp-profession-selector-input-label">
-            {t("hcp-profession")}
+            {t('hcp-profession')}
           </InputLabel>
           <Select
             labelId="hcp-profession-selector-label"
-            label={t("hcp-profession")}
+            label={t('hcp-profession')}
             id="hcp-profession-selector"
             value={state.formValues?.hcpProfession}
             onBlur={validateHcpProfession}
-            onChange={(e) => onSelectChange(e, "hcpProfession")}
+            onChange={(e) => onSelectChange(e, 'hcpProfession')}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>
@@ -248,7 +248,7 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
           id="button-signup-steppers-back"
           onClick={handleBack}
         >
-          {t("signup-steppers-back")}
+          {t('signup-steppers-back')}
         </Button>
         <ProgressIconButtonWrapper inProgress={saving}>
           <Button
@@ -259,12 +259,12 @@ function SignUpProfileForm(props: SignUpFormProps): JSX.Element {
             disabled={_.some(errors) || saving}
             onClick={onFinishSignup}
           >
-            {t("signup-steppers-create-account")}
+            {t('signup-steppers-create-account')}
           </Button>
         </ProgressIconButtonWrapper>
       </Box>
     </Box>
-  );
+  )
 }
 
-export default SignUpProfileForm;
+export default SignUpProfileForm

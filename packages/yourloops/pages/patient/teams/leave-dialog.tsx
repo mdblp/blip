@@ -26,60 +26,60 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { makeStyles } from "@material-ui/core/styles";
+import _ from 'lodash'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { makeButtonsStyles } from "../../../components/theme";
-import { LeaveTeamDialogContentProps } from "./types";
+import { makeButtonsStyles } from '../../../components/theme'
+import { LeaveTeamDialogContentProps } from './types'
 
 export interface LeaveTeamDialogProps {
-  teamToLeave: null | LeaveTeamDialogContentProps;
+  teamToLeave: null | LeaveTeamDialogContentProps
 }
 
-const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-buttons" });
+const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-buttons' })
 
 function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const buttonsClasses = makeButtonsClasses();
+  const { t } = useTranslation('yourloops')
+  const buttonsClasses = makeButtonsClasses()
 
-  const { teamToLeave } = props;
-  const dialogIsOpen = !_.isEmpty(teamToLeave?.team);
-  const teamName = teamToLeave?.team?.name ?? "";
+  const { teamToLeave } = props
+  const dialogIsOpen = !_.isEmpty(teamToLeave?.team)
+  const teamName = teamToLeave?.team?.name ?? ''
 
-  const handleClose = () => {
-    teamToLeave?.onDialogResult(false);
-  };
-  const handleLeaveTeam = () => {
-    teamToLeave?.onDialogResult(true);
-  };
+  const handleClose = (): void => {
+    teamToLeave?.onDialogResult(false)
+  }
+  const handleLeaveTeam = (): void => {
+    teamToLeave?.onDialogResult(true)
+  }
 
   return (
     <Dialog
       id="team-leave-dialog"
       open={dialogIsOpen}
-      aria-labelledby={t("aria-team-leave-dialog-title")}
-      aria-describedby={t("aria-team-leave-dialog-question", { teamName })}
+      aria-labelledby={t('aria-team-leave-dialog-title')}
+      aria-describedby={t('aria-team-leave-dialog-question', { teamName })}
       onClose={handleClose}
     >
       <DialogTitle id="team-leave-dialog-title">
-        <strong>{t("modal-patient-remove-team-title")}</strong>
+        <strong>{t('modal-patient-remove-team-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText color="textPrimary" id="team-leave-dialog-question">
-          {t("modal-remove-team-question", { name: teamName })}
+          {t('modal-remove-team-question', { name: teamName })}
         </DialogContentText>
         <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
-          {t("modal-patient-remove-team-info-2")}
+          {t('modal-patient-remove-team-info-2')}
         </DialogContentText>
       </DialogContent>
 
@@ -88,7 +88,7 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
           id="team-leave-dialog-button-cancel"
           onClick={handleClose}
         >
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <Button
           id="team-leave-dialog-button-leave"
@@ -97,11 +97,11 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
           disableElevation
           onClick={handleLeaveTeam}
         >
-          {t("modal-patient-remove-team-remove")}
+          {t('modal-patient-remove-team-remove')}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default LeaveTeamDialog;
+export default LeaveTeamDialog

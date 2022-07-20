@@ -26,48 +26,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18n from "i18next";
-import moment from "moment-timezone";
+import i18n from 'i18next'
+import moment from 'moment-timezone'
 
-import config from "../../lib/config";
-import { getCurrentLang, getLangName } from "../../lib/language";
+import config from '../../lib/config'
+import { getCurrentLang, getLangName } from '../../lib/language'
 
-describe("Language", () => {
-  const zeSpy = jest.fn();
+describe('Language', () => {
+  const zeSpy = jest.fn()
 
   beforeAll(() => {
-    window.zE = zeSpy;
-    config.METRICS_SERVICE = "matomo";
-  });
+    window.zE = zeSpy
+    config.METRICS_SERVICE = 'matomo'
+  })
 
   afterAll(async () => {
-    delete window.zE;
-    await i18n.changeLanguage("en");
-    delete window._paq;
-    config.METRICS_SERVICE = "disabled";
-  });
+    delete window.zE
+    await i18n.changeLanguage('en')
+    delete window._paq
+    config.METRICS_SERVICE = 'disabled'
+  })
 
   beforeEach(() => {
-    zeSpy.mockReset();
-    window._paq = [];
-  });
+    zeSpy.mockReset()
+    window._paq = []
+  })
 
-  it("should update zendesk & moment locale on change", async () => {
-    await i18n.changeLanguage("fr");
-    expect(zeSpy).toHaveBeenCalledTimes(1);
-    expect(moment.locale()).toBe("fr");
-    expect(localStorage.getItem("lang")).toBe("fr");
-    expect(getCurrentLang()).toBe("fr");
-    expect(window._paq).toEqual([["setCustomVariable", 1, "UserLang", "fr", "visit"]]);
-  });
+  it('should update zendesk & moment locale on change', async () => {
+    await i18n.changeLanguage('fr')
+    expect(zeSpy).toHaveBeenCalledTimes(1)
+    expect(moment.locale()).toBe('fr')
+    expect(localStorage.getItem('lang')).toBe('fr')
+    expect(getCurrentLang()).toBe('fr')
+    expect(window._paq).toEqual([['setCustomVariable', 1, 'UserLang', 'fr', 'visit']])
+  })
 
-  it("getLangName should return the language name", () => {
-    expect(getLangName("en")).toBe("English");
-    expect(getLangName("fr")).toBe("Français");
-    expect(getLangName("de")).toBe("Deutsch");
-    expect(getLangName("es")).toBe("Español");
-    expect(getLangName("it")).toBe("Italiano");
-    expect(getLangName("nl")).toBe("Nederlands");
-  });
-});
-
+  it('getLangName should return the language name', () => {
+    expect(getLangName('en')).toBe('English')
+    expect(getLangName('fr')).toBe('Français')
+    expect(getLangName('de')).toBe('Deutsch')
+    expect(getLangName('es')).toBe('Español')
+    expect(getLangName('it')).toBe('Italiano')
+    expect(getLangName('nl')).toBe('Nederlands')
+  })
+})

@@ -26,17 +26,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
+import React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { Auth0Provider } from '@auth0/auth0-react'
 
-import "@fontsource/roboto";
-import "branding/theme.css";
+import '@fontsource/roboto'
+import 'branding/theme.css'
 
-import appConfig from "../lib/config";
-import { AuthContextProvider } from "../lib/auth";
-import { MainLobby } from "./main-lobby";
-import MetricsLocationListener from "../components/MetricsLocationListener";
+import appConfig from '../lib/config'
+import { AuthContextProvider } from '../lib/auth'
+import { MainLobby } from './main-lobby'
+import MetricsLocationListener from '../components/MetricsLocationListener'
 
 const Yourloops = (): JSX.Element => {
   return (
@@ -55,7 +55,7 @@ const Yourloops = (): JSX.Element => {
         </AuthContextProvider>
       </BrowserRouter>
     </Auth0Provider>
-  );
-};
+  )
+}
 
-export default Yourloops;
+export default Yourloops

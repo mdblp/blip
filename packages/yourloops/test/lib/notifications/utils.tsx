@@ -26,14 +26,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { INotification, NotificationContext } from "../../../lib/notifications/models";
+import { INotification, NotificationContext } from '../../../lib/notifications/models'
 
 export interface NotificationAPIStub {
-  getReceivedInvitations: jest.Mock<Promise<INotification[]>, []>;
-  getSentInvitations: jest.Mock<Promise<INotification[]>, []>;
-  acceptInvitation: jest.Mock<Promise<void>, [INotification]>;
-  declineInvitation: jest.Mock<Promise<void>, [INotification]>;
-  cancelInvitation: jest.Mock<Promise<void>, [INotification]>;
+  getReceivedInvitations: jest.Mock<Promise<INotification[]>, []>
+  getSentInvitations: jest.Mock<Promise<INotification[]>, []>
+  acceptInvitation: jest.Mock<Promise<void>, [INotification]>
+  declineInvitation: jest.Mock<Promise<void>, [INotification]>
+  cancelInvitation: jest.Mock<Promise<void>, [INotification]>
 }
 
 export const notificationAPIStub: NotificationAPIStub = {
@@ -41,8 +41,8 @@ export const notificationAPIStub: NotificationAPIStub = {
   getSentInvitations: jest.fn<Promise<INotification[]>, []>().mockResolvedValue([]),
   acceptInvitation: jest.fn<Promise<void>, [INotification]>().mockResolvedValue(),
   declineInvitation: jest.fn<Promise<void>, [INotification]>().mockResolvedValue(),
-  cancelInvitation: jest.fn<Promise<void>, [INotification]>().mockResolvedValue(),
-};
+  cancelInvitation: jest.fn<Promise<void>, [INotification]>().mockResolvedValue()
+}
 
 const stubNotificationContextValueInternal = {
   accept: jest.fn().mockReturnValue(() => Promise.resolve()),
@@ -51,7 +51,7 @@ const stubNotificationContextValueInternal = {
   update: jest.fn(),
   initialized: true,
   receivedInvitations: [] as INotification[],
-  sentInvitations: [] as INotification[],
-};
+  sentInvitations: [] as INotification[]
+}
 
-export const stubNotificationContextValue = stubNotificationContextValueInternal as unknown as NotificationContext;
+export const stubNotificationContextValue = stubNotificationContextValueInternal as unknown as NotificationContext

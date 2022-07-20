@@ -25,61 +25,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from "lodash";
-import React from "react";
-import { useLocation } from "react-router-dom";
+import _ from 'lodash'
+import React from 'react'
+import { useLocation } from 'react-router-dom'
 
-import "@fontsource/roboto";
-import "branding/theme.css";
+import '@fontsource/roboto'
+import 'branding/theme.css'
 
-import metrics from "../lib/metrics";
+import metrics from '../lib/metrics'
 
 /** Tell matomo the page is changed, but with a little delay, because of some async stuff */
 const trackPageView = _.debounce(() => {
-  metrics.send("metrics", "trackPageView");
-}, 1000);
-const RE_PATIENT_URL = /^\/[0-9a-f]+\/?(.*)/;
-const RE_CAREGIVER_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/;
-const CONFIDENTIALS_PARAMS = ["signupEmail", "signupKey", "resetKey", "login"];
+  metrics.send('metrics', 'trackPageView')
+}, 1000)
+const RE_PATIENT_URL = /^\/[0-9a-f]+\/?(.*)/
+const RE_CAREGIVER_URL = /^\/patient\/[0-9a-f]+\/?(.*)/
+const RE_HCP_URL = /^\/patient\/[0-9a-f]+\/?(.*)/
+const CONFIDENTIALS_PARAMS = ['signupEmail', 'signupKey', 'resetKey', 'login']
 
 export default function MetricsLocationListener(): null {
-  const location = useLocation();
-  const locPathname = location.pathname;
-  const locSearch = location.search;
+  const location = useLocation()
+  const locPathname = location.pathname
+  const locSearch = location.search
 
   React.useEffect(() => {
-    let pathname: string | null = null;
-    let match = locPathname.match(RE_PATIENT_URL);
+    let pathname: string | null = null
+    let match = locPathname.match(RE_PATIENT_URL)
     if (match) {
-      pathname = `/userid/${match[1]}`;
+      pathname = `/userid/${match[1]}`
     }
-    match = !pathname ? locPathname.match(RE_CAREGIVER_URL) : null;
+    match = !pathname ? locPathname.match(RE_CAREGIVER_URL) : null
     if (match) {
-      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ''}`
     }
-    match = !pathname ? locPathname.match(RE_HCP_URL) : null;
+    match = !pathname ? locPathname.match(RE_HCP_URL) : null
     if (match) {
-      pathname = `/patient/userid/${match.length > 1 ? match[1] : ""}`;
+      pathname = `/patient/userid/${match.length > 1 ? match[1] : ''}`
     }
 
     if (!pathname) {
-      pathname = locPathname;
+      pathname = locPathname
     }
 
-    const searchParams = new URLSearchParams(locSearch);
-    let nParams = 0;
+    const searchParams = new URLSearchParams(locSearch)
+    let nParams = 0
     searchParams.forEach((value: string, key: string) => {
       if (CONFIDENTIALS_PARAMS.includes(key)) {
-        pathname = `${pathname}${nParams > 0 ? "&" : "?"}${key}=confidential`;
+        pathname = `${pathname}${nParams > 0 ? '&' : '?'}${key}=confidential`
       } else {
-        pathname = `${pathname}${nParams > 0 ? "&" : "?"}${key}=${value}`;
+        pathname = `${pathname}${nParams > 0 ? '&' : '?'}${key}=${value}`
       }
-      nParams++;
-    });
+      nParams++
+    })
 
-    metrics.send("metrics", "setCustomUrl", pathname);
-    trackPageView();
-  }, [locPathname, locSearch]);
-  return null;
+    metrics.send('metrics', 'setCustomUrl', pathname)
+    trackPageView()
+  }, [locPathname, locSearch])
+  return null
 }

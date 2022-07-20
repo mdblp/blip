@@ -30,30 +30,29 @@
  * @typedef { import('redux').Store } Store
  */
 
-import * as React from "react";
-import PropTypes from "prop-types";
-import bows from "bows";
-import { Provider } from "react-redux";
-import { useHistory } from "react-router-dom";
+import * as React from 'react'
+import PropTypes from 'prop-types'
+import bows from 'bows'
+import { Provider } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
-import "../../viz/src/styles/colors.css";
-import "../../tideline/css/tideline.less";
-import "./style.less";
+import '../../viz/src/styles/colors.css'
+import '../../tideline/css/tideline.less'
+import './style.less'
 
-import { updateConfig } from "./config";
-import { initStore, cleanStore } from "./redux";
-import PatientData from "./components/patient-data";
+import { updateConfig } from './config'
+import { initStore, cleanStore } from './redux'
+import PatientData from './components/patient-data'
 
-const log = bows("Blip");
+const log = bows('Blip')
 
 /**
  * @param {import('./index').BlipProperties} props For blip view
  */
 function ReduxProvider(props) {
-  const store = initStore();
-  const historyHook = useHistory();
+  const store = initStore()
+  const historyHook = useHistory()
   return (
-    // @ts-ignore
     <Provider store={store}>
       <PatientData
         key={props.patient.userid}
@@ -75,7 +74,7 @@ function ReduxProvider(props) {
         medicalFilesWidget={props.medicalFilesWidget}
       />
     </Provider>
-  );
+  )
 }
 
 ReduxProvider.propTypes = {
@@ -93,16 +92,16 @@ ReduxProvider.propTypes = {
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
   medicalFilesWidget: PropTypes.func.isRequired
-};
+}
 
 /**
  * @param {import('./index').BlipProperties} props For blip view
  */
 function Blip(props) {
-  if (typeof props === "object") {
+  if (typeof props === 'object') {
     try {
-      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props;
-      updateConfig(config);
+      const { config, api, patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, dialogPDFOptions, chatWidget, alarmCard, patientInfoWidget, medicalFilesWidget } = props
+      updateConfig(config)
 
       return (
         <ReduxProvider
@@ -121,14 +120,14 @@ function Blip(props) {
           alarmCard={alarmCard}
           medicalFilesWidget={medicalFilesWidget}
         />
-      );
+      )
     } catch (err) {
-      log.error(err);
+      log.error(err)
     }
   } else {
-    log.error("Blip: Missing props");
+    log.error('Blip: Missing props')
   }
-  return null;
+  return null
 }
 
 Blip.propTypes = {
@@ -146,8 +145,8 @@ Blip.propTypes = {
   patientInfoWidget: PropTypes.func.isRequired,
   chatWidget: PropTypes.func.isRequired,
   alarmCard: PropTypes.func.isRequired,
-  medicalFilesWidget: PropTypes.func.isRequired,
-};
+  medicalFilesWidget: PropTypes.func.isRequired
+}
 
-export { cleanStore };
-export default Blip;
+export { cleanStore }
+export default Blip

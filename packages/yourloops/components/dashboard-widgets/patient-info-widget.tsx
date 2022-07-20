@@ -26,149 +26,149 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from "react";
-import moment from "moment-timezone";
-import { useTranslation } from "react-i18next";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { commonComponentStyles } from "../common";
+import React, { useState } from 'react'
+import moment from 'moment-timezone'
+import { useTranslation } from 'react-i18next'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { commonComponentStyles } from '../common'
 
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import LocalHospitalOutlinedIcon from "@material-ui/icons/LocalHospitalOutlined";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import Button from '@material-ui/core/Button'
+import Box from '@material-ui/core/Box'
+import LocalHospitalOutlinedIcon from '@material-ui/icons/LocalHospitalOutlined'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 
-import { Settings } from "../../models/user";
-import { Patient } from "../../lib/data/patient";
-import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from "../dialogs/remote-monitoring-dialog";
-import { useAuth } from "../../lib/auth";
-import { genderLabels } from "../../lib/auth/helpers";
-import { MonitoringStatus } from "../../models/monitoring";
-import { useNotification } from "../../lib/notifications/hook";
-import { useTeam } from "../../lib/team";
-import ConfirmDialog from "../dialogs/confirm-dialog";
-import { TeamMemberRole } from "../../models/team";
+import { Settings } from '../../models/user'
+import { Patient } from '../../lib/data/patient'
+import RemoteMonitoringPatientDialog, { RemoteMonitoringDialogAction } from '../dialogs/remote-monitoring-dialog'
+import { useAuth } from '../../lib/auth'
+import { genderLabels } from '../../lib/auth/helpers'
+import { MonitoringStatus } from '../../models/monitoring'
+import { useNotification } from '../../lib/notifications/hook'
+import { useTeam } from '../../lib/team'
+import ConfirmDialog from '../dialogs/confirm-dialog'
+import { TeamMemberRole } from '../../models/team'
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   card: {
-    width: 430,
+    width: 430
   },
   cardHeader: {
-    textTransform: "uppercase",
-    backgroundColor: "var(--card-header-background-color)",
+    textTransform: 'uppercase',
+    backgroundColor: 'var(--card-header-background-color)'
   },
   deviceLabels: {
-    alignSelf: "center",
+    alignSelf: 'center'
   },
   deviceValues: {
-    overflowWrap: "break-word",
+    overflowWrap: 'break-word'
   },
   marginLeft: {
-    marginLeft: theme.spacing(2),
-  },
-}), { name: "patient-info-widget" });
+    marginLeft: theme.spacing(2)
+  }
+}), { name: 'patient-info-widget' })
 
 export interface PatientInfoWidgetProps {
-  patient: Patient,
+  patient: Patient
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const { patient } = props;
-  const classes = patientInfoWidgetStyles();
-  const commonStyles = commonComponentStyles();
-  const { t } = useTranslation("yourloops");
-  const trNA = t("N/A");
-  const authHook = useAuth();
-  const notificationHook = useNotification();
-  const teamHook = useTeam();
-  const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false);
-  const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false);
-  const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false);
-  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false);
-  const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false);
-  const [confirmDeleteDialogActionInProgress, setConfirmDeleteDialogActionInProgress] = useState(false);
-  const hbA1c: Settings["a1c"] = patient.settings.a1c
-    ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format("L") }
-    : undefined;
-  const birthdate = moment.utc(patient.profile.birthdate).format("L");
+  const { patient } = props
+  const classes = patientInfoWidgetStyles()
+  const commonStyles = commonComponentStyles()
+  const { t } = useTranslation('yourloops')
+  const trNA = t('N/A')
+  const authHook = useAuth()
+  const notificationHook = useNotification()
+  const teamHook = useTeam()
+  const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false)
+  const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false)
+  const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false)
+  const [showConfirmDeleteDialog, setShowConfirmDeleteDialog] = useState(false)
+  const [confirmCancelDialogActionInProgress, setConfirmCancelDialogActionInProgress] = useState(false)
+  const [confirmDeleteDialogActionInProgress, setConfirmDeleteDialogActionInProgress] = useState(false)
+  const hbA1c: Settings['a1c'] = patient.settings.a1c
+    ? { value: patient.settings.a1c.value, date: moment.utc(patient.settings.a1c.date).format('L') }
+    : undefined
+  const birthdate = moment.utc(patient.profile.birthdate).format('L')
 
-  const isLoggedInUserHcpAdmin = () => {
+  const isLoggedInUserHcpAdmin = (): boolean => {
     return authHook.user?.isUserHcp() &&
-      teamHook.getRemoteMonitoringTeams()
-        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.id)
-          && team.members.find(member => member.user.userid === patient.userid)
-        );
-  };
+      !!teamHook.getRemoteMonitoringTeams()
+        .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.id) &&
+          team.members.find(member => member.user.userid === patient.userid)
+        )
+  }
 
-  const showMonitoringButtonAction = isLoggedInUserHcpAdmin();
+  const showMonitoringButtonAction = isLoggedInUserHcpAdmin()
 
   const buttonsVisible: { invite: boolean, cancel: boolean, renewAndRemove: boolean } = {
     invite: false,
     cancel: false,
-    renewAndRemove: false,
-  };
+    renewAndRemove: false
+  }
 
   const patientInfo: Record<string, string> = {
     patient: patient.profile.fullName,
     gender: patient.profile.sex,
     birthdate,
     email: patient.profile.email,
-    hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA,
-  };
-
-  patientInfo["gender"] = genderLabels()[patient.profile.sex ?? ""];
-
-  const computePatientInformation = () => {
-    patientInfo["remote-monitoring"] = patient.monitoring?.enabled ? t("yes") : t("no");
-
-    const displayInviteButton = patient.monitoring?.enabled === false
-      && patient.monitoring.status !== MonitoringStatus.pending
-      && patient.monitoring.status !== MonitoringStatus.accepted;
-    const displayCancelInviteButton = patient.monitoring?.enabled === false
-      && patient.monitoring.status === MonitoringStatus.pending;
-    const displayRenewAndRemoveMonitoringButton = (patient.monitoring?.enabled === false
-      && patient.monitoring.status === MonitoringStatus.accepted) || patient.monitoring?.enabled === true;
-
-    buttonsVisible.invite = displayInviteButton;
-    buttonsVisible.cancel = displayCancelInviteButton;
-    buttonsVisible.renewAndRemove = displayRenewAndRemoveMonitoringButton;
-  };
-
-  if (patient.monitoring) {
-    computePatientInformation();
+    hba1c: hbA1c ? `${hbA1c.value} (${hbA1c?.date})` : trNA
   }
 
-  const removePatientRemoteMonitoring = async (setActionInProgress: React.Dispatch<boolean>, setShow: React.Dispatch<boolean>) => {
+  patientInfo.gender = genderLabels()[patient.profile.sex ?? '']
+
+  const computePatientInformation = (): void => {
+    patientInfo['remote-monitoring'] = patient.monitoring?.enabled ? t('yes') : t('no')
+
+    const displayInviteButton = !patient.monitoring?.enabled &&
+      patient.monitoring.status !== MonitoringStatus.pending &&
+      patient.monitoring.status !== MonitoringStatus.accepted
+    const displayCancelInviteButton = !patient.monitoring?.enabled &&
+      patient.monitoring.status === MonitoringStatus.pending
+    const displayRenewAndRemoveMonitoringButton = (!patient.monitoring?.enabled &&
+      patient.monitoring.status === MonitoringStatus.accepted) || patient.monitoring?.enabled
+
+    buttonsVisible.invite = displayInviteButton
+    buttonsVisible.cancel = displayCancelInviteButton
+    buttonsVisible.renewAndRemove = displayRenewAndRemoveMonitoringButton
+  }
+
+  if (patient.monitoring) {
+    computePatientInformation()
+  }
+
+  const removePatientRemoteMonitoring = async (setActionInProgress: React.Dispatch<boolean>, setShow: React.Dispatch<boolean>): Promise<void> => {
     if (!patient.monitoring) {
-      throw Error("Cannot cancel monitoring invite as patient monitoring is not defined");
+      throw Error('Cannot cancel monitoring invite as patient monitoring is not defined')
     }
     try {
-      patient.monitoring = { ...patient.monitoring, status: undefined, monitoringEnd: undefined };
-      await teamHook.updatePatientMonitoring(patient);
-      setActionInProgress(false);
-      setShow(false);
+      patient.monitoring = { ...patient.monitoring, status: undefined, monitoringEnd: undefined }
+      await teamHook.updatePatientMonitoring(patient)
+      setActionInProgress(false)
+      setShow(false)
     } catch (e) {
-      setActionInProgress(false);
+      setActionInProgress(false)
     }
-  };
+  }
 
-  const onConfirmCancelInviteDialog = async () => {
-    setConfirmCancelDialogActionInProgress(true);
+  const onConfirmCancelInviteDialog = async (): Promise<void> => {
+    setConfirmCancelDialogActionInProgress(true)
     try {
-      await notificationHook.cancelRemoteMonitoringInvite(teamHook.getPatientRemoteMonitoringTeam(patient).teamId, patient.userid);
+      await notificationHook.cancelRemoteMonitoringInvite(teamHook.getPatientRemoteMonitoringTeam(patient).teamId, patient.userid)
     } catch (e) {
-      setConfirmCancelDialogActionInProgress(false);
+      setConfirmCancelDialogActionInProgress(false)
     }
-    await removePatientRemoteMonitoring(setConfirmCancelDialogActionInProgress, setShowConfirmCancelDialog);
-  };
+    await removePatientRemoteMonitoring(setConfirmCancelDialogActionInProgress, setShowConfirmCancelDialog)
+  }
 
-  const onConfirmDeleteDialog = async () => {
-    setConfirmDeleteDialogActionInProgress(true);
-    await removePatientRemoteMonitoring(setConfirmDeleteDialogActionInProgress, setShowConfirmDeleteDialog);
-  };
+  const onConfirmDeleteDialog = async (): Promise<void> => {
+    setConfirmDeleteDialogActionInProgress(true)
+    await removePatientRemoteMonitoring(setConfirmDeleteDialogActionInProgress, setShowConfirmDeleteDialog)
+  }
 
   return (
     <Card id="patient-info" className={classes.card}>
@@ -176,7 +176,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
         id="patient-info-header"
         avatar={<LocalHospitalOutlinedIcon />}
         className={classes.cardHeader}
-        title={t("patient-info")}
+        title={t('patient-info')}
       />
       <CardContent id="patient-info-content">
         <Grid container spacing={1}>
@@ -192,7 +192,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                   <Typography variant="body2" id={`patient-info-${key}-value`}>
                     {patientInfo[key]}
                   </Typography>
-                  {key === "remote-monitoring" && showMonitoringButtonAction &&
+                  {key === 'remote-monitoring' && showMonitoringButtonAction &&
                     <React.Fragment>
                       {buttonsVisible.invite &&
                         <Button
@@ -204,7 +204,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           size="small"
                           onClick={() => setShowInviteRemoteMonitoringDialog(true)}
                         >
-                          {t("invite")}
+                          {t('invite')}
                         </Button>
                       }
                       {buttonsVisible.cancel &&
@@ -217,7 +217,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           size="small"
                           onClick={() => setShowConfirmCancelDialog(true)}
                         >
-                          {t("cancel-invite")}
+                          {t('cancel-invite')}
                         </Button>
                       }
                       {buttonsVisible.renewAndRemove &&
@@ -231,7 +231,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             size="small"
                             onClick={() => setShowRenewRemoteMonitoringDialog(true)}
                           >
-                            {t("renew")}
+                            {t('renew')}
                           </Button>
                           <Button
                             id="remove-button-id"
@@ -242,7 +242,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             size="small"
                             onClick={() => setShowConfirmDeleteDialog(true)}
                           >
-                            {t("button-remove")}
+                            {t('button-remove')}
                           </Button>
                         </Box>
                       }
@@ -270,8 +270,8 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       }
       {showConfirmCancelDialog &&
         <ConfirmDialog
-          title={t("cancel-remote-monitoring-invite")}
-          label={t("cancel-remote-monitoring-invite-confirm", { fullName: patient.profile.fullName })}
+          title={t('cancel-remote-monitoring-invite')}
+          label={t('cancel-remote-monitoring-invite-confirm', { fullName: patient.profile.fullName })}
           inProgress={confirmCancelDialogActionInProgress}
           onClose={() => setShowConfirmCancelDialog(false)}
           onConfirm={onConfirmCancelInviteDialog}
@@ -279,15 +279,15 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       }
       {showConfirmDeleteDialog &&
         <ConfirmDialog
-          title={t("remove-remote-monitoring")}
-          label={t("remove-remote-monitoring-confirm", { fullName: patient.profile.fullName })}
+          title={t('remove-remote-monitoring')}
+          label={t('remove-remote-monitoring-confirm', { fullName: patient.profile.fullName })}
           inProgress={confirmDeleteDialogActionInProgress}
           onClose={() => setShowConfirmDeleteDialog(false)}
           onConfirm={onConfirmDeleteDialog}
         />
       }
     </Card>
-  );
+  )
 }
 
-export default PatientInfoWidget;
+export default PatientInfoWidget

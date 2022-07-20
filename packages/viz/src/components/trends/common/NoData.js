@@ -15,13 +15,13 @@
  * == BSD2 LICENSE ==
  */
 
-import PropTypes from "prop-types";
-import React from "react";
-import i18next from "i18next";
+import PropTypes from 'prop-types'
+import React from 'react'
+import i18next from 'i18next'
 
-import styles from "./NoData.css";
+import styles from './NoData.css'
 
-const t = i18next.t.bind(i18next);
+const t = i18next.t.bind(i18next)
 
 const NoData = (props) => {
   const {
@@ -29,45 +29,45 @@ const NoData = (props) => {
     displayTypes,
     position,
     unselectedAllData,
-    unselectedAllDataString,
-  } = props;
+    unselectedAllDataString
+  } = props
 
   const noDataMessage = (displayType) => (
     unselectedAllData
       ? unselectedAllDataString
-      : t("There is no {{displayType}} data for this time period :(", { displayType })
-  );
+      : t('There is no {{displayType}} data for this time period :(', { displayType })
+  )
 
   if (!position) {
-    return null;
+    return null
   }
 
-  let displayType = "";
+  let displayType = ''
   if (dataType) {
-    displayType = displayTypes[dataType];
+    displayType = displayTypes[dataType]
   }
 
   return (
     <text className={styles.noDataMsg} id="noDataMsg" x={position.x} y={position.y}>
       {noDataMessage(displayType)}
     </text>
-  );
-};
+  )
+}
 
 NoData.defaultProps = {
-  displayTypes: { cbg: "CGM", smbg: "fingerstick" },
-  unselectedAllDataString: t("Hang on there, skippy! You unselected all of the data!"),
-};
+  displayTypes: { cbg: 'CGM', smbg: 'fingerstick' },
+  unselectedAllDataString: t('Hang on there, skippy! You unselected all of the data!')
+}
 
 NoData.propTypes = {
-  dataType: PropTypes.oneOf(["cbg", "smbg"]).isRequired,
+  dataType: PropTypes.oneOf(['cbg', 'smbg']).isRequired,
   displayTypes: PropTypes.object.isRequired,
   position: PropTypes.shape({
     x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired
   }).isRequired,
   unselectedAllData: PropTypes.bool.isRequired,
-  unselectedAllDataString: PropTypes.string,
-};
+  unselectedAllDataString: PropTypes.string
+}
 
-export default NoData;
+export default NoData

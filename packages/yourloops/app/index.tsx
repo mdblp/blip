@@ -27,42 +27,42 @@
  */
 
 // Polyfills for compatibility with older browsers:
-import "core-js/stable";
+import 'core-js/stable'
 
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-import config from "../lib/config";
-import { init as i18nInit } from "../lib/language";
-import initCookiesConcentListener from "../lib/cookies-manager";
-import initDayJS from "../lib/dayjs";
-import initAxios from "../lib/axios";
-import { initTheme } from "../components/theme";
+import config from '../lib/config'
+import { init as i18nInit } from '../lib/language'
+import initCookiesConcentListener from '../lib/cookies-manager'
+import initDayJS from '../lib/dayjs'
+import initAxios from '../lib/axios'
+import { initTheme } from '../components/theme'
 
-import Yourloops from "./app";
-import OnError from "./error";
+import Yourloops from './app'
+import OnError from './error'
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
-    if (source && !source.endsWith(".js")) {
-      return true;
+    if (source && !source.endsWith('.js')) {
+      return true
     }
-    console.error(event, source, lineno, colno, error);
-    ReactDOM.render(<OnError event={event} source={source} lineno={lineno} colno={colno} error={error} />, document.body);
-    return false;
-  };
-
-  let div = document.getElementById("app");
-  if (div === null) {
-    div = document.createElement("div");
-    div.id = "app";
-    document.body.appendChild(div);
+    console.error(event, source, lineno, colno, error)
+    ReactDOM.render(<OnError event={event} source={source} lineno={lineno} colno={colno} error={error} />, document.body)
+    return false
   }
 
-  initDayJS();
-  initCookiesConcentListener();
-  initAxios();
-  initTheme();
+  let div = document.getElementById('app')
+  if (div === null) {
+    div = document.createElement('div')
+    div.id = 'app'
+    document.body.appendChild(div)
+  }
 
-  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div);
-});
+  initDayJS()
+  initCookiesConcentListener()
+  initAxios()
+  initTheme()
+
+  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, div)
+})

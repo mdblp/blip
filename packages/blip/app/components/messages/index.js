@@ -1,2 +1,2 @@
-import Messages from "./messages";
-export default Messages;
+import Messages from './messages'
+export default Messages

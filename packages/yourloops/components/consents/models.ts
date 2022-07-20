@@ -26,42 +26,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as React from "react";
-import { UserRoles } from "../../models/user";
+import * as React from 'react'
+import { UserRoles } from '../../models/user'
 
 export interface BaseConsentCheck {
-  id: string;
-  checked: boolean;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  style?: React.CSSProperties;
+  id: string
+  checked: boolean
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  style?: React.CSSProperties
 }
 
 export interface ConsentCheck extends BaseConsentCheck {
-  userRole: UserRoles;
+  userRole: UserRoles
 }
 
 export interface ConsentFormProps {
-  userRole: UserRoles;
-  id: string;
+  userRole: UserRoles
+  id: string
   /** className for the FormControl */
-  className?: string;
+  className?: string
   /** className for the FormGroup */
-  group?: string;
-  policyAccepted: boolean;
-  setPolicyAccepted: React.Dispatch<boolean>;
-  termsAccepted: boolean;
-  setTermsAccepted: React.Dispatch<boolean>;
-  feedbackAccepted?: boolean;
+  group?: string
+  policyAccepted: boolean
+  setPolicyAccepted: React.Dispatch<boolean>
+  termsAccepted: boolean
+  setTermsAccepted: React.Dispatch<boolean>
+  feedbackAccepted?: boolean
   // Set to undefined to not display this option
-  setFeedbackAccepted?: React.Dispatch<boolean>;
+  setFeedbackAccepted?: React.Dispatch<boolean>
 }
 
 export interface MonitoringConsentFormProps {
-  id: string;
+  id: string
   /** className for the FormControl */
-  className?: string;
+  className?: string
   /** className for the FormGroup */
-  group?: string;
-  termsAccepted: boolean;
-  setTermsAccepted: React.Dispatch<boolean>;
+  group?: string
+  termsAccepted: boolean
+  setTermsAccepted: React.Dispatch<boolean>
 }

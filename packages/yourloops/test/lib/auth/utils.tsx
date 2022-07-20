@@ -26,63 +26,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-import { Preferences, Profile, Settings } from "../../../models/user";
-import { SignupForm } from "../../../lib/auth/models";
-import { User } from "../../../lib/auth";
-import { HcpProfession } from "../../../models/hcp-profession";
+import { Preferences, Profile, Settings } from '../../../models/user'
+import { SignupForm } from '../../../lib/auth/models'
+import { User } from '../../../lib/auth'
+import { HcpProfession } from '../../../models/hcp-profession'
 
 /**
  * API Stubs
  */
 export interface AuthAPIStubs {
-  getShorelineAccessToken: jest.Mock<Promise<string>, [string]>;
-  updatePreferences: jest.Mock<Promise<Preferences>, []>;
-  updateProfile: jest.Mock<Promise<Profile>, []>;
-  updateSettings: jest.Mock<Promise<Settings>, []>;
+  getShorelineAccessToken: jest.Mock<Promise<string>, [string]>
+  updatePreferences: jest.Mock<Promise<Preferences>, []>
+  updateProfile: jest.Mock<Promise<Profile>, []>
+  updateSettings: jest.Mock<Promise<Settings>, []>
 }
 
 export const createAuthAPIStubs = (user: User): AuthAPIStubs => ({
-  getShorelineAccessToken: jest.fn<Promise<string>, [string]>().mockResolvedValue("token"),
+  getShorelineAccessToken: jest.fn<Promise<string>, [string]>().mockResolvedValue('token'),
   updatePreferences: jest.fn<Promise<Preferences>, []>().mockResolvedValue(user.preferences),
   updateProfile: jest.fn<Promise<Profile>, []>().mockResolvedValue(user.profile),
-  updateSettings: jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings),
-});
+  updateSettings: jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings)
+})
 
 export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, user: User): void => {
-  apiStubs.updatePreferences.mockReset();
-  apiStubs.updatePreferences = jest.fn<Promise<Preferences>, []>().mockResolvedValue(user.preferences);
-  apiStubs.updatePreferences.mockResolvedValue(user.preferences);
+  apiStubs.updatePreferences.mockReset()
+  apiStubs.updatePreferences = jest.fn<Promise<Preferences>, []>().mockResolvedValue(user.preferences)
+  apiStubs.updatePreferences.mockResolvedValue(user.preferences)
 
-  apiStubs.updateProfile.mockReset();
-  apiStubs.updateProfile = jest.fn<Promise<Profile>, []>().mockResolvedValue(user.profile);
-  apiStubs.updateProfile.mockResolvedValue(user.profile);
+  apiStubs.updateProfile.mockReset()
+  apiStubs.updateProfile = jest.fn<Promise<Profile>, []>().mockResolvedValue(user.profile)
+  apiStubs.updateProfile.mockResolvedValue(user.profile)
 
-  apiStubs.updateSettings.mockReset();
-  apiStubs.updateSettings = jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings);
-  apiStubs.updateSettings.mockResolvedValue(user.settings);
-};
+  apiStubs.updateSettings.mockReset()
+  apiStubs.updateSettings = jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings)
+  apiStubs.updateSettings.mockResolvedValue(user.settings)
+}
 
 /**
  * Auth hook stubs definitions
  */
 export interface AuthContextStubs {
-  certifyProfessionalAccount: jest.Mock<Promise<void>, null>;
-  fetchingUser: boolean;
-  flagPatient: jest.Mock<Promise<void>, [string]>;
-  getFlagPatients: jest.Mock<string[], []>;
-  isLoggedIn: boolean;
-  logout: jest.Mock<Promise<void>>;
-  redirectToProfessionalAccountLogin: jest.Mock<void, []>;
-  setFlagPatients: jest.Mock<Promise<void>, [string[]]>;
-  setUser: jest.Mock<void, [User]>;
-  completeSignup: jest.Mock<Promise<void>, [SignupForm]>;
-  switchRoleToHCP: jest.Mock<Promise<void>, [boolean, HcpProfession]>;
-  updatePassword: jest.Mock<Promise<void>, [string, string]>;
-  updatePreferences: jest.Mock<Promise<void>, [Preferences]>;
-  updateProfile: jest.Mock<Promise<void>, [Profile]>;
-  updateSettings: jest.Mock<Promise<void>, [Settings]>;
-  user: Readonly<User> | null;
+  certifyProfessionalAccount: jest.Mock<Promise<void>, null>
+  fetchingUser: boolean
+  flagPatient: jest.Mock<Promise<void>, [string]>
+  getFlagPatients: jest.Mock<string[], []>
+  isLoggedIn: boolean
+  logout: jest.Mock<Promise<void>>
+  redirectToProfessionalAccountLogin: jest.Mock<void, []>
+  setFlagPatients: jest.Mock<Promise<void>, [string[]]>
+  setUser: jest.Mock<void, [User]>
+  completeSignup: jest.Mock<Promise<void>, [SignupForm]>
+  switchRoleToHCP: jest.Mock<Promise<void>, [boolean, HcpProfession]>
+  updatePassword: jest.Mock<Promise<void>, [string, string]>
+  updatePreferences: jest.Mock<Promise<void>, [Preferences]>
+  updateProfile: jest.Mock<Promise<void>, [Profile]>
+  updateSettings: jest.Mock<Promise<void>, [Settings]>
+  user: Readonly<User> | null
 }
 
 /**
@@ -104,8 +103,8 @@ export const createAuthHookStubs = (user?: User): AuthContextStubs => ({
   updatePreferences: jest.fn<Promise<void>, [Preferences]>().mockResolvedValue(),
   updateProfile: jest.fn<Promise<void>, [Profile]>().mockResolvedValue(),
   updateSettings: jest.fn<Promise<void>, [Settings]>().mockResolvedValue(),
-  user: user ?? null,
-});
+  user: user ?? null
+})
 
 /**
  *mockReset() stubs history & behavior
@@ -113,11 +112,9 @@ export const createAuthHookStubs = (user?: User): AuthContextStubs => ({
  * TODO complete me
  */
 export const resetAuthHookStubs = (hookStubs: AuthContextStubs, user?: User): void => {
-  hookStubs.isLoggedIn = !!user;
+  hookStubs.isLoggedIn = !!user
 
-  hookStubs.logout.mockReset();
-  hookStubs.logout = jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue();
-  hookStubs.logout.mockResolvedValue();
-};
-
-
+  hookStubs.logout.mockReset()
+  hookStubs.logout = jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue()
+  hookStubs.logout.mockResolvedValue()
+}

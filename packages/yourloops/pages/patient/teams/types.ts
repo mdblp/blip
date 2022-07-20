@@ -26,13 +26,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team } from "../../../lib/team";
+import { Team } from '../../../lib/team'
 
 export interface LeaveTeamDialogContentProps {
-  team: Readonly<Team> | null;
-  onDialogResult: (leave: boolean) => void;
+  team: Readonly<Team> | null
+  onDialogResult: (leave: boolean) => void
 }
 
 export interface AddTeamDialogContentProps {
-  onDialogResult: (teamId?: string) => void;
+  onDialogResult: (teamId?: string) => void
 }

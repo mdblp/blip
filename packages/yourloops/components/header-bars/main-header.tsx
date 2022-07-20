@@ -25,30 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
-import MenuIcon from "@material-ui/icons/Menu";
-import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
+import MenuIcon from '@material-ui/icons/Menu'
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone'
 
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Avatar from "@material-ui/core/Avatar";
-import Badge from "@material-ui/core/Badge";
-import Box from "@material-ui/core/Box";
-import Toolbar from "@material-ui/core/Toolbar";
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Avatar from '@material-ui/core/Avatar'
+import Badge from '@material-ui/core/Badge'
+import Box from '@material-ui/core/Box'
+import Toolbar from '@material-ui/core/Toolbar'
 
-import config from "../../lib/config";
-import { useNotification } from "../../lib/notifications/hook";
-import { useAuth } from "../../lib/auth";
-import { UserRoles } from "../../models/user";
-import TeamMenu from "../menus/team-menu";
-import UserMenu from "../menus/user-menu";
+import config from '../../lib/config'
+import { useNotification } from '../../lib/notifications/hook'
+import { useAuth } from '../../lib/auth'
+import { UserRoles } from '../../models/user'
+import TeamMenu from '../menus/team-menu'
+import UserMenu from '../menus/user-menu'
 
 interface MainHeaderProps {
-  withShrinkIcon?: boolean;
-  onClickShrinkIcon?: () => void;
+  withShrinkIcon?: boolean
+  onClickShrinkIcon?: () => void
 }
 
 const classes = makeStyles((theme: Theme) => ({
@@ -56,31 +56,31 @@ const classes = makeStyles((theme: Theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
-    color: "var(--text-base-color)",
+    color: 'var(--text-base-color)'
   },
   leftIcon: {
-    cursor: "pointer",
-    marginRight: theme.spacing(3),
+    cursor: 'pointer',
+    marginRight: theme.spacing(3)
   },
   desktopLogo: {
-    width: 140,
+    width: 140
   },
   separator: {
     height: 25,
     width: 1,
-    backgroundColor: "var(--text-base-color)",
-    margin: `0 ${theme.spacing(2)}px`,
+    backgroundColor: 'var(--text-base-color)',
+    margin: `0 ${theme.spacing(2)}px`
   },
   toolbar: {
-    padding: `0 ${theme.spacing(2)}px`,
-  },
-}));
+    padding: `0 ${theme.spacing(2)}px`
+  }
+}))
 
 function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { desktopLogo, separator, appBar, leftIcon, toolbar } = classes();
-  const { t } = useTranslation("yourloops");
-  const { receivedInvitations } = useNotification();
-  const { user } = useAuth();
+  const { desktopLogo, separator, appBar, leftIcon, toolbar } = classes()
+  const { t } = useTranslation('yourloops')
+  const { receivedInvitations } = useNotification()
+  const { user } = useAuth()
 
   return (
     <AppBar
@@ -103,7 +103,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
                 id="header-main-logo"
                 variant="square"
                 src={`/branding_${config.BRANDING}_logo.svg`}
-                alt={t("alt-img-logo")}
+                alt={t('alt-img-logo')}
                 className={desktopLogo}
               />
             </Link>
@@ -132,7 +132,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
         </Box>
       </Toolbar>
     </AppBar>
-  );
+  )
 }
 
-export default MainHeader;
+export default MainHeader

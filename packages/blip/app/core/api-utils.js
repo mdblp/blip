@@ -37,10 +37,10 @@
  * @typedef { import("./lib/partial-data-load").DateRange } DateRange
  */
 
-import bows from "bows";
-import moment from "moment-timezone";
+import bows from 'bows'
+import moment from 'moment-timezone'
 
-import PartialDataLoad from "./lib/partial-data-load";
+import PartialDataLoad from './lib/partial-data-load'
 
 class ApiUtils {
   /**
@@ -49,17 +49,17 @@ class ApiUtils {
    * @param {User} patient The current patient
    */
   constructor(api, patient) {
-    this.api = api;
-    this.patient = patient;
+    this.api = api
+    this.patient = patient
     /** @type {Console} */
-    this.log = bows("ApiUtils");
+    this.log = bows('ApiUtils')
 
     /** @type {PartialDataLoad} */
-    this.partialDataLoad = null;
+    this.partialDataLoad = null
   }
 
   get dateRange() {
-    return this.partialDataLoad.range;
+    return this.partialDataLoad.range
   }
 
   /**
@@ -67,9 +67,9 @@ class ApiUtils {
    * @returns {Promise<PatientData>} The patient data
    */
   refresh() {
-    this.partialDataLoad = null;
+    this.partialDataLoad = null
 
-    return this.refreshV1();
+    return this.refreshV1()
   }
 
   /**
@@ -77,47 +77,47 @@ class ApiUtils {
    * @private
    */
   async refreshV1() {
-    const range = await this.api.getPatientDataRange(this.patient);
+    const range = await this.api.getPatientDataRange(this.patient)
     if (range === null) {
-      this.log.info("Range is empty - no data available");
-      throw Error("no-data");
+      this.log.info('Range is empty - no data available')
+      throw Error('no-data')
     }
 
-    const start = moment.utc(range[0]).startOf("day");
-    const end = moment.utc(range[1]).startOf("day");
+    const start = moment.utc(range[0]).startOf('day')
+    const end = moment.utc(range[1]).startOf('day')
 
-    this.log.info("Available data range:",
+    this.log.info('Available data range:',
       range[0], range[1],
-      "updated to", start.toISOString(), end.toISOString()
-    );
+      'updated to', start.toISOString(), end.toISOString()
+    )
 
     // Get the initial range of data to load:
     // 3 weeks (for basics view) -> start/end of week
     // subtract one day to be sure to have all the data we need
     // since the timezone is generally not UTC
     const initialLoadingDates = [
-      end.clone().startOf("week").subtract(2, "weeks").subtract(1, "day"),
-      end,
-    ];
+      end.clone().startOf('week').subtract(2, 'weeks').subtract(1, 'day'),
+      end
+    ]
 
     /** @type {GetPatientDataOptions} */
     const loadingOptions = {
       startDate: initialLoadingDates[0].toISOString(),
-      withPumpSettings: true,
-    };
+      withPumpSettings: true
+    }
 
     // Get the data from the API
     const [patientData, messagesNotes] = await Promise.all([
       this.api.getPatientData(this.patient, loadingOptions),
-      this.api.getMessages(this.patient, loadingOptions),
-    ]);
+      this.api.getMessages(this.patient, loadingOptions)
+    ])
 
     this.partialDataLoad = new PartialDataLoad(
       { start, end },
       { start: initialLoadingDates[0], end: initialLoadingDates[1] }
-    );
+    )
 
-    return patientData.concat(messagesNotes);
+    return patientData.concat(messagesNotes)
   }
 
   /**
@@ -126,26 +126,26 @@ class ApiUtils {
    * @returns {Promise<PatientData>} The patient data
    */
   fetchDataRange(dateRange) {
-    const rangesToLoad = this.partialDataLoad.getMissingRanges(dateRange);
-    this.log.info("partialDataLoad updated", this.partialDataLoad.toDebug());
+    const rangesToLoad = this.partialDataLoad.getMissingRanges(dateRange)
+    this.log.info('partialDataLoad updated', this.partialDataLoad.toDebug())
 
-    const promises = [];
+    const promises = []
     for (const rangeToLoad of rangesToLoad) {
       /** @type {GetPatientDataOptions|GetPatientDataOptionsV0} */
       const loadingOptions = {
         startDate: rangeToLoad.start.toISOString(),
-        endDate: rangeToLoad.end.toISOString(),
-      };
-      promises.push(this.fetchDataRangeV1(loadingOptions));
+        endDate: rangeToLoad.end.toISOString()
+      }
+      promises.push(this.fetchDataRangeV1(loadingOptions))
     }
 
     return Promise.all(promises).then((values) => {
-      let r = [];
+      let r = []
       for (const value of values) {
-        r = r.concat(value);
+        r = r.concat(value)
       }
-      return r;
-    });
+      return r
+    })
   }
 
   /**
@@ -157,10 +157,10 @@ class ApiUtils {
     /** @type {[PatientData, PatientData]} */
     const [patientData, messagesNotes] = await Promise.all([
       this.api.getPatientData(this.patient, loadingOptions),
-      this.api.getMessages(this.patient, loadingOptions),
-    ]);
-    return patientData.concat(messagesNotes);
+      this.api.getMessages(this.patient, loadingOptions)
+    ])
+    return patientData.concat(messagesNotes)
   }
 }
 
-export default ApiUtils;
+export default ApiUtils

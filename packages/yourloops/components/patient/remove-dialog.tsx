@@ -25,109 +25,107 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
+import { makeStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 
-import MedicalServiceIcon from "../icons/MedicalServiceIcon";
-import ProgressIconButtonWrapper from "../buttons/progress-icon-button-wrapper";
+import MedicalServiceIcon from '../icons/MedicalServiceIcon'
+import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 
-import { useTeam } from "../../lib/team";
-import { makeButtonsStyles } from "../theme";
-import { useAlert } from "../utils/snackbar";
-import { UserInvitationStatus } from "../../models/generic";
-import { Patient, PatientTeam } from "../../lib/data/patient";
+import { useTeam } from '../../lib/team'
+import { makeButtonsStyles } from '../theme'
+import { useAlert } from '../utils/snackbar'
+import { UserInvitationStatus } from '../../models/generic'
+import { Patient, PatientTeam } from '../../lib/data/patient'
 
 interface RemoveDialogProps {
-  isOpen: boolean;
-  patient: Patient | null;
-  onClose: () => void;
+  isOpen: boolean
+  patient: Patient | null
+  onClose: () => void
 }
 
-const makeButtonClasses = makeStyles(makeButtonsStyles, { name: "ylp-dialog-remove-patient-dialog-buttons" });
+const makeButtonClasses = makeStyles(makeButtonsStyles, { name: 'ylp-dialog-remove-patient-dialog-buttons' })
 
 function RemoveDialog(props: RemoveDialogProps): JSX.Element {
-  const { isOpen, onClose, patient } = props;
-  const { t } = useTranslation("yourloops");
-  const alert = useAlert();
-  const teamHook = useTeam();
-  const buttonClasses = makeButtonClasses();
+  const { isOpen, onClose, patient } = props
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const teamHook = useTeam()
+  const buttonClasses = makeButtonClasses()
 
-  const [selectedTeamId, setSelectedTeamId] = useState<string>("");
-  const [processing, setProcessing] = useState<boolean>(false);
-  const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([]);
+  const [selectedTeamId, setSelectedTeamId] = useState<string>('')
+  const [processing, setProcessing] = useState<boolean>(false)
+  const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([])
 
-  const userName = patient ? { firstName: patient.profile.firstName, lastName: patient.profile.lastName } : { firstName: "", lastName: "" };
-  const patientName = t("user-name", userName);
-  const patientTeams = patient?.teams;
-  const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId) as PatientTeam;
+  const userName = patient ? { firstName: patient.profile.firstName, lastName: patient.profile.lastName } : { firstName: '', lastName: '' }
+  const patientName = t('user-name', userName)
+  const patientTeams = patient?.teams
+  const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId)
 
-  const getSuccessAlertMessage = () => {
+  const getSuccessAlertMessage = (): void => {
     if (patientTeamStatus.status === UserInvitationStatus.pending) {
-      return alert.success(t("alert-remove-patient-pending-invitation-success"));
+      alert.success(t('alert-remove-patient-pending-invitation-success'))
     }
-    const team = sortedTeams.find(team => team.teamId === selectedTeamId) as PatientTeam;
-    if (team.code === "private") {
-      return alert.success(t("alert-remove-private-practice-success", { patientName }));
+    const team = sortedTeams.find(team => team.teamId === selectedTeamId)
+    if (team.code === 'private') {
+      alert.success(t('alert-remove-private-practice-success', { patientName }))
     }
-    return alert.success(t("alert-remove-patient-from-team-success", { teamName: team.teamName, patientName }));
-  };
-
+    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.teamName, patientName }))
+  }
 
   const handleOnClose = (): void => {
-    onClose();
-    setSelectedTeamId("");
-  };
+    onClose()
+    setSelectedTeamId('')
+  }
 
   const handleOnClickRemove = async (): Promise<void> => {
     try {
-      setProcessing(true);
-      await teamHook.removePatient(patient as Patient, patientTeamStatus, selectedTeamId);
-      getSuccessAlertMessage();
-      handleOnClose();
+      setProcessing(true)
+      await teamHook.removePatient(patient, patientTeamStatus, selectedTeamId)
+      getSuccessAlertMessage()
+      handleOnClose()
     } catch (err) {
-      alert.error(t("alert-remove-patient-failure"));
+      alert.error(t('alert-remove-patient-failure'))
     } finally {
-      setProcessing(false);
+      setProcessing(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (patientTeams) {
       if (patientTeams?.length === 1) {
-        setSelectedTeamId(patientTeams[0].teamId);
-        setSortedTeams([patientTeams[0]]);
-        return;
+        setSelectedTeamId(patientTeams[0].teamId)
+        setSortedTeams([patientTeams[0]])
+        return
       }
 
       // Sorting teams in alphabetical order if there are several
       if (patientTeams?.length > 1) {
-        const teams = patientTeams;
+        const teams = patientTeams
 
-        setSortedTeams(teams.sort((a,b) => +a.teamName - +b.teamName));
+        setSortedTeams(teams.sort((a, b) => +a.teamName - +b.teamName))
 
         teams.forEach((team, index) => {
-          if (team.code === "private") {
-            const privatePractice = teams.splice(index, 1)[0];
-            teams.unshift(privatePractice);
+          if (team.code === 'private') {
+            const privatePractice = teams.splice(index, 1)[0]
+            teams.unshift(privatePractice)
           }
-        });
+        })
       }
     }
-  }, [patientTeams]);
-
+  }, [patientTeams])
 
   return (
     <Dialog
@@ -136,12 +134,12 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       onClose={handleOnClose}
     >
       <DialogTitle>
-        <strong>{t("remove-patient")}</strong>
+        <strong>{t('remove-patient')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t("team-modal-remove-patient-choice", { patientName })}
+          {t('team-modal-remove-patient-choice', { patientName })}
         </DialogContentText>
       </DialogContent>
 
@@ -151,22 +149,22 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
           required
           variant="outlined"
         >
-          <InputLabel>{t("team")}</InputLabel>
+          <InputLabel>{t('team')}</InputLabel>
           <Select
             id="patient-team-selector"
-            label={t("team")}
+            label={t('team')}
             value={selectedTeamId}
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
               <MenuItem value={team.teamId} key={index}>
-                {team.code === "private" ?
-                  <Box display="flex" alignItems="center">
+                {team.code === 'private'
+                  ? <Box display="flex" alignItems="center">
                     <React.Fragment>
                       <Box display="flex" ml={0} mr={1}>
                         <MedicalServiceIcon color="primary" />
                       </Box>
-                      {t("private-practice")}
+                      {t('private-practice')}
                     </React.Fragment>
                   </Box>
                   : team.teamName
@@ -181,14 +179,14 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
       {sortedTeams.length === 1 &&
         <DialogContent>
           <DialogContentText>
-            {t("modal-remove-patient-info-2")}
+            {t('modal-remove-patient-info-2')}
           </DialogContentText>
         </DialogContent>
       }
 
       <DialogActions>
         <Button onClick={handleOnClose}>
-          {t("button-cancel")}
+          {t('button-cancel')}
         </Button>
         <ProgressIconButtonWrapper inProgress={processing}>
           <Button
@@ -199,12 +197,12 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
             disableElevation
             onClick={handleOnClickRemove}
           >
-            {t("remove-patient")}
+            {t('remove-patient')}
           </Button>
         </ProgressIconButtonWrapper>
       </DialogActions>
     </Dialog>
-  );
+  )
 }
 
-export default RemoveDialog;
+export default RemoveDialog

@@ -25,53 +25,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MedicalData } from "../../models/device-data";
-import { Alarm } from "../../models/alarm";
-import { UserInvitationStatus } from "../../models/generic";
-import { INotification } from "../notifications/models";
-import { Monitoring } from "../../models/monitoring";
+import { MedicalData } from '../../models/device-data'
+import { Alarm } from '../../models/alarm'
+import { UserInvitationStatus } from '../../models/generic'
+import { INotification } from '../notifications/models'
+import { Monitoring } from '../../models/monitoring'
 
 interface PatientTeam {
-  code: string;
-  invitation?: INotification;
-  status: UserInvitationStatus;
-  teamId: string;
-  teamName: string;
+  code: string
+  invitation?: INotification
+  status: UserInvitationStatus
+  teamId: string
+  teamName: string
 }
 
 interface PatientProfile {
-  birthdate?: Date;
-  firstName?: string;
-  fullName: string;
-  lastName?: string;
-  email: string;
-  sex: string;
-  referringDoctor?: string;
+  birthdate?: Date
+  firstName?: string
+  fullName: string
+  lastName?: string
+  email: string
+  sex: string
+  referringDoctor?: string
 }
 
 interface PatientSettings {
   a1c?: {
-    date: string;
-    value: string;
-  };
-  system?: string;
+    date: string
+    value: string
+  }
+  system?: string
 }
 
 interface PatientMetadata {
-  alarm: Alarm;
-  flagged?: boolean;
+  alarm: Alarm
+  flagged?: boolean
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null;
-  unreadMessagesSent: number;
+  medicalData?: MedicalData | null
+  unreadMessagesSent: number
 }
 
 interface Patient {
-  profile: PatientProfile;
-  settings: PatientSettings;
-  metadata: PatientMetadata;
-  monitoring?: Monitoring;
-  teams: PatientTeam[];
-  readonly userid: string;
+  profile: PatientProfile
+  settings: PatientSettings
+  metadata: PatientMetadata
+  monitoring?: Monitoring
+  teams: PatientTeam[]
+  readonly userid: string
 }
 
-export { Patient, PatientTeam };
+export { Patient, PatientTeam }

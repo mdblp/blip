@@ -16,10 +16,10 @@
  */
 
 function DataUtil(data) {
-  this.data = data || [];
+  this.data = data || []
   if (this.data.length > 0) {
-    this.endpoints = [this.data[0].normalTime, this.data[this.data.length - 1].normalTime];
+    this.endpoints = [this.data[0].normalTime, this.data[this.data.length - 1].normalTime]
   }
 }
 
-export default DataUtil;
+export default DataUtil

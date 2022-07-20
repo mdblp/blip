@@ -15,57 +15,57 @@
  * == BSD2 LICENSE ==
  */
 
-import React from "react";
-import { expect } from "chai";
-import { mount } from "enzyme";
+import React from 'react'
+import { expect } from 'chai'
+import { mount } from 'enzyme'
 
-import Loader from "../../../../src/components/common/loader/Loader";
-import { formatClassesAsSelector } from "../../../helpers/cssmodules";
+import Loader from '../../../../src/components/common/loader/Loader'
+import { formatClassesAsSelector } from '../../../helpers/cssmodules'
 
-import styles from "../../../../src/components/common/loader/Loader.css";
+import styles from '../../../../src/components/common/loader/Loader.css'
 
-describe("Loader", () => {
-  let wrapper;
+describe('Loader', () => {
+  let wrapper
 
   beforeEach(() => {
-    wrapper = mount(<Loader />);
-  });
+    wrapper = mount(<Loader />)
+  })
 
-  it("should render with defaut props when no properties provided", () => {
-    expect(wrapper.find(formatClassesAsSelector(styles.loaderDots))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(0);
-    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(0);
-    expect(wrapper.find(formatClassesAsSelector(styles.loaderText))).to.have.length(1);
-    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal("Loading...");
-  });
+  it('should render with defaut props when no properties provided', () => {
+    expect(wrapper.find(formatClassesAsSelector(styles.loaderDots))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(0)
+    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(0)
+    expect(wrapper.find(formatClassesAsSelector(styles.loaderText))).to.have.length(1)
+    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal('Loading...')
+  })
 
-  it("should render with an overlay when `overlay` prop is true", () => {
-    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(0);
-
-    wrapper.setProps({
-      overlay: true,
-    });
-
-    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(1);
-  });
-
-  it("should hide the loader when `show` prop is false", () => {
-    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(0);
+  it('should render with an overlay when `overlay` prop is true', () => {
+    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(0)
 
     wrapper.setProps({
-      show: false,
-    });
+      overlay: true
+    })
 
-    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(1);
-  });
+    expect(wrapper.find(formatClassesAsSelector(styles.overlay))).to.have.length(1)
+  })
 
-  it("should render custom loading text as provided by the `text` prop", () => {
-    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal("Loading...");
+  it('should hide the loader when `show` prop is false', () => {
+    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(0)
 
     wrapper.setProps({
-      text: "Yeah :)",
-    });
+      show: false
+    })
 
-    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal("Yeah :)");
-  });
-});
+    expect(wrapper.find(formatClassesAsSelector(styles.hidden))).to.have.length(1)
+  })
+
+  it('should render custom loading text as provided by the `text` prop', () => {
+    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal('Loading...')
+
+    wrapper.setProps({
+      text: 'Yeah :)'
+    })
+
+    expect(wrapper.find(formatClassesAsSelector(styles.loaderText)).text()).to.equal('Yeah :)')
+  })
+})

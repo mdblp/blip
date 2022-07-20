@@ -26,103 +26,103 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Tooltip from "@material-ui/core/Tooltip";
+import { makeStyles } from '@material-ui/core/styles'
+import Box from '@material-ui/core/Box'
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import TableSortLabel from '@material-ui/core/TableSortLabel'
+import Tooltip from '@material-ui/core/Tooltip'
 
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import PersonRemoveIcon from "../../../components/icons/PersonRemoveIcon";
-import IconActionButton from "../../../components/buttons/icon-action";
-import CertifiedProfessionalIcon from "../../../components/icons/certified-professional-icon";
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import PersonRemoveIcon from '../../../components/icons/PersonRemoveIcon'
+import IconActionButton from '../../../components/buttons/icon-action'
+import CertifiedProfessionalIcon from '../../../components/icons/certified-professional-icon'
 
-import { UserInvitationStatus } from "../../../models/generic";
-import { ShareUser } from "../../../lib/share/models";
+import { UserInvitationStatus } from '../../../models/generic'
+import { ShareUser } from '../../../lib/share/models'
 
-import { getUserFirstName, getUserLastName } from "../../../lib/utils";
-import { SortFields, SortDirection } from "./types";
+import { getUserFirstName, getUserLastName } from '../../../lib/utils'
+import { SortFields, SortDirection } from './types'
 
 export interface CaregiverTableProps {
-  userShares: ShareUser[];
-  onRemoveCaregiver: (user: ShareUser) => Promise<void>;
+  userShares: ShareUser[]
+  onRemoveCaregiver: (user: ShareUser) => Promise<void>
 }
 
 const tableStyles = makeStyles(
   () => {
     return {
       tableRowHeader: {
-        textTransform: "uppercase",
+        textTransform: 'uppercase'
       },
       tableCellActions: {
-        textAlign: "right",
-      },
-    };
+        textAlign: 'right'
+      }
+    }
   },
-  { name: "ylp-patient-caregivers-table" }
-);
+  { name: 'ylp-patient-caregivers-table' }
+)
 
 function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUser, b: ShareUser): number {
-  let value = 0;
+  let value = 0
 
   if (a.status === UserInvitationStatus.pending && b.status === UserInvitationStatus.pending) {
-    value = a.user.username.localeCompare(b.user.username);
+    value = a.user.username.localeCompare(b.user.username)
     if (order === SortDirection.desc) {
-      value = -value;
+      value = -value
     }
   } else if (a.status === UserInvitationStatus.pending) {
-    value = 1;
+    value = 1
   } else if (b.status === UserInvitationStatus.pending) {
-    value = -1;
+    value = -1
   } else {
     switch (orderBy) {
-    case SortFields.firstname:
-      value = getUserFirstName(a.user).localeCompare(getUserFirstName(b.user));
-      break;
-    case SortFields.lastname:
-      value = getUserLastName(a.user).localeCompare(getUserLastName(b.user));
-      break;
+      case SortFields.firstname:
+        value = getUserFirstName(a.user).localeCompare(getUserFirstName(b.user))
+        break
+      case SortFields.lastname:
+        value = getUserLastName(a.user).localeCompare(getUserLastName(b.user))
+        break
     }
     if (order === SortDirection.desc) {
-      value = -value;
+      value = -value
     }
   }
 
-  return value;
+  return value
 }
 
 function CaregiverTable(props: CaregiverTableProps): JSX.Element {
-  const { t } = useTranslation("yourloops");
-  const classes = tableStyles();
-  const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname);
-  const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc);
+  const { t } = useTranslation('yourloops')
+  const classes = tableStyles()
+  const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
+  const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
 
   const createSortHandler = (property: SortFields): (() => void) => {
     return (): void => {
       if (orderBy === property) {
-        setOrder(order === SortDirection.asc ? SortDirection.desc : SortDirection.asc);
+        setOrder(order === SortDirection.asc ? SortDirection.desc : SortDirection.asc)
       } else {
-        setOrder(SortDirection.asc);
-        setOrderBy(property);
+        setOrder(SortDirection.asc)
+        setOrderBy(property)
       }
-    };
-  };
+    }
+  }
 
   props.userShares.sort((a: ShareUser, b: ShareUser) => {
-    return compareUserShare(orderBy, order, a, b);
-  });
+    return compareUserShare(orderBy, order, a, b)
+  })
 
   const tableRows = props.userShares.map((userShare) => {
-    const userId = userShare.user.userid;
+    const userId = userShare.user.userid
 
     return (
       <TableRow
@@ -133,17 +133,17 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
         <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
           {userShare.status === UserInvitationStatus.pending &&
             <Box display="flex">
-              <Tooltip title={t("pending-invitation") as string} aria-label={t("pending-invitation")} placement="bottom">
+              <Tooltip title={t('pending-invitation') } aria-label={t('pending-invitation')} placement="bottom">
                 <AccessTimeIcon id={`patient-caregivers-table-row-pendingicon-${userId}`} />
               </Tooltip>
             </Box>
           }
         </TableCell>
         <TableCell id={`patient-caregivers-table-row-${userId}-lastname`}>
-          {userShare.status === UserInvitationStatus.pending ? "-" : getUserLastName(userShare.user)}
+          {userShare.status === UserInvitationStatus.pending ? '-' : getUserLastName(userShare.user)}
         </TableCell>
         <TableCell id={`patient-caregivers-table-row-${userId}-firstname`}>
-          {userShare.status === UserInvitationStatus.pending ? "-" : getUserFirstName(userShare.user)}
+          {userShare.status === UserInvitationStatus.pending ? '-' : getUserFirstName(userShare.user)}
         </TableCell>
         <TableCell id={`patient-caregivers-table-row-${userId}-email`}>
           <Box display="flex">
@@ -155,36 +155,36 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           <IconActionButton
             icon={<PersonRemoveIcon />}
             id={`patient-caregivers-table-row-${userId}-button-remove`}
-            onClick={() => props.onRemoveCaregiver(userShare)}
-            tooltip={t("modal-patient-remove-caregiver-remove")}
+            onClick={async () => await props.onRemoveCaregiver(userShare)}
+            tooltip={t('modal-patient-remove-caregiver-remove')}
           />
         </TableCell>
       </TableRow>
-    );
-  });
+    )
+  })
 
   return (
     <TableContainer component={Paper}>
-      <Table id="patient-caregivers-table" aria-label={t("aria-table-list-caregivers")} stickyHeader>
+      <Table id="patient-caregivers-table" aria-label={t('aria-table-list-caregivers')} stickyHeader>
         <TableHead id="patient-caregivers-table-header">
           <TableRow id="patient-caregivers-table-header-row" className={classes.tableRowHeader}>
             <TableCell id="patient-caregivers-table-header-status" />
             <TableCell id="patient-caregivers-table-header-lastname">
-              <TableSortLabel active={orderBy === "lastname"} direction={order} onClick={createSortHandler(SortFields.lastname)}>
-                {t("lastname")}
+              <TableSortLabel active={orderBy === 'lastname'} direction={order} onClick={createSortHandler(SortFields.lastname)}>
+                {t('lastname')}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patient-caregivers-table-header-firstname">
               <TableSortLabel
-                active={orderBy === "firstname"}
+                active={orderBy === 'firstname'}
                 direction={order}
                 onClick={createSortHandler(SortFields.firstname)}
               >
-                {t("firstname")}
+                {t('firstname')}
               </TableSortLabel>
             </TableCell>
             <TableCell id="patient-cargivers-table-header-email">
-              {t("email")}
+              {t('email')}
             </TableCell>
             <TableCell id="patient-caregivers-table-header-actions" />
           </TableRow>
@@ -192,7 +192,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
         <TableBody>{tableRows}</TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 }
 
-export default CaregiverTable;
+export default CaregiverTable
