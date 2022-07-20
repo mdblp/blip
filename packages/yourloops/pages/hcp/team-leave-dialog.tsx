@@ -45,31 +45,27 @@ import { TeamLeaveDialogContentProps } from './types'
 import TeamUtils from '../../lib/team/utils'
 
 interface LeaveTeamDialogProps {
-  teamToLeave: TeamLeaveDialogContentProps | null
+  teamToLeave: TeamLeaveDialogContentProps
 }
 
 interface LeaveTeamDialogElementsProps {
-  team: Team | null
+  team: Team
   teamName: string
-  onlyMember: boolean
+  isUserPatient: boolean
+  onlyHcpMember: boolean
   userIsTheOnlyAdministrator: boolean
-  buttonsDisabled: boolean
   handleClose: () => void
   handleLeaveTeam: () => void
 }
 
 const makeButtonsClasses = makeStyles(makeButtonsStyles, { name: 'YlpLeaveTeamDialogButtons' })
 
-function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element | null {
-  const { team, teamName, onlyMember, userIsTheOnlyAdministrator } = props
+function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element {
+  const { teamName, onlyHcpMember, userIsTheOnlyAdministrator } = props
   const { t } = useTranslation('yourloops')
 
-  if (team === null) {
-    return null
-  }
-
-  let msg = ''
-  if (onlyMember) {
+  let msg
+  if (onlyHcpMember) {
     msg = t('team-leave-dialog-and-del-title')
   } else if (userIsTheOnlyAdministrator) {
     msg = t('team-leave-dialog-only-admin-title')
@@ -86,26 +82,23 @@ function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element 
   )
 }
 
-function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Element | null {
-  const { team, teamName, onlyMember, userIsTheOnlyAdministrator } = props
+function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Element {
+  const { teamName, onlyHcpMember, userIsTheOnlyAdministrator, isUserPatient } = props
   const { t } = useTranslation('yourloops')
 
-  if (team === null) {
-    return null
-  }
+  let question: JSX.Element
+  let consequences: JSX.Element
 
-  let question: JSX.Element | null = null
-  let consequences: JSX.Element | null = null
-
-  if (onlyMember) {
+  if (onlyHcpMember) {
     question = (
-      <DialogContentText color="textPrimary" id="team-leave-dialog-question">
-        <Trans i18nKey="team-leave-dialog-and-del-question" t={t} components={{ strong: <strong /> }} values={{ teamName }}
-          parent={React.Fragment}>
-          Since you are the only &quot;member&quot; in this team, {{ teamName }} will be <strong>permanently
-          deleted</strong> if
-          you leave it.
-        </Trans>
+      <DialogContentText color="textPrimary" data-testid="team-leave-dialog-question">
+        <Trans
+          i18nKey="team-leave-dialog-and-del-question"
+          t={t}
+          components={{ strong: <strong /> }}
+          values={{ teamName }}
+          parent={React.Fragment}
+        />
       </DialogContentText>
     )
     consequences = (
@@ -115,25 +108,23 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
     )
   } else if (userIsTheOnlyAdministrator) {
     consequences = (
-      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
+      <DialogContentText color="textPrimary" data-testid="team-leave-dialog-consequences">
         <Trans
           i18nKey="team-leave-dialog-only-admin-consequences"
           t={t}
           components={{ strong: <strong /> }}
-          parent={React.Fragment}>
-          Since you are the only team&apos;s administrator, you need to
-          <strong>give administrator permission to another member</strong> before leaving.
-        </Trans>
+          parent={React.Fragment}
+        />
       </DialogContentText>
     )
   } else {
     question = (
-      <DialogContentText color="textPrimary" id="team-leave-dialog-question">
+      <DialogContentText color="textPrimary" data-testid="team-leave-dialog-question">
         {t('team-leave-dialog-question')}
       </DialogContentText>
     )
     consequences = (
-      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
+      <DialogContentText color="textPrimary" data-testid="team-leave-dialog-consequences">
         {t('team-leave-dialog-consequences')}
       </DialogContentText>
     )
@@ -142,30 +133,25 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
   return (
     <DialogContent>
       {question}
-      {consequences}
+      {!isUserPatient && consequences}
     </DialogContent>
   )
 }
 
-function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element | null {
-  const { team, onlyMember, userIsTheOnlyAdministrator, buttonsDisabled, handleClose, handleLeaveTeam } = props
+function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Element {
+  const { onlyHcpMember, userIsTheOnlyAdministrator, handleClose, handleLeaveTeam } = props
   const buttonClasses = makeButtonsClasses()
 
   const { t } = useTranslation('yourloops')
 
-  if (team === null) {
-    return null
-  }
+  let buttonOK: JSX.Element
+  let buttonCancel: JSX.Element
 
-  let buttonOK: JSX.Element | null = null
-  let buttonCancel: JSX.Element | null = null
-
-  if (onlyMember) {
+  if (onlyHcpMember) {
     buttonOK = (
       <Button
         id="team-leave-dialog-button-leave"
         onClick={handleLeaveTeam}
-        disabled={buttonsDisabled}
         className={buttonClasses.alertActionButton}
         variant="contained"
         disableElevation
@@ -177,7 +163,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
       <Button
         id="team-leave-dialog-button-cancel"
         onClick={handleClose}
-        disabled={buttonsDisabled}
       >
         {t('button-cancel')}
       </Button>
@@ -186,7 +171,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
     buttonOK = (
       <Button
         id="team-leave-dialog-button-ok"
-        disabled={buttonsDisabled}
         color="primary"
         variant="contained"
         disableElevation
@@ -200,7 +184,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
       <Button
         className={buttonClasses.alertActionButton}
         id="team-leave-dialog-button-leave"
-        disabled={buttonsDisabled}
         color="primary"
         variant="contained"
         disableElevation
@@ -213,7 +196,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
       <Button
         id="team-leave-dialog-button-cancel"
         onClick={handleClose}
-        disabled={buttonsDisabled}
       >
         {t('button-cancel')}
       </Button>
@@ -230,20 +212,13 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
 function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const { teamToLeave } = props
-  const dialogIsOpen = teamToLeave !== null
-  const team = teamToLeave?.team ?? null
-
+  const team = teamToLeave.team
   const auth = useAuth()
   const { t } = useTranslation('yourloops')
-
-  let teamName = ''
-  let onlyMember = false
-  let userIsTheOnlyAdministrator = false
-  if (team !== null) {
-    teamName = team.name
-    onlyMember = TeamUtils.getNumMedicalMembers(team) < 2
-    userIsTheOnlyAdministrator = TeamUtils.isUserTheOnlyAdministrator(team, auth.user?.id)
-  }
+  const teamName = team.name
+  const isUserPatient = auth.user.isUserPatient()
+  const onlyHcpMember = auth.user.isUserHcp() && TeamUtils.getNumMedicalMembers(team) < 2
+  const userIsTheOnlyAdministrator = TeamUtils.isUserTheOnlyAdministrator(team, auth.user?.id)
 
   const ariaTitle = t('aria-team-leave-dialog-title')
   const ariaQuestion = t('aria-team-leave-dialog-question', { teamName })
@@ -255,12 +230,12 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
     teamToLeave?.onDialogResult(true)
   }
 
-  const dialogProps = {
+  const dialogProps: LeaveTeamDialogElementsProps = {
     team,
     teamName,
-    onlyMember,
+    isUserPatient,
+    onlyHcpMember,
     userIsTheOnlyAdministrator,
-    buttonsDisabled: !dialogIsOpen,
     handleClose,
     handleLeaveTeam
   }
@@ -268,10 +243,13 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   return (
     <Dialog
       id="team-leave-dialog"
-      open={dialogIsOpen}
+      open
+      maxWidth="sm"
+      fullWidth
       aria-labelledby={ariaTitle}
       aria-describedby={ariaQuestion}
-      onClose={handleClose}>
+      onClose={handleClose}
+    >
       <LeaveTeamDialogTitle {...dialogProps} />
       <LeaveTeamDialogContent {...dialogProps} />
       <LeaveTeamDialogActions {...dialogProps} />

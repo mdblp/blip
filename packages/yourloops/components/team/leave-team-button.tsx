@@ -35,6 +35,7 @@ import { TeamLeaveDialogContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
+import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../../pages/hcp/team-leave-dialog'
 import TeamUtils from '../../lib/team/utils'
 
@@ -46,6 +47,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props
   const teamHook = useTeam()
   const alert = useAlert()
+  const { user } = useAuth()
   const historyHook = useHistory()
   const commonTeamClasses = commonComponentStyles()
   const { t } = useTranslation('yourloops')
@@ -55,13 +57,13 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
     if (hasLeft) {
       try {
         await teamHook.leaveTeam(team)
-        const message = TeamUtils.teamHasOnlyOneMember(team)
+        const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-success-deleted')
           : t('team-page-leave-success')
         alert.success(message)
         historyHook.push('/')
       } catch (reason: unknown) {
-        const message = TeamUtils.teamHasOnlyOneMember(team)
+        const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-failure-deleted')
           : t('team-page-failed-leave')
         alert.error(message)
@@ -85,7 +87,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
       >
         <ExitToAppIcon className={commonTeamClasses.icon} />{t('button-team-leave')}
       </Button>
-      <LeaveTeamDialog teamToLeave={teamToLeave} />
+      {teamToLeave && <LeaveTeamDialog teamToLeave={teamToLeave} />}
     </React.Fragment>
   )
 }

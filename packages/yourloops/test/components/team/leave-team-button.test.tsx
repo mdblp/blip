@@ -29,8 +29,9 @@ import React from 'react'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 
 import * as teamHookMock from '../../../lib/team'
-import { buildTeam, buildTeamMember } from '../../common/utils'
+import * as authHookMock from '../../../lib/auth'
 import * as alertHookMock from '../../../components/utils/snackbar'
+import { buildTeam, buildTeamMember } from '../../common/utils'
 import LeaveTeamButton, { LeaveTeamButtonProps } from '../../../components/team/leave-team-button'
 import TeamUtils from '../../../lib/team/utils'
 import { Router } from 'react-router-dom'
@@ -38,6 +39,7 @@ import { createMemoryHistory } from 'history'
 
 jest.mock('../../../components/utils/snackbar')
 jest.mock('../../../lib/team')
+jest.mock('../../../lib/auth')
 describe('TeamMembers', () => {
   const leaveTeamMock = jest.fn()
   const successMock = jest.fn()
@@ -52,15 +54,15 @@ describe('TeamMembers', () => {
   let history = createMemoryHistory({ initialEntries: [initialRoute] })
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { leaveTeam: leaveTeamMock, getTeam: jest.fn().mockReturnValue(team) }
     });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+      user: {
+        isUserPatient: () => false,
+        isUserHcp: () => true
+      }
+    }));
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }
     })
@@ -107,7 +109,7 @@ describe('TeamMembers', () => {
 
   it('should throw an error when failing and member was the last one', async () => {
     jest.spyOn(TeamUtils, 'teamHasOnlyOneMember').mockReturnValue(true)
-    leaveTeamMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+    leaveTeamMock.mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
     render(getLeaveTeamButtonJSX())
     await leaveTeam()
     expect(errorMock).toHaveBeenCalledWith('team-page-failure-deleted')
@@ -115,25 +117,73 @@ describe('TeamMembers', () => {
   })
 
   it('should throw an error when failing and member was not the last one', async () => {
-    leaveTeamMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+    leaveTeamMock.mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
     render(getLeaveTeamButtonJSX())
     await leaveTeam()
     expect(errorMock).toHaveBeenCalledWith('team-page-failed-leave')
   })
 
   it('should not leave team when user has clicked on cancel', async () => {
-    leaveTeamMock.mockRejectedValue(Error('This error was thrown by a mock on purpose'))
+    leaveTeamMock.mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
     render(getLeaveTeamButtonJSX())
     const leaveButton = screen.getByRole('button')
     await act(async () => {
       fireEvent.click(leaveButton)
       await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
       const leaveDialog = within(screen.getByRole('dialog'))
-      const confirmButton = leaveDialog.getByRole('button', { name: 'button-cancel' })
-      fireEvent.click(confirmButton)
+      const cancelButton = leaveDialog.getByRole('button', { name: 'button-cancel' })
+      fireEvent.click(cancelButton)
     })
     expect(leaveTeamMock).toHaveBeenCalledTimes(0)
-    expect(screen.queryByRole('dialog')).not.toBeNull()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(history.location.pathname).toBe(initialRoute)
+    leaveTeamMock.mockReset()
+  })
+
+  it('should not be able to leave team when member is the only administrator', async () => {
+    jest.spyOn(TeamUtils, 'isUserTheOnlyAdministrator').mockReturnValueOnce(true)
+    render(getLeaveTeamButtonJSX())
+    const leaveButton = screen.getByRole('button')
+    await act(async () => {
+      fireEvent.click(leaveButton)
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      expect(screen.getByRole('button', { name: 'button-ok' })).toBeInTheDocument()
+      expect(screen.getByTestId('team-leave-dialog-consequences').textContent).toEqual('team-leave-dialog-only-admin-consequences')
+    })
+  })
+
+  it('should display a delete alert message when user leave the team and is the only member', async () => {
+    jest.spyOn(TeamUtils, 'teamHasOnlyOneMember').mockReturnValueOnce(true)
+    jest.spyOn(TeamUtils, 'getNumMedicalMembers').mockReturnValueOnce(1)
+    render(getLeaveTeamButtonJSX())
+    const leaveButton = screen.getByRole('button')
+    await act(async () => {
+      fireEvent.click(leaveButton)
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      expect(screen.getByRole('button', { name: 'team-leave-dialog-button-leave-and-del' })).toBeInTheDocument()
+      expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-and-del-question')
+    })
+  })
+
+  it('should display a leaving message when user is a patient', async () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
+      user: {
+        isUserPatient: () => true,
+        isUserHcp: () => false
+      }
+    }))
+    render(getLeaveTeamButtonJSX())
+    const leaveButton = screen.getByRole('button')
+    await act(async () => {
+      fireEvent.click(leaveButton)
+      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
+      const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })
+      expect(confirmButton).toBeInTheDocument()
+      expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-question')
+      expect(screen.queryByRole('team-leave-dialog-consequences')).not.toBeInTheDocument()
+      await waitFor(() => confirmButton.click())
+      expect(successMock).toHaveBeenCalledWith('team-page-leave-success')
+      expect(history.location.pathname).toBe('/')
+    })
   })
 })
