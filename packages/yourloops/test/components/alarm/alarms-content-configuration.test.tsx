@@ -40,7 +40,7 @@ import AlarmsContentConfiguration, {
   MIN_LOW_BG,
   MIN_VERY_LOW_BG
 } from '../../../components/alarm/alarms-content-configuration'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, logRoles, render, screen } from '@testing-library/react'
 import * as teamHookMock from '../../../lib/team'
 import { PatientTeam } from '../../../lib/data/patient'
 import { Monitoring } from '../../../models/monitoring'
