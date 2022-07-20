@@ -144,60 +144,36 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
 
   const { t } = useTranslation('yourloops')
 
-  let buttonOK: JSX.Element
-  let buttonCancel: JSX.Element = (
-    <Button
-      id="team-leave-dialog-button-cancel"
-      onClick={handleClose}
-    >
-      {t('button-cancel')}
-    </Button>
-  )
-
-  if (onlyHcpMember) {
-    buttonOK = (
-      <Button
-        id="team-leave-dialog-button-leave"
-        onClick={handleLeaveTeam}
-        className={buttonClasses.alertActionButton}
-        variant="contained"
-        disableElevation
-      >
-        {t('team-leave-dialog-button-leave-and-del')}
-      </Button>
-    )
-  } else if (userIsTheOnlyAdministrator) {
-    buttonOK = (
-      <Button
-        id="team-leave-dialog-button-ok"
-        color="primary"
-        variant="contained"
-        disableElevation
-        onClick={handleClose}
-      >
-        {t('button-ok')}
-      </Button>
-    )
-    buttonCancel = undefined
-  } else {
-    buttonOK = (
-      <Button
-        className={buttonClasses.alertActionButton}
-        id="team-leave-dialog-button-leave"
-        color="primary"
-        variant="contained"
-        disableElevation
-        onClick={handleLeaveTeam}
-      >
-        {t('team-leave-dialog-button-leave')}
-      </Button>
-    )
-  }
-
   return (
     <DialogActions>
-      {buttonCancel}
-      {buttonOK}
+      {(onlyHcpMember || !userIsTheOnlyAdministrator) &&
+        <Button
+          id="team-leave-dialog-button-cancel"
+          onClick={handleClose}
+        >
+          {t('button-cancel')}
+        </Button>
+      }
+      {userIsTheOnlyAdministrator && !onlyHcpMember
+        ? <Button
+          id="team-leave-dialog-button-ok"
+          color="primary"
+          variant="contained"
+          disableElevation
+          onClick={handleClose}
+        >
+          {t('button-ok')}
+        </Button>
+        : <Button
+          id="team-leave-dialog-button-leave"
+          onClick={handleLeaveTeam}
+          className={buttonClasses.alertActionButton}
+          variant="contained"
+          disableElevation
+        >
+          {onlyHcpMember ? t('team-leave-dialog-button-leave-and-del') : t('team-leave-dialog-button-leave')}
+        </Button>
+      }
     </DialogActions>
   )
 }

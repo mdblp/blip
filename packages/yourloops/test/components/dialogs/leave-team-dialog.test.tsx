@@ -79,7 +79,11 @@ describe('Leave team dialog', () => {
     expect(screen.getByTestId(teamLeaveDialogTitleTestId).textContent).toEqual('team-leave-dialog-only-admin-title')
     expect(screen.queryByTestId(teamLeaveDialogQuestionTestId)).not.toBeInTheDocument()
     expect(screen.getByTestId(teamLeaveDialogConsequencesTestId).textContent).toEqual('team-leave-dialog-only-admin-consequences')
-    expect(screen.getByRole('button', { name: 'button-ok' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'button-cancel' })).not.toBeInTheDocument()
+    const confirmButton = screen.getByRole('button', { name: 'button-ok' })
+    expect(confirmButton).toBeInTheDocument()
+    confirmButton.click()
+    expect(onDialogResult).toBeCalledWith(false)
   })
 
   it('should display a delete message when user is hcp and the only member and leave the team', () => {
@@ -94,7 +98,7 @@ describe('Leave team dialog', () => {
     expect(onDialogResult).toBeCalledWith(true)
   })
 
-  it('should display a leaving message when user is a patient', () => {
+  it('should display a leaving message when user is a patient and leave the team', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
       user: {
         isUserPatient: () => true,
@@ -105,6 +109,9 @@ describe('Leave team dialog', () => {
     expect(screen.getByTestId(teamLeaveDialogTitleTestId).textContent).toEqual('team-leave-dialog-title')
     expect(screen.getByTestId(teamLeaveDialogQuestionTestId).textContent).toEqual('team-leave-dialog-question')
     expect(screen.queryByRole(teamLeaveDialogConsequencesTestId)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })).toBeInTheDocument()
+    const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })
+    expect(confirmButton).toBeInTheDocument()
+    confirmButton.click()
+    expect(onDialogResult).toBeCalledWith(true)
   })
 })
