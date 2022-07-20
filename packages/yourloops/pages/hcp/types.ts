@@ -39,11 +39,6 @@ export interface AddPatientDialogContentProps {
   onDialogResult: (value: AddPatientDialogResult | null) => void
 }
 
-export interface LeaveTeamDialogContentProps {
-  team: Readonly<Team>
-  onDialogResult: (result: boolean) => void
-}
-
 export interface AddMemberDialogContentProps {
   team: Readonly<Team>
   onMemberInvited: (result: { email: string, role: Exclude<TypeTeamMemberRole, 'patient'>, team: Team } | null) => void

@@ -41,11 +41,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
 import { makeButtonsStyles } from '../theme'
-import { LeaveTeamDialogContentProps } from '../../pages/hcp/types'
 import TeamUtils from '../../lib/team/utils'
 
-interface LeaveTeamDialogProps {
-  teamToLeave: LeaveTeamDialogContentProps
+export interface LeaveTeamDialogProps {
+  team: Readonly<Team>
+  onDialogResult: (result: boolean) => void
 }
 
 interface LeaveTeamDialogElementsProps {
@@ -74,8 +74,8 @@ function LeaveTeamDialogTitle(props: LeaveTeamDialogElementsProps): JSX.Element 
   }
 
   return (
-    <DialogTitle id="team-leave-dialog-title">
-      <strong>{msg}</strong>
+    <DialogTitle>
+      <strong data-testid="team-leave-dialog-title">{msg}</strong>
       <br />
       <span id="team-leave-dialog-title-team-name">{teamName}</span>
     </DialogTitle>
@@ -102,7 +102,7 @@ function LeaveTeamDialogContent(props: LeaveTeamDialogElementsProps): JSX.Elemen
       </DialogContentText>
     )
     consequences = (
-      <DialogContentText color="textPrimary" id="team-leave-dialog-consequences">
+      <DialogContentText color="textPrimary" data-testid="team-leave-dialog-consequences">
         {t('team-leave-dialog-and-del-consequences')}
       </DialogContentText>
     )
@@ -211,8 +211,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
 }
 
 function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
-  const { teamToLeave } = props
-  const team = teamToLeave.team
+  const { team, onDialogResult } = props
   const auth = useAuth()
   const { t } = useTranslation('yourloops')
   const teamName = team.name
@@ -224,10 +223,10 @@ function LeaveTeamDialog(props: LeaveTeamDialogProps): JSX.Element {
   const ariaQuestion = t('aria-team-leave-dialog-question', { teamName })
 
   const handleClose = (): void => {
-    teamToLeave?.onDialogResult(false)
+    onDialogResult(false)
   }
   const handleLeaveTeam = (): void => {
-    teamToLeave?.onDialogResult(true)
+    onDialogResult(true)
   }
 
   const dialogProps: LeaveTeamDialogElementsProps = {

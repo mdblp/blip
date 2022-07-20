@@ -140,31 +140,6 @@ describe('TeamMembers', () => {
     leaveTeamMock.mockReset()
   })
 
-  it('should not be able to leave team when member is the only administrator', async () => {
-    jest.spyOn(TeamUtils, 'isUserTheOnlyAdministrator').mockReturnValueOnce(true)
-    render(getLeaveTeamButtonJSX())
-    const leaveButton = screen.getByRole('button')
-    await act(async () => {
-      fireEvent.click(leaveButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
-      expect(screen.getByRole('button', { name: 'button-ok' })).toBeInTheDocument()
-      expect(screen.getByTestId('team-leave-dialog-consequences').textContent).toEqual('team-leave-dialog-only-admin-consequences')
-    })
-  })
-
-  it('should display a delete alert message when user leave the team and is the only member', async () => {
-    jest.spyOn(TeamUtils, 'teamHasOnlyOneMember').mockReturnValueOnce(true)
-    jest.spyOn(TeamUtils, 'getNumMedicalMembers').mockReturnValueOnce(1)
-    render(getLeaveTeamButtonJSX())
-    const leaveButton = screen.getByRole('button')
-    await act(async () => {
-      fireEvent.click(leaveButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
-      expect(screen.getByRole('button', { name: 'team-leave-dialog-button-leave-and-del' })).toBeInTheDocument()
-      expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-and-del-question')
-    })
-  })
-
   it('should display a leaving message when user is a patient', async () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
       user: {
@@ -173,17 +148,7 @@ describe('TeamMembers', () => {
       }
     }))
     render(getLeaveTeamButtonJSX())
-    const leaveButton = screen.getByRole('button')
-    await act(async () => {
-      fireEvent.click(leaveButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
-      const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })
-      expect(confirmButton).toBeInTheDocument()
-      expect(screen.getByTestId('team-leave-dialog-question').textContent).toEqual('team-leave-dialog-question')
-      expect(screen.queryByRole('team-leave-dialog-consequences')).not.toBeInTheDocument()
-      await waitFor(() => confirmButton.click())
-      expect(successMock).toHaveBeenCalledWith('team-page-leave-success')
-      expect(history.location.pathname).toBe('/')
-    })
+    await leaveTeam()
+    expect(successMock).toHaveBeenCalledWith('team-page-leave-success')
   })
 })

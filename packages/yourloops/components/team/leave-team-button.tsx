@@ -25,13 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@material-ui/core/Button'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import { Team, useTeam } from '../../lib/team'
-import { LeaveTeamDialogContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
@@ -51,7 +50,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const historyHook = useHistory()
   const commonTeamClasses = commonComponentStyles()
   const { t } = useTranslation('yourloops')
-  const [teamToLeave, setTeamToLeave] = React.useState<LeaveTeamDialogContentProps | null>(null)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
   const onTeamLeft = async (hasLeft: boolean): Promise<void> => {
     if (hasLeft) {
@@ -69,11 +68,11 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
         alert.error(message)
       }
     }
-    setTeamToLeave(null)
+    setModalIsOpen(false)
   }
 
   const openLeaveTeamDialog = (): void => {
-    setTeamToLeave({ team, onDialogResult: onTeamLeft })
+    setModalIsOpen(true)
   }
 
   return (
@@ -87,7 +86,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
       >
         <ExitToAppIcon className={commonTeamClasses.icon} />{t('button-team-leave')}
       </Button>
-      {teamToLeave && <LeaveTeamDialog teamToLeave={teamToLeave} />}
+      {modalIsOpen && <LeaveTeamDialog team={team} onDialogResult={onTeamLeft} />}
     </React.Fragment>
   )
 }
