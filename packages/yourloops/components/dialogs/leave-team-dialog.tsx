@@ -40,12 +40,12 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import { Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import { makeButtonsStyles } from '../../components/theme'
-import { TeamLeaveDialogContentProps } from './types'
+import { makeButtonsStyles } from '../theme'
+import { LeaveTeamDialogContentProps } from '../../pages/hcp/types'
 import TeamUtils from '../../lib/team/utils'
 
 interface LeaveTeamDialogProps {
-  teamToLeave: TeamLeaveDialogContentProps
+  teamToLeave: LeaveTeamDialogContentProps
 }
 
 interface LeaveTeamDialogElementsProps {

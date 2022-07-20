@@ -27,7 +27,7 @@
  */
 
 import { TypeTeamMemberRole } from '../../models/team'
-import { Team, TeamMember } from '../../lib/team'
+import { Team } from '../../lib/team'
 
 export interface AddPatientDialogResult {
   email: string
@@ -39,13 +39,7 @@ export interface AddPatientDialogContentProps {
   onDialogResult: (value: AddPatientDialogResult | null) => void
 }
 
-export interface SwitchRoleDialogContentProps {
-  member: Readonly<TeamMember>
-  role: Exclude<TypeTeamMemberRole, 'patient'>
-  onDialogResult: (result: boolean) => void
-}
-
-export interface TeamLeaveDialogContentProps {
+export interface LeaveTeamDialogContentProps {
   team: Readonly<Team>
   onDialogResult: (result: boolean) => void
 }
