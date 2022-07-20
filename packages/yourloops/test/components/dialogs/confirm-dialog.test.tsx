@@ -72,7 +72,7 @@ describe('ConfirmDialog', () => {
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 
-  it('should not display spinner loader when inProgress is true', () => {
+  it('should display spinner loader when inProgress is true', () => {
     render(getConfirmDialogPropsJSX({ ...defaultProps, inProgress: true }))
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
