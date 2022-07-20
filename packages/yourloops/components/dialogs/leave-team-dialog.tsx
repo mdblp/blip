@@ -145,7 +145,14 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
   const { t } = useTranslation('yourloops')
 
   let buttonOK: JSX.Element
-  let buttonCancel: JSX.Element
+  let buttonCancel: JSX.Element = (
+    <Button
+      id="team-leave-dialog-button-cancel"
+      onClick={handleClose}
+    >
+      {t('button-cancel')}
+    </Button>
+  )
 
   if (onlyHcpMember) {
     buttonOK = (
@@ -157,14 +164,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         disableElevation
       >
         {t('team-leave-dialog-button-leave-and-del')}
-      </Button>
-    )
-    buttonCancel = (
-      <Button
-        id="team-leave-dialog-button-cancel"
-        onClick={handleClose}
-      >
-        {t('button-cancel')}
       </Button>
     )
   } else if (userIsTheOnlyAdministrator) {
@@ -179,6 +178,7 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         {t('button-ok')}
       </Button>
     )
+    buttonCancel = undefined
   } else {
     buttonOK = (
       <Button
@@ -190,14 +190,6 @@ function LeaveTeamDialogActions(props: LeaveTeamDialogElementsProps): JSX.Elemen
         onClick={handleLeaveTeam}
       >
         {t('team-leave-dialog-button-leave')}
-      </Button>
-    )
-    buttonCancel = (
-      <Button
-        id="team-leave-dialog-button-cancel"
-        onClick={handleClose}
-      >
-        {t('button-cancel')}
       </Button>
     )
   }
