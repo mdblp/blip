@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Teams hook tests
  *
  * All rights reserved.
@@ -27,24 +27,22 @@
  */
 
 import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
-import { act } from 'react-dom/test-utils'
+import { act, render, waitFor } from '@testing-library/react'
 
-import { Team, TeamContext, TeamContextProvider, TeamMember, useTeam } from '../../../lib/team'
+import { Team, TeamContext, TeamContextProvider, useTeam } from '../../../lib/team'
 import { PatientFilterTypes, UserInvitationStatus } from '../../../models/generic'
 import * as notificationHookMock from '../../../lib/notifications/hook'
 import { TeamMemberRole } from '../../../models/team'
 import { UserRoles } from '../../../models/user'
-import { buildTeam, buildTeamMember } from '../../common/utils'
+import { buildInvite, buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../lib/auth'
 import TeamUtils from '../../../lib/team/utils'
 import { mapTeamUserToPatient } from '../../../components/patient/utils'
-import { INotification, NotificationType } from '../../../lib/notifications/models'
+import TeamApi from '../../../lib/team/team-api'
 
 jest.mock('../../../lib/auth')
 jest.mock('../../../lib/notifications/hook')
 describe('Team hook', () => {
-  let container: HTMLElement | null = null
   let teamHook: TeamContext
   const memberPatientAccepted1 = buildTeamMember('team1Id', 'memberPatientAccepted1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.accepted, UserRoles.patient)
   const memberPatientPending1 = buildTeamMember('team1Id', 'memberPatientPending1', undefined, TeamMemberRole.patient, undefined, undefined, UserInvitationStatus.pending, UserRoles.patient)
@@ -53,18 +51,23 @@ describe('Team hook', () => {
   const team2 = buildTeam('team2Id', [memberPatientPending1, memberPatientPending2])
   const team3 = buildTeam('team3Id', [])
   const team4 = buildTeam('team4Id', [])
-  const teams: Team[] = [team1, team2, team3, team4]
+  team4.monitoring.enabled = false
+  const unmonitoredTeam = buildTeam('team4Id', [], 'fakeTeamName')
+  unmonitoredTeam.monitoring = undefined
+  const teams: Team[] = [team1, team2, team3, team4, unmonitoredTeam]
 
-  async function mountComponent(): Promise<void> {
+  async function mountComponent() {
     const DummyComponent = (): JSX.Element => {
       teamHook = useTeam()
       return (<div />)
     }
-    await act(() => {
-      return new Promise(resolve => render(
+    await act(async () => {
+      render(
         <TeamContextProvider>
           <DummyComponent />
-        </TeamContextProvider>, container, resolve))
+        </TeamContextProvider>
+      )
+      await waitFor(() => expect(teamHook.teams.length).toBeGreaterThan(0))
     })
   }
 
@@ -87,19 +90,6 @@ describe('Team hook', () => {
     })
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container)
-      container.remove()
-      container = null
-    }
-  })
-
   describe('filterPatients', () => {
     it('should return correct patients when filter is pending', async () => {
       await mountComponent()
@@ -115,54 +105,59 @@ describe('Team hook', () => {
   })
 
   describe('removeMember', () => {
-    function buildTeamMember(teamId = 'fakeTeamId', userId = 'fakeUserId', invitation: INotification = null): TeamMember {
-      return {
-        team: { id: teamId } as Team,
-        role: TeamMemberRole.admin,
-        status: UserInvitationStatus.pending,
-        user: {
-          role: UserRoles.hcp,
-          userid: userId,
-          username: 'fakeUsername',
-          members: []
-        },
-        invitation
-      }
-    }
-
-    function buildInvite(teamId = 'fakeTeamId', userId = 'fakeUserId'): INotification {
-      return {
-        id: 'fakeInviteId',
-        type: NotificationType.careTeamProInvitation,
-        metricsType: 'join_team',
-        email: 'fake@email.com',
-        creatorId: 'fakeCreatorId',
-        date: 'fakeDate',
-        target: {
-          id: teamId,
-          name: 'fakeTeamName'
-        },
-        role: TeamMemberRole.admin,
-        creator: {
-          userid: userId
-        }
-      }
-    }
-
-    it('should throw an error when there is no invitation', () => {
-      mountComponent()
+    it('should throw an error when there is no invitation', async () => {
+      await mountComponent()
       const teamMember = buildTeamMember()
-      expect(async () => {
+      await expect(async () => {
         await teamHook.removeMember(teamMember)
       }).rejects.toThrow()
     })
 
-    it('should throw an error when there is no invitation for the member team', () => {
-      mountComponent()
+    it('should throw an error when there is no invitation for the member team', async () => {
+      await mountComponent()
       const teamMember = buildTeamMember('fakeTeamId', 'fakeUserId', buildInvite('wrongTeam'))
-      expect(async () => {
+      await expect(async () => {
         await teamHook.removeMember(teamMember)
       }).rejects.toThrow()
+    })
+  })
+
+  describe('updateTeamAlerts', () => {
+    it('should throw an error when the team is not monitored', async () => {
+      await mountComponent()
+      await expect(async () => {
+        await teamHook.updateTeamAlerts(unmonitoredTeam)
+      }).rejects.toThrow()
+      expect(TeamUtils.loadTeams).not.toHaveBeenCalledTimes(2)
+    })
+
+    it('should throw an error when the api called failed', async () => {
+      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await mountComponent()
+      await expect(async () => {
+        await teamHook.updateTeamAlerts(team1)
+      }).rejects.toThrow()
+      expect(updateTeamAlertsSpy).toHaveBeenCalled()
+      expect(TeamUtils.loadTeams).not.toHaveBeenCalledTimes(2)
+    })
+
+    it('should refresh team hook when api called succeeded', async () => {
+      const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockResolvedValue(null)
+      await mountComponent()
+      await act(async () => {
+        await teamHook.updateTeamAlerts(team1)
+        expect(updateTeamAlertsSpy).toHaveBeenCalled()
+        await waitFor(() => expect(TeamUtils.loadTeams).toHaveBeenCalledTimes(2))
+      })
+    })
+  })
+
+  describe('getRemoteMonitoringTeams', () => {
+    it('should only return team with monitoring enabled', async () => {
+      const expectedResult = [team1, team2, team3]
+      await mountComponent()
+      const monitoredTeams = teamHook.getRemoteMonitoringTeams()
+      expect(monitoredTeams).toEqual(expectedResult)
     })
   })
 })
