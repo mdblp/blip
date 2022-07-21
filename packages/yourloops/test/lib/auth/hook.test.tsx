@@ -122,17 +122,11 @@ describe('Auth hook', () => {
   })
 
   describe('Logout', () => {
-    const cleanBlipReduxStore = jest.fn()
-
     beforeAll(() => {
       config.METRICS_SERVICE = 'matomo'
-      window._paq = []
-      window.cleanBlipReduxStore = cleanBlipReduxStore
     })
 
     afterAll(() => {
-      delete window.cleanBlipReduxStore
-      delete window._paq
       config.METRICS_SERVICE = 'disabled'
     })
 
