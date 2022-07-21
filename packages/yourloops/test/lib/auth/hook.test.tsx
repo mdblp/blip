@@ -40,7 +40,7 @@ import { AuthContext } from '../../../lib/auth'
 import { AuthContextImpl } from '../../../lib/auth/hook'
 import { loggedInUsers } from '../../common'
 import { HcpProfession } from '../../../models/hcp-profession'
-import { createAuthAPIStubs, resetAuthAPIStubs } from './utils'
+import { createAuthAPIStubs } from './utils'
 import UserApi from '../../../lib/auth/user-api'
 import { Units } from '../../../models/generic'
 import User from '../../../lib/auth/user'
@@ -56,7 +56,7 @@ describe('Auth hook', () => {
   const ReactAuthContext = React.createContext({} as AuthContext)
   const authApiHcpStubs = createAuthAPIStubs(authHcp)
   const authApiCaregiverStubs = createAuthAPIStubs(authCaregiver)
-  const authApiPatientStubs = createAuthAPIStubs(authPatient)
+  createAuthAPIStubs(authPatient)
   let container: HTMLDivElement | null = null
   let authContext: AuthContext = null
   const auth0UserId = '0123456789'
@@ -110,9 +110,6 @@ describe('Auth hook', () => {
   afterEach(() => {
     document.body.removeChild(container)
     container = null
-    resetAuthAPIStubs(authApiHcpStubs, loggedInUsers.getHcp())
-    resetAuthAPIStubs(authApiCaregiverStubs, loggedInUsers.getCaregiver())
-    resetAuthAPIStubs(authApiPatientStubs, loggedInUsers.getPatient())
     authContext = null
   })
 
@@ -125,17 +122,11 @@ describe('Auth hook', () => {
   })
 
   describe('Logout', () => {
-    const cleanBlipReduxStore = jest.fn()
-
     beforeAll(() => {
       config.METRICS_SERVICE = 'matomo'
-      window._paq = []
-      window.cleanBlipReduxStore = cleanBlipReduxStore
     })
 
     afterAll(() => {
-      delete window.cleanBlipReduxStore
-      delete window._paq
       config.METRICS_SERVICE = 'disabled'
     })
 
