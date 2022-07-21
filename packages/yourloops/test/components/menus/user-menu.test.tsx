@@ -26,7 +26,6 @@
  */
 
 import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { renderToString } from 'react-dom/server'
 import { Router } from 'react-router-dom'
@@ -36,74 +35,68 @@ import FaceIcon from '@material-ui/icons/Face'
 import RoundedHospitalIcon from '../../../components/icons/RoundedHospitalIcon'
 import StethoscopeIcon from '../../../components/icons/StethoscopeIcon'
 
-import { AuthContextProvider } from '../../../lib/auth'
-import { createAuthHookStubs } from '../../lib/auth/utils'
 import UserMenu from '../../../components/menus/user-menu'
-import { loggedInUsers } from '../../common'
 import { triggerMouseEvent } from '../../common/utils'
 import User from '../../../lib/auth/user'
+import * as authHookMock from '../../../lib/auth/hook'
+import { UserRoles } from '../../../models/user'
+import { render } from '@testing-library/react'
 
+jest.mock('../../../lib/auth/hook')
 describe('User Menu', () => {
-  let container: HTMLElement | null = null
   const history = createMemoryHistory({ initialEntries: ['/'] })
-  const hcp = loggedInUsers.getHcp()
-  const caregiver = loggedInUsers.getCaregiver()
-  const patient = loggedInUsers.getPatient()
-  let authContext = createAuthHookStubs(hcp)
+  const logout = jest.fn()
 
   function openMenu(): void {
     const userMenu = document.getElementById('user-menu')
     triggerMouseEvent('click', userMenu)
   }
 
-  async function mountComponent(user: User): Promise<void> {
-    authContext = createAuthHookStubs(user)
-
-    await act(() => {
-      return new Promise((resolve) => {
-        render(
-          <Router history={history}>
-            <AuthContextProvider value={authContext}>
-              <UserMenu />
-            </AuthContextProvider>
-          </Router>, container, resolve)
-      })
+  async function mountComponent(): Promise<void> {
+    await act(async () => {
+      render(
+        <Router history={history}>
+          <UserMenu />
+        </Router>
+      )
     })
   }
 
   beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container)
-      container.remove()
-      container = null
-    }
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return {
+        user: { role: UserRoles.hcp } as User,
+        logout
+      }
+    })
   })
 
   it('should display the hcp icon', async () => {
-    await mountComponent(hcp)
+    await mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />))
   })
 
   it('should display the caregiver icon', async () => {
-    await mountComponent(caregiver)
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { role: UserRoles.caregiver } as User }
+    })
+    await mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />))
   })
 
   it('should display the patient icon', async () => {
-    await mountComponent(patient)
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { role: UserRoles.patient } as User }
+    })
+    await mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />))
   })
 
-  it("should redirect to '/preferences' route when clicking on profile link", async () => {
-    await mountComponent(hcp)
+  it('should redirect to \'/preferences\' route when clicking on profile link', async () => {
+    await mountComponent()
     openMenu()
     const profileItem = document.getElementById('user-menu-settings-item')
     triggerMouseEvent('click', profileItem)
@@ -111,10 +104,10 @@ describe('User Menu', () => {
   })
 
   it('should logout the user when clicking on logout item', async () => {
-    await mountComponent(hcp)
+    await mountComponent()
     openMenu()
     const logoutItem = document.getElementById('user-menu-logout-item')
     triggerMouseEvent('click', logoutItem)
-    expect(authContext.logout).toBeCalledTimes(1)
+    expect(logout).toBeCalledTimes(1)
   })
 })
