@@ -25,17 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@material-ui/core/Button'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import { Team, useTeam } from '../../lib/team'
-import { TeamLeaveDialogContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useHistory } from 'react-router-dom'
-import LeaveTeamDialog from '../../pages/hcp/team-leave-dialog'
+import { useAuth } from '../../lib/auth'
+import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/utils'
 
 export interface LeaveTeamButtonProps {
@@ -46,32 +46,33 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props
   const teamHook = useTeam()
   const alert = useAlert()
+  const { user } = useAuth()
   const historyHook = useHistory()
   const commonTeamClasses = commonComponentStyles()
   const { t } = useTranslation('yourloops')
-  const [teamToLeave, setTeamToLeave] = React.useState<TeamLeaveDialogContentProps | null>(null)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
   const onTeamLeft = async (hasLeft: boolean): Promise<void> => {
     if (hasLeft) {
       try {
         await teamHook.leaveTeam(team)
-        const message = TeamUtils.teamHasOnlyOneMember(team)
+        const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-success-deleted')
           : t('team-page-leave-success')
         alert.success(message)
         historyHook.push('/')
       } catch (reason: unknown) {
-        const message = TeamUtils.teamHasOnlyOneMember(team)
+        const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-failure-deleted')
           : t('team-page-failed-leave')
         alert.error(message)
       }
     }
-    setTeamToLeave(null)
+    setModalIsOpen(false)
   }
 
   const openLeaveTeamDialog = (): void => {
-    setTeamToLeave({ team, onDialogResult: onTeamLeft })
+    setModalIsOpen(true)
   }
 
   return (
@@ -85,7 +86,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
       >
         <ExitToAppIcon className={commonTeamClasses.icon} />{t('button-team-leave')}
       </Button>
-      <LeaveTeamDialog teamToLeave={teamToLeave} />
+      {modalIsOpen && <LeaveTeamDialog team={team} onDialogResult={onTeamLeft} />}
     </React.Fragment>
   )
 }
