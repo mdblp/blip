@@ -26,16 +26,13 @@
  */
 
 import { createAlarm, createPatient, createTeamMember, createTeamUser } from '../../../common/utils'
-import {
-  comparePatients,
-  mapTeamMemberToPatientTeam,
-  mapTeamUserToPatient
-} from '../../../../components/patient/utils'
+import { comparePatients, mapTeamMemberToPatientTeam, mapTeamUserToPatient } from '../../../../components/patient/utils'
 import { PatientTableSortFields, UserInvitationStatus } from '../../../../models/generic'
 import { Patient, PatientTeam } from '../../../../lib/data/patient'
 import { INotification } from '../../../../lib/notifications/models'
 import { Profile } from '../../../../models/user'
 import { Monitoring } from '../../../../models/monitoring'
+import { Alarm } from '../../../../models/alarm'
 
 describe('Patient utils', () => {
   describe('comparePatients', () => {
@@ -304,12 +301,13 @@ describe('Patient utils', () => {
       }
       const member = createTeamMember('fakeTeamMember', 'teamName', 'fakeTeamCode', UserInvitationStatus.accepted)
       const teamUser = createTeamUser('fakeTeamMember', [member], profile)
+      teamUser.unreadMessages = 4
       const patient: Patient = {
         metadata: {
           alarm: teamUser.alarms,
           flagged: undefined,
           medicalData: null,
-          unreadMessagesSent: 0
+          unreadMessagesSent: teamUser.unreadMessages
         },
         monitoring: undefined,
         profile: {
@@ -319,8 +317,42 @@ describe('Patient utils', () => {
           lastName: profile.lastName,
           email: teamUser.username,
           referringDoctor: undefined,
-
           sex: ''
+        },
+        settings: {
+          a1c: undefined,
+          system: 'DBLG1'
+        },
+        teams: [mapTeamMemberToPatientTeam(teamUser.members[0])],
+        userid: teamUser.userid
+      }
+      const res = mapTeamUserToPatient(teamUser)
+      patient.monitoring = res.monitoring
+      expect(res).toStrictEqual(patient)
+    })
+
+    it('should correctly map alarm, unread messages, birthdate, sex and fullname ', () => {
+      const member = createTeamMember('fakeTeamMember', 'teamName', 'fakeTeamCode', UserInvitationStatus.accepted)
+      const teamUser = createTeamUser('fakeTeamMember', [member], undefined, undefined, 'fakeUsername')
+      teamUser.alarms = undefined
+      teamUser.unreadMessages = undefined
+      teamUser.profile = { patient: { sex: 'helicopter', birthday: new Date().toString() } } as Profile
+      const patient: Patient = {
+        metadata: {
+          alarm: {} as Alarm,
+          flagged: undefined,
+          medicalData: null,
+          unreadMessagesSent: 0
+        },
+        monitoring: undefined,
+        profile: {
+          birthdate: new Date(teamUser.profile.patient.birthday),
+          firstName: undefined,
+          fullName: teamUser.username,
+          lastName: undefined,
+          email: teamUser.username,
+          referringDoctor: undefined,
+          sex: teamUser.profile.patient.sex
         },
         settings: {
           a1c: undefined,
