@@ -128,7 +128,6 @@ describe('Team hook', () => {
       await expect(async () => {
         await teamHook.updateTeamAlerts(unmonitoredTeam)
       }).rejects.toThrow()
-      expect(TeamUtils.loadTeams).not.toHaveBeenCalledTimes(2)
     })
 
     it('should throw an error when api called failed', async () => {
@@ -138,7 +137,6 @@ describe('Team hook', () => {
         await teamHook.updateTeamAlerts(team1)
       }).rejects.toThrow()
       expect(updateTeamAlertsSpy).toHaveBeenCalled()
-      expect(TeamUtils.loadTeams).not.toHaveBeenCalledTimes(2)
     })
 
     it('should refresh team hook when api called succeeded', async () => {
