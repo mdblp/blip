@@ -54,7 +54,7 @@ function ProgressIconButtonWrapper({ children, inProgress }: Props): JSX.Element
   return (
     <div className={wrapper}>
       {children}
-      {inProgress && <CircularProgress size={24} className={progressButton} />}
+      {inProgress && <CircularProgress role="progressbar" size={24} className={progressButton} />}
     </div>
   )
 }
