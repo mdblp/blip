@@ -32,23 +32,6 @@ import { User } from '../../../lib/auth'
 import { HcpProfession } from '../../../models/hcp-profession'
 
 /**
- * API Stubs
- */
-export interface AuthAPIStubs {
-  getShorelineAccessToken: jest.Mock<Promise<string>, [string]>
-  updatePreferences: jest.Mock<Promise<Preferences>, []>
-  updateProfile: jest.Mock<Promise<Profile>, []>
-  updateSettings: jest.Mock<Promise<Settings>, []>
-}
-
-export const createAuthAPIStubs = (user: User): AuthAPIStubs => ({
-  getShorelineAccessToken: jest.fn<Promise<string>, [string]>().mockResolvedValue('token'),
-  updatePreferences: jest.fn<Promise<Preferences>, []>().mockResolvedValue(user.preferences),
-  updateProfile: jest.fn<Promise<Profile>, []>().mockResolvedValue(user.profile),
-  updateSettings: jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings)
-})
-
-/**
  * Auth hook stubs definitions
  */
 export interface AuthContextStubs {
