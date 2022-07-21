@@ -73,14 +73,8 @@ describe('Team hook', () => {
 
   beforeAll(() => {
     jest.spyOn(TeamUtils, 'loadTeams').mockResolvedValue({ teams, flaggedNotInResult: [] });
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: {} }
-    });
-    (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return {
