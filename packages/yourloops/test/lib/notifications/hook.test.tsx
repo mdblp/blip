@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
+ * Copyright (c) 2021-2022, Diabeloop
  * Auth hook tests
  *
  * All rights reserved.
@@ -27,21 +27,18 @@
  */
 
 import React from 'react'
-import { render } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { BrowserRouter } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-
-import { waitTimeout } from '../../../lib/utils'
 import * as authHookMock from '../../../lib/auth/hook'
 import { INotification, NotificationContext, NotificationType } from '../../../lib/notifications/models'
 import { NotificationContextProvider, useNotification } from '../../../lib/notifications/hook'
 import { loggedInUsers } from '../../common'
 import NotificationApi from '../../../lib/notifications/notification-api'
+import { render, waitFor } from '@testing-library/react'
 
 jest.mock('../../../lib/auth/hook')
 describe('Notification hook', () => {
-  let container: HTMLDivElement | null = null
   let notifications: NotificationContext | null = null
 
   jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
@@ -50,18 +47,22 @@ describe('Notification hook', () => {
   jest.spyOn(NotificationApi, 'declineInvitation').mockResolvedValue()
   jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
 
-  const initNotificationContext = async (): Promise<void> => {
+  const initNotificationContext = async () => {
     const DummyComponent = (): JSX.Element => {
       notifications = useNotification()
       return (<div />)
     }
-    await act(() => {
-      return new Promise(resolve => render(
+    await act(async () => {
+      render(
         <BrowserRouter>
           <NotificationContextProvider>
             <DummyComponent />
           </NotificationContextProvider>
-        </BrowserRouter>, container, resolve))
+        </BrowserRouter>
+      )
+      await waitFor(() => expect(notifications.initialized).toBeTruthy())
+      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
+      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
   }
 
@@ -74,34 +75,40 @@ describe('Notification hook', () => {
     })
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    document.body.removeChild(container)
-    container = null
-  })
-
-  describe('Initialization', () => {
-    it('should initialize', async () => {
-      await initNotificationContext()
-      expect(notifications.initialized).toBe(true)
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
-    })
-  })
-
   describe('Update', () => {
     it('should re-fetch invitations from the api', async () => {
       await initNotificationContext()
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
-      notifications.update()
-      await waitTimeout(100)
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2)
+      act(() => {
+        notifications.update()
+      })
+      await waitFor(() => expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2))
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  describe('inviteRemoteMonitoring', () => {
+    it('should call the api', async () => {
+      const api = jest.spyOn(NotificationApi, 'inviteToRemoteMonitoring').mockResolvedValueOnce(null)
+      await initNotificationContext()
+      const teamId = 'fakeTeamId'
+      const userId = 'fakeUserId'
+      const monitoringEnd = new Date()
+      const referringDoctor = 'fakeReferringDoctor'
+      await notifications.inviteRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
+      expect(api).toHaveBeenCalledWith(teamId, userId, monitoringEnd, referringDoctor)
+    })
+  })
+
+  describe('cancelRemoteMonitoringInvite', () => {
+    it('should call the api', async () => {
+      const api = jest.spyOn(NotificationApi, 'cancelRemoteMonitoringInvite').mockResolvedValueOnce(null)
+      await initNotificationContext()
+      const teamId = 'fakeTeamId'
+      const userId = 'fakeUserId'
+      await notifications.cancelRemoteMonitoringInvite(teamId, userId)
+      expect(api).toHaveBeenCalledWith(teamId, userId)
     })
   })
 
@@ -114,7 +121,7 @@ describe('Notification hook', () => {
         id: uuidv4(),
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
-        creator: caregiver,
+        creator: { userid: caregiver.id, profile: caregiver.profile },
         creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
@@ -123,8 +130,9 @@ describe('Notification hook', () => {
           name: 'A team'
         }
       }
-      await notifications.accept(notification)
-      await waitTimeout(100)
+      await act(async () => {
+        await notifications.accept(notification)
+      })
       expect(NotificationApi.acceptInvitation).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
@@ -140,7 +148,7 @@ describe('Notification hook', () => {
         id: uuidv4(),
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
-        creator: caregiver,
+        creator: { userid: caregiver.id, profile: caregiver.profile },
         creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
@@ -149,8 +157,9 @@ describe('Notification hook', () => {
           name: 'A team'
         }
       }
-      await notifications.decline(notification)
-      await waitTimeout(100)
+      await act(async () => {
+        await notifications.decline(notification)
+      })
       expect(NotificationApi.declineInvitation).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
@@ -166,7 +175,7 @@ describe('Notification hook', () => {
         id: uuidv4(),
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
-        creator: caregiver,
+        creator: { userid: caregiver.id, profile: caregiver.profile },
         creatorId: caregiver.id,
         date: new Date().toISOString(),
         email: currentUser.username,
@@ -175,8 +184,9 @@ describe('Notification hook', () => {
           name: 'A team'
         }
       }
-      await notifications.cancel(notification)
-      await waitTimeout(100)
+      await act(async () => {
+        await notifications.cancel(notification)
+      })
       expect(NotificationApi.cancelInvitation).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
