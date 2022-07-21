@@ -131,7 +131,7 @@ describe('Team hook', () => {
       expect(TeamUtils.loadTeams).not.toHaveBeenCalledTimes(2)
     })
 
-    it('should throw an error when the api called failed', async () => {
+    it('should throw an error when api called failed', async () => {
       const updateTeamAlertsSpy = jest.spyOn(TeamApi, 'updateTeamAlerts').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await mountComponent()
       await expect(async () => {
@@ -153,7 +153,7 @@ describe('Team hook', () => {
   })
 
   describe('getRemoteMonitoringTeams', () => {
-    it('should only return team with monitoring enabled', async () => {
+    it('should only return teams with monitoring enabled', async () => {
       const expectedResult = [team1, team2, team3]
       await mountComponent()
       const monitoredTeams = teamHook.getRemoteMonitoringTeams()
