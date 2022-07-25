@@ -40,7 +40,7 @@ import { triggerMouseEvent } from '../../common/utils'
 import User from '../../../lib/auth/user'
 import * as authHookMock from '../../../lib/auth/hook'
 import { UserRoles } from '../../../models/user'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 
 jest.mock('../../../lib/auth/hook')
 describe('User Menu', () => {
@@ -52,8 +52,8 @@ describe('User Menu', () => {
     triggerMouseEvent('click', userMenu)
   }
 
-  async function mountComponent(): Promise<void> {
-    await act(async () => {
+  function mountComponent() {
+    act(() => {
       render(
         <Router history={history}>
           <UserMenu />
@@ -71,32 +71,32 @@ describe('User Menu', () => {
     })
   })
 
-  it('should display the hcp icon', async () => {
-    await mountComponent()
+  it('should display the hcp icon', () => {
+    mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<StethoscopeIcon />))
   })
 
-  it('should display the caregiver icon', async () => {
+  it('should display the caregiver icon', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { role: UserRoles.caregiver } as User }
     })
-    await mountComponent()
+    mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<RoundedHospitalIcon />))
   })
 
-  it('should display the patient icon', async () => {
+  it('should display the patient icon', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { role: UserRoles.patient } as User }
     })
-    await mountComponent()
+    mountComponent()
     const roleIcon = document.querySelector('#user-role-icon')
     expect(roleIcon.innerHTML).toEqual(renderToString(<FaceIcon />))
   })
 
-  it('should redirect to \'/preferences\' route when clicking on profile link', async () => {
-    await mountComponent()
+  it('should redirect to \'/preferences\' route when clicking on profile link', () => {
+    mountComponent()
     openMenu()
     const profileItem = document.getElementById('user-menu-settings-item')
     triggerMouseEvent('click', profileItem)
@@ -104,10 +104,12 @@ describe('User Menu', () => {
   })
 
   it('should logout the user when clicking on logout item', async () => {
-    await mountComponent()
+    mountComponent()
     openMenu()
     const logoutItem = document.getElementById('user-menu-logout-item')
-    triggerMouseEvent('click', logoutItem)
-    expect(logout).toBeCalledTimes(1)
+    await act(async () => {
+      triggerMouseEvent('click', logoutItem)
+      await waitFor(() => expect(logout).toBeCalledTimes(1))
+    })
   })
 })

@@ -55,6 +55,7 @@ describe('Auth hook', () => {
   const settings: Settings = { country: 'FR', units: { bg: Units.gram } }
 
   const initAuthContext = async (): Promise<void> => {
+    auth = null
     const DummyComponent = (): JSX.Element => {
       auth = useAuth()
       return <div />
@@ -115,9 +116,12 @@ describe('Auth hook', () => {
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
     const updatedSettings: Settings = { ...settings, country: 'EN' }
-    jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)
-    jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce(updatedPreferences)
-    jest.spyOn(UserApi, 'updateSettings').mockResolvedValueOnce(updatedSettings)
+
+    beforeAll(() => {
+      jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)
+      jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce(updatedPreferences)
+      jest.spyOn(UserApi, 'updateSettings').mockResolvedValueOnce(updatedSettings)
+    })
 
     it('updatePreferences should call the API with the good parameters', async () => {
       await initAuthContext()
@@ -252,7 +256,6 @@ describe('Auth hook', () => {
       await act(async () => {
         await auth.flagPatient(userId)
       })
-      console.log(auth.user)
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1)
       expect(auth.getFlagPatients()).toEqual([userId])
     })
@@ -278,8 +281,11 @@ describe('Auth hook', () => {
       const userId2 = uuidv4()
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1] })
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1, userId2] })
+      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce({
+        displayLanguageCode: 'en',
+        patientsStarred: []
+      })
       await initAuthContext()
-      console.log(auth.user)
       expect(auth.getFlagPatients()).toEqual([])
 
       await act(async () => {
@@ -293,7 +299,6 @@ describe('Auth hook', () => {
       })
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(2)
       expect(auth.getFlagPatients()).toEqual([userId1, userId2])
-      console.log(auth.user.preferences)
     })
 
     it('setFlagPatients should replace the currently flagged patient', async () => {
