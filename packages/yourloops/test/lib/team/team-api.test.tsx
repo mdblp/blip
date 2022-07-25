@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * Types definitions for Typescript
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team } from '../../../lib/team'
+import TeamApi from '../../../lib/team/team-api'
+import { Monitoring } from '../../../models/monitoring'
+import HttpService from '../../../services/http'
 
-export interface LeaveTeamDialogContentProps {
-  team: Readonly<Team> | null
-  onDialogResult: (leave: boolean) => void
-}
+describe('TeamApi', () => {
+  describe('updateTeamAlerts', () => {
+    it('should make correct http call', () => {
+      const teamId = 'fakeTeamId'
+      const monitoring: Monitoring = {} as Monitoring
+      const httpServiceSpy = jest.spyOn(HttpService, 'put').mockResolvedValue(null)
+      const expectedParams = {
+        url: `/crew/v0/teams/${teamId}/remote-monitoring`,
+        payload: monitoring
+      }
 
-export interface AddTeamDialogContentProps {
-  onDialogResult: (teamId?: string) => void
-}
+      TeamApi.updateTeamAlerts(teamId, monitoring)
+
+      expect(httpServiceSpy).toHaveBeenCalledWith(expectedParams)
+    })
+  })
+})

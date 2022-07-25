@@ -107,12 +107,15 @@ export const createTeamUser = (
     frequencyOfSevereHypoglycemiaActive: true,
     nonDataTransmissionRate: 10,
     nonDataTransmissionActive: true
-  }): TeamUser => {
+  },
+  username: string = 'fakeUsername'
+): TeamUser => {
   return {
     userid: id,
     members,
     profile,
     alarms,
+    username,
     monitoring: { enabled: false }
   } as TeamUser
 }

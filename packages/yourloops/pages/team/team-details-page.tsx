@@ -143,7 +143,7 @@ function TeamDetailsPage(): JSX.Element {
   return (
     <React.Fragment>
       {dropdownData.selectedTeam &&
-        <div role="main">
+        <Box role="main" paddingLeft={2}>
           <Box display="flex" alignItems="center">
             <IconButton className={classes.disableRipple} aria-label="back-button" onClick={redirectToDashboard}>
               <ArrowBackIcon />
@@ -246,7 +246,7 @@ function TeamDetailsPage(): JSX.Element {
               </div>
             </Box>
           </Box>
-        </div>
+        </Box>
       }
     </React.Fragment>
   )

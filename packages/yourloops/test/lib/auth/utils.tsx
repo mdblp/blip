@@ -48,20 +48,6 @@ export const createAuthAPIStubs = (user: User): AuthAPIStubs => ({
   updateSettings: jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings)
 })
 
-export const resetAuthAPIStubs = (apiStubs: AuthAPIStubs, user: User): void => {
-  apiStubs.updatePreferences.mockReset()
-  apiStubs.updatePreferences = jest.fn<Promise<Preferences>, []>().mockResolvedValue(user.preferences)
-  apiStubs.updatePreferences.mockResolvedValue(user.preferences)
-
-  apiStubs.updateProfile.mockReset()
-  apiStubs.updateProfile = jest.fn<Promise<Profile>, []>().mockResolvedValue(user.profile)
-  apiStubs.updateProfile.mockResolvedValue(user.profile)
-
-  apiStubs.updateSettings.mockReset()
-  apiStubs.updateSettings = jest.fn<Promise<Settings>, []>().mockResolvedValue(user.settings)
-  apiStubs.updateSettings.mockResolvedValue(user.settings)
-}
-
 /**
  * Auth hook stubs definitions
  */
@@ -105,16 +91,3 @@ export const createAuthHookStubs = (user?: User): AuthContextStubs => ({
   updateSettings: jest.fn<Promise<void>, [Settings]>().mockResolvedValue(),
   user: user ?? null
 })
-
-/**
- *mockReset() stubs history & behavior
- *
- * TODO complete me
- */
-export const resetAuthHookStubs = (hookStubs: AuthContextStubs, user?: User): void => {
-  hookStubs.isLoggedIn = !!user
-
-  hookStubs.logout.mockReset()
-  hookStubs.logout = jest.fn<Promise<void>, [boolean | undefined]>().mockResolvedValue()
-  hookStubs.logout.mockResolvedValue()
-}

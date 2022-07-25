@@ -74,8 +74,7 @@ async function init(): Promise<void> {
     returnEmptyString: false,
 
     react: {
-      wait: true,
-      useSuspense: false, // Experimental features that is not yet available in a stable release.
+      useSuspense: true,
       transSupportBasicHtmlNodes: true // allow <br/> and simple html elements in translations
     },
     ns: locales.namespaces,
