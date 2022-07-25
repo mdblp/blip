@@ -26,7 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ReactNode } from 'react'
 import User from './user'
 import { LanguageCodes } from '../../models/locales'
 import { Preferences, Profile, Settings } from '../../models/user'
@@ -60,9 +59,4 @@ export interface AuthContext {
   updateProfile: (profile: Profile) => Promise<void>
   updateSettings: (settings: Settings) => Promise<void>
   user: Readonly<User> | null
-}
-
-export interface AuthProvider {
-  children: ReactNode
-  value?: AuthContext // Used for test components which need this hook
 }

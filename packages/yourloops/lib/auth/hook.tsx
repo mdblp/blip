@@ -37,7 +37,6 @@ import { zendeskLogout } from '../zendesk'
 import User from './user'
 import {
   AuthContext,
-  AuthProvider,
   SignupForm
 } from './models'
 import appConfig from '../config'
@@ -253,9 +252,10 @@ export function useAuth(): AuthContext {
  * Provider component that wraps your app and makes auth object available to any child component that calls useAuth().
  * @param props for auth provider & children
  */
-export function AuthContextProvider(props: AuthProvider): JSX.Element {
-  const { children, value } = props
-  const authValue = value ?? AuthContextImpl() // eslint-disable-line new-cap
-
-  return <ReactAuthContext.Provider value={authValue}>{children}</ReactAuthContext.Provider>
+export function AuthContextProvider({ children }: { children: JSX.Element }): JSX.Element {
+  return (
+    <ReactAuthContext.Provider value={AuthContextImpl()}>
+      {children}
+    </ReactAuthContext.Provider>
+  )
 }
