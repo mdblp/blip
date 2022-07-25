@@ -67,9 +67,6 @@ describe('Notification hook', () => {
   }
 
   beforeAll(() => {
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: {} }
     })
