@@ -84,7 +84,7 @@ function Login(): JSX.Element {
             ? <Typography variant="h6">
               {t('valid-email-alert')}
             </Typography>
-            : <Typography variant="h6" id="welcome-message">
+            : <Typography variant="h6" data-testId="welcome-message">
               {t('welcome-message')}
             </Typography>
           }
