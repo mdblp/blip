@@ -117,7 +117,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     setUserUpdateInProgress(true)
     try {
       await teamHook.removeMember(teamMember)
+      alert.success(t('remove-member-success'))
     } catch (reason: unknown) {
+      console.error(reason)
       alert.error(t('remove-member-failed'))
     } finally {
       setUserUpdateInProgress(false)
@@ -179,6 +181,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             className={classes.iconCell}
           >
             <IconButton
+              data-testId="remove-member-button"
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
               aria-label="remove-member-button"

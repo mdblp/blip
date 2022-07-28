@@ -149,7 +149,11 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
                 {t('team-name')}
               </Typography>
             </div>
-            <Typography id={`team-information-${team.id}-name`} className={classes.value}>
+            <Typography
+              id={`team-information-${team.id}-name`}
+              data-testId="team-information-name"
+              className={classes.value}
+            >
               {team.name}
             </Typography>
           </div>
@@ -160,7 +164,11 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
                 {t('phone-number')}
               </Typography>
             </div>
-            <Typography id={`team-information-${team.id}-phone`} className={classes.value}>
+            <Typography
+              id={`team-information-${team.id}-phone`}
+              data-testId="team-information-phone"
+              className={classes.value}
+            >
               {team.phone}
             </Typography>
           </div>
@@ -171,7 +179,11 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
                 {t('identification-code')}
               </Typography>
             </div>
-            <Typography id={`team-information-${team.id}-code`} className={classes.value}>
+            <Typography
+              id={`team-information-${team.id}-code`}
+              data-testId="team-information-code"
+              className={classes.value}
+            >
               {team.code}
             </Typography>
           </div>
@@ -184,6 +196,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             </div>
             <Typography
               id={`team-information-${team.id}-address`}
+              data-testId="team-information-address"
               className={classes.value}
             >
               {address}

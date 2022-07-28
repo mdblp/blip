@@ -282,6 +282,7 @@
   "remove-member-confirm": "Remove the member {{fullName}} from the team {{teamName}}?",
   "remove-member-failed": "Impossible to remove member. Please try again later.",
   "remove-member-from-team": "Remove member from team",
+  "remove-member-success": "The member has successfully be removed from the team.",
   "remove-patient": "Remove patient",
   "remove-remote-monitoring": "Remove the patient from remote monitoring?",
   "remove-remote-monitoring-confirm": "Please, confirm that you want to remove the patient {{fullName}} from remote monitoring",
