@@ -323,6 +323,7 @@
   "team-leave-dialog-and-del-consequences": "You will no longer have access to your patients data. This action can't be undone.",
   "team-leave-dialog-and-del-question": "Since you are the only member in this team, {{teamName}} will be <strong>permanently deleted</strong> if you leave it.",
   "team-leave-dialog-and-del-title": "Leave and delete a care team",
+  "team-leave-dialog-button-leave": "Leave team",
   "team-leave-dialog-button-leave-and-del": "Leave and delete team",
   "team-leave-dialog-consequences": "You will no longer have access to your patients data.",
   "team-leave-dialog-only-admin-consequences": "Since you are the only team's administrator, you need to <strong>give administrator permission to another member</strong> before leaving.",
