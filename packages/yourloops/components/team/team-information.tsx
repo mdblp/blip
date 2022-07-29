@@ -124,6 +124,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
           {isUserAdmin &&
             <Button
               id="edit-team-button"
+              data-testid="edit-team-button"
               variant="contained"
               color="primary"
               disableElevation
@@ -151,7 +152,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             </div>
             <Typography
               id={`team-information-${team.id}-name`}
-              data-testId="team-information-name"
+              data-testid="team-information-name"
               className={classes.value}
             >
               {team.name}
@@ -166,7 +167,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             </div>
             <Typography
               id={`team-information-${team.id}-phone`}
-              data-testId="team-information-phone"
+              data-testid="team-information-phone"
               className={classes.value}
             >
               {team.phone}
@@ -181,7 +182,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             </div>
             <Typography
               id={`team-information-${team.id}-code`}
-              data-testId="team-information-code"
+              data-testid="team-information-code"
               className={classes.value}
             >
               {team.code}
@@ -196,7 +197,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
             </div>
             <Typography
               id={`team-information-${team.id}-address`}
-              data-testId="team-information-address"
+              data-testid="team-information-address"
               className={classes.value}
             >
               {address}
