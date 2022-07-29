@@ -21,7 +21,7 @@
     "define": false,
     "console": false
   },
-  "ignorePatterns": ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js", "packages/yourloops"],
+  "ignorePatterns": ["**/dist/*", "**/node_modules/*", "templates/lambda-request-viewer.js", "packages/yourloops", "packages/medical-domain"],
   "rules": {
     "complexity": ["warn", 15],
     "comma-dangle": ["error", "never"],

@@ -19,7 +19,7 @@
     "gen-robot": "node server/gen-robot-txt.js",
     "gen-sitemap": "node server/gen-sitemap-xml.js",
     "gen-lambda": "node server/cloudfront-gen-lambda.js",
-    "lint": "npm run lint-blip && npm run lint-yourloops",
+    "lint": "npm run lint-blip && npm run lint-yourloops && npm run lint-medical-domain",
     "lint-blip": "eslint templates server packages",
     "lint-fix-blip": "npm run lint-blip -- --fix",
     "lint-yourloops": "lerna run --scope=yourloops lint",
