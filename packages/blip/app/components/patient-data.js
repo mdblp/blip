@@ -24,7 +24,8 @@ import i18next from 'i18next'
 import clsx from 'clsx'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { MGDL_UNITS, MS_IN_DAY, nurseShark, TidelineData } from 'tideline'
+import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
+import MedicalDataService, { TimeService } from 'medical-domain'
 import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 
 import config from '../config'
@@ -64,7 +65,7 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
  * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
  * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
- * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
+ * @typedef {{loadingState: number; medicalData: MedicalDataService | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
  */
 
 /**
@@ -139,8 +140,8 @@ class PatientDataPage extends React.Component {
       chartStates: {
         trends: {}
       },
-      /** @type {TidelineData | null} */
-      tidelineData: null
+      /** @type {MedicalDataService | null} */
+      medicalData: null
     }
 
     this.handleSwitchToDashboard = this.handleSwitchToDashboard.bind(this)
@@ -201,7 +202,7 @@ class PatientDataPage extends React.Component {
 
   render() {
     const { dialogPDFOptions: DialogPDFOptions } = this.props
-    const { loadingState, errorMessage, tidelineData, canPrint, showPDFPrintOptions } = this.state
+    const { loadingState, errorMessage, medicalData, canPrint, showPDFPrintOptions } = this.state
     const chartType = this.getChartType()
     let loader = null
     let messages = null
@@ -236,16 +237,13 @@ class PatientDataPage extends React.Component {
     let start = '1970-01-01'
     let end = '1970-01-02'
     if (canPrint && showPDFPrintOptions) {
-      const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints()
-      start = startDate.format('YYYY-MM-DD')
-
+      const { startDate, endDate } = medicalData.getLocaleTimeEndpoints()
+      start = startDate
+      end = endDate
       //hack to display the current date selected in print calendar
       if (chartType === 'dashboard') {
-        const timezone = tidelineData.getTimezoneAt(this.state.epochLocation)
-        const mDate = moment.utc(this.state.epochLocation).tz(timezone)
-        end = mDate.format('YYYY-MM-DD')
-      } else {
-        end = endDate.format('YYYY-MM-DD')
+        const timezone = medicalData.getTimezoneAt(this.state.epochLocation)
+        end = TimeService.format(this.state.epochLocation, timezone)
       }
     }
 
@@ -330,12 +328,7 @@ class PatientDataPage extends React.Component {
 
   isInsufficientPatientData() {
     /** @type {PatientData} */
-    const diabetesData = _.get(this.state, 'tidelineData.diabetesData', [])
-    if (_.isEmpty(diabetesData)) {
-      this.log.warn('Sorry, no data to display')
-      return true
-    }
-    return false
+    return !this.state.medicalData.hasDiabetesData()
   }
 
   renderChart() {
@@ -362,7 +355,7 @@ class PatientDataPage extends React.Component {
       chartStates,
       epochLocation,
       msRange,
-      tidelineData
+      medicalData
     } = this.state
     const user = api.whoami
 
@@ -384,7 +377,7 @@ class PatientDataPage extends React.Component {
             msRange={msRange}
             prefixURL={prefixURL}
             loading={loadingState !== LOADING_STATE_DONE}
-            tidelineData={tidelineData}
+            tidelineData={medicalData}
             permsOfLoggedInUser={permsOfLoggedInUser}
             trackMetric={this.trackMetric}
             patientInfoWidget={patientInfoWidget}
@@ -411,7 +404,7 @@ class PatientDataPage extends React.Component {
             setPatient={setPatient}
             patients={patients}
             userIsHCP={userIsHCP}
-            tidelineData={tidelineData}
+            tidelineData={medicalData}
             epochLocation={epochLocation}
             msRange={msRange}
             loading={loadingState !== LOADING_STATE_DONE}
@@ -446,7 +439,7 @@ class PatientDataPage extends React.Component {
             setPatient={setPatient}
             patients={patients}
             userIsHCP={userIsHCP}
-            tidelineData={tidelineData}
+            tidelineData={medicalData}
             loading={loadingState !== LOADING_STATE_DONE}
             canPrint={canPrint}
             onClickPrint={this.handleClickPrint}
@@ -524,14 +517,17 @@ class PatientDataPage extends React.Component {
    */
   async generateReport(printOptions) {
     const { patient } = this.props
-    const { tidelineData, bgPrefs } = this.state
+    const { medicalData, bgPrefs } = this.state
 
-    if (tidelineData === null) {
-      return Promise.reject('Tidelinedata is null')
+    if (medicalData === null) {
+      return Promise.reject('MedicalData is null')
     }
 
-    const start = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf('day')
-    const timezone = tidelineData.getTimezoneAt(printOptions.end)
+    const start = moment.tz(
+      printOptions.start,
+      medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.start))
+    ).startOf('day')
+    const timezone = medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.end))
     const end = moment.tz(printOptions.end, timezone).endOf('day')
     const endPDFDate = end.toISOString()
 
@@ -549,13 +545,12 @@ class PatientDataPage extends React.Component {
       timePrefs,
       endPDFDate
     }
-
-    const lastPumpSettings = _.last(tidelineData.grouped.pumpSettings)
+    const lastPumpSettings = medicalData.medicalData.pumpSettings[medicalData.medicalData.pumpSettings.length - 1]
     const pdfData = {
-      basics: tidelineData.generateBasicsData(start, end),
-      daily: vizUtils.data.selectDailyViewData(tidelineData, start, end),
+      basics: medicalData.generateBasicsData(start.toISOString(), end.toISOString()),
+      daily: vizUtils.data.selectDailyViewData(medicalData, start, end),
       settings: !printOptions.preset
-        ? vizUtils.data.generatePumpSettings(_.last(tidelineData.grouped.pumpSettings), end)
+        ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
         : lastPumpSettings
     }
 
@@ -565,15 +560,17 @@ class PatientDataPage extends React.Component {
 
   async generateCSV(printOptions) {
     const { api, patient } = this.props
-    const { tidelineData } = this.state
+    const { medicalData } = this.state
 
-    const startDate = moment.tz(printOptions.start, tidelineData.getTimezoneAt(printOptions.start)).startOf('day').toISOString()
-    const endDate = moment.tz(printOptions.end, tidelineData.getTimezoneAt(printOptions.end)).endOf('day').toISOString()
+    const startTimeZone = medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.start))
+    const endTimeZone = medicalData.getTimezoneAt(TimeService.getEpoch(printOptions.end))
+    const startDate = moment.tz(printOptions.start, startTimeZone).startOf('day').toISOString()
+    const endDate = moment.tz(printOptions.end, endTimeZone).endOf('day').toISOString()
     return api.exportData(patient, startDate, endDate)
   }
 
   async handleMessageCreation(message) {
-    await this.chartRef.current.createMessage(nurseShark.reshapeMessage(message))
+    await this.chartRef.current.createMessage(/*nurseShark.reshapeMessage(*/message)/*)*/
     this.trackMetric('note', 'create_note')
   }
 
@@ -607,8 +604,7 @@ class PatientDataPage extends React.Component {
 
     if (_.isEmpty(message.parentmessage)) {
       // Daily timeline view only cares for top-level note
-      const reshapedMessage = nurseShark.reshapeMessage(message)
-      this.chartRef.current.editMessage(reshapedMessage)
+      this.chartRef.current.editMessage(message)
     }
   }
 
@@ -620,10 +616,10 @@ class PatientDataPage extends React.Component {
   }
 
   handleShowMessageCreation(/** @type {moment.Moment | Date | null} */ datetime) {
-    const { epochLocation, tidelineData } = this.state
+    const { epochLocation, medicalData } = this.state
     let mDate = datetime
     if (datetime === null) {
-      const timezone = tidelineData.getTimezoneAt(epochLocation)
+      const timezone = medicalData.getTimezoneAt(epochLocation)
       mDate = moment.utc(epochLocation).tz(timezone)
     }
     this.setState({ createMessageDatetime: mDate.toISOString() })
@@ -915,14 +911,13 @@ class PatientDataPage extends React.Component {
       loadingState: LOADING_STATE_INITIAL_FETCH,
       epochLocation: 0,
       msRange: 0,
-      tidelineData: null
+      medicalData: null
     })
 
     try {
       const data = await this.apiUtils.refresh()
       this.setState({ loadingState: LOADING_STATE_INITIAL_PROCESS })
       await waitTimeout(1)
-
       // Process the data to be usable by us
       await this.processData(data)
 
@@ -940,58 +935,54 @@ class PatientDataPage extends React.Component {
   async processData(data) {
     const { store, patient } = this.props
     const { timePrefs, bgPrefs, epochLocation, msRange } = this.state
-    let { tidelineData } = this.state
+    let { medicalData } = this.state
 
-    const firstLoadOrRefresh = tidelineData === null
+    const firstLoadOrRefresh = medicalData === null
 
     this.props.api.metrics.startTimer('process_data')
 
-    const res = nurseShark.processData(data, bgPrefs.bgUnits)
     await waitTimeout(1)
     if (firstLoadOrRefresh) {
-      const opts = {
-        timePrefs,
-        ...bgPrefs,
-        // Used by tideline oneDay to set-up the scroll range
-        // Send this information by tidelineData options
-        dateRange: this.apiUtils.dateRange,
-        YLP820_BASAL_TIME: config.YLP820_BASAL_TIME
+      medicalData = new MedicalDataService()
+      medicalData.opts = {
+        defaultSource: 'Diabeloop',
+        YLP820_BASAL_TIME: config.YLP820_BASAL_TIME,
+        timezoneName: timePrefs.timezoneName,
+        dateRange: {
+          start: this.apiUtils.dateRange.start.valueOf(),
+          end: this.apiUtils.dateRange.end.valueOf()
+        },
+        bgUnits: bgPrefs.bgUnits,
+        defaultPumpManufacturer: 'default'
       }
-      tidelineData = new TidelineData(opts)
     }
-    await tidelineData.addData(res.processedData)
+    medicalData.add(data)
 
-    if (_.isEmpty(tidelineData.data)) {
+    if (medicalData.data.length === 0) {
       this.props.api.metrics.endTimer('process_data')
       throw new Error('no-data')
     }
 
     const bgPrefsUpdated = {
-      bgUnits: tidelineData.opts.bgUnits,
-      bgClasses: tidelineData.opts.bgClasses
+      bgUnits: medicalData.opts.bgUnits,
+      bgClasses: medicalData.opts.bgClasses
     }
-    this.dataUtil = new DataUtil(tidelineData.data, {
-      bgPrefs: bgPrefsUpdated,
-      timePrefs,
-      endpoints: tidelineData.endpoints
-    })
-
+    this.dataUtil = new DataUtil(medicalData.data, { bgPrefs: bgPrefsUpdated, timePrefs, endpoints: medicalData.endpoints })
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
-      newLocation = moment.utc(tidelineData.endpoints[1]).valueOf() - MS_IN_DAY / 2
+      newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - MS_IN_DAY/2
     }
     let newRange = msRange
     if (msRange === 0) {
       newRange = MS_IN_DAY
     }
 
-    const hasDiabetesData = _.get(tidelineData, 'diabetesData.length', 0) > 0
-
+    const hasDiabetesData = medicalData.hasDiabetesData()
     this.setState({
       bgPrefs: bgPrefsUpdated,
-      timePrefs: tidelineData.opts.timePrefs,
-      tidelineData,
+      timePrefs: medicalData.opts.timePrefs,
+      medicalData,
       epochLocation: newLocation,
       msRange: newRange,
       canPrint: hasDiabetesData
