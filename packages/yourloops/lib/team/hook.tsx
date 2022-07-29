@@ -443,7 +443,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const joinTeam = async (teamId: string): Promise<void> => {
-    await TeamApi.joinTeam(user.id, teamId)
+    await TeamApi.joinTeam(teamId, user.id)
     refresh(true)
   }
 
