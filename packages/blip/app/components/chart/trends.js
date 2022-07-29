@@ -454,9 +454,9 @@ class Trends extends React.Component {
 
     const onResult = (/** @type {string|undefined} */ start, /** @type {string|undefined} */ end) => {
       if (start && end) {
-        const startTimezone = tidelineData.getTimezoneAt(start)
+        const startTimezone = tidelineData.getTimezoneAt(moment.utc(start).valueOf())
         const mStartDate = moment.tz(start, startTimezone)
-        const endTimezone = tidelineData.getTimezoneAt(end)
+        const endTimezone = tidelineData.getTimezoneAt(moment.utc(end).valueOf())
         const mEndDate = moment.tz(end, endTimezone).add(1, 'day')
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / MS_IN_DAY
 
@@ -482,8 +482,8 @@ class Trends extends React.Component {
         displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
         start={startDate.format(ISO_DAY_FORMAT)}
         end={displayEndDate.format(ISO_DAY_FORMAT)}
-        minDate={getDayAt(startMinDate, tidelineData)}
-        maxDate={getDayAt(endMaxDate, tidelineData)}
+        minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
+        maxDate={getDayAt(endMaxDate.valueOf(), tidelineData)}
         disabled={loading}
         onResult={onResult}
       />
@@ -514,7 +514,7 @@ class Trends extends React.Component {
       const startEpoch = Math.max(epochLocation - epochShift, this.startDate.valueOf())
 
       const newStartDate = getMomentDayAt(startEpoch, tidelineData)
-      const newEndDate = getMomentDayAt(newStartDate.clone().add(extentSize, 'days'), tidelineData)
+      const newEndDate = getMomentDayAt(newStartDate.clone().add(extentSize, 'days').valueOf(), tidelineData)
 
       this.setEndPoints(newStartDate, newEndDate)
     }
@@ -537,7 +537,7 @@ class Trends extends React.Component {
     } else {
       const endEpoch = epochLocation + epochShift
       const newEndDate = getMomentDayAt(endEpoch, tidelineData).add(1, 'day')
-      const newStartDate = getMomentDayAt(newEndDate.clone().subtract(extentSize, 'days'), tidelineData)
+      const newStartDate = getMomentDayAt(newEndDate.clone().subtract(extentSize, 'days').valueOf(), tidelineData)
       this.setEndPoints(newStartDate, newEndDate)
     }
     this.props.trackMetric('data_visualization', 'select_period', 'forward')

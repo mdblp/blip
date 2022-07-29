@@ -39,6 +39,7 @@
     "redux-thunk": "~2.3.0",
     "sundial": "file:../sundial",
     "tideline": "file:../tideline",
-    "tidepool-viz": "file:../viz"
+    "tidepool-viz": "file:../viz",
+    "medical-domain": "file:../medical-domain/dist"
   }
 }

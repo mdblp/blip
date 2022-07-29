@@ -374,9 +374,9 @@ class Daily extends React.Component {
     const { tidelineData } = props
     const { startDate, endDate } = tidelineData.getLocaleTimeEndpoints()
     /** @type {Date} */
-    this.startDate = startDate.toDate()
+    this.startDate = Date.parse(startDate)
     /** @type {Date} */
-    this.endDate = endDate.toDate()
+    this.endDate = Date.parse(endDate)
   }
 
   componentDidUpdate(prevProps) {
@@ -395,14 +395,13 @@ class Daily extends React.Component {
   }
 
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker } = this.props
+    const { tidelineData, epochLocation, msRange, trackMetric, loading, dialogDatePicker, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
-    const { timePrefs } = tidelineData.opts
     const endpoints = this.getEndpoints()
 
     const onSelectedDateChange = loading || inTransition ? _.noop : (/** @type {string|undefined} */ date) => {
       if (typeof date === 'string' && this.chartRef.current !== null) {
-        const timezone = tidelineData.getTimezoneAt(date)
+        const timezone = tidelineData.getTimezoneAt(Date.parse(date).valueOf())
         const mDate = moment.tz(date, timezone).add(MS_IN_DAY / 2, 'milliseconds')
         this.log.debug('DatePicker', date, timezone, mDate.toISOString())
         this.chartRef.current.goToDate(mDate.toDate())
