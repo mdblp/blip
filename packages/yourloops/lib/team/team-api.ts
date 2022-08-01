@@ -200,7 +200,7 @@ export default class TeamApi {
   }
 
   static async joinTeam(teamId: string, userId: string): Promise<void> {
-    await HttpService.put<void, { userId: string }>({
+    await HttpService.post<void, { userId: string }>({
       url: `/crew/v0/teams/${teamId}/patients`,
       payload: { userId }
     })
