@@ -151,7 +151,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.iconCell}
         >
           {currentUserIsPending &&
-            <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-user-icon" className={classes.icon} />
+            <AccessTimeIcon id={`${rowId}-pending-icon`} aria-label={t('team-member-pending-status')} titleAccess="pending-user-icon" className={classes.icon} />
           }
         </StyledTableCell>
         <StyledTableCell

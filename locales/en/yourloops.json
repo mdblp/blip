@@ -330,6 +330,7 @@
   "team-leave-dialog-only-admin-title": "You can't leave this team",
   "team-leave-dialog-question": "Are you sure you want to leave this care team?",
   "team-leave-dialog-title": "Leave a care team",
+  "team-member-pending-status": "The team member is marked as pending",
   "team-modal-add-title": "New team",
   "team-modal-create-info": "This information will be displayed along your name when you invite a new patient or a team member. They will review this information to verify your identity. Please make sure it is accurate.",
   "team-modal-create-warning-line1": "By creating this care team, your account will become its administrator by default. You can invite other healthcare professionals and manage user permissions at anytime.",
