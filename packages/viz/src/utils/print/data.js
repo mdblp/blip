@@ -24,7 +24,6 @@ import { getLatestPumpUpload, isAutomatedBasalDevice } from '../../utils/device'
 import { commonStats, statFetchMethods, getStatDefinition } from '../../utils/stat'
 
 /**
- * @typedef { import("tideline").TidelineData } TidelineData
  * @typedef { import("../data").default } DataUtil
  */
 

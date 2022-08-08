@@ -2,7 +2,6 @@ import moment from 'moment-timezone'
 
 const INVALID_TIMEZONES = ['UTC', 'GMT', 'Etc/GMT']
 const timezones = moment.tz.names().filter((tz) => !INVALID_TIMEZONES.includes(tz))
-export const MS_IN_DAY = 864e5
 
 interface NormalizedTime {
   epoch: number
@@ -18,6 +17,9 @@ interface TrendsTime {
   isoWeekday: string
   msPer24: number
 }
+
+export const MS_IN_DAY = 864e5
+export const MS_IN_HOUR = 3600000
 
 // Find first Daily Saving Time(Summer/Winter time) in a timezone between two dates (unix timestamp)
 export function getDstChange(timezone: string, epochFrom: number, epochTo: number): number | null {

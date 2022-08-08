@@ -27,7 +27,7 @@ import React from 'react'
 import sizeMe from 'react-sizeme'
 import _ from 'lodash'
 import { scaleLinear } from 'd3-scale'
-import { MGDL_UNITS, MMOLL_UNITS, MS_IN_DAY } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { THREE_HRS } from '../../../utils/datetime'
 import { findDatesIntersectingWithCbgSliceSegment } from '../../../utils/trends/data'
@@ -66,7 +66,7 @@ export class TrendsSVGContainer extends React.Component {
 
     this.state = {
       focusedSegmentDataGroupedByDate: null,
-      xScale: scaleLinear().domain([0, MS_IN_DAY]),
+      xScale: scaleLinear().domain([0, TimeService.MS_IN_DAY]),
       yScale: null
     }
   }
@@ -111,7 +111,7 @@ export class TrendsSVGContainer extends React.Component {
   setScales() {
     const { margins, smbgOpts, yScaleDomain } = this.props
     const { width, height } = this.props.size
-    const xScale = scaleLinear().domain([0, MS_IN_DAY]).range([
+    const xScale = scaleLinear().domain([0, TimeService.MS_IN_DAY]).range([
       margins.left + Math.round(smbgOpts.maxR),
       width - margins.right - Math.round(smbgOpts.maxR)
     ])

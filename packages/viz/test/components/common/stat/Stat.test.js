@@ -7,7 +7,7 @@ import { VictoryBar, VictoryContainer } from 'victory'
 import { expect } from 'chai'
 import * as sinon from 'sinon'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import { formatClassesAsSelector } from '../../../helpers/cssmodules'
 import Stat from '../../../../src/components/common/stat/Stat'
 import StatLegend from '../../../../src/components/common/stat/StatLegend'

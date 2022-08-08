@@ -9,7 +9,7 @@ import { SizeMe } from 'react-sizeme'
 import { VictoryBar, VictoryContainer } from 'victory'
 import { Collapse } from 'react-collapse'
 
-import { MGDL_UNITS } from 'tideline'
+import { MGDL_UNITS } from 'medical-domain'
 import { formatPercentage, formatDecimalNumber, formatBgValue } from '../../../utils/format'
 import { formatDuration } from '../../../utils/datetime'
 import { generateBgRangeLabels, classifyBgValue, classifyCvValue } from '../../../utils/bloodglucose'

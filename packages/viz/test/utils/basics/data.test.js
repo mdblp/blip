@@ -20,7 +20,7 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { utcDay } from 'd3-time'
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import * as dataUtils from '../../../src/utils/basics/data'
 import * as Types from '../../../data/types'
 

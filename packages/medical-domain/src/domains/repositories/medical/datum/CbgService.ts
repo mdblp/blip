@@ -69,4 +69,4 @@ const CbgService: DatumProcessor<Cbg> = {
 }
 
 export default CbgService
-export { normalizeBg }
+export { normalizeBg, convertBG }

@@ -24,8 +24,7 @@ import i18next from 'i18next'
 import clsx from 'clsx'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
-import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
-import MedicalDataService, { TimeService } from 'medical-domain'
+import MedicalDataService, { MGDL_UNITS, TimeService } from 'medical-domain'
 import { components as vizComponents, createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 
 import config from '../config'
@@ -653,7 +652,7 @@ class PatientDataPage extends React.Component {
     this.dataUtil.chartPrefs = this.state.chartPrefs[toChart]
     this.setState({
       epochLocation,
-      msRange: MS_IN_DAY
+      msRange: TimeService.MS_IN_DAY
     }, () => {
       if (fromChart !== toChart) {
         history.push(`${prefixURL}/${toChart}`)
@@ -700,7 +699,7 @@ class PatientDataPage extends React.Component {
     // Default one week data period for dashboard (now() - 7 days)
     this.setState({
       epochLocation: new Date().valueOf(),
-      msRange: MS_IN_DAY * 7
+      msRange: TimeService.MS_IN_DAY * 7
     })
     if (fromChart !== toChart) {
       history.push(`${prefixURL}/${toChart}`)
@@ -835,8 +834,8 @@ class PatientDataPage extends React.Component {
       const rangeToLoad = this.apiUtils.partialDataLoad.getMissingRanges({ start, end }, true)
       if (rangeToLoad.length > 0) {
         // For daily we will load 4 days to avoid too many loading
-        start = moment.utc(epochLocation - MS_IN_DAY * 4).startOf('day')
-        end = moment.utc(epochLocation + MS_IN_DAY * 4).startOf('day').add(1, 'day')
+        start = moment.utc(epochLocation - TimeService.MS_IN_DAY * 4).startOf('day')
+        end = moment.utc(epochLocation + TimeService.MS_IN_DAY * 4).startOf('day').add(1, 'day')
       }
     }
 
@@ -971,11 +970,11 @@ class PatientDataPage extends React.Component {
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
-      newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - MS_IN_DAY/2
+      newLocation = moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY/2
     }
     let newRange = msRange
     if (msRange === 0) {
-      newRange = MS_IN_DAY
+      newRange = TimeService.MS_IN_DAY
     }
 
     const hasDiabetesData = medicalData.hasDiabetesData()
