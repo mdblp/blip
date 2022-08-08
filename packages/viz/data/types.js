@@ -17,7 +17,7 @@
 
 import _ from 'lodash'
 
-import { MGDL_UNITS, MS_IN_DAY } from 'tideline'
+import { MGDL_UNITS, TimeService } from 'medical-domain'
 
 import dblDevice from './pumpSettings/diabeloop/device.json'
 import dblParamHistory from './pumpSettings/diabeloop/deviceHistory.json'
@@ -92,7 +92,7 @@ export class Basal extends Common {
     _.defaults(opts, {
       deliveryType: 'scheduled',
       deviceTime: this.makeDeviceTime(),
-      duration: MS_IN_DAY / 12,
+      duration: TimeService.MS_IN_DAY / 12,
       rate: 0.5
     })
 

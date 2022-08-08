@@ -3,7 +3,7 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import bows from 'bows'
 
-import { convertBG, MGDL_UNITS, MMOLL_UNITS, MS_IN_DAY } from 'tideline'
+import { convertBG, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import { getTotalBasalFromEndpoints, getBasalGroupDurationsFromEndpoints } from './basal'
 import { getTotalBolus } from './bolus'
 import { cgmSampleFrequency, classifyBgValue, reshapeBgClassesToBgBounds } from './bloodglucose'
@@ -71,7 +71,7 @@ class DataUtil {
     if (basalData.length && basalData[0].normalTime > this._endpoints[0]) {
       // Fetch last basal from previous day
       this.filter.byEndpoints([
-        addDuration(this._endpoints[0], -MS_IN_DAY),
+        addDuration(this._endpoints[0], -TimeService.MS_IN_DAY),
         this._endpoints[0]
       ])
 
@@ -314,7 +314,7 @@ class DataUtil {
 
     _.forEach(clone, (value, key) => {
       if (key !== 'total') {
-        clone[key] = (value / total) * MS_IN_DAY
+        clone[key] = (value / total) * TimeService.MS_IN_DAY
       }
     })
 
@@ -332,7 +332,7 @@ class DataUtil {
   }
 
   getDayCountFromEndpoints = () => moment.utc(this._endpoints[1])
-    .diff(moment.utc(this._endpoints[0])) / MS_IN_DAY
+    .diff(moment.utc(this._endpoints[0])) / TimeService.MS_IN_DAY
 
   getDayIndex = day => {
     const dayMap = {
@@ -362,7 +362,7 @@ class DataUtil {
 
     const insufficientData = this.bgSource === 'smbg'
       || this.getDayCountFromEndpoints() < 14
-      || getTotalCbgDuration() < 14 * MS_IN_DAY * 0.7
+      || getTotalCbgDuration() < 14 * TimeService.MS_IN_DAY * 0.7
 
     if (insufficientData) {
       return {
@@ -434,7 +434,7 @@ class DataUtil {
       0
     )
 
-    const total = Math.round(this.days * MS_IN_DAY)
+    const total = Math.round(this.days * TimeService.MS_IN_DAY)
 
     return {
       sensorUsage: duration,

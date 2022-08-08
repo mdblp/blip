@@ -31,7 +31,7 @@ import {
   containers as vizContainers,
   utils as vizUtils
 } from 'tidepool-viz'
-import { MS_IN_DAY } from 'tideline'
+import { TimeService } from 'medical-domain'
 
 import Header from './header'
 import SubNav, { weekDays } from './trendssubnav'
@@ -39,8 +39,7 @@ import Stats from './stats'
 import Footer from './footer'
 
 /**
- * @typedef { import("tideline").TidelineData } TidelineData
- * @typedef { import("tideline/js/tidelinedata").Datum } Datum
+ * @typedef { import("medical-domain").MedicalDataService } MedicalDataService
  * @typedef { import("../../index").DialogRangeDatePicker } DialogRangeDatePicker
  *
  * @typedef { import("./index").TrendsDatePickerProps } TrendsDatePickerProps
@@ -74,7 +73,7 @@ const ISO_DAY_FORMAT = 'YYYY-MM-DD'
  *
  * startOf("day") of moment do not do what's is expected
  * @param {string|number|Date|moment.Moment} date
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  */
 function getDayAt(date, tidelineData) {
   const timezone = tidelineData.getTimezoneAt(date)
@@ -87,7 +86,7 @@ function getDayAt(date, tidelineData) {
  *
  * Return the start day, for the timezone at that moment for the specified date
  * @param {string|number|Date|moment.Moment} date
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  */
 function getMomentDayAt(date, tidelineData) {
   const timezone = tidelineData.getTimezoneAt(date)
@@ -233,7 +232,7 @@ class Trends extends React.Component {
     this.toggleWeekdays = this.toggleWeekdays.bind(this)
     this.toggleWeekends = this.toggleWeekends.bind(this)
 
-    /** @type {{tidelineData: TidelineData}} */
+    /** @type {{tidelineData: MedicalDataService}} */
     const { tidelineData } = props
     // Min / max date for the date picker
     /** @type {Date} */
@@ -304,7 +303,7 @@ class Trends extends React.Component {
   updateAtMostRecent() {
     const extentSize = this.props.chartPrefs.trends.extentSize
     const epochLocation = this.props.epochLocation
-    const atMostRecent = epochLocation + Math.floor(extentSize * MS_IN_DAY / 2) + 1 > this.endDate.valueOf()
+    const atMostRecent = epochLocation + Math.floor(extentSize * TimeService.MS_IN_DAY / 2) + 1 > this.endDate.valueOf()
     if (this.state.atMostRecent !== atMostRecent) {
       this.setState({ atMostRecent })
     }
@@ -351,7 +350,7 @@ class Trends extends React.Component {
   }
 
   getMaxExtendsSize() {
-    return Math.ceil(this.maxRange / MS_IN_DAY)
+    return Math.ceil(this.maxRange / TimeService.MS_IN_DAY)
   }
 
   updateExtendsSize(/** @type {number} */ newExtend, /** @type {(()=>void)|undefined} */ cb) {
@@ -381,7 +380,7 @@ class Trends extends React.Component {
       })
     }
 
-    const msRange = Math.max(extentSize, 1) * MS_IN_DAY
+    const msRange = Math.max(extentSize, 1) * TimeService.MS_IN_DAY
     const msRangeDiv2 = Math.floor(msRange / 2)
     const end = epochLocation + msRangeDiv2
 
@@ -416,7 +415,7 @@ class Trends extends React.Component {
     const { epochLocation, tidelineData } = this.props
     /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize
-    const msRange = Math.max(extentSize, 1) * MS_IN_DAY
+    const msRange = Math.max(extentSize, 1) * TimeService.MS_IN_DAY
     const msRangeDiv2 = Math.floor(msRange / 2)
     const start = epochLocation - msRangeDiv2
     const end = epochLocation + msRangeDiv2
@@ -458,7 +457,7 @@ class Trends extends React.Component {
         const mStartDate = moment.tz(start, startTimezone)
         const endTimezone = tidelineData.getTimezoneAt(moment.utc(end).valueOf())
         const mEndDate = moment.tz(end, endTimezone).add(1, 'day')
-        const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / MS_IN_DAY
+        const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / TimeService.MS_IN_DAY
 
         this.setState({ updatingDates: true }, () => {
           this.updateExtendsSize(extendSize, () => {
@@ -504,11 +503,11 @@ class Trends extends React.Component {
     // Multiply by 1.5 => 1 = the extends + 0.5 since the current location is the
     // middle of the range.
     // Ex: if extentSize == 14, we need to shift 14+7 days back
-    const epochShift = Math.max(Math.floor(extentSize * 1.5), 1) * MS_IN_DAY
+    const epochShift = Math.max(Math.floor(extentSize * 1.5), 1) * TimeService.MS_IN_DAY
 
     // Use the start range date to do the shift
     if (epochLocation - epochShift < this.startDate.valueOf()) {
-      const msRange = extentSize * MS_IN_DAY
+      const msRange = extentSize * TimeService.MS_IN_DAY
       this.props.onDatetimeLocationChange(this.startDate.valueOf() + msRange / 2, msRange)
     } else {
       const startEpoch = Math.max(epochLocation - epochShift, this.startDate.valueOf())
@@ -531,7 +530,7 @@ class Trends extends React.Component {
     // For the comments see handleClickBack()
     const { epochLocation, tidelineData } = this.props
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize)
-    const epochShift = Math.max(Math.floor(extentSize * 1.5), 1) * MS_IN_DAY
+    const epochShift = Math.max(Math.floor(extentSize * 1.5), 1) * TimeService.MS_IN_DAY
     if (epochLocation + epochShift > this.endDate.valueOf()) {
       this.handleClickMostRecent(null)
     } else {
@@ -551,7 +550,7 @@ class Trends extends React.Component {
       return
     }
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize)
-    const msRange = extentSize * MS_IN_DAY
+    const msRange = extentSize * TimeService.MS_IN_DAY
     this.props.onDatetimeLocationChange(this.endDate.valueOf() - Math.floor(msRange/2), msRange)
     if (event) {
       // If event is set, it's a click, so we can track this change
@@ -570,7 +569,7 @@ class Trends extends React.Component {
     }
     const { tidelineData, epochLocation, msRange } = this.props
     let newExtentSize = extentSize
-    let newMsRange = newExtentSize * MS_IN_DAY
+    let newMsRange = newExtentSize * TimeService.MS_IN_DAY
     let endEpoch = epochLocation + Math.floor(msRange / 2)
     let startEpoch = endEpoch - newMsRange
     if (startEpoch < this.startDate.valueOf()) {
@@ -746,7 +745,7 @@ class Trends extends React.Component {
       <SubNav
         trackMetric={this.props.trackMetric}
         activeDays={this.props.chartPrefs.trends.activeDays}
-        extentSize={msRange / MS_IN_DAY}
+        extentSize={msRange / TimeService.MS_IN_DAY}
         domainClickHandlers={{
           '1 week': (e) => this.handleClickPresetWeeks(e, 7),
           '2 weeks': (e) => this.handleClickPresetWeeks(e, 14),

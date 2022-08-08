@@ -19,7 +19,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 import { expect } from 'chai'
 
-import { TidelineData } from 'tideline'
+import MedicalDataService from 'medical-domain'
 
 import { types } from '../../../data/types'
 import DataUtil from '../../../../blip/test/helpers/DataUtil.js'
@@ -96,7 +96,7 @@ describe('print data utils', () => {
     let filtered
     let latestFilteredData
     let latestFilteredDate
-    /** @type {TidelineData} */
+    /** @type {MedicalDataService} */
     let tidelineData
 
     beforeEach(async () => {
@@ -116,8 +116,43 @@ describe('print data utils', () => {
         new types.CBG({ deviceTime: '2019-05-27T08:59:38', timezone: 'Europe/Paris' }) // Should be left over
       ]
 
-      tidelineData = new TidelineData({ timePrefs: { timezoneAware: true, timezoneName: 'Europe/Paris' } })
-      await tidelineData.addData(data)
+      tidelineData = new MedicalDataService()
+      tidelineData.opts = { timePrefs: { timezoneAware: true, timezoneName: 'Europe/Paris' } }
+      tidelineData.medicalData = {
+        basal: [
+          new types.Basal({ deviceTime: '2019-05-26T10:20:27', timezone: 'Europe/Paris' }),
+          new types.Basal({ deviceTime: '2019-05-26T11:20:27', timezone: 'Europe/Paris', deliveryType: 'automated' })
+        ],
+        bolus: [bolus],
+        cbg: [
+          new types.CBG({ deviceTime: '2019-05-20T08:59:38', timezone: 'Europe/Paris' }),
+          new types.CBG({ deviceTime: '2019-05-26T08:59:38', timezone: 'Europe/Paris' }),
+          new types.CBG({ deviceTime: '2019-05-27T08:59:38', timezone: 'Europe/Paris' }) // Should be left over
+        ],
+        confidentialModes: [],
+        deviceParametersChanges: [],
+        messages: [],
+        meals: [
+          new types.Food({ deviceTime: '2019-05-26T10:00:01', timezone: 'Europe/Paris' }),
+        ],
+        physicalActivities: [],
+        pumpSettings: [
+          new types.PumpSettings({ deviceTime: '2019-05-26T08:59:38', timezone: 'Europe/Paris' })
+        ],
+        reservoirChanges: [],
+        smbg: [
+          new types.SMBG({ deviceTime: '2019-05-26T11:20:27', timezone: 'Europe/Paris' })
+        ],
+        uploads: [
+          new types.Upload({ deviceTime: '2019-05-20T08:59:37', timezone: 'Europe/Paris' })
+        ],
+        wizards: [
+          new types.Wizard({ deviceTime: '2019-05-22T14:33:15', timezone: 'Europe/Paris' })
+        ],
+        zenModes: [],
+        timezoneChanges: []
+      }
+      tidelineData.add([])
     })
 
     beforeEach(() => {

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
-import { MGDL_UNITS, MMOLL_UNITS, MS_IN_DAY } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import DataUtil from '../../src/utils/data'
 import * as Types from '../../data/types'
 import { MS_IN_HOUR, MS_IN_MIN } from '../../src/utils/constants'
@@ -933,29 +933,29 @@ describe('DataUtil', () => {
   describe('getDailyAverageDurations', () => {
     it('should divide each value in the supplied data object by the provided total, and multiply by `MS_IN_DAY`', () => {
       const sampleData = {
-        automated: MS_IN_DAY * 1.5,
-        manual: MS_IN_DAY * 0.5,
-        total: MS_IN_DAY * 2
+        automated: TimeService.MS_IN_DAY * 1.5,
+        manual: TimeService.MS_IN_DAY * 0.5,
+        total: TimeService.MS_IN_DAY * 2
       }
 
       dataUtil.endpoints = twoDayEndpoints
       expect(dataUtil.getDailyAverageDurations(sampleData)).to.eql({
-        automated: MS_IN_DAY * 0.75,
-        manual: MS_IN_DAY * 0.25,
-        total: MS_IN_DAY * 2
+        automated: TimeService.MS_IN_DAY * 0.75,
+        manual: TimeService.MS_IN_DAY * 0.25,
+        total: TimeService.MS_IN_DAY * 2
       })
     })
 
     it('should divide each value in the supplied data object by the sum of values when total is not provided', () => {
       const sampleData = {
-        automated: MS_IN_DAY * 1.0,
-        manual: MS_IN_DAY * 0.5
+        automated: TimeService.MS_IN_DAY * 1.0,
+        manual: TimeService.MS_IN_DAY * 0.5
       }
 
       dataUtil.endpoints = twoDayEndpoints
       expect(dataUtil.getDailyAverageDurations(sampleData)).to.eql({
-        automated: MS_IN_DAY * (2 / 3),
-        manual: MS_IN_DAY * (1 / 3)
+        automated: TimeService.MS_IN_DAY * (2 / 3),
+        manual: TimeService.MS_IN_DAY * (1 / 3)
       })
     })
   })
@@ -1127,13 +1127,13 @@ describe('DataUtil', () => {
       dataUtil.endpoints = dayEndpoints
       expect(dataUtil.getSensorUsage()).to.eql({
         sensorUsage: MS_IN_MIN * 55, // 3 * 15m for libre readings, 2 * 5m for dex readings
-        total: MS_IN_DAY
+        total: TimeService.MS_IN_DAY
       })
 
       dataUtil.endpoints = twoWeekEndpoints
       expect(dataUtil.getSensorUsage()).to.eql({
         sensorUsage: MS_IN_MIN * (55 + 5 + 15),
-        total: MS_IN_DAY * 14
+        total: TimeService.MS_IN_DAY * 14
       })
     })
   })
@@ -1213,8 +1213,8 @@ describe('DataUtil', () => {
     it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
       dataUtil.endpoints = twoDayEndpoints
       expect(dataUtil.getTimeInAutoData()).to.eql({
-        automated: MS_IN_DAY * (1 / 3),
-        manual: MS_IN_DAY * (2 / 3)
+        automated: TimeService.MS_IN_DAY * (1 / 3),
+        manual: TimeService.MS_IN_DAY * (2 / 3)
       })
     })
 
@@ -1258,11 +1258,11 @@ describe('DataUtil', () => {
       const result = dataUtil.getTimeInRangeData()
       const totalDuration = result.total
       expect(result).to.eql({
-        veryLow: (MS_IN_MIN * 15) / totalDuration * MS_IN_DAY,
-        low: (MS_IN_MIN * 15) / totalDuration * MS_IN_DAY,
-        target: (MS_IN_MIN * (15 + 5)) / totalDuration * MS_IN_DAY,
-        high: (MS_IN_MIN * 5) / totalDuration * MS_IN_DAY,
-        veryHigh: (MS_IN_MIN * 5) / totalDuration * MS_IN_DAY,
+        veryLow: (MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
+        low: (MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
+        target: (MS_IN_MIN * (15 + 5)) / totalDuration * TimeService.MS_IN_DAY,
+        high: (MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
+        veryHigh: (MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
         total: MS_IN_MIN * (55 + 5)
       })
     })

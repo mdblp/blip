@@ -19,7 +19,7 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'tideline'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 import { formatBgValue } from '../../../utils/format'
 import styles from './YAxisLabelsAndTicks.css'
