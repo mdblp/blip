@@ -32,13 +32,6 @@ import HttpService from '../../../services/http'
 import { AxiosResponse } from 'axios'
 
 describe('Auth API', () => {
-  const fetchMock = jest.fn()
-
-  afterEach(() => {
-    fetchMock.mockReset()
-    delete global.fetch
-  })
-
   describe('updateProfile', () => {
     it('should return the updated profile on success', async () => {
       const profile: Profile = {
