@@ -33,6 +33,16 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import User from '../../../../lib/auth/user'
 
+/* eslint-disable react/display-name */
+jest.mock('../../../../components/dashboard-widgets/medical-files/medical-record-list', () => () => {
+  return (<></>)
+})
+jest.mock('../../../../components/dashboard-widgets/medical-files/prescription-list', () => () => {
+  return (<></>)
+})
+jest.mock('../../../../components/dashboard-widgets/medical-files/weekly-report-list', () => () => {
+  return (<></>)
+})
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
 describe('Medical Files Widget', () => {
@@ -58,6 +68,7 @@ describe('Medical Files Widget', () => {
   })
 
   it('should throw an error if no monitoring team is found', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     expect(() => render(getMedicalFilesWidgetJSX())).toThrow()
   })
 
