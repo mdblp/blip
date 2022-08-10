@@ -27,7 +27,7 @@
  */
 
 import { TeamMemberRole } from '../../../models/team'
-import { INotificationAPI, APINotificationType } from '../../../models/notification'
+import { APINotificationType, INotificationAPI } from '../../../models/notification'
 import { notificationConversion } from '../../../lib/notifications/utils'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
 
@@ -50,7 +50,7 @@ describe('Notification utils', () => {
         name: 'The team'
       }
     }
-    const baseNotification: INotification = {
+    const expectedNotification: INotification = {
       id: 'abcd',
       metricsType: 'join_team',
       type: NotificationType.careTeamProInvitation,
@@ -83,49 +83,35 @@ describe('Notification utils', () => {
     })
 
     it("should transform 'careteam_invitation' to 'directInvitation'", () => {
-      baseAPINotification.type = 'careteam_invitation' as APINotificationType.careTeamInvitation
-      baseNotification.type = NotificationType.directInvitation
-      baseNotification.metricsType = 'share_data'
-      const convertedNotification = notificationConversion(baseAPINotification)
-      expect(convertedNotification).toEqual(baseNotification)
+      baseAPINotification.type = APINotificationType.careTeamInvitation
+      expectedNotification.type = NotificationType.directInvitation
+      expectedNotification.metricsType = 'share_data'
+      const actualNotification = notificationConversion(baseAPINotification)
+      expect(actualNotification).toEqual(expectedNotification)
     })
 
-    it(
-      "should transform 'medicalteam_patient_invitation' to 'careTeamPatientInvitation'",
-      () => {
-        baseAPINotification.type = 'medicalteam_patient_invitation' as APINotificationType.medicalTeamPatientInvitation
-        baseNotification.type = NotificationType.careTeamPatientInvitation
-        baseNotification.metricsType = 'join_team'
-        const convertedNotification = notificationConversion(baseAPINotification)
-        expect(convertedNotification).toEqual(baseNotification)
-      }
-    )
-
-    it(
-      "should transform 'medicalteam_invitation' to 'careTeamProInvitation'",
-      () => {
-        baseAPINotification.type = 'medicalteam_invitation' as APINotificationType.medicalTeamProInvitation
-        baseNotification.type = NotificationType.careTeamProInvitation
-        baseNotification.metricsType = 'join_team'
-        const convertedNotification = notificationConversion(baseAPINotification)
-        expect(convertedNotification).toEqual(baseNotification)
-      }
-    )
-
-    it.skip("should transform 'medicalteam_do_admin' to 'careTeamDoAdmin'", () => {
-      baseAPINotification.type = 'medicalteam_do_admin' as APINotificationType.medicalTeamDoAdmin
-      baseNotification.type = NotificationType.careTeamDoAdmin
-      baseNotification.metricsType = 'join_team'
-      const convertedNotification = notificationConversion(baseAPINotification)
-      expect(convertedNotification).toEqual(baseNotification)
+    it("should transform 'medicalteam_patient_invitation' to 'careTeamPatientInvitation'", () => {
+      baseAPINotification.type = APINotificationType.medicalTeamPatientInvitation
+      expectedNotification.type = NotificationType.careTeamPatientInvitation
+      expectedNotification.metricsType = 'join_team'
+      const actualNotification = notificationConversion(baseAPINotification)
+      expect(actualNotification).toEqual(expectedNotification)
     })
 
-    it.skip("should transform 'medicalteam_remove' to 'careTeamRemoveMember'", () => {
-      baseAPINotification.type = 'medicalteam_remove' as APINotificationType.medicalTeamRemoveMember
-      baseNotification.type = NotificationType.careTeamRemoveMember
-      baseNotification.metricsType = 'join_team'
-      const convertedNotification = notificationConversion(baseAPINotification)
-      expect(convertedNotification).toEqual(baseNotification)
+    it("should transform 'medicalteam_invitation' to 'careTeamProInvitation'", () => {
+      baseAPINotification.type = APINotificationType.medicalTeamProInvitation
+      expectedNotification.type = NotificationType.careTeamProInvitation
+      expectedNotification.metricsType = 'join_team'
+      const actualNotification = notificationConversion(baseAPINotification)
+      expect(actualNotification).toEqual(expectedNotification)
+    })
+
+    it("should transform 'medicalteam_monitoring_invitation' to 'careTeamProInvitation'", () => {
+      baseAPINotification.type = APINotificationType.medicalTeamMonitoringInvitation
+      expectedNotification.type = NotificationType.careTeamMonitoringInvitation
+      expectedNotification.metricsType = 'join_team'
+      const actualNotification = notificationConversion(baseAPINotification)
+      expect(actualNotification).toEqual(expectedNotification)
     })
   })
 })
