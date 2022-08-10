@@ -40,15 +40,23 @@ describe('Auth API', () => {
       const token = 'session-token'
       const data = { token, userid: userId }
       const headers = { [HttpHeaderKeys.sessionToken]: token } as AxiosResponseHeaders
+      const expectedResponse = { token, id: data.userid }
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({
         data,
         headers
       } as AxiosResponse)
 
       const response = await UserApi.getShorelineAccessToken()
-      const expectedResponse = { token, id: data.userid }
+
       expect(response).toEqual(expectedResponse)
       expect(HttpService.get).toHaveBeenCalledWith({ url: 'auth/login' })
+    })
+
+    it('should throw an error if profile does not exist', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValue('error')
+      await expect(async () => {
+        await UserApi.getShorelineAccessToken()
+      }).rejects.toThrowError('unknown user')
     })
   })
 
@@ -66,6 +74,13 @@ describe('Auth API', () => {
       const response = await UserApi.getProfile(userId)
       expect(response).toBeUndefined()
     })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await UserApi.getProfile(userId)
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+    })
   })
 
   describe('getPreferences', () => {
@@ -79,8 +94,15 @@ describe('Auth API', () => {
 
     it('should return undefined if preferences doesn\'t exist', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await UserApi.getSettings(userId)
+      const response = await UserApi.getPreferences(userId)
       expect(response).toBeUndefined()
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await UserApi.getPreferences(userId)
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
 
@@ -97,6 +119,13 @@ describe('Auth API', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await UserApi.getSettings(userId)
       expect(response).toBeUndefined()
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await UserApi.getSettings(userId)
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
 

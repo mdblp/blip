@@ -56,6 +56,19 @@ describe('TeamApi', () => {
       expect(teams).toEqual(data)
       expect(HttpService.get).toHaveBeenCalledWith({ url: '/v0/my-teams' })
     })
+
+    it('should return an empty array if not found', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
+      const response = await TeamApi.getTeams()
+      expect(response).toBeInstanceOf(Array)
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await TeamApi.getTeams()
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+    })
   })
 
   describe('getPatients', () => {
@@ -69,6 +82,19 @@ describe('TeamApi', () => {
       const patients = await TeamApi.getPatients()
       expect(patients).toEqual(data)
       expect(HttpService.get).toHaveBeenCalledWith({ url: '/v0/my-patients' })
+    })
+
+    it('should return an empty array if not found', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
+      const response = await TeamApi.getPatients()
+      expect(response).toBeInstanceOf(Array)
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await TeamApi.getPatients()
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
 
@@ -120,8 +146,19 @@ describe('TeamApi', () => {
 
     it('should failed if missing mandatory parameters', async () => {
       const wrongTeam = { name }
+      const wrongTeam2 = { address }
+      const wrongTeam3 = { phone, name }
+
       await expect(async () => {
         await TeamApi.createTeam(wrongTeam)
+      }).rejects.toThrow()
+
+      await expect(async () => {
+        await TeamApi.createTeam(wrongTeam2)
+      }).rejects.toThrow()
+
+      await expect(async () => {
+        await TeamApi.createTeam(wrongTeam3)
       }).rejects.toThrow()
     })
   })
@@ -233,6 +270,13 @@ describe('TeamApi', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await TeamApi.getTeamFromCode(code)
       expect(response).toEqual(null)
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      await expect(async () => {
+        await TeamApi.getTeamFromCode(code)
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })
 
