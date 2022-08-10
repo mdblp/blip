@@ -238,9 +238,9 @@ describe('TeamApi', () => {
 
   describe('joinTeam', () => {
     it('should join a team', async () => {
-      jest.spyOn(HttpService, 'put').mockResolvedValueOnce(undefined)
+      jest.spyOn(HttpService, 'post').mockResolvedValueOnce(undefined)
       await TeamApi.joinTeam(teamId, userId)
-      expect(HttpService.put).toHaveBeenCalledWith({
+      expect(HttpService.post).toHaveBeenCalledWith({
         url: `/crew/v0/teams/${teamId}/patients`,
         payload: { userId }
       })
