@@ -166,7 +166,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
                     size="small"
                     disableRipple
                     disableFocusRipple
-                    aria-label="edit-button"
+                    aria-label={t('edit')}
                     onClick={() => onEditMedicalRecord(medicalRecord)}
                   >
                     <CreateOutlinedIcon />
@@ -178,7 +178,7 @@ export default function MedicalRecordList(props: CategoryProps): JSX.Element {
                     size="small"
                     disableRipple
                     disableFocusRipple
-                    aria-label="delete-button"
+                    aria-label={t('delete')}
                     onClick={() => onDeleteMedicalRecord(medicalRecord)}
                   >
                     <TrashCanOutlined />
