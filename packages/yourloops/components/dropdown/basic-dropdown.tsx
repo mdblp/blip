@@ -84,6 +84,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
   return (
     <Select
       id={`basic-dropdown-${id}-selector`}
+      data-testid="basic-dropdown-selector"
       value={selectedValue}
       className={classes.select}
       variant="outlined"
