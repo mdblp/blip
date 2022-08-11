@@ -68,8 +68,7 @@ describe('Medical Files Widget', () => {
   })
 
   it('should throw an error if no monitoring team is found', () => {
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-    expect(() => render(getMedicalFilesWidgetJSX())).toThrow()
+    expect(() => render(getMedicalFilesWidgetJSX())).toThrowError()
   })
 
   it('should display widget for the selected monitored team', () => {
