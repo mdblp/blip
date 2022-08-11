@@ -145,7 +145,7 @@ describe('AlarmsContentConfiguration', () => {
     expect(allInputs[1].value).toBe(monitoring.parameters.highBg.toString())
     expect(allInputs[2].value).toBe(monitoring.parameters.veryLowBg.toString())
     expect(screen.getByRole('button', { name: `${monitoring.parameters.outOfRangeThreshold}%` })).not.toBeNull()
-    expect(screen.getByRole('button', { name: `${monitoring.parameters.hypoThreshold}%` })).toBeDefined()
+    expect(screen.getByRole('button', { name: `${monitoring.parameters.hypoThreshold}%` })).not.toBeNull()
     expect(screen.getByRole('button', { name: `${monitoring.parameters.nonDataTxThreshold}%` })).not.toBeNull()
   }
 
