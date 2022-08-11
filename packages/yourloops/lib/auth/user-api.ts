@@ -11,7 +11,7 @@ export default class UserApi {
       const { headers, data } = await HttpService.get<IUser>({ url: 'auth/login' })
       return { token: headers[HttpHeaderKeys.sessionToken], id: data.userid }
     } catch (err) {
-      console.log("This profile doesn't exists")
+      console.log('This profile doesn\'t exists')
       throw Error('unknown user')
     }
   }
