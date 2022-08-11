@@ -92,8 +92,7 @@ describe('Team hook', () => {
     let allTeamMembers = []
     teams.forEach(team => allTeamMembers.push(team.members))
     allTeamMembers = allTeamMembers.flat()
-    allTeamMembers = [...new Set(allTeamMembers)]
-    return allTeamMembers
+    return [...new Set(allTeamMembers)]
   }
 
   beforeAll(async () => {
@@ -188,10 +187,10 @@ describe('Team hook', () => {
       expect(() => teamHook.editPatientRemoteMonitoring(unknownPatient)).toThrowError()
     })
 
-    it('should update patient monitoring', async () => {
+    it('should update patient monitoring', () => {
       const teamMember = team1.members.find(member => member.user.userid === monitoredPatient1.userid)
       expect(teamMember.user.monitoring).toBeUndefined()
-      await act(() => {
+      act(() => {
         teamHook.editPatientRemoteMonitoring(monitoredPatient1)
       })
       expect(teamMember.user.monitoring).toBeTruthy()

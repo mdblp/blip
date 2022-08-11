@@ -329,14 +329,17 @@ describe('Auth hook', () => {
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
-      const signupForm = {
+      const signupForm: SignupForm = {
         profileFirstname: 'Tim',
         profileLastname: 'Hagine',
+        hcpProfession: HcpProfession.nurse,
         preferencesLanguage: 'fr',
-        profileCountry: 'fr'
-      } as SignupForm
+        profileCountry: 'fr',
+        terms: true,
+        privacyPolicy: true,
+        feedback: true
+      }
       await initAuthContext()
-      console.log(auth.user)
 
       expect(auth.user.profile).toBeUndefined()
       expect(auth.user.preferences).toBeUndefined()
@@ -346,7 +349,13 @@ describe('Auth hook', () => {
         await auth.completeSignup(signupForm)
       })
 
+      expect(auth.user.profile.firstName).toEqual('Tim')
+      expect(auth.user.profile.lastName).toEqual('Hagine')
       expect(auth.user.profile.fullName).toEqual('Tim Hagine')
+      expect(auth.user.profile.hcpProfession).toEqual(HcpProfession.nurse)
+      expect(auth.user.profile.termsOfUse.isAccepted).toBeTruthy()
+      expect(auth.user.profile.privacyPolicy.isAccepted).toBeTruthy()
+      expect(auth.user.profile.contactConsent.isAccepted).toBeTruthy()
       expect(auth.user.preferences.displayLanguageCode).toEqual('fr')
       expect(auth.user.settings.country).toEqual('fr')
     })
