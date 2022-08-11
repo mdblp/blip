@@ -52,11 +52,9 @@ export function notificationConversion(apin: INotificationAPI): INotification | 
       break
     case APINotificationType.medicalTeamDoAdmin:
       type = NotificationType.careTeamDoAdmin
-      // break; // TODO medicalTeamDoAdmin
       return null
     case APINotificationType.medicalTeamRemoveMember:
       type = NotificationType.careTeamRemoveMember
-      // break; // TODO medicalTeamRemoveMember
       return null
     default:
       throw new Error('Invalid notification type')
