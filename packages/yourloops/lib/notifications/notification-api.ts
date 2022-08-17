@@ -97,7 +97,7 @@ export default class NotificationApi {
         if (!notification.target) {
           throw Error('Cannot decline notification as team id is not specified')
         }
-        return await NotificationApi.cancelRemoteMonitoringInvite(userId, notification.target?.id)
+        return await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
       default:
         log.info('Unknown notification', notification)
         throw Error(`Unknown notification ${notification.type}`)
