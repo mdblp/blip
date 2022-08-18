@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 202, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *

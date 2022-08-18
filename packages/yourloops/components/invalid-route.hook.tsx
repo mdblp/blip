@@ -1,6 +1,5 @@
 /**
- * Copyright (c) 2021, Diabeloop
- * 404 page
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
