@@ -29,7 +29,6 @@
 import React from 'react'
 import { act } from 'react-dom/test-utils'
 import { BrowserRouter } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import * as authHookMock from '../../../lib/auth/hook'
 import { INotification, NotificationContext, NotificationType } from '../../../lib/notifications/models'
 import { NotificationContextProvider, useNotification } from '../../../lib/notifications/hook'
@@ -115,7 +114,7 @@ describe('Notification hook', () => {
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
         creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -123,7 +122,7 @@ describe('Notification hook', () => {
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -142,7 +141,7 @@ describe('Notification hook', () => {
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
         creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -150,7 +149,7 @@ describe('Notification hook', () => {
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -169,7 +168,7 @@ describe('Notification hook', () => {
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamProInvitation,
         creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -177,7 +176,7 @@ describe('Notification hook', () => {
         date: new Date().toISOString(),
         email: currentUser.username,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
