@@ -30,7 +30,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Grid from '@material-ui/core/Grid'
-import { useInValidRoute } from './invalid-route.hook'
+import { useInvalidRoute } from './invalid-route.hook'
 
 interface InvalidRouteProps {
   /** The message to display (default to "page-not-found") */
@@ -42,7 +42,7 @@ interface InvalidRouteProps {
 function InvalidRoute(props: InvalidRouteProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { defaultURL, message } = props
-  const { handleRedirect } = useInValidRoute(defaultURL)
+  const { handleRedirect } = useInvalidRoute(defaultURL)
 
   return (
     <Grid container direction="column" justify="center" alignItems="center" style={{ flexGrow: 1 }}>

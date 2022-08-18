@@ -26,7 +26,7 @@
  */
 
 import { renderHook } from '@testing-library/react-hooks'
-import { useInValidRoute } from '../../components/invalid-route.hook'
+import { useInvalidRoute } from '../../components/invalid-route.hook'
 import * as utils from '../../lib/utils'
 
 const mockPush = jest.fn()
@@ -43,7 +43,7 @@ describe('Invalid Route hook', () => {
 
   describe('handleRedirect', () => {
     it('should redirect to / when no defaultValue is given', () => {
-      const { result } = renderHook(() => useInValidRoute())
+      const { result } = renderHook(() => useInvalidRoute())
 
       result.current.handleRedirect(event)
 
@@ -54,7 +54,7 @@ describe('Invalid Route hook', () => {
 
     it('should redirect to defaultValue when defaultValue is given', () => {
       const defaultValue = 'defaultValue'
-      const { result } = renderHook(() => useInValidRoute(defaultValue))
+      const { result } = renderHook(() => useInvalidRoute(defaultValue))
 
       result.current.handleRedirect(event)
 

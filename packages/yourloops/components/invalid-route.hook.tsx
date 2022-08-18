@@ -30,7 +30,7 @@ import { useHistory } from 'react-router-dom'
 
 import { setPageTitle } from '../lib/utils'
 
-export function useInValidRoute(defaultURL?: string): { handleRedirect: (event: React.MouseEvent<HTMLAnchorElement>) => void } {
+export function useInvalidRoute(defaultURL?: string): { handleRedirect: (event: React.MouseEvent<HTMLAnchorElement>) => void } {
   const historyHook = useHistory()
 
   const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>): void => {
