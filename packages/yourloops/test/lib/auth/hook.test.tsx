@@ -29,13 +29,12 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import { v4 as uuidv4 } from 'uuid'
 import _ from 'lodash'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 
 import { Preferences, Profile, Settings, UserRoles } from '../../../models/user'
-import { AuthContext, AuthContextProvider, useAuth, User } from '../../../lib/auth'
+import { AuthContext, AuthContextProvider, SignupForm, useAuth, User } from '../../../lib/auth'
 import { HcpProfession } from '../../../models/hcp-profession'
 import UserApi from '../../../lib/auth/user-api'
 import { Units } from '../../../models/generic'
@@ -45,6 +44,9 @@ jest.mock('@auth0/auth0-react')
 describe('Auth hook', () => {
   let auth: AuthContext | null = null
   const id = '0123456789'
+  const userId = 'fakeUserId'
+  const userId1 = 'fakeUserId1'
+  const userId2 = 'fakeUserId2'
   const profile: Profile = {
     firstName: 'John',
     lastName: 'Doe',
@@ -250,7 +252,6 @@ describe('Auth hook', () => {
 
   describe('Flag patient', () => {
     it('should flag a un-flagged patient', async () => {
-      const userId = uuidv4()
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId] })
       await initAuthContext()
       await act(async () => {
@@ -261,8 +262,7 @@ describe('Auth hook', () => {
     })
 
     it('should un-flag a flagged patient', async () => {
-      const userId = uuidv4()
-      const otherUserId = uuidv4()
+      const otherUserId = 'otherUserId'
       jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce({
         displayLanguageCode: 'en',
         patientsStarred: [userId, otherUserId]
@@ -277,8 +277,6 @@ describe('Auth hook', () => {
     })
 
     it('should add another user to an existing list', async () => {
-      const userId1 = uuidv4()
-      const userId2 = uuidv4()
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1] })
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce({ patientsStarred: [userId1, userId2] })
       jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce({
@@ -318,6 +316,46 @@ describe('Auth hook', () => {
       })
       expect(UserApi.updatePreferences).toHaveBeenCalledTimes(1)
       expect(auth.getFlagPatients()).toEqual([userId])
+    })
+  })
+
+  describe('completeSignup', () => {
+    it('should update user profile, preferences and settings', async () => {
+      jest.spyOn(UserApi, 'getProfile').mockResolvedValueOnce(undefined)
+      jest.spyOn(UserApi, 'getPreferences').mockResolvedValueOnce(undefined)
+      jest.spyOn(UserApi, 'getSettings').mockResolvedValueOnce(undefined)
+      jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
+      jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
+      jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
+      const signupForm: SignupForm = {
+        profileFirstname: 'Tim',
+        profileLastname: 'Hagine',
+        hcpProfession: HcpProfession.nurse,
+        preferencesLanguage: 'fr',
+        profileCountry: 'fr',
+        terms: true,
+        privacyPolicy: true,
+        feedback: true
+      }
+      await initAuthContext()
+
+      expect(auth.user.profile).toBeUndefined()
+      expect(auth.user.preferences).toBeUndefined()
+      expect(auth.user.settings).toBeUndefined()
+
+      await act(async () => {
+        await auth.completeSignup(signupForm)
+      })
+
+      expect(auth.user.profile.firstName).toEqual('Tim')
+      expect(auth.user.profile.lastName).toEqual('Hagine')
+      expect(auth.user.profile.fullName).toEqual('Tim Hagine')
+      expect(auth.user.profile.hcpProfession).toEqual(HcpProfession.nurse)
+      expect(auth.user.profile.termsOfUse.isAccepted).toBeTruthy()
+      expect(auth.user.profile.privacyPolicy.isAccepted).toBeTruthy()
+      expect(auth.user.profile.contactConsent.isAccepted).toBeTruthy()
+      expect(auth.user.preferences.displayLanguageCode).toEqual('fr')
+      expect(auth.user.settings.country).toEqual('fr')
     })
   })
 })

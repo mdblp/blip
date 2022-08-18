@@ -26,8 +26,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { v4 as uuidv4 } from 'uuid'
-
 import HttpStatus from '../../../lib/http-status-codes'
 import HttpService, { ErrorMessageStatus } from '../../../services/http'
 import { APINotificationType, INotificationAPI } from '../../../models/notification'
@@ -56,7 +54,7 @@ describe('Notification API', () => {
   })
 
   const directInvitationNotification: INotification = {
-    id: uuidv4(),
+    id: 'directInvitationNotificationFakeId',
     metricsType: 'share_data',
     type: NotificationType.directInvitation,
     creator: { userid: patient.id, profile: patient.profile },
@@ -66,7 +64,7 @@ describe('Notification API', () => {
   }
 
   const careTeamProInvitationNotification: INotification = {
-    id: uuidv4(),
+    id: 'careTeamProInvitationNotificationFakeId',
     metricsType: 'join_team',
     type: NotificationType.careTeamProInvitation,
     creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -74,13 +72,13 @@ describe('Notification API', () => {
     date: new Date().toISOString(),
     email,
     target: {
-      id: uuidv4(),
+      id: 'fakeTargetId',
       name: 'A team'
     }
   }
 
   const careTeamProInvitationNotificationNoTarget: INotification = {
-    id: uuidv4(),
+    id: 'careTeamProInvitationNotificationNoTargetFakeId',
     metricsType: 'join_team',
     type: NotificationType.careTeamProInvitation,
     creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -169,7 +167,7 @@ describe('Notification API', () => {
     it('should return the converted notifications', async () => {
       const apiNotifications: INotificationAPI[] = [
         {
-          key: uuidv4(),
+          key: 'fakeId',
           type: APINotificationType.careTeamInvitation,
           creatorId: 'abcd',
           created: new Date().toISOString(),
@@ -250,7 +248,7 @@ describe('Notification API', () => {
     it('should return the converted notifications', async () => {
       const apiNotifications: INotificationAPI[] = [
         {
-          key: uuidv4(),
+          key: 'fakeId',
           type: APINotificationType.careTeamInvitation,
           creatorId: userId2,
           created: new Date().toISOString(),
@@ -312,7 +310,7 @@ describe('Notification API', () => {
         creatorId: userId2,
         date: new Date().toISOString(),
         email,
-        id: uuidv4()
+        id: 'fakeId'
       }
       for (const notificationType of notificationTypes) {
         try {
@@ -378,7 +376,7 @@ describe('Notification API', () => {
       mockedAxios.put.mockResolvedValue(resolveOK)
 
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'share_data',
         type: NotificationType.careTeamProInvitation,
         creator: { userid: caregiver.id, profile: caregiver.profile },
@@ -386,7 +384,7 @@ describe('Notification API', () => {
         date: new Date().toISOString(),
         email,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -404,7 +402,7 @@ describe('Notification API', () => {
       })
 
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamPatientInvitation,
         creator: { userid: patient.id, profile: patient.profile },
@@ -412,7 +410,7 @@ describe('Notification API', () => {
         date: new Date().toISOString(),
         email,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -434,7 +432,7 @@ describe('Notification API', () => {
 
       const patient = loggedInUsers.getPatient()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamPatientInvitation,
         creator: { userid: patient.id, profile: patient.profile },
@@ -442,7 +440,7 @@ describe('Notification API', () => {
         date: new Date().toISOString(),
         email,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -469,7 +467,7 @@ describe('Notification API', () => {
         creatorId: user.id,
         date: new Date().toISOString(),
         email: user.username,
-        id: uuidv4()
+        id: 'fakeId'
       }
       for (const notificationType of notificationTypes) {
         try {
@@ -554,7 +552,7 @@ describe('Notification API', () => {
 
       const patient = loggedInUsers.getPatient()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamPatientInvitation,
         creator: { userid: patient.id, profile: patient.profile },
@@ -579,7 +577,7 @@ describe('Notification API', () => {
 
       const patient = loggedInUsers.getPatient()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamPatientInvitation,
         creator: { userid: patient.id, profile: patient.profile },
@@ -587,7 +585,7 @@ describe('Notification API', () => {
         date: new Date().toISOString(),
         email,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -609,7 +607,7 @@ describe('Notification API', () => {
 
       const patient = loggedInUsers.getPatient()
       const notification: INotification = {
-        id: uuidv4(),
+        id: 'fakeId',
         metricsType: 'join_team',
         type: NotificationType.careTeamPatientInvitation,
         creator: { userid: patient.id, profile: patient.profile },
@@ -617,7 +615,7 @@ describe('Notification API', () => {
         date: new Date().toISOString(),
         email,
         target: {
-          id: uuidv4(),
+          id: 'fakeTargetId',
           name: 'A team'
         }
       }
@@ -647,7 +645,7 @@ describe('Notification API', () => {
         creatorId: user.id,
         date: new Date().toISOString(),
         email: user.username,
-        id: uuidv4()
+        id: 'fakeId'
       }
       for (const notificationType of notificationTypes) {
         try {

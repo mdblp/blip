@@ -30,7 +30,6 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
-import { v4 as uuidv4 } from 'uuid'
 
 import * as notificationHookMock from '../../../lib/notifications/hook'
 import * as authHookMock from '../../../lib/auth'
@@ -57,7 +56,7 @@ describe('Main Header', () => {
     creatorId: 'creatorId',
     date: new Date().toISOString(),
     email: 'fake@email.com',
-    id: uuidv4()
+    id: 'fakeId'
   }]
   const teams: Team[] = [buildTeam('team1Id', []), buildTeam('team1Id', [])]
 

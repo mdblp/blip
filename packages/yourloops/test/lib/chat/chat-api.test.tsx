@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2022, Diabeloop
+ * Chat API tests
  *
  * All rights reserved.
  *
@@ -25,29 +26,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import EncoderService from '../../services/encoder'
-import { Crypto } from '@peculiar/webcrypto'
+import { Message } from '../../../components/chat/chat-widget'
+import HttpService from '../../../services/http'
+import { AxiosResponse } from 'axios'
+import ChatApi from '../../../lib/chat/api'
 
-describe('Encoder service', () => {
-  beforeAll(() => {
-    Object.defineProperty(global.self, 'crypto', {
-      value: {
-        subtle: new Crypto().subtle
-      }
+describe('Chat API', () => {
+  const teamId = 'teamId'
+  const patientId = 'patientId'
+
+  it('should get chat messages', async () => {
+    const data: Message[] = [
+      { text: 'hello doc', isMine: true },
+      { text: 'hi patient', isMine: false }
+    ]
+    jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
+
+    const messages = await ChatApi.getChatMessages(teamId, patientId)
+    expect(messages).toEqual(data)
+    expect(HttpService.get).toHaveBeenCalledWith({
+      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`
     })
   })
 
-  describe('encodeSHA1', () => {
-    it('should return correct SHA1 hash', async () => {
-      // given
-      const expected = '8EF80F372246EBBB93B988437EB9B43E7B93DE62'
-      const valueToEncode = 'Bienveillant'
+  it('should send chat messages', async () => {
+    const text = 'hello doc'
+    const isPrivate = false
+    jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: true } as AxiosResponse)
 
-      // when
-      const actual = await EncoderService.encodeSHA1(valueToEncode)
-
-      // then
-      expect(actual).toEqual(expected)
+    const messageIsSent = await ChatApi.sendChatMessage(teamId, patientId, text, isPrivate)
+    expect(messageIsSent).toBeTruthy()
+    expect(HttpService.post).toHaveBeenCalledWith({
+      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
+      payload: { text, private: isPrivate }
     })
   })
 })
