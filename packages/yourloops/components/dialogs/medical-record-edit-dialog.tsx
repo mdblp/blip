@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 
@@ -42,10 +42,11 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
 import { MedicalRecord } from '../../lib/medical-files/model'
-import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-import { useAlert } from '../utils/snackbar'
+import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
+import { useAuth } from '../../lib/auth'
+import { UserRoles } from '../../models/user'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -75,54 +76,19 @@ const classes = makeStyles((theme: Theme) => ({
 export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogProps): JSX.Element {
   const { title, textArea, divider } = classes()
   const { t } = useTranslation('yourloops')
-  const alert = useAlert()
+  const { user } = useAuth()
   const { onClose, onSaved, medicalRecord, teamId, patientId, readonly } = props
-
-  const [diagnosis, setDiagnosis] = useState<string>(medicalRecord?.diagnosis || '')
-  const [progressionProposal, setProgressionProposal] = useState<string>(medicalRecord?.progressionProposal || '')
-  const [trainingSubject, setTrainingSubject] = useState<string>(medicalRecord?.trainingSubject || '')
-  const [inProgress, setInProgress] = useState<boolean>(false)
-  const disabled = useMemo<boolean>(
-    () => (readonly || inProgress || !diagnosis) && !trainingSubject && !progressionProposal,
-    [diagnosis, inProgress, progressionProposal, readonly, trainingSubject])
-
-  const saveMedicalRecord = async (): Promise<void> => {
-    try {
-      setInProgress(true)
-      let payload: MedicalRecord
-      if (medicalRecord) {
-        payload = await MedicalFilesApi.updateMedicalRecord({
-          ...medicalRecord,
-          diagnosis,
-          progressionProposal,
-          trainingSubject
-        })
-      } else {
-        payload = await MedicalFilesApi.createMedicalRecord({
-          teamId,
-          patientId,
-          diagnosis,
-          progressionProposal,
-          trainingSubject
-        })
-      }
-      setInProgress(false)
-      alert.success(t('medical-record-save-success'))
-      onSaved(payload)
-    } catch (err) {
-      console.log(err)
-      setInProgress(false)
-      alert.error(t('medical-record-save-failed'))
-    }
-  }
-
-  useEffect(() => {
-    return () => {
-      setProgressionProposal('')
-      setDiagnosis('')
-      setTrainingSubject('')
-    }
-  }, [])
+  const {
+    diagnosis,
+    setDiagnosis,
+    progressionProposal,
+    setProgressionProposal,
+    inProgress,
+    trainingSubject,
+    setTrainingSubject,
+    disabled,
+    saveMedicalRecord
+  } = useMedicalRecordEditDialog({ onSaved, readonly, medicalRecord, teamId, patientId })
 
   return (
     <Dialog
@@ -198,17 +164,19 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         >
           {t('cancel')}
         </Button>
-        <ProgressIconButtonWrapper inProgress={inProgress}>
-          <Button
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={disabled}
-            onClick={saveMedicalRecord}
-          >
-            {t('save')}
-          </Button>
-        </ProgressIconButtonWrapper>
+        {user.role !== UserRoles.patient &&
+          <ProgressIconButtonWrapper inProgress={inProgress}>
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              disabled={disabled}
+              onClick={saveMedicalRecord}
+            >
+              {t('save')}
+            </Button>
+          </ProgressIconButtonWrapper>
+        }
       </DialogActions>
     </Dialog>
   )
