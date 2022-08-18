@@ -159,22 +159,26 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('all-patients')} (${patientFiltersStats.all})`,
-      filter: PatientFilterTypes.all
+      filter: PatientFilterTypes.all,
+      ariaLabel: t('all-patients-filter')
     },
     {
       icon: <FlagOutlinedIcon />,
       text: `${t('flagged')} (${numberOfFlaggedPatients})`,
-      filter: PatientFilterTypes.flagged
+      filter: PatientFilterTypes.flagged,
+      ariaLabel: t('flagged-patients-filter')
     },
     {
       icon: <PendingIcon />,
       text: `${t('pending')} (${patientFiltersStats.pending})`,
-      filter: PatientFilterTypes.pending
+      filter: PatientFilterTypes.pending,
+      ariaLabel: t('pending-patients-filter')
     },
     {
       icon: <MedicalServiceIcon />,
       text: `${t('private-practice')} (${patientFiltersStats.directShare})`,
-      filter: PatientFilterTypes.private
+      filter: PatientFilterTypes.private,
+      ariaLabel: t('private-practice-patients-filter')
     }
   ]
 
@@ -183,19 +187,22 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       icon: <HourglassEmptyIcon />,
       count: patientFiltersStats.outOfRange,
       text: t('time-away-from-target'),
-      filter: PatientFilterTypes.outOfRange
+      filter: PatientFilterTypes.outOfRange,
+      ariaLabel: t('time-away-from-target-patients-filter')
     },
     {
       icon: <TimelineIcon />,
       count: patientFiltersStats.severeHypoglycemia,
       text: t('alert-hypoglycemic'),
-      filter: PatientFilterTypes.severeHypoglycemia
+      filter: PatientFilterTypes.severeHypoglycemia,
+      ariaLabel: t('alert-hypoglycemic-patients-filter')
     },
     {
       icon: <SignalWifiOffIcon />,
       count: patientFiltersStats.dataNotTransferred,
       text: t('data-not-transferred'),
-      filter: PatientFilterTypes.dataNotTransferred
+      filter: PatientFilterTypes.dataNotTransferred,
+      ariaLabel: t('data-not-transferred-patients-filter')
     }
   ]
 
@@ -204,6 +211,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   return (
     <Drawer
       id="main-left-drawer"
+      data-testid="main-left-drawer"
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
@@ -215,7 +223,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
         {drawerItems.map((item, index) => (
           <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
             <ListItem button>
-              <ListItemIcon>
+              <ListItemIcon aria-label={item.ariaLabel}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText>
@@ -239,7 +247,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}
               aria-label={PatientFilterTypes.remoteMonitored}>
               <ListItem button>
-                <ListItemIcon>
+                <ListItemIcon aria-label={t('remote-monitoring-patients-filter')}>
                   <SupervisedUserCircleIcon />
                 </ListItemIcon>
                 <ListItemText>
@@ -251,7 +259,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </Link>
             <Link to={`/home?filter=${PatientFilterTypes.renew}`} aria-label={PatientFilterTypes.renew}>
               <ListItem button>
-                <ListItemIcon>
+                <ListItemIcon aria-label={t('incoming-renewal-patients-filter')}>
                   <HistoryIcon />
                 </ListItemIcon>
                 <ListItemText>
@@ -280,7 +288,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             {drawerEventsItems.map((item, index) => (
               <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
                 <ListItem button>
-                  <ListItemIcon>
+                  <ListItemIcon aria-label={item.ariaLabel}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText>
@@ -309,7 +317,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </ListItem>
             <Link to={`/home?filter=${PatientFilterTypes.unread}`} aria-label={PatientFilterTypes.unread}>
               <ListItem button>
-                <ListItemIcon>
+                <ListItemIcon aria-label={t('unread-messages-patients-filter')}>
                   <EmailIcon />
                 </ListItemIcon>
                 <ListItemText>

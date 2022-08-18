@@ -27,37 +27,22 @@
  */
 
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Grid from '@material-ui/core/Grid'
 
 import { setPageTitle } from '../lib/utils'
 
-interface InvalidRouteProps {
-  /** The message to display (default to "page-not-found") */
-  message?: string
-  /** Redirect URL (default to "/") */
-  defaultURL?: string
-}
-
-function InvalidRoute(props: InvalidRouteProps): JSX.Element {
+function InvalidRoute(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const historyHook = useHistory()
-  const { defaultURL, message } = props
-
-  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>): void => {
-    event.preventDefault()
-    historyHook.push(defaultURL ?? '/')
-  }
 
   setPageTitle()
 
   return (
     <Grid container direction="column" justify="center" alignItems="center" style={{ flexGrow: 1 }}>
-      <p>{message ?? t('page-not-found')}</p>
+      <p>{t('page-not-found')}</p>
       <p>
-        <a href={defaultURL} onClick={handleRedirect}>
+        <a href="/">
           {t('breadcrumb-home')}
         </a>
       </p>

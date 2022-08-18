@@ -41,6 +41,7 @@ import PatientDataPage from '../components/patient-data'
 import DashboardLayout from '../components/layouts/dashboard-layout'
 import TeamDetailsPage from './team/team-details-page'
 import HomePage from './home-page'
+import InvalidRoute from '../components/invalid-route'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()
@@ -66,6 +67,7 @@ export function MainLayout(): JSX.Element {
             <DataContextProvider context={DefaultDataContext}>
               <DashboardLayout>
                 <Switch>
+                  <Route exact path="/not-found" component={InvalidRoute} />
                   <Route exact path="/preferences" component={ProfilePage} />
                   <Route exact path="/notifications" component={NotificationsPage} />
                   <Route exact path="/home">

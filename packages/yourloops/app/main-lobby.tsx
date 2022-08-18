@@ -119,7 +119,6 @@ export function MainLobby(): JSX.Element {
                   <Route exact path="/complete-signup" component={CompleteSignUpPage} />
                   <Route exact path="/renew-consent" component={ConsentPage} />
                   <Route exact path="/new-consent" component={PatientConsentPage} />
-                  <Route exact path="/not-found" component={InvalidRoute} />
                   <Route component={MainLayout} />
                 </Switch>
               </div>
