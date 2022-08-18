@@ -76,7 +76,7 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
   }
 
   return (
-    <Card className={classes.medicalFilesWidget} id="medical-files-card">
+    <Card className={classes.medicalFilesWidget} id="medical-files-card" data-testid="medical-files-card">
       <CardHeader
         id="medical-files-card-header"
         avatar={<AssignmentIcon />}
