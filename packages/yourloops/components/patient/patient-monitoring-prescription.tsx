@@ -248,7 +248,7 @@ function PatientMonitoringPrescription(props: PatientMonitoringPrescriptionProps
             <Typography>{t('remote-monitoring-prescription-duration')}:</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
-                id="team"
+                id="prescription-duration"
                 defaultValue={`${numberOfMonthSelected} ${month}`}
                 values={monthValues}
                 onSelect={onMonthDropdownSelect}

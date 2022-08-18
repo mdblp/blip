@@ -92,9 +92,10 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       onChange={handleSelectChange}
       MenuProps={MenuProps}
       classes={error ? { root: classes.error } : undefined}
+      data-testid={`basic-dropdown-${id}-selector`}
     >
       {values.map(item => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>
           {t(item)}
         </MenuItem>
       ))}

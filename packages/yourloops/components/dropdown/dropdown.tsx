@@ -73,9 +73,10 @@ function Dropdown(props: BasicDropdownProps): JSX.Element {
       disabled={disabled}
       input={<OutlinedInput margin="dense" />}
       onChange={handleSelectChange}
+      data-testid={`basic-dropdown-${id}-selector`}
     >
       {Array.from(values.entries()).map(value => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${value[0]}`} key={value[0]} value={value[0]}>
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${value[0]}`} key={value[0]} value={value[0]} data-testid={`basic-dropdown-${id}-menuitem-${value[1]}`}>
           {value[1]}
         </MenuItem>
       ))}
