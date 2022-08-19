@@ -314,7 +314,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </ListItem>
             <Link to={`/home?filter=${PatientFilterTypes.unread}`} aria-label={PatientFilterTypes.unread}>
               <ListItem button>
-                <ListItemIcon aria-label={t('unread-messages-patients-filter')}>
+                <ListItemIcon>
                   <EmailIcon />
                 </ListItemIcon>
                 <ListItemText>

@@ -206,7 +206,7 @@ describe('Main Drawer', () => {
     await checkFilterActionByRole(`data-not-transferred ${patientsFilterStats.dataNotTransferred}`, PatientFilterTypes.dataNotTransferred.toString())
   })
 
-  it('should display correct filter value for data not transferred alert patients and redirect to proper url', async () => {
+  it('should display correct filter value for unread messages and redirect to proper url', async () => {
     await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientFilterTypes.unread.toString())
   })
 
