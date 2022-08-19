@@ -144,6 +144,7 @@ class TidelineHeader extends React.Component {
               <span>{ t('patient') } :</span>
               <FormControl id="subnav-patient-list" variant="outlined">
                 <Select
+                  data-testid="drop-down-patient"
                   defaultValue={this.props.patient.userid}
                   onChange={event => this.props.onSwitchPatient(this.props.patients.find(patient => patient.userid === event.target.value))}
                 >

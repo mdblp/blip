@@ -8,13 +8,30 @@ import * as sinon from 'sinon'
 import Header from '../../../../app/components/chart/header'
 
 describe('Header', function () {
+  let div = null
+
   describe('render', () => {
     const props = {
       patient: {
+        userid: 'user1',
         profile: {
-          fullName: 'Jane Doe'
+          fullName: 'Jone Dah'
         }
       },
+      patients: [
+        {
+          userid: 'user1',
+          profile: {
+            fullName: 'Jone Dah'
+          }
+        },
+        {
+          userid: 'user2',
+          profile: {
+            fullName: 'Jane Doe'
+          }
+        }
+      ],
       chartType: 'daily',
       inTransition: false,
       atMostRecent: false,
@@ -52,10 +69,14 @@ describe('Header', function () {
       props.onClickSettings.resetHistory()
       props.onClickTrends.resetHistory()
       props.onSwitchPatient.resetHistory()
+      ReactDOM.unmountComponentAtNode(div)
+      document.body.removeChild(div)
+      div = null
     })
 
     const renderIntoDocument = (elem) => {
-      const div = document.createElement('div')
+      div = document.createElement('div')
+      document.body.appendChild(div)
       ReactDOM.render(elem, div)
       return div
     }
@@ -177,5 +198,8 @@ describe('Header', function () {
       TestUtils.Simulate.click(nextButton)
       expect(props.onClickNext.callCount).to.equal(0)
     })
+
+    /*should trigger onSwitchPatient not tested because can't make it work with MUI
+    * Doing an IT test instead*/
   })
 })
