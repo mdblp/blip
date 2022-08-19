@@ -85,6 +85,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
     <Select
       id={`basic-dropdown-${id}-selector`}
       data-testid="basic-dropdown-selector"
+      // data-testid={`basic-dropdown-${id}-selector`} TODO: choose which one to keep
       value={selectedValue}
       className={classes.select}
       variant="outlined"
@@ -92,7 +93,6 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       onChange={handleSelectChange}
       MenuProps={MenuProps}
       classes={error ? { root: classes.error } : undefined}
-      data-testid={`basic-dropdown-${id}-selector`}
     >
       {values.map(item => (
         <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>
