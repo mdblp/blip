@@ -187,22 +187,19 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
       icon: <HourglassEmptyIcon />,
       count: patientFiltersStats.outOfRange,
       text: t('time-away-from-target'),
-      filter: PatientFilterTypes.outOfRange,
-      ariaLabel: t('time-away-from-target-patients-filter')
+      filter: PatientFilterTypes.outOfRange
     },
     {
       icon: <TimelineIcon />,
       count: patientFiltersStats.severeHypoglycemia,
       text: t('alert-hypoglycemic'),
-      filter: PatientFilterTypes.severeHypoglycemia,
-      ariaLabel: t('alert-hypoglycemic-patients-filter')
+      filter: PatientFilterTypes.severeHypoglycemia
     },
     {
       icon: <SignalWifiOffIcon />,
       count: patientFiltersStats.dataNotTransferred,
       text: t('data-not-transferred'),
-      filter: PatientFilterTypes.dataNotTransferred,
-      ariaLabel: t('data-not-transferred-patients-filter')
+      filter: PatientFilterTypes.dataNotTransferred
     }
   ]
 
@@ -245,7 +242,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemText>
             </ListItem>
             <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}
-              aria-label={PatientFilterTypes.remoteMonitored}>
+                  aria-label={PatientFilterTypes.remoteMonitored}>
               <ListItem button>
                 <ListItemIcon aria-label={t('remote-monitoring-patients-filter')}>
                   <SupervisedUserCircleIcon />
@@ -259,7 +256,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             </Link>
             <Link to={`/home?filter=${PatientFilterTypes.renew}`} aria-label={PatientFilterTypes.renew}>
               <ListItem button>
-                <ListItemIcon aria-label={t('incoming-renewal-patients-filter')}>
+                <ListItemIcon>
                   <HistoryIcon />
                 </ListItemIcon>
                 <ListItemText>
@@ -288,7 +285,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
             {drawerEventsItems.map((item, index) => (
               <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
                 <ListItem button>
-                  <ListItemIcon aria-label={item.ariaLabel}>
+                  <ListItemIcon>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText>

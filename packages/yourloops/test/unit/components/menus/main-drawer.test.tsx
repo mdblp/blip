@@ -32,7 +32,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 
-import MainDrawer, { mainDrawerDefaultWidth, mainDrawerMiniVariantWidth } from '../../../../components/menus/main-drawer'
+import MainDrawer, {
+  mainDrawerDefaultWidth,
+  mainDrawerMiniVariantWidth
+} from '../../../../components/menus/main-drawer'
 import { buildTeam, buildTeamMember, triggerMouseEvent } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
@@ -106,13 +109,28 @@ describe('Main Drawer', () => {
     }
   })
 
-  async function checkFilterAction(filterLabel: string, urlFilterName: string, filterNumber?: number) {
-    render(getMainDrawerJSX())
-    const buttonName = filterNumber ? `${filterLabel} (${filterNumber})` : filterLabel
-    await waitFor(() => expect(screen.queryByRole('button', { name: buttonName })).toBeInTheDocument())
+  async function checkFilterAction(filterLabel: string, urlFilterName: string) {
     const link = await screen.findByRole('link', { name: urlFilterName })
     fireEvent.click(link)
     await waitFor(() => expect(`${history.location.pathname}${history.location.search}`).toBe(`/home?filter=${urlFilterName}`))
+  }
+
+  function computeButtonName(filterLabel: string, filterNumber?: number) {
+    return filterNumber ? `${filterLabel} (${filterNumber})` : filterLabel
+  }
+
+  async function checkFilterActionByText(filterLabel: string, urlFilterName: string, filterNumber?: number) {
+    render(getMainDrawerJSX())
+    const buttonName = computeButtonName(filterLabel, filterNumber)
+    expect(await screen.findByText(buttonName)).toBeInTheDocument()
+    await checkFilterAction(filterLabel, urlFilterName)
+  }
+
+  async function checkFilterActionByRole(filterLabel: string, urlFilterName: string, filterNumber?: number) {
+    render(getMainDrawerJSX())
+    const buttonName = computeButtonName(filterLabel, filterNumber)
+    expect(await screen.findByRole('button', { name: buttonName })).toBeInTheDocument()
+    await checkFilterAction(filterLabel, urlFilterName)
   }
 
   async function checkFilterLabel(patientsFilterStatsUpdated: PatientFilterStats, buttonLabel: string) {
@@ -123,7 +141,7 @@ describe('Main Drawer', () => {
       }
     })
     render(getMainDrawerJSX())
-    await waitFor(() => expect(screen.queryByRole('button', { name: buttonLabel })).not.toBeNull())
+    expect(await screen.findByText(buttonLabel)).toBeInTheDocument()
   }
 
   it('Should render miniVariant by default', async () => {
@@ -153,43 +171,43 @@ describe('Main Drawer', () => {
   })
 
   it('should display correct filter value for all patients and redirect to proper url', async () => {
-    await checkFilterAction('all-patients', PatientFilterTypes.all.toString(), patientsFilterStats.all)
+    await checkFilterActionByText('all-patients', PatientFilterTypes.all.toString(), patientsFilterStats.all)
   })
 
   it('should display correct filter value for flagged patients and redirect to proper url', async () => {
-    await checkFilterAction(PatientFilterTypes.flagged.toString(), PatientFilterTypes.flagged.toString(), flaggedPatients.length)
+    await checkFilterActionByText(PatientFilterTypes.flagged.toString(), PatientFilterTypes.flagged.toString(), flaggedPatients.length)
   })
 
   it('should display correct filter value for pending patients and redirect to proper url', async () => {
-    await checkFilterAction(PatientFilterTypes.pending.toString(), PatientFilterTypes.pending.toString(), patientsFilterStats.pending)
+    await checkFilterActionByText(PatientFilterTypes.pending.toString(), PatientFilterTypes.pending.toString(), patientsFilterStats.pending)
   })
 
   it('should display correct filter value for private patients and redirect to proper url', async () => {
-    await checkFilterAction('private-practice', PatientFilterTypes.private.toString(), patientsFilterStats.directShare)
+    await checkFilterActionByText('private-practice', PatientFilterTypes.private.toString(), patientsFilterStats.directShare)
   })
 
   it('should display correct filter value for monitored patient sand redirect to proper url', async () => {
-    await checkFilterAction('monitored-patients', PatientFilterTypes.remoteMonitored.toString(), patientsFilterStats.remoteMonitored)
+    await checkFilterActionByText('monitored-patients', PatientFilterTypes.remoteMonitored.toString(), patientsFilterStats.remoteMonitored)
   })
 
   it('should display correct filter value for soon to renew patients and redirect to proper url', async () => {
-    await checkFilterAction(`incoming-renewal ${patientsFilterStats.renew}`, PatientFilterTypes.renew.toString())
+    await checkFilterActionByRole(`incoming-renewal ${patientsFilterStats.renew}`, PatientFilterTypes.renew.toString())
   })
 
   it('should display correct filter value for out of range alert patients and redirect to proper url', async () => {
-    await checkFilterAction(`time-away-from-target ${patientsFilterStats.outOfRange}`, PatientFilterTypes.outOfRange.toString())
+    await checkFilterActionByRole(`time-away-from-target ${patientsFilterStats.outOfRange}`, PatientFilterTypes.outOfRange.toString())
   })
 
   it('should display correct filter value for severe hypoglycemia alert patients and redirect to proper url', async () => {
-    await checkFilterAction(`alert-hypoglycemic ${patientsFilterStats.severeHypoglycemia}`, PatientFilterTypes.severeHypoglycemia.toString())
+    await checkFilterActionByRole(`alert-hypoglycemic ${patientsFilterStats.severeHypoglycemia}`, PatientFilterTypes.severeHypoglycemia.toString())
   })
 
   it('should display correct filter value for data not transferred alert patients and redirect to proper url', async () => {
-    await checkFilterAction(`data-not-transferred ${patientsFilterStats.dataNotTransferred}`, PatientFilterTypes.dataNotTransferred.toString())
+    await checkFilterActionByRole(`data-not-transferred ${patientsFilterStats.dataNotTransferred}`, PatientFilterTypes.dataNotTransferred.toString())
   })
 
   it('should display correct filter value for data not transferred alert patients and redirect to proper url', async () => {
-    await checkFilterAction(`unread-messages ${patientsFilterStats.unread}`, PatientFilterTypes.unread.toString())
+    await checkFilterActionByRole(`unread-messages ${patientsFilterStats.unread}`, PatientFilterTypes.unread.toString())
   })
 
   it('renew filter should not display a number when there are 0 incoming renewal', async () => {
