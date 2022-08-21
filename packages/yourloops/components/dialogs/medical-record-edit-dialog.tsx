@@ -46,7 +46,6 @@ import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import useMedicalRecordEditDialog from './medical-record-edit-dialog.hook'
 import { useAuth } from '../../lib/auth'
-import { UserRoles } from '../../models/user'
 
 export interface MedicalRecordEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -164,7 +163,7 @@ export default function MedicalRecordEditDialog(props: MedicalRecordEditDialogPr
         >
           {t('cancel')}
         </Button>
-        {user.role !== UserRoles.patient &&
+        {!user.isUserPatient() &&
           <ProgressIconButtonWrapper inProgress={inProgress}>
             <Button
               variant="contained"

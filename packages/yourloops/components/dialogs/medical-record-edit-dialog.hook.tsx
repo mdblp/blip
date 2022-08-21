@@ -33,13 +33,13 @@ import MedicalFilesApi from '../../lib/medical-files/medical-files-api'
 import { CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
 import { useAlert } from '../utils/snackbar'
 
-interface Props extends CategoryProps {
+interface MedicalRecordEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalRecord) => void
   readonly: boolean
   medicalRecord?: MedicalRecord
 }
 
-interface Return {
+interface MedicalRecordEditDialogHookReturn {
   saveMedicalRecord: () => Promise<void>
   diagnosis: string
   setDiagnosis: Function
@@ -52,7 +52,7 @@ interface Return {
   disabled: boolean
 }
 
-export default function useMedicalRecordEditDialog(props: Props): Return {
+export default function useMedicalRecordEditDialog(props: MedicalRecordEditDialogHookProps): MedicalRecordEditDialogHookReturn {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { onSaved, medicalRecord, teamId, patientId, readonly } = props

@@ -91,7 +91,7 @@ describe('Medical record edit dialog', () => {
       return { success: successAlertMock, error: errorAlertMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.hcp } as User }
+      return { user: { role: UserRoles.hcp, isUserPatient: () => false } as User }
     })
   })
 
@@ -153,7 +153,7 @@ describe('Medical record edit dialog', () => {
 
   it('should not be able to save a medical record for a patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return { user: { role: UserRoles.patient } as User }
+      return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
     })
     mountComponent(true)
     expect(saveButton).not.toBeInTheDocument()
