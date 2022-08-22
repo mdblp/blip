@@ -32,6 +32,7 @@ import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 
 import * as teamHookMock from '../../../../lib/team'
+import * as authHookMock from '../../../../lib/auth'
 import MemberRow, { TeamMembersProps } from '../../../../components/team/member-row'
 import { TeamMemberRole } from '../../../../models/team'
 import { UserInvitationStatus } from '../../../../models/generic'
@@ -40,8 +41,22 @@ import { buildInvite, buildTeam, buildTeamMember } from '../../common/utils'
 import TeamApi from '../../../../lib/team/team-api'
 import TeamUtils from '../../../../lib/team/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
+import { ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
+import { User } from '../../../../lib/auth'
 
+// eslint-disable-next-line react/display-name
+jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
+  return (
+    <tr>
+      <td>
+        <button onClick={props.onConfirm}>confirm-mock</button>
+        <button onClick={props.onClose}>close-mock</button>
+      </td>
+    </tr>
+  )
+})
 jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/auth')
 jest.mock('../../../../components/utils/snackbar')
 describe('MemberRow', () => {
   const refreshParent = jest.fn()
@@ -49,6 +64,7 @@ describe('MemberRow', () => {
   const changeMemberRoleMock = jest.fn()
   const removeMemberMock = jest.fn()
   const errorMock = jest.fn()
+  const successMock = jest.fn()
   let props: TeamMembersProps = {} as TeamMembersProps
 
   const teamId = 'teamId'
@@ -62,11 +78,53 @@ describe('MemberRow', () => {
     UserInvitationStatus.accepted
   )
 
+  const pendingTeamMemberWithNoInvite = buildTeamMember(
+    teamId,
+    'fakeUserId',
+    undefined,
+    TeamMemberRole.member,
+    'fake@username.com',
+    'fake full name',
+    UserInvitationStatus.pending
+  )
+
+  const pendingTeamMemberWithInviteFromAnotherUser = buildTeamMember(
+    teamId,
+    'fakeUserId',
+    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    TeamMemberRole.member,
+    'fake@username.com',
+    'fake full name',
+    UserInvitationStatus.pending
+  )
+  pendingTeamMemberWithInviteFromAnotherUser.invitation.target = { id: 'wrongId', name: 'wrongTeam' }
+
+  const pendingTeamMemberWithInviteFromCurrentLoggedInUser = buildTeamMember(
+    teamId,
+    'fakeUserId',
+    buildInvite(teamId, 'fakeUserId', TeamMemberRole.member),
+    TeamMemberRole.member,
+    'fake@username.com',
+    'fake full name',
+    UserInvitationStatus.pending
+  )
+  pendingTeamMemberWithInviteFromCurrentLoggedInUser.invitation.target = { id: teamId, name: 'correctTeam' }
+
   const loggedInUserAdmin = buildTeamMember(
     teamId,
     loggedInUserId,
     buildInvite(teamId, loggedInUserId, TeamMemberRole.admin),
     TeamMemberRole.admin,
+    'fake@admin.com',
+    'fake admin full name',
+    UserInvitationStatus.accepted
+  )
+
+  const loggedInUserNotAdmin = buildTeamMember(
+    teamId,
+    loggedInUserId,
+    buildInvite(teamId, loggedInUserId, TeamMemberRole.member),
+    TeamMemberRole.member,
     'fake@admin.com',
     'fake admin full name',
     UserInvitationStatus.accepted
@@ -97,7 +155,13 @@ describe('MemberRow', () => {
       return { changeMemberRole: changeMemberRoleMock, removeMember: removeMemberMock }
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
-      return { error: errorMock }
+      return { error: errorMock, success: successMock }
+    })
+  })
+
+  beforeEach(() => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { id: loggedInUserAdmin.user.userid } as User }
     })
   })
 
@@ -105,9 +169,8 @@ describe('MemberRow', () => {
     const removeMemberButton = screen.getByRole('button', { name: 'remove-member-button' })
     await act(async () => {
       fireEvent.click(removeMemberButton)
-      await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeNull())
-      const confirmDialog = within(screen.getByRole('dialog'))
-      const confirmButton = confirmDialog.getByRole('button', { name: 'confirm' })
+      await waitFor(() => expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument())
+      const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
       fireEvent.click(confirmButton)
       await waitFor(() => expect(removeMemberMock).toHaveBeenCalledWith(teamMember))
       expect(refreshParent).toHaveBeenCalled()
@@ -142,8 +205,8 @@ describe('MemberRow', () => {
     expect(cells[0].innerHTML).toEqual('--')
     expect(screen.queryByTitle('pending-user-icon')).not.toBeNull()
     expect(cells[2].innerHTML).toEqual(teamMember.user.username)
-    expect(roleCheckbox.checked).toBeTruthy()
-    expect(roleCheckbox.disabled).toBeTruthy()
+    expect(roleCheckbox).toBeChecked()
+    expect(roleCheckbox).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).toBeNull()
   })
 
@@ -157,8 +220,8 @@ describe('MemberRow', () => {
     render(getMemberRowJSX())
     const cells = screen.getAllByRole('cell')
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
-    expect(roleCheckbox.checked).toBeFalsy()
-    expect(roleCheckbox.disabled).toBeTruthy()
+    expect(roleCheckbox).not.toBeChecked()
+    expect(roleCheckbox).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).toBeNull()
   })
 
@@ -176,8 +239,8 @@ describe('MemberRow', () => {
     expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName)
     expect(screen.queryByTitle('pending-user-icon')).toBeNull()
     expect(cells[2].innerHTML).toEqual(teamMember.user.username)
-    expect(roleCheckbox.checked).toBeFalsy()
-    expect(roleCheckbox.disabled).toBeTruthy()
+    expect(roleCheckbox).not.toBeChecked()
+    expect(roleCheckbox).toBeDisabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).toBeNull()
   })
 
@@ -196,8 +259,8 @@ describe('MemberRow', () => {
     expect(cells[0].innerHTML).toEqual(teamMember.user.profile.fullName)
     expect(screen.queryByTitle('pending-user-icon')).toBeNull()
     expect(cells[2].innerHTML).toEqual(teamMember.user.username)
-    expect(roleCheckbox.checked).toBeFalsy()
-    expect(roleCheckbox.disabled).toBeFalsy()
+    expect(roleCheckbox).not.toBeChecked()
+    expect(roleCheckbox).toBeEnabled()
     expect(screen.queryByRole('button', { name: 'remove-member-button' })).not.toBeNull()
   })
 
@@ -213,7 +276,7 @@ describe('MemberRow', () => {
     render(getMemberRowJSX())
     const cells = screen.getAllByRole('cell')
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
-    expect(roleCheckbox.checked).toBeTruthy()
+    expect(roleCheckbox).toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
       await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member))
@@ -234,7 +297,7 @@ describe('MemberRow', () => {
     render(getMemberRowJSX())
     const cells = screen.getAllByRole('cell')
     const roleCheckbox = within(cells[3]).getByRole('checkbox')
-    expect(roleCheckbox.checked).toBeFalsy()
+    expect(roleCheckbox).not.toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
       await waitFor(() => expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin))
@@ -268,5 +331,77 @@ describe('MemberRow', () => {
     render(getMemberRowJSX())
     await clickRemoveMemberButton()
     expect(errorMock).toHaveBeenCalledWith('remove-member-failed')
+  })
+
+  it('remove member icon should not be visible when logged in user is not admin', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(false)
+    const team = buildTeam(teamId, [teamMember, loggedInUserNotAdmin])
+    props = {
+      team,
+      teamMember,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.queryByRole('button', { name: 'remove-member-button' })).not.toBeInTheDocument()
+  })
+
+  it('remove member icon should not be visible when logged in user not admin', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin])
+    props = {
+      team,
+      teamMember,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.getByRole('button', { name: 'remove-member-button' })).toBeInTheDocument()
+  })
+
+  it('remove member icon should be disabled when logged in is the user that we want to remove', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
+    const team = buildTeam(teamId, [teamMember, loggedInUserAdmin])
+    props = {
+      team,
+      teamMember: loggedInUserAdmin,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.getByRole('button', { name: 'remove-member-button' })).toBeDisabled()
+  })
+
+  it('remove member icon should be disabled when user is pending and has no invite', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
+    const team = buildTeam(teamId, [pendingTeamMemberWithNoInvite, loggedInUserAdmin])
+    props = {
+      team,
+      teamMember: pendingTeamMemberWithNoInvite,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.getByRole('button', { name: 'remove-member-button' })).toBeDisabled()
+  })
+
+  it('remove member icon should be disabled when user is pending and was not invited by the current user', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
+    const team = buildTeam(teamId, [pendingTeamMemberWithInviteFromAnotherUser, loggedInUserAdmin])
+    props = {
+      team,
+      teamMember: pendingTeamMemberWithInviteFromAnotherUser,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.getByRole('button', { name: 'remove-member-button' })).toBeDisabled()
+  })
+
+  it('remove member icon should be enabled when user all the conditions are met for a pending user', () => {
+    jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
+    const team = buildTeam(teamId, [pendingTeamMemberWithInviteFromCurrentLoggedInUser, loggedInUserAdmin])
+    props = {
+      team,
+      teamMember: pendingTeamMemberWithInviteFromCurrentLoggedInUser,
+      refreshParent
+    }
+    render(getMemberRowJSX())
+    expect(screen.getByRole('button', { name: 'remove-member-button' })).toBeEnabled()
   })
 })

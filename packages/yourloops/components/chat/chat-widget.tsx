@@ -206,14 +206,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   return (
-    <Card className={classes.chatWidget} id="chat-widget">
+    <Card className={classes.chatWidget} id="chat-widget" data-testid="chat-card">
       <CardHeader
         id="chat-widget-header"
         avatar={<EmailOutlinedIcon />}
         className={classes.chatWidgetHeader}
         title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       />
-      <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent}>
+      <div ref={content} id="chat-widget-messages" className={classes.chatWidgetContent} data-testid="chat-card-messages">
         {messages.map(
           (msg): JSX.Element => (
             <ChatMessage key={msg.id} text={msg.text}
@@ -236,9 +236,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             <div>
               <Tabs className={classes.chatWidgetTabs} value={inputTab} aria-label="basic tabs example"
                 onChange={handleChange}>
-                <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')}
+                <Tab className={classes.chatWidgetTab} label={t('chat-footer-reply')} data-testid="chat-card-reply"
                   onClick={() => setPrivateMessage(false)} />
-                <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')}
+                <Tab className={classes.chatWidgetTab} label={t('chat-footer-private')} data-testid="chat-card-private"
                   onClick={() => setPrivateMessage(true)} />
               </Tabs>
             </div>
@@ -258,8 +258,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
             onChange={inputHandler}
             variant="outlined"
             InputLabelProps={{ shrink: false }}
+            data-testid="chat-card-input"
           />
-          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton}
+          <Button id="chat-widget-send-button" disabled={inputText.length < 1} className={classes.iconButton} arial-label={t('send')} data-testid="chat-card-send"
             onClick={sendMessage}>
             <SendIcon />
           </Button>

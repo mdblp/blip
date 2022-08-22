@@ -53,15 +53,15 @@ const LOADING_STATE_ERROR = LOADING_STATE_EARLIER_PROCESS + 1
 /**
  * @typedef { import('history').History } History
  * @typedef { import('redux').Store } Store
- * @typedef { import("../index").BlipApi } API
- * @typedef { import("../index").IUser } User
- * @typedef { import("../index").PatientData } PatientData
- * @typedef { import("../index").MessageNote } MessageNote
- * @typedef { import("../index").DialogDatePicker } DialogDatePicker
- * @typedef { import("../index").DialogRangeDatePicker } DialogRangeDatePicker
- * @typedef { import("../index").ProfileDialog } ProfileDialog
- * @typedef { import("../index").PatientInfoWidget } PatientInfoWidget
- * @typedef { import("../core/lib/partial-data-load").DateRange } DateRange
+ * @typedef { import('../index').BlipApi } API
+ * @typedef { import('../index').IUser } User
+ * @typedef { import('../index').PatientData } PatientData
+ * @typedef { import('../index').MessageNote } MessageNote
+ * @typedef { import('../index').DialogDatePicker } DialogDatePicker
+ * @typedef { import('../index').DialogRangeDatePicker } DialogRangeDatePicker
+ * @typedef { import('../index').ProfileDialog } ProfileDialog
+ * @typedef { import('../index').PatientInfoWidget } PatientInfoWidget
+ * @typedef { import('../core/lib/partial-data-load').DateRange } DateRange
  *
  * @typedef {{ api: API, patient: User, store: Store, prefixURL: string, history: History;dialogDatePicker: DialogDatePicker; dialogRangeDatePicker:DialogRangeDatePicker; profileDialog: ProfileDialog, patientInfoWidget: PatientInfoWidget }} PatientDataProps
  * @typedef {{loadingState: number; tidelineData: TidelineData | null; epochLocation: number; epochRange: number; patient: User; canPrint: boolean; chartPrefs: object; createMessageDatetime: string | null; messageThread: MessageNote[] | null; errorMessage?: string | null; msRange: number}} PatientDataState
@@ -86,7 +86,7 @@ class PatientDataPage extends React.Component {
     const currentUser = api.whoami
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
 
-    this.showProfileDialog = currentUser.userid !== patient.userid
+    this.showProfileDialog = currentUser.id !== patient.userid
 
     this.state = {
       loadingState: LOADING_STATE_NONE,
@@ -137,8 +137,7 @@ class PatientDataPage extends React.Component {
         }
       },
       chartStates: {
-        trends: {
-        }
+        trends: {}
       },
       /** @type {TidelineData | null} */
       tidelineData: null
@@ -340,7 +339,21 @@ class PatientDataPage extends React.Component {
   }
 
   renderChart() {
-    const { patient, setPatient, patients, userIsHCP, profileDialog, prefixURL, dialogDatePicker, dialogRangeDatePicker, patientInfoWidget, chatWidget, alarmCard, api, medicalFilesWidget } = this.props
+    const {
+      patient,
+      setPatient,
+      patients,
+      userIsHCP,
+      profileDialog,
+      prefixURL,
+      dialogDatePicker,
+      dialogRangeDatePicker,
+      patientInfoWidget,
+      chatWidget,
+      alarmCard,
+      api,
+      medicalFilesWidget
+    } = this.props
     const {
       canPrint,
       permsOfLoggedInUser,
@@ -613,7 +626,7 @@ class PatientDataPage extends React.Component {
       const timezone = tidelineData.getTimezoneAt(epochLocation)
       mDate = moment.utc(epochLocation).tz(timezone)
     }
-    this.setState({ createMessageDatetime : mDate.toISOString() })
+    this.setState({ createMessageDatetime: mDate.toISOString() })
   }
 
   closeMessageThread() {
@@ -685,7 +698,9 @@ class PatientDataPage extends React.Component {
       e.preventDefault()
     }
 
-    this.dataUtil.chartPrefs = this.state.chartPrefs[toChart]
+    if (this.dataUtil) {
+      this.dataUtil.chartPrefs = this.state.chartPrefs[toChart]
+    }
     // Default one week data period for dashboard (now() - 7 days)
     this.setState({
       epochLocation: new Date().valueOf(),
@@ -955,12 +970,16 @@ class PatientDataPage extends React.Component {
       bgUnits: tidelineData.opts.bgUnits,
       bgClasses: tidelineData.opts.bgClasses
     }
-    this.dataUtil = new DataUtil(tidelineData.data, { bgPrefs: bgPrefsUpdated, timePrefs, endpoints: tidelineData.endpoints })
+    this.dataUtil = new DataUtil(tidelineData.data, {
+      bgPrefs: bgPrefsUpdated,
+      timePrefs,
+      endpoints: tidelineData.endpoints
+    })
 
     let newLocation = epochLocation
     if (epochLocation === 0) {
       // First loading, display the last day in the daily chart
-      newLocation = moment.utc(tidelineData.endpoints[1]).valueOf() - MS_IN_DAY/2
+      newLocation = moment.utc(tidelineData.endpoints[1]).valueOf() - MS_IN_DAY / 2
     }
     let newRange = msRange
     if (msRange === 0) {

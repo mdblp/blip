@@ -42,7 +42,7 @@ class Messages extends React.Component {
    */
   getSaveEdit(messageUserId) {
     let saveEdit = null
-    if (messageUserId === this.props.user.userid) {
+    if (messageUserId === this.props.user.id) {
       saveEdit = this.handleEditNote
     }
     return saveEdit
@@ -178,7 +178,7 @@ class Messages extends React.Component {
 
       const comment = {
         parentmessage: parent.id,
-        userid: this.props.user.userid,
+        userid: this.props.user.id,
         groupid: parent.groupid,
         messagetext: formValues.text,
         timestamp: formValues.timestamp
@@ -206,7 +206,7 @@ class Messages extends React.Component {
     if (!_.isEmpty(formValues)) {
       const message = {
         timezone: timePrefs.timezoneName,
-        userid: user.userid,
+        userid: user.id,
         groupid: patient.userid,
         messagetext: formValues.text,
         timestamp: formValues.timestamp

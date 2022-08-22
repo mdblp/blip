@@ -96,7 +96,8 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending ||
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
-  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId
+  const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
+    (teamMember.status === UserInvitationStatus.pending && (!teamMember.invitation || teamMember.team.id !== teamMember.invitation.target?.id)) // This condition basically means that the logged in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
@@ -117,7 +118,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     setUserUpdateInProgress(true)
     try {
       await teamHook.removeMember(teamMember)
+      alert.success(t('remove-member-success'))
     } catch (reason: unknown) {
+      console.error(reason)
       alert.error(t('remove-member-failed'))
     } finally {
       setUserUpdateInProgress(false)
@@ -148,7 +151,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           className={classes.iconCell}
         >
           {currentUserIsPending &&
-            <AccessTimeIcon id={`${rowId}-pending-icon`} titleAccess="pending-user-icon" className={classes.icon} />
+            <AccessTimeIcon id={`${rowId}-pending-icon`} aria-label={t('team-member-pending-status')} titleAccess="pending-user-icon" className={classes.icon} />
           }
         </StyledTableCell>
         <StyledTableCell
@@ -167,6 +170,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           <Checkbox
             disabled={checkboxAdminDisabled}
             id={`members-row-${rowId}-role-checkbox`}
+            data-testid="members-row-checkbox"
             color="primary"
             checked={currentUserIsAdmin}
             onChange={switchRole}
@@ -179,6 +183,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
             className={classes.iconCell}
           >
             <IconButton
+              data-testid="remove-member-button"
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
               aria-label="remove-member-button"

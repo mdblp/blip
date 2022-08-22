@@ -276,7 +276,7 @@ export const Notification = (props: NotificationProps): JSX.Element => {
   }
 
   return (
-    <div id={`notification-line-${id}`} className={`${classes.container} notification-line`} data-notificationid={id}>
+    <div id={`notification-line-${id}`} data-testid="notification-line" className={`${classes.container} notification-line`} data-notificationid={id}>
       <NotificationIcon id={id} className="notification-icon" type={notification.type} />
       <NotificationSpan id={`notification-text-${id}`} notification={notification} />
       <div className={classes.rightSide}>

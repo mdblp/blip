@@ -144,6 +144,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
         prescriptionInfo.file
       )
       onClose()
+      alert.success(t('alert-invitation-sent-success'))
     } catch (error) {
       setSaveButtonDisabled(false)
       alert.error(t('error-http-500'))
@@ -171,6 +172,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
       maxWidth="lg"
       open
       onClose={onClose}
+      data-testid="remote-monitoring-dialog"
     >
       <DialogTitle id="remote-monitoring-dialog-title" className={classes.title}>
         <Box display="flex">
@@ -207,6 +209,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
                   variant="outlined"
                   size="small"
                   onChange={(e) => setPhysician(e.target.value)}
+                  data-testid="remote-monitoring-dialog-referring-doctor"
                 />
               </Box>
             </Box>
@@ -225,6 +228,7 @@ function RemoteMonitoringPatientDialog(props: RemoteMonitoringPatientDialogProps
           disableElevation
           disabled={saveButtonDisabled}
           onClick={onSave}
+          data-testid="remote-monitoring-dialog-save-button"
         >
           {t('button-save')}
         </Button>

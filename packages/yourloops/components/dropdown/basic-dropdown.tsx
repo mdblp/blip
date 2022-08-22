@@ -84,6 +84,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
   return (
     <Select
       id={`basic-dropdown-${id}-selector`}
+      data-testid={`basic-dropdown-${id}-selector`}
       value={selectedValue}
       className={classes.select}
       variant="outlined"
@@ -93,7 +94,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
       classes={error ? { root: classes.error } : undefined}
     >
       {values.map(item => (
-        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item}>
+        <MenuItem id={`basic-dropdown-${id}-menuitem-${item}`} key={item} value={item} data-testid={`basic-dropdown-${id}-menuitem-${item}`}>
           {t(item)}
         </MenuItem>
       ))}
