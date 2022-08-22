@@ -73,6 +73,7 @@ export default function MedicalRecordDeleteDialog({ onClose, medicalRecord, onDe
 
   return (
     <Dialog
+      data-testid="delete-medical-report-dialog"
       open
       fullWidth
       maxWidth="sm"
