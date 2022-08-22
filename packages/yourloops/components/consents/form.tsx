@@ -161,6 +161,7 @@ export function ConsentMonitoringTerms({ id, style, checked, onChange }: BaseCon
       onChange={onChange}
       name="terms"
       color="primary"
+      data-testid={`${id}-checkbox-terms`}
     />
   )
   const terms = t('terms-of-use')

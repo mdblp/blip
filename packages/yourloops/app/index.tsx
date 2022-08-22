@@ -44,6 +44,9 @@ import OnError from './error'
 
 i18nInit().then(() => {
   window.onerror = (event, source, lineno, colno, error) => {
+    if (source && !source.endsWith('.js')) {
+      return true
+    }
     console.error(event, source, lineno, colno, error)
     ReactDOM.render(<OnError event={event} source={source} lineno={lineno} colno={colno} error={error} />, document.body)
     return false

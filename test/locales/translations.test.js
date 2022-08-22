@@ -26,119 +26,120 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const { expect } = require("chai");
-const blipEnglish = Object.keys(require("../../locales/en/translation.json"));
-const ylpEnglish = Object.keys(require("../../locales/en/yourloops.json"));
+const fs = require('fs').promises
+const path = require('path')
+const { expect } = require('chai')
+const blipEnglish = Object.keys(require('../../locales/en/translation.json'))
+const ylpEnglish = Object.keys(require('../../locales/en/yourloops.json'))
 
-const reFuncTranslate1 = /[^a-zA-Z0-9]t\("([^"]+)"\s*(,[^)]+)?\)/;
-const reFuncTranslate2 = /[^a-zA-Z0-9]t\('([^']+)'\s*(,[^)]+)?\)/;
-const reFuncTranslate3 = /[^a-zA-Z0-9]t\(`([^`]+)`\s*(,[^)]+)?\)/;
+const reFuncTranslate1 = /[^a-zA-Z0-9]t\("([^"]+)"\s*(,[^)]+)?\)/
+const reFuncTranslate2 = /[^a-zA-Z0-9]t\('([^']+)'\s*(,[^)]+)?\)/
+const reFuncTranslate3 = /[^a-zA-Z0-9]t\(`([^`]+)`\s*(,[^)]+)?\)/
 
 /** Keys to ignore (used in <Trans /> or composed keys or others mechanism) */
 const ignoredTransKeysForBlip = [
-  "html.setting-no-uploaded-data",
+  'html.setting-no-uploaded-data',
   // Bolus types:
-  "bolus_biphasic",
-  "bolus_normal",
-  "bolus_pen",
+  'bolus_biphasic',
+  'bolus_normal',
+  'bolus_pen',
   // Physical activity intensity
-  "high-pa",
-  "medium-pa",
-  "low-pa",
+  'high-pa',
+  'medium-pa',
+  'low-pa',
   // Dates (not sure all are still used)
-  "hour",
-  "hours",
-  "minute",
-  "minutes",
-  "month",
-  "months",
-  "seconds",
-  "week",
-  "weeks",
-  "year",
-  "years",
+  'hour',
+  'hours',
+  'minute',
+  'minutes',
+  'month',
+  'months',
+  'seconds',
+  'week',
+  'weeks',
+  'year',
+  'years',
   // Others
-  "YYYY-MM-DD",
-  "carbs",
-  "delivered",
-  "level",
-];
+  'YYYY-MM-DD',
+  'carbs',
+  'delivered',
+  'level'
+]
 const ignoredTransKeyInBlipFiles = [
-  "${pa.reportedIntensity}-pa",
-  "bolus_${bolusType}",
-  "params|${parameter.name}",
-  "params|${row.name}"
-];
+  '${pa.reportedIntensity}-pa',
+  'bolus_${bolusType}',
+  'params|${parameter.name}',
+  'params|${row.name}'
+]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
-  "Austria",
-  "Belgium",
-  "France",
-  "Germany",
-  "Italy",
-  "Netherlands",
-  "Spain",
-  "Switzerland",
-  "United Kingdom",
+  'Austria',
+  'Belgium',
+  'France',
+  'Germany',
+  'Italy',
+  'Netherlands',
+  'Spain',
+  'Switzerland',
+  'United Kingdom',
   // HcpProfessions
-  "hcp-profession-nurse",
-  "hcp-profession-diabeto",
-  "hcp-profession-other",
-  "hcp-profession-dietitian",
+  'hcp-profession-nurse',
+  'hcp-profession-diabeto',
+  'hcp-profession-other',
+  'hcp-profession-dietitian',
   // <Trans /> keys
-  "consent-renew-message",
-  "consent-welcome-message",
-  "modal-add-patient-warning-line2",
-  "modal-patient-team-privacy-2",
-  "no",
-  "notification-caregiver-invitation-by-patient",
-  "notification-hcp-invitation-by-team",
-  "notification-patient-invitation-by-team",
-  "signup-steppers-ending-message-1",
-  "signup-steppers-ending-message-2",
-  "team-leave-dialog-and-del-question",
-  "team-leave-dialog-only-admin-consequences",
-  "team-members-dialog-rmmember-question",
-  "team-members-dialog-rmmember-title",
-  "team-modal-create-warning-line2",
+  'consent-renew-message',
+  'consent-welcome-message',
+  'modal-add-patient-warning-line2',
+  'modal-patient-team-privacy-2',
+  'no',
+  'notification-caregiver-invitation-by-patient',
+  'notification-hcp-invitation-by-team',
+  'notification-patient-invitation-by-team',
+  'signup-steppers-ending-message-1',
+  'signup-steppers-ending-message-2',
+  'team-leave-dialog-and-del-question',
+  'team-leave-dialog-only-admin-consequences',
+  'team-members-dialog-rmmember-question',
+  'team-members-dialog-rmmember-title',
+  'team-modal-create-warning-line2',
   // Generated keys
-  "consent-caregiver-privacy-policy",
-  "consent-caregiver-terms-of-use",
-  "consent-hcp-feedback",
-  "consent-hcp-privacy-policy",
-  "consent-hcp-terms-of-use",
-  "consent-patient-privacy-policy",
-  "consent-patient-terms-of-use",
-  "consent-monitoring-terms-of-use",
-  "not-logged-in",
-  "modal-add-medical-team-code-no-invite",
-  "severe-hypoglycemia-threshold",
-  "signup-steppers-caregiver-title",
-  "signup-steppers-hcp-title",
-  "signup-steppers-step1",
-  "signup-steppers-step2",
-  "team-card-label-address",
-  "until",
+  'consent-caregiver-privacy-policy',
+  'consent-caregiver-terms-of-use',
+  'consent-hcp-feedback',
+  'consent-hcp-privacy-policy',
+  'consent-hcp-terms-of-use',
+  'consent-patient-privacy-policy',
+  'consent-patient-terms-of-use',
+  'consent-monitoring-terms-of-use',
+  'not-logged-in',
+  'modal-add-medical-team-code-no-invite',
+  'severe-hypoglycemia-threshold',
+  'signup-steppers-caregiver-title',
+  'signup-steppers-hcp-title',
+  'signup-steppers-step1',
+  'signup-steppers-step2',
+  'team-card-label-address',
+  'team-leave-dialog-button-leave',
+  'until',
   // Others
   // TODO
-  "alert-invitation-patient-failed-already-in-team",
-  "alert-invitation-patient-failed-already-invited",
-  "accompanying-documents",
-  "intended-use",
-  "training",
-  "initial-hba1c",
-  "optional",
-];
+  'alert-invitation-patient-failed-already-in-team',
+  'alert-invitation-patient-failed-already-invited',
+  'accompanying-documents',
+  'intended-use',
+  'training',
+  'initial-hba1c',
+  'optional'
+]
 const ignoredTransKeyInYourLoopsFiles = [
-  "yourloops|${s}",
-  "team-card-label-${label}",
-  "signup-steppers-${state.formValues.accountRole}-title",
+  'yourloops|${s}',
+  'team-card-label-${label}',
+  'signup-steppers-${state.formValues.accountRole}-title',
   // Documentation!
-  "translate-me",
-  "translate-{{someone}}",
-];
+  'translate-me',
+  'translate-{{someone}}'
+]
 
 /**
  * @param {string} baseDir
@@ -146,27 +147,27 @@ const ignoredTransKeyInYourLoopsFiles = [
  */
 async function getFiles(baseDir) {
   // const dir = path.resolve(__dirname, "locales", lang);
-  let files = await fs.readdir(baseDir);
-  const subDirs = [];
+  let files = await fs.readdir(baseDir)
+  const subDirs = []
   for (const filename of files) {
-    if (filename === "node_modules") {
-      continue;
+    if (filename === 'node_modules') {
+      continue
     }
-    const fullName = `${baseDir}/${filename}`;
-    const fileStatus = await fs.stat(fullName);
+    const fullName = `${baseDir}/${filename}`
+    const fileStatus = await fs.stat(fullName)
     if (fileStatus.isDirectory()) {
-      subDirs.push(fullName);
+      subDirs.push(fullName)
     }
   }
 
-  files = files.filter((name) => /\.[jt]sx?$/.test(name) && !/\.test\.[jt]sx?$/.test(name));
-  files.sort((a, b) => a.localeCompare(b));
-  const fullNames = files.map((file) => `${baseDir}/${file}`);
+  files = files.filter((name) => /\.[jt]sx?$/.test(name) && !/\.test\.[jt]sx?$/.test(name))
+  files.sort((a, b) => a.localeCompare(b))
+  const fullNames = files.map((file) => `${baseDir}/${file}`)
   for (const dirName of subDirs) {
-    const subFiles = await getFiles(dirName);
-    Array.prototype.push.apply(fullNames, subFiles);
+    const subFiles = await getFiles(dirName)
+    Array.prototype.push.apply(fullNames, subFiles)
   }
-  return fullNames;
+  return fullNames
 }
 
 /**
@@ -175,21 +176,21 @@ async function getFiles(baseDir) {
  * @returns {Promise<string[]>} The list of used translations
  */
 async function getTranslations(file) {
-  const content = await fs.readFile(file, { encoding: "utf-8" });
-  const lines = content.split("\n");
+  const content = await fs.readFile(file, { encoding: 'utf-8' })
+  const lines = content.split('\n')
   /** @type {string[]} */
-  const trKeys = [];
+  const trKeys = []
   for (const line of lines) {
     // console.log(line);
-    let match = reFuncTranslate1.exec(line) ?? reFuncTranslate2.exec(line) ?? reFuncTranslate3.exec(line);
+    let match = reFuncTranslate1.exec(line) ?? reFuncTranslate2.exec(line) ?? reFuncTranslate3.exec(line)
     if (match !== null) {
-      const trKey = match[1];
-      if (typeof trKey === "string") {
-        trKeys.push(trKey);
+      const trKey = match[1]
+      if (typeof trKey === 'string') {
+        trKeys.push(trKey)
       }
     }
   }
-  return trKeys;
+  return trKeys
 }
 
 /**
@@ -199,74 +200,74 @@ async function getTranslations(file) {
  */
 async function getTrKeys(files) {
   /** @type {string[]} */
-  const trKeys = [];
+  const trKeys = []
   for (const file of files) {
-    const keys = await getTranslations(file);
+    const keys = await getTranslations(file)
     // console.log({ file, trKeys });
     for (const key of keys) {
       // Avoid Double entries
       if (!trKeys.includes(key)) {
-        trKeys.push(key);
+        trKeys.push(key)
       }
     }
   }
-  trKeys.sort((a, b) => a.localeCompare(b));
-  return trKeys;
+  trKeys.sort((a, b) => a.localeCompare(b))
+  return trKeys
 }
 
-describe("Locales tests", () => {
-  it("should find all translations from translation.json", async () => {
-    const blipFiles = await getFiles(path.resolve(`${__dirname}/../../packages/blip`));
-    expect(blipFiles).to.be.an("array").not.empty;
-    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`));
-    expect(vizFiles).to.be.an("array").not.empty;
-    const tidelineFiles = await getFiles(path.resolve(`${__dirname}/../../packages/tideline`));
-    expect(tidelineFiles).to.be.an("array").not.empty;
+describe('Locales tests', () => {
+  it('should find all translations from translation.json', async () => {
+    const blipFiles = await getFiles(path.resolve(`${__dirname}/../../packages/blip`))
+    expect(blipFiles).to.be.an('array').not.empty
+    const vizFiles = await getFiles(path.resolve(`${__dirname}/../../packages/viz`))
+    expect(vizFiles).to.be.an('array').not.empty
+    const tidelineFiles = await getFiles(path.resolve(`${__dirname}/../../packages/tideline`))
+    expect(tidelineFiles).to.be.an('array').not.empty
 
-    const allFiles = blipFiles;
-    Array.prototype.push.apply(allFiles, vizFiles);
-    Array.prototype.push.apply(allFiles, tidelineFiles);
+    const allFiles = blipFiles
+    Array.prototype.push.apply(allFiles, vizFiles)
+    Array.prototype.push.apply(allFiles, tidelineFiles)
 
-    const trKeys = await getTrKeys(allFiles);
+    const trKeys = await getTrKeys(allFiles)
     /** @type {string[]} */
-    const unusedTranslations = [];
+    const unusedTranslations = []
     /** @type {string[]} */
-    const missingTranslations = [];
+    const missingTranslations = []
     for (const key of blipEnglish) {
       if (!trKeys.includes(key) && !ignoredTransKeysForBlip.includes(key)) {
-        unusedTranslations.push(key);
+        unusedTranslations.push(key)
       }
     }
     for (const key of trKeys) {
       // Use yourloops.json as a fallback
       if (!blipEnglish.includes(key) && !ylpEnglish.includes(key) && !ignoredTransKeyInBlipFiles.includes(key)) {
-        missingTranslations.push(key);
+        missingTranslations.push(key)
       }
     }
 
-    expect(unusedTranslations, "Unused translations").to.be.empty;
-    expect(missingTranslations, "Missing translations").to.be.empty;
-  });
+    expect(unusedTranslations, 'Unused translations').to.be.empty
+    expect(missingTranslations, 'Missing translations').to.be.empty
+  })
 
-  it("should find all translations from yourloops.json", async () => {
-    const allFiles = await getFiles(path.resolve(`${__dirname}/../../packages/yourloops`));
-    const trKeys = await getTrKeys(allFiles);
+  it('should find all translations from yourloops.json', async () => {
+    const allFiles = await getFiles(path.resolve(`${__dirname}/../../packages/yourloops`))
+    const trKeys = await getTrKeys(allFiles)
     /** @type {string[]} */
-    const unusedTranslations = [];
+    const unusedTranslations = []
     /** @type {string[]} */
-    const missingTranslations = [];
+    const missingTranslations = []
     for (const key of ylpEnglish) {
       if (!trKeys.includes(key) && !ignoredTransKeyForYourLoops.includes(key)) {
-        unusedTranslations.push(key);
+        unusedTranslations.push(key)
       }
     }
     for (const key of trKeys) {
       if (!ylpEnglish.includes(key) && !ignoredTransKeyInYourLoopsFiles.includes(key)) {
-        missingTranslations.push(key);
+        missingTranslations.push(key)
       }
     }
 
-    expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty;
-    expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty;
-  });
-});
+    expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty
+    expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty
+  })
+})

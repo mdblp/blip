@@ -286,6 +286,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                   }
                 }}
                 onChange={(event) => onChange(+event.target.value, MIN_LOW_BG, MAX_LOW_BG, setLowBg)}
+                data-testid="low-bg-text-field-id"
               />
               <Typography>{t('mg/dL')}</Typography>
             </Box>
@@ -305,6 +306,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 }
               }}
               onChange={(event) => onChange(+event.target.value, MIN_HIGH_BG, MAX_HIGH_BG, setHighBg)}
+              data-testid="high-bg-text-field-id"
             />
             <Typography>{t('mg/dL')}</Typography>
           </div>
@@ -364,6 +366,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
                 }
               }}
               onChange={(event) => onChange(+event.target.value, MIN_VERY_LOW_BG, MAX_VERY_LOW_BG, setVeryLowBg)}
+              data-testid="very-low-bg-text-field-id"
             />
             <Typography>{t('mg/dL')}</Typography>
           </div>
@@ -432,6 +435,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               color="primary"
               disableElevation
               onClick={resetToTeamDefaultValues}
+              data-testid="alarm-config-reset"
             >
               {t('default-values')}
             </Button>
@@ -443,6 +447,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               id="cancel-button-id"
               className={classes.cancelButton}
               onClick={onClose}
+              data-testid="alarm-config-cancel"
             >
               {t('button-cancel')}
             </Button>
@@ -455,6 +460,7 @@ function AlarmsContentConfiguration(props: AlarmsContentConfigurationProps): JSX
               disableElevation
               disabled={saveButtonDisabled}
               onClick={save}
+              data-testid="alarm-config-save"
             >
               {t('button-save')}
             </Button>

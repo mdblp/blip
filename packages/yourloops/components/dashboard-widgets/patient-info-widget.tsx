@@ -171,7 +171,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   }
 
   return (
-    <Card id="patient-info" className={classes.card}>
+    <Card id="patient-info" className={classes.card} data-testid="patient-info-card">
       <CardHeader
         id="patient-info-header"
         avatar={<LocalHospitalOutlinedIcon />}
@@ -203,6 +203,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           disableElevation
                           size="small"
                           onClick={() => setShowInviteRemoteMonitoringDialog(true)}
+                          data-testid="patient-info-card-invite-button"
                         >
                           {t('invite')}
                         </Button>
@@ -216,6 +217,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                           disableElevation
                           size="small"
                           onClick={() => setShowConfirmCancelDialog(true)}
+                          data-testid="patient-info-card-cancel-invite-button"
                         >
                           {t('cancel-invite')}
                         </Button>
@@ -230,6 +232,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             disableElevation
                             size="small"
                             onClick={() => setShowRenewRemoteMonitoringDialog(true)}
+                            data-testid="patient-info-card-renew-button"
                           >
                             {t('renew')}
                           </Button>
@@ -241,6 +244,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
                             disableElevation
                             size="small"
                             onClick={() => setShowConfirmDeleteDialog(true)}
+                            data-testid="patient-info-card-remove-button"
                           >
                             {t('button-remove')}
                           </Button>

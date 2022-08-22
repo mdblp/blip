@@ -88,7 +88,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
   }
 
   return (
-    <Card className={classes.eventCard} id="alarm-card">
+    <Card className={classes.eventCard} id="alarm-card" data-testid="alarm-card">
       <CardHeader
         id="alarm-card-header-id"
         avatar={
@@ -101,7 +101,7 @@ function AlarmCard(props: AlarmCardProps): JSX.Element {
         action={
           <div>
             {!loggedInUser?.isUserPatient() &&
-              <IconButton id="configure-icon-button-id" aria-label="settings"
+              <IconButton id="configure-icon-button-id" aria-label="settings" data-testid="alarm-card-configure-button"
                 onClick={() => setShowPatientAlarmDialog(true)}>
                 <TuneIcon />
               </IconButton>

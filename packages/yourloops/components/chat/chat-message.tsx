@@ -163,7 +163,7 @@ function ChatMessage(props: ChatMessageProps): JSX.Element {
   }
 
   return (
-    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`}>
+    <div className={`message ${classes.chatMessageContainer} ${messageContainerType} ${privateMessage}`} >
       {!isMine &&
         <div className={classes.chatMessageHeader}>
           <Face />

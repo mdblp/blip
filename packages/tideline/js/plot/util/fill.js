@@ -121,8 +121,8 @@ function drawFill(pool, opts = defaults) {
         })
         .on('click', function(fillRect) {
           if (opts.emitter) {
-            const parentContainer = document.getElementById('tidelineMain').getBoundingClientRect()
-            const offsetX = d3.event.clientX - parentContainer.left
+            const parentContainer = document.getElementById('newNoteIcon').getBoundingClientRect()
+            const offsetX = d3.event.clientX - parentContainer.right
             opts.emitter.emit('clickInPool', { offsetX, datum: fillRect })
           }
         })
