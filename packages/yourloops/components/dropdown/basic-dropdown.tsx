@@ -84,8 +84,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
   return (
     <Select
       id={`basic-dropdown-${id}-selector`}
-      data-testid="basic-dropdown-selector"
-      // data-testid={`basic-dropdown-${id}-selector`} TODO: choose which one to keep
+      data-testid={`basic-dropdown-${id}-selector`}
       value={selectedValue}
       className={classes.select}
       variant="outlined"
