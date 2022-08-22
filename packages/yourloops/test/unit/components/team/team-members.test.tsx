@@ -67,14 +67,8 @@ describe('TeamMembers', () => {
   const errorMock = jest.fn()
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { inviteMember: inviteMemberMock, getTeam: jest.fn().mockReturnValue(team) }
-    });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }

@@ -95,20 +95,11 @@ describe('Team Menu', () => {
 
   beforeAll(() => {
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue(caregivers);
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { teams, createTeam: createTeamMock, joinTeam: joinTeamMock }
     });
     (teamHookMock.getDisplayTeamCode as jest.Mock).mockImplementation(() => {
       return '123-456-788'
-    });
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }

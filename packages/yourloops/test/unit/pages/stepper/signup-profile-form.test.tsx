@@ -50,12 +50,6 @@ describe('Signup profile form', () => {
     })
   }
 
-  beforeAll(() => {
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
-  })
-
   beforeEach(() => {
     container = document.createElement('div')
     document.body.appendChild(container);

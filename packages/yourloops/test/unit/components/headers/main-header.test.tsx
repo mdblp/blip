@@ -71,9 +71,6 @@ describe('Main Header', () => {
 
   beforeAll(() => {
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([]);
-    (notificationHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (notificationHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return {
         initialized: true,
@@ -81,12 +78,6 @@ describe('Main Header', () => {
         getReceivedInvitations: jest.fn().mockResolvedValue(notifications),
         receivedInvitations: notifications
       }
-    });
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { teams }

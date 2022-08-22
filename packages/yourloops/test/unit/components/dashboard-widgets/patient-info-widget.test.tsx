@@ -68,14 +68,8 @@ describe('PatientInfoWidget', () => {
 
   beforeAll(() => {
     i18n.changeLanguage('en');
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserCaregiver: () => false, isUserHcp: () => true, id: adminMember.user.userid } as User }
-    });
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
@@ -86,9 +80,6 @@ describe('PatientInfoWidget', () => {
     });
     (RemoteMonitoringPatientDialogMock.default as jest.Mock).mockImplementation((props: RemoteMonitoringPatientDialogProps) => {
       return <button onClick={props.onClose}>save-mock</button>
-    });
-    (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return { cancelRemoteMonitoringInvite: cancelRemoteMonitoringInviteMock }

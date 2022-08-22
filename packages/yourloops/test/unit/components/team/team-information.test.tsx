@@ -77,13 +77,7 @@ describe('TeamInformation', () => {
 
   beforeAll(() => {
     jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true);
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {

@@ -93,14 +93,8 @@ describe('MemberRow', () => {
     UserInvitationStatus.accepted)
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { changeMemberRole: changeMemberRoleMock, removeMember: removeMemberMock }
-    });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { error: errorMock }

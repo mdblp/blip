@@ -59,9 +59,6 @@ describe('Chat widget', () => {
 
   beforeAll(() => {
     Element.prototype.scroll = jest.fn();
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { getPatientRemoteMonitoringTeam: jest.fn().mockReturnValue(patientTeam) }
     })

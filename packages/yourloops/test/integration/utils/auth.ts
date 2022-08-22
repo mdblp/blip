@@ -28,7 +28,7 @@
 import UserApi from '../../../lib/auth/user-api'
 import { Preferences, Profile, Settings } from '../../../models/user'
 
-export const mockUserRetrieval = (firstName: string, lastName: string) => {
+export const mockUserDataFetch = (firstName: string, lastName: string) => {
   jest.spyOn(UserApi, 'getShorelineAccessToken').mockResolvedValue({ id: null, token: null })
   jest.spyOn(UserApi, 'getProfile').mockResolvedValue({
     firstName,

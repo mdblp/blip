@@ -26,6 +26,7 @@
  */
 
 import * as auth0Mock from '@auth0/auth0-react'
+import { UserMetadata } from '../../../models/user'
 
 export const mockAuth0 = () => {
   (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
@@ -35,7 +36,7 @@ export const mockAuth0 = () => {
       email: 'john.doe@example.com',
       email_verified: true,
       sub: 'auth0|fakeUserId',
-      'http://your-loops.com/roles': ['hcp']
+      [UserMetadata.Roles]: ['hcp']
     }
   })
 }

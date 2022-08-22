@@ -92,15 +92,6 @@ describe('Main Drawer', () => {
     })
   })
 
-  beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
-  })
-
   afterEach(() => {
     if (container) {
       unmountComponentAtNode(container)

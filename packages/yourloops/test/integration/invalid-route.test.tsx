@@ -35,7 +35,7 @@ import { checkHeader } from './utils/header'
 import { checkDrawer } from './utils/drawer'
 import { checkFooter } from './utils/footer'
 import { mockAuth0 } from './utils/auth0'
-import { mockUserRetrieval } from './utils/auth'
+import { mockUserDataFetch } from './utils/auth'
 
 jest.mock('@auth0/auth0-react')
 describe('Invalid Route', () => {
@@ -46,7 +46,7 @@ describe('Invalid Route', () => {
 
   beforeAll(() => {
     mockAuth0()
-    mockUserRetrieval(firstName, lastName)
+    mockUserDataFetch(firstName, lastName)
   })
 
   function getInvalidRoutePage() {

@@ -70,10 +70,7 @@ describe('Main lobby', () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([]);
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
+    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([])
   })
 
   it("should render ConsentPage when user is logged in and did not consent and route is '/'", () => {

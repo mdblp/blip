@@ -67,12 +67,6 @@ describe('PatientAlarmDialog', () => {
     }
   }
 
-  beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
-  })
-
   beforeEach(() => {
     container = document.createElement('div')
     document.body.appendChild(container)

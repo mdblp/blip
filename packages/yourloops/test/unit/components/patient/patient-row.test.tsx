@@ -55,12 +55,6 @@ describe('Patient row', () => {
     onFlagPatient
   }
 
-  beforeAll(() => {
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
-  })
-
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
       return { user: { isUserHcp: () => true } as User }

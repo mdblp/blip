@@ -65,14 +65,8 @@ describe('Patient list table', () => {
   let container: HTMLElement | null = null
 
   beforeAll(() => {
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (authHookMock.useAuth as jest.Mock) = jest.fn().mockImplementation(() => {
       return {}
-    });
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {

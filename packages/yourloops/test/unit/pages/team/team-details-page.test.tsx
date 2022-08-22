@@ -63,15 +63,6 @@ describe('TeamDetailsPage', () => {
   const getMedicalTeamsMock = jest.fn().mockReturnValue(teams)
   const history = createMemoryHistory({ initialEntries: ['/fakeRoute'] })
 
-  beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
-  })
-
   beforeEach(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { getMedicalTeams: getMedicalTeamsMock, getTeam: getTeamMock }

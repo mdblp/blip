@@ -96,9 +96,6 @@ describe('AlarmsContentConfiguration', () => {
   })
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
         getPatientRemoteMonitoringTeam: getPatientRemoteMonitoringTeamMock,

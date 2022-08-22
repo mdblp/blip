@@ -47,10 +47,7 @@ describe('AlarmCard', () => {
   let container: HTMLElement | null = null
 
   beforeAll(() => {
-    i18n.changeLanguage('en');
-    (authHookMock.AuthContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    })
+    i18n.changeLanguage('en')
   })
 
   beforeEach(() => {

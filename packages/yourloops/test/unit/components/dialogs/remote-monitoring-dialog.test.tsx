@@ -70,9 +70,6 @@ describe('RemoteMonitoringPatientDialog', () => {
   }
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {
         editPatientRemoteMonitoring: editPatientRemoteMonitoringMock,
@@ -80,14 +77,8 @@ describe('RemoteMonitoringPatientDialog', () => {
         updatePatientMonitoring: updatePatientMonitoringMock
       }
     });
-    (alertHookMock.SnackbarContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
-    });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { error: errorMock }
-    });
-    (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
-      return children
     });
     (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
       return { inviteRemoteMonitoring: inviteRemoteMonitoringMock }
