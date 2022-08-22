@@ -34,7 +34,11 @@ import MedicalRecordEditDialog, {
   MedicalRecordEditDialogProps
 } from '../../../../components/dialogs/medical-record-edit-dialog'
 import userEvent from '@testing-library/user-event'
+import * as authHookMock from '../../../../lib/auth'
+import User from '../../../../lib/auth/user'
+import { UserRoles } from '../../../../models/user'
 
+jest.mock('../../../../lib/auth')
 jest.mock('../../../../components/utils/snackbar')
 describe('Medical record edit dialog', () => {
   const updateMedicalRecordSpy = jest.spyOn(MedicalFilesApi, 'updateMedicalRecord').mockResolvedValue({} as MedicalRecord)
@@ -79,12 +83,15 @@ describe('Medical record edit dialog', () => {
     diagnosisTextArea = within(screen.getByTestId('diagnosis')).getByRole('textbox')
     progressionProposalTextArea = within(screen.getByTestId('progression-proposal')).getByRole('textbox')
     trainingSubjectTextArea = within(screen.getByTestId('training-subject')).getByRole('textbox')
-    saveButton = screen.getByRole('button', { name: 'save' })
+    saveButton = screen.queryByRole('button', { name: 'save' })
   }
 
   beforeAll(() => {
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successAlertMock, error: errorAlertMock }
+    });
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { role: UserRoles.hcp, isUserPatient: () => false } as User }
     })
   })
 
@@ -142,5 +149,13 @@ describe('Medical record edit dialog', () => {
     expect(trainingSubjectTextArea.value).toBe('training1')
     fireEvent.click(saveButton)
     expect(createMedicalRecordSpy).not.toHaveBeenCalled()
+  })
+
+  it('should not be able to save a medical record for a patient', () => {
+    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+      return { user: { role: UserRoles.patient, isUserPatient: () => true } as User }
+    })
+    mountComponent(true)
+    expect(saveButton).not.toBeInTheDocument()
   })
 })

@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-1645 A patient can create, edit and delete a medical record
 - YLP-1658 Creating a note does not create it at the time selected
 - YLP-1659 Language is not updated with user preferences
+- YLP-1694 Disable save button in medical record dialog for a patient
 
 ## 3.0.0 - 2022-06-16
 ### Added
