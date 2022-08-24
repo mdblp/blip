@@ -41,13 +41,12 @@ import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../..
 import metrics from '../../lib/metrics'
 import { useAuth } from '../../lib/auth'
 import { errorTextFromException, setPageTitle } from '../../lib/utils'
-import { TeamContext, useTeam } from '../../lib/team'
 import PatientsTable from './table'
 import { Patient } from '../../lib/data/patient'
 import { PatientListProps } from './models'
 import { comparePatients } from './utils'
-import TeamUtils from '../../lib/team/utils'
 import { usePatient } from '../../lib/patient/hook'
+import PatientUtils from '../../lib/patient/utils'
 
 const log = bows('PatientListPage')
 
@@ -59,7 +58,6 @@ function PatientList(props: PatientListProps): JSX.Element {
   const historyHook = useHistory()
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
-  const teamHook = useTeam()
   const patientHook = usePatient()
   const [loading, setLoading] = React.useState<boolean>(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
@@ -68,7 +66,6 @@ function PatientList(props: PatientListProps): JSX.Element {
   const flagged = authHook.getFlagPatients()
 
   const updatePatientList = (
-    teamHook: TeamContext,
     flagged: string[],
     filter: string,
     filterType: PatientFilterTypes,
@@ -76,7 +73,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     order: SortDirection
   ): Patient[] => {
     let filteredPatients = patientHook.filterPatients(filterType, filter, flagged)
-    filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged)
+    filteredPatients = PatientUtils.computeFlaggedPatients(filteredPatients, flagged)
     // Sort the patients
     filteredPatients.sort((a: Patient, b: Patient): number => {
       const c = comparePatients(a, b, orderBy)
@@ -94,7 +91,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     setLoading(true)
     setErrorMessage(null)
     try {
-      await teamHook.refresh(force)
+      await patientHook.refresh()
     } catch (reason: unknown) {
       log.error('handleRefresh', reason)
       const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
@@ -123,8 +120,8 @@ function PatientList(props: PatientListProps): JSX.Element {
     if (!patientHook.initialized || errorMessage !== null) {
       return []
     }
-    return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order)
-  }, [patientHook, flagged, filter, filterType, orderBy, order, errorMessage])
+    return updatePatientList(flagged, filter, filterType, orderBy, order)
+  }, [patientHook.initialized, errorMessage, updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
     if (!patientHook.initialized) {
@@ -136,7 +133,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     if (loading) {
       setLoading(false)
     }
-  }, [patientHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
+  }, [patientHook.initialized, errorMessage, loading, t])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))

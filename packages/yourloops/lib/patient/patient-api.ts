@@ -32,6 +32,7 @@ import { INotificationAPI } from '../../models/notification'
 import { UserRoles } from '../../models/user'
 import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
+import { Monitoring } from '../../models/monitoring'
 
 const log = bows('Patient API')
 
@@ -66,5 +67,16 @@ export default class PatientApi {
       config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
     })
     return data
+  }
+
+  static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
+    await HttpService.put<void, Monitoring>({
+      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
+      payload: monitoring
+    })
+  }
+
+  static async removePatient(teamId: string, userId: string): Promise<void> {
+    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
   }
 }

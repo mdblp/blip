@@ -29,6 +29,7 @@
 import { Patient, PatientTeam } from '../data/patient'
 import PatientApi from './patient-api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
+import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
 
 export default class PatientUtils {
   static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
@@ -57,5 +58,60 @@ export default class PatientUtils {
       throw Error(`Could not find a monitored team for patient ${patient.userid}`)
     }
     return remoteMonitoredTeam
+  }
+
+  static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
+    return patients.map(patient => {
+      return { ...patient, metadata: { ...patient.metadata, flagged: flaggedPatients.includes(patient.userid) } }
+    })
+  }
+
+  static isInAtLeastATeam = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.accepted)
+    return !!tm
+  }
+
+  static isInvitationPending = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.status === UserInvitationStatus.pending)
+    return typeof tm === 'object'
+  }
+
+  static isOnlyPendingInvitation = (patient: Patient): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.status !== UserInvitationStatus.pending)
+    return typeof tm === 'undefined'
+  }
+
+  static isInTeam = (patient: Patient, teamId: string): boolean => {
+    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId)
+    return typeof tm === 'object'
+  }
+
+  static extractPatients = (patients: Patient[], filterType: PatientFilterTypes, flaggedPatients: string[]): Patient[] => {
+    const twoWeeksFromNow = new Date()
+    switch (filterType) {
+      case PatientFilterTypes.all:
+        return patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient))
+      case PatientFilterTypes.pending:
+        return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+      case PatientFilterTypes.flagged:
+        return patients.filter(patient => flaggedPatients.includes(patient.userid))
+      case PatientFilterTypes.unread:
+        return patients.filter(patient => patient.metadata.unreadMessagesSent > 0)
+      case PatientFilterTypes.outOfRange:
+        return patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive)
+      case PatientFilterTypes.severeHypoglycemia:
+        return patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive)
+      case PatientFilterTypes.dataNotTransferred:
+        return patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive)
+      case PatientFilterTypes.remoteMonitored:
+        return patients.filter(patient => patient.monitoring?.enabled)
+      case PatientFilterTypes.private:
+        return patients.filter(patient => PatientUtils.isInTeam(patient, filterType))
+      case PatientFilterTypes.renew:
+        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
+        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
+      default:
+        return patients
+    }
   }
 }

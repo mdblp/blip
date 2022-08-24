@@ -37,6 +37,7 @@ import MedicalRecordList from './medical-record-list'
 import PrescriptionList from './prescription-list'
 import { Patient } from '../../../lib/data/patient'
 import WeeklyReportList from './weekly-report-list'
+import PatientUtils from '../../../lib/patient/utils'
 
 const useStyle = makeStyles(() => ({
   cardContent: {
@@ -67,11 +68,7 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
   const classes = useStyle()
   const { patient } = props
 
-  const team = patient.teams.find(patientTeam => patientTeam.remoteMonitoringEnabled)
-
-  if (!team) {
-    throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`)
-  }
+  const team = PatientUtils.getRemoteMonitoringTeam(patient)
 
   return (
     <Card className={classes.medicalFilesWidget} id="medical-files-card" data-testid="medical-files-card">

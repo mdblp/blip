@@ -33,12 +33,10 @@ import { Patient, PatientTeam } from '../data/patient'
 import { Team } from '../team'
 import { useNotification } from '../notifications/hook'
 import PatientUtils from './utils'
-import TeamUtils from '../team/utils'
 import { PatientFilterStats } from '../team/models'
 import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
 import { notificationConversion } from '../notifications/utils'
 import PatientApi from './patient-api'
-import TeamApi from '../team/team-api'
 import DirectShareApi from '../share/direct-share-api'
 import { useAuth } from '../auth'
 import metrics from '../metrics'
@@ -51,15 +49,15 @@ interface PatientContextResult {
   initialized: boolean
   setPatients: Function
   getPatient: Function
-  filterPatients: Function
-  invitePatient: Function
-  editPatientRemoteMonitoring: Function
-  markPatientMessagesAsRead: Function
-  updatePatientMonitoring: Function
-  removePatient: Function
-  leaveTeam: Function
-  setPatientMedicalData: Function
-  refresh: Function
+  filterPatients: (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => Patient[]
+  invitePatient: (team: Team, username: string) => Promise<void>
+  editPatientRemoteMonitoring: (patient: Patient) => void
+  markPatientMessagesAsRead: (patient: Patient) => void
+  updatePatientMonitoring: (patient: Patient) => Promise<void>
+  removePatient: (patient: Patient, member: PatientTeam, teamId: string) => Promise<void>
+  leaveTeam: (team: Team) => Promise<void>
+  setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
+  refresh: () => void
 }
 
 const PatientContext = React.createContext<PatientContextResult>({
@@ -70,20 +68,15 @@ const PatientContext = React.createContext<PatientContextResult>({
   },
   getPatient: () => {
   },
-  filterPatients: () => {
-  },
-  invitePatient: () => {
-  },
+  filterPatients: () => [],
+  invitePatient: async () => await Promise.resolve(),
   editPatientRemoteMonitoring: () => {
   },
   markPatientMessagesAsRead: () => {
   },
-  updatePatientMonitoring: () => {
-  },
-  removePatient: () => {
-  },
-  leaveTeam: () => {
-  },
+  updatePatientMonitoring: async () => await Promise.resolve(),
+  removePatient: async () => await Promise.resolve(),
+  leaveTeam: async () => await Promise.resolve(),
   setPatientMedicalData: () => {
   },
   refresh: () => {
@@ -108,8 +101,8 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
 
   const buildPatientFiltersStats = useCallback(() => {
     return {
-      all: patients.filter((patient) => !TeamUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patients.filter((patient) => TeamUtils.isInvitationPending(patient)).length,
+      all: patients.filter((patient) => !PatientUtils.isOnlyPendingInvitation(patient)).length,
+      pending: patients.filter((patient) => PatientUtils.isInvitationPending(patient)).length,
       directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
       unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
       outOfRange: patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive).length,
@@ -127,7 +120,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   }, [patients])
 
   const filterPatients = useCallback((filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => {
-    let res = TeamUtils.extractPatients(patients, filterType, flaggedPatients)
+    let res = PatientUtils.extractPatients(patients, filterType, flaggedPatients)
     const searchByName = search.length > 0
     if (searchByName) {
       const searchText = search.toLocaleLowerCase()
@@ -207,7 +200,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
       throw Error(`Cannot find monitoring team in which patient ${patient.profile.email} is in`)
     }
     try {
-      await TeamApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
+      await PatientApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
       monitoredTeam.remoteMonitoringEnabled = patient.monitoring?.enabled
       patient.teams = patient.teams.filter(team => team.teamId !== monitoredTeam.teamId)
       patient.teams.push(monitoredTeam)
@@ -226,7 +219,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     if (teamId === 'private') {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
-      await TeamApi.removePatient(teamId, patient.userid)
+      await PatientApi.removePatient(teamId, patient.userid)
     }
 
     patient.teams = patient.teams.filter(patientTeam => patientTeam.teamId !== teamId)
@@ -238,11 +231,11 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
         await flagPatient(patient.userid)
       }
     }
-  }, [cancelInvitation, flagPatient, getFlagPatients, updatePatient, user.id])
+  }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, updatePatient, user.id])
 
   const leaveTeam = useCallback(async (team: Team) => {
     const loggedInUserAsPatient = patients.find(patient => patient.userid === user.id)
-    await TeamApi.removePatient(team.id, loggedInUserAsPatient.userid)
+    await PatientApi.removePatient(team.id, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
     loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== team.id)
     updatePatient(loggedInUserAsPatient)

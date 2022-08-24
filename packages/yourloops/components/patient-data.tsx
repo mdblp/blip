@@ -86,7 +86,6 @@ function PatientDataPage(): JSX.Element | null {
   const classes = patientDataStyles()
 
   const [patient, setPatient] = React.useState<Readonly<Patient> | null>(null)
-  const [patients, setPatients] = React.useState<Array<Readonly<Patient>>>([])
   const [error, setError] = React.useState<string | null>(null)
 
   const { blipApi } = dataHook
@@ -104,7 +103,6 @@ function PatientDataPage(): JSX.Element | null {
       return
     }
 
-    setPatients(patientHook.patients)
     let patientId = paramPatientId ?? userId
     if (userIsPatient && authUser) {
       patientId = authUser.id
@@ -146,7 +144,7 @@ function PatientDataPage(): JSX.Element | null {
         api={blipApi}
         patient={patient}
         userIsHCP={!!userIsHCP}
-        patients={patients}
+        patients={patientHook.patients}
         setPatient={setPatient}
         profileDialog={ProfileDialog}
         prefixURL={prefixURL}

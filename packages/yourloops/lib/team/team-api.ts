@@ -105,13 +105,6 @@ export default class TeamApi {
     })
   }
 
-  static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
-    await HttpService.put<void, Monitoring>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
-      payload: monitoring
-    })
-  }
-
   static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
     await HttpService.put<void, Monitoring>({
       url: `/crew/v0/teams/${teamId}/remote-monitoring`,
@@ -132,10 +125,6 @@ export default class TeamApi {
       url: `confirm/send/team/leave/${teamId}/${userId}`,
       config: { params: { email } }
     })
-  }
-
-  static async removePatient(teamId: string, userId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
   }
 
   static async changeMemberRole({ teamId, userId, email, role }: ChangeMemberRoleArgs): Promise<void> {
