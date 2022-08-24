@@ -4,7 +4,8 @@ Desktop.ini
 
 # Files used by IntelliJ
 *.iml
-.idea
+.idea/*
+!.idea/runConfigurations
 
 # Thumbnail cache files
 ._*

@@ -161,22 +161,26 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
     {
       icon: <SupervisedUserCircleIcon />,
       text: `${t('all-patients')} (${patientFiltersStats.all})`,
-      filter: PatientFilterTypes.all
+      filter: PatientFilterTypes.all,
+      ariaLabel: t('all-patients-filter')
     },
     {
       icon: <FlagOutlinedIcon />,
       text: `${t('flagged')} (${numberOfFlaggedPatients})`,
-      filter: PatientFilterTypes.flagged
+      filter: PatientFilterTypes.flagged,
+      ariaLabel: t('flagged-patients-filter')
     },
     {
       icon: <PendingIcon />,
       text: `${t('pending')} (${patientFiltersStats.pending})`,
-      filter: PatientFilterTypes.pending
+      filter: PatientFilterTypes.pending,
+      ariaLabel: t('pending-patients-filter')
     },
     {
       icon: <MedicalServiceIcon />,
       text: `${t('private-practice')} (${patientFiltersStats.directShare})`,
-      filter: PatientFilterTypes.private
+      filter: PatientFilterTypes.private,
+      ariaLabel: t('private-practice-patients-filter')
     }
   ]
 
@@ -206,6 +210,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
   return (
     <Drawer
       id="main-left-drawer"
+      data-testid="main-left-drawer"
       variant="permanent"
       className={drawerClass}
       classes={{ paper: paperClass }}
@@ -217,7 +222,7 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
         {drawerItems.map((item, index) => (
           <Link key={index} to={`/home?filter=${item.filter}`} aria-label={item.filter}>
             <ListItem button>
-              <ListItemIcon>
+              <ListItemIcon aria-label={item.ariaLabel}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText>
@@ -239,9 +244,9 @@ function MainDrawer({ miniVariant }: MainDrawerProps): JSX.Element {
               </ListItemText>
             </ListItem>
             <Link to={`/home?filter=${PatientFilterTypes.remoteMonitored}`}
-              aria-label={PatientFilterTypes.remoteMonitored}>
+                  aria-label={PatientFilterTypes.remoteMonitored}>
               <ListItem button>
-                <ListItemIcon>
+                <ListItemIcon aria-label={t('remote-monitoring-patients-filter')}>
                   <SupervisedUserCircleIcon />
                 </ListItemIcon>
                 <ListItemText>

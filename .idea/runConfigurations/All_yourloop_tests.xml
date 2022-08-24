@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All yourloop tests" type="CompoundRunConfigurationType">
+    <toRun name="Yourloops Integration" type="JavaScriptTestRunnerJest" />
+    <toRun name="Yourloops unit" type="JavaScriptTestRunnerJest" />
+    <method v="2" />
+  </configuration>
+</component>
