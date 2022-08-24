@@ -41,6 +41,7 @@ import PatientDataPage from '../components/patient-data'
 import DashboardLayout from '../components/layouts/dashboard-layout'
 import TeamDetailsPage from './team/team-details-page'
 import HomePage from './home-page'
+import { PatientProvider } from '../lib/patient/hook'
 
 export function MainLayout(): JSX.Element {
   const { user } = useAuth()
@@ -63,44 +64,46 @@ export function MainLayout(): JSX.Element {
       {user &&
         <NotificationContextProvider>
           <TeamContextProvider>
-            <DataContextProvider context={DefaultDataContext}>
-              <DashboardLayout>
-                <Switch>
-                  <Route exact path="/preferences" component={ProfilePage} />
-                  <Route exact path="/notifications" component={NotificationsPage} />
-                  <Route exact path="/home">
-                    {getHomePage()}
-                  </Route>
+            <PatientProvider>
+              <DataContextProvider context={DefaultDataContext}>
+                <DashboardLayout>
+                  <Switch>
+                    <Route exact path="/preferences" component={ProfilePage} />
+                    <Route exact path="/notifications" component={NotificationsPage} />
+                    <Route exact path="/home">
+                      {getHomePage()}
+                    </Route>
 
-                  {user.isUserHcp() &&
-                    <Switch>
-                      <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-                      <Route exact path="/certify" component={CertifyAccountPage} />
-                      <Route path="/patient/:patientId" component={PatientDataPage} />
-                      <Redirect exact from="/" to="/home" />
-                      <Redirect to="/not-found" />
-                    </Switch>
-                  }
+                    {user.isUserHcp() &&
+                      <Switch>
+                        <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
+                        <Route exact path="/certify" component={CertifyAccountPage} />
+                        <Route path="/patient/:patientId" component={PatientDataPage} />
+                        <Redirect exact from="/" to="/home" />
+                        <Redirect to="/not-found" />
+                      </Switch>
+                    }
 
-                  {user.isUserCaregiver() &&
+                    {user.isUserCaregiver() &&
                       <Switch>
                         <Route path="/patient/:patientId" component={PatientDataPage} />
                         <Redirect exact from="/" to="/home" />
                         <Redirect to="/not-found" />
                       </Switch>
-                  }
+                    }
 
-                  {user.isUserPatient() &&
-                    <Switch>
-                      <Route exact path="/caregivers" component={CaregiversPage} />
-                      <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-                      <Redirect exact from="/" to="/dashboard" />
-                      <Route path="/" component={PatientDataPage} />
-                    </Switch>
-                  }
-                </Switch>
-              </DashboardLayout>
-            </DataContextProvider>
+                    {user.isUserPatient() &&
+                      <Switch>
+                        <Route exact path="/caregivers" component={CaregiversPage} />
+                        <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
+                        <Redirect exact from="/" to="/dashboard" />
+                        <Route path="/" component={PatientDataPage} />
+                      </Switch>
+                    }
+                  </Switch>
+                </DashboardLayout>
+              </DataContextProvider>
+            </PatientProvider>
           </TeamContextProvider>
         </NotificationContextProvider>
       }

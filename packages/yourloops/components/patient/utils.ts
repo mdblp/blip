@@ -35,6 +35,7 @@ import { MedicalTableValues } from './models'
 import { TeamMember, TeamUser } from '../../lib/team'
 import { Patient, PatientTeam } from '../../lib/data/patient'
 import { Alarm } from '../../models/alarm'
+import { ITeamMember } from '../../models/team'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -221,5 +222,33 @@ export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
     },
     teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
     userid: teamUser.userid
+  }
+}
+
+export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
+  const birthdate = iTeamMember.profile?.patient?.birthday
+  return {
+    metadata: {
+      alarm: iTeamMember.alarms ?? {} as Alarm,
+      flagged: undefined,
+      medicalData: null,
+      unreadMessagesSent: iTeamMember.unreadMessages ?? 0
+    },
+    monitoring: iTeamMember.monitoring,
+    profile: {
+      birthdate: birthdate ? new Date(birthdate) : undefined,
+      sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
+      firstName: iTeamMember.profile?.firstName,
+      fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,
+      lastName: iTeamMember.profile?.lastName,
+      email: iTeamMember.email,
+      referringDoctor: iTeamMember.profile?.patient?.referringDoctor
+    },
+    settings: {
+      a1c: iTeamMember.settings?.a1c,
+      system: 'DBLG1'
+    },
+    teams: [{ teamId: iTeamMember.teamId, status: iTeamMember.invitationStatus } as PatientTeam],
+    userid: iTeamMember.userId
   }
 }

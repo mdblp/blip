@@ -47,6 +47,7 @@ import { Patient } from '../../lib/data/patient'
 import { PatientListProps } from './models'
 import { comparePatients } from './utils'
 import TeamUtils from '../../lib/team/utils'
+import { usePatient } from '../../lib/patient/hook'
 
 const log = bows('PatientListPage')
 
@@ -59,6 +60,7 @@ function PatientList(props: PatientListProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
   const teamHook = useTeam()
+  const patientHook = usePatient()
   const [loading, setLoading] = React.useState<boolean>(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
@@ -73,7 +75,7 @@ function PatientList(props: PatientListProps): JSX.Element {
     orderBy: PatientTableSortFields,
     order: SortDirection
   ): Patient[] => {
-    let filteredPatients = teamHook.filterPatients(filterType, filter, flagged)
+    let filteredPatients = patientHook.filterPatients(filterType, filter, flagged)
     filteredPatients = TeamUtils.computeFlaggedPatients(filteredPatients, flagged)
     // Sort the patients
     filteredPatients.sort((a: Patient, b: Patient): number => {
@@ -118,34 +120,23 @@ function PatientList(props: PatientListProps): JSX.Element {
   }
 
   const patients = React.useMemo(() => {
-    if (!teamHook.initialized || errorMessage !== null) {
+    if (!patientHook.initialized || errorMessage !== null) {
       return []
     }
     return updatePatientList(teamHook, flagged, filter, filterType, orderBy, order)
-  }, [teamHook, flagged, filter, filterType, orderBy, order, errorMessage])
+  }, [patientHook, flagged, filter, filterType, orderBy, order, errorMessage])
 
   React.useEffect(() => {
-    if (!teamHook.initialized) {
+    if (!patientHook.initialized) {
       if (!loading) {
         setLoading(true)
       }
       return
     }
-
-    if (teamHook.errorMessage !== null) {
-      const message = t('error-failed-display-teams', { errorMessage: teamHook.errorMessage })
-      if (message !== errorMessage) {
-        log.error('errorMessage', message)
-        setErrorMessage(message)
-      }
-    } else if (errorMessage !== null) {
-      setErrorMessage(null)
-    }
-
     if (loading) {
       setLoading(false)
     }
-  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
+  }, [patientHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))

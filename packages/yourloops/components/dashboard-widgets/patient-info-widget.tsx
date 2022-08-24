@@ -51,6 +51,7 @@ import { useNotification } from '../../lib/notifications/hook'
 import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../models/team'
+import { usePatient } from '../../lib/patient/hook'
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -76,7 +77,6 @@ export interface PatientInfoWidgetProps {
 }
 
 function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
-  const { patient } = props
   const classes = patientInfoWidgetStyles()
   const commonStyles = commonComponentStyles()
   const { t } = useTranslation('yourloops')
@@ -84,6 +84,8 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teamHook = useTeam()
+  const patientHook = usePatient()
+  const [patient, setPatient] = useState(props.patient)
   const [showInviteRemoteMonitoringDialog, setShowInviteRemoteMonitoringDialog] = useState(false)
   const [showRenewRemoteMonitoringDialog, setShowRenewRemoteMonitoringDialog] = useState(false)
   const [showConfirmCancelDialog, setShowConfirmCancelDialog] = useState(false)
@@ -99,7 +101,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
     return authHook.user?.isUserHcp() &&
       !!teamHook.getRemoteMonitoringTeams()
         .find(team => team.members.find(member => member.role === TeamMemberRole.admin && member.user.userid === authHook.user?.id) &&
-          team.members.find(member => member.user.userid === patient.userid)
+          patient.teams.find(t => t.teamId === team.id)
         )
   }
 
@@ -146,8 +148,9 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       throw Error('Cannot cancel monitoring invite as patient monitoring is not defined')
     }
     try {
-      patient.monitoring = { ...patient.monitoring, status: undefined, monitoringEnd: undefined }
-      await teamHook.updatePatientMonitoring(patient)
+      patient.monitoring = { ...patient.monitoring, enabled: false, status: undefined, monitoringEnd: undefined }
+      await patientHook.updatePatientMonitoring(patient)
+      setPatient(patientHook.getPatient(patient.userid))
       setActionInProgress(false)
       setShow(false)
     } catch (e) {

@@ -25,7 +25,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
+import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { INotificationAPI } from '../../models/notification'
 import { UserRoles } from '../../models/user'
@@ -35,15 +35,6 @@ import { Monitoring } from '../../models/monitoring'
 import bows from 'bows'
 
 const log = bows('Team API')
-
-interface InvitePatientArgs {
-  teamId: string
-  email: string
-}
-
-interface InvitePatientPayload extends InvitePatientArgs {
-  role: UserRoles
-}
 
 interface InviteMemberArgs {
   teamId: string
@@ -84,29 +75,6 @@ export default class TeamApi {
       }
       throw err
     }
-  }
-
-  static async getPatients(): Promise<ITeamMember[]> {
-    try {
-      const { data } = await HttpService.get<ITeamMember[]>({ url: '/v0/my-patients' })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info('No patients')
-        return []
-      }
-      throw err
-    }
-  }
-
-  static async invitePatient({ teamId, email }: InvitePatientArgs): Promise<INotificationAPI> {
-    const { data } = await HttpService.post<INotificationAPI, InvitePatientPayload>({
-      url: '/confirm/send/team/invite',
-      payload: { teamId, email, role: UserRoles.patient },
-      config: { headers: { [HttpHeaderKeys.language]: getCurrentLang() } }
-    })
-    return data
   }
 
   static async inviteMember({ teamId, email, role }: InviteMemberArgs): Promise<INotificationAPI> {

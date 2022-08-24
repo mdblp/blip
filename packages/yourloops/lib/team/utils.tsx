@@ -26,7 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { LoadTeams, Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from './models'
+import { Team, TEAM_CODE_LENGTH, TeamMember, TeamUser } from './models'
 import TeamApi from './team-api'
 import { ITeam, ITeamMember, TeamMemberRole, TeamType } from '../../models/team'
 import bows from 'bows'
@@ -196,20 +196,11 @@ export default class TeamUtils {
     return null
   }
 
-  static async loadTeams(user: User): Promise<LoadTeams> {
-    const getFlagPatients = (): string[] => {
-      const flagged = user.preferences?.patientsStarred
-      if (Array.isArray(flagged)) {
-        return Array.from(flagged)
-      }
-      return []
-    }
-
+  static async loadTeams(user: User): Promise<Team[]> {
     const users = new Map<string, TeamUser>()
-    const [apiTeams, apiPatients] = await Promise.all([TeamApi.getTeams(), TeamApi.getPatients()])
+    const apiTeams = await TeamApi.getTeams()
 
-    const nPatients = apiPatients.length
-    log.debug('loadTeams', { nPatients, nTeams: apiTeams.length })
+    log.debug('loadTeams', { nTeams: apiTeams.length })
 
     const privateTeam: Team = {
       code: TeamType.private,
@@ -226,29 +217,8 @@ export default class TeamUtils {
       teams.push(team)
     })
 
-    const flaggedNotInResult = getFlagPatients()
-
-    // Merge patients
-    for (let i = 0; i < nPatients; i++) {
-      const apiPatient = apiPatients[i]
-      const userId = apiPatient.userId
-
-      if (flaggedNotInResult.includes(userId)) {
-        flaggedNotInResult.splice(flaggedNotInResult.indexOf(userId), 1)
-      }
-
-      let team = teams.find((t) => t.id === apiPatient.teamId)
-      if (typeof team === 'undefined') {
-        log.error(`Missing teamId ${apiPatient.teamId} for patient member`, apiPatient)
-        // Use the private team
-        team = privateTeam
-      }
-
-      TeamUtils.iMemberToMember(apiPatient, team, users)
-    }
-
     // End, cleanup to help the garbage collector
     users.clear()
-    return { teams, flaggedNotInResult }
+    return teams
   }
 }

@@ -26,13 +26,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
-import moment from 'moment-timezone'
 
-import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
-import { MedicalData } from '../../models/device-data'
+import { UserInvitationStatus } from '../../models/generic'
 import { UserRoles } from '../../models/user'
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 
@@ -40,12 +38,10 @@ import { errorTextFromException } from '../utils'
 import metrics from '../metrics'
 import { useAuth } from '../auth'
 import { useNotification } from '../notifications/hook'
-import { LoadTeams, Team, TeamContext, TeamMember, TeamUser } from './models'
+import { Team, TeamContext, TeamMember, TeamUser } from './models'
 import { Patient, PatientTeam } from '../data/patient'
-import { mapTeamUserToPatient } from '../../components/patient/utils'
 import TeamApi from './team-api'
 import TeamUtils from './utils'
-import DirectShareApi from '../share/direct-share-api'
 import { notificationConversion } from '../notifications/utils'
 
 const log = bows('TeamHook')
@@ -61,45 +57,6 @@ function TeamContextImpl(): TeamContext {
   const [teams, setTeams] = React.useState<Team[]>([])
   const [initialized, setInitialized] = React.useState<boolean>(false)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
-
-  const getPatientsAsTeamUsers = useCallback(() => {
-    const patients = new Map<string, TeamUser>()
-    const nTeams = teams.length
-    for (let i = 0; i < nTeams; i++) {
-      const team = teams[i]
-      const members = team.members
-      const nMembers = members.length
-      for (let j = 0; j < nMembers; j++) {
-        const member = members[j]
-        if (member.role === TeamMemberRole.patient && !patients.has(member.user.userid)) {
-          patients.set(member.user.userid, member.user)
-        }
-      }
-    }
-    return Array.from(patients.values())
-  }, [teams])
-
-  const getPatients = useCallback(() => {
-    const teamUsers = getPatientsAsTeamUsers()
-    return teamUsers.map(teamUser => mapTeamUserToPatient(teamUser))
-  }, [getPatientsAsTeamUsers])
-
-  const buildPatientFiltersStats = useCallback(() => {
-    const patients = getPatients()
-    return {
-      all: patients.filter((patient) => !TeamUtils.isOnlyPendingInvitation(patient)).length,
-      pending: patients.filter((patient) => TeamUtils.isInvitationPending(patient)).length,
-      directShare: patients.filter((patient) => patient.teams.find(team => team.teamId === 'private')).length,
-      unread: patients.filter(patient => patient.metadata.unreadMessagesSent > 0).length,
-      outOfRange: patients.filter(patient => patient.metadata.alarm.timeSpentAwayFromTargetActive).length,
-      severeHypoglycemia: patients.filter(patient => patient.metadata.alarm.frequencyOfSevereHypoglycemiaActive).length,
-      dataNotTransferred: patients.filter(patient => patient.metadata.alarm.nonDataTransmissionActive).length,
-      remoteMonitored: patients.filter(patient => patient.monitoring?.enabled).length,
-      renew: patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - moment.utc(new Date()).add(14, 'd').toDate().getTime() < 0).length
-    }
-  }, [getPatients])
-
-  const patientsFilterStats = useMemo(() => buildPatientFiltersStats(), [buildPatientFiltersStats])
 
   const user = authHook.user
   if (!user) {
@@ -120,20 +77,6 @@ function TeamContextImpl(): TeamContext {
       for (const member of team.members) {
         if (member.user.userid === userId) {
           return member.user
-        }
-      }
-    }
-    return null
-  }
-
-  const getPatient = (userId: string): Patient | null => {
-    // Sorry for the "for", I know it's now forbidden
-    // But today it's too late for me to think how to use a magic function
-    // to have this info.
-    for (const team of teams) {
-      for (const member of team.members) {
-        if (member.user.userid === userId) {
-          return mapTeamUserToPatient(member.user)
         }
       }
     }
@@ -175,59 +118,6 @@ function TeamContextImpl(): TeamContext {
       throw Error('Could not find team to which patient is remote monitored')
     }
     return res
-  }
-
-  const editPatientRemoteMonitoring = (patient: Patient): void => {
-    const user = getUser(patient.userid)
-    if (!user) {
-      throw Error('Cannot update user monitoring as user was not found')
-    }
-    user.monitoring = patient.monitoring
-    setTeams(teams)
-  }
-
-  const filterPatients = (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]): Patient[] => {
-    const allPatients = getPatients()
-    let patients = TeamUtils.extractPatients(allPatients, filterType, flaggedPatients)
-    const searchByName = search.length > 0
-    if (searchByName) {
-      const searchText = search.toLocaleLowerCase()
-      patients = patients.filter((patient: Patient): boolean => {
-        const firstName = patient.profile.firstName ?? ''
-        if (firstName.toLocaleLowerCase().includes(searchText)) {
-          return true
-        }
-        const lastName = patient.profile.lastName ?? ''
-        return lastName.toLocaleLowerCase().includes(searchText)
-      })
-    }
-    return patients
-  }
-
-  const invitePatient = async (team: Team, username: string): Promise<void> => {
-    const apiInvitation = await TeamApi.invitePatient({ teamId: team.id, email: username })
-    const invitation = notificationConversion(apiInvitation)
-
-    let user = TeamUtils.getUserByEmail(teams, invitation.email)
-    if (user === null) {
-      user = {
-        userid: invitation.id,
-        role: UserRoles.patient,
-        username,
-        emails: [username],
-        members: []
-      }
-    }
-    const member: TeamMember = {
-      role: TeamMemberRole.patient,
-      status: UserInvitationStatus.pending,
-      team,
-      user,
-      invitation
-    }
-    user.members.push(member)
-    team.members.push(member)
-    setTeams(teams)
   }
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
@@ -294,17 +184,6 @@ function TeamContextImpl(): TeamContext {
     metrics.send('team_management', 'edit_care_team')
   }
 
-  const markPatientMessagesAsRead = (patient: Patient): void => {
-    const clonedTeams = teams
-    clonedTeams.forEach(team => {
-      const patientAsTeamUser = team.members.find(member => member.user.userid === patient.userid)
-      if (patientAsTeamUser) {
-        patientAsTeamUser.user.unreadMessages = 0
-      }
-    })
-    setTeams(clonedTeams)
-  }
-
   const updateTeamAlerts = async (team: Team): Promise<void> => {
     if (!team.monitoring) {
       throw Error('Cannot update team monitoring with undefined')
@@ -314,23 +193,6 @@ function TeamContextImpl(): TeamContext {
     } catch (error) {
       console.error(error)
       throw Error(`Failed to update team with id ${team.id}`)
-    }
-    refresh(true)
-  }
-
-  const updatePatientMonitoring = async (patient: Patient): Promise<void> => {
-    if (!patient.monitoring) {
-      throw Error('Cannot update patient monitoring with undefined')
-    }
-    const team = teams.find(t => t.monitoring?.enabled && t.members.find(member => member.user.userid === patient.userid))
-    if (!team) {
-      throw Error('Cannot find monitoring team in which patient is')
-    }
-    try {
-      await TeamApi.updatePatientAlerts(team.id, patient.userid, patient.monitoring)
-    } catch (error) {
-      console.error(error)
-      throw Error(`Failed to update patient with id ${patient.userid}`)
     }
     refresh(true)
   }
@@ -360,6 +222,15 @@ function TeamContextImpl(): TeamContext {
     }
   }
 
+  // TODO: TIM FIND A BETTER SOLUTION
+  const removeTeamFromList = useCallback((teamId: string) => {
+    const idx = teams.findIndex((t: Team) => t.id === teamId)
+    if (idx > -1) {
+      teams.splice(idx, 1)
+      setTeams(teams)
+    }
+  }, [teams])
+
   const removeMember = async (member: TeamMember): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
       if (!member.invitation || member.team.id !== member.invitation.target?.id) {
@@ -383,35 +254,6 @@ function TeamContextImpl(): TeamContext {
     }
   }
 
-  const removePatient = async (patient: Patient, member: PatientTeam, teamId: string): Promise<void> => {
-    if (member.status === UserInvitationStatus.pending) {
-      if (_.isNil(member.invitation)) {
-        throw new Error('Missing invitation!')
-      }
-      await notificationHook.cancel(member.invitation)
-    }
-    if (teamId === 'private') {
-      await DirectShareApi.removeDirectShare(patient.userid, user.id)
-    } else {
-      await TeamApi.removePatient(teamId, patient.userid)
-    }
-
-    const team = teams.find(team => team.id === teamId)
-    if (!team) {
-      throw Error(`Could not find team with id ${teamId}`)
-    }
-    const memberIndex = team.members.findIndex(member => member.user.userid === patient.userid)
-    team.members.splice(memberIndex, 1)
-    setTeams(teams)
-
-    if (team.members.length < 1) {
-      const isFlagged = authHook.getFlagPatients().includes(patient.userid)
-      if (isFlagged) {
-        await authHook.flagPatient(patient.userid)
-      }
-    }
-  }
-
   const changeMemberRole = async (member: TeamMember, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     await TeamApi.changeMemberRole({
       teamId: member.team.id,
@@ -422,13 +264,6 @@ function TeamContextImpl(): TeamContext {
     member.role = role
     setTeams(teams)
     metrics.send('team_management', 'manage_admin_permission', role === 'admin' ? 'grant' : 'revoke')
-  }
-
-  const setPatientMedicalData = (userId: string, medicalData: MedicalData | null): void => {
-    const user = getUser(userId)
-    if (user !== null && user.role === UserRoles.patient) {
-      user.medicalData = medicalData
-    }
   }
 
   const getTeamFromCode = async (code: string): Promise<Readonly<Team> | null> => {
@@ -449,7 +284,7 @@ function TeamContextImpl(): TeamContext {
     lock = true
 
     TeamUtils.loadTeams(user)
-      .then(({ teams, flaggedNotInResult }: LoadTeams) => {
+      .then((teams: Team[]) => {
         log.debug('Loaded teams: ', teams)
         for (const invitation of notificationHook.sentInvitations) {
           const user = TeamUtils.getUserByEmail(teams, invitation.email)
@@ -465,13 +300,6 @@ function TeamContextImpl(): TeamContext {
         setTeams(teams)
         if (errorMessage !== null) {
           setErrorMessage(null)
-        }
-
-        if (flaggedNotInResult.length > 0) {
-          // For some reason, the flagged list is not accurate - update it
-          log.warn('Missing patients in team list', flaggedNotInResult)
-          const validUserIds = authHook.getFlagPatients().filter((userId: string) => !flaggedNotInResult.includes(userId))
-          authHook.setFlagPatients(validUserIds)
         }
       })
       .catch((reason: unknown) => {
@@ -495,32 +323,22 @@ function TeamContextImpl(): TeamContext {
     teams,
     initialized,
     errorMessage,
-    patientsFilterStats,
     refresh,
     getTeam,
     getUser,
-    getPatient,
     getMedicalTeams,
     getRemoteMonitoringTeams,
-    getPatientsAsTeamUsers,
-    getPatients,
-    filterPatients,
     getPatientRemoteMonitoringTeam,
-    invitePatient,
     inviteMember,
-    markPatientMessagesAsRead,
     createTeam,
     editTeam,
-    updatePatientMonitoring,
-    editPatientRemoteMonitoring,
     updateTeamAlerts,
     leaveTeam,
     removeMember,
-    removePatient,
     changeMemberRole,
-    setPatientMedicalData,
     getTeamFromCode,
-    joinTeam
+    joinTeam,
+    removeTeamFromList
   }
 }
 

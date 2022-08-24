@@ -43,12 +43,11 @@ import Select from '@material-ui/core/Select'
 
 import MedicalServiceIcon from '../icons/MedicalServiceIcon'
 import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
-
-import { useTeam } from '../../lib/team'
 import { makeButtonsStyles } from '../theme'
 import { useAlert } from '../utils/snackbar'
 import { UserInvitationStatus } from '../../models/generic'
 import { Patient, PatientTeam } from '../../lib/data/patient'
+import { usePatient } from '../../lib/patient/hook'
 
 interface RemoveDialogProps {
   isOpen: boolean
@@ -62,14 +61,17 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const { isOpen, onClose, patient } = props
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const teamHook = useTeam()
+  const patientHook = usePatient()
   const buttonClasses = makeButtonClasses()
 
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
   const [processing, setProcessing] = useState<boolean>(false)
   const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([])
 
-  const userName = patient ? { firstName: patient.profile.firstName, lastName: patient.profile.lastName } : { firstName: '', lastName: '' }
+  const userName = patient ? {
+    firstName: patient.profile.firstName,
+    lastName: patient.profile.lastName
+  } : { firstName: '', lastName: '' }
   const patientName = t('user-name', userName)
   const patientTeams = patient?.teams
   const patientTeamStatus = patientTeams?.find(team => team.teamId === selectedTeamId)
@@ -93,7 +95,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true)
-      await teamHook.removePatient(patient, patientTeamStatus, selectedTeamId)
+      await patientHook.removePatient(patient, patientTeamStatus, selectedTeamId)
       getSuccessAlertMessage()
       handleOnClose()
     } catch (err) {

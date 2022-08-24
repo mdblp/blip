@@ -37,6 +37,7 @@ import { useHistory } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/utils'
+import { usePatient } from '../../lib/patient/hook'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -45,6 +46,7 @@ export interface LeaveTeamButtonProps {
 function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props
   const teamHook = useTeam()
+  const patientHook = usePatient()
   const alert = useAlert()
   const { user } = useAuth()
   const historyHook = useHistory()
@@ -55,7 +57,11 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const onTeamLeft = async (hasLeft: boolean): Promise<void> => {
     if (hasLeft) {
       try {
-        await teamHook.leaveTeam(team)
+        if (user.isUserPatient()) {
+          await patientHook.leaveTeam(team)
+        } else {
+          await teamHook.leaveTeam(team)
+        }
         const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-success-deleted')
           : t('team-page-leave-success')

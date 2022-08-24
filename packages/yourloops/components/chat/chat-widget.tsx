@@ -44,6 +44,7 @@ import { useTranslation } from 'react-i18next'
 import { UserRoles } from '../../models/user'
 import { Patient } from '../../lib/data/patient'
 import { useTeam } from '../../lib/team'
+import { usePatient } from '../../lib/patient/hook'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -134,6 +135,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const classes = chatWidgetStyles()
   const authHook = useAuth()
   const teamHook = useTeam()
+  const patientHook = usePatient()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
   const [inputText, setInputText] = useState('')
@@ -157,14 +159,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages(): Promise<void> {
       const messages = await ChatApi.getChatMessages(team.teamId, patient.userid)
       if (patient.metadata.unreadMessagesSent > 0) {
-        teamHook.markPatientMessagesAsRead(patient)
+        patientHook.markPatientMessagesAsRead(patient)
       }
       setMessages(messages)
       setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length)
     }
 
     fetchMessages()
-  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook])
+  }, [userId, authHook, patient.userid, team.teamId, patient, teamHook, patientHook])
 
   const onEmojiClick = (_event: React.MouseEvent, emojiObject: IEmojiData): void => {
     setShowPicker(false)

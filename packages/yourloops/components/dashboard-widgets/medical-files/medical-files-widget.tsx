@@ -69,7 +69,7 @@ export default function MedicalFilesWidget(props: MedicalFilesWidgetProps): JSX.
   const { getRemoteMonitoringTeams } = useTeam()
   const { patient } = props
 
-  const team = getRemoteMonitoringTeams().find(team => team.members.find(member => member.user.userid === patient.userid))
+  const team = getRemoteMonitoringTeams().find(team => patient.teams.find(patientTeam => patientTeam.teamId === team.id))
 
   if (!team) {
     throw Error(`Could not find monitoring team for patient with id: ${patient.userid}`)

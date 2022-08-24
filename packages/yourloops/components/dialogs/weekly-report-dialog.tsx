@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined'
 import Box from '@material-ui/core/Box'
@@ -41,8 +40,8 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import Divider from '@material-ui/core/Divider'
 
 import { WeeklyReport } from '../../lib/medical-files/model'
-import { useTeam } from '../../lib/team'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
+import { usePatient } from '../../lib/patient/hook'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void
@@ -71,8 +70,8 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
   const { title, divider, explanatoryText } = classes()
   const { t } = useTranslation('yourloops')
   const { onClose, weeklyReport } = props
-  const teamHook = useTeam()
-  const patient = teamHook.getPatient(weeklyReport.patientId)
+  const patientHook = usePatient()
+  const patient = patientHook.getPatient(weeklyReport.patientId)
   const endDatePeriod = new Date(weeklyReport.creationDate)
   const startDatePeriod = new Date(weeklyReport.creationDate)
   startDatePeriod.setDate(startDatePeriod.getDate() - 7)

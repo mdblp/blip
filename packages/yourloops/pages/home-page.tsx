@@ -49,6 +49,7 @@ import TeamCodeDialog from '../components/patient/team-code-dialog'
 import { Patient } from '../lib/data/patient'
 import PatientList from '../components/patient/list'
 import { useLocation } from 'react-router-dom'
+import { usePatient } from '../lib/patient/hook'
 
 const log = bows('PatientListPage')
 
@@ -57,6 +58,7 @@ const throttledMetrics = _.throttle(metrics.send, 60000) // No more than one per
 function HomePage(): JSX.Element {
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
+  const patientHook = usePatient()
   const alert = useAlert()
   const { search } = useLocation()
   const [loading, setLoading] = React.useState<boolean>(true)
@@ -97,7 +99,7 @@ function HomePage(): JSX.Element {
       try {
         const { email, teamId } = result
         const team = teamHook.getTeam(teamId)
-        await teamHook.invitePatient(team as Team, email)
+        await patientHook.invitePatient(team as Team, email)
         alert.success(t('alert-invitation-sent-success'))
         metrics.send('invitation', 'send_invitation', 'patient')
         setTeamCodeToDisplay(team)
