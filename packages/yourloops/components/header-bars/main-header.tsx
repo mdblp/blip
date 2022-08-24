@@ -85,6 +85,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   return (
     <AppBar
       id="app-main-header"
+      data-testid="app-main-header"
       elevation={0}
       className={appBar}
       position="fixed"
@@ -97,10 +98,11 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           alignItems="center"
         >
           <Box display="flex" alignItems="center">
-            {withShrinkIcon && <MenuIcon id="left-menu-icon" className={leftIcon} onClick={onClickShrinkIcon} />}
+            {withShrinkIcon && <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon} onClick={onClickShrinkIcon} />}
             <Link to="/">
               <Avatar
                 id="header-main-logo"
+                aria-label={t('alt-img-logo')}
                 variant="square"
                 src={`/branding_${config.BRANDING}_logo.svg`}
                 alt={t('alt-img-logo')}
@@ -113,6 +115,7 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
             <Link to="/notifications" id="header-notification-link">
               <Badge
                 id="notification-count-badge"
+                aria-label={t('notification-list')}
                 badgeContent={receivedInvitations.length}
                 overlap="circular"
                 color="error"

@@ -226,7 +226,7 @@ function Footer(): JSX.Element {
   }
 
   return (
-    <Container id="footer-links-container" className={classes.container} maxWidth={false}>
+    <Container id="footer-links-container" data-testid="footer" className={classes.container} maxWidth={false}>
       <Box className={`${classes.sideBox} ${classes.leftBox}`}>
         <Box className={classes.supportButton} />
       </Box>
