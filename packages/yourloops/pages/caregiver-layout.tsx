@@ -26,42 +26,29 @@
  */
 
 import React from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import PatientDataPage from '../components/patient-data'
+import { PatientProvider } from '../lib/patient/hook'
+import DashboardLayout from '../components/layouts/dashboard-layout'
+import HomePage from './home-page'
+import InvalidRoute from '../components/invalid-route'
+import ProfilePage from './profile'
+import NotificationsPage from './notifications'
 
-import { UserRoles } from '../models/user'
-import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/hook'
-import { Redirect } from 'react-router-dom'
-import { HcpLayout } from './hcp-layout'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayout } from './patient-layout'
-import { DataContextProvider, DefaultDataContext } from '../lib/data/hook'
-
-export function MainLayout(): JSX.Element {
-  const { user } = useAuth()
-
-  const getUserLayout = (): JSX.Element => {
-    switch (user?.role) {
-      case UserRoles.hcp:
-        return <HcpLayout />
-      case UserRoles.caregiver:
-        return <CaregiverLayout />
-      case UserRoles.patient:
-        return <PatientLayout />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Redirect to="/not-found" />
-    }
-  }
-
+export function CaregiverLayout(): JSX.Element {
   return (
-    <React.Fragment>
-      {user &&
-        <NotificationContextProvider>
-          <DataContextProvider context={DefaultDataContext}>
-            {getUserLayout()}
-          </DataContextProvider>
-        </NotificationContextProvider>
-      }
-    </React.Fragment>
+    <PatientProvider>
+      <DashboardLayout>
+        <Switch>
+          <Route exact path="/not-found" component={InvalidRoute} />
+          <Route exact path="/preferences" component={ProfilePage} />
+          <Route exact path="/notifications" component={NotificationsPage} />
+          <Route exact path="/home" component={HomePage} />
+          <Route path="/patient/:patientId" component={PatientDataPage} />
+          <Redirect exact from="/" to="/home" />
+          <Redirect to="/not-found" />
+        </Switch>
+      </DashboardLayout>
+    </PatientProvider>
   )
 }

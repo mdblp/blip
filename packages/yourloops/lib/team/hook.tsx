@@ -39,7 +39,6 @@ import metrics from '../metrics'
 import { useAuth } from '../auth'
 import { useNotification } from '../notifications/hook'
 import { Team, TeamContext, TeamMember, TeamUser } from './models'
-import { Patient, PatientTeam } from '../data/patient'
 import TeamApi from './team-api'
 import TeamUtils from './utils'
 import { notificationConversion } from '../notifications/utils'
@@ -186,6 +185,14 @@ function TeamContextImpl(): TeamContext {
     refresh(true)
   }
 
+  const removeTeamFromList = useCallback((teamId: string) => {
+    const idx = teams.findIndex((t: Team) => t.id === teamId)
+    if (idx > -1) {
+      teams.splice(idx, 1)
+      setTeams(teams)
+    }
+  }, [teams])
+
   const leaveTeam = async (team: Team): Promise<void> => {
     const ourselve = team.members.find((member) => member.user.userid === user.id)
     if (_.isNil(ourselve)) {
@@ -199,23 +206,8 @@ function TeamContextImpl(): TeamContext {
       await TeamApi.leaveTeam(user.id, team.id)
       metrics.send('team_management', 'leave_team')
     }
-    const idx = teams.findIndex((t: Team) => t.id === team.id)
-    if (idx > -1) {
-      teams.splice(idx, 1)
-      setTeams(teams)
-    } else {
-      log.warn('leaveTeam(): Team not found', team)
-    }
+    removeTeamFromList(team.id)
   }
-
-  // TODO: TIM FIND A BETTER SOLUTION
-  const removeTeamFromList = useCallback((teamId: string) => {
-    const idx = teams.findIndex((t: Team) => t.id === teamId)
-    if (idx > -1) {
-      teams.splice(idx, 1)
-      setTeams(teams)
-    }
-  }, [teams])
 
   const removeMember = async (member: TeamMember): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {

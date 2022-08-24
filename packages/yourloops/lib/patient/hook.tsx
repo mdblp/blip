@@ -30,7 +30,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { Patient, PatientTeam } from '../data/patient'
-import { Team } from '../team'
+import { Team, useTeam } from '../team'
 import { useNotification } from '../notifications/hook'
 import PatientUtils from './utils'
 import { PatientFilterStats } from '../team/models'
@@ -42,13 +42,14 @@ import { useAuth } from '../auth'
 import metrics from '../metrics'
 import { MedicalData } from '../../models/device-data'
 import { Alarm } from '../../models/alarm'
+import { errorTextFromException } from '../utils'
 
 interface PatientContextResult {
   patients: Patient[]
   patientsFilterStats: PatientFilterStats
   initialized: boolean
-  setPatients: Function
-  getPatient: Function
+  errorMessage: string | null
+  getPatient: (userId: string) => Patient
   filterPatients: (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => Patient[]
   invitePatient: (team: Team, username: string) => Promise<void>
   editPatientRemoteMonitoring: (patient: Patient) => void
@@ -64,10 +65,8 @@ const PatientContext = React.createContext<PatientContextResult>({
   patients: [],
   patientsFilterStats: {} as PatientFilterStats,
   initialized: false,
-  setPatients: () => {
-  },
-  getPatient: () => {
-  },
+  errorMessage: null,
+  getPatient: () => ({} as Patient),
   filterPatients: () => [],
   invitePatient: async () => await Promise.resolve(),
   editPatientRemoteMonitoring: () => {
@@ -85,9 +84,12 @@ const PatientContext = React.createContext<PatientContextResult>({
 
 export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
   const { cancel: cancelInvitation, getInvitation } = useNotification()
+  const { removeTeamFromList } = useTeam()
+  const { user, getFlagPatients, flagPatient } = useAuth()
+
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
-  const { user, getFlagPatients, flagPatient } = useAuth()
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const refresh = useCallback(() => {
     setInitialized(false)
@@ -239,7 +241,8 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     metrics.send('team_management', 'leave_team')
     loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== team.id)
     updatePatient(loggedInUserAsPatient)
-  }, [patients, updatePatient, user.id])
+    removeTeamFromList(team.id)
+  }, [patients, removeTeamFromList, updatePatient, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
     const patient = getPatient(userId)
@@ -254,6 +257,12 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
       PatientUtils.computePatients().then(computedPatients => {
         setPatients(computedPatients)
         setInitialized(true)
+        setErrorMessage(null)
+      }).catch((reason: unknown) => {
+        const message = errorTextFromException(reason)
+        if (message !== errorMessage) {
+          setErrorMessage(message)
+        }
       })
     }
   }, [initialized, user])
@@ -262,7 +271,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     patients,
     patientsFilterStats,
     initialized,
-    setPatients,
+    errorMessage,
     getPatient,
     filterPatients,
     invitePatient,
@@ -277,7 +286,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     patients,
     patientsFilterStats,
     initialized,
-    setPatients,
+    errorMessage,
     getPatient,
     filterPatients,
     invitePatient,

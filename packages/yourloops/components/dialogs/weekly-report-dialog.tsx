@@ -42,6 +42,7 @@ import Divider from '@material-ui/core/Divider'
 import { WeeklyReport } from '../../lib/medical-files/model'
 import { formatAlarmSettingThreshold, formatDateWithMomentLongFormat } from '../../lib/utils'
 import { usePatient } from '../../lib/patient/hook'
+import { useTeam } from '../../lib/team'
 
 export interface WeeklyReportDialogProps {
   onClose: () => void
@@ -70,6 +71,7 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
   const { title, divider, explanatoryText } = classes()
   const { t } = useTranslation('yourloops')
   const { onClose, weeklyReport } = props
+  const teamHook = useTeam()
   const patientHook = usePatient()
   const patient = patientHook.getPatient(weeklyReport.patientId)
   const endDatePeriod = new Date(weeklyReport.creationDate)
@@ -110,7 +112,7 @@ export default function WeeklyReportDialog(props: WeeklyReportDialogProps): JSX.
           {t('email')} : {patient?.profile.email}
         </DialogContentText>
         <DialogContentText color="textPrimary" aria-label="monitoring-team">
-          {t('monitoring-team')} : {patient?.teams.filter(t => t.teamId === weeklyReport.teamId)[0].teamName}
+          {t('monitoring-team')} : {teamHook.teams.filter(t => t.id === weeklyReport.teamId)[0].name}
         </DialogContentText>
         <DialogContentText color="textPrimary" aria-label="created-at">
           {t('created-at')} : {formatDateWithMomentLongFormat(endDatePeriod)}

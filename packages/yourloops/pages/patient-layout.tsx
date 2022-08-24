@@ -26,42 +26,34 @@
  */
 
 import React from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
+import PatientDataPage from '../components/patient-data'
+import TeamDetailsPage from './team/team-details-page'
+import CaregiversPage from './patient/caregivers/page'
+import { PatientProvider } from '../lib/patient/hook'
+import { TeamContextProvider } from '../lib/team'
+import DashboardLayout from '../components/layouts/dashboard-layout'
+import InvalidRoute from '../components/invalid-route'
+import ProfilePage from './profile'
+import NotificationsPage from './notifications'
 
-import { UserRoles } from '../models/user'
-import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/hook'
-import { Redirect } from 'react-router-dom'
-import { HcpLayout } from './hcp-layout'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayout } from './patient-layout'
-import { DataContextProvider, DefaultDataContext } from '../lib/data/hook'
-
-export function MainLayout(): JSX.Element {
-  const { user } = useAuth()
-
-  const getUserLayout = (): JSX.Element => {
-    switch (user?.role) {
-      case UserRoles.hcp:
-        return <HcpLayout />
-      case UserRoles.caregiver:
-        return <CaregiverLayout />
-      case UserRoles.patient:
-        return <PatientLayout />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Redirect to="/not-found" />
-    }
-  }
-
+export function PatientLayout(): JSX.Element {
   return (
-    <React.Fragment>
-      {user &&
-        <NotificationContextProvider>
-          <DataContextProvider context={DefaultDataContext}>
-            {getUserLayout()}
-          </DataContextProvider>
-        </NotificationContextProvider>
-      }
-    </React.Fragment>
+    <TeamContextProvider>
+      <PatientProvider>
+        <DashboardLayout>
+          <Switch>
+            <Route exact path="/not-found" component={InvalidRoute} />
+            <Route exact path="/preferences" component={ProfilePage} />
+            <Route exact path="/notifications" component={NotificationsPage} />
+            <Route exact path="/home" component={PatientDataPage} />
+            <Route exact path="/caregivers" component={CaregiversPage} />
+            <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
+            <Redirect exact from="/" to="/dashboard" />
+            <Route path="/" component={PatientDataPage} />
+          </Switch>
+        </DashboardLayout>
+      </PatientProvider>
+    </TeamContextProvider>
   )
 }

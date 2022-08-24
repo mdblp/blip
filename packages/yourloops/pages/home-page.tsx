@@ -75,7 +75,7 @@ function HomePage(): JSX.Element {
     setLoading(true)
     setErrorMessage(null)
     try {
-      await teamHook.refresh(force)
+      await patientHook.refresh()
     } catch (reason: unknown) {
       log.error('handleRefresh', reason)
       const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
@@ -126,15 +126,15 @@ function HomePage(): JSX.Element {
   const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null)
 
   React.useEffect(() => {
-    if (!teamHook.initialized) {
+    if (!patientHook.initialized) {
       if (!loading) {
         setLoading(true)
       }
       return
     }
 
-    if (teamHook.errorMessage !== null) {
-      const message = t('error-failed-display-teams', { errorMessage: teamHook.errorMessage })
+    if (patientHook.errorMessage !== null) {
+      const message = t('error-failed-display-teams', { errorMessage: patientHook.errorMessage })
       if (message !== errorMessage) {
         log.error('errorMessage', message)
         setErrorMessage(message)
@@ -146,7 +146,7 @@ function HomePage(): JSX.Element {
     if (loading) {
       setLoading(false)
     }
-  }, [teamHook.initialized, teamHook.errorMessage, errorMessage, loading, t])
+  }, [patientHook.initialized, patientHook.errorMessage, errorMessage, loading, t])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
@@ -155,7 +155,7 @@ function HomePage(): JSX.Element {
   if (loading) {
     return (
       <CircularProgress disableShrink
-        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }} />
+                        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }} />
     )
   }
 
@@ -186,7 +186,7 @@ function HomePage(): JSX.Element {
         onInvitePatient={handleInvitePatient}
       />
       <Grid container direction="row" justifyContent="center" alignItems="center"
-        style={{ marginTop: '1.5em', marginBottom: '1.5em' }}>
+            style={{ marginTop: '1.5em', marginBottom: '1.5em' }}>
         <Alert severity="info">{t('secondary-bar-period-text')}</Alert>
       </Grid>
       <PatientList filter={filter} filterType={filterType} />
