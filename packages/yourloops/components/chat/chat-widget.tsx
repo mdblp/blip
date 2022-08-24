@@ -45,6 +45,7 @@ import { UserRoles } from '../../models/user'
 import { Patient } from '../../lib/data/patient'
 import { useTeam } from '../../lib/team'
 import { usePatient } from '../../lib/patient/hook'
+import PatientUtils from '../../lib/patient/utils'
 
 const chatWidgetStyles = makeStyles((theme: Theme) => {
   return {
@@ -144,7 +145,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
-  const team = teamHook.getPatientRemoteMonitoringTeam(patient)
+  const team = PatientUtils.getRemoteMonitoringTeam(patient)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const handleChange = (_event: React.ChangeEvent<{}>, newValue: number): void => {

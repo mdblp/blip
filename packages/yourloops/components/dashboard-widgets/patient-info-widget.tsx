@@ -52,6 +52,7 @@ import { useTeam } from '../../lib/team'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../models/team'
 import { usePatient } from '../../lib/patient/hook'
+import PatientUtils from '../../lib/patient/utils'
 
 const patientInfoWidgetStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -161,7 +162,8 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
   const onConfirmCancelInviteDialog = async (): Promise<void> => {
     setConfirmCancelDialogActionInProgress(true)
     try {
-      await notificationHook.cancelRemoteMonitoringInvite(teamHook.getPatientRemoteMonitoringTeam(patient).teamId, patient.userid)
+      const team = PatientUtils.getRemoteMonitoringTeam(patient)
+      await notificationHook.cancelRemoteMonitoringInvite(team.teamId, patient.userid)
     } catch (e) {
       setConfirmCancelDialogActionInProgress(false)
     }

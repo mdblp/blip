@@ -97,10 +97,6 @@ export interface TeamContext {
    * @param userId The user we want
    */
   getUser: (userId: string) => Readonly<TeamUser> | null
-  /**
-   * Return the remote monitoring team the patient is in
-   */
-  getPatientRemoteMonitoringTeam: (patient: Patient) => PatientTeam
 
   /**
    * As an HCP invite a member (non patient)

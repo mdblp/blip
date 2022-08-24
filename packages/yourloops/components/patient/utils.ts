@@ -187,44 +187,6 @@ export const comparePatients = (a: Patient, b: Patient, orderBy: PatientTableSor
   return compareValues(aValue, bValue)
 }
 
-export const mapTeamMemberToPatientTeam = (member: TeamMember): PatientTeam => {
-  return {
-    code: member.team.code,
-    invitation: member.invitation,
-    status: member.status,
-    teamId: member.team.id,
-    teamName: member.team.name
-  }
-}
-
-export const mapTeamUserToPatient = (teamUser: TeamUser): Patient => {
-  const birthdate = teamUser.profile?.patient?.birthday
-  return {
-    metadata: {
-      alarm: teamUser.alarms ?? {} as Alarm,
-      flagged: undefined,
-      medicalData: null,
-      unreadMessagesSent: teamUser.unreadMessages ?? 0
-    },
-    monitoring: teamUser.monitoring,
-    profile: {
-      birthdate: birthdate ? new Date(birthdate) : undefined,
-      sex: teamUser.profile?.patient?.sex ? teamUser.profile?.patient?.sex : '',
-      firstName: teamUser.profile?.firstName,
-      fullName: teamUser.profile?.fullName ?? teamUser.username,
-      lastName: teamUser.profile?.lastName,
-      email: teamUser.username,
-      referringDoctor: teamUser.profile?.patient?.referringDoctor
-    },
-    settings: {
-      a1c: teamUser.settings?.a1c,
-      system: 'DBLG1'
-    },
-    teams: teamUser.members.map(member => mapTeamMemberToPatientTeam(member)),
-    userid: teamUser.userid
-  }
-}
-
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
@@ -248,7 +210,13 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       a1c: iTeamMember.settings?.a1c,
       system: 'DBLG1'
     },
-    teams: [{ teamId: iTeamMember.teamId, status: iTeamMember.invitationStatus } as PatientTeam],
+    teams: [
+      {
+        teamId: iTeamMember.teamId,
+        status: iTeamMember.invitationStatus,
+        remoteMonitoringEnabled: iTeamMember.monitoring?.enabled
+      }
+    ],
     userid: iTeamMember.userId
   }
 }

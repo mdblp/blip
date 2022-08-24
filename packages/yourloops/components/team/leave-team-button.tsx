@@ -59,6 +59,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
       try {
         if (user.isUserPatient()) {
           await patientHook.leaveTeam(team)
+          await teamHook.removeTeamFromList(team.id)
         } else {
           await teamHook.leaveTeam(team)
         }

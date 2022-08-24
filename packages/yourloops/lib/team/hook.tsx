@@ -109,17 +109,6 @@ function TeamContextImpl(): TeamContext {
     return teams.filter(team => team.monitoring?.enabled)
   }
 
-  const getPatientRemoteMonitoringTeam = (patient: Patient): PatientTeam => {
-    if (!patient.monitoring) {
-      throw Error('Cannot get patient remote monitoring team as patient is not remote monitored')
-    }
-    const res = patient.teams.find(team => getRemoteMonitoringTeams().find(t => t.id === team.teamId) !== undefined)
-    if (!res) {
-      throw Error('Could not find team to which patient is remote monitored')
-    }
-    return res
-  }
-
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const apiInvitation = await TeamApi.inviteMember({ teamId: team.id, email: username, role })
     const invitation = notificationConversion(apiInvitation)
@@ -203,10 +192,7 @@ function TeamContextImpl(): TeamContext {
       throw new Error('We are not a member of the team!')
     }
     log.info('leaveTeam', { ourselve, team })
-    if (ourselve.role === TeamMemberRole.patient) {
-      await TeamApi.removePatient(team.id, ourselve.user.userid)
-      metrics.send('team_management', 'leave_team')
-    } else if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
+    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
       await TeamApi.deleteTeam(team.id)
       metrics.send('team_management', 'delete_team')
     } else {
@@ -328,7 +314,6 @@ function TeamContextImpl(): TeamContext {
     getUser,
     getMedicalTeams,
     getRemoteMonitoringTeams,
-    getPatientRemoteMonitoringTeam,
     inviteMember,
     createTeam,
     editTeam,

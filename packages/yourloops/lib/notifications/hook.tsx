@@ -80,6 +80,14 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
   }
 
+  const getInvitation = (teamId: string): INotification => {
+    const inviation = sentInvitations.find(invitation => invitation.target.id === teamId)
+    if (!inviation) {
+      throw Error(`Could not find invitation for team ${teamId}`)
+    }
+    return inviation
+  }
+
   const initHook = (): void => {
     if (initialized || lock) {
       return
@@ -113,7 +121,8 @@ function NotificationContextImpl(): NotificationContext {
     decline,
     cancel,
     inviteRemoteMonitoring,
-    cancelRemoteMonitoringInvite
+    cancelRemoteMonitoringInvite,
+    getInvitation
   }
 }
 

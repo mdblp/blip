@@ -30,7 +30,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { Patient, PatientTeam } from '../data/patient'
-import { Team, useTeam } from '../team'
+import { Team } from '../team'
 import { useNotification } from '../notifications/hook'
 import PatientUtils from './utils'
 import TeamUtils from '../team/utils'
@@ -39,7 +39,6 @@ import { PatientFilterTypes, UserInvitationStatus } from '../../models/generic'
 import { notificationConversion } from '../notifications/utils'
 import PatientApi from './patient-api'
 import TeamApi from '../team/team-api'
-import _ from 'lodash'
 import DirectShareApi from '../share/direct-share-api'
 import { useAuth } from '../auth'
 import metrics from '../metrics'
@@ -92,12 +91,11 @@ const PatientContext = React.createContext<PatientContextResult>({
 })
 
 export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.Element => {
-  const { teams, initialized: teamHookInitialized, removeTeamFromList } = useTeam()
-  const { sentInvitations, cancel: cancelInvitation } = useNotification()
+  const { cancel: cancelInvitation, getInvitation } = useNotification()
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const { user, getFlagPatients, flagPatient } = useAuth()
-  // console.log(user?.preferences?.patientsStarred)
+
   const refresh = useCallback(() => {
     setInitialized(false)
   }, [])
@@ -148,9 +146,13 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   const invitePatient = useCallback(async (team: Team, username: string) => {
     const apiInvitation = await PatientApi.invitePatient({ teamId: team.id, email: username })
     const invitation = notificationConversion(apiInvitation)
-    const patientTeam = { status: UserInvitationStatus.pending, teamId: team.id, code: team.code, teamName: team.name }
+    const patientTeam = {
+      status: UserInvitationStatus.pending,
+      teamId: team.id,
+      remoteMonitoringEnabled: team.monitoring?.enabled
+    }
 
-    let patient = patients.find(patient => patient.profile.email === invitation.email)
+    let patient: Patient = patients.find(patient => patient.profile.email === invitation.email)
     if (!patient) {
       patient = {
         metadata: {
@@ -200,25 +202,26 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     if (!patient.monitoring) {
       throw Error('Cannot update patient monitoring with undefined')
     }
-    const team = teams.find(t => t.monitoring?.enabled && patient.teams.find(team => team.teamId === t.id))
-    if (!team) {
+    const monitoredTeam = patient.teams.find(team => team.remoteMonitoringEnabled)
+    if (!monitoredTeam) {
       throw Error(`Cannot find monitoring team in which patient ${patient.profile.email} is in`)
     }
     try {
-      await TeamApi.updatePatientAlerts(team.id, patient.userid, patient.monitoring)
+      await TeamApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
+      monitoredTeam.remoteMonitoringEnabled = patient.monitoring?.enabled
+      patient.teams = patient.teams.filter(team => team.teamId !== monitoredTeam.teamId)
+      patient.teams.push(monitoredTeam)
     } catch (error) {
       console.error(error)
       throw Error(`Failed to update patient with id ${patient.userid}`)
     }
     updatePatient(patient)
-  }, [teams, updatePatient])
+  }, [updatePatient])
 
   const removePatient = useCallback(async (patient: Patient, member: PatientTeam, teamId: string) => {
+    const invitation = getInvitation(teamId)
     if (member.status === UserInvitationStatus.pending) {
-      if (_.isNil(member.invitation)) {
-        throw new Error('Missing invitation!')
-      }
-      await cancelInvitation(member.invitation)
+      await cancelInvitation(invitation)
     }
     if (teamId === 'private') {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
@@ -243,8 +246,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     metrics.send('team_management', 'leave_team')
     loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== team.id)
     updatePatient(loggedInUserAsPatient)
-    removeTeamFromList(team.id)
-  }, [patients, removeTeamFromList, updatePatient, user.id])
+  }, [patients, updatePatient, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
     const patient = getPatient(userId)
@@ -255,14 +257,13 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   }, [getPatient, updatePatient])
 
   React.useEffect(() => {
-    if (!initialized && teamHookInitialized) {
-      console.log('FETCHING PATIENTS')
-      PatientUtils.computePatients(teams, sentInvitations).then(computedPatients => {
+    if (!initialized && user) {
+      PatientUtils.computePatients().then(computedPatients => {
         setPatients(computedPatients)
         setInitialized(true)
       })
     }
-  }, [initialized, sentInvitations, teamHookInitialized, teams])
+  }, [initialized, user])
 
   const shared = useMemo(() => ({
     patients,

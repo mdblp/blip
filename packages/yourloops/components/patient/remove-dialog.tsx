@@ -46,8 +46,10 @@ import ProgressIconButtonWrapper from '../buttons/progress-icon-button-wrapper'
 import { makeButtonsStyles } from '../theme'
 import { useAlert } from '../utils/snackbar'
 import { UserInvitationStatus } from '../../models/generic'
-import { Patient, PatientTeam } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient'
 import { usePatient } from '../../lib/patient/hook'
+import { useNotification } from '../../lib/notifications/hook'
+import { Team, useTeam } from '../../lib/team'
 
 interface RemoveDialogProps {
   isOpen: boolean
@@ -62,11 +64,13 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const patientHook = usePatient()
+  const teamHook = useTeam()
+  const { getInvitation } = useNotification()
   const buttonClasses = makeButtonClasses()
 
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
   const [processing, setProcessing] = useState<boolean>(false)
-  const [sortedTeams, setSortedTeams] = useState<PatientTeam[]>([])
+  const [sortedTeams, setSortedTeams] = useState<Team[]>([])
 
   const userName = patient ? {
     firstName: patient.profile.firstName,
@@ -80,11 +84,11 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     if (patientTeamStatus.status === UserInvitationStatus.pending) {
       alert.success(t('alert-remove-patient-pending-invitation-success'))
     }
-    const team = sortedTeams.find(team => team.teamId === selectedTeamId)
+    const team = teamHook.getTeam(selectedTeamId)
     if (team.code === 'private') {
       alert.success(t('alert-remove-private-practice-success', { patientName }))
     }
-    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.teamName, patientName }))
+    alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
   }
 
   const handleOnClose = (): void => {
@@ -109,15 +113,15 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
     if (patientTeams) {
       if (patientTeams?.length === 1) {
         setSelectedTeamId(patientTeams[0].teamId)
-        setSortedTeams([patientTeams[0]])
+        setSortedTeams([teamHook.getTeam(patientTeams[0].teamId)])
         return
       }
 
       // Sorting teams in alphabetical order if there are several
       if (patientTeams?.length > 1) {
-        const teams = patientTeams
+        const teams = teamHook.teams
 
-        setSortedTeams(teams.sort((a, b) => +a.teamName - +b.teamName))
+        setSortedTeams(teams.sort((a, b) => +a.name - +b.name))
 
         teams.forEach((team, index) => {
           if (team.code === 'private') {
@@ -127,7 +131,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
         })
       }
     }
-  }, [patientTeams])
+  }, [patientTeams, teamHook])
 
   return (
     <Dialog
@@ -159,7 +163,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
             onChange={(e) => setSelectedTeamId(e.target.value as string)}
           >
             {sortedTeams.map((team, index) => (
-              <MenuItem value={team.teamId} key={index}>
+              <MenuItem value={team.id} key={index}>
                 {team.code === 'private'
                   ? <Box display="flex" alignItems="center">
                     <React.Fragment>
@@ -169,7 +173,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
                       {t('private-practice')}
                     </React.Fragment>
                   </Box>
-                  : team.teamName
+                  : team.name
                 }
               </MenuItem>
             ))
