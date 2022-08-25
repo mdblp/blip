@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Teams utility functions
  *
  * All rights reserved.
  *
@@ -38,7 +37,7 @@ export default class PatientUtils {
       if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
         const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
         patient.monitoring = patientDuplicates.find(p => p.monitoring !== undefined).monitoring ?? undefined
-        patient.teams = patientDuplicates.map(p => p.teams[0])
+        patient.teams = patientDuplicates.map(p => p.teams[0]) // TODO TIM Can a team be null?
         patientsWithoutDuplicates.push(patient)
       }
     })

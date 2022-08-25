@@ -1,6 +1,5 @@
 /**
  * Copyright (c) 2022, Diabeloop
- * Teams management - API calls
  *
  * All rights reserved.
  *

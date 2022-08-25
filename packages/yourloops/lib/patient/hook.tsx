@@ -238,13 +238,13 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, patients, updatePatient, user.id])
 
   const leaveTeam = useCallback(async (teamId: string) => {
-    const loggedInUserAsPatient = patients.find(patient => patient.userid === user.id)
+    const loggedInUserAsPatient = getPatient(user.id)
     await PatientApi.removePatient(teamId, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
     loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== teamId)
     updatePatient(loggedInUserAsPatient)
     removeTeamFromList(teamId)
-  }, [patients, removeTeamFromList, updatePatient, user.id])
+  }, [getPatient, removeTeamFromList, updatePatient, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
     const patient = getPatient(userId)
