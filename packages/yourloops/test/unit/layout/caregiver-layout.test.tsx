@@ -30,24 +30,21 @@ import { render, screen } from '@testing-library/react'
 import { MainLayout } from '../../../layout/main-layout'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
-import * as teamHookMock from '../../../lib/team'
+import * as patientHookMock from '../../../lib/patient/hook'
 import * as notificationsHookMock from '../../../lib/notifications/hook'
 import { UserRoles } from '../../../models/user'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory, MemoryHistory } from 'history'
+import { CaregiverLayout } from '../../../layout/caregiver-layout'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
-const teamDetailsPageTestId = 'mock-team-details-page'
-const certifyAccountPageTestId = 'mock-certify-account-page'
 const patientDataPageTestId = 'mock-patient-data-page'
 const caregiverPageTestId = 'mock-caregivers-page'
 const homePagePageTestId = 'mock-caregivers-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
-  teamDetailsPageTestId,
-  certifyAccountPageTestId,
   patientDataPageTestId,
   caregiverPageTestId,
   homePagePageTestId
@@ -55,8 +52,8 @@ const allTestIds = [
 
 /* eslint-disable react/display-name */
 jest.mock('../../../lib/auth')
-jest.mock('../../../lib/team')
 jest.mock('../../../lib/notifications/hook')
+jest.mock('../../../lib/patient/hook')
 jest.mock('../../../components/layouts/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
@@ -65,12 +62,6 @@ jest.mock('../../../pages/profile', () => () => {
 })
 jest.mock('../../../pages/notifications', () => () => {
   return <div data-testid={notificationsPageTestId} />
-})
-jest.mock('../../../pages/team/team-details-page', () => () => {
-  return <div data-testid={teamDetailsPageTestId} />
-})
-jest.mock('../../../pages/hcp/certify-account-page', () => () => {
-  return <div data-testid={certifyAccountPageTestId} />
 })
 jest.mock('../../../components/patient-data', () => () => {
   return <div data-testid={patientDataPageTestId} />
@@ -81,38 +72,28 @@ jest.mock('../../../pages/patient/caregivers/page', () => () => {
 jest.mock('../../../pages/home-page', () => () => {
   return <div data-testid={homePagePageTestId} />
 })
-describe('MainLayout', () => {
+describe('Caregiver Layout', () => {
   function getMainLayoutJSX(history: MemoryHistory): JSX.Element {
     return (
       <Router history={history}>
-        <MainLayout />
+        <CaregiverLayout />
       </Router>
     )
   }
 
   beforeAll(() => {
-    (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+    (patientHookMock.PatientProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
+    });
+    (notificationsHookMock.useNotification as jest.Mock).mockImplementation(() => {
+      return { cancel: jest.fn() }
     })
   })
 
   beforeEach(() => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.hcp,
-          isUserHcp: () => true,
-          isUserCaregiver: () => false,
-          isUserPatient: () => false
-        } as User
-      }
-    })
-  })
-
-  function mockCurrentUserAsCaregiver() {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
         user: {
@@ -123,23 +104,10 @@ describe('MainLayout', () => {
         } as User
       }
     })
-  }
+  })
 
-  function mockCurrentUserAsPatient() {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.patient,
-          isUserHcp: () => false,
-          isUserCaregiver: () => false,
-          isUserPatient: () => true
-        } as User
-      }
-    })
-  }
-
-  function checkInDocument(testId: string) {
-    expect(screen.queryByTestId(testId)).toBeInTheDocument()
+  async function checkInDocument(testId: string) {
+    expect(screen.getByTestId(testId)).toBeInTheDocument()
     allTestIds.filter(id => testId !== id).forEach(id => {
       expect(screen.queryByTestId(id)).not.toBeInTheDocument()
     })
@@ -157,113 +125,27 @@ describe('MainLayout', () => {
     checkInDocument(notificationsPageTestId)
   })
 
-  it('should render home page when route is /home and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(homePagePageTestId)
-  })
-
-  it('should render home page when route is / and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(homePagePageTestId)
-    expect(history.location.pathname).toBe('/home')
-  })
-
   it('should render home page when route is /home and user is caregiver', () => {
-    mockCurrentUserAsCaregiver()
     const history = createMemoryHistory({ initialEntries: ['/home'] })
     render(getMainLayoutJSX(history))
     checkInDocument(homePagePageTestId)
   })
 
   it('should render home page when route is / and user is caregiver', () => {
-    mockCurrentUserAsCaregiver()
     const history = createMemoryHistory({ initialEntries: ['/'] })
-    render(getMainLayoutJSX(history))
+    const { container } = render(getMainLayoutJSX(history))
+    console.log(container)
     checkInDocument(homePagePageTestId)
     expect(history.location.pathname).toBe('/home')
   })
 
-  it('should render patient data page when route is /home and user is patient', () => {
-    mockCurrentUserAsPatient()
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-  })
-
-  it('should render patient data page when route is / and user is patient', () => {
-    mockCurrentUserAsPatient()
-    const history = createMemoryHistory({ initialEntries: ['/'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-    expect(history.location.pathname).toBe('/dashboard')
-  })
-
-  it('should render patient data page when user is patient and route is unknown', () => {
-    mockCurrentUserAsPatient()
-    const history = createMemoryHistory({ initialEntries: ['/wrongRoute'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-    expect(history.location.pathname).toBe('/wrongRoute')
-  })
-
-  it('should render patient data page when route matches /patient/:patientId and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/patient/fakePatientId'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(patientDataPageTestId)
-  })
-
   it('should render patient data page when route matches /patient/:patientId and user is caregiver', () => {
-    mockCurrentUserAsCaregiver()
     const history = createMemoryHistory({ initialEntries: ['/patient/fakePatientId'] })
     render(getMainLayoutJSX(history))
     checkInDocument(patientDataPageTestId)
-  })
-
-  it('should redirect to /not-found when route is /home and user as unknown role', () => {
-    (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
-      return {
-        user: {
-          role: UserRoles.unset,
-          isUserHcp: () => false,
-          isUserCaregiver: () => false,
-          isUserPatient: () => false
-        } as User
-      }
-    })
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-    render(getMainLayoutJSX(history))
-    expect(history.location.pathname).toBe('/not-found')
-  })
-
-  it('should render team details page when route matches /teams/:teamId and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/teams/fakeTeamId'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(teamDetailsPageTestId)
-  })
-
-  it('should render team details page when route matches /teams/:teamId and user is patient', () => {
-    mockCurrentUserAsPatient()
-    const history = createMemoryHistory({ initialEntries: ['/teams/fakeTeamId'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(teamDetailsPageTestId)
-  })
-
-  it('should render certify account page when route is /certify and user is hcp', () => {
-    const history = createMemoryHistory({ initialEntries: ['/certify'] })
-    render(getMainLayoutJSX(history))
-    checkInDocument(certifyAccountPageTestId)
-  })
-
-  it('should redirect to /not-found when route is unknown for user with hcp role', () => {
-    const history = createMemoryHistory({ initialEntries: ['/wrongRoute'] })
-    render(getMainLayoutJSX(history))
-    expect(history.location.pathname).toBe('/not-found')
   })
 
   it('should redirect to /not-found when route is unknown for user with caregiver role', () => {
-    mockCurrentUserAsCaregiver()
     const history = createMemoryHistory({ initialEntries: ['/wrongRoute'] })
     render(getMainLayoutJSX(history))
     expect(history.location.pathname).toBe('/not-found')

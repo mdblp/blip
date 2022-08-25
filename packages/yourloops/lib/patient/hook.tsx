@@ -45,7 +45,7 @@ import { Alarm } from '../../models/alarm'
 import { errorTextFromException } from '../utils'
 import { CircularProgress } from '@material-ui/core'
 
-interface PatientContextResult {
+export interface PatientContextResult {
   patients: Patient[]
   patientsFilterStats: PatientFilterStats
   errorMessage: string | null
@@ -55,8 +55,8 @@ interface PatientContextResult {
   editPatientRemoteMonitoring: (patient: Patient) => void
   markPatientMessagesAsRead: (patient: Patient) => void
   updatePatientMonitoring: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient, member: PatientTeam, teamId: string) => Promise<void>
-  leaveTeam: (team: Team) => Promise<void>
+  removePatient: (patient: Patient, patientTeam: PatientTeam) => Promise<void>
+  leaveTeam: (team: string) => Promise<void>
   setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
   refresh: () => void
 }
@@ -212,35 +212,38 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     updatePatient(patient)
   }, [updatePatient])
 
-  const removePatient = useCallback(async (patient: Patient, member: PatientTeam, teamId: string) => {
-    const invitation = getInvitation(teamId)
-    if (member.status === UserInvitationStatus.pending) {
+  const removePatient = useCallback(async (patient: Patient, patientTeam: PatientTeam) => {
+    if (patientTeam.status === UserInvitationStatus.pending) {
+      const invitation = getInvitation(patientTeam.teamId)
       await cancelInvitation(invitation)
     }
-    if (teamId === 'private') {
+    if (patientTeam.teamId === 'private') {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
-      await PatientApi.removePatient(teamId, patient.userid)
+      await PatientApi.removePatient(patientTeam.teamId, patient.userid)
     }
 
-    patient.teams = patient.teams.filter(patientTeam => patientTeam.teamId !== teamId)
-    updatePatient(patient)
+    patient.teams = patient.teams.filter(pt => pt.teamId !== patientTeam.teamId)
 
     if (patient.teams.length === 0) {
+      const patientsUpdated = patients.filter(p => p.userid !== patient.userid)
+      setPatients(patientsUpdated)
       const isFlagged = getFlagPatients().includes(patient.userid)
       if (isFlagged) {
         await flagPatient(patient.userid)
       }
+    } else {
+      updatePatient(patient)
     }
-  }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, updatePatient, user.id])
+  }, [cancelInvitation, flagPatient, getFlagPatients, getInvitation, patients, updatePatient, user.id])
 
-  const leaveTeam = useCallback(async (team: Team) => {
+  const leaveTeam = useCallback(async (teamId: string) => {
     const loggedInUserAsPatient = patients.find(patient => patient.userid === user.id)
-    await PatientApi.removePatient(team.id, loggedInUserAsPatient.userid)
+    await PatientApi.removePatient(teamId, loggedInUserAsPatient.userid)
     metrics.send('team_management', 'leave_team')
-    loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== team.id)
+    loggedInUserAsPatient.teams = loggedInUserAsPatient.teams.filter(t => t.teamId !== teamId)
     updatePatient(loggedInUserAsPatient)
-    removeTeamFromList(team.id)
+    removeTeamFromList(teamId)
   }, [patients, removeTeamFromList, updatePatient, user.id])
 
   const setPatientMedicalData = useCallback((userId: string, medicalData: MedicalData | null) => {
@@ -264,7 +267,7 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
         }
       })
     }
-  }, [initialized, user])
+  }, [errorMessage, initialized, user])
 
   const shared = useMemo(() => ({
     patients,
@@ -295,7 +298,6 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     setPatientMedicalData,
     refresh
   ])
-
   return initialized ? (
     <PatientContext.Provider value={shared}>
       {children}

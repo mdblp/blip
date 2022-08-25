@@ -48,7 +48,6 @@ import { useAlert } from '../utils/snackbar'
 import { UserInvitationStatus } from '../../models/generic'
 import { Patient } from '../../lib/data/patient'
 import { usePatient } from '../../lib/patient/hook'
-import { useNotification } from '../../lib/notifications/hook'
 import { Team, useTeam } from '../../lib/team'
 
 interface RemoveDialogProps {
@@ -65,7 +64,6 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const alert = useAlert()
   const patientHook = usePatient()
   const teamHook = useTeam()
-  const { getInvitation } = useNotification()
   const buttonClasses = makeButtonClasses()
 
   const [selectedTeamId, setSelectedTeamId] = useState<string>('')
@@ -99,7 +97,7 @@ function RemoveDialog(props: RemoveDialogProps): JSX.Element {
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true)
-      await patientHook.removePatient(patient, patientTeamStatus, selectedTeamId)
+      await patientHook.removePatient(patient, patientTeamStatus)
       getSuccessAlertMessage()
       handleOnClose()
     } catch (err) {

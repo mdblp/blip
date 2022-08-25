@@ -31,7 +31,7 @@ import { act } from 'react-dom/test-utils'
 import { PatientInfoWidgetProps } from '../../../../components/dashboard-widgets/patient-info-widget'
 import { createPatient, triggerMouseEvent } from '../../common/utils'
 import { render, unmountComponentAtNode } from 'react-dom'
-import * as teamHookMock from '../../../../lib/team'
+import * as patientHook from '../../../../lib/patient/hook'
 import { Alarm } from '../../../../models/alarm'
 import { Monitoring } from '../../../../models/monitoring'
 import { ThemeProvider } from '@material-ui/core'
@@ -40,7 +40,7 @@ import PatientAlarmDialog from '../../../../components/alarm/patient-alarm-dialo
 import { UNITS_TYPE } from '../../../../lib/units/utils'
 import { MIN_HIGH_BG, MIN_LOW_BG, MIN_VERY_LOW_BG } from '../../../../components/alarm/alarms-content-configuration'
 
-jest.mock('../../../../lib/team')
+jest.mock('../../../../lib/patient/hook')
 describe('PatientAlarmDialog', () => {
   const patient = createPatient('fakePatientId', [])
   let container: HTMLElement | null = null
@@ -107,7 +107,7 @@ describe('PatientAlarmDialog', () => {
 
   it('should execute updatePatientAlerts when clicking on save button', async () => {
     const updatePatientMonitoring = jest.fn();
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+    (patientHook.usePatient as jest.Mock).mockImplementation(() => {
       return { updatePatientMonitoring }
     })
     const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)
@@ -125,7 +125,7 @@ describe('PatientAlarmDialog', () => {
     const updatePatientMonitoring = jest.fn().mockImplementation(() => {
       throw Error()
     });
-    (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
+    (patientHook.usePatient as jest.Mock).mockImplementation(() => {
       return { updatePatientMonitoring }
     })
     const patientWithMonitoring = createPatient('fakePatientId', [], alarm, '', monitoring)

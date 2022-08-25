@@ -27,16 +27,17 @@
 
 import { UserInvitationStatus } from '../../../../models/generic'
 import { createPatient, createPatientTeam } from '../../common/utils'
-import { Patient } from '../../../../lib/data/patient'
-import TeamUtils from '../../../../lib/team/utils'
+import { Patient, PatientTeam } from '../../../../lib/data/patient'
+import PatientUtils from '../../../../lib/patient/utils'
+import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
 
-describe('Team utils', () => {
+describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
     it('should return patients with the correct flagged attribute', () => {
       const patientFlaggedId = 'flaggedPatient'
       const patients: Patient[] = [createPatient(patientFlaggedId, []), createPatient('fakePatient1', []), createPatient('fakePatient2', [])]
       const flaggedPatientIds = [patientFlaggedId]
-      const patientsUpdated = TeamUtils.computeFlaggedPatients(patients, flaggedPatientIds)
+      const patientsUpdated = PatientUtils.computeFlaggedPatients(patients, flaggedPatientIds)
       patientsUpdated.forEach(patient => {
         expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
       })
@@ -50,7 +51,7 @@ describe('Team utils', () => {
         createPatientTeam('team2Id', UserInvitationStatus.pending)
       ]
       const teamUser = createPatient('id1', members)
-      const res = TeamUtils.isInAtLeastATeam(teamUser)
+      const res = PatientUtils.isInAtLeastATeam(teamUser)
       expect(res).toBe(false)
     })
 
@@ -61,8 +62,22 @@ describe('Team utils', () => {
       ]
       const teamUser = createPatient('id1', members)
 
-      const res = TeamUtils.isInAtLeastATeam(teamUser)
+      const res = PatientUtils.isInAtLeastATeam(teamUser)
       expect(res).toBe(true)
+    })
+  })
+
+  describe('getPatientRemoteMonitoringTeam', () => {
+    const patientTeam1 = createPatientTeam('team1Id', UserInvitationStatus.accepted, MonitoringStatus.accepted)
+    const unknownPatient = createPatient('nigma')
+    const monitoredPatient1 = createPatient('memberPatientAccepted1', [patientTeam1], undefined, undefined, {} as Monitoring)
+    it('should throw an error if patient is not monitored', () => {
+      expect(() => PatientUtils.getRemoteMonitoringTeam(unknownPatient)).toThrowError(`Could not find a monitored team for patient ${unknownPatient.userid}`)
+    })
+
+    it('should return the patient monitored team', () => {
+      const team = PatientUtils.getRemoteMonitoringTeam(monitoredPatient1)
+      expect(team).toEqual(patientTeam1)
     })
   })
 })

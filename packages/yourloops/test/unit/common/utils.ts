@@ -32,7 +32,7 @@ import { Alarm } from '../../../models/alarm'
 import { Team, TeamMember, TeamUser } from '../../../lib/team'
 import { Profile, UserRoles } from '../../../models/user'
 import { TeamMemberRole, TeamType } from '../../../models/team'
-import { Monitoring } from '../../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../../models/monitoring'
 import { UNITS_TYPE } from '../../../lib/units/utils'
 import { INotification, NotificationType } from '../../../lib/notifications/models'
 
@@ -82,11 +82,15 @@ export const createPatient = (
   }
 }
 
-export const createPatientTeam = (id: string, status: UserInvitationStatus, teamName = 'fakeTeamName'): PatientTeam => {
+export const createPatientTeam = (
+  id: string,
+  status: UserInvitationStatus,
+  monitoringStatus: MonitoringStatus | undefined = undefined
+): PatientTeam => {
   return {
     teamId: id,
     status,
-    teamName
+    monitoringStatus
   } as PatientTeam
 }
 export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarm => {

@@ -33,7 +33,7 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import RemoveDialog from '../../../../components/patient/remove-dialog'
 import { waitTimeout } from '../../../../lib/utils'
 import { Patient, PatientTeam } from '../../../../lib/data/patient'
-import { createPatient, createPatientTeam } from '../../common/utils'
+import { buildTeam, createPatient, createPatientTeam } from '../../common/utils'
 import { UserInvitationStatus } from '../../../../models/generic'
 import * as teamHookMock from '../../../../lib/team'
 
@@ -41,6 +41,11 @@ jest.mock('../../../../lib/team')
 describe('RemoveDialog', () => {
   let container: HTMLElement | null = null
   let patient: Patient | undefined
+  const patientTeams: PatientTeam[] = [
+    createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, 'team1'),
+    createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, 'team2')
+  ]
+  const teams = [buildTeam('fakePatientTeam1Id'), buildTeam('fakePatientTeam2Id')]
   const onCloseStub = jest.fn()
 
   function mountComponent(props: { dialogOpened: boolean }): void {
@@ -70,7 +75,7 @@ describe('RemoveDialog', () => {
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { removePatient: jest.fn() }
+      return { teams, removePatient: jest.fn(), getTeam: jest.fn().mockReturnValue(teams[0]) }
     })
   })
 
@@ -93,10 +98,6 @@ describe('RemoveDialog', () => {
   })
 
   it('should be able to remove patient after selecting a team', async () => {
-    const patientTeams: PatientTeam[] = [
-      createPatientTeam('fakePatientTeam1Id', UserInvitationStatus.accepted, 'team1'),
-      createPatientTeam('fakePatientTeam2Id', UserInvitationStatus.accepted, 'team2')
-    ]
     patient = createPatient('fakePatientId', patientTeams)
     mountComponent({ dialogOpened: true })
     const validateButton: HTMLButtonElement = document.querySelector('#remove-patient-dialog-validate-button')
