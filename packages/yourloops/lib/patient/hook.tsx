@@ -43,11 +43,11 @@ import metrics from '../metrics'
 import { MedicalData } from '../../models/device-data'
 import { Alarm } from '../../models/alarm'
 import { errorTextFromException } from '../utils'
+import { CircularProgress } from '@material-ui/core'
 
 interface PatientContextResult {
   patients: Patient[]
   patientsFilterStats: PatientFilterStats
-  initialized: boolean
   errorMessage: string | null
   getPatient: (userId: string) => Patient
   filterPatients: (filterType: PatientFilterTypes, search: string, flaggedPatients: string[]) => Patient[]
@@ -64,7 +64,6 @@ interface PatientContextResult {
 const PatientContext = React.createContext<PatientContextResult>({
   patients: [],
   patientsFilterStats: {} as PatientFilterStats,
-  initialized: false,
   errorMessage: null,
   getPatient: () => ({} as Patient),
   filterPatients: () => [],
@@ -197,13 +196,13 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     if (!patient.monitoring) {
       throw Error('Cannot update patient monitoring with undefined')
     }
-    const monitoredTeam = patient.teams.find(team => team.remoteMonitoringEnabled)
+    const monitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
     if (!monitoredTeam) {
       throw Error(`Cannot find monitoring team in which patient ${patient.profile.email} is in`)
     }
     try {
       await PatientApi.updatePatientAlerts(monitoredTeam.teamId, patient.userid, patient.monitoring)
-      monitoredTeam.remoteMonitoringEnabled = patient.monitoring?.enabled
+      monitoredTeam.monitoringStatus = patient.monitoring?.status
       patient.teams = patient.teams.filter(team => team.teamId !== monitoredTeam.teamId)
       patient.teams.push(monitoredTeam)
     } catch (error) {
@@ -270,7 +269,6 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   const shared = useMemo(() => ({
     patients,
     patientsFilterStats,
-    initialized,
     errorMessage,
     getPatient,
     filterPatients,
@@ -285,7 +283,6 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
   }), [
     patients,
     patientsFilterStats,
-    initialized,
     errorMessage,
     getPatient,
     filterPatients,
@@ -299,11 +296,14 @@ export const PatientProvider = ({ children }: { children: JSX.Element }): JSX.El
     refresh
   ])
 
-  return (
+  return initialized ? (
     <PatientContext.Provider value={shared}>
       {children}
     </PatientContext.Provider>
-  )
+  ) : <CircularProgress
+    disableShrink
+    style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
+  />
 }
 
 export function usePatient(): PatientContextResult {

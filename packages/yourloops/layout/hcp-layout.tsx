@@ -27,17 +27,18 @@
 
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import CertifyAccountPage from '../pages/hcp/certify-account-page'
 import PatientDataPage from '../components/patient-data'
-import TeamDetailsPage from './team/team-details-page'
-import CaregiversPage from './patient/caregivers/page'
+import TeamDetailsPage from '../pages/team/team-details-page'
+import HomePage from '../pages/home-page'
 import { PatientProvider } from '../lib/patient/hook'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from '../components/layouts/dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
-import ProfilePage from './profile'
-import NotificationsPage from './notifications'
+import ProfilePage from '../pages/profile'
+import NotificationsPage from '../pages/notifications'
 
-export function PatientLayout(): JSX.Element {
+export function HcpLayout(): JSX.Element {
   return (
     <TeamContextProvider>
       <PatientProvider>
@@ -46,11 +47,12 @@ export function PatientLayout(): JSX.Element {
             <Route exact path="/not-found" component={InvalidRoute} />
             <Route exact path="/preferences" component={ProfilePage} />
             <Route exact path="/notifications" component={NotificationsPage} />
-            <Route exact path="/home" component={PatientDataPage} />
-            <Route exact path="/caregivers" component={CaregiversPage} />
+            <Route exact path="/home" component={HomePage} />
+            <Route path="/patient/:patientId" component={PatientDataPage} />
             <Route exact path="/teams/:teamId" component={TeamDetailsPage} />
-            <Redirect exact from="/" to="/dashboard" />
-            <Route path="/" component={PatientDataPage} />
+            <Route exact path="/certify" component={CertifyAccountPage} />
+            <Redirect exact from="/" to="/home" />
+            <Redirect to="/not-found" />
           </Switch>
         </DashboardLayout>
       </PatientProvider>

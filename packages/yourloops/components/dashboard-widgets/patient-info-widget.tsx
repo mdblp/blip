@@ -165,6 +165,7 @@ function PatientInfoWidget(props: PatientInfoWidgetProps): JSX.Element {
       const team = PatientUtils.getRemoteMonitoringTeam(patient)
       await notificationHook.cancelRemoteMonitoringInvite(team.teamId, patient.userid)
     } catch (e) {
+      console.error(e)
       setConfirmCancelDialogActionInProgress(false)
     }
     await removePatientRemoteMonitoring(setConfirmCancelDialogActionInProgress, setShowConfirmCancelDialog)

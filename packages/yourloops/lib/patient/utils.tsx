@@ -36,7 +36,9 @@ export default class PatientUtils {
     const patientsWithoutDuplicates = []
     patientsWithDuplicates.forEach(patient => {
       if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
-        patient.teams = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid).map(p => p.teams[0])
+        const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
+        patient.monitoring = patientDuplicates.find(p => p.monitoring !== undefined).monitoring ?? undefined
+        patient.teams = patientDuplicates.map(p => p.teams[0])
         patientsWithoutDuplicates.push(patient)
       }
     })
@@ -53,7 +55,7 @@ export default class PatientUtils {
   }
 
   static getRemoteMonitoringTeam(patient: Patient): PatientTeam {
-    const remoteMonitoredTeam = patient.teams.find(team => team.remoteMonitoringEnabled)
+    const remoteMonitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
     if (!remoteMonitoredTeam) {
       throw Error(`Could not find a monitored team for patient ${patient.userid}`)
     }

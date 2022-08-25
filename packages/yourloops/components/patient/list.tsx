@@ -34,7 +34,6 @@ import { useHistory } from 'react-router-dom'
 
 import Alert from '@material-ui/lab/Alert'
 import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 
 import { PatientFilterTypes, PatientTableSortFields, SortDirection } from '../../models/generic'
@@ -59,7 +58,6 @@ function PatientList(props: PatientListProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const authHook = useAuth()
   const patientHook = usePatient()
-  const [loading, setLoading] = React.useState<boolean>(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
@@ -88,7 +86,6 @@ function PatientList(props: PatientListProps): JSX.Element {
 
   const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })
-    setLoading(true)
     setErrorMessage(null)
     try {
       await patientHook.refresh()
@@ -97,7 +94,6 @@ function PatientList(props: PatientListProps): JSX.Element {
       const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
       setErrorMessage(errorMessage)
     }
-    setLoading(false)
   }
 
   const handleSelectPatient = (patient: Patient): void => {
@@ -117,36 +113,15 @@ function PatientList(props: PatientListProps): JSX.Element {
   }
 
   const patients = React.useMemo(() => {
-    if (!patientHook.initialized || errorMessage !== null) {
+    if (errorMessage !== null) {
       return []
     }
     return updatePatientList(flagged, filter, filterType, orderBy, order)
-  }, [patientHook.initialized, errorMessage, updatePatientList, flagged, filter, filterType, orderBy, order])
-
-  React.useEffect(() => {
-    if (!patientHook.initialized) {
-      if (!loading) {
-        setLoading(true)
-      }
-      return
-    }
-    if (loading) {
-      setLoading(false)
-    }
-  }, [patientHook.initialized, errorMessage, loading, t])
+  }, [errorMessage, updatePatientList, flagged, filter, filterType, orderBy, order])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
   }, [t])
-
-  if (loading) {
-    return (
-      <CircularProgress
-        disableShrink
-        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
-      />
-    )
-  }
 
   if (errorMessage !== null) {
     return (

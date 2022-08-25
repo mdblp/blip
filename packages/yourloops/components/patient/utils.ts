@@ -32,8 +32,7 @@ import { TFunction } from 'i18next'
 import { PatientTableSortFields, SortFields } from '../../models/generic'
 import { MedicalData } from '../../models/device-data'
 import { MedicalTableValues } from './models'
-import { TeamMember, TeamUser } from '../../lib/team'
-import { Patient, PatientTeam } from '../../lib/data/patient'
+import { Patient } from '../../lib/data/patient'
 import { Alarm } from '../../models/alarm'
 import { ITeamMember } from '../../models/team'
 
@@ -214,7 +213,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       {
         teamId: iTeamMember.teamId,
         status: iTeamMember.invitationStatus,
-        remoteMonitoringEnabled: iTeamMember.monitoring?.enabled
+        monitoringStatus: iTeamMember.monitoring?.status
       }
     ],
     userid: iTeamMember.userId

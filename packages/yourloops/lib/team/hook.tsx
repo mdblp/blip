@@ -42,6 +42,7 @@ import { Team, TeamContext, TeamMember, TeamUser } from './models'
 import TeamApi from './team-api'
 import TeamUtils from './utils'
 import { notificationConversion } from '../notifications/utils'
+import { CircularProgress } from '@material-ui/core'
 
 const log = bows('TeamHook')
 const ReactTeamContext = React.createContext<TeamContext>({} as TeamContext)
@@ -325,7 +326,12 @@ function TeamContextImpl(): TeamContext {
  */
 export function TeamContextProvider({ children }: { children: JSX.Element }): JSX.Element {
   const context = TeamContextImpl()
-  return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
+  return context.initialized ? (
+    <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
+  ) : <CircularProgress
+    disableShrink
+    style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }}
+  />
 }
 
 /**

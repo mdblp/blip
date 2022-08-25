@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { MainLayout } from '../../../pages/main-layout'
+import { MainLayout } from '../../../layout/main-layout'
 import * as authHookMock from '../../../lib/auth'
 import { User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'

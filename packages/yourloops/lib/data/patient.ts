@@ -28,12 +28,12 @@
 import { MedicalData } from '../../models/device-data'
 import { Alarm } from '../../models/alarm'
 import { UserInvitationStatus } from '../../models/generic'
-import { Monitoring } from '../../models/monitoring'
+import { Monitoring, MonitoringStatus } from '../../models/monitoring'
 
 interface PatientTeam {
   status: UserInvitationStatus
   teamId: string
-  remoteMonitoringEnabled: boolean
+  monitoringStatus?: MonitoringStatus
 }
 
 interface PatientProfile {

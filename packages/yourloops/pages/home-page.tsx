@@ -33,7 +33,6 @@ import { useTranslation } from 'react-i18next'
 
 import Alert from '@material-ui/lab/Alert'
 import Button from '@material-ui/core/Button'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 
 import { PatientFilterTypes } from '../models/generic'
@@ -61,7 +60,6 @@ function HomePage(): JSX.Element {
   const patientHook = usePatient()
   const alert = useAlert()
   const { search } = useLocation()
-  const [loading, setLoading] = React.useState<boolean>(true)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [filter, setFilter] = React.useState<string>('')
   const [patientToAdd, setPatientToAdd] = React.useState<AddPatientDialogContentProps | null>(null)
@@ -72,7 +70,6 @@ function HomePage(): JSX.Element {
 
   const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })
-    setLoading(true)
     setErrorMessage(null)
     try {
       await patientHook.refresh()
@@ -81,7 +78,6 @@ function HomePage(): JSX.Element {
       const errorMessage = t('error-failed-display-teams', { errorMessage: errorTextFromException(reason) })
       setErrorMessage(errorMessage)
     }
-    setLoading(false)
   }
 
   const handleInvitePatient = async (): Promise<void> => {
@@ -126,13 +122,6 @@ function HomePage(): JSX.Element {
   const handleCloseRemovePatientDialog = (): void => setPatientToRemove(null)
 
   React.useEffect(() => {
-    if (!patientHook.initialized) {
-      if (!loading) {
-        setLoading(true)
-      }
-      return
-    }
-
     if (patientHook.errorMessage !== null) {
       const message = t('error-failed-display-teams', { errorMessage: patientHook.errorMessage })
       if (message !== errorMessage) {
@@ -142,22 +131,11 @@ function HomePage(): JSX.Element {
     } else if (errorMessage !== null) {
       setErrorMessage(null)
     }
-
-    if (loading) {
-      setLoading(false)
-    }
-  }, [patientHook.initialized, patientHook.errorMessage, errorMessage, loading, t])
+  }, [patientHook.errorMessage, errorMessage, t])
 
   React.useEffect(() => {
     setPageTitle(t('hcp-tab-patients'))
   }, [t])
-
-  if (loading) {
-    return (
-      <CircularProgress disableShrink
-                        style={{ position: 'absolute', top: 'calc(50vh - 20px)', left: 'calc(50vw - 20px)' }} />
-    )
-  }
 
   if (errorMessage !== null) {
     return (

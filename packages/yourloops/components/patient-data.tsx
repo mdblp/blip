@@ -96,7 +96,7 @@ function PatientDataPage(): JSX.Element | null {
   const userIsHCP = authHook.user?.isUserHcp()
   const prefixURL = userIsPatient ? '' : `/patient/${paramPatientId}`
 
-  const initialized = authHook.isLoggedIn && patientHook.initialized && blipApi
+  const initialized = authHook.isLoggedIn && blipApi
 
   React.useEffect(() => {
     if (!initialized) {
