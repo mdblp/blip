@@ -28,7 +28,6 @@
 import { ITeam, TeamMemberRole, TeamType } from '../../models/team'
 import HttpService, { ErrorMessageStatus } from '../../services/http'
 import { INotificationAPI } from '../../models/notification'
-import { UserRoles } from '../../models/user'
 import { HttpHeaderKeys } from '../../models/api'
 import { getCurrentLang } from '../language'
 import { Monitoring } from '../../models/monitoring'

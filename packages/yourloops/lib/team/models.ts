@@ -26,12 +26,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { UserInvitationStatus, PostalAddress } from '../../models/generic'
-import { MedicalData } from '../../models/device-data'
+import { PostalAddress, UserInvitationStatus } from '../../models/generic'
 import { IUser } from '../../models/user'
 import { INotification } from '../notifications/models'
-import { TeamType, TeamMemberRole, TypeTeamMemberRole } from '../../models/team'
-import { Patient, PatientTeam } from '../data/patient'
+import { TeamMemberRole, TeamType, TypeTeamMemberRole } from '../../models/team'
 import { Monitoring } from '../../models/monitoring'
 
 export const TEAM_CODE_LENGTH = 9

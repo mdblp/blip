@@ -27,7 +27,7 @@
  */
 
 import _ from 'lodash'
-import React from 'react'
+import React, { useCallback } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
@@ -63,26 +63,27 @@ function PatientList(props: PatientListProps): JSX.Element {
   const [orderBy, setOrderBy] = React.useState<PatientTableSortFields>(PatientTableSortFields.patientFullName)
   const flagged = authHook.getFlagPatients()
 
-  const updatePatientList = (
-    flagged: string[],
-    filter: string,
-    filterType: PatientFilterTypes,
-    orderBy: PatientTableSortFields,
-    order: SortDirection
-  ): Patient[] => {
-    let filteredPatients = patientHook.filterPatients(filterType, filter, flagged)
-    filteredPatients = PatientUtils.computeFlaggedPatients(filteredPatients, flagged)
-    // Sort the patients
-    filteredPatients.sort((a: Patient, b: Patient): number => {
-      const c = comparePatients(a, b, orderBy)
-      return order === SortDirection.asc ? c : -c
-    })
-    const searchByName = filter.length > 0
-    if (searchByName) {
-      throttleSearchMetrics('trackSiteSearch', 'patient_name', 'hcp', filteredPatients.length)
-    }
-    return filteredPatients
-  }
+  const updatePatientList = useCallback(
+    (
+      flagged: string[],
+      filter: string,
+      filterType: PatientFilterTypes,
+      orderBy: PatientTableSortFields,
+      order: SortDirection
+    ) => {
+      let filteredPatients = patientHook.filterPatients(filterType, filter, flagged)
+      filteredPatients = PatientUtils.computeFlaggedPatients(filteredPatients, flagged)
+      // Sort the patients
+      filteredPatients.sort((a: Patient, b: Patient): number => {
+        const c = comparePatients(a, b, orderBy)
+        return order === SortDirection.asc ? c : -c
+      })
+      const searchByName = filter.length > 0
+      if (searchByName) {
+        throttleSearchMetrics('trackSiteSearch', 'patient_name', 'hcp', filteredPatients.length)
+      }
+      return filteredPatients
+    }, [patientHook])
 
   const handleRefresh = async (force = false): Promise<void> => {
     log.debug('handleRefresh:', { force })

@@ -27,7 +27,7 @@
 
 import { UserInvitationStatus } from '../../../../models/generic'
 import { createPatient, createPatientTeam } from '../../common/utils'
-import { Patient, PatientTeam } from '../../../../lib/data/patient'
+import { Patient } from '../../../../lib/data/patient'
 import PatientUtils from '../../../../lib/patient/utils'
 import { Monitoring, MonitoringStatus } from '../../../../models/monitoring'
 
